@@ -156,6 +156,18 @@ extension SignInViewController: SignInViewInput {
         alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
+
+    func showUnexpectedHTTPStatusCodeError() {
+        let message = RuuviLocalization.RuuviCloudApiError.unexpectedHTTPStatusCodeShouldRetry
+        let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(
+            title: RuuviLocalization.ok,
+            style: .cancel,
+            handler: { [weak self] _ in
+                self?.output.viewDidTapOkFromUnexpectedHTTPStatusCodeError()
+        }))
+        present(alertVC, animated: true)
+    }
 }
 
 extension SignInViewController: SignInViewDelegate {

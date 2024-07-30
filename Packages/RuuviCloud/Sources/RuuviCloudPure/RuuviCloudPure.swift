@@ -1177,9 +1177,10 @@ public final class RuuviCloudPure: RuuviCloud {
             return promise.future
         }
 
-        guard let type = request.type, let requestBody = request.requestBodyData
+        guard let type = request.type,
+              let requestBody = request.requestBodyData
         else {
-            promise.fail(error: .api(.unexpectedHTTPStatusCode))
+            promise.fail(error: .api(.badParameters))
             return promise.future
         }
 

@@ -6,7 +6,9 @@ public enum RuuviCloudApiError: Error {
     case parsing(Error)
     case api(RuuviCloudApiErrorCode)
     case emptyResponse
-    case unexpectedHTTPStatusCode
+    case unexpectedHTTPStatusCode(Int)
+    case unexpectedHTTPStatusCodeShouldRetry(Int)
     case failedToGetDataFromResponse
     case unauthorized
+    case badParameters
 }

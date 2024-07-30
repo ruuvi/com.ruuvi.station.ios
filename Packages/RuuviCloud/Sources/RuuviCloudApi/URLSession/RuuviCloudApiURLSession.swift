@@ -398,9 +398,7 @@ extension RuuviCloudApiURLSession {
             config.timeoutIntervalForResource = 30
         }
         let task = URLSession(configuration: config).dataTask(with: request) {
-            data,
-                _,
-                error in
+            data, response, error in
             if let error {
                 promise.fail(error: .networking(error))
             } else {
@@ -422,7 +420,19 @@ extension RuuviCloudApiURLSession {
                         case let .success(model):
                             promise.succeed(value: model)
                         case let .failure(userApiError):
-                            promise.fail(error: userApiError)
+                            if let httpResponse = response as? HTTPURLResponse {
+                                if httpResponse.statusCode == 500 {
+                                    promise.fail(
+                                        error: .unexpectedHTTPStatusCodeShouldRetry(httpResponse.statusCode)
+                                    )
+                                } else {
+                                    promise.fail(
+                                        error: .unexpectedHTTPStatusCode(httpResponse.statusCode)
+                                    )
+                                }
+                            } else {
+                                promise.fail(error: userApiError)
+                            }
                         }
                     } catch {
                         #if DEBUG || ALPHA
@@ -462,8 +472,11 @@ extension RuuviCloudApiURLSession {
             completionHandler: { data, response, error in
                 if let error {
                     completion(.failure(.networking(error)))
-                } else if (response as? HTTPURLResponse)?.statusCode != 200 {
-                    completion(.failure(.unexpectedHTTPStatusCode))
+                } else if let httpResponse = response as? HTTPURLResponse,
+                          httpResponse.statusCode != 200 {
+                    completion(
+                        .failure(.unexpectedHTTPStatusCode(httpResponse.statusCode))
+                    )
                 } else if let data {
                     completion(.success(data))
                 } else {
