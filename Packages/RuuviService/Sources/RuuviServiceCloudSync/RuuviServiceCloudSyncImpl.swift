@@ -209,6 +209,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         syncSensors().on(success: { [weak self] _ in
             self?.ruuviLocalSyncState.setSyncDate(Date())
             promise.succeed(value: true)
+        }, failure: { error in
+            promise.fail(error: error)
         })
         return promise.future
     }
@@ -226,7 +228,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 switch cloudError {
                 case .api(.unauthorized):
                     self?.postNotification()
-                default: break
+                default:
+                    promise.fail(error: .ruuviCloud(cloudError))
                 }
             default: break
             }
@@ -498,6 +501,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     promise.fail(error: error)
                 })
             })
+        }, failure: { error in
+            promise.fail(error: .ruuviCloud(error))
         })
         return promise.future
     }

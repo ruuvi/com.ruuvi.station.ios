@@ -29,8 +29,11 @@ class SignInPresenter: NSObject {
     var cloudSyncService: RuuviServiceCloudSync!
     var cloudSyncDaemon: RuuviDaemonCloudSync!
     var cloudNotificationService: RuuviServiceCloudNotification!
+    var authService: RuuviServiceAuth!
     var settings: RuuviLocalSettings!
 
+    private let maxRetryCount: Int = 1
+    private var currentRetryCount: Int = 0
     private var state: State = .enterEmail
     private var universalLinkObservationToken: NSObjectProtocol?
     private var viewModel: SignInViewModel! {
@@ -89,6 +92,13 @@ extension SignInPresenter: SignInViewOutput {
             module: self,
             didSelectUseWithoutAccount: nil
         )
+    }
+
+    func viewDidTapOkFromUnexpectedHTTPStatusCodeError() {
+        authService.logout().on(success: { [weak self] _ in
+            self?.settings.isSyncing = false
+            self?.dismiss(completion: {})
+        })
     }
 }
 
@@ -163,16 +173,7 @@ extension SignInPresenter {
                     sSelf.state = .isSyncing
                     sSelf.settings.isSyncing = true
                     sSelf.registerFCMToken()
-                    sSelf.cloudSyncService.syncAllRecords().on(success: { [weak sSelf] _ in
-                        guard let ssSelf = sSelf else { return }
-                        ssSelf.cloudSyncDaemon.start()
-                        ssSelf.output?.signIn(module: ssSelf, didSuccessfulyLogin: nil)
-                        sSelf?.settings.isSyncing = false
-                    }, failure: { [weak self] error in
-                        self?.errorPresenter.present(error: error)
-                    }, completion: { [weak self] in
-                        self?.activityPresenter.dismiss()
-                    })
+                    sSelf.syncAllRecords()
                 } else if let requestedEmail = sSelf.ruuviUser.email {
                     sSelf.activityPresenter.dismiss()
                     sSelf.view.showEmailsAreDifferent(
@@ -188,6 +189,59 @@ extension SignInPresenter {
                 self?.view.showInvalidTokenEntered()
                 self?.errorPresenter.present(error: error)
             })
+    }
+
+    private func syncAllRecords() {
+        cloudSyncService.syncAllRecords().on(success: { [weak self] _ in
+            self?.executePostSuccessfullSignInAction()
+        }, failure: { [weak self] error in
+            self?.retryFetchingTheSensorsOnFailIfNeeded(from: error)
+        })
+    }
+
+    private func syncSensors() {
+        cloudSyncService.refreshLatestRecord().on(success: { [weak self] _ in
+            self?.executePostSuccessfullSignInAction()
+        }, failure: { [weak self] error in
+            self?.retryFetchingTheSensorsOnFailIfNeeded(from: error)
+        })
+    }
+
+    private func executePostSuccessfullSignInAction() {
+        cloudSyncDaemon.start()
+        output?.signIn(module: self, didSuccessfulyLogin: nil)
+        settings.isSyncing = false
+        activityPresenter.dismiss()
+    }
+
+    private func retryFetchingTheSensorsOnFailIfNeeded(
+        from error: RuuviServiceError
+    ) {
+        switch error {
+        case let .ruuviCloud(cloudError):
+            switch cloudError {
+            case .api(.unexpectedHTTPStatusCodeShouldRetry):
+                guard currentRetryCount < maxRetryCount
+                else {
+                    activityPresenter.dismiss()
+                    view.showUnexpectedHTTPStatusCodeError()
+                    break
+                }
+                currentRetryCount += 1
+                syncSensors()
+            default:
+                dismissActivityAndShowError(from: error)
+            }
+        default:
+            dismissActivityAndShowError(from: error)
+        }
+    }
+
+    private func dismissActivityAndShowError(
+        from error: RuuviServiceError
+    ) {
+        activityPresenter.dismiss()
+        errorPresenter.present(error: error)
     }
 
     private func startObservingUniversalLinks() {

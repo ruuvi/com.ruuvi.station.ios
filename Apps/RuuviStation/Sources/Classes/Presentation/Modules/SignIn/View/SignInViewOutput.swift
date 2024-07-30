@@ -6,4 +6,5 @@ protocol SignInViewOutput {
     func viewDidTapRequestCodeButton(for email: String?)
     func viewDidTapEnterCodeManually(code: String)
     func viewDidTapUseWithoutAccount()
+    func viewDidTapOkFromUnexpectedHTTPStatusCodeError()
 }

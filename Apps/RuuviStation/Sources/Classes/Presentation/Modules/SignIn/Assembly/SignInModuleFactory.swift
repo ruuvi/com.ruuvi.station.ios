@@ -30,6 +30,7 @@ class SignInModuleFactoryImpl: SignInModuleFactory {
         presenter.cloudSyncService = r.resolve(RuuviServiceCloudSync.self)
         presenter.cloudSyncDaemon = r.resolve(RuuviDaemonCloudSync.self)
         presenter.cloudNotificationService = r.resolve(RuuviServiceCloudNotification.self)
+        presenter.authService = r.resolve(RuuviServiceAuth.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
 
         view.output = presenter

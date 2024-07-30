@@ -10,4 +10,5 @@ protocol SignInViewInput: ViewInput {
     func showFailedToGetRequestedEmail()
     func showInvalidTokenEntered()
     func showInvalidEmailEntered()
+    func showUnexpectedHTTPStatusCodeError()
 }

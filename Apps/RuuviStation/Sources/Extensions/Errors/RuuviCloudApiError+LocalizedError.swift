@@ -13,6 +13,8 @@ extension RuuviCloudApiError: LocalizedError {
             RuuviLocalization.RuuviCloudApiError.failedToGetDataFromResponse
         case .unexpectedHTTPStatusCode:
             RuuviLocalization.RuuviCloudApiError.unexpectedHTTPStatusCode
+        case .unexpectedHTTPStatusCodeShouldRetry:
+            RuuviLocalization.RuuviCloudApiError.unexpectedHTTPStatusCodeShouldRetry
         case let .api(code):
             code.localizedDescription
         case let .networking(error):
@@ -20,6 +22,8 @@ extension RuuviCloudApiError: LocalizedError {
         case let .parsing(error):
             error.localizedDescription
         case .unauthorized:
+            nil
+        case .badParameters:
             nil
         }
     }
