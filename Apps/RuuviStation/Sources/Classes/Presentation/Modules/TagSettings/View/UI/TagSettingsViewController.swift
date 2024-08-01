@@ -4060,7 +4060,7 @@ extension TagSettingsViewController {
             )
             alertTextField.keyboardType = .decimalPad
             alertMaxRangeTextField = alertTextField
-            if maximumBound < 0 {
+            if maximumBound <= 0 {
                 alertMaxRangeTextField.addNumericAccessory()
             }
             if sender == temperatureAlertCell || sender == humidityAlertCell || sender == pressureAlertCell {
