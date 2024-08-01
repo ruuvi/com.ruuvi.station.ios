@@ -7,7 +7,8 @@ class AppDateFormatter {
 
     private let ruuviAgoFormatter: DateFormatter = {
         let df = DateFormatter()
-        df.dateFormat = "E MMM dd yyyy HH:mm:ss"
+        df.locale = Locale.autoupdatingCurrent
+        df.setLocalizedDateFormatFromTemplate("ddMMyyyy")
         return df
     }()
 
@@ -29,7 +30,7 @@ class AppDateFormatter {
 
 extension AppDateFormatter {
     func ruuviAgoString(from date: Date) -> String {
-        ruuviAgoFormatter.string(from: date)
+        ruuviAgoFormatter.string(from: date) + " " + shortTimeString(from: date)
     }
 
     func shortTimeString(from date: Date) -> String {
