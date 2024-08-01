@@ -467,15 +467,8 @@ extension TagSettingsViewController {
         tableView.reloadSections(section, with: .fade)
     }
 
-    // swiftlint:disable:next function_body_length
     private func reloadSection(identifier: TagSettingsSectionIdentifier) {
         switch identifier {
-        case .btPair:
-            let section = configureBluetoothSection()
-            updateSection(
-                with: identifier,
-                newSection: section
-            )
         case .offsetCorrection:
             if showOffsetCorrection() {
                 let section = configureOffsetCorrectionSection()
@@ -598,6 +591,25 @@ extension TagSettingsViewController {
                     currentSection.cells = availableItems
                     tableView.deleteRows(at: oldIndexPaths, with: .none)
                     tableView.insertRows(at: newIndexPaths, with: .none)
+                }, completion: nil)
+                UIView.setAnimationsEnabled(true)
+            }
+        case .btPair:
+            if let currentSection = tableViewSections.first(where: {
+                $0.identifier == section
+            }) {
+                let btPairItem = tagPairSettingItem()
+                let sectionIndex = indexOfSection(section: section)
+                let indexPath = IndexPath(row: 0, section: sectionIndex)
+
+                UIView.setAnimationsEnabled(false)
+                tableView.performBatchUpdates({
+                    if currentSection.cells.count > 0 {
+                        currentSection.cells.remove(at: 0)
+                        currentSection.cells.insert(btPairItem, at: 0)
+                        tableView.deleteRows(at: [indexPath], with: .none)
+                        tableView.insertRows(at: [indexPath], with: .none)
+                    }
                 }, completion: nil)
                 UIView.setAnimationsEnabled(true)
             }
@@ -872,7 +884,7 @@ extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
                     cell.configure(title: self?.unpairedString)
                     cell.configurePairingAnimation(start: false)
                 }
-                self?.reloadSection(identifier: .btPair)
+                self?.reloadCellsFor(section: .btPair)
             }
 
             let isConnected = viewModel.isConnected
@@ -893,7 +905,7 @@ extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
                     cell.configure(title: self?.unpairedString)
                     cell.configurePairingAnimation(start: false)
                 }
-                self?.reloadSection(identifier: .btPair)
+                self?.reloadCellsFor(section: .btPair)
             }
         }
     }
