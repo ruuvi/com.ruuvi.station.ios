@@ -7,7 +7,12 @@ extension RuuviTagEnvLogFull {
     }
 
     var unitHumidity: Humidity? {
-        Humidity(relative: humidity / 100.0, temperature: unitTemperature)
+        let relativeHumidity = humidity / 100.0
+        guard relativeHumidity >= 0 else { return nil }
+        return Humidity(
+            relative: relativeHumidity,
+            temperature: unitTemperature
+        )
     }
 
     var unitPressure: Pressure? {
