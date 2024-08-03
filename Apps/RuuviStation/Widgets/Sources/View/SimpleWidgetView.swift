@@ -45,21 +45,22 @@ struct SimpleWidgetView: View {
                         .foregroundColor(.bodyTextColor)
                         .font(.custom(
                             Constants.oswaldBold.rawValue,
-                            size: canShowBackground ? 36 : 66,
+                            size: canShowBackground ? 30 : 66,
                             relativeTo: .largeTitle
                         ))
-                        .frame(maxWidth: .infinity, alignment: .bottomLeading)
+                        .frame(alignment: .bottomLeading)
                         .minimumScaleFactor(0.5)
                         Text(viewModel.getUnit(for: WidgetSensorEnum(rawValue: entry.config.sensor.rawValue)))
                             .foregroundColor(Color.unitTextColor)
                             .font(.custom(
                                 Constants.oswaldExtraLight.rawValue,
-                                size: canShowBackground ? 16 : 24,
+                                size: canShowBackground ? 14 : 24,
                                 relativeTo: .title3
                             ))
-                            .baselineOffset(14)
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .baselineOffset(10)
+                            .frame(alignment: .topLeading)
                             .minimumScaleFactor(0.5)
+                        Spacer()
                         if #available(iOS 17.0, *) {
                             if !entry.isPreview {
                                 Button(intent: WidgetRefresher()
