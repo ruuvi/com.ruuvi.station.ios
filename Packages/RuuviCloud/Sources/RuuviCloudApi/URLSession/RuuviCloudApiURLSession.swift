@@ -425,10 +425,6 @@ extension RuuviCloudApiURLSession {
                                     promise.fail(
                                         error: .unexpectedHTTPStatusCodeShouldRetry(httpResponse.statusCode)
                                     )
-                                } else {
-                                    promise.fail(
-                                        error: .unexpectedHTTPStatusCode(httpResponse.statusCode)
-                                    )
                                 }
                             } else {
                                 promise.fail(error: userApiError)
