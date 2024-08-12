@@ -20,7 +20,7 @@ class CardsLargeImageCell: UICollectionViewCell {
         label.textColor = .white
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.font = UIFont.Oswald(.extraLight, size: 40)
+        label.font = UIFont.Oswald(.regular, size: 40)
         return label
     }()
 
