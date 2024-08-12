@@ -16,6 +16,8 @@ public extension UIFont {
 
     enum OswaldStyles: String {
         case bold = "Bold"
+        case regular = "Regular"
+        case light = "Light"
         case extraLight = "ExtraLight"
     }
 

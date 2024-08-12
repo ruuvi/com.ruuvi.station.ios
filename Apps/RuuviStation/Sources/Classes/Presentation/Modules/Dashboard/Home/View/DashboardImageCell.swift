@@ -74,7 +74,7 @@ class DashboardImageCell: DashboardCell {
         label.textColor = RuuviColor.dashboardIndicatorBig.color
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.font = UIFont.Oswald(.extraLight, size: 16)
+        label.font = UIFont.Oswald(.regular, size: 16)
         return label
     }()
 

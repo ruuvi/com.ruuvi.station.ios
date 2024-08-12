@@ -79,7 +79,7 @@ targets:
         NSLocationWhenInUseUsageDescription: Ruuvi Station needs to access your location in order to determine your position and show weather parameters for you live location.
         NSPhotoLibraryUsageDescription: Ruuvi Station needs to access your camera roll to enable selecting the background for the sensor.
         NSUserActivityTypes: [RuuviTagSelectionIntent]
-        UIAppFonts: [Oswald-Bold.ttf,Oswald-ExtraLight.ttf,Muli-Regular.ttf,Muli-Bold.ttf,Muli-SemiBoldItalic.ttf,Muli-ExtraBold.ttf,Montserrat-Bold.ttf,Montserrat-Regular.ttf,Montserrat-ExtraBold.ttf]
+        UIAppFonts: [Oswald-Bold.ttf,Oswald-Regular.ttf,Oswald-Light.ttf,Oswald-ExtraLight.ttf,Muli-Regular.ttf,Muli-Bold.ttf,Muli-SemiBoldItalic.ttf,Muli-ExtraBold.ttf,Montserrat-Bold.ttf,Montserrat-Regular.ttf,Montserrat-ExtraBold.ttf]
         UIBackgroundModes: [bluetooth-central, processing, remote-notification]
         UIRequiredDeviceCapabilities: [armv7]
         UIRequiresFullScreen: true
