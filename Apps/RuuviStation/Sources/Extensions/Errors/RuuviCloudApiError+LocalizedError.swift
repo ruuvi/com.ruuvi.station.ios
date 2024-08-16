@@ -21,8 +21,6 @@ extension RuuviCloudApiError: LocalizedError {
             error.localizedDescription
         case let .parsing(error):
             error.localizedDescription
-        case .unauthorized:
-            nil
         case .badParameters:
             nil
         }

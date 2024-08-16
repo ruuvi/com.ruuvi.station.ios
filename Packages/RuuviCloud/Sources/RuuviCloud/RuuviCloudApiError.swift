@@ -9,6 +9,5 @@ public enum RuuviCloudApiError: Error {
     case unexpectedHTTPStatusCode(Int)
     case unexpectedHTTPStatusCodeShouldRetry(Int)
     case failedToGetDataFromResponse
-    case unauthorized
     case badParameters
 }
