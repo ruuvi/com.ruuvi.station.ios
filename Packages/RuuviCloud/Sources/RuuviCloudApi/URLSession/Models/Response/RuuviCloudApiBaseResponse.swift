@@ -44,10 +44,6 @@ public extension RuuviCloudApiBaseResponse {
                 }
             }
 
-            if code == .erUnauthorized {
-                return .failure(.unauthorized)
-            }
-
             return .failure(.api(code))
         }
     }

@@ -137,8 +137,13 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 }
 
                 promise.succeed(value: cloudSettings)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
+            }, failure: { [weak self] error in
+                switch error {
+                case .api(.api(.erUnauthorized)):
+                    self?.postNotification()
+                default:
+                    promise.fail(error: .ruuviCloud(error))
+                }
             })
         return promise.future
     }
@@ -222,17 +227,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         let syncAll = syncAll()
         syncAll.on(success: { _ in
             promise.succeed(value: true)
-        }, failure: { [weak self] error in
-            switch error {
-            case let .ruuviCloud(cloudError):
-                switch cloudError {
-                case .api(.unauthorized):
-                    self?.postNotification()
-                default:
-                    promise.fail(error: .ruuviCloud(cloudError))
-                }
-            default: break
-            }
+        }, failure: { error in
+            promise.fail(error: error)
         }, completion: { [weak self] in
             self?.ruuviLocalSettings.isSyncing = false
         })
@@ -501,8 +497,13 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     promise.fail(error: error)
                 })
             })
-        }, failure: { error in
-            promise.fail(error: .ruuviCloud(error))
+        }, failure: { [weak self] error in
+            switch error {
+            case .api(.api(.erUnauthorized)):
+                self?.postNotification()
+            default:
+                promise.fail(error: .ruuviCloud(error))
+            }
         })
         return promise.future
     }
