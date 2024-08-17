@@ -138,4 +138,7 @@ public protocol RuuviLocalSettings {
 
     func showCustomTempAlertBound(for id: String) -> Bool
     func setShowCustomTempAlertBound(for id: String)
+
+    func dashboardSignInBannerHidden(for version: String) -> Bool
+    func setDashboardSignInBannerHidden(for version: String)
 }

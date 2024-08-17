@@ -28,4 +28,5 @@ protocol DashboardViewOutput {
     func viewDidRenameTag(to name: String, viewModel: CardsViewModel)
     func viewDidReorderSensors(with type: DashboardSortingType, orderedIds: [String])
     func viewDidResetManualSorting()
+    func viewDidHideSignInBanner()
 }

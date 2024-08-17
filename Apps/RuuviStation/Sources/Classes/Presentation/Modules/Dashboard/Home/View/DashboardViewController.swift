@@ -65,6 +65,12 @@ class DashboardViewController: UIViewController {
         }
     }
 
+    var shouldShowSignInBanner: Bool = false {
+        didSet {
+            showNoSignInBannerIfNeeded()
+        }
+    }
+
     private func cell(
         collectionView: UICollectionView,
         indexPath: IndexPath,
@@ -147,6 +153,12 @@ class DashboardViewController: UIViewController {
         )
 
     // BODY
+    private lazy var dashboardSignInBannerView: DashboardSignInBannerView = {
+        let view = DashboardSignInBannerView()
+        view.delegate = self
+        return view
+    }()
+
     private lazy var collectionView: UICollectionView = {
         let cv = UICollectionView(
             frame: .zero,
@@ -171,6 +183,9 @@ class DashboardViewController: UIViewController {
         rc.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
         return rc
     }()
+
+    private var showSignInBannerConstraint: NSLayoutConstraint!
+    private var hideSignInBannerConstraint: NSLayoutConstraint!
 
     private var tagNameTextField = UITextField()
     private let tagNameCharaterLimit: Int = 32
@@ -505,6 +520,32 @@ extension DashboardViewController {
       let macIds = viewModels.compactMap { $0.mac.value?.value }
       output.viewDidReorderSensors(with: .manual, orderedIds: macIds)
     }
+
+    private func showNoSignInBannerIfNeeded() {
+        DispatchQueue.main.async {
+            UIView.animate(withDuration: 0.3, animations: { [weak self] in
+                guard let sSelf = self else { return }
+                sSelf.dashboardSignInBannerView.alpha = sSelf.shouldShowSignInBanner ? 1 : 0
+
+                if sSelf.shouldShowSignInBanner {
+                    NSLayoutConstraint.deactivate([
+                        sSelf.hideSignInBannerConstraint
+                    ])
+                    NSLayoutConstraint.activate([
+                        sSelf.showSignInBannerConstraint
+                    ])
+                } else {
+                    NSLayoutConstraint.deactivate([
+                        sSelf.showSignInBannerConstraint
+                    ])
+                    NSLayoutConstraint.activate([
+                        sSelf.hideSignInBannerConstraint
+                    ])
+                }
+                sSelf.view.layoutIfNeeded()
+            })
+        }
+    }
 }
 
 private extension DashboardViewController {
@@ -582,19 +623,37 @@ private extension DashboardViewController {
     }
 
     func setUpContentView() {
+
+        view.addSubview(dashboardSignInBannerView)
+        dashboardSignInBannerView.anchor(
+            top: view.safeTopAnchor,
+            leading: view.safeLeftAnchor,
+            bottom: nil,
+            trailing: view.safeRightAnchor
+        )
+        dashboardSignInBannerView.alpha = 0
+
         view.addSubview(collectionView)
         collectionView.anchor(
-            top: view.safeTopAnchor,
+            top: nil,
             leading: view.safeLeftAnchor,
             bottom: view.bottomAnchor,
             trailing: view.safeRightAnchor,
             padding: .init(
-                top: 12,
+                top: 0,
                 left: 12,
                 bottom: 0,
                 right: 12
             )
         )
+        showSignInBannerConstraint = collectionView.topAnchor.constraint(
+            equalTo: dashboardSignInBannerView.bottomAnchor, constant: 8
+        )
+        hideSignInBannerConstraint = collectionView.topAnchor.constraint(
+            equalTo: view.safeTopAnchor,
+            constant: 12
+        )
+        hideSignInBannerConstraint.isActive = true
 
         collectionView.showsVerticalScrollIndicator = false
         collectionView.register(DashboardImageCell.self, forCellWithReuseIdentifier: "cellId")
@@ -1088,5 +1147,17 @@ extension DashboardViewController: UITextFieldDelegate {
         } else {
             return false
         }
+    }
+}
+
+// MARK: - DashboardSignInBannerViewDelegate
+extension DashboardViewController: DashboardSignInBannerViewDelegate {
+
+    func didTapCloseButton(sender: DashboardSignInBannerView) {
+        output.viewDidHideSignInBanner()
+    }
+
+    func didTapSignInButton(sender _: DashboardSignInBannerView) {
+        output.viewDidTriggerSignIn()
     }
 }
