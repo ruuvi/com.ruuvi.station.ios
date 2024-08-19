@@ -751,6 +751,20 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     var historySyncOnDashboard: Bool
     @UserDefault("SettingsUserDefaults.historySyncForEachSensor", defaultValue: true)
     var historySyncForEachSensor: Bool
+
+    private let dashboardSignInBannerHiddenUDKey = "SettingsUserDefaults.dashboardSignInBannerHiddenUDKey"
+    func dashboardSignInBannerHidden(for version: String) -> Bool {
+        UserDefaults.standard.value(
+            forKey: dashboardSignInBannerHiddenUDKey + version
+        ) as? Bool ?? false
+    }
+
+    func setDashboardSignInBannerHidden(for version: String) {
+        UserDefaults.standard.set(
+            true,
+            forKey: dashboardSignInBannerHiddenUDKey + version
+        )
+    }
 }
 
 // swiftlint:enable type_body_length file_length

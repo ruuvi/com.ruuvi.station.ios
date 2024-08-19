@@ -362,6 +362,13 @@ extension DashboardPresenter: DashboardViewOutput {
     func viewDidResetManualSorting() {
         view?.showSensorSortingResetConfirmationDialog()
     }
+
+    func viewDidHideSignInBanner() {
+        if let currentAppVersion = currentAppVersion() {
+            settings.setDashboardSignInBannerHidden(for: currentAppVersion)
+            view?.shouldShowSignInBanner = false
+        }
+    }
 }
 
 // MARK: - MenuModuleOutput
@@ -656,6 +663,19 @@ extension DashboardPresenter {
         }
 
         viewModels = vms
+
+        // Show sign in banner if user signed in at least once,
+        // but currently not authorized, there is at least one BT sensor and
+        // user did not already hide the banner for current app version by tapping
+        // close button.
+        if let currentAppVersion = currentAppVersion() {
+            view?.shouldShowSignInBanner =
+                    settings.signedInAtleastOnce && !ruuviUser.isAuthorized &&
+                    viewModels.count > 0 &&
+                    !settings.dashboardSignInBannerHidden(for: currentAppVersion)
+        } else {
+            view?.shouldShowSignInBanner = false
+        }
     }
 
     private func syncViewModel(ruuviTagSensor: RuuviTagSensor?) {
@@ -2008,6 +2028,10 @@ extension DashboardPresenter {
              !settings.historySyncForEachSensor) {
             cloudSyncService.syncAllHistory()
         }
+    }
+
+    private func currentAppVersion() -> String? {
+        return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
     }
 }
 
