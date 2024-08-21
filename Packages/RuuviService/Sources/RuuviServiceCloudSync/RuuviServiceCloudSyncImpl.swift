@@ -305,6 +305,26 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         return temperatureSyncs + humiditySyncs + pressureSyncs
     }
 
+    private func subscriptionSyncs(
+        cloudSensors: [RuuviCloudSensorDense],
+        updatedSensors: Set<AnyRuuviTagSensor>
+    ) -> [Future<CloudSensorSubscription, RuuviPoolError>] {
+        let syncs: [Future<CloudSensorSubscription, RuuviPoolError>]
+        = cloudSensors.compactMap { [weak self] cloudSensor in
+            if let updatedSensor = updatedSensors
+                .first(where: { $0.id == cloudSensor.sensor.id }),
+               let macId = updatedSensor.macId?.mac,
+               let cloudSubscription = cloudSensor.subscription {
+                let subscription = cloudSubscription.with(macId: macId)
+                return self?.ruuviPool.save(subscription: subscription)
+            } else {
+                return nil
+            }
+        }
+
+        return syncs
+    }
+
     @discardableResult
     public func sync(sensor: RuuviTagSensor) -> Future<[AnyRuuviTagSensorRecord], RuuviServiceError> {
         let promise = Promise<[AnyRuuviTagSensorRecord], RuuviServiceError>()
@@ -444,7 +464,10 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             let cloudSensors = denseSensors.compactMap { sensor in
                 sensor.sensor.any
             }
-            let sensors = sSelf.syncSensors(cloudSensors: cloudSensors)
+            let sensors = sSelf.syncSensors(
+                cloudSensors: cloudSensors,
+                denseSensor: denseSensors
+            )
             sensors.on(success: { [weak self] updatedSensors in
                 guard let sSelf = self else { return }
                 let filteredDenseSensorsWithoutHistory = denseSensors.filter { sensor in
@@ -459,10 +482,10 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 // as the sync date. For the rest this value will be set after successful sync.
                 filteredDenseSensorsWithoutHistory.forEach { [weak self]
                     ruuviTag in
-                        self?.ruuviLocalSyncState.setSyncDate(
-                            ruuviTag.record?.date,
-                            for: ruuviTag.sensor.ruuviTagSensor.macId
-                        )
+                    self?.ruuviLocalSyncState.setSyncDate(
+                        ruuviTag.record?.date,
+                        for: ruuviTag.sensor.ruuviTagSensor.macId
+                    )
                 }
 
                 let syncLatestPoint = denseSensors.map {
@@ -509,10 +532,14 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     }
 
     // swiftlint:disable:next function_body_length
-    private func syncSensors(cloudSensors: [AnyCloudSensor]) -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
+    private func syncSensors(
+        cloudSensors: [AnyCloudSensor],
+        denseSensor: [RuuviCloudSensorDense]
+    ) -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
         let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
         var updatedSensors = Set<AnyRuuviTagSensor>()
-        ruuviStorage.readAll().on(success: { localSensors in
+        ruuviStorage.readAll().on(success: {
+            localSensors in
             let updateSensors: [Future<Bool, RuuviPoolError>] = localSensors
                 .compactMap { localSensor in
                     if let cloudSensor = cloudSensors.first(where: { $0.id == localSensor.id }) {
@@ -566,14 +593,24 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 .on(success: { _ in
 
                     Future.zip(syncImages).on()
+
+                    let syncSubscriptions = self.subscriptionSyncs(
+                        cloudSensors: denseSensor,
+                        updatedSensors: updatedSensors
+                    )
                     let syncOffsets = self.offsetSyncs(
                         cloudSensors: cloudSensors,
                         updatedSensors: updatedSensors
                     )
 
-                    Future.zip(syncOffsets)
+                    Future.zip(syncSubscriptions)
                         .on(success: { _ in
-                            promise.succeed(value: updatedSensors)
+                            Future.zip(syncOffsets)
+                                .on(success: { _ in
+                                    promise.succeed(value: updatedSensors)
+                                }, failure: { error in
+                                    promise.fail(error: .ruuviPool(error))
+                                })
                         }, failure: { error in
                             promise.fail(error: .ruuviPool(error))
                         })

@@ -615,6 +615,7 @@ extension DashboardPresenter: SensorRemovalModuleOutput {
 // MARK: - Private
 
 extension DashboardPresenter {
+    // swiftlint:disable:next function_body_length
     private func syncViewModels() {
         view?.userSignedInOnce = settings.signedInAtleastOnce
         view?.isAuthorized = ruuviUser.isAuthorized

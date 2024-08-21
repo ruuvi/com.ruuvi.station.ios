@@ -88,4 +88,13 @@ public protocol RuuviPersistence {
 
     @discardableResult
     func deleteQueuedRequests() -> Future<Bool, RuuviPersistenceError>
+
+    // MARK: - Subscription
+    func save(
+        subscription: CloudSensorSubscription
+    ) -> Future<CloudSensorSubscription, RuuviPersistenceError>
+
+    func readSensorSubscriptionSettings(
+        _ ruuviTag: RuuviTagSensor
+    ) -> Future<CloudSensorSubscription?, RuuviPersistenceError>
 }

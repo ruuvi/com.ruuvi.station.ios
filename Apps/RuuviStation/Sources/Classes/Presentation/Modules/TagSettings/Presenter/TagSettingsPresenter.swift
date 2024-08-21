@@ -138,6 +138,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
             settings.dashboardSensorOrder.count == 0 ? .alphabetical : .manual
         syncUnits()
         syncAllAlerts()
+        syncMaxShareCount()
 
         bindViewModel(to: ruuviTag)
         startObservingRuuviTag()
@@ -619,6 +620,16 @@ extension TagSettingsPresenter {
 
         viewModel.humidityOffsetCorrectionVisible.value = !(lastMeasurement?.humidity == nil)
         viewModel.pressureOffsetCorrectionVisible.value = !(lastMeasurement?.pressure == nil)
+    }
+
+    private func syncMaxShareCount() {
+        ruuviPool.readSensorSubscriptionSettings(
+            ruuviTag
+        ).on(success: { [weak self] subscription in
+            if let maxShares = subscription?.maxShares {
+                self?.view.maxShareCount = maxShares
+            }
+        })
     }
 
     /// Sets the view model properties related to provided alert type.

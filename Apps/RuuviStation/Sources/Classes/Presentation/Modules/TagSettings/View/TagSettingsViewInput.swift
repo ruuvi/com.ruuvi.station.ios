@@ -4,6 +4,7 @@ import RuuviOntology
 protocol TagSettingsViewInput: ViewInput {
     var viewModel: TagSettingsViewModel? { get set }
     var dashboardSortingType: DashboardSortingType? { get set }
+    var maxShareCount: Int { get set }
 
     func showTagClaimDialog()
     func showMacAddressDetail()

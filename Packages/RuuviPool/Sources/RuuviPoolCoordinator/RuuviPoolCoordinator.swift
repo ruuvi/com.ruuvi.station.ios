@@ -4,6 +4,7 @@ import RuuviLocal
 import RuuviOntology
 import RuuviPersistence
 
+// swiftlint:disable:next type_body_length
 final class RuuviPoolCoordinator: RuuviPool {
     private var sqlite: RuuviPersistence
     private var idPersistence: RuuviLocalIDs
@@ -263,6 +264,33 @@ final class RuuviPoolCoordinator: RuuviPool {
         sqlite.deleteQueuedRequests()
             .on(success: { success in
                 promise.succeed(value: success)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
+        return promise.future
+    }
+
+    // MARK: - Subscription
+    func save(
+        subscription: CloudSensorSubscription
+    ) -> Future<CloudSensorSubscription, RuuviPoolError> {
+        let promise = Promise<CloudSensorSubscription, RuuviPoolError>()
+        sqlite.save(subscription: subscription)
+            .on(success: { subscription in
+                promise.succeed(value: subscription)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
+        return promise.future
+    }
+
+    func readSensorSubscriptionSettings(
+        _ ruuviTag: RuuviTagSensor
+    ) -> Future<CloudSensorSubscription?, RuuviPoolError> {
+        let promise = Promise<CloudSensorSubscription?, RuuviPoolError>()
+        sqlite.readSensorSubscriptionSettings(ruuviTag)
+            .on(success: { subscription in
+                promise.succeed(value: subscription)
             }, failure: { error in
                 promise.fail(error: .ruuviPersistence(error))
             })

@@ -47,10 +47,20 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
     }
 
     public struct RuuviCloudApiGetSensorSubsription: Codable, CloudSensorSubscription {
-        public let maxHistoryDays: Int?
-        public let pushAlertAllowed: Bool?
-        public let subscriptionName: String?
-        public let maxResolutionMinutes: Int?
-        public let emailAlertAllowed: Bool?
+        public var macId: String?
+        public var subscriptionName: String?
+        public var isActive: Bool?
+        public var maxClaims: Int?
+        public var maxHistoryDays: Int?
+        public var maxResolutionMinutes: Int?
+        public var maxShares: Int?
+        public var maxSharesPerSensor: Int?
+        public var delayedAlertAllowed: Bool?
+        public var emailAlertAllowed: Bool?
+        public var offlineAlertAllowed: Bool?
+        public var pdfExportAllowed: Bool?
+        public var pushAlertAllowed: Bool?
+        public var telegramAlertAllowed: Bool?
+        public var endAt: String?
     }
 }

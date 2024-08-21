@@ -46,6 +46,15 @@ public protocol RuuviPool {
     func deleteQueuedRequest(_ request: RuuviCloudQueuedRequest) -> Future<Bool, RuuviPoolError>
     @discardableResult
     func deleteQueuedRequests() -> Future<Bool, RuuviPoolError>
+
+    // MARK: - Subscription
+    func save(
+        subscription: CloudSensorSubscription
+    ) -> Future<CloudSensorSubscription, RuuviPoolError>
+
+    func readSensorSubscriptionSettings(
+        _ ruuviTag: RuuviTagSensor
+    ) -> Future<CloudSensorSubscription?, RuuviPoolError>
 }
 
 public extension RuuviPool {
