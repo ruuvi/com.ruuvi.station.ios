@@ -2,6 +2,7 @@ import Foundation
 import Future
 import RuuviLocalization
 import RuuviOntology
+import RuuviPool
 import RuuviPresenters
 import RuuviReactor
 import RuuviService
@@ -16,6 +17,7 @@ class SharePresenter {
     var errorPresenter: ErrorPresenter!
     var ruuviOwnershipService: RuuviServiceOwnership!
     var ruuviReactor: RuuviReactor!
+    var ruuviPool: RuuviPool!
 
     private var sensor: RuuviTagSensor! {
         didSet {
@@ -23,7 +25,7 @@ class SharePresenter {
         }
     }
 
-    private let maxShareCount: Int = 10
+    private var maxShareCount: Int = 10
     private var viewModel: ShareViewModel! {
         didSet {
             view.viewModel = viewModel
@@ -122,6 +124,7 @@ extension SharePresenter: ShareViewOutput {
 
 extension SharePresenter: ShareModuleInput {
     func configure(sensor: RuuviTagSensor) {
+        syncMaxShareCount(ruuviTag: sensor)
         viewModel = ShareViewModel(maxCount: maxShareCount)
         self.sensor = sensor
     }
@@ -201,6 +204,16 @@ extension SharePresenter {
         }
         let sensor = sensor.with(sharedTo: sharedTo)
         ruuviOwnershipService.updateShareable(for: sensor)
+    }
+
+    private func syncMaxShareCount(ruuviTag: RuuviTagSensor) {
+        ruuviPool.readSensorSubscriptionSettings(
+            ruuviTag
+        ).on(success: { [weak self] subscription in
+            if let maxShares = subscription?.maxShares {
+                self?.maxShareCount = maxShares
+            }
+        })
     }
 
     private func isValidEmail(_ email: String) -> Bool {

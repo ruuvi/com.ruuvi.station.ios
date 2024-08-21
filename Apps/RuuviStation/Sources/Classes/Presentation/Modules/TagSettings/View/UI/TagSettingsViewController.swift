@@ -83,6 +83,8 @@ class TagSettingsViewController: UIViewController {
         }
     }
 
+    var maxShareCount: Int = 10
+
     var dashboardSortingType: DashboardSortingType?
 
     private lazy var backButton: UIButton = {
@@ -828,7 +830,6 @@ extension TagSettingsViewController {
     }
 
     private func sensorSharedTo(from: [String]?) -> String {
-        let maxShareCount = 10
         if let sharedTo = from, sharedTo.count > 0 {
             return RuuviLocalization.sharedToX(sharedTo.count, maxShareCount)
         } else {

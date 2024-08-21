@@ -13,6 +13,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     typealias RecordLatest = RuuviTagLatestDataSQLite
     typealias Settings = SensorSettingsSQLite
     typealias QueuedRequest = RuuviCloudQueuedRequestSQLite
+    typealias SensorSubscription = RuuviCloudSensorSubscriptionSQLite
 
     public var database: GRDBDatabase {
         context.database
@@ -758,6 +759,41 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 deletedCount = try QueuedRequest.deleteAll(db)
             }
             promise.succeed(value: deletedCount > 0)
+        } catch {
+            promise.fail(error: .grdb(error))
+        }
+        return promise.future
+    }
+
+    // MARK: - Subscription
+    public func save(
+        subscription: CloudSensorSubscription
+    ) -> Future<CloudSensorSubscription, RuuviPersistenceError> {
+        let promise = Promise<CloudSensorSubscription, RuuviPersistenceError>()
+        do {
+            try database.dbPool.write { db in
+                try subscription.sqlite.save(db)
+            }
+            promise.succeed(value: subscription)
+        } catch {
+            promise.fail(error: .grdb(error))
+        }
+        return promise.future
+    }
+
+    public func readSensorSubscriptionSettings(
+        _ ruuviTag: RuuviTagSensor
+    ) -> Future<CloudSensorSubscription?, RuuviPersistenceError> {
+        let promise = Promise<CloudSensorSubscription?, RuuviPersistenceError>()
+        do {
+            var sqliteSensorSettings: CloudSensorSubscription?
+            let request = SensorSubscription.filter(
+                ruuviTag.macId?.value != nil && SensorSubscription.macIdColumn == ruuviTag.macId?.value
+            )
+            try database.dbPool.read { db in
+                sqliteSensorSettings = try request.fetchOne(db)
+            }
+            promise.succeed(value: sqliteSensorSettings)
         } catch {
             promise.fail(error: .grdb(error))
         }

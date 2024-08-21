@@ -1,4 +1,5 @@
 import Foundation
+import RuuviPool
 import RuuviPresenters
 import RuuviReactor
 import RuuviService
@@ -14,6 +15,7 @@ class ShareConfigurator {
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.ruuviOwnershipService = r.resolve(RuuviServiceOwnership.self)
         presenter.ruuviReactor = r.resolve(RuuviReactor.self)
+        presenter.ruuviPool = r.resolve(RuuviPool.self)
 
         router.transitionHandler = view
 

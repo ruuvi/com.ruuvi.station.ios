@@ -218,6 +218,10 @@ extension SQLiteGRDBDatabase {
                 t.add(column: RuuviTagSQLite.maxHistoryDaysColumn.name, .integer)
             })
         }
+        // v13
+        migrator.registerMigration("Create RuuviCloudSensorSubscription table") { db in
+            try RuuviCloudSensorSubscriptionSQLite.createTable(in: db)
+        }
 
         try migrator.migrate(dbPool)
     }
