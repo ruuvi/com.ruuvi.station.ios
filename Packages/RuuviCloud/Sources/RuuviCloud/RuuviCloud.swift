@@ -174,10 +174,10 @@ public protocol RuuviCloud {
     func set(dashboardTapActionType: DashboardTapActionType) -> Future<DashboardTapActionType, RuuviCloudError>
 
     @discardableResult
-    func set(emailAlert: Bool) -> Future<Bool, RuuviCloudError>
+    func set(disableEmailAlert: Bool) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
-    func set(pushAlert: Bool) -> Future<Bool, RuuviCloudError>
+    func set(disablePushAlert: Bool) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
     func set(profileLanguageCode: String) -> Future<String, RuuviCloudError>

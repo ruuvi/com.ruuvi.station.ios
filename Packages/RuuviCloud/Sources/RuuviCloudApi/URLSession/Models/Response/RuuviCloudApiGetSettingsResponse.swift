@@ -63,12 +63,12 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
         dashboardTapActionTypeString?.ruuviCloudApiSettingsDashboardTapActionType
     }
 
-    public var pushAlertEnabled: Bool? {
-        pushAlertEnabledString?.ruuviCloudApiSettingBoolean
+    public var pushAlertDisabled: Bool? {
+        pushAlertDisabledString?.ruuviCloudApiSettingBoolean
     }
 
-    public var emailAlertEnabled: Bool? {
-        emailAlertEnabledString?.ruuviCloudApiSettingBoolean
+    public var emailAlertDisabled: Bool? {
+        emailAlertDisabledString?.ruuviCloudApiSettingBoolean
     }
 
     public var profileLanguageCode: String? {
@@ -93,8 +93,8 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
     var dashboardEnabledString: String?
     var dashboardTypeString: String?
     var dashboardTapActionTypeString: String?
-    var pushAlertEnabledString: String?
-    var emailAlertEnabledString: String?
+    var emailAlertDisabledString: String?
+    var pushAlertDisabledString: String?
     var profileLanguageCodeString: String?
     var dashboardSensorOrderString: String?
 
@@ -113,8 +113,8 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
         case dashboardEnabledString = "DASHBOARD_ENABLED"
         case dashboardTypeString = "DASHBOARD_TYPE"
         case dashboardTapActionTypeString = "DASHBOARD_TAP_ACTION"
-        case pushAlertEnabledString = "ALERT_PUSH_ENABLED"
-        case emailAlertEnabledString = "ALERT_EMAIL_ENABLED"
+        case emailAlertDisabledString = "DISABLE_EMAIL_NOTIFICATIONS"
+        case pushAlertDisabledString = "DISABLE_PUSH_NOTIFICATIONS"
         case profileLanguageCodeString = "PROFILE_LANGUAGE_CODE"
         case dashboardSensorOrderString = "SENSOR_ORDER"
     }

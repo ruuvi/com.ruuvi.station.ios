@@ -198,11 +198,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     }
 
     @discardableResult
-    public func set(emailAlert: Bool) -> Future<Bool, RuuviServiceError> {
+    public func set(disableEmailAlert: Bool) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
-        cloud.set(emailAlert: emailAlert)
-            .on(success: { enabled in
-                promise.succeed(value: enabled)
+        cloud.set(disableEmailAlert: disableEmailAlert)
+            .on(success: { disabled in
+                promise.succeed(value: disabled)
             }, failure: { error in
                 promise.fail(error: .ruuviCloud(error))
             })
@@ -210,11 +210,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     }
 
     @discardableResult
-    public func set(pushAlert: Bool) -> Future<Bool, RuuviServiceError> {
+    public func set(disablePushAlert: Bool) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
-        cloud.set(pushAlert: pushAlert)
-            .on(success: { enabled in
-                promise.succeed(value: enabled)
+        cloud.set(disablePushAlert: disablePushAlert)
+            .on(success: { disabled in
+                promise.succeed(value: disabled)
             }, failure: { error in
                 promise.fail(error: .ruuviCloud(error))
             })

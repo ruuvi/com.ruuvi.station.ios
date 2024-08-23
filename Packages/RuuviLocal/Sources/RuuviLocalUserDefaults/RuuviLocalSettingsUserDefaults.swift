@@ -654,11 +654,8 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
-    @UserDefault("SettingsUserDefaults.showEmailAlertSettings", defaultValue: false)
-    var showEmailAlertSettings: Bool
-
-    @UserDefault("SettingsUserDefaults.emailAlertEnabled", defaultValue: false)
-    var emailAlertEnabled: Bool {
+    @UserDefault("SettingsUserDefaults.emailAlertDisabled", defaultValue: false)
+    var emailAlertDisabled: Bool {
         didSet {
             DispatchQueue.global(qos: .userInitiated).async {
                 NotificationCenter
@@ -672,11 +669,8 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
-    @UserDefault("SettingsUserDefaults.showPushAlertSettings", defaultValue: false)
-    var showPushAlertSettings: Bool
-
-    @UserDefault("SettingsUserDefaults.pushAlertEnabled", defaultValue: false)
-    var pushAlertEnabled: Bool {
+    @UserDefault("SettingsUserDefaults.pushAlertDisabled", defaultValue: false)
+    var pushAlertDisabled: Bool {
         didSet {
             DispatchQueue.global(qos: .userInitiated).async {
                 NotificationCenter

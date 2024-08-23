@@ -63,8 +63,6 @@ extension DefaultsPresenter {
             buildHideNFCButtonInSensorContents(),
             buildIsAuthorized(),
             buildAuthToken(),
-            buildShowEmailAlertSettings(),
-            buildShowPushAlertSettings(),
             buildIsAuthorized(),
             buildShowStatusLabelSettings(),
             buildShowAlertRangeInGraph(),
@@ -375,34 +373,6 @@ extension DefaultsPresenter {
         ) { observer, hideNFC in
             observer.settings.hideNFCForSensorContest = hideNFC.bound
         }
-        return viewModel
-    }
-
-    private func buildShowEmailAlertSettings() -> DefaultsViewModel {
-        let viewModel = DefaultsViewModel()
-        viewModel.title = RuuviLocalization.Defaults.ShowEmailAlertsSettings.title
-        viewModel.boolean.value = settings.showEmailAlertSettings
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
-        viewModel.type.value = .switcher
-
-        bind(viewModel.boolean, fire: false) { observer, show in
-            observer.settings.showEmailAlertSettings = GlobalHelpers.getBool(from: show)
-        }
-
-        return viewModel
-    }
-
-    private func buildShowPushAlertSettings() -> DefaultsViewModel {
-        let viewModel = DefaultsViewModel()
-        viewModel.title = RuuviLocalization.Defaults.ShowPushAlertsSettings.title
-        viewModel.boolean.value = settings.showPushAlertSettings
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
-        viewModel.type.value = .switcher
-
-        bind(viewModel.boolean, fire: false) { observer, show in
-            observer.settings.showPushAlertSettings = GlobalHelpers.getBool(from: show)
-        }
-
         return viewModel
     }
 

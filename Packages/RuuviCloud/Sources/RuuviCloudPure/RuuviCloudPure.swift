@@ -472,7 +472,7 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(emailAlert: Bool) -> Future<Bool, RuuviCloudError> {
+    public func set(disableEmailAlert: Bool) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -480,18 +480,18 @@ public final class RuuviCloudPure: RuuviCloud {
             return promise.future
         }
         let request = RuuviCloudApiPostSettingRequest(
-            name: .emailAlertEnabled,
-            value: emailAlert.chartBoolSettingString,
+            name: .emailAlertDisabled,
+            value: disableEmailAlert.chartBoolSettingString,
             timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
-                promise.succeed(value: emailAlert)
+                promise.succeed(value: disableEmailAlert)
             }, failure: { [weak self] error in
                 self?.createQueuedRequest(
                     from: request,
                     type: .settings,
-                    uniqueKey: RuuviCloudApiSetting.emailAlertEnabled.rawValue
+                    uniqueKey: RuuviCloudApiSetting.emailAlertDisabled.rawValue
                 )
                 promise.fail(error: .api(error))
             })
@@ -499,7 +499,7 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(pushAlert: Bool) -> Future<Bool, RuuviCloudError> {
+    public func set(disablePushAlert: Bool) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -507,18 +507,18 @@ public final class RuuviCloudPure: RuuviCloud {
             return promise.future
         }
         let request = RuuviCloudApiPostSettingRequest(
-            name: .pushAlertEnabled,
-            value: pushAlert.chartBoolSettingString,
+            name: .pushAlertDisabled,
+            value: disablePushAlert.chartBoolSettingString,
             timestamp: Int(Date().timeIntervalSince1970)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
-                promise.succeed(value: pushAlert)
+                promise.succeed(value: disablePushAlert)
             }, failure: { [weak self] error in
                 self?.createQueuedRequest(
                     from: request,
                     type: .settings,
-                    uniqueKey: RuuviCloudApiSetting.pushAlertEnabled.rawValue
+                    uniqueKey: RuuviCloudApiSetting.pushAlertDisabled.rawValue
                 )
                 promise.fail(error: .api(error))
             })

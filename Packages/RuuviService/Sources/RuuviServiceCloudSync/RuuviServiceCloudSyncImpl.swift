@@ -109,13 +109,13 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                    dashboardTapActionType != sSelf.ruuviLocalSettings.dashboardTapActionType {
                     sSelf.ruuviLocalSettings.dashboardTapActionType = dashboardTapActionType
                 }
-                if let pushAlertEnabled = cloudSettings.pushAlertEnabled,
-                   pushAlertEnabled != sSelf.ruuviLocalSettings.pushAlertEnabled {
-                    sSelf.ruuviLocalSettings.pushAlertEnabled = pushAlertEnabled
+                if let pushAlertDisabled = cloudSettings.pushAlertDisabled,
+                   pushAlertDisabled != sSelf.ruuviLocalSettings.pushAlertDisabled {
+                    sSelf.ruuviLocalSettings.pushAlertDisabled = pushAlertDisabled
                 }
-                if let emailAlertEnabled = cloudSettings.emailAlertEnabled,
-                   emailAlertEnabled != sSelf.ruuviLocalSettings.emailAlertEnabled {
-                    sSelf.ruuviLocalSettings.emailAlertEnabled = emailAlertEnabled
+                if let emailAlertDisabled = cloudSettings.emailAlertDisabled,
+                   emailAlertDisabled != sSelf.ruuviLocalSettings.emailAlertDisabled {
+                    sSelf.ruuviLocalSettings.emailAlertDisabled = emailAlertDisabled
                 }
                 if let cloudProfileLanguageCode = cloudSettings.profileLanguageCode {
                     if cloudProfileLanguageCode !=
