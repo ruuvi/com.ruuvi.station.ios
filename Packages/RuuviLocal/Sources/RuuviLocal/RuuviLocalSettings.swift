@@ -92,10 +92,8 @@ public protocol RuuviLocalSettings {
     var theme: RuuviTheme { get set }
     var hideNFCForSensorContest: Bool { get set }
     var alertSound: RuuviAlertSound { get set }
-    var showEmailAlertSettings: Bool { get set }
-    var emailAlertEnabled: Bool { get set }
-    var showPushAlertSettings: Bool { get set }
-    var pushAlertEnabled: Bool { get set }
+    var emailAlertDisabled: Bool { get set }
+    var pushAlertDisabled: Bool { get set }
     var limitAlertNotificationsEnabled: Bool { get set }
     var showSwitchStatusLabel: Bool { get set }
     var showAlertsRangeInGraph: Bool { get set }

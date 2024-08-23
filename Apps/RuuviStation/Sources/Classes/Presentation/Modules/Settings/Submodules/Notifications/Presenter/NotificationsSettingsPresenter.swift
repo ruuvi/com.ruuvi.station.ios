@@ -55,15 +55,9 @@ extension NotificationsSettingsPresenter {
     private func configure() {
         var viewModels: [NotificationsSettingsViewModel] = []
 
-        if settings.showEmailAlertSettings {
-            viewModels.append(buildEmailAlertSettings())
-        }
-
-        if settings.showPushAlertSettings {
-            viewModels.append(buildPushSettings())
-        }
-
         viewModels.append(buildLimitAlertNotificationsSettings())
+        viewModels.append(buildEmailAlertSettings())
+        viewModels.append(buildPushSettings())
         viewModels.append(buildSoundSettings())
 
         settingsViewModels = viewModels
@@ -73,15 +67,15 @@ extension NotificationsSettingsPresenter {
         let viewModel = NotificationsSettingsViewModel()
         viewModel.title = RuuviLocalization.settingsEmailAlerts
         viewModel.subtitle = RuuviLocalization.settingsEmailAlertsDescription
-        viewModel.boolean.value = settings.emailAlertEnabled
+        viewModel.boolean.value = !settings.emailAlertDisabled
         viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
         viewModel.configType.value = .switcher
         viewModel.settingsType.value = .email
 
         bind(viewModel.boolean, fire: false) { observer, enabled in
-            let alertEnabled = GlobalHelpers.getBool(from: enabled)
-            observer.settings.emailAlertEnabled = alertEnabled
-            observer.ruuviAppSettingsService.set(emailAlert: alertEnabled)
+            let alertDisabled = !GlobalHelpers.getBool(from: enabled)
+            observer.settings.emailAlertDisabled = alertDisabled
+            observer.ruuviAppSettingsService.set(disableEmailAlert: alertDisabled)
         }
 
         return viewModel
@@ -91,15 +85,15 @@ extension NotificationsSettingsPresenter {
         let viewModel = NotificationsSettingsViewModel()
         viewModel.title = RuuviLocalization.settingsPushAlerts
         viewModel.subtitle = RuuviLocalization.settingsPushAlertsDescription
-        viewModel.boolean.value = settings.pushAlertEnabled
+        viewModel.boolean.value = !settings.pushAlertDisabled
         viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
         viewModel.configType.value = .switcher
         viewModel.settingsType.value = .push
 
         bind(viewModel.boolean, fire: false) { observer, enabled in
-            let alertEnabled = GlobalHelpers.getBool(from: enabled)
-            observer.settings.pushAlertEnabled = alertEnabled
-            observer.ruuviAppSettingsService.set(pushAlert: alertEnabled)
+            let alertDisabled = !GlobalHelpers.getBool(from: enabled)
+            observer.settings.pushAlertDisabled = alertDisabled
+            observer.ruuviAppSettingsService.set(disablePushAlert: alertDisabled)
         }
 
         return viewModel
@@ -183,7 +177,7 @@ extension NotificationsSettingsPresenter {
         if let viewModel = settingsViewModels.first(where: { vm in
             vm.settingsType.value == .email
         }) {
-            if viewModel.boolean.value != settings.emailAlertEnabled {
+            if viewModel.boolean.value == settings.emailAlertDisabled {
                 configure()
             }
         }
@@ -193,7 +187,7 @@ extension NotificationsSettingsPresenter {
         if let viewModel = settingsViewModels.first(where: { vm in
             vm.settingsType.value == .push
         }) {
-            if viewModel.boolean.value != settings.pushAlertEnabled {
+            if viewModel.boolean.value == settings.emailAlertDisabled {
                 configure()
             }
         }

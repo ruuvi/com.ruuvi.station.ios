@@ -16,8 +16,8 @@ public enum RuuviCloudApiSetting: String, CaseIterable, Codable {
     case dashboardEnabled = "DASHBOARD_ENABLED"
     case dashboardType = "DASHBOARD_TYPE"
     case dashboardTapActionType = "DASHBOARD_TAP_ACTION"
-    case pushAlertEnabled = "ALERT_PUSH_ENABLED"
-    case emailAlertEnabled = "ALERT_EMAIL_ENABLED"
+    case pushAlertDisabled = "DISABLE_PUSH_NOTIFICATIONS"
+    case emailAlertDisabled = "DISABLE_EMAIL_NOTIFICATIONS"
     case profileLanguageCode = "PROFILE_LANGUAGE_CODE"
     case dashboardSensorOrder = "SENSOR_ORDER"
 }
@@ -122,9 +122,9 @@ public extension String {
 
     var ruuviCloudApiSettingBoolean: Bool? {
         switch self {
-        case "true":
+        case "true", "1":
             true
-        case "false":
+        case "false", "0":
             false
         default:
             nil
