@@ -18,6 +18,7 @@ final class BackgroundSelectionModuleFactoryImpl: BackgroundSelectionModuleFacto
         presenter.photoPickerPresenter = r.resolve(PhotoPickerPresenter.self)
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
         presenter.ruuviLocalImages = r.resolve(RuuviLocalImages.self)
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         return presenter
     }

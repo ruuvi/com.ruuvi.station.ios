@@ -15,7 +15,8 @@ public protocol RuuviServiceSensorProperties {
         image: UIImage,
         for sensor: RuuviTagSensor,
         progress: ((MACIdentifier, Double) -> Void)?,
-        maxSize: CGSize
+        maxSize: CGSize,
+        compressionQuality: CGFloat
     ) -> Future<URL, RuuviServiceError>
 
     @discardableResult
@@ -29,13 +30,16 @@ public protocol RuuviServiceSensorProperties {
 public extension RuuviServiceSensorProperties {
     func set(
         image: UIImage,
-        for sensor: RuuviTagSensor
+        for sensor: RuuviTagSensor,
+        maxSize: CGSize,
+        compressionQuality: CGFloat
     ) -> Future<URL, RuuviServiceError> {
         set(
             image: image,
             for: sensor,
             progress: nil,
-            maxSize: CGSize(width: 3000, height: 3000)
+            maxSize: maxSize,
+            compressionQuality: compressionQuality
         )
     }
 }

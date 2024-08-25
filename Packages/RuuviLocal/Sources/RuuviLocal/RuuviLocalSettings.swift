@@ -98,6 +98,7 @@ public protocol RuuviLocalSettings {
     var showSwitchStatusLabel: Bool { get set }
     var showAlertsRangeInGraph: Bool { get set }
     var useNewGraphRendering: Bool { get set }
+    var imageCompressionQuality: Int { get set }
 
     /// Syncs full history for all sensoers after code verification
     /// on sign in, before presenting dashboard. Heavy after sign in

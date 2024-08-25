@@ -31,6 +31,7 @@ final class BackgroundSelectionPresenter: BackgroundSelectionModuleInput {
     // TODO: Find out why backgroundToken is getting notification twice.
     /// A boolean to keep track of background upload for local sensors
     private var didUploadBackground: Bool = false
+    private let maxSize: CGSize = .init(width: 3000, height: 3000)
 
     var photoPickerPresenter: PhotoPickerPresenter! {
         didSet {
@@ -40,6 +41,7 @@ final class BackgroundSelectionPresenter: BackgroundSelectionModuleInput {
 
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     var ruuviLocalImages: RuuviLocalImages!
+    var settings: RuuviLocalSettings!
     var errorPresenter: ErrorPresenter!
 
     init(ruuviTag: RuuviTagSensor?) {
@@ -174,7 +176,9 @@ extension BackgroundSelectionPresenter: PhotoPickerPresenterDelegate {
         viewModel.isUploadingBackground.value = true
         ruuviSensorPropertiesService.set(
             image: photo,
-            for: ruuviTag
+            for: ruuviTag,
+            maxSize: maxSize,
+            compressionQuality: CGFloat(settings.imageCompressionQuality)*0.1
         ).on(success: { [weak self] _ in
             self?.viewModel.isUploadingBackground.value = false
             self?.viewModel.background.value = photo

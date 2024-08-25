@@ -738,6 +738,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     var showAlertsRangeInGraph: Bool
     @UserDefault("SettingsUserDefaults.useNewGraphRendering", defaultValue: false)
     var useNewGraphRendering: Bool
+    // On a scale of 10-100, 100 being best quality, and 10 being the worst.
+    @UserDefault("SettingsUserDefaults.imageCompressionQuality", defaultValue: 40)
+    var imageCompressionQuality: Int
 
     @UserDefault("SettingsUserDefaults.historySyncLegacy", defaultValue: false)
     var historySyncLegacy: Bool

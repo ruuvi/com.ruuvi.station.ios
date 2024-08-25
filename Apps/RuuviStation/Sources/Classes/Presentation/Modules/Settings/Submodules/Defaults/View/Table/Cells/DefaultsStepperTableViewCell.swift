@@ -8,6 +8,7 @@ protocol DefaultsStepperTableViewCellDelegate: AnyObject {
 class DefaultsStepperTableViewCell: UITableViewCell {
     weak var delegate: DefaultsStepperTableViewCellDelegate?
     var unit: DefaultsIntegerUnit = .seconds
+    var item: DefaultItem?
 
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var stepper: UIStepper!
@@ -31,11 +32,16 @@ class DefaultsStepperTableViewCell: UITableViewCell {
         case .decimal:
             ""
         }
-        switch unit {
-        case .hours, .minutes, .seconds:
-            titleLabel.text = prefix + " " + "(" + "\(result)" + " " + unitString + ")"
-        case .decimal:
-            titleLabel.text = prefix + " " + "(" + "\(result)" + ")"
+        switch item {
+        case .imageCompressionQuality:
+            titleLabel.text = prefix + " " + "(" + "\(result)" + "%)"
+        default:
+            switch unit {
+            case .hours, .minutes, .seconds:
+                titleLabel.text = prefix + " " + "(" + "\(result)" + " " + unitString + ")"
+            case .decimal:
+                titleLabel.text = prefix + " " + "(" + "\(result)" + ")"
+            }
         }
         delegate?.defaultsStepper(cell: self, didChange: result)
     }

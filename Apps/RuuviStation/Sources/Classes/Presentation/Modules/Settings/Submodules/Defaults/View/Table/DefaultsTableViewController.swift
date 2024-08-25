@@ -48,7 +48,7 @@ extension DefaultsTableViewController {
         viewModels.count
     }
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let viewModel = viewModels[indexPath.row]
         switch viewModel.type.value {
@@ -88,36 +88,48 @@ extension DefaultsTableViewController {
                 ) as! DefaultsStepperTableViewCell
             // swiftlint:enable force_cast
             let title = viewModel.title ?? ""
-            let unitString: String
-            switch viewModel.unit {
-            case .hours:
-                unitString = RuuviLocalization.Defaults.Interval.Hour.string
-                cell.stepper.stepValue = 1
-            case .minutes:
-                unitString = RuuviLocalization.Defaults.Interval.Min.string
-                cell.stepper.stepValue = 5
-            case .seconds:
-                unitString = RuuviLocalization.Defaults.Interval.Sec.string
-                cell.stepper.stepValue = 30
-            case .decimal:
-                unitString = ""
-                cell.stepper.stepValue = 5
-                cell.stepper.minimumValue = 5
-            }
+
             cell.unit = viewModel.unit
+            cell.item = viewModel.item.value
             let result = viewModel.integer.value.bound
-            switch viewModel.unit {
-            case .hours, .minutes, .seconds:
-                cell.titleLabel.text = title + " "
-                    + "(" + "\(result)" + " "
-                    + unitString + ")"
-            case .decimal:
-                cell.titleLabel.text = title + " " + "(" + "\(result)" + ")"
+            switch viewModel.item.value {
+            case .imageCompressionQuality:
+                cell.titleLabel.text = title + " " + "(" + "\(result)" + "%)"
+                cell.stepper.stepValue = 10
+                cell.stepper.minimumValue = 10
+                cell.stepper.maximumValue = 100
+                cell.stepper.value = Double(viewModel.integer.value.bound)
+            default:
+                let unitString: String
+                switch viewModel.unit {
+                case .hours:
+                    unitString = RuuviLocalization.Defaults.Interval.Hour.string
+                    cell.stepper.stepValue = 1
+                case .minutes:
+                    unitString = RuuviLocalization.Defaults.Interval.Min.string
+                    cell.stepper.stepValue = 5
+                case .seconds:
+                    unitString = RuuviLocalization.Defaults.Interval.Sec.string
+                    cell.stepper.stepValue = 30
+                case .decimal:
+                    unitString = ""
+                    cell.stepper.stepValue = 5
+                    cell.stepper.minimumValue = 5
+                }
+                switch viewModel.unit {
+                case .hours, .minutes, .seconds:
+                    cell.titleLabel.text = title + " "
+                        + "(" + "\(result)" + " "
+                        + unitString + ")"
+                case .decimal:
+                    cell.titleLabel.text = title + " " + "(" + "\(result)" + ")"
+                }
+                cell.stepper.value = Double(viewModel.integer.value.bound)
             }
+
             cell.titleLabel.textColor = RuuviColor.menuTextColor.color
             cell.stepper.backgroundColor = RuuviColor.tintColor.color
             cell.prefix = title
-            cell.stepper.value = Double(viewModel.integer.value.bound)
             cell.delegate = self
             return cell
         default:
