@@ -6,11 +6,17 @@ enum DefaultsType {
     case plain
 }
 
+enum DefaultItem {
+    case imageCompressionQuality
+    case other
+}
+
 class DefaultsViewModel: Identifiable {
     var id = UUID().uuidString
 
     var title: String?
     var type: Observable<DefaultsType?> = .init()
+    var item: Observable<DefaultItem?> = .init()
     // Value for switcher type
     var boolean: Observable<Bool?> = .init()
     var hideStatusLabel: Observable<Bool?> = .init(false)

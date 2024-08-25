@@ -56,6 +56,7 @@ extension DefaultsPresenter {
             buildChartDurationHours(),
             saveAdvertisementsInterval(),
             saveHeartbeatsForgroundInterval(),
+            buildImageCompressionQuality(),
             buildAskForReviewFirstTime(),
             buildAskForReviewLater(),
             buildDashboardCardTapAction(),
@@ -259,6 +260,20 @@ extension DefaultsPresenter {
             observer.settings.saveHeartbeatsForegroundIntervalSeconds = interval.bound
         }
         return heartbeatsInterval
+    }
+
+    private func buildImageCompressionQuality() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.item.value = .imageCompressionQuality
+        viewModel.title = RuuviLocalization.Defaults.ImageCompressionQuality.title
+        viewModel.integer.value = settings.imageCompressionQuality
+        viewModel.unit = .decimal
+        viewModel.type.value = .stepper
+
+        bind(viewModel.integer, fire: false) { observer, integer in
+            observer.settings.imageCompressionQuality = integer.bound
+        }
+        return viewModel
     }
 
     private func saveAdvertisementsInterval() -> DefaultsViewModel {

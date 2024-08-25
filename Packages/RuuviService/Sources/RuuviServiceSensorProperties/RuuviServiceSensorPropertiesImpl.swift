@@ -83,11 +83,12 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         image: UIImage,
         for sensor: RuuviTagSensor,
         progress: ((MACIdentifier, Double) -> Void)?,
-        maxSize: CGSize
+        maxSize: CGSize,
+        compressionQuality: CGFloat
     ) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
         let croppedImage = coreImage.cropped(image: image, to: maxSize)
-        guard let jpegData = croppedImage.jpegData(compressionQuality: 0.6)
+        guard let jpegData = croppedImage.jpegData(compressionQuality: compressionQuality)
         else {
             promise.fail(error: .failedToGetJpegRepresentation)
             return promise.future
