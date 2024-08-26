@@ -3,6 +3,7 @@ import RuuviLocal
 import RuuviLocalization
 import RuuviOntology
 import RuuviService
+import RuuviUser
 import UIKit
 
 class NotificationsSettingsPresenter: NSObject, NotificationsSettingsModuleInput {
@@ -10,6 +11,7 @@ class NotificationsSettingsPresenter: NSObject, NotificationsSettingsModuleInput
     var router: NotificationsSettingsRouterInput!
 
     var settings: RuuviLocalSettings!
+    var ruuviUser: RuuviUser!
     var ruuviAppSettingsService: RuuviServiceAppSettings!
     var cloudNotificationService: RuuviServiceCloudNotification!
 
@@ -56,8 +58,12 @@ extension NotificationsSettingsPresenter {
         var viewModels: [NotificationsSettingsViewModel] = []
 
         viewModels.append(buildLimitAlertNotificationsSettings())
-        viewModels.append(buildEmailAlertSettings())
-        viewModels.append(buildPushSettings())
+
+        if ruuviUser.isAuthorized {
+            viewModels.append(buildEmailAlertSettings())
+            viewModels.append(buildPushSettings())
+        }
+
         viewModels.append(buildSoundSettings())
 
         settingsViewModels = viewModels
