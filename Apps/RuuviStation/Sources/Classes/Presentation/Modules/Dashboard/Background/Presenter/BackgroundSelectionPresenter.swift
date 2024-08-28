@@ -178,7 +178,7 @@ extension BackgroundSelectionPresenter: PhotoPickerPresenterDelegate {
             image: photo,
             for: ruuviTag,
             maxSize: maxSize,
-            compressionQuality: CGFloat(settings.imageCompressionQuality)*0.1
+            compressionQuality: CGFloat(settings.imageCompressionQuality)/100
         ).on(success: { [weak self] _ in
             self?.viewModel.isUploadingBackground.value = false
             self?.viewModel.background.value = photo
