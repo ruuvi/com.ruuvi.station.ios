@@ -13,6 +13,7 @@ class RuuviLinkTextView: UITextView {
     private var fullTextString: String?
     private var linkString: String?
     private var link: String?
+    private var fontSize: CGFloat = 13
 
     weak var linkDelegate: RuuviLinkTextViewDelegate?
 
@@ -21,7 +22,8 @@ class RuuviLinkTextView: UITextView {
         linkColor: UIColor? = RuuviColor.textColor.color,
         fullTextString: String?,
         linkString: String?,
-        link: String?
+        link: String?,
+        fontSize: CGFloat = 13
     ) {
         self.init()
         textRegularColor = textColor
@@ -29,6 +31,24 @@ class RuuviLinkTextView: UITextView {
         self.fullTextString = fullTextString
         self.linkString = linkString
         self.link = link
+        self.fontSize = fontSize
+        setUpUI()
+    }
+
+    public func setUpComponents(
+        textColor: UIColor? = RuuviColor.textColor.color.withAlphaComponent(0.6),
+        linkColor: UIColor? = RuuviColor.textColor.color,
+        fullTextString: String?,
+        linkString: String?,
+        link: String?,
+        fontSize: CGFloat = 13
+    ) {
+        textRegularColor = textColor
+        textLinkColor = linkColor
+        self.fullTextString = fullTextString
+        self.linkString = linkString
+        self.link = link
+        self.fontSize = fontSize
         setUpUI()
     }
 
@@ -50,12 +70,12 @@ class RuuviLinkTextView: UITextView {
         isSelectable = false
 
         let regularAttributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.Muli(.regular, size: 13),
+            .font: UIFont.Muli(.regular, size: fontSize),
             .foregroundColor: textRegularColor ?? .secondaryLabel,
         ]
 
         let tappableAttributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.Muli(.bold, size: 13),
+            .font: UIFont.Muli(.bold, size: fontSize),
             .foregroundColor: textLinkColor ?? .secondaryLabel,
         ]
 

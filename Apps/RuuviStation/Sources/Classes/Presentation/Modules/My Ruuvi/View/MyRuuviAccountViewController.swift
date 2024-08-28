@@ -6,6 +6,7 @@ class MyRuuviAccountViewController: UIViewController {
     var output: MyRuuviAccountViewOutput!
 
     @IBOutlet weak var dismissButton: UIButton!
+    @IBOutlet weak var supportLinkTextView: RuuviLinkTextView!
     @IBOutlet var headerTitleLabel: UILabel!
     @IBOutlet var loggedInLabel: UILabel!
     @IBOutlet var usernameLabel: UILabel!
@@ -21,6 +22,7 @@ class MyRuuviAccountViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         styleViews()
+        setUpSupportLinkView()
         configureViews()
         localize()
         output.viewDidLoad()
@@ -32,6 +34,17 @@ class MyRuuviAccountViewController: UIViewController {
         usernameLabel.textColor = RuuviColor.textColor.color
         deleteAccountButton.backgroundColor = RuuviColor.orangeColor.color
         signoutButton.backgroundColor = RuuviColor.tintColor.color
+    }
+
+    private func setUpSupportLinkView() {
+        supportLinkTextView.linkDelegate = self
+        supportLinkTextView.setUpComponents(
+            textColor: RuuviColor.textColor.color.withAlphaComponent(0.8),
+            fullTextString: RuuviLocalization.myAccountChangeEmail,
+            linkString: RuuviLocalization.myAccountChangeEmailLinkMarkup,
+            link: RuuviLocalization.myAccountChangeEmailLink,
+            fontSize: 15
+        )
     }
 
     // MARK: - Button actions
@@ -46,6 +59,12 @@ class MyRuuviAccountViewController: UIViewController {
 
     @IBAction func signoutButtonTouchUpInside(_: Any) {
         output.viewDidTapSignoutButton()
+    }
+}
+
+extension MyRuuviAccountViewController: RuuviLinkTextViewDelegate {
+    func didTapLink(url: String) {
+        output.viewDidTriggerSupport(with: url)
     }
 }
 

@@ -16,6 +16,14 @@ class MailComposerPresenterMessageUI: NSObject, MailComposerPresenter {
             errorPresenter.present(error: CoreError.unableToSendEmail)
         }
     }
+
+    func present(email: String) {
+        if let emailURL = URL(string: email), UIApplication.shared.canOpenURL(emailURL) {
+            UIApplication.shared.open(emailURL)
+        } else {
+            errorPresenter.present(error: CoreError.unableToSendEmail)
+        }
+    }
 }
 
 // MARK: - MFMailComposeViewControllerDelegate
