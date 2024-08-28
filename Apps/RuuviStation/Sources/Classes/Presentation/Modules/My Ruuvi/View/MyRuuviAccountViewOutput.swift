@@ -3,4 +3,5 @@ protocol MyRuuviAccountViewOutput {
     func viewDidTapDeleteButton()
     func viewDidTapSignoutButton()
     func viewDidTriggerClose()
+    func viewDidTriggerSupport(with email: String)
 }

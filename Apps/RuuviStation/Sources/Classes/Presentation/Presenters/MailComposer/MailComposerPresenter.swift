@@ -2,6 +2,7 @@ import Foundation
 
 protocol MailComposerPresenter {
     func present(email: String, subject: String, body: String?)
+    func present(email: String)
 }
 
 extension MailComposerPresenter {

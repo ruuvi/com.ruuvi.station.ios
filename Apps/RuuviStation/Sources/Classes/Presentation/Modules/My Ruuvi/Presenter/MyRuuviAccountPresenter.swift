@@ -25,6 +25,7 @@ final class MyRuuviAccountPresenter: MyRuuviAccountModuleInput {
     var pnManager: RuuviCorePN!
     var cloudNotificationService: RuuviServiceCloudNotification!
     var settings: RuuviLocalSettings!
+    var mailComposerPresenter: MailComposerPresenter!
 }
 
 // MARK: - MyRuuviAccountViewOutput
@@ -55,6 +56,10 @@ extension MyRuuviAccountPresenter: MyRuuviAccountViewOutput {
 
     func viewDidTriggerClose() {
         router.dismiss()
+    }
+
+    func viewDidTriggerSupport(with email: String) {
+        mailComposerPresenter.present(email: email)
     }
 }
 
