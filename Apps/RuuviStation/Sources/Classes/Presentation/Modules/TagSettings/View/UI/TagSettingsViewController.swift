@@ -4059,7 +4059,8 @@ extension TagSettingsViewController {
             if minimumBound < 0 {
                 alertMinRangeTextField.addNumericAccessory()
             }
-            if sender == temperatureAlertCell || sender == humidityAlertCell || sender == pressureAlertCell {
+            if sender == temperatureAlertCell || sender == humidityAlertCell ||
+                sender == pressureAlertCell || sender == rssiAlertCell {
                 alertTextField.text = measurementService.string(for: currentLowerBound)
             }
         }
@@ -4076,7 +4077,8 @@ extension TagSettingsViewController {
             if maximumBound <= 0 {
                 alertMaxRangeTextField.addNumericAccessory()
             }
-            if sender == temperatureAlertCell || sender == humidityAlertCell || sender == pressureAlertCell {
+            if sender == temperatureAlertCell || sender == humidityAlertCell ||
+                sender == pressureAlertCell || sender == rssiAlertCell {
                 alertTextField.text = measurementService.string(for: currentUpperBound)
             }
         }
@@ -4092,6 +4094,10 @@ extension TagSettingsViewController {
             guard let maximumInputText = alertMaxRangeTextField.text,
                   maximumInputText.doubleValue <= maximumBound
             else {
+                return
+            }
+
+            guard minimumInputText.doubleValue < maximumInputText.doubleValue else {
                 return
             }
 
