@@ -147,7 +147,8 @@ public extension RuuviNotifierImpl {
             case .cloudConnection:
                 let isCloudConnection = processCloudConnection(
                     alertType: type,
-                    identifier: identifier
+                    identifier: identifier,
+                    record: record
                 )
                 isTriggered = isTriggered || isCloudConnection
                 notify(
@@ -410,7 +411,8 @@ extension RuuviNotifierImpl {
 
     private func processCloudConnection(
         alertType: AlertType,
-        identifier: MACIdentifier?
+        identifier: MACIdentifier?,
+        record: RuuviTagSensorRecord
     ) -> Bool {
         guard let identifier else { return false }
 
@@ -424,19 +426,8 @@ extension RuuviNotifierImpl {
                 byAdding: .second, value: -Int(unseenDuration), to: Date()
             ) ?? Date()
 
-            // Check the last successful system sync with the cloud
-            if let lastSystemCloudSyncDate = localSyncState.getSyncDate() {
-                // If the sync date is earlier than our threshold, don't trigger the alert
-                if lastSystemCloudSyncDate < thresholdDateTime {
-                    return false
-                }
-            }
-
-            // If the system sync is within our threshold, check the measurement date
-            if let measurementDate = localSyncState.getSyncDate(for: identifier) {
-                // If the measurement date is earlier than our threshold, trigger the alert
-                return measurementDate < thresholdDateTime
-            }
+            // If the measurement date is earlier than our threshold, trigger the alert
+            return record.date < thresholdDateTime
         }
 
         // Default case, don't trigger alert
