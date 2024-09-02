@@ -122,6 +122,9 @@ packages:
   FLEX: 
     url: https://github.com/FLEXTool/FLEX.git
     from: 5.22.10
+  xlsxwriter:
+    url: https://github.com/ruuvi/xlsxwriter.swift
+    branch: "SPM"
 
 include:
 - Packages/RuuviAnalytics/target.yml

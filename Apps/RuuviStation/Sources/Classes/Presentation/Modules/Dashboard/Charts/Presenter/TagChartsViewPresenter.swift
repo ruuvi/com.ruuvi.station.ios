@@ -259,9 +259,21 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
         }
     }
 
-    func viewDidTapOnExport() {
+    func viewDidTapOnExportCSV() {
         activityPresenter.show(with: .loading(message: nil))
         exportService.csvLog(for: ruuviTag.id, settings: sensorSettings)
+            .on(success: { [weak self] url in
+                self?.view?.showExportSheet(with: url)
+            }, failure: { [weak self] error in
+                self?.errorPresenter.present(error: error)
+            }, completion: { [weak self] in
+                self?.activityPresenter.dismiss(immediately: true)
+            })
+    }
+
+    func viewDidTapOnExportXLSX() {
+        activityPresenter.show(with: .loading(message: nil))
+        exportService.xlsxLog(for: ruuviTag.id, settings: sensorSettings)
             .on(success: { [weak self] url in
                 self?.view?.showExportSheet(with: url)
             }, failure: { [weak self] error in

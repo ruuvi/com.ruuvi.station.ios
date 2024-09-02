@@ -579,9 +579,14 @@ class TagChartsViewController: UIViewController {
     }
 
     fileprivate func moreButtonOptions(showChartStat: Bool = true) -> UIMenu {
-        let exportHistoryAction = UIAction(title: RuuviLocalization.exportHistory) {
+        let exportHistoryCSVAction = UIAction(title: RuuviLocalization.exportHistory) {
             [weak self] _ in
-            self?.output.viewDidTapOnExport()
+            self?.output.viewDidTapOnExportCSV()
+        }
+
+        let exportHistoryXLSXAction = UIAction(title: RuuviLocalization.exportHistoryXlsx) {
+            [weak self] _ in
+            self?.output.viewDidTapOnExportXLSX()
         }
 
         let clearViewHistory = UIAction(title: RuuviLocalization.clearView) {
@@ -604,7 +609,8 @@ class TagChartsViewController: UIViewController {
         return UIMenu(
             title: "",
             children: [
-                exportHistoryAction,
+                exportHistoryCSVAction,
+                exportHistoryXLSXAction,
                 clearViewHistory,
                 minMaxAvgAction,
             ]

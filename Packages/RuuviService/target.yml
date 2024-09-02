@@ -10,6 +10,7 @@ targets:
     - package: Future
     - package: Humidity
     - package: BTKit
+    - package: xlsxwriter
     - target: RuuviOntology
     - target: RuuviStorage
     - target: RuuviCloud

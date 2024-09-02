@@ -354,6 +354,10 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         syncRecordsOperation(for: sensor, since: since)
             .on(success: { [weak self] result in
                 self?.ruuviLocalSyncState.setDownloadFullHistory(for: sensor.macId, downloadFull: false)
+                self?.ruuviLocalSyncState.setSyncDate(
+                    Date(),
+                    for: sensor.macId
+                )
                 promise.succeed(value: result)
             }, failure: { error in
                 promise.fail(error: error)
@@ -647,10 +651,6 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 if sSelf.ruuviLocalSettings.cloudModeEnabled || isMeasurementNew {
                     sSelf.ruuviPool.updateLast(cloudRecord).on(success: { _ in
                         sSelf.ruuviLocalSyncState.setSyncStatus(.complete, for: ruuviTag.id.mac)
-                        sSelf.ruuviLocalSyncState.setSyncDate(
-                            Date(),
-                            for: ruuviTag.id.mac
-                        )
                         promise.succeed(value: true)
                     }, failure: { error in
                         sSelf.ruuviLocalSyncState.setSyncStatus(.onError, for: ruuviTag.id.mac)
@@ -664,10 +664,6 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 // If no record found, create a new record
                 self?.ruuviPool.createLast(cloudRecord).on(success: { [weak self] _ in
                     self?.ruuviLocalSyncState.setSyncStatus(.complete, for: ruuviTag.id.mac)
-                    self?.ruuviLocalSyncState.setSyncDate(
-                        Date(),
-                        for: ruuviTag.id.mac
-                    )
                     promise.succeed(value: true)
                 }, failure: { [weak self] error in
                     self?.ruuviLocalSyncState.setSyncStatus(.onError, for: ruuviTag.id.mac)
