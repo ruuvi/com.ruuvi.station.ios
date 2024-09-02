@@ -12,10 +12,6 @@ let package = Package(
             targets: ["RuuviOntology"]
         ),
         .library(
-            name: "RuuviOntologyRealm",
-            targets: ["RuuviOntologyRealm"]
-        ),
-        .library(
             name: "RuuviOntologySQLite",
             targets: ["RuuviOntologySQLite"]
         ),
@@ -23,7 +19,6 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/rinat-enikeev/Humidity", from: "0.1.5"),
         .package(url: "https://github.com/ruuvi/BTKit", .upToNextMinor(from: "0.4.3")),
-        .package(name: "Realm", url: "https://github.com/realm/realm-cocoa", .upToNextMajor(from: "10.8.0")),
         .package(name: "GRDB", url: "https://github.com/groue/GRDB.swift", .upToNextMajor(from: "4.14.0")),
     ],
     targets: [
@@ -32,13 +27,6 @@ let package = Package(
             dependencies: [
                 "Humidity",
                 "BTKit",
-            ]
-        ),
-        .target(
-            name: "RuuviOntologyRealm",
-            dependencies: [
-                "RuuviOntology",
-                .product(name: "RealmSwift", package: "Realm"),
             ]
         ),
         .target(
