@@ -1,4 +1,4 @@
-import MobileCoreServices
+import PhotosUI
 import RuuviCore
 import RuuviPresenters
 import UIKit
@@ -9,7 +9,7 @@ class PhotoPickerPresenterSheet: NSObject, PhotoPickerPresenter {
     var permissionPresenter: PermissionPresenter!
 
     func showLibrary() {
-        checkPhotoLibraryPermission()
+        showPhotoLibrary()
     }
 
     func showCameraUI() {
@@ -33,22 +33,33 @@ extension PhotoPickerPresenterSheet: UIImagePickerControllerDelegate, UINavigati
     }
 }
 
+// MARK: - PHPickerViewControllerDelegate
+
+extension PhotoPickerPresenterSheet: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true, completion: { [weak self] in
+            guard let sSelf = self else { return }
+            guard let result = results.first else { return }
+
+            if result.itemProvider.canLoadObject(ofClass: UIImage.self) {
+                result.itemProvider.loadObject(ofClass: UIImage.self) { (object, error) in
+                    guard error == nil else {
+                        return
+                    }
+                    if let image = object as? UIImage {
+                        DispatchQueue.main.async {
+                            sSelf.delegate?.photoPicker(presenter: sSelf, didPick: image)
+                        }
+                    }
+                }
+            }
+        })
+    }
+}
+
 // MARK: - Private
 
 extension PhotoPickerPresenterSheet {
-    private func checkPhotoLibraryPermission() {
-        if permissionsManager.isPhotoLibraryPermissionGranted {
-            showPhotoLibrary()
-        } else {
-            permissionsManager.requestPhotoLibraryPermission { [weak self] granted in
-                if granted {
-                    self?.showPhotoLibrary()
-                } else {
-                    self?.permissionPresenter.presentNoPhotoLibraryPermission()
-                }
-            }
-        }
-    }
 
     private func checkCameraPermission() {
         if permissionsManager.isCameraPermissionGranted {
@@ -66,10 +77,18 @@ extension PhotoPickerPresenterSheet {
 
     private func showPhotoLibrary() {
         guard let viewController = UIApplication.shared.topViewController() else { return }
-        let vc = UIImagePickerController()
-        vc.sourceType = .photoLibrary
-        vc.delegate = self
-        viewController.present(vc, animated: true)
+        presentPhotoPicker(from: viewController)
+    }
+
+    private func presentPhotoPicker(from viewController: UIViewController) {
+        var configuration = PHPickerConfiguration()
+        configuration.filter = .images
+        configuration.selectionLimit = 1
+        configuration.preferredAssetRepresentationMode = .current
+
+        let picker = PHPickerViewController(configuration: configuration)
+        picker.delegate = self
+        viewController.present(picker, animated: true, completion: nil)
     }
 
     private func showCamera() {
