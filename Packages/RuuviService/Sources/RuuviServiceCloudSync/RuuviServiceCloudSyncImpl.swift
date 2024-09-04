@@ -158,14 +158,23 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         }
         URLSession
             .shared
-            .dataTask(with: pictureUrl, completionHandler: { data, _, error in
+            .dataTask(with: pictureUrl,
+                      completionHandler: {
+                data,
+                _,
+                error in
                 if let error {
                     promise.fail(error: .networking(error))
                 } else if let data {
                     if let image = UIImage(data: data) {
+                        // Sync the image with original quality from cloud
                         DispatchQueue.main.async {
                             self.ruuviLocalImages
-                                .setCustomBackground(image: image, for: sensor.id.mac)
+                                .setCustomBackground(
+                                    image: image,
+                                    compressionQuality: 1.0,
+                                    for: sensor.id.mac
+                                )
                                 .on(success: { fileUrl in
                                     self.ruuviLocalImages.setPictureIsCached(for: sensor)
                                     promise.succeed(value: fileUrl)

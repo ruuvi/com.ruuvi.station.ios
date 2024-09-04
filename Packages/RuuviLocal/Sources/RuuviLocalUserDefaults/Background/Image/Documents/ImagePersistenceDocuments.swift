@@ -19,11 +19,15 @@ class ImagePersistenceDocuments: ImagePersistence {
         try? FileManager.default.removeItem(at: url)
     }
 
-    func persistBg(image: UIImage, for identifier: Identifier) -> Future<URL, RuuviLocalError> {
+    func persistBg(
+        image: UIImage,
+        compressionQuality: CGFloat,
+        for identifier: Identifier
+    ) -> Future<URL, RuuviLocalError> {
         let uuid = identifier.value
         let promise = Promise<URL, RuuviLocalError>()
         DispatchQueue.global().async {
-            if let data = image.jpegData(compressionQuality: 1.0) {
+            if let data = image.jpegData(compressionQuality: compressionQuality) {
                 do {
                     let url = try self.getBgDirectory().appendingPathComponent(uuid + self.ext)
                     try data.write(to: url)

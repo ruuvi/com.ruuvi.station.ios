@@ -298,6 +298,8 @@ extension RuuviServiceOwnershipImpl {
         macId: MACIdentifier
     ) {
         if let customImage = localImages.getCustomBackground(for: macId) {
+            // Send the original custom image to cloud. The resize and compression
+            // is already handled at the time of setting it to local.
             if let jpegData = customImage.jpegData(compressionQuality: 1.0) {
                 let remote = cloud.upload(
                     imageData: jpegData,

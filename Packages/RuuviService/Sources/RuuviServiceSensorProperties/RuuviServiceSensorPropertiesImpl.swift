@@ -112,18 +112,34 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
                     },
                     for: mac
                 )
-                local = localImages.setCustomBackground(image: image, for: mac)
+                local = localImages.setCustomBackground(
+                    image: croppedImage,
+                    compressionQuality: compressionQuality,
+                    for: mac
+                )
             } else if let luid {
-                local = localImages.setCustomBackground(image: image, for: luid)
+                local = localImages.setCustomBackground(
+                    image: croppedImage,
+                    compressionQuality: compressionQuality,
+                    for: luid
+                )
             } else {
                 promise.fail(error: .bothLuidAndMacAreNil)
                 return promise.future
             }
         } else {
             if let mac = macId {
-                local = localImages.setCustomBackground(image: image, for: mac)
+                local = localImages.setCustomBackground(
+                    image: croppedImage,
+                    compressionQuality: compressionQuality,
+                    for: mac
+                )
             } else if let luid {
-                local = localImages.setCustomBackground(image: image, for: luid)
+                local = localImages.setCustomBackground(
+                    image: croppedImage,
+                    compressionQuality: compressionQuality,
+                    for: luid
+                )
             } else {
                 promise.fail(error: .bothLuidAndMacAreNil)
                 return promise.future

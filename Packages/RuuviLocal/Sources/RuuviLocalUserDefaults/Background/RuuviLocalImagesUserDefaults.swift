@@ -77,9 +77,17 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
         }
     }
 
-    func setCustomBackground(image: UIImage, for identifier: Identifier) -> Future<URL, RuuviLocalError> {
+    func setCustomBackground(
+        image: UIImage,
+        compressionQuality: CGFloat,
+        for identifier: Identifier
+    ) -> Future<URL, RuuviLocalError> {
         let promise = Promise<URL, RuuviLocalError>()
-        let persist = imagePersistence.persistBg(image: image, for: identifier)
+        let persist = imagePersistence.persistBg(
+            image: image,
+            compressionQuality: compressionQuality,
+            for: identifier
+        )
         persist.on(success: { url in
             self.setBackground(0, for: identifier)
             let userInfoKey: BPDidChangeBackgroundKey
