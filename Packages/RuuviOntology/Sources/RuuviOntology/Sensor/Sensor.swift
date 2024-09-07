@@ -4,6 +4,10 @@ public protocol StringIdentifieable {
     var id: String { get }
 }
 
+public protocol BackgroundScanable {
+    var serviceUUID: String? { get }
+}
+
 public protocol Connectable {
     var isConnectable: Bool { get }
 }
@@ -47,7 +51,8 @@ public protocol CloudSensor: Sensor,
                              HasRemotePicture,
                              Calibratable,
                              Shareable,
-                             HistoryFetchable {}
+                             HistoryFetchable,
+                             BackgroundScanable {}
 
 public protocol Shareable {
     var canShare: Bool { get }

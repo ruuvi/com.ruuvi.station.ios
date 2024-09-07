@@ -15,6 +15,7 @@ class CardsViewModel: NSObject {
     var id: Observable<String?> = .init()
     var luid: Observable<AnyLocalIdentifier?> = .init()
     var mac: Observable<AnyMACIdentifier?> = .init()
+    var serviceUUID: Observable<String?> = .init()
     var name: Observable<String?> = .init()
     var source: Observable<RuuviTagSensorRecordSource?> = .init()
     var temperature: Observable<Temperature?> = .init()
@@ -82,11 +83,12 @@ class CardsViewModel: NSObject {
         if let macId = ruuviTag.macId?.any {
             mac.value = macId
         }
+        serviceUUID.value = ruuviTag.serviceUUID
         name.value = ruuviTag.name
         version.value = ruuviTag.version
         isConnectable.value = ruuviTag.isConnectable
         isChartAvailable.value = ruuviTag.isConnectable || ruuviTag.isCloud
-        isAlertAvailable.value = ruuviTag.isCloud || isConnected.value ?? false
+        isAlertAvailable.value = ruuviTag.isCloud || isConnected.value ?? false || ruuviTag.serviceUUID != nil
         isCloud.value = ruuviTag.isCloud
         isOwner.value = ruuviTag.isOwner
         canShareTag.value =
@@ -111,7 +113,7 @@ class CardsViewModel: NSObject {
                     temperature: record.temperature,
                     voltage: record.voltage
                 )
-        isAlertAvailable.value = isCloud.value ?? false || isConnected.value ?? false
+        isAlertAvailable.value = isCloud.value ?? false || isConnected.value ?? false || serviceUUID.value != nil
     }
 
     func update(with ruuviTag: RuuviTag) {
@@ -132,6 +134,7 @@ class CardsViewModel: NSObject {
         if let macId = ruuviTag.mac?.mac.any {
             mac.value = macId
         }
+        serviceUUID.value = ruuviTag.serviceUUID
         date.value = Date()
         movementCounter.value = ruuviTag.movementCounter
         source.value = ruuviTag.source

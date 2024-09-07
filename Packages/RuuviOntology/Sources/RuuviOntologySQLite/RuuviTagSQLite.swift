@@ -5,6 +5,7 @@ public struct RuuviTagSQLite: RuuviTagSensor, Equatable {
     public var id: String
     public var macId: MACIdentifier?
     public var luid: LocalIdentifier?
+    public var serviceUUID: String?
     public var name: String
     public var version: Int
     public var firmwareVersion: String?
@@ -22,6 +23,7 @@ public struct RuuviTagSQLite: RuuviTagSensor, Equatable {
         id: String,
         macId: MACIdentifier?,
         luid: LocalIdentifier?,
+        serviceUUID: String?,
         name: String,
         version: Int,
         firmwareVersion: String?,
@@ -38,6 +40,7 @@ public struct RuuviTagSQLite: RuuviTagSensor, Equatable {
         self.id = id
         self.macId = macId
         self.luid = luid
+        self.serviceUUID = serviceUUID
         self.name = name
         self.version = version
         self.firmwareVersion = firmwareVersion
@@ -56,6 +59,7 @@ public struct RuuviTagSQLite: RuuviTagSensor, Equatable {
         return lhs.id == rhs.id
         && lhs.macId?.any == rhs.macId?.any
         && lhs.luid?.any == rhs.luid?.any
+        && lhs.serviceUUID == rhs.serviceUUID
         && lhs.name == rhs.name
         && lhs.version == rhs.version
         && lhs.firmwareVersion == rhs.firmwareVersion
@@ -75,6 +79,7 @@ public extension RuuviTagSQLite {
     static let idColumn = Column("id")
     static let macColumn = Column("mac")
     static let luidColumn = Column("luid")
+    static let serviceUUIDColumn = Column("serviceUUID")
     static let nameColumn = Column("name")
     static let versionColumn = Column("version")
     static let firmwareVersionColumn = Column("firmwareVersion")
@@ -99,6 +104,7 @@ extension RuuviTagSQLite: FetchableRecord {
         if let luidColumn = row[RuuviTagSQLite.luidColumn] as? String {
             luid = LocalIdentifierStruct(value: luidColumn)
         }
+        serviceUUID = row[RuuviTagSQLite.serviceUUIDColumn]
         name = row[RuuviTagSQLite.nameColumn]
         version = row[RuuviTagSQLite.versionColumn]
         firmwareVersion = row[RuuviTagSQLite.firmwareVersionColumn]
@@ -127,6 +133,7 @@ extension RuuviTagSQLite: PersistableRecord {
         container[RuuviTagSQLite.idColumn] = id
         container[RuuviTagSQLite.macColumn] = macId?.value
         container[RuuviTagSQLite.luidColumn] = luid?.value
+        container[RuuviTagSQLite.serviceUUIDColumn] = serviceUUID
         container[RuuviTagSQLite.nameColumn] = name
         container[RuuviTagSQLite.versionColumn] = version
         container[RuuviTagSQLite.firmwareVersionColumn] = firmwareVersion
@@ -148,6 +155,7 @@ public extension RuuviTagSQLite {
             table.column(RuuviTagSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
             table.column(RuuviTagSQLite.macColumn.name, .text)
             table.column(RuuviTagSQLite.luidColumn.name, .text)
+            table.column(RuuviTagSQLite.serviceUUIDColumn.name, .text)
             table.column(RuuviTagSQLite.nameColumn.name, .text).notNull()
             table.column(RuuviTagSQLite.versionColumn.name, .integer).notNull()
             table.column(RuuviTagSQLite.firmwareVersionColumn.name, .text)

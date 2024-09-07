@@ -1902,7 +1902,8 @@ extension TagSettingsViewController {
 
     private func alertsAvailable() -> Bool {
         (viewModel?.isCloudAlertsAvailable.value ?? false ||
-            viewModel?.isConnected.value ?? false)
+            viewModel?.isConnected.value ?? false ||
+            viewModel?.serviceUUID.value != nil)
     }
 
     private func reloadAlertSectionHeaders() {
@@ -3319,7 +3320,7 @@ extension TagSettingsViewController {
         if let source {
             var sourceString = emptyString
             switch source {
-            case .advertisement:
+            case .advertisement, .bgAdvertisement:
                 sourceString = RuuviLocalization.TagSettings.DataSource.Advertisement.title
             case .heartbeat:
                 sourceString = RuuviLocalization.TagSettings.DataSource.Heartbeat.title

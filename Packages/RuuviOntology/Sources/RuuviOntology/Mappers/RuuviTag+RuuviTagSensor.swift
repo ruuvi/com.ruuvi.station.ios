@@ -8,6 +8,7 @@ public extension RuuviTag {
             firmwareVersion: nil,
             luid: uuid.luid,
             macId: mac?.mac,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: false,

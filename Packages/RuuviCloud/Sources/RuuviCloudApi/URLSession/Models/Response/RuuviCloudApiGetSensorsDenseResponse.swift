@@ -6,6 +6,7 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
 
     public struct CloudApiSensor: Decodable {
         public let sensor: String
+        public let serviceUUID: String?
         public let owner: String
         public let name: String
         public let picture: String
@@ -21,6 +22,7 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
 
         enum CodingKeys: String, CodingKey {
             case sensor
+            case serviceUUID
             case owner
             case name
             case picture

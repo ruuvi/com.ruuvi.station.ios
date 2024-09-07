@@ -4,6 +4,7 @@ import Humidity
 public enum RuuviTagSensorRecordSource: String {
     case unknown
     case advertisement
+    case bgAdvertisement
     case log
     case heartbeat
     case ruuviNetwork

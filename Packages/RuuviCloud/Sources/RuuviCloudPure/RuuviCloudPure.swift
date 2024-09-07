@@ -807,6 +807,7 @@ public final class RuuviCloudPure: RuuviCloud {
                     RuuviCloudSensorDense(
                         sensor: CloudSensorStruct(
                             id: sensor.sensor,
+                            serviceUUID: sensor.serviceUUID,
                             name: sensor.name,
                             isClaimed: true,
                             isOwner: sensor.owner == self?.user.email,

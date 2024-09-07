@@ -222,6 +222,17 @@ extension SQLiteGRDBDatabase {
         migrator.registerMigration("Create RuuviCloudSensorSubscription table") { db in
             try RuuviCloudSensorSubscriptionSQLite.createTable(in: db)
         }
+        // v14
+        migrator.registerMigration("Create RuuviTagSQLite serviceUUID column") { db in
+            guard try db.columns(in: RuuviTagSQLite.databaseTableName)
+                .contains(where: { $0.name == RuuviTagSQLite.serviceUUIDColumn.name }) == false
+            else {
+                return
+            }
+            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { t in
+                t.add(column: RuuviTagSQLite.serviceUUIDColumn.name, .text)
+            })
+        }
 
         try migrator.migrate(dbPool)
     }

@@ -428,6 +428,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                     firmwareVersion: nil,
                     luid: uuid.luid,
                     macId: uuid.mac,
+                    serviceUUID: nil,
                     isConnectable: true,
                     name: "",
                     isClaimed: false,
@@ -456,6 +457,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                     firmwareVersion: nil,
                     luid: uuid.luid,
                     macId: uuid.mac,
+                    serviceUUID: nil,
                     isConnectable: true,
                     name: "",
                     isClaimed: false,
@@ -610,7 +612,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
 
     private func ruuviTag(
         for uuid: String,
-        completion: @escaping(AnyRuuviTagSensor) -> Void
+        completion: @escaping (AnyRuuviTagSensor) -> Void
     ) {
         ruuviStorage.readOne(uuid).on(success: completion)
     }
