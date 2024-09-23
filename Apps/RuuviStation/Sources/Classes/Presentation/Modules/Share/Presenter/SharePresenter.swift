@@ -57,13 +57,13 @@ extension SharePresenter: ShareViewOutput {
 
         activityPresenter.show(with: .loading(message: nil))
         ruuviOwnershipService
-            .share(macId: sensor.id.mac, with: email)
+            .share(macId: sensor.id.mac, with: email.lowercased())
             .on(success: { [weak self] result in
                 self?.view.clearInput()
                 if let invited = result.invited, invited {
                     self?.view.showSuccessfullyInvited()
                 } else {
-                    self?.updateShared(email: email, add: true)
+                    self?.updateShared(email: email.lowercased(), add: true)
                     self?.view.showSuccessfullyShared()
                 }
 
@@ -77,9 +77,9 @@ extension SharePresenter: ShareViewOutput {
     private func unshareTag(_ email: String) {
         activityPresenter.show(with: .loading(message: nil))
         ruuviOwnershipService
-            .unshare(macId: sensor.id.mac, with: email)
+            .unshare(macId: sensor.id.mac, with: email.lowercased())
             .on(success: { [weak self] _ in
-                self?.updateShared(email: email, add: false)
+                self?.updateShared(email: email.lowercased(), add: false)
             }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in
@@ -94,7 +94,9 @@ extension SharePresenter: ShareViewOutput {
             return
         }
         let title: String? = nil
-        let message = RuuviLocalization.SharePresenter.UnshareSensor.message(email)
+        let message = RuuviLocalization.SharePresenter.UnshareSensor.message(
+            email.lowercased()
+        )
         let confirmActionTitle = RuuviLocalization.yes
         let cancelActionTitle = RuuviLocalization.no
         let confirmAction = UIAlertAction(
@@ -184,7 +186,7 @@ extension SharePresenter {
     }
 
     private func updateViewModel() {
-        viewModel.sharedEmails.value = sensor.sharedTo
+        viewModel.sharedEmails.value = sensor.sharedTo.map({ $0.lowercased() })
         viewModel.canShare.value = sensor.canShare
         view.reloadTableView()
     }

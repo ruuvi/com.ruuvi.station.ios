@@ -37,7 +37,7 @@ extension MenuPresenter: MenuViewOutput {
     }
 
     var userEmail: String? {
-        ruuviUser.email
+        ruuviUser.email?.lowercased()
     }
 
     func viewDidTapOnDimmingView() {

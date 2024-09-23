@@ -13,10 +13,10 @@ final class RuuviUserCoordinator: RuuviUser {
 
     var email: String? {
         get {
-            keychainService.userApiEmail
+            keychainService.userApiEmail?.lowercased()
         }
         set {
-            keychainService.userApiEmail = newValue
+            keychainService.userApiEmail = newValue?.lowercased()
         }
     }
 

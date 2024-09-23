@@ -551,7 +551,7 @@ extension TagSettingsPresenter {
 
         // Not set / Someone else / email of the one who shared the sensor with you / You
         if let owner = ruuviTag.owner {
-            viewModel.owner.value = owner
+            viewModel.owner.value = owner.lowercased()
         } else {
             viewModel.owner.value = RuuviLocalization.TagSettings.General.Owner.none
         }

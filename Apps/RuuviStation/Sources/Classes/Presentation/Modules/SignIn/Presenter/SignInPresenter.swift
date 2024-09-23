@@ -77,7 +77,7 @@ extension SignInPresenter: SignInViewOutput {
         }
         switch state {
         case .enterEmail:
-            sendVerificationCode(for: email)
+            sendVerificationCode(for: email.lowercased())
         default:
             return
         }
@@ -164,7 +164,7 @@ extension SignInPresenter {
         ruuviCloud.validateCode(code: code)
             .on(success: { [weak self] result in
                 guard let sSelf = self else { return }
-                if sSelf.ruuviUser.email == result.email {
+                if sSelf.ruuviUser.email == result.email.lowercased() {
                     if !sSelf.settings.signedInAtleastOnce {
                         sSelf.settings.signedInAtleastOnce = true
                     }
@@ -178,7 +178,7 @@ extension SignInPresenter {
                     sSelf.activityPresenter.dismiss()
                     sSelf.view.showEmailsAreDifferent(
                         requestedEmail: requestedEmail,
-                        validatedEmail: result.email
+                        validatedEmail: result.email.lowercased()
                     )
                 } else {
                     sSelf.view.showFailedToGetRequestedEmail()
