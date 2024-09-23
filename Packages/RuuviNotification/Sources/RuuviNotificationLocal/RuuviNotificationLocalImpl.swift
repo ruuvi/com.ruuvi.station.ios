@@ -610,7 +610,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
 
     private func ruuviTag(
         for uuid: String,
-        completion: @escaping(AnyRuuviTagSensor) -> Void
+        completion: @escaping (AnyRuuviTagSensor) -> Void
     ) {
         ruuviStorage.readOne(uuid).on(success: completion)
     }
