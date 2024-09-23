@@ -36,7 +36,7 @@ extension MyRuuviAccountPresenter: MyRuuviAccountViewOutput {
     }
 
     func viewDidTapDeleteButton() {
-        guard let email = ruuviUser.email else { return }
+        guard let email = ruuviUser.email?.lowercased() else { return }
         activityPresenter.show(with: .loading(message: nil))
         ruuviCloud.deleteAccount(email: email).on(success: {
             [weak self] _ in
@@ -59,7 +59,7 @@ extension MyRuuviAccountPresenter: MyRuuviAccountViewOutput {
     }
 
     func viewDidTriggerSupport(with email: String) {
-        mailComposerPresenter.present(email: email)
+        mailComposerPresenter.present(email: email.lowercased())
     }
 }
 
@@ -69,7 +69,7 @@ extension MyRuuviAccountPresenter {
     private func syncViewModel() {
         let viewModel = MyRuuviAccountViewModel()
         if ruuviUser.isAuthorized {
-            viewModel.username.value = ruuviUser.email
+            viewModel.username.value = ruuviUser.email?.lowercased()
         }
         view.viewModel = viewModel
     }

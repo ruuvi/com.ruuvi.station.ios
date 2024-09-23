@@ -149,7 +149,9 @@ extension SignInVerifyView: RuuviCodeViewDelegate {
 extension SignInVerifyView {
     func updateMessage(with email: String?) {
         guard let email else { return }
-        subtitleLabel.text = RuuviLocalization.SignIn.checkMailbox(email)
+        subtitleLabel.text = RuuviLocalization.SignIn.checkMailbox(
+            email.lowercased()
+        )
     }
 
     func populate(from code: String?) {

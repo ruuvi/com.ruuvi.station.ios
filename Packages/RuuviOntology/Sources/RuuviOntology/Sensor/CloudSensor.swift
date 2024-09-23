@@ -24,9 +24,9 @@ public extension CloudSensor {
         CloudSensorStruct(
             id: id,
             name: name,
-            isClaimed: email == owner,
-            isOwner: email == owner,
-            owner: owner,
+            isClaimed: email.lowercased() == owner?.lowercased(),
+            isOwner: email.lowercased() == owner?.lowercased(),
+            owner: owner?.lowercased(),
             ownersPlan: ownersPlan,
             picture: picture,
             offsetTemperature: offsetTemperature,
@@ -119,7 +119,7 @@ public struct AnyCloudSensor: CloudSensor, Equatable, Hashable, Reorderable {
     }
 
     public var owner: String? {
-        object.owner
+        object.owner?.lowercased()
     }
 
     public var ownersPlan: String? {

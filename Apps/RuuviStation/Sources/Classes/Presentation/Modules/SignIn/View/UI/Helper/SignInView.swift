@@ -186,10 +186,10 @@ extension SignInView {
 extension SignInView {
     func enteredEmail() -> String? {
         let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        return email
+        return email?.lowercased()
     }
 
     func populateEmail(from value: String?) {
-        emailTextField.text = value
+        emailTextField.text = value?.lowercased()
     }
 }

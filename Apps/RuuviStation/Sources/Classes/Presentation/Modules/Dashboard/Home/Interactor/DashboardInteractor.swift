@@ -76,8 +76,8 @@ extension DashboardInteractor: DashboardInteractorInput {
                     return
                 }
                 sSelf.ruuviPool.update(ruuviTag
-                    .with(owner: owner)
-                    .with(isOwner: owner == sSelf.ruuviUser.email))
+                    .with(owner: owner.lowercased())
+                    .with(isOwner: owner.lowercased() == sSelf.ruuviUser.email))
             })
     }
 }
