@@ -426,6 +426,14 @@ extension RuuviNotifierImpl {
                 byAdding: .second, value: -Int(unseenDuration), to: Date()
             ) ?? Date()
 
+            // Check the last successful system sync with the cloud
+            if let lastSystemCloudSyncDate = localSyncState.getSyncDate() {
+                // If the sync date is earlier than our threshold, don't trigger the alert
+                if lastSystemCloudSyncDate < thresholdDateTime {
+                    return false
+                }
+            }
+
             // If the measurement date is earlier than our threshold, trigger the alert
             return record.date < thresholdDateTime
         }
