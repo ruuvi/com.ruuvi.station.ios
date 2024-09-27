@@ -144,7 +144,7 @@ extension RuuviServiceExportImpl {
             let measurementSequenceNumber = log.measurementSequenceNumber.map { "\($0)" } ?? emptyValueString
             let txPower = log.txPower.map { "\($0)" } ?? emptyValueString
 
-            return [
+            var exportableData = [
                 date,
                 temperature,
                 humidity,
@@ -158,6 +158,13 @@ extension RuuviServiceExportImpl {
                 measurementSequenceNumber,
                 txPower,
             ]
+
+            if ruuviLocalSettings.includeDataSourceInHistoryExport {
+                let dataSource = log.source.rawValue
+                exportableData.append(dataSource)
+            }
+
+            return exportableData
         }
     }
 
@@ -174,7 +181,10 @@ extension RuuviServiceExportImpl {
 
         queue.async {
             autoreleasepool {
-                let headers = self.headersProvider.getHeaders(self.measurementService.units)
+                let headers = self.headersProvider.getHeaders(
+                    self.measurementService.units,
+                    settings: self.ruuviLocalSettings
+                )
                 var csvText = headers.joined(separator: ",") + "\n"
                 let rows = self.formatRows(for: records)
 
@@ -216,7 +226,10 @@ extension RuuviServiceExportImpl {
                 let ws = wb.addWorksheet()
 
                 // Write headers
-                let headers = self.headersProvider.getHeaders(self.measurementService.units)
+                let headers = self.headersProvider.getHeaders(
+                    self.measurementService.units,
+                    settings: self.ruuviLocalSettings
+                )
                 for (index, header) in headers.enumerated() {
                     ws.write(.string(header), [0, index])
                 }

@@ -71,6 +71,7 @@ extension DefaultsPresenter {
             buildDoIndividualHistorySync(),
             buildDoLegacyHistorySync(),
             buildDoHistorySyncAfterSignIn(),
+            buildIncludeDataSourceInHistoryExport(),
         ]
     }
 
@@ -470,6 +471,20 @@ extension DefaultsPresenter {
 
         bind(viewModel.boolean, fire: false) { observer, bool in
             observer.settings.historySyncForEachSensor = GlobalHelpers.getBool(from: bool)
+        }
+
+        return viewModel
+    }
+
+    private func buildIncludeDataSourceInHistoryExport() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = RuuviLocalization.Defaults.IncludeDataSourceInHistoryExport.title
+        viewModel.boolean.value = settings.includeDataSourceInHistoryExport
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, bool in
+            observer.settings.includeDataSourceInHistoryExport = GlobalHelpers.getBool(from: bool)
         }
 
         return viewModel
