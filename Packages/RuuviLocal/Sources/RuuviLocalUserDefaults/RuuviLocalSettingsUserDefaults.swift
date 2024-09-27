@@ -748,6 +748,8 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     var historySyncOnDashboard: Bool
     @UserDefault("SettingsUserDefaults.historySyncForEachSensor", defaultValue: true)
     var historySyncForEachSensor: Bool
+    @UserDefault("SettingsUserDefaults.includeDataSourceInHistoryExport", defaultValue: false)
+    var includeDataSourceInHistoryExport: Bool
 
     private let dashboardSignInBannerHiddenUDKey = "SettingsUserDefaults.dashboardSignInBannerHiddenUDKey"
     func dashboardSignInBannerHidden(for version: String) -> Bool {

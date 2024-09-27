@@ -1,13 +1,18 @@
 import Foundation
+import RuuviLocal
 import RuuviLocalization
 import RuuviService
 
 struct ExportHeadersProvider: RuuviServiceExportHeaders {
-    func getHeaders(_ units: RuuviServiceMeasurementSettingsUnit) -> [String] {
+    func getHeaders(
+        _ units: RuuviServiceMeasurementSettingsUnit,
+        settings: RuuviLocalSettings
+    ) -> [String] {
         let tempFormat = RuuviLocalization.ExportService.temperature
         let pressureFormat = RuuviLocalization.ExportService.pressure
         let humidityFormat = RuuviLocalization.ExportService.humidity
-        return [
+
+        var headers = [
             RuuviLocalization.ExportService.date,
             tempFormat(units.temperatureUnit.symbol),
             units.humidityUnit == .dew
@@ -23,5 +28,11 @@ struct ExportHeadersProvider: RuuviServiceExportHeaders {
             RuuviLocalization.ExportService.measurementSequenceNumber,
             RuuviLocalization.ExportService.txPower + " (\(RuuviLocalization.dBm))",
         ]
+
+        if settings.includeDataSourceInHistoryExport {
+            headers.append(RuuviLocalization.ExportService.dataSource)
+        }
+
+        return headers
     }
 }

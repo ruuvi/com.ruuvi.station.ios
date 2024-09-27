@@ -1,5 +1,6 @@
 import Foundation
 import Future
+import RuuviLocal
 import RuuviOntology
 
 public protocol RuuviServiceExport {
@@ -8,5 +9,8 @@ public protocol RuuviServiceExport {
 }
 
 public protocol RuuviServiceExportHeaders {
-    func getHeaders(_ units: RuuviServiceMeasurementSettingsUnit) -> [String]
+    func getHeaders(
+        _ units: RuuviServiceMeasurementSettingsUnit,
+        settings: RuuviLocalSettings
+    ) -> [String]
 }

@@ -110,6 +110,7 @@ public protocol RuuviLocalSettings {
     /// Syncs full history for each sensor when associated charts
     /// is presented. Much efficient.
     var historySyncForEachSensor: Bool { get set }
+    var includeDataSourceInHistoryExport: Bool { get set }
 
     var customTempAlertLowerBound: Double { get set }
     var customTempAlertUpperBound: Double { get set }
