@@ -18,7 +18,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/rinat-enikeev/Humidity", from: "0.1.5"),
-        .package(url: "https://github.com/ruuvi/BTKit", .upToNextMinor(from: "0.4.3")),
+        .package(url: "https://github.com/ruuvi/BTKit", branch: "master"),
         .package(name: "GRDB", url: "https://github.com/groue/GRDB.swift", .upToNextMajor(from: "4.14.0")),
     ],
     targets: [

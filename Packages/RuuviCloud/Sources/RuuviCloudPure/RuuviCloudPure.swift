@@ -807,6 +807,7 @@ public final class RuuviCloudPure: RuuviCloud {
                     RuuviCloudSensorDense(
                         sensor: CloudSensorStruct(
                             id: sensor.sensor,
+                            serviceUUID: nil,
                             name: sensor.name,
                             isClaimed: true,
                             isOwner: sensor.owner == self?.user.email,
@@ -1326,6 +1327,7 @@ public final class RuuviCloudPure: RuuviCloud {
                 source: .ruuviNetwork,
                 macId: macId,
                 rssi: rssi,
+                version: tag.version,
                 temperature: tag.temperature,
                 humidity: tag.humidity,
                 pressure: tag.pressure,
@@ -1365,6 +1367,7 @@ public final class RuuviCloudPure: RuuviCloud {
             source: .ruuviNetwork,
             macId: macId,
             rssi: record.rssi,
+            version: tag.version,
             temperature: tag.temperature,
             humidity: tag.humidity,
             pressure: tag.pressure,

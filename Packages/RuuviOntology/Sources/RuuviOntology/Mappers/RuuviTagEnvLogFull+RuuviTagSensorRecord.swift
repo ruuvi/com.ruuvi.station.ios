@@ -34,6 +34,7 @@ extension RuuviTagEnvLogFull {
             source: .log,
             macId: mac?.mac,
             rssi: nil,
+            version: 0,
             temperature: unitTemperature,
             humidity: unitHumidity,
             pressure: unitPressure,

@@ -24,6 +24,7 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
 
     private var ruuviTags = [AnyRuuviTagSensor]()
     private var sensorSettingsList = [SensorSettings]()
+    private var observeTokens = [ObservationToken]()
     private var connectTokens = [String: ObservationToken]()
     private var disconnectTokens = [String: ObservationToken]()
     private var connectionAddedToken: NSObjectProtocol?
@@ -180,6 +181,7 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
         ruuviStorage.readAll().on(success: { [weak self] sensors in
             self?.ruuviTags = sensors
             self?.handleRuuviTagsChange()
+            self?.restartObserving()
         })
     }
 
@@ -247,14 +249,16 @@ extension RuuviTagHeartbeatDaemonBTKit {
                             self.createRecords(
                                 observer: observer,
                                 ruuviTag: ruuviTag,
-                                uuid: uuid
+                                uuid: uuid,
+                                source: .heartbeat
                             )
                         }
                     } else {
                         self.createRecords(
                             observer: observer,
                             ruuviTag: ruuviTag,
-                            uuid: uuid
+                            uuid: uuid,
+                            source: .heartbeat
                         )
                     }
                 }
@@ -286,9 +290,10 @@ extension RuuviTagHeartbeatDaemonBTKit {
     private func createRecords(
         observer: RuuviTagHeartbeatDaemonBTKit,
         ruuviTag: RuuviTag,
-        uuid: String
+        uuid: String,
+        source: RuuviTagSensorRecordSource
     ) {
-        createRecord(observer: observer, ruuviTag: ruuviTag, uuid: uuid)
+        createRecord(observer: observer, ruuviTag: ruuviTag, uuid: uuid, source: source)
         heartbeatQueue.async { [weak observer] in
             observer?.savedDate[uuid] = Date()
         }
@@ -297,24 +302,32 @@ extension RuuviTagHeartbeatDaemonBTKit {
     private func createRecord(
         observer: RuuviTagHeartbeatDaemonBTKit,
         ruuviTag: RuuviTag,
-        uuid: String
+        uuid: String,
+        source: RuuviTagSensorRecordSource
     ) {
         observer.ruuviPool.create(
             ruuviTag
-                .with(source: .heartbeat)
-        ).on(success: { [weak self] _ in
-            self?.createLastRecord(observer: observer, ruuviTag: ruuviTag, uuid: uuid)
+                .with(source: source)
+        ).on(
+            success: { [weak self] _ in
+                self?.createLastRecord(
+                    observer: observer,
+                    ruuviTag: ruuviTag,
+                    uuid: uuid,
+                    source: source
+                )
         })
     }
 
     private func createLastRecord(
         observer: RuuviTagHeartbeatDaemonBTKit,
         ruuviTag: RuuviTag,
-        uuid: String
+        uuid: String,
+        source: RuuviTagSensorRecordSource
     ) {
         if let tag = ruuviTags.first(where: { $0.luid?.value == uuid }) {
             ruuviStorage.readLatest(tag).on(success: { localRecord in
-                let record = ruuviTag.with(source: .heartbeat)
+                let record = ruuviTag.with(source: source)
                 if let localRecord,
                    record.macId?.value == localRecord.macId?.value {
                     observer.ruuviPool.updateLast(record)
@@ -354,6 +367,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
             }
         }
         restartSensorSettingsObservers()
+        restartObserving()
     }
 
     @objc private func connect(uuid: String) {
@@ -387,6 +401,8 @@ extension RuuviTagHeartbeatDaemonBTKit {
     private func invalidateTokens() {
         autoreleasepool {
             ruuviTagsToken?.invalidate()
+            observeTokens.forEach { $0.invalidate() }
+            observeTokens.removeAll()
             connectTokens.values.forEach { $0.invalidate() }
             connectTokens.removeAll()
             disconnectTokens.values.forEach { $0.invalidate() }
@@ -432,6 +448,77 @@ extension RuuviTagHeartbeatDaemonBTKit {
 // MARK: - Sensor Settings
 
 extension RuuviTagHeartbeatDaemonBTKit {
+
+    // swiftlint:disable:next function_body_length
+    private func restartObserving() {
+        observeTokens.forEach { $0.invalidate() }
+        observeTokens.removeAll()
+
+        for ruuviTag in ruuviTags {
+
+            let shouldAvoidObserving =
+                (settings.cloudModeEnabled && ruuviTag.isCloud) || settings.appIsOnForeground
+            if shouldAvoidObserving {
+                continue
+            }
+            guard let serviceUUID = ruuviTag.serviceUUID else { continue }
+            observeTokens.append(
+                background.observe(
+                    self,
+                    uuid: serviceUUID,
+                    options: [.callbackQueue(.untouch)]
+                ) {
+                    [weak self] _, device in
+                    guard let sSelf = self else { return }
+
+                    if let ruuviTag = device.ruuvi?.tag, ruuviTag.vC5?.serviceUUID != nil {
+                        var sensorSettings: SensorSettings?
+                        if let ruuviTagSensor = sSelf.ruuviTags
+                            .first(where: {
+                                ($0.macId?.value != nil && $0.macId?.value == ruuviTag.mac)
+                                || ($0.luid?.any != nil && $0.luid?.any == ruuviTag.luid?.any)
+                            }),
+                           let settings = sSelf.sensorSettingsList
+                            .first(where: {
+                                ($0.luid?.any != nil && $0.luid?.any == ruuviTagSensor.luid?.any)
+                                || ($0.macId?.any != nil && $0.macId?.any == ruuviTagSensor.macId?.any)
+                            }) {
+                            sensorSettings = settings
+                        }
+                        sSelf.alertHandler.process(
+                            record: ruuviTag
+                                .with(sensorSettings: sensorSettings)
+                                .with(source: .bgAdvertisement),
+                            trigger: true
+                        )
+                        if sSelf.settings.saveHeartbeats {
+                            let uuid = ruuviTag.uuid
+                            guard ruuviTag.luid != nil, ruuviTag.vC5?.serviceUUID != nil else { return }
+                            let interval = sSelf.settings.saveHeartbeatsForegroundIntervalSeconds
+                            if let date = sSelf.savedDate[uuid] {
+                                if Date().timeIntervalSince(date) > TimeInterval(interval) {
+                                    sSelf.createRecords(
+                                        observer: sSelf,
+                                        ruuviTag: ruuviTag,
+                                        uuid: uuid,
+                                        source: .bgAdvertisement
+                                    )
+                                }
+                            } else {
+                                sSelf.createRecords(
+                                    observer: sSelf,
+                                    ruuviTag: ruuviTag,
+                                    uuid: uuid,
+                                    source: .bgAdvertisement
+                                )
+                            }
+                        }
+                    }
+                }
+            )
+        }
+    }
+
     private func restartSensorSettingsObservers() {
         sensorSettingsTokens.forEach { $0.value.invalidate() }
         sensorSettingsTokens.removeAll()

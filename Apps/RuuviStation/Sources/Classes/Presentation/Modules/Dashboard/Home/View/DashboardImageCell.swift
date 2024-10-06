@@ -222,7 +222,7 @@ class DashboardImageCell: DashboardCell {
             switch source {
             case .unknown:
                 dataSourceIconView.image = nil
-            case .advertisement:
+            case .advertisement, .bgAdvertisement:
                 dataSourceIconView.image = RuuviAsset.iconBluetooth.image
             case .heartbeat, .log:
                 dataSourceIconView.image = RuuviAsset.iconBluetoothConnected.image
@@ -256,7 +256,9 @@ class DashboardImageCell: DashboardCell {
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     override func restartAlertAnimation(for viewModel: CardsViewModel) {
         // Alert
-        let alertVisible = viewModel.isCloud.value ?? false || viewModel.isConnected.value ?? false
+        let alertVisible = viewModel.isCloud.value ?? false ||
+            viewModel.isConnected.value ?? false ||
+            viewModel.serviceUUID.value != nil
 
         let mutedTills = [
             viewModel.temperatureAlertMutedTill.value,

@@ -15,6 +15,7 @@ class CardsViewModel: NSObject {
     var id: Observable<String?> = .init()
     var luid: Observable<AnyLocalIdentifier?> = .init()
     var mac: Observable<AnyMACIdentifier?> = .init()
+    var serviceUUID: Observable<String?> = .init()
     var name: Observable<String?> = .init()
     var source: Observable<RuuviTagSensorRecordSource?> = .init()
     var temperature: Observable<Temperature?> = .init()
@@ -82,11 +83,12 @@ class CardsViewModel: NSObject {
         if let macId = ruuviTag.macId?.any {
             mac.value = macId
         }
+        serviceUUID.value = ruuviTag.serviceUUID
         name.value = ruuviTag.name
         version.value = ruuviTag.version
         isConnectable.value = ruuviTag.isConnectable
-        isChartAvailable.value = ruuviTag.isConnectable || ruuviTag.isCloud
-        isAlertAvailable.value = ruuviTag.isCloud || isConnected.value ?? false
+        isChartAvailable.value = ruuviTag.isConnectable || ruuviTag.isCloud || ruuviTag.serviceUUID != nil
+        isAlertAvailable.value = ruuviTag.isCloud || isConnected.value ?? false || ruuviTag.serviceUUID != nil
         isCloud.value = ruuviTag.isCloud
         isOwner.value = ruuviTag.isOwner
         canShareTag.value =
@@ -111,7 +113,7 @@ class CardsViewModel: NSObject {
                     temperature: record.temperature,
                     voltage: record.voltage
                 )
-        isAlertAvailable.value = isCloud.value ?? false || isConnected.value ?? false
+        isAlertAvailable.value = isCloud.value ?? false || isConnected.value ?? false || serviceUUID.value != nil
     }
 
     func update(with ruuviTag: RuuviTag) {
@@ -122,8 +124,15 @@ class CardsViewModel: NSObject {
                ruuviTag.isConnectable {
                 isChartAvailable.value = true
             }
+        } else {
+            if let isChart = isChartAvailable.value,
+               !isChart,
+               ruuviTag.serviceUUID != nil {
+                isChartAvailable.value = true
+            }
         }
-        isAlertAvailable.value = isCloud.value ?? false || ruuviTag.isConnected
+        isAlertAvailable.value = isCloud.value ?? false ||
+            ruuviTag.isConnected || ruuviTag.serviceUUID != nil
         temperature.value = ruuviTag.temperature
         humidity.value = ruuviTag.humidity
         pressure.value = ruuviTag.pressure
@@ -132,6 +141,7 @@ class CardsViewModel: NSObject {
         if let macId = ruuviTag.mac?.mac.any {
             mac.value = macId
         }
+        serviceUUID.value = ruuviTag.serviceUUID
         date.value = Date()
         movementCounter.value = ruuviTag.movementCounter
         source.value = ruuviTag.source

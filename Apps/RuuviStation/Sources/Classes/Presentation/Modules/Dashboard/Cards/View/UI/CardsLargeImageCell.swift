@@ -334,7 +334,7 @@ extension CardsLargeImageCell {
             switch source {
             case .unknown:
                 dataSourceIconView.image = nil
-            case .advertisement:
+            case .advertisement, .bgAdvertisement:
                 dataSourceIconView.image = RuuviAsset.iconBluetooth.image
             case .heartbeat, .log:
                 dataSourceIconView.image = RuuviAsset.iconBluetoothConnected.image

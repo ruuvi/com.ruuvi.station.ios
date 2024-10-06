@@ -25,6 +25,8 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         case df4_tags(Int)
         // Quantity of tags using data format 5
         case df5_tags(Int)
+        // Quantity of tags using data format C5
+        case dfC5_tags(Int)
         // Background scan enabled or not (true/false)
         case backgroundScanEnabled(Bool)
         // Background scan interval (seconds)
@@ -80,6 +82,8 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
                 "use_df4"
             case .df5_tags:
                 "use_df5"
+            case .dfC5_tags:
+                "use_dfC5"
             case .backgroundScanEnabled:
                 "background_scan_enabled"
             case .backgroundScanInterval:
@@ -201,6 +205,7 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
              let .df3_tags(count),
              let .df4_tags(count),
              let .df5_tags(count),
+             let .dfC5_tags(count),
              let .alertTemperature(count),
              let .alertHumidity(count),
              let .alertPressure(count),

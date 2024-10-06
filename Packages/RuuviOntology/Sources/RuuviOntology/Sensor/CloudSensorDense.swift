@@ -38,6 +38,10 @@ public struct AnyCloudSensorDense: CloudSensor, Equatable, Hashable, Reorderable
         sensor.id
     }
 
+    public var serviceUUID: String? {
+        sensor.serviceUUID
+    }
+
     public var name: String {
         sensor.name
     }
@@ -166,5 +170,9 @@ extension AnyCloudSensorDense: RuuviTagSensorRecord {
 
     public var pressureOffset: Double {
         record.pressureOffset
+    }
+
+    public var version: Int {
+        record.version
     }
 }

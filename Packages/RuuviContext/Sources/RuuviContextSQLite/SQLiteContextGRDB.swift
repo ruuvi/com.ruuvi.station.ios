@@ -222,6 +222,38 @@ extension SQLiteGRDBDatabase {
         migrator.registerMigration("Create RuuviCloudSensorSubscription table") { db in
             try RuuviCloudSensorSubscriptionSQLite.createTable(in: db)
         }
+        // v14
+        migrator.registerMigration("Create RuuviTagSQLite serviceUUID column") { db in
+            guard try db.columns(in: RuuviTagSQLite.databaseTableName)
+                .contains(where: { $0.name == RuuviTagSQLite.serviceUUIDColumn.name }) == false
+            else {
+                return
+            }
+            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { t in
+                t.add(column: RuuviTagSQLite.serviceUUIDColumn.name, .text)
+            })
+        }
+        // v15
+        migrator.registerMigration("Create RuuviTagDataSQLite version column") { db in
+            guard try db.columns(in: RuuviTagDataSQLite.databaseTableName)
+                .contains(where: { $0.name == RuuviTagDataSQLite.versionColumn.name }) == false
+            else {
+                return
+            }
+            try db.alter(table: RuuviTagDataSQLite.databaseTableName, body: { t in
+                t.add(column: RuuviTagDataSQLite.versionColumn.name, .integer)
+            })
+        }
+        migrator.registerMigration("Create RuuviTagLatestDataSQLite version column") { db in
+            guard try db.columns(in: RuuviTagLatestDataSQLite.databaseTableName)
+                .contains(where: { $0.name == RuuviTagLatestDataSQLite.versionColumn.name }) == false
+            else {
+                return
+            }
+            try db.alter(table: RuuviTagLatestDataSQLite.databaseTableName, body: { t in
+                t.add(column: RuuviTagLatestDataSQLite.versionColumn.name, .integer)
+            })
+        }
 
         try migrator.migrate(dbPool)
     }

@@ -16,6 +16,7 @@ extension RuuviTagSensorRecordStruct {
             source: .ruuviNetwork,
             macId: nil,
             rssi: nil,
+            version: 5,
             temperature: Temperature(69.50),
             humidity: nil,
             pressure: nil,

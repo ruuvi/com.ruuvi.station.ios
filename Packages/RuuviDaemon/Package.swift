@@ -38,7 +38,7 @@ let package = Package(
         .package(path: "../RuuviPersistence"),
         .package(path: "../RuuviNotifier"),
         .package(path: "../RuuviNotification"),
-        .package(url: "https://github.com/ruuvi/BTKit", .upToNextMinor(from: "0.4.3")),
+        .package(url: "https://github.com/ruuvi/BTKit", branch: "master"),
     ],
     targets: [
         .target(
