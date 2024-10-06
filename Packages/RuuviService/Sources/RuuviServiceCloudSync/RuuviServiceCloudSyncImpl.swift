@@ -650,6 +650,12 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             return promise.future
         }
 
+        // First update the version number of the tag if there is a difference between
+        // cloud data and local data.
+        if cloudRecord.version > 0 && cloudRecord.version != ruuviTag.version {
+            ruuviPool.update(ruuviTag.with(version: cloudRecord.version))
+        }
+
         ruuviStorage.readLatest(ruuviTag).on(success: { [weak self] record in
             guard let sSelf = self else { return }
             // If the latest table already have a data point for the mac update that record

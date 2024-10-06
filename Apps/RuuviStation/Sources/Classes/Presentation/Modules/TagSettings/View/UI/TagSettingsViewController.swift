@@ -1902,7 +1902,8 @@ extension TagSettingsViewController {
 
     private func alertsAvailable() -> Bool {
         (viewModel?.isCloudAlertsAvailable.value ?? false ||
-            viewModel?.isConnected.value ?? false)
+            viewModel?.isConnected.value ?? false ||
+            viewModel?.serviceUUID.value != nil)
     }
 
     private func reloadAlertSectionHeaders() {
@@ -3038,8 +3039,9 @@ extension TagSettingsViewController {
 
         // Data format
         if let moreInfoDataFormatCell {
-            moreInfoDataFormatCell.bind(viewModel.version) { cell, version in
-                cell.configure(value: version.stringValue)
+            moreInfoDataFormatCell.bind(viewModel.version) { [weak self] cell, version in
+                guard let sSelf = self else { return }
+                cell.configure(value: sSelf.formattedVersion(value: version))
             }
         }
 
@@ -3170,7 +3172,7 @@ extension TagSettingsViewController {
             createdCell: { [weak self] in
                 self?.moreInfoDataFormatCell?.configure(
                     title: RuuviLocalization.TagSettings.DataFormatTitleLabel.text,
-                    value: self?.viewModel?.version.value?.stringValue
+                    value: self?.formattedVersion(value: self?.viewModel?.version.value)
                 )
                 self?.moreInfoDataFormatCell?.selectionStyle = .none
                 return self?.moreInfoDataFormatCell ?? UITableViewCell()
@@ -3319,7 +3321,7 @@ extension TagSettingsViewController {
         if let source {
             var sourceString = emptyString
             switch source {
-            case .advertisement:
+            case .advertisement, .bgAdvertisement:
                 sourceString = RuuviLocalization.TagSettings.DataSource.Advertisement.title
             case .heartbeat:
                 sourceString = RuuviLocalization.TagSettings.DataSource.Heartbeat.title
@@ -3368,6 +3370,14 @@ extension TagSettingsViewController {
             value.stringValue + " " + RuuviLocalization.dBm
         } else {
             RuuviLocalization.na
+        }
+    }
+
+    private func formattedVersion(value: Int?) -> String {
+        if value == 197 {
+            return "C5"
+        } else {
+            return value.stringValue
         }
     }
 }

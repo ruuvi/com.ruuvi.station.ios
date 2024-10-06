@@ -20,6 +20,7 @@ public struct RuuviTagLatestDataSQLite: RuuviTagSensorRecord {
     public var temperatureOffset: Double
     public var humidityOffset: Double
     public var pressureOffset: Double
+    public var version: Int
 
     public init(
         id: String,
@@ -28,6 +29,7 @@ public struct RuuviTagLatestDataSQLite: RuuviTagSensorRecord {
         source: RuuviTagSensorRecordSource,
         macId: MACIdentifier?,
         rssi: Int?,
+        version: Int,
         temperature: Temperature?,
         humidity: Humidity?,
         pressure: Pressure?,
@@ -46,6 +48,7 @@ public struct RuuviTagLatestDataSQLite: RuuviTagSensorRecord {
         self.source = source
         self.macId = macId
         self.rssi = rssi
+        self.version = version
         self.temperature = temperature
         self.humidity = humidity
         self.pressure = pressure
@@ -68,6 +71,7 @@ public extension RuuviTagLatestDataSQLite {
     static let sourceColumn = Column("source")
     static let macColumn = Column("mac")
     static let rssiColumn = Column("rssi")
+    static let versionColumn = Column("version")
     static let celsiusColumn = Column("celsius")
     static let relativeHumidityInPercentColumn = Column("relativeHumidityInPercent")
     static let hectopascalsColumn = Column("hectopascals")
@@ -107,6 +111,7 @@ extension RuuviTagLatestDataSQLite: FetchableRecord {
             macId = MACIdentifierStruct(value: macIdValue)
         }
         rssi = row[RuuviTagLatestDataSQLite.rssiColumn]
+        version = row[RuuviTagLatestDataSQLite.versionColumn] ?? 5
         if let celsius = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.celsiusColumn]) {
             temperature = Temperature(value: celsius, unit: .celsius)
             if let relativeHumidity
@@ -155,6 +160,7 @@ extension RuuviTagLatestDataSQLite: PersistableRecord {
         container[RuuviTagLatestDataSQLite.dateColumn] = date
         container[RuuviTagLatestDataSQLite.sourceColumn] = source.rawValue
         container[RuuviTagLatestDataSQLite.rssiColumn] = rssi
+        container[RuuviTagLatestDataSQLite.versionColumn] = version
         container[RuuviTagLatestDataSQLite.celsiusColumn] = temperature?.converted(to: .celsius).value
         container[RuuviTagLatestDataSQLite.relativeHumidityInPercentColumn] = humidity?.value
         container[RuuviTagLatestDataSQLite.hectopascalsColumn] = pressure?.converted(to: .hectopascals).value
@@ -184,6 +190,7 @@ public extension RuuviTagLatestDataSQLite {
             table.column(RuuviTagLatestDataSQLite.sourceColumn.name, .text).notNull()
             table.column(RuuviTagLatestDataSQLite.macColumn.name, .text)
             table.column(RuuviTagLatestDataSQLite.rssiColumn.name, .integer)
+            table.column(RuuviTagLatestDataSQLite.versionColumn.name, .integer).notNull()
             table.column(RuuviTagLatestDataSQLite.celsiusColumn.name, .double)
             table.column(RuuviTagLatestDataSQLite.relativeHumidityInPercentColumn.name, .double)
             table.column(RuuviTagLatestDataSQLite.hectopascalsColumn.name, .double)

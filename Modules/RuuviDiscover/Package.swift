@@ -21,7 +21,7 @@ let package = Package(
         .package(path: "../../Packages/RuuviService"),
         .package(path: "../../Common/RuuviPresenters"),
         .package(path: "../../Common/RuuviLocalization"),
-        .package(url: "https://github.com/ruuvi/BTKit", .upToNextMinor(from: "0.4.3")),
+        .package(url: "https://github.com/ruuvi/BTKit", branch: "master"),
     ],
     targets: [
         .target(

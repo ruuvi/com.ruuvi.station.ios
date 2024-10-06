@@ -7,7 +7,8 @@ public protocol RuuviTagSensor: PhysicalSensor,
                                 Connectable,
                                 Nameable,
                                 Shareable,
-                                HistoryFetchable {}
+                                HistoryFetchable,
+                                BackgroundScanable {}
 
 public enum SensorOwnership {
     case claimedByMe
@@ -51,6 +52,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
@@ -70,6 +72,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
@@ -89,6 +92,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
@@ -108,6 +112,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
@@ -127,6 +132,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
@@ -146,6 +152,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
@@ -165,6 +172,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
@@ -184,6 +192,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
@@ -203,6 +212,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
@@ -222,6 +232,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
@@ -241,6 +252,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: nil,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
@@ -260,6 +272,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
@@ -279,6 +292,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
@@ -298,6 +312,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: cloudSensor.name.isEmpty ? cloudSensor.id : cloudSensor.name,
             isClaimed: cloudSensor.isOwner,
@@ -318,6 +333,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
@@ -337,6 +353,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: false,
@@ -356,6 +373,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
@@ -375,6 +393,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
@@ -394,6 +413,7 @@ public extension RuuviTagSensor {
             firmwareVersion: firmwareVersion,
             luid: luid,
             macId: macId,
+            serviceUUID: serviceUUID,
             isConnectable: isConnectable,
             name: name,
             isClaimed: isClaimed,
@@ -419,6 +439,7 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
     public var firmwareVersion: String?
     public var luid: LocalIdentifier? // local unqiue id
     public var macId: MACIdentifier?
+    public var serviceUUID: String?
     public var isConnectable: Bool
     public var name: String
     public var isClaimed: Bool
@@ -435,6 +456,7 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
         firmwareVersion: String?,
         luid: LocalIdentifier?,
         macId: MACIdentifier?,
+        serviceUUID: String?,
         isConnectable: Bool,
         name: String,
         isClaimed: Bool,
@@ -450,6 +472,7 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
         self.firmwareVersion = firmwareVersion
         self.luid = luid
         self.macId = macId
+        self.serviceUUID = serviceUUID
         self.isConnectable = isConnectable
         self.name = name
         self.isClaimed = isClaimed
@@ -488,6 +511,10 @@ public struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderabl
 
     public var macId: MACIdentifier? {
         object.macId
+    }
+
+    public var serviceUUID: String? {
+        object.serviceUUID
     }
 
     public var isConnectable: Bool {

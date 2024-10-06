@@ -853,8 +853,10 @@ extension CardsViewController {
                 alertButton.isHidden = !isAlertAvailable
                 alertButtonHidden.isUserInteractionEnabled = isAlertAvailable
             } else {
-                alertButton.isHidden = !viewModel.isConnected.value.bound
-                alertButtonHidden.isUserInteractionEnabled = viewModel.isConnected.value.bound
+                alertButton.isHidden =
+                    !viewModel.isConnected.value.bound || viewModel.serviceUUID.value == nil
+                alertButtonHidden.isUserInteractionEnabled =
+                    viewModel.isConnected.value.bound || viewModel.serviceUUID.value != nil
             }
         }
     }

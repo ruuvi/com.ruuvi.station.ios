@@ -4,6 +4,7 @@ import Humidity
 public enum RuuviTagSensorRecordSource: String {
     case unknown
     case advertisement
+    case bgAdvertisement
     case log
     case heartbeat
     case ruuviNetwork
@@ -30,6 +31,9 @@ public protocol RuuviTagSensorRecord: PhysicalSensor {
     var temperatureOffset: Double { get }
     var humidityOffset: Double { get }
     var pressureOffset: Double { get }
+
+    // Firmware version
+    var version: Int { get }
 }
 
 public extension RuuviTagSensorRecord {
@@ -66,6 +70,7 @@ public extension RuuviTagSensorRecord {
             source: source,
             macId: macId,
             rssi: rssi,
+            version: version,
             temperature: temperature,
             humidity: humidity,
             pressure: pressure,
@@ -87,6 +92,7 @@ public extension RuuviTagSensorRecord {
             source: source,
             macId: macId,
             rssi: rssi,
+            version: version,
             temperature: temperature,
             humidity: humidity,
             pressure: pressure,
@@ -110,6 +116,7 @@ public extension RuuviTagSensorRecord {
             source: source,
             macId: macId,
             rssi: rssi,
+            version: version,
             temperature: temperature,
             humidity: humidity,
             pressure: pressure,
@@ -131,6 +138,7 @@ public extension RuuviTagSensorRecord {
             source: source,
             macId: macId,
             rssi: rssi,
+            version: version,
             temperature: temperature?
                 .minus(value: temperatureOffset)?
                 .plus(sensorSettings: sensorSettings),
@@ -158,6 +166,7 @@ public struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
     public var source: RuuviTagSensorRecordSource
     public var macId: MACIdentifier?
     public var rssi: Int?
+    public var version: Int
     public var temperature: Temperature?
     public var humidity: Humidity?
     public var pressure: Pressure?
@@ -180,6 +189,7 @@ public struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
         source: RuuviTagSensorRecordSource,
         macId: MACIdentifier?,
         rssi: Int?,
+        version: Int,
         temperature: Temperature?,
         humidity: Humidity?,
         pressure: Pressure?,
@@ -197,6 +207,7 @@ public struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
         self.source = source
         self.macId = macId
         self.rssi = rssi
+        self.version = version
         self.temperature = temperature
         self.humidity = humidity
         self.pressure = pressure
@@ -236,6 +247,10 @@ public struct AnyRuuviTagSensorRecord: RuuviTagSensorRecord, Equatable, Hashable
 
     public var rssi: Int? {
         object.rssi
+    }
+
+    public var version: Int {
+        object.version
     }
 
     public var temperature: Temperature? {

@@ -92,4 +92,8 @@ extension RuuviCloudApiSensor: CloudSensor {
     public var id: String {
         sensorId
     }
+
+    public var serviceUUID: String? {
+        nil
+    }
 }

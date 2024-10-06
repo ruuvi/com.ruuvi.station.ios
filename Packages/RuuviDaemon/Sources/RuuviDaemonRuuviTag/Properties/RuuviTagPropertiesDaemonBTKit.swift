@@ -216,6 +216,7 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                 firmwareVersion: nil,
                 luid: device.uuid.luid,
                 macId: mac,
+                serviceUUID: nil,
                 isConnectable: device.isConnectable,
                 name: ruuviTag.name,
                 isClaimed: ruuviTag.isClaimed,

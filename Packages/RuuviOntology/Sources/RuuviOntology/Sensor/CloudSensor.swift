@@ -7,6 +7,7 @@ public extension CloudSensor {
             firmwareVersion: nil,
             luid: nil,
             macId: id.mac,
+            serviceUUID: serviceUUID,
             isConnectable: true,
             name: name.isEmpty ? id : name,
             isClaimed: isOwner,
@@ -23,6 +24,7 @@ public extension CloudSensor {
     func with(email: String) -> CloudSensor {
         CloudSensorStruct(
             id: id,
+            serviceUUID: serviceUUID,
             name: name,
             isClaimed: email.lowercased() == owner?.lowercased(),
             isOwner: email.lowercased() == owner?.lowercased(),
@@ -42,6 +44,7 @@ public extension CloudSensor {
 
 public struct CloudSensorStruct: CloudSensor {
     public var id: String
+    public var serviceUUID: String?
     public var name: String
     public var isClaimed: Bool
     public var isOwner: Bool
@@ -58,6 +61,7 @@ public struct CloudSensorStruct: CloudSensor {
 
     public init(
         id: String,
+        serviceUUID: String?,
         name: String,
         isClaimed: Bool,
         isOwner: Bool,
@@ -73,6 +77,7 @@ public struct CloudSensorStruct: CloudSensor {
         maxHistoryDays: Int?
     ) {
         self.id = id
+        self.serviceUUID = serviceUUID
         self.name = name
         self.isClaimed = isClaimed
         self.isOwner = isOwner
@@ -168,5 +173,9 @@ public struct AnyCloudSensor: CloudSensor, Equatable, Hashable, Reorderable {
 
     public var orderElement: String {
         id
+    }
+
+    public var serviceUUID: String? {
+        object.serviceUUID
     }
 }

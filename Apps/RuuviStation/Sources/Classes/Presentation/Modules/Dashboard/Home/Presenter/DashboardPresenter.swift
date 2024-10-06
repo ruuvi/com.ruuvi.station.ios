@@ -511,7 +511,8 @@ extension DashboardPresenter: RuuviNotifierObserver {
             .filter { $0.luid.value?.value == uuid || $0.mac.value?.value == uuid }
             .forEach { viewModel in
                 let isFireable = viewModel.isCloud.value ?? false ||
-                    viewModel.isConnected.value ?? false
+                    viewModel.isConnected.value ?? false ||
+                    viewModel.serviceUUID.value != nil
                 switch alertType {
                 case .temperature:
                     let isTriggered = isTriggered && isFireable

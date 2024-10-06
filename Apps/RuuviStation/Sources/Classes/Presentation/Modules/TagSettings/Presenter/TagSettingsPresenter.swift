@@ -512,20 +512,23 @@ extension TagSettingsPresenter {
         bind(viewModel.isConnected) { [weak isCloudAlertsAvailable] observer, isConnected in
             let isCl = isCloudAlertsAvailable?.value ?? false
             let isCo = isConnected ?? false
-            observer.viewModel.isAlertsEnabled.value = isCl || isCo
+            observer.viewModel.isAlertsEnabled.value = isCl || isCo || observer.ruuviTag.serviceUUID != nil
         }
 
         let isConnected = viewModel.isConnected
         bind(viewModel.isCloudAlertsAvailable) { [weak isConnected] observer, isCloudAlertsAvailable in
             let isCl = isCloudAlertsAvailable ?? false
             let isCo = isConnected?.value ?? false
-            observer.viewModel.isAlertsEnabled.value = isCl || isCo
+            observer.viewModel.isAlertsEnabled.value = isCl || isCo || observer.ruuviTag.serviceUUID != nil
             self.processAlerts()
         }
     }
 
-    /// Sets the view model properties related to the associated RuuviTag
+    // Sets the view model properties related to the associated RuuviTag
+    // swiftlint:disable:next function_body_length
     private func syncTag() {
+        viewModel.serviceUUID.value = ruuviTag.serviceUUID
+
         ruuviSensorPropertiesService.getImage(for: ruuviTag)
             .on(success: { [weak self] image in
                 self?.viewModel.background.value = image
@@ -895,13 +898,13 @@ extension TagSettingsPresenter {
             return
         }
         advertisementToken = foreground.observe(self, uuid: luid.value, closure: { [weak self] _, device in
-            if let tag = device.ruuvi?.tag {
+            if let tag = device.ruuvi?.tag, tag.luid?.value == luid.value {
                 self?.handleMeasurementPoint(tag: tag, luid: luid, source: .advertisement)
             }
         })
 
         heartbeatToken = background.observe(self, uuid: luid.value, closure: { [weak self] _, device in
-            if let tag = device.ruuvi?.tag {
+            if let tag = device.ruuvi?.tag, tag.luid?.value == luid.value {
                 self?.handleMeasurementPoint(tag: tag, luid: luid, source: .heartbeat)
             }
         })
@@ -933,6 +936,7 @@ extension TagSettingsPresenter {
         }
     }
 
+    // swiftlint:disable:next function_body_length
     private func sync(
         device: RuuviTag,
         luid _: LocalIdentifier,
@@ -944,6 +948,7 @@ extension TagSettingsPresenter {
             source: source,
             macId: device.mac?.mac,
             rssi: device.rssi,
+            version: device.version,
             temperature: device.temperature,
             humidity: device.humidity,
             pressure: device.pressure,
@@ -1332,7 +1337,9 @@ extension TagSettingsPresenter: RuuviNotifierObserver {
         for uuid: String
     ) {
         if ruuviTag.luid?.value == uuid || ruuviTag.macId?.value == uuid {
-            let isFireable = ruuviTag.isCloud || viewModel.isConnected.value ?? false
+            let isFireable = ruuviTag.isCloud ||
+                viewModel.isConnected.value ?? false ||
+                viewModel.serviceUUID.value != nil
             switch alertType {
             case .temperature:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
