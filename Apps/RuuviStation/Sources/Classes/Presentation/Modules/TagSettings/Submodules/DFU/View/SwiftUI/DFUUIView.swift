@@ -86,6 +86,7 @@ struct DFUUIView: View {
                 UIApplication.shared.isIdleTimerDisabled = false
             }
         }
+        .navigationViewStyle(StackNavigationViewStyle())
     }
 
     private var content: some View {
