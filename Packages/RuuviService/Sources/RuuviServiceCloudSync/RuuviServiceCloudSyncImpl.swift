@@ -382,21 +382,47 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
         ruuviStorage.readAll().on(success: { [weak self] localSensors in
             guard let sSelf = self else { return }
-            let sensorsWithHistory = localSensors.filter { sensor in
+
+            // Read the latest record for each sensor asynchronously, filter sensors with history.
+            let sensorHistoryFutures = localSensors.compactMap {
+                sensor -> Future<(AnyRuuviTagSensor, RuuviTagSensorRecord?), RuuviServiceError>? in
+
+                // Sensor should be a cloud sensor with allow max history days greater than 0.
+                // Also, the sensor should already have a measurement on the latest measurement
+                // table from database.
                 guard sensor.isCloud,
-                      let maxHistoryDays = sensor.maxHistoryDays
-                else {
-                    return false
+                        let maxHistoryDays = sensor.maxHistoryDays,
+                        maxHistoryDays > 0 else {
+                    return nil
                 }
-                return maxHistoryDays > 0
+
+                // Read the latest record for the sensor
+                return sSelf.ruuviStorage.readLatest(sensor).map { record in
+                    (sensor, record)
+                }.mapError({ error in
+                    return .ruuviStorage(error)
+                })
             }
-            let syncHistory = sensorsWithHistory.map { sSelf.sync(sensor: $0) }
-            Future.zip(syncHistory).on(success: { _ in
-                promise.succeed(value: true)
+
+            Future.zip(sensorHistoryFutures).on(success: { sensorRecords in
+                // Filter sensors that have no records, then sync
+                let sensorsToSync = sensorRecords
+                    .filter { $0.1 != nil } // Only include sensors that have a valid record
+                    .map { $0.0 } // Extract the sensors
+
+                let syncHistoryFutures = sensorsToSync.map { sSelf.sync(sensor: $0) }
+
+                // Zip all sync operations together and handle the final result
+                Future.zip(syncHistoryFutures).on(success: { _ in
+                    promise.succeed(value: true)
+                }, failure: { error in
+                    promise.fail(error: error)
+                })
             }, failure: { error in
                 promise.fail(error: error)
             })
         })
+
         return promise.future
     }
 
