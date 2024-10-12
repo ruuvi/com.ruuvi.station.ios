@@ -212,7 +212,7 @@ extension SharePresenter {
         ruuviPool.readSensorSubscriptionSettings(
             ruuviTag
         ).on(success: { [weak self] subscription in
-            if let maxShares = subscription?.maxShares {
+            if let maxShares = subscription?.maxSharesPerSensor {
                 self?.maxShareCount = maxShares
             }
         })
