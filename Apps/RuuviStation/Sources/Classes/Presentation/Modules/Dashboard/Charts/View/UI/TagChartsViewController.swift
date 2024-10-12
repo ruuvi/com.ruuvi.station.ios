@@ -384,7 +384,7 @@ class TagChartsViewController: UIViewController {
                 leading: view.safeLeftAnchor,
                 bottom: view.safeBottomAnchor,
                 trailing: view.safeRightAnchor,
-                padding: .init(top: 6, left: 0, bottom: 28, right: 0)
+                padding: .init(top: 6, left: 0, bottom: 36, right: 0)
             )
 
             scrollView.addSubview(temperatureChartView)
@@ -449,21 +449,21 @@ class TagChartsViewController: UIViewController {
                     bottom: 8,
                     right: 16
                 ),
-                size: .init(width: 0, height: 26)
+                size: .init(width: 0, height: 24)
             )
         } else {
             footerView.anchor(
-                top: scrollView.bottomAnchor,
+                top: nil,
                 leading: view.safeLeftAnchor,
                 bottom: view.safeBottomAnchor,
                 trailing: view.safeRightAnchor,
                 padding: .init(
                     top: 4,
                     left: 16,
-                    bottom: 8,
+                    bottom: 4,
                     right: 16
                 ),
-                size: .init(width: 0, height: 26)
+                size: .init(width: 0, height: 24)
             )
         }
 
