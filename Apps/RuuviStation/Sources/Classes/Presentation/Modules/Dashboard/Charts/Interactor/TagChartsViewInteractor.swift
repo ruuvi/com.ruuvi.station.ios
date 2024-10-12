@@ -378,12 +378,16 @@ extension TagChartsViewInteractor {
     }
 
     private func syncFullHistory(for ruuviTag: RuuviTagSensor) {
-        if settings.historySyncForEachSensor {
-            cloudSyncService.sync(
-                sensor: ruuviTag
-            ).on(success: {
-                [weak self] _ in
-                self?.restartScheduler()
+        if ruuviTag.isCloud && settings.historySyncForEachSensor {
+            ruuviStorage.readLatest(ruuviTag).on(success: { [weak self] record in
+                if record != nil {
+                    self?.cloudSyncService.sync(
+                        sensor: ruuviTag
+                    ).on(success: {
+                        [weak self] _ in
+                        self?.restartScheduler()
+                    })
+                }
             })
         }
     }
