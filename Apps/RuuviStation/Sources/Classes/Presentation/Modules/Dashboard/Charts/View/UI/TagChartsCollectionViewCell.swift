@@ -25,8 +25,8 @@ class TagChartsCollectionViewCell: UICollectionViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        chartView.data?.clearValues()
-        chartView.data = nil
+        chartView.underlyingView.data?.clearValues()
+        chartView.underlyingView.data = nil
     }
 
     func populateChartView(
@@ -62,9 +62,9 @@ class TagChartsCollectionViewCell: UICollectionViewCell {
             measurementService: measurementService,
             unit: unit
         )
-        chartView.data = data.chartData
-        chartView.lowerAlertValue = data.lowerAlertValue
-        chartView.upperAlertValue = data.upperAlertValue
+        chartView.underlyingView.data = data.chartData
+        chartView.underlyingView.lowerAlertValue = data.lowerAlertValue
+        chartView.underlyingView.upperAlertValue = data.upperAlertValue
         chartView.setSettings(settings: settings)
         chartView.localize()
         chartView.setYAxisLimit(min: data.chartData?.yMin ?? 0, max: data.chartData?.yMax ?? 0)
@@ -90,7 +90,7 @@ class TagChartsCollectionViewCell: UICollectionViewCell {
 
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func calculateAlertFillIfNeeded(for view: TagChartsView) {
-        if let data = view.data,
+        if let data = view.underlyingView.data,
            let dataSet = data.dataSets.first as? LineChartDataSet {
 
             let maxY = view.highestVisibleY
@@ -99,7 +99,8 @@ class TagChartsCollectionViewCell: UICollectionViewCell {
             let colorRegular = RuuviColor.graphFillColor.color
             let colorAlert = RuuviColor.graphAlertColor.color
 
-            if let upperAlertValue = view.upperAlertValue, let lowerAlertValue = view.lowerAlertValue {
+            if let upperAlertValue = view.underlyingView.upperAlertValue,
+               let lowerAlertValue = view.underlyingView.lowerAlertValue {
                 let colorLocations: [CGFloat]
                 let gradientColors: CFArray
                 if lowerAlertValue <= minY && upperAlertValue >= maxY {
@@ -214,10 +215,10 @@ class TagChartsCollectionViewCell: UICollectionViewCell {
     }
 
     private func calculateMinMaxForChart(for view: TagChartsView) {
-        if let data = view.data,
+        if let data = view.underlyingView.data,
            let dataSet = data.dataSets.first as? LineChartDataSet {
-            let lowestVisibleX = view.lowestVisibleX
-            let highestVisibleX = view.highestVisibleX
+            let lowestVisibleX = view.underlyingView.lowestVisibleX
+            let highestVisibleX = view.underlyingView.highestVisibleX
 
             var minVisibleYValue = Double.greatestFiniteMagnitude
             var maxVisibleYValue = -Double.greatestFiniteMagnitude
@@ -229,7 +230,10 @@ class TagChartsCollectionViewCell: UICollectionViewCell {
                 }
             }
 
-            let averageYValue = calculateVisibleAverage(chartView: view, dataSet: dataSet)
+            let averageYValue = calculateVisibleAverage(
+                chartView: view.underlyingView,
+                dataSet: dataSet
+            )
 
             view.setChartStat(
                 min: minVisibleYValue,

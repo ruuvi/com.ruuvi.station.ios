@@ -5,47 +5,31 @@ import RuuviOntology
 import RuuviService
 import UIKit
 
-// swiftlint:disable file_length
-
-protocol TagChartsViewDelegate: NSObjectProtocol {
-    func chartDidTranslate(_ chartView: TagChartsView)
+protocol TagChartsViewInternalDelegate: NSObjectProtocol {
+    func chartDidTranslate(_ chartView: TagChartsViewInternal)
     func chartValueDidSelect(
-        _ chartView: TagChartsView,
+        _ chartView: TagChartsViewInternal,
         entry: ChartDataEntry,
         highlight: Highlight
     )
-    func chartValueDidDeselect(_ chartView: TagChartsView)
+    func chartValueDidDeselect(_ chartView: TagChartsViewInternal)
 }
 
-class TagChartsView: LineChartView {
-    weak var chartDelegate: TagChartsViewDelegate?
+class TagChartsViewInternal: LineChartView {
+    weak var chartDelegate: TagChartsViewInternalDelegate?
+
     var lowerAlertValue: Double?
     var upperAlertValue: Double?
-    private var settings: RuuviLocalSettings!
-    private var chartName: String = ""
 
-    private lazy var chartNameLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.font = UIFont.Muli(.regular, size: UIDevice.isTablet() ? 12 : 10)
-        return label
-    }()
-
-    private lazy var chartMinMaxAvgLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.font = UIFont.Muli(.regular, size: UIDevice.isTablet() ? 12 : 10)
-        return label
-    }()
-
+    // MARK: - Private
     private lazy var markerView = TagChartsMarkerView()
+    private var settings: RuuviLocalSettings!
 
     // MARK: - LifeCycle
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         delegate = self
-        addSubviews()
         configure()
         localize()
     }
@@ -53,36 +37,6 @@ class TagChartsView: LineChartView {
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    // MARK: - Layout
-
-    private func addSubviews() {
-        addSubview(chartNameLabel)
-        chartNameLabel.anchor(
-            top: nil,
-            leading: nil,
-            bottom: bottomAnchor,
-            trailing: trailingAnchor,
-            padding: .init(
-                top: 0,
-                left: 0,
-                bottom: UIDevice.isTablet() ? 42 : 28,
-                right: 16
-            )
-        )
-
-        addSubview(chartMinMaxAvgLabel)
-        chartMinMaxAvgLabel.anchor(
-            top: nil,
-            leading: nil,
-            bottom: chartNameLabel.topAnchor,
-            trailing: trailingAnchor,
-            padding: .init(
-                top: 0, left: 0, bottom: 4, right: 16
-            )
-        )
-        chartMinMaxAvgLabel.isHidden = true
     }
 
     // MARK: - Private
@@ -144,7 +98,7 @@ class TagChartsView: LineChartView {
     }
 }
 
-extension TagChartsView: ChartViewDelegate {
+extension TagChartsViewInternal: ChartViewDelegate {
     func chartTranslated(
         _: ChartViewBase,
         dX _: CGFloat,
@@ -178,7 +132,7 @@ extension TagChartsView: ChartViewDelegate {
     }
 }
 
-extension TagChartsView {
+extension TagChartsViewInternal {
     func localize() {
         xAxis.valueFormatter = XAxisValueFormatter()
         leftAxis.valueFormatter = YAxisValueFormatter()
@@ -266,35 +220,11 @@ extension TagChartsView {
         reloadData()
     }
 
-    func updateLatest(
-        with entry: ChartDataEntry?,
-        type: MeasurementType,
+    func setMarker(
+        with type: MeasurementType,
         measurementService: RuuviServiceMeasurement,
         unit: String
     ) {
-        guard let entry else { return }
-        switch type {
-        case .temperature:
-            let tempValue = measurementService.stringWithoutSign(temperature: entry.y)
-            chartNameLabel.text = chartName + " (\(tempValue) \(unit))"
-        case .humidity:
-            let humidityValue = measurementService.stringWithoutSign(humidity: entry.y)
-            chartNameLabel.text = chartName + " (\(humidityValue) \(unit))"
-        case .pressure:
-            let pressureValue = measurementService.stringWithoutSign(pressure: entry.y)
-            chartNameLabel.text = chartName + " (\(pressureValue) \(unit))"
-        default: break
-        }
-    }
-
-    func setChartLabel(
-        with name: String,
-        type: MeasurementType,
-        measurementService: RuuviServiceMeasurement,
-        unit: String
-    ) {
-        chartName = name
-        chartNameLabel.text = name
         if let marker = marker as? TagChartsMarkerView {
             marker.initialise(
                 with: unit,
@@ -303,35 +233,6 @@ extension TagChartsView {
                 parentFrame: frame
             )
         }
-    }
-
-    func hideChartNameLabel(hide: Bool) {
-        chartNameLabel.alpha = hide ? 0 : 1
-    }
-
-    func setChartStat(
-        min: Double,
-        max: Double,
-        avg: Double,
-        type: MeasurementType,
-        measurementService: RuuviServiceMeasurement
-    ) {
-        let measurement = createMeasurementStrings(
-            type: type,
-            min: min,
-            max: max,
-            avg: avg,
-            measurementService: measurementService
-        )
-        chartMinMaxAvgLabel.text = measurement
-    }
-
-    func clearChartStat() {
-        chartMinMaxAvgLabel.text = nil
-    }
-
-    func setChartStatVisible(show: Bool) {
-        chartMinMaxAvgLabel.isHidden = !show
     }
 
     /// The lowest y-index (value on the y-axis) that is still visible on he chart.
@@ -356,60 +257,6 @@ extension TagChartsView {
         getTransformer(forAxis: .left).pixelToValues(&pt)
 
         return min(leftAxis.axisMaximum, Double(pt.y))
-    }
-}
-
-extension TagChartsView {
-
-    private func createMeasurementStrings(
-        type: MeasurementType,
-        min: Double?,
-        max: Double?,
-        avg: Double?,
-        measurementService: RuuviServiceMeasurement
-    ) -> String {
-        let minValue = formattedMeasurementString(
-            for: type,
-            value: min,
-            measurementService: measurementService
-        )
-
-        let maxValue = formattedMeasurementString(
-            for: type,
-            value: max,
-            measurementService: measurementService
-        )
-
-        let avgValue = formattedMeasurementString(
-            for: type,
-            value: avg,
-            measurementService: measurementService
-        )
-
-        return RuuviLocalization.chartMinMaxAvg(minValue, maxValue, avgValue)
-    }
-
-    private func formattedMeasurementString(
-        for type: MeasurementType,
-        value: Double?,
-        measurementService: RuuviServiceMeasurement
-    ) -> String {
-        switch type {
-        case .temperature:
-            return measurementService.stringWithoutSign(
-                temperature: value
-            )
-        case .humidity:
-            return measurementService.stringWithoutSign(
-                humidity: value
-            )
-        case .pressure:
-            return measurementService.stringWithoutSign(
-                pressure: value
-            )
-        default:
-            return ""
-        }
     }
 }
 

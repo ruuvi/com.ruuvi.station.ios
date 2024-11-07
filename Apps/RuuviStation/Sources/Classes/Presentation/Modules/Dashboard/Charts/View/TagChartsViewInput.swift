@@ -8,6 +8,7 @@ protocol TagChartsViewInput: ViewInput {
     var viewModel: TagChartsViewModel { get set }
     var historyLengthInHours: Int { get set }
     var showChartStat: Bool { get set }
+    var compactChartView: Bool { get set }
     var showChartAll: Bool { get set }
     var showAlertRangeInGraph: Bool { get set }
     var useNewGraphRendering: Bool { get set }

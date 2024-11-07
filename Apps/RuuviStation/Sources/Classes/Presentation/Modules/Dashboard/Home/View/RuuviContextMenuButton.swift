@@ -95,6 +95,8 @@ extension RuuviContextMenuButton {
     }
 
     func updateTitle(with string: String?) {
-        buttonTitleLabel.text = string
+        if buttonTitleLabel.text != string {
+            buttonTitleLabel.text = string
+        }
     }
 }
