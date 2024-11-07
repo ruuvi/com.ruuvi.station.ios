@@ -741,6 +741,8 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     // On a scale of 10-100, 100 being best quality, and 10 being the worst.
     @UserDefault("SettingsUserDefaults.imageCompressionQuality", defaultValue: 40)
     var imageCompressionQuality: Int
+    @UserDefault("SettingsUserDefaults.compactChatView", defaultValue: true)
+    var compactChartView: Bool
 
     @UserDefault("SettingsUserDefaults.historySyncLegacy", defaultValue: false)
     var historySyncLegacy: Bool

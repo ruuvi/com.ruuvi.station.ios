@@ -44,7 +44,7 @@ class CardsLargeImageCell: UICollectionViewCell {
         label.textColor = .white.withAlphaComponent(0.8)
         label.textAlignment = .right
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: 14)
+        label.font = UIFont.Muli(.regular, size: 10)
         return label
     }()
 

@@ -99,6 +99,7 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
             view?.viewModel = viewModel
             view?.historyLengthInHours = settings.chartDurationHours
             view?.showChartStat = settings.chartStatsOn
+            view?.compactChartView = settings.compactChartView
             view?.showChartAll = settings.chartShowAll
             view?.showAlertRangeInGraph = settings.showAlertsRangeInGraph
             view?.useNewGraphRendering = settings.useNewGraphRendering
@@ -301,6 +302,11 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
         settings.chartStatsOn = show
         view?.showChartStat = show
         interactor.updateChartShowMinMaxAvgSetting(with: show)
+    }
+
+    func viewDidSelectTriggerCompactChart(showCompactChartView: Bool) {
+        settings.compactChartView = showCompactChartView
+        view?.compactChartView = showCompactChartView
     }
 }
 

@@ -19,4 +19,5 @@ protocol TagChartsViewOutput {
     func viewDidSelectAllChartHistory()
     func viewDidSelectLongerHistory()
     func viewDidSelectTriggerChartStat(show: Bool)
+    func viewDidSelectTriggerCompactChart(showCompactChartView: Bool)
 }

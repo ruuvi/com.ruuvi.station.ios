@@ -41,7 +41,19 @@ class TagChartsViewController: UIViewController {
 
     var showChartStat: Bool = true {
         didSet {
-            moreButton.menu = moreButtonOptions(showChartStat: showChartStat)
+            moreButton.menu = moreButtonOptions(
+                showChartStat: showChartStat,
+                compactChartView: compactChartView
+            )
+        }
+    }
+
+    var compactChartView: Bool = true {
+        didSet {
+            moreButton.menu = moreButtonOptions(
+                showChartStat: showChartStat,
+                compactChartView: compactChartView
+            )
         }
     }
 
@@ -182,7 +194,7 @@ class TagChartsViewController: UIViewController {
         label.textColor = .white.withAlphaComponent(0.8)
         label.textAlignment = .right
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: 14)
+        label.font = UIFont.Muli(.regular, size: 10)
         return label
     }()
 
@@ -578,7 +590,10 @@ class TagChartsViewController: UIViewController {
         output.viewDidSelectAllChartHistory()
     }
 
-    fileprivate func moreButtonOptions(showChartStat: Bool = true) -> UIMenu {
+    fileprivate func moreButtonOptions(
+        showChartStat: Bool = true,
+        compactChartView: Bool = true
+    ) -> UIMenu {
         let exportHistoryCSVAction = UIAction(title: RuuviLocalization.exportHistory) {
             [weak self] _ in
             self?.output.viewDidTapOnExportCSV()
@@ -606,6 +621,22 @@ class TagChartsViewController: UIViewController {
             }
         }
 
+        let chartCompactExpandAction = UIAction(
+            title: compactChartView ?
+                    RuuviLocalization.increaseGraphSize :
+                        RuuviLocalization.decreaseGraphSize
+        ) {
+            [weak self] _ in
+            guard let sSelf = self else { return }
+            sSelf.output.viewDidSelectTriggerCompactChart(
+                showCompactChartView: !compactChartView
+            )
+            sSelf.updateChartsCollectionConstaints(
+                from: sSelf.chartModules,
+                withAnimation: true
+            )
+        }
+
         return UIMenu(
             title: "",
             children: [
@@ -613,6 +644,7 @@ class TagChartsViewController: UIViewController {
                 exportHistoryXLSXAction,
                 clearViewHistory,
                 minMaxAvgAction,
+                chartCompactExpandAction,
             ]
         )
     }
@@ -628,14 +660,14 @@ extension TagChartsViewController: TagChartsViewDelegate {
             }
             return
         }
-        let sourceMatrix = chartView.viewPortHandler.touchMatrix
+        let sourceMatrix = chartView.underlyingView.viewPortHandler.touchMatrix
         chartViews.filter { $0 != chartView }.forEach { otherChart in
-            var targetMatrix = otherChart.viewPortHandler.touchMatrix
+            var targetMatrix = otherChart.underlyingView.viewPortHandler.touchMatrix
             targetMatrix.a = sourceMatrix.a
             targetMatrix.tx = sourceMatrix.tx
-            otherChart.viewPortHandler.refresh(
+            otherChart.underlyingView.viewPortHandler.refresh(
                 newMatrix: targetMatrix,
-                chart: otherChart,
+                chart: otherChart.underlyingView,
                 invalidate: true
             )
         }
@@ -659,7 +691,7 @@ extension TagChartsViewController: TagChartsViewDelegate {
         }
 
         chartViews.filter { $0 != chartView }.forEach { otherChart in
-            otherChart.highlightValue(highlight)
+            otherChart.underlyingView.highlightValue(highlight)
         }
     }
 
@@ -670,7 +702,7 @@ extension TagChartsViewController: TagChartsViewDelegate {
         }
 
         chartViews.forEach { chart in
-            chart.highlightValue(nil)
+            chart.underlyingView.highlightValue(nil)
         }
     }
 }
@@ -1048,24 +1080,20 @@ extension TagChartsViewController {
 
         if !from.contains(.humidity) {
             humidityChartView.isHidden = true
-            humidityChartView.hideChartNameLabel(hide: true)
             if humidityChartViewHeight.constant != 0 {
                 humidityChartViewHeight.constant = 0
             }
         } else {
             humidityChartView.isHidden = false
-            humidityChartView.hideChartNameLabel(hide: false)
         }
 
         if !from.contains(.pressure) {
             pressureChartView.isHidden = true
-            pressureChartView.hideChartNameLabel(hide: true)
             if pressureChartViewHeight.constant != 0 {
                 pressureChartViewHeight.constant = 0
             }
         } else {
             pressureChartView.isHidden = false
-            pressureChartView.hideChartNameLabel(hide: false)
         }
 
         for item in from {
@@ -1100,11 +1128,14 @@ extension TagChartsViewController {
         }
     }
 
-    private func getItemHeight(from totalHeight: CGFloat, count: CGFloat) -> CGFloat {
+    private func getItemHeight(
+        from totalHeight: CGFloat,
+        count: CGFloat
+    ) -> CGFloat {
         if UIWindow.isLandscape {
             totalHeight
         } else {
-            if count == 1 {
+            if count == 1 || !compactChartView {
                 totalHeight / 2
             } else {
                 totalHeight / count
@@ -1113,12 +1144,17 @@ extension TagChartsViewController {
     }
 
     private func updateScrollviewBehaviour() {
-        if UIWindow.isLandscape {
-            scrollView.isPagingEnabled = true
-            scrollView.isScrollEnabled = true
+        if (compactChartView) {
+            if UIWindow.isLandscape {
+                scrollView.isPagingEnabled = true
+                scrollView.isScrollEnabled = true
+            } else {
+                scrollView.isPagingEnabled = false
+                scrollView.isScrollEnabled = false
+            }
         } else {
             scrollView.isPagingEnabled = false
-            scrollView.isScrollEnabled = false
+            scrollView.isScrollEnabled = true
         }
     }
 
@@ -1158,9 +1194,9 @@ extension TagChartsViewController {
             measurementService: measurementService,
             unit: unit
         )
-        view.data = data.chartData
-        view.lowerAlertValue = data.lowerAlertValue
-        view.upperAlertValue = data.upperAlertValue
+        view.underlyingView.data = data.chartData
+        view.underlyingView.lowerAlertValue = data.lowerAlertValue
+        view.underlyingView.upperAlertValue = data.upperAlertValue
         view.setSettings(settings: settings)
         view.localize()
         view.setYAxisLimit(min: data.chartData?.yMin ?? 0, max: data.chartData?.yMax ?? 0)
@@ -1185,14 +1221,11 @@ extension TagChartsViewController {
 
     private func clearChartData() {
         temperatureChartView.clearChartData()
-        temperatureChartView.highlightValue(nil)
-        temperatureChartView.clearChartStat()
+        temperatureChartView.underlyingView.highlightValue(nil)
         humidityChartView.clearChartData()
-        humidityChartView.highlightValue(nil)
-        humidityChartView.clearChartStat()
+        humidityChartView.underlyingView.highlightValue(nil)
         pressureChartView.clearChartData()
-        pressureChartView.highlightValue(nil)
-        pressureChartView.clearChartStat()
+        pressureChartView.underlyingView.highlightValue(nil)
     }
 
     private func resetXAxisTimeline() {
@@ -1247,7 +1280,7 @@ extension TagChartsViewController {
 
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func calculateAlertFillIfNeeded(for view: TagChartsView) {
-        if let data = view.data,
+        if let data = view.underlyingView.data,
            let dataSet = data.dataSets.first as? LineChartDataSet {
 
             let maxY = view.highestVisibleY
@@ -1256,7 +1289,8 @@ extension TagChartsViewController {
             let colorRegular = RuuviColor.graphFillColor.color
             let colorAlert = RuuviColor.graphAlertColor.color
 
-            if let upperAlertValue = view.upperAlertValue, let lowerAlertValue = view.lowerAlertValue {
+            if let upperAlertValue = view.underlyingView.upperAlertValue,
+                let lowerAlertValue = view.underlyingView.lowerAlertValue {
                 let colorLocations: [CGFloat]
                 let gradientColors: CFArray
                 if lowerAlertValue <= minY && upperAlertValue >= maxY {
@@ -1371,10 +1405,10 @@ extension TagChartsViewController {
     }
 
     private func calculateMinMaxForChart(for view: TagChartsView) {
-        if let data = view.data,
+        if let data = view.underlyingView.data,
            let dataSet = data.dataSets.first as? LineChartDataSet {
-            let lowestVisibleX = view.lowestVisibleX
-            let highestVisibleX = view.highestVisibleX
+            let lowestVisibleX = view.underlyingView.lowestVisibleX
+            let highestVisibleX = view.underlyingView.highestVisibleX
 
             var minVisibleYValue = Double.greatestFiniteMagnitude
             var maxVisibleYValue = -Double.greatestFiniteMagnitude
@@ -1386,7 +1420,10 @@ extension TagChartsViewController {
                 }
             }
 
-            let averageYValue = calculateVisibleAverage(chartView: view, dataSet: dataSet)
+            let averageYValue = calculateVisibleAverage(
+                chartView: view.underlyingView,
+                dataSet: dataSet
+            )
             var type: MeasurementType = .temperature
             if view == temperatureChartView {
                 type = .temperature

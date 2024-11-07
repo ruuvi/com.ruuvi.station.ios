@@ -99,6 +99,7 @@ public protocol RuuviLocalSettings {
     var showAlertsRangeInGraph: Bool { get set }
     var useNewGraphRendering: Bool { get set }
     var imageCompressionQuality: Int { get set }
+    var compactChartView: Bool { get set }
 
     /// Syncs full history for all sensoers after code verification
     /// on sign in, before presenting dashboard. Heavy after sign in
