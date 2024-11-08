@@ -123,6 +123,7 @@ class TagChartsViewController: UIViewController {
         sv.alwaysBounceHorizontal = false
         sv.contentInsetAdjustmentBehavior = .never
         sv.isScrollEnabled = false
+        sv.indicatorStyle = .white
         return sv
     }()
 
@@ -505,7 +506,7 @@ class TagChartsViewController: UIViewController {
                 bottom: 0,
                 right: 0
             ),
-            size: .init(width: 22, height: 22)
+            size: .init(width: 16, height: 16)
         )
         dataSourceIconView.centerYInSuperview()
     }
@@ -1144,17 +1145,20 @@ extension TagChartsViewController {
     }
 
     private func updateScrollviewBehaviour() {
-        if (compactChartView) {
+        if compactChartView {
             if UIWindow.isLandscape {
                 scrollView.isPagingEnabled = true
                 scrollView.isScrollEnabled = true
+                scrollView.showsVerticalScrollIndicator = true
             } else {
                 scrollView.isPagingEnabled = false
                 scrollView.isScrollEnabled = false
+                scrollView.showsVerticalScrollIndicator = false
             }
         } else {
             scrollView.isPagingEnabled = false
             scrollView.isScrollEnabled = true
+            scrollView.showsVerticalScrollIndicator = true
         }
     }
 

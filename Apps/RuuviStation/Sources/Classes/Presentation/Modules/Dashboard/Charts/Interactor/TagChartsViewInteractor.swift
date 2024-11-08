@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import BTKit
 import Foundation
 import Future
@@ -402,3 +403,4 @@ extension TagChartsViewInteractor {
         presenter.interactorDidUpdate(sensor: ruuviTagSensor)
     }
 }
+// swiftlint:enable file_length

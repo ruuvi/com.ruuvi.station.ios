@@ -93,7 +93,7 @@ extension TagChartsView {
                 equalToConstant: 0
             ),
             chartMinMaxAvgLabel.topAnchor.constraint(
-                equalTo: chartNameLabel.bottomAnchor, 
+                equalTo: chartNameLabel.bottomAnchor,
                 constant: 0
             ),
         ]

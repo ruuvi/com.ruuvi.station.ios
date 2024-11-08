@@ -230,7 +230,7 @@ class CardsLargeImageCell: UICollectionViewCell {
                 bottom: 0,
                 right: 0
             ),
-            size: .init(width: 22, height: 22)
+            size: .init(width: 16, height: 16)
         )
         dataSourceIconView.centerYInSuperview()
     }
