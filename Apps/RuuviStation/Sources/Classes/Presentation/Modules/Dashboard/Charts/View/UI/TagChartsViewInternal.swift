@@ -259,5 +259,3 @@ extension TagChartsViewInternal {
         return min(leftAxis.axisMaximum, Double(pt.y))
     }
 }
-
-// swiftlint:enable file_length
