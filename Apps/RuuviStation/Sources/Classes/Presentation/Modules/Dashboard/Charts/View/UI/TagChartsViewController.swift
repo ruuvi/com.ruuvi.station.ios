@@ -13,7 +13,14 @@ import UIKit
 // swiftlint:disable type_body_length
 class TagChartsViewController: UIViewController {
     var output: TagChartsViewOutput!
-    private var chartModules: [MeasurementType] = []
+    private var chartModules: [MeasurementType] = [] {
+        didSet {
+            moreButton.menu = moreButtonOptions(
+                showChartStat: showChartStat,
+                compactChartView: compactChartView
+            )
+        }
+    }
 
     var viewModel: TagChartsViewModel = .init(type: .ruuvi)
     var showAlertRangeInGraph: Bool = true
@@ -638,15 +645,18 @@ class TagChartsViewController: UIViewController {
             )
         }
 
+        var actions: [UIAction] = [exportHistoryCSVAction,
+                                   exportHistoryXLSXAction,
+                                   clearViewHistory,
+                                   minMaxAvgAction]
+
+        if chartModules.count > 2 {
+            actions.append(chartCompactExpandAction)
+        }
+
         return UIMenu(
             title: "",
-            children: [
-                exportHistoryCSVAction,
-                exportHistoryXLSXAction,
-                clearViewHistory,
-                minMaxAvgAction,
-                chartCompactExpandAction,
-            ]
+            children: actions
         )
     }
 }
