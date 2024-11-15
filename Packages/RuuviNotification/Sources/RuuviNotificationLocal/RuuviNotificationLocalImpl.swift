@@ -608,6 +608,12 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         let newBadgeCount = currentCount + 1
         content.badge = newBadgeCount as NSNumber
         settings.setNotificationsBadgeCount(value: newBadgeCount)
+
+        if #available(iOS 16.0, *) {
+            UNUserNotificationCenter.current().setBadgeCount(newBadgeCount)
+        } else {
+            UIApplication.shared.applicationIconBadgeNumber = newBadgeCount
+        }
     }
 
     private func ruuviTag(

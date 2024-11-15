@@ -238,5 +238,6 @@ extension AppDelegate {
             settings.setNotificationsBadgeCount(value: 0)
             UIApplication.shared.applicationIconBadgeNumber = 0
         }
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
     }
 }
