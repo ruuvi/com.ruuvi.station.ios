@@ -28,7 +28,7 @@ class CardsLargeImageCell: UICollectionViewCell {
     private lazy var pressureView = CardsIndicatorView(icon: RuuviAsset.iconMeasurePressure.image)
     private lazy var movementView = CardsIndicatorView(icon: RuuviAsset.iconMeasureMovement.image)
 
-    private lazy var batteryLevelView = BatteryLevelView(fontSize: 12)
+    private lazy var batteryLevelView = BatteryLevelView(fontSize: 10, iconSize: 16)
 
     private lazy var syncStateLabel: UILabel = {
         let label = UILabel()
