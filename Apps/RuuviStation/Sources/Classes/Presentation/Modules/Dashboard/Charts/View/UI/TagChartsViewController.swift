@@ -598,6 +598,7 @@ class TagChartsViewController: UIViewController {
         output.viewDidSelectAllChartHistory()
     }
 
+    // swiftlint:disable:next function_body_length
     fileprivate func moreButtonOptions(
         showChartStat: Bool = true,
         compactChartView: Bool = true
@@ -645,10 +646,12 @@ class TagChartsViewController: UIViewController {
             )
         }
 
-        var actions: [UIAction] = [exportHistoryCSVAction,
-                                   exportHistoryXLSXAction,
-                                   clearViewHistory,
-                                   minMaxAvgAction]
+        var actions: [UIAction] = [
+            exportHistoryCSVAction,
+            exportHistoryXLSXAction,
+            clearViewHistory,
+            minMaxAvgAction,
+        ]
 
         if chartModules.count > 2 {
             actions.append(chartCompactExpandAction)

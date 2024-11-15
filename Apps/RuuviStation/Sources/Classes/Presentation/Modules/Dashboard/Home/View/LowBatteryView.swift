@@ -23,8 +23,11 @@ class BatteryLevelView: UIView {
         return iv
     }()
 
-    convenience init(fontSize: CGFloat = 10) {
+    private var iconSize: CGFloat = 22
+
+    convenience init(fontSize: CGFloat = 10, iconSize: CGFloat = 22) {
         self.init()
+        self.iconSize = iconSize
         setUpUI()
         batteryLevelLabel.font = UIFont.Muli(.regular, size: fontSize)
     }
@@ -49,10 +52,10 @@ class BatteryLevelView: UIView {
         stack.axis = .horizontal
         stack.distribution = .fill
         batteryLevelIcon.heightAnchor.constraint(
-            lessThanOrEqualToConstant: 22
+            lessThanOrEqualToConstant: iconSize
         ).isActive = true
         batteryLevelIcon.widthAnchor.constraint(
-            lessThanOrEqualToConstant: 22
+            lessThanOrEqualToConstant: iconSize
         ).isActive = true
 
         addSubview(stack)
