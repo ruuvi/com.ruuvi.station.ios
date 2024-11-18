@@ -22,7 +22,8 @@ final class RuuviUserCoordinator: RuuviUser {
 
     var isAuthorized: Bool {
         get {
-            UserDefaults.standard.bool(forKey: isAuthorizedUDKey)
+            keychainService.userIsAuthorized &&
+                UserDefaults.standard.bool(forKey: isAuthorizedUDKey)
         }
         set {
             UserDefaults.standard.set(newValue, forKey: isAuthorizedUDKey)

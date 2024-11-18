@@ -24,8 +24,7 @@ extension KeychainServiceImpl: KeychainService {
             do {
                 return try keychain.get(Account.ruuviUserApi.rawValue)
             } catch {
-                return UserDefaults.standard
-                    .string(forKey: Account.ruuviUserApi.rawValue)
+                return nil
             }
         }
         set {
@@ -33,15 +32,13 @@ extension KeychainServiceImpl: KeychainService {
                 do {
                     try keychain.set(value, key: Account.ruuviUserApi.rawValue)
                 } catch {
-                    UserDefaults.standard
-                        .setValue(value, forKey: Account.ruuviUserApi.rawValue)
+                    // No op.
                 }
             } else {
                 do {
                     try keychain.remove(Account.ruuviUserApi.rawValue)
                 } catch {
-                    UserDefaults.standard
-                        .removeObject(forKey: Account.ruuviUserApi.rawValue)
+                    // No op.
                 }
             }
         }
@@ -52,8 +49,7 @@ extension KeychainServiceImpl: KeychainService {
             do {
                 return try keychain.get(Account.userApiEmail.rawValue)
             } catch {
-                return UserDefaults.standard
-                    .string(forKey: Account.userApiEmail.rawValue)
+                return nil
             }
         }
         set {
@@ -61,22 +57,19 @@ extension KeychainServiceImpl: KeychainService {
                 do {
                     try keychain.set(value, key: Account.userApiEmail.rawValue)
                 } catch {
-                    UserDefaults.standard
-                        .setValue(value, forKey: Account.userApiEmail.rawValue)
+                    // No op.
                 }
             } else {
                 do {
                     try keychain.remove(Account.userApiEmail.rawValue)
                 } catch {
-                    UserDefaults.standard
-                        .removeObject(forKey: Account.userApiEmail.rawValue)
+                    // No op.
                 }
             }
         }
     }
 
     var userIsAuthorized: Bool {
-        !((ruuviUserApiKey ?? "").isEmpty)
-            && !((userApiEmail ?? "").isEmpty)
+        ruuviUserApiKey?.isEmpty == false
     }
 }
