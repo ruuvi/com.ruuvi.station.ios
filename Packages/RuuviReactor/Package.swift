@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "RuuviReactor",
-    platforms: [.macOS(.v10_15), .iOS(.v13)],
+    platforms: [.macOS(.v10_15), .iOS(.v14)],
     products: [
         .library(
             name: "RuuviReactor",
@@ -35,7 +35,6 @@ let package = Package(
                 "RuuviReactor",
                 "RuuviContext",
                 "RuuviPersistence",
-                .product(name: "RuuviOntologyRealm", package: "RuuviOntology"),
                 .product(name: "RuuviOntologySQLite", package: "RuuviOntology"),
             ]
         ),
