@@ -43,6 +43,17 @@ extension RuuviTagEnvLogFull {
             movementCounter: nil,
             measurementSequenceNumber: nil,
             txPower: nil,
+            // TODO: Add support for log (E0_F0 FW)
+            pm1: nil,
+            pm2_5: nil,
+            pm4: nil,
+            pm10: nil,
+            co2: nil,
+            voc: nil,
+            nox: nil,
+            luminance: nil,
+            dbaAvg: nil,
+            dbaPeak: nil,
             temperatureOffset: 0.0,
             humidityOffset: 0.0,
             pressureOffset: 0.0

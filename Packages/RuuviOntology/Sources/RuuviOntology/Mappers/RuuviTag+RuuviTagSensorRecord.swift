@@ -70,6 +70,46 @@ extension RuuviTag: RuuviTagSensorRecord {
         return Voltage(value: voltage, unit: .volts)
     }
 
+    public var pm1: Double? {
+        pMatter1_0
+    }
+
+    public var pm2_5: Double? {
+        pMatter2_5
+    }
+
+    public var pm4: Double? {
+        pMatter4
+    }
+
+    public var pm10: Double? {
+        pMatter10
+    }
+
+    public var co2: Double? {
+        carbonDioxide
+    }
+
+    public var voc: Double? {
+        volatileOrganicCompound
+    }
+
+    public var nox: Double? {
+        nitrogenOxide
+    }
+
+    public var luminance: Double? {
+        luminanceValue
+    }
+
+    public var dbaAvg: Double? {
+        decibelAverage
+    }
+
+    public var dbaPeak: Double? {
+        decibelPeak
+    }
+
     public var temperatureOffset: Double { 0.0 }
     public var humidityOffset: Double { 0.0 }
     public var pressureOffset: Double { 0.0 }

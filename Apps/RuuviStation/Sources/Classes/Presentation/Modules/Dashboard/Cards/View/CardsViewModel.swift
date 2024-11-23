@@ -24,6 +24,16 @@ class CardsViewModel: NSObject {
     var rssi: Observable<Int?> = .init()
     var version: Observable<Int?> = .init()
     var voltage: Observable<Voltage?> = .init()
+    var pm1: Observable<Double?> = .init()
+    var pm2_5: Observable<Double?> = .init()
+    var pm4: Observable<Double?> = .init()
+    var pm10: Observable<Double?> = .init()
+    var co2: Observable<Double?> = .init()
+    var voc: Observable<Double?> = .init()
+    var nox: Observable<Double?> = .init()
+    var luminance: Observable<Double?> = .init()
+    var dbaAvg: Observable<Double?> = .init()
+    var dbaPeak: Observable<Double?> = .init()
     let batteryNeedsReplacement: Observable<Bool?> = .init()
     var background: Observable<UIImage?> = .init()
     var date: Observable<Date?> = .init()
@@ -106,6 +116,16 @@ class CardsViewModel: NSObject {
         date.value = record.date
         rssi.value = record.rssi
         movementCounter.value = record.movementCounter
+        pm1.value = record.pm1
+        pm2_5.value = record.pm2_5
+        pm4.value = record.pm4
+        pm10.value = record.pm10
+        co2.value = record.co2
+        voc.value = record.voc
+        nox.value = record.nox
+        luminance.value = record.luminance
+        dbaAvg.value = record.dbaAvg
+        dbaPeak.value = record.dbaPeak
         source.value = record.source
         batteryNeedsReplacement.value =
             batteryStatusProvider
@@ -144,6 +164,16 @@ class CardsViewModel: NSObject {
         serviceUUID.value = ruuviTag.serviceUUID
         date.value = Date()
         movementCounter.value = ruuviTag.movementCounter
+        pm1.value = ruuviTag.pm1
+        pm2_5.value = ruuviTag.pm2_5
+        pm4.value = ruuviTag.pm4
+        pm10.value = ruuviTag.pm10
+        co2.value = ruuviTag.co2
+        voc.value = ruuviTag.voc
+        nox.value = ruuviTag.nox
+        luminance.value = ruuviTag.luminance
+        dbaAvg.value = ruuviTag.dbaAvg
+        dbaPeak.value = ruuviTag.dbaPeak
         source.value = ruuviTag.source
     }
 }
