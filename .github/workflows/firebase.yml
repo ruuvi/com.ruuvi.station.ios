@@ -61,7 +61,7 @@ jobs:
           make set_build_number
 
       - name: Tools cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: .tools/
           key: ${{ runner.os }}-tools-${{ hashFiles('/.tools/') }}
@@ -73,7 +73,7 @@ jobs:
           make xcodeproj
 
       - name: SPM Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/Library/Developer/Xcode/DerivedData/Ruuvi*/SourcePackages/
           key: ${{ runner.os }}-Ruuvi-${{ hashFiles('Ruuvi.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
