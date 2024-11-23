@@ -21,6 +21,16 @@ struct TagSettingsViewModel {
     let movementCounter: Observable<Int?> = .init()
     let measurementSequenceNumber: Observable<Int?> = .init()
     let txPower: Observable<Int?> = .init()
+    let pm1: Observable<Double?> = .init()
+    let pm2_5: Observable<Double?> = .init()
+    let pm4: Observable<Double?> = .init()
+    let pm10: Observable<Double?> = .init()
+    let co2: Observable<Double?> = .init()
+    let voc: Observable<Double?> = .init()
+    let nox: Observable<Double?> = .init()
+    let luminance: Observable<Double?> = .init()
+    let dbaAvg: Observable<Double?> = .init()
+    let dbaPeak: Observable<Double?> = .init()
     let isConnectable: Observable<Bool?> = .init()
     let isConnected: Observable<Bool?> = .init()
     let isNetworkConnected: Observable<Bool?> = .init()
@@ -116,6 +126,16 @@ struct TagSettingsViewModel {
         movementCounter.value = record.movementCounter
         measurementSequenceNumber.value = record.measurementSequenceNumber
         txPower.value = record.txPower
+        pm1.value = record.pm1
+        pm2_5.value = record.pm2_5
+        pm4.value = record.pm4
+        pm10.value = record.pm10
+        co2.value = record.co2
+        voc.value = record.voc
+        nox.value = record.nox
+        luminance.value = record.luminance
+        dbaAvg.value = record.dbaAvg
+        dbaPeak.value = record.dbaPeak
         source.value = record.source
         let batteryStatusProvider = RuuviTagBatteryStatusProvider()
         batteryNeedsReplacement.value = batteryStatusProvider.batteryNeedsReplacement(
@@ -145,6 +165,7 @@ struct TagSettingsViewModel {
 
         isSignalAlertOn.value = false
         signalLowerBound.value = -105
+        signalLowerBound.value = -105
         signalUpperBound.value = 0
         signalAlertDescription.value = nil
 
@@ -155,5 +176,16 @@ struct TagSettingsViewModel {
         movementAlertDescription.value = nil
 
         latestMeasurement.value = nil
+
+        pm1.value = nil
+        pm2_5.value = nil
+        pm4.value = nil
+        pm10.value = nil
+        co2.value = nil
+        voc.value = nil
+        nox.value = nil
+        luminance.value = nil
+        dbaAvg.value = nil
+        dbaPeak.value = nil
     }
 }

@@ -255,6 +255,43 @@ extension SQLiteGRDBDatabase {
             })
         }
 
+        // v16
+        migrator.registerMigration("Add new columns to RuuviTagDataSQLite and RuuviTagLatestDataSQLite") { db in
+            // For RuuviTagDataSQLite
+            if try db.columns(in: RuuviTagDataSQLite.databaseTableName)
+                .contains(where: { $0.name == RuuviTagDataSQLite.pm1Column.name }) == false {
+                try db.alter(table: RuuviTagDataSQLite.databaseTableName, body: { t in
+                    t.add(column: RuuviTagDataSQLite.pm1Column.name, .double)
+                    t.add(column: RuuviTagDataSQLite.pm2_5Column.name, .double)
+                    t.add(column: RuuviTagDataSQLite.pm4Column.name, .double)
+                    t.add(column: RuuviTagDataSQLite.pm10Column.name, .double)
+                    t.add(column: RuuviTagDataSQLite.co2Column.name, .double)
+                    t.add(column: RuuviTagDataSQLite.vocColumn.name, .double)
+                    t.add(column: RuuviTagDataSQLite.noxColumn.name, .double)
+                    t.add(column: RuuviTagDataSQLite.luminanceColumn.name, .double)
+                    t.add(column: RuuviTagDataSQLite.dbaAvgColumn.name, .double)
+                    t.add(column: RuuviTagDataSQLite.dbaPeakColumn.name, .double)
+                })
+            }
+
+            // For RuuviTagLatestDataSQLite
+            if try db.columns(in: RuuviTagLatestDataSQLite.databaseTableName)
+                .contains(where: { $0.name == RuuviTagLatestDataSQLite.pm1Column.name }) == false {
+                try db.alter(table: RuuviTagLatestDataSQLite.databaseTableName, body: { t in
+                    t.add(column: RuuviTagLatestDataSQLite.pm1Column.name, .double)
+                    t.add(column: RuuviTagLatestDataSQLite.pm2_5Column.name, .double)
+                    t.add(column: RuuviTagLatestDataSQLite.pm4Column.name, .double)
+                    t.add(column: RuuviTagLatestDataSQLite.pm10Column.name, .double)
+                    t.add(column: RuuviTagLatestDataSQLite.co2Column.name, .double)
+                    t.add(column: RuuviTagLatestDataSQLite.vocColumn.name, .double)
+                    t.add(column: RuuviTagLatestDataSQLite.noxColumn.name, .double)
+                    t.add(column: RuuviTagLatestDataSQLite.luminanceColumn.name, .double)
+                    t.add(column: RuuviTagLatestDataSQLite.dbaAvgColumn.name, .double)
+                    t.add(column: RuuviTagLatestDataSQLite.dbaPeakColumn.name, .double)
+                })
+            }
+        }
+
         try migrator.migrate(dbPool)
     }
 }

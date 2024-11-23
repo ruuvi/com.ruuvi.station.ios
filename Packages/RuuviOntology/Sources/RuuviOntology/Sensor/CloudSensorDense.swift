@@ -160,6 +160,46 @@ extension AnyCloudSensorDense: RuuviTagSensorRecord {
         record.txPower
     }
 
+    public var pm1: Double? {
+        record.pm1
+    }
+
+    public var pm2_5: Double? {
+        record.pm2_5
+    }
+
+    public var pm4: Double? {
+        record.pm4
+    }
+
+    public var pm10: Double? {
+        record.pm10
+    }
+
+    public var co2: Double? {
+        record.co2
+    }
+
+    public var voc: Double? {
+        record.voc
+    }
+
+    public var nox: Double? {
+        record.nox
+    }
+
+    public var luminance: Double? {
+        record.luminance
+    }
+
+    public var dbaAvg: Double? {
+        record.dbaAvg
+    }
+
+    public var dbaPeak: Double? {
+        record.dbaPeak
+    }
+
     public var temperatureOffset: Double {
         record.temperatureOffset
     }
