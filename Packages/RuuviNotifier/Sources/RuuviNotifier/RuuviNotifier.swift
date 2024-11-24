@@ -41,5 +41,23 @@ public protocol RuuviNotifierTitles {
     var highPressure: String { get }
     var lowSignal: String { get }
     var highSignal: String { get }
+    var lowCarbonDioxide: String { get }
+    var highCarbonDioxide: String { get }
+    var lowPMatter1: String { get }
+    var highPMatter1: String { get }
+    var lowPMatter2_5: String { get }
+    var highPMatter2_5: String { get }
+    var lowPMatter4: String { get }
+    var highPMatter4: String { get }
+    var lowPMatter10: String { get }
+    var highPMatter10: String { get }
+    var lowVOC: String { get }
+    var highVOC: String { get }
+    var lowNOx: String { get }
+    var highNOx: String { get }
+    var lowSound: String { get }
+    var highSound: String { get }
+    var lowLuminosity: String { get }
+    var highLuminosity: String { get }
     var didMove: String { get }
 }

@@ -20,6 +20,15 @@ enum TagSettingsSectionIdentifier {
     case alertMovement
     case alertConnection
     case alertCloudConnection
+    case alertCarbonDioxide
+    case alertPMatter1
+    case alertPMatter2_5
+    case alertPMatter4
+    case alertPMatter10
+    case alertVOC
+    case alertNOx
+    case alertSound
+    case alertLuminosity
     case offsetCorrection
     case moreInfo
     case firmware
@@ -130,6 +139,8 @@ class TagSettingsViewController: UIViewController {
     private var cloudConnectionAlertDelayTextField = UITextField()
     private let cloudConnectionAlertDelayCharaterLimit: Int = 2
     private let commonHeaderHeight: CGFloat = 48
+
+    private var frozenContentOffsetForRowAnimation: CGPoint?
 
     private let pairedString = RuuviLocalization.TagSettings.PairAndBackgroundScan.Paired.title
     private let pairingString = RuuviLocalization.TagSettings.PairAndBackgroundScan.Pairing.title
@@ -260,6 +271,87 @@ class TagSettingsViewController: UIViewController {
         reuseIdentifier: Self.ReuseIdentifier
     )
 
+    // Carbon Dioxide
+    private lazy var co2AlertSectionHeaderView:
+        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+
+    private lazy var co2AlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
+
+    // PM1
+    private lazy var pm1AlertSectionHeaderView:
+        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+
+    private lazy var pm1AlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
+
+    // PM2.5
+    private lazy var pm2_5AlertSectionHeaderView:
+        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+
+    private lazy var pm2_5AlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
+
+    // PM4
+    private lazy var pm4AlertSectionHeaderView:
+        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+
+    private lazy var pm4AlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
+
+    // PM10
+    private lazy var pm10AlertSectionHeaderView:
+        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+
+    private lazy var pm10AlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
+
+    // VOC
+    private lazy var vocAlertSectionHeaderView:
+        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+
+    private lazy var vocAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
+
+    // NOX
+    private lazy var noxAlertSectionHeaderView:
+        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+
+    private lazy var noxAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
+
+    // Sound
+    private lazy var soundAlertSectionHeaderView:
+        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+
+    private lazy var soundAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
+
+    // Luminosity
+    private lazy var luminosityAlertSectionHeaderView:
+        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+
+    private lazy var luminosityAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
+
     // Movement
     private lazy var movementAlertSectionHeaderView:
         TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
@@ -380,6 +472,24 @@ class TagSettingsViewController: UIViewController {
         pressureAlertCell = nil
         rssiAlertSectionHeaderView = nil
         rssiAlertCell = nil
+        co2AlertSectionHeaderView = nil
+        co2AlertCell = nil
+        pm1AlertSectionHeaderView = nil
+        pm1AlertCell = nil
+        pm2_5AlertSectionHeaderView = nil
+        pm2_5AlertCell = nil
+        pm4AlertSectionHeaderView = nil
+        pm4AlertCell = nil
+        pm10AlertSectionHeaderView = nil
+        pm10AlertCell = nil
+        vocAlertSectionHeaderView = nil
+        vocAlertCell = nil
+        noxAlertSectionHeaderView = nil
+        noxAlertCell = nil
+        soundAlertSectionHeaderView = nil
+        soundAlertCell = nil
+        luminosityAlertSectionHeaderView = nil
+        luminosityAlertCell = nil
         movementAlertSectionHeaderView = nil
         movementAlertCell = nil
         connectionAlertSectionHeaderView = nil
@@ -461,12 +571,27 @@ extension TagSettingsViewController {
     }
 
     private func updateUI() {
-        tableView.reloadData()
+        tableView.performBatchUpdates({
+            tableView.reloadData()
+        }, completion: { [weak self] completed in
+            if completed {
+                self?.frozenContentOffsetForRowAnimation = self?.tableView.contentOffset
+            }
+        })
     }
 
     private func reloadSection(index: Int) {
+        let originalContentOffset = tableView.contentOffset
+        tableView.beginUpdates()
+
         let section = NSIndexSet(index: index) as IndexSet
         tableView.reloadSections(section, with: .fade)
+
+        tableView.endUpdates()
+
+        if tableView.contentOffset != originalContentOffset {
+            frozenContentOffsetForRowAnimation = tableView.contentOffset
+        }
     }
 
     private func reloadSection(identifier: TagSettingsSectionIdentifier) {
@@ -624,6 +749,21 @@ extension TagSettingsViewController {
         tableViewSections.firstIndex(where: {
             $0.identifier == section
         }) ?? tableViewSections.count
+    }
+}
+
+// MARK: ScrollViewDelegate
+
+extension TagSettingsViewController: UIScrollViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        frozenContentOffsetForRowAnimation = nil
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if let overrideOffset = frozenContentOffsetForRowAnimation,
+            scrollView.contentOffset != overrideOffset {
+            scrollView.setContentOffset(overrideOffset, animated: false)
+        }
     }
 }
 
@@ -1392,6 +1532,818 @@ extension TagSettingsViewController {
                 }
         }
 
+        // Carbon Dioxide
+        if let co2AlertCell {
+            co2AlertCell.bind(viewModel.isCarbonDioxideAlertOn) { cell, value in
+                cell.setStatus(
+                    with: value,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
+            }
+
+            co2AlertCell.bind(viewModel.carbonDioxideAlertDescription) {
+                [weak self] cell, value in
+                cell.setCustomDescription(with: self?.alertCustomDescription(from: value))
+            }
+
+            co2AlertCell.bind(viewModel.carbonDioxideUpperBound) {
+                [weak self] cell, _ in
+                cell
+                    .setAlertLimitDescription(
+                        description: self?.co2AlertRangeDescription()
+                    )
+                cell.setAlertRange(
+                    selectedMinValue: self?.co2LowerBound(),
+                    selectedMaxValue: self?.co2UpperBound()
+                )
+            }
+
+            co2AlertCell.bind(viewModel.carbonDioxideLowerBound) {
+                [weak self] cell, _ in
+                cell.setAlertLimitDescription(description: self?.co2AlertRangeDescription())
+                cell.setAlertRange(
+                    selectedMinValue: self?.co2LowerBound(),
+                    selectedMaxValue: self?.co2UpperBound()
+                )
+            }
+
+            co2AlertCell.bind(viewModel.latestMeasurement) { [weak self]
+                cell, measurement in
+                cell.disableEditing(
+                    disable: measurement == nil,
+                    identifier: .alertCarbonDioxide
+                )
+                guard let sSelf = self else { return }
+                cell.setLatestMeasurementText(
+                    with: sSelf.latestValue(
+                        for: .carbonDioxide(
+                            lower: 0,
+                            upper: 0
+                        )
+                    )
+                )
+            }
+        }
+
+        if let co2AlertSectionHeaderView {
+            co2AlertSectionHeaderView.bind(
+                viewModel.carbonDioxideAlertMutedTill) {
+                    [weak self] header,
+                    mutedTill in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isCarbonDioxideAlertOn.value)
+                    let alertState = viewModel.carbonDioxideAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            co2AlertSectionHeaderView
+                .bind(viewModel.isCarbonDioxideAlertOn) { [weak self] header, isOn in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                        GlobalHelpers.getBool(from: isOn)
+                    let alertState = viewModel.carbonDioxideAlertState.value
+                    let mutedTill = viewModel.carbonDioxideAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            co2AlertSectionHeaderView
+                .bind(viewModel.carbonDioxideAlertState) {
+                    [weak self] header,
+                    state in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isCarbonDioxideAlertOn.value)
+                    let mutedTill = viewModel.carbonDioxideAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
+                }
+        }
+
+        // PM1
+        if let pm1AlertCell {
+            pm1AlertCell.bind(viewModel.isPMatter1AlertOn) { cell, value in
+                cell.setStatus(
+                    with: value,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
+            }
+
+            pm1AlertCell.bind(viewModel.pMatter1AlertDescription) {
+                [weak self] cell, value in
+                cell.setCustomDescription(with: self?.alertCustomDescription(from: value))
+            }
+
+            pm1AlertCell.bind(viewModel.pMatter1UpperBound) {
+                [weak self] cell, _ in
+                cell
+                    .setAlertLimitDescription(
+                        description: self?.pm1AlertRangeDescription()
+                    )
+                cell.setAlertRange(
+                    selectedMinValue: self?.pm1LowerBound(),
+                    selectedMaxValue: self?.pm1UpperBound()
+                )
+            }
+
+            pm1AlertCell.bind(viewModel.pMatter1LowerBound) {
+                [weak self] cell, _ in
+                cell.setAlertLimitDescription(description: self?.pm1AlertRangeDescription())
+                cell.setAlertRange(
+                    selectedMinValue: self?.pm1LowerBound(),
+                    selectedMaxValue: self?.pm1UpperBound()
+                )
+            }
+
+            pm1AlertCell.bind(viewModel.latestMeasurement) { [weak self]
+                cell, measurement in
+                cell.disableEditing(
+                    disable: measurement == nil,
+                    identifier: .alertPMatter1
+                )
+                guard let sSelf = self else { return }
+                cell.setLatestMeasurementText(
+                    with: sSelf.latestValue(
+                        for: .pMatter1(
+                            lower: 0,
+                            upper: 0
+                        )
+                    )
+                )
+            }
+        }
+
+        if let pm1AlertSectionHeaderView {
+            pm1AlertSectionHeaderView.bind(
+                viewModel.pMatter1AlertMutedTill) {
+                    [weak self] header,
+                    mutedTill in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isPMatter1AlertOn.value)
+                    let alertState = viewModel.pMatter1AlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            pm1AlertSectionHeaderView
+                .bind(viewModel.isPMatter1AlertOn) {
+                    [weak self] header,
+                    isOn in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                        GlobalHelpers.getBool(from: isOn)
+                    let alertState = viewModel.pMatter1AlertState.value
+                    let mutedTill = viewModel.pMatter1AlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            pm1AlertSectionHeaderView
+                .bind(viewModel.pMatter1AlertState) {
+                    [weak self] header,
+                    state in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isPMatter1AlertOn.value)
+                    let mutedTill = viewModel.pMatter1AlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
+                }
+        }
+
+        // PM2_5
+        if let pm2_5AlertCell {
+            pm2_5AlertCell.bind(viewModel.isPMatter2_5AlertOn) { cell, value in
+                cell.setStatus(
+                    with: value,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
+            }
+
+            pm2_5AlertCell.bind(viewModel.pMatter2_5AlertDescription) {
+                [weak self] cell, value in
+                cell.setCustomDescription(with: self?.alertCustomDescription(from: value))
+            }
+
+            pm2_5AlertCell.bind(viewModel.pMatter2_5UpperBound) {
+                [weak self] cell, _ in
+                cell
+                    .setAlertLimitDescription(
+                        description: self?.pm2_5AlertRangeDescription()
+                    )
+                cell.setAlertRange(
+                    selectedMinValue: self?.pm2_5LowerBound(),
+                    selectedMaxValue: self?.pm2_5UpperBound()
+                )
+            }
+
+            pm2_5AlertCell.bind(viewModel.pMatter2_5LowerBound) {
+                [weak self] cell, _ in
+                cell.setAlertLimitDescription(description: self?.pm2_5AlertRangeDescription())
+                cell.setAlertRange(
+                    selectedMinValue: self?.pm2_5LowerBound(),
+                    selectedMaxValue: self?.pm2_5UpperBound()
+                )
+            }
+
+            pm2_5AlertCell.bind(viewModel.latestMeasurement) { [weak self]
+                cell, measurement in
+                cell.disableEditing(
+                    disable: measurement == nil,
+                    identifier: .alertPMatter2_5
+                )
+                guard let sSelf = self else { return }
+                cell.setLatestMeasurementText(
+                    with: sSelf.latestValue(
+                        for: .pMatter2_5(
+                            lower: 0,
+                            upper: 0
+                        )
+                    )
+                )
+            }
+        }
+
+        if let pm2_5AlertSectionHeaderView {
+            pm2_5AlertSectionHeaderView.bind(
+                viewModel.pMatter2_5AlertMutedTill) {
+                    [weak self] header,
+                    mutedTill in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isPMatter2_5AlertOn.value)
+                    let alertState = viewModel.pMatter2_5AlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            pm2_5AlertSectionHeaderView
+                .bind(viewModel.isPMatter2_5AlertOn) {
+                    [weak self] header,
+                    isOn in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                        GlobalHelpers.getBool(from: isOn)
+                    let alertState = viewModel.pMatter2_5AlertState.value
+                    let mutedTill = viewModel.pMatter2_5AlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            pm2_5AlertSectionHeaderView
+                .bind(viewModel.pMatter2_5AlertState) {
+                    [weak self] header,
+                    state in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isPMatter2_5AlertOn.value)
+                    let mutedTill = viewModel.pMatter2_5AlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
+                }
+        }
+
+        // PM4
+        if let pm4AlertCell {
+            pm4AlertCell.bind(viewModel.isPMatter4AlertOn) { cell, value in
+                cell.setStatus(
+                    with: value,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
+            }
+
+            pm4AlertCell.bind(viewModel.pMatter4AlertDescription) {
+                [weak self] cell, value in
+                cell.setCustomDescription(with: self?.alertCustomDescription(from: value))
+            }
+
+            pm4AlertCell.bind(viewModel.pMatter4UpperBound) {
+                [weak self] cell, _ in
+                cell
+                    .setAlertLimitDescription(
+                        description: self?.pm4AlertRangeDescription()
+                    )
+                cell.setAlertRange(
+                    selectedMinValue: self?.pm4LowerBound(),
+                    selectedMaxValue: self?.pm4UpperBound()
+                )
+            }
+
+            pm4AlertCell.bind(viewModel.pMatter4LowerBound) {
+                [weak self] cell, _ in
+                cell.setAlertLimitDescription(description: self?.pm4AlertRangeDescription())
+                cell.setAlertRange(
+                    selectedMinValue: self?.pm4LowerBound(),
+                    selectedMaxValue: self?.pm4UpperBound()
+                )
+            }
+
+            pm4AlertCell.bind(viewModel.latestMeasurement) { [weak self]
+                cell, measurement in
+                cell.disableEditing(
+                    disable: measurement == nil,
+                    identifier: .alertPMatter4
+                )
+                guard let sSelf = self else { return }
+                cell.setLatestMeasurementText(
+                    with: sSelf.latestValue(
+                        for: .pMatter4(
+                            lower: 0,
+                            upper: 0
+                        )
+                    )
+                )
+            }
+        }
+
+        if let pm4AlertSectionHeaderView {
+            pm4AlertSectionHeaderView.bind(
+                viewModel.pMatter4AlertMutedTill) {
+                    [weak self] header,
+                    mutedTill in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isPMatter4AlertOn.value)
+                    let alertState = viewModel.pMatter4AlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            pm4AlertSectionHeaderView
+                .bind(viewModel.isPMatter4AlertOn) {
+                    [weak self] header,
+                    isOn in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                        GlobalHelpers.getBool(from: isOn)
+                    let alertState = viewModel.pMatter4AlertState.value
+                    let mutedTill = viewModel.pMatter4AlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            pm4AlertSectionHeaderView
+                .bind(viewModel.pMatter4AlertState) {
+                    [weak self] header,
+                    state in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isPMatter4AlertOn.value)
+                    let mutedTill = viewModel.pMatter4AlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
+                }
+        }
+
+        // PM10
+        if let pm10AlertCell {
+            pm10AlertCell.bind(viewModel.isPMatter10AlertOn) { cell, value in
+                cell.setStatus(
+                    with: value,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
+            }
+
+            pm10AlertCell.bind(viewModel.pMatter10AlertDescription) {
+                [weak self] cell, value in
+                cell.setCustomDescription(with: self?.alertCustomDescription(from: value))
+            }
+
+            pm10AlertCell.bind(viewModel.pMatter10UpperBound) {
+                [weak self] cell, _ in
+                cell
+                    .setAlertLimitDescription(
+                        description: self?.pm10AlertRangeDescription()
+                    )
+                cell.setAlertRange(
+                    selectedMinValue: self?.pm10LowerBound(),
+                    selectedMaxValue: self?.pm10UpperBound()
+                )
+            }
+
+            pm10AlertCell.bind(viewModel.pMatter10LowerBound) {
+                [weak self] cell, _ in
+                cell.setAlertLimitDescription(description: self?.pm10AlertRangeDescription())
+                cell.setAlertRange(
+                    selectedMinValue: self?.pm10LowerBound(),
+                    selectedMaxValue: self?.pm10UpperBound()
+                )
+            }
+
+            pm10AlertCell.bind(viewModel.latestMeasurement) { [weak self]
+                cell, measurement in
+                cell.disableEditing(
+                    disable: measurement == nil,
+                    identifier: .alertPMatter10
+                )
+                guard let sSelf = self else { return }
+                cell.setLatestMeasurementText(
+                    with: sSelf.latestValue(
+                        for: .pMatter10(
+                            lower: 0,
+                            upper: 0
+                        )
+                    )
+                )
+            }
+        }
+
+        if let pm10AlertSectionHeaderView {
+            pm10AlertSectionHeaderView.bind(
+                viewModel.pMatter10AlertMutedTill) {
+                    [weak self] header,
+                    mutedTill in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isPMatter10AlertOn.value)
+                    let alertState = viewModel.pMatter10AlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            pm10AlertSectionHeaderView
+                .bind(viewModel.isPMatter10AlertOn) {
+                    [weak self] header,
+                    isOn in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                        GlobalHelpers.getBool(from: isOn)
+                    let alertState = viewModel.pMatter10AlertState.value
+                    let mutedTill = viewModel.pMatter10AlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            pm10AlertSectionHeaderView
+                .bind(viewModel.pMatter10AlertState) {
+                    [weak self] header,
+                    state in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isPMatter10AlertOn.value)
+                    let mutedTill = viewModel.pMatter10AlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
+                }
+        }
+
+        // VOC
+        if let vocAlertCell {
+            vocAlertCell.bind(viewModel.isVOCAlertOn) { cell, value in
+                cell.setStatus(
+                    with: value,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
+            }
+
+            vocAlertCell.bind(viewModel.vocAlertDescription) {
+                [weak self] cell, value in
+                cell.setCustomDescription(with: self?.alertCustomDescription(from: value))
+            }
+
+            vocAlertCell.bind(viewModel.vocUpperBound) {
+                [weak self] cell, _ in
+                cell
+                    .setAlertLimitDescription(
+                        description: self?.vocAlertRangeDescription()
+                    )
+                cell.setAlertRange(
+                    selectedMinValue: self?.vocLowerBound(),
+                    selectedMaxValue: self?.vocUpperBound()
+                )
+            }
+
+            vocAlertCell.bind(viewModel.vocLowerBound) {
+                [weak self] cell, _ in
+                cell.setAlertLimitDescription(description: self?.vocAlertRangeDescription())
+                cell.setAlertRange(
+                    selectedMinValue: self?.vocLowerBound(),
+                    selectedMaxValue: self?.vocUpperBound()
+                )
+            }
+
+            vocAlertCell.bind(viewModel.latestMeasurement) { [weak self]
+                cell, measurement in
+                cell.disableEditing(
+                    disable: measurement == nil,
+                    identifier: .alertVOC
+                )
+                guard let sSelf = self else { return }
+                cell.setLatestMeasurementText(
+                    with: sSelf.latestValue(
+                        for: .voc(
+                            lower: 0,
+                            upper: 0
+                        )
+                    )
+                )
+            }
+        }
+
+        if let vocAlertSectionHeaderView {
+            vocAlertSectionHeaderView.bind(
+                viewModel.vocAlertMutedTill) {
+                    [weak self] header,
+                    mutedTill in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isVOCAlertOn.value)
+                    let alertState = viewModel.vocAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            vocAlertSectionHeaderView
+                .bind(viewModel.isVOCAlertOn) { [weak self] header, isOn in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                        GlobalHelpers.getBool(from: isOn)
+                    let alertState = viewModel.vocAlertState.value
+                    let mutedTill = viewModel.vocAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            vocAlertSectionHeaderView
+                .bind(viewModel.vocAlertState) {
+                    [weak self] header,
+                    state in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isVOCAlertOn.value)
+                    let mutedTill = viewModel.vocAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
+                }
+        }
+
+        // NOX
+        if let noxAlertCell {
+            noxAlertCell.bind(viewModel.isNOXAlertOn) { cell, value in
+                cell.setStatus(
+                    with: value,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
+            }
+
+            noxAlertCell.bind(viewModel.noxAlertDescription) {
+                [weak self] cell, value in
+                cell.setCustomDescription(with: self?.alertCustomDescription(from: value))
+            }
+
+            noxAlertCell.bind(viewModel.noxUpperBound) {
+                [weak self] cell, _ in
+                cell
+                    .setAlertLimitDescription(
+                        description: self?.noxAlertRangeDescription()
+                    )
+                cell.setAlertRange(
+                    selectedMinValue: self?.noxLowerBound(),
+                    selectedMaxValue: self?.noxUpperBound()
+                )
+            }
+
+            noxAlertCell.bind(viewModel.noxLowerBound) {
+                [weak self] cell, _ in
+                cell.setAlertLimitDescription(description: self?.noxAlertRangeDescription())
+                cell.setAlertRange(
+                    selectedMinValue: self?.noxLowerBound(),
+                    selectedMaxValue: self?.noxUpperBound()
+                )
+            }
+
+            noxAlertCell.bind(viewModel.latestMeasurement) { [weak self]
+                cell, measurement in
+                cell.disableEditing(
+                    disable: measurement == nil,
+                    identifier: .alertNOx
+                )
+                guard let sSelf = self else { return }
+                cell.setLatestMeasurementText(
+                    with: sSelf.latestValue(
+                        for: .nox(
+                            lower: 0,
+                            upper: 0
+                        )
+                    )
+                )
+            }
+        }
+
+        if let noxAlertSectionHeaderView {
+            noxAlertSectionHeaderView.bind(
+                viewModel.carbonDioxideAlertMutedTill) {
+                    [weak self] header,
+                    mutedTill in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isNOXAlertOn.value)
+                    let alertState = viewModel.noxAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            noxAlertSectionHeaderView
+                .bind(viewModel.isNOXAlertOn) { [weak self] header, isOn in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                        GlobalHelpers.getBool(from: isOn)
+                    let alertState = viewModel.noxAlertState.value
+                    let mutedTill = viewModel.noxAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            noxAlertSectionHeaderView
+                .bind(viewModel.noxAlertState) {
+                    [weak self] header,
+                    state in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isNOXAlertOn.value)
+                    let mutedTill = viewModel.noxAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
+                }
+        }
+
+        // Sound
+        if let soundAlertCell {
+            soundAlertCell.bind(viewModel.isSoundAlertOn) { cell, value in
+                cell.setStatus(
+                    with: value,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
+            }
+
+            soundAlertCell.bind(viewModel.soundAlertDescription) {
+                [weak self] cell, value in
+                cell.setCustomDescription(with: self?.alertCustomDescription(from: value))
+            }
+
+            soundAlertCell.bind(viewModel.soundUpperBound) {
+                [weak self] cell, _ in
+                cell
+                    .setAlertLimitDescription(
+                        description: self?.soundAlertRangeDescription()
+                    )
+                cell.setAlertRange(
+                    selectedMinValue: self?.soundLowerBound(),
+                    selectedMaxValue: self?.soundUpperBound()
+                )
+            }
+
+            soundAlertCell.bind(viewModel.soundLowerBound) {
+                [weak self] cell, _ in
+                cell.setAlertLimitDescription(description: self?.soundAlertRangeDescription())
+                cell.setAlertRange(
+                    selectedMinValue: self?.soundLowerBound(),
+                    selectedMaxValue: self?.soundUpperBound()
+                )
+            }
+
+            soundAlertCell.bind(viewModel.latestMeasurement) { [weak self]
+                cell, measurement in
+                cell.disableEditing(
+                    disable: measurement == nil,
+                    identifier: .alertSound
+                )
+                guard let sSelf = self else { return }
+                cell.setLatestMeasurementText(
+                    with: sSelf.latestValue(
+                        for: .sound(
+                            lower: 0,
+                            upper: 0
+                        )
+                    )
+                )
+            }
+        }
+
+        if let soundAlertSectionHeaderView {
+            soundAlertSectionHeaderView.bind(
+                viewModel.soundAlertMutedTill) {
+                    [weak self] header,
+                    mutedTill in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isSoundAlertOn.value)
+                    let alertState = viewModel.soundAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            soundAlertSectionHeaderView
+                .bind(viewModel.isSignalAlertOn) { [weak self] header, isOn in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                        GlobalHelpers.getBool(from: isOn)
+                    let alertState = viewModel.soundAlertState.value
+                    let mutedTill = viewModel.soundAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            soundAlertSectionHeaderView
+                .bind(viewModel.soundAlertState) {
+                    [weak self] header,
+                    state in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isSignalAlertOn.value)
+                    let mutedTill = viewModel.soundAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
+                }
+        }
+
+        // Luminosity
+        if let luminosityAlertCell {
+            luminosityAlertCell
+                .bind(viewModel.isLuminosityAlertOn) { cell, value in
+                cell.setStatus(
+                    with: value,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
+            }
+
+            luminosityAlertCell.bind(viewModel.luminosityAlertDescription) {
+                [weak self] cell, value in
+                cell.setCustomDescription(with: self?.alertCustomDescription(from: value))
+            }
+
+            luminosityAlertCell.bind(viewModel.luminosityLowerBound) {
+                [weak self] cell, _ in
+                cell
+                    .setAlertLimitDescription(
+                        description: self?.luminosityAlertRangeDescription()
+                    )
+                cell.setAlertRange(
+                    selectedMinValue: self?.luminosityLowerBound(),
+                    selectedMaxValue: self?.luminosityUpperBound()
+                )
+            }
+
+            luminosityAlertCell.bind(viewModel.luminosityLowerBound) {
+                [weak self] cell, _ in
+                cell.setAlertLimitDescription(description: self?.luminosityAlertRangeDescription())
+                cell.setAlertRange(
+                    selectedMinValue: self?.luminosityLowerBound(),
+                    selectedMaxValue: self?.luminosityUpperBound()
+                )
+            }
+
+            luminosityAlertCell.bind(viewModel.latestMeasurement) { [weak self]
+                cell, measurement in
+                cell.disableEditing(
+                    disable: measurement == nil,
+                    identifier: .alertLuminosity
+                )
+                guard let sSelf = self else { return }
+                cell.setLatestMeasurementText(
+                    with: sSelf.latestValue(
+                        for: .luminosity(
+                            lower: 0,
+                            upper: 0
+                        )
+                    )
+                )
+            }
+        }
+
+        if let luminosityAlertSectionHeaderView {
+            luminosityAlertSectionHeaderView.bind(
+                viewModel.luminosityAlertMutedTill) {
+                    [weak self] header,
+                    mutedTill in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isLuminosityAlertOn.value)
+                    let alertState = viewModel.luminosityAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            luminosityAlertSectionHeaderView
+                .bind(viewModel.isLuminosityAlertOn) {
+                    [weak self] header,
+                    isOn in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                        GlobalHelpers.getBool(from: isOn)
+                    let alertState = viewModel.luminosityAlertState.value
+                    let mutedTill = viewModel.luminosityAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            luminosityAlertSectionHeaderView
+                .bind(viewModel.luminosityAlertState) {
+                    [weak self] header,
+                    state in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isLuminosityAlertOn.value)
+                    let mutedTill = viewModel.luminosityAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
+                }
+        }
+
         // Movement
         if let movementAlertCell {
             movementAlertCell.bind(viewModel.isMovementAlertOn) { cell, value in
@@ -1561,6 +2513,7 @@ extension TagSettingsViewController {
         }
     }
 
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func configureAlertSections() -> [TagSettingsSection] {
         var sections: [TagSettingsSection] = []
 
@@ -1568,12 +2521,64 @@ extension TagSettingsViewController {
         sections += [
             configureAlertHeaderSection(),
             configureTemperatureAlertSection(),
-            configureHumidityAlertSection(),
-            configurePressureAlertSection(),
-            configureRSSIAlertSection(),
-            configureMovementAlertSection(),
-            configureConnectionAlertSection(),
         ]
+
+        // Variable items
+        if viewModel?.latestMeasurement.value?.humidity != nil {
+            sections.append(configureHumidityAlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.pressure != nil {
+            sections.append(configurePressureAlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.rssi != nil {
+            sections.append(configureRSSIAlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.co2 != nil {
+            sections.append(configureCO2AlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.pm1 != nil {
+            sections.append(configurePM1AlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.pm2_5 != nil {
+            sections.append(configurePM2_5AlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.pm4 != nil {
+            sections.append(configurePM4AlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.pm10 != nil {
+            sections.append(configurePM10AlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.voc != nil {
+            sections.append(configureVOCAlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.nox != nil {
+            sections.append(configureNOXAlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.dbaAvg != nil {
+            sections.append(configureSoundAlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.luminance != nil {
+            sections.append(configureLuminosityAlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.movementCounter != nil {
+            sections.append(configureMovementAlertSection())
+        }
+
+        if viewModel?.isConnectable != nil {
+            sections.append(configureConnectionAlertSection())
+        }
 
         if cloudConnectionAlertVisible() {
             sections += [
@@ -1781,6 +2786,555 @@ extension TagSettingsViewController {
         return settingItem
     }
 
+    // MARK: - CO2 ALERTS
+
+    private func configureCO2AlertSection() -> TagSettingsSection {
+        let title = RuuviLocalization.TagSettings.Co2AlertTitleLabel.text(
+            RuuviLocalization.unitCo2
+        )
+        let section = TagSettingsSection(
+            identifier: .alertCarbonDioxide,
+            title: title,
+            cells: [
+                co2AlertItem()
+            ],
+            collapsed: true,
+            headerType: .expandable
+        )
+        return section
+    }
+
+    private func co2AlertItem() -> TagSettingsItem {
+        let (minRange, maxRange) = co2AlertRange()
+        let disableCo2 = !hasMeasurement()
+        let latestMeasurement = latestValue(
+            for: .carbonDioxide(lower: 0, upper: 0)
+        )
+        let settingItem = TagSettingsItem(
+            createdCell: {
+                [weak self] in
+                self?.co2AlertCell?.hideNoticeView()
+                self?.co2AlertCell?.showAlertRangeSetter()
+                self?.co2AlertCell?
+                    .setStatus(
+                        with: self?.viewModel?.isCarbonDioxideAlertOn.value,
+                        hideStatusLabel: self?.viewModel?.hideSwitchStatusLabel.value ?? false
+                    )
+                self?.co2AlertCell?
+                    .setCustomDescription(
+                        with: self?.alertCustomDescription(from: self?.viewModel?
+                            .carbonDioxideAlertDescription.value))
+                self?.co2AlertCell?
+                    .setAlertLimitDescription(
+                        description: self?.co2AlertRangeDescription()
+                    )
+                self?.co2AlertCell?.setAlertRange(
+                    minValue: minRange,
+                    selectedMinValue: self?.co2LowerBound(),
+                    maxValue: maxRange,
+                    selectedMaxValue: self?.co2UpperBound()
+                )
+                self?.co2AlertCell?.setLatestMeasurementText(with: latestMeasurement)
+                self?.co2AlertCell?.disableEditing(
+                    disable: disableCo2,
+                    identifier: .alertCarbonDioxide
+                )
+                self?.co2AlertCell?.delegate = self
+                return self?.co2AlertCell ?? UITableViewCell()
+            },
+            action: nil
+        )
+        return settingItem
+    }
+
+    // MARK: - PM1 ALERTS
+
+    private func configurePM1AlertSection() -> TagSettingsSection {
+        let title = RuuviLocalization.TagSettings.Pm10AlertTitleLabel.text(
+            RuuviLocalization.unitPm10
+        )
+        let section = TagSettingsSection(
+            identifier: .alertPMatter1,
+            title: title,
+            cells: [
+                pm1AlertItem()
+            ],
+            collapsed: true,
+            headerType: .expandable
+        )
+        return section
+    }
+
+    private func pm1AlertItem() -> TagSettingsItem {
+        let (minRange, maxRange) = pmAlertRange()
+        let disablePM1 = !hasMeasurement()
+        let latestMeasurement = latestValue(
+            for: .pMatter1(lower: 0, upper: 0)
+        )
+        let settingItem = TagSettingsItem(
+            createdCell: {
+                [weak self] in
+                self?.pm1AlertCell?.hideNoticeView()
+                self?.pm1AlertCell?.showAlertRangeSetter()
+                self?.pm1AlertCell?
+                    .setStatus(
+                        with: self?.viewModel?.isPMatter1AlertOn.value,
+                        hideStatusLabel: self?.viewModel?.hideSwitchStatusLabel.value ?? false
+                    )
+                self?.pm1AlertCell?
+                    .setCustomDescription(
+                        with: self?.alertCustomDescription(from: self?.viewModel?
+                            .pMatter1AlertDescription.value))
+                self?.pm1AlertCell?
+                    .setAlertLimitDescription(
+                        description: self?.pm1AlertRangeDescription()
+                    )
+                self?.pm1AlertCell?.setAlertRange(
+                    minValue: minRange,
+                    selectedMinValue: self?.pm1LowerBound(),
+                    maxValue: maxRange,
+                    selectedMaxValue: self?.pm1UpperBound()
+                )
+                self?.pm1AlertCell?.setLatestMeasurementText(with: latestMeasurement)
+                self?.pm1AlertCell?.disableEditing(
+                    disable: disablePM1,
+                    identifier: .alertPMatter1
+                )
+                self?.pm1AlertCell?.delegate = self
+                return self?.pm1AlertCell ?? UITableViewCell()
+            },
+            action: nil
+        )
+        return settingItem
+    }
+
+    // MARK: - PM2.5 ALERTS
+
+    private func configurePM2_5AlertSection() -> TagSettingsSection {
+        let title = RuuviLocalization.TagSettings.Pm25AlertTitleLabel.text(
+            RuuviLocalization.unitPm25
+        )
+        let section = TagSettingsSection(
+            identifier: .alertPMatter2_5,
+            title: title,
+            cells: [
+                pm2_5AlertItem()
+            ],
+            collapsed: true,
+            headerType: .expandable
+        )
+        return section
+    }
+
+    private func pm2_5AlertItem() -> TagSettingsItem {
+        let (minRange, maxRange) = pmAlertRange()
+        let disablePM = !hasMeasurement()
+        let latestMeasurement = latestValue(
+            for: .pMatter2_5(lower: 0, upper: 0)
+        )
+        let settingItem = TagSettingsItem(
+            createdCell: {
+                [weak self] in
+                self?.pm2_5AlertCell?.hideNoticeView()
+                self?.pm2_5AlertCell?.showAlertRangeSetter()
+                self?.pm2_5AlertCell?
+                    .setStatus(
+                        with: self?.viewModel?.isPMatter2_5AlertOn.value,
+                        hideStatusLabel: self?.viewModel?.hideSwitchStatusLabel.value ?? false
+                    )
+                self?.pm2_5AlertCell?
+                    .setCustomDescription(
+                        with: self?.alertCustomDescription(from: self?.viewModel?
+                            .pMatter2_5AlertDescription.value))
+                self?.pm2_5AlertCell?
+                    .setAlertLimitDescription(
+                        description: self?.pm2_5AlertRangeDescription()
+                    )
+                self?.pm2_5AlertCell?.setAlertRange(
+                    minValue: minRange,
+                    selectedMinValue: self?.pm2_5LowerBound(),
+                    maxValue: maxRange,
+                    selectedMaxValue: self?.pm2_5UpperBound()
+                )
+                self?.pm2_5AlertCell?.setLatestMeasurementText(with: latestMeasurement)
+                self?.pm2_5AlertCell?.disableEditing(
+                    disable: disablePM,
+                    identifier: .alertPMatter2_5
+                )
+                self?.pm2_5AlertCell?.delegate = self
+                return self?.pm2_5AlertCell ?? UITableViewCell()
+            },
+            action: nil
+        )
+        return settingItem
+    }
+
+    // MARK: - PM4 ALERTS
+
+    private func configurePM4AlertSection() -> TagSettingsSection {
+        let title = RuuviLocalization.TagSettings.Pm40AlertTitleLabel.text(
+            RuuviLocalization.unitPm40
+        )
+        let section = TagSettingsSection(
+            identifier: .alertPMatter4,
+            title: title,
+            cells: [
+                pm4AlertItem()
+            ],
+            collapsed: true,
+            headerType: .expandable
+        )
+        return section
+    }
+
+    private func pm4AlertItem() -> TagSettingsItem {
+        let (minRange, maxRange) = pmAlertRange()
+        let disablePM = !hasMeasurement()
+        let latestMeasurement = latestValue(
+            for: .pMatter4(lower: 0, upper: 0)
+        )
+        let settingItem = TagSettingsItem(
+            createdCell: {
+                [weak self] in
+                self?.pm4AlertCell?.hideNoticeView()
+                self?.pm4AlertCell?.showAlertRangeSetter()
+                self?.pm4AlertCell?
+                    .setStatus(
+                        with: self?.viewModel?.isPMatter4AlertOn.value,
+                        hideStatusLabel: self?.viewModel?.hideSwitchStatusLabel.value ?? false
+                    )
+                self?.pm4AlertCell?
+                    .setCustomDescription(
+                        with: self?.alertCustomDescription(from: self?.viewModel?
+                            .pMatter4AlertDescription.value))
+                self?.pm4AlertCell?
+                    .setAlertLimitDescription(
+                        description: self?.pm4AlertRangeDescription()
+                    )
+                self?.pm4AlertCell?.setAlertRange(
+                    minValue: minRange,
+                    selectedMinValue: self?.pm4LowerBound(),
+                    maxValue: maxRange,
+                    selectedMaxValue: self?.pm4UpperBound()
+                )
+                self?.pm4AlertCell?.setLatestMeasurementText(with: latestMeasurement)
+                self?.pm4AlertCell?.disableEditing(
+                    disable: disablePM,
+                    identifier: .alertPMatter4
+                )
+                self?.pm4AlertCell?.delegate = self
+                return self?.pm4AlertCell ?? UITableViewCell()
+            },
+            action: nil
+        )
+        return settingItem
+    }
+
+    // MARK: - PM10 ALERTS
+
+    private func configurePM10AlertSection() -> TagSettingsSection {
+        let title = RuuviLocalization.TagSettings.Pm100AlertTitleLabel.text(
+            RuuviLocalization.unitPm100
+        )
+        let section = TagSettingsSection(
+            identifier: .alertPMatter10,
+            title: title,
+            cells: [
+                pm10AlertItem()
+            ],
+            collapsed: true,
+            headerType: .expandable
+        )
+        return section
+    }
+
+    private func pm10AlertItem() -> TagSettingsItem {
+        let (minRange, maxRange) = pmAlertRange()
+        let disablePM = !hasMeasurement()
+        let latestMeasurement = latestValue(
+            for: .pMatter10(lower: 0, upper: 0)
+        )
+        let settingItem = TagSettingsItem(
+            createdCell: {
+                [weak self] in
+                self?.pm10AlertCell?.hideNoticeView()
+                self?.pm10AlertCell?.showAlertRangeSetter()
+                self?.pm10AlertCell?
+                    .setStatus(
+                        with: self?.viewModel?.isPMatter10AlertOn.value,
+                        hideStatusLabel: self?.viewModel?.hideSwitchStatusLabel.value ?? false
+                    )
+                self?.pm10AlertCell?
+                    .setCustomDescription(
+                        with: self?.alertCustomDescription(from: self?.viewModel?
+                            .pMatter10AlertDescription.value))
+                self?.pm10AlertCell?
+                    .setAlertLimitDescription(
+                        description: self?.pm10AlertRangeDescription()
+                    )
+                self?.pm10AlertCell?.setAlertRange(
+                    minValue: minRange,
+                    selectedMinValue: self?.pm10LowerBound(),
+                    maxValue: maxRange,
+                    selectedMaxValue: self?.pm10UpperBound()
+                )
+                self?.pm10AlertCell?.setLatestMeasurementText(with: latestMeasurement)
+                self?.pm10AlertCell?.disableEditing(
+                    disable: disablePM,
+                    identifier: .alertPMatter10
+                )
+                self?.pm10AlertCell?.delegate = self
+                return self?.pm10AlertCell ?? UITableViewCell()
+            },
+            action: nil
+        )
+        return settingItem
+    }
+
+    // MARK: - VOC ALERTS
+
+    private func configureVOCAlertSection() -> TagSettingsSection {
+        let title = RuuviLocalization.TagSettings.VocAlertTitleLabel.text(
+            RuuviLocalization.unitVoc
+        )
+        let section = TagSettingsSection(
+            identifier: .alertVOC,
+            title: title,
+            cells: [
+                vocAlertItem()
+            ],
+            collapsed: true,
+            headerType: .expandable
+        )
+        return section
+    }
+
+    private func vocAlertItem() -> TagSettingsItem {
+        let (minRange, maxRange) = vocAlertRange()
+        let disableVOC = !hasMeasurement()
+        let latestMeasurement = latestValue(
+            for: .voc(lower: 0, upper: 0)
+        )
+        let settingItem = TagSettingsItem(
+            createdCell: {
+                [weak self] in
+                self?.vocAlertCell?.hideNoticeView()
+                self?.vocAlertCell?.showAlertRangeSetter()
+                self?.vocAlertCell?
+                    .setStatus(
+                        with: self?.viewModel?.isVOCAlertOn.value,
+                        hideStatusLabel: self?.viewModel?.hideSwitchStatusLabel.value ?? false
+                    )
+                self?.vocAlertCell?
+                    .setCustomDescription(
+                        with: self?.alertCustomDescription(from: self?.viewModel?
+                            .vocAlertDescription.value))
+                self?.vocAlertCell?
+                    .setAlertLimitDescription(
+                        description: self?.vocAlertRangeDescription()
+                    )
+                self?.vocAlertCell?.setAlertRange(
+                    minValue: minRange,
+                    selectedMinValue: self?.vocLowerBound(),
+                    maxValue: maxRange,
+                    selectedMaxValue: self?.vocUpperBound()
+                )
+                self?.vocAlertCell?.setLatestMeasurementText(with: latestMeasurement)
+                self?.vocAlertCell?.disableEditing(
+                    disable: disableVOC,
+                    identifier: .alertVOC
+                )
+                self?.vocAlertCell?.delegate = self
+                return self?.vocAlertCell ?? UITableViewCell()
+            },
+            action: nil
+        )
+        return settingItem
+    }
+
+    // MARK: - NOx ALERTS
+
+    private func configureNOXAlertSection() -> TagSettingsSection {
+        let title = RuuviLocalization.TagSettings.NoxAlertTitleLabel.text(
+            RuuviLocalization.unitNox
+        )
+        let section = TagSettingsSection(
+            identifier: .alertNOx,
+            title: title,
+            cells: [
+                noxAlertItem()
+            ],
+            collapsed: true,
+            headerType: .expandable
+        )
+        return section
+    }
+
+    private func noxAlertItem() -> TagSettingsItem {
+        let (minRange, maxRange) = noxAlertRange()
+        let disableNOX = !hasMeasurement()
+        let latestMeasurement = latestValue(
+            for: .nox(lower: 0, upper: 0)
+        )
+        let settingItem = TagSettingsItem(
+            createdCell: {
+                [weak self] in
+                self?.noxAlertCell?.hideNoticeView()
+                self?.noxAlertCell?.showAlertRangeSetter()
+                self?.noxAlertCell?
+                    .setStatus(
+                        with: self?.viewModel?.isNOXAlertOn.value,
+                        hideStatusLabel: self?.viewModel?.hideSwitchStatusLabel.value ?? false
+                    )
+                self?.noxAlertCell?
+                    .setCustomDescription(
+                        with: self?.alertCustomDescription(from: self?.viewModel?
+                            .noxAlertDescription.value))
+                self?.noxAlertCell?
+                    .setAlertLimitDescription(
+                        description: self?.noxAlertRangeDescription()
+                    )
+                self?.noxAlertCell?.setAlertRange(
+                    minValue: minRange,
+                    selectedMinValue: self?.noxLowerBound(),
+                    maxValue: maxRange,
+                    selectedMaxValue: self?.noxUpperBound()
+                )
+                self?.noxAlertCell?.setLatestMeasurementText(with: latestMeasurement)
+                self?.noxAlertCell?.disableEditing(
+                    disable: disableNOX,
+                    identifier: .alertNOx
+                )
+                self?.noxAlertCell?.delegate = self
+                return self?.noxAlertCell ?? UITableViewCell()
+            },
+            action: nil
+        )
+        return settingItem
+    }
+
+    // MARK: - SOUND ALERTS
+
+    private func configureSoundAlertSection() -> TagSettingsSection {
+        let title = RuuviLocalization.TagSettings.SoundAlertTitleLabel.text(
+            RuuviLocalization.unitSound
+        )
+        let section = TagSettingsSection(
+            identifier: .alertSound,
+            title: title,
+            cells: [
+                soundAlertItem()
+            ],
+            collapsed: true,
+            headerType: .expandable
+        )
+        return section
+    }
+
+    private func soundAlertItem() -> TagSettingsItem {
+        let (minRange, maxRange) = soundAlertRange()
+        let disableSound = !hasMeasurement()
+        let latestMeasurement = latestValue(
+            for: .sound(lower: 0, upper: 0)
+        )
+        let settingItem = TagSettingsItem(
+            createdCell: {
+                [weak self] in
+                self?.soundAlertCell?.hideNoticeView()
+                self?.soundAlertCell?.showAlertRangeSetter()
+                self?.soundAlertCell?
+                    .setStatus(
+                        with: self?.viewModel?.isSoundAlertOn.value,
+                        hideStatusLabel: self?.viewModel?.hideSwitchStatusLabel.value ?? false
+                    )
+                self?.soundAlertCell?
+                    .setCustomDescription(
+                        with: self?.alertCustomDescription(from: self?.viewModel?
+                            .soundAlertDescription.value))
+                self?.soundAlertCell?
+                    .setAlertLimitDescription(
+                        description: self?.soundAlertRangeDescription()
+                    )
+                self?.soundAlertCell?.setAlertRange(
+                    minValue: minRange,
+                    selectedMinValue: self?.soundLowerBound(),
+                    maxValue: maxRange,
+                    selectedMaxValue: self?.soundUpperBound()
+                )
+                self?.soundAlertCell?.setLatestMeasurementText(with: latestMeasurement)
+                self?.soundAlertCell?.disableEditing(
+                    disable: disableSound,
+                    identifier: .alertSound
+                )
+                self?.soundAlertCell?.delegate = self
+                return self?.soundAlertCell ?? UITableViewCell()
+            },
+            action: nil
+        )
+        return settingItem
+    }
+
+    // MARK: - LUMINOSITY ALERTS
+
+    private func configureLuminosityAlertSection() -> TagSettingsSection {
+        let title = RuuviLocalization.TagSettings.LuminosityAlertTitleLabel.text(
+            RuuviLocalization.unitLuminosity
+        )
+        let section = TagSettingsSection(
+            identifier: .alertLuminosity,
+            title: title,
+            cells: [
+                luminosityAlertItem()
+            ],
+            collapsed: true,
+            headerType: .expandable
+        )
+        return section
+    }
+
+    private func luminosityAlertItem() -> TagSettingsItem {
+        let (minRange, maxRange) = co2AlertRange()
+        let disableLuminosity = !hasMeasurement()
+        let latestMeasurement = latestValue(
+            for: .luminosity(lower: 0, upper: 0)
+        )
+        let settingItem = TagSettingsItem(
+            createdCell: {
+                [weak self] in
+                self?.luminosityAlertCell?.hideNoticeView()
+                self?.luminosityAlertCell?.showAlertRangeSetter()
+                self?.luminosityAlertCell?
+                    .setStatus(
+                        with: self?.viewModel?.isLuminosityAlertOn.value,
+                        hideStatusLabel: self?.viewModel?.hideSwitchStatusLabel.value ?? false
+                    )
+                self?.luminosityAlertCell?
+                    .setCustomDescription(
+                        with: self?.alertCustomDescription(from: self?.viewModel?
+                            .luminosityAlertDescription.value))
+                self?.luminosityAlertCell?
+                    .setAlertLimitDescription(
+                        description: self?.luminosityAlertRangeDescription()
+                    )
+                self?.luminosityAlertCell?.setAlertRange(
+                    minValue: minRange,
+                    selectedMinValue: self?.luminosityLowerBound(),
+                    maxValue: maxRange,
+                    selectedMaxValue: self?.luminosityUpperBound()
+                )
+                self?.luminosityAlertCell?.setLatestMeasurementText(with: latestMeasurement)
+                self?.luminosityAlertCell?.disableEditing(
+                    disable: disableLuminosity,
+                    identifier: .alertLuminosity
+                )
+                self?.luminosityAlertCell?.delegate = self
+                return self?.luminosityAlertCell ?? UITableViewCell()
+            },
+            action: nil
+        )
+        return settingItem
+    }
+
     // MARK: - MOVEMENT ALERTS
 
     private func configureMovementAlertSection() -> TagSettingsSection {
@@ -1872,7 +3426,8 @@ extension TagSettingsViewController {
     }
 
     private func cloudConnectionAlertItem() -> TagSettingsItem {
-        let duration = viewModel?.cloudConnectionAlertUnseenDuration.value?.intValue ?? 900
+        let duration = viewModel?.cloudConnectionAlertUnseenDuration.value?.intValue ??
+                TagSettingsAlertConstants.CloudConnection.defaultUnseenDuration
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
                 self?.cloudConnectionAlertCell?.hideAlertRangeSlider()
@@ -1887,7 +3442,7 @@ extension TagSettingsViewController {
                 self?.cloudConnectionAlertCell?
                     .setAlertLimitDescription(
                         description: self?.cloudConnectionAlertRangeDescription(
-                            from: duration / 60
+                            from: duration / 60 // Convert to minutes
                         )
                     )
                 self?.cloudConnectionAlertCell?.delegate = self
@@ -1911,6 +3466,15 @@ extension TagSettingsViewController {
         reloadRHAlertSectionHeader()
         reloadPressureAlertSectionHeader()
         reloadSignalAlertSectionHeader()
+        reloadCo2AlertSectionHeader()
+        reloadPM1AlertSectionHeader()
+        reloadPM2_5AlertSectionHeader()
+        reloadPM4AlertSectionHeader()
+        reloadPM10AlertSectionHeader()
+        reloadVOCAlertSectionHeader()
+        reloadNOXAlertSectionHeader()
+        reloadSoundAlertSectionHeader()
+        reloadLuminosityAlertSectionHeader()
         reloadMovementAlertSectionHeader()
         reloadConnectionAlertSectionHeader()
     }
@@ -1964,6 +3528,132 @@ extension TagSettingsViewController {
         let mutedTill = viewModel?.signalAlertMutedTill.value
         let alertState = viewModel?.signalAlertState.value
         rssiAlertSectionHeaderView?
+            .setAlertState(
+                with: mutedTill,
+                isOn: isOn,
+                alertState: alertState
+            )
+    }
+
+    private func reloadCo2AlertSectionHeader() {
+        let isOn = alertsAvailable() && GlobalHelpers.getBool(
+            from: viewModel?.isCarbonDioxideAlertOn.value
+        )
+        let mutedTill = viewModel?.carbonDioxideAlertMutedTill.value
+        let alertState = viewModel?.carbonDioxideAlertState.value
+        co2AlertSectionHeaderView?
+            .setAlertState(
+                with: mutedTill,
+                isOn: isOn,
+                alertState: alertState
+            )
+    }
+
+    private func reloadPM1AlertSectionHeader() {
+        let isOn = alertsAvailable() && GlobalHelpers.getBool(
+            from: viewModel?.isPMatter1AlertOn.value
+        )
+        let mutedTill = viewModel?.pMatter1AlertMutedTill.value
+        let alertState = viewModel?.pMatter1AlertState.value
+        pm1AlertSectionHeaderView?
+            .setAlertState(
+                with: mutedTill,
+                isOn: isOn,
+                alertState: alertState
+            )
+    }
+
+    private func reloadPM2_5AlertSectionHeader() {
+        let isOn = alertsAvailable() && GlobalHelpers.getBool(
+            from: viewModel?.isPMatter2_5AlertOn.value
+        )
+        let mutedTill = viewModel?.pMatter2_5AlertMutedTill.value
+        let alertState = viewModel?.pMatter2_5AlertState.value
+        pm2_5AlertSectionHeaderView?
+            .setAlertState(
+                with: mutedTill,
+                isOn: isOn,
+                alertState: alertState
+            )
+    }
+
+    private func reloadPM4AlertSectionHeader() {
+        let isOn = alertsAvailable() && GlobalHelpers.getBool(
+            from: viewModel?.isPMatter4AlertOn.value
+        )
+        let mutedTill = viewModel?.pMatter4AlertMutedTill.value
+        let alertState = viewModel?.pMatter4AlertState.value
+        pm4AlertSectionHeaderView?
+            .setAlertState(
+                with: mutedTill,
+                isOn: isOn,
+                alertState: alertState
+            )
+    }
+
+    private func reloadPM10AlertSectionHeader() {
+        let isOn = alertsAvailable() && GlobalHelpers.getBool(
+            from: viewModel?.isPMatter10AlertOn.value
+        )
+        let mutedTill = viewModel?.pMatter10AlertMutedTill.value
+        let alertState = viewModel?.pMatter10AlertState.value
+        pm10AlertSectionHeaderView?
+            .setAlertState(
+                with: mutedTill,
+                isOn: isOn,
+                alertState: alertState
+            )
+    }
+
+    private func reloadVOCAlertSectionHeader() {
+        let isOn = alertsAvailable() && GlobalHelpers.getBool(
+            from: viewModel?.isVOCAlertOn.value
+        )
+        let mutedTill = viewModel?.vocAlertMutedTill.value
+        let alertState = viewModel?.vocAlertState.value
+        vocAlertSectionHeaderView?
+            .setAlertState(
+                with: mutedTill,
+                isOn: isOn,
+                alertState: alertState
+            )
+    }
+
+    private func reloadNOXAlertSectionHeader() {
+        let isOn = alertsAvailable() && GlobalHelpers.getBool(
+            from: viewModel?.isNOXAlertOn.value
+        )
+        let mutedTill = viewModel?.noxAlertMutedTill.value
+        let alertState = viewModel?.noxAlertState.value
+        noxAlertSectionHeaderView?
+            .setAlertState(
+                with: mutedTill,
+                isOn: isOn,
+                alertState: alertState
+            )
+    }
+
+    private func reloadSoundAlertSectionHeader() {
+        let isOn = alertsAvailable() && GlobalHelpers.getBool(
+            from: viewModel?.isSoundAlertOn.value
+        )
+        let mutedTill = viewModel?.soundAlertMutedTill.value
+        let alertState = viewModel?.soundAlertState.value
+        soundAlertSectionHeaderView?
+            .setAlertState(
+                with: mutedTill,
+                isOn: isOn,
+                alertState: alertState
+            )
+    }
+
+    private func reloadLuminosityAlertSectionHeader() {
+        let isOn = alertsAvailable() && GlobalHelpers.getBool(
+            from: viewModel?.isLuminosityAlertOn.value
+        )
+        let mutedTill = viewModel?.luminosityAlertMutedTill.value
+        let alertState = viewModel?.luminosityAlertState.value
+        luminosityAlertSectionHeaderView?
             .setAlertState(
                 with: mutedTill,
                 isOn: isOn,
@@ -2114,8 +3804,10 @@ extension TagSettingsViewController {
     }
 
     private func customTempAlertBound() -> (lower: Double, upper: Double) {
-        let customLowerBound = viewModel?.customTemperatureLowerBound.value?.value ?? -55
-        let customUpperBound = viewModel?.customTemperatureUpperBound.value?.value ?? 150
+        let customLowerBound = viewModel?.customTemperatureLowerBound.value?.value ??
+            TagSettingsAlertConstants.Temperature.customLowerBound
+        let customUpperBound = viewModel?.customTemperatureUpperBound.value?.value ??
+            TagSettingsAlertConstants.Temperature.customUpperBound
         return (lower: customLowerBound, upper: customUpperBound)
     }
 
@@ -2125,6 +3817,7 @@ extension TagSettingsViewController {
         return numberFormatter.string(from: number) ?? ""
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func latestValue(for type: AlertType) -> String {
         switch type {
         case .temperature:
@@ -2160,6 +3853,69 @@ extension TagSettingsViewController {
             if let signal = viewModel?.latestMeasurement.value?.rssi {
                 let symbol = RuuviLocalization.dBm
                 return "\(signal)" + " \(symbol)"
+            } else {
+                return RuuviLocalization.na
+            }
+        case .carbonDioxide:
+            if let co2 = viewModel?.latestMeasurement.value?.co2?.round(to: 2) {
+                let symbol = RuuviLocalization.unitCo2
+                return "\(co2)" + " \(symbol)"
+            } else {
+                return RuuviLocalization.na
+            }
+        case .pMatter1:
+            if let pm1 = viewModel?.latestMeasurement.value?.pm1?.round(to: 2) {
+                let symbol = RuuviLocalization.unitPm10
+                return "\(pm1)" + " \(symbol)"
+            } else {
+                return RuuviLocalization.na
+            }
+        case .pMatter2_5:
+            if let pm2_5 = viewModel?.latestMeasurement.value?.pm2_5?.round(to: 2) {
+                let symbol = RuuviLocalization.unitPm25
+                return "\(pm2_5)" + " \(symbol)"
+            } else {
+                return RuuviLocalization.na
+            }
+        case .pMatter4:
+            if let pm4 = viewModel?.latestMeasurement.value?.pm4?.round(to: 2) {
+                let symbol = RuuviLocalization.unitPm40
+                return "\(pm4)" + " \(symbol)"
+            } else {
+                return RuuviLocalization.na
+            }
+        case .pMatter10:
+            if let pm10 = viewModel?.latestMeasurement.value?.pm10?.round(to: 2) {
+                let symbol = RuuviLocalization.unitPm100
+                return "\(pm10)" + " \(symbol)"
+            } else {
+                return RuuviLocalization.na
+            }
+        case .voc:
+            if let voc = viewModel?.latestMeasurement.value?.voc?.round(to: 2) {
+                let symbol = RuuviLocalization.unitVoc
+                return "\(voc)" + " \(symbol)"
+            } else {
+                return RuuviLocalization.na
+            }
+        case .nox:
+            if let nox = viewModel?.latestMeasurement.value?.nox?.round(to: 2) {
+                let symbol = RuuviLocalization.unitNox
+                return "\(nox)" + " \(symbol)"
+            } else {
+                return RuuviLocalization.na
+            }
+        case .sound:
+            if let sound = viewModel?.latestMeasurement.value?.dbaAvg?.round(to: 2) {
+                let symbol = RuuviLocalization.unitSound
+                return "\(sound)" + " \(symbol)"
+            } else {
+                return RuuviLocalization.na
+            }
+        case .luminosity:
+            if let luminance = viewModel?.latestMeasurement.value?.luminance?.round(to: 2) {
+                let symbol = RuuviLocalization.unitLuminosity
+                return "\(luminance)" + " \(symbol)"
             } else {
                 return RuuviLocalization.na
             }
@@ -2205,7 +3961,9 @@ extension TagSettingsViewController {
     }
 
     private func humidityLowerBound() -> CGFloat {
-        guard isViewLoaded else { return 0 }
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.RelativeHumidity.lowerBound
+        }
         let range = HumidityUnit.percent.alertRange
         if let lower = viewModel?.relativeHumidityLowerBound.value {
             return CGFloat(lower)
@@ -2215,7 +3973,9 @@ extension TagSettingsViewController {
     }
 
     private func humidityUpperBound() -> CGFloat {
-        guard isViewLoaded else { return 100 }
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.RelativeHumidity.upperBound
+        }
         let range = HumidityUnit.percent.alertRange
         if let upper = viewModel?.relativeHumidityUpperBound.value {
             return CGFloat(upper)
@@ -2280,7 +4040,9 @@ extension TagSettingsViewController {
     }
 
     private func pressureLowerBound() -> CGFloat {
-        guard isViewLoaded else { return 0 }
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.Pressure.lowerBound
+        }
         guard let pu = viewModel?.pressureUnit.value
         else {
             let range = UnitPressure.hectopascals.alertRange
@@ -2298,7 +4060,9 @@ extension TagSettingsViewController {
     }
 
     private func pressureUpperBound() -> CGFloat {
-        guard isViewLoaded else { return 0 }
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.Pressure.upperBound
+        }
         guard let pu = viewModel?.pressureUnit.value
         else {
             let range = UnitPressure.hectopascals.alertRange
@@ -2362,7 +4126,9 @@ extension TagSettingsViewController {
     }
 
     private func rssiLowerBound() -> CGFloat {
-        guard isViewLoaded else { return -105 }
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.Signal.lowerBound
+        }
         let (minRange, _) = rssiMinMaxForSliders()
         if let lower = viewModel?.signalLowerBound.value {
             return CGFloat(lower)
@@ -2372,7 +4138,9 @@ extension TagSettingsViewController {
     }
 
     private func rssiUpperBound() -> CGFloat {
-        guard isViewLoaded else { return 0 }
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.Signal.upperBound
+        }
         let (_, maxRange) = rssiMinMaxForSliders()
         if let upper = viewModel?.signalUpperBound.value {
             return CGFloat(upper)
@@ -2386,8 +4154,8 @@ extension TagSettingsViewController {
         maximum: CGFloat
     ) {
         (
-            minimum: CGFloat(-105),
-            maximum: CGFloat(0)
+            minimum: TagSettingsAlertConstants.Signal.lowerBound,
+            maximum: TagSettingsAlertConstants.Signal.upperBound
         )
     }
 
@@ -2408,6 +4176,624 @@ extension TagSettingsViewController {
         }
     }
 
+    // Carbon Dioxide
+    private func co2AlertRangeDescription(
+        from min: CGFloat? = nil,
+        max: CGFloat? = nil
+    ) -> NSMutableAttributedString? {
+        guard isViewLoaded else { return nil }
+        let format = RuuviLocalization.TagSettings.Alerts.description
+
+        if let min, let max {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: min
+                    ),
+                    formatNumber(
+                        from: max
+                    )
+                )
+            )
+        }
+
+        if let lower = viewModel?.carbonDioxideLowerBound.value,
+           let upper = viewModel?.carbonDioxideUpperBound.value {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: lower
+                    ),
+                    formatNumber(
+                        from: upper
+                    )
+                )
+            )
+        } else {
+            return nil
+        }
+    }
+
+    private func co2LowerBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.CarbonDioxide.lowerBound
+        }
+        let (minRange, _) = co2AlertRange()
+        if let lower = viewModel?.carbonDioxideLowerBound.value {
+            return CGFloat(lower)
+        } else {
+            return minRange
+        }
+    }
+
+    private func co2UpperBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.CarbonDioxide.upperBound
+        }
+        let (_, maxRange) = co2AlertRange()
+        if let upper = viewModel?.carbonDioxideUpperBound.value {
+            return CGFloat(upper)
+        } else {
+            return maxRange
+        }
+    }
+
+    private func co2AlertRange() -> (
+        minimum: CGFloat,
+        maximum: CGFloat
+    ) {
+        (
+            minimum: TagSettingsAlertConstants.CarbonDioxide.lowerBound,
+            maximum: TagSettingsAlertConstants.CarbonDioxide.upperBound
+        )
+    }
+
+    // PM1
+    private func pm1AlertRangeDescription(
+        from min: CGFloat? = nil,
+        max: CGFloat? = nil
+    ) -> NSMutableAttributedString? {
+        guard isViewLoaded else { return nil }
+        let format = RuuviLocalization.TagSettings.Alerts.description
+
+        if let min, let max {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: min
+                    ),
+                    formatNumber(
+                        from: max
+                    )
+                )
+            )
+        }
+
+        if let lower = viewModel?.pMatter1LowerBound.value,
+           let upper = viewModel?.pMatter1UpperBound.value {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: lower
+                    ),
+                    formatNumber(
+                        from: upper
+                    )
+                )
+            )
+        } else {
+            return nil
+        }
+    }
+
+    private func pm1LowerBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.ParticulateMatter.lowerBound
+        }
+        let (minRange, _) = pmAlertRange()
+        if let lower = viewModel?.pMatter1LowerBound.value {
+            return CGFloat(lower)
+        } else {
+            return minRange
+        }
+    }
+
+    private func pm1UpperBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.ParticulateMatter.upperBound
+        }
+        let (_, maxRange) = pmAlertRange()
+        if let upper = viewModel?.pMatter1UpperBound.value {
+            return CGFloat(upper)
+        } else {
+            return maxRange
+        }
+    }
+
+    private func pmAlertRange() -> (
+        minimum: CGFloat,
+        maximum: CGFloat
+    ) {
+        (
+            minimum: TagSettingsAlertConstants.ParticulateMatter.lowerBound,
+            maximum: TagSettingsAlertConstants.ParticulateMatter.upperBound
+        )
+    }
+
+    // PM2.5
+    private func pm2_5AlertRangeDescription(
+        from min: CGFloat? = nil,
+        max: CGFloat? = nil
+    ) -> NSMutableAttributedString? {
+        guard isViewLoaded else { return nil }
+        let format = RuuviLocalization.TagSettings.Alerts.description
+
+        if let min, let max {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: min
+                    ),
+                    formatNumber(
+                        from: max
+                    )
+                )
+            )
+        }
+
+        if let lower = viewModel?.pMatter2_5LowerBound.value,
+           let upper = viewModel?.pMatter2_5UpperBound.value {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: lower
+                    ),
+                    formatNumber(
+                        from: upper
+                    )
+                )
+            )
+        } else {
+            return nil
+        }
+    }
+
+    private func pm2_5LowerBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.ParticulateMatter.lowerBound
+        }
+        let (minRange, _) = pmAlertRange()
+        if let lower = viewModel?.pMatter2_5LowerBound.value {
+            return CGFloat(lower)
+        } else {
+            return minRange
+        }
+    }
+
+    private func pm2_5UpperBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.ParticulateMatter.upperBound
+        }
+        let (_, maxRange) = pmAlertRange()
+        if let upper = viewModel?.pMatter2_5UpperBound.value {
+            return CGFloat(upper)
+        } else {
+            return maxRange
+        }
+    }
+
+    // PM4
+    private func pm4AlertRangeDescription(
+        from min: CGFloat? = nil,
+        max: CGFloat? = nil
+    ) -> NSMutableAttributedString? {
+        guard isViewLoaded else { return nil }
+        let format = RuuviLocalization.TagSettings.Alerts.description
+
+        if let min, let max {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: min
+                    ),
+                    formatNumber(
+                        from: max
+                    )
+                )
+            )
+        }
+
+        if let lower = viewModel?.pMatter4LowerBound.value,
+           let upper = viewModel?.pMatter4UpperBound.value {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: lower
+                    ),
+                    formatNumber(
+                        from: upper
+                    )
+                )
+            )
+        } else {
+            return nil
+        }
+    }
+
+    private func pm4LowerBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.ParticulateMatter.lowerBound
+        }
+        let (minRange, _) = pmAlertRange()
+        if let lower = viewModel?.pMatter4LowerBound.value {
+            return CGFloat(lower)
+        } else {
+            return minRange
+        }
+    }
+
+    private func pm4UpperBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.ParticulateMatter.upperBound
+        }
+        let (_, maxRange) = pmAlertRange()
+        if let upper = viewModel?.pMatter4UpperBound.value {
+            return CGFloat(upper)
+        } else {
+            return maxRange
+        }
+    }
+
+    // PM10
+    private func pm10AlertRangeDescription(
+        from min: CGFloat? = nil,
+        max: CGFloat? = nil
+    ) -> NSMutableAttributedString? {
+        guard isViewLoaded else { return nil }
+        let format = RuuviLocalization.TagSettings.Alerts.description
+
+        if let min, let max {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: min
+                    ),
+                    formatNumber(
+                        from: max
+                    )
+                )
+            )
+        }
+
+        if let lower = viewModel?.pMatter10LowerBound.value,
+           let upper = viewModel?.pMatter10UpperBound.value {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: lower
+                    ),
+                    formatNumber(
+                        from: upper
+                    )
+                )
+            )
+        } else {
+            return nil
+        }
+    }
+
+    private func pm10LowerBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.ParticulateMatter.lowerBound
+        }
+        let (minRange, _) = pmAlertRange()
+        if let lower = viewModel?.pMatter10LowerBound.value {
+            return CGFloat(lower)
+        } else {
+            return minRange
+        }
+    }
+
+    private func pm10UpperBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.ParticulateMatter.upperBound
+        }
+        let (_, maxRange) = pmAlertRange()
+        if let upper = viewModel?.pMatter10UpperBound.value {
+            return CGFloat(upper)
+        } else {
+            return maxRange
+        }
+    }
+
+    // VOC
+    private func vocAlertRangeDescription(
+        from min: CGFloat? = nil,
+        max: CGFloat? = nil
+    ) -> NSMutableAttributedString? {
+        guard isViewLoaded else { return nil }
+        let format = RuuviLocalization.TagSettings.Alerts.description
+
+        if let min, let max {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: min
+                    ),
+                    formatNumber(
+                        from: max
+                    )
+                )
+            )
+        }
+
+        if let lower = viewModel?.vocLowerBound.value,
+           let upper = viewModel?.vocUpperBound.value {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: lower
+                    ),
+                    formatNumber(
+                        from: upper
+                    )
+                )
+            )
+        } else {
+            return nil
+        }
+    }
+
+    private func vocLowerBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.VOC.lowerBound
+        }
+        let (minRange, _) = vocAlertRange()
+        if let lower = viewModel?.vocLowerBound.value {
+            return CGFloat(lower)
+        } else {
+            return minRange
+        }
+    }
+
+    private func vocUpperBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.VOC.upperBound
+        }
+        let (_, maxRange) = vocAlertRange()
+        if let upper = viewModel?.vocUpperBound.value {
+            return CGFloat(upper)
+        } else {
+            return maxRange
+        }
+    }
+
+    private func vocAlertRange() -> (
+        minimum: CGFloat,
+        maximum: CGFloat
+    ) {
+        (
+            minimum: TagSettingsAlertConstants.VOC.lowerBound,
+            maximum: TagSettingsAlertConstants.VOC.upperBound
+        )
+    }
+
+    // NOX
+    private func noxAlertRangeDescription(
+        from min: CGFloat? = nil,
+        max: CGFloat? = nil
+    ) -> NSMutableAttributedString? {
+        guard isViewLoaded else { return nil }
+        let format = RuuviLocalization.TagSettings.Alerts.description
+
+        if let min, let max {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: min
+                    ),
+                    formatNumber(
+                        from: max
+                    )
+                )
+            )
+        }
+
+        if let lower = viewModel?.noxLowerBound.value,
+           let upper = viewModel?.noxUpperBound.value {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: lower
+                    ),
+                    formatNumber(
+                        from: upper
+                    )
+                )
+            )
+        } else {
+            return nil
+        }
+    }
+
+    private func noxLowerBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.NOX.lowerBound
+        }
+        let (minRange, _) = noxAlertRange()
+        if let lower = viewModel?.noxLowerBound.value {
+            return CGFloat(lower)
+        } else {
+            return minRange
+        }
+    }
+
+    private func noxUpperBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.NOX.upperBound
+        }
+        let (_, maxRange) = noxAlertRange()
+        if let upper = viewModel?.noxUpperBound.value {
+            return CGFloat(upper)
+        } else {
+            return maxRange
+        }
+    }
+
+    private func noxAlertRange() -> (
+        minimum: CGFloat,
+        maximum: CGFloat
+    ) {
+        (
+            minimum: TagSettingsAlertConstants.NOX.lowerBound,
+            maximum: TagSettingsAlertConstants.NOX.upperBound
+        )
+    }
+
+    // Sound
+    private func soundAlertRangeDescription(
+        from min: CGFloat? = nil,
+        max: CGFloat? = nil
+    ) -> NSMutableAttributedString? {
+        guard isViewLoaded else { return nil }
+        let format = RuuviLocalization.TagSettings.Alerts.description
+
+        if let min, let max {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: min
+                    ),
+                    formatNumber(
+                        from: max
+                    )
+                )
+            )
+        }
+
+        if let lower = viewModel?.soundLowerBound.value,
+           let upper = viewModel?.soundUpperBound.value {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: lower
+                    ),
+                    formatNumber(
+                        from: upper
+                    )
+                )
+            )
+        } else {
+            return nil
+        }
+    }
+
+    private func soundLowerBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.Sound.lowerBound
+        }
+        let (minRange, _) = soundAlertRange()
+        if let lower = viewModel?.soundLowerBound.value {
+            return CGFloat(lower)
+        } else {
+            return minRange
+        }
+    }
+
+    private func soundUpperBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.Sound.upperBound
+        }
+        let (_, maxRange) = soundAlertRange()
+        if let upper = viewModel?.soundUpperBound.value {
+            return CGFloat(upper)
+        } else {
+            return maxRange
+        }
+    }
+
+    private func soundAlertRange() -> (
+        minimum: CGFloat,
+        maximum: CGFloat
+    ) {
+        (
+            minimum: TagSettingsAlertConstants.Sound.lowerBound,
+            maximum: TagSettingsAlertConstants.Sound.upperBound
+        )
+    }
+
+    // Luminosity
+    private func luminosityAlertRangeDescription(
+        from min: CGFloat? = nil,
+        max: CGFloat? = nil
+    ) -> NSMutableAttributedString? {
+        guard isViewLoaded else { return nil }
+        let format = RuuviLocalization.TagSettings.Alerts.description
+
+        if let min, let max {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: min
+                    ),
+                    formatNumber(
+                        from: max
+                    )
+                )
+            )
+        }
+
+        if let lower = viewModel?.luminosityLowerBound.value,
+           let upper = viewModel?.luminosityUpperBound.value {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: lower
+                    ),
+                    formatNumber(
+                        from: upper
+                    )
+                )
+            )
+        } else {
+            return nil
+        }
+    }
+
+    private func luminosityLowerBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.Luminosity.lowerBound
+        }
+        let (minRange, _) = luminosityAlertRange()
+        if let lower = viewModel?.luminosityLowerBound.value {
+            return CGFloat(lower)
+        } else {
+            return minRange
+        }
+    }
+
+    private func luminosityUpperBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.Luminosity.upperBound
+        }
+        let (_, maxRange) = luminosityAlertRange()
+        if let upper = viewModel?.luminosityUpperBound.value {
+            return CGFloat(upper)
+        } else {
+            return maxRange
+        }
+    }
+
+    private func luminosityAlertRange() -> (
+        minimum: CGFloat,
+        maximum: CGFloat
+    ) {
+        (
+            minimum: TagSettingsAlertConstants.Luminosity.lowerBound,
+            maximum: TagSettingsAlertConstants.Luminosity.upperBound
+        )
+    }
+
     // Cloud Connection
     private func cloudConnectionAlertVisible() -> Bool {
         viewModel?.isCloudConnectionAlertsAvailable.value ?? false
@@ -2423,17 +4809,11 @@ extension TagSettingsViewController {
             return nil
         }
     }
-
-    private func cloudConnectionMinUnseenDuration() -> Int {
-        2 // mins
-    }
-
-    private func cloudConnectionDefaultUnseenDuration() -> Int {
-        15 // mins
-    }
 }
 
 extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
+
+    // swiftlint:disable:next cyclomatic_complexity
     func didSelectSetCustomDescription(sender: TagSettingsAlertConfigCell) {
         var description: String?
         switch sender {
@@ -2445,6 +4825,24 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
             description = viewModel?.pressureAlertDescription.value
         case rssiAlertCell:
             description = viewModel?.signalAlertDescription.value
+        case co2AlertCell:
+            description = viewModel?.carbonDioxideAlertDescription.value
+        case pm1AlertCell:
+            description = viewModel?.pMatter1AlertDescription.value
+        case pm2_5AlertCell:
+            description = viewModel?.pMatter2_5AlertDescription.value
+        case pm4AlertCell:
+            description = viewModel?.pMatter4AlertDescription.value
+        case pm10AlertCell:
+            description = viewModel?.pMatter10AlertDescription.value
+        case vocAlertCell:
+            description = viewModel?.vocAlertDescription.value
+        case noxAlertCell:
+            description = viewModel?.noxAlertDescription.value
+        case soundAlertCell:
+            description = viewModel?.soundAlertDescription.value
+        case luminosityAlertCell:
+            description = viewModel?.luminosityAlertDescription.value
         case movementAlertCell:
             description = viewModel?.movementAlertDescription.value
         case connectionAlertCell:
@@ -2461,6 +4859,7 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
         )
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func didSelectAlertLimitDescription(sender: TagSettingsAlertConfigCell) {
         switch sender {
         case temperatureAlertCell:
@@ -2471,6 +4870,24 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
             showPressureAlertSetDialog(sender: sender)
         case rssiAlertCell:
             showRSSIAlertSetDialog(sender: sender)
+        case co2AlertCell:
+            showCo2AlertSetDialog(sender: sender)
+        case pm1AlertCell:
+            showPM1AlertSetDialog(sender: sender)
+        case pm2_5AlertCell:
+            showPM2_5AlertSetDialog(sender: sender)
+        case pm4AlertCell:
+            showPM4AlertSetDialog(sender: sender)
+        case pm10AlertCell:
+            showPM10AlertSetDialog(sender: sender)
+        case vocAlertCell:
+            showVOCAlertSetDialog(sender: sender)
+        case noxAlertCell:
+            showNOXAlertSetDialog(sender: sender)
+        case soundAlertCell:
+            showSoundAlertSetDialog(sender: sender)
+        case luminosityAlertCell:
+            showLuminosityAlertSetDialog(sender: sender)
         case cloudConnectionAlertCell:
             showCloudConnectionAlertSetDialog(sender: sender)
         default:
@@ -2478,6 +4895,7 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func didChangeAlertState(sender: TagSettingsAlertConfigCell, didToggle isOn: Bool) {
         switch sender {
         case temperatureAlertCell:
@@ -2501,6 +4919,60 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
         case rssiAlertCell:
             output.viewDidChangeAlertState(
                 for: .signal(lower: 0, upper: 0),
+                isOn: isOn
+            )
+
+        case co2AlertCell:
+            output.viewDidChangeAlertState(
+                for: .carbonDioxide(lower: 0, upper: 0),
+                isOn: isOn
+            )
+
+        case pm1AlertCell:
+            output.viewDidChangeAlertState(
+                for: .pMatter1(lower: 0, upper: 0),
+                isOn: isOn
+            )
+
+        case pm2_5AlertCell:
+            output.viewDidChangeAlertState(
+                for: .pMatter2_5(lower: 0, upper: 0),
+                isOn: isOn
+            )
+
+        case pm4AlertCell:
+            output.viewDidChangeAlertState(
+                for: .pMatter4(lower: 0, upper: 0),
+                isOn: isOn
+            )
+
+        case pm10AlertCell:
+            output.viewDidChangeAlertState(
+                for: .pMatter10(lower: 0, upper: 0),
+                isOn: isOn
+            )
+
+        case vocAlertCell:
+            output.viewDidChangeAlertState(
+                for: .voc(lower: 0, upper: 0),
+                isOn: isOn
+            )
+
+        case noxAlertCell:
+            output.viewDidChangeAlertState(
+                for: .nox(lower: 0, upper: 0),
+                isOn: isOn
+            )
+
+        case soundAlertCell:
+            output.viewDidChangeAlertState(
+                for: .sound(lower: 0, upper: 0),
+                isOn: isOn
+            )
+
+        case luminosityAlertCell:
+            output.viewDidChangeAlertState(
+                for: .luminosity(lower: 0, upper: 0),
                 isOn: isOn
             )
 
@@ -2595,11 +5067,146 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
                 )
             }
 
+        case co2AlertCell:
+            if minValue != viewModel?.carbonDioxideLowerBound.value {
+                output.viewDidChangeAlertLowerBound(
+                    for: .carbonDioxide(lower: 0, upper: 0),
+                    lower: minValue
+                )
+            }
+
+            if maxValue != viewModel?.carbonDioxideUpperBound.value {
+                output.viewDidChangeAlertUpperBound(
+                    for: .carbonDioxide(lower: 0, upper: 0),
+                    upper: maxValue
+                )
+            }
+
+        case pm1AlertCell:
+            if minValue != viewModel?.pMatter1LowerBound.value {
+                output.viewDidChangeAlertLowerBound(
+                    for: .pMatter1(lower: 0, upper: 0),
+                    lower: minValue
+                )
+            }
+
+            if maxValue != viewModel?.pMatter1UpperBound.value {
+                output.viewDidChangeAlertUpperBound(
+                    for: .pMatter1(lower: 0, upper: 0),
+                    upper: maxValue
+                )
+            }
+
+        case pm2_5AlertCell:
+            if minValue != viewModel?.pMatter2_5LowerBound.value {
+                output.viewDidChangeAlertLowerBound(
+                    for: .pMatter2_5(lower: 0, upper: 0),
+                    lower: minValue
+                )
+            }
+
+            if maxValue != viewModel?.pMatter2_5UpperBound.value {
+                output.viewDidChangeAlertUpperBound(
+                    for: .pMatter2_5(lower: 0, upper: 0),
+                    upper: maxValue
+                )
+            }
+
+        case pm4AlertCell:
+            if minValue != viewModel?.pMatter4LowerBound.value {
+                output.viewDidChangeAlertLowerBound(
+                    for: .pMatter4(lower: 0, upper: 0),
+                    lower: minValue
+                )
+            }
+
+            if maxValue != viewModel?.pMatter4UpperBound.value {
+                output.viewDidChangeAlertUpperBound(
+                    for: .pMatter4(lower: 0, upper: 0),
+                    upper: maxValue
+                )
+            }
+
+        case pm10AlertCell:
+            if minValue != viewModel?.pMatter10LowerBound.value {
+                output.viewDidChangeAlertLowerBound(
+                    for: .pMatter10(lower: 0, upper: 0),
+                    lower: minValue
+                )
+            }
+
+            if maxValue != viewModel?.pMatter1UpperBound.value {
+                output.viewDidChangeAlertUpperBound(
+                    for: .pMatter1(lower: 0, upper: 0),
+                    upper: maxValue
+                )
+            }
+
+        case vocAlertCell:
+            if minValue != viewModel?.vocLowerBound.value {
+                output.viewDidChangeAlertLowerBound(
+                    for: .voc(lower: 0, upper: 0),
+                    lower: minValue
+                )
+            }
+
+            if maxValue != viewModel?.vocUpperBound.value {
+                output.viewDidChangeAlertUpperBound(
+                    for: .voc(lower: 0, upper: 0),
+                    upper: maxValue
+                )
+            }
+
+        case noxAlertCell:
+            if minValue != viewModel?.noxLowerBound.value {
+                output.viewDidChangeAlertLowerBound(
+                    for: .nox(lower: 0, upper: 0),
+                    lower: minValue
+                )
+            }
+
+            if maxValue != viewModel?.noxUpperBound.value {
+                output.viewDidChangeAlertUpperBound(
+                    for: .nox(lower: 0, upper: 0),
+                    upper: maxValue
+                )
+            }
+
+        case soundAlertCell:
+            if minValue != viewModel?.soundLowerBound.value {
+                output.viewDidChangeAlertLowerBound(
+                    for: .sound(lower: 0, upper: 0),
+                    lower: minValue
+                )
+            }
+
+            if maxValue != viewModel?.soundUpperBound.value {
+                output.viewDidChangeAlertUpperBound(
+                    for: .sound(lower: 0, upper: 0),
+                    upper: maxValue
+                )
+            }
+
+        case luminosityAlertCell:
+            if minValue != viewModel?.luminosityLowerBound.value {
+                output.viewDidChangeAlertLowerBound(
+                    for: .luminosity(lower: 0, upper: 0),
+                    lower: minValue
+                )
+            }
+
+            if maxValue != viewModel?.luminosityUpperBound.value {
+                output.viewDidChangeAlertUpperBound(
+                    for: .luminosity(lower: 0, upper: 0),
+                    upper: maxValue
+                )
+            }
         default:
             break
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func didChangeAlertRange(
         sender: TagSettingsAlertConfigCell,
         didSlideTo minValue: CGFloat,
@@ -2627,6 +5234,60 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
         case rssiAlertCell:
             rssiAlertCell?.setAlertLimitDescription(
                 description: rssiAlertRangeDescription(
+                    from: minValue,
+                    max: maxValue
+                ))
+        case co2AlertCell:
+            co2AlertCell?.setAlertLimitDescription(
+                description: co2AlertRangeDescription(
+                    from: minValue,
+                    max: maxValue
+                ))
+        case pm1AlertCell:
+            pm1AlertCell?.setAlertLimitDescription(
+                description: pm1AlertRangeDescription(
+                    from: minValue,
+                    max: maxValue
+                ))
+        case pm2_5AlertCell:
+            pm2_5AlertCell?.setAlertLimitDescription(
+                description: pm2_5AlertRangeDescription(
+                    from: minValue,
+                    max: maxValue
+                ))
+        case pm4AlertCell:
+            pm4AlertCell?.setAlertLimitDescription(
+                description: pm4AlertRangeDescription(
+                    from: minValue,
+                    max: maxValue
+                ))
+        case pm10AlertCell:
+            pm10AlertCell?.setAlertLimitDescription(
+                description: pm10AlertRangeDescription(
+                    from: minValue,
+                    max: maxValue
+                ))
+        case vocAlertCell:
+            vocAlertCell?.setAlertLimitDescription(
+                description: vocAlertRangeDescription(
+                    from: minValue,
+                    max: maxValue
+                ))
+        case noxAlertCell:
+            noxAlertCell?.setAlertLimitDescription(
+                description: noxAlertRangeDescription(
+                    from: minValue,
+                    max: maxValue
+                ))
+        case soundAlertCell:
+            soundAlertCell?.setAlertLimitDescription(
+                description: soundAlertRangeDescription(
+                    from: minValue,
+                    max: maxValue
+                ))
+        case luminosityAlertCell:
+            luminosityAlertCell?.setAlertLimitDescription(
+                description: luminosityAlertRangeDescription(
                     from: minValue,
                     max: maxValue
                 ))
@@ -2707,13 +5368,166 @@ extension TagSettingsViewController {
         )
     }
 
+    private func showCo2AlertSetDialog(sender: TagSettingsAlertConfigCell) {
+        let title = RuuviLocalization.TagSettings.Co2AlertTitleLabel.text(
+            RuuviLocalization.unitCo2
+        )
+
+        let (minimumRange, maximumRange) = co2AlertRange()
+        let (minimumValue, maximumValue) = co2Value()
+        showSensorCustomAlertRangeDialog(
+            title: title,
+            minimumBound: minimumRange,
+            maximumBound: maximumRange,
+            currentLowerBound: minimumValue,
+            currentUpperBound: maximumValue,
+            sender: sender
+        )
+    }
+
+    private func showPM1AlertSetDialog(sender: TagSettingsAlertConfigCell) {
+        let title = RuuviLocalization.TagSettings.Pm10AlertTitleLabel.text(
+            RuuviLocalization.unitPm10
+        )
+
+        let (minimumRange, maximumRange) = pmAlertRange()
+        let (minimumValue, maximumValue) = pm1Value()
+        showSensorCustomAlertRangeDialog(
+            title: title,
+            minimumBound: minimumRange,
+            maximumBound: maximumRange,
+            currentLowerBound: minimumValue,
+            currentUpperBound: maximumValue,
+            sender: sender
+        )
+    }
+
+    private func showPM2_5AlertSetDialog(sender: TagSettingsAlertConfigCell) {
+        let title = RuuviLocalization.TagSettings.Pm25AlertTitleLabel.text(
+            RuuviLocalization.unitPm25
+        )
+
+        let (minimumRange, maximumRange) = pmAlertRange()
+        let (minimumValue, maximumValue) = pm2_5Value()
+        showSensorCustomAlertRangeDialog(
+            title: title,
+            minimumBound: minimumRange,
+            maximumBound: maximumRange,
+            currentLowerBound: minimumValue,
+            currentUpperBound: maximumValue,
+            sender: sender
+        )
+    }
+
+    private func showPM4AlertSetDialog(sender: TagSettingsAlertConfigCell) {
+        let title = RuuviLocalization.TagSettings.Pm40AlertTitleLabel.text(
+            RuuviLocalization.unitPm40
+        )
+
+        let (minimumRange, maximumRange) = pmAlertRange()
+        let (minimumValue, maximumValue) = pm4Value()
+        showSensorCustomAlertRangeDialog(
+            title: title,
+            minimumBound: minimumRange,
+            maximumBound: maximumRange,
+            currentLowerBound: minimumValue,
+            currentUpperBound: maximumValue,
+            sender: sender
+        )
+    }
+
+    private func showPM10AlertSetDialog(sender: TagSettingsAlertConfigCell) {
+        let title = RuuviLocalization.TagSettings.Pm100AlertTitleLabel.text(
+            RuuviLocalization.unitPm100
+        )
+
+        let (minimumRange, maximumRange) = pmAlertRange()
+        let (minimumValue, maximumValue) = pm10Value()
+        showSensorCustomAlertRangeDialog(
+            title: title,
+            minimumBound: minimumRange,
+            maximumBound: maximumRange,
+            currentLowerBound: minimumValue,
+            currentUpperBound: maximumValue,
+            sender: sender
+        )
+    }
+
+    private func showVOCAlertSetDialog(sender: TagSettingsAlertConfigCell) {
+        let title = RuuviLocalization.TagSettings.VocAlertTitleLabel.text(
+            RuuviLocalization.unitVoc
+        )
+
+        let (minimumRange, maximumRange) = vocAlertRange()
+        let (minimumValue, maximumValue) = vocValue()
+        showSensorCustomAlertRangeDialog(
+            title: title,
+            minimumBound: minimumRange,
+            maximumBound: maximumRange,
+            currentLowerBound: minimumValue,
+            currentUpperBound: maximumValue,
+            sender: sender
+        )
+    }
+
+    private func showNOXAlertSetDialog(sender: TagSettingsAlertConfigCell) {
+        let title = RuuviLocalization.TagSettings.NoxAlertTitleLabel.text(
+            RuuviLocalization.unitNox
+        )
+
+        let (minimumRange, maximumRange) = noxAlertRange()
+        let (minimumValue, maximumValue) = noxValue()
+        showSensorCustomAlertRangeDialog(
+            title: title,
+            minimumBound: minimumRange,
+            maximumBound: maximumRange,
+            currentLowerBound: minimumValue,
+            currentUpperBound: maximumValue,
+            sender: sender
+        )
+    }
+
+    private func showSoundAlertSetDialog(sender: TagSettingsAlertConfigCell) {
+        let title = RuuviLocalization.TagSettings.SoundAlertTitleLabel.text(
+            RuuviLocalization.unitSound
+        )
+
+        let (minimumRange, maximumRange) = soundAlertRange()
+        let (minimumValue, maximumValue) = soundValue()
+        showSensorCustomAlertRangeDialog(
+            title: title,
+            minimumBound: minimumRange,
+            maximumBound: maximumRange,
+            currentLowerBound: minimumValue,
+            currentUpperBound: maximumValue,
+            sender: sender
+        )
+    }
+
+    private func showLuminosityAlertSetDialog(sender: TagSettingsAlertConfigCell) {
+        let title = RuuviLocalization.TagSettings.LuminosityAlertTitleLabel.text(
+            RuuviLocalization.unitLuminosity
+        )
+
+        let (minimumRange, maximumRange) = luminosityAlertRange()
+        let (minimumValue, maximumValue) = luminosityValue()
+        showSensorCustomAlertRangeDialog(
+            title: title,
+            minimumBound: minimumRange,
+            maximumBound: maximumRange,
+            currentLowerBound: minimumValue,
+            currentUpperBound: maximumValue,
+            sender: sender
+        )
+    }
+
     private func showCloudConnectionAlertSetDialog(sender: TagSettingsAlertConfigCell) {
         let title = RuuviLocalization.alertCloudConnectionDialogTitle
         let message = RuuviLocalization.alertCloudConnectionDialogDescription
 
-        let minimumDuration = cloudConnectionMinUnseenDuration()
-        let defaultDuration = cloudConnectionDefaultUnseenDuration()
-        let currentDuration = viewModel?.cloudConnectionAlertUnseenDuration.value?.intValue ?? 900
+        let minimumDuration = TagSettingsAlertConstants.CloudConnection.minUnseenDuration
+        let defaultDuration = TagSettingsAlertConstants.CloudConnection.defaultUnseenDuration
+        let currentDuration = viewModel?.cloudConnectionAlertUnseenDuration.value?.intValue ?? defaultDuration
 
         showSensorCustomAlertRangeDialog(
             title: title,
@@ -2798,11 +5612,10 @@ extension TagSettingsViewController {
         }
     }
 
-    // TODO: - Move the values to a separate constant file
     private func rssiAlertRange() -> (minimum: Double, maximum: Double) {
         (
-            minimum: -105,
-            maximum: 0
+            minimum: TagSettingsAlertConstants.Signal.lowerBound,
+            maximum: TagSettingsAlertConstants.Signal.upperBound
         )
     }
 
@@ -2812,6 +5625,96 @@ extension TagSettingsViewController {
             (minimum: lower, maximum: upper)
         } else {
             (minimum: nil, maximum: nil)
+        }
+    }
+
+    // Carbon Dioxide
+    private func co2Value() -> (minimum: Double?, maximum: Double?) {
+        if let lower = viewModel?.carbonDioxideLowerBound.value,
+           let upper = viewModel?.carbonDioxideUpperBound.value {
+            return (minimum: lower, maximum: upper)
+        } else {
+            return (minimum: nil, maximum: nil)
+        }
+    }
+
+    // PM1
+    private func pm1Value() -> (minimum: Double?, maximum: Double?) {
+        if let lower = viewModel?.pMatter1LowerBound.value,
+           let upper = viewModel?.pMatter1UpperBound.value {
+            return (minimum: lower, maximum: upper)
+        } else {
+            return (minimum: nil, maximum: nil)
+        }
+    }
+
+    // PM1
+    private func pm2_5Value() -> (minimum: Double?, maximum: Double?) {
+        if let lower = viewModel?.pMatter2_5LowerBound.value,
+           let upper = viewModel?.pMatter2_5UpperBound.value {
+            return (minimum: lower, maximum: upper)
+        } else {
+            return (minimum: nil, maximum: nil)
+        }
+    }
+
+    // PM1
+    private func pm4Value() -> (minimum: Double?, maximum: Double?) {
+        if let lower = viewModel?.pMatter4LowerBound.value,
+           let upper = viewModel?.pMatter4UpperBound.value {
+            return (minimum: lower, maximum: upper)
+        } else {
+            return (minimum: nil, maximum: nil)
+        }
+    }
+
+    // PM10
+    private func pm10Value() -> (minimum: Double?, maximum: Double?) {
+        if let lower = viewModel?.pMatter10LowerBound.value,
+           let upper = viewModel?.pMatter10UpperBound.value {
+            return (minimum: lower, maximum: upper)
+        } else {
+            return (minimum: nil, maximum: nil)
+        }
+    }
+
+    // VOC
+    private func vocValue() -> (minimum: Double?, maximum: Double?) {
+        if let lower = viewModel?.vocLowerBound.value,
+           let upper = viewModel?.vocUpperBound.value {
+            return (minimum: lower, maximum: upper)
+        } else {
+            return (minimum: nil, maximum: nil)
+        }
+    }
+
+    // NOX
+    private func noxValue() -> (minimum: Double?, maximum: Double?) {
+        if let lower = viewModel?.noxLowerBound.value,
+           let upper = viewModel?.noxUpperBound.value {
+            return (minimum: lower, maximum: upper)
+        } else {
+            return (minimum: nil, maximum: nil)
+        }
+    }
+
+    // Sound
+    private func soundValue() -> (minimum: Double?, maximum: Double?) {
+        if let lower = viewModel?.noxLowerBound.value,
+           let upper = viewModel?.noxUpperBound.value {
+            return (minimum: lower, maximum: upper)
+        } else {
+            return (minimum: nil, maximum: nil)
+        }
+    }
+
+    // Luminosity
+    private func luminosityValue() -> (minimum: Double?, maximum: Double?) {
+        if let lower = viewModel?.luminosityLowerBound.value,
+           let upper = viewModel?.luminosityUpperBound.value {
+            return (minimum: lower, maximum: upper)
+        } else {
+            return (minimum: nil, maximum: nil)
         }
     }
 }
@@ -3374,7 +6277,7 @@ extension TagSettingsViewController {
     }
 
     private func formattedVersion(value: Int?) -> String {
-        if value == 197 {
+        if value == 0xC5 {
             return "C5"
         } else {
             return value.stringValue
@@ -3595,6 +6498,105 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
                     alertState: viewModel?.signalAlertState.value,
                     section: section
                 )
+            case .alertCarbonDioxide:
+                return alertSectionHeaderView(
+                    from: co2AlertSectionHeaderView,
+                    sectionItem: sectionItem,
+                    mutedTill: viewModel?.carbonDioxideAlertMutedTill.value,
+                    isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
+                        from: viewModel?.isCarbonDioxideAlertOn.value
+                    ),
+                    alertState: viewModel?.carbonDioxideAlertState.value,
+                    section: section
+                )
+            case .alertPMatter1:
+                return alertSectionHeaderView(
+                    from: pm1AlertSectionHeaderView,
+                    sectionItem: sectionItem,
+                    mutedTill: viewModel?.pMatter1AlertMutedTill.value,
+                    isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
+                        from: viewModel?.isPMatter1AlertOn.value
+                    ),
+                    alertState: viewModel?.pMatter1AlertState.value,
+                    section: section
+                )
+            case .alertPMatter2_5:
+                return alertSectionHeaderView(
+                    from: pm2_5AlertSectionHeaderView,
+                    sectionItem: sectionItem,
+                    mutedTill: viewModel?.pMatter2_5AlertMutedTill.value,
+                    isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
+                        from: viewModel?.isPMatter2_5AlertOn.value
+                    ),
+                    alertState: viewModel?.pMatter2_5AlertState.value,
+                    section: section
+                )
+            case .alertPMatter4:
+                return alertSectionHeaderView(
+                    from: pm4AlertSectionHeaderView,
+                    sectionItem: sectionItem,
+                    mutedTill: viewModel?.pMatter4AlertMutedTill.value,
+                    isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
+                        from: viewModel?.isPMatter4AlertOn.value
+                    ),
+                    alertState: viewModel?.pMatter4AlertState.value,
+                    section: section
+                )
+            case .alertPMatter10:
+                return alertSectionHeaderView(
+                    from: pm10AlertSectionHeaderView,
+                    sectionItem: sectionItem,
+                    mutedTill: viewModel?.pMatter10AlertMutedTill.value,
+                    isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
+                        from: viewModel?.isPMatter10AlertOn.value
+                    ),
+                    alertState: viewModel?.pMatter10AlertState.value,
+                    section: section
+                )
+            case .alertVOC:
+                return alertSectionHeaderView(
+                    from: vocAlertSectionHeaderView,
+                    sectionItem: sectionItem,
+                    mutedTill: viewModel?.vocAlertMutedTill.value,
+                    isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
+                        from: viewModel?.isVOCAlertOn.value
+                    ),
+                    alertState: viewModel?.vocAlertState.value,
+                    section: section
+                )
+            case .alertNOx:
+                return alertSectionHeaderView(
+                    from: noxAlertSectionHeaderView,
+                    sectionItem: sectionItem,
+                    mutedTill: viewModel?.noxAlertMutedTill.value,
+                    isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
+                        from: viewModel?.isNOXAlertOn.value
+                    ),
+                    alertState: viewModel?.noxAlertState.value,
+                    section: section
+                )
+            case .alertSound:
+                return alertSectionHeaderView(
+                    from: soundAlertSectionHeaderView,
+                    sectionItem: sectionItem,
+                    mutedTill: viewModel?.soundAlertMutedTill.value,
+                    isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
+                        from: viewModel?.isSoundAlertOn.value
+                    ),
+                    alertState: viewModel?.soundAlertState.value,
+                    section: section
+                )
+            case .alertLuminosity:
+                return alertSectionHeaderView(
+                    from: luminosityAlertSectionHeaderView,
+                    sectionItem: sectionItem,
+                    mutedTill: viewModel?.luminosityAlertMutedTill.value,
+                    isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
+                        from: viewModel?.isLuminosityAlertOn.value
+                    ),
+                    alertState: viewModel?.luminosityAlertState.value,
+                    section: section
+                )
             case .alertMovement:
                 return alertSectionHeaderView(
                     from: movementAlertSectionHeaderView,
@@ -3724,6 +6726,24 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
             reloadPressureAlertSectionHeader()
         case .alertRSSI:
             reloadSignalAlertSectionHeader()
+        case .alertCarbonDioxide:
+            reloadCo2AlertSectionHeader()
+        case .alertPMatter1:
+            reloadPM1AlertSectionHeader()
+        case .alertPMatter2_5:
+            reloadPM2_5AlertSectionHeader()
+        case .alertPMatter4:
+            reloadPM4AlertSectionHeader()
+        case .alertPMatter10:
+            reloadPM10AlertSectionHeader()
+        case .alertVOC:
+            reloadVOCAlertSectionHeader()
+        case .alertNOx:
+            reloadNOXAlertSectionHeader()
+        case .alertSound:
+            reloadSoundAlertSectionHeader()
+        case .alertLuminosity:
+            reloadLuminosityAlertSectionHeader()
         case .alertMovement:
             reloadMovementAlertSectionHeader()
         case .alertConnection:
@@ -3806,6 +6826,222 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                     rssiAlertCell.disableEditing(
                         disable: GlobalHelpers.getBool(from: !hasMeasurement()) ||
                             !GlobalHelpers.getBool(from: viewModel?.isClaimedTag.value),
+                        identifier: currentSection.identifier
+                    )
+                }
+            case .alertCarbonDioxide:
+                if let co2AlertCell {
+                    let (minRange, maxRange) = co2AlertRange()
+                    let latest = latestValue(
+                        for: .carbonDioxide(lower: 0, upper: 0)
+                    )
+                    co2AlertCell
+                        .setAlertLimitDescription(
+                            description: co2AlertRangeDescription()
+                        )
+                    co2AlertCell.setAlertRange(
+                        minValue: minRange,
+                        selectedMinValue: co2LowerBound(),
+                        maxValue: maxRange,
+                        selectedMaxValue: co2UpperBound()
+                    )
+                    co2AlertCell.setLatestMeasurementText(with: latest)
+                    co2AlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(
+                            from: !hasMeasurement()
+                        ),
+                        identifier: currentSection.identifier
+                    )
+                }
+            case .alertPMatter1:
+                if let pm1AlertCell {
+                    let (minRange, maxRange) = pmAlertRange()
+                    let latest = latestValue(
+                        for: .pMatter1(lower: 0, upper: 0)
+                    )
+                    pm1AlertCell
+                        .setAlertLimitDescription(
+                            description: pm1AlertRangeDescription()
+                        )
+                    pm1AlertCell.setAlertRange(
+                        minValue: minRange,
+                        selectedMinValue: pm1LowerBound(),
+                        maxValue: maxRange,
+                        selectedMaxValue: pm1UpperBound()
+                    )
+                    pm1AlertCell.setLatestMeasurementText(with: latest)
+                    pm1AlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(
+                            from: !hasMeasurement()
+                        ),
+                        identifier: currentSection.identifier
+                    )
+                }
+            case .alertPMatter2_5:
+                if let pm2_5AlertCell {
+                    let (minRange, maxRange) = pmAlertRange()
+                    let latest = latestValue(
+                        for: .pMatter2_5(lower: 0, upper: 0)
+                    )
+                    pm2_5AlertCell
+                        .setAlertLimitDescription(
+                            description: pm2_5AlertRangeDescription()
+                        )
+                    pm2_5AlertCell.setAlertRange(
+                        minValue: minRange,
+                        selectedMinValue: pm2_5LowerBound(),
+                        maxValue: maxRange,
+                        selectedMaxValue: pm2_5UpperBound()
+                    )
+                    pm2_5AlertCell.setLatestMeasurementText(with: latest)
+                    pm2_5AlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(
+                            from: !hasMeasurement()
+                        ),
+                        identifier: currentSection.identifier
+                    )
+                }
+            case .alertPMatter4:
+                if let pm4AlertCell {
+                    let (minRange, maxRange) = pmAlertRange()
+                    let latest = latestValue(
+                        for: .pMatter4(lower: 0, upper: 0)
+                    )
+                    pm4AlertCell
+                        .setAlertLimitDescription(
+                            description: pm4AlertRangeDescription()
+                        )
+                    pm4AlertCell.setAlertRange(
+                        minValue: minRange,
+                        selectedMinValue: pm4LowerBound(),
+                        maxValue: maxRange,
+                        selectedMaxValue: pm4UpperBound()
+                    )
+                    pm4AlertCell.setLatestMeasurementText(with: latest)
+                    pm4AlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(
+                            from: !hasMeasurement()
+                        ),
+                        identifier: currentSection.identifier
+                    )
+                }
+            case .alertPMatter10:
+                if let pm10AlertCell {
+                    let (minRange, maxRange) = pmAlertRange()
+                    let latest = latestValue(
+                        for: .pMatter10(lower: 0, upper: 0)
+                    )
+                    pm10AlertCell
+                        .setAlertLimitDescription(
+                            description: pm10AlertRangeDescription()
+                        )
+                    pm10AlertCell.setAlertRange(
+                        minValue: minRange,
+                        selectedMinValue: pm10LowerBound(),
+                        maxValue: maxRange,
+                        selectedMaxValue: pm10UpperBound()
+                    )
+                    pm10AlertCell.setLatestMeasurementText(with: latest)
+                    pm10AlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(
+                            from: !hasMeasurement()
+                        ),
+                        identifier: currentSection.identifier
+                    )
+                }
+            case .alertVOC:
+                if let vocAlertCell {
+                    let (minRange, maxRange) = vocAlertRange()
+                    let latest = latestValue(
+                        for: .voc(lower: 0, upper: 0)
+                    )
+                    vocAlertCell
+                        .setAlertLimitDescription(
+                            description: vocAlertRangeDescription()
+                        )
+                    vocAlertCell.setAlertRange(
+                        minValue: minRange,
+                        selectedMinValue: vocLowerBound(),
+                        maxValue: maxRange,
+                        selectedMaxValue: vocUpperBound()
+                    )
+                    vocAlertCell.setLatestMeasurementText(with: latest)
+                    vocAlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(
+                            from: !hasMeasurement()
+                        ),
+                        identifier: currentSection.identifier
+                    )
+                }
+            case .alertNOx:
+                if let noxAlertCell {
+                    let (minRange, maxRange) = noxAlertRange()
+                    let latest = latestValue(
+                        for: .nox(lower: 0, upper: 0)
+                    )
+                    noxAlertCell
+                        .setAlertLimitDescription(
+                            description: noxAlertRangeDescription()
+                        )
+                    noxAlertCell.setAlertRange(
+                        minValue: minRange,
+                        selectedMinValue: noxLowerBound(),
+                        maxValue: maxRange,
+                        selectedMaxValue: noxUpperBound()
+                    )
+                    noxAlertCell.setLatestMeasurementText(with: latest)
+                    noxAlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(
+                            from: !hasMeasurement()
+                        ),
+                        identifier: currentSection.identifier
+                    )
+                }
+            case .alertSound:
+                if let soundAlertCell {
+                    let (minRange, maxRange) = soundAlertRange()
+                    let latest = latestValue(
+                        for: .sound(lower: 0, upper: 0)
+                    )
+                    soundAlertCell
+                        .setAlertLimitDescription(
+                            description: soundAlertRangeDescription()
+                        )
+                    soundAlertCell.setAlertRange(
+                        minValue: minRange,
+                        selectedMinValue: soundLowerBound(),
+                        maxValue: maxRange,
+                        selectedMaxValue: soundUpperBound()
+                    )
+                    soundAlertCell.setLatestMeasurementText(with: latest)
+                    soundAlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(
+                            from: !hasMeasurement()
+                        ),
+                        identifier: currentSection.identifier
+                    )
+                }
+            case .alertLuminosity:
+                if let luminosityAlertCell {
+                    let (minRange, maxRange) = luminosityAlertRange()
+                    let latest = latestValue(
+                        for: .luminosity(lower: 0, upper: 0)
+                    )
+                    luminosityAlertCell
+                        .setAlertLimitDescription(
+                            description: luminosityAlertRangeDescription()
+                        )
+                    luminosityAlertCell.setAlertRange(
+                        minValue: minRange,
+                        selectedMinValue: luminosityLowerBound(),
+                        maxValue: maxRange,
+                        selectedMaxValue: luminosityUpperBound()
+                    )
+                    luminosityAlertCell.setLatestMeasurementText(with: latest)
+                    luminosityAlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(
+                            from: !hasMeasurement()
+                        ),
                         identifier: currentSection.identifier
                     )
                 }
@@ -3997,6 +7233,7 @@ extension TagSettingsViewController {
         present(alert, animated: true, completion: nil)
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func notify(sender: TagSettingsAlertConfigCell, inputText: String?) {
         switch sender {
         case temperatureAlertCell:
@@ -4017,6 +7254,51 @@ extension TagSettingsViewController {
         case rssiAlertCell:
             output.viewDidChangeAlertDescription(
                 for: .signal(lower: 0, upper: 0),
+                description: inputText
+            )
+        case co2AlertCell:
+            output.viewDidChangeAlertDescription(
+                for: .carbonDioxide(lower: 0, upper: 0),
+                description: inputText
+            )
+        case pm1AlertCell:
+            output.viewDidChangeAlertDescription(
+                for: .pMatter1(lower: 0, upper: 0),
+                description: inputText
+            )
+        case pm2_5AlertCell:
+            output.viewDidChangeAlertDescription(
+                for: .pMatter2_5(lower: 0, upper: 0),
+                description: inputText
+            )
+        case pm4AlertCell:
+            output.viewDidChangeAlertDescription(
+                for: .pMatter4(lower: 0, upper: 0),
+                description: inputText
+            )
+        case pm10AlertCell:
+            output.viewDidChangeAlertDescription(
+                for: .pMatter10(lower: 0, upper: 0),
+                description: inputText
+            )
+        case vocAlertCell:
+            output.viewDidChangeAlertDescription(
+                for: .voc(lower: 0, upper: 0),
+                description: inputText
+            )
+        case noxAlertCell:
+            output.viewDidChangeAlertDescription(
+                for: .nox(lower: 0, upper: 0),
+                description: inputText
+            )
+        case soundAlertCell:
+            output.viewDidChangeAlertDescription(
+                for: .sound(lower: 0, upper: 0),
+                description: inputText
+            )
+        case luminosityAlertCell:
+            output.viewDidChangeAlertDescription(
+                for: .luminosity(lower: 0, upper: 0),
                 description: inputText
             )
         case movementAlertCell:
@@ -4070,7 +7352,12 @@ extension TagSettingsViewController {
                 alertMinRangeTextField.addNumericAccessory()
             }
             if sender == temperatureAlertCell || sender == humidityAlertCell ||
-                sender == pressureAlertCell || sender == rssiAlertCell {
+                sender == pressureAlertCell || sender == rssiAlertCell ||
+                sender == co2AlertCell || sender == pm1AlertCell ||
+                sender == pm2_5AlertCell || sender == pm4AlertCell ||
+                sender == pm10AlertCell || sender == vocAlertCell ||
+                sender == noxAlertCell || sender == soundAlertCell ||
+                sender == luminosityAlertCell {
                 alertTextField.text = measurementService.string(for: currentLowerBound)
             }
         }
@@ -4088,7 +7375,12 @@ extension TagSettingsViewController {
                 alertMaxRangeTextField.addNumericAccessory()
             }
             if sender == temperatureAlertCell || sender == humidityAlertCell ||
-                sender == pressureAlertCell || sender == rssiAlertCell {
+                sender == pressureAlertCell || sender == rssiAlertCell ||
+                sender == co2AlertCell || sender == pm1AlertCell ||
+                sender == pm2_5AlertCell || sender == pm4AlertCell ||
+                sender == pm10AlertCell || sender == vocAlertCell ||
+                sender == noxAlertCell || sender == soundAlertCell ||
+                sender == luminosityAlertCell {
                 alertTextField.text = measurementService.string(for: currentUpperBound)
             }
         }
@@ -4157,7 +7449,8 @@ extension TagSettingsViewController {
                 return
             }
 
-            let currentDuration = viewModel?.cloudConnectionAlertUnseenDuration.value?.intValue ?? 900
+            let currentDuration = viewModel?.cloudConnectionAlertUnseenDuration.value?.intValue ??
+                    TagSettingsAlertConstants.CloudConnection.defaultUnseenDuration
             if durationInput == (currentDuration / 60) {
                 return
             }

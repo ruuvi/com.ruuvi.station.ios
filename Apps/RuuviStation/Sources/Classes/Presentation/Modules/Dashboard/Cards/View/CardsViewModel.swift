@@ -79,6 +79,42 @@ class CardsViewModel: NSObject {
     let connectionAlertState: Observable<AlertState?> = .init()
     let connectionAlertMutedTill: Observable<Date?> = .init(nil)
 
+    let isCarbonDioxideAlertOn: Observable<Bool?> = .init(false)
+    let carbonDioxideAlertState: Observable<AlertState?> = .init()
+    let carbonDioxideAlertMutedTill: Observable<Date?> = .init(nil)
+
+    let isPMatter1AlertOn: Observable<Bool?> = .init(false)
+    let pMatter1AlertState: Observable<AlertState?> = .init()
+    let pMatter1AlertMutedTill: Observable<Date?> = .init(nil)
+
+    let isPMatter2_5AlertOn: Observable<Bool?> = .init(false)
+    let pMatter2_5AlertState: Observable<AlertState?> = .init()
+    let pMatter2_5AlertMutedTill: Observable<Date?> = .init(nil)
+
+    let isPMatter4AlertOn: Observable<Bool?> = .init(false)
+    let pMatter4AlertState: Observable<AlertState?> = .init()
+    let pMatter4AlertMutedTill: Observable<Date?> = .init(nil)
+
+    let isPMatter10AlertOn: Observable<Bool?> = .init(false)
+    let pMatter10AlertState: Observable<AlertState?> = .init()
+    let pMatter10AlertMutedTill: Observable<Date?> = .init(nil)
+
+    let isVOCAlertOn: Observable<Bool?> = .init(false)
+    let vocAlertState: Observable<AlertState?> = .init()
+    let vocAlertMutedTill: Observable<Date?> = .init(nil)
+
+    let isNOXAlertOn: Observable<Bool?> = .init(false)
+    let noxAlertState: Observable<AlertState?> = .init()
+    let noxAlertMutedTill: Observable<Date?> = .init(nil)
+
+    let isSoundAlertOn: Observable<Bool?> = .init(false)
+    let soundAlertState: Observable<AlertState?> = .init()
+    let soundAlertMutedTill: Observable<Date?> = .init(nil)
+
+    let isLuminosityAlertOn: Observable<Bool?> = .init(false)
+    let luminosityAlertState: Observable<AlertState?> = .init()
+    let luminosityAlertMutedTill: Observable<Date?> = .init(nil)
+
     let isCloudConnectionAlertOn: Observable<Bool?> = .init(false)
     let cloudConnectionAlertState: Observable<AlertState?> = .init()
 

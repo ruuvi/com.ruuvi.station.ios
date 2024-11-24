@@ -2,7 +2,7 @@ import BTKit
 import Foundation
 import Future
 import RuuviLocal
-// swiftlint:disable file_length
+// swiftlint:disable file_length cyclomatic_complexity
 import RuuviLocalization
 import RuuviOntology
 import RuuviReactor
@@ -56,11 +56,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         }
     }
 
-    private var viewModel: TagSettingsViewModel! {
-        didSet {
-            view.viewModel = viewModel
-        }
-    }
+    private var viewModel: TagSettingsViewModel!
 
     private var ruuviTagToken: RuuviReactorToken?
     private var ruuviTagSensorRecordToken: RuuviReactorToken?
@@ -119,28 +115,41 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         latestMeasurement: RuuviTagSensorRecord?,
         sensorSettings: SensorSettings?
     ) {
-        // TODO: - Check if this can be improved.
-        // Note:(Temporary solution) ViewModel should not depend on this.
+        // Create the ViewModel
         let tagViewModel = TagSettingsViewModel()
+
+        // Assign initial values to the ViewModel
         tagViewModel.isAuthorized.value = ruuviUser.isAuthorized
         tagViewModel.hideSwitchStatusLabel.value = !settings.showSwitchStatusLabel
         tagViewModel.rssi.value = latestMeasurement?.rssi
-        viewModel = tagViewModel
+        tagViewModel.latestMeasurement.value = latestMeasurement
+        tagViewModel.temperatureUnit.value = settings.temperatureUnit
+        tagViewModel.humidityUnit.value = settings.humidityUnit
+        tagViewModel.pressureUnit.value = settings.pressureUnit
 
+        // Assign to the presenter property
+        self.viewModel = tagViewModel
+
+        // Assign ruuviTag and other properties
         self.ruuviTag = ruuviTag
-        lastMeasurement = latestMeasurement
-        if let sensorSettings {
-            self.sensorSettings = sensorSettings
-        } else {
-            self.sensorSettings = emptySensorSettings()
-        }
-        view.dashboardSortingType =
-            settings.dashboardSensorOrder.count == 0 ? .alphabetical : .manual
+        self.lastMeasurement = latestMeasurement
+        self.sensorSettings = sensorSettings ?? emptySensorSettings()
+
+        // Sync data into the ViewModel
+        syncTag()
         syncUnits()
         syncAllAlerts()
         syncMaxShareCount()
+        syncLastMeasurement()
+        syncOffsetCorrection()
 
-        bindViewModel(to: ruuviTag)
+        // Bind ViewModel to View after syncing all data
+        view.viewModel = viewModel
+        view.dashboardSortingType =
+            settings.dashboardSensorOrder.count == 0 ? .alphabetical : .manual
+
+        // Bind ViewModel to ruuviTag and start observing
+        bindViewModel()
         startObservingRuuviTag()
         startScanningRuuviTag()
         startObservingRuuviTagSensor(ruuviTag: ruuviTag)
@@ -295,6 +304,24 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setPressureAlertState(isOn: isOn)
         case .signal:
             setSignalAlertState(isOn: isOn)
+        case .carbonDioxide:
+            setCarbonDioxideAlertState(isOn: isOn)
+        case .pMatter1:
+            setPMatter1AlertState(isOn: isOn)
+        case .pMatter2_5:
+            setPMatter2_5AlertState(isOn: isOn)
+        case .pMatter4:
+            setPMatter4AlertState(isOn: isOn)
+        case .pMatter10:
+            setPMatter10AlertState(isOn: isOn)
+        case .voc:
+            setVOCAlertState(isOn: isOn)
+        case .nox:
+            setNOXAlertState(isOn: isOn)
+        case .sound:
+            setSoundAlertState(isOn: isOn)
+        case .luminosity:
+            setLuminosityAlertState(isOn: isOn)
         case .connection:
             setConnectionAlertState(isOn: isOn)
         case .cloudConnection:
@@ -314,6 +341,24 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setPressureAlertLowerBound(lower: lower)
         case .signal:
             setSignalAlertLowerBound(lower: lower)
+        case .carbonDioxide:
+            setCarbonDioxideAlertLowerBound(lower: lower)
+        case .pMatter1:
+            setPMatter1AlertLowerBound(lower: lower)
+        case .pMatter2_5:
+            setPMatter2_5AlertLowerBound(lower: lower)
+        case .pMatter4:
+            setPMatter4AlertLowerBound(lower: lower)
+        case .pMatter10:
+            setPMatter10AlertLowerBound(lower: lower)
+        case .voc:
+            setVOCAlertLowerBound(lower: lower)
+        case .nox:
+            setNOXAlertLowerBound(lower: lower)
+        case .sound:
+            setSoundAlertLowerBound(lower: lower)
+        case .luminosity:
+            setLuminosityAlertLowerBound(lower: lower)
         default:
             break
         }
@@ -329,6 +374,24 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setPressureAlertUpperBound(upper: upper)
         case .signal:
             setSignalAlertUpperBound(upper: upper)
+        case .carbonDioxide:
+            setCarbonDioxideAlertUpperBound(upper: upper)
+        case .pMatter1:
+            setPMatter1AlertUpperBound(upper: upper)
+        case .pMatter2_5:
+            setPMatter2_5AlertUpperBound(upper: upper)
+        case .pMatter4:
+            setPMatter4AlertUpperBound(upper: upper)
+        case .pMatter10:
+            setPMatter10AlertUpperBound(upper: upper)
+        case .voc:
+            setVOCAlertUpperBound(upper: upper)
+        case .nox:
+            setNOXAlertUpperBound(upper: upper)
+        case .sound:
+            setSoundAlertUpperBound(upper: upper)
+        case .luminosity:
+            setLuminosityAlertUpperBound(upper: upper)
         default:
             break
         }
@@ -353,6 +416,24 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setPressureAlertDescription(description: description)
         case .signal:
             setSignalAlertDescription(description: description)
+        case .carbonDioxide:
+            setCarbonDioxideAlertDescription(description: description)
+        case .pMatter1:
+            setPMatter1AlertDescription(description: description)
+        case .pMatter2_5:
+            setPMatter2_5AlertDescription(description: description)
+        case .pMatter4:
+            setPMatter4AlertDescription(description: description)
+        case .pMatter10:
+            setPMatter10AlertDescription(description: description)
+        case .voc:
+            setVOCAlertDescription(description: description)
+        case .nox:
+            setNOXAlertDescription(description: description)
+        case .sound:
+            setSoundAlertDescription(description: description)
+        case .luminosity:
+            setLuminosityAlertDescription(description: description)
         case .connection:
             setConnectionAlertDescription(description: description)
         case .cloudConnection:
@@ -648,6 +729,24 @@ extension TagSettingsPresenter {
             sync(pressure: type, ruuviTag: ruuviTag)
         case .signal:
             sync(signal: type, ruuviTag: ruuviTag)
+        case .carbonDioxide:
+            sync(carbonDioxide: type, ruuviTag: ruuviTag)
+        case .pMatter1:
+            sync(pMatter1: type, ruuviTag: ruuviTag)
+        case .pMatter2_5:
+            sync(pMatter2_5: type, ruuviTag: ruuviTag)
+        case .pMatter4:
+            sync(pMatter4: type, ruuviTag: ruuviTag)
+        case .pMatter10:
+            sync(pMatter10: type, ruuviTag: ruuviTag)
+        case .voc:
+            sync(voc: type, ruuviTag: ruuviTag)
+        case .nox:
+            sync(nox: type, ruuviTag: ruuviTag)
+        case .sound:
+            sync(sound: type, ruuviTag: ruuviTag)
+        case .luminosity:
+            sync(luminosity: type, ruuviTag: ruuviTag)
         case .connection:
             sync(connection: type, ruuviTag: ruuviTag)
         case .cloudConnection:
@@ -753,6 +852,188 @@ extension TagSettingsPresenter {
         }
         viewModel.signalAlertMutedTill.value =
             alertService.mutedTill(type: signal, for: ruuviTag)
+    }
+
+    private func sync(carbonDioxide: AlertType, ruuviTag: RuuviTagSensor) {
+        viewModel.carbonDioxideAlertDescription.value =
+            alertService.carbonDioxideDescription(for: ruuviTag)
+        if case let .carbonDioxide(lower, upper) = alertService.alert(for: ruuviTag, of: carbonDioxide) {
+            viewModel.isCarbonDioxideAlertOn.value = true
+            viewModel.carbonDioxideLowerBound.value = Double(lower)
+            viewModel.carbonDioxideUpperBound.value = Double(upper)
+        } else {
+            viewModel.isCarbonDioxideAlertOn.value = false
+            if let carbonDioxideLowerBound = alertService.lowerCarbonDioxide(for: ruuviTag) {
+                viewModel.carbonDioxideLowerBound.value = carbonDioxideLowerBound
+            }
+            if let carbonDioxideUpperBound = alertService.upperCarbonDioxide(for: ruuviTag) {
+                viewModel.carbonDioxideUpperBound.value = carbonDioxideUpperBound
+            }
+        }
+        viewModel.carbonDioxideAlertMutedTill.value =
+        alertService.mutedTill(type: carbonDioxide, for: ruuviTag)
+    }
+
+    private func sync(pMatter1: AlertType, ruuviTag: RuuviTagSensor) {
+        viewModel.pMatter1AlertDescription.value = alertService.pm1Description(for: ruuviTag)
+        if case let .pMatter1(lower, upper) = alertService
+            .alert(for: ruuviTag, of: pMatter1) {
+            viewModel.isPMatter1AlertOn.value = true
+            viewModel.pMatter1LowerBound.value = Double(lower)
+            viewModel.pMatter1UpperBound.value = Double(upper)
+        } else {
+            viewModel.isPMatter1AlertOn.value = false
+            if let pMatter1LowerBound = alertService.lowerPM1(for: ruuviTag) {
+                viewModel.pMatter1LowerBound.value = pMatter1LowerBound
+            }
+            if let pMatter1UpperBound = alertService.upperPM1(for: ruuviTag) {
+                viewModel.pMatter1UpperBound.value = pMatter1UpperBound
+            }
+        }
+        viewModel.pMatter1AlertMutedTill.value = alertService
+            .mutedTill(type: pMatter1, for: ruuviTag)
+    }
+
+    private func sync(pMatter2_5: AlertType, ruuviTag: RuuviTagSensor) {
+        viewModel.pMatter2_5AlertDescription.value = alertService.pm2_5Description(for: ruuviTag)
+        if case let .pMatter2_5(lower, upper) = alertService
+            .alert(for: ruuviTag, of: pMatter2_5) {
+            viewModel.isPMatter2_5AlertOn.value = true
+            viewModel.pMatter2_5LowerBound.value = Double(lower)
+            viewModel.pMatter2_5UpperBound.value = Double(upper)
+        } else {
+            viewModel.isPMatter2_5AlertOn.value = false
+            if let pMatter2_5LowerBound = alertService.lowerPM2_5(for: ruuviTag) {
+                viewModel.pMatter2_5LowerBound.value = pMatter2_5LowerBound
+            }
+            if let pMatter2_5UpperBound = alertService.upperPM2_5(for: ruuviTag) {
+                viewModel.pMatter2_5UpperBound.value = pMatter2_5UpperBound
+            }
+        }
+        viewModel.pMatter2_5AlertMutedTill.value = alertService
+            .mutedTill(type: pMatter2_5, for: ruuviTag)
+    }
+
+    private func sync(pMatter4: AlertType, ruuviTag: RuuviTagSensor) {
+        viewModel.pMatter4AlertDescription.value = alertService.pm4Description(for: ruuviTag)
+        if case let .pMatter4(lower, upper) = alertService
+            .alert(for: ruuviTag, of: pMatter4) {
+            viewModel.isPMatter4AlertOn.value = true
+            viewModel.pMatter4LowerBound.value = Double(lower)
+            viewModel.pMatter4UpperBound.value = Double(upper)
+        } else {
+            viewModel.isPMatter4AlertOn.value = false
+            if let pMatter4LowerBound = alertService.lowerPM4(for: ruuviTag) {
+                viewModel.pMatter4LowerBound.value = pMatter4LowerBound
+            }
+            if let pMatter4UpperBound = alertService.upperPM4(for: ruuviTag) {
+                viewModel.pMatter4UpperBound.value = pMatter4UpperBound
+            }
+        }
+        viewModel.pMatter4AlertMutedTill.value = alertService
+            .mutedTill(type: pMatter4, for: ruuviTag)
+    }
+
+    private func sync(pMatter10: AlertType, ruuviTag: RuuviTagSensor) {
+        viewModel.pMatter10AlertDescription.value = alertService.pm10Description(for: ruuviTag)
+        if case let .pMatter10(lower, upper) = alertService
+            .alert(for: ruuviTag, of: pMatter10) {
+            viewModel.isPMatter10AlertOn.value = true
+            viewModel.pMatter10LowerBound.value = Double(lower)
+            viewModel.pMatter10UpperBound.value = Double(upper)
+        } else {
+            viewModel.isPMatter10AlertOn.value = false
+            if let pMatter10LowerBound = alertService.lowerPM10(for: ruuviTag) {
+                viewModel.pMatter10LowerBound.value = pMatter10LowerBound
+            }
+            if let pMatter10UpperBound = alertService.upperPM10(for: ruuviTag) {
+                viewModel.pMatter10UpperBound.value = pMatter10UpperBound
+            }
+        }
+        viewModel.pMatter10AlertMutedTill.value = alertService
+            .mutedTill(type: pMatter10, for: ruuviTag)
+    }
+
+    private func sync(voc: AlertType, ruuviTag: RuuviTagSensor) {
+        viewModel.vocAlertDescription.value = alertService.vocDescription(for: ruuviTag)
+        if case let .voc(lower, upper) = alertService.alert(for: ruuviTag, of: voc) {
+            viewModel.isVOCAlertOn.value = true
+            viewModel.vocLowerBound.value = Double(lower)
+            viewModel.vocUpperBound.value = Double(upper)
+        } else {
+            viewModel.isVOCAlertOn.value = false
+            if let vocLowerBound = alertService.lowerVOC(for: ruuviTag) {
+                viewModel.vocLowerBound.value = vocLowerBound
+            }
+            if let vocUpperBound = alertService.upperVOC(for: ruuviTag) {
+                viewModel.vocUpperBound.value = vocUpperBound
+            }
+        }
+        viewModel.vocAlertMutedTill.value = alertService
+            .mutedTill(type: voc, for: ruuviTag)
+    }
+
+    private func sync(nox: AlertType, ruuviTag: RuuviTagSensor) {
+        viewModel.noxAlertDescription.value = alertService.noxDescription(for: ruuviTag)
+        if case let .nox(lower, upper) = alertService.alert(for: ruuviTag, of: nox) {
+            viewModel.isNOXAlertOn.value = true
+            viewModel.noxLowerBound.value = Double(lower)
+            viewModel.noxUpperBound.value = Double(upper)
+        } else {
+            viewModel.isNOXAlertOn.value = false
+            if let noxLowerBound = alertService.lowerNOX(for: ruuviTag) {
+                viewModel.noxLowerBound.value = noxLowerBound
+            }
+            if let noxUpperBound = alertService.upperNOX(for: ruuviTag) {
+                viewModel.noxUpperBound.value = noxUpperBound
+            }
+        }
+        viewModel.noxAlertMutedTill.value = alertService
+            .mutedTill(type: nox, for: ruuviTag)
+    }
+
+    private func sync(sound: AlertType, ruuviTag: RuuviTagSensor) {
+        viewModel.soundAlertDescription.value = alertService.soundDescription(for: ruuviTag)
+        if case let .sound(lower, upper) = alertService
+            .alert(for: ruuviTag, of: sound) {
+            viewModel.isSoundAlertOn.value = true
+            viewModel.soundLowerBound.value = Double(lower)
+            viewModel.soundUpperBound.value = Double(upper)
+        } else {
+            viewModel.isSoundAlertOn.value = false
+            if let soundLowerBound = alertService.lowerSound(for: ruuviTag) {
+                viewModel.soundLowerBound.value = soundLowerBound
+            }
+            if let soundUpperBound = alertService.upperSound(for: ruuviTag) {
+                viewModel.soundUpperBound.value = soundUpperBound
+            }
+        }
+        viewModel.soundAlertMutedTill.value = alertService
+            .mutedTill(type: sound, for: ruuviTag)
+    }
+
+    private func sync(luminosity: AlertType, ruuviTag: RuuviTagSensor) {
+        viewModel.luminosityAlertDescription.value = alertService.luminosityDescription(for: ruuviTag)
+        if case let .luminosity(lower, upper) = alertService
+            .alert(for: ruuviTag, of: luminosity) {
+            viewModel.isLuminosityAlertOn.value = true
+            viewModel.luminosityLowerBound.value = Double(lower)
+            viewModel.luminosityUpperBound.value = Double(upper)
+        } else {
+            viewModel.isLuminosityAlertOn.value = false
+            if let luminosityLowerBound = alertService.lowerLuminosity(
+                for: ruuviTag
+            ) {
+                viewModel.luminosityLowerBound.value = luminosityLowerBound
+            }
+            if let luminosityUpperBound = alertService.upperLuminosity(
+                for: ruuviTag
+            ) {
+                viewModel.luminosityUpperBound.value = luminosityUpperBound
+            }
+        }
+        viewModel.luminosityAlertMutedTill.value = alertService
+            .mutedTill(type: luminosity, for: ruuviTag)
     }
 
     private func sync(connection: AlertType, ruuviTag: RuuviTagSensor) {
@@ -1237,6 +1518,24 @@ extension TagSettingsPresenter {
             observable = viewModel.pressureAlertMutedTill
         case .signal:
             observable = viewModel.signalAlertMutedTill
+        case .carbonDioxide:
+            observable = viewModel.carbonDioxideAlertMutedTill
+        case .pMatter1:
+            observable = viewModel.pMatter1AlertMutedTill
+        case .pMatter2_5:
+            observable = viewModel.pMatter2_5AlertMutedTill
+        case .pMatter4:
+            observable = viewModel.pMatter4AlertMutedTill
+        case .pMatter10:
+            observable = viewModel.pMatter10AlertMutedTill
+        case .voc:
+            observable = viewModel.vocAlertMutedTill
+        case .nox:
+            observable = viewModel.noxAlertMutedTill
+        case .sound:
+            observable = viewModel.soundAlertMutedTill
+        case .luminosity:
+            observable = viewModel.luminosityAlertMutedTill
         case .connection:
             observable = viewModel.connectionAlertMutedTill
         case .cloudConnection:
@@ -1264,6 +1563,24 @@ extension TagSettingsPresenter {
             observable = viewModel.isPressureAlertOn
         case .signal:
             observable = viewModel.isSignalAlertOn
+        case .carbonDioxide:
+            observable = viewModel.isCarbonDioxideAlertOn
+        case .pMatter1:
+            observable = viewModel.isPMatter1AlertOn
+        case .pMatter2_5:
+            observable = viewModel.isPMatter2_5AlertOn
+        case .pMatter4:
+            observable = viewModel.isPMatter4AlertOn
+        case .pMatter10:
+            observable = viewModel.isPMatter10AlertOn
+        case .voc:
+            observable = viewModel.isVOCAlertOn
+        case .nox:
+            observable = viewModel.isNOXAlertOn
+        case .sound:
+            observable = viewModel.isSoundAlertOn
+        case .luminosity:
+            observable = viewModel.isLuminosityAlertOn
         case .connection:
             observable = viewModel.isConnectionAlertOn
         case .cloudConnection:
@@ -1340,6 +1657,7 @@ extension TagSettingsPresenter: RuuviNotifierObserver {
         // No op here.
     }
 
+    // swiftlint:disable:next function_body_length
     func ruuvi(
         notifier _: RuuviNotifier,
         alertType: AlertType,
@@ -1371,6 +1689,51 @@ extension TagSettingsPresenter: RuuviNotifierObserver {
                 let isOn = viewModel.isSignalAlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
                 viewModel.signalAlertState.value = newValue
+            case .carbonDioxide:
+                let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
+                let isOn = viewModel.isCarbonDioxideAlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                viewModel.carbonDioxideAlertState.value = newValue
+            case .pMatter1:
+                let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
+                let isOn = viewModel.isPMatter1AlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                viewModel.pMatter1AlertState.value = newValue
+            case .pMatter2_5:
+                let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
+                let isOn = viewModel.isPMatter2_5AlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                viewModel.pMatter2_5AlertState.value = newValue
+            case .pMatter4:
+                let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
+                let isOn = viewModel.isPMatter4AlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                viewModel.pMatter4AlertState.value = newValue
+            case .pMatter10:
+                let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
+                let isOn = viewModel.isPMatter10AlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                viewModel.pMatter10AlertState.value = newValue
+            case .voc:
+                let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
+                let isOn = viewModel.isVOCAlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                viewModel.vocAlertState.value = newValue
+            case .nox:
+                let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
+                let isOn = viewModel.isNOXAlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                viewModel.noxAlertState.value = newValue
+            case .sound:
+                let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
+                let isOn = viewModel.isSoundAlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                viewModel.soundAlertState.value = newValue
+            case .luminosity:
+                let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
+                let isOn = viewModel.isLuminosityAlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                viewModel.luminosityAlertState.value = newValue
             case .connection:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isConnectionAlertOn.value ?? false
@@ -1674,6 +2037,521 @@ extension TagSettingsPresenter {
     }
 }
 
+// MARK: - Carbon Dioxide
+
+extension TagSettingsPresenter {
+    private func setCarbonDioxideAlertState(isOn: Bool) {
+        viewModel.isCarbonDioxideAlertOn.value = isOn
+        let carbonDiOxideLower = viewModel.carbonDioxideLowerBound.value
+        let carbonDiOxideUpper = viewModel.carbonDioxideUpperBound.value
+
+        if let l = carbonDiOxideLower, let u = carbonDiOxideUpper {
+            let type: AlertType = .carbonDioxide(
+                lower: l,
+                upper: u
+            )
+            let currentState = alertService.isOn(type: type, for: ruuviTag)
+            if currentState != isOn {
+                if isOn {
+                    alertService.register(type: type, ruuviTag: ruuviTag)
+                    processAlerts()
+                } else {
+                    alertService.unregister(type: type, ruuviTag: ruuviTag)
+                }
+                alertService.unmute(type: type, for: ruuviTag)
+            }
+        }
+    }
+
+    private func setCarbonDioxideAlertLowerBound(lower: CGFloat) {
+        let lowCarbonDioxideDebouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.carbonDioxideLowerBound.value = lower
+
+        lowCarbonDioxideDebouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setLower(
+                carbonDioxide: lower,
+                ruuviTag: sSelf.ruuviTag
+            )
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setCarbonDioxideAlertUpperBound(upper: CGFloat) {
+        let upperCarbonDioxideDebouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.carbonDioxideUpperBound.value = upper
+
+        upperCarbonDioxideDebouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setUpper(
+                carbonDioxide: upper,
+                ruuviTag: sSelf.ruuviTag
+            )
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setCarbonDioxideAlertDescription(description: String?) {
+        viewModel.carbonDioxideAlertDescription.value = description
+        alertService.setCarbonDioxide(
+            description: description,
+            ruuviTag: ruuviTag
+        )
+    }
+}
+
+// MARK: - PMatter1
+
+extension TagSettingsPresenter {
+    private func setPMatter1AlertState(isOn: Bool) {
+        viewModel.isPMatter1AlertOn.value = isOn
+        if let pMatter1Lower = viewModel.pMatter1LowerBound.value,
+           let pMatter1Upper = viewModel.pMatter1UpperBound.value {
+            let type: AlertType = .pMatter1(lower: pMatter1Lower, upper: pMatter1Upper)
+            let currentState = alertService.isOn(type: type, for: ruuviTag)
+            if currentState != isOn {
+                if isOn {
+                    alertService.register(type: type, ruuviTag: ruuviTag)
+                    processAlerts()
+                } else {
+                    alertService.unregister(type: type, ruuviTag: ruuviTag)
+                }
+                alertService.unmute(type: type, for: ruuviTag)
+            }
+        }
+    }
+
+    private func setPMatter1AlertLowerBound(lower: CGFloat) {
+        let lowPMatter1Debouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.pMatter1LowerBound.value = lower
+
+        lowPMatter1Debouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setLower(pm1: lower, ruuviTag: sSelf.ruuviTag)
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setPMatter1AlertUpperBound(upper: CGFloat) {
+        let upperPMatter1Debouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.pMatter1UpperBound.value = upper
+
+        upperPMatter1Debouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setUpper(pm1: upper, ruuviTag: sSelf.ruuviTag)
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setPMatter1AlertDescription(description: String?) {
+        viewModel.pMatter1AlertDescription.value = description
+        alertService.setPM1(
+            description: description,
+            ruuviTag: ruuviTag
+        )
+    }
+}
+
+// MARK: - PMatter2_5
+
+extension TagSettingsPresenter {
+    private func setPMatter2_5AlertState(isOn: Bool) {
+        viewModel.isPMatter2_5AlertOn.value = isOn
+        if let pMatter2_5Lower = viewModel.pMatter2_5LowerBound.value,
+           let pMatter2_5Upper = viewModel.pMatter2_5UpperBound.value {
+            let type: AlertType = .pMatter2_5(lower: pMatter2_5Lower, upper: pMatter2_5Upper)
+            let currentState = alertService.isOn(type: type, for: ruuviTag)
+            if currentState != isOn {
+                if isOn {
+                    alertService.register(type: type, ruuviTag: ruuviTag)
+                    processAlerts()
+                } else {
+                    alertService.unregister(type: type, ruuviTag: ruuviTag)
+                }
+                alertService.unmute(type: type, for: ruuviTag)
+            }
+        }
+    }
+
+    private func setPMatter2_5AlertLowerBound(lower: CGFloat) {
+        let lowPMatter2_5Debouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.pMatter2_5LowerBound.value = lower
+
+        lowPMatter2_5Debouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setLower(pm2_5: lower, ruuviTag: sSelf.ruuviTag)
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setPMatter2_5AlertUpperBound(upper: CGFloat) {
+        let upperPMatter2_5Debouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.pMatter2_5UpperBound.value = upper
+
+        upperPMatter2_5Debouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setUpper(pm2_5: upper, ruuviTag: sSelf.ruuviTag)
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setPMatter2_5AlertDescription(description: String?) {
+        viewModel.pMatter2_5AlertDescription.value = description
+        alertService.setPM2_5(
+            description: description,
+            ruuviTag: ruuviTag
+        )
+    }
+}
+
+// MARK: - PMatter4
+
+extension TagSettingsPresenter {
+    private func setPMatter4AlertState(isOn: Bool) {
+        viewModel.isPMatter4AlertOn.value = isOn
+        if let pMatter4Lower = viewModel.pMatter4LowerBound.value,
+           let pMatter4Upper = viewModel.pMatter4UpperBound.value {
+            let type: AlertType = .pMatter4(lower: pMatter4Lower, upper: pMatter4Upper)
+            let currentState = alertService.isOn(type: type, for: ruuviTag)
+            if currentState != isOn {
+                if isOn {
+                    alertService.register(type: type, ruuviTag: ruuviTag)
+                    processAlerts()
+                } else {
+                    alertService.unregister(type: type, ruuviTag: ruuviTag)
+                }
+                alertService.unmute(type: type, for: ruuviTag)
+            }
+        }
+    }
+
+    private func setPMatter4AlertLowerBound(lower: CGFloat) {
+        let lowPMatter4Debouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.pMatter4LowerBound.value = lower
+
+        lowPMatter4Debouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setLower(
+                pm4: lower,
+                ruuviTag: sSelf.ruuviTag
+            )
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setPMatter4AlertUpperBound(upper: CGFloat) {
+        let upperPMatter4Debouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.pMatter4UpperBound.value = upper
+
+        upperPMatter4Debouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setUpper(
+                pm4: upper,
+                ruuviTag: sSelf.ruuviTag
+            )
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setPMatter4AlertDescription(description: String?) {
+        viewModel.pMatter4AlertDescription.value = description
+        alertService.setPM4(
+            description: description,
+            ruuviTag: ruuviTag
+        )
+    }
+}
+
+// MARK: - PMatter10
+
+extension TagSettingsPresenter {
+    private func setPMatter10AlertState(isOn: Bool) {
+        viewModel.isPMatter10AlertOn.value = isOn
+        if let pMatter10Lower = viewModel.pMatter10LowerBound.value,
+           let pMatter10Upper = viewModel.pMatter10UpperBound.value {
+            let type: AlertType = .pMatter10(lower: pMatter10Lower, upper: pMatter10Upper)
+            let currentState = alertService.isOn(type: type, for: ruuviTag)
+            if currentState != isOn {
+                if isOn {
+                    alertService.register(type: type, ruuviTag: ruuviTag)
+                    processAlerts()
+                } else {
+                    alertService.unregister(type: type, ruuviTag: ruuviTag)
+                }
+                alertService.unmute(type: type, for: ruuviTag)
+            }
+        }
+    }
+
+    private func setPMatter10AlertLowerBound(lower: CGFloat) {
+        let lowPMatter10Debouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.pMatter10LowerBound.value = lower
+
+        lowPMatter10Debouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setLower(
+                pm10: lower,
+                ruuviTag: sSelf.ruuviTag
+            )
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setPMatter10AlertUpperBound(upper: CGFloat) {
+        let upperPMatter10Debouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.pMatter10UpperBound.value = upper
+
+        upperPMatter10Debouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setUpper(
+                pm10: upper,
+                ruuviTag: sSelf.ruuviTag
+            )
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setPMatter10AlertDescription(description: String?) {
+        viewModel.pMatter10AlertDescription.value = description
+        alertService.setPM10(
+            description: description,
+            ruuviTag: ruuviTag
+        )
+    }
+}
+
+// MARK: - VOC
+
+extension TagSettingsPresenter {
+    private func setVOCAlertState(isOn: Bool) {
+        viewModel.isVOCAlertOn.value = isOn
+        if let vocLowerBound = viewModel.vocLowerBound.value,
+           let vocUpperBound = viewModel.vocUpperBound.value {
+            let type: AlertType = .voc(lower: vocLowerBound, upper: vocUpperBound)
+            let currentState = alertService.isOn(type: type, for: ruuviTag)
+            if currentState != isOn {
+                if isOn {
+                    alertService.register(type: type, ruuviTag: ruuviTag)
+                    processAlerts()
+                } else {
+                    alertService.unregister(type: type, ruuviTag: ruuviTag)
+                }
+                alertService.unmute(type: type, for: ruuviTag)
+            }
+        }
+    }
+
+    private func setVOCAlertLowerBound(lower: CGFloat) {
+        let lowVOCDebouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.vocLowerBound.value = lower
+
+        lowVOCDebouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setLower(
+                voc: lower,
+                ruuviTag: sSelf.ruuviTag
+            )
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setVOCAlertUpperBound(upper: CGFloat) {
+        let upperVOCDebouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.vocUpperBound.value = upper
+
+        upperVOCDebouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setUpper(
+                voc: upper,
+                ruuviTag: sSelf.ruuviTag
+            )
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setVOCAlertDescription(description: String?) {
+        viewModel.vocAlertDescription.value = description
+        alertService.setVOC(
+            description: description,
+            ruuviTag: ruuviTag
+        )
+    }
+}
+
+// MARK: - NOX
+
+extension TagSettingsPresenter {
+    private func setNOXAlertState(isOn: Bool) {
+        viewModel.isNOXAlertOn.value = isOn
+        if let noxLowerBound = viewModel.noxLowerBound.value,
+              let noxUpperBound = viewModel.noxUpperBound.value {
+            let type: AlertType = .nox(lower: noxLowerBound, upper: noxUpperBound)
+            let currentState = alertService.isOn(type: type, for: ruuviTag)
+            if currentState != isOn {
+                if isOn {
+                    alertService.register(type: type, ruuviTag: ruuviTag)
+                    processAlerts()
+                } else {
+                    alertService.unregister(type: type, ruuviTag: ruuviTag)
+                }
+                alertService.unmute(type: type, for: ruuviTag)
+            }
+        }
+    }
+
+    private func setNOXAlertLowerBound(lower: CGFloat) {
+        let lowNOXDebouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.noxLowerBound.value = lower
+
+        lowNOXDebouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setLower(
+                nox: lower,
+                ruuviTag: sSelf.ruuviTag
+            )
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setNOXAlertUpperBound(upper: CGFloat) {
+        let upperNOXDebouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.noxUpperBound.value = upper
+
+        upperNOXDebouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setUpper(
+                nox: upper,
+                ruuviTag: sSelf.ruuviTag
+            )
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setNOXAlertDescription(description: String?) {
+        viewModel.noxAlertDescription.value = description
+        alertService.setNOX(
+            description: description,
+            ruuviTag: ruuviTag
+        )
+    }
+}
+
+// MARK: - SOUND
+
+extension TagSettingsPresenter {
+    private func setSoundAlertState(isOn: Bool) {
+        viewModel.isSoundAlertOn.value = isOn
+        if let soundLowerBound = viewModel.soundLowerBound.value,
+              let soundUpperBound = viewModel.soundUpperBound.value {
+            let type: AlertType = .sound(lower: soundLowerBound, upper: soundUpperBound)
+            let currentState = alertService.isOn(type: type, for: ruuviTag)
+            if currentState != isOn {
+                if isOn {
+                    alertService.register(type: type, ruuviTag: ruuviTag)
+                    processAlerts()
+                } else {
+                    alertService.unregister(type: type, ruuviTag: ruuviTag)
+                }
+                alertService.unmute(type: type, for: ruuviTag)
+            }
+        }
+    }
+
+    private func setSoundAlertLowerBound(lower: CGFloat) {
+        let lowSoundDebouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.soundLowerBound.value = lower
+
+        lowSoundDebouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setLower(
+                sound: lower,
+                ruuviTag: sSelf.ruuviTag
+            )
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setSoundAlertUpperBound(upper: CGFloat) {
+        let upperSoundDebouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.soundUpperBound.value = upper
+
+        upperSoundDebouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setUpper(
+                sound: upper,
+                ruuviTag: sSelf.ruuviTag
+            )
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setSoundAlertDescription(description: String?) {
+        viewModel.soundAlertDescription.value = description
+        alertService.setSound(
+            description: description,
+            ruuviTag: ruuviTag
+        )
+    }
+}
+
+// MARK: - LUMINOSITY
+
+extension TagSettingsPresenter {
+    private func setLuminosityAlertState(isOn: Bool) {
+        viewModel.isLuminosityAlertOn.value = isOn
+        if let luminosityLowerBound = viewModel.luminosityLowerBound.value,
+                let luminosityUpperBound = viewModel.luminosityUpperBound.value {
+            let type: AlertType = .luminosity(lower: luminosityLowerBound, upper: luminosityUpperBound)
+            let currentState = alertService.isOn(type: type, for: ruuviTag)
+            if currentState != isOn {
+                if isOn {
+                    alertService.register(type: type, ruuviTag: ruuviTag)
+                    processAlerts()
+                } else {
+                    alertService.unregister(type: type, ruuviTag: ruuviTag)
+                }
+                alertService.unmute(type: type, for: ruuviTag)
+            }
+        }
+    }
+
+    private func setLuminosityAlertLowerBound(lower: CGFloat) {
+        let lowLuminosityDebouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.luminosityLowerBound.value = lower
+
+        lowLuminosityDebouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setLower(
+                luminosity: lower,
+                ruuviTag: sSelf.ruuviTag
+            )
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setLuminosityAlertUpperBound(upper: CGFloat) {
+        let upperLuminosityDebouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.luminosityUpperBound.value = upper
+
+        upperLuminosityDebouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setUpper(
+                luminosity: upper,
+                ruuviTag: sSelf.ruuviTag
+            )
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setLuminosityAlertDescription(description: String?) {
+        viewModel.luminosityAlertDescription.value = description
+        alertService.setLuminosity(
+            description: description,
+            ruuviTag: ruuviTag
+        )
+    }
+}
+
 // MARK: - MOVEMENT
 
 extension TagSettingsPresenter {
@@ -1890,4 +2768,4 @@ extension TagSettingsPresenter: UIDocumentPickerDelegate {
     }
 }
 
-// swiftlint:enable file_length
+// swiftlint:enable file_length cyclomatic_complexity

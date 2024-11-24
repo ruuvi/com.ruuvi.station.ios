@@ -14,16 +14,19 @@ extension String {
 extension String {
     static let numberFormatter = NumberFormatter()
     var doubleValue: Double {
-        String.numberFormatter.decimalSeparator = "."
-        if let result = String.numberFormatter.number(from: self) {
-            return result.doubleValue
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        numberFormatter.locale = Locale.current
+
+        // Clean the string by removing whitespace and newlines
+        let cleanedString = self.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        // Attempt to parse the number
+        if let number = numberFormatter.number(from: cleanedString) {
+            return number.doubleValue
         } else {
-            String.numberFormatter.decimalSeparator = ","
-            if let result = String.numberFormatter.number(from: self) {
-                return result.doubleValue
-            }
+            return 0
         }
-        return 0
     }
 }
 

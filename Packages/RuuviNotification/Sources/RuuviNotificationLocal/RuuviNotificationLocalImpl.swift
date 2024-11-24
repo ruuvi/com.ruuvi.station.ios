@@ -216,6 +216,7 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
 
 public extension RuuviNotificationLocalImpl {
 
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     func notify(
         _ reason: LowHighNotificationReason,
         _ type: LowHighNotificationType,
@@ -256,6 +257,24 @@ public extension RuuviNotificationLocalImpl {
                 sSelf.ruuviAlertService.pressureDescription(for: uuid) ?? ""
             case .signal:
                 sSelf.ruuviAlertService.signalDescription(for: uuid) ?? ""
+            case .carbonDioxide:
+                sSelf.ruuviAlertService.carbonDioxideDescription(for: uuid) ?? ""
+            case .pMatter1:
+                sSelf.ruuviAlertService.pm1Description(for: uuid) ?? ""
+            case .pMatter2_5:
+                sSelf.ruuviAlertService.pm2_5Description(for: uuid) ?? ""
+            case .pMatter4:
+                sSelf.ruuviAlertService.pm4Description(for: uuid) ?? ""
+            case .pMatter10:
+                sSelf.ruuviAlertService.pm10Description(for: uuid) ?? ""
+            case .voc:
+                sSelf.ruuviAlertService.vocDescription(for: uuid) ?? ""
+            case .nox:
+                sSelf.ruuviAlertService.noxDescription(for: uuid) ?? ""
+            case .sound:
+                sSelf.ruuviAlertService.soundDescription(for: uuid) ?? ""
+            case .luminosity:
+                sSelf.ruuviAlertService.luminosityDescription(for: uuid) ?? ""
             }
             content.body = body
 
@@ -280,6 +299,8 @@ public extension RuuviNotificationLocalImpl {
 // MARK: - Private
 
 extension RuuviNotificationLocalImpl {
+
+    // swiftlint:disable:next cyclomatic_complexity
     private static func alertType(from type: LowHighNotificationType) -> AlertType {
         switch type {
         case .temperature:
@@ -295,6 +316,24 @@ extension RuuviNotificationLocalImpl {
             .pressure(lower: 0, upper: 0)
         case .signal:
             .signal(lower: 0, upper: 0)
+        case .carbonDioxide:
+            .carbonDioxide(lower: 0, upper: 0)
+        case .pMatter1:
+            .pMatter1(lower: 0, upper: 0)
+        case .pMatter2_5:
+            .pMatter2_5(lower: 0, upper: 0)
+        case .pMatter4:
+            .pMatter4(lower: 0, upper: 0)
+        case .pMatter10:
+            .pMatter10(lower: 0, upper: 0)
+        case .voc:
+            .voc(lower: 0, upper: 0)
+        case .nox:
+            .nox(lower: 0, upper: 0)
+        case .sound:
+            .sound(lower: 0, upper: 0)
+        case .luminosity:
+            .luminosity(lower: 0, upper: 0)
         }
     }
 
@@ -307,7 +346,7 @@ extension RuuviNotificationLocalImpl {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func startObserving() {
         alertDidChangeToken = NotificationCenter
             .default
@@ -346,6 +385,42 @@ extension RuuviNotificationLocalImpl {
                         case .signal:
                             if !isOn {
                                 self?.cancel(.signal, for: uuid)
+                            }
+                        case .carbonDioxide:
+                            if !isOn {
+                                self?.cancel(.carbonDioxide, for: uuid)
+                            }
+                        case .pMatter1:
+                            if !isOn {
+                                self?.cancel(.pMatter1, for: uuid)
+                            }
+                        case .pMatter2_5:
+                            if !isOn {
+                                self?.cancel(.pMatter2_5, for: uuid)
+                            }
+                        case .pMatter4:
+                            if !isOn {
+                                self?.cancel(.pMatter4, for: uuid)
+                            }
+                        case .pMatter10:
+                            if !isOn {
+                                self?.cancel(.pMatter10, for: uuid)
+                            }
+                        case .voc:
+                            if !isOn {
+                                self?.cancel(.voc, for: uuid)
+                            }
+                        case .nox:
+                            if !isOn {
+                                self?.cancel(.nox, for: uuid)
+                            }
+                        case .sound:
+                            if !isOn {
+                                self?.cancel(.sound, for: uuid)
+                            }
+                        case .luminosity:
+                            if !isOn {
+                                self?.cancel(.luminosity, for: uuid)
                             }
                         case .connection, .cloudConnection, .movement:
                             // do nothing

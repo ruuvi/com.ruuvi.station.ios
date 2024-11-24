@@ -85,6 +85,150 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     private let signalAlertTriggeredAtUDKeyPrefix
         = "AlertPersistenceUserDefaults.signalAlertTriggeredAtUDKeyPrefix."
 
+    // carbon dioxide
+    private let co2LowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.co2LowerBoundUDKeyPrefix."
+    private let co2UpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.co2UpperBoundUDKeyPrefix."
+    private let co2AlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.co2AlertIsOnUDKeyPrefix."
+    private let co2AlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.co2AlertDescriptionUDKeyPrefix."
+    private let co2AlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.co2AlertMuteTillDateUDKeyPrefix."
+    private let co2AlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.co2AlertIsTriggeredUDKeyPrefix."
+    private let co2AlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.co2AlertTriggeredAtUDKeyPrefix."
+
+    // pm1
+    private let pm1LowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm1LowerBoundUDKeyPrefix."
+    private let pm1UpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm1UpperBoundUDKeyPrefix."
+    private let pm1AlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm1AlertIsOnUDKeyPrefix."
+    private let pm1AlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm1AlertDescriptionUDKeyPrefix."
+    private let pm1AlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm1AlertMuteTillDateUDKeyPrefix."
+    private let pm1AlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm1AlertIsTriggeredUDKeyPrefix."
+    private let pm1AlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm1AlertTriggeredAtUDKeyPrefix."
+
+    // pm2.5
+    private let pm2_5LowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm2_5LowerBoundUDKeyPrefix."
+    private let pm2_5UpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm2_5UpperBoundUDKeyPrefix."
+    private let pm2_5AlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm2_5AlertIsOnUDKeyPrefix."
+    private let pm2_5AlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm2_5AlertDescriptionUDKeyPrefix."
+    private let pm2_5AlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm2_5AlertMuteTillDateUDKeyPrefix."
+    private let pm2_5AlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm2_5AlertIsTriggeredUDKeyPrefix."
+    private let pm2_5AlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm2_5AlertTriggeredAtUDKeyPrefix."
+
+    // pm4
+    private let pm4LowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm4LowerBoundUDKeyPrefix."
+    private let pm4UpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm4UpperBoundUDKeyPrefix."
+    private let pm4AlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm4AlertIsOnUDKeyPrefix."
+    private let pm4AlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm4AlertDescriptionUDKeyPrefix."
+    private let pm4AlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm4AlertMuteTillDateUDKeyPrefix."
+    private let pm4AlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm4AlertIsTriggeredUDKeyPrefix."
+    private let pm4AlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm4AlertTriggeredAtUDKeyPrefix."
+
+    // pm10
+    private let pm10LowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm10LowerBoundUDKeyPrefix."
+    private let pm10UpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm10UpperBoundUDKeyPrefix."
+    private let pm10AlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm10AlertIsOnUDKeyPrefix."
+    private let pm10AlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm10AlertDescriptionUDKeyPrefix."
+    private let pm10AlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm10AlertMuteTillDateUDKeyPrefix."
+    private let pm10AlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm10AlertIsTriggeredUDKeyPrefix."
+    private let pm10AlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.pm10AlertTriggeredAtUDKeyPrefix."
+
+    // voc
+    private let vocLowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.vocLowerBoundUDKeyPrefix."
+    private let vocUpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.vocUpperBoundUDKeyPrefix."
+    private let vocAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.vocAlertIsOnUDKeyPrefix."
+    private let vocAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.vocAlertDescriptionUDKeyPrefix."
+    private let vocAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.vocAlertMuteTillDateUDKeyPrefix."
+    private let vocAlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.vocAlertIsTriggeredUDKeyPrefix."
+    private let vocAlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.vocAlertTriggeredAtUDKeyPrefix."
+
+    // nox
+    private let noxLowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.noxLowerBoundUDKeyPrefix."
+    private let noxUpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.noxUpperBoundUDKeyPrefix."
+    private let noxAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.noxAlertIsOnUDKeyPrefix."
+    private let noxAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.noxAlertDescriptionUDKeyPrefix."
+    private let noxAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.noxAlertMuteTillDateUDKeyPrefix."
+    private let noxAlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.noxAlertIsTriggeredUDKeyPrefix."
+    private let noxAlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.noxAlertTriggeredAtUDKeyPrefix."
+
+    // sound
+    private let soundLowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundLowerBoundUDKeyPrefix."
+    private let soundUpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundUpperBoundUDKeyPrefix."
+    private let soundAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundAlertIsOnUDKeyPrefix."
+    private let soundAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundAlertDescriptionUDKeyPrefix."
+    private let soundAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundAlertMuteTillDateUDKeyPrefix."
+    private let soundAlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundAlertIsTriggeredUDKeyPrefix."
+    private let soundAlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundAlertTriggeredAtUDKeyPrefix."
+
+    // luminosity
+    private let luminosityLowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.luminosityLowerBoundUDKeyPrefix."
+    private let luminosityUpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.luminosityUpperBoundUDKeyPrefix."
+    private let luminosityAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.luminosityAlertIsOnUDKeyPrefix."
+    private let luminosityAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.luminosityAlertDescriptionUDKeyPrefix."
+    private let luminosityAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.luminosityAlertMuteTillDateUDKeyPrefix."
+    private let luminosityAlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.luminosityAlertIsTriggeredUDKeyPrefix."
+    private let luminosityAlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.luminosityAlertTriggeredAtUDKeyPrefix."
+
     // connection
     private let connectionAlertIsOnUDKeyPrefix
         = "AlertPersistenceUserDefaults.connectionAlertIsOnUDKeyPrefix."
@@ -132,17 +276,17 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             if prefs.bool(forKey: temperatureAlertIsOnUDKeyPrefix + uuid),
                let lower = prefs.optionalDouble(forKey: temperatureLowerBoundUDKeyPrefix + uuid),
                let upper = prefs.optionalDouble(forKey: temperatureUpperBoundUDKeyPrefix + uuid) {
-                .temperature(lower: lower, upper: upper)
+                return .temperature(lower: lower, upper: upper)
             } else {
-                nil
+                return nil
             }
         case .relativeHumidity:
             if prefs.bool(forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid),
                let lower = prefs.optionalDouble(forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid),
                let upper = prefs.optionalDouble(forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid) {
-                .relativeHumidity(lower: lower, upper: upper)
+                return .relativeHumidity(lower: lower, upper: upper)
             } else {
-                nil
+                return nil
             }
         case .humidity:
             if prefs.bool(forKey: humidityAlertIsOnUDKeyPrefix + uuid),
@@ -150,51 +294,128 @@ class AlertPersistenceUserDefaults: AlertPersistence {
                let upper = prefs.data(forKey: humidityUpperBoundUDKeyPrefix + uuid),
                let lowerHumidity = KeyedArchiver.unarchive(lower, with: Humidity.self),
                let upperHumidity = KeyedArchiver.unarchive(upper, with: Humidity.self) {
-                .humidity(lower: lowerHumidity, upper: upperHumidity)
+                return .humidity(lower: lowerHumidity, upper: upperHumidity)
             } else {
-                nil
+                return nil
             }
         case .pressure:
             if prefs.bool(forKey: pressureAlertIsOnUDKeyPrefix + uuid),
                let lower = prefs.optionalDouble(forKey: pressureLowerBoundUDKeyPrefix + uuid),
                let upper = prefs.optionalDouble(forKey: pressureUpperBoundUDKeyPrefix + uuid) {
-                .pressure(lower: lower, upper: upper)
+                return .pressure(lower: lower, upper: upper)
             } else {
-                nil
+                return nil
             }
         case .signal:
             if prefs.bool(forKey: signalAlertIsOnUDKeyPrefix + uuid),
                let lower = prefs.optionalDouble(forKey: signalLowerBoundUDKeyPrefix + uuid),
                let upper = prefs.optionalDouble(forKey: signalUpperBoundUDKeyPrefix + uuid) {
-                .signal(lower: lower, upper: upper)
+                return .signal(lower: lower, upper: upper)
             } else {
-                nil
+                return nil
+            }
+        case .carbonDioxide:
+            if prefs.bool(forKey: co2AlertIsOnUDKeyPrefix + uuid),
+                let lower = prefs.optionalDouble(forKey: co2LowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: co2UpperBoundUDKeyPrefix + uuid) {
+                return .carbonDioxide(lower: lower, upper: upper)
+            } else {
+                return nil
+            }
+        case .pMatter1:
+            if prefs.bool(forKey: pm1AlertIsOnUDKeyPrefix + uuid),
+               let lower = prefs.optionalDouble(forKey: pm1LowerBoundUDKeyPrefix + uuid),
+               let upper = prefs.optionalDouble(forKey: pm1UpperBoundUDKeyPrefix + uuid) {
+                return .pMatter1(lower: lower, upper: upper)
+            } else {
+                return nil
+            }
+        case .pMatter2_5:
+            if prefs.bool(forKey: pm2_5AlertIsOnUDKeyPrefix + uuid),
+               let lower = prefs.optionalDouble(forKey: pm2_5LowerBoundUDKeyPrefix + uuid),
+               let upper = prefs.optionalDouble(forKey: pm2_5UpperBoundUDKeyPrefix + uuid) {
+                return .pMatter2_5(lower: lower, upper: upper)
+            } else {
+                return nil
+            }
+        case .pMatter4:
+            if prefs.bool(forKey: pm4AlertIsOnUDKeyPrefix + uuid),
+               let lower = prefs.optionalDouble(forKey: pm4LowerBoundUDKeyPrefix + uuid),
+               let upper = prefs.optionalDouble(forKey: pm4UpperBoundUDKeyPrefix + uuid) {
+                return .pMatter4(lower: lower, upper: upper)
+            } else {
+                return nil
+            }
+        case .pMatter10:
+            if prefs.bool(forKey: pm10AlertIsOnUDKeyPrefix + uuid),
+               let lower = prefs.optionalDouble(forKey: pm10LowerBoundUDKeyPrefix + uuid),
+               let upper = prefs.optionalDouble(forKey: pm10UpperBoundUDKeyPrefix + uuid) {
+                return .pMatter10(lower: lower, upper: upper)
+            } else {
+                return nil
+            }
+        case .voc:
+            if prefs.bool(forKey: vocAlertIsOnUDKeyPrefix + uuid),
+               let lower = prefs.optionalDouble(
+                forKey: vocLowerBoundUDKeyPrefix + uuid
+               ),
+               let upper = prefs.optionalDouble(
+                forKey: vocUpperBoundUDKeyPrefix + uuid
+               ) {
+                return .voc(lower: lower, upper: upper)
+            } else {
+                return nil
+            }
+        case .nox:
+            if prefs.bool(forKey: noxAlertIsOnUDKeyPrefix + uuid),
+               let lower = prefs.optionalDouble(forKey: noxLowerBoundUDKeyPrefix + uuid),
+               let upper = prefs.optionalDouble(forKey: noxUpperBoundUDKeyPrefix + uuid) {
+                return .nox(lower: lower, upper: upper)
+            } else {
+                return nil
+            }
+        case .sound:
+            if prefs.bool(forKey: soundAlertIsOnUDKeyPrefix + uuid),
+               let lower = prefs.optionalDouble(forKey: soundLowerBoundUDKeyPrefix + uuid),
+               let upper = prefs.optionalDouble(forKey: soundUpperBoundUDKeyPrefix + uuid) {
+                return .sound(lower: lower, upper: upper)
+            } else {
+                return nil
+            }
+        case .luminosity:
+            if prefs.bool(forKey: luminosityAlertIsOnUDKeyPrefix + uuid),
+               let lower = prefs.optionalDouble(forKey: luminosityLowerBoundUDKeyPrefix + uuid),
+               let upper = prefs.optionalDouble(forKey: luminosityUpperBoundUDKeyPrefix + uuid) {
+                return .luminosity(lower: lower, upper: upper)
+            } else {
+                return nil
             }
         case .connection:
             if prefs.bool(forKey: connectionAlertIsOnUDKeyPrefix + uuid) {
-                .connection
+                return .connection
             } else {
-                nil
+                return nil
             }
         case .cloudConnection:
             if prefs.bool(forKey: cloudConnectionAlertIsOnUDKeyPrefix + uuid),
                let unseenDuration = prefs.optionalDouble(
                    forKey: cloudConnectionAlertUnseenDurationUDPrefix + uuid
                ) {
-                .cloudConnection(unseenDuration: unseenDuration)
+                return .cloudConnection(unseenDuration: unseenDuration)
             } else {
-                nil
+                return nil
             }
         case .movement:
             if prefs.bool(forKey: movementAlertIsOnUDKeyPrefix + uuid),
                let counter = prefs.optionalInt(forKey: movementAlertCounterUDPrefix + uuid) {
-                .movement(last: counter)
+                return .movement(last: counter)
             } else {
-                nil
+                return nil
             }
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func register(type: AlertType, for uuid: String) {
         switch type {
         case let .temperature(lower, upper):
@@ -217,6 +438,42 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(true, forKey: signalAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: signalLowerBoundUDKeyPrefix + uuid)
             prefs.set(upper, forKey: signalUpperBoundUDKeyPrefix + uuid)
+        case let .carbonDioxide(lower, upper):
+            prefs.set(true, forKey: co2AlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: co2LowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: co2UpperBoundUDKeyPrefix + uuid)
+        case let .pMatter1(lower, upper):
+            prefs.set(true, forKey: pm1AlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: pm1LowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: pm1UpperBoundUDKeyPrefix + uuid)
+        case let .pMatter2_5(lower, upper):
+            prefs.set(true, forKey: pm2_5AlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: pm2_5LowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: pm2_5UpperBoundUDKeyPrefix + uuid)
+        case let .pMatter4(lower, upper):
+            prefs.set(true, forKey: pm4AlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: pm4LowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: pm4UpperBoundUDKeyPrefix + uuid)
+        case let .pMatter10(lower, upper):
+            prefs.set(true, forKey: pm10AlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: pm10LowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: pm10UpperBoundUDKeyPrefix + uuid)
+        case let .voc(lower, upper):
+            prefs.set(true, forKey: vocAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: vocLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: vocUpperBoundUDKeyPrefix + uuid)
+        case let .nox(lower, upper):
+            prefs.set(true, forKey: noxAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: noxLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: noxUpperBoundUDKeyPrefix + uuid)
+        case let .sound(lower, upper):
+            prefs.set(true, forKey: soundAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: soundLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: soundUpperBoundUDKeyPrefix + uuid)
+        case let .luminosity(lower, upper):
+            prefs.set(true, forKey: luminosityAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: luminosityLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: luminosityUpperBoundUDKeyPrefix + uuid)
         case .connection:
             prefs.set(true, forKey: connectionAlertIsOnUDKeyPrefix + uuid)
         case let .cloudConnection(unseenDuration):
@@ -228,6 +485,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func unregister(type: AlertType, for uuid: String) {
         switch type {
         case let .temperature(lower, upper):
@@ -260,6 +518,60 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(upper, forKey: signalUpperBoundUDKeyPrefix + uuid)
             prefs.set(false, forKey: signalAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(nil, forKey: signalAlertTriggeredAtUDKeyPrefix + uuid)
+        case let .carbonDioxide(lower, upper):
+            prefs.set(false, forKey: co2AlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: co2LowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: co2UpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: co2AlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: co2AlertTriggeredAtUDKeyPrefix + uuid)
+        case let .pMatter1(lower, upper):
+            prefs.set(false, forKey: pm1AlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: pm1LowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: pm1UpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: pm1AlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: pm1AlertTriggeredAtUDKeyPrefix + uuid)
+        case let .pMatter2_5(lower, upper):
+            prefs.set(false, forKey: pm2_5AlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: pm2_5LowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: pm2_5UpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: pm2_5AlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: pm2_5AlertTriggeredAtUDKeyPrefix + uuid)
+        case let .pMatter4(lower, upper):
+            prefs.set(false, forKey: pm4AlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: pm4LowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: pm4UpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: pm4AlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: pm4AlertTriggeredAtUDKeyPrefix + uuid)
+        case let .pMatter10(lower, upper):
+            prefs.set(false, forKey: pm10AlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: pm10LowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: pm10UpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: pm10AlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: pm10AlertTriggeredAtUDKeyPrefix + uuid)
+        case let .voc(lower, upper):
+            prefs.set(false, forKey: vocAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: vocLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: vocUpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: vocAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: vocAlertTriggeredAtUDKeyPrefix + uuid)
+        case let .nox(lower, upper):
+            prefs.set(false, forKey: noxAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: noxLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: noxUpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: noxAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: noxAlertTriggeredAtUDKeyPrefix + uuid)
+        case let .sound(lower, upper):
+            prefs.set(false, forKey: soundAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: soundLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: soundUpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: soundAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: soundAlertTriggeredAtUDKeyPrefix + uuid)
+        case let .luminosity(lower, upper):
+            prefs.set(false, forKey: luminosityAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: luminosityLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: luminosityUpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: luminosityAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: luminosityAlertTriggeredAtUDKeyPrefix + uuid)
         case .connection:
             prefs.set(false, forKey: connectionAlertIsOnUDKeyPrefix + uuid)
         case let .cloudConnection(unseenDuration):
@@ -275,6 +587,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func remove(type: AlertType, for uuid: String) {
         switch type {
         case .temperature:
@@ -307,6 +620,60 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.removeObject(forKey: signalUpperBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: signalAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.removeObject(forKey: signalAlertTriggeredAtUDKeyPrefix + uuid)
+        case .carbonDioxide:
+            prefs.removeObject(forKey: co2AlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: co2LowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: co2UpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: co2AlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: co2AlertTriggeredAtUDKeyPrefix + uuid)
+        case .pMatter1:
+            prefs.removeObject(forKey: pm1AlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm1LowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm1UpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm1AlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm1AlertTriggeredAtUDKeyPrefix + uuid)
+        case .pMatter2_5:
+            prefs.removeObject(forKey: pm2_5AlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm2_5LowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm2_5UpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm2_5AlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm2_5AlertTriggeredAtUDKeyPrefix + uuid)
+        case .pMatter4:
+            prefs.removeObject(forKey: pm4AlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm4LowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm4UpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm4AlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm4AlertTriggeredAtUDKeyPrefix + uuid)
+        case .pMatter10:
+            prefs.removeObject(forKey: pm10AlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm10LowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm10UpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm10AlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm10AlertTriggeredAtUDKeyPrefix + uuid)
+        case .voc:
+            prefs.removeObject(forKey: vocAlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: vocLowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: vocUpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: vocAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: vocAlertTriggeredAtUDKeyPrefix + uuid)
+        case .nox:
+            prefs.removeObject(forKey: noxAlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: noxLowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: noxUpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: noxAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: noxAlertTriggeredAtUDKeyPrefix + uuid)
+        case .sound:
+            prefs.removeObject(forKey: soundAlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: soundLowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: soundUpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: soundAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: soundAlertTriggeredAtUDKeyPrefix + uuid)
+        case .luminosity:
+            prefs.removeObject(forKey: luminosityAlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: luminosityLowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: luminosityUpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: luminosityAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: luminosityAlertTriggeredAtUDKeyPrefix + uuid)
         case .connection:
             prefs.removeObject(forKey: connectionAlertIsOnUDKeyPrefix + uuid)
         case .cloudConnection:
@@ -322,6 +689,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func mute(type: AlertType, for uuid: String, till date: Date) {
         switch type {
         case .temperature:
@@ -334,6 +702,24 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(date, forKey: pressureAlertMuteTillDateUDKeyPrefix + uuid)
         case .signal:
             prefs.set(date, forKey: signalAlertMuteTillDateUDKeyPrefix + uuid)
+        case .carbonDioxide:
+            prefs.set(date, forKey: co2AlertMuteTillDateUDKeyPrefix + uuid)
+        case .pMatter1:
+            prefs.set(date, forKey: pm1AlertMuteTillDateUDKeyPrefix + uuid)
+        case .pMatter2_5:
+            prefs.set(date, forKey: pm2_5AlertMuteTillDateUDKeyPrefix + uuid)
+        case .pMatter4:
+            prefs.set(date, forKey: pm4AlertMuteTillDateUDKeyPrefix + uuid)
+        case .pMatter10:
+            prefs.set(date, forKey: pm10AlertMuteTillDateUDKeyPrefix + uuid)
+        case .voc:
+            prefs.set(date, forKey: vocAlertMuteTillDateUDKeyPrefix + uuid)
+        case .nox:
+            prefs.set(date, forKey: noxAlertMuteTillDateUDKeyPrefix + uuid)
+        case .sound:
+            prefs.set(date, forKey: soundAlertMuteTillDateUDKeyPrefix + uuid)
+        case .luminosity:
+            prefs.set(date, forKey: luminosityAlertMuteTillDateUDKeyPrefix + uuid)
         case .connection:
             prefs.set(date, forKey: connectionAlertMuteTillDateUDKeyPrefix + uuid)
         case .cloudConnection:
@@ -343,6 +729,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func unmute(type: AlertType, for uuid: String) {
         switch type {
         case .temperature:
@@ -355,6 +742,24 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(nil, forKey: pressureAlertMuteTillDateUDKeyPrefix + uuid)
         case .signal:
             prefs.set(nil, forKey: signalAlertMuteTillDateUDKeyPrefix + uuid)
+        case .carbonDioxide:
+            prefs.set(nil, forKey: co2AlertMuteTillDateUDKeyPrefix + uuid)
+        case .pMatter1:
+            prefs.set(nil, forKey: pm1AlertMuteTillDateUDKeyPrefix + uuid)
+        case .pMatter2_5:
+            prefs.set(nil, forKey: pm2_5AlertMuteTillDateUDKeyPrefix + uuid)
+        case .pMatter4:
+            prefs.set(nil, forKey: pm4AlertMuteTillDateUDKeyPrefix + uuid)
+        case .pMatter10:
+            prefs.set(nil, forKey: pm10AlertMuteTillDateUDKeyPrefix + uuid)
+        case .voc:
+            prefs.set(nil, forKey: vocAlertMuteTillDateUDKeyPrefix + uuid)
+        case .nox:
+            prefs.set(nil, forKey: noxAlertMuteTillDateUDKeyPrefix + uuid)
+        case .sound:
+            prefs.set(nil, forKey: soundAlertMuteTillDateUDKeyPrefix + uuid)
+        case .luminosity:
+            prefs.set(nil, forKey: luminosityAlertMuteTillDateUDKeyPrefix + uuid)
         case .connection:
             prefs.set(nil, forKey: connectionAlertMuteTillDateUDKeyPrefix + uuid)
         case .cloudConnection:
@@ -364,6 +769,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func mutedTill(type: AlertType, for uuid: String) -> Date? {
         switch type {
         case .temperature:
@@ -376,6 +782,24 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             return prefs.value(forKey: pressureAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .signal:
             return prefs.value(forKey: signalAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .carbonDioxide:
+            return prefs.value(forKey: co2AlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .pMatter1:
+            return prefs.value(forKey: pm1AlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .pMatter2_5:
+            return prefs.value(forKey: pm2_5AlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .pMatter4:
+            return prefs.value(forKey: pm4AlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .pMatter10:
+            return prefs.value(forKey: pm10AlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .voc:
+            return prefs.value(forKey: vocAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .nox:
+            return prefs.value(forKey: noxAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .sound:
+            return prefs.value(forKey: soundAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .luminosity:
+            return prefs.value(forKey: luminosityAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .connection:
             return prefs.value(forKey: connectionAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .cloudConnection:
@@ -385,6 +809,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func trigger(type: AlertType, trigerred: Bool?, trigerredAt: String?, for uuid: String) {
         switch type {
         case .temperature:
@@ -402,6 +827,33 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         case .signal:
             prefs.set(trigerred, forKey: signalAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(trigerredAt, forKey: signalAlertTriggeredAtUDKeyPrefix + uuid)
+        case .carbonDioxide:
+            prefs.set(trigerred, forKey: co2AlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: co2AlertTriggeredAtUDKeyPrefix + uuid)
+        case .pMatter1:
+            prefs.set(trigerred, forKey: pm1AlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: pm1AlertTriggeredAtUDKeyPrefix + uuid)
+        case .pMatter2_5:
+            prefs.set(trigerred, forKey: pm2_5AlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: pm2_5AlertTriggeredAtUDKeyPrefix + uuid)
+        case .pMatter4:
+            prefs.set(trigerred, forKey: pm4AlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: pm4AlertTriggeredAtUDKeyPrefix + uuid)
+        case .pMatter10:
+            prefs.set(trigerred, forKey: pm10AlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: pm10AlertTriggeredAtUDKeyPrefix + uuid)
+        case .voc:
+            prefs.set(trigerred, forKey: vocAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: vocAlertTriggeredAtUDKeyPrefix + uuid)
+        case .nox:
+            prefs.set(trigerred, forKey: noxAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: noxAlertTriggeredAtUDKeyPrefix + uuid)
+        case .sound:
+            prefs.set(trigerred, forKey: soundAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: soundAlertTriggeredAtUDKeyPrefix + uuid)
+        case .luminosity:
+            prefs.set(trigerred, forKey: luminosityAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: luminosityAlertTriggeredAtUDKeyPrefix + uuid)
         case .cloudConnection:
             prefs.set(trigerred, forKey: cloudConnectionAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(trigerredAt, forKey: cloudConnectionAlertTriggeredAtUDKeyPrefix + uuid)
@@ -414,6 +866,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func triggered(for uuid: String, of type: AlertType) -> Bool? {
         switch type {
         case .temperature:
@@ -426,6 +879,24 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.bool(forKey: pressureAlertIsTriggeredUDKeyPrefix + uuid)
         case .signal:
             prefs.bool(forKey: signalAlertIsTriggeredUDKeyPrefix + uuid)
+        case .carbonDioxide:
+            prefs.bool(forKey: co2AlertIsTriggeredUDKeyPrefix + uuid)
+        case .pMatter1:
+            prefs.bool(forKey: pm1AlertIsTriggeredUDKeyPrefix + uuid)
+        case .pMatter2_5:
+            prefs.bool(forKey: pm2_5AlertIsTriggeredUDKeyPrefix + uuid)
+        case .pMatter4:
+            prefs.bool(forKey: pm4AlertIsTriggeredUDKeyPrefix + uuid)
+        case .pMatter10:
+            prefs.bool(forKey: pm10AlertIsTriggeredUDKeyPrefix + uuid)
+        case .voc:
+            prefs.bool(forKey: vocAlertIsTriggeredUDKeyPrefix + uuid)
+        case .nox:
+            prefs.bool(forKey: noxAlertIsTriggeredUDKeyPrefix + uuid)
+        case .sound:
+            prefs.bool(forKey: soundAlertIsTriggeredUDKeyPrefix + uuid)
+        case .luminosity:
+            prefs.bool(forKey: luminosityAlertIsTriggeredUDKeyPrefix + uuid)
         case .cloudConnection:
             prefs.bool(forKey: cloudConnectionAlertIsTriggeredUDKeyPrefix + uuid)
         case .movement:
@@ -435,6 +906,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func triggeredAt(for uuid: String, of type: AlertType) -> String? {
         switch type {
         case .temperature:
@@ -447,6 +919,24 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.string(forKey: pressureAlertTriggeredAtUDKeyPrefix + uuid)
         case .signal:
             prefs.string(forKey: signalAlertTriggeredAtUDKeyPrefix + uuid)
+        case .carbonDioxide:
+            prefs.string(forKey: co2AlertTriggeredAtUDKeyPrefix + uuid)
+        case .pMatter1:
+            prefs.string(forKey: pm1AlertTriggeredAtUDKeyPrefix + uuid)
+        case .pMatter2_5:
+            prefs.string(forKey: pm2_5AlertTriggeredAtUDKeyPrefix + uuid)
+        case .pMatter4:
+            prefs.string(forKey: pm4AlertTriggeredAtUDKeyPrefix + uuid)
+        case .pMatter10:
+            prefs.string(forKey: pm10AlertTriggeredAtUDKeyPrefix + uuid)
+        case .voc:
+            prefs.string(forKey: vocAlertTriggeredAtUDKeyPrefix + uuid)
+        case .nox:
+            prefs.string(forKey: noxAlertTriggeredAtUDKeyPrefix + uuid)
+        case .sound:
+            prefs.string(forKey: soundAlertTriggeredAtUDKeyPrefix + uuid)
+        case .luminosity:
+            prefs.string(forKey: luminosityAlertTriggeredAtUDKeyPrefix + uuid)
         case .cloudConnection:
             prefs.string(forKey: cloudConnectionAlertTriggeredAtUDKeyPrefix + uuid)
         case .movement:
@@ -610,6 +1100,260 @@ extension AlertPersistenceUserDefaults {
 
     func setSignal(description: String?, for uuid: String) {
         prefs.set(description, forKey: signalAlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - Carbon Dioxide
+
+extension AlertPersistenceUserDefaults {
+    func lowerCarbonDioxide(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: co2LowerBoundUDKeyPrefix + uuid)
+    }
+
+    func setLower(carbonDioxide: Double?, for uuid: String) {
+        prefs.set(carbonDioxide, forKey: co2LowerBoundUDKeyPrefix + uuid)
+    }
+
+    func upperCarbonDioxide(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: co2UpperBoundUDKeyPrefix + uuid)
+    }
+
+    func setUpper(carbonDioxide: Double?, for uuid: String) {
+        prefs.set(carbonDioxide, forKey: co2UpperBoundUDKeyPrefix + uuid)
+    }
+
+    func carbonDioxideDescription(for uuid: String) -> String? {
+        prefs.string(forKey: co2AlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setCarbonDioxide(description: String?, for uuid: String) {
+        prefs.set(description, forKey: co2AlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - Particulate Matter 1
+
+extension AlertPersistenceUserDefaults {
+    func lowerPM1(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: pm1LowerBoundUDKeyPrefix + uuid)
+    }
+
+    func setLower(pm1: Double?, for uuid: String) {
+        prefs.set(pm1, forKey: pm1LowerBoundUDKeyPrefix + uuid)
+    }
+
+    func upperPM1(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: pm1UpperBoundUDKeyPrefix + uuid)
+    }
+
+    func setUpper(pm1: Double?, for uuid: String) {
+        prefs.set(pm1, forKey: pm1UpperBoundUDKeyPrefix + uuid)
+    }
+
+    func pm1Description(for uuid: String) -> String? {
+        prefs.string(forKey: pm1AlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setPM1(description: String?, for uuid: String) {
+        prefs.set(description, forKey: pm1AlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - Particulate Matter 2.5
+
+extension AlertPersistenceUserDefaults {
+    func lowerPM2_5(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: pm2_5LowerBoundUDKeyPrefix + uuid)
+    }
+
+    func setLower(pm2_5: Double?, for uuid: String) {
+        prefs.set(pm2_5, forKey: pm2_5LowerBoundUDKeyPrefix + uuid)
+    }
+
+    func upperPM2_5(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: pm2_5UpperBoundUDKeyPrefix + uuid)
+    }
+
+    func setUpper(pm2_5: Double?, for uuid: String) {
+        prefs.set(pm2_5, forKey: pm2_5UpperBoundUDKeyPrefix + uuid)
+    }
+
+    func pm2_5Description(for uuid: String) -> String? {
+        prefs.string(forKey: pm2_5AlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setPM2_5(description: String?, for uuid: String) {
+        prefs.set(description, forKey: pm2_5AlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - Particulate Matter 4
+
+extension AlertPersistenceUserDefaults {
+    func lowerPM4(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: pm4LowerBoundUDKeyPrefix + uuid)
+    }
+
+    func setLower(pm4: Double?, for uuid: String) {
+        prefs.set(pm4, forKey: pm4LowerBoundUDKeyPrefix + uuid)
+    }
+
+    func upperPM4(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: pm4UpperBoundUDKeyPrefix + uuid)
+    }
+
+    func setUpper(pm4: Double?, for uuid: String) {
+        prefs.set(pm4, forKey: pm4UpperBoundUDKeyPrefix + uuid)
+    }
+
+    func pm4Description(for uuid: String) -> String? {
+        prefs.string(forKey: pm4AlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setPM4(description: String?, for uuid: String) {
+        prefs.set(description, forKey: pm4AlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - Particulate Matter 10
+
+extension AlertPersistenceUserDefaults {
+    func lowerPM10(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: pm10LowerBoundUDKeyPrefix + uuid)
+    }
+
+    func setLower(pm10: Double?, for uuid: String) {
+        prefs.set(pm10, forKey: pm10LowerBoundUDKeyPrefix + uuid)
+    }
+
+    func upperPM10(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: pm10UpperBoundUDKeyPrefix + uuid)
+    }
+
+    func setUpper(pm10: Double?, for uuid: String) {
+        prefs.set(pm10, forKey: pm10UpperBoundUDKeyPrefix + uuid)
+    }
+
+    func pm10Description(for uuid: String) -> String? {
+        prefs.string(forKey: pm10AlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setPM10(description: String?, for uuid: String) {
+        prefs.set(description, forKey: pm10AlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - VOC
+
+extension AlertPersistenceUserDefaults {
+    func lowerVOC(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: vocLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func setLower(voc: Double?, for uuid: String) {
+        prefs.set(voc, forKey: vocLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func upperVOC(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: vocUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func setUpper(voc: Double?, for uuid: String) {
+        prefs.set(voc, forKey: vocUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func vocDescription(for uuid: String) -> String? {
+        prefs.string(forKey: vocAlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setVOC(description: String?, for uuid: String) {
+        prefs.set(description, forKey: vocAlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - NOX
+
+extension AlertPersistenceUserDefaults {
+    func lowerNOX(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: noxLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func setLower(nox: Double?, for uuid: String) {
+        prefs.set(nox, forKey: noxLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func upperNOX(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: noxUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func setUpper(nox: Double?, for uuid: String) {
+        prefs.set(nox, forKey: noxUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func noxDescription(for uuid: String) -> String? {
+        prefs.string(forKey: noxAlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setNOX(description: String?, for uuid: String) {
+        prefs.set(description, forKey: noxAlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - Sound
+
+extension AlertPersistenceUserDefaults {
+
+    func lowerSound(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: soundLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func setLower(sound: Double?, for uuid: String) {
+        prefs.set(sound, forKey: soundLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func upperSound(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: soundUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func setUpper(sound: Double?, for uuid: String) {
+        prefs.set(sound, forKey: soundUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func soundDescription(for uuid: String) -> String? {
+        prefs.string(forKey: soundAlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setSound(description: String?, for uuid: String) {
+        prefs.set(description, forKey: soundAlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - Luminosity
+
+extension AlertPersistenceUserDefaults {
+
+    func lowerLuminosity(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: luminosityLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func setLower(luminosity: Double?, for uuid: String) {
+        prefs.set(luminosity, forKey: luminosityLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func upperLuminosity(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: luminosityUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func setUpper(luminosity: Double?, for uuid: String) {
+        prefs.set(luminosity, forKey: luminosityUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func luminosityDescription(for uuid: String) -> String? {
+        prefs.string(forKey: luminosityAlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setLuminosity(description: String?, for uuid: String) {
+        prefs.set(description, forKey: luminosityAlertDescriptionUDKeyPrefix + uuid)
     }
 }
 

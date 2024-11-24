@@ -134,6 +134,8 @@ extension RuuviTagLatestDataSQLite: Equatable {
 }
 
 extension RuuviTagLatestDataSQLite: FetchableRecord {
+
+    // swiftlint:disable:next function_body_length
     public init(row: Row) {
         id = row[RuuviTagLatestDataSQLite.idColumn]
         if let luidValue = String.fromDatabaseValue(row[RuuviTagLatestDataSQLite.luidColumn]) {
