@@ -1142,6 +1142,7 @@ extension CardsPresenter {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func syncAlerts(ruuviTag: RuuviTagSensor, viewModel: CardsViewModel) {
         AlertType.allCases.forEach { type in
             switch type {
@@ -1157,6 +1158,24 @@ extension CardsPresenter {
                 sync(pressure: type, ruuviTag: ruuviTag, viewModel: viewModel)
             case .signal:
                 sync(signal: type, ruuviTag: ruuviTag, viewModel: viewModel)
+            case .carbonDioxide:
+                sync(carbonDioxide: type, ruuviTag: ruuviTag, viewModel: viewModel)
+            case .pMatter1:
+                sync(pMatter1: type, ruuviTag: ruuviTag, viewModel: viewModel)
+            case .pMatter2_5:
+                sync(pMatter2_5: type, ruuviTag: ruuviTag, viewModel: viewModel)
+            case .pMatter4:
+                sync(pMatter4: type, ruuviTag: ruuviTag, viewModel: viewModel)
+            case .pMatter10:
+                sync(pMatter10: type, ruuviTag: ruuviTag, viewModel: viewModel)
+            case .voc:
+                sync(voc: type, ruuviTag: ruuviTag, viewModel: viewModel)
+            case .nox:
+                sync(nox: type, ruuviTag: ruuviTag, viewModel: viewModel)
+            case .sound:
+                sync(sound: type, ruuviTag: ruuviTag, viewModel: viewModel)
+            case .luminosity:
+                sync(luminosity: type, ruuviTag: ruuviTag, viewModel: viewModel)
             case .connection:
                 sync(connection: type, ruuviTag: ruuviTag, viewModel: viewModel)
             case .movement:
@@ -1172,6 +1191,15 @@ extension CardsPresenter {
             viewModel.relativeHumidityAlertState.value,
             viewModel.pressureAlertState.value,
             viewModel.signalAlertState.value,
+            viewModel.carbonDioxideAlertState.value,
+            viewModel.pMatter1AlertState.value,
+            viewModel.pMatter2_5AlertState.value,
+            viewModel.pMatter4AlertState.value,
+            viewModel.pMatter10AlertState.value,
+            viewModel.vocAlertState.value,
+            viewModel.noxAlertState.value,
+            viewModel.soundAlertState.value,
+            viewModel.luminosityAlertState.value,
             viewModel.connectionAlertState.value,
             viewModel.movementAlertState.value,
             viewModel.cloudConnectionAlertState.value,
@@ -1269,6 +1297,164 @@ extension CardsPresenter {
     }
 
     private func sync(
+        carbonDioxide: AlertType,
+        ruuviTag: PhysicalSensor,
+        viewModel: CardsViewModel
+    ) {
+        if case .carbonDioxide = alertService
+            .alert(for: ruuviTag, of: carbonDioxide) {
+            viewModel.isCarbonDioxideAlertOn.value = true
+        } else {
+            viewModel.isCarbonDioxideAlertOn.value = false
+        }
+        viewModel.carbonDioxideAlertMutedTill.value =
+            alertService.mutedTill(
+                type: carbonDioxide,
+                for: ruuviTag
+            )
+    }
+
+    private func sync(
+        pMatter1: AlertType,
+        ruuviTag: PhysicalSensor,
+        viewModel: CardsViewModel
+    ) {
+        if case .pMatter1 = alertService
+            .alert(for: ruuviTag, of: pMatter1) {
+            viewModel.isPMatter1AlertOn.value = true
+        } else {
+            viewModel.isPMatter1AlertOn.value = false
+        }
+        viewModel.pMatter1AlertMutedTill.value =
+            alertService.mutedTill(
+                type: pMatter1,
+                for: ruuviTag
+            )
+    }
+
+    private func sync(
+        pMatter2_5: AlertType,
+        ruuviTag: PhysicalSensor,
+        viewModel: CardsViewModel
+    ) {
+        if case .pMatter2_5 = alertService
+            .alert(for: ruuviTag, of: pMatter2_5) {
+            viewModel.isPMatter2_5AlertOn.value = true
+        } else {
+            viewModel.isPMatter2_5AlertOn.value = false
+        }
+        viewModel.pMatter2_5AlertMutedTill.value =
+            alertService.mutedTill(
+                type: pMatter2_5,
+                for: ruuviTag
+            )
+    }
+
+    private func sync(
+        pMatter4: AlertType,
+        ruuviTag: PhysicalSensor,
+        viewModel: CardsViewModel
+    ) {
+        if case .pMatter4 = alertService
+            .alert(for: ruuviTag, of: pMatter4) {
+            viewModel.isPMatter4AlertOn.value = true
+        } else {
+            viewModel.isPMatter4AlertOn.value = false
+        }
+        viewModel.pMatter4AlertMutedTill.value =
+            alertService.mutedTill(
+                type: pMatter4,
+                for: ruuviTag
+            )
+    }
+
+    private func sync(
+        pMatter10: AlertType,
+        ruuviTag: PhysicalSensor,
+        viewModel: CardsViewModel
+    ) {
+        if case .pMatter10 = alertService
+            .alert(for: ruuviTag, of: pMatter10) {
+            viewModel.isPMatter10AlertOn.value = true
+        } else {
+            viewModel.isPMatter10AlertOn.value = false
+        }
+        viewModel.pMatter10AlertMutedTill.value =
+            alertService.mutedTill(
+                type: pMatter10,
+                for: ruuviTag
+            )
+    }
+
+    private func sync(
+        voc: AlertType,
+        ruuviTag: PhysicalSensor,
+        viewModel: CardsViewModel
+    ) {
+        if case .voc = alertService.alert(for: ruuviTag, of: voc) {
+            viewModel.isVOCAlertOn.value = true
+        } else {
+            viewModel.isVOCAlertOn.value = false
+        }
+        viewModel.vocAlertMutedTill.value =
+            alertService.mutedTill(
+                type: voc,
+                for: ruuviTag
+            )
+    }
+
+    private func sync(
+        nox: AlertType,
+        ruuviTag: PhysicalSensor,
+        viewModel: CardsViewModel
+    ) {
+        if case .nox = alertService.alert(for: ruuviTag, of: nox) {
+            viewModel.isNOXAlertOn.value = true
+        } else {
+            viewModel.isNOXAlertOn.value = false
+        }
+        viewModel.noxAlertMutedTill.value =
+            alertService.mutedTill(
+                type: nox,
+                for: ruuviTag
+            )
+    }
+
+    private func sync(
+        sound: AlertType,
+        ruuviTag: PhysicalSensor,
+        viewModel: CardsViewModel
+    ) {
+        if case .sound = alertService.alert(for: ruuviTag, of: sound) {
+            viewModel.isSignalAlertOn.value = true
+        } else {
+            viewModel.isSoundAlertOn.value = false
+        }
+        viewModel.soundAlertMutedTill.value =
+            alertService.mutedTill(
+                type: sound,
+                for: ruuviTag
+            )
+    }
+
+    private func sync(
+        luminosity: AlertType,
+        ruuviTag: PhysicalSensor,
+        viewModel: CardsViewModel
+    ) {
+        if case .luminosity = alertService.alert(for: ruuviTag, of: luminosity) {
+            viewModel.isLuminosityAlertOn.value = true
+        } else {
+            viewModel.isLuminosityAlertOn.value = false
+        }
+        viewModel.luminosityAlertMutedTill.value =
+            alertService.mutedTill(
+                type: luminosity,
+                for: ruuviTag
+            )
+    }
+
+    private func sync(
         connection: AlertType,
         ruuviTag: RuuviTagSensor,
         viewModel: CardsViewModel
@@ -1314,6 +1500,7 @@ extension CardsPresenter {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func reloadMutedTill() {
         for viewModel in viewModels {
             if let mutedTill = viewModel.temperatureAlertMutedTill.value,
@@ -1336,6 +1523,51 @@ extension CardsPresenter {
                 viewModel.signalAlertMutedTill.value = nil
             }
 
+            if let mutedTill = viewModel.carbonDioxideAlertMutedTill.value,
+               mutedTill < Date() {
+                viewModel.carbonDioxideAlertMutedTill.value = nil
+            }
+
+            if let mutedTill = viewModel.pMatter1AlertMutedTill.value,
+               mutedTill < Date() {
+                viewModel.pMatter1AlertMutedTill.value = nil
+            }
+
+            if let mutedTill = viewModel.pMatter2_5AlertMutedTill.value,
+               mutedTill < Date() {
+                viewModel.pMatter2_5AlertMutedTill.value = nil
+            }
+
+            if let mutedTill = viewModel.pMatter4AlertMutedTill.value,
+               mutedTill < Date() {
+                viewModel.pMatter4AlertMutedTill.value = nil
+            }
+
+            if let mutedTill = viewModel.pMatter10AlertMutedTill.value,
+               mutedTill < Date() {
+                viewModel.pMatter10AlertMutedTill.value = nil
+            }
+
+            if let mutedTill = viewModel.vocAlertMutedTill.value,
+               mutedTill < Date() {
+                viewModel.vocAlertMutedTill.value = nil
+            }
+
+            if let mutedTill = viewModel.noxAlertMutedTill.value,
+               mutedTill < Date() {
+                viewModel.noxAlertMutedTill.value = nil
+            }
+
+            if let mutedTill = viewModel.soundAlertMutedTill.value,
+               mutedTill < Date() {
+                viewModel.soundAlertMutedTill.value = nil
+            }
+
+            if let mutedTill = viewModel.luminosityAlertMutedTill.value,
+               mutedTill < Date() {
+                viewModel.luminosityAlertMutedTill.value = nil
+            }
+
             if let mutedTill = viewModel.connectionAlertMutedTill.value,
                mutedTill < Date() {
                 viewModel.connectionAlertMutedTill.value = nil
@@ -1348,6 +1580,7 @@ extension CardsPresenter {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func updateMutedTill(
         of type: AlertType,
         for uuid: String,
@@ -1362,6 +1595,24 @@ extension CardsPresenter {
             viewModel.pressureAlertMutedTill
         case .signal:
             viewModel.signalAlertMutedTill
+        case .carbonDioxide:
+            viewModel.carbonDioxideAlertMutedTill
+        case .pMatter1:
+            viewModel.pMatter1AlertMutedTill
+        case .pMatter2_5:
+            viewModel.pMatter2_5AlertMutedTill
+        case .pMatter4:
+            viewModel.pMatter4AlertMutedTill
+        case .pMatter10:
+            viewModel.pMatter10AlertMutedTill
+        case .voc:
+            viewModel.vocAlertMutedTill
+        case .nox:
+            viewModel.noxAlertMutedTill
+        case .sound:
+            viewModel.soundAlertMutedTill
+        case .luminosity:
+            viewModel.luminosityAlertMutedTill
         case .connection:
             viewModel.connectionAlertMutedTill
         case .movement:
@@ -1377,6 +1628,7 @@ extension CardsPresenter {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func updateIsOnState(
         of type: AlertType,
         for uuid: String,
@@ -1391,6 +1643,24 @@ extension CardsPresenter {
             viewModel.isPressureAlertOn
         case .signal:
             viewModel.isSignalAlertOn
+        case .carbonDioxide:
+            viewModel.isCarbonDioxideAlertOn
+        case .pMatter1:
+            viewModel.isPMatter1AlertOn
+        case .pMatter2_5:
+            viewModel.isPMatter2_5AlertOn
+        case .pMatter4:
+            viewModel.isPMatter4AlertOn
+        case .pMatter10:
+            viewModel.isPMatter10AlertOn
+        case .voc:
+            viewModel.isVOCAlertOn
+        case .nox:
+            viewModel.isNOXAlertOn
+        case .sound:
+            viewModel.isSoundAlertOn
+        case .luminosity:
+            viewModel.isLuminosityAlertOn
         case .connection:
             viewModel.isConnectionAlertOn
         case .movement:

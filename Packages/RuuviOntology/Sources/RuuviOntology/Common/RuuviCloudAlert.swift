@@ -7,6 +7,15 @@ public enum RuuviCloudAlertType: String, Codable {
     case signal
     case movement
     case offline
+    case co2
+    case pm10
+    case pm25
+    case pm40
+    case pm100
+    case voc
+    case nox
+    case sound
+    case luminosity
 }
 
 public enum RuuviCloudAlertSettingType: String {

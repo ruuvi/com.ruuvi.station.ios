@@ -8,7 +8,7 @@ import RuuviOntology
 // MARK: - RuuviTag
 
 public extension RuuviServiceAlertImpl {
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func register(type: AlertType, ruuviTag: RuuviTagSensor) {
         register(type: type, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
@@ -63,6 +63,114 @@ public extension RuuviServiceAlertImpl {
                     description: signalDescription(for: ruuviTag),
                     for: macId
                 )
+            case let .carbonDioxide(lower, upper):
+                cloud.setAlert(
+                    type: .co2,
+                    settingType: .state,
+                    isEnabled: true,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: carbonDioxideDescription(for: ruuviTag),
+                    for: macId
+                )
+            case let .pMatter1(lower, upper):
+                cloud.setAlert(
+                    type: .pm10,
+                    settingType: .state,
+                    isEnabled: true,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: pm1Description(for: ruuviTag),
+                    for: macId
+                )
+            case let .pMatter2_5(lower, upper):
+                cloud.setAlert(
+                    type: .pm25,
+                    settingType: .state,
+                    isEnabled: true,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: pm2_5Description(for: ruuviTag),
+                    for: macId
+                )
+            case let .pMatter4(lower, upper):
+                cloud.setAlert(
+                    type: .pm40,
+                    settingType: .state,
+                    isEnabled: true,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: pm4Description(for: ruuviTag),
+                    for: macId
+                )
+            case let .pMatter10(lower, upper):
+                cloud.setAlert(
+                    type: .pm100,
+                    settingType: .state,
+                    isEnabled: true,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: carbonDioxideDescription(for: ruuviTag),
+                    for: macId
+                )
+            case let .voc(lower, upper):
+                cloud.setAlert(
+                    type: .voc,
+                    settingType: .state,
+                    isEnabled: true,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: vocDescription(for: ruuviTag),
+                    for: macId
+                )
+            case let .nox(lower, upper):
+                cloud.setAlert(
+                    type: .nox,
+                    settingType: .state,
+                    isEnabled: true,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: noxDescription(for: ruuviTag),
+                    for: macId
+                )
+            case let .sound(lower, upper):
+                cloud.setAlert(
+                    type: .sound,
+                    settingType: .state,
+                    isEnabled: true,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: soundDescription(for: ruuviTag),
+                    for: macId
+                )
+            case let .luminosity(lower, upper):
+                cloud.setAlert(
+                    type: .luminosity,
+                    settingType: .state,
+                    isEnabled: true,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: luminosityDescription(for: ruuviTag),
+                    for: macId
+                )
             case .connection:
                 break
             case let .cloudConnection(unseenDuration):
@@ -93,7 +201,7 @@ public extension RuuviServiceAlertImpl {
         }
     }
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func unregister(type: AlertType, ruuviTag: RuuviTagSensor) {
         unregister(type: type, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
@@ -148,6 +256,114 @@ public extension RuuviServiceAlertImpl {
                     description: signalDescription(for: ruuviTag),
                     for: macId
                 )
+            case let .carbonDioxide(lower, upper):
+                cloud.setAlert(
+                    type: .co2,
+                    settingType: .state,
+                    isEnabled: false,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: carbonDioxideDescription(for: ruuviTag),
+                    for: macId
+                )
+            case let .pMatter1(lower, upper):
+                cloud.setAlert(
+                    type: .pm10,
+                    settingType: .state,
+                    isEnabled: false,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: pm1Description(for: ruuviTag),
+                    for: macId
+                )
+            case let .pMatter2_5(lower, upper):
+                cloud.setAlert(
+                    type: .pm25,
+                    settingType: .state,
+                    isEnabled: false,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: pm2_5Description(for: ruuviTag),
+                    for: macId
+                )
+            case let .pMatter4(lower, upper):
+                cloud.setAlert(
+                    type: .pm40,
+                    settingType: .state,
+                    isEnabled: false,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: pm4Description(for: ruuviTag),
+                    for: macId
+                )
+            case let .pMatter10(lower, upper):
+                cloud.setAlert(
+                    type: .pm100,
+                    settingType: .state,
+                    isEnabled: false,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: pm10Description(for: ruuviTag),
+                    for: macId
+                )
+            case let .voc(lower, upper):
+                cloud.setAlert(
+                    type: .voc,
+                    settingType: .state,
+                    isEnabled: false,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: vocDescription(for: ruuviTag),
+                    for: macId
+                )
+            case let .nox(lower, upper):
+                cloud.setAlert(
+                    type: .nox,
+                    settingType: .state,
+                    isEnabled: false,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: noxDescription(for: ruuviTag),
+                    for: macId
+                )
+            case let .sound(lower, upper):
+                cloud.setAlert(
+                    type: .sound,
+                    settingType: .state,
+                    isEnabled: false,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: noxDescription(for: ruuviTag),
+                    for: macId
+                )
+            case let .luminosity(lower, upper):
+                cloud.setAlert(
+                    type: .luminosity,
+                    settingType: .state,
+                    isEnabled: false,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: luminosityDescription(for: ruuviTag),
+                    for: macId
+                )
             case .connection:
                 break
             case let .cloudConnection(unseenDuration):
@@ -178,6 +394,7 @@ public extension RuuviServiceAlertImpl {
         }
     }
 
+    // MARK: - Temperature
     func setLower(celsius: Double?, ruuviTag: RuuviTagSensor) {
         setLower(celsius: celsius, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
@@ -229,6 +446,7 @@ public extension RuuviServiceAlertImpl {
         }
     }
 
+    // MARK: - RH
     func setLower(relativeHumidity: Double?, ruuviTag: RuuviTagSensor) {
         setLower(relativeHumidity: relativeHumidity, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
@@ -280,6 +498,7 @@ public extension RuuviServiceAlertImpl {
         }
     }
 
+    // MARK: - Pressure
     func setLower(pressure: Double?, ruuviTag: RuuviTagSensor) {
         setLower(pressure: pressure, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
@@ -331,6 +550,7 @@ public extension RuuviServiceAlertImpl {
         }
     }
 
+    // MARK: - Signal
     func setLower(signal: Double?, ruuviTag: RuuviTagSensor) {
         setLower(signal: signal, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
@@ -391,6 +611,556 @@ public extension RuuviServiceAlertImpl {
         }
     }
 
+    // MARK: - CO2
+    func setLower(carbonDioxide: Double?, ruuviTag: RuuviTagSensor) {
+        setLower(carbonDioxide: carbonDioxide, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .co2,
+                settingType: .lowerBound,
+                isEnabled: isOn(
+                    type: .carbonDioxide(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: carbonDioxide ?? 0,
+                max: upperCarbonDioxide(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: carbonDioxideDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setUpper(carbonDioxide: Double?, ruuviTag: RuuviTagSensor) {
+        setUpper(carbonDioxide: carbonDioxide, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .co2,
+                settingType: .upperBound,
+                isEnabled: isOn(
+                    type: .carbonDioxide(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerCarbonDioxide(for: ruuviTag) ?? 0,
+                max: carbonDioxide ?? 0,
+                counter: nil,
+                delay: nil,
+                description: carbonDioxideDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setCarbonDioxide(description: String?, ruuviTag: RuuviTagSensor) {
+        setCarbonDioxide(description: description, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .co2,
+                settingType: .description,
+                isEnabled: isOn(
+                    type: .carbonDioxide(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerCarbonDioxide(for: ruuviTag) ?? 0,
+                max: upperCarbonDioxide(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: description,
+                for: macId
+            )
+        }
+    }
+
+    // MARK: - PM1
+    func setLower(pm1: Double?, ruuviTag: RuuviTagSensor) {
+        setLower(pm1: pm1, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .pm10,
+                settingType: .lowerBound,
+                isEnabled: isOn(
+                    type: .pMatter1(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: pm1 ?? 0,
+                max: upperPM1(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: pm1Description(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setUpper(pm1: Double?, ruuviTag: RuuviTagSensor) {
+        setUpper(pm1: pm1, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .pm10,
+                settingType: .upperBound,
+                isEnabled: isOn(
+                    type: .pMatter1(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerPM1(for: ruuviTag) ?? 0,
+                max: pm1 ?? 0,
+                counter: nil,
+                delay: nil,
+                description: pm1Description(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setPM1(description: String?, ruuviTag: RuuviTagSensor) {
+        setPM1(description: description, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .pm10,
+                settingType: .description,
+                isEnabled: isOn(
+                    type: .pMatter1(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerPM1(for: ruuviTag) ?? 0,
+                max: upperPM1(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: description,
+                for: macId
+            )
+        }
+    }
+
+    // MARK: - PM2.5
+    func setLower(pm2_5: Double?, ruuviTag: RuuviTagSensor) {
+        setLower(pm2_5: pm2_5, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .pm25,
+                settingType: .lowerBound,
+                isEnabled: isOn(
+                    type: .pMatter2_5(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: pm2_5 ?? 0,
+                max: upperPM2_5(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: pm2_5Description(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setUpper(pm2_5: Double?, ruuviTag: RuuviTagSensor) {
+        setUpper(pm2_5: pm2_5, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .pm25,
+                settingType: .upperBound,
+                isEnabled: isOn(
+                    type: .pMatter2_5(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerPM2_5(for: ruuviTag) ?? 0,
+                max: pm2_5 ?? 0,
+                counter: nil,
+                delay: nil,
+                description: pm2_5Description(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setPM2_5(description: String?, ruuviTag: RuuviTagSensor) {
+        setPM2_5(description: description, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .pm25,
+                settingType: .description,
+                isEnabled: isOn(
+                    type: .pMatter2_5(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerPM2_5(for: ruuviTag) ?? 0,
+                max: upperPM2_5(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: description,
+                for: macId
+            )
+        }
+    }
+
+    // MARK: - PM4
+    func setLower(pm4: Double?, ruuviTag: RuuviTagSensor) {
+        setLower(pm4: pm4, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .pm40,
+                settingType: .lowerBound,
+                isEnabled: isOn(
+                    type: .pMatter4(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: pm4 ?? 0,
+                max: upperPM4(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: pm4Description(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setUpper(pm4: Double?, ruuviTag: RuuviTagSensor) {
+        setUpper(pm4: pm4, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .pm40,
+                settingType: .upperBound,
+                isEnabled: isOn(
+                    type: .pMatter4(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerPM4(for: ruuviTag) ?? 0,
+                max: pm4 ?? 0,
+                counter: nil,
+                delay: nil,
+                description: pm4Description(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setPM4(description: String?, ruuviTag: RuuviTagSensor) {
+        setPM4(description: description, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .pm40,
+                settingType: .description,
+                isEnabled: isOn(
+                    type: .pMatter4(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerPM4(for: ruuviTag) ?? 0,
+                max: upperPM4(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: description,
+                for: macId
+            )
+        }
+    }
+
+    // MARK: - PM10
+    func setLower(pm10: Double?, ruuviTag: RuuviTagSensor) {
+        setLower(pm10: pm10, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .pm100,
+                settingType: .lowerBound,
+                isEnabled: isOn(
+                    type: .pMatter10(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: pm10 ?? 0,
+                max: upperPM10(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: pm10Description(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setUpper(pm10: Double?, ruuviTag: RuuviTagSensor) {
+        setUpper(pm10: pm10, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .pm100,
+                settingType: .upperBound,
+                isEnabled: isOn(
+                    type: .pMatter10(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerPM10(for: ruuviTag) ?? 0,
+                max: pm10 ?? 0,
+                counter: nil,
+                delay: nil,
+                description: pm10Description(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setPM10(description: String?, ruuviTag: RuuviTagSensor) {
+        setPM10(description: description, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .pm100,
+                settingType: .description,
+                isEnabled: isOn(
+                    type: .pMatter10(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerPM10(for: ruuviTag) ?? 0,
+                max: upperPM10(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: description,
+                for: macId
+            )
+        }
+    }
+
+    // MARK: - VOC
+    func setLower(voc: Double?, ruuviTag: RuuviTagSensor) {
+        setLower(voc: voc, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .voc,
+                settingType: .lowerBound,
+                isEnabled: isOn(
+                    type: .voc(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: voc ?? 0,
+                max: upperVOC(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: vocDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setUpper(voc: Double?, ruuviTag: RuuviTagSensor) {
+        setUpper(voc: voc, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .voc,
+                settingType: .upperBound,
+                isEnabled: isOn(
+                    type: .voc(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerVOC(for: ruuviTag) ?? 0,
+                max: voc ?? 0,
+                counter: nil,
+                delay: nil,
+                description: vocDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setVOC(description: String?, ruuviTag: RuuviTagSensor) {
+        setVOC(description: description, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .voc,
+                settingType: .description,
+                isEnabled: isOn(
+                    type: .voc(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerVOC(for: ruuviTag) ?? 0,
+                max: upperVOC(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: description,
+                for: macId
+            )
+        }
+    }
+
+    // MARK: - NOX
+    func setLower(nox: Double?, ruuviTag: RuuviTagSensor) {
+        setLower(nox: nox, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .nox,
+                settingType: .lowerBound,
+                isEnabled: isOn(
+                    type: .nox(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: nox ?? 0,
+                max: upperNOX(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: noxDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setUpper(nox: Double?, ruuviTag: RuuviTagSensor) {
+        setUpper(nox: nox, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .nox,
+                settingType: .upperBound,
+                isEnabled: isOn(
+                    type: .nox(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerNOX(for: ruuviTag) ?? 0,
+                max: nox ?? 0,
+                counter: nil,
+                delay: nil,
+                description: noxDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setNOX(description: String?, ruuviTag: RuuviTagSensor) {
+        setNOX(description: description, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .nox,
+                settingType: .description,
+                isEnabled: isOn(
+                    type: .nox(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerNOX(for: ruuviTag) ?? 0,
+                max: upperNOX(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: description,
+                for: macId
+            )
+        }
+    }
+
+    // MARK: - Sound
+    func setLower(sound: Double?, ruuviTag: RuuviTagSensor) {
+        setLower(sound: sound, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .sound,
+                settingType: .lowerBound,
+                isEnabled: isOn(
+                    type: .sound(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: sound ?? 0,
+                max: upperSound(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: soundDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setUpper(sound: Double?, ruuviTag: RuuviTagSensor) {
+        setUpper(sound: sound, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .sound,
+                settingType: .upperBound,
+                isEnabled: isOn(
+                    type: .sound(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerSound(for: ruuviTag) ?? 0,
+                max: sound ?? 0,
+                counter: nil,
+                delay: nil,
+                description: soundDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setSound(description: String?, ruuviTag: RuuviTagSensor) {
+        setSound(description: description, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .sound,
+                settingType: .description,
+                isEnabled: isOn(
+                    type: .sound(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerSound(for: ruuviTag) ?? 0,
+                max: upperSound(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: description,
+                for: macId
+            )
+        }
+    }
+
+    // MARK: - Luminosity
+    func setLower(luminosity: Double?, ruuviTag: RuuviTagSensor) {
+        setLower(luminosity: luminosity, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .luminosity,
+                settingType: .lowerBound,
+                isEnabled: isOn(
+                    type: .luminosity(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: luminosity ?? 0,
+                max: upperLuminosity(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: luminosityDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setUpper(luminosity: Double?, ruuviTag: RuuviTagSensor) {
+        setUpper(luminosity: luminosity, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .luminosity,
+                settingType: .upperBound,
+                isEnabled: isOn(
+                    type: .luminosity(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerLuminosity(for: ruuviTag) ?? 0,
+                max: luminosity ?? 0,
+                counter: nil,
+                delay: nil,
+                description: luminosityDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setLuminosity(description: String?, ruuviTag: RuuviTagSensor) {
+        setLuminosity(description: description, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .luminosity,
+                settingType: .description,
+                isEnabled: isOn(
+                    type: .luminosity(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerLuminosity(for: ruuviTag) ?? 0,
+                max: upperLuminosity(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: description,
+                for: macId
+            )
+        }
+    }
+
+    // MARK: - Movement
     func setMovement(description: String?, ruuviTag: RuuviTagSensor) {
         setMovement(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
@@ -408,6 +1178,7 @@ public extension RuuviServiceAlertImpl {
         }
     }
 
+    // MARK: - Cloud Connection
     func setCloudConnection(unseenDuration: Double?, ruuviTag: RuuviTagSensor) {
         setCloudConnection(unseenDuration: unseenDuration, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
@@ -511,6 +1282,96 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         upper: max
                     )
                     setSignal(description: cloudAlert.description, for: physicalSensor)
+                case .co2:
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    type = .carbonDioxide(
+                        lower: min,
+                        upper: max
+                    )
+                    setCarbonDioxide(
+                        description: cloudAlert.description,
+                        for: physicalSensor
+                    )
+                case .pm10:
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    type = .pMatter1(
+                        lower: min,
+                        upper: max
+                    )
+                    setPM1(
+                        description: cloudAlert.description,
+                        for: physicalSensor
+                    )
+                case .pm25:
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    type = .pMatter2_5(
+                        lower: min,
+                        upper: max
+                    )
+                    setPM2_5(
+                        description: cloudAlert.description,
+                        for: physicalSensor
+                    )
+                case .pm40:
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    type = .pMatter4(
+                        lower: min,
+                        upper: max
+                    )
+                    setPM4(
+                        description: cloudAlert.description,
+                        for: physicalSensor
+                    )
+                case .pm100:
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    type = .pMatter10(
+                        lower: min,
+                        upper: max
+                    )
+                    setPM10(
+                        description: cloudAlert.description,
+                        for: physicalSensor
+                    )
+                case .voc:
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    type = .voc(
+                        lower: min,
+                        upper: max
+                    )
+                    setVOC(
+                        description: cloudAlert.description,
+                        for: physicalSensor
+                    )
+                case .nox:
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    type = .nox(
+                        lower: min,
+                        upper: max
+                    )
+                    setNOX(
+                        description: cloudAlert.description,
+                        for: physicalSensor
+                    )
+                case .sound:
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    type = .sound(
+                        lower: min,
+                        upper: max
+                    )
+                    setSound(
+                        description: cloudAlert.description,
+                        for: physicalSensor
+                    )
+                case .luminosity:
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    type = .luminosity(
+                        lower: min,
+                        upper: max
+                    )
+                    setLuminosity(
+                        description: cloudAlert.description,
+                        for: physicalSensor
+                    )
                 case .offline:
                     guard let unseenDuration = cloudAlert.max else { return }
                     type = .cloudConnection(unseenDuration: unseenDuration)
@@ -775,23 +1636,6 @@ public extension RuuviServiceAlertImpl {
         }
     }
 
-    func setLower(celsius: Double?, for sensor: PhysicalSensor) {
-        if let luid = sensor.luid, let macId = sensor.macId {
-            alertPersistence.setLower(celsius: celsius, for: luid.value)
-            alertPersistence.setLower(celsius: celsius, for: macId.value)
-        } else if let luid = sensor.luid {
-            alertPersistence.setLower(celsius: celsius, for: luid.value)
-        } else if let macId = sensor.macId {
-            alertPersistence.setLower(celsius: celsius, for: macId.value)
-        } else {
-            assertionFailure()
-        }
-
-        if let l = celsius, let u = upperCelsius(for: sensor) {
-            postAlertDidChange(with: sensor, of: .temperature(lower: l, upper: u))
-        }
-    }
-
     func upperCelsius(for sensor: PhysicalSensor) -> Double? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.upperCelsius(for: luid.value)
@@ -803,23 +1647,6 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
             return nil
-        }
-    }
-
-    func setUpper(celsius: Double?, for sensor: PhysicalSensor) {
-        if let luid = sensor.luid, let macId = sensor.macId {
-            alertPersistence.setUpper(celsius: celsius, for: luid.value)
-            alertPersistence.setUpper(celsius: celsius, for: macId.value)
-        } else if let luid = sensor.luid {
-            alertPersistence.setUpper(celsius: celsius, for: luid.value)
-        } else if let macId = sensor.macId {
-            alertPersistence.setUpper(celsius: celsius, for: macId.value)
-        } else {
-            assertionFailure()
-        }
-
-        if let u = celsius, let l = lowerCelsius(for: sensor) {
-            postAlertDidChange(with: sensor, of: .temperature(lower: l, upper: u))
         }
     }
 
@@ -837,7 +1664,54 @@ public extension RuuviServiceAlertImpl {
         }
     }
 
-    func setTemperature(description: String?, for sensor: PhysicalSensor) {
+    func lowerCelsius(for uuid: String) -> Double? {
+        alertPersistence.lowerCelsius(for: uuid)
+    }
+
+    func upperCelsius(for uuid: String) -> Double? {
+        alertPersistence.upperCelsius(for: uuid)
+    }
+
+    func temperatureDescription(for uuid: String) -> String? {
+        alertPersistence.temperatureDescription(for: uuid)
+    }
+
+    // Private helpers
+    private func setLower(celsius: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(celsius: celsius, for: luid.value)
+            alertPersistence.setLower(celsius: celsius, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(celsius: celsius, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(celsius: celsius, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+
+        if let l = celsius, let u = upperCelsius(for: sensor) {
+            postAlertDidChange(with: sensor, of: .temperature(lower: l, upper: u))
+        }
+    }
+
+    private func setUpper(celsius: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(celsius: celsius, for: luid.value)
+            alertPersistence.setUpper(celsius: celsius, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(celsius: celsius, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(celsius: celsius, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+
+        if let u = celsius, let l = lowerCelsius(for: sensor) {
+            postAlertDidChange(with: sensor, of: .temperature(lower: l, upper: u))
+        }
+    }
+
+    private func setTemperature(description: String?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setTemperature(description: description, for: luid.value)
             alertPersistence.setTemperature(description: description, for: macId.value)
@@ -852,18 +1726,6 @@ public extension RuuviServiceAlertImpl {
         if let l = lowerCelsius(for: sensor), let u = upperCelsius(for: sensor) {
             postAlertDidChange(with: sensor, of: .temperature(lower: l, upper: u))
         }
-    }
-
-    func lowerCelsius(for uuid: String) -> Double? {
-        alertPersistence.lowerCelsius(for: uuid)
-    }
-
-    func upperCelsius(for uuid: String) -> Double? {
-        alertPersistence.upperCelsius(for: uuid)
-    }
-
-    func temperatureDescription(for uuid: String) -> String? {
-        alertPersistence.temperatureDescription(for: uuid)
     }
 }
 
@@ -884,22 +1746,6 @@ public extension RuuviServiceAlertImpl {
         }
     }
 
-    func setLower(relativeHumidity: Double?, for sensor: PhysicalSensor) {
-        if let luid = sensor.luid, let macId = sensor.macId {
-            alertPersistence.setLower(relativeHumidity: relativeHumidity, for: luid.value)
-            alertPersistence.setLower(relativeHumidity: relativeHumidity, for: macId.value)
-        } else if let luid = sensor.luid {
-            alertPersistence.setLower(relativeHumidity: relativeHumidity, for: luid.value)
-        } else if let macId = sensor.macId {
-            alertPersistence.setLower(relativeHumidity: relativeHumidity, for: macId.value)
-        } else {
-            assertionFailure()
-        }
-        if let l = relativeHumidity, let u = upperRelativeHumidity(for: sensor) {
-            postAlertDidChange(with: sensor, of: .relativeHumidity(lower: l, upper: u))
-        }
-    }
-
     func upperRelativeHumidity(for sensor: PhysicalSensor) -> Double? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.upperRelativeHumidity(for: luid.value)
@@ -911,22 +1757,6 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
             return nil
-        }
-    }
-
-    func setUpper(relativeHumidity: Double?, for sensor: PhysicalSensor) {
-        if let luid = sensor.luid, let macId = sensor.macId {
-            alertPersistence.setUpper(relativeHumidity: relativeHumidity, for: luid.value)
-            alertPersistence.setUpper(relativeHumidity: relativeHumidity, for: macId.value)
-        } else if let luid = sensor.luid {
-            alertPersistence.setUpper(relativeHumidity: relativeHumidity, for: luid.value)
-        } else if let macId = sensor.macId {
-            alertPersistence.setUpper(relativeHumidity: relativeHumidity, for: macId.value)
-        } else {
-            assertionFailure()
-        }
-        if let u = relativeHumidity, let l = lowerRelativeHumidity(for: sensor) {
-            postAlertDidChange(with: sensor, of: .relativeHumidity(lower: l, upper: u))
         }
     }
 
@@ -944,7 +1774,52 @@ public extension RuuviServiceAlertImpl {
         }
     }
 
-    func setRelativeHumidity(description: String?, for sensor: PhysicalSensor) {
+    func lowerRelativeHumidity(for uuid: String) -> Double? {
+        alertPersistence.lowerRelativeHumidity(for: uuid)
+    }
+
+    func upperRelativeHumidity(for uuid: String) -> Double? {
+        alertPersistence.upperRelativeHumidity(for: uuid)
+    }
+
+    func relativeHumidityDescription(for uuid: String) -> String? {
+        alertPersistence.relativeHumidityDescription(for: uuid)
+    }
+
+    // Private helpers
+    private func setLower(relativeHumidity: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(relativeHumidity: relativeHumidity, for: luid.value)
+            alertPersistence.setLower(relativeHumidity: relativeHumidity, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(relativeHumidity: relativeHumidity, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(relativeHumidity: relativeHumidity, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+        if let l = relativeHumidity, let u = upperRelativeHumidity(for: sensor) {
+            postAlertDidChange(with: sensor, of: .relativeHumidity(lower: l, upper: u))
+        }
+    }
+
+    private func setUpper(relativeHumidity: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(relativeHumidity: relativeHumidity, for: luid.value)
+            alertPersistence.setUpper(relativeHumidity: relativeHumidity, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(relativeHumidity: relativeHumidity, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(relativeHumidity: relativeHumidity, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+        if let u = relativeHumidity, let l = lowerRelativeHumidity(for: sensor) {
+            postAlertDidChange(with: sensor, of: .relativeHumidity(lower: l, upper: u))
+        }
+    }
+
+    private func setRelativeHumidity(description: String?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setRelativeHumidity(description: description, for: luid.value)
             alertPersistence.setRelativeHumidity(description: description, for: macId.value)
@@ -959,18 +1834,6 @@ public extension RuuviServiceAlertImpl {
         if let l = lowerRelativeHumidity(for: sensor), let u = upperRelativeHumidity(for: sensor) {
             postAlertDidChange(with: sensor, of: .relativeHumidity(lower: l, upper: u))
         }
-    }
-
-    func lowerRelativeHumidity(for uuid: String) -> Double? {
-        alertPersistence.lowerRelativeHumidity(for: uuid)
-    }
-
-    func upperRelativeHumidity(for uuid: String) -> Double? {
-        alertPersistence.upperRelativeHumidity(for: uuid)
-    }
-
-    func relativeHumidityDescription(for uuid: String) -> String? {
-        alertPersistence.relativeHumidityDescription(for: uuid)
     }
 }
 
@@ -1099,23 +1962,6 @@ public extension RuuviServiceAlertImpl {
         }
     }
 
-    func setLower(pressure: Double?, for sensor: PhysicalSensor) {
-        if let luid = sensor.luid, let macId = sensor.macId {
-            alertPersistence.setLower(pressure: pressure, for: luid.value)
-            alertPersistence.setLower(pressure: pressure, for: macId.value)
-        } else if let luid = sensor.luid {
-            alertPersistence.setLower(pressure: pressure, for: luid.value)
-        } else if let macId = sensor.macId {
-            alertPersistence.setLower(pressure: pressure, for: macId.value)
-        } else {
-            assertionFailure()
-        }
-
-        if let l = pressure, let u = upperPressure(for: sensor) {
-            postAlertDidChange(with: sensor, of: .pressure(lower: l, upper: u))
-        }
-    }
-
     func upperPressure(for sensor: PhysicalSensor) -> Double? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.upperPressure(for: luid.value)
@@ -1127,23 +1973,6 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
             return nil
-        }
-    }
-
-    func setUpper(pressure: Double?, for sensor: PhysicalSensor) {
-        if let luid = sensor.luid, let macId = sensor.macId {
-            alertPersistence.setUpper(pressure: pressure, for: luid.value)
-            alertPersistence.setUpper(pressure: pressure, for: macId.value)
-        } else if let luid = sensor.luid {
-            alertPersistence.setUpper(pressure: pressure, for: luid.value)
-        } else if let macId = sensor.macId {
-            alertPersistence.setUpper(pressure: pressure, for: macId.value)
-        } else {
-            assertionFailure()
-        }
-
-        if let u = pressure, let l = lowerPressure(for: sensor) {
-            postAlertDidChange(with: sensor, of: .pressure(lower: l, upper: u))
         }
     }
 
@@ -1161,7 +1990,54 @@ public extension RuuviServiceAlertImpl {
         }
     }
 
-    func setPressure(description: String?, for sensor: PhysicalSensor) {
+    func lowerPressure(for uuid: String) -> Double? {
+        alertPersistence.lowerPressure(for: uuid)
+    }
+
+    func upperPressure(for uuid: String) -> Double? {
+        alertPersistence.upperPressure(for: uuid)
+    }
+
+    func pressureDescription(for uuid: String) -> String? {
+        alertPersistence.pressureDescription(for: uuid)
+    }
+
+    // Private helpers
+    private func setLower(pressure: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(pressure: pressure, for: luid.value)
+            alertPersistence.setLower(pressure: pressure, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(pressure: pressure, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(pressure: pressure, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+
+        if let l = pressure, let u = upperPressure(for: sensor) {
+            postAlertDidChange(with: sensor, of: .pressure(lower: l, upper: u))
+        }
+    }
+
+    private func setUpper(pressure: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(pressure: pressure, for: luid.value)
+            alertPersistence.setUpper(pressure: pressure, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(pressure: pressure, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(pressure: pressure, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+
+        if let u = pressure, let l = lowerPressure(for: sensor) {
+            postAlertDidChange(with: sensor, of: .pressure(lower: l, upper: u))
+        }
+    }
+
+    private func setPressure(description: String?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setPressure(description: description, for: luid.value)
             alertPersistence.setPressure(description: description, for: macId.value)
@@ -1176,18 +2052,6 @@ public extension RuuviServiceAlertImpl {
         if let l = lowerPressure(for: sensor), let u = upperPressure(for: sensor) {
             postAlertDidChange(with: sensor, of: .pressure(lower: l, upper: u))
         }
-    }
-
-    func lowerPressure(for uuid: String) -> Double? {
-        alertPersistence.lowerPressure(for: uuid)
-    }
-
-    func upperPressure(for uuid: String) -> Double? {
-        alertPersistence.upperPressure(for: uuid)
-    }
-
-    func pressureDescription(for uuid: String) -> String? {
-        alertPersistence.pressureDescription(for: uuid)
     }
 }
 
@@ -1208,23 +2072,6 @@ public extension RuuviServiceAlertImpl {
         }
     }
 
-    func setLower(signal: Double?, for sensor: PhysicalSensor) {
-        if let luid = sensor.luid, let macId = sensor.macId {
-            alertPersistence.setLower(signal: signal, for: luid.value)
-            alertPersistence.setLower(signal: signal, for: macId.value)
-        } else if let luid = sensor.luid {
-            alertPersistence.setLower(signal: signal, for: luid.value)
-        } else if let macId = sensor.macId {
-            alertPersistence.setLower(signal: signal, for: macId.value)
-        } else {
-            assertionFailure()
-        }
-
-        if let l = signal, let u = upperSignal(for: sensor) {
-            postAlertDidChange(with: sensor, of: .signal(lower: l, upper: u))
-        }
-    }
-
     func upperSignal(for sensor: PhysicalSensor) -> Double? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.upperSignal(for: luid.value)
@@ -1236,23 +2083,6 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
             return nil
-        }
-    }
-
-    func setUpper(signal: Double?, for sensor: PhysicalSensor) {
-        if let luid = sensor.luid, let macId = sensor.macId {
-            alertPersistence.setUpper(signal: signal, for: luid.value)
-            alertPersistence.setUpper(signal: signal, for: macId.value)
-        } else if let luid = sensor.luid {
-            alertPersistence.setUpper(signal: signal, for: luid.value)
-        } else if let macId = sensor.macId {
-            alertPersistence.setUpper(signal: signal, for: macId.value)
-        } else {
-            assertionFailure()
-        }
-
-        if let u = signal, let l = lowerSignal(for: sensor) {
-            postAlertDidChange(with: sensor, of: .signal(lower: l, upper: u))
         }
     }
 
@@ -1270,7 +2100,54 @@ public extension RuuviServiceAlertImpl {
         }
     }
 
-    func setSignal(description: String?, for sensor: PhysicalSensor) {
+    func lowerSignal(for uuid: String) -> Double? {
+        alertPersistence.lowerSignal(for: uuid)
+    }
+
+    func upperSignal(for uuid: String) -> Double? {
+        alertPersistence.upperSignal(for: uuid)
+    }
+
+    func signalDescription(for uuid: String) -> String? {
+        alertPersistence.signalDescription(for: uuid)
+    }
+
+    // Private helpers
+    private func setLower(signal: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(signal: signal, for: luid.value)
+            alertPersistence.setLower(signal: signal, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(signal: signal, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(signal: signal, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+
+        if let l = signal, let u = upperSignal(for: sensor) {
+            postAlertDidChange(with: sensor, of: .signal(lower: l, upper: u))
+        }
+    }
+
+    private func setUpper(signal: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(signal: signal, for: luid.value)
+            alertPersistence.setUpper(signal: signal, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(signal: signal, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(signal: signal, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+
+        if let u = signal, let l = lowerSignal(for: sensor) {
+            postAlertDidChange(with: sensor, of: .signal(lower: l, upper: u))
+        }
+    }
+
+    private func setSignal(description: String?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setSignal(description: description, for: luid.value)
             alertPersistence.setSignal(description: description, for: macId.value)
@@ -1286,17 +2163,876 @@ public extension RuuviServiceAlertImpl {
             postAlertDidChange(with: sensor, of: .signal(lower: l, upper: u))
         }
     }
+}
 
-    func lowerSignal(for uuid: String) -> Double? {
-        alertPersistence.lowerSignal(for: uuid)
+// MARK: - Carbon Dioxide
+
+public extension RuuviServiceAlertImpl {
+
+    func lowerCarbonDioxide(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.lowerCarbonDioxide(for: luid.value)
+                ?? alertPersistence.lowerCarbonDioxide(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.lowerCarbonDioxide(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.lowerCarbonDioxide(for: macId.value)
+        } else {
+            return nil
+        }
     }
 
-    func upperSignal(for uuid: String) -> Double? {
-        alertPersistence.upperSignal(for: uuid)
+    func upperCarbonDioxide(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.upperCarbonDioxide(for: luid.value)
+            ?? alertPersistence.upperCarbonDioxide(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.upperCarbonDioxide(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.upperCarbonDioxide(for: macId.value)
+        } else {
+            return nil
+        }
     }
 
-    func signalDescription(for uuid: String) -> String? {
-        alertPersistence.signalDescription(for: uuid)
+    func carbonDioxideDescription(for sensor: PhysicalSensor) -> String? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.carbonDioxideDescription(for: luid.value)
+            ?? alertPersistence.carbonDioxideDescription(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.carbonDioxideDescription(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.carbonDioxideDescription(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func lowerCarbonDioxide(for uuid: String) -> Double? {
+        alertPersistence.lowerCarbonDioxide(for: uuid)
+    }
+
+    func upperCarbonDioxide(for uuid: String) -> Double? {
+        alertPersistence.upperCarbonDioxide(for: uuid)
+    }
+
+    func carbonDioxideDescription(for uuid: String) -> String? {
+        alertPersistence.carbonDioxideDescription(for: uuid)
+    }
+
+    // Private Helpers
+    private func setLower(carbonDioxide: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(carbonDioxide: carbonDioxide, for: luid.value)
+            alertPersistence.setLower(carbonDioxide: carbonDioxide, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(carbonDioxide: carbonDioxide, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(carbonDioxide: carbonDioxide, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+
+        if let l = carbonDioxide, let u = upperCarbonDioxide(for: sensor) {
+            postAlertDidChange(
+                with: sensor,
+                of: .carbonDioxide(lower: l, upper: u)
+            )
+        }
+    }
+
+    private func setUpper(carbonDioxide: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(carbonDioxide: carbonDioxide, for: luid.value)
+            alertPersistence.setUpper(carbonDioxide: carbonDioxide, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(carbonDioxide: carbonDioxide, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(carbonDioxide: carbonDioxide, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+
+        if let l = lowerCarbonDioxide(for: sensor), let u = carbonDioxide {
+            postAlertDidChange(
+                with: sensor,
+                of: .carbonDioxide(lower: l, upper: u)
+            )
+        }
+    }
+
+    private func setCarbonDioxide(description: String?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setCarbonDioxide(description: description, for: luid.value)
+            alertPersistence.setCarbonDioxide(description: description, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setCarbonDioxide(description: description, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setCarbonDioxide(description: description, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+
+        if let l = lowerCarbonDioxide(for: sensor), let u = upperCarbonDioxide(for: sensor) {
+            postAlertDidChange(
+                with: sensor,
+                of: .carbonDioxide(lower: l, upper: u)
+            )
+        }
+    }
+}
+
+// MARK: - PM1
+public extension RuuviServiceAlertImpl {
+    func lowerPM1(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.lowerPM1(for: luid.value)
+                ?? alertPersistence.lowerPM1(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.lowerPM1(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.lowerPM1(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func upperPM1(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.upperPM1(for: luid.value)
+                ?? alertPersistence.upperPM1(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.upperPM1(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.upperPM1(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func pm1Description(for sensor: PhysicalSensor) -> String? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.pm1Description(for: luid.value)
+                ?? alertPersistence.pm1Description(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.pm1Description(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.pm1Description(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func lowerPM1(for uuid: String) -> Double? {
+        alertPersistence.lowerPM1(for: uuid)
+    }
+
+    func upperPM1(for uuid: String) -> Double? {
+        alertPersistence.upperPM1(for: uuid)
+    }
+
+    func pm1Description(for uuid: String) -> String? {
+        alertPersistence.pm1Description(for: uuid)
+    }
+
+    // Private helpers
+    private func setLower(pm1: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(pm1: pm1, for: luid.value)
+            alertPersistence.setLower(pm1: pm1, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(pm1: pm1, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(pm1: pm1, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setUpper(pm1: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(pm1: pm1, for: luid.value)
+            alertPersistence.setUpper(pm1: pm1, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(pm1: pm1, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(pm1: pm1, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setPM1(description: String?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setPM1(description: description, for: luid.value)
+            alertPersistence.setPM1(description: description, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setPM1(description: description, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setPM1(description: description, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+}
+
+// MARK: - PM2.5
+public extension RuuviServiceAlertImpl {
+    func lowerPM2_5(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.lowerPM2_5(for: luid.value)
+                ?? alertPersistence.lowerPM2_5(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.lowerPM2_5(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.lowerPM2_5(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func upperPM2_5(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.upperPM2_5(for: luid.value)
+                ?? alertPersistence.upperPM2_5(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.upperPM2_5(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.upperPM2_5(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func pm2_5Description(for sensor: PhysicalSensor) -> String? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.pm2_5Description(for: luid.value)
+                ?? alertPersistence.pm2_5Description(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.pm2_5Description(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.pm2_5Description(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func lowerPM2_5(for uuid: String) -> Double? {
+        alertPersistence.lowerPM2_5(for: uuid)
+    }
+
+    func upperPM2_5(for uuid: String) -> Double? {
+        alertPersistence.upperPM2_5(for: uuid)
+    }
+
+    func pm2_5Description(for uuid: String) -> String? {
+        alertPersistence.pm2_5Description(for: uuid)
+    }
+
+    // Private helpers
+    private func setLower(pm2_5: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(pm2_5: pm2_5, for: luid.value)
+            alertPersistence.setLower(pm2_5: pm2_5, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(pm2_5: pm2_5, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(pm2_5: pm2_5, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setUpper(pm2_5: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(pm2_5: pm2_5, for: luid.value)
+            alertPersistence.setUpper(pm2_5: pm2_5, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(pm2_5: pm2_5, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(pm2_5: pm2_5, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setPM2_5(description: String?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setPM2_5(description: description, for: luid.value)
+            alertPersistence.setPM2_5(description: description, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setPM2_5(description: description, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setPM2_5(description: description, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+}
+
+// MARK: - PM4
+public extension RuuviServiceAlertImpl {
+    func lowerPM4(for sensor: PhysicalSensor) -> Double? {
+      if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.lowerPM4(for: luid.value)
+                ?? alertPersistence.lowerPM4(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.lowerPM4(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.lowerPM4(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func upperPM4(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.upperPM4(for: luid.value)
+            ?? alertPersistence.upperPM4(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.upperPM4(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.upperPM4(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func pm4Description(for sensor: PhysicalSensor) -> String? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.pm4Description(for: luid.value)
+                ?? alertPersistence.pm4Description(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.pm4Description(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.pm4Description(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func lowerPM4(for uuid: String) -> Double? {
+        alertPersistence.lowerPM4(for: uuid)
+    }
+
+    func upperPM4(for uuid: String) -> Double? {
+        alertPersistence.upperPM4(for: uuid)
+    }
+
+    func pm4Description(for uuid: String) -> String? {
+        alertPersistence.pm4Description(for: uuid)
+    }
+
+    // Private helpers
+    private func setLower(pm4: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(pm4: pm4, for: luid.value)
+            alertPersistence.setLower(pm4: pm4, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(pm4: pm4, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(pm4: pm4, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setUpper(pm4: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(pm4: pm4, for: luid.value)
+            alertPersistence.setUpper(pm4: pm4, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(pm4: pm4, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(pm4: pm4, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setPM4(description: String?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setPM4(description: description, for: luid.value)
+            alertPersistence.setPM4(description: description, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setPM4(description: description, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setPM4(description: description, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+}
+
+// MARK: - PM10
+public extension RuuviServiceAlertImpl {
+    func lowerPM10(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.lowerPM10(for: luid.value)
+                ?? alertPersistence.lowerPM10(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.lowerPM10(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.lowerPM10(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func upperPM10(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.upperPM10(for: luid.value)
+            ?? alertPersistence.upperPM10(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.upperPM10(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.upperPM10(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func pm10Description(for sensor: PhysicalSensor) -> String? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.pm10Description(for: luid.value)
+                ?? alertPersistence.pm10Description(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.pm10Description(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.pm10Description(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func lowerPM10(for uuid: String) -> Double? {
+        alertPersistence.lowerPM10(for: uuid)
+    }
+
+    func upperPM10(for uuid: String) -> Double? {
+        alertPersistence.upperPM10(for: uuid)
+    }
+
+    func pm10Description(for uuid: String) -> String? {
+        alertPersistence.pm10Description(for: uuid)
+    }
+
+    // Private helpers
+    private func setLower(pm10: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(pm10: pm10, for: luid.value)
+            alertPersistence.setLower(pm10: pm10, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(pm10: pm10, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(pm10: pm10, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setUpper(pm10: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(pm10: pm10, for: luid.value)
+            alertPersistence.setUpper(pm10: pm10, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(pm10: pm10, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(pm10: pm10, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setPM10(description: String?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setPM10(description: description, for: luid.value)
+            alertPersistence.setPM10(description: description, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setPM10(description: description, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setPM10(description: description, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+}
+
+// MARK: - VOC
+public extension RuuviServiceAlertImpl {
+    func lowerVOC(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.lowerVOC(for: luid.value)
+                ?? alertPersistence.lowerVOC(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.lowerVOC(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.lowerVOC(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func upperVOC(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.upperVOC(for: luid.value)
+                ?? alertPersistence.upperVOC(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.upperVOC(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.upperVOC(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func vocDescription(for sensor: PhysicalSensor) -> String? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.vocDescription(for: luid.value)
+                ?? alertPersistence.vocDescription(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.vocDescription(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.vocDescription(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func lowerVOC(for uuid: String) -> Double? {
+        alertPersistence.lowerVOC(for: uuid)
+    }
+
+    func upperVOC(for uuid: String) -> Double? {
+        alertPersistence.upperVOC(for: uuid)
+    }
+
+    func vocDescription(for uuid: String) -> String? {
+        alertPersistence.vocDescription(for: uuid)
+    }
+
+    // Private helpers
+    private func setLower(voc: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(voc: voc, for: luid.value)
+            alertPersistence.setLower(voc: voc, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(voc: voc, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(voc: voc, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setUpper(voc: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(voc: voc, for: luid.value)
+            alertPersistence.setUpper(voc: voc, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(voc: voc, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(voc: voc, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setVOC(description: String?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setVOC(description: description, for: luid.value)
+            alertPersistence.setVOC(description: description, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setVOC(description: description, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setVOC(description: description, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+}
+
+// MARK: - NOX
+public extension RuuviServiceAlertImpl {
+
+    func lowerNOX(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.lowerNOX(for: luid.value)
+                ?? alertPersistence.lowerNOX(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.lowerNOX(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.lowerNOX(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func upperNOX(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.upperNOX(for: luid.value)
+                ?? alertPersistence.upperNOX(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.upperNOX(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.upperNOX(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func noxDescription(for sensor: PhysicalSensor) -> String? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.noxDescription(for: luid.value)
+                ?? alertPersistence.noxDescription(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.noxDescription(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.noxDescription(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func lowerNOX(for uuid: String) -> Double? {
+        alertPersistence.lowerNOX(for: uuid)
+    }
+
+    func upperNOX(for uuid: String) -> Double? {
+        alertPersistence.upperNOX(for: uuid)
+    }
+
+    func noxDescription(for uuid: String) -> String? {
+        alertPersistence.noxDescription(for: uuid)
+    }
+
+    // Private helpers
+    private func setLower(nox: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(nox: nox, for: luid.value)
+            alertPersistence.setLower(nox: nox, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(nox: nox, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(nox: nox, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setUpper(nox: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(nox: nox, for: luid.value)
+            alertPersistence.setUpper(nox: nox, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(nox: nox, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(nox: nox, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setNOX(description: String?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setNOX(description: description, for: luid.value)
+            alertPersistence.setNOX(description: description, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setNOX(description: description, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setNOX(description: description, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+}
+
+// MARK: - Sound
+public extension RuuviServiceAlertImpl {
+
+    func lowerSound(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.lowerSound(for: luid.value)
+                ?? alertPersistence.lowerSound(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.lowerSound(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.lowerSound(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func upperSound(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.upperSound(for: luid.value)
+                ?? alertPersistence.upperSound(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.upperSound(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.upperSound(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func soundDescription(for sensor: PhysicalSensor) -> String? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.soundDescription(for: luid.value)
+                ?? alertPersistence.soundDescription(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.soundDescription(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.soundDescription(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func lowerSound(for uuid: String) -> Double? {
+        alertPersistence.lowerSound(for: uuid)
+    }
+
+    func upperSound(for uuid: String) -> Double? {
+        alertPersistence.upperSound(for: uuid)
+    }
+
+    func soundDescription(for uuid: String) -> String? {
+        alertPersistence.soundDescription(for: uuid)
+    }
+
+    // Private helpers
+    private func setLower(sound: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(sound: sound, for: luid.value)
+            alertPersistence.setLower(sound: sound, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(sound: sound, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(sound: sound, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setUpper(sound: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(sound: sound, for: luid.value)
+            alertPersistence.setUpper(sound: sound, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(sound: sound, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(sound: sound, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setSound(description: String?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setSound(description: description, for: luid.value)
+            alertPersistence.setSound(description: description, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setSound(description: description, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setSound(description: description, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+}
+
+// MARK: - Luminosity
+public extension RuuviServiceAlertImpl {
+    func lowerLuminosity(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.lowerLuminosity(for: luid.value)
+                ?? alertPersistence.lowerLuminosity(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.lowerLuminosity(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.lowerLuminosity(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func upperLuminosity(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.upperLuminosity(for: luid.value)
+                ?? alertPersistence.upperLuminosity(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.upperLuminosity(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.upperLuminosity(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func luminosityDescription(for sensor: PhysicalSensor) -> String? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.luminosityDescription(for: luid.value)
+                ?? alertPersistence.luminosityDescription(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.luminosityDescription(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.luminosityDescription(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func lowerLuminosity(for uuid: String) -> Double? {
+        alertPersistence.lowerLuminosity(for: uuid)
+    }
+
+    func upperLuminosity(for uuid: String) -> Double? {
+        alertPersistence.upperLuminosity(for: uuid)
+    }
+
+    func luminosityDescription(for uuid: String) -> String? {
+        alertPersistence.luminosityDescription(for: uuid)
+    }
+
+    // Private helpers
+    private func setLower(luminosity: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(luminosity: luminosity, for: luid.value)
+            alertPersistence.setLower(luminosity: luminosity, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(luminosity: luminosity, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(luminosity: luminosity, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setUpper(luminosity: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(luminosity: luminosity, for: luid.value)
+            alertPersistence.setUpper(luminosity: luminosity, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(luminosity: luminosity, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(luminosity: luminosity, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setLuminosity(description: String?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLuminosity(description: description, for: luid.value)
+            alertPersistence.setLuminosity(description: description, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLuminosity(description: description, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLuminosity(description: description, for: macId.value)
+        } else {
+            assertionFailure()
+        }
     }
 }
 

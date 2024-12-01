@@ -43,6 +43,51 @@ public protocol RuuviServiceAlertRuuviTag {
     func setUpper(signal: Double?, ruuviTag: RuuviTagSensor)
     func setSignal(description: String?, ruuviTag: RuuviTagSensor)
 
+    // Carbon Dioxide
+    func setLower(carbonDioxide: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(carbonDioxide: Double?, ruuviTag: RuuviTagSensor)
+    func setCarbonDioxide(description: String?, ruuviTag: RuuviTagSensor)
+
+    // PM1
+    func setLower(pm1: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(pm1: Double?, ruuviTag: RuuviTagSensor)
+    func setPM1(description: String?, ruuviTag: RuuviTagSensor)
+
+    // PM2.5
+    func setLower(pm2_5: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(pm2_5: Double?, ruuviTag: RuuviTagSensor)
+    func setPM2_5(description: String?, ruuviTag: RuuviTagSensor)
+
+    // PM4
+    func setLower(pm4: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(pm4: Double?, ruuviTag: RuuviTagSensor)
+    func setPM4(description: String?, ruuviTag: RuuviTagSensor)
+
+    // PM10
+    func setLower(pm10: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(pm10: Double?, ruuviTag: RuuviTagSensor)
+    func setPM10(description: String?, ruuviTag: RuuviTagSensor)
+
+    // VOC
+    func setLower(voc: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(voc: Double?, ruuviTag: RuuviTagSensor)
+    func setVOC(description: String?, ruuviTag: RuuviTagSensor)
+
+    // NOX
+    func setLower(nox: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(nox: Double?, ruuviTag: RuuviTagSensor)
+    func setNOX(description: String?, ruuviTag: RuuviTagSensor)
+
+    // Sound
+    func setLower(sound: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(sound: Double?, ruuviTag: RuuviTagSensor)
+    func setSound(description: String?, ruuviTag: RuuviTagSensor)
+
+    // Luminosity
+    func setLower(luminosity: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(luminosity: Double?, ruuviTag: RuuviTagSensor)
+    func setLuminosity(description: String?, ruuviTag: RuuviTagSensor)
+
     // movement
     func setMovement(description: String?, ruuviTag: RuuviTagSensor)
 
@@ -85,6 +130,51 @@ public protocol RuuviServiceAlertDeprecated {
     func upperSignal(for uuid: String) -> Double?
     func signalDescription(for uuid: String) -> String?
 
+    // Carbon Dioxide
+    func lowerCarbonDioxide(for uuid: String) -> Double?
+    func upperCarbonDioxide(for uuid: String) -> Double?
+    func carbonDioxideDescription(for uuid: String) -> String?
+
+    // PM1
+    func lowerPM1(for uuid: String) -> Double?
+    func upperPM1(for uuid: String) -> Double?
+    func pm1Description(for uuid: String) -> String?
+
+    // PM2.5
+    func lowerPM2_5(for uuid: String) -> Double?
+    func upperPM2_5(for uuid: String) -> Double?
+    func pm2_5Description(for uuid: String) -> String?
+
+    // PM4
+    func lowerPM4(for uuid: String) -> Double?
+    func upperPM4(for uuid: String) -> Double?
+    func pm4Description(for uuid: String) -> String?
+
+    // PM10
+    func lowerPM10(for uuid: String) -> Double?
+    func upperPM10(for uuid: String) -> Double?
+    func pm10Description(for uuid: String) -> String?
+
+    // VOC
+    func lowerVOC(for uuid: String) -> Double?
+    func upperVOC(for uuid: String) -> Double?
+    func vocDescription(for uuid: String) -> String?
+
+    // NOX
+    func lowerNOX(for uuid: String) -> Double?
+    func upperNOX(for uuid: String) -> Double?
+    func noxDescription(for uuid: String) -> String?
+
+    // Sound
+    func lowerSound(for uuid: String) -> Double?
+    func upperSound(for uuid: String) -> Double?
+    func soundDescription(for uuid: String) -> String?
+
+    // Luminosity
+    func lowerLuminosity(for uuid: String) -> Double?
+    func upperLuminosity(for uuid: String) -> Double?
+    func luminosityDescription(for uuid: String) -> String?
+
     // connection
     func connectionDescription(for uuid: String) -> String?
 
@@ -105,17 +195,17 @@ public protocol RuuviServiceAlertPhysicalSensor {
     func triggered(for sensor: PhysicalSensor, of type: AlertType) -> Bool?
     func triggeredAt(for sensor: PhysicalSensor, of type: AlertType) -> String?
 
-    /// temperature (celsius)
+    // temperature (celsius)
     func lowerCelsius(for sensor: PhysicalSensor) -> Double?
     func upperCelsius(for sensor: PhysicalSensor) -> Double?
     func temperatureDescription(for sensor: PhysicalSensor) -> String?
 
-    /// relative humidity (fraction of one)
+    // relative humidity (fraction of one)
     func lowerRelativeHumidity(for sensor: PhysicalSensor) -> Double?
     func upperRelativeHumidity(for sensor: PhysicalSensor) -> Double?
     func relativeHumidityDescription(for sensor: PhysicalSensor) -> String?
 
-    /// humidity (unitHumidity)
+    // humidity (unitHumidity)
     func lowerHumidity(for sensor: PhysicalSensor) -> Humidity?
     func setLower(humidity: Humidity?, for sensor: PhysicalSensor)
     func upperHumidity(for sensor: PhysicalSensor) -> Humidity?
@@ -133,17 +223,62 @@ public protocol RuuviServiceAlertPhysicalSensor {
     func upperSignal(for sensor: PhysicalSensor) -> Double?
     func signalDescription(for sensor: PhysicalSensor) -> String?
 
-    /// connection
+    // Carbon Dioxide
+    func lowerCarbonDioxide(for sensor: PhysicalSensor) -> Double?
+    func upperCarbonDioxide(for sensor: PhysicalSensor) -> Double?
+    func carbonDioxideDescription(for sensor: PhysicalSensor) -> String?
+
+    // PM1
+    func lowerPM1(for sensor: PhysicalSensor) -> Double?
+    func upperPM1(for sensor: PhysicalSensor) -> Double?
+    func pm1Description(for sensor: PhysicalSensor) -> String?
+
+    // PM2.5
+    func lowerPM2_5(for sensor: PhysicalSensor) -> Double?
+    func upperPM2_5(for sensor: PhysicalSensor) -> Double?
+    func pm2_5Description(for sensor: PhysicalSensor) -> String?
+
+    // PM4
+    func lowerPM4(for sensor: PhysicalSensor) -> Double?
+    func upperPM4(for sensor: PhysicalSensor) -> Double?
+    func pm4Description(for sensor: PhysicalSensor) -> String?
+
+    // PM10
+    func lowerPM10(for sensor: PhysicalSensor) -> Double?
+    func upperPM10(for sensor: PhysicalSensor) -> Double?
+    func pm10Description(for sensor: PhysicalSensor) -> String?
+
+    // VOC
+    func lowerVOC(for sensor: PhysicalSensor) -> Double?
+    func upperVOC(for sensor: PhysicalSensor) -> Double?
+    func vocDescription(for sensor: PhysicalSensor) -> String?
+
+    // NOX
+    func lowerNOX(for sensor: PhysicalSensor) -> Double?
+    func upperNOX(for sensor: PhysicalSensor) -> Double?
+    func noxDescription(for sensor: PhysicalSensor) -> String?
+
+    // Sound
+    func lowerSound(for sensor: PhysicalSensor) -> Double?
+    func upperSound(for sensor: PhysicalSensor) -> Double?
+    func soundDescription(for sensor: PhysicalSensor) -> String?
+
+    // Luminosity
+    func lowerLuminosity(for sensor: PhysicalSensor) -> Double?
+    func upperLuminosity(for sensor: PhysicalSensor) -> Double?
+    func luminosityDescription(for sensor: PhysicalSensor) -> String?
+
+    // connection
     func connectionDescription(for sensor: PhysicalSensor) -> String?
     func setConnection(description: String?, for sensor: PhysicalSensor)
 
-    /// cloud connection
+    // cloud connection
     func setCloudConnection(unseenDuration: Double?, for sensor: PhysicalSensor)
     func cloudConnectionUnseenDuration(for sensor: PhysicalSensor) -> Double?
     func cloudConnectionDescription(for sensor: PhysicalSensor) -> String?
     func setCloudConnection(description: String?, for sensor: PhysicalSensor)
 
-    /// movement
+    // movement
     func movementCounter(for sensor: PhysicalSensor) -> Int?
     func setMovement(counter: Int?, for sensor: PhysicalSensor)
     func movementDescription(for sensor: PhysicalSensor) -> String?

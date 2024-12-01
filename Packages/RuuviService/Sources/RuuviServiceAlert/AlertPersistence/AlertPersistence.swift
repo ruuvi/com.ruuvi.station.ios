@@ -53,6 +53,78 @@ protocol AlertPersistence {
     func signalDescription(for uuid: String) -> String?
     func setSignal(description: String?, for uuid: String)
 
+    // Carbon Dioxide
+    func lowerCarbonDioxide(for uuid: String) -> Double?
+    func setLower(carbonDioxide: Double?, for uuid: String)
+    func upperCarbonDioxide(for uuid: String) -> Double?
+    func setUpper(carbonDioxide: Double?, for uuid: String)
+    func carbonDioxideDescription(for uuid: String) -> String?
+    func setCarbonDioxide(description: String?, for uuid: String)
+
+    // PM1
+    func lowerPM1(for uuid: String) -> Double?
+    func setLower(pm1: Double?, for uuid: String)
+    func upperPM1(for uuid: String) -> Double?
+    func setUpper(pm1: Double?, for uuid: String)
+    func pm1Description(for uuid: String) -> String?
+    func setPM1(description: String?, for uuid: String)
+
+    // PM2.5
+    func lowerPM2_5(for uuid: String) -> Double?
+    func setLower(pm2_5: Double?, for uuid: String)
+    func upperPM2_5(for uuid: String) -> Double?
+    func setUpper(pm2_5: Double?, for uuid: String)
+    func pm2_5Description(for uuid: String) -> String?
+    func setPM2_5(description: String?, for uuid: String)
+
+    // PM4
+    func lowerPM4(for uuid: String) -> Double?
+    func setLower(pm4: Double?, for uuid: String)
+    func upperPM4(for uuid: String) -> Double?
+    func setUpper(pm4: Double?, for uuid: String)
+    func pm4Description(for uuid: String) -> String?
+    func setPM4(description: String?, for uuid: String)
+
+    // PM10
+    func lowerPM10(for uuid: String) -> Double?
+    func setLower(pm10: Double?, for uuid: String)
+    func upperPM10(for uuid: String) -> Double?
+    func setUpper(pm10: Double?, for uuid: String)
+    func pm10Description(for uuid: String) -> String?
+    func setPM10(description: String?, for uuid: String)
+
+    // VOC
+    func lowerVOC(for uuid: String) -> Double?
+    func setLower(voc: Double?, for uuid: String)
+    func upperVOC(for uuid: String) -> Double?
+    func setUpper(voc: Double?, for uuid: String)
+    func vocDescription(for uuid: String) -> String?
+    func setVOC(description: String?, for uuid: String)
+
+    // NOX
+    func lowerNOX(for uuid: String) -> Double?
+    func setLower(nox: Double?, for uuid: String)
+    func upperNOX(for uuid: String) -> Double?
+    func setUpper(nox: Double?, for uuid: String)
+    func noxDescription(for uuid: String) -> String?
+    func setNOX(description: String?, for uuid: String)
+
+    // Sound
+    func lowerSound(for uuid: String) -> Double?
+    func setLower(sound: Double?, for uuid: String)
+    func upperSound(for uuid: String) -> Double?
+    func setUpper(sound: Double?, for uuid: String)
+    func soundDescription(for uuid: String) -> String?
+    func setSound(description: String?, for uuid: String)
+
+    // Luminosity
+    func lowerLuminosity(for uuid: String) -> Double?
+    func setLower(luminosity: Double?, for uuid: String)
+    func upperLuminosity(for uuid: String) -> Double?
+    func setUpper(luminosity: Double?, for uuid: String)
+    func luminosityDescription(for uuid: String) -> String?
+    func setLuminosity(description: String?, for uuid: String)
+
     // connection
     func connectionDescription(for uuid: String) -> String?
     func setConnection(description: String?, for uuid: String)

@@ -131,6 +131,8 @@ extension RuuviTagDataSQLite: Equatable {
 }
 
 extension RuuviTagDataSQLite: FetchableRecord {
+
+    // swiftlint:disable:next function_body_length
     public init(row: Row) {
         if let luidValue = String.fromDatabaseValue(row[RuuviTagDataSQLite.luidColumn]) {
             luid = LocalIdentifierStruct(value: luidValue)

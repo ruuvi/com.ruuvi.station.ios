@@ -37,6 +37,15 @@ public enum LowHighNotificationType: String {
     case humidity
     case pressure
     case signal
+    case carbonDioxide
+    case pMatter1
+    case pMatter2_5
+    case pMatter4
+    case pMatter10
+    case voc
+    case nox
+    case sound
+    case luminosity
 }
 
 public enum LowHighNotificationReason {
