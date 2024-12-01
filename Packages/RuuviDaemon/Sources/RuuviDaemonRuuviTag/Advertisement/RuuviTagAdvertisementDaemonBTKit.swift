@@ -247,8 +247,8 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
                     persist(wrapper.device, uuid)
                 }
             } else {
-                // Tags with data format 3 doesn't sent duplicates packets*
-                if wrapper.device.version == 3 {
+                // Tags with data format 3 and E0 doesn't sent duplicates packets*
+                if wrapper.device.version == 3 || wrapper.device.version == 224 {
                     persist(wrapper.device, uuid)
                 }
                 advertisementSequence[uuid] = wrapper.device.measurementSequenceNumber
