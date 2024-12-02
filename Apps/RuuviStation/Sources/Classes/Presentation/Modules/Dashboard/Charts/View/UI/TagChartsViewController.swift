@@ -1149,7 +1149,7 @@ extension TagChartsViewController {
         if UIWindow.isLandscape {
             totalHeight
         } else {
-            if count == 1 || !compactChartView {
+            if !compactChartView {
                 totalHeight / 2
             } else {
                 totalHeight / count
