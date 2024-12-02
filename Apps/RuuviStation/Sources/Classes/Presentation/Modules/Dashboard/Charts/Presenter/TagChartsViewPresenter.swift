@@ -262,26 +262,34 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
 
     func viewDidTapOnExportCSV() {
         activityPresenter.show(with: .loading(message: nil))
-        exportService.csvLog(for: ruuviTag.id, settings: sensorSettings)
-            .on(success: { [weak self] url in
-                self?.view?.showExportSheet(with: url)
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            }, completion: { [weak self] in
-                self?.activityPresenter.dismiss(immediately: true)
-            })
+        exportService.csvLog(
+            for: ruuviTag.id,
+            version: ruuviTag.version,
+            settings: sensorSettings
+        )
+        .on(success: { [weak self] url in
+            self?.view?.showExportSheet(with: url)
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        }, completion: { [weak self] in
+            self?.activityPresenter.dismiss(immediately: true)
+        })
     }
 
     func viewDidTapOnExportXLSX() {
         activityPresenter.show(with: .loading(message: nil))
-        exportService.xlsxLog(for: ruuviTag.id, settings: sensorSettings)
-            .on(success: { [weak self] url in
-                self?.view?.showExportSheet(with: url)
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            }, completion: { [weak self] in
-                self?.activityPresenter.dismiss(immediately: true)
-            })
+        exportService.xlsxLog(
+            for: ruuviTag.id,
+            version: ruuviTag.version,
+            settings: sensorSettings
+        )
+        .on(success: { [weak self] url in
+            self?.view?.showExportSheet(with: url)
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+        }, completion: { [weak self] in
+            self?.activityPresenter.dismiss(immediately: true)
+        })
     }
 
     func viewDidSelectChartHistoryLength(hours: Int) {

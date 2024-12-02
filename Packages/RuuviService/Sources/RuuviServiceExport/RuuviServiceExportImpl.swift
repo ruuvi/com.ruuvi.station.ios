@@ -41,7 +41,14 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
         return dateFormatter
     }()
 
-    public func csvLog(for uuid: String, settings: SensorSettings?) -> Future<URL, RuuviServiceError> {
+    public func csvLog(
+        for uuid: String,
+        version: Int,
+        settings: SensorSettings?
+    ) -> Future<
+        URL,
+        RuuviServiceError
+    > {
         let promise = Promise<URL, RuuviServiceError>()
         let networkPruningOffset = -TimeInterval(ruuviLocalSettings.networkPruningIntervalHours * 60 * 60)
         let networkPuningDate = Date(timeIntervalSinceNow: networkPruningOffset)
@@ -50,7 +57,8 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
             let recordsOperation = self?.ruuviStorage.readAll(uuid, after: networkPuningDate)
             recordsOperation?.on(success: { [weak self] records in
                 let offsetedLogs = records.compactMap { $0.with(sensorSettings: settings) }
-                self?.csvLog(for: ruuviTag, with: offsetedLogs).on(success: { url in
+                self?.csvLog(for: ruuviTag, version: version, with: offsetedLogs)
+                    .on(success: { url in
                     promise.succeed(value: url)
                 }, failure: { error in
                     promise.fail(error: error)
@@ -65,7 +73,11 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
         return promise.future
     }
 
-    public func xlsxLog(for uuid: String, settings: SensorSettings?) -> Future<URL, RuuviServiceError> {
+    public func xlsxLog(
+        for uuid: String,
+        version: Int,
+        settings: SensorSettings?
+    ) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
 
         let networkPruningOffset = -TimeInterval(ruuviLocalSettings.networkPruningIntervalHours * 60 * 60)
@@ -79,7 +91,8 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
             recordsOperation.on(success: { [weak self] records in
                 guard let self = self else { return }
                 let offsetedLogs = records.compactMap { $0.with(sensorSettings: settings) }
-                self.exportToXlsx(for: ruuviTag, with: offsetedLogs).on(success: { url in
+                self.exportToXlsx(for: ruuviTag, version: version, with: offsetedLogs)
+                    .on(success: { url in
                     promise.succeed(value: url)
                 }, failure: { error in
                     promise.fail(error: error)
@@ -102,7 +115,8 @@ extension RuuviServiceExportImpl {
     // Common helper function to process records and format rows
     // swiftlint:disable:next function_body_length
     private func formatRows(
-        for records: [RuuviTagSensorRecord]
+        for records: [RuuviTagSensorRecord],
+        version: Int
     ) -> [[String]] {
         func toString(_ value: Double?, format: String) -> String {
             guard let v = value else {
@@ -143,22 +157,55 @@ extension RuuviServiceExportImpl {
             let movementCounter = log.movementCounter.map { "\($0)" } ?? emptyValueString
             let measurementSequenceNumber = log.measurementSequenceNumber.map { "\($0)" } ?? emptyValueString
             let txPower = log.txPower.map { "\($0)" } ?? emptyValueString
+            let co2 = toString(log.co2, format: "%.2f")
+            let pm1 = toString(log.pm1, format: "%.2f")
+            let pm2_5 = toString(log.pm2_5, format: "%.2f")
+            let pm4 = toString(log.pm4, format: "%.2f")
+            let pm10 = toString(log.pm10, format: "%.2f")
+            let voc = toString(log.voc, format: "%.2f")
+            let nox = toString(log.nox, format: "%.2f")
+            let soundAvg = toString(log.dbaAvg, format: "%.2f")
+            let soundPeak = toString(log.dbaPeak, format: "%.2f")
+            let luminosity = toString(log.luminance, format: "%.2f")
 
+            // Common for v3/v5/E0/F0
             var exportableData = [
                 date,
                 temperature,
                 humidity,
                 pressure,
                 rssi,
-                accelerationX,
-                accelerationY,
-                accelerationZ,
                 voltage,
-                movementCounter,
-                measurementSequenceNumber,
-                txPower,
             ]
 
+            // E0/F0
+            if version == 224 || version == 240 {
+                exportableData += [
+                    co2,
+                    pm1,
+                    pm2_5,
+                    pm4,
+                    pm10,
+                    voc,
+                    nox,
+                    soundAvg,
+                    soundPeak,
+                    luminosity,
+                ]
+            } else { // v3/v5
+                exportableData += [
+                    accelerationX,
+                    accelerationY,
+                    accelerationZ,
+                    movementCounter,
+                    txPower,
+                ]
+            }
+
+            // Common for v3/v5/E0/F0
+            exportableData.append(measurementSequenceNumber)
+
+            // Flags
             if ruuviLocalSettings.includeDataSourceInHistoryExport {
                 let dataSource = log.source.rawValue
                 exportableData.append(dataSource)
@@ -171,6 +218,7 @@ extension RuuviServiceExportImpl {
     // CSV export method
     private func csvLog(
         for ruuviTag: RuuviTagSensor,
+        version: Int,
         with records: [RuuviTagSensorRecord]
     ) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
@@ -182,11 +230,12 @@ extension RuuviServiceExportImpl {
         queue.async {
             autoreleasepool {
                 let headers = self.headersProvider.getHeaders(
-                    self.measurementService.units,
+                    version: version,
+                    units: self.measurementService.units,
                     settings: self.ruuviLocalSettings
                 )
                 var csvText = headers.joined(separator: ",") + "\n"
-                let rows = self.formatRows(for: records)
+                let rows = self.formatRows(for: records, version: version)
 
                 for row in rows {
                     csvText.append(contentsOf: row.joined(separator: ",") + "\n")
@@ -211,6 +260,7 @@ extension RuuviServiceExportImpl {
     // XLSX export method
     private func exportToXlsx(
         for ruuviTag: RuuviTagSensor,
+        version: Int,
         with records: [RuuviTagSensorRecord]
     ) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
@@ -227,7 +277,8 @@ extension RuuviServiceExportImpl {
 
                 // Write headers
                 let headers = self.headersProvider.getHeaders(
-                    self.measurementService.units,
+                    version: version,
+                    units: self.measurementService.units,
                     settings: self.ruuviLocalSettings
                 )
                 for (index, header) in headers.enumerated() {
@@ -235,7 +286,7 @@ extension RuuviServiceExportImpl {
                 }
 
                 // Write data rows
-                let rows = self.formatRows(for: records)
+                let rows = self.formatRows(for: records, version: version)
                 for (rowIndex, row) in rows.enumerated() {
                     for (colIndex, value) in row.enumerated() {
                         ws.write(.string(value), [rowIndex + 1, colIndex])

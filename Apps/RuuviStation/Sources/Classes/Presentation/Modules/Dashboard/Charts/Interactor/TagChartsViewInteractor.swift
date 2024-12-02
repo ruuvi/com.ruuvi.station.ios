@@ -123,7 +123,11 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
         else {
             return promise.future
         }
-        let op = exportService.csvLog(for: ruuviTagSensor.id, settings: sensorSettings)
+        let op = exportService.csvLog(
+            for: ruuviTagSensor.id,
+            version: ruuviTagSensor.version,
+            settings: sensorSettings
+        )
         op.on(success: { url in
             promise.succeed(value: url)
         }, failure: { error in

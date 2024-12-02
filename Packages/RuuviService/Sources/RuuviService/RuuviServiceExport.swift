@@ -4,13 +4,22 @@ import RuuviLocal
 import RuuviOntology
 
 public protocol RuuviServiceExport {
-    func csvLog(for uuid: String, settings: SensorSettings?) -> Future<URL, RuuviServiceError>
-    func xlsxLog(for uuid: String, settings: SensorSettings?) -> Future<URL, RuuviServiceError>
+    func csvLog(
+        for uuid: String,
+        version: Int,
+        settings: SensorSettings?
+    ) -> Future<URL, RuuviServiceError>
+    func xlsxLog(
+        for uuid: String,
+        version: Int,
+        settings: SensorSettings?
+    ) -> Future<URL, RuuviServiceError>
 }
 
 public protocol RuuviServiceExportHeaders {
     func getHeaders(
-        _ units: RuuviServiceMeasurementSettingsUnit,
+        version: Int,
+        units: RuuviServiceMeasurementSettingsUnit,
         settings: RuuviLocalSettings
     ) -> [String]
 }
