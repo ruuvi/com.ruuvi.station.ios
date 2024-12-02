@@ -6031,21 +6031,42 @@ extension TagSettingsViewController {
     }
 
     private func configureMoreInfoSection() -> TagSettingsSection {
+
+        // Common
+        var moreInfoCells: [TagSettingsItem] = [
+            moreInfoMacAddressItem(),
+            moreInfoDataFormatItem(),
+            moreInfoDataSourceItem(),
+            moreInfoBatteryVoltageItem(),
+        ]
+
+        // Variable items
+        if viewModel?.accelerationX.value != nil {
+            moreInfoCells.append(moreInfoAccXItem())
+        }
+
+        if viewModel?.accelerationY.value != nil {
+            moreInfoCells.append(moreInfoAccYItem())
+        }
+
+        if viewModel?.accelerationZ.value != nil {
+            moreInfoCells.append(moreInfoAccZItem())
+        }
+
+        if viewModel?.txPower.value != nil {
+            moreInfoCells.append(moreInfoTxPowerItem())
+        }
+
+        // Common
+        moreInfoCells += [
+            moreInfoRSSIItem(),
+            moreInfoMeasurementSequenceItem(),
+        ]
+
         let section = TagSettingsSection(
             identifier: .moreInfo,
             title: RuuviLocalization.TagSettings.Label.MoreInfo.text.capitalized,
-            cells: [
-                moreInfoMacAddressItem(),
-                moreInfoDataFormatItem(),
-                moreInfoDataSourceItem(),
-                moreInfoBatteryVoltageItem(),
-                moreInfoAccXItem(),
-                moreInfoAccYItem(),
-                moreInfoAccZItem(),
-                moreInfoTxPowerItem(),
-                moreInfoRSSIItem(),
-                moreInfoMeasurementSequenceItem(),
-            ],
+            cells: moreInfoCells,
             collapsed: true,
             headerType: .expandable,
             backgroundColor: RuuviColor.tagSettingsSectionHeaderColor.color,
