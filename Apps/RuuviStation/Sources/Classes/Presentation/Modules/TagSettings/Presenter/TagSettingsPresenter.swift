@@ -127,6 +127,10 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         tagViewModel.humidityUnit.value = settings.humidityUnit
         tagViewModel.pressureUnit.value = settings.pressureUnit
 
+        if let latestMeasurement = latestMeasurement {
+            tagViewModel.updateRecord(latestMeasurement)
+        }
+
         // Assign to the presenter property
         self.viewModel = tagViewModel
 
