@@ -386,6 +386,158 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         let number = NSNumber(value: measurement)
         return commonNumberFormatter.string(from: number) ?? ""
     }
+
+    public func aqiString(
+        for co2: Double?,
+        pm25: Double?,
+        voc: Double?,
+        nox: Double?
+    ) -> (
+        currentScore: Int,
+        maxScore: Int,
+        state: AirQualityState
+    ) {
+        func scorePpm(_ ppm: Double) -> Double {
+            return max(0, (ppm - 12) * 2)
+        }
+
+        func scoreVoc(_ voc: Double) -> Double {
+            return max(0, voc - 200)
+        }
+
+        func scoreNox(_ nox: Double) -> Double {
+            return max(0, nox - 200)
+        }
+
+        func scoreCo2(_ co2: Double) -> Double {
+            return max(0, (co2 - 600) / 10)
+        }
+
+        var distances = [Double]()
+
+        if let co2 = co2 {
+            distances.append(scoreCo2(co2))
+        }
+        if let pm25 = pm25 {
+            distances.append(scorePpm(pm25))
+        }
+        if let voc = voc {
+            distances.append(scoreVoc(voc))
+        }
+        if let nox = nox {
+            distances.append(scoreNox(nox))
+        }
+
+        let maxScore = 100.0
+
+        guard !distances.isEmpty else {
+            return (
+                currentScore: 0, maxScore: Int(maxScore), state: .unhealthy
+            )
+        }
+
+        let squaredSum = distances.reduce(0) { $0 + $1 * $1 }
+        let meanSquared = squaredSum / Double(distances.count)
+        let distance = sqrt(meanSquared)
+        let currentScore = max(0, maxScore - distance)
+
+        let state: AirQualityState
+        switch currentScore {
+        case 66...maxScore:
+            state = .excellent
+        case 33..<66:
+            state = .medium
+        default:
+            state = .unhealthy
+        }
+
+        return (
+            currentScore: Int(currentScore),
+            maxScore: Int(maxScore),
+            state: state
+        )
+    }
+
+    public func co2String(for carbonDiOxide: Double?) -> String {
+        guard let carbonDiOxide
+        else {
+            return emptyValueString
+        }
+        let number = NSNumber(value: carbonDiOxide)
+        return commonNumberFormatter.string(from: number) ?? emptyValueString
+    }
+
+    public func pm10String(for pm10: Double?) -> String {
+        guard let pm10
+        else {
+            return emptyValueString
+        }
+        let number = NSNumber(value: pm10)
+        return commonNumberFormatter.string(from: number) ?? emptyValueString
+    }
+
+    public func pm25String(for pm25: Double?) -> String {
+        guard let pm25
+        else {
+            return emptyValueString
+        }
+        let number = NSNumber(value: pm25)
+        return commonNumberFormatter.string(from: number) ?? emptyValueString
+    }
+
+    public func pm40String(for pm40: Double?) -> String {
+        guard let pm40
+        else {
+            return emptyValueString
+        }
+        let number = NSNumber(value: pm40)
+        return commonNumberFormatter.string(from: number) ?? emptyValueString
+    }
+
+    public func pm100String(for pm100: Double?) -> String {
+        guard let pm100
+        else {
+            return emptyValueString
+        }
+        let number = NSNumber(value: pm100)
+        return commonNumberFormatter.string(from: number) ?? emptyValueString
+    }
+
+    public func vocString(for voc: Double?) -> String {
+        guard let voc
+        else {
+            return emptyValueString
+        }
+        let number = NSNumber(value: voc)
+        return commonNumberFormatter.string(from: number) ?? emptyValueString
+    }
+
+    public func noxString(for nox: Double?) -> String {
+        guard let nox
+        else {
+            return emptyValueString
+        }
+        let number = NSNumber(value: nox)
+        return commonNumberFormatter.string(from: number) ?? emptyValueString
+    }
+
+    public func soundAvgString(for soundAvg: Double?) -> String {
+        guard let soundAvg
+        else {
+            return emptyValueString
+        }
+        let number = NSNumber(value: soundAvg)
+        return commonNumberFormatter.string(from: number) ?? emptyValueString
+    }
+
+    public func luminosityString(for luminosity: Double?) -> String {
+        guard let luminosity
+        else {
+            return emptyValueString
+        }
+        let number = NSNumber(value: luminosity)
+        return commonNumberFormatter.string(from: number) ?? emptyValueString
+    }
 }
 
 // MARK: - Private

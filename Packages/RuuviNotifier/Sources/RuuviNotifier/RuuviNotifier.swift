@@ -31,33 +31,32 @@ public extension RuuviNotifierObserver {
 }
 
 public protocol RuuviNotifierTitles {
-    var lowTemperature: String { get }
-    var highTemperature: String { get }
-    var lowHumidity: String { get }
-    var highHumidity: String { get }
-    var lowDewPoint: String { get }
-    var highDewPoint: String { get }
-    var lowPressure: String { get }
-    var highPressure: String { get }
-    var lowSignal: String { get }
-    var highSignal: String { get }
-    var lowCarbonDioxide: String { get }
-    var highCarbonDioxide: String { get }
-    var lowPMatter1: String { get }
-    var highPMatter1: String { get }
-    var lowPMatter2_5: String { get }
-    var highPMatter2_5: String { get }
-    var lowPMatter4: String { get }
-    var highPMatter4: String { get }
-    var lowPMatter10: String { get }
-    var highPMatter10: String { get }
-    var lowVOC: String { get }
-    var highVOC: String { get }
-    var lowNOx: String { get }
-    var highNOx: String { get }
-    var lowSound: String { get }
-    var highSound: String { get }
-    var lowLuminosity: String { get }
-    var highLuminosity: String { get }
+    func lowTemperature(_ value: String) -> String
+    func highTemperature(_ value: String) -> String
+    func lowHumidity(_ value: String) -> String
+    func highHumidity(_ value: String) -> String
+    func lowPressure(_ value: String) -> String
+    func highPressure(_ value: String) -> String
+    func lowSignal(_ value: String) -> String
+    func highSignal(_ value: String) -> String
+    func lowCarbonDioxide(_ value: String) -> String
+    func highCarbonDioxide(_ value: String) -> String
+    func lowPMatter1(_ value: String) -> String
+    func highPMatter1(_ value: String) -> String
+    func lowPMatter2_5(_ value: String) -> String
+    func highPMatter2_5(_ value: String) -> String
+    func lowPMatter4(_ value: String) -> String
+    func highPMatter4(_ value: String) -> String
+    func lowPMatter10(_ value: String) -> String
+    func highPMatter10(_ value: String) -> String
+    func lowVOC(_ value: String) -> String
+    func highVOC(_ value: String) -> String
+    func lowNOx(_ value: String) -> String
+    func highNOx(_ value: String) -> String
+    func lowSound(_ value: String) -> String
+    func highSound(_ value: String) -> String
+    func lowLuminosity(_ value: String) -> String
+    func highLuminosity(_ value: String) -> String
+
     var didMove: String { get }
 }
