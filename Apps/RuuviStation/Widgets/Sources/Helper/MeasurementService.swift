@@ -170,6 +170,87 @@ extension MeasurementService {
         }
         return movements.value
     }
+
+    public func carbonDiOxide(for co2: Double?) -> String {
+        guard let co2
+        else {
+            return emptyValueString
+        }
+        let value = co2.round(to: commonFormatter.maximumFractionDigits)
+        return formattedValue(from: value, formatter: commonFormatter)
+    }
+
+    public func pMatter10(for pm10: Double?) -> String {
+        guard let pm10
+        else {
+            return emptyValueString
+        }
+        let value = pm10.round(to: commonFormatter.maximumFractionDigits)
+        return formattedValue(from: value, formatter: commonFormatter)
+    }
+
+    public func pMatter25(for pm25: Double?) -> String {
+        guard let pm25
+        else {
+            return emptyValueString
+        }
+        let value = pm25.round(to: commonFormatter.maximumFractionDigits)
+        return formattedValue(from: value, formatter: commonFormatter)
+    }
+
+    public func pMatter40(for pm40: Double?) -> String {
+        guard let pm40
+        else {
+            return emptyValueString
+        }
+        let value = pm40.round(to: commonFormatter.maximumFractionDigits)
+        return formattedValue(from: value, formatter: commonFormatter)
+    }
+
+    public func pMatter100(for pm100: Double?) -> String {
+        guard let pm100
+        else {
+            return emptyValueString
+        }
+        let value = pm100.round(to: commonFormatter.maximumFractionDigits)
+        return formattedValue(from: value, formatter: commonFormatter)
+    }
+
+    public func voc(for voc: Double?) -> String {
+        guard let voc
+        else {
+            return emptyValueString
+        }
+        let value = voc.round(to: commonFormatter.maximumFractionDigits)
+        return formattedValue(from: value, formatter: commonFormatter)
+    }
+
+    public func nox(for nox: Double?) -> String {
+        guard let nox
+        else {
+            return emptyValueString
+        }
+        let value = nox.round(to: commonFormatter.maximumFractionDigits)
+        return formattedValue(from: value, formatter: commonFormatter)
+    }
+
+    public func soundAverage(for soundAvg: Double?) -> String {
+        guard let soundAvg
+        else {
+            return emptyValueString
+        }
+        let value = soundAvg.round(to: commonFormatter.maximumFractionDigits)
+        return formattedValue(from: value, formatter: commonFormatter)
+    }
+
+    public func luminosity(for luminosity: Double?) -> String {
+        guard let luminosity
+        else {
+            return emptyValueString
+        }
+        let value = luminosity.round(to: commonFormatter.maximumFractionDigits)
+        return formattedValue(from: value, formatter: commonFormatter)
+    }
 }
 
 // MARK: - MeasurementService Helper methods

@@ -120,7 +120,7 @@ public extension RuuviServiceAlertImpl {
                     max: upper,
                     counter: nil,
                     delay: nil,
-                    description: carbonDioxideDescription(for: ruuviTag),
+                    description: pm10Description(for: ruuviTag),
                     for: macId
                 )
             case let .voc(lower, upper):

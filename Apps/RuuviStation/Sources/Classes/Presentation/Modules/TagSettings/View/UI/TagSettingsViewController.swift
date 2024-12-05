@@ -5137,7 +5137,7 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
 
             if maxValue != viewModel?.pMatter1UpperBound.value {
                 output.viewDidChangeAlertUpperBound(
-                    for: .pMatter1(lower: 0, upper: 0),
+                    for: .pMatter10(lower: 0, upper: 0),
                     upper: maxValue
                 )
             }
