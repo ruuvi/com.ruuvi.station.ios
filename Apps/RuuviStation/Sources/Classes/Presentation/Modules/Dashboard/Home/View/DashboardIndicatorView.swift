@@ -33,37 +33,30 @@ class DashboardIndicatorView: UIView {
     }
 
     fileprivate func setUpUI() {
-        addSubview(indicatorValueLabel)
-        indicatorValueLabel.anchor(
-            top: topAnchor,
-            leading: leadingAnchor,
-            bottom: bottomAnchor,
-            trailing: nil
-        )
+        let indicatorValueLabelView = UIView(color: .clear)
+        indicatorValueLabelView.addSubview(indicatorValueLabel)
+        indicatorValueLabel.fillSuperview()
 
-        addSubview(indicatorUnitLabel)
-        indicatorUnitLabel.anchor(
-            top: nil,
-            leading: indicatorValueLabel.trailingAnchor,
-            bottom: indicatorValueLabel.bottomAnchor,
-            trailing: nil,
-            padding: .init(
-                top: 0,
-                left: 4,
-                bottom: 0,
-                right: 0
-            )
-        )
-        indicatorUnitLabel
-            .topAnchor
-            .constraint(
-                lessThanOrEqualTo: indicatorValueLabel.topAnchor,
-                constant: 2
-            ).isActive = true
+        let indicatorUnitLabelView = UIView(color: .clear)
+        indicatorUnitLabelView.addSubview(indicatorUnitLabel)
+        indicatorUnitLabel.fillSuperview()
 
-        indicatorUnitLabel.trailingAnchor
-            .constraint(greaterThanOrEqualTo: trailingAnchor)
-            .isActive = true
+        let textStack = UIStackView(
+            arrangedSubviews: [indicatorValueLabelView, indicatorUnitLabelView]
+        )
+        textStack.axis = .horizontal
+        textStack.alignment = .center
+        textStack.distribution = .fill
+        textStack.spacing = 4
+
+        indicatorValueLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        indicatorUnitLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+
+        indicatorValueLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+        indicatorUnitLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+
+        addSubview(textStack)
+        textStack.fillSuperview()
     }
 }
 

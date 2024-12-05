@@ -293,11 +293,13 @@ private final class BusinessAssembly: Assembly {
             let notificationLocal = r.resolve(RuuviNotificationLocal.self)!
             let ruuviAlertService = r.resolve(RuuviServiceAlert.self)!
             let localSyncState = r.resolve(RuuviLocalSyncState.self)!
+            let measurementService = r.resolve(RuuviServiceMeasurement.self)!
             let titles = RuuviNotifierTitlesImpl()
             let service = RuuviNotifierImpl(
                 ruuviAlertService: ruuviAlertService,
                 ruuviNotificationLocal: notificationLocal,
                 localSyncState: localSyncState,
+                measurementService: measurementService,
                 titles: titles
             )
             return service
