@@ -6,6 +6,13 @@ on:
       - closed
     branches: [main]
 
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to build and upload'
+        required: true
+        default: 'main'
+
 jobs:
   build:
     if: github.event.pull_request.merged == true
