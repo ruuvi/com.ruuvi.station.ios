@@ -98,6 +98,9 @@ public protocol RuuviServiceMeasurement {
     func noxString(for nox: Double?) -> String
     func soundAvgString(for soundAvg: Double?) -> String
     func luminosityString(for luminosity: Double?) -> String
+
+    // Common
+    func double(for value: Double?) -> Double
 }
 
 public extension RuuviServiceMeasurement {

@@ -19,17 +19,37 @@ protocol TagChartsViewInput: ViewInput {
         from chartViewData: [TagChartViewData],
         settings: RuuviLocalSettings
     )
+
+    // swiftlint:disable:next function_parameter_count
     func updateChartViewData(
         temperatureEntries: [ChartDataEntry],
         humidityEntries: [ChartDataEntry],
         pressureEntries: [ChartDataEntry],
+        aqiEntries: [ChartDataEntry],
+        co2Entries: [ChartDataEntry],
+        pm10Entries: [ChartDataEntry],
+        pm25Entries: [ChartDataEntry],
+        vocEntries: [ChartDataEntry],
+        noxEntries: [ChartDataEntry],
+        luminosityEntries: [ChartDataEntry],
+        soundEntries: [ChartDataEntry],
         isFirstEntry: Bool,
         settings: RuuviLocalSettings
     )
+
+    // swiftlint:disable:next function_parameter_count
     func updateLatestMeasurement(
         temperature: ChartDataEntry?,
         humidity: ChartDataEntry?,
         pressure: ChartDataEntry?,
+        aqi: ChartDataEntry?,
+        co2: ChartDataEntry?,
+        pm10: ChartDataEntry?,
+        pm25: ChartDataEntry?,
+        voc: ChartDataEntry?,
+        nox: ChartDataEntry?,
+        luminosity: ChartDataEntry?,
+        sound: ChartDataEntry?,
         settings: RuuviLocalSettings
     )
     func updateLatestRecordStatus(with record: RuuviTagSensorRecord)

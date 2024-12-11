@@ -280,15 +280,11 @@ extension TagChartsView {
 
         var latestVal = ""
         if let latest = latestValue {
-            switch type {
-            case .temperature:
-                latestVal = measurementService.stringWithoutSign(temperature: latest.y)
-            case .humidity:
-                latestVal = measurementService.stringWithoutSign(humidity: latest.y)
-            case .pressure:
-                latestVal = measurementService.stringWithoutSign(pressure: latest.y)
-            default: break
-            }
+            latestVal = formattedMeasurementString(
+                for: type,
+                value: latest.y,
+                measurementService: measurementService
+            )
         }
 
         return RuuviLocalization.chartLatestMinMaxAvg(
@@ -299,6 +295,7 @@ extension TagChartsView {
         )
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func formattedMeasurementString(
         for type: MeasurementType,
         value: Double?,
@@ -317,6 +314,22 @@ extension TagChartsView {
             return measurementService.stringWithoutSign(
                 pressure: value
             )
+        case .aqi:
+            return value?.intValue.stringValue ?? RuuviLocalization.na
+        case .co2:
+            return measurementService.co2String(for: value)
+        case .pm25:
+            return measurementService.pm25String(for: value)
+        case .pm10:
+            return measurementService.pm10String(for: value)
+        case .voc:
+            return measurementService.vocString(for: value)
+        case .nox:
+            return measurementService.noxString(for: value)
+        case .luminosity:
+            return measurementService.luminosityString(for: value)
+        case .sound:
+            return measurementService.soundAvgString(for: value)
         default:
             return ""
         }

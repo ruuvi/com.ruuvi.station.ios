@@ -392,7 +392,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         pm25: Double?,
         voc: Double?,
         nox: Double?
-    ) -> (
+    ) -> ( // swiftlint:disable:this large_tuple
         currentScore: Int,
         maxScore: Int,
         state: AirQualityState
@@ -537,6 +537,10 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         }
         let number = NSNumber(value: luminosity)
         return commonNumberFormatter.string(from: number) ?? emptyValueString
+    }
+
+    public func double(for value: Double?) -> Double {
+        return value?.round(to: commonNumberFormatter.maximumFractionDigits) ?? 0
     }
 }
 
