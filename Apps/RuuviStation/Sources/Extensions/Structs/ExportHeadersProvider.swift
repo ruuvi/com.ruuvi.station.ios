@@ -28,6 +28,7 @@ struct ExportHeadersProvider: RuuviServiceExportHeaders {
         // E0/F0
         if version == 224 || version == 240 {
             headers += [
+                RuuviLocalization.aqi + " (%)",
                 RuuviLocalization.co2 + " (\(RuuviLocalization.unitCo2))",
                 RuuviLocalization.pm1 + " (\(RuuviLocalization.unitPm10))",
                 RuuviLocalization.pm25 + " (\(RuuviLocalization.unitPm25))",

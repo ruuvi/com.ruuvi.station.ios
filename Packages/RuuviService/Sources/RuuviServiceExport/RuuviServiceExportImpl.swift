@@ -157,6 +157,13 @@ extension RuuviServiceExportImpl {
             let movementCounter = log.movementCounter.map { "\($0)" } ?? emptyValueString
             let measurementSequenceNumber = log.measurementSequenceNumber.map { "\($0)" } ?? emptyValueString
             let txPower = log.txPower.map { "\($0)" } ?? emptyValueString
+            let (aqi, _, _) = measurementService.aqiString(
+                for: log.co2,
+                pm25: log.pm2_5,
+                voc: log.voc,
+                nox: log.nox
+            )
+            let aqiString = "\(aqi)"
             let co2 = toString(log.co2, format: "%.2f")
             let pm1 = toString(log.pm1, format: "%.2f")
             let pm2_5 = toString(log.pm2_5, format: "%.2f")
@@ -181,6 +188,7 @@ extension RuuviServiceExportImpl {
             // E0/F0
             if version == 224 || version == 240 {
                 exportableData += [
+                    aqiString,
                     co2,
                     pm1,
                     pm2_5,

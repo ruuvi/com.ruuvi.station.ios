@@ -84,7 +84,7 @@ public protocol RuuviServiceMeasurement {
         pm25: Double?,
         voc: Double?,
         nox: Double?
-    ) -> (
+    ) -> ( // swiftlint:disable:this large_tuple
         currentScore: Int,
         maxScore: Int,
         state: AirQualityState
