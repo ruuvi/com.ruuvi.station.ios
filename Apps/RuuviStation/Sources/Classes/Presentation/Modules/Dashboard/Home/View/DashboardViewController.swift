@@ -660,30 +660,19 @@ private extension DashboardViewController {
         collectionView.register(DashboardPlainCell.self, forCellWithReuseIdentifier: "cellIdPlain")
     }
 
-    // swiftlint:disable:next function_body_length
     func createLayout() -> UICollectionViewLayout {
-        var itemEstimatedHeight: CGFloat = 144
-        switch dashboardType {
-        case .image:
-            itemEstimatedHeight = GlobalHelpers.isDeviceTablet() ? 170 : 144
-        case .simple:
-            itemEstimatedHeight = GlobalHelpers.isDeviceTablet() ? 110 : 90
-        default:
-            break
-        }
-
         let sectionProvider = { (
             _: Int,
             _: NSCollectionLayoutEnvironment
-        )
-            -> NSCollectionLayoutSection? in
+        ) -> NSCollectionLayoutSection? in
+
         let widthMultiplier = GlobalHelpers.isDeviceTablet() ?
             (!GlobalHelpers.isDeviceLandscape() ? 0.5 : 0.3333) :
             (GlobalHelpers.isDeviceLandscape() ? 0.5 : 1.0)
 
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(widthMultiplier),
-            heightDimension: .absolute(itemEstimatedHeight)
+            heightDimension: .estimated(1)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let itemHorizontalSpacing: CGFloat = GlobalHelpers.isDeviceTablet() ? 6 : 4
@@ -696,7 +685,7 @@ private extension DashboardViewController {
 
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(itemEstimatedHeight)
+            heightDimension: .estimated(1)
         )
         let group = NSCollectionLayoutGroup.horizontal(
             layoutSize: groupSize, subitems: [item]

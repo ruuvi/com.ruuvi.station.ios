@@ -1,6 +1,8 @@
 // swiftlint:disable file_length
 import Foundation
 import RuuviOntology
+import RuuviLocalization
+import RuuviService
 
 // MARK: - Process Physical Sensors
 
@@ -424,23 +426,31 @@ extension RuuviNotifierImpl {
             let isUpper = t > u
             if trigger {
                 if isLower {
+                    let lowerString = measurementService.string(
+                        for: l,
+                        allowSettings: false
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
-                        self?.localNotificationsManager.notify(
+                        sSelf.localNotificationsManager.notify(
                             .low,
                             .temperature,
                             for: identifier.value,
-                            title: sSelf.titles.lowTemperature
+                            title: sSelf.titles.lowTemperature(lowerString)
                         )
                     }
                 } else if isUpper {
+                    let upperString = measurementService.string(
+                        for: u,
+                        allowSettings: false
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
                             .temperature,
                             for: identifier.value,
-                            title: sSelf.titles.highTemperature
+                            title: sSelf.titles.highTemperature(upperString)
                         )
                     }
                 }
@@ -466,23 +476,33 @@ extension RuuviNotifierImpl {
             let isUpper = rh.value > upper
             if trigger {
                 if isLower {
+                    let lowerString = measurementService.stringWithoutSign(
+                        humidity: lower*100
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
                             .relativeHumidity,
                             for: identifier.value,
-                            title: sSelf.titles.lowHumidity
+                            title: sSelf.titles.lowHumidity(
+                                "\(lowerString) %"
+                            )
                         )
                     }
                 } else if isUpper {
+                    let upperString = measurementService.stringWithoutSign(
+                        humidity: upper*100
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
                             .relativeHumidity,
                             for: identifier.value,
-                            title: sSelf.titles.highHumidity
+                            title: sSelf.titles.highHumidity(
+                                "\(upperString) %"
+                            )
                         )
                     }
                 }
@@ -508,23 +528,29 @@ extension RuuviNotifierImpl {
             let isUpper = pressure > u
             if trigger {
                 if isLower {
+                    let lowerString = measurementService.string(
+                        for: l, allowSettings: false
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
                             .pressure,
                             for: identifier.value,
-                            title: sSelf.titles.lowPressure
+                            title: sSelf.titles.lowPressure(lowerString)
                         )
                     }
                 } else if isUpper {
+                    let upperString = measurementService.string(
+                        for: u, allowSettings: false
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
                             .pressure,
                             for: identifier.value,
-                            title: sSelf.titles.highPressure
+                            title: sSelf.titles.highPressure(upperString)
                         )
                     }
                 }
@@ -552,23 +578,33 @@ extension RuuviNotifierImpl {
             let isUpper = Double(signal) > upper
             if trigger {
                 if isLower {
+                    let lowerString = measurementService.string(
+                        for: lower
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
                             .signal,
                             for: identifier.value,
-                            title: sSelf.titles.lowSignal
+                            title: sSelf.titles.lowSignal(
+                                "\(lowerString) \(RuuviLocalization.dBm)"
+                            )
                         )
                     }
                 } else if isUpper {
+                    let upperString = measurementService.string(
+                        for: upper
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
                             .signal,
                             for: identifier.value,
-                            title: sSelf.titles.highSignal
+                            title: sSelf.titles.highSignal(
+                                "\(upperString) \(RuuviLocalization.dBm)"
+                            )
                         )
                     }
                 }
@@ -596,23 +632,33 @@ extension RuuviNotifierImpl {
             let isUpper = carbonDioxide > upper
             if trigger {
                 if isLower {
+                    let lowerString = measurementService.co2String(
+                        for: lower
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
                             .carbonDioxide,
                             for: identifier.value,
-                            title: sSelf.titles.lowCarbonDioxide
+                            title: sSelf.titles.lowCarbonDioxide(
+                                "\(lowerString) \(RuuviLocalization.unitCo2)"
+                            )
                         )
                     }
                 } else if isUpper {
+                    let upperString = measurementService.co2String(
+                        for: upper
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
                             .carbonDioxide,
                             for: identifier.value,
-                            title: sSelf.titles.highCarbonDioxide
+                            title: sSelf.titles.highCarbonDioxide(
+                                "\(upperString) \(RuuviLocalization.unitCo2)"
+                            )
                         )
                     }
                 }
@@ -640,23 +686,33 @@ extension RuuviNotifierImpl {
             let isUpper = pMatter1 > upper
             if trigger {
                 if isLower {
+                    let lowerString = measurementService.pm10String(
+                        for: lower
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
                             .pMatter1,
                             for: identifier.value,
-                            title: sSelf.titles.lowPMatter1
+                            title: sSelf.titles.lowPMatter1(
+                                "\(lowerString) \(RuuviLocalization.unitPm10)"
+                            )
                         )
                     }
                 } else if isUpper {
+                    let upperString = measurementService.pm10String(
+                        for: upper
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
                             .pMatter1,
                             for: identifier.value,
-                            title: sSelf.titles.highPMatter1
+                            title: sSelf.titles.highPMatter1(
+                                "\(upperString) \(RuuviLocalization.unitPm10)"
+                            )
                         )
                     }
                 }
@@ -684,23 +740,33 @@ extension RuuviNotifierImpl {
             let isUpper = pMatter2_5 > upper
             if trigger {
                 if isLower {
+                    let lowerString = measurementService.pm25String(
+                        for: lower
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
                             .pMatter2_5,
                             for: identifier.value,
-                            title: sSelf.titles.lowPMatter2_5
+                            title: sSelf.titles.lowPMatter2_5(
+                                "\(lowerString) \(RuuviLocalization.unitPm25)"
+                            )
                         )
                     }
                 } else if isUpper {
+                    let upperString = measurementService.pm25String(
+                        for: upper
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
                             .pMatter2_5,
                             for: identifier.value,
-                            title: sSelf.titles.highPMatter2_5
+                            title: sSelf.titles.highPMatter2_5(
+                                "\(upperString) \(RuuviLocalization.unitPm25)"
+                            )
                         )
                     }
                 }
@@ -728,23 +794,33 @@ extension RuuviNotifierImpl {
             let isUpper = pMatter4 > upper
             if trigger {
                 if isLower {
+                    let lowerString = measurementService.pm40String(
+                        for: lower
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
                             .pMatter4,
                             for: identifier.value,
-                            title: sSelf.titles.lowPMatter4
+                            title: sSelf.titles.lowPMatter4(
+                                "\(lowerString) \(RuuviLocalization.unitPm40)"
+                            )
                         )
                     }
                 } else if isUpper {
+                    let upperString = measurementService.pm40String(
+                        for: upper
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
                             .pMatter4,
                             for: identifier.value,
-                            title: sSelf.titles.highPMatter4
+                            title: sSelf.titles.highPMatter4(
+                                "\(upperString) \(RuuviLocalization.unitPm40)"
+                            )
                         )
                     }
                 }
@@ -772,23 +848,33 @@ extension RuuviNotifierImpl {
             let isUpper = pMatter10 > upper
             if trigger {
                 if isLower {
+                    let lowerString = measurementService.pm100String(
+                        for: lower
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
                             .pMatter10,
                             for: identifier.value,
-                            title: sSelf.titles.lowPMatter10
+                            title: sSelf.titles.lowPMatter10(
+                                "\(lowerString) \(RuuviLocalization.unitPm100)"
+                            )
                         )
                     }
                 } else if isUpper {
+                    let upperString = measurementService.pm100String(
+                        for: upper
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
                             .pMatter10,
                             for: identifier.value,
-                            title: sSelf.titles.highPMatter10
+                            title: sSelf.titles.highPMatter10(
+                                "\(upperString) \(RuuviLocalization.unitPm100)"
+                            )
                         )
                     }
                 }
@@ -816,23 +902,33 @@ extension RuuviNotifierImpl {
             let isUpper = voc > upper
             if trigger {
                 if isLower {
+                    let lowerString = measurementService.vocString(
+                        for: lower
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
                             .voc,
                             for: identifier.value,
-                            title: sSelf.titles.lowVOC
+                            title: sSelf.titles.lowVOC(
+                                "\(lowerString) \(RuuviLocalization.unitVoc)"
+                            )
                         )
                     }
                 } else if isUpper {
+                    let upperString = measurementService.vocString(
+                        for: upper
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
                             .voc,
                             for: identifier.value,
-                            title: sSelf.titles.highVOC
+                            title: sSelf.titles.highVOC(
+                                "\(upperString) \(RuuviLocalization.unitVoc)"
+                            )
                         )
                     }
                 }
@@ -860,23 +956,33 @@ extension RuuviNotifierImpl {
             let isUpper = nox > upper
             if trigger {
                 if isLower {
+                    let lowerString = measurementService.noxString(
+                        for: lower
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
                             .nox,
                             for: identifier.value,
-                            title: sSelf.titles.lowNOx
+                            title: sSelf.titles.lowNOx(
+                                "\(lowerString) \(RuuviLocalization.unitNox)"
+                            )
                         )
                     }
                 } else if isUpper {
+                    let upperString = measurementService.noxString(
+                        for: upper
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
                             .nox,
                             for: identifier.value,
-                            title: sSelf.titles.highNOx
+                            title: sSelf.titles.highNOx(
+                                "\(upperString) \(RuuviLocalization.unitNox)"
+                            )
                         )
                     }
                 }
@@ -904,23 +1010,33 @@ extension RuuviNotifierImpl {
             let isUpper = sound > upper
             if trigger {
                 if isLower {
+                    let lowerString = measurementService.soundAvgString(
+                        for: lower
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
                             .sound,
                             for: identifier.value,
-                            title: sSelf.titles.lowSound
+                            title: sSelf.titles.lowSound(
+                                "\(lowerString) \(RuuviLocalization.unitSound)"
+                            )
                         )
                     }
                 } else if isUpper {
+                    let upperString = measurementService.soundAvgString(
+                        for: upper
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
                             .sound,
                             for: identifier.value,
-                            title: sSelf.titles.highSound
+                            title: sSelf.titles.highSound(
+                                "\(upperString) \(RuuviLocalization.unitSound)"
+                            )
                         )
                     }
                 }
@@ -948,23 +1064,33 @@ extension RuuviNotifierImpl {
             let isUpper = luminosity > upper
             if trigger {
                 if isLower {
+                    let lowerString = measurementService.luminosityString(
+                        for: lower
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
                             .luminosity,
                             for: identifier.value,
-                            title: sSelf.titles.lowLuminosity
+                            title: sSelf.titles.lowLuminosity(
+                                "\(lowerString) \(RuuviLocalization.unitLuminosity)"
+                            )
                         )
                     }
                 } else if isUpper {
+                    let upperString = measurementService.luminosityString(
+                        for: upper
+                    )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
                             .luminosity,
                             for: identifier.value,
-                            title: sSelf.titles.highLuminosity
+                            title: sSelf.titles.highLuminosity(
+                                "\(upperString) \(RuuviLocalization.unitLuminosity)"
+                            )
                         )
                     }
                 }

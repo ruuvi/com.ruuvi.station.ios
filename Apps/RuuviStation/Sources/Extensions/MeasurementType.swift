@@ -9,6 +9,15 @@ enum MeasurementType: String {
     // v5
     case movementCounter
     case txPower
+    // E0/F0
+    case aqi
+    case co2
+    case pm25
+    case pm10
+    case nox
+    case voc
+    case luminosity
+    case sound
 }
 
 extension MeasurementType {
@@ -17,6 +26,14 @@ extension MeasurementType {
             .temperature,
             .humidity,
             .pressure,
+            .aqi,
+            .co2,
+            .pm25,
+            .pm10,
+            .nox,
+            .voc,
+            .luminosity,
+            .sound,
         ]
     }
 }

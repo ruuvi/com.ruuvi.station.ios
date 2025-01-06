@@ -78,6 +78,29 @@ public protocol RuuviServiceMeasurement {
     func pressureOffsetCorrectionString(for pressure: Double) -> String
 
     func string(for measurement: Double?) -> String
+
+    func aqiString(
+        for co2: Double?,
+        pm25: Double?,
+        voc: Double?,
+        nox: Double?
+    ) -> ( // swiftlint:disable:this large_tuple
+        currentScore: Int,
+        maxScore: Int,
+        state: AirQualityState
+    )
+    func co2String(for carbonDiOxide: Double?) -> String
+    func pm10String(for pm10: Double?) -> String
+    func pm25String(for pm25: Double?) -> String
+    func pm40String(for pm40: Double?) -> String
+    func pm100String(for pm100: Double?) -> String
+    func vocString(for voc: Double?) -> String
+    func noxString(for nox: Double?) -> String
+    func soundAvgString(for soundAvg: Double?) -> String
+    func luminosityString(for luminosity: Double?) -> String
+
+    // Common
+    func double(for value: Double?) -> Double
 }
 
 public extension RuuviServiceMeasurement {

@@ -29,6 +29,12 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
 
     private var queue = DispatchQueue(label: "com.ruuvi.station.RuuviServiceExportImpl.queue", qos: .userInitiated)
 
+    private var numberFormatter: NumberFormatter = {
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        return numberFormatter
+    }()
+
     private static let fileNameDateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyyMMdd'T'HHmmssZ"
@@ -125,6 +131,19 @@ extension RuuviServiceExportImpl {
             return String(format: format, v)
         }
 
+        func toString(
+            _ value: Double?,
+            minimumDecimalPlaces: Int = 0,
+            maximumDecimalPlaces: Int = 2
+        ) -> String {
+            guard let v = value else {
+                return emptyValueString
+            }
+            numberFormatter.minimumFractionDigits = minimumDecimalPlaces
+            numberFormatter.maximumFractionDigits = maximumDecimalPlaces
+            return numberFormatter.string(from: NSNumber(value: v)) ?? emptyValueString
+        }
+
         return records.map { log in
             let date = Self.dataDateFormatter.string(from: log.date)
             let temperature = toString(
@@ -153,20 +172,27 @@ extension RuuviServiceExportImpl {
             let accelerationX = toString(log.acceleration?.x.value, format: "%.3f")
             let accelerationY = toString(log.acceleration?.y.value, format: "%.3f")
             let accelerationZ = toString(log.acceleration?.z.value, format: "%.3f")
-            let voltage = toString(log.voltage?.converted(to: .volts).value, format: "%.3f")
+            let voltage = toString(log.voltage?.converted(to: .volts).value)
             let movementCounter = log.movementCounter.map { "\($0)" } ?? emptyValueString
             let measurementSequenceNumber = log.measurementSequenceNumber.map { "\($0)" } ?? emptyValueString
             let txPower = log.txPower.map { "\($0)" } ?? emptyValueString
-            let co2 = toString(log.co2, format: "%.2f")
-            let pm1 = toString(log.pm1, format: "%.2f")
-            let pm2_5 = toString(log.pm2_5, format: "%.2f")
-            let pm4 = toString(log.pm4, format: "%.2f")
-            let pm10 = toString(log.pm10, format: "%.2f")
-            let voc = toString(log.voc, format: "%.2f")
-            let nox = toString(log.nox, format: "%.2f")
-            let soundAvg = toString(log.dbaAvg, format: "%.2f")
-            let soundPeak = toString(log.dbaPeak, format: "%.2f")
-            let luminosity = toString(log.luminance, format: "%.2f")
+            let (aqi, _, _) = measurementService.aqiString(
+                for: log.co2,
+                pm25: log.pm2_5,
+                voc: log.voc,
+                nox: log.nox
+            )
+            let aqiString = "\(aqi)"
+            let co2 = toString(log.co2)
+            let pm1 = toString(log.pm1)
+            let pm2_5 = toString(log.pm2_5)
+            let pm4 = toString(log.pm4)
+            let pm10 = toString(log.pm10)
+            let voc = toString(log.voc)
+            let nox = toString(log.nox)
+            let soundAvg = toString(log.dbaAvg)
+            let soundPeak = toString(log.dbaPeak)
+            let luminosity = toString(log.luminance)
 
             // Common for v3/v5/E0/F0
             var exportableData = [
@@ -181,6 +207,7 @@ extension RuuviServiceExportImpl {
             // E0/F0
             if version == 224 || version == 240 {
                 exportableData += [
+                    aqiString,
                     co2,
                     pm1,
                     pm2_5,

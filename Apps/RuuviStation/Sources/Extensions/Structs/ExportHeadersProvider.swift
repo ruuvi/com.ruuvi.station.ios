@@ -28,16 +28,17 @@ struct ExportHeadersProvider: RuuviServiceExportHeaders {
         // E0/F0
         if version == 224 || version == 240 {
             headers += [
-                RuuviLocalization.ExportService.co2 + " (\(RuuviLocalization.unitCo2))",
-                RuuviLocalization.ExportService.pm10 + " (\(RuuviLocalization.unitPm10))",
-                RuuviLocalization.ExportService.pm25 + " (\(RuuviLocalization.unitPm25))",
-                RuuviLocalization.ExportService.pm40 + " (\(RuuviLocalization.unitPm40))",
-                RuuviLocalization.ExportService.pm100 + " (\(RuuviLocalization.unitPm100))",
-                RuuviLocalization.ExportService.voc + " (\(RuuviLocalization.unitVoc))",
-                RuuviLocalization.ExportService.nox + " (\(RuuviLocalization.unitNox))",
-                RuuviLocalization.ExportService.soundAvg + " (\(RuuviLocalization.unitSound))",
-                RuuviLocalization.ExportService.soundPeak + " (\(RuuviLocalization.unitSound))",
-                RuuviLocalization.ExportService.luminosity + " (\(RuuviLocalization.unitLuminosity))",
+                RuuviLocalization.aqi + " (%)",
+                RuuviLocalization.co2 + " (\(RuuviLocalization.unitCo2))",
+                RuuviLocalization.pm1 + " (\(RuuviLocalization.unitPm10))",
+                RuuviLocalization.pm25 + " (\(RuuviLocalization.unitPm25))",
+                RuuviLocalization.pm4 + " (\(RuuviLocalization.unitPm40))",
+                RuuviLocalization.pm10 + " (\(RuuviLocalization.unitPm100))",
+                RuuviLocalization.voc + " (\(RuuviLocalization.unitVoc))",
+                RuuviLocalization.nox + " (\(RuuviLocalization.unitNox))",
+                RuuviLocalization.soundAvg + " (\(RuuviLocalization.unitSound))",
+                RuuviLocalization.soundPeak + " (\(RuuviLocalization.unitSound))",
+                RuuviLocalization.luminosity + " (\(RuuviLocalization.unitLuminosity))",
             ]
         } else { // v3/v5
             headers += [

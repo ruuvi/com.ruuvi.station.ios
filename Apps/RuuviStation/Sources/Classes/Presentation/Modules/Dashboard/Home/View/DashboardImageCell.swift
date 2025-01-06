@@ -60,27 +60,30 @@ class DashboardImageCell: DashboardCell {
         return button
     }()
 
-    private lazy var temperatureLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = RuuviColor.dashboardIndicatorBig.color
-        label.textAlignment = .left
-        label.numberOfLines = 1
-        label.font = UIFont.Oswald(.bold, size: 30)
-        return label
+    // Stack view to hold rows (vertical)
+    private lazy var rowsStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.spacing = 4
+        stackView.distribution = .fillEqually
+        return stackView
     }()
 
-    private lazy var temperatureUnitLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = RuuviColor.dashboardIndicatorBig.color
-        label.textAlignment = .left
-        label.numberOfLines = 1
-        label.font = UIFont.Oswald(.regular, size: 16)
-        return label
-    }()
+    // Prominent view that show the more important value
+    private lazy var prominentView = DashboardIndicatorProminentView()
 
+    // Indicator views for all possible values
+    private lazy var temperatureView = DashboardIndicatorView()
     private lazy var humidityView = DashboardIndicatorView()
     private lazy var pressureView = DashboardIndicatorView()
     private lazy var movementView = DashboardIndicatorView()
+    private lazy var co2View = DashboardIndicatorView()
+    private lazy var pm25View = DashboardIndicatorView()
+    private lazy var pm10View = DashboardIndicatorView()
+    private lazy var noxView = DashboardIndicatorView()
+    private lazy var vocView = DashboardIndicatorView()
+    private lazy var luminosityView = DashboardIndicatorView()
+    private lazy var soundView = DashboardIndicatorView()
 
     private lazy var dataSourceIconView: UIImageView = {
         let iv = UIImageView()
@@ -107,11 +110,7 @@ class DashboardImageCell: DashboardCell {
     private lazy var batteryLevelView = BatteryLevelView()
     private lazy var noDataView = NoDataView()
 
-    private var humidityViewHeight: NSLayoutConstraint!
-    private var pressureViewHeight: NSLayoutConstraint!
-    private var emptyViewHeight: NSLayoutConstraint!
-    private var movementViewHeight: NSLayoutConstraint!
-
+    private var backgroundImageHeightConstraint: NSLayoutConstraint!
     private var dataSourceIconViewWidthConstraint: NSLayoutConstraint!
     private let dataSourceIconViewRegularWidth: CGFloat = 22
     private let dataSourceIconViewCompactWidth: CGFloat = 16
@@ -138,6 +137,7 @@ class DashboardImageCell: DashboardCell {
     ) {
         self.viewModel = viewModel
 
+        cardBackgroundView.contentMode = .scaleAspectFit
         cardBackgroundView
             .setBackgroundImage(
                 with: viewModel.background.value,
@@ -147,65 +147,75 @@ class DashboardImageCell: DashboardCell {
         // Name
         ruuviTagNameLabel.text = viewModel.name.value
 
-        // Temp
-        if let temp = measurementService?.stringWithoutSign(for: viewModel.temperature.value) {
-            temperatureLabel.text = temp.components(separatedBy: String.nbsp).first
-        } else {
-            temperatureLabel.text = RuuviLocalization.na
-        }
+        // Clear existing arranged subviews
+        rowsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
-        if let temperatureUnit = measurementService?.units.temperatureUnit {
-            temperatureUnitLabel.text = temperatureUnit.symbol
-        } else {
-            temperatureUnitLabel.text = RuuviLocalization.na
-        }
+        var indicators = [DashboardIndicatorView]()
 
-        // Humidity
-        if let humidity = viewModel.humidity.value,
-           let measurementService {
-            hideHumidityView(hide: false)
-            let humidityValue = measurementService.stringWithoutSign(
-                for: humidity,
-                temperature: viewModel.temperature.value
-            )
-            let humidityUnit = measurementService.units.humidityUnit
-            let humidityUnitSymbol = humidityUnit.symbol
-            let temperatureUnitSymbol = measurementService.units.temperatureUnit.symbol
-            let unit = humidityUnit == .dew ? temperatureUnitSymbol
-                : humidityUnitSymbol
-            humidityView.setValue(
-                with: humidityValue,
-                unit: unit
-            )
-        } else {
-            hideHumidityView(hide: true)
-        }
+        if let version = viewModel.version.value {
+            if version == 224 || version == 240 {
+                // Version 224/240
+                // Set Air Quality Index as prominent
+                if let (
+                    currentAirQIndex,
+                    maximumAirQIndex,
+                    currentAirQState
+                ) = measurementService?.aqiString(
+                    for: viewModel.co2.value,
+                    pm25: viewModel.pm2_5.value,
+                    voc: viewModel.voc.value,
+                    nox: viewModel.nox.value
+                ) {
+                    prominentView
+                        .setValue(
+                            with: currentAirQIndex.stringValue,
+                            superscriptValue: "/\(maximumAirQIndex.stringValue)",
+                            subscriptValue: RuuviLocalization.airQuality,
+                            showProgress: true,
+                            progressColor: currentAirQState.color
+                        )
+                }
 
-        // Pressure
-        if let pressure = viewModel.pressure.value {
-            hidePressureView(hide: false)
-            let pressureValue = measurementService?.stringWithoutSign(for: pressure)
-            pressureView.setValue(
-                with: pressureValue,
-                unit: measurementService?.units.pressureUnit.symbol
-            )
-        } else {
-            hidePressureView(hide: true)
-        }
-
-        // Movement
-        switch viewModel.type {
-        case .ruuvi:
-            if let movement = viewModel.movementCounter.value {
-                hideMovementView(hide: false)
-                movementView.setValue(
-                    with: "\(movement)",
-                    unit: RuuviLocalization.Cards.Movements.title
+                // Collect indicators for the grid
+                indicators = indicatorsForE0(
+                    viewModel,
+                    measurementService: measurementService
                 )
             } else {
-                hideMovementView(hide: true)
+                // Version 5
+                // Set Temperature as prominent
+                var temperatureValue: String?
+                var temperatureUnit: String?
+
+                if let temp = measurementService?.stringWithoutSign(for: viewModel.temperature.value) {
+                    temperatureValue = temp.components(separatedBy: String.nbsp).first
+                } else {
+                    temperatureValue = RuuviLocalization.na
+                }
+
+                if let unit = measurementService?.units.temperatureUnit {
+                    temperatureUnit = unit.symbol
+                } else {
+                    temperatureUnit = RuuviLocalization.na
+                }
+
+                prominentView
+                    .setValue(
+                        with: temperatureValue,
+                        superscriptValue: temperatureUnit,
+                        subscriptValue: RuuviLocalization.WebTagSettings.TemperatureAlertTitleLabel.text
+                    )
+
+                // Collect indicators for the grid
+                indicators = indicatorsForV5OrOlder(
+                    viewModel,
+                    measurementService: measurementService
+                )
             }
         }
+
+        // Build the grid
+        buildGrid(with: indicators)
 
         // Ago
         if let date = viewModel.date.value?.ruuviAgo() {
@@ -251,6 +261,17 @@ class DashboardImageCell: DashboardCell {
         } else {
             batteryLevelView.isHidden = true
         }
+
+        // After setting up all the content force the layout
+        setNeedsLayout()
+        layoutIfNeeded()
+
+        // Calculate the right content view's height
+        let targetSize = CGSize(width: frame.width, height: UIView.layoutFittingCompressedSize.height)
+        let finalHeight = systemLayoutSizeFitting(targetSize).height
+
+        // Set the image view's height constraint to match the right content's height
+        backgroundImageHeightConstraint.constant = finalHeight
     }
 
     // swiftlint:disable:next function_body_length cyclomatic_complexity
@@ -267,6 +288,13 @@ class DashboardImageCell: DashboardCell {
             viewModel.signalAlertMutedTill.value,
             viewModel.movementAlertMutedTill.value,
             viewModel.connectionAlertMutedTill.value,
+            viewModel.carbonDioxideAlertMutedTill.value,
+            viewModel.pMatter2_5AlertMutedTill.value,
+            viewModel.pMatter10AlertMutedTill.value,
+            viewModel.vocAlertMutedTill.value,
+            viewModel.noxAlertMutedTill.value,
+            viewModel.soundAlertMutedTill.value,
+            viewModel.luminosityAlertMutedTill.value,
         ]
 
         if mutedTills.first(where: { $0 != nil }) != nil || !alertVisible {
@@ -278,9 +306,21 @@ class DashboardImageCell: DashboardCell {
 
         if let isOn = viewModel.isTemperatureAlertOn.value, isOn,
            let temperatureAlertState = viewModel.temperatureAlertState.value {
-            highlightTemperatureValues(highlight: temperatureAlertState == .firing)
+            if let version = viewModel.version.value {
+                if version == 224 || version == 240 {
+                    prominentView.changeColor(highlight: temperatureAlertState == .firing)
+                } else {
+                    temperatureView.changeColor(highlight: temperatureAlertState == .firing)
+                }
+            }
         } else {
-            highlightTemperatureValues(highlight: false)
+            if let version = viewModel.version.value {
+                if version == 224 || version == 240 {
+                    prominentView.changeColor(highlight: false)
+                } else {
+                    temperatureView.changeColor(highlight: false)
+                }
+            }
         }
 
         if let isOn = viewModel.isRelativeHumidityAlertOn.value, isOn,
@@ -302,6 +342,55 @@ class DashboardImageCell: DashboardCell {
             movementView.changeColor(highlight: movementAlertState == .firing)
         } else {
             movementView.changeColor(highlight: false)
+        }
+
+        if let isOn = viewModel.isCarbonDioxideAlertOn.value, isOn,
+           let alertState = viewModel.carbonDioxideAlertState.value {
+            co2View.changeColor(highlight: alertState == .firing)
+        } else {
+            co2View.changeColor(highlight: false)
+        }
+
+        if let isOn = viewModel.isPMatter2_5AlertOn.value, isOn,
+           let alertState = viewModel.pMatter2_5AlertState.value {
+            pm25View.changeColor(highlight: alertState == .firing)
+        } else {
+            pm25View.changeColor(highlight: false)
+        }
+
+        if let isOn = viewModel.isPMatter10AlertOn.value, isOn,
+           let alertState = viewModel.pMatter10AlertState.value {
+            pm10View.changeColor(highlight: alertState == .firing)
+        } else {
+            pm10View.changeColor(highlight: false)
+        }
+
+        if let isOn = viewModel.isVOCAlertOn.value, isOn,
+           let alertState = viewModel.vocAlertState.value {
+            vocView.changeColor(highlight: alertState == .firing)
+        } else {
+            vocView.changeColor(highlight: false)
+        }
+
+        if let isOn = viewModel.isNOXAlertOn.value, isOn,
+           let alertState = viewModel.noxAlertState.value {
+            noxView.changeColor(highlight: alertState == .firing)
+        } else {
+            noxView.changeColor(highlight: false)
+        }
+
+        if let isOn = viewModel.isSoundAlertOn.value, isOn,
+           let alertState = viewModel.soundAlertState.value {
+            soundView.changeColor(highlight: alertState == .firing)
+        } else {
+            soundView.changeColor(highlight: false)
+        }
+
+        if let isOn = viewModel.isLuminosityAlertOn.value, isOn,
+           let alertState = viewModel.luminosityAlertState.value {
+            luminosityView.changeColor(highlight: alertState == .firing)
+        } else {
+            luminosityView.changeColor(highlight: false)
         }
 
         if let state = viewModel.alertState.value {
@@ -366,19 +455,30 @@ extension DashboardImageCell {
         super.prepareForReuse()
         viewModel = nil
         ruuviTagNameLabel.text = nil
-        temperatureLabel.text = nil
-        temperatureUnitLabel.text = nil
-        humidityView.clearValues()
-        pressureView.clearValues()
-        movementView.clearValues()
         updatedAtLabel.text = nil
         batteryLevelView.isHidden = true
         timer?.invalidate()
         alertIcon.image = nil
         alertIcon.layer.removeAllAnimations()
-        highlightTemperatureValues(highlight: false)
         dataSourceIconViewWidthConstraint.constant = dataSourceIconViewCompactWidth
         noDataView.isHidden = true
+        // Clear indicator views
+        prominentView.clearValues()
+        [
+            temperatureView,
+            humidityView,
+            pressureView,
+            movementView,
+            co2View,
+            pm25View,
+            pm10View,
+            noxView,
+            vocView,
+            luminosityView,
+            soundView,
+        ].forEach {
+            $0.clearValues()
+        }
     }
 }
 
@@ -396,13 +496,15 @@ extension DashboardImageCell {
         cardBackgroundView.anchor(
             top: container.topAnchor,
             leading: container.leadingAnchor,
-            bottom: container.bottomAnchor,
+            bottom: nil,
             trailing: nil
         )
         cardBackgroundView.widthAnchor.constraint(
             equalTo: container.widthAnchor,
             multiplier: 0.25
         ).isActive = true
+        cardBackgroundView.setContentHuggingPriority(.defaultLow, for: .vertical)
+        cardBackgroundView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
 
         container.addSubview(ruuviTagNameLabel)
         ruuviTagNameLabel.anchor(
@@ -416,105 +518,25 @@ extension DashboardImageCell {
             greaterThanOrEqualToConstant: 14
         ).isActive = true
 
-        container.addSubview(temperatureLabel)
-        temperatureLabel.anchor(
+        container.addSubview(prominentView)
+        prominentView.anchor(
             top: ruuviTagNameLabel.bottomAnchor,
             leading: ruuviTagNameLabel.leadingAnchor,
             bottom: nil,
-            trailing: nil,
-            padding: .init(top: -4, left: 0, bottom: 0, right: 0)
-        )
-
-        container.addSubview(temperatureUnitLabel)
-        temperatureUnitLabel.anchor(
-            top: temperatureLabel.topAnchor,
-            leading: temperatureLabel.trailingAnchor,
-            bottom: nil,
-            trailing: nil,
-            padding: .init(
-                top: 6,
-                left: 2,
-                bottom: 0,
-                right: 0
-            )
-        )
-
-        let leftContainerView = UIView()
-        container.addSubview(leftContainerView)
-        leftContainerView.anchor(
-            top: nil,
-            leading: ruuviTagNameLabel.leadingAnchor,
-            bottom: nil,
-            trailing: nil,
-            padding: .init(
-                top: 4,
-                left: 0,
-                bottom: 0,
-                right: 0
-            )
-        )
-
-        leftContainerView.addSubview(humidityView)
-        humidityView.anchor(
-            top: leftContainerView.topAnchor,
-            leading: leftContainerView.leadingAnchor,
-            bottom: nil,
-            trailing: leftContainerView.trailingAnchor
-        )
-        humidityViewHeight = humidityView.heightAnchor.constraint(equalToConstant: indicatorViewHeight())
-        humidityViewHeight.isActive = true
-
-        leftContainerView.addSubview(movementView)
-        movementView.anchor(
-            top: humidityView.bottomAnchor,
-            leading: leftContainerView.leadingAnchor,
-            bottom: leftContainerView.bottomAnchor,
-            trailing: leftContainerView.trailingAnchor
-        )
-        movementViewHeight = movementView.heightAnchor.constraint(equalToConstant: indicatorViewHeight())
-        movementViewHeight.isActive = true
-
-        let rightContainerView = UIView()
-        container.addSubview(rightContainerView)
-        rightContainerView.anchor(
-            top: nil,
-            leading: leftContainerView.trailingAnchor,
-            bottom: leftContainerView.bottomAnchor,
             trailing: container.trailingAnchor,
-            padding: .init(
-                top: 0,
-                left: 4,
-                bottom: 0,
-                right: 4
+            padding: .init(top: 0, left: 0, bottom: 0, right: 0)
+        )
+
+        // Add the rowsStackView
+        container.addSubview(rowsStackView)
+        rowsStackView
+            .anchor(
+                top: prominentView.bottomAnchor,
+                leading: ruuviTagNameLabel.leadingAnchor,
+                bottom: nil,
+                trailing: container.trailingAnchor,
+                padding: .init(top: 4, left: 0, bottom: 0, right: 0)
             )
-        )
-
-        rightContainerView.addSubview(pressureView)
-        pressureView.anchor(
-            top: rightContainerView.topAnchor,
-            leading: rightContainerView.leadingAnchor,
-            bottom: nil,
-            trailing: rightContainerView.trailingAnchor
-        )
-        pressureViewHeight = pressureView.heightAnchor.constraint(equalToConstant: indicatorViewHeight())
-        pressureViewHeight.isActive = true
-
-        let emptySpacer = UIView()
-        emptySpacer.backgroundColor = .clear
-        rightContainerView.addSubview(emptySpacer)
-        emptySpacer.anchor(
-            top: pressureView.bottomAnchor,
-            leading: rightContainerView.leadingAnchor,
-            bottom: rightContainerView.bottomAnchor,
-            trailing: rightContainerView.trailingAnchor
-        )
-        emptyViewHeight = emptySpacer.heightAnchor.constraint(equalToConstant: indicatorViewHeight())
-        emptyViewHeight.isActive = true
-
-        leftContainerView
-            .widthAnchor
-            .constraint(equalTo: rightContainerView.widthAnchor)
-            .isActive = true
 
         let sourceAndUpdateStack = UIStackView(arrangedSubviews: [
             dataSourceIconView, updatedAtLabel
@@ -537,7 +559,7 @@ extension DashboardImageCell {
 
         container.addSubview(footerStack)
         footerStack.anchor(
-            top: leftContainerView.bottomAnchor,
+            top: rowsStackView.bottomAnchor,
             leading: ruuviTagNameLabel.leadingAnchor,
             bottom: container.bottomAnchor,
             trailing: container.trailingAnchor,
@@ -549,6 +571,9 @@ extension DashboardImageCell {
             )
         )
         batteryLevelView.isHidden = true
+
+        backgroundImageHeightConstraint = cardBackgroundView.heightAnchor.constraint(equalToConstant: 0)
+        backgroundImageHeightConstraint.isActive = true
 
         container.addSubview(alertIcon)
         alertIcon.anchor(
@@ -605,40 +630,6 @@ extension DashboardImageCell {
         )
     }
 
-    private func hideHumidityView(hide: Bool) {
-        if hide {
-            humidityView.isHidden = true
-            humidityViewHeight.constant = 0
-        } else {
-            humidityView.isHidden = false
-            humidityViewHeight.constant = indicatorViewHeight()
-        }
-    }
-
-    private func hidePressureView(hide: Bool) {
-        if hide {
-            pressureView.isHidden = true
-            pressureViewHeight.constant = 0
-        } else {
-            pressureView.isHidden = false
-            pressureViewHeight.constant = indicatorViewHeight()
-        }
-    }
-
-    private func hideMovementView(hide: Bool) {
-        if hide {
-            movementView.isHidden = true
-            movementViewHeight.constant = 0
-        } else {
-            movementView.isHidden = false
-            movementViewHeight.constant = indicatorViewHeight()
-        }
-    }
-
-    private func indicatorViewHeight() -> CGFloat {
-        GlobalHelpers.isDeviceTablet() ? 24 : 18
-    }
-
     @objc private func alertButtonDidTap() {
         guard let viewModel
         else {
@@ -646,11 +637,214 @@ extension DashboardImageCell {
         }
         delegate?.didTapAlertButton(for: viewModel)
     }
+}
 
-    private func highlightTemperatureValues(highlight: Bool) {
-        temperatureLabel.textColor =
-        highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicatorBig.color
-        temperatureUnitLabel.textColor =
-        highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicatorBig.color
+extension DashboardImageCell {
+    private func indicatorsForV5OrOlder(
+        _ viewModel: CardsViewModel,
+        measurementService: RuuviServiceMeasurement?
+    ) -> [DashboardIndicatorView] {
+        var indicators = [DashboardIndicatorView]()
+
+        // Humidity
+        if let humidity = viewModel.humidity.value,
+           let measurementService {
+            let humidityValue = measurementService.stringWithoutSign(
+                for: humidity,
+                temperature: viewModel.temperature.value
+            )
+            let humidityUnit = measurementService.units.humidityUnit
+            let humidityUnitSymbol = humidityUnit.symbol
+            let temperatureUnitSymbol = measurementService.units.temperatureUnit.symbol
+            let unit = humidityUnit == .dew ? temperatureUnitSymbol : humidityUnitSymbol
+            humidityView.setValue(
+                with: humidityValue,
+                unit: unit
+            )
+            indicators.append(humidityView)
+        }
+
+        // Pressure
+        if let pressure = viewModel.pressure.value {
+            let pressureValue = measurementService?.stringWithoutSign(for: pressure)
+            pressureView.setValue(
+                with: pressureValue,
+                unit: measurementService?.units.pressureUnit.symbol
+            )
+            indicators.append(pressureView)
+        }
+
+        // Movement
+        if let movement = viewModel.movementCounter.value {
+            movementView.setValue(
+                with: "\(movement)",
+                unit: RuuviLocalization.Cards.Movements.title
+            )
+            indicators.append(movementView)
+        }
+
+        return indicators
+    }
+
+    // swiftlint:disable:next function_body_length
+    private func indicatorsForE0(
+        _ viewModel: CardsViewModel,
+        measurementService: RuuviServiceMeasurement?
+    ) -> [DashboardIndicatorView] {
+        var indicators = [DashboardIndicatorView]()
+
+        // Temp
+        if let temperature = viewModel.temperature.value {
+            let tempValue = measurementService?.stringWithoutSign(for: temperature)
+            temperatureView.setValue(
+                with: tempValue,
+                unit: measurementService?.units.temperatureUnit.symbol
+            )
+            indicators.append(temperatureView)
+        }
+
+        // Humidity
+        if let humidity = viewModel.humidity.value,
+           let measurementService {
+            let humidityValue = measurementService.stringWithoutSign(
+                for: humidity,
+                temperature: viewModel.temperature.value
+            )
+            let humidityUnit = measurementService.units.humidityUnit
+            let humidityUnitSymbol = humidityUnit.symbol
+            let temperatureUnitSymbol = measurementService.units.temperatureUnit.symbol
+            let unit = humidityUnit == .dew ? temperatureUnitSymbol : humidityUnitSymbol
+            humidityView.setValue(
+                with: humidityValue,
+                unit: unit
+            )
+            indicators.append(humidityView)
+        }
+
+        // Pressure
+        if let pressure = viewModel.pressure.value {
+            let pressureValue = measurementService?.stringWithoutSign(for: pressure)
+            pressureView.setValue(
+                with: pressureValue,
+                unit: measurementService?.units.pressureUnit.symbol
+            )
+            indicators.append(pressureView)
+        }
+
+        // CO2
+        if let co2 = viewModel.co2.value,
+           let co2Value = measurementService?.co2String(for: co2) {
+            co2View.setValue(
+                with: co2Value,
+                unit: RuuviLocalization.unitCo2
+            )
+            indicators.append(co2View)
+        }
+
+        // PM2.5
+        if let pm25 = viewModel.pm2_5.value,
+           let pm25Value = measurementService?.pm25String(for: pm25) {
+            pm25View.setValue(
+                with: pm25Value,
+                unit: "\(RuuviLocalization.pm25) \(RuuviLocalization.unitPm25)"
+            )
+            indicators.append(pm25View)
+        }
+
+        // PM10
+        if let pm10 = viewModel.pm10.value,
+           let pm10Value = measurementService?.pm10String(for: pm10) {
+            pm10View.setValue(
+                with: pm10Value,
+                unit: "\(RuuviLocalization.pm10) \(RuuviLocalization.unitPm10)"
+            )
+            indicators.append(pm10View)
+        }
+
+        // NOx
+        if let nox = viewModel.nox.value,
+           let noxValue = measurementService?.noxString(for: nox) {
+            noxView.setValue(
+                with: noxValue,
+                unit: RuuviLocalization.unitNox
+            )
+            indicators.append(noxView)
+        }
+
+        // VOC
+        if let voc = viewModel.voc.value,
+           let vocValue = measurementService?.vocString(for: voc) {
+            vocView.setValue(
+                with: vocValue,
+                unit: RuuviLocalization.unitVoc
+            )
+            indicators.append(vocView)
+        }
+
+        // Luminosity
+        if let luminosity = viewModel.luminance.value,
+           let luminosityValue = measurementService?.luminosityString(for: luminosity) {
+            luminosityView.setValue(
+                with: luminosityValue,
+                unit: RuuviLocalization.unitLuminosity
+            )
+            indicators.append(luminosityView)
+        }
+
+        // Sound
+        if let sound = viewModel.dbaAvg.value,
+           let soundValue = measurementService?.soundAvgString(for: sound) {
+            soundView.setValue(
+                with: soundValue,
+                unit: RuuviLocalization.unitSound
+            )
+            indicators.append(soundView)
+        }
+
+        return indicators
+    }
+
+    private func buildGrid(with indicators: [DashboardIndicatorView]) {
+        // Clear existing arranged subviews
+        rowsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+
+        // Configure the rowsStackView
+        rowsStackView.axis = .vertical
+        rowsStackView.spacing = 8
+        rowsStackView.distribution = .fillEqually
+
+        if indicators.count < 3 {
+            // Less than 3 indicators: arrange vertically
+            for indicator in indicators {
+                rowsStackView.addArrangedSubview(indicator)
+            }
+        } else {
+            // 3 or more indicators: arrange in rows of two
+            var index = 0
+            while index < indicators.count {
+                // Create a horizontal stack view for each row
+                let rowStackView = UIStackView()
+                rowStackView.axis = .horizontal
+                rowStackView.spacing = 8
+                rowStackView.distribution = .fillEqually
+
+                // Add the first indicator
+                rowStackView.addArrangedSubview(indicators[index])
+                index += 1
+
+                // Check if there's a second indicator to add
+                if index < indicators.count {
+                    rowStackView.addArrangedSubview(indicators[index])
+                    index += 1
+                } else {
+                    // Add an empty view to fill the second column
+                    let emptyView = UIView()
+                    rowStackView.addArrangedSubview(emptyView)
+                }
+
+                // Add the row to the vertical stack view
+                rowsStackView.addArrangedSubview(rowStackView)
+            }
+        }
     }
 }

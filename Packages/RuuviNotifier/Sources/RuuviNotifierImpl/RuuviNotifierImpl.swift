@@ -10,17 +10,20 @@ public final class RuuviNotifierImpl: RuuviNotifier {
     let ruuviAlertService: RuuviServiceAlert
     let localNotificationsManager: RuuviNotificationLocal
     let localSyncState: RuuviLocalSyncState
+    let measurementService: RuuviServiceMeasurement
 
     public init(
         ruuviAlertService: RuuviServiceAlert,
         ruuviNotificationLocal: RuuviNotificationLocal,
         localSyncState: RuuviLocalSyncState,
+        measurementService: RuuviServiceMeasurement,
         titles: RuuviNotifierTitles
     ) {
         self.ruuviAlertService = ruuviAlertService
         localNotificationsManager = ruuviNotificationLocal
         self.localSyncState = localSyncState
         self.titles = titles
+        self.measurementService = measurementService
     }
 
     public func subscribe(_ observer: some RuuviNotifierObserver, to uuid: String) {

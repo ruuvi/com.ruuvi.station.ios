@@ -57,6 +57,7 @@ class TagChartsViewController: UIViewController {
 
     var compactChartView: Bool = true {
         didSet {
+            updateChartsCollectionConstaints(from: self.chartModules)
             moreButton.menu = moreButtonOptions(
                 showChartStat: showChartStat,
                 compactChartView: compactChartView
@@ -154,10 +155,26 @@ class TagChartsViewController: UIViewController {
     lazy var temperatureChartView = TagChartsView()
     lazy var humidityChartView = TagChartsView()
     lazy var pressureChartView = TagChartsView()
+    lazy var aqiChartView = TagChartsView()
+    lazy var co2ChartView = TagChartsView()
+    lazy var pm25ChartView = TagChartsView()
+    lazy var pm10ChartView = TagChartsView()
+    lazy var vocChartView = TagChartsView()
+    lazy var noxChartView = TagChartsView()
+    lazy var luminosityChartView = TagChartsView()
+    lazy var soundChartView = TagChartsView()
 
     private var temperatureChartViewHeight: NSLayoutConstraint!
     private var humidityChartViewHeight: NSLayoutConstraint!
     private var pressureChartViewHeight: NSLayoutConstraint!
+    private var aqiChartViewHeight: NSLayoutConstraint!
+    private var co2ChartViewHeight: NSLayoutConstraint!
+    private var pm25ChartViewHeight: NSLayoutConstraint!
+    private var pm10ChartViewHeight: NSLayoutConstraint!
+    private var vocChartViewHeight: NSLayoutConstraint!
+    private var noxChartViewHeight: NSLayoutConstraint!
+    private var luminosityChartViewHeight: NSLayoutConstraint!
+    private var soundChartViewHeight: NSLayoutConstraint!
 
     // Sync view
     lazy var syncProgressView = UIView(color: .clear)
@@ -435,13 +452,109 @@ class TagChartsViewController: UIViewController {
             pressureChartView.anchor(
                 top: humidityChartView.bottomAnchor,
                 leading: scrollView.leadingAnchor,
-                bottom: scrollView.bottomAnchor,
+                bottom: nil,
                 trailing: scrollView.trailingAnchor
             )
             pressureChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
             pressureChartViewHeight = pressureChartView.heightAnchor.constraint(equalToConstant: 0)
             pressureChartViewHeight.isActive = true
             pressureChartView.chartDelegate = self
+
+            scrollView.addSubview(aqiChartView)
+            aqiChartView.anchor(
+                top: pressureChartView.bottomAnchor,
+                leading: scrollView.leadingAnchor,
+                bottom: nil,
+                trailing: scrollView.trailingAnchor
+            )
+            aqiChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+            aqiChartViewHeight = aqiChartView.heightAnchor.constraint(equalToConstant: 0)
+            aqiChartViewHeight.isActive = true
+            aqiChartView.chartDelegate = self
+
+            scrollView.addSubview(co2ChartView)
+            co2ChartView.anchor(
+                top: aqiChartView.bottomAnchor,
+                leading: scrollView.leadingAnchor,
+                bottom: nil,
+                trailing: scrollView.trailingAnchor
+            )
+            co2ChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+            co2ChartViewHeight = co2ChartView.heightAnchor.constraint(equalToConstant: 0)
+            co2ChartViewHeight.isActive = true
+            co2ChartView.chartDelegate = self
+
+            scrollView.addSubview(pm25ChartView)
+            pm25ChartView.anchor(
+                top: co2ChartView.bottomAnchor,
+                leading: scrollView.leadingAnchor,
+                bottom: nil,
+                trailing: scrollView.trailingAnchor
+            )
+            pm25ChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+            pm25ChartViewHeight = pm25ChartView.heightAnchor.constraint(equalToConstant: 0)
+            pm25ChartViewHeight.isActive = true
+            pm25ChartView.chartDelegate = self
+
+            scrollView.addSubview(pm10ChartView)
+            pm10ChartView.anchor(
+                top: pm25ChartView.bottomAnchor,
+                leading: scrollView.leadingAnchor,
+                bottom: nil,
+                trailing: scrollView.trailingAnchor
+            )
+            pm10ChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+            pm10ChartViewHeight = pm10ChartView.heightAnchor.constraint(equalToConstant: 0)
+            pm10ChartViewHeight.isActive = true
+            pm10ChartView.chartDelegate = self
+
+            scrollView.addSubview(vocChartView)
+            vocChartView.anchor(
+                top: pm10ChartView.bottomAnchor,
+                leading: scrollView.leadingAnchor,
+                bottom: nil,
+                trailing: scrollView.trailingAnchor
+            )
+            vocChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+            vocChartViewHeight = vocChartView.heightAnchor.constraint(equalToConstant: 0)
+            vocChartViewHeight.isActive = true
+            vocChartView.chartDelegate = self
+
+            scrollView.addSubview(noxChartView)
+            noxChartView.anchor(
+                top: vocChartView.bottomAnchor,
+                leading: scrollView.leadingAnchor,
+                bottom: nil,
+                trailing: scrollView.trailingAnchor
+            )
+            noxChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+            noxChartViewHeight = noxChartView.heightAnchor.constraint(equalToConstant: 0)
+            noxChartViewHeight.isActive = true
+            noxChartView.chartDelegate = self
+
+            scrollView.addSubview(luminosityChartView)
+            luminosityChartView.anchor(
+                top: noxChartView.bottomAnchor,
+                leading: scrollView.leadingAnchor,
+                bottom: nil,
+                trailing: scrollView.trailingAnchor
+            )
+            luminosityChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+            luminosityChartViewHeight = luminosityChartView.heightAnchor.constraint(equalToConstant: 0)
+            luminosityChartViewHeight.isActive = true
+            luminosityChartView.chartDelegate = self
+
+            scrollView.addSubview(soundChartView)
+            soundChartView.anchor(
+                top: luminosityChartView.bottomAnchor,
+                leading: scrollView.leadingAnchor,
+                bottom: scrollView.bottomAnchor,
+                trailing: scrollView.trailingAnchor
+            )
+            soundChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+            soundChartViewHeight = soundChartView.heightAnchor.constraint(equalToConstant: 0)
+            soundChartViewHeight.isActive = true
+            soundChartView.chartDelegate = self
         }
 
         view.addSubview(noDataLabel)
@@ -770,6 +883,7 @@ extension TagChartsViewController: TagChartsViewInput {
         }
     }
 
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     func setChartViewData(
         from chartViewData: [TagChartViewData],
         settings: RuuviLocalSettings
@@ -816,6 +930,70 @@ extension TagChartsViewController: TagChartsViewInput {
                         settings: settings,
                         view: pressureChartView
                     )
+                case .aqi:
+                    populateChartView(
+                        from: data,
+                        title: RuuviLocalization.aqi,
+                        unit: "%",
+                        settings: settings,
+                        view: aqiChartView
+                    )
+                case .co2:
+                    populateChartView(
+                        from: data,
+                        title: RuuviLocalization.co2,
+                        unit: RuuviLocalization.unitCo2,
+                        settings: settings,
+                        view: co2ChartView
+                    )
+                case .pm10:
+                    populateChartView(
+                        from: data,
+                        title: RuuviLocalization.pm10,
+                        unit: RuuviLocalization.unitPm10,
+                        settings: settings,
+                        view: pm10ChartView
+                    )
+                case .pm25:
+                    populateChartView(
+                        from: data,
+                        title: RuuviLocalization.pm25,
+                        unit: RuuviLocalization.unitPm25,
+                        settings: settings,
+                        view: pm25ChartView
+                    )
+                case .voc:
+                    populateChartView(
+                        from: data,
+                        title: RuuviLocalization.voc,
+                        unit: RuuviLocalization.unitVoc,
+                        settings: settings,
+                        view: vocChartView
+                    )
+                case .nox:
+                    populateChartView(
+                        from: data,
+                        title: RuuviLocalization.nox,
+                        unit: RuuviLocalization.unitNox,
+                        settings: settings,
+                        view: noxChartView
+                    )
+                case .luminosity:
+                    populateChartView(
+                        from: data,
+                        title: RuuviLocalization.luminosity,
+                        unit: RuuviLocalization.unitLuminosity,
+                        settings: settings,
+                        view: luminosityChartView
+                    )
+                case .sound:
+                    populateChartView(
+                        from: data,
+                        title: RuuviLocalization.sound,
+                        unit: RuuviLocalization.unitSound,
+                        settings: settings,
+                        view: soundChartView
+                    )
                 default:
                     break
                 }
@@ -823,10 +1001,19 @@ extension TagChartsViewController: TagChartsViewInput {
         }
     }
 
+    // swiftlint:disable:next function_parameter_count function_body_length
     func updateChartViewData(
         temperatureEntries: [ChartDataEntry],
         humidityEntries: [ChartDataEntry],
         pressureEntries: [ChartDataEntry],
+        aqiEntries: [ChartDataEntry],
+        co2Entries: [ChartDataEntry],
+        pm10Entries: [ChartDataEntry],
+        pm25Entries: [ChartDataEntry],
+        vocEntries: [ChartDataEntry],
+        noxEntries: [ChartDataEntry],
+        luminosityEntries: [ChartDataEntry],
+        soundEntries: [ChartDataEntry],
         isFirstEntry: Bool,
         settings: RuuviLocalSettings
     ) {
@@ -856,13 +1043,78 @@ extension TagChartsViewController: TagChartsViewInput {
                 isFirstEntry: isFirstEntry,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
+
+            aqiChartView.setSettings(settings: settings)
+            aqiChartView.updateDataSet(
+                with: aqiEntries,
+                isFirstEntry: isFirstEntry,
+                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+            )
+
+            co2ChartView.setSettings(settings: settings)
+            co2ChartView.updateDataSet(
+                with: co2Entries,
+                isFirstEntry: isFirstEntry,
+                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+            )
+
+            pm10ChartView.setSettings(settings: settings)
+            pm10ChartView.updateDataSet(
+                with: pm10Entries,
+                isFirstEntry: isFirstEntry,
+                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+            )
+
+            pm25ChartView.setSettings(settings: settings)
+            pm25ChartView.updateDataSet(
+                with: pm25Entries,
+                isFirstEntry: isFirstEntry,
+                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+            )
+
+            vocChartView.setSettings(settings: settings)
+            vocChartView.updateDataSet(
+                with: vocEntries,
+                isFirstEntry: isFirstEntry,
+                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+            )
+
+            noxChartView.setSettings(settings: settings)
+            noxChartView.updateDataSet(
+                with: noxEntries,
+                isFirstEntry: isFirstEntry,
+                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+            )
+
+            luminosityChartView.setSettings(settings: settings)
+            luminosityChartView.updateDataSet(
+                with: luminosityEntries,
+                isFirstEntry: isFirstEntry,
+                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+            )
+
+            soundChartView.setSettings(settings: settings)
+            soundChartView.updateDataSet(
+                with: soundEntries,
+                isFirstEntry: isFirstEntry,
+                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+            )
         }
     }
 
+    // swiftlint:disable:next function_parameter_count function_body_length
     func updateLatestMeasurement(
         temperature: ChartDataEntry?,
         humidity: ChartDataEntry?,
         pressure: ChartDataEntry?,
+        aqi: ChartDataEntry?,
+        co2: ChartDataEntry?,
+        pm10: ChartDataEntry?,
+        pm25: ChartDataEntry?,
+        voc: ChartDataEntry?,
+        nox: ChartDataEntry?,
+        luminosity: ChartDataEntry?,
+        sound: ChartDataEntry?,
         settings: RuuviLocalSettings
     ) {
         if useNewGraphRendering {
@@ -887,6 +1139,54 @@ extension TagChartsViewController: TagChartsViewInput {
                 type: .pressure,
                 measurementService: measurementService,
                 unit: settings.pressureUnit.symbol
+            )
+            aqiChartView.updateLatest(
+                with: aqi,
+                type: .aqi,
+                measurementService: measurementService,
+                unit: "%"
+            )
+            co2ChartView.updateLatest(
+                with: co2,
+                type: .co2,
+                measurementService: measurementService,
+                unit: RuuviLocalization.unitCo2
+            )
+            pm10ChartView.updateLatest(
+                with: pm10,
+                type: .pm10,
+                measurementService: measurementService,
+                unit: RuuviLocalization.unitPm10
+            )
+            pm25ChartView.updateLatest(
+                with: pm25,
+                type: .pm25,
+                measurementService: measurementService,
+                unit: RuuviLocalization.unitPm25
+            )
+            vocChartView.updateLatest(
+                with: voc,
+                type: .voc,
+                measurementService: measurementService,
+                unit: RuuviLocalization.unitVoc
+            )
+            noxChartView.updateLatest(
+                with: nox,
+                type: .nox,
+                measurementService: measurementService,
+                unit: RuuviLocalization.unitNox
+            )
+            luminosityChartView.updateLatest(
+                with: luminosity,
+                type: .luminosity,
+                measurementService: measurementService,
+                unit: RuuviLocalization.unitLuminosity
+            )
+            soundChartView.updateLatest(
+                with: sound,
+                type: .sound,
+                measurementService: measurementService,
+                unit: RuuviLocalization.unitSound
             )
         }
     }
@@ -1110,6 +1410,78 @@ extension TagChartsViewController {
             pressureChartView.isHidden = false
         }
 
+        if !from.contains(.aqi) {
+            aqiChartView.isHidden = true
+            if aqiChartViewHeight.constant != 0 {
+                aqiChartViewHeight.constant = 0
+            }
+        } else {
+            aqiChartView.isHidden = false
+        }
+
+        if !from.contains(.co2) {
+            co2ChartView.isHidden = true
+            if co2ChartViewHeight.constant != 0 {
+                co2ChartViewHeight.constant = 0
+            }
+        } else {
+            co2ChartView.isHidden = false
+        }
+
+        if !from.contains(.pm25) {
+            pm25ChartView.isHidden = true
+            if pm25ChartViewHeight.constant != 0 {
+                pm25ChartViewHeight.constant = 0
+            }
+        } else {
+            pm25ChartView.isHidden = false
+        }
+
+        if !from.contains(.pm10) {
+            pm10ChartView.isHidden = true
+            if pm10ChartViewHeight.constant != 0 {
+                pm10ChartViewHeight.constant = 0
+            }
+        } else {
+            pm10ChartView.isHidden = false
+        }
+
+        if !from.contains(.voc) {
+            vocChartView.isHidden = true
+            if vocChartViewHeight.constant != 0 {
+                vocChartViewHeight.constant = 0
+            }
+        } else {
+            vocChartView.isHidden = false
+        }
+
+        if !from.contains(.nox) {
+            noxChartView.isHidden = true
+            if noxChartViewHeight.constant != 0 {
+                noxChartViewHeight.constant = 0
+            }
+        } else {
+            noxChartView.isHidden = false
+        }
+
+        if !from.contains(.luminosity) {
+            luminosityChartView.isHidden = true
+            if luminosityChartViewHeight.constant != 0 {
+                luminosityChartViewHeight.constant = 0
+            }
+        } else {
+            luminosityChartView.isHidden = false
+        }
+
+        if !from.contains(.sound) {
+            soundChartView.isHidden = true
+            if soundChartViewHeight.constant != 0 {
+                soundChartViewHeight.constant = 0
+            }
+        } else {
+            soundChartView.isHidden = false
+        }
+
         for item in from {
             switch item {
             case .temperature:
@@ -1136,6 +1508,70 @@ extension TagChartsViewController {
                     itemCount: from.count,
                     withAnimation: withAnimation
                 )
+            case .aqi:
+                chartViews.append(aqiChartView)
+                updateChartViewConstaints(
+                    constaint: aqiChartViewHeight,
+                    totalHeight: scrollViewHeight,
+                    itemCount: from.count,
+                    withAnimation: withAnimation
+                )
+            case .co2:
+                chartViews.append(co2ChartView)
+                updateChartViewConstaints(
+                    constaint: co2ChartViewHeight,
+                    totalHeight: scrollViewHeight,
+                    itemCount: from.count,
+                    withAnimation: withAnimation
+                )
+            case .pm10:
+                chartViews.append(pm10ChartView)
+                updateChartViewConstaints(
+                    constaint: pm10ChartViewHeight,
+                    totalHeight: scrollViewHeight,
+                    itemCount: from.count,
+                    withAnimation: withAnimation
+                )
+            case .pm25:
+                chartViews.append(pm25ChartView)
+                updateChartViewConstaints(
+                    constaint: pm25ChartViewHeight,
+                    totalHeight: scrollViewHeight,
+                    itemCount: from.count,
+                    withAnimation: withAnimation
+                )
+            case .voc:
+                chartViews.append(vocChartView)
+                updateChartViewConstaints(
+                    constaint: vocChartViewHeight,
+                    totalHeight: scrollViewHeight,
+                    itemCount: from.count,
+                    withAnimation: withAnimation
+                )
+            case .nox:
+                chartViews.append(noxChartView)
+                updateChartViewConstaints(
+                    constaint: noxChartViewHeight,
+                    totalHeight: scrollViewHeight,
+                    itemCount: from.count,
+                    withAnimation: withAnimation
+                )
+            case .luminosity:
+                chartViews.append(luminosityChartView)
+                updateChartViewConstaints(
+                    constaint: luminosityChartViewHeight,
+                    totalHeight: scrollViewHeight,
+                    itemCount: from.count,
+                    withAnimation: withAnimation
+                )
+            case .sound:
+                chartViews.append(soundChartView)
+                updateChartViewConstaints(
+                    constaint: soundChartViewHeight,
+                    totalHeight: scrollViewHeight,
+                    itemCount: from.count,
+                    withAnimation: withAnimation
+                )
             default:
                 break
             }
@@ -1152,15 +1588,15 @@ extension TagChartsViewController {
             if !compactChartView {
                 totalHeight / 2
             } else {
-                totalHeight / count
+                totalHeight / 3
             }
         }
     }
 
     private func updateScrollviewBehaviour() {
         if compactChartView {
-            if UIWindow.isLandscape {
-                scrollView.isPagingEnabled = true
+            if UIWindow.isLandscape || chartModules.count > 3 {
+                scrollView.isPagingEnabled = UIWindow.isLandscape
                 scrollView.isScrollEnabled = true
                 scrollView.showsVerticalScrollIndicator = true
             } else {
@@ -1169,7 +1605,11 @@ extension TagChartsViewController {
                 scrollView.showsVerticalScrollIndicator = false
             }
         } else {
-            scrollView.isPagingEnabled = false
+            if UIWindow.isLandscape {
+                scrollView.isPagingEnabled = true
+            } else {
+                scrollView.isPagingEnabled = false
+            }
             scrollView.isScrollEnabled = true
             scrollView.showsVerticalScrollIndicator = true
         }
@@ -1237,18 +1677,52 @@ extension TagChartsViewController {
     }
 
     private func clearChartData() {
-        temperatureChartView.clearChartData()
-        temperatureChartView.underlyingView.highlightValue(nil)
-        humidityChartView.clearChartData()
-        humidityChartView.underlyingView.highlightValue(nil)
-        pressureChartView.clearChartData()
-        pressureChartView.underlyingView.highlightValue(nil)
+        [temperatureChartView,
+         humidityChartView,
+         pressureChartView,
+         aqiChartView,
+         co2ChartView,
+         pm10ChartView,
+         pm25ChartView,
+         vocChartView,
+         noxChartView,
+         luminosityChartView,
+         soundChartView,
+        ].forEach {
+            $0.clearChartData()
+        }
+
+        [temperatureChartView,
+         humidityChartView,
+         pressureChartView,
+         aqiChartView,
+         co2ChartView,
+         pm10ChartView,
+         pm25ChartView,
+         vocChartView,
+         noxChartView,
+         luminosityChartView,
+         soundChartView,
+        ].forEach {
+            $0.underlyingView.highlightValue(nil)
+        }
     }
 
     private func resetXAxisTimeline() {
-        temperatureChartView.resetCustomAxisMinMax()
-        humidityChartView.resetCustomAxisMinMax()
-        pressureChartView.resetCustomAxisMinMax()
+        [temperatureChartView,
+         humidityChartView,
+         pressureChartView,
+         aqiChartView,
+         co2ChartView,
+         pm10ChartView,
+         pm25ChartView,
+         vocChartView,
+         noxChartView,
+         luminosityChartView,
+         soundChartView,
+        ].forEach {
+            $0.resetCustomAxisMinMax()
+        }
     }
 
     // MARK: - UI RELATED METHODS
@@ -1259,15 +1733,37 @@ extension TagChartsViewController {
     }
 
     private func hideChartViews() {
-        temperatureChartView.isHidden = true
-        humidityChartView.isHidden = true
-        pressureChartView.isHidden = true
+        [temperatureChartView,
+         humidityChartView,
+         pressureChartView,
+         aqiChartView,
+         co2ChartView,
+         pm10ChartView,
+         pm25ChartView,
+         vocChartView,
+         noxChartView,
+         luminosityChartView,
+         soundChartView,
+        ].forEach {
+            $0.isHidden = true
+        }
     }
 
     private func showChartViews() {
-        temperatureChartView.isHidden = false
-        humidityChartView.isHidden = false
-        pressureChartView.isHidden = false
+        [temperatureChartView,
+         humidityChartView,
+         pressureChartView,
+         aqiChartView,
+         co2ChartView,
+         pm10ChartView,
+         pm25ChartView,
+         vocChartView,
+         noxChartView,
+         luminosityChartView,
+         soundChartView,
+        ].forEach {
+            $0.isHidden = false
+        }
     }
 
     private func hideNoDataLabel() {
@@ -1421,6 +1917,7 @@ extension TagChartsViewController {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func calculateMinMaxForChart(for view: TagChartsView) {
         if let data = view.underlyingView.data,
            let dataSet = data.dataSets.first as? LineChartDataSet {
@@ -1448,6 +1945,22 @@ extension TagChartsViewController {
                 type = .humidity
             } else if view == pressureChartView {
                 type = .pressure
+            } else if view == aqiChartView {
+                type = .aqi
+            } else if view == co2ChartView {
+                type = .co2
+            } else if view == pm25ChartView {
+                type = .pm25
+            } else if view == pm10ChartView {
+                type = .pm10
+            } else if view == vocChartView {
+                type = .voc
+            } else if view == noxChartView {
+                type = .nox
+            } else if view == luminosityChartView {
+                type = .luminosity
+            } else if view == soundChartView {
+                type = .sound
             }
 
             if minVisibleYValue == Double.greatestFiniteMagnitude {
