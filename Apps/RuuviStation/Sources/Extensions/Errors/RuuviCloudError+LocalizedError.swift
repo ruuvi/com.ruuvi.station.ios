@@ -2,7 +2,7 @@ import Foundation
 import RuuviCloud
 import RuuviLocalization
 
-extension RuuviCloudError: @retroactive LocalizedError {
+extension RuuviCloudError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case let .api(error):

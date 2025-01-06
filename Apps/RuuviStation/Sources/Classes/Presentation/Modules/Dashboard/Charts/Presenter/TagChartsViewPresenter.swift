@@ -731,7 +731,7 @@ extension TagChartsViewPresenter {
 
 extension TagChartsViewPresenter {
 
-    // swiftlint:disable:next function_body_length cyclomatic_complexity
+    // swiftlint:disable:next function_body_length
     func insertMeasurements(_ newValues: [RuuviMeasurement]) {
         guard view != nil else { return }
         ruuviTagData = interactor.ruuviTagData

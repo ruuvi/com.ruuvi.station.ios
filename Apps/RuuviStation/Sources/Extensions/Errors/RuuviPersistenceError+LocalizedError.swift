@@ -2,7 +2,7 @@ import Foundation
 import RuuviLocalization
 import RuuviPersistence
 
-extension RuuviPersistenceError: @retroactive LocalizedError {
+extension RuuviPersistenceError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case let .grdb(error):
