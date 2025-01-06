@@ -1,7 +1,7 @@
 import Foundation
 import RuuviReactor
 
-extension RuuviReactorError: @retroactive LocalizedError {
+extension RuuviReactorError: LocalizedError {
     public var errorDescription: String? {
         switch self {
         case let .ruuviPersistence(error):
