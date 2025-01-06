@@ -3,7 +3,7 @@ import Foundation
 import RuuviOntology
 import RuuviPool
 
-final class RuuviTagReadLogsOperation: AsyncOperation {
+final class RuuviTagReadLogsOperation: AsyncOperation, @unchecked Sendable {
     var uuid: String
     var mac: String?
     var sensorSettings: SensorSettings?
