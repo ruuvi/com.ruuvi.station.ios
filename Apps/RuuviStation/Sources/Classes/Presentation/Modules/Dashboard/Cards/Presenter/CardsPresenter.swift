@@ -214,16 +214,7 @@ extension CardsPresenter {
                         }) {
                     sSelf.ruuviTags[index] = sensor
                     sSelf.syncViewModels()
-                    if let viewModel = sSelf.viewModels.first(where: {
-                        ($0.luid.value != nil && $0.luid.value == sensor.luid?.any)
-                            || ($0.mac.value != nil && $0.mac.value == sensor.macId?.any)
-                    }) {
-                        sSelf.updateVisibleCard(
-                            from: viewModel,
-                            triggerScroll: true
-                        )
-                        sSelf.view?.scroll(to: sSelf.visibleViewModelIndex)
-                    }
+                    sSelf.view?.scroll(to: sSelf.visibleViewModelIndex)
                 }
 
             case let .delete(sensor):
@@ -381,10 +372,11 @@ extension CardsPresenter {
                     self,
                     uuid: luid.value,
                     closure: { [weak self] _, device in
+                        guard let sSelf = self else { return }
                         if let tag = device.ruuvi?.tag {
-                            self?.handleMeasurementPoint(
+                            sSelf.handleMeasurementPoint(
                                 tag: tag,
-                                source: .heartbeat
+                                source: sSelf.settings.appIsOnForeground ? .advertisement : .heartbeat
                             )
                         }
                     }
