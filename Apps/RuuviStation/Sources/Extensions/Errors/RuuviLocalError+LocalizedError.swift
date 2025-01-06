@@ -2,7 +2,7 @@ import Foundation
 import RuuviLocal
 import RuuviLocalization
 
-extension RuuviLocalError: LocalizedError {
+extension RuuviLocalError: @retroactive LocalizedError {
     public var errorDescription: String? {
         switch self {
         case let .disk(error):

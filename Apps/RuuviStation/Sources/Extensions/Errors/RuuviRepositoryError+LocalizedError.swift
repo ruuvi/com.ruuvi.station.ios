@@ -1,7 +1,7 @@
 import Foundation
 import RuuviRepository
 
-extension RuuviRepositoryError: LocalizedError {
+extension RuuviRepositoryError: @retroactive LocalizedError {
     public var errorDescription: String? {
         switch self {
         case let .ruuviStorage(error):

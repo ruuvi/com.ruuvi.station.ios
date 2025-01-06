@@ -2,7 +2,7 @@ import Foundation
 import RuuviCore
 import RuuviLocalization
 
-extension RuuviCoreError: LocalizedError {
+extension RuuviCoreError: @retroactive LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .locationPermissionDenied:

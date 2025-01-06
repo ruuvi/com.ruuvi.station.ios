@@ -4,7 +4,7 @@ import RuuviLocal
 import RuuviOntology
 import RuuviRepository
 
-final class RuuviServiceCloudSyncRecordsOperation: AsyncOperation {
+final class RuuviServiceCloudSyncRecordsOperation: AsyncOperation, @unchecked Sendable {
     var sensor: RuuviTagSensor
     var error: RuuviServiceError?
     var records: [AnyRuuviTagSensorRecord] = []
