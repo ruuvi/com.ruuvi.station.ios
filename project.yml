@@ -97,7 +97,7 @@ packages:
     from: 2.8.3
   Firebase: 
     url: https://github.com/firebase/firebase-ios-sdk
-    from: 10.26.0
+    from: 11.6.0
   RangeSeekSlider:
     url: https://github.com/rinat-enikeev/RangeSeekSlider
     from: 1.8.2
