@@ -17,7 +17,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(name: "Firebase", url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "10.0.0")),
+        .package(name: "Firebase", url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "11.6.0")),
         .package(path: "../RuuviStorage"),
         .package(path: "../RuuviLocal"),
         .package(path: "../RuuviOntology"),
