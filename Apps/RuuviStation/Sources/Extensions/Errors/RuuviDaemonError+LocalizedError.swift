@@ -6,7 +6,7 @@ import RuuviPool
 import RuuviReactor
 import RuuviStorage
 
-extension RuuviDaemonError: LocalizedError {
+extension RuuviDaemonError: @retroactive LocalizedError {
     public var errorDescription: String? {
         switch self {
         case let .btkit(error):

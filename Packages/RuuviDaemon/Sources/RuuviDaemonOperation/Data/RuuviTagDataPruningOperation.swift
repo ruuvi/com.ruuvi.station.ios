@@ -2,7 +2,7 @@ import Foundation
 import RuuviLocal
 import RuuviPool
 
-class RuuviTagDataPruningOperation: AsyncOperation {
+class RuuviTagDataPruningOperation: AsyncOperation, @unchecked Sendable {
     private var id: String
     private var settings: RuuviLocalSettings
     private var ruuviPool: RuuviPool

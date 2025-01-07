@@ -1,6 +1,6 @@
 import Foundation
 
-class AsyncOperation: Operation {
+class AsyncOperation: Operation, @unchecked Sendable {
     enum State: String {
         case ready, executing, finished
 

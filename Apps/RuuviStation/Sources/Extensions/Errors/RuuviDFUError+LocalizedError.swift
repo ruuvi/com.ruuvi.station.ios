@@ -2,7 +2,7 @@ import Foundation
 import RuuviDFU
 import RuuviLocalization
 
-extension RuuviDfuError: LocalizedError {
+extension RuuviDfuError: @retroactive LocalizedError {
     public var errorDescription: String? {
         description
     }

@@ -1,7 +1,7 @@
 import Foundation
 import RuuviPool
 
-extension RuuviPoolError: LocalizedError {
+extension RuuviPoolError: @retroactive LocalizedError {
     public var errorDescription: String? {
         switch self {
         case let .ruuviPersistence(error):

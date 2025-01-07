@@ -2,7 +2,7 @@ import Foundation
 import RuuviLocalization
 import RuuviService
 
-extension RuuviServiceError: LocalizedError {
+extension RuuviServiceError: @retroactive LocalizedError {
     public var errorDescription: String? {
         switch self {
         case let .btkit(error):

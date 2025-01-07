@@ -16,12 +16,12 @@ on:
 jobs:
   build:
     if: (github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true)
-    runs-on: macos-13
+    runs-on: macos-14
 
     steps:
-      - uses: maxim-lobanov/setup-xcode@v1
+      - uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
-          xcode-version: '15'
+          xcode-version: '16.1.0'
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -93,7 +93,7 @@ jobs:
 
       - name: Build app
         run: |
-          xcodebuild -project Ruuvi.xcodeproj -scheme station -configuration Alpha -archivePath ./Build/Station_Dev.xcarchive archive -allowProvisioningUpdates -quiet
+          xcodebuild -project Ruuvi.xcodeproj -scheme station -configuration Alpha -archivePath ./Build/Station_Dev.xcarchive archive -allowProvisioningUpdates -quiet -destination 'generic/platform=iOS'
       - name: Export IPA
         env:
           EXPORT_PLIST: ${{ secrets.ADHOC_EXPORT_OPTIONS }}
