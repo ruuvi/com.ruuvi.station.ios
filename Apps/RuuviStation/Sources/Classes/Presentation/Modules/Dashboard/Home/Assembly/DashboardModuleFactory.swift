@@ -91,10 +91,10 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
         view.menuDismissInteractiveTransition = menuTransition.dismiss
 
         // MARK: VIEW
-
         view.measurementService = r.resolve(RuuviServiceMeasurement.self)
 
         view.output = presenter
+        presenter.start()
 
         return view
     }
