@@ -7379,7 +7379,11 @@ extension TagSettingsViewController {
                 sender == pm10AlertCell || sender == vocAlertCell ||
                 sender == noxAlertCell || sender == soundAlertCell ||
                 sender == luminosityAlertCell {
-                alertTextField.text = measurementService.string(for: currentLowerBound)
+                alertTextField.text = measurementService.string(
+                    for: currentLowerBound,
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 2
+                )
             }
         }
 
@@ -7402,7 +7406,11 @@ extension TagSettingsViewController {
                 sender == pm10AlertCell || sender == vocAlertCell ||
                 sender == noxAlertCell || sender == soundAlertCell ||
                 sender == luminosityAlertCell {
-                alertTextField.text = measurementService.string(for: currentUpperBound)
+                alertTextField.text = measurementService.string(
+                    for: currentUpperBound,
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 2
+                )
             }
         }
 
