@@ -387,6 +387,21 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         return commonNumberFormatter.string(from: number) ?? ""
     }
 
+    public func string(
+        for measurement: Double?,
+        minimumFractionDigits: Int,
+        maximumFractionDigits: Int
+    ) -> String {
+        guard let measurement
+        else {
+            return ""
+        }
+        let number = NSNumber(value: measurement)
+        commonNumberFormatter.minimumFractionDigits = minimumFractionDigits
+        commonNumberFormatter.maximumFractionDigits = maximumFractionDigits
+        return commonNumberFormatter.string(from: number) ?? ""
+    }
+
     public func aqiString(
         for co2: Double?,
         pm25: Double?,

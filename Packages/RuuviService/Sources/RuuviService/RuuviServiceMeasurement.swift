@@ -78,6 +78,11 @@ public protocol RuuviServiceMeasurement {
     func pressureOffsetCorrectionString(for pressure: Double) -> String
 
     func string(for measurement: Double?) -> String
+    func string(
+        for measurement: Double?,
+        minimumFractionDigits: Int,
+        maximumFractionDigits: Int
+    ) -> String
 
     func aqiString(
         for co2: Double?,
