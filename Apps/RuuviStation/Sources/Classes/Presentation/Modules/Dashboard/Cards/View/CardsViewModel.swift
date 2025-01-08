@@ -4,223 +4,253 @@ import RuuviLocal
 import RuuviOntology
 import UIKit
 import MobileCoreServices
+import Combine
 
 enum CardType {
     case ruuvi
 }
 
-class CardsViewModel: NSObject {
-    var type: CardType = .ruuvi
+final class CardsViewModel: NSObject, ObservableObject {
+    // MARK: - Basic
 
-    var id: Observable<String?> = .init()
-    var luid: Observable<AnyLocalIdentifier?> = .init()
-    var mac: Observable<AnyMACIdentifier?> = .init()
-    var serviceUUID: Observable<String?> = .init()
-    var name: Observable<String?> = .init()
-    var source: Observable<RuuviTagSensorRecordSource?> = .init()
-    var temperature: Observable<Temperature?> = .init()
-    var humidity: Observable<Humidity?> = .init()
-    var pressure: Observable<Pressure?> = .init()
-    var rssi: Observable<Int?> = .init()
-    var version: Observable<Int?> = .init()
-    var voltage: Observable<Voltage?> = .init()
-    var pm1: Observable<Double?> = .init()
-    var pm2_5: Observable<Double?> = .init()
-    var pm4: Observable<Double?> = .init()
-    var pm10: Observable<Double?> = .init()
-    var co2: Observable<Double?> = .init()
-    var voc: Observable<Double?> = .init()
-    var nox: Observable<Double?> = .init()
-    var luminance: Observable<Double?> = .init()
-    var dbaAvg: Observable<Double?> = .init()
-    var dbaPeak: Observable<Double?> = .init()
-    let batteryNeedsReplacement: Observable<Bool?> = .init()
-    var background: Observable<UIImage?> = .init()
-    var date: Observable<Date?> = .init()
-    var location: Observable<Location?> = .init()
-    var currentLocation: Observable<Location?> = .init()
-    var animateRSSI: Observable<Bool?> = .init()
-    var isConnectable: Observable<Bool?> = .init()
-    var isConnected: Observable<Bool?> = .init()
-    var isCloud: Observable<Bool?> = .init()
-    var isOwner: Observable<Bool?> = .init()
-    var canShareTag: Observable<Bool?> = .init(false)
-    var alertState: Observable<AlertState?> = .init()
-    var rhAlertLowerBound: Observable<Double?> = .init()
-    var rhAlertUpperBound: Observable<Double?> = .init()
-    var networkSyncStatus: Observable<NetworkSyncStatus?> = .init(NetworkSyncStatus.none)
-    var movementCounter: Observable<Int?> = .init()
-    var isChartAvailable: Observable<Bool?> = .init(false)
-    var isAlertAvailable: Observable<Bool?> = .init(false)
+    @Published var type: CardType = .ruuvi
 
-    var latestMeasurement: Observable<RuuviTagSensorRecord?> = .init()
+    // Core sensor identifiers
+    @Published var id: String?
+    @Published var luid: AnyLocalIdentifier?
+    @Published var mac: AnyMACIdentifier?
+    @Published var serviceUUID: String?
 
-    let isTemperatureAlertOn: Observable<Bool?> = .init(false)
-    let temperatureAlertState: Observable<AlertState?> = .init()
-    let temperatureAlertMutedTill: Observable<Date?> = .init(nil)
+    // Basic metadata
+    @Published var name: String = ""
+    @Published var version: Int?
+    @Published var isConnectable: Bool = false
+    @Published var isConnected: Bool = false
+    @Published var isCloud: Bool = false
+    @Published var isOwner: Bool = false
+    @Published var canShareTag: Bool = false
 
-    let isRelativeHumidityAlertOn: Observable<Bool?> = .init(false)
-    let relativeHumidityAlertState: Observable<AlertState?> = .init()
-    let relativeHumidityAlertMutedTill: Observable<Date?> = .init(nil)
+    // Data reading source
+    @Published var source: RuuviTagSensorRecordSource?
 
-    let isPressureAlertOn: Observable<Bool?> = .init(false)
-    let pressureAlertState: Observable<AlertState?> = .init()
-    let pressureAlertMutedTill: Observable<Date?> = .init(nil)
+    // Measurement fields
+    @Published var temperature: Temperature?
+    @Published var humidity: Humidity?
+    @Published var pressure: Pressure?
+    @Published var rssi: Int?
+    @Published var voltage: Voltage?
+    @Published var pm1: Double?
+    @Published var pm2_5: Double?
+    @Published var pm4: Double?
+    @Published var pm10: Double?
+    @Published var co2: Double?
+    @Published var voc: Double?
+    @Published var nox: Double?
+    @Published var luminance: Double?
+    @Published var dbaAvg: Double?
+    @Published var dbaPeak: Double?
 
-    let isSignalAlertOn: Observable<Bool?> = .init(false)
-    let signalAlertState: Observable<AlertState?> = .init()
-    let signalAlertMutedTill: Observable<Date?> = .init(nil)
+    // Battery
+    @Published var batteryNeedsReplacement: Bool?
 
-    let isMovementAlertOn: Observable<Bool?> = .init(false)
-    let movementAlertState: Observable<AlertState?> = .init()
-    let movementAlertMutedTill: Observable<Date?> = .init(nil)
+    // Background
+    @Published var background: UIImage?
 
-    let isConnectionAlertOn: Observable<Bool?> = .init(false)
-    let connectionAlertState: Observable<AlertState?> = .init()
-    let connectionAlertMutedTill: Observable<Date?> = .init(nil)
+    // Date & location
+    @Published var date: Date?
 
-    let isCarbonDioxideAlertOn: Observable<Bool?> = .init(false)
-    let carbonDioxideAlertState: Observable<AlertState?> = .init()
-    let carbonDioxideAlertMutedTill: Observable<Date?> = .init(nil)
+    // Others
+    @Published var animateRSSI: Bool?
+    @Published var alertState: AlertState?
+    @Published var rhAlertLowerBound: Double?
+    @Published var rhAlertUpperBound: Double?
+    @Published var networkSyncStatus: NetworkSyncStatus = .none
+    @Published var movementCounter: Int?
+    @Published var isChartAvailable: Bool?
+    @Published var isAlertAvailable: Bool?
 
-    let isPMatter1AlertOn: Observable<Bool?> = .init(false)
-    let pMatter1AlertState: Observable<AlertState?> = .init()
-    let pMatter1AlertMutedTill: Observable<Date?> = .init(nil)
+    // Latest measurement record
+    @Published var latestMeasurement: RuuviTagSensorRecord?
 
-    let isPMatter2_5AlertOn: Observable<Bool?> = .init(false)
-    let pMatter2_5AlertState: Observable<AlertState?> = .init()
-    let pMatter2_5AlertMutedTill: Observable<Date?> = .init(nil)
+    // MARK: - Alerts
 
-    let isPMatter4AlertOn: Observable<Bool?> = .init(false)
-    let pMatter4AlertState: Observable<AlertState?> = .init()
-    let pMatter4AlertMutedTill: Observable<Date?> = .init(nil)
+    @Published var isTemperatureAlertOn: Bool?
+    @Published var temperatureAlertState: AlertState?
+    @Published var temperatureAlertMutedTill: Date?
 
-    let isPMatter10AlertOn: Observable<Bool?> = .init(false)
-    let pMatter10AlertState: Observable<AlertState?> = .init()
-    let pMatter10AlertMutedTill: Observable<Date?> = .init(nil)
+    @Published var isRelativeHumidityAlertOn: Bool?
+    @Published var relativeHumidityAlertState: AlertState?
+    @Published var relativeHumidityAlertMutedTill: Date?
 
-    let isVOCAlertOn: Observable<Bool?> = .init(false)
-    let vocAlertState: Observable<AlertState?> = .init()
-    let vocAlertMutedTill: Observable<Date?> = .init(nil)
+    @Published var isPressureAlertOn: Bool?
+    @Published var pressureAlertState: AlertState?
+    @Published var pressureAlertMutedTill: Date?
 
-    let isNOXAlertOn: Observable<Bool?> = .init(false)
-    let noxAlertState: Observable<AlertState?> = .init()
-    let noxAlertMutedTill: Observable<Date?> = .init(nil)
+    @Published var isSignalAlertOn: Bool?
+    @Published var signalAlertState: AlertState?
+    @Published var signalAlertMutedTill: Date?
 
-    let isSoundAlertOn: Observable<Bool?> = .init(false)
-    let soundAlertState: Observable<AlertState?> = .init()
-    let soundAlertMutedTill: Observable<Date?> = .init(nil)
+    @Published var isMovementAlertOn: Bool?
+    @Published var movementAlertState: AlertState?
+    @Published var movementAlertMutedTill: Date?
 
-    let isLuminosityAlertOn: Observable<Bool?> = .init(false)
-    let luminosityAlertState: Observable<AlertState?> = .init()
-    let luminosityAlertMutedTill: Observable<Date?> = .init(nil)
+    @Published var isConnectionAlertOn: Bool?
+    @Published var connectionAlertState: AlertState?
+    @Published var connectionAlertMutedTill: Date?
 
-    let isCloudConnectionAlertOn: Observable<Bool?> = .init(false)
-    let cloudConnectionAlertState: Observable<AlertState?> = .init()
+    @Published var isCarbonDioxideAlertOn: Bool?
+    @Published var carbonDioxideAlertState: AlertState?
+    @Published var carbonDioxideAlertMutedTill: Date?
 
-    private var lastUpdateRssi: Observable<CFTimeInterval?> = .init(CFAbsoluteTimeGetCurrent())
+    @Published var isPMatter1AlertOn: Bool?
+    @Published var pMatter1AlertState: AlertState?
+    @Published var pMatter1AlertMutedTill: Date?
+
+    @Published var isPMatter2_5AlertOn: Bool?
+    @Published var pMatter2_5AlertState: AlertState?
+    @Published var pMatter2_5AlertMutedTill: Date?
+
+    @Published var isPMatter4AlertOn: Bool?
+    @Published var pMatter4AlertState: AlertState?
+    @Published var pMatter4AlertMutedTill: Date?
+
+    @Published var isPMatter10AlertOn: Bool?
+    @Published var pMatter10AlertState: AlertState?
+    @Published var pMatter10AlertMutedTill: Date?
+
+    @Published var isVOCAlertOn: Bool?
+    @Published var vocAlertState: AlertState?
+    @Published var vocAlertMutedTill: Date?
+
+    @Published var isNOXAlertOn: Bool?
+    @Published var noxAlertState: AlertState?
+    @Published var noxAlertMutedTill: Date?
+
+    @Published var isSoundAlertOn: Bool?
+    @Published var soundAlertState: AlertState?
+    @Published var soundAlertMutedTill: Date?
+
+    @Published var isLuminosityAlertOn: Bool?
+    @Published var luminosityAlertState: AlertState?
+    @Published var luminosityAlertMutedTill: Date?
+
+    @Published var isCloudConnectionAlertOn: Bool?
+    @Published var cloudConnectionAlertState: AlertState?
+
+    // MARK: - Private
 
     private let batteryStatusProvider = RuuviTagBatteryStatusProvider()
 
+    // MARK: - Init
+
     init(_ ruuviTag: RuuviTagSensor) {
+        super.init()
         type = .ruuvi
-        id.value = ruuviTag.id
-        luid.value = ruuviTag.luid?.any
+        id = ruuviTag.id
+        luid = ruuviTag.luid?.any
         if let macId = ruuviTag.macId?.any {
-            mac.value = macId
+            mac = macId
         }
-        serviceUUID.value = ruuviTag.serviceUUID
-        name.value = ruuviTag.name
-        version.value = ruuviTag.version
-        isConnectable.value = ruuviTag.isConnectable
-        isChartAvailable.value = ruuviTag.isConnectable || ruuviTag.isCloud || ruuviTag.serviceUUID != nil
-        isAlertAvailable.value = ruuviTag.isCloud || isConnected.value ?? false || ruuviTag.serviceUUID != nil
-        isCloud.value = ruuviTag.isCloud
-        isOwner.value = ruuviTag.isOwner
-        canShareTag.value =
-            (ruuviTag.isOwner && ruuviTag.isClaimed) || ruuviTag.canShare
+        serviceUUID = ruuviTag.serviceUUID
+        name = ruuviTag.name
+        version = ruuviTag.version
+        isConnectable = ruuviTag.isConnectable
+        isChartAvailable = ruuviTag.isConnectable || ruuviTag.isCloud || ruuviTag.serviceUUID != nil
+        isAlertAvailable = ruuviTag.isCloud || isConnected || ruuviTag.serviceUUID != nil
+        isCloud = ruuviTag.isCloud
+        isOwner = ruuviTag.isOwner
+        canShareTag = (ruuviTag.isOwner && ruuviTag.isClaimed) || ruuviTag.canShare
     }
 
+    // MARK: - Update Methods
+
     func update(_ record: RuuviTagSensorRecord) {
-        latestMeasurement.value = record
-        temperature.value = record.temperature
-        humidity.value = record.humidity
-        pressure.value = record.pressure
+        latestMeasurement = record
+        temperature = record.temperature
+        humidity = record.humidity
+        pressure = record.pressure
+
         if let macId = record.macId?.any {
-            mac.value = macId
+            mac = macId
         }
-        date.value = record.date
-        rssi.value = record.rssi
-        movementCounter.value = record.movementCounter
-        pm1.value = record.pm1
-        pm2_5.value = record.pm2_5
-        pm4.value = record.pm4
-        pm10.value = record.pm10
-        co2.value = record.co2
-        voc.value = record.voc
-        nox.value = record.nox
-        luminance.value = record.luminance
-        dbaAvg.value = record.dbaAvg
-        dbaPeak.value = record.dbaPeak
-        source.value = record.source
-        batteryNeedsReplacement.value =
-            batteryStatusProvider
-                .batteryNeedsReplacement(
-                    temperature: record.temperature,
-                    voltage: record.voltage
-                )
-        isAlertAvailable.value = isCloud.value ?? false || isConnected.value ?? false || serviceUUID.value != nil
+
+        date = record.date
+        rssi = record.rssi
+        movementCounter = record.movementCounter
+        pm1 = record.pm1
+        pm2_5 = record.pm2_5
+        pm4 = record.pm4
+        pm10 = record.pm10
+        co2 = record.co2
+        voc = record.voc
+        nox = record.nox
+        luminance = record.luminance
+        dbaAvg = record.dbaAvg
+        dbaPeak = record.dbaPeak
+        source = record.source
+
+        batteryNeedsReplacement = batteryStatusProvider.batteryNeedsReplacement(
+            temperature: record.temperature,
+            voltage: record.voltage
+        )
+
+        // isAlertAvailable might change if data source changed
+        isAlertAvailable = isCloud || isConnected || serviceUUID != nil
     }
 
     func update(with ruuviTag: RuuviTag) {
-        if !ruuviTag.isConnected, isConnectable.value != ruuviTag.isConnectable, ruuviTag.isConnectable {
-            isConnectable.value = ruuviTag.isConnectable
-            if let isChart = isChartAvailable.value,
-               !isChart,
-               ruuviTag.isConnectable {
-                isChartAvailable.value = true
+        // If connectable changes
+        if !ruuviTag.isConnected,
+            isConnectable != ruuviTag.isConnectable,
+            ruuviTag.isConnectable {
+            isConnectable = ruuviTag.isConnectable
+            if let isChart = isChartAvailable, !isChart, ruuviTag.isConnectable {
+                isChartAvailable = true
             }
         } else {
-            if let isChart = isChartAvailable.value,
-               !isChart,
-               ruuviTag.serviceUUID != nil {
-                isChartAvailable.value = true
+            if let isChart = isChartAvailable, !isChart, ruuviTag.serviceUUID != nil {
+                isChartAvailable = true
             }
         }
-        isAlertAvailable.value = isCloud.value ?? false ||
-            ruuviTag.isConnected || ruuviTag.serviceUUID != nil
-        temperature.value = ruuviTag.temperature
-        humidity.value = ruuviTag.humidity
-        pressure.value = ruuviTag.pressure
-        version.value = ruuviTag.version
-        voltage.value = ruuviTag.voltage
+
+        isAlertAvailable = isCloud || ruuviTag.isConnected || ruuviTag.serviceUUID != nil
+        temperature = ruuviTag.temperature
+        humidity = ruuviTag.humidity
+        pressure = ruuviTag.pressure
+        version = ruuviTag.version
+        voltage = ruuviTag.voltage
+
         if let macId = ruuviTag.mac?.mac.any {
-            mac.value = macId
+            mac = macId
         }
-        serviceUUID.value = ruuviTag.serviceUUID
-        date.value = Date()
-        movementCounter.value = ruuviTag.movementCounter
-        pm1.value = ruuviTag.pm1
-        pm2_5.value = ruuviTag.pm2_5
-        pm4.value = ruuviTag.pm4
-        pm10.value = ruuviTag.pm10
-        co2.value = ruuviTag.co2
-        voc.value = ruuviTag.voc
-        nox.value = ruuviTag.nox
-        luminance.value = ruuviTag.luminance
-        dbaAvg.value = ruuviTag.dbaAvg
-        dbaPeak.value = ruuviTag.dbaPeak
-        source.value = ruuviTag.source
+
+        serviceUUID = ruuviTag.serviceUUID
+        date = Date()
+        movementCounter = ruuviTag.movementCounter
+        pm1 = ruuviTag.pm1
+        pm2_5 = ruuviTag.pm2_5
+        pm4 = ruuviTag.pm4
+        pm10 = ruuviTag.pm10
+        co2 = ruuviTag.co2
+        voc = ruuviTag.voc
+        nox = ruuviTag.nox
+        luminance = ruuviTag.luminance
+        dbaAvg = ruuviTag.dbaAvg
+        dbaPeak = ruuviTag.dbaPeak
+        source = ruuviTag.source
     }
 }
+
+// MARK: - Reorderable
 
 extension CardsViewModel: Reorderable {
     var orderElement: String {
-        id.value ?? UUID().uuidString
+        id ?? UUID().uuidString
     }
 }
 
-// Comform to NSItemProviderWriting to enable drag and drop of item with CardsViewModel
+// MARK: - NSItemProviderWriting for Drag & Drop
+
 extension CardsViewModel: NSItemProviderWriting {
     public static var writableTypeIdentifiersForItemProvider: [String] {
         return [kUTTypePlainText as String]

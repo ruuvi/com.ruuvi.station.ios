@@ -185,8 +185,8 @@ class CardsViewController: UIViewController {
         didSet {
             bindCurrentVisibleItem()
             updateCardInfo(
-                with: currentVisibleItem?.name.value,
-                image: currentVisibleItem?.background.value
+                with: currentVisibleItem?.name,
+                image: currentVisibleItem?.background
             )
             updateTopActionButtonVisibility()
         }
@@ -563,8 +563,8 @@ extension CardsViewController: CardsViewInput {
 
     func applyUpdate(to viewModel: CardsViewModel) {
         if let index = viewModels.firstIndex(where: { vm in
-            vm.luid.value != nil && vm.luid.value == viewModel.luid.value ||
-                vm.mac.value != nil && vm.mac.value == viewModel.mac.value
+            vm.luid != nil && vm.luid == viewModel.luid ||
+                vm.mac != nil && vm.mac == viewModel.mac
         }) {
             let indexPath = IndexPath(item: index, section: 0)
             if let cell = collectionView
@@ -583,7 +583,7 @@ extension CardsViewController: CardsViewInput {
         to image: UIImage?
     ) {
         if viewModel == currentVisibleItem {
-            updateCardInfo(with: viewModel.name.value, image: image)
+            updateCardInfo(with: viewModel.name, image: image)
         }
     }
 
@@ -728,49 +728,49 @@ extension CardsViewController {
             return
         }
 
-        view.bind(currentVisibleItem.name) { [weak self] _, name in
-            self?.updateCardInfo(with: name, image: currentVisibleItem.background.value)
-        }
-
-        view.bind(currentVisibleItem.temperatureAlertMutedTill) { [weak self] _, _ in
-            self?.restartAnimations()
-        }
-
-        view.bind(currentVisibleItem.relativeHumidityAlertMutedTill) { [weak self] _, _ in
-            self?.restartAnimations()
-        }
-
-        view.bind(currentVisibleItem.pressureAlertMutedTill) { [weak self] _, _ in
-            self?.restartAnimations()
-        }
-
-        view.bind(currentVisibleItem.signalAlertMutedTill) { [weak self] _, _ in
-            self?.restartAnimations()
-        }
-
-        view.bind(currentVisibleItem.movementAlertMutedTill) { [weak self] _, _ in
-            self?.restartAnimations()
-        }
-
-        view.bind(currentVisibleItem.connectionAlertMutedTill) { [weak self] _, _ in
-            self?.restartAnimations()
-        }
-
-        view.bind(currentVisibleItem.alertState) { [weak self] _, _ in
-            self?.restartAnimations()
-        }
-
-        view.bind(currentVisibleItem.isChartAvailable) { [weak self] _, _ in
-            self?.updateTopActionButtonVisibility()
-        }
-
-        view.bind(currentVisibleItem.isAlertAvailable) { [weak self] _, _ in
-            self?.updateTopActionButtonVisibility()
-        }
-
-        view.bind(currentVisibleItem.isConnected) { [weak self] _, _ in
-            self?.updateTopActionButtonVisibility()
-        }
+//        view.bind(currentVisibleItem.name) { [weak self] _, name in
+//            self?.updateCardInfo(with: name, image: currentVisibleItem.background.value)
+//        }
+//
+//        view.bind(currentVisibleItem.temperatureAlertMutedTill) { [weak self] _, _ in
+//            self?.restartAnimations()
+//        }
+//
+//        view.bind(currentVisibleItem.relativeHumidityAlertMutedTill) { [weak self] _, _ in
+//            self?.restartAnimations()
+//        }
+//
+//        view.bind(currentVisibleItem.pressureAlertMutedTill) { [weak self] _, _ in
+//            self?.restartAnimations()
+//        }
+//
+//        view.bind(currentVisibleItem.signalAlertMutedTill) { [weak self] _, _ in
+//            self?.restartAnimations()
+//        }
+//
+//        view.bind(currentVisibleItem.movementAlertMutedTill) { [weak self] _, _ in
+//            self?.restartAnimations()
+//        }
+//
+//        view.bind(currentVisibleItem.connectionAlertMutedTill) { [weak self] _, _ in
+//            self?.restartAnimations()
+//        }
+//
+//        view.bind(currentVisibleItem.alertState) { [weak self] _, _ in
+//            self?.restartAnimations()
+//        }
+//
+//        view.bind(currentVisibleItem.isChartAvailable) { [weak self] _, _ in
+//            self?.updateTopActionButtonVisibility()
+//        }
+//
+//        view.bind(currentVisibleItem.isAlertAvailable) { [weak self] _, _ in
+//            self?.updateTopActionButtonVisibility()
+//        }
+//
+//        view.bind(currentVisibleItem.isConnected) { [weak self] _, _ in
+//            self?.updateTopActionButtonVisibility()
+//        }
     }
 }
 
@@ -782,12 +782,12 @@ extension CardsViewController {
 
     private func restartAnimations() {
         let mutedTills = [
-            currentVisibleItem?.temperatureAlertMutedTill.value,
-            currentVisibleItem?.relativeHumidityAlertMutedTill.value,
-            currentVisibleItem?.pressureAlertMutedTill.value,
-            currentVisibleItem?.signalAlertMutedTill.value,
-            currentVisibleItem?.movementAlertMutedTill.value,
-            currentVisibleItem?.connectionAlertMutedTill.value,
+            currentVisibleItem?.temperatureAlertMutedTill,
+            currentVisibleItem?.relativeHumidityAlertMutedTill,
+            currentVisibleItem?.pressureAlertMutedTill,
+            currentVisibleItem?.signalAlertMutedTill,
+            currentVisibleItem?.movementAlertMutedTill,
+            currentVisibleItem?.connectionAlertMutedTill,
         ]
 
         if mutedTills.first(where: { $0 != nil }) != nil {
@@ -796,7 +796,7 @@ extension CardsViewController {
             return
         }
 
-        if let state = currentVisibleItem?.alertState.value {
+        if let state = currentVisibleItem?.alertState {
             switch state {
             case .empty:
                 alertButton.image = RuuviAsset.iconAlertOff.image
@@ -840,7 +840,7 @@ extension CardsViewController {
             return
         }
 
-        if let isChartAvaiable = viewModel.isChartAvailable.value {
+        if let isChartAvaiable = viewModel.isChartAvailable {
             chartButton.isHidden = !isChartAvaiable
         } else {
             chartButton.isHidden = true
@@ -849,14 +849,14 @@ extension CardsViewController {
         let type = viewModel.type
         switch type {
         case .ruuvi:
-            if let isAlertAvailable = viewModel.isAlertAvailable.value {
+            if let isAlertAvailable = viewModel.isAlertAvailable {
                 alertButton.isHidden = !isAlertAvailable
                 alertButtonHidden.isUserInteractionEnabled = isAlertAvailable
             } else {
                 alertButton.isHidden =
-                    !viewModel.isConnected.value.bound || viewModel.serviceUUID.value == nil
+                    !viewModel.isConnected || viewModel.serviceUUID == nil
                 alertButtonHidden.isUserInteractionEnabled =
-                    viewModel.isConnected.value.bound || viewModel.serviceUUID.value != nil
+                    viewModel.isConnected || viewModel.serviceUUID != nil
             }
         }
     }

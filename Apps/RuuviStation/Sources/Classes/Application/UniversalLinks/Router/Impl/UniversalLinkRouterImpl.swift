@@ -24,7 +24,7 @@ class UniversalLinkRouterImpl: UniversalLinkRouter {
     ) {
         if let dashboardViewController = transitionHandler as? DashboardViewController {
             if let viewModel = dashboardViewController.viewModels.first(where: { viewModel in
-                viewModel.mac.value?.value == macId || viewModel.luid.value?.value == macId
+                viewModel.mac?.value == macId || viewModel.luid?.value == macId
             }) {
                 dashboardViewController.output.viewDidTriggerOpenSensorCardFromWidget(for: viewModel)
                 settings.setCardToOpenFromWidget(for: nil)
