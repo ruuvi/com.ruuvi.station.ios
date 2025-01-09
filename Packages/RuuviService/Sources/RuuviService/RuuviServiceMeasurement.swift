@@ -77,12 +77,10 @@ public protocol RuuviServiceMeasurement {
     func pressureOffsetCorrection(for pressure: Double) -> Double
     func pressureOffsetCorrectionString(for pressure: Double) -> String
 
+    // Always returns 2 decimal points fraction value.
     func string(for measurement: Double?) -> String
-    func string(
-        for measurement: Double?,
-        minimumFractionDigits: Int,
-        maximumFractionDigits: Int
-    ) -> String
+    // Returns based on minimum 0 and maximum 2 decimal points fraction value.
+    func string(from value: Double?) -> String
 
     func aqiString(
         for co2: Double?,

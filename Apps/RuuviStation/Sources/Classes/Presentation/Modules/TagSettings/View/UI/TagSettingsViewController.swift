@@ -7380,9 +7380,7 @@ extension TagSettingsViewController {
                 sender == noxAlertCell || sender == soundAlertCell ||
                 sender == luminosityAlertCell {
                 alertTextField.text = measurementService.string(
-                    for: currentLowerBound,
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 2
+                    from: currentLowerBound
                 )
             }
         }
@@ -7407,9 +7405,7 @@ extension TagSettingsViewController {
                 sender == noxAlertCell || sender == soundAlertCell ||
                 sender == luminosityAlertCell {
                 alertTextField.text = measurementService.string(
-                    for: currentUpperBound,
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 2
+                    from: currentUpperBound
                 )
             }
         }
