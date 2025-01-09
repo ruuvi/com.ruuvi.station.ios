@@ -52,7 +52,16 @@ public final class RuuviServiceMeasurementImpl: NSObject {
 
     private var observers: [NSObjectProtocol] = []
 
-    // Common formatted
+    // Common formatter
+    private var minimalNumberFormatter: NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale.autoupdatingCurrent
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2
+        return formatter
+    }
+
     private var commonNumberFormatter: NumberFormatter {
         let formatter = NumberFormatter()
         formatter.locale = Locale.autoupdatingCurrent
@@ -388,18 +397,14 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     }
 
     public func string(
-        for measurement: Double?,
-        minimumFractionDigits: Int,
-        maximumFractionDigits: Int
+        from double: Double?
     ) -> String {
-        guard let measurement
+        guard let double
         else {
             return ""
         }
-        let number = NSNumber(value: measurement)
-        commonNumberFormatter.minimumFractionDigits = minimumFractionDigits
-        commonNumberFormatter.maximumFractionDigits = maximumFractionDigits
-        return commonNumberFormatter.string(from: number) ?? ""
+        let number = NSNumber(value: double)
+        return minimalNumberFormatter.string(from: number) ?? ""
     }
 
     public func aqiString(
