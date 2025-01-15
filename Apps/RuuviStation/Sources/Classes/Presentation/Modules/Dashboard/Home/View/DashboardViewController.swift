@@ -25,6 +25,7 @@ class DashboardViewController: UIViewController {
 
     var dashboardType: DashboardType! {
         didSet {
+            guard oldValue != dashboardType else { return }
             viewButton.updateMenu(with: viewToggleMenuOptions())
             reloadCollectionView(redrawLayout: true)
         }
@@ -246,24 +247,14 @@ private extension DashboardViewController {
 
     private func reloadCollectionView(redrawLayout: Bool = false) {
         DispatchQueue.main.async { [weak self] in
+            guard let sSelf = self else { return }
             if redrawLayout {
-                guard let self else { return }
-                let flowLayout = createLayout()
-                collectionView.setCollectionViewLayout(
-                    flowLayout,
-                    animated: false,
-                    completion: { _ in
-                        guard self.viewModels.count > 0 else { return }
-                        let indexPath = IndexPath(item: 0, section: 0)
-                        self.collectionView.scrollToItem(
-                            at: indexPath,
-                            at: .top,
-                            animated: false
-                        )
-                    }
-                )
+                self?.collectionView.collectionViewLayout.invalidateLayout()
             }
-            self?.collectionView.reloadWithoutAnimation()
+
+            let oldOffset = sSelf.collectionView.contentOffset
+            sSelf.collectionView.reloadWithoutAnimation()
+            sSelf.collectionView.setContentOffset(oldOffset, animated: false)
         }
     }
 
