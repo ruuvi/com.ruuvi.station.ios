@@ -1,5 +1,7 @@
 import SwiftUI
 import RuuviLocalization
+import RuuviOntology
+import RuuviService
 
 struct DashboardView: View {
     @EnvironmentObject var state: DashboardViewState
@@ -10,7 +12,7 @@ struct DashboardView: View {
         NavigationView {
             ScrollViewReader { proxy in
                 ScrollView {
-                    LazyVStack {
+                    LazyVStack(spacing: 6) {
                         ForEach(state.items, id: \.id) { viewModel in
                             DashboardViewRowSwiftUI(
                                 viewModel: viewModel,
@@ -19,147 +21,237 @@ struct DashboardView: View {
                             .id(viewModel.id)
                         }
                     }
+                    .padding()
                 }
-//                .scrollPosition(id: $state.scrollManager.currentPosition)
-                .simultaneousGesture(
-                    DragGesture(minimumDistance: 0)
-                        .updating($isScrolling) { _, state, _ in
-                            state = true
-                            self.state.scrollManager.updateScrolling(true)
-                        }
-                        .onEnded { _ in
-                            self.state.scrollManager.updateScrolling(false)
-                        }
+                .background(
+                    RuuviColor.dashboardBG.color
+                        .toColor()
+                        .edgesIgnoringSafeArea(.bottom)
                 )
-                .onChange(of: state.scrollManager.currentPosition) { position in
-                    if let position = position {
-                        withAnimation {
-                            proxy.scrollTo(position, anchor: .center)
-                        }
-                    }
-                }
             }
             .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
 
-import SwiftUI
-import RuuviOntology
-import RuuviService
+struct CardsBackgroundViewWrapper: UIViewRepresentable {
+    var backgroundImage: UIImage?
+    var withAnimation: Bool = true
 
-/// 1) A small UIViewRepresentable wrapper around your DashboardIndicatorView.
-struct DashboardIndicatorRepresentable: UIViewRepresentable {
-    /// You might inject a pre-configured DashboardIndicatorView
-    /// or create it dynamically; here's a minimal example:
-    let indicatorView = DashboardIndicatorView()
-
-    /// Optionally store some text/values to set on the indicator.
-    let value: String?
-    let unit: String?
-
-    func makeUIView(context: Context) -> DashboardIndicatorView {
-        indicatorView
+    func makeUIView(context: Context) -> CardsBackgroundView {
+        let view = CardsBackgroundView()
+        return view
     }
 
-    func updateUIView(_ uiView: DashboardIndicatorView, context: Context) {
-        uiView.setValue(with: value, unit: unit)
+    func updateUIView(_ uiView: CardsBackgroundView, context: Context) {
+        uiView.setBackgroundImage(with: backgroundImage, withAnimation: withAnimation)
     }
 }
 
-/// 2) A small UIViewRepresentable for your DashboardIndicatorProminentView.
-struct DashboardIndicatorProminentRepresentable: UIViewRepresentable {
-    let prominentView = DashboardIndicatorProminentView()
+struct DashboardIndicatorViewSwiftUIView: View {
+    // Properties for the value and unit
+    let value: String?
+    let unit: String?
 
-    /// Example data
+    // Property to handle highlight state
+    let highlight: Bool
+
+    // Colors
+    private var valueColor: Color {
+        highlight ? Color(RuuviColor.orangeColor.color) : Color(RuuviColor.dashboardIndicator.color)
+    }
+
+    private var unitColor: Color {
+        highlight ? Color(RuuviColor.orangeColor.color) : Color(RuuviColor.dashboardIndicator.color)
+    }
+
+    var body: some View {
+        HStack(spacing: 4) {
+            // Value Label
+            Text(value ?? "")
+                .font(.custom("Montserrat-Bold", size: 14))
+                .foregroundColor(valueColor)
+                .lineLimit(nil)
+
+            // Unit Label
+            Text(unit ?? "")
+                .font(.custom("Muli-Regular", size: 12))
+                .foregroundColor(unitColor)
+                .lineLimit(nil)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+struct DashboardIndicatorProminentViewSwiftUIView: View {
+    // Properties
     let value: String?
     let superscriptValue: String?
     let subscriptValue: String?
     let showProgress: Bool
-    let progressColor: UIColor?
+    let progressColor: Color?
 
-    func makeUIView(context: Context) -> DashboardIndicatorProminentView {
-        prominentView
+    // For progress value (converting to percentage)
+    private var progress: Float {
+        Float(value?.intValue ?? 0) / 100
     }
 
-    func updateUIView(_ uiView: DashboardIndicatorProminentView, context: Context) {
-        uiView.setValue(
-            with: value,
-            superscriptValue: superscriptValue,
-            subscriptValue: subscriptValue,
-            showProgress: showProgress,
-            progressColor: progressColor
-        )
+    var body: some View {
+        ZStack {
+            VStack(alignment: .leading, spacing: 0) {
+                // Value and superscript/subscript container
+                HStack(alignment: .center, spacing: 6) {
+                    // Main Value
+                    Text(value ?? "")
+                        .font(.custom("Oswald-Bold", size: 30))
+                        .foregroundColor(
+                            RuuviColor.dashboardIndicatorBig.color.toColor()
+                        )
+
+                    VStack(alignment: .leading, spacing: -2) {
+                        Spacer()
+                        // Superscript
+                        Text(superscriptValue ?? "")
+                            .font(.custom("Oswald-Regular", size: 12))
+                            .foregroundColor(
+                                RuuviColor.dashboardIndicatorBig.color.toColor()
+                            )
+
+                        // Subscript
+                        Text(subscriptValue ?? "")
+                            .font(.custom("Muli-Bold", size: 12))
+                            .foregroundColor(
+                                RuuviColor.dashboardIndicator.color
+                                    .toColor()
+                                    .opacity(0.6)
+                            )
+                        Spacer()
+                    }
+                }
+
+                // Progress View
+                if showProgress {
+                    ProgressView(value: progress)
+                        .progressViewStyle(
+                            LinearProgressViewStyle(tint: progressColor ?? .primary)
+                        )
+                        .frame(width: 120, height: 4)
+                        .padding(.bottom, 4)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+
     }
 }
 
-/// 3) The main SwiftUI view that mimics the DashboardViewRow’s layout,
-///    while embedding the two custom UIView types via representables.
+// swiftlint:disable:next type_body_length
 struct DashboardViewRowSwiftUI: View {
-    // Provide your existing data + measurement service
     @ObservedObject var viewModel: CardsViewModel
     var measurementService: RuuviServiceMeasurement?
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
-    // Example body replicating the structure of DashboardViewRow
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            // Top row: Name label + optional alert icon, etc.
-            HStack(alignment: .top, spacing: 8) {
-                Text(viewModel.name)
-                    .font(.custom("Montserrat-Bold", size: 14))
-                    .foregroundColor(RuuviColor.dashboardIndicatorBig.color.toColor())
 
-                // Alert icon if needed
-                if let alertIconName = alertIconName() {
-                    Image(uiImage: alertIconName)
-                        .renderingMode(.template)
-                        .foregroundColor(alertIconTintColor())
-                }
-                // "More" button, etc., would go here if you replicate that logic
-            }
+        ZStack {
+            RoundedRectangle(cornerRadius: 8)
+                .fill(RuuviColor.dashboardCardBG.color.toColor())
 
-            // The "Prominent" indicator row
-            DashboardIndicatorProminentRepresentable(
-                value: computeProminentValue().value,
-                superscriptValue: computeProminentValue().superscriptValue,
-                subscriptValue: computeProminentValue().subscriptValue,
-                showProgress: computeProminentValue().showProgress,
-                progressColor: computeProminentValue().progressColor
-            )
-            .frame(height: 40) // or as needed
-
-            // Additional indicators in a grid
-            buildIndicatorGrid()
-
-            // The row with data source icon + updatedAt + battery
-            HStack(spacing: 8) {
-                // For a dataSource icon if needed:
-                if let dataSourceIcon = dataSourceIcon() {
-                    Image(uiImage: dataSourceIcon)
-                        .renderingMode(.template)
-                        .foregroundColor(RuuviColor
-                            .dashboardIndicator.color
-                            .withAlphaComponent(0.8)
-                            .toColor())
-                        .frame(width: 22, height: 22)
+            HStack {
+                if let background = viewModel.background {
+                    CardsBackgroundViewWrapper(backgroundImage: background)
+                        .aspectRatio(contentMode: .fill)
+                        .frame(
+                            width: 100
+                        )
+                        .clipped()
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
 
-                // updatedAt text
-                UpdatedAtTextView(date: viewModel.date)
-//                Text(updatedAtText() ?? "")
-//                    .font(.custom("Muli-Regular", size: 10))
-//                    .foregroundColor(RuuviColor
-//                        .dashboardIndicator.color
-//                        .withAlphaComponent(0.8)
-//                        .toColor())
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(alignment: .top, spacing: 8) {
+                        Text(viewModel.name)
+                            .lineLimit(2)
+                            .font(.custom("Montserrat-Bold", size: 14))
+                            .foregroundColor(RuuviColor.dashboardIndicatorBig.color.toColor())
+                            .frame(maxWidth: .infinity, alignment: .leading)
 
-                // Battery indicator if needed, or replicate BatteryLevelView
+//                        Spacer()
+
+                        // Alert icon
+                        if let alertIconName = alertIconName() {
+                            Image(uiImage: alertIconName)
+                                .renderingMode(.template)
+                                .foregroundColor(alertIconTintColor())
+                        }
+
+                        // More action
+                        Menu {
+                            Button {
+                                print("Change country setting")
+                            } label: {
+                                Label("Choose Country", systemImage: "globe")
+                            }
+
+                            Button {
+                                print("Enable geolocation")
+                            } label: {
+                                Label("Detect Location", systemImage: "location.circle")
+                            }
+                        } label: {
+                            ZStack {
+                                Image(uiImage: RuuviAsset.more3dot.image)
+                                    .renderingMode(.template)
+                                    .foregroundColor(RuuviColor.dashboardIndicatorBig.color.toColor())
+                            }
+                            .frame(width: 36, height: 36)
+                        }
+                        .padding(.top, -4)
+                    }
+                    .padding(.top, 8)
+                    .padding(.leading, 8)
+                    .padding(.trailing, 0)
+
+                    DashboardIndicatorProminentViewSwiftUIView(
+                        value: computeProminentValue().value,
+                        superscriptValue: computeProminentValue().superscriptValue,
+                        subscriptValue: computeProminentValue().subscriptValue,
+                        showProgress: computeProminentValue().showProgress,
+                        progressColor: computeProminentValue().progressColor?
+                            .toColor()
+                    )
+                    .padding(.horizontal, 8)
+                    .padding(.top, -24)
+
+                    buildIndicatorGrid()
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, -6)
+
+                    // The row with data source icon + updatedAt + battery
+                    HStack(alignment: .center, spacing: 4) {
+                        // For a dataSource icon if needed:
+                        if let dataSourceIcon = dataSourceIcon() {
+                            Image(uiImage: dataSourceIcon)
+                                .renderingMode(.template)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .foregroundColor(RuuviColor
+                                    .dashboardIndicator.color
+                                    .withAlphaComponent(0.8)
+                                    .toColor())
+                                .frame(width: 22, height: 22)
+                        }
+
+                        // updatedAt text
+                        UpdatedAtTextView(date: viewModel.date)
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.bottom, 4)
+                }
             }
+
+
         }
-        .padding(12)
-        .background(RuuviColor.dashboardCardBG.color.toColor())
-        .cornerRadius(8)
     }
 
     // MARK: - Helpers for the "Prominent" row
@@ -171,14 +263,25 @@ struct DashboardViewRowSwiftUI: View {
         showProgress: Bool,
         progressColor: UIColor?
     ) {
-        // Example logic if sensor version == 224 => show AQI, else show temperature, etc.
-        // Return the data that the ProminentRepresentable needs.
+
         if (viewModel.version == 224 || viewModel.version == 240),
-           let co2 = viewModel.co2 {
-            // Example: "AirQuality"
-            let current = "2"
-            let maximum = "5"
-            return (current, "/\(maximum)", "AirQuality", true, .green)
+           let (
+               currentAirQIndex,
+               maximumAirQIndex,
+               currentAirQState
+           ) = measurementService?.aqiString(
+               for: viewModel.co2,
+               pm25: viewModel.pm2_5,
+               voc: viewModel.voc,
+               nox: viewModel.nox
+           ) {
+            return (
+                currentAirQIndex.stringValue,
+                "/\(maximumAirQIndex.stringValue)",
+                RuuviLocalization.airQuality,
+                true,
+                currentAirQState.color
+            )
         } else {
             // Example: temperature
             let tempString = measurementService?.stringWithoutSign(for: viewModel.temperature) ?? "N/A"
@@ -189,49 +292,228 @@ struct DashboardViewRowSwiftUI: View {
     // MARK: - Helpers for the additional Indicator Grid
     @ViewBuilder
     private func buildIndicatorGrid() -> some View {
-        let indicators: [DashboardIndicatorRepresentable] = createIndicatorData()
+        let indicatorsE0: [DashboardIndicatorViewSwiftUIView] = indicatorsForE0(
+            viewModel,
+            measurementService: measurementService
+        )
 
-        if indicators.count < 3 {
-            VStack(spacing: 8) {
-                ForEach(indicators.indices, id: \.self) { idx in
-                    indicators[idx]
-                        .frame(height: 24)
-                }
-            }
+        let indicatorsV5OrOlder: [DashboardIndicatorViewSwiftUIView] = indicatorsForV5OrOlder(
+            viewModel,
+            measurementService: measurementService
+        )
+
+        if viewModel.version == 224 || viewModel.version == 240 {
+            DashboardGridView(indicators: indicatorsE0)
         } else {
-            // 2 columns
-            VStack(spacing: 8) {
-                // Convert the stride to an Array:
-                ForEach(Array(stride(from: 0, to: indicators.count, by: 2)), id: \.self) { index in
-                    HStack(spacing: 8) {
-                        indicators[index].frame(height: 24)
-                        if index + 1 < indicators.count {
-                            indicators[index + 1].frame(height: 24)
-                        } else {
-                            Spacer()
-                        }
-                    }
+            DashboardGridView(indicators: indicatorsV5OrOlder)
+        }
+    }
+
+    struct DashboardGridView: View {
+        let indicators: [DashboardIndicatorViewSwiftUIView]
+
+        private let columns = [
+            GridItem(.flexible(), spacing: 8),
+            GridItem(.flexible(), spacing: 8),
+        ]
+
+        var body: some View {
+            LazyVGrid(columns: columns, spacing: 4) {
+                ForEach(indicators.indices, id: \.self) { index in
+                    indicators[index]
                 }
             }
         }
     }
 
-    /// Actually build the array of DashboardIndicatorRepresentable
-    private func createIndicatorData() -> [DashboardIndicatorRepresentable] {
-        var result: [DashboardIndicatorRepresentable] = []
+    private func indicatorsForV5OrOlder(
+        _ viewModel: CardsViewModel,
+        measurementService: RuuviServiceMeasurement?
+    ) -> [DashboardIndicatorViewSwiftUIView] {
+        var indicators: [DashboardIndicatorViewSwiftUIView] = []
 
-        // Example: Temperature is #1
-        if let temperature = measurementService?.stringWithoutSign(for: viewModel.temperature) {
-            let unit = measurementService?.units.temperatureUnit.symbol
-            let indicator = DashboardIndicatorRepresentable(
-                value: temperature,
-                unit: unit
+        // Humidity
+        if let humidity = viewModel.humidity,
+           let measurementService {
+            let humidityValue = measurementService.stringWithoutSign(
+                for: humidity,
+                temperature: viewModel.temperature
             )
-            result.append(indicator)
+            let humidityUnit = measurementService.units.humidityUnit
+            let unit = humidityUnit == .dew
+                ? measurementService.units.temperatureUnit.symbol
+                : humidityUnit.symbol
+            indicators.append(
+                DashboardIndicatorViewSwiftUIView(
+                    value: humidityValue,
+                    unit: unit,
+                    highlight: false
+                )
+            )
         }
-        // Add more humidity, pressure, etc. repeating your original logic:
-        // ...
-        return result
+
+        // Pressure
+        if let pressure = viewModel.pressure {
+            let pressureValue = measurementService?.stringWithoutSign(for: pressure)
+            indicators.append(
+                DashboardIndicatorViewSwiftUIView(
+                    value: pressureValue,
+                    unit: measurementService?.units.pressureUnit.symbol,
+                    highlight: false
+                )
+            )
+        }
+
+        // Movement
+        if let movement = viewModel.movementCounter {
+            indicators.append(
+                DashboardIndicatorViewSwiftUIView(
+                    value: "\(movement)",
+                    unit: RuuviLocalization.Cards.Movements.title,
+                    highlight: false
+                )
+            )
+        }
+
+        return indicators
+    }
+
+    // swiftlint:disable:next function_body_length
+    private func indicatorsForE0(
+        _ viewModel: CardsViewModel,
+        measurementService: RuuviServiceMeasurement?
+    ) -> [DashboardIndicatorViewSwiftUIView] {
+        var indicators: [DashboardIndicatorViewSwiftUIView] = []
+
+        // Temperature
+        if let temperature = viewModel.temperature {
+            let tempValue = measurementService?.stringWithoutSign(for: temperature)
+            indicators.append(
+                DashboardIndicatorViewSwiftUIView(
+                    value: tempValue,
+                    unit: measurementService?.units.temperatureUnit.symbol,
+                    highlight: false
+                )
+            )
+        }
+
+        // Humidity
+        if let humidity = viewModel.humidity,
+           let measurementService {
+            let humidityValue = measurementService.stringWithoutSign(
+                for: humidity,
+                temperature: viewModel.temperature
+            )
+            let humidityUnit = measurementService.units.humidityUnit
+            let unit = humidityUnit == .dew
+                ? measurementService.units.temperatureUnit.symbol
+                : humidityUnit.symbol
+            indicators.append(
+                DashboardIndicatorViewSwiftUIView(
+                    value: humidityValue,
+                    unit: unit,
+                    highlight: false
+                )
+            )
+        }
+
+        // Pressure
+        if let pressure = viewModel.pressure {
+            let pressureValue = measurementService?.stringWithoutSign(for: pressure)
+            indicators.append(
+                DashboardIndicatorViewSwiftUIView(
+                    value: pressureValue,
+                    unit: measurementService?.units.pressureUnit.symbol,
+                    highlight: false
+                )
+            )
+        }
+
+        // CO2
+        if let co2 = viewModel.co2,
+           let co2Value = measurementService?.co2String(for: co2) {
+            indicators.append(
+                DashboardIndicatorViewSwiftUIView(
+                    value: co2Value,
+                    unit: RuuviLocalization.unitCo2,
+                    highlight: false
+                )
+            )
+        }
+
+        // PM2.5
+        if let pm25 = viewModel.pm2_5,
+           let pm25Value = measurementService?.pm25String(for: pm25) {
+            indicators.append(
+                DashboardIndicatorViewSwiftUIView(
+                    value: pm25Value,
+                    unit: "\(RuuviLocalization.pm25) \(RuuviLocalization.unitPm25)",
+                    highlight: false
+                )
+            )
+        }
+
+        // PM10
+        if let pm10 = viewModel.pm10,
+           let pm10Value = measurementService?.pm10String(for: pm10) {
+            indicators.append(
+                DashboardIndicatorViewSwiftUIView(
+                    value: pm10Value,
+                    unit: "\(RuuviLocalization.pm10) \(RuuviLocalization.unitPm10)",
+                    highlight: false
+                )
+            )
+        }
+
+        // NOx
+        if let nox = viewModel.nox,
+           let noxValue = measurementService?.noxString(for: nox) {
+            indicators.append(
+                DashboardIndicatorViewSwiftUIView(
+                    value: noxValue,
+                    unit: RuuviLocalization.unitNox,
+                    highlight: false
+                )
+            )
+        }
+
+        // VOC
+        if let voc = viewModel.voc,
+           let vocValue = measurementService?.vocString(for: voc) {
+            indicators.append(
+                DashboardIndicatorViewSwiftUIView(
+                    value: vocValue,
+                    unit: RuuviLocalization.unitVoc,
+                    highlight: false
+                )
+            )
+        }
+
+        // Luminosity
+        if let luminosity = viewModel.luminance,
+           let luminosityValue = measurementService?.luminosityString(for: luminosity) {
+            indicators.append(
+                DashboardIndicatorViewSwiftUIView(
+                    value: luminosityValue,
+                    unit: RuuviLocalization.unitLuminosity,
+                    highlight: false
+                )
+            )
+        }
+
+        // Sound
+        if let sound = viewModel.dbaAvg,
+           let soundValue = measurementService?.soundAvgString(for: sound) {
+            indicators.append(
+                DashboardIndicatorViewSwiftUIView(
+                    value: soundValue,
+                    unit: RuuviLocalization.unitSound,
+                    highlight: false
+                )
+            )
+        }
+
+        return indicators
     }
 
     // MARK: - Data Source icon
@@ -286,6 +568,11 @@ struct DashboardViewRowSwiftUI: View {
 
         var body: some View {
             Text(updatedText)
+                .font(.custom("Muli-Regular", size: 10))
+                .foregroundColor(RuuviColor
+                    .dashboardIndicator.color
+                    .withAlphaComponent(0.8)
+                    .toColor())
                 .onAppear(perform: updateText)
                 .onReceive(timer) { _ in
                     updateText()

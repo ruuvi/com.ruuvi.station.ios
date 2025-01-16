@@ -38,6 +38,7 @@ class ScrollPositionManager: ObservableObject {
 class DashboardViewState: ObservableObject {
     @Published var items: [CardsViewModel] = []
     @Published var isUpdating: Bool = false
+    @Published var dashboardViewType: DashboardType = .simple
     var scrollManager = ScrollPositionManager()
 
     private var updateQueue = DispatchQueue(label: "com.ruuvi.dashboard.updates")
@@ -91,7 +92,7 @@ class DashboardViewProvider: NSObject {
 
     var dashboardType: DashboardType! {
         didSet {
-
+            state.dashboardViewType = dashboardType
         }
     }
 
