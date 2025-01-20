@@ -5,6 +5,7 @@ import RuuviOntology
 import RuuviService
 // swiftlint:disable file_length
 import UIKit
+import SwiftUI
 
 class DashboardViewController: UIViewController {
     // Configuration
@@ -19,7 +20,7 @@ class DashboardViewController: UIViewController {
 
     var viewModels: [CardsViewModel] = [] {
         didSet {
-            updateUI()
+            state.items = viewModels
         }
     }
 
@@ -27,7 +28,7 @@ class DashboardViewController: UIViewController {
         didSet {
             guard oldValue != dashboardType else { return }
             viewButton.updateMenu(with: viewToggleMenuOptions())
-            reloadCollectionView(redrawLayout: true)
+            state.dashboardViewType = dashboardType
         }
     }
 
@@ -69,37 +70,6 @@ class DashboardViewController: UIViewController {
     var shouldShowSignInBanner: Bool = false {
         didSet {
             showNoSignInBannerIfNeeded()
-        }
-    }
-
-    private func cell(
-        collectionView: UICollectionView,
-        indexPath: IndexPath,
-        viewModel: CardsViewModel
-    ) -> UICollectionViewCell? {
-        switch dashboardType {
-        case .image:
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "cellId",
-                for: indexPath
-            ) as? DashboardImageCell
-            cell?.configure(with: viewModel, measurementService: measurementService)
-            cell?.restartAlertAnimation(for: viewModel)
-            cell?.delegate = self
-            cell?.resetMenu(menu: cardContextMenuOption(for: indexPath.item))
-            return cell
-        case .simple:
-            let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: "cellIdPlain",
-                for: indexPath
-            ) as? DashboardPlainCell
-            cell?.configure(with: viewModel, measurementService: measurementService)
-            cell?.restartAlertAnimation(for: viewModel)
-            cell?.delegate = self
-            cell?.resetMenu(menu: cardContextMenuOption(for: indexPath.item))
-            return cell
-        case .none:
-            return nil
         }
     }
 
@@ -160,29 +130,34 @@ class DashboardViewController: UIViewController {
         return view
     }()
 
-    private lazy var collectionView: UICollectionView = {
-        let cv = UICollectionView(
-            frame: .zero,
-            collectionViewLayout: createLayout()
-        )
-        cv.backgroundColor = .clear
-        cv.showsVerticalScrollIndicator = false
-        cv.delegate = self
-        cv.dragDelegate = self
-        cv.dropDelegate = self
-        cv.alwaysBounceVertical = true
-        cv.refreshControl = refresher
-        return cv
+    private lazy var dashboardViewHostingController: UIViewController = {
+        let view = DashboardView(measurementService: measurementService)
+        return UIHostingController(rootView: view.environmentObject(state))
     }()
 
-    private lazy var refresher: UIRefreshControl = {
-        let rc = UIRefreshControl()
-        rc.tintColor = RuuviColor.tintColor.color
-        rc.layer.zPosition = -1
-        rc.alpha = 0
-        rc.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
-        return rc
-    }()
+//    private lazy var collectionView: UICollectionView = {
+//        let cv = UICollectionView(
+//            frame: .zero,
+//            collectionViewLayout: createLayout()
+//        )
+//        cv.backgroundColor = .clear
+//        cv.showsVerticalScrollIndicator = false
+//        cv.delegate = self
+//        cv.dragDelegate = self
+//        cv.dropDelegate = self
+//        cv.alwaysBounceVertical = true
+//        cv.refreshControl = refresher
+//        return cv
+//    }()
+
+//    private lazy var refresher: UIRefreshControl = {
+//        let rc = UIRefreshControl()
+//        rc.tintColor = RuuviColor.tintColor.color
+//        rc.layer.zPosition = -1
+//        rc.alpha = 0
+//        rc.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
+//        return rc
+//    }()
 
     private var showSignInBannerConstraint: NSLayoutConstraint!
     private var hideSignInBannerConstraint: NSLayoutConstraint!
@@ -194,6 +169,8 @@ class DashboardViewController: UIViewController {
 
     private var isListRefreshable: Bool = true
     private var isRefreshing: Bool = false
+
+    private var state = DashboardViewState()
 
     private enum DashboardSection {
         case main
@@ -272,31 +249,31 @@ private extension DashboardViewController {
 //            self?.collectionView.reloadWithoutAnimation()
 //        }
 
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            if redrawLayout {
-                let flowLayout = self.createLayout()
-                self.collectionView.setCollectionViewLayout(flowLayout, animated: false)
-            }
-            // 2) We no longer call reloadWithoutAnimation(); just re-apply snapshot if needed.
-            self.updateUI() // which calls dataSource.apply(...)
-        }
+//        DispatchQueue.main.async { [weak self] in
+//            guard let self else { return }
+//            if redrawLayout {
+//                let flowLayout = self.createLayout()
+//                self.collectionView.setCollectionViewLayout(flowLayout, animated: false)
+//            }
+//            // 2) We no longer call reloadWithoutAnimation(); just re-apply snapshot if needed.
+//            self.updateUI() // which calls dataSource.apply(...)
+//        }
     }
 
     @objc func didPullToRefresh() {
-        guard !isRefreshing
-        else {
-            refresher.endRefreshing()
-            return
-        }
-        refresher.fadeIn()
-        isRefreshing = true
-        output.viewDidTriggerPullToRefresh()
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) { [weak self] in
-            self?.refresher.endRefreshing()
-            self?.isRefreshing = false
-            self?.refresher.fadeOut()
-        }
+//        guard !isRefreshing
+//        else {
+//            refresher.endRefreshing()
+//            return
+//        }
+//        refresher.fadeIn()
+//        isRefreshing = true
+//        output.viewDidTriggerPullToRefresh()
+//        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) { [weak self] in
+//            self?.refresher.endRefreshing()
+//            self?.isRefreshing = false
+//            self?.refresher.fadeOut()
+//        }
     }
 }
 
@@ -434,7 +411,7 @@ extension DashboardViewController {
             if let viewModel = self?.viewModels[index] {
                 let moveToIndex = index-1
                 guard moveToIndex >= 0 else { return }
-                self?.moveItem(viewModel, from: index, to: moveToIndex)
+//                self?.moveItem(viewModel, from: index, to: moveToIndex)
             }
         }
 
@@ -444,7 +421,7 @@ extension DashboardViewController {
                 guard let sSelf = self else { return }
                 let moveToIndex = index+1
                 guard moveToIndex < sSelf.viewModels.count else { return }
-                self?.moveItem(viewModel, from: index, to: moveToIndex)
+//                self?.moveItem(viewModel, from: index, to: moveToIndex)
             }
         }
 
@@ -493,48 +470,48 @@ extension DashboardViewController {
         return UIMenu(title: "", children: contextMenuActions)
     }
 
-  private func moveItem( _ item: CardsViewModel, from index: Int, to: Int) {
-      let sourceIndexPath = IndexPath(item: index, section: 0)
-      let destinationIndexPath = IndexPath(item: to, section: 0)
-
-      collectionView.performBatchUpdates({ [weak self] in
-          guard let self else { return }
-          self.viewModels.remove(at: sourceIndexPath.item)
-          self.viewModels.insert(item, at: destinationIndexPath.item)
-          collectionView.deleteItems(at: [sourceIndexPath])
-          collectionView.insertItems(at: [destinationIndexPath])
-      }, completion: nil)
-
-      // Reset the menu item for source and destionation cell
-      if let sourceCell = collectionView.cellForItem(
-        at: sourceIndexPath
-      ) as? DashboardCell {
-          sourceCell.resetMenu(
-            menu: cardContextMenuOption(
-                for: sourceIndexPath.item
-            )
-          )
-      }
-      if let destinationCell = collectionView.cellForItem(
-        at: destinationIndexPath
-      ) as? DashboardCell {
-          destinationCell.resetMenu(
-            menu: cardContextMenuOption(
-                for: destinationIndexPath.item
-            )
-          )
-      }
-
-      // Scroll to destination indexpath
-      collectionView.scrollToItem(
-        at: destinationIndexPath,
-        at: .centeredVertically,
-        animated: true
-      )
-
-      let macIds = viewModels.compactMap { $0.mac?.value }
-      output.viewDidReorderSensors(with: .manual, orderedIds: macIds)
-    }
+//  private func moveItem( _ item: CardsViewModel, from index: Int, to: Int) {
+//      let sourceIndexPath = IndexPath(item: index, section: 0)
+//      let destinationIndexPath = IndexPath(item: to, section: 0)
+//
+//      collectionView.performBatchUpdates({ [weak self] in
+//          guard let self else { return }
+//          self.viewModels.remove(at: sourceIndexPath.item)
+//          self.viewModels.insert(item, at: destinationIndexPath.item)
+//          collectionView.deleteItems(at: [sourceIndexPath])
+//          collectionView.insertItems(at: [destinationIndexPath])
+//      }, completion: nil)
+//
+//      // Reset the menu item for source and destionation cell
+//      if let sourceCell = collectionView.cellForItem(
+//        at: sourceIndexPath
+//      ) as? DashboardCell {
+//          sourceCell.resetMenu(
+//            menu: cardContextMenuOption(
+//                for: sourceIndexPath.item
+//            )
+//          )
+//      }
+//      if let destinationCell = collectionView.cellForItem(
+//        at: destinationIndexPath
+//      ) as? DashboardCell {
+//          destinationCell.resetMenu(
+//            menu: cardContextMenuOption(
+//                for: destinationIndexPath.item
+//            )
+//          )
+//      }
+//
+//      // Scroll to destination indexpath
+//      collectionView.scrollToItem(
+//        at: destinationIndexPath,
+//        at: .centeredVertically,
+//        animated: true
+//      )
+//
+//      let macIds = viewModels.compactMap { $0.mac?.value }
+//      output.viewDidReorderSensors(with: .manual, orderedIds: macIds)
+//    }
 
     private func showNoSignInBannerIfNeeded() {
         DispatchQueue.main.async {
@@ -570,17 +547,17 @@ private extension DashboardViewController {
         setUpHeaderView()
         setUpContentView()
 
-        // 1) Create a Diffable Data Source
-        dataSource = UICollectionViewDiffableDataSource<DashboardSection, CardsViewModel>(
-            collectionView: collectionView
-        ) { [weak self] (collectionView, indexPath, viewModel) -> UICollectionViewCell? in
-            return self?.cell(
-                collectionView: collectionView,
-                indexPath: indexPath,
-                viewModel: viewModel
-            )
-        }
-        updateUI()
+//        // 1) Create a Diffable Data Source
+//        dataSource = UICollectionViewDiffableDataSource<DashboardSection, CardsViewModel>(
+//            collectionView: collectionView
+//        ) { [weak self] (collectionView, indexPath, viewModel) -> UICollectionViewCell? in
+//            return self?.cell(
+//                collectionView: collectionView,
+//                indexPath: indexPath,
+//                viewModel: viewModel
+//            )
+//        }
+//        updateUI()
 
 //        // 2) Optional: If you want automatic reordering with iOS 14+
 //        // (since you have drag & drop), do:
@@ -667,8 +644,10 @@ private extension DashboardViewController {
         )
         dashboardSignInBannerView.alpha = 0
 
-        view.addSubview(collectionView)
-        collectionView.anchor(
+        dashboardViewHostingController.view.backgroundColor = RuuviColor.dashboardBG.color
+        addChild(dashboardViewHostingController)
+        view.addSubview(dashboardViewHostingController.view)
+        dashboardViewHostingController.view.anchor(
             top: nil,
             leading: view.safeLeftAnchor,
             bottom: view.bottomAnchor,
@@ -680,18 +659,18 @@ private extension DashboardViewController {
                 right: 12
             )
         )
-        showSignInBannerConstraint = collectionView.topAnchor.constraint(
+        showSignInBannerConstraint = dashboardViewHostingController.view.topAnchor.constraint(
             equalTo: dashboardSignInBannerView.bottomAnchor, constant: 8
         )
-        hideSignInBannerConstraint = collectionView.topAnchor.constraint(
+        hideSignInBannerConstraint = dashboardViewHostingController.view.topAnchor.constraint(
             equalTo: view.safeTopAnchor,
             constant: 12
         )
         hideSignInBannerConstraint.isActive = true
 
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.register(DashboardImageCell.self, forCellWithReuseIdentifier: "cellId")
-        collectionView.register(DashboardPlainCell.self, forCellWithReuseIdentifier: "cellIdPlain")
+//        collectionView.showsVerticalScrollIndicator = false
+//        collectionView.register(DashboardImageCell.self, forCellWithReuseIdentifier: "cellId")
+//        collectionView.register(DashboardPlainCell.self, forCellWithReuseIdentifier: "cellIdPlain")
     }
 
     func createLayout() -> UICollectionViewLayout {
@@ -797,23 +776,23 @@ extension DashboardViewController: UICollectionViewDelegate {
         }
     }
 
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        NSObject.cancelPreviousPerformRequests(withTarget: self)
-        perform(
-            #selector(UIScrollViewDelegate.scrollViewDidEndScrollingAnimation),
-            with: nil,
-            afterDelay: 0.3
-        )
-        if scrollView.isDragging {
-            refresher.fadeIn()
-            isListRefreshable = false
-        }
-    }
-
-    func scrollViewDidEndScrollingAnimation(_: UIScrollView) {
-        NSObject.cancelPreviousPerformRequests(withTarget: self)
-        isListRefreshable = true
-    }
+//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        NSObject.cancelPreviousPerformRequests(withTarget: self)
+//        perform(
+//            #selector(UIScrollViewDelegate.scrollViewDidEndScrollingAnimation),
+//            with: nil,
+//            afterDelay: 0.3
+//        )
+//        if scrollView.isDragging {
+////            refresher.fadeIn()
+////            isListRefreshable = false
+//        }
+//    }
+//
+//    func scrollViewDidEndScrollingAnimation(_: UIScrollView) {
+//        NSObject.cancelPreviousPerformRequests(withTarget: self)
+//        isListRefreshable = true
+//    }
 }
 
 // MARK: UICollectionViewDragDelegate
@@ -917,30 +896,30 @@ extension DashboardViewController: UICollectionViewDropDelegate {
 
 extension DashboardViewController: DashboardViewInput {
     func applyUpdate(to viewModel: CardsViewModel) {
-        guard isListRefreshable
-        else {
-            return
-        }
-
-        if let index = viewModels.firstIndex(where: { vm in
-            vm.luid != nil && vm.luid == viewModel.luid ||
-                vm.mac != nil && vm.mac == viewModel.mac
-        }) {
-            let indexPath = IndexPath(item: index, section: 0)
-            if let cell = collectionView
-                .cellForItem(at: indexPath) as? DashboardImageCell {
-                cell.configure(
-                    with: viewModel, measurementService: measurementService
-                )
-                cell.restartAlertAnimation(for: viewModel)
-            } else if let cell = collectionView
-                .cellForItem(at: indexPath) as? DashboardPlainCell {
-                cell.configure(
-                    with: viewModel, measurementService: measurementService
-                )
-                cell.restartAlertAnimation(for: viewModel)
-            }
-        }
+//        guard isListRefreshable
+//        else {
+//            return
+//        }
+//
+//        if let index = viewModels.firstIndex(where: { vm in
+//            vm.luid != nil && vm.luid == viewModel.luid ||
+//                vm.mac != nil && vm.mac == viewModel.mac
+//        }) {
+//            let indexPath = IndexPath(item: index, section: 0)
+//            if let cell = collectionView
+//                .cellForItem(at: indexPath) as? DashboardImageCell {
+//                cell.configure(
+//                    with: viewModel, measurementService: measurementService
+//                )
+//                cell.restartAlertAnimation(for: viewModel)
+//            } else if let cell = collectionView
+//                .cellForItem(at: indexPath) as? DashboardPlainCell {
+//                cell.configure(
+//                    with: viewModel, measurementService: measurementService
+//                )
+//                cell.restartAlertAnimation(for: viewModel)
+//            }
+//        }
     }
 
     func localize() {
@@ -973,7 +952,7 @@ extension DashboardViewController: DashboardViewInput {
             showSignInButtonOnNoSensorView: showSignInButtonOnNoSensorView
         )
         noSensorView.isHidden = !show
-        collectionView.isHidden = show
+        dashboardViewHostingController.view.isHidden = show
     }
 
     func showKeepConnectionDialogChart(for viewModel: CardsViewModel) {

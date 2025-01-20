@@ -3,33 +3,107 @@ import RuuviLocalization
 import RuuviOntology
 import RuuviService
 
+struct CustomRefreshableScrollView<Content: View>: UIViewRepresentable {
+    @Binding var isRefreshing: Bool
+    let content: Content
+    @State private var contentHeight: CGFloat = 0
+
+    init(isRefreshing: Binding<Bool>, @ViewBuilder content: () -> Content) {
+        self._isRefreshing = isRefreshing
+        self.content = content()
+    }
+
+    func makeUIView(context: Context) -> UIScrollView {
+        let scrollView = UIScrollView()
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(context.coordinator, action: #selector(Coordinator.handleRefresh), for: .valueChanged)
+        scrollView.refreshControl = refreshControl
+
+        let hostingController = UIHostingController(rootView: content)
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+
+        scrollView.addSubview(hostingController.view)
+        NSLayoutConstraint.activate([
+            hostingController.view.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            hostingController.view.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            hostingController.view.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            hostingController.view.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ])
+
+        context.coordinator.hostingController = hostingController
+        return scrollView
+    }
+
+    func updateUIView(_ uiView: UIScrollView, context: Context) {
+        if isRefreshing {
+            uiView.refreshControl?.beginRefreshing()
+        } else {
+            uiView.refreshControl?.endRefreshing()
+        }
+
+        if let hostingView = context.coordinator.hostingController?.view {
+            hostingView.frame.size.height = contentHeight
+        }
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(isRefreshing: $isRefreshing)
+    }
+
+    class Coordinator: NSObject {
+        @Binding var isRefreshing: Bool
+        var hostingController: UIHostingController<Content>?
+
+        init(isRefreshing: Binding<Bool>) {
+            self._isRefreshing = isRefreshing
+        }
+
+        @objc func handleRefresh() {
+            isRefreshing = true
+        }
+    }
+}
+
+struct ContentHeightKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+}
+
 struct DashboardView: View {
     @EnvironmentObject var state: DashboardViewState
     @GestureState private var isScrolling = false
     let measurementService: RuuviServiceMeasurement
 
+    @State private var isRefreshing = false
+
+    private func refreshData() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            print("ekhane...")
+            isRefreshing = false
+        }
+    }
+
+    let columns = [
+        GridItem(.adaptive(minimum: 300))
+    ]
+
     var body: some View {
-        NavigationView {
-            ScrollViewReader { proxy in
-                ScrollView {
-                    LazyVStack(spacing: 6) {
-                        ForEach(state.items, id: \.id) { viewModel in
-                            DashboardViewRowSwiftUI(
-                                viewModel: viewModel,
-                                measurementService: measurementService
-                            )
-                            .id(viewModel.id)
-                        }
-                    }
-                    .padding()
+
+        ScrollView(showsIndicators: false) {
+            LazyVGrid(columns: columns, spacing: 6) {
+                ForEach(state.items, id: \.id) { viewModel in
+                    DashboardViewRowSwiftUI(
+                        viewModel: viewModel,
+                        measurementService: measurementService
+                    )
+                    .environmentObject(state)
+                    .id(viewModel.id)
                 }
-                .background(
-                    RuuviColor.dashboardBG.color
-                        .toColor()
-                        .edgesIgnoringSafeArea(.bottom)
-                )
             }
-            .navigationBarTitleDisplayMode(.inline)
+            .padding(.horizontal, 6)
         }
     }
 }
@@ -147,6 +221,7 @@ struct DashboardIndicatorProminentViewSwiftUIView: View {
 
 // swiftlint:disable:next type_body_length
 struct DashboardViewRowSwiftUI: View {
+    @EnvironmentObject var state: DashboardViewState
     @ObservedObject var viewModel: CardsViewModel
     var measurementService: RuuviServiceMeasurement?
     private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
@@ -158,14 +233,15 @@ struct DashboardViewRowSwiftUI: View {
                 .fill(RuuviColor.dashboardCardBG.color.toColor())
 
             HStack {
-                if let background = viewModel.background {
+                if state.dashboardViewType == .image,
+                   let background = viewModel.background {
                     CardsBackgroundViewWrapper(backgroundImage: background)
                         .aspectRatio(contentMode: .fill)
                         .frame(
-                            width: 100
+                            width: 110
                         )
                         .clipped()
-                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .cornerRadius(8, corners: [.topLeft, .bottomLeft])
                 }
 
                 VStack(alignment: .leading, spacing: 8) {
@@ -176,7 +252,6 @@ struct DashboardViewRowSwiftUI: View {
                             .foregroundColor(RuuviColor.dashboardIndicatorBig.color.toColor())
                             .frame(maxWidth: .infinity, alignment: .leading)
 
-//                        Spacer()
 
                         // Alert icon
                         if let alertIconName = alertIconName() {
@@ -312,15 +387,27 @@ struct DashboardViewRowSwiftUI: View {
     struct DashboardGridView: View {
         let indicators: [DashboardIndicatorViewSwiftUIView]
 
-        private let columns = [
+        private let singleColumn = [
+            GridItem(.flexible(), spacing: 8)
+        ]
+
+        private let multipleColumns = [
             GridItem(.flexible(), spacing: 8),
             GridItem(.flexible(), spacing: 8),
         ]
 
         var body: some View {
-            LazyVGrid(columns: columns, spacing: 4) {
-                ForEach(indicators.indices, id: \.self) { index in
-                    indicators[index]
+            if indicators.indices.count <= 2 {
+                LazyVGrid(columns: singleColumn, spacing: 4) {
+                    ForEach(indicators.indices, id: \.self) { index in
+                        indicators[index]
+                    }
+                }
+            } else {
+                LazyVGrid(columns: multipleColumns, spacing: 4) {
+                    ForEach(indicators.indices, id: \.self) { index in
+                        indicators[index]
+                    }
                 }
             }
         }

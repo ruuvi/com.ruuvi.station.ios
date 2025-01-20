@@ -21,18 +21,14 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
     func create() -> UIViewController {
         let r = AppAssembly.shared.assembler.resolver
 
-        let viewProvider = DashboardViewProvider()
-        viewProvider.measurementService = r.resolve(RuuviServiceMeasurement.self)
-
-        let view = viewProvider.makeViewController()
+        let view = DashboardViewController()
         let router = DashboardRouter()
         router.transitionHandler = view
         router.settings = r.resolve(RuuviLocalSettings.self)
 
         let presenter = DashboardPresenter()
         presenter.router = router
-        presenter.viewProvider = viewProvider
-//        presenter.view = view
+        presenter.view = view
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.foreground = r.resolve(BTForeground.self)
@@ -91,15 +87,13 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
         router.menuTableInteractiveTransition = menuTransition
         menu.transitioningDelegate = menuTransition
 
-//        view.menuPresentInteractiveTransition = menuTransition.present
-//        view.menuDismissInteractiveTransition = menuTransition.dismiss
+        view.menuPresentInteractiveTransition = menuTransition.present
+        view.menuDismissInteractiveTransition = menuTransition.dismiss
 
         // MARK: VIEW
-//
-//        view.measurementService = r.resolve(RuuviServiceMeasurement.self)
-//
-//        view.output = presenter
-        viewProvider.output = presenter
+        view.measurementService = r.resolve(RuuviServiceMeasurement.self)
+
+        view.output = presenter
         presenter.start()
 
         return view

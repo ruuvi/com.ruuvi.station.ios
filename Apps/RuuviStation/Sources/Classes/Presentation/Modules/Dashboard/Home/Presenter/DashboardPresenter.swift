@@ -21,7 +21,7 @@ import WidgetKit
 // swiftlint:disable file_length
 class DashboardPresenter: DashboardModuleInput {
     weak var view: DashboardViewInput?
-    var viewProvider: DashboardViewInput?
+//    var viewProvider: DashboardViewInput?
     var router: DashboardRouterInput!
     var interactor: DashboardInteractorInput!
     var errorPresenter: ErrorPresenter!
@@ -91,7 +91,7 @@ class DashboardPresenter: DashboardModuleInput {
     private var sensorSettingsList = [SensorSettings]()
     private var viewModels: [CardsViewModel] = [] {
         didSet {
-            viewProvider?.viewModels = viewModels
+            view?.viewModels = viewModels
         }
     }
 
