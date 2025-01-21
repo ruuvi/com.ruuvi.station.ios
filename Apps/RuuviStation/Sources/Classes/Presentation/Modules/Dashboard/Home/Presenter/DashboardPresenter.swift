@@ -194,12 +194,12 @@ extension DashboardPresenter: DashboardViewOutput {
 
     func viewDidTriggerSettings(for viewModel: CardsViewModel) {
         if viewModel.type == .ruuvi {
-            if let luid = viewModel.luid.value {
+            if let luid = viewModel.luid {
                 if settings.keepConnectionDialogWasShown(for: luid)
                     || background.isConnected(uuid: luid.value)
-                    || !viewModel.isConnectable.value.bound
-                    || !viewModel.isOwner.value.bound
-                    || (settings.cloudModeEnabled && viewModel.isCloud.value.bound) {
+                    || !viewModel.isConnectable
+                    || !viewModel.isOwner
+                    || (settings.cloudModeEnabled && viewModel.isCloud) {
                     openTagSettingsScreens(viewModel: viewModel)
                 } else {
                     view?.showKeepConnectionDialogSettings(for: viewModel)
@@ -211,17 +211,17 @@ extension DashboardPresenter: DashboardViewOutput {
     }
 
     func viewDidTriggerChart(for viewModel: CardsViewModel) {
-        if let luid = viewModel.luid.value {
+        if let luid = viewModel.luid {
             if settings.keepConnectionDialogWasShown(for: luid)
                 || background.isConnected(uuid: luid.value)
-                || !viewModel.isConnectable.value.bound
-                || !viewModel.isOwner.value.bound
-                || (settings.cloudModeEnabled && viewModel.isCloud.value.bound) {
+                || !viewModel.isConnectable
+                || !viewModel.isOwner
+                || (settings.cloudModeEnabled && viewModel.isCloud) {
                 openCardView(viewModel: viewModel, showCharts: true)
             } else {
                 view?.showKeepConnectionDialogChart(for: viewModel)
             }
-        } else if viewModel.mac.value != nil {
+        } else if viewModel.mac != nil {
             openCardView(viewModel: viewModel, showCharts: true)
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
@@ -252,7 +252,7 @@ extension DashboardPresenter: DashboardViewOutput {
 
     func viewDidTriggerChangeBackground(for viewModel: CardsViewModel) {
         if viewModel.type == .ruuvi {
-            if let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
+            if let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id }) {
                 router.openBackgroundSelectionView(ruuviTag: ruuviTagSensor)
             }
         }
@@ -266,19 +266,19 @@ extension DashboardPresenter: DashboardViewOutput {
     }
 
     func viewDidTriggerShare(for viewModel: CardsViewModel) {
-        if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
+        if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id }) {
             router.openShare(for: ruuviTag)
         }
     }
 
     func viewDidTriggerRemove(for viewModel: CardsViewModel) {
-        if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
+        if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id }) {
             router.openRemove(for: ruuviTag, output: self)
         }
     }
 
     func viewDidDismissKeepConnectionDialogChart(for viewModel: CardsViewModel) {
-        if let luid = viewModel.luid.value {
+        if let luid = viewModel.luid {
             settings.setKeepConnectionDialogWasShown(for: luid)
             openCardView(viewModel: viewModel, showCharts: true)
         } else {
@@ -287,7 +287,7 @@ extension DashboardPresenter: DashboardViewOutput {
     }
 
     func viewDidConfirmToKeepConnectionChart(to viewModel: CardsViewModel) {
-        if let luid = viewModel.luid.value {
+        if let luid = viewModel.luid {
             connectionPersistence.setKeepConnection(true, for: luid)
             settings.setKeepConnectionDialogWasShown(for: luid)
             openCardView(viewModel: viewModel, showCharts: true)
@@ -297,7 +297,7 @@ extension DashboardPresenter: DashboardViewOutput {
     }
 
     func viewDidDismissKeepConnectionDialogSettings(for viewModel: CardsViewModel) {
-        if let luid = viewModel.luid.value {
+        if let luid = viewModel.luid {
             settings.setKeepConnectionDialogWasShown(for: luid)
             openTagSettingsScreens(viewModel: viewModel)
         } else {
@@ -306,7 +306,7 @@ extension DashboardPresenter: DashboardViewOutput {
     }
 
     func viewDidConfirmToKeepConnectionSettings(to viewModel: CardsViewModel) {
-        if let luid = viewModel.luid.value {
+        if let luid = viewModel.luid {
             connectionPersistence.setKeepConnection(true, for: luid)
             settings.setKeepConnectionDialogWasShown(for: luid)
             openTagSettingsScreens(viewModel: viewModel)
@@ -337,7 +337,7 @@ extension DashboardPresenter: DashboardViewOutput {
 
     func viewDidRenameTag(to name: String, viewModel: CardsViewModel) {
         guard let ruuviTag = ruuviTags.first(where: {
-            $0.id == viewModel.id.value
+            $0.id == viewModel.id
         })
         else {
             return
@@ -471,7 +471,7 @@ extension DashboardPresenter: DiscoverRouterDelegate {
     ) {
         router.viewController.dismiss(animated: true)
         if let viewModel = viewModels.first(where: {
-            $0.id.value == ruuviTag.id
+            $0.id == ruuviTag.id
         }) {
             self.router.openCardImageView(
                 with: viewModels,
@@ -508,106 +508,104 @@ extension DashboardPresenter: RuuviNotifierObserver {
         for uuid: String
     ) {
         viewModels
-            .filter { $0.luid.value?.value == uuid || $0.mac.value?.value == uuid }
+            .filter { $0.luid?.value == uuid || $0.mac?.value == uuid }
             .forEach { viewModel in
-                let isFireable = viewModel.isCloud.value ?? false ||
-                    viewModel.isConnected.value ?? false ||
-                    viewModel.serviceUUID.value != nil
+                let isFireable = viewModel.isCloud ||
+                    viewModel.isConnected ||
+                    viewModel.serviceUUID != nil
                 switch alertType {
                 case .temperature:
                     let isTriggered = isTriggered && isFireable
                     let newValue: AlertState? = isTriggered ? .firing : .registered
-                    viewModel.temperatureAlertState.value = newValue
+                    viewModel.temperatureAlertState = newValue
                 case .relativeHumidity:
                     let isTriggered = isTriggered && isFireable
                     let newValue: AlertState? = isTriggered ? .firing : .registered
-                    viewModel.relativeHumidityAlertState.value = newValue
+                    viewModel.relativeHumidityAlertState = newValue
                 case .pressure:
                     let isTriggered = isTriggered && isFireable
                     let newValue: AlertState? = isTriggered ? .firing : .registered
-                    viewModel.pressureAlertState.value = newValue
+                    viewModel.pressureAlertState = newValue
                 case .signal:
                     let isTriggered = isTriggered && isFireable
                     let newValue: AlertState? = isTriggered ? .firing : .registered
-                    viewModel.signalAlertState.value = newValue
+                    viewModel.signalAlertState = newValue
                 case .carbonDioxide:
                     let isTriggered = isTriggered && isFireable
                     let newValue: AlertState? = isTriggered ? .firing : .registered
-                    viewModel.carbonDioxideAlertState.value = newValue
+                    viewModel.carbonDioxideAlertState = newValue
                 case .pMatter1:
                     let isTriggered = isTriggered && isFireable
                     let newValue: AlertState? = isTriggered ? .firing : .registered
-                    viewModel.pMatter1AlertState.value = newValue
+                    viewModel.pMatter1AlertState = newValue
                 case .pMatter2_5:
                     let isTriggered = isTriggered && isFireable
                     let newValue: AlertState? = isTriggered ? .firing : .registered
-                    viewModel.pMatter2_5AlertState.value = newValue
+                    viewModel.pMatter2_5AlertState = newValue
                 case .pMatter4:
                     let isTriggered = isTriggered && isFireable
                     let newValue: AlertState? = isTriggered ? .firing : .registered
-                    viewModel.pMatter4AlertState.value = newValue
+                    viewModel.pMatter4AlertState = newValue
                 case .pMatter10:
                     let isTriggered = isTriggered && isFireable
                     let newValue: AlertState? = isTriggered ? .firing : .registered
-                    viewModel.pMatter10AlertState.value = newValue
+                    viewModel.pMatter10AlertState = newValue
                 case .voc:
                     let isTriggered = isTriggered && isFireable
                     let newValue: AlertState? = isTriggered ? .firing : .registered
-                    viewModel.vocAlertState.value = newValue
+                    viewModel.vocAlertState = newValue
                 case .nox:
                     let isTriggered = isTriggered && isFireable
                     let newValue: AlertState? = isTriggered ? .firing : .registered
-                    viewModel.noxAlertState.value = newValue
+                    viewModel.noxAlertState = newValue
                 case .sound:
                     let isTriggered = isTriggered && isFireable
                     let newValue: AlertState? = isTriggered ? .firing : .registered
-                    viewModel.soundAlertState.value = newValue
+                    viewModel.soundAlertState = newValue
                 case .luminosity:
                     let isTriggered = isTriggered && isFireable
                     let newValue: AlertState? = isTriggered ? .firing : .registered
-                    viewModel.luminosityAlertState.value = newValue
+                    viewModel.luminosityAlertState = newValue
                 case .connection:
                     let isTriggered = isTriggered && isFireable
                     let newValue: AlertState? = isTriggered ? .firing : .registered
-                    viewModel.connectionAlertState.value = newValue
+                    viewModel.connectionAlertState = newValue
                 case .movement:
                     let isTriggered = isTriggered && isFireable
                     let newValue: AlertState? = isTriggered ? .firing : .registered
-                    viewModel.movementAlertState.value = newValue
+                    viewModel.movementAlertState = newValue
                 case .cloudConnection:
                     let isTriggered = isTriggered && isFireable
                     let newValue: AlertState? = isTriggered ? .firing : .registered
-                    viewModel.cloudConnectionAlertState.value = newValue
+                    viewModel.cloudConnectionAlertState = newValue
                 default:
                     break
                 }
                 let alertStates = [
-                    viewModel.temperatureAlertState.value,
-                    viewModel.relativeHumidityAlertState.value,
-                    viewModel.pressureAlertState.value,
-                    viewModel.signalAlertState.value,
-                    viewModel.carbonDioxideAlertState.value,
-                    viewModel.pMatter1AlertState.value,
-                    viewModel.pMatter2_5AlertState.value,
-                    viewModel.pMatter4AlertState.value,
-                    viewModel.pMatter10AlertState.value,
-                    viewModel.vocAlertState.value,
-                    viewModel.noxAlertState.value,
-                    viewModel.soundAlertState.value,
-                    viewModel.luminosityAlertState.value,
-                    viewModel.connectionAlertState.value,
-                    viewModel.movementAlertState.value,
-                    viewModel.cloudConnectionAlertState.value,
+                    viewModel.temperatureAlertState,
+                    viewModel.relativeHumidityAlertState,
+                    viewModel.pressureAlertState,
+                    viewModel.signalAlertState,
+                    viewModel.carbonDioxideAlertState,
+                    viewModel.pMatter1AlertState,
+                    viewModel.pMatter2_5AlertState,
+                    viewModel.pMatter4AlertState,
+                    viewModel.pMatter10AlertState,
+                    viewModel.vocAlertState,
+                    viewModel.noxAlertState,
+                    viewModel.soundAlertState,
+                    viewModel.luminosityAlertState,
+                    viewModel.connectionAlertState,
+                    viewModel.movementAlertState,
+                    viewModel.cloudConnectionAlertState,
                 ]
                 if alertStates.first(where: { alert in
                     alert == .firing
                 }) != nil {
-                    viewModel.alertState.value = .firing
+                    viewModel.alertState = .firing
                 } else {
-                    viewModel.alertState.value = .registered
+                    viewModel.alertState = .registered
                 }
-
-                notifyViewModelUpdate(for: viewModel)
             }
     }
 }
@@ -661,7 +659,7 @@ extension DashboardPresenter: SensorRemovalModuleOutput {
 // MARK: - Private
 
 extension DashboardPresenter {
-    // swiftlint:disable:next function_body_length
+
     private func syncViewModels() {
         view?.userSignedInOnce = settings.signedInAtleastOnce
         view?.isAuthorized = ruuviUser.isAuthorized
@@ -672,30 +670,28 @@ extension DashboardPresenter {
         let ruuviViewModels = ruuviTags.compactMap { ruuviTag -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
             ruuviSensorPropertiesService.getImage(for: ruuviTag)
-                .on(success: { [weak self] image in
-                    viewModel.background.value = image
-                    self?.notifyViewModelUpdate(for: viewModel)
+                .on(success: { image in
+                    viewModel.background = image
                 }, failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
                 })
             if let luid = ruuviTag.luid {
-                viewModel.isConnected.value = background.isConnected(uuid: luid.value)
+                viewModel.isConnected = background.isConnected(uuid: luid.value)
             } else if let macId = ruuviTag.macId {
-                viewModel.networkSyncStatus.value = localSyncState.getSyncStatus(for: macId)
-                viewModel.isConnected.value = false
+                viewModel.networkSyncStatus = localSyncState.getSyncStatus(for: macId)
+                viewModel.isConnected = false
             } else {
                 assertionFailure()
             }
-            viewModel.rhAlertLowerBound.value = alertService
+            viewModel.rhAlertLowerBound = alertService
                 .lowerRelativeHumidity(for: ruuviTag)
-            viewModel.rhAlertUpperBound.value = alertService
+            viewModel.rhAlertUpperBound = alertService
                 .upperRelativeHumidity(for: ruuviTag)
             syncAlerts(ruuviTag: ruuviTag, viewModel: viewModel)
             let op = ruuviStorage.readLatest(ruuviTag)
             op.on { [weak self] record in
                 if let record {
                     viewModel.update(record)
-                    self?.notifyViewModelUpdate(for: viewModel)
                     self?.processAlert(record: record, viewModel: viewModel)
                 }
             }
@@ -729,30 +725,28 @@ extension DashboardPresenter {
         if let ruuviTag = ruuviTagSensor {
             let viewModel = CardsViewModel(ruuviTag)
             ruuviSensorPropertiesService.getImage(for: ruuviTag)
-                .on(success: { [weak self] image in
-                    viewModel.background.value = image
-                    self?.notifyViewModelUpdate(for: viewModel)
+                .on(success: { image in
+                    viewModel.background = image
                 }, failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
                 })
             if let luid = ruuviTag.luid {
-                viewModel.isConnected.value = background.isConnected(uuid: luid.value)
+                viewModel.isConnected = background.isConnected(uuid: luid.value)
             } else if let macId = ruuviTag.macId {
-                viewModel.networkSyncStatus.value = localSyncState.getSyncStatus(for: macId)
-                viewModel.isConnected.value = false
+                viewModel.networkSyncStatus = localSyncState.getSyncStatus(for: macId)
+                viewModel.isConnected = false
             } else {
                 assertionFailure()
             }
-            viewModel.rhAlertLowerBound.value = alertService
+            viewModel.rhAlertLowerBound = alertService
                 .lowerRelativeHumidity(for: ruuviTag)
-            viewModel.rhAlertUpperBound.value = alertService
+            viewModel.rhAlertUpperBound = alertService
                 .upperRelativeHumidity(for: ruuviTag)
             syncAlerts(ruuviTag: ruuviTag, viewModel: viewModel)
             let op = ruuviStorage.readLatest(ruuviTag)
             op.on { [weak self] record in
                 if let record {
                     viewModel.update(record)
-                    self?.notifyViewModelUpdate(for: viewModel)
                     self?.processAlert(record: record, viewModel: viewModel)
                 }
             }
@@ -763,7 +757,7 @@ extension DashboardPresenter {
             } else {
                 // For manual sorting, newly added sensor will be sent to the top
                 viewModels.insert(viewModel, at: 0)
-                let macIds = viewModels.compactMap { $0.mac.value?.value }
+                let macIds = viewModels.compactMap { $0.mac?.value }
                 viewDidReorderSensors(with: .manual, orderedIds: macIds)
             }
         }
@@ -773,18 +767,18 @@ extension DashboardPresenter {
         record: RuuviTagSensorRecord,
         viewModel: CardsViewModel
     ) {
-        if let isCloud = viewModel.isCloud.value, isCloud,
-           let macId = viewModel.mac.value {
+        if viewModel.isCloud,
+           let macId = viewModel.mac {
             alertHandler.processNetwork(
                 record: record,
                 trigger: false,
                 for: macId
             )
         } else {
-            if viewModel.luid.value != nil {
+            if viewModel.luid != nil {
                 alertHandler.process(record: record, trigger: false)
             } else {
-                guard let macId = viewModel.mac.value
+                guard let macId = viewModel.mac
                 else {
                     return
                 }
@@ -805,16 +799,16 @@ extension DashboardPresenter {
 
         if !sortedSensors.isEmpty {
             return sortedAndUniqueArray.sorted { (first, second) -> Bool in
-                guard let firstMacId = first.mac.value?.value,
-                      let secondMacId = second.mac.value?.value else { return false }
+                guard let firstMacId = first.mac?.value,
+                      let secondMacId = second.mac?.value else { return false }
                 let firstIndex = sortedSensors.firstIndex(of: firstMacId) ?? Int.max
                 let secondIndex = sortedSensors.firstIndex(of: secondMacId) ?? Int.max
                 return firstIndex < secondIndex
             }
         } else {
             return sortedAndUniqueArray.sorted { (first, second) -> Bool in
-                let firstName = first.name.value?.lowercased() ?? ""
-                let secondName = second.name.value?.lowercased() ?? ""
+                let firstName = first.name.lowercased()
+                let secondName = second.name.lowercased()
                 return firstName < secondName
             }
         }
@@ -934,11 +928,13 @@ extension DashboardPresenter {
         }.forEach { luid in
             heartbeatTokens.append(background.observe(self, uuid: luid.value) { [weak self] _, device in
                 if let ruuviTag = device.ruuvi?.tag,
-                   let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
+                   let viewModel = self?.viewModels.first(
+                    where: { $0.luid?.value == ruuviTag.uuid.luid.value }
+                   ) {
                     let sensorSettings = self?.sensorSettingsList
                         .first(where: {
-                            ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
-                                || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
+                            ($0.luid?.any != nil && $0.luid?.any == viewModel.luid)
+                                || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac)
                         })
                     let record = ruuviTag
                         .with(source: .heartbeat)
@@ -946,7 +942,6 @@ extension DashboardPresenter {
                     viewModel.update(
                         record
                     )
-                    self?.notifyViewModelUpdate(for: viewModel)
                     self?.alertHandler.process(record: record, trigger: false)
                 }
             })
@@ -960,25 +955,24 @@ extension DashboardPresenter {
             let shouldAvoidObserving =
                 ruuviUser.isAuthorized &&
                 settings.cloudModeEnabled &&
-                viewModel.isCloud.value.bound
+                viewModel.isCloud
             if shouldAvoidObserving {
                 continue
             }
             if viewModel.type == .ruuvi,
-               let luid = viewModel.luid.value {
+               let luid = viewModel.luid {
                 advertisementTokens.append(foreground.observe(self, uuid: luid.value) { [weak self] _, device in
                     if let ruuviTag = device.ruuvi?.tag,
-                       let viewModel = self?.viewModels.first(where: { $0.luid.value == ruuviTag.uuid.luid.any }) {
+                       let viewModel = self?.viewModels.first(where: { $0.luid == ruuviTag.uuid.luid.any }) {
                         let sensorSettings = self?.sensorSettingsList
                             .first(where: {
-                                ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
-                                    || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
+                                ($0.luid?.any != nil && $0.luid?.any == viewModel.luid)
+                                    || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac)
                             })
                         let record = ruuviTag
                             .with(source: .advertisement)
                             .with(sensorSettings: sensorSettings)
                         viewModel.update(record)
-                        self?.notifyViewModelUpdate(for: viewModel)
                         self?.alertHandler.process(record: record, trigger: false)
                     }
                 })
@@ -995,7 +989,7 @@ extension DashboardPresenter {
         ) {
             sensorSettingsList[updateIndex] = sensorSettings
             if let viewModel = viewModels.first(where: {
-                $0.id.value == ruuviTagSensor.id
+                $0.id == ruuviTagSensor.id
             }) {
                 notifySensorSettingsUpdate(
                     sensorSettings: sensorSettings,
@@ -1013,7 +1007,7 @@ extension DashboardPresenter {
         sensorSettingsTokens.removeAll()
         for viewModel in viewModels {
             if viewModel.type == .ruuvi,
-               let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
+               let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id }) {
                 sensorSettingsTokens.append(
                     ruuviReactor.observe(ruuviTagSensor) { [weak self] change in
                         guard let sSelf = self else { return }
@@ -1021,7 +1015,7 @@ extension DashboardPresenter {
                         case let .insert(sensorSettings):
                             self?.sensorSettingsList.append(sensorSettings)
                             if let viewModel = sSelf.viewModels.first(where: {
-                                $0.id.value == ruuviTagSensor.id
+                                $0.id == ruuviTagSensor.id
                             }) {
                                 self?.notifySensorSettingsUpdate(
                                     sensorSettings: sensorSettings,
@@ -1036,7 +1030,7 @@ extension DashboardPresenter {
                             ) {
                                 self?.sensorSettingsList.remove(at: deleteIndex)
                                 if let viewModel = sSelf.viewModels.first(where: {
-                                    $0.id.value == ruuviTagSensor.id
+                                    $0.id == ruuviTagSensor.id
                                 }) {
                                     self?.notifySensorSettingsUpdate(
                                         sensorSettings: deleteSensorSettings,
@@ -1060,14 +1054,13 @@ extension DashboardPresenter {
     private func notifySensorSettingsUpdate(
         sensorSettings: SensorSettings?, viewModel: CardsViewModel
     ) {
-        let currentRecord = viewModel.latestMeasurement.value
+        let currentRecord = viewModel.latestMeasurement
         let updatedRecord = currentRecord?.with(sensorSettings: sensorSettings)
         guard let updatedRecord
         else {
             return
         }
         viewModel.update(updatedRecord)
-        notifyViewModelUpdate(for: viewModel)
     }
 
     private func restartObservingRuuviTagLastRecords() {
@@ -1075,24 +1068,22 @@ extension DashboardPresenter {
         ruuviTagObserveLastRecordTokens.removeAll()
         for viewModel in viewModels {
             if viewModel.type == .ruuvi,
-               let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
+               let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id }) {
                 let token = ruuviReactor.observeLatest(ruuviTagSensor) { [weak self] changes in
                     if case let .update(anyRecord) = changes,
                        let viewModel = self?.viewModels
                            .first(where: {
-                               ($0.luid.value != nil && ($0.luid.value == anyRecord?.luid?.any))
-                                   || ($0.mac.value != nil && ($0.mac.value == anyRecord?.macId?.any))
+                               ($0.luid != nil && ($0.luid == anyRecord?.luid?.any))
+                                   || ($0.mac != nil && ($0.mac == anyRecord?.macId?.any))
                            }),
                            let record = anyRecord {
                         let sensorSettings = self?.sensorSettingsList
                             .first(where: {
-                                ($0.luid?.any != nil && $0.luid?.any == viewModel.luid.value)
-                                    || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac.value)
+                                ($0.luid?.any != nil && $0.luid?.any == viewModel.luid)
+                                    || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac)
                             })
                         let sensorRecord = record.with(sensorSettings: sensorSettings)
                         viewModel.update(sensorRecord)
-                        self?.notifyViewModelUpdate(for: viewModel)
-
                         self?.processAlert(record: sensorRecord, viewModel: viewModel)
                     }
                 }
@@ -1133,8 +1124,8 @@ extension DashboardPresenter {
                 sSelf.observeRuuviTags()
                 if !sSelf.settings.isSyncing,
                    let viewModel = sSelf.viewModels.first(where: {
-                       ($0.luid.value != nil && $0.luid.value == sensor.luid?.any)
-                           || ($0.mac.value != nil && $0.mac.value == sensor.macId?.any)
+                       ($0.luid != nil && $0.luid == sensor.luid?.any)
+                           || ($0.mac != nil && $0.mac == sensor.macId?.any)
                    }) {
                     let op = sSelf.ruuviStorage.readLatest(sensor.any)
                     op.on { [weak self] record in
@@ -1193,9 +1184,9 @@ extension DashboardPresenter {
                     let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
                     let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
                     let viewModel = sSelf.view?.viewModels
-                        .first(where: { $0.luid.value != nil && $0.luid.value == luid?.any })
+                        .first(where: { $0.luid != nil && $0.luid == luid?.any })
                         ?? sSelf.view?.viewModels
-                        .first(where: { $0.mac.value != nil && $0.mac.value == macId?.any })
+                        .first(where: { $0.mac != nil && $0.mac == macId?.any })
                     if let viewModel {
                         let ruuviTag = sSelf.ruuviTags
                             .first(where: { $0.luid != nil && $0.luid?.any == luid?.any })
@@ -1204,8 +1195,7 @@ extension DashboardPresenter {
                         if let ruuviTag {
                             sSelf.ruuviSensorPropertiesService.getImage(for: ruuviTag)
                                 .on(success: { image in
-                                    viewModel.background.value = image
-                                    self?.notifyViewModelUpdate(for: viewModel)
+                                    viewModel.background = image
                                 }, failure: { [weak self] error in
                                     self?.errorPresenter.present(error: error)
                                 })
@@ -1311,10 +1301,9 @@ extension DashboardPresenter {
                 using: { [weak self] notification in
                     if let userInfo = notification.userInfo,
                        let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String,
-                       let viewModel = self?.viewModels.first(where: { $0.luid.value == uuid.luid.any }) {
-                        viewModel.isConnected.value = true
-                        self?.notifyViewModelUpdate(for: viewModel)
-                        if let latestRecord = viewModel.latestMeasurement.value {
+                       let viewModel = self?.viewModels.first(where: { $0.luid == uuid.luid.any }) {
+                        viewModel.isConnected = true
+                        if let latestRecord = viewModel.latestMeasurement {
                             self?.processAlert(
                                 record: latestRecord,
                                 viewModel: viewModel
@@ -1333,10 +1322,9 @@ extension DashboardPresenter {
                 using: { [weak self] notification in
                     if let userInfo = notification.userInfo,
                        let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String,
-                       let viewModel = self?.viewModels.first(where: { $0.luid.value == uuid.luid.any }) {
-                        viewModel.isConnected.value = false
-                        self?.notifyViewModelUpdate(for: viewModel)
-                        if let latestRecord = viewModel.latestMeasurement.value {
+                       let viewModel = self?.viewModels.first(where: { $0.luid == uuid.luid.any }) {
+                        viewModel.isConnected = false
+                        if let latestRecord = viewModel.latestMeasurement {
                             self?.processAlert(
                                 record: latestRecord,
                                 viewModel: viewModel
@@ -1362,17 +1350,17 @@ extension DashboardPresenter {
                             = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
                             let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType {
                             sSelf.viewModels.filter {
-                                ($0.luid.value != nil && ($0.luid.value == physicalSensor.luid?.any))
-                                    || ($0.mac.value != nil && ($0.mac.value == physicalSensor.macId?.any))
+                                ($0.luid != nil && ($0.luid == physicalSensor.luid?.any))
+                                    || ($0.mac != nil && ($0.mac == physicalSensor.macId?.any))
                             }.forEach { viewModel in
                                 if sSelf.alertService.hasRegistrations(for: physicalSensor) {
-                                    viewModel.rhAlertLowerBound.value = sSelf.alertService
+                                    viewModel.rhAlertLowerBound = sSelf.alertService
                                         .lowerRelativeHumidity(for: physicalSensor)
-                                    viewModel.rhAlertUpperBound.value = sSelf.alertService
+                                    viewModel.rhAlertUpperBound = sSelf.alertService
                                         .upperRelativeHumidity(for: physicalSensor)
                                 } else {
-                                    viewModel.rhAlertLowerBound.value = 0
-                                    viewModel.rhAlertUpperBound.value = 100
+                                    viewModel.rhAlertLowerBound = 0
+                                    viewModel.rhAlertUpperBound = 100
                                 }
                                 sSelf.syncAlerts(
                                     ruuviTag: physicalSensor,
@@ -1413,14 +1401,14 @@ extension DashboardPresenter {
     }
 
     private func openTagSettingsScreens(viewModel: CardsViewModel) {
-        if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
+        if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id }) {
             router.openTagSettings(
                 ruuviTag: ruuviTag,
-                latestMeasurement: viewModel.latestMeasurement.value,
+                latestMeasurement: viewModel.latestMeasurement,
                 sensorSettings: sensorSettingsList
                     .first(where: {
-                        ($0.luid != nil && $0.luid?.any == viewModel.luid.value)
-                            || ($0.macId != nil && $0.macId?.any == viewModel.mac.value)
+                        ($0.luid != nil && $0.luid?.any == viewModel.luid)
+                            || ($0.macId != nil && $0.macId?.any == viewModel.mac)
                     }),
                 output: self
             )
@@ -1428,18 +1416,18 @@ extension DashboardPresenter {
     }
 
     private func openTagSettingsForNewSensor(viewModel: CardsViewModel) {
-        if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id.value }) {
+        if let ruuviTag = ruuviTags.first(where: { $0.id == viewModel.id }) {
             router.openTagSettings(
                 with: viewModels,
                 ruuviTagSensors: ruuviTags,
                 sensorSettings: sensorSettingsList,
                 scrollTo: viewModel,
                 ruuviTag: ruuviTag,
-                latestMeasurement: viewModel.latestMeasurement.value,
+                latestMeasurement: viewModel.latestMeasurement,
                 sensorSetting: sensorSettingsList
                     .first(where: {
-                        ($0.luid != nil && $0.luid?.any == viewModel.luid.value)
-                            || ($0.macId != nil && $0.macId?.any == viewModel.mac.value)
+                        ($0.luid != nil && $0.luid?.any == viewModel.luid)
+                            || ($0.macId != nil && $0.macId?.any == viewModel.mac)
                     }),
                 output: self
             )
@@ -1766,37 +1754,35 @@ extension DashboardPresenter {
             }
 
             let alertStates = [
-                viewModel.temperatureAlertState.value,
-                viewModel.relativeHumidityAlertState.value,
-                viewModel.pressureAlertState.value,
-                viewModel.signalAlertState.value,
-                viewModel.carbonDioxideAlertState.value,
-                viewModel.pMatter1AlertState.value,
-                viewModel.pMatter2_5AlertState.value,
-                viewModel.pMatter4AlertState.value,
-                viewModel.pMatter10AlertState.value,
-                viewModel.vocAlertState.value,
-                viewModel.noxAlertState.value,
-                viewModel.soundAlertState.value,
-                viewModel.luminosityAlertState.value,
-                viewModel.connectionAlertState.value,
-                viewModel.movementAlertState.value,
-                viewModel.cloudConnectionAlertState.value,
+                viewModel.temperatureAlertState,
+                viewModel.relativeHumidityAlertState,
+                viewModel.pressureAlertState,
+                viewModel.signalAlertState,
+                viewModel.carbonDioxideAlertState,
+                viewModel.pMatter1AlertState,
+                viewModel.pMatter2_5AlertState,
+                viewModel.pMatter4AlertState,
+                viewModel.pMatter10AlertState,
+                viewModel.vocAlertState,
+                viewModel.noxAlertState,
+                viewModel.soundAlertState,
+                viewModel.luminosityAlertState,
+                viewModel.connectionAlertState,
+                viewModel.movementAlertState,
+                viewModel.cloudConnectionAlertState,
             ]
 
             if alertService.hasRegistrations(for: ruuviTag) {
                 if alertStates.first(where: { alert in
                     alert == .firing
                 }) != nil {
-                    viewModel.alertState.value = .firing
+                    viewModel.alertState = .firing
                 } else {
-                    viewModel.alertState.value = .registered
+                    viewModel.alertState = .registered
                 }
             } else {
-                viewModel.alertState.value = .empty
+                viewModel.alertState = .empty
             }
-
-            notifyViewModelUpdate(for: viewModel)
         }
     }
 
@@ -1807,11 +1793,11 @@ extension DashboardPresenter {
     ) {
         if case .temperature = alertService
             .alert(for: ruuviTag, of: temperature) {
-            viewModel.isTemperatureAlertOn.value = true
+            viewModel.isTemperatureAlertOn = true
         } else {
-            viewModel.isTemperatureAlertOn.value = false
+            viewModel.isTemperatureAlertOn = false
         }
-        viewModel.temperatureAlertMutedTill.value = alertService
+        viewModel.temperatureAlertMutedTill = alertService
             .mutedTill(
                 type: temperature,
                 for: ruuviTag
@@ -1827,11 +1813,11 @@ extension DashboardPresenter {
             for: ruuviTag,
             of: relativeHumidity
         ) {
-            viewModel.isRelativeHumidityAlertOn.value = true
+            viewModel.isRelativeHumidityAlertOn = true
         } else {
-            viewModel.isRelativeHumidityAlertOn.value = false
+            viewModel.isRelativeHumidityAlertOn = false
         }
-        viewModel.relativeHumidityAlertMutedTill.value = alertService
+        viewModel.relativeHumidityAlertMutedTill = alertService
             .mutedTill(
                 type: relativeHumidity,
                 for: ruuviTag
@@ -1844,11 +1830,11 @@ extension DashboardPresenter {
         viewModel: CardsViewModel
     ) {
         if case .pressure = alertService.alert(for: ruuviTag, of: pressure) {
-            viewModel.isPressureAlertOn.value = true
+            viewModel.isPressureAlertOn = true
         } else {
-            viewModel.isPressureAlertOn.value = false
+            viewModel.isPressureAlertOn = false
         }
-        viewModel.pressureAlertMutedTill.value = alertService
+        viewModel.pressureAlertMutedTill = alertService
             .mutedTill(
                 type: pressure,
                 for: ruuviTag
@@ -1861,11 +1847,11 @@ extension DashboardPresenter {
         viewModel: CardsViewModel
     ) {
         if case .signal = alertService.alert(for: ruuviTag, of: signal) {
-            viewModel.isSignalAlertOn.value = true
+            viewModel.isSignalAlertOn = true
         } else {
-            viewModel.isSignalAlertOn.value = false
+            viewModel.isSignalAlertOn = false
         }
-        viewModel.signalAlertMutedTill.value =
+        viewModel.signalAlertMutedTill =
             alertService.mutedTill(
                 type: signal,
                 for: ruuviTag
@@ -1879,11 +1865,11 @@ extension DashboardPresenter {
     ) {
         if case .carbonDioxide = alertService
             .alert(for: ruuviTag, of: carbonDioxide) {
-            viewModel.isCarbonDioxideAlertOn.value = true
+            viewModel.isCarbonDioxideAlertOn = true
         } else {
-            viewModel.isCarbonDioxideAlertOn.value = false
+            viewModel.isCarbonDioxideAlertOn = false
         }
-        viewModel.carbonDioxideAlertMutedTill.value =
+        viewModel.carbonDioxideAlertMutedTill =
             alertService.mutedTill(
                 type: carbonDioxide,
                 for: ruuviTag
@@ -1897,11 +1883,11 @@ extension DashboardPresenter {
     ) {
         if case .pMatter1 = alertService
             .alert(for: ruuviTag, of: pMatter1) {
-            viewModel.isPMatter1AlertOn.value = true
+            viewModel.isPMatter1AlertOn = true
         } else {
-            viewModel.isPMatter1AlertOn.value = false
+            viewModel.isPMatter1AlertOn = false
         }
-        viewModel.pMatter1AlertMutedTill.value =
+        viewModel.pMatter1AlertMutedTill =
             alertService.mutedTill(
                 type: pMatter1,
                 for: ruuviTag
@@ -1915,11 +1901,11 @@ extension DashboardPresenter {
     ) {
         if case .pMatter2_5 = alertService
             .alert(for: ruuviTag, of: pMatter2_5) {
-            viewModel.isPMatter2_5AlertOn.value = true
+            viewModel.isPMatter2_5AlertOn = true
         } else {
-            viewModel.isPMatter2_5AlertOn.value = false
+            viewModel.isPMatter2_5AlertOn = false
         }
-        viewModel.pMatter2_5AlertMutedTill.value =
+        viewModel.pMatter2_5AlertMutedTill =
             alertService.mutedTill(
                 type: pMatter2_5,
                 for: ruuviTag
@@ -1933,11 +1919,11 @@ extension DashboardPresenter {
     ) {
         if case .pMatter4 = alertService
             .alert(for: ruuviTag, of: pMatter4) {
-            viewModel.isPMatter4AlertOn.value = true
+            viewModel.isPMatter4AlertOn = true
         } else {
-            viewModel.isPMatter4AlertOn.value = false
+            viewModel.isPMatter4AlertOn = false
         }
-        viewModel.pMatter4AlertMutedTill.value =
+        viewModel.pMatter4AlertMutedTill =
             alertService.mutedTill(
                 type: pMatter4,
                 for: ruuviTag
@@ -1951,11 +1937,11 @@ extension DashboardPresenter {
     ) {
         if case .pMatter10 = alertService
             .alert(for: ruuviTag, of: pMatter10) {
-            viewModel.isPMatter10AlertOn.value = true
+            viewModel.isPMatter10AlertOn = true
         } else {
-            viewModel.isPMatter10AlertOn.value = false
+            viewModel.isPMatter10AlertOn = false
         }
-        viewModel.pMatter10AlertMutedTill.value =
+        viewModel.pMatter10AlertMutedTill =
             alertService.mutedTill(
                 type: pMatter10,
                 for: ruuviTag
@@ -1968,11 +1954,11 @@ extension DashboardPresenter {
         viewModel: CardsViewModel
     ) {
         if case .voc = alertService.alert(for: ruuviTag, of: voc) {
-            viewModel.isVOCAlertOn.value = true
+            viewModel.isVOCAlertOn = true
         } else {
-            viewModel.isVOCAlertOn.value = false
+            viewModel.isVOCAlertOn = false
         }
-        viewModel.vocAlertMutedTill.value =
+        viewModel.vocAlertMutedTill =
             alertService.mutedTill(
                 type: voc,
                 for: ruuviTag
@@ -1985,11 +1971,11 @@ extension DashboardPresenter {
         viewModel: CardsViewModel
     ) {
         if case .nox = alertService.alert(for: ruuviTag, of: nox) {
-            viewModel.isNOXAlertOn.value = true
+            viewModel.isNOXAlertOn = true
         } else {
-            viewModel.isNOXAlertOn.value = false
+            viewModel.isNOXAlertOn = false
         }
-        viewModel.noxAlertMutedTill.value =
+        viewModel.noxAlertMutedTill =
             alertService.mutedTill(
                 type: nox,
                 for: ruuviTag
@@ -2002,11 +1988,11 @@ extension DashboardPresenter {
         viewModel: CardsViewModel
     ) {
         if case .sound = alertService.alert(for: ruuviTag, of: sound) {
-            viewModel.isSignalAlertOn.value = true
+            viewModel.isSignalAlertOn = true
         } else {
-            viewModel.isSoundAlertOn.value = false
+            viewModel.isSoundAlertOn = false
         }
-        viewModel.soundAlertMutedTill.value =
+        viewModel.soundAlertMutedTill =
             alertService.mutedTill(
                 type: sound,
                 for: ruuviTag
@@ -2019,11 +2005,11 @@ extension DashboardPresenter {
         viewModel: CardsViewModel
     ) {
         if case .luminosity = alertService.alert(for: ruuviTag, of: luminosity) {
-            viewModel.isLuminosityAlertOn.value = true
+            viewModel.isLuminosityAlertOn = true
         } else {
-            viewModel.isLuminosityAlertOn.value = false
+            viewModel.isLuminosityAlertOn = false
         }
-        viewModel.luminosityAlertMutedTill.value =
+        viewModel.luminosityAlertMutedTill =
             alertService.mutedTill(
                 type: luminosity,
                 for: ruuviTag
@@ -2036,11 +2022,11 @@ extension DashboardPresenter {
         viewModel: CardsViewModel
     ) {
         if case .connection = alertService.alert(for: ruuviTag, of: connection) {
-            viewModel.isConnectionAlertOn.value = true
+            viewModel.isConnectionAlertOn = true
         } else {
-            viewModel.isConnectionAlertOn.value = false
+            viewModel.isConnectionAlertOn = false
         }
-        viewModel.connectionAlertMutedTill.value = alertService
+        viewModel.connectionAlertMutedTill = alertService
             .mutedTill(
                 type: connection,
                 for: ruuviTag
@@ -2053,11 +2039,11 @@ extension DashboardPresenter {
         viewModel: CardsViewModel
     ) {
         if case .movement = alertService.alert(for: ruuviTag, of: movement) {
-            viewModel.isMovementAlertOn.value = true
+            viewModel.isMovementAlertOn = true
         } else {
-            viewModel.isMovementAlertOn.value = false
+            viewModel.isMovementAlertOn = false
         }
-        viewModel.movementAlertMutedTill.value = alertService
+        viewModel.movementAlertMutedTill = alertService
             .mutedTill(
                 type: movement,
                 for: ruuviTag
@@ -2070,91 +2056,89 @@ extension DashboardPresenter {
         viewModel: CardsViewModel
     ) {
         if case .cloudConnection = alertService.alert(for: ruuviTag, of: cloudConnection) {
-            viewModel.isCloudConnectionAlertOn.value = true
+            viewModel.isCloudConnectionAlertOn = true
         } else {
-            viewModel.isCloudConnectionAlertOn.value = false
+            viewModel.isCloudConnectionAlertOn = false
         }
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func reloadMutedTill() {
         for viewModel in viewModels {
-            if let mutedTill = viewModel.temperatureAlertMutedTill.value,
+            if let mutedTill = viewModel.temperatureAlertMutedTill,
                mutedTill < Date() {
-                viewModel.temperatureAlertMutedTill.value = nil
+                viewModel.temperatureAlertMutedTill = nil
             }
 
-            if let mutedTill = viewModel.relativeHumidityAlertMutedTill.value,
+            if let mutedTill = viewModel.relativeHumidityAlertMutedTill,
                mutedTill < Date() {
-                viewModel.relativeHumidityAlertMutedTill.value = nil
+                viewModel.relativeHumidityAlertMutedTill = nil
             }
 
-            if let mutedTill = viewModel.pressureAlertMutedTill.value,
+            if let mutedTill = viewModel.pressureAlertMutedTill,
                mutedTill < Date() {
-                viewModel.pressureAlertMutedTill.value = nil
+                viewModel.pressureAlertMutedTill = nil
             }
 
-            if let mutedTill = viewModel.signalAlertMutedTill.value,
+            if let mutedTill = viewModel.signalAlertMutedTill,
                mutedTill < Date() {
-                viewModel.signalAlertMutedTill.value = nil
+                viewModel.signalAlertMutedTill = nil
             }
 
-            if let mutedTill = viewModel.carbonDioxideAlertMutedTill.value,
+            if let mutedTill = viewModel.carbonDioxideAlertMutedTill,
                mutedTill < Date() {
-                viewModel.carbonDioxideAlertMutedTill.value = nil
+                viewModel.carbonDioxideAlertMutedTill = nil
             }
 
-            if let mutedTill = viewModel.pMatter1AlertMutedTill.value,
+            if let mutedTill = viewModel.pMatter1AlertMutedTill,
                mutedTill < Date() {
-                viewModel.pMatter1AlertMutedTill.value = nil
+                viewModel.pMatter1AlertMutedTill = nil
             }
 
-            if let mutedTill = viewModel.pMatter2_5AlertMutedTill.value,
+            if let mutedTill = viewModel.pMatter2_5AlertMutedTill,
                mutedTill < Date() {
-                viewModel.pMatter2_5AlertMutedTill.value = nil
+                viewModel.pMatter2_5AlertMutedTill = nil
             }
 
-            if let mutedTill = viewModel.pMatter4AlertMutedTill.value,
+            if let mutedTill = viewModel.pMatter4AlertMutedTill,
                mutedTill < Date() {
-                viewModel.pMatter4AlertMutedTill.value = nil
+                viewModel.pMatter4AlertMutedTill = nil
             }
 
-            if let mutedTill = viewModel.pMatter10AlertMutedTill.value,
+            if let mutedTill = viewModel.pMatter10AlertMutedTill,
                mutedTill < Date() {
-                viewModel.pMatter10AlertMutedTill.value = nil
+                viewModel.pMatter10AlertMutedTill = nil
             }
 
-            if let mutedTill = viewModel.vocAlertMutedTill.value,
+            if let mutedTill = viewModel.vocAlertMutedTill,
                mutedTill < Date() {
-                viewModel.vocAlertMutedTill.value = nil
+                viewModel.vocAlertMutedTill = nil
             }
 
-            if let mutedTill = viewModel.noxAlertMutedTill.value,
+            if let mutedTill = viewModel.noxAlertMutedTill,
                mutedTill < Date() {
-                viewModel.noxAlertMutedTill.value = nil
+                viewModel.noxAlertMutedTill = nil
             }
 
-            if let mutedTill = viewModel.soundAlertMutedTill.value,
+            if let mutedTill = viewModel.soundAlertMutedTill,
                mutedTill < Date() {
-                viewModel.soundAlertMutedTill.value = nil
+                viewModel.soundAlertMutedTill = nil
             }
 
-            if let mutedTill = viewModel.luminosityAlertMutedTill.value,
+            if let mutedTill = viewModel.luminosityAlertMutedTill,
                mutedTill < Date() {
-                viewModel.luminosityAlertMutedTill.value = nil
+                viewModel.luminosityAlertMutedTill = nil
             }
 
-            if let mutedTill = viewModel.connectionAlertMutedTill.value,
+            if let mutedTill = viewModel.connectionAlertMutedTill,
                mutedTill < Date() {
-                viewModel.connectionAlertMutedTill.value = nil
+                viewModel.connectionAlertMutedTill = nil
             }
 
-            if let mutedTill = viewModel.movementAlertMutedTill.value,
+            if let mutedTill = viewModel.movementAlertMutedTill,
                mutedTill < Date() {
-                viewModel.movementAlertMutedTill.value = nil
+                viewModel.movementAlertMutedTill = nil
             }
-
-            notifyViewModelUpdate(for: viewModel)
         }
     }
 
@@ -2164,47 +2148,43 @@ extension DashboardPresenter {
         for uuid: String,
         viewModel: CardsViewModel
     ) {
-        let observable: Observable<Date?> = switch type {
+        let date = alertService.mutedTill(type: type, for: uuid)
+
+        switch type {
         case .temperature:
-            viewModel.temperatureAlertMutedTill
+            viewModel.temperatureAlertMutedTill = date
         case .relativeHumidity:
-            viewModel.relativeHumidityAlertMutedTill
+            viewModel.relativeHumidityAlertMutedTill = date
         case .pressure:
-            viewModel.pressureAlertMutedTill
+            viewModel.pressureAlertMutedTill = date
         case .signal:
-            viewModel.signalAlertMutedTill
+            viewModel.signalAlertMutedTill = date
         case .carbonDioxide:
-            viewModel.carbonDioxideAlertMutedTill
+            viewModel.carbonDioxideAlertMutedTill = date
         case .pMatter1:
-            viewModel.pMatter1AlertMutedTill
+            viewModel.pMatter1AlertMutedTill = date
         case .pMatter2_5:
-            viewModel.pMatter2_5AlertMutedTill
+            viewModel.pMatter2_5AlertMutedTill = date
         case .pMatter4:
-            viewModel.pMatter4AlertMutedTill
+            viewModel.pMatter4AlertMutedTill = date
         case .pMatter10:
-            viewModel.pMatter10AlertMutedTill
+            viewModel.pMatter10AlertMutedTill = date
         case .voc:
-            viewModel.vocAlertMutedTill
+            viewModel.vocAlertMutedTill = date
         case .nox:
-            viewModel.noxAlertMutedTill
+            viewModel.noxAlertMutedTill = date
         case .sound:
-            viewModel.soundAlertMutedTill
+            viewModel.soundAlertMutedTill = date
         case .luminosity:
-            viewModel.luminosityAlertMutedTill
+            viewModel.luminosityAlertMutedTill = date
         case .connection:
-            viewModel.connectionAlertMutedTill
+            viewModel.connectionAlertMutedTill = date
         case .movement:
-            viewModel.movementAlertMutedTill
+            viewModel.movementAlertMutedTill = date
         default:
             // Should never be here
-            viewModel.temperatureAlertMutedTill
+            viewModel.temperatureAlertMutedTill = date
         }
-
-        let date = alertService.mutedTill(type: type, for: uuid)
-        if date != observable.value {
-            observable.value = date
-        }
-        notifyViewModelUpdate(for: viewModel)
     }
 
     // swiftlint:disable:next cyclomatic_complexity
@@ -2213,49 +2193,45 @@ extension DashboardPresenter {
         for uuid: String,
         viewModel: CardsViewModel
     ) {
-        let observable: Observable<Bool?> = switch type {
-        case .temperature:
-            viewModel.isTemperatureAlertOn
-        case .relativeHumidity:
-            viewModel.isRelativeHumidityAlertOn
-        case .pressure:
-            viewModel.isPressureAlertOn
-        case .signal:
-            viewModel.isSignalAlertOn
-        case .carbonDioxide:
-            viewModel.isCarbonDioxideAlertOn
-        case .pMatter1:
-            viewModel.isPMatter1AlertOn
-        case .pMatter2_5:
-            viewModel.isPMatter2_5AlertOn
-        case .pMatter4:
-            viewModel.isPMatter4AlertOn
-        case .pMatter10:
-            viewModel.isPMatter10AlertOn
-        case .voc:
-            viewModel.isVOCAlertOn
-        case .nox:
-            viewModel.isNOXAlertOn
-        case .sound:
-            viewModel.isSoundAlertOn
-        case .luminosity:
-            viewModel.isLuminosityAlertOn
-        case .connection:
-            viewModel.isConnectionAlertOn
-        case .movement:
-            viewModel.isMovementAlertOn
-        case .cloudConnection:
-            viewModel.isCloudConnectionAlertOn
-        default:
-            // Should never be here
-            viewModel.isTemperatureAlertOn
-        }
-
         let isOn = alertService.isOn(type: type, for: uuid)
-        if isOn != observable.value {
-            observable.value = isOn
+
+        switch type {
+        case .temperature:
+            viewModel.isTemperatureAlertOn = isOn
+        case .relativeHumidity:
+            viewModel.isRelativeHumidityAlertOn = isOn
+        case .pressure:
+            viewModel.isPressureAlertOn = isOn
+        case .signal:
+            viewModel.isSignalAlertOn = isOn
+        case .carbonDioxide:
+            viewModel.isCarbonDioxideAlertOn = isOn
+        case .pMatter1:
+            viewModel.isPMatter1AlertOn = isOn
+        case .pMatter2_5:
+            viewModel.isPMatter2_5AlertOn = isOn
+        case .pMatter4:
+            viewModel.isPMatter4AlertOn = isOn
+        case .pMatter10:
+            viewModel.isPMatter10AlertOn = isOn
+        case .voc:
+            viewModel.isVOCAlertOn = isOn
+        case .nox:
+            viewModel.isNOXAlertOn = isOn
+        case .sound:
+            viewModel.isSoundAlertOn = isOn
+        case .luminosity:
+            viewModel.isLuminosityAlertOn = isOn
+        case .connection:
+            viewModel.isConnectionAlertOn = isOn
+        case .movement:
+            viewModel.isMovementAlertOn = isOn
+        case .cloudConnection:
+            viewModel.isCloudConnectionAlertOn = isOn
+        default:
+            // Should never be here, but fallback:
+            viewModel.isTemperatureAlertOn = isOn
         }
-        notifyViewModelUpdate(for: viewModel)
     }
 
     /// Log out user if the auth token is expired.
@@ -2294,10 +2270,6 @@ extension DashboardPresenter {
         )
     }
 
-    private func notifyViewModelUpdate(for viewModel: CardsViewModel) {
-        view?.applyUpdate(to: viewModel)
-    }
-
     private func notifyRestartAdvertisementDaemon() {
         // Notify daemon to restart
         NotificationCenter
@@ -2322,8 +2294,8 @@ extension DashboardPresenter {
 
     private func triggerAlertsIfNeeded() {
         for viewModel in viewModels {
-            if let latestRecord = viewModel.latestMeasurement.value {
-                guard let macId = viewModel.mac.value
+            if let latestRecord = viewModel.latestMeasurement {
+                guard let macId = viewModel.mac
                 else {
                     continue
                 }

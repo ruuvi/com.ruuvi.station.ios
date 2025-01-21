@@ -10,7 +10,6 @@ protocol DashboardViewInput: ViewInput {
     var userSignedInOnce: Bool { get set }
     var isAuthorized: Bool { get set }
     var shouldShowSignInBanner: Bool { get set }
-    func applyUpdate(to viewModel: CardsViewModel)
     func showNoSensorsAddedMessage(show: Bool)
     func showBluetoothDisabled(userDeclined: Bool)
     func showKeepConnectionDialogChart(for viewModel: CardsViewModel)
