@@ -4,9 +4,12 @@ import RuuviOntology
 import RuuviService
 // swiftlint:disable file_length
 import UIKit
+import Combine
 
 // swiftlint:disable:next type_body_length
 class DashboardPlainCell: DashboardCell {
+    var cancellables = Set<AnyCancellable>()
+
     private lazy var ruuviTagNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor.dashboardIndicatorBig.color
@@ -133,14 +136,14 @@ class DashboardPlainCell: DashboardCell {
         self.viewModel = viewModel
 
         // Name
-        ruuviTagNameLabel.text = viewModel.name.value
+        ruuviTagNameLabel.text = viewModel.name
 
         // Clear existing arranged subviews
         rowsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
         var indicators = [DashboardIndicatorView]()
 
-        if let version = viewModel.version.value {
+        if let version = viewModel.version {
             if version == 224 || version == 240 {
                 // Version 224/240
                 // Set Air Quality Index as prominent
@@ -149,10 +152,10 @@ class DashboardPlainCell: DashboardCell {
                     maximumAirQIndex,
                     currentAirQState
                 ) = measurementService?.aqiString(
-                    for: viewModel.co2.value,
-                    pm25: viewModel.pm2_5.value,
-                    voc: viewModel.voc.value,
-                    nox: viewModel.nox.value
+                    for: viewModel.co2,
+                    pm25: viewModel.pm2_5,
+                    voc: viewModel.voc,
+                    nox: viewModel.nox
                 ) {
                     prominentView
                         .setValue(
@@ -175,7 +178,7 @@ class DashboardPlainCell: DashboardCell {
                 var temperatureValue: String?
                 var temperatureUnit: String?
 
-                if let temp = measurementService?.stringWithoutSign(for: viewModel.temperature.value) {
+                if let temp = measurementService?.stringWithoutSign(for: viewModel.temperature) {
                     temperatureValue = temp.components(separatedBy: String.nbsp).first
                 } else {
                     temperatureValue = RuuviLocalization.na
@@ -206,7 +209,7 @@ class DashboardPlainCell: DashboardCell {
         buildGrid(with: indicators)
 
         // Ago
-        if let date = viewModel.date.value?.ruuviAgo() {
+        if let date = viewModel.date?.ruuviAgo() {
             updatedAtLabel.text = date
             noDataView.isHidden = true
         } else {
@@ -214,10 +217,10 @@ class DashboardPlainCell: DashboardCell {
             noDataView.isHidden = false
         }
 
-        startTimer(with: viewModel.date.value)
+        startTimer(with: viewModel.date)
 
         // Source
-        if let source = viewModel.source.value {
+        if let source = viewModel.source {
             switch source {
             case .unknown:
                 dataSourceIconView.image = nil
@@ -232,7 +235,7 @@ class DashboardPlainCell: DashboardCell {
             dataSourceIconView.image = nil
         }
 
-        switch viewModel.source.value {
+        switch viewModel.source {
         case .ruuviNetwork:
             dataSourceIconViewWidthConstraint.constant = dataSourceIconViewRegularWidth
         default:
@@ -244,7 +247,7 @@ class DashboardPlainCell: DashboardCell {
             .withRenderingMode(.alwaysTemplate)
 
         // Battery stat
-        if let batteryLow = viewModel.batteryNeedsReplacement.value,
+        if let batteryLow = viewModel.batteryNeedsReplacement,
            batteryLow {
             batteryLevelView.isHidden = false
         } else {
@@ -255,24 +258,24 @@ class DashboardPlainCell: DashboardCell {
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     override func restartAlertAnimation(for viewModel: CardsViewModel) {
         // Alert
-        let alertVisible = viewModel.isCloud.value ?? false ||
-            viewModel.isConnected.value ?? false ||
-            viewModel.serviceUUID.value != nil
+        let alertVisible = viewModel.isCloud ||
+            viewModel.isConnected ||
+            viewModel.serviceUUID != nil
 
         let mutedTills = [
-            viewModel.temperatureAlertMutedTill.value,
-            viewModel.relativeHumidityAlertMutedTill.value,
-            viewModel.pressureAlertMutedTill.value,
-            viewModel.signalAlertMutedTill.value,
-            viewModel.movementAlertMutedTill.value,
-            viewModel.connectionAlertMutedTill.value,
-            viewModel.carbonDioxideAlertMutedTill.value,
-            viewModel.pMatter2_5AlertMutedTill.value,
-            viewModel.pMatter10AlertMutedTill.value,
-            viewModel.vocAlertMutedTill.value,
-            viewModel.noxAlertMutedTill.value,
-            viewModel.soundAlertMutedTill.value,
-            viewModel.luminosityAlertMutedTill.value,
+            viewModel.temperatureAlertMutedTill,
+            viewModel.relativeHumidityAlertMutedTill,
+            viewModel.pressureAlertMutedTill,
+            viewModel.signalAlertMutedTill,
+            viewModel.movementAlertMutedTill,
+            viewModel.connectionAlertMutedTill,
+            viewModel.carbonDioxideAlertMutedTill,
+            viewModel.pMatter2_5AlertMutedTill,
+            viewModel.pMatter10AlertMutedTill,
+            viewModel.vocAlertMutedTill,
+            viewModel.noxAlertMutedTill,
+            viewModel.soundAlertMutedTill,
+            viewModel.luminosityAlertMutedTill,
         ]
 
         if mutedTills.first(where: { $0 != nil }) != nil || !alertVisible {
@@ -282,9 +285,9 @@ class DashboardPlainCell: DashboardCell {
             return
         }
 
-        if let isOn = viewModel.isTemperatureAlertOn.value, isOn,
-           let temperatureAlertState = viewModel.temperatureAlertState.value {
-            if let version = viewModel.version.value {
+        if let isOn = viewModel.isTemperatureAlertOn, isOn,
+           let temperatureAlertState = viewModel.temperatureAlertState {
+            if let version = viewModel.version {
                 if version == 224 || version == 240 {
                     prominentView.changeColor(highlight: temperatureAlertState == .firing)
                 } else {
@@ -292,7 +295,7 @@ class DashboardPlainCell: DashboardCell {
                 }
             }
         } else {
-            if let version = viewModel.version.value {
+            if let version = viewModel.version {
                 if version == 224 || version == 240 {
                     prominentView.changeColor(highlight: false)
                 } else {
@@ -301,77 +304,77 @@ class DashboardPlainCell: DashboardCell {
             }
         }
 
-        if let isOn = viewModel.isRelativeHumidityAlertOn.value, isOn,
-           let rhAlertState = viewModel.relativeHumidityAlertState.value {
+        if let isOn = viewModel.isRelativeHumidityAlertOn, isOn,
+           let rhAlertState = viewModel.relativeHumidityAlertState {
             humidityView.changeColor(highlight: rhAlertState == .firing)
         } else {
             humidityView.changeColor(highlight: false)
         }
 
-        if let isOn = viewModel.isPressureAlertOn.value, isOn,
-           let pressureAlertState = viewModel.pressureAlertState.value {
+        if let isOn = viewModel.isPressureAlertOn, isOn,
+           let pressureAlertState = viewModel.pressureAlertState {
             pressureView.changeColor(highlight: pressureAlertState == .firing)
         } else {
             pressureView.changeColor(highlight: false)
         }
 
-        if let isOn = viewModel.isMovementAlertOn.value, isOn,
-           let movementAlertState = viewModel.movementAlertState.value {
+        if let isOn = viewModel.isMovementAlertOn, isOn,
+           let movementAlertState = viewModel.movementAlertState {
             movementView.changeColor(highlight: movementAlertState == .firing)
         } else {
             movementView.changeColor(highlight: false)
         }
 
-        if let isOn = viewModel.isCarbonDioxideAlertOn.value, isOn,
-           let alertState = viewModel.carbonDioxideAlertState.value {
+        if let isOn = viewModel.isCarbonDioxideAlertOn, isOn,
+           let alertState = viewModel.carbonDioxideAlertState {
             co2View.changeColor(highlight: alertState == .firing)
         } else {
             co2View.changeColor(highlight: false)
         }
 
-        if let isOn = viewModel.isPMatter2_5AlertOn.value, isOn,
-           let alertState = viewModel.pMatter2_5AlertState.value {
+        if let isOn = viewModel.isPMatter2_5AlertOn, isOn,
+           let alertState = viewModel.pMatter2_5AlertState {
             pm25View.changeColor(highlight: alertState == .firing)
         } else {
             pm25View.changeColor(highlight: false)
         }
 
-        if let isOn = viewModel.isPMatter10AlertOn.value, isOn,
-           let alertState = viewModel.pMatter10AlertState.value {
+        if let isOn = viewModel.isPMatter10AlertOn, isOn,
+           let alertState = viewModel.pMatter10AlertState {
             pm10View.changeColor(highlight: alertState == .firing)
         } else {
             pm10View.changeColor(highlight: false)
         }
 
-        if let isOn = viewModel.isVOCAlertOn.value, isOn,
-           let alertState = viewModel.vocAlertState.value {
+        if let isOn = viewModel.isVOCAlertOn, isOn,
+           let alertState = viewModel.vocAlertState {
             vocView.changeColor(highlight: alertState == .firing)
         } else {
             vocView.changeColor(highlight: false)
         }
 
-        if let isOn = viewModel.isNOXAlertOn.value, isOn,
-           let alertState = viewModel.noxAlertState.value {
+        if let isOn = viewModel.isNOXAlertOn, isOn,
+           let alertState = viewModel.noxAlertState {
             noxView.changeColor(highlight: alertState == .firing)
         } else {
             noxView.changeColor(highlight: false)
         }
 
-        if let isOn = viewModel.isSoundAlertOn.value, isOn,
-           let alertState = viewModel.soundAlertState.value {
+        if let isOn = viewModel.isSoundAlertOn, isOn,
+           let alertState = viewModel.soundAlertState {
             soundView.changeColor(highlight: alertState == .firing)
         } else {
             soundView.changeColor(highlight: false)
         }
 
-        if let isOn = viewModel.isLuminosityAlertOn.value, isOn,
-           let alertState = viewModel.luminosityAlertState.value {
+        if let isOn = viewModel.isLuminosityAlertOn, isOn,
+           let alertState = viewModel.luminosityAlertState {
             luminosityView.changeColor(highlight: alertState == .firing)
         } else {
             luminosityView.changeColor(highlight: false)
         }
 
-        if let state = viewModel.alertState.value {
+        if let state = viewModel.alertState {
             switch state {
             case .empty:
                 if alertIcon.image != nil {
@@ -459,6 +462,7 @@ extension DashboardPlainCell {
         ].forEach {
             $0.clearValues()
         }
+        cancellables.removeAll()
     }
 }
 
@@ -615,11 +619,11 @@ extension DashboardPlainCell {
         var indicators = [DashboardIndicatorView]()
 
         // Humidity
-        if let humidity = viewModel.humidity.value,
+        if let humidity = viewModel.humidity,
            let measurementService {
             let humidityValue = measurementService.stringWithoutSign(
                 for: humidity,
-                temperature: viewModel.temperature.value
+                temperature: viewModel.temperature
             )
             let humidityUnit = measurementService.units.humidityUnit
             let humidityUnitSymbol = humidityUnit.symbol
@@ -633,7 +637,7 @@ extension DashboardPlainCell {
         }
 
         // Pressure
-        if let pressure = viewModel.pressure.value {
+        if let pressure = viewModel.pressure {
             let pressureValue = measurementService?.stringWithoutSign(for: pressure)
             pressureView.setValue(
                 with: pressureValue,
@@ -643,7 +647,7 @@ extension DashboardPlainCell {
         }
 
         // Movement
-        if let movement = viewModel.movementCounter.value {
+        if let movement = viewModel.movementCounter {
             movementView.setValue(
                 with: "\(movement)",
                 unit: RuuviLocalization.Cards.Movements.title
@@ -662,7 +666,7 @@ extension DashboardPlainCell {
         var indicators = [DashboardIndicatorView]()
 
         // Temp
-        if let temperature = viewModel.temperature.value {
+        if let temperature = viewModel.temperature {
             let tempValue = measurementService?.stringWithoutSign(for: temperature)
             temperatureView.setValue(
                 with: tempValue,
@@ -672,11 +676,11 @@ extension DashboardPlainCell {
         }
 
         // Humidity
-        if let humidity = viewModel.humidity.value,
+        if let humidity = viewModel.humidity,
            let measurementService {
             let humidityValue = measurementService.stringWithoutSign(
                 for: humidity,
-                temperature: viewModel.temperature.value
+                temperature: viewModel.temperature
             )
             let humidityUnit = measurementService.units.humidityUnit
             let humidityUnitSymbol = humidityUnit.symbol
@@ -690,7 +694,7 @@ extension DashboardPlainCell {
         }
 
         // Pressure
-        if let pressure = viewModel.pressure.value {
+        if let pressure = viewModel.pressure {
             let pressureValue = measurementService?.stringWithoutSign(for: pressure)
             pressureView.setValue(
                 with: pressureValue,
@@ -700,7 +704,7 @@ extension DashboardPlainCell {
         }
 
         // CO2
-        if let co2 = viewModel.co2.value,
+        if let co2 = viewModel.co2,
            let co2Value = measurementService?.co2String(for: co2) {
             co2View.setValue(
                 with: co2Value,
@@ -710,7 +714,7 @@ extension DashboardPlainCell {
         }
 
         // PM2.5
-        if let pm25 = viewModel.pm2_5.value,
+        if let pm25 = viewModel.pm2_5,
            let pm25Value = measurementService?.pm25String(for: pm25) {
             pm25View.setValue(
                 with: pm25Value,
@@ -720,7 +724,7 @@ extension DashboardPlainCell {
         }
 
         // PM10
-        if let pm10 = viewModel.pm10.value,
+        if let pm10 = viewModel.pm10,
            let pm10Value = measurementService?.pm10String(for: pm10) {
             pm10View.setValue(
                 with: pm10Value,
@@ -730,7 +734,7 @@ extension DashboardPlainCell {
         }
 
         // NOx
-        if let nox = viewModel.nox.value,
+        if let nox = viewModel.nox,
            let noxValue = measurementService?.noxString(for: nox) {
             noxView.setValue(
                 with: noxValue,
@@ -740,7 +744,7 @@ extension DashboardPlainCell {
         }
 
         // VOC
-        if let voc = viewModel.voc.value,
+        if let voc = viewModel.voc,
            let vocValue = measurementService?.vocString(for: voc) {
             vocView.setValue(
                 with: vocValue,
@@ -750,7 +754,7 @@ extension DashboardPlainCell {
         }
 
         // Luminosity
-        if let luminosity = viewModel.luminance.value,
+        if let luminosity = viewModel.luminance,
            let luminosityValue = measurementService?.luminosityString(for: luminosity) {
             luminosityView.setValue(
                 with: luminosityValue,
@@ -760,7 +764,7 @@ extension DashboardPlainCell {
         }
 
         // Sound
-        if let sound = viewModel.dbaAvg.value,
+        if let sound = viewModel.dbaAvg,
            let soundValue = measurementService?.soundAvgString(for: sound) {
             soundView.setValue(
                 with: soundValue,

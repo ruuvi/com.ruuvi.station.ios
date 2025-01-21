@@ -5,6 +5,7 @@ import RuuviOntology
 import RuuviService
 // swiftlint:disable file_length
 import UIKit
+import Combine
 
 class DashboardViewController: UIViewController {
     // Configuration
@@ -78,24 +79,36 @@ class DashboardViewController: UIViewController {
     ) -> UICollectionViewCell? {
         switch dashboardType {
         case .image:
-            let cell = collectionView.dequeueReusableCell(
+            guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: "cellId",
                 for: indexPath
-            ) as? DashboardImageCell
-            cell?.configure(with: viewModel, measurementService: measurementService)
-            cell?.restartAlertAnimation(for: viewModel)
-            cell?.delegate = self
-            cell?.resetMenu(menu: cardContextMenuOption(for: indexPath.item))
+            ) as? DashboardImageCell else { return nil }
+            viewModel.combinedPublisher()
+              .receive(on: DispatchQueue.main)
+              .sink { [weak self] _ in
+                  cell.configure(with: viewModel, measurementService: self?.measurementService)
+              }
+              .store(in: &cell.cancellables)
+            cell.configure(with: viewModel, measurementService: measurementService)
+            cell.restartAlertAnimation(for: viewModel)
+            cell.delegate = self
+            cell.resetMenu(menu: cardContextMenuOption(for: indexPath.item))
             return cell
         case .simple:
-            let cell = collectionView.dequeueReusableCell(
+            guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: "cellIdPlain",
                 for: indexPath
-            ) as? DashboardPlainCell
-            cell?.configure(with: viewModel, measurementService: measurementService)
-            cell?.restartAlertAnimation(for: viewModel)
-            cell?.delegate = self
-            cell?.resetMenu(menu: cardContextMenuOption(for: indexPath.item))
+            ) as? DashboardPlainCell else { return nil }
+            viewModel.combinedPublisher()
+              .receive(on: DispatchQueue.main)
+              .sink { [weak self] _ in
+                  cell.configure(with: viewModel, measurementService: self?.measurementService)
+              }
+              .store(in: &cell.cancellables)
+            cell.configure(with: viewModel, measurementService: measurementService)
+            cell.restartAlertAnimation(for: viewModel)
+            cell.delegate = self
+            cell.resetMenu(menu: cardContextMenuOption(for: indexPath.item))
             return cell
         case .none:
             return nil
@@ -246,24 +259,13 @@ private extension DashboardViewController {
 
     private func reloadCollectionView(redrawLayout: Bool = false) {
         DispatchQueue.main.async { [weak self] in
+            guard let sSelf = self else { return }
             if redrawLayout {
-                guard let self else { return }
-                let flowLayout = createLayout()
-                collectionView.setCollectionViewLayout(
-                    flowLayout,
-                    animated: false,
-                    completion: { _ in
-                        guard self.viewModels.count > 0 else { return }
-                        let indexPath = IndexPath(item: 0, section: 0)
-                        self.collectionView.scrollToItem(
-                            at: indexPath,
-                            at: .top,
-                            animated: false
-                        )
-                    }
-                )
+                sSelf.collectionView.collectionViewLayout.invalidateLayout()
             }
-            self?.collectionView.reloadWithoutAnimation()
+            let oldOffset = sSelf.collectionView.contentOffset
+            sSelf.collectionView.reloadWithoutAnimation()
+            sSelf.collectionView.setContentOffset(oldOffset, animated: false)
         }
     }
 
@@ -468,8 +470,7 @@ extension DashboardViewController {
         }
 
         let viewModel = viewModels[index]
-        if let canShare = viewModel.canShareTag.value,
-           canShare {
+        if viewModel.canShareTag {
             contextMenuActions.append(shareSensorAction)
         }
 
@@ -517,7 +518,7 @@ extension DashboardViewController {
         animated: true
       )
 
-      let macIds = viewModels.compactMap { $0.mac.value?.value }
+      let macIds = viewModels.compactMap { $0.mac?.value }
       output.viewDidReorderSensors(with: .manual, orderedIds: macIds)
     }
 
@@ -672,7 +673,7 @@ private extension DashboardViewController {
 
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(widthMultiplier),
-            heightDimension: .estimated(1)
+            heightDimension: .estimated(200)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         let itemHorizontalSpacing: CGFloat = GlobalHelpers.isDeviceTablet() ? 6 : 4
@@ -890,7 +891,7 @@ extension DashboardViewController: UICollectionViewDropDelegate {
 
         coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
 
-        let macIds = viewModels.compactMap { $0.mac.value?.value }
+        let macIds = viewModels.compactMap { $0.mac?.value }
         output.viewDidReorderSensors(with: .manual, orderedIds: macIds)
     }
 
@@ -906,32 +907,6 @@ extension DashboardViewController: UICollectionViewDropDelegate {
 // MARK: - DashboardViewInput
 
 extension DashboardViewController: DashboardViewInput {
-    func applyUpdate(to viewModel: CardsViewModel) {
-        guard isListRefreshable
-        else {
-            return
-        }
-
-        if let index = viewModels.firstIndex(where: { vm in
-            vm.luid.value != nil && vm.luid.value == viewModel.luid.value ||
-                vm.mac.value != nil && vm.mac.value == viewModel.mac.value
-        }) {
-            let indexPath = IndexPath(item: index, section: 0)
-            if let cell = collectionView
-                .cellForItem(at: indexPath) as? DashboardImageCell {
-                cell.configure(
-                    with: viewModel, measurementService: measurementService
-                )
-                cell.restartAlertAnimation(for: viewModel)
-            } else if let cell = collectionView
-                .cellForItem(at: indexPath) as? DashboardPlainCell {
-                cell.configure(
-                    with: viewModel, measurementService: measurementService
-                )
-                cell.restartAlertAnimation(for: viewModel)
-            }
-        }
-    }
 
     func localize() {
         // No op.
@@ -1013,8 +988,8 @@ extension DashboardViewController: DashboardViewInput {
         sortingType: DashboardSortingType
     ) {
         let defaultName = GlobalHelpers.ruuviTagDefaultName(
-            from: viewModel.mac.value?.mac,
-            luid: viewModel.luid.value?.value
+            from: viewModel.mac?.mac,
+            luid: viewModel.luid?.value
         )
         let alert = UIAlertController(
             title: RuuviLocalization.TagSettings.TagNameTitleLabel.text,
@@ -1025,7 +1000,7 @@ extension DashboardViewController: DashboardViewInput {
         alert.addTextField { [weak self] alertTextField in
             guard let self else { return }
             alertTextField.delegate = self
-            alertTextField.text = (defaultName == viewModel.name.value) ? nil : viewModel.name.value
+            alertTextField.text = (defaultName == viewModel.name) ? nil : viewModel.name
             alertTextField.placeholder = defaultName
             tagNameTextField = alertTextField
         }

@@ -133,7 +133,7 @@ extension DashboardIndicatorProminentView {
         superscriptValue: String? = nil,
         subscriptValue: String? = nil,
         showProgress: Bool = false,
-        progressColor: UIColor = .clear
+        progressColor: UIColor? = .clear
     ) {
         indicatorValueLabel.text = value
         indicatorSuperscriptLabel.text = superscriptValue

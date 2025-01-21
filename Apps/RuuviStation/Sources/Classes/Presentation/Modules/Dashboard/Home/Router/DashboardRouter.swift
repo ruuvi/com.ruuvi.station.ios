@@ -134,6 +134,19 @@ class DashboardRouter: NSObject, DashboardRouterInput {
             cards = output
         }
 
+        if let cards {
+            cards.configure(output: output)
+            cards.configure(
+                viewModels: viewModels,
+                ruuviTagSensors: ruuviTagSensors,
+                sensorSettings: sensorSettings
+            )
+            cards.configure(
+                scrollTo: scrollTo,
+                openChart: showCharts
+            )
+        }
+
         // Remove any cards view controller from stack if exists already
         if let navigationController = transitionHandler.navigationController,
            navigationController
@@ -149,18 +162,6 @@ class DashboardRouter: NSObject, DashboardRouterInput {
                 module,
                 animated: true
             )
-        if let cards {
-            cards.configure(output: output)
-            cards.configure(
-                viewModels: viewModels,
-                ruuviTagSensors: ruuviTagSensors,
-                sensorSettings: sensorSettings
-            )
-            cards.configure(
-                scrollTo: scrollTo,
-                openChart: showCharts
-            )
-        }
     }
 
     // swiftlint:disable:next function_parameter_count

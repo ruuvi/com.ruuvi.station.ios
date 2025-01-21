@@ -262,7 +262,7 @@ extension CardsLargeImageCell {
         measurementService: RuuviServiceMeasurement?
     ) {
         // Temp
-        if let temp = measurementService?.stringWithoutSign(for: viewModel.temperature.value) {
+        if let temp = measurementService?.stringWithoutSign(for: viewModel.temperature) {
             temperatureLabel.text = temp.components(separatedBy: String.nbsp).first
         } else {
             temperatureLabel.text = RuuviLocalization.na
@@ -275,12 +275,12 @@ extension CardsLargeImageCell {
         }
 
         // Humidity
-        if let humidity = viewModel.humidity.value,
+        if let humidity = viewModel.humidity,
            let measurementService {
             hideHumidityView(hide: false)
             let humidityValue = measurementService.stringWithoutSign(
                 for: humidity,
-                temperature: viewModel.temperature.value
+                temperature: viewModel.temperature
             )
             let humidityUnit = measurementService.units.humidityUnit
             let humidityUnitSymbol = humidityUnit.symbol
@@ -296,7 +296,7 @@ extension CardsLargeImageCell {
         }
 
         // Pressure
-        if let pressure = viewModel.pressure.value {
+        if let pressure = viewModel.pressure {
             hidePressureView(hide: false)
             let pressureValue = measurementService?.stringWithoutSign(for: pressure)
             pressureView.setValue(
@@ -310,7 +310,7 @@ extension CardsLargeImageCell {
         // Movement
         switch viewModel.type {
         case .ruuvi:
-            if let movement = viewModel.movementCounter.value {
+            if let movement = viewModel.movementCounter {
                 hideMovementView(hide: false)
                 movementView.setValue(
                     with: "\(movement)",
@@ -322,15 +322,15 @@ extension CardsLargeImageCell {
         }
 
         // Ago
-        if let date = viewModel.date.value?.ruuviAgo() {
+        if let date = viewModel.date?.ruuviAgo() {
             updatedAtLabel.text = date
         } else {
             updatedAtLabel.text = RuuviLocalization.Cards.UpdatedLabel.NoData.message
         }
-        startTimer(with: viewModel.date.value)
+        startTimer(with: viewModel.date)
 
         // Source
-        if let source = viewModel.source.value {
+        if let source = viewModel.source {
             switch source {
             case .unknown:
                 dataSourceIconView.image = nil
@@ -346,7 +346,7 @@ extension CardsLargeImageCell {
         }
 
         // Battery stat
-        if let batteryLow = viewModel.batteryNeedsReplacement.value,
+        if let batteryLow = viewModel.batteryNeedsReplacement,
            batteryLow {
             batteryLevelView.isHidden = false
             batteryLevelViewHeight.constant = 24
@@ -356,7 +356,7 @@ extension CardsLargeImageCell {
         }
 
         // Sync status
-        guard let macId = viewModel.mac.value
+        guard let macId = viewModel.mac
         else {
             return
         }
