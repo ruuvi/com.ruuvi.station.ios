@@ -62,8 +62,8 @@ class TagChartsMarkerView: MarkerImage {
             width: labelWidth,
             height: labelHeight
         )
-        let screenSize: CGRect = UIScreen.main.bounds
-        if (point.x + rectangle.width) >= screenSize.width {
+        let chartWidth = self.chartView?.bounds.width ?? UIScreen.main.bounds.width
+        if (point.x + rectangle.width) >= chartWidth {
             rectangle.origin.x -= rectangle.width
         } else {
             rectangle.origin.x -= rectangle.width / 2
@@ -101,6 +101,8 @@ class TagChartsMarkerView: MarkerImage {
             attributes: attrs,
             context: nil
         )
+
+        lastDrawnRect = rectangle
     }
 
     override func refreshContent(entry: ChartDataEntry, highlight _: Highlight) {
