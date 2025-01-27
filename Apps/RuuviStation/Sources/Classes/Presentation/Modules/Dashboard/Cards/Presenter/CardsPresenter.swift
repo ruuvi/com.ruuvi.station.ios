@@ -535,7 +535,6 @@ extension CardsPresenter {
                             sSelf.ruuviSensorPropertiesService.getImage(for: ruuviTag)
                                 .on(success: { image in
                                     viewModel.background = image
-                                    self?.view?.changeCardBackground(of: viewModel, to: image)
                                 }, failure: { [weak self] error in
                                     self?.errorPresenter.present(error: error)
                                 })
@@ -699,7 +698,6 @@ extension CardsPresenter {
             ruuviSensorPropertiesService.getImage(for: ruuviTag)
                 .on(success: { [weak self] image in
                     viewModel.background = image
-                    self?.view?.changeCardBackground(of: viewModel, to: image)
                 }, failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
                 })
