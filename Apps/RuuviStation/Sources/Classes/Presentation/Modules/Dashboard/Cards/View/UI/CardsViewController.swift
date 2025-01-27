@@ -186,10 +186,6 @@ class CardsViewController: UIViewController {
     private var currentVisibleItem: CardsViewModel? {
         didSet {
             bindCurrentVisibleItem()
-            updateCardInfo(
-                with: currentVisibleItem?.name,
-                image: currentVisibleItem?.background
-            )
             updateTopActionButtonVisibility()
         }
     }
@@ -584,15 +580,6 @@ extension CardsViewController: CardsViewInput {
         }
     }
 
-    func changeCardBackground(
-        of viewModel: CardsViewModel,
-        to image: UIImage?
-    ) {
-        if viewModel == currentVisibleItem {
-            updateCardInfo(with: viewModel.name, image: image)
-        }
-    }
-
     func localize() {
         // No op.
     }
@@ -739,10 +726,14 @@ extension CardsViewController {
         item.$name
             .receive(on: RunLoop.main)
             .sink { [weak self] newName in
-                self?.updateCardInfo(
-                    with: newName,
-                    image: item.background
-                )
+                self?.ruuviTagNameLabel.text = newName
+            }
+            .store(in: &currentVisibleCancellables)
+
+        item.$background
+            .receive(on: RunLoop.main)
+            .sink { [weak self] background in
+                self?.cardBackgroundView.setBackgroundImage(with: background)
             }
             .store(in: &currentVisibleCancellables)
 
@@ -801,10 +792,6 @@ extension CardsViewController {
 }
 
 extension CardsViewController {
-    private func updateCardInfo(with name: String?, image: UIImage?) {
-        ruuviTagNameLabel.text = name
-        cardBackgroundView.setBackgroundImage(with: image)
-    }
 
     // swiftlint:disable:next function_body_length
     private func restartAnimations() {
