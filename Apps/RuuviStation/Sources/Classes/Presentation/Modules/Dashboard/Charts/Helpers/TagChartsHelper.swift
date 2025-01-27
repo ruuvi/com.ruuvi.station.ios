@@ -5,6 +5,8 @@ import RuuviLocalization
 import UIKit
 
 enum TagChartsHelper {
+
+    // swiftlint:disable:next function_body_length
     static func newDataSet(
         upperAlertValue: Double?,
         entries: [ChartDataEntry] = [],
@@ -26,6 +28,8 @@ enum TagChartsHelper {
         lineChartDataSet.drawCircleHoleEnabled = false
         lineChartDataSet.drawFilledEnabled = true
         lineChartDataSet.highlightEnabled = true
+        lineChartDataSet.maximumGapBetweenPoints = 3600
+        lineChartDataSet.gapCircleRadius = 1.5
 
         if showAlertRangeInGraph {
             let lineColor = RuuviColor.graphLineColor.color
