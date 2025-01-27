@@ -47,54 +47,56 @@ class TagChartsMarkerView: MarkerImage {
     }
 
     override func draw(context: CGContext, point: CGPoint) {
-        guard let attrs
-        else {
-            return
-        }
-        // Padding for the label.
+        guard let attrs else { return }
+
         let labelWidth = labelText.size(withAttributes: attrs).width + hPadding
         let labelHeight = labelText.size(withAttributes: attrs).height + vPadding
+        var rectangle = CGRect(x: point.x, y: point.y, width: labelWidth, height: labelHeight)
 
-        // Set position of the marker view container
-        var rectangle = CGRect(
-            x: point.x,
-            y: point.y,
-            width: labelWidth,
-            height: labelHeight
-        )
-        let chartWidth = self.chartView?.bounds.width ?? UIScreen.main.bounds.width
+        let chartWidth = chartView?.bounds.width ?? UIScreen.main.bounds.width
         if (point.x + rectangle.width) >= chartWidth {
+            // shift left
             rectangle.origin.x -= rectangle.width
         } else {
+            // center horizontally
             rectangle.origin.x -= rectangle.width / 2
         }
 
         let distanceFromTop = point.y - rectangle.height
         let distanceFromBottom = point.y + rectangle.height
-        // Place the markup in correct Y position.
-        // If the touch point and the markup height exceeds the minimum Y-position,
-        // place to to minimum Y-position. And, otherwise for the maximum Y-position.
-        // For rest of the cases place it near to the touch point.
+
         if distanceFromTop <= 0 {
+            // near top → shift marker down
             rectangle.origin.y = rectangle.height / 2
         } else if distanceFromBottom >= (parentFrame.height - yBottomPadding) {
+            // near bottom → shift marker up
             rectangle.origin.y -= (rectangle.height + yBottomPadding)
         } else {
+            // otherwise → standard “center vertically” offset
             rectangle.origin.y -= rectangle.height / 2 + yBottomPadding
         }
 
-        // Rounded corner
-        let clipPath = UIBezierPath(
-            roundedRect: rectangle,
-            cornerRadius: cornerRadius
-        ).cgPath
+        if rectangle.minX < 0 {
+            rectangle.origin.x = 0
+        } else if rectangle.maxX > chartWidth {
+            rectangle.origin.x = chartWidth - rectangle.width
+        }
+
+        // parentFrame is the chart area or superview bounds you want to respect.
+        let maxY = parentFrame.height
+        if rectangle.minY < 0 {
+            rectangle.origin.y = 0
+        } else if rectangle.maxY > maxY {
+            rectangle.origin.y = maxY - rectangle.height
+        }
+
+        // Draw the background rectangle (rounded corners).
+        let clipPath = UIBezierPath(roundedRect: rectangle, cornerRadius: cornerRadius).cgPath
         context.addPath(clipPath)
         context.setFillColor(color.cgColor)
-        context.setStrokeColor(UIColor.clear.cgColor)
-        context.closePath()
-        context.drawPath(using: .fillStroke)
+        context.fillPath()
 
-        // Draw
+        // Draw text
         labelText.draw(
             with: rectangle,
             options: .usesLineFragmentOrigin,
