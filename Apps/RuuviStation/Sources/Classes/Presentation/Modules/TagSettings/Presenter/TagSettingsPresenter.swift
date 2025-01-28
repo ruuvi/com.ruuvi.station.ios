@@ -607,6 +607,24 @@ extension TagSettingsPresenter {
             observer.viewModel.isAlertsEnabled.value = isCl || isCo || observer.ruuviTag.serviceUUID != nil
             self.processAlerts()
         }
+
+        if let luid = ruuviTag.luid {
+            bind(viewModel.keepConnection, fire: false) { [weak self] observer, keepConnection in
+                if keepConnection.bound {
+                    if !observer.connectionPersistence.keepConnection(to: luid) {
+                        observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: luid)
+                    }
+                } else {
+                    observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: luid)
+                }
+                // Toggle the background scanning if any tag is asked to pair.
+                if keepConnection.bound {
+                    self?.settings.saveHeartbeats = true
+                }
+            }
+        }
+
+        bindOffsetCorrection()
     }
 
     // Sets the view model properties related to the associated RuuviTag
@@ -1304,20 +1322,6 @@ extension TagSettingsPresenter {
 
         viewModel.updateRecord(record)
         reloadMutedTill()
-    }
-
-    private func bindViewModel(to ruuviTag: RuuviTagSensor) {
-        if let luid = ruuviTag.luid {
-            bind(viewModel.keepConnection, fire: false) { [weak self] observer, keepConnection in
-                observer.connectionPersistence.setKeepConnection(keepConnection.bound, for: luid)
-                // Toggle the background scanning if any tag is asked to pair.
-                if keepConnection.bound {
-                    self?.settings.saveHeartbeats = true
-                }
-            }
-        }
-
-        bindOffsetCorrection()
     }
 
     private func bindOffsetCorrection() {

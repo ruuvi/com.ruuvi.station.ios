@@ -72,6 +72,7 @@ class TagSettingsSwitchCell: UITableViewCell {
             leading: titleLabel.trailingAnchor,
             bottom: nil,
             trailing: nil,
+            padding: .init(top: 0, left: 6, bottom: 0, right: 0),
             size: .init(width: 16, height: 16)
         )
         pairingAnimationView.centerYInSuperview()
