@@ -696,7 +696,7 @@ extension CardsPresenter {
         let ruuviViewModels = ruuviTags.compactMap { ruuviTag -> CardsViewModel in
             let viewModel = CardsViewModel(ruuviTag)
             ruuviSensorPropertiesService.getImage(for: ruuviTag)
-                .on(success: { [weak self] image in
+                .on(success: { image in
                     viewModel.background = image
                 }, failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
