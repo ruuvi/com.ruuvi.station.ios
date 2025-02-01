@@ -263,7 +263,8 @@ extension CardsViewModel: NSItemProviderWriting {
 }
 
 extension CardsViewModel {
-    /// Combines all `@Published` properties into a single publisher
+
+    // Combines all `@Published` properties into a single publisher
     // swiftlint:disable:next function_body_length
     func combinedPublisher() -> AnyPublisher<Void, Never> {
         let publishers: [AnyPublisher<Void, Never>] = [
@@ -352,7 +353,7 @@ extension CardsViewModel {
         ]
 
         return Publishers.MergeMany(publishers)
-            .debounce(for: .milliseconds(1500), scheduler: DispatchQueue.main)
+            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 }

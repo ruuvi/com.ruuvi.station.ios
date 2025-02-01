@@ -69,10 +69,8 @@ class DashboardPlainCell: DashboardCell {
         return stackView
     }()
 
-    // Prominent view that show the more important value
-    private lazy var prominentView = DashboardIndicatorProminentView()
-
     // Indicator views for all possible values
+    private lazy var airQIndexView = DashboardIndicatorView()
     private lazy var temperatureView = DashboardIndicatorView()
     private lazy var humidityView = DashboardIndicatorView()
     private lazy var pressureView = DashboardIndicatorView()
@@ -146,27 +144,6 @@ class DashboardPlainCell: DashboardCell {
         if let version = viewModel.version {
             if version == 224 || version == 240 {
                 // Version 224/240
-                // Set Air Quality Index as prominent
-                if let (
-                    currentAirQIndex,
-                    maximumAirQIndex,
-                    currentAirQState
-                ) = measurementService?.aqiString(
-                    for: viewModel.co2,
-                    pm25: viewModel.pm2_5,
-                    voc: viewModel.voc,
-                    nox: viewModel.nox
-                ) {
-                    prominentView
-                        .setValue(
-                            with: currentAirQIndex.stringValue,
-                            superscriptValue: "/\(maximumAirQIndex.stringValue)",
-                            subscriptValue: RuuviLocalization.airQuality,
-                            showProgress: true,
-                            progressColor: currentAirQState.color
-                        )
-                }
-
                 // Collect indicators for the grid
                 indicators = indicatorsForE0(
                     viewModel,
@@ -174,29 +151,6 @@ class DashboardPlainCell: DashboardCell {
                 )
             } else {
                 // Version 5
-                // Set Temperature as prominent
-                var temperatureValue: String?
-                var temperatureUnit: String?
-
-                if let temp = measurementService?.stringWithoutSign(for: viewModel.temperature) {
-                    temperatureValue = temp.components(separatedBy: String.nbsp).first
-                } else {
-                    temperatureValue = RuuviLocalization.na
-                }
-
-                if let unit = measurementService?.units.temperatureUnit {
-                    temperatureUnit = unit.symbol
-                } else {
-                    temperatureUnit = RuuviLocalization.na
-                }
-
-                prominentView
-                    .setValue(
-                        with: temperatureValue,
-                        superscriptValue: temperatureUnit,
-                        subscriptValue: RuuviLocalization.WebTagSettings.TemperatureAlertTitleLabel.text
-                    )
-
                 // Collect indicators for the grid
                 indicators = indicatorsForV5OrOlder(
                     viewModel,
@@ -287,21 +241,9 @@ class DashboardPlainCell: DashboardCell {
 
         if let isOn = viewModel.isTemperatureAlertOn, isOn,
            let temperatureAlertState = viewModel.temperatureAlertState {
-            if let version = viewModel.version {
-                if version == 224 || version == 240 {
-                    prominentView.changeColor(highlight: temperatureAlertState == .firing)
-                } else {
-                    temperatureView.changeColor(highlight: temperatureAlertState == .firing)
-                }
-            }
+            temperatureView.changeColor(highlight: temperatureAlertState == .firing)
         } else {
-            if let version = viewModel.version {
-                if version == 224 || version == 240 {
-                    prominentView.changeColor(highlight: false)
-                } else {
-                    temperatureView.changeColor(highlight: false)
-                }
-            }
+            temperatureView.changeColor(highlight: false)
         }
 
         if let isOn = viewModel.isRelativeHumidityAlertOn, isOn,
@@ -445,9 +387,8 @@ extension DashboardPlainCell {
         alertButton.isUserInteractionEnabled = false
         dataSourceIconViewWidthConstraint.constant = dataSourceIconViewCompactWidth
         noDataView.isHidden = true
-        // Clear indicator views
-        prominentView.clearValues()
         [
+            airQIndexView,
             temperatureView,
             humidityView,
             pressureView,
@@ -493,20 +434,11 @@ extension DashboardPlainCell {
             greaterThanOrEqualToConstant: 14
         ).isActive = true
 
-        container.addSubview(prominentView)
-        prominentView.anchor(
-            top: ruuviTagNameLabel.bottomAnchor,
-            leading: ruuviTagNameLabel.leadingAnchor,
-            bottom: nil,
-            trailing: container.trailingAnchor,
-            padding: .init(top: 0, left: 0, bottom: 0, right: 0)
-        )
-
         // Add the rowsStackView
         container.addSubview(rowsStackView)
         rowsStackView
             .anchor(
-                top: prominentView.bottomAnchor,
+                top: ruuviTagNameLabel.bottomAnchor,
                 leading: ruuviTagNameLabel.leadingAnchor,
                 bottom: nil,
                 trailing: container.trailingAnchor,
@@ -618,6 +550,16 @@ extension DashboardPlainCell {
     ) -> [DashboardIndicatorView] {
         var indicators = [DashboardIndicatorView]()
 
+        // Temperature
+        if let temperature = viewModel.temperature {
+           let tempValue = measurementService?.stringWithoutSign(for: temperature)
+           temperatureView.setValue(
+               with: tempValue,
+               unit: measurementService?.units.temperatureUnit.symbol
+           )
+           indicators.append(temperatureView)
+        }
+
         // Humidity
         if let humidity = viewModel.humidity,
            let measurementService {
@@ -658,12 +600,30 @@ extension DashboardPlainCell {
         return indicators
     }
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func indicatorsForE0(
         _ viewModel: CardsViewModel,
         measurementService: RuuviServiceMeasurement?
     ) -> [DashboardIndicatorView] {
         var indicators = [DashboardIndicatorView]()
+
+        // Air Quality Index
+        if let (
+            currentAirQIndex,
+            maximumAirQIndex,
+            _
+        ) = measurementService?.aqiString(
+            for: viewModel.co2,
+            pm25: viewModel.pm2_5,
+            voc: viewModel.voc,
+            nox: viewModel.nox
+        ) {
+            airQIndexView.setValue(
+                with: currentAirQIndex.stringValue + "/\(maximumAirQIndex.stringValue)",
+                unit: RuuviLocalization.airQuality
+            )
+            indicators.append(airQIndexView)
+        }
 
         // Temp
         if let temperature = viewModel.temperature {
