@@ -715,6 +715,14 @@ extension CardsPresenter {
                 .lowerRelativeHumidity(for: ruuviTag)
             viewModel.rhAlertUpperBound = alertService
                 .upperRelativeHumidity(for: ruuviTag)
+            // Inject previous record if available that will prevent showing nil
+            // value while this method is rebuilding the collection and fetching
+            // latest record from storage asynchronously.
+            if let previousRecord = viewModels.first(where: {
+                $0.id == ruuviTag.id
+            })?.latestMeasurement {
+                viewModel.update(previousRecord)
+            }
             syncAlerts(ruuviTag: ruuviTag, viewModel: viewModel)
             let op = ruuviStorage.readLatest(ruuviTag)
             op.on { [weak self] record in
