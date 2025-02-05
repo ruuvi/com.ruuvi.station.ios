@@ -326,7 +326,6 @@ private final class BusinessAssembly: Assembly {
             let service = RuuviServiceExportImpl(
                 ruuviStorage: ruuviStorage,
                 measurementService: measurementService,
-                headersProvider: ExportHeadersProvider(),
                 emptyValueString: "",
                 ruuviLocalSettings: localSettings
             )

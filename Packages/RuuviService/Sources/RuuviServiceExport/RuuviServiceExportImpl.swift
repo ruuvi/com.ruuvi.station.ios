@@ -1,4 +1,7 @@
+// swiftlint:disable file_length
+
 import Foundation
+import RuuviLocalization
 import Future
 import Humidity
 import RuuviLocal
@@ -7,22 +10,25 @@ import RuuviStorage
 import xlsxwriter
 
 public final class RuuviServiceExportImpl: RuuviServiceExport {
+
+    fileprivate struct ColumnDefinition {
+        let header: String
+        let cellExtractor: (RuuviTagSensorRecord) -> String
+    }
+
     private let ruuviStorage: RuuviStorage
     private let measurementService: RuuviServiceMeasurement
     private let emptyValueString: String
-    private let headersProvider: RuuviServiceExportHeaders
     private let ruuviLocalSettings: RuuviLocalSettings
 
     public init(
         ruuviStorage: RuuviStorage,
         measurementService: RuuviServiceMeasurement,
-        headersProvider: RuuviServiceExportHeaders,
         emptyValueString: String,
         ruuviLocalSettings: RuuviLocalSettings
     ) {
         self.ruuviStorage = ruuviStorage
         self.measurementService = measurementService
-        self.headersProvider = headersProvider
         self.emptyValueString = emptyValueString
         self.ruuviLocalSettings = ruuviLocalSettings
     }
@@ -32,6 +38,7 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
     private var numberFormatter: NumberFormatter = {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
+        numberFormatter.decimalSeparator = "."
         return numberFormatter
     }()
 
@@ -118,128 +125,232 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
 
 extension RuuviServiceExportImpl {
 
-    // Common helper function to process records and format rows
+    // Helper function that builds the column with the header and a closure
+    // that extracts the cell value.
     // swiftlint:disable:next function_body_length
-    private func formatRows(
-        for records: [RuuviTagSensorRecord],
-        version: Int
-    ) -> [[String]] {
-        func toString(_ value: Double?, format: String) -> String {
-            guard let v = value else {
-                return emptyValueString
-            }
-            return String(format: format, v)
-        }
+    private func buildColumnDefinitions(
+        firmware: RuuviFirmwareVersion,
+        units: RuuviServiceMeasurementSettingsUnit,
+        settings: RuuviLocalSettings
+    ) -> [ColumnDefinition] {
 
+        // Local numeric-to-string helper
         func toString(
             _ value: Double?,
-            minimumDecimalPlaces: Int = 0,
-            maximumDecimalPlaces: Int = 2
+            minDecimal: Int = 0,
+            maxDecimal: Int = 3
         ) -> String {
-            guard let v = value else {
-                return emptyValueString
-            }
-            numberFormatter.minimumFractionDigits = minimumDecimalPlaces
-            numberFormatter.maximumFractionDigits = maximumDecimalPlaces
+            guard let v = value else { return emptyValueString }
+            numberFormatter.minimumFractionDigits = minDecimal
+            numberFormatter.maximumFractionDigits = maxDecimal
             return numberFormatter.string(from: NSNumber(value: v)) ?? emptyValueString
         }
 
-        return records.map { log in
-            let date = Self.dataDateFormatter.string(from: log.date)
-            let temperature = toString(
-                measurementService.double(for: log.temperature),
-                format: "%.2f"
-            )
-            let humidity = toString(
-                measurementService.double(
-                    for: log.humidity,
-                    temperature: log.temperature,
-                    isDecimal: false
+        // MARK: Common columns
+        func buildCommonColumns() -> [ColumnDefinition] {
+            // Temperature, humidity, rssi, voltage, etc
+            return [
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.date,
+                    cellExtractor: { record in
+                        Self.dataDateFormatter.string(from: record.date)
+                    }
                 ),
-                format: "%.2f"
-            )
-
-            let pressureValue = measurementService.double(for: log.pressure)
-            let pressure = pressureValue == -0.01 ? toString(
-                nil,
-                format: "%.2f"
-            ) : toString(
-                pressureValue,
-                format: "%.2f"
-            )
-
-            let rssi = log.rssi.map { "\($0)" } ?? emptyValueString
-            let accelerationX = toString(log.acceleration?.x.value, format: "%.3f")
-            let accelerationY = toString(log.acceleration?.y.value, format: "%.3f")
-            let accelerationZ = toString(log.acceleration?.z.value, format: "%.3f")
-            let voltage = toString(log.voltage?.converted(to: .volts).value)
-            let movementCounter = log.movementCounter.map { "\($0)" } ?? emptyValueString
-            let measurementSequenceNumber = log.measurementSequenceNumber.map { "\($0)" } ?? emptyValueString
-            let txPower = log.txPower.map { "\($0)" } ?? emptyValueString
-            let (aqi, _, _) = measurementService.aqiString(
-                for: log.co2,
-                pm25: log.pm2_5,
-                voc: log.voc,
-                nox: log.nox
-            )
-            let aqiString = "\(aqi)"
-            let co2 = toString(log.co2)
-            let pm1 = toString(log.pm1)
-            let pm2_5 = toString(log.pm2_5)
-            let pm4 = toString(log.pm4)
-            let pm10 = toString(log.pm10)
-            let voc = toString(log.voc)
-            let nox = toString(log.nox)
-            let soundAvg = toString(log.dbaAvg)
-            let soundPeak = toString(log.dbaPeak)
-            let luminosity = toString(log.luminance)
-
-            // Common for v3/v5/E0/F0
-            var exportableData = [
-                date,
-                temperature,
-                humidity,
-                pressure,
-                rssi,
-                voltage,
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.temperature(units.temperatureUnit.symbol),
+                    cellExtractor: { [weak self] record in
+                        let val = self?.measurementService.double(for: record.temperature)
+                        return toString(val)
+                    }
+                ),
+                ColumnDefinition(
+                    // if .dew, or else...
+                    header: (units.humidityUnit == .dew)
+                      ? RuuviLocalization.ExportService.humidity(units.temperatureUnit.symbol)
+                      : RuuviLocalization.ExportService.humidity(units.temperatureUnit.symbol),
+                    cellExtractor: { [weak self] record in
+                        let val = self?.measurementService.double(
+                            for: record.humidity,
+                            temperature: record.temperature,
+                            isDecimal: false
+                        )
+                        return toString(val)
+                    }
+                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.pressure(units.pressureUnit.symbol),
+                    cellExtractor: { [weak self] record in
+                        let pressureVal = self?.measurementService.double(for: record.pressure)
+                        if pressureVal == -0.01 { return toString(nil) }
+                        return toString(pressureVal)
+                    }
+                ),
+                ColumnDefinition(
+                    header: "RSSI (\(RuuviLocalization.dBm))",
+                    cellExtractor: { [weak self] record in
+                        guard let sSelf = self else { return "" }
+                        return record.rssi.map { "\($0)" } ?? sSelf.emptyValueString
+                    }
+                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.voltage,
+                    cellExtractor: { record in
+                        let v = record.voltage?.converted(to: .volts).value
+                        return toString(v)
+                    }
+                ),
             ]
-
-            // E0/F0
-            if version == 224 || version == 240 {
-                exportableData += [
-                    aqiString,
-                    co2,
-                    pm1,
-                    pm2_5,
-                    pm4,
-                    pm10,
-                    voc,
-                    nox,
-                    soundAvg,
-                    soundPeak,
-                    luminosity,
-                ]
-            } else { // v3/v5
-                exportableData += [
-                    accelerationX,
-                    accelerationY,
-                    accelerationZ,
-                    movementCounter,
-                    txPower,
-                ]
-            }
-
-            // Common for v3/v5/E0/F0
-            exportableData.append(measurementSequenceNumber)
-
-            // Flags
-            if ruuviLocalSettings.includeDataSourceInHistoryExport {
-                let dataSource = log.source.rawValue
-                exportableData.append(dataSource)
-            }
-
-            return exportableData
         }
+
+        // MARK: E0/F0 columns
+        // swiftlint:disable:next function_body_length
+        func buildE0F0Columns() -> [ColumnDefinition] {
+            return [
+                ColumnDefinition(
+                    header: RuuviLocalization.aqi + " (%)",
+                    cellExtractor: { [weak self] record in
+                        guard let sSelf = self else { return "" }
+                        let (aqi, _, _) = sSelf.measurementService.aqiString(
+                            for: record.co2,
+                            pm25: record.pm2_5,
+                            voc: record.voc,
+                            nox: record.nox
+                        )
+                        return "\(aqi)"
+                    }
+                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.co2 + " (\(RuuviLocalization.unitCo2))",
+                    cellExtractor: { record in
+                        toString(record.co2)
+                    }
+                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.pm1 + " (\(RuuviLocalization.unitPm10))",
+                    cellExtractor: { record in
+                        toString(record.pm1)
+                    }
+                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.pm25 + " (\(RuuviLocalization.unitPm25))",
+                    cellExtractor: { record in
+                        toString(record.pm2_5)
+                    }
+                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.pm4 + " (\(RuuviLocalization.unitPm40))",
+                    cellExtractor: { record in
+                        toString(record.pm4)
+                    }
+                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.pm10 + " (\(RuuviLocalization.unitPm100))",
+                    cellExtractor: { record in
+                        toString(record.pm10)
+                    }
+                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.voc + " (\(RuuviLocalization.unitVoc))",
+                    cellExtractor: { record in
+                        toString(record.voc)
+                    }
+                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.nox + " (\(RuuviLocalization.unitNox))",
+                    cellExtractor: { record in
+                        toString(record.nox)
+                    }
+                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.soundAvg + " (\(RuuviLocalization.unitSound))",
+                    cellExtractor: { record in
+                        toString(record.dbaAvg)
+                    }
+                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.soundPeak + " (\(RuuviLocalization.unitSound))",
+                    cellExtractor: { record in
+                        toString(record.dbaPeak)
+                    }
+                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.luminosity + " (\(RuuviLocalization.unitLuminosity))",
+                    cellExtractor: { record in
+                        toString(record.luminance)
+                    }
+                ),
+            ]
+        }
+
+        // MARK: v5 columns
+        func buildV5Columns() -> [ColumnDefinition] {
+            return [
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.accelerationX + " (\(RuuviLocalization.g))",
+                    cellExtractor: { record in
+                        toString(record.acceleration?.x.value)
+                    }
+                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.accelerationY + " (\(RuuviLocalization.g))",
+                    cellExtractor: { record in
+                        toString(record.acceleration?.y.value)
+                    }
+                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.accelerationZ + " (\(RuuviLocalization.g))",
+                    cellExtractor: { record in
+                        toString(record.acceleration?.z.value)
+                    }
+                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.movementCounter +
+                        " (\(RuuviLocalization.Cards.Movements.title))",
+                    cellExtractor: { record in
+                        record.movementCounter.map { "\($0)" } ?? self.emptyValueString
+                    }
+                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.txPower + " (\(RuuviLocalization.dBm))",
+                    cellExtractor: { record in
+                        record.txPower.map { "\($0)" } ?? self.emptyValueString
+                    }
+                ),
+            ]
+        }
+
+        // Start assembling the columns
+        var columns = buildCommonColumns()
+        switch firmware {
+        case .e0, .f0:
+            columns += buildE0F0Columns()
+        case .v5:
+            columns += buildV5Columns()
+        default:
+            break
+        }
+
+        // Add measurement sequence number
+        columns.append(ColumnDefinition(
+            header: RuuviLocalization.ExportService.measurementSequenceNumber,
+            cellExtractor: { [weak self] record in
+                guard let sSelf = self else { return "" }
+                return record.measurementSequenceNumber
+                    .map { "\($0)" } ?? sSelf.emptyValueString
+            }
+        ))
+
+        // Possibly data source
+        if settings.includeDataSourceInHistoryExport {
+            columns.append(ColumnDefinition(
+                header: RuuviLocalization.ExportService.dataSource,
+                cellExtractor: { record in
+                    record.source.rawValue
+                }
+            ))
+        }
+
+        return columns
     }
 
     // CSV export method
@@ -256,16 +367,20 @@ extension RuuviServiceExportImpl {
 
         queue.async {
             autoreleasepool {
-                let headers = self.headersProvider.getHeaders(
-                    version: version,
+                let firmware = RuuviFirmwareVersion.firmwareVersion(from: version)
+                let columns = self.buildColumnDefinitions(
+                    firmware: firmware,
                     units: self.measurementService.units,
                     settings: self.ruuviLocalSettings
                 )
-                var csvText = headers.joined(separator: ",") + "\n"
-                let rows = self.formatRows(for: records, version: version)
 
-                for row in rows {
-                    csvText.append(contentsOf: row.joined(separator: ",") + "\n")
+                let headerLine = columns.map { $0.header }.joined(separator: ",")
+                var csvText = headerLine + "\n"
+
+                for record in records {
+                    let rowValues = columns.map { $0.cellExtractor(record) }
+                    csvText.append(rowValues.joined(separator: ","))
+                    csvText.append("\n")
                 }
 
                 do {
@@ -298,24 +413,28 @@ extension RuuviServiceExportImpl {
 
         queue.async {
             autoreleasepool {
+
+                let firmwareType = RuuviFirmwareVersion.firmwareVersion(
+                    from: version
+                )
+
+                let columns = self.buildColumnDefinitions(
+                    firmware: firmwareType,
+                    units: self.measurementService.units,
+                    settings: self.ruuviLocalSettings
+                )
+
                 let wb = Workbook(name: pathURL.path)
                 defer { wb.close() }
                 let ws = wb.addWorksheet()
 
-                // Write headers
-                let headers = self.headersProvider.getHeaders(
-                    version: version,
-                    units: self.measurementService.units,
-                    settings: self.ruuviLocalSettings
-                )
-                for (index, header) in headers.enumerated() {
-                    ws.write(.string(header), [0, index])
+                for (colIndex, colDef) in columns.enumerated() {
+                    ws.write(.string(colDef.header), [0, colIndex])
                 }
 
-                // Write data rows
-                let rows = self.formatRows(for: records, version: version)
-                for (rowIndex, row) in rows.enumerated() {
-                    for (colIndex, value) in row.enumerated() {
+                for (rowIndex, record) in records.enumerated() {
+                    for (colIndex, column) in columns.enumerated() {
+                        let value = column.cellExtractor(record)
                         ws.write(.string(value), [rowIndex + 1, colIndex])
                     }
                 }
@@ -329,3 +448,4 @@ extension RuuviServiceExportImpl {
         return promise.future
     }
 }
+// swiftlint:enable file_length

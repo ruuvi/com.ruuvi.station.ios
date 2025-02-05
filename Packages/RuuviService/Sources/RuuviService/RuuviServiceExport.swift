@@ -15,11 +15,3 @@ public protocol RuuviServiceExport {
         settings: SensorSettings?
     ) -> Future<URL, RuuviServiceError>
 }
-
-public protocol RuuviServiceExportHeaders {
-    func getHeaders(
-        version: Int,
-        units: RuuviServiceMeasurementSettingsUnit,
-        settings: RuuviLocalSettings
-    ) -> [String]
-}
