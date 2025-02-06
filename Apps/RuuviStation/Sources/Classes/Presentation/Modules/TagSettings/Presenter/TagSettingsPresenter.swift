@@ -118,16 +118,18 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         // Create the ViewModel
         let tagViewModel = TagSettingsViewModel()
 
+        let measurementWithOffset = latestMeasurement?.with(sensorSettings: sensorSettings)
+
         // Assign initial values to the ViewModel
         tagViewModel.isAuthorized.value = ruuviUser.isAuthorized
         tagViewModel.hideSwitchStatusLabel.value = !settings.showSwitchStatusLabel
-        tagViewModel.rssi.value = latestMeasurement?.rssi
-        tagViewModel.latestMeasurement.value = latestMeasurement
+        tagViewModel.rssi.value = measurementWithOffset?.rssi
+        tagViewModel.latestMeasurement.value = measurementWithOffset
         tagViewModel.temperatureUnit.value = settings.temperatureUnit
         tagViewModel.humidityUnit.value = settings.humidityUnit
         tagViewModel.pressureUnit.value = settings.pressureUnit
 
-        if let latestMeasurement = latestMeasurement {
+        if let latestMeasurement = measurementWithOffset {
             tagViewModel.updateRecord(latestMeasurement)
         }
 
@@ -136,7 +138,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
 
         // Assign ruuviTag and other properties
         self.ruuviTag = ruuviTag
-        self.lastMeasurement = latestMeasurement
+        self.lastMeasurement = measurementWithOffset
         self.sensorSettings = sensorSettings ?? emptySensorSettings()
 
         // Sync data into the ViewModel
@@ -1152,7 +1154,9 @@ extension TagSettingsPresenter {
             [weak self] changes in
             switch changes {
             case let .update(record):
-                if let lastRecord = record {
+                if let lastRecord = record?.with(
+                    sensorSettings: self?.sensorSettings
+                ) {
                     self?.lastMeasurement = lastRecord
                     self?.viewModel.updateRecord(lastRecord)
                     self?.processAlerts()
@@ -1340,13 +1344,22 @@ extension TagSettingsPresenter {
                 self?.sensorSettings = sensorSettings
             case let .update(updateSensorSettings):
                 self?.sensorSettings = updateSensorSettings
+                self?.updateOffsetCorrectedValue()
             case .delete:
                 self?.sensorSettings = self?.emptySensorSettings()
+                self?.updateOffsetCorrectedValue()
             case let .initial(initialSensorSettings):
                 self?.sensorSettings = initialSensorSettings.first
             case let .error(error):
                 self?.errorPresenter.present(error: error)
             }
+        }
+    }
+
+    private func updateOffsetCorrectedValue() {
+        if let updatedMeasurement = lastMeasurement?.with(sensorSettings: sensorSettings) {
+            lastMeasurement = updatedMeasurement
+            viewModel.updateRecord(updatedMeasurement)
         }
     }
 
