@@ -156,7 +156,10 @@ class DashboardImageCell: DashboardCell {
         var indicators = [DashboardIndicatorView]()
 
         if let version = viewModel.version {
-            if version == 224 || version == 240 {
+            let firmwareVersion = RuuviFirmwareVersion.firmwareVersion(
+                from: version
+            )
+            if firmwareVersion == .e0 || firmwareVersion == .f0 {
                 // Version 224/240
                 // Set Air Quality Index as prominent
                 if let (
@@ -206,7 +209,7 @@ class DashboardImageCell: DashboardCell {
                     .setValue(
                         with: temperatureValue,
                         superscriptValue: temperatureUnit,
-                        subscriptValue: RuuviLocalization.WebTagSettings.TemperatureAlertTitleLabel.text
+                        subscriptValue: " "
                     )
 
                 // Collect indicators for the grid
