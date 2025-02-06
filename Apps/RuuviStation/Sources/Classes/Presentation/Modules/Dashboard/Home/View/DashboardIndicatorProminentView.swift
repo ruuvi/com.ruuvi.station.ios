@@ -91,8 +91,8 @@ class DashboardIndicatorProminentView: UIView {
             bottom: indicatorValueLabel.bottomAnchor,
             trailing: nil,
             padding: .init(
-                top: 6,
-                left: 6,
+                top: 8,
+                left: 2,
                 bottom: 6,
                 right: 0
             )
