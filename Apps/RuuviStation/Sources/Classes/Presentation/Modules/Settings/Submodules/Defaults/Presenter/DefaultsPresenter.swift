@@ -395,12 +395,12 @@ extension DefaultsPresenter {
     private func buildShowStatusLabelSettings() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.ShowStatusLabelSettings.title
-        viewModel.boolean.value = settings.showAlertsRangeInGraph
+        viewModel.boolean.value = settings.showSwitchStatusLabel
         viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, show in
-            observer.settings.showAlertsRangeInGraph = GlobalHelpers.getBool(from: show)
+            observer.settings.showSwitchStatusLabel = GlobalHelpers.getBool(from: show)
         }
 
         return viewModel
