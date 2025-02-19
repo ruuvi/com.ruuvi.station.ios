@@ -6,6 +6,7 @@ import RuuviPool
 final class RuuviTagReadLogsOperation: AsyncOperation {
     var uuid: String
     var mac: String?
+    var firmware: Int
     var sensorSettings: SensorSettings?
     var error: RuuviServiceError?
 
@@ -19,6 +20,7 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
     init(
         uuid: String,
         mac: String?,
+        firmware: Int,
         from: Date,
         settings: SensorSettings?,
         ruuviPool: RuuviPool,
@@ -29,6 +31,7 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
     ) {
         self.uuid = uuid
         self.mac = mac
+        self.firmware = firmware
         self.from = from
         sensorSettings = settings
         self.ruuviPool = ruuviPool
@@ -40,10 +43,12 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
 
     override func main() {
         post(started: from, with: uuid)
+        let firmwareVersion = RuuviFirmwareVersion.firmwareVersion(from: firmware)
         background.services.ruuvi.nus.log(
             for: self,
             uuid: uuid,
             from: from,
+            service: firmwareVersion == .e0 || firmwareVersion == .f0 ? .e0 : .all,
             options: [
                 .callbackQueue(.untouch),
                 .connectionTimeout(connectionTimeout ?? 0),
@@ -57,7 +62,11 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
                 case let .points(points):
                     observer.post(points: points, with: observer.uuid)
                 case let .logs(logs):
-                    let records = logs.compactMap { $0.ruuviSensorRecord(uuid: observer.uuid, mac: observer.mac)
+                    let records = logs.compactMap {
+                        $0.ruuviSensorRecord(
+                            uuid: observer.uuid,
+                            mac: observer.mac
+                        )
                         .with(source: .log)
                         .any
                     }

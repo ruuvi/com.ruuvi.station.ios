@@ -197,48 +197,6 @@ final class CardsViewModel: NSObject, ObservableObject {
         // isAlertAvailable might change if data source changed
         isAlertAvailable = isCloud || isConnected || serviceUUID != nil
     }
-
-    func update(with ruuviTag: RuuviTag) {
-        // If connectable changes
-        if !ruuviTag.isConnected,
-            isConnectable != ruuviTag.isConnectable,
-            ruuviTag.isConnectable {
-            isConnectable = ruuviTag.isConnectable
-            if let isChart = isChartAvailable, !isChart, ruuviTag.isConnectable {
-                isChartAvailable = true
-            }
-        } else {
-            if let isChart = isChartAvailable, !isChart, ruuviTag.serviceUUID != nil {
-                isChartAvailable = true
-            }
-        }
-
-        isAlertAvailable = isCloud || ruuviTag.isConnected || ruuviTag.serviceUUID != nil
-        temperature = ruuviTag.temperature
-        humidity = ruuviTag.humidity
-        pressure = ruuviTag.pressure
-        version = ruuviTag.version
-        voltage = ruuviTag.voltage
-
-        if let macId = ruuviTag.mac?.mac.any {
-            mac = macId
-        }
-
-        serviceUUID = ruuviTag.serviceUUID
-        date = Date()
-        movementCounter = ruuviTag.movementCounter
-        pm1 = ruuviTag.pm1
-        pm2_5 = ruuviTag.pm2_5
-        pm4 = ruuviTag.pm4
-        pm10 = ruuviTag.pm10
-        co2 = ruuviTag.co2
-        voc = ruuviTag.voc
-        nox = ruuviTag.nox
-        luminance = ruuviTag.luminance
-        dbaAvg = ruuviTag.dbaAvg
-        dbaPeak = ruuviTag.dbaPeak
-        source = ruuviTag.source
-    }
 }
 
 // MARK: - Reorderable

@@ -38,6 +38,7 @@ public protocol GATTService {
     func syncLogs(
         uuid: String,
         mac: String?,
+        firmware: Int,
         from: Date,
         settings: SensorSettings?,
         progress: ((BTServiceProgress) -> Void)?,
@@ -54,12 +55,14 @@ public extension GATTService {
     func syncLogs(
         uuid: String,
         mac: String?,
+        firmware: Int,
         from: Date,
         settings: SensorSettings?
     ) -> Future<Bool, RuuviServiceError> {
         syncLogs(
             uuid: uuid,
             mac: mac,
+            firmware: firmware,
             from: from,
             settings: settings,
             progress: nil,

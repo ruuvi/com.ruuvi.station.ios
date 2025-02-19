@@ -232,11 +232,13 @@ private final class DaemonAssembly: Assembly {
             let ruuviPool = r.resolve(RuuviPool.self)!
             let ruuviReactor = r.resolve(RuuviReactor.self)!
             let ruuviStorage = r.resolve(RuuviStorage.self)!
+            let idPersistence = r.resolve(RuuviLocalIDs.self)!
             let daemon = RuuviTagAdvertisementDaemonBTKit(
                 ruuviPool: ruuviPool,
                 ruuviStorage: ruuviStorage,
                 ruuviReactor: ruuviReactor,
                 foreground: foreground,
+                idPersistence: idPersistence,
                 settings: settings
             )
             return daemon

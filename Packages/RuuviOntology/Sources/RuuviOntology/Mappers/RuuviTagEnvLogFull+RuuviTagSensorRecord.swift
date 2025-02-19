@@ -3,10 +3,12 @@ import Humidity
 
 extension RuuviTagEnvLogFull {
     var unitTemperature: Temperature? {
-        Temperature(value: temperature, unit: .celsius)
+        guard let temperature = temperature else { return nil }
+        return Temperature(value: temperature, unit: .celsius)
     }
 
     var unitHumidity: Humidity? {
+        guard let humidity = humidity else { return nil }
         let relativeHumidity = humidity / 100.0
         guard relativeHumidity >= 0 else { return nil }
         return Humidity(
@@ -16,7 +18,8 @@ extension RuuviTagEnvLogFull {
     }
 
     var unitPressure: Pressure? {
-        Pressure(value: pressure, unit: .hectopascals)
+        guard let pressure = pressure else { return nil }
+        return Pressure(value: pressure, unit: .hectopascals)
     }
 
     var acceleration: Acceleration? {
@@ -24,7 +27,7 @@ extension RuuviTagEnvLogFull {
     }
 
     var unitVoltage: Voltage? {
-        nil
+        Voltage(value: batteryVoltage ?? 0, unit: .volts)
     }
 
     public func ruuviSensorRecord(uuid: String, mac: String?) -> RuuviTagSensorRecord {
@@ -43,17 +46,16 @@ extension RuuviTagEnvLogFull {
             movementCounter: nil,
             measurementSequenceNumber: nil,
             txPower: nil,
-            // TODO: Add support for log (E0_F0 FW)
-            pm1: nil,
-            pm2_5: nil,
-            pm4: nil,
-            pm10: nil,
-            co2: nil,
-            voc: nil,
-            nox: nil,
-            luminance: nil,
-            dbaAvg: nil,
-            dbaPeak: nil,
+            pm1: pm1,
+            pm2_5: pm25,
+            pm4: pm4,
+            pm10: pm10,
+            co2: co2,
+            voc: voc,
+            nox: nox,
+            luminance: luminosity,
+            dbaAvg: soundAvg,
+            dbaPeak: soundPeak,
             temperatureOffset: 0.0,
             humidityOffset: 0.0,
             pressureOffset: 0.0

@@ -23,6 +23,12 @@ extension CardsInteractor: CardsInteractorInput {
             return
         }
 
+        // TODO: Remove this check once fw revision is supported for E0/F0
+        let fwVersion = RuuviFirmwareVersion.firmwareVersion(from: ruuviTag.version)
+        if fwVersion == .e0 || fwVersion == .f0 {
+            return
+        }
+
         background.services.gatt.firmwareRevision(
             for: self,
             uuid: luid.value,
