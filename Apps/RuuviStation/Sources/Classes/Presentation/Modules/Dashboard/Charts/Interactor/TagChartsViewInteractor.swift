@@ -16,6 +16,7 @@ class TagChartsViewInteractor {
     var ruuviStorage: RuuviStorage!
     var ruuviReactor: RuuviReactor!
     var cloudSyncService: RuuviServiceCloudSync!
+    var flags: RuuviLocalFlags!
     var settings: RuuviLocalSettings!
     var ruuviTagSensor: AnyRuuviTagSensor!
     var sensorSettings: SensorSettings?
@@ -413,7 +414,7 @@ extension TagChartsViewInteractor {
     }
 
     private func syncFullHistory(for ruuviTag: RuuviTagSensor) {
-        if ruuviTag.isCloud && settings.historySyncForEachSensor {
+        if ruuviTag.isCloud && flags.historySyncForEachSensor {
             ruuviStorage.readLatest(ruuviTag).on(success: { [weak self] record in
                 if record != nil {
                     self?.cloudSyncService.sync(

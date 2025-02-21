@@ -4,12 +4,13 @@ import RuuviLocal
 class HeartbeatPresenter: NSObject, HeartbeatModuleInput {
     weak var view: HeartbeatViewInput!
     var router: HeartbeatRouterInput!
+    var flags: RuuviLocalFlags!
     var settings: RuuviLocalSettings!
     var connectionPersistence: RuuviLocalConnections!
 
     func configure() {
         let viewModel = HeartbeatViewModel()
-        viewModel.hideSwitchStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.hideSwitchStatusLabel.value = !flags.showSwitchStatusLabel
         viewModel.bgScanningState.value = settings.saveHeartbeats
         viewModel.bgScanningInterval.value = settings.saveHeartbeatsIntervalMinutes
 

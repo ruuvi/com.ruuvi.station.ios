@@ -24,6 +24,7 @@ class DashboardPresenter: DashboardModuleInput {
     var router: DashboardRouterInput!
     var interactor: DashboardInteractorInput!
     var errorPresenter: ErrorPresenter!
+    var flags: RuuviLocalFlags!
     var settings: RuuviLocalSettings!
     var foreground: BTForeground!
     var background: BTBackground!
@@ -2232,9 +2233,9 @@ extension DashboardPresenter {
     }
 
     private func triggerFullHistorySync() {
-        if settings.historySyncOnDashboard &&
-            (!settings.historySyncLegacy ||
-             !settings.historySyncForEachSensor) {
+        if flags.historySyncOnDashboard &&
+            (!flags.historySyncLegacy ||
+             !flags.historySyncForEachSensor) {
             cloudSyncService.syncAllHistory()
         }
     }

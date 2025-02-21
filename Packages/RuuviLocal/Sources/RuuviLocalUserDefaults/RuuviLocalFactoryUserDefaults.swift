@@ -3,6 +3,10 @@ import Foundation
 public final class RuuviLocalFactoryUserDefaults: RuuviLocalFactory {
     public init() {}
 
+    public func createLocalFlags() -> RuuviLocalFlags {
+        RuuviLocalFlagsUserDefaults()
+    }
+
     public func createLocalSettings() -> RuuviLocalSettings {
         RuuviLocalSettingsUserDefaults()
     }

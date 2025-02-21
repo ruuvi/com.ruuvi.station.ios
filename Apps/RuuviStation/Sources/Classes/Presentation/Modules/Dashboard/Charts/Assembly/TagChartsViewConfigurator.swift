@@ -21,6 +21,7 @@ class TagChartsViewConfigurator {
 
         presenter.view = view
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
+        presenter.flags = r.resolve(RuuviLocalFlags.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.ruuviStorage = r.resolve(RuuviStorage.self)
@@ -42,6 +43,7 @@ class TagChartsViewConfigurator {
         presenter.configure(ruuviTag: ruuviTag)
 
         interactor.gattService = r.resolve(GATTService.self)
+        interactor.flags = r.resolve(RuuviLocalFlags.self)
         interactor.settings = r.resolve(RuuviLocalSettings.self)
         interactor.exportService = r.resolve(RuuviServiceExport.self)
         interactor.ruuviReactor = r.resolve(RuuviReactor.self)

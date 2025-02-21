@@ -11,6 +11,7 @@ class HeartbeatConfigurator {
         let presenter = HeartbeatPresenter()
         presenter.router = router
         presenter.view = view
+        presenter.flags = r.resolve(RuuviLocalFlags.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.connectionPersistence = r.resolve(RuuviLocalConnections.self)
 

@@ -30,6 +30,7 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
         presenter.router = router
         presenter.view = view
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
+        presenter.flags = r.resolve(RuuviLocalFlags.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.background = r.resolve(BTBackground.self)

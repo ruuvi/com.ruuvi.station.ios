@@ -20,6 +20,7 @@ final class NotificationsSettingsModuleFactoryImpl: NotificationsSettingsModuleF
 
         let presenter = NotificationsSettingsPresenter()
         presenter.view = view
+        presenter.flags = r.resolve(RuuviLocalFlags.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.ruuviUser = r.resolve(RuuviUser.self)
         presenter.ruuviAppSettingsService = r.resolve(RuuviServiceAppSettings.self)

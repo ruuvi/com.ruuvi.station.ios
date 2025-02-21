@@ -9,6 +9,7 @@ import WidgetKit
 class DefaultsPresenter: NSObject, DefaultsModuleInput {
     weak var view: DefaultsViewInput!
     var router: DefaultsRouterInput!
+    var flags: RuuviLocalFlags!
     var settings: RuuviLocalSettings!
     var ruuviUser: RuuviUser!
     var output: DefaultsModuleOutput?
@@ -79,7 +80,7 @@ extension DefaultsPresenter {
         let welcomeShown = DefaultsViewModel()
         welcomeShown.title = RuuviLocalization.Defaults.WelcomeShown.title
         welcomeShown.boolean.value = settings.welcomeShown
-        welcomeShown.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        welcomeShown.hideStatusLabel.value = !flags.showSwitchStatusLabel
         welcomeShown.type.value = .switcher
 
         bind(welcomeShown.boolean, fire: false) { observer, welcomeShown in
@@ -92,7 +93,7 @@ extension DefaultsPresenter {
         let welcomeShown = DefaultsViewModel()
         welcomeShown.title = RuuviLocalization.Defaults.TOSAccepted.title
         welcomeShown.boolean.value = settings.tosAccepted
-        welcomeShown.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        welcomeShown.hideStatusLabel.value = !flags.showSwitchStatusLabel
         welcomeShown.type.value = .switcher
 
         bind(welcomeShown.boolean, fire: false) { observer, welcomeShown in
@@ -108,7 +109,7 @@ extension DefaultsPresenter {
         tagChartsLandscapeSwipeInstructionWasShown.boolean.value
             = settings.tagChartsLandscapeSwipeInstructionWasShown
         tagChartsLandscapeSwipeInstructionWasShown.hideStatusLabel.value =
-                !settings.showSwitchStatusLabel
+                !flags.showSwitchStatusLabel
         tagChartsLandscapeSwipeInstructionWasShown.type.value = .switcher
 
         bind(tagChartsLandscapeSwipeInstructionWasShown.boolean, fire: false) {
@@ -150,7 +151,7 @@ extension DefaultsPresenter {
         cardsSwipeHint.title = RuuviLocalization.Defaults.CardsSwipeHint.title
         cardsSwipeHint.boolean.value = settings.cardsSwipeHintWasShown
         cardsSwipeHint.hideStatusLabel.value =
-                !settings.showSwitchStatusLabel
+                !flags.showSwitchStatusLabel
         cardsSwipeHint.type.value = .switcher
 
         bind(cardsSwipeHint.boolean, fire: false) { observer, cardsSwipeHintWasShown in
@@ -336,7 +337,7 @@ extension DefaultsPresenter {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.DashboardTapActionChart.title
         viewModel.boolean.value = settings.dashboardTapActionType == .chart
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.hideStatusLabel.value = !flags.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, showChart in
@@ -355,7 +356,7 @@ extension DefaultsPresenter {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.DevServer.title
         viewModel.boolean.value = useDevServer
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.hideStatusLabel.value = !flags.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         // This is a different settings than all other local settings.
@@ -380,7 +381,7 @@ extension DefaultsPresenter {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.HideNFC.title
         viewModel.boolean.value = settings.hideNFCForSensorContest
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.hideStatusLabel.value = !flags.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         bind(
@@ -395,12 +396,12 @@ extension DefaultsPresenter {
     private func buildShowStatusLabelSettings() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.ShowStatusLabelSettings.title
-        viewModel.boolean.value = settings.showSwitchStatusLabel
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.boolean.value = flags.showSwitchStatusLabel
+        viewModel.hideStatusLabel.value = !flags.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, show in
-            observer.settings.showSwitchStatusLabel = GlobalHelpers.getBool(from: show)
+            observer.flags.showSwitchStatusLabel = GlobalHelpers.getBool(from: show)
         }
 
         return viewModel
@@ -409,12 +410,12 @@ extension DefaultsPresenter {
     private func buildShowAlertRangeInGraph() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.ShowAlertRangeInCharts.title
-        viewModel.boolean.value = settings.showAlertsRangeInGraph
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.boolean.value = flags.showAlertsRangeInGraph
+        viewModel.hideStatusLabel.value = !flags.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, show in
-            observer.settings.showAlertsRangeInGraph = GlobalHelpers.getBool(from: show)
+            observer.flags.showAlertsRangeInGraph = GlobalHelpers.getBool(from: show)
         }
 
         return viewModel
@@ -423,12 +424,12 @@ extension DefaultsPresenter {
     private func buildUseNewChartsRendering() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.UseNewChart.title
-        viewModel.boolean.value = settings.useNewGraphRendering
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.boolean.value = flags.useNewGraphRendering
+        viewModel.hideStatusLabel.value = !flags.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, show in
-            observer.settings.useNewGraphRendering = GlobalHelpers.getBool(from: show)
+            observer.flags.useNewGraphRendering = GlobalHelpers.getBool(from: show)
         }
 
         return viewModel
@@ -437,12 +438,12 @@ extension DefaultsPresenter {
     private func buildDoHistorySyncAfterSignIn() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.HistorySyncDashboard.title
-        viewModel.boolean.value = settings.historySyncOnDashboard
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.boolean.value = flags.historySyncOnDashboard
+        viewModel.hideStatusLabel.value = !flags.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, bool in
-            observer.settings.historySyncLegacy = GlobalHelpers.getBool(from: bool)
+            observer.flags.historySyncOnDashboard = GlobalHelpers.getBool(from: bool)
         }
 
         return viewModel
@@ -451,12 +452,12 @@ extension DefaultsPresenter {
     private func buildDoIndividualHistorySync() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.HistorySyncPerSensor.title
-        viewModel.boolean.value = settings.historySyncForEachSensor
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.boolean.value = flags.historySyncForEachSensor
+        viewModel.hideStatusLabel.value = !flags.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, bool in
-            observer.settings.historySyncOnDashboard = GlobalHelpers.getBool(from: bool)
+            observer.flags.historySyncForEachSensor = GlobalHelpers.getBool(from: bool)
         }
 
         return viewModel
@@ -465,12 +466,12 @@ extension DefaultsPresenter {
     private func buildDoLegacyHistorySync() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.HistorySyncLegacy.title
-        viewModel.boolean.value = settings.historySyncLegacy
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.boolean.value = flags.historySyncLegacy
+        viewModel.hideStatusLabel.value = !flags.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, bool in
-            observer.settings.historySyncForEachSensor = GlobalHelpers.getBool(from: bool)
+            observer.flags.historySyncLegacy = GlobalHelpers.getBool(from: bool)
         }
 
         return viewModel
@@ -479,12 +480,12 @@ extension DefaultsPresenter {
     private func buildIncludeDataSourceInHistoryExport() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.IncludeDataSourceInHistoryExport.title
-        viewModel.boolean.value = settings.includeDataSourceInHistoryExport
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.boolean.value = flags.includeDataSourceInHistoryExport
+        viewModel.hideStatusLabel.value = !flags.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, bool in
-            observer.settings.includeDataSourceInHistoryExport = GlobalHelpers.getBool(from: bool)
+            observer.flags.includeDataSourceInHistoryExport = GlobalHelpers.getBool(from: bool)
         }
 
         return viewModel

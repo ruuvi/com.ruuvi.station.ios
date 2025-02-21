@@ -34,7 +34,8 @@ protocol TagChartsViewInput: ViewInput {
         luminosityEntries: [ChartDataEntry],
         soundEntries: [ChartDataEntry],
         isFirstEntry: Bool,
-        settings: RuuviLocalSettings
+        settings: RuuviLocalSettings,
+        flags: RuuviLocalFlags
     )
 
     // swiftlint:disable:next function_parameter_count
