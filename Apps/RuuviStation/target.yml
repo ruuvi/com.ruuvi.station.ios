@@ -35,6 +35,7 @@ targets:
       - package: Humidity
       - package: Future
       - package: FLEX
+      - package: SwiftUIIntrospect
       - target: RuuviAnalytics
       - target: RuuviCloud
       - target: RuuviContext

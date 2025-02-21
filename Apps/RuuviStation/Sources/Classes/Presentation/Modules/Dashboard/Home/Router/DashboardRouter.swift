@@ -8,10 +8,13 @@ import UIKit
 class DashboardRouter: NSObject, DashboardRouterInput {
     weak var transitionHandler: UIViewController!
     weak var delegate: DashboardRouterDelegate!
+    var settings: RuuviLocalSettings!
+    var flags: RuuviLocalFlags!
     private weak var dfuModule: DFUModuleInput?
     private weak var backgroundSelectionModule: BackgroundSelectionModuleInput?
-    weak var cards: CardsModuleInput?
-    var settings: RuuviLocalSettings!
+    private weak var cards: CardsModuleInput?
+    private weak var newCardsInput: NewCardsModuleInput?
+    private var cardsViewProvider: NewCardsViewProvider?
 
     // swiftlint:disable weak_delegate
     var menuTableInteractiveTransition: MenuTableTransitioningDelegate!
@@ -128,40 +131,70 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         showCharts: Bool,
         output: CardsModuleOutput
     ) {
-        let factory: CardsViewModuleFactory = CardsViewModuleFactoryImpl()
-        let module = factory.create()
-        if let output = module.output as? CardsModuleInput {
-            cards = output
-        }
+        if flags.showNewFullSensorCardView {
+            let factory: NewCardsViewModuleFactory = NewCardsViewModuleFactoryImpl()
+            let moduleProvider = factory.create()
+            if let output = moduleProvider.output as? NewCardsModuleInput {
+                newCardsInput = output
+            }
+            cardsViewProvider = moduleProvider
 
-        if let cards {
-            cards.configure(output: output)
-            cards.configure(
-                viewModels: viewModels,
-                ruuviTagSensors: ruuviTagSensors,
-                sensorSettings: sensorSettings
-            )
-            cards.configure(
-                scrollTo: scrollTo,
-                openChart: showCharts
-            )
-        }
+            if let newCardsInput {
+                newCardsInput.configure(
+                    viewModels: viewModels,
+                    ruuviTagSensors: ruuviTagSensors,
+                    sensorSettings: sensorSettings,
+                    scrollTo: scrollTo,
+                    openWith: showCharts ? .graph : .home,
+                    output: output
+                )
+            }
 
-        // Remove any cards view controller from stack if exists already
-        if let navigationController = transitionHandler.navigationController,
-           navigationController
-               .containsViewController(ofKind: CardsViewController.self) {
             transitionHandler
                 .navigationController?
-                .removeAnyViewControllers(ofKind: CardsViewController.self)
-        }
+                .pushViewController(
+                    moduleProvider
+                        .makeViewController(
+                            transitionHandler: transitionHandler
+                        ),
+                    animated: true
+                )
+        } else {
+            let factory: CardsViewModuleFactory = CardsViewModuleFactoryImpl()
+            let module = factory.create()
+            if let output = module.output as? CardsModuleInput {
+                cards = output
+            }
 
-        transitionHandler
-            .navigationController?
-            .pushViewController(
-                module,
-                animated: true
-            )
+            if let cards {
+                cards.configure(output: output)
+                cards.configure(
+                    viewModels: viewModels,
+                    ruuviTagSensors: ruuviTagSensors,
+                    sensorSettings: sensorSettings
+                )
+                cards.configure(
+                    scrollTo: scrollTo,
+                    openChart: showCharts
+                )
+            }
+
+            // Remove any cards view controller from stack if exists already
+            if let navigationController = transitionHandler.navigationController,
+               navigationController
+                   .containsViewController(ofKind: CardsViewController.self) {
+                transitionHandler
+                    .navigationController?
+                    .removeAnyViewControllers(ofKind: CardsViewController.self)
+            }
+
+            transitionHandler
+                .navigationController?
+                .pushViewController(
+                    module,
+                    animated: true
+                )
+        }
     }
 
     // swiftlint:disable:next function_parameter_count

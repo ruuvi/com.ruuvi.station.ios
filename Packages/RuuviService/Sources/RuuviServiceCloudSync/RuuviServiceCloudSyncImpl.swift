@@ -492,10 +492,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             .on(success: { [weak self] localSensors in
                 guard let sSelf = self else { return }
                 for sensor in localSensors {
-                    let skip = !sensor.isClaimed ||
-                    (sensor.isOwner && sensor.isClaimed &&
-                     !sSelf.ruuviLocalSettings.cloudModeEnabled)
-                    if let macId = sensor.macId, !skip {
+                    if let macId = sensor.macId, sensor.isCloud {
                         sSelf.ruuviLocalSyncState.setSyncStatus(.syncing, for: macId)
                     }
                 }

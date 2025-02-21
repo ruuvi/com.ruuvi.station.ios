@@ -125,6 +125,9 @@ packages:
   xlsxwriter:
     url: https://github.com/ruuvi/xlsxwriter.swift
     branch: "SPM"
+  SwiftUIIntrospect:
+    url: https://github.com/siteline/SwiftUI-Introspect
+    from: 1.3.0
 
 include:
 - Packages/RuuviAnalytics/target.yml

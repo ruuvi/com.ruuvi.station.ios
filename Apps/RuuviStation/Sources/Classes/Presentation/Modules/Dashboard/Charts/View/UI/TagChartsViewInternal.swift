@@ -18,12 +18,15 @@ protocol TagChartsViewInternalDelegate: NSObjectProtocol {
 class TagChartsViewInternal: LineChartView {
     weak var chartDelegate: TagChartsViewInternalDelegate?
 
-    var lowerAlertValue: Double?
-    var upperAlertValue: Double?
+    public var lowerAlertValue: Double?
+    public var upperAlertValue: Double?
+
+    // MARK: Private properties
+    private var chartShowAll: Bool = false
+    private var chartDurationHours: Int = 0
 
     // MARK: - Private
     private lazy var markerView = TagChartsMarkerView()
-    private var settings: RuuviLocalSettings!
 
     // MARK: - LifeCycle
 
@@ -39,7 +42,7 @@ class TagChartsViewInternal: LineChartView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: - Private
+    // MARK: - Private Configuration
 
     private func configure() {
         chartDescription.enabled = false
@@ -58,11 +61,10 @@ class TagChartsViewInternal: LineChartView {
         xAxis.centerAxisLabelsEnabled = false
         xAxis.granularity = 1
         xAxis.granularityEnabled = true
-        viewPortHandler.setMaximumScaleX(5000)
-        viewPortHandler.setMaximumScaleY(30)
         xAxis.setLabelCount(5, force: false)
         xAxis.valueFormatter = XAxisValueFormatter()
         xAxis.forceLabelsEnabled = true
+        xAxis.avoidFirstLastClippingEnabled = true
 
         leftAxis.labelPosition = .outsideChart
         leftAxis.labelAlignment = .right
@@ -90,6 +92,9 @@ class TagChartsViewInternal: LineChartView {
         markerView.chartView = self
         marker = markerView
         setExtraOffsets(left: 2, top: 4, right: 0, bottom: 2)
+
+        viewPortHandler.setMaximumScaleX(5000)
+        viewPortHandler.setMaximumScaleY(30)
     }
 
     private func reloadData() {
@@ -98,6 +103,7 @@ class TagChartsViewInternal: LineChartView {
     }
 }
 
+// MARK: ChartViewDelegate
 extension TagChartsViewInternal: ChartViewDelegate {
     func chartTranslated(
         _: ChartViewBase,
@@ -132,13 +138,14 @@ extension TagChartsViewInternal: ChartViewDelegate {
     }
 }
 
+// MARK: Public
 extension TagChartsViewInternal {
-    func localize() {
+    public func localize() {
         xAxis.valueFormatter = XAxisValueFormatter()
         leftAxis.valueFormatter = YAxisValueFormatter()
     }
 
-    func clearChartData() {
+    public func clearChartData() {
         clearValues()
         resetCustomAxisMinMax()
         resetZoom()
@@ -146,7 +153,17 @@ extension TagChartsViewInternal {
         fitScreen()
     }
 
-    func setYAxisLimit(min: Double, max: Double) {
+    public func setAlertLimit(lower: Double?, upper: Double?) {
+        lowerAlertValue = lower
+        upperAlertValue = upper
+    }
+
+    public func setChartConfiguration(showAll: Bool, durationHours: Int) {
+        chartShowAll = showAll
+        chartDurationHours = durationHours
+    }
+
+    public func setYAxisLimit(min: Double, max: Double) {
         leftAxis.axisMinimum = min - 1
         leftAxis.axisMaximum = max + 1
         leftYAxisRenderer = CustomYAxisRenderer(
@@ -166,7 +183,8 @@ extension TagChartsViewInternal {
         leftAxis.drawTopYLabelEntryEnabled = !entriesNotZero
         leftAxis.drawBottomYLabelEntryEnabled = !entriesNotZero
     }
-    func setXAxisRenderer() {
+
+    public func setXAxisRenderer() {
         let axisRenderer = CustomXAxisRenderer(
             from: 0,
             viewPortHandler: viewPortHandler,
@@ -175,10 +193,10 @@ extension TagChartsViewInternal {
         )
         xAxisRenderer = axisRenderer
 
-        if !settings.chartShowAll {
+        if !chartShowAll {
             let from = Calendar.autoupdatingCurrent.date(
                 byAdding: .hour,
-                value: -settings.chartDurationHours,
+                value: -chartDurationHours,
                 to: Date()
             ) ?? Date.distantFuture
             xAxis.axisMinimum = from.timeIntervalSince1970
@@ -186,18 +204,12 @@ extension TagChartsViewInternal {
         }
     }
 
-    func resetCustomAxisMinMax() {
+    public func resetCustomAxisMinMax() {
         xAxis.resetCustomAxisMin()
         xAxis.resetCustomAxisMax()
     }
 
-    func setSettings(settings: RuuviLocalSettings) {
-        self.settings = settings
-    }
-
-    // MARK: - UpdateUI
-
-    func updateDataSet(
+    public func updateDataSet(
         with newData: [ChartDataEntry],
         isFirstEntry: Bool,
         showAlertRangeInGraph: Bool
@@ -220,23 +232,21 @@ extension TagChartsViewInternal {
         reloadData()
     }
 
-    func setMarker(
+    public func setMarker(
         with type: MeasurementType,
-        measurementService: RuuviServiceMeasurement,
         unit: String
     ) {
         if let marker = marker as? TagChartsMarkerView {
             marker.initialise(
                 with: unit,
                 type: type,
-                measurementService: measurementService,
                 parentFrame: frame
             )
         }
     }
 
-    /// The lowest y-index (value on the y-axis) that is still visible on he chart.
-    var lowestVisibleY: Double {
+    /// The lowest y-index (value on the y-axis) that is still visible on the chart.
+    public var lowestVisibleY: Double {
         var pt = CGPoint(
             x: viewPortHandler.contentLeft,
             y: viewPortHandler.contentBottom
@@ -248,7 +258,7 @@ extension TagChartsViewInternal {
     }
 
     /// The highest y-index (value on the y-axis) that is still visible on the chart.
-    var highestVisibleY: Double {
+    public var highestVisibleY: Double {
         var pt = CGPoint(
             x: viewPortHandler.contentLeft,
             y: viewPortHandler.contentTop

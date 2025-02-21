@@ -1,51 +1,55 @@
 import BTKit
-import Foundation
+import RuuviContext
+import RuuviCore
+import RuuviDaemon
 import RuuviLocal
 import RuuviNotifier
-import RuuviOntology
 import RuuviPool
 import RuuviPresenters
 import RuuviReactor
 import RuuviService
 import RuuviStorage
+import RuuviUser
+import UIKit
 
-protocol TagChartsModuleFactory {
-    func create() -> TagChartsViewController
+protocol NewCardsViewModuleFactory {
+    func create() -> NewCardsViewProvider
 }
 
-final class TagChartsModuleFactoryImpl: TagChartsModuleFactory {
-    func create() -> TagChartsViewController {
+final class NewCardsViewModuleFactoryImpl: NewCardsViewModuleFactory {
+    func create() -> NewCardsViewProvider {
         let r = AppAssembly.shared.assembler.resolver
 
-        let view = TagChartsViewController()
-        let interactor = TagChartsViewInteractor()
-        let presenter = TagChartsViewPresenter()
+        let viewProvider = NewCardsViewProvider()
 
-        presenter.view = view
+//        let router = CardsRouter()
+//        router.transitionHandler = view
+//
+        let presenter = NewCardsPresenter()
+        let interactor = NewCardsInteractor()
+
+//        presenter.router = router
+        presenter.view = viewProvider
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
-        presenter.flags = r.resolve(RuuviLocalFlags.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
-        presenter.foreground = r.resolve(BTForeground.self)
-        presenter.ruuviStorage = r.resolve(RuuviStorage.self)
+        presenter.flags = r.resolve(RuuviLocalFlags.self)
         presenter.ruuviReactor = r.resolve(RuuviReactor.self)
-        presenter.activityPresenter = r.resolve(ActivityPresenter.self)
-        presenter.alertPresenter = r.resolve(AlertPresenter.self)
-        presenter.mailComposerPresenter = r.resolve(MailComposerPresenter.self)
-        presenter.measurementService = r.resolve(RuuviServiceMeasurement.self)
         presenter.alertService = r.resolve(RuuviServiceAlert.self)
         presenter.alertHandler = r.resolve(RuuviNotifier.self)
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.background = r.resolve(BTBackground.self)
-        presenter.feedbackEmail = PresentationConstants.feedbackEmail
-        presenter.feedbackSubject = PresentationConstants.feedbackSubject
-        presenter.infoProvider = r.resolve(InfoProvider.self)
-        presenter.interactor = interactor
+        presenter.connectionPersistence = r.resolve(RuuviLocalConnections.self)
+        presenter.featureToggleService = r.resolve(FeatureToggleService.self)
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
-        presenter.exportService = r.resolve(RuuviServiceExport.self)
+        presenter.localSyncState = r.resolve(RuuviLocalSyncState.self)
+        presenter.ruuviStorage = r.resolve(RuuviStorage.self)
+        presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
+        presenter.permissionsManager = r.resolve(RuuviCorePermission.self)
+        presenter.measurementService = r.resolve(RuuviServiceMeasurement.self)
+        presenter.interactor = interactor
 
         interactor.gattService = r.resolve(GATTService.self)
         interactor.settings = r.resolve(RuuviLocalSettings.self)
-        interactor.flags = r.resolve(RuuviLocalFlags.self)
         interactor.exportService = r.resolve(RuuviServiceExport.self)
         interactor.ruuviReactor = r.resolve(RuuviReactor.self)
         interactor.ruuviPool = r.resolve(RuuviPool.self)
@@ -55,12 +59,11 @@ final class TagChartsModuleFactoryImpl: TagChartsModuleFactory {
         interactor.featureToggleService = r.resolve(FeatureToggleService.self)
         interactor.localSyncState = r.resolve(RuuviLocalSyncState.self)
         interactor.ruuviAppSettingsService = r.resolve(RuuviServiceAppSettings.self)
+        interactor.flags = r.resolve(RuuviLocalFlags.self)
         interactor.presenter = presenter
 
-        view.measurementService = r.resolve(RuuviServiceMeasurement.self)
+        viewProvider.output = presenter
 
-        view.output = presenter
-
-        return view
+        return viewProvider
     }
 }

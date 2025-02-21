@@ -12,7 +12,6 @@ class TagChartsMarkerView: MarkerImage {
     private var attrs: [NSAttributedString.Key: AnyObject]!
     private var unit: String = ""
     private var type: MeasurementType = .temperature
-    private var measurementService: RuuviServiceMeasurement!
     private var parentFrame: CGRect = .zero
 
     private let baselineOffset: Int = -4
@@ -119,12 +118,10 @@ extension TagChartsMarkerView {
     func initialise(
         with unit: String,
         type: MeasurementType,
-        measurementService: RuuviServiceMeasurement,
         parentFrame: CGRect
     ) {
         self.unit = unit
         self.type = type
-        self.measurementService = measurementService
         self.parentFrame = parentFrame
     }
 }

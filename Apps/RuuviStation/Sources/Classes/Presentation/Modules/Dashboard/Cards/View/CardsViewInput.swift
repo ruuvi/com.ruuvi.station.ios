@@ -5,6 +5,7 @@ import UIKit
 
 protocol CardsViewInput: ViewInput {
     var viewModels: [CardsViewModel] { get set }
+    var ruuviTags: [AnyRuuviTagSensor] { get set }
     var scrollIndex: Int { get set }
     func applyUpdate(to viewModel: CardsViewModel)
     func scroll(to index: Int)
