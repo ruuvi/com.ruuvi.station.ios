@@ -152,6 +152,11 @@ private final class PersistenceAssembly: Assembly {
             return factory
         }
 
+        container.register(RuuviLocalFlags.self) { r in
+            let factory = r.resolve(RuuviLocalFactory.self)!
+            return factory.createLocalFlags()
+        }
+
         container.register(RuuviLocalSettings.self) { r in
             let factory = r.resolve(RuuviLocalFactory.self)!
             return factory.createLocalSettings()
@@ -325,11 +330,13 @@ private final class BusinessAssembly: Assembly {
             let ruuviStorage = r.resolve(RuuviStorage.self)!
             let measurementService = r.resolve(RuuviServiceMeasurement.self)!
             let localSettings = r.resolve(RuuviLocalSettings.self)!
+            let flags = r.resolve(RuuviLocalFlags.self)!
             let service = RuuviServiceExportImpl(
                 ruuviStorage: ruuviStorage,
                 measurementService: measurementService,
                 emptyValueString: "",
-                ruuviLocalSettings: localSettings
+                ruuviLocalSettings: localSettings,
+                flags: flags
             )
             return service
         }
@@ -464,6 +471,7 @@ private final class BusinessAssembly: Assembly {
             let storage = r.resolve(RuuviStorage.self)!
             let cloud = r.resolve(RuuviCloud.self)!
             let pool = r.resolve(RuuviPool.self)!
+            let flags = r.resolve(RuuviLocalFlags.self)!
             let localSettings = r.resolve(RuuviLocalSettings.self)!
             let localSyncState = r.resolve(RuuviLocalSyncState.self)!
             let localImages = r.resolve(RuuviLocalImages.self)!
@@ -475,6 +483,7 @@ private final class BusinessAssembly: Assembly {
                 ruuviStorage: storage,
                 ruuviCloud: cloud,
                 ruuviPool: pool,
+                flags: flags,
                 ruuviLocalSettings: localSettings,
                 ruuviLocalSyncState: localSyncState,
                 ruuviLocalImages: localImages,

@@ -23,6 +23,7 @@ class PresentationAssembly: Assembly {
         container.register(FeatureTogglesViewController.self) { r in
             let controller = FeatureTogglesViewController()
             controller.featureToggleService = r.resolve(FeatureToggleService.self)
+            controller.flags = r.resolve(RuuviLocalFlags.self)
             controller.settings = r.resolve(RuuviLocalSettings.self)
             return controller
         }

@@ -32,6 +32,7 @@ final class TagSettingsModuleFactoryImpl: TagSettingsModuleFactory {
         presenter.foreground = r.resolve(BTForeground.self)
         presenter.background = r.resolve(BTBackground.self)
         presenter.alertService = r.resolve(RuuviServiceAlert.self)
+        presenter.flags = r.resolve(RuuviLocalFlags.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.connectionPersistence = r.resolve(RuuviLocalConnections.self)
         presenter.pushNotificationsManager = r.resolve(RuuviCorePN.self)

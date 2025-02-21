@@ -418,9 +418,6 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDefaults.chartShowAll", defaultValue: true)
     var chartShowAll: Bool
 
-    @UserDefault("SettingsUserDefaults.experimentalFeaturesEnabled", defaultValue: false)
-    var experimentalFeaturesEnabled: Bool
-
     @UserDefault("SettingsUserDefaults.cloudModeEnabled", defaultValue: false)
     var cloudModeEnabled: Bool {
         didSet {
@@ -702,9 +699,6 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
-    @UserDefault("SettingsUserDefaults.showSwitchStatusLabel", defaultValue: true)
-    var showSwitchStatusLabel: Bool
-
     private let notificationsBadgeCountUDKey = "SettingsUserDefaults.notificationsBadgeCount"
     func setNotificationsBadgeCount(value: Int) {
         notificationServiceAppGroup?
@@ -737,24 +731,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         UserDefaults.standard.set(true, forKey: showCustomTempAlertBoundUDKey + id)
     }
 
-    @UserDefault("SettingsUserDefaults.showAlertsRangeInGraph", defaultValue: false)
-    var showAlertsRangeInGraph: Bool
-    @UserDefault("SettingsUserDefaults.useNewGraphRendering", defaultValue: false)
-    var useNewGraphRendering: Bool
     // On a scale of 10-100, 100 being best quality, and 10 being the worst.
     @UserDefault("SettingsUserDefaults.imageCompressionQuality", defaultValue: 40)
     var imageCompressionQuality: Int
     @UserDefault("SettingsUserDefaults.compactChatView", defaultValue: true)
     var compactChartView: Bool
-
-    @UserDefault("SettingsUserDefaults.historySyncLegacy", defaultValue: false)
-    var historySyncLegacy: Bool
-    @UserDefault("SettingsUserDefaults.historySyncOnDashboard", defaultValue: false)
-    var historySyncOnDashboard: Bool
-    @UserDefault("SettingsUserDefaults.historySyncForEachSensor", defaultValue: true)
-    var historySyncForEachSensor: Bool
-    @UserDefault("SettingsUserDefaults.includeDataSourceInHistoryExport", defaultValue: false)
-    var includeDataSourceInHistoryExport: Bool
 
     private let dashboardSignInBannerHiddenUDKey = "SettingsUserDefaults.dashboardSignInBannerHiddenUDKey"
     func dashboardSignInBannerHidden(for version: String) -> Bool {

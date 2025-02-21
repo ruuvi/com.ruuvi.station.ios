@@ -10,6 +10,7 @@ class NotificationsSettingsPresenter: NSObject, NotificationsSettingsModuleInput
     weak var view: NotificationsSettingsViewInput?
     var router: NotificationsSettingsRouterInput!
 
+    var flags: RuuviLocalFlags!
     var settings: RuuviLocalSettings!
     var ruuviUser: RuuviUser!
     var ruuviAppSettingsService: RuuviServiceAppSettings!
@@ -74,7 +75,7 @@ extension NotificationsSettingsPresenter {
         viewModel.title = RuuviLocalization.settingsEmailAlerts
         viewModel.subtitle = RuuviLocalization.settingsEmailAlertsDescription
         viewModel.boolean.value = !settings.emailAlertDisabled
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.hideStatusLabel.value = !flags.showSwitchStatusLabel
         viewModel.configType.value = .switcher
         viewModel.settingsType.value = .email
 
@@ -92,7 +93,7 @@ extension NotificationsSettingsPresenter {
         viewModel.title = RuuviLocalization.settingsPushAlerts
         viewModel.subtitle = RuuviLocalization.settingsPushAlertsDescription
         viewModel.boolean.value = !settings.pushAlertDisabled
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.hideStatusLabel.value = !flags.showSwitchStatusLabel
         viewModel.configType.value = .switcher
         viewModel.settingsType.value = .push
 
@@ -110,7 +111,7 @@ extension NotificationsSettingsPresenter {
         viewModel.title = RuuviLocalization.settingsAlertLimitNotification
         viewModel.subtitle = RuuviLocalization.settingsAlertLimitNotificationDescription
         viewModel.boolean.value = settings.limitAlertNotificationsEnabled
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.hideStatusLabel.value = !flags.showSwitchStatusLabel
         viewModel.configType.value = .switcher
         viewModel.settingsType.value = .limitAlert
 

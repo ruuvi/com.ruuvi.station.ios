@@ -12,6 +12,7 @@ final class RuuviCloudModuleFactoryImpl: RuuviCloudModuleFactory {
 
         let presenter = RuuviCloudPresenter()
         presenter.settings = r.resolve(RuuviLocalSettings.self)
+        presenter.flags = r.resolve(RuuviLocalFlags.self)
         presenter.ruuviAppSettingsService = r.resolve(RuuviServiceAppSettings.self)
         return presenter
     }

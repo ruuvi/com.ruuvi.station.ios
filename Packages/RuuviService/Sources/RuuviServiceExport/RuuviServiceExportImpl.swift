@@ -20,17 +20,20 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
     private let measurementService: RuuviServiceMeasurement
     private let emptyValueString: String
     private let ruuviLocalSettings: RuuviLocalSettings
+    private let flags: RuuviLocalFlags
 
     public init(
         ruuviStorage: RuuviStorage,
         measurementService: RuuviServiceMeasurement,
         emptyValueString: String,
-        ruuviLocalSettings: RuuviLocalSettings
+        ruuviLocalSettings: RuuviLocalSettings,
+        flags: RuuviLocalFlags
     ) {
         self.ruuviStorage = ruuviStorage
         self.measurementService = measurementService
         self.emptyValueString = emptyValueString
         self.ruuviLocalSettings = ruuviLocalSettings
+        self.flags = flags
     }
 
     private var queue = DispatchQueue(label: "com.ruuvi.station.RuuviServiceExportImpl.queue", qos: .userInitiated)
@@ -131,7 +134,8 @@ extension RuuviServiceExportImpl {
     private func buildColumnDefinitions(
         firmware: RuuviFirmwareVersion,
         units: RuuviServiceMeasurementSettingsUnit,
-        settings: RuuviLocalSettings
+        settings: RuuviLocalSettings,
+        flags: RuuviLocalFlags
     ) -> [ColumnDefinition] {
 
         // Local numeric-to-string helper
@@ -341,7 +345,7 @@ extension RuuviServiceExportImpl {
         ))
 
         // Possibly data source
-        if settings.includeDataSourceInHistoryExport {
+        if flags.includeDataSourceInHistoryExport {
             columns.append(ColumnDefinition(
                 header: RuuviLocalization.ExportService.dataSource,
                 cellExtractor: { record in
@@ -371,7 +375,8 @@ extension RuuviServiceExportImpl {
                 let columns = self.buildColumnDefinitions(
                     firmware: firmware,
                     units: self.measurementService.units,
-                    settings: self.ruuviLocalSettings
+                    settings: self.ruuviLocalSettings,
+                    flags: self.flags
                 )
 
                 let headerLine = columns.map { $0.header }.joined(separator: ",")
@@ -421,7 +426,8 @@ extension RuuviServiceExportImpl {
                 let columns = self.buildColumnDefinitions(
                     firmware: firmwareType,
                     units: self.measurementService.units,
-                    settings: self.ruuviLocalSettings
+                    settings: self.ruuviLocalSettings,
+                    flags: self.flags
                 )
 
                 let wb = Workbook(name: pathURL.path)

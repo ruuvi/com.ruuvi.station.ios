@@ -13,6 +13,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private let ruuviStorage: RuuviStorage
     private let ruuviCloud: RuuviCloud
     private let ruuviPool: RuuviPool
+    private let flags: RuuviLocalFlags
     private var ruuviLocalSettings: RuuviLocalSettings
     private var ruuviLocalSyncState: RuuviLocalSyncState
     private let ruuviLocalImages: RuuviLocalImages
@@ -28,6 +29,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         ruuviStorage: RuuviStorage,
         ruuviCloud: RuuviCloud,
         ruuviPool: RuuviPool,
+        flags: RuuviLocalFlags,
         ruuviLocalSettings: RuuviLocalSettings,
         ruuviLocalSyncState: RuuviLocalSyncState,
         ruuviLocalImages: RuuviLocalImages,
@@ -39,6 +41,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         self.ruuviStorage = ruuviStorage
         self.ruuviCloud = ruuviCloud
         self.ruuviPool = ruuviPool
+        self.flags = flags
         self.ruuviLocalSettings = ruuviLocalSettings
         self.ruuviLocalSyncState = ruuviLocalSyncState
         self.ruuviLocalImages = ruuviLocalImages
@@ -582,8 +585,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                             Future.zip(addLatestPointToHistory)
                                 .observe(on: .global(qos: .utility))
                                 .on(success: { _ in
-                                    if sSelf.ruuviLocalSettings.historySyncLegacy ||
-                                        sSelf.ruuviLocalSettings.historySyncOnDashboard {
+                                    if sSelf.flags.historySyncLegacy ||
+                                        sSelf.flags.historySyncOnDashboard {
                                         sSelf.syncAllHistory()
                                             .observe(on: .global(qos: .utility))
                                             .on(success: { _ in

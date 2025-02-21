@@ -25,6 +25,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     var foreground: BTForeground!
     var background: BTBackground!
     var alertService: RuuviServiceAlert!
+    var flags: RuuviLocalFlags!
     var settings: RuuviLocalSettings!
     var connectionPersistence: RuuviLocalConnections!
     var pushNotificationsManager: RuuviCorePN!
@@ -120,7 +121,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
 
         // Assign initial values to the ViewModel
         tagViewModel.isAuthorized.value = ruuviUser.isAuthorized
-        tagViewModel.hideSwitchStatusLabel.value = !settings.showSwitchStatusLabel
+        tagViewModel.hideSwitchStatusLabel.value = !flags.showSwitchStatusLabel
         tagViewModel.rssi.value = measurementWithOffset?.rssi
         tagViewModel.latestMeasurement.value = measurementWithOffset
         tagViewModel.temperatureUnit.value = settings.temperatureUnit

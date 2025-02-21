@@ -12,6 +12,7 @@ class ChartSettingsConfigurator {
         let presenter = ChartSettingsPresenter()
         presenter.view = view
         presenter.router = router
+        presenter.flags = r.resolve(RuuviLocalFlags.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.featureToggleService = r.resolve(FeatureToggleService.self)
         presenter.ruuviAppSettingsService = r.resolve(RuuviServiceAppSettings.self)

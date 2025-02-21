@@ -6,6 +6,7 @@ import RuuviService
 class ChartSettingsPresenter: NSObject, ChartSettingsModuleInput {
     weak var view: ChartSettingsViewInput!
     var router: ChartSettingsRouterInput!
+    var flags: RuuviLocalFlags!
     var settings: RuuviLocalSettings!
     var featureToggleService: FeatureToggleService!
     var ruuviAppSettingsService: RuuviServiceAppSettings!
@@ -61,7 +62,7 @@ extension ChartSettingsPresenter {
         let type: ChartSettingsCellType = .switcher(
             title: title,
             value: value,
-            hideStatusLabel: !settings.showSwitchStatusLabel
+            hideStatusLabel: !flags.showSwitchStatusLabel
         )
         let cell = ChartSettingsCell(type: type)
         cell.boolean.value = value
@@ -78,7 +79,7 @@ extension ChartSettingsPresenter {
         let type: ChartSettingsCellType = .switcher(
             title: title,
             value: value,
-            hideStatusLabel: !settings.showSwitchStatusLabel
+            hideStatusLabel: !flags.showSwitchStatusLabel
         )
         let cell = ChartSettingsCell(type: type)
         cell.boolean.value = value

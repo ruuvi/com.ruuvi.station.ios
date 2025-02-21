@@ -1020,8 +1020,8 @@ extension TagChartsViewController: TagChartsViewInput {
         luminosityEntries: [ChartDataEntry],
         soundEntries: [ChartDataEntry],
         isFirstEntry: Bool,
-        firstEntry: RuuviMeasurement?,
-        settings: RuuviLocalSettings
+        settings: RuuviLocalSettings,
+        flags: RuuviLocalFlags
     ) {
         if useNewGraphRendering {
             // Do something
@@ -1033,88 +1033,77 @@ extension TagChartsViewController: TagChartsViewInput {
             temperatureChartView.updateDataSet(
                 with: temperatureEntries,
                 isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
             humidityChartView.setSettings(settings: settings)
             humidityChartView.updateDataSet(
                 with: humidityEntries,
                 isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
             pressureChartView.setSettings(settings: settings)
             pressureChartView.updateDataSet(
                 with: pressureEntries,
                 isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
             aqiChartView.setSettings(settings: settings)
             aqiChartView.updateDataSet(
                 with: aqiEntries,
                 isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
             co2ChartView.setSettings(settings: settings)
             co2ChartView.updateDataSet(
                 with: co2Entries,
                 isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
             pm10ChartView.setSettings(settings: settings)
             pm10ChartView.updateDataSet(
                 with: pm10Entries,
                 isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
             pm25ChartView.setSettings(settings: settings)
             pm25ChartView.updateDataSet(
                 with: pm25Entries,
                 isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
             vocChartView.setSettings(settings: settings)
             vocChartView.updateDataSet(
                 with: vocEntries,
                 isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
             noxChartView.setSettings(settings: settings)
             noxChartView.updateDataSet(
                 with: noxEntries,
                 isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
             luminosityChartView.setSettings(settings: settings)
             luminosityChartView.updateDataSet(
                 with: luminosityEntries,
                 isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
             soundChartView.setSettings(settings: settings)
             soundChartView.updateDataSet(
                 with: soundEntries,
                 isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
         }
     }

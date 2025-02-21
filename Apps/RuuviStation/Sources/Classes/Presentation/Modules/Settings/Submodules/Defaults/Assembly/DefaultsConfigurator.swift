@@ -12,6 +12,7 @@ class DefaultsConfigurator {
         let presenter = DefaultsPresenter()
         presenter.view = view
         presenter.router = router
+        presenter.flags = r.resolve(RuuviLocalFlags.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.ruuviUser = r.resolve(RuuviUser.self)
 

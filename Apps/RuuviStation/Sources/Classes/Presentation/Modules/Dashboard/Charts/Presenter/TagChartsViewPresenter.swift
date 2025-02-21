@@ -40,6 +40,7 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
     var interactor: TagChartsViewInteractorInput!
 
     var errorPresenter: ErrorPresenter!
+    var flags: RuuviLocalFlags!
     var settings: RuuviLocalSettings!
     var foreground: BTForeground!
     var ruuviStorage: RuuviStorage!
@@ -102,8 +103,8 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
             view?.showChartStat = settings.chartStatsOn
             view?.compactChartView = settings.compactChartView
             view?.showChartAll = settings.chartShowAll
-            view?.showAlertRangeInGraph = settings.showAlertsRangeInGraph
-            view?.useNewGraphRendering = settings.useNewGraphRendering
+            view?.showAlertRangeInGraph = flags.showAlertsRangeInGraph
+            view?.useNewGraphRendering = flags.useNewGraphRendering
         }
     }
 
@@ -877,7 +878,8 @@ extension TagChartsViewPresenter {
             soundEntries: soundData,
             isFirstEntry: ruuviTagData.count == 1,
             firstEntry: ruuviTagData.first,
-            settings: settings
+            settings: settings,
+            flags: flags
         )
 
         // Update the latest measurement label.
@@ -1029,7 +1031,7 @@ extension TagChartsViewPresenter {
                     .flatMap {
                         Temperature($0, unit: .celsius)
                     }.map { measurementService.double(for: $0) } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
             let temperatureChartData = TagChartViewData(
                 upperAlertValue: isOn ? alertService.upperCelsius(for: ruuviTag)
@@ -1059,7 +1061,7 @@ extension TagChartsViewPresenter {
                 lowerAlertValue: (isOn && isRelative) ? alertService.lowerRelativeHumidity(
                     for: ruuviTag
                 ).map { $0 * 100 } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
             let humidityChartData = TagChartViewData(
                 upperAlertValue: (isOn && isRelative) ? alertService.upperRelativeHumidity(for: ruuviTag).map {
@@ -1086,7 +1088,7 @@ extension TagChartsViewPresenter {
                     .flatMap {
                         Pressure($0, unit: .hectopascals)
                     }.map { measurementService.double(for: $0) } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
             let pressureChartData = TagChartViewData(
                 upperAlertValue: isOn ? alertService.upperPressure(for: ruuviTag)
@@ -1109,7 +1111,7 @@ extension TagChartsViewPresenter {
                 upperAlertValue: nil,
                 entries: aqiData,
                 lowerAlertValue: nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
             let aqiChartData = TagChartViewData(
                 upperAlertValue: nil,
@@ -1136,7 +1138,7 @@ extension TagChartsViewPresenter {
                     .lowerCarbonDioxide(
                     for: ruuviTag
                 ).map { $0 } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
             let co2ChartData = TagChartViewData(
                 upperAlertValue: isOn ? alertService
@@ -1169,7 +1171,7 @@ extension TagChartsViewPresenter {
                     .lowerPM10(
                     for: ruuviTag
                 ).map { $0 } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
             let pm10ChartData = TagChartViewData(
                 upperAlertValue: isOn ? alertService
@@ -1202,7 +1204,7 @@ extension TagChartsViewPresenter {
                     .lowerPM2_5(
                     for: ruuviTag
                 ).map { $0 } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
             let pm25ChartData = TagChartViewData(
                 upperAlertValue: isOn ? alertService
@@ -1235,7 +1237,7 @@ extension TagChartsViewPresenter {
                     .lowerVOC(
                     for: ruuviTag
                 ).map { $0 } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
             let vocChartData = TagChartViewData(
                 upperAlertValue: isOn ? alertService
@@ -1268,7 +1270,7 @@ extension TagChartsViewPresenter {
                     .lowerNOX(
                     for: ruuviTag
                 ).map { $0 } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
             let noxChartData = TagChartViewData(
                 upperAlertValue: isOn ? alertService
@@ -1301,7 +1303,7 @@ extension TagChartsViewPresenter {
                     .lowerLuminosity(
                     for: ruuviTag
                 ).map { $0 } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
             let luminosityChartData = TagChartViewData(
                 upperAlertValue: isOn ? alertService
@@ -1334,7 +1336,7 @@ extension TagChartsViewPresenter {
                     .lowerSound(
                     for: ruuviTag
                 ).map { $0 } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
             let soundChartData = TagChartViewData(
                 upperAlertValue: isOn ? alertService

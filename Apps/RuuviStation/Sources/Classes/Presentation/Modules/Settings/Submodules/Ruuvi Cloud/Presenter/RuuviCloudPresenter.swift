@@ -19,6 +19,7 @@ class RuuviCloudPresenter: NSObject, RuuviCloudModuleInput {
     private weak var weakView: UIViewController?
 
     var settings: RuuviLocalSettings!
+    var flags: RuuviLocalFlags!
     var ruuviAppSettingsService: RuuviServiceAppSettings!
 }
 
@@ -43,7 +44,7 @@ private extension RuuviCloudPresenter {
         let cloudMode = RuuviCloudViewModel()
         cloudMode.title = RuuviLocalization.Settings.Label.cloudMode
         cloudMode.boolean.value = settings.cloudModeEnabled
-        cloudMode.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        cloudMode.hideStatusLabel.value = !flags.showSwitchStatusLabel
         bind(cloudMode.boolean, fire: false) { observer, isOn in
             observer.settings.cloudModeEnabled = isOn.bound
             observer.ruuviAppSettingsService.set(cloudMode: isOn.bound)

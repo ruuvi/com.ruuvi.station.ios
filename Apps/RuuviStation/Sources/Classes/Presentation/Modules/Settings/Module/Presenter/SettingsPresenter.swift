@@ -13,6 +13,7 @@ import UIKit
 class SettingsPresenter: SettingsModuleInput {
     weak var view: SettingsViewInput!
     var router: SettingsRouterInput!
+    var flags: RuuviLocalFlags!
     var settings: RuuviLocalSettings!
     var errorPresenter: ErrorPresenter!
     var ruuviReactor: RuuviReactor!
@@ -45,7 +46,7 @@ extension SettingsPresenter: SettingsViewOutput {
                 }
             )
 
-        view.experimentalFunctionsEnabled = settings.experimentalFeaturesEnabled
+        view.experimentalFunctionsEnabled = flags.experimentalFeaturesEnabled
         ruuviStorage.readAll().on(success: { [weak self] tags in
             guard let sSelf = self else { return }
             let cloudTagsCount = tags.filter { $0.isOwner || $0.isCloud }.count
@@ -133,11 +134,11 @@ extension SettingsPresenter: SettingsViewOutput {
     }
 
     func viewDidTriggerShake() {
-        guard !settings.experimentalFeaturesEnabled
+        guard !flags.experimentalFeaturesEnabled
         else {
             return
         }
-        settings.experimentalFeaturesEnabled = true
+        flags.experimentalFeaturesEnabled = true
         view.experimentalFunctionsEnabled = true
     }
 
