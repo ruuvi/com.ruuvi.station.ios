@@ -19,4 +19,7 @@ public protocol RuuviLocalFlags {
     var historySyncForEachSensor: Bool { get set }
     var includeDataSourceInHistoryExport: Bool { get set }
     // MARK: End Legacy flags
+
+    /// When enabled new and improved full sensor card view is shown
+    var showNewFullSensorCardView: Bool { get set }
 }

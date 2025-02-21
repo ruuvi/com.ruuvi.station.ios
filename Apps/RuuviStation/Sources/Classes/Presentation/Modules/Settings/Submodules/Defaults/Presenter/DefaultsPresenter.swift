@@ -73,6 +73,7 @@ extension DefaultsPresenter {
             buildDoLegacyHistorySync(),
             buildDoHistorySyncAfterSignIn(),
             buildIncludeDataSourceInHistoryExport(),
+            buildShowNewFullSensorCard(),
         ]
     }
 
@@ -486,6 +487,20 @@ extension DefaultsPresenter {
 
         bind(viewModel.boolean, fire: false) { observer, bool in
             observer.flags.includeDataSourceInHistoryExport = GlobalHelpers.getBool(from: bool)
+        }
+
+        return viewModel
+    }
+
+    private func buildShowNewFullSensorCard() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Show New Full Sensor Card"
+        viewModel.boolean.value = flags.showNewFullSensorCardView
+        viewModel.hideStatusLabel.value = !flags.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, bool in
+            observer.flags.showNewFullSensorCardView = GlobalHelpers.getBool(from: bool)
         }
 
         return viewModel
