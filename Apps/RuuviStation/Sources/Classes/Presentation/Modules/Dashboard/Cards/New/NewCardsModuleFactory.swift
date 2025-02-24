@@ -13,15 +13,14 @@
 import UIKit
 
 protocol NewCardsViewModuleFactory {
-    func create() -> UIViewController
+    func create() -> NewCardsViewProvider
 }
 
 final class NewCardsViewModuleFactoryImpl: NewCardsViewModuleFactory {
-    func create() -> UIViewController {
+    func create() -> NewCardsViewProvider {
 //        let r = AppAssembly.shared.assembler.resolver
 
         let viewProvider = NewCardsViewProvider()
-        let view = viewProvider.makeViewController()
 
 //        let router = CardsRouter()
 //        router.transitionHandler = view
@@ -53,6 +52,6 @@ final class NewCardsViewModuleFactoryImpl: NewCardsViewModuleFactory {
 //        view.measurementService = r.resolve(RuuviServiceMeasurement.self)
 //        view.output = presenter
 
-        return view
+        return viewProvider
     }
 }

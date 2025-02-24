@@ -8,11 +8,12 @@ import UIKit
 class DashboardRouter: NSObject, DashboardRouterInput {
     weak var transitionHandler: UIViewController!
     weak var delegate: DashboardRouterDelegate!
-    private weak var dfuModule: DFUModuleInput?
-    private weak var backgroundSelectionModule: BackgroundSelectionModuleInput?
-    weak var cards: CardsModuleInput?
     var settings: RuuviLocalSettings!
     var flags: RuuviLocalFlags!
+    private weak var dfuModule: DFUModuleInput?
+    private weak var backgroundSelectionModule: BackgroundSelectionModuleInput?
+    private weak var cards: CardsModuleInput?
+    private var cardsViewProvider: NewCardsViewProvider?
 
     // swiftlint:disable weak_delegate
     var menuTableInteractiveTransition: MenuTableTransitioningDelegate!
@@ -131,12 +132,16 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     ) {
         if flags.showNewFullSensorCardView {
             let factory: NewCardsViewModuleFactory = NewCardsViewModuleFactoryImpl()
-            let module = factory.create()
+            let moduleProvider = factory.create()
+            cardsViewProvider = moduleProvider
 
             transitionHandler
                 .navigationController?
                 .pushViewController(
-                    module,
+                    moduleProvider
+                        .makeViewController(
+                            transitionHandler: transitionHandler
+                        ),
                     animated: true
                 )
         } else {
