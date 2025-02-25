@@ -21,7 +21,10 @@ struct PageViewController<Page: View>: UIViewControllerRepresentable {
 
     func updateUIViewController(_ pageViewController: UIPageViewController, context: Context) {
         pageViewController.setViewControllers(
-            [context.coordinator.controllers[currentPage]], direction: .forward, animated: true)
+            [context.coordinator.controllers[currentPage]],
+            direction: .forward,
+            animated: true
+        )
     }
 
     class Coordinator: NSObject, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
@@ -30,7 +33,11 @@ struct PageViewController<Page: View>: UIViewControllerRepresentable {
 
         init(_ pageViewController: PageViewController) {
             parent = pageViewController
-            controllers = parent.pages.map { UIHostingController(rootView: $0) }
+            controllers = parent.pages.map {
+                let controller = UIHostingController(rootView: $0)
+                controller.view.backgroundColor = .clear
+                return controller
+            }
         }
 
         func pageViewController(

@@ -1,5 +1,7 @@
 import UIKit
+import SwiftUI
 
+// MARK: - UIKit
 public extension UIFont {
     enum MontserratStyles: String {
         case bold = "Bold"
@@ -61,6 +63,46 @@ public extension UIFont {
     }
 }
 
+// MARK: - SwiftUI
+extension Font {
+    static func montserrat(
+        _ type: UIFont.MontserratStyles = .regular,
+        size: CGFloat = UIFont.systemFontSize
+    ) -> Font {
+        Font(
+            UIFont.Montserrat(
+                type,
+                size: size
+            )
+        )
+    }
+
+    static func muli(
+        _ type: UIFont.MuliStyles = .regular,
+        size: CGFloat = UIFont.systemFontSize
+    ) -> Font {
+        Font(
+            UIFont.Muli(
+                type,
+                size: size
+            )
+        )
+    }
+
+    static func oswald(
+        _ type: UIFont.OswaldStyles = .extraLight,
+        size: CGFloat = UIFont.systemFontSize
+    ) -> Font {
+        Font(
+            UIFont.Oswald(
+                type,
+                size: size
+            )
+        )
+    }
+}
+
+// MARK: - Helpers
 extension CGFloat {
     func adjustedSize() -> CGFloat {
         GlobalHelpers.isDeviceTablet() ? self + 4 : self

@@ -1,6 +1,8 @@
 import SwiftUI
 import Combine
 import RuuviLocalization
+import RuuviOntology
+import RuuviService
 
 enum SensorCardSelectedTab {
     case home
@@ -12,15 +14,25 @@ enum SensorCardSelectedTab {
 struct NewCardsView: View {
     @EnvironmentObject var state: NewCardsViewState
     @Environment(\.verticalSizeClass) var verticalSizeClass
-    @State private var currentPage = 0
     @State private var selectedTab: SensorCardSelectedTab = .home
-    let sensors = SensorDataProvider.sampleData
+
+    var measurementService: RuuviServiceMeasurement?
 
     var body: some View {
 
         ZStack {
             // Background
-            Color.black.opacity(0.8).edgesIgnoringSafeArea(.all)
+            if state.viewModels.count > 0 && state.currentPage < state.viewModels.count {
+                CardsBackgroundViewRepresentable(
+                    image: state.viewModels[state.currentPage].background,
+                    withAnimation: true
+                )
+                .edgesIgnoringSafeArea(.all)
+                // TODO: Remove this after discussing with design team
+                RoundedRectangle(cornerRadius: 0)
+                    .fill(Color.black.opacity(0.3))
+                    .edgesIgnoringSafeArea(.all)
+            }
 
             VStack(spacing: 0) {
                 // Top navigation bar
@@ -28,9 +40,13 @@ struct NewCardsView: View {
                     Button(action: {
                         state.backButtonTapped.send()
                     }) {
-                        Image(systemName: "chevron.left")
-                            .font(.title3)
-                            .foregroundColor(.white)
+                        ZStack {
+                            Image(systemName: "chevron.left")
+                                .font(.title3)
+                                .foregroundColor(.white)
+                        }
+                        .frame(width: 44, height: 44) // Expands tappable area
+                        .clipShape(Rectangle())
                     }
 
                     // Ruuvi logo
@@ -46,41 +62,47 @@ struct NewCardsView: View {
                     CustomTabBar(selectedTab: $selectedTab)
                         .frame(height: 30)
                 }
-                .padding(.horizontal)
+                .padding(.trailing)
                 .padding(.top, verticalSizeClass == .regular ? 0 : 12)
                 .padding(.bottom, verticalSizeClass == .regular ? 24 : 8)
 
                 // Horizontal navigation indicators
                 HStack {
                     Button(action: {
-                        if currentPage > 0 {
-                            currentPage -= 1
+                        if state.currentPage > 0 {
+                            state.currentPage -= 1
                         }
                     }) {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 24))
                             .foregroundColor(.white)
                     }
-                    .opacity(currentPage == 0 ? 0 : 1)
+                    .opacity(state.currentPage == 0 ? 0 : 1)
 
                     Spacer()
 
-                    Text(sensors[currentPage].sensorName)
-                        .font(.system(size: 24, weight: .regular))
+                    // TODO: Fix long name two lines
+                    // Also align center.
+                    Text(state.viewModels[state.currentPage].name)
+                        .font(.muli(.extraBold, size: 20))
                         .foregroundColor(.white)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .lineLimit(2)
 
                     Spacer()
 
                     Button(action: {
-                        if currentPage < sensors.count - 1 {
-                            currentPage += 1
+                        if state.currentPage < state.viewModels.count - 1 {
+                            state.currentPage += 1
                         }
                     }) {
                         Image(systemName: "chevron.right")
                             .font(.system(size: 24))
                             .foregroundColor(.white)
                     }
-                    .opacity(currentPage < sensors.count - 1 ? 1 : 0)
+                    .opacity(
+                        state.currentPage < state.viewModels.count - 1 ? 1 : 0
+                    )
                 }
                 .padding(.horizontal)
 
@@ -88,8 +110,9 @@ struct NewCardsView: View {
                     switch selectedTab {
                     case .home:
                         PageView(
-                            sensors: sensors,
-                            currentPage: $currentPage
+                            viewModels: state.viewModels,
+                            currentPage: $state.currentPage,
+                            measurementService: measurementService
                         )
                         .tag(0)
                     case .graph:
@@ -122,20 +145,22 @@ struct NewCardsView: View {
 }
 
 struct PageView: View {
-    let sensors: [SensorData]
+    let viewModels: [CardsViewModel]
     @Binding var currentPage: Int
+    let measurementService: RuuviServiceMeasurement?
 
     var body: some View {
         PageViewController(
-            pages: sensors.map {
+            pages: viewModels.map {
                 SensorCardView(
-                    sensor: $0
+                    viewModel: $0,
+                    measurementService: measurementService
                 )
             },
-            currentPage: $currentPage)
+            currentPage: $currentPage
+        )
     }
 }
-
 
 struct CustomTabBar: View {
     @Binding var selectedTab: SensorCardSelectedTab
@@ -162,7 +187,7 @@ struct CustomTabBar: View {
     ]
 
     var body: some View {
-        HStack(spacing: 16) {
+        HStack(spacing: 24) {
             Spacer()
             ForEach(0..<tabs.count, id: \.self) { index in
                 Button(action: {
@@ -211,9 +236,25 @@ struct TabItem {
 }
 
 class NewCardsViewProvider: NSObject {
+    var output: CardsModuleOutput?
+    var measurementService: RuuviServiceMeasurement?
+
     private let state = NewCardsViewState()
     private var cancellables = Set<AnyCancellable>()
     private var transitionHandler: UIViewController?
+
+    // MARK: CardsViewInput
+    var viewModels: [CardsViewModel] = [] {
+        didSet {
+            state.viewModels = viewModels
+        }
+    }
+
+    var scrollIndex: Int = 0 {
+        didSet {
+            state.currentPage = scrollIndex
+        }
+    }
 
     func makeViewController(transitionHandler: UIViewController?) -> UIViewController {
         // Store the transition handler
@@ -222,8 +263,10 @@ class NewCardsViewProvider: NSObject {
 
         // Create the hosting controller with the state injected
         let hostingController = UIHostingController(
-            rootView: NewCardsView()
-                .environmentObject(state)
+            rootView: NewCardsView(
+                measurementService: measurementService
+            )
+            .environmentObject(state)
         )
 
         return hostingController
@@ -235,18 +278,68 @@ class NewCardsViewProvider: NSObject {
         // Subscribe to back button tap events
         state.backButtonTapped
             .sink { [weak self] _ in
-                print("Back button tapped in Combine")
+                // TODO: CLEANUP
+                self?.transitionHandler?.navigationController?.navigationBar.isHidden = false
                 // Get the navigation controller and pop
                 if let navigationController = self?.transitionHandler?.navigationController {
                     navigationController.popViewController(animated: true)
-                } else {
-                    print("Navigation controller not found")
                 }
             }
             .store(in: &cancellables)
     }
 }
 
+extension NewCardsViewProvider: CardsViewInput {
+
+    func applyUpdate(to viewModel: CardsViewModel) {
+
+    }
+
+    func scroll(to index: Int) {
+
+    }
+
+    func showBluetoothDisabled(userDeclined: Bool) {
+
+    }
+
+    func showKeepConnectionDialogChart(for viewModel: CardsViewModel) {
+
+    }
+
+    func showKeepConnectionDialogSettings(for viewModel: CardsViewModel) {
+
+    }
+
+    func showFirmwareUpdateDialog(for viewModel: CardsViewModel) {
+
+    }
+
+    func showFirmwareDismissConfirmationUpdateDialog(
+        for viewModel: CardsViewModel
+    ) {
+
+    }
+
+    func showReverseGeocodingFailed() {
+
+    }
+
+    func showAlreadyLoggedInAlert(with email: String) {
+
+    }
+
+    func viewShouldDismiss() {
+
+    }
+
+}
+
 class NewCardsViewState: ObservableObject {
+    // MARK: Properties
+    @Published var currentPage: Int = 0
+    @Published var viewModels: [CardsViewModel] = []
+
+    // MARK: Actions
     let backButtonTapped = PassthroughSubject<Void, Never>()
 }

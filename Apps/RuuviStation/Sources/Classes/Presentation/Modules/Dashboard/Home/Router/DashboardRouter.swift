@@ -13,6 +13,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     private weak var dfuModule: DFUModuleInput?
     private weak var backgroundSelectionModule: BackgroundSelectionModuleInput?
     private weak var cards: CardsModuleInput?
+    private weak var newCardsInput: NewCardsModuleInput?
     private var cardsViewProvider: NewCardsViewProvider?
 
     // swiftlint:disable weak_delegate
@@ -133,7 +134,21 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         if flags.showNewFullSensorCardView {
             let factory: NewCardsViewModuleFactory = NewCardsViewModuleFactoryImpl()
             let moduleProvider = factory.create()
+            if let output = moduleProvider.output as? NewCardsModuleInput {
+                newCardsInput = output
+            }
             cardsViewProvider = moduleProvider
+
+            if let newCardsInput {
+                newCardsInput.configure(
+                    viewModels: viewModels,
+                    ruuviTagSensors: ruuviTagSensors,
+                    sensorSettings: sensorSettings,
+                    scrollTo: scrollTo,
+                    openWith: showCharts ? .graph : .home,
+                    output: output
+                )
+            }
 
             transitionHandler
                 .navigationController?
