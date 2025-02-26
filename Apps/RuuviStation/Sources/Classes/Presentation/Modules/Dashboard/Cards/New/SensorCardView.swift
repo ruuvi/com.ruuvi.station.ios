@@ -3,11 +3,14 @@ import UIKit
 import RuuviLocalization
 import RuuviService
 import RuuviOntology
+import Combine
+import RuuviLocal
 
 // MARK: - Metric View Component
 struct MetricView: View {
     let icon: String
     let value: String
+    let unit: String
     let label: String
 
     var body: some View {
@@ -23,9 +26,17 @@ struct MetricView: View {
             }
 
             VStack(alignment: .leading, spacing: 0) {
-                Text(value)
-                    .font(.muli(.bold, size: 18))
-                    .bold()
+                HStack(alignment: .lastTextBaseline, spacing: 4) {
+                    Text(value)
+                        .font(.montserrat(.bold, size: 18))
+                        .bold()
+                    VStack {
+                        Spacer()
+                        Text(unit)
+                            .font(.montserrat(.bold, size: 12))
+                            .bold()
+                    }
+                }
 
                 Text(label)
                     .font(.muli(.regular, size: 12))
@@ -39,21 +50,20 @@ struct MetricView: View {
 }
 
 struct ProminentMetricView: View {
+    @Environment(\.verticalSizeClass) var verticalSizeClass
     let value: String
     let unit: String
 
     var body: some View {
         HStack {
-            Spacer()
             Text(value)
                 .font(.oswald(.bold, size: 74))
                 .bold()
-                .padding(.leading, 50)
+                .padding(.leading, verticalSizeClass == .compact ? 0 : 50)
             Text(unit)
                 .font(.oswald(.regular, size: 40))
                 .foregroundColor(.white.opacity(0.7))
                 .padding(.top, -20)
-            Spacer()
         }
     }
 }
@@ -117,9 +127,11 @@ struct SensorCardView: View {
                                 airQualityGauge
                                 airQualityLabels
                             } else {
-                                if let temperature = viewModel.temperature {
+                                if let temperature = viewModel.temperature,
+                                   let tempValue = measurementService?.stringWithoutSign(for: temperature),
+                                   let unit = measurementService?.units.temperatureUnit.symbol {
                                     ProminentMetricView(
-                                        value: "\(String(format: "%.2f", temperature.value))", unit: "°C"
+                                        value: "\(tempValue)", unit: unit
                                     )
                                 }
                             }
@@ -303,13 +315,20 @@ extension SensorCardView {
         }
     }
 
-    private var gridColumns: [GridItem] {
+    private func gridColumns(for firmwareVersion: RuuviFirmwareVersion) -> [GridItem] {
         if verticalSizeClass == .compact {
-            [
-                GridItem(.flexible()),
-                GridItem(.flexible()),
-                GridItem(.flexible()),
-            ]
+            if firmwareVersion == .e0 || firmwareVersion == .f0 {
+                [
+                    GridItem(.flexible()),
+                    GridItem(.flexible()),
+                    GridItem(.flexible()),
+                ]
+            } else {
+                [
+                    GridItem(.flexible()),
+                    GridItem(.flexible()),
+                ]
+            }
         } else {
             [
                 GridItem(.flexible()),
@@ -320,92 +339,122 @@ extension SensorCardView {
 
     private var metricsGrid: some View {
         LazyVGrid(
-            columns: gridColumns,
+            columns: gridColumns(
+                for: RuuviFirmwareVersion.firmwareVersion(from: viewModel.version ?? 0)
+            ),
             spacing: 20
         ) {
             // Temperature
-            if let version = viewModel.version,
-                let temperature = viewModel.temperature {
+            if let version = viewModel.version {
                 let firmwareVersion = RuuviFirmwareVersion.firmwareVersion(
                     from: version
                 )
                 if firmwareVersion == .e0 || firmwareVersion == .f0 {
-                    MetricView(
-                        icon: "thermometer",
-                        value: "\(String(format: "%.2f", temperature.value)) °C",
-                        label: "Temperature"
-                    )
+                    if let temperature = viewModel.temperature,
+                       let tempValue = measurementService?.stringWithoutSign(for: temperature),
+                       let unit = measurementService?.units.temperatureUnit.symbol {
+                        MetricView(
+                            icon: "thermometer",
+                            value: "\(tempValue)",
+                            unit: unit,
+                            label: "Temperature"
+                        )
+                    }
                 }
             }
 
             // Humidity
             if let humidity = viewModel.humidity {
+                let humidityValue = measurementService?.stringWithoutSign(
+                    for: humidity,
+                    temperature: viewModel.temperature
+                )
+                let humidityUnit = measurementService?.units.humidityUnit
+                let unitSymbol = humidityUnit == .dew
+                    ? measurementService?.units.temperatureUnit.symbol ?? "°C"
+                    : humidityUnit?.symbol ?? "%"
                 MetricView(
                     icon: "humidity.fill",
-                    value: "\(String(format: "%.2f", humidity.value)) %",
+                    value: "\(humidityValue ?? "-")",
+                    unit: unitSymbol,
                     label: "Humidity"
                 )
             }
 
             // Pressure
-            if let pressure = viewModel.pressure {
+            if let pressure = viewModel.pressure,
+               let pressureValue = measurementService?.stringWithoutSign(for: pressure),
+               let unit = measurementService?.units.pressureUnit.symbol {
                 MetricView(
                     icon: "wind",
-                    value: "\(String(format: "%.2f", pressure.value)) hPa",
+                    value: "\(pressureValue)",
+                    unit: unit,
                     label: "Pressure"
                 )
             }
 
-            // PM2.5
-            if let pm2_5 = viewModel.pm2_5 {
-                MetricView(
-                    icon: "aqi.medium",
-                    value: "\(pm2_5) µg/m³",
-                    label: "PM2.5"
-                )
-            }
-
-            // NOX
-            if let nox = viewModel.nox {
-                MetricView(
-                    icon: "drop.fill",
-                    value: "\(nox)",
-                    label: "NOX"
-                )
-            }
-
             // CO2
-            if let co2 = viewModel.co2 {
+            if let co2 = viewModel.co2,
+               let co2Value = measurementService?.co2String(for: co2) {
                 MetricView(
                     icon: "carbon.dioxide.cloud.fill",
-                    value: "\(co2) ppm",
-                    label: "CO₂"
+                    value: "\(co2Value)",
+                    unit: RuuviLocalization.unitCo2,
+                    label: RuuviLocalization.co2
                 )
             }
 
-            // Light
-            if let luminance = viewModel.luminance {
+            // PM2.5
+            if let pm2_5 = viewModel.pm2_5,
+               let pm25Value = measurementService?.pm25String(for: pm2_5) {
                 MetricView(
-                    icon: "lightspectrum.horizontal",
-                    value: "\(luminance) lux",
-                    label: "Light"
+                    icon: "aqi.medium",
+                    value: "\(pm25Value)",
+                    unit: RuuviLocalization.unitPm25,
+                    label: RuuviLocalization.pm25
                 )
             }
 
-            // Battery
-            if let voltage = viewModel.voltage {
+            // PM10
+            if let pm10 = viewModel.pm10,
+               let pm10Value = measurementService?.pm10String(for: pm10) {
                 MetricView(
-                    icon: "battery.75percent",
-                    value: "\(String(format: "%.1f", voltage.value)) V",
-                    label: "Battery"
+                    icon: "aqi.high",
+                    value: "\(pm10Value)",
+                    unit: RuuviLocalization.unitPm10,
+                    label: RuuviLocalization.pm10
+                )
+            }
+
+            // NOx
+            if let nox = viewModel.nox,
+               let noxValue = measurementService?.noxString(for: nox) {
+                MetricView(
+                    icon: "drop.fill",
+                    value: "\(noxValue)",
+                    unit: RuuviLocalization.unitNox,
+                    label: RuuviLocalization.nox
+                )
+            }
+
+            // Light (Luminosity)
+            if let luminance = viewModel.luminance,
+               let luminanceValue = measurementService?.luminosityString(for: luminance) {
+                MetricView(
+                    icon: "lightbulb.fill",
+                    value: "\(luminanceValue)",
+                    unit: RuuviLocalization.unitLuminosity,
+                    label: RuuviLocalization.luminosity
                 )
             }
 
             // Sound
-            if let dbaAvg = viewModel.dbaAvg {
+            if let sound = viewModel.dbaAvg,
+               let soundValue = measurementService?.soundAvgString(for: sound) {
                 MetricView(
                     icon: "waveform.circle",
-                    value: "\(dbaAvg) dBm",
+                    value: "\(soundValue)",
+                    unit: RuuviLocalization.unitSound,
                     label: "Sound"
                 )
             }
@@ -413,9 +462,20 @@ extension SensorCardView {
             // Movement
             if let movementCounter = viewModel.movementCounter {
                 MetricView(
-                    icon: "brakesignal",
+                    icon: "arrow.triangle.2.circlepath.circle",
                     value: "\(movementCounter)",
-                    label: "movements"
+                    unit: "",
+                    label: RuuviLocalization.Cards.Movements.title
+                )
+            }
+
+            // Battery
+            if let voltage = viewModel.voltage {
+                MetricView(
+                    icon: "battery.75percent",
+                    value: "\(String(format: "%.1f", voltage.value))",
+                    unit: "V",
+                    label: "Battery"
                 )
             }
         }
@@ -424,18 +484,46 @@ extension SensorCardView {
 
     private var statusBar: some View {
         HStack {
-            Text("Synchronising...")
-                .foregroundColor(.white.opacity(0.7))
+            NetworkSyncView(
+                viewModel: NetworkSyncViewModel(macId: viewModel.mac)
+            )
+            .foregroundColor(.white.opacity(0.7))
 
             Spacer()
 
-            // Sync time
-            HStack(spacing: 4) {
-                Image(systemName: "hourglass")
-                    .foregroundColor(.white.opacity(0.7))
-                Text(viewModel.date?.ruuviAgo() ?? RuuviLocalization.na)
-                    .foregroundColor(.white.opacity(0.7))
-                    .lineLimit(1)
+            HStack(spacing: 8) {
+                Group {
+                    if let source = viewModel.source {
+                        switch source {
+                        case .advertisement, .bgAdvertisement:
+                            Image(uiImage: RuuviAsset.iconBluetooth.image)
+                                .renderingMode(.template)
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundColor(.white.opacity(0.7))
+                                .frame(width: 24, height: 24)
+                        case .heartbeat, .log:
+                            Image(uiImage: RuuviAsset.iconBluetoothConnected.image)
+                                .renderingMode(.template)
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundColor(.white.opacity(0.7))
+                                .frame(width: 24, height: 24)
+                        case .ruuviNetwork:
+                            Image(uiImage: RuuviAsset.iconGateway.image)
+                                .renderingMode(.template)
+                                .resizable()
+                                .scaledToFit()
+                                .foregroundColor(.white.opacity(0.7))
+                                .frame(width: 24, height: 24)
+                        default:
+                            EmptyView()
+                        }
+                    }
+                }
+
+                // Keep only the text updating
+                UpdatedAtTextView(date: viewModel.date)
             }
 
             // Low battery indicator (only if hasLowBattery == true)
@@ -451,5 +539,89 @@ extension SensorCardView {
         }
         .font(.system(size: 14))
         .padding(.horizontal)
+    }
+}
+
+struct UpdatedAtTextView: View {
+    let date: Date?
+    @State private var timeAgo: String = ""
+
+    var body: some View {
+        Text(timeAgo)
+            .foregroundColor(.white.opacity(0.7))
+            .lineLimit(1)
+            .onAppear {
+                startTimer()
+            }
+    }
+
+    private func startTimer() {
+        updateText() // Initial update
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            updateText()
+        }
+    }
+
+    private func updateText() {
+        timeAgo = date?.ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
+    }
+}
+
+class NetworkSyncViewModel: ObservableObject {
+    @Published var syncStatus: NetworkSyncStatus = .none
+    private var notificationCancellable: AnyCancellable?
+
+    let macId: AnyMACIdentifier?
+
+    init(macId: AnyMACIdentifier?) {
+        self.macId = macId
+        startObservingNetworkSyncNotification()
+    }
+
+    private func startObservingNetworkSyncNotification() {
+        notificationCancellable = NotificationCenter.default
+            .publisher(for: .NetworkSyncDidChangeStatus)
+            .compactMap { notification -> NetworkSyncStatus? in
+                guard let mac = notification.userInfo?[NetworkSyncStatusKey.mac] as? MACIdentifier,
+                      let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus,
+                      mac.any == self.macId
+                else {
+                    return nil
+                }
+                return status
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] status in
+                self?.updateSyncState(with: status)
+            }
+    }
+
+    private func updateSyncState(with status: NetworkSyncStatus) {
+        withAnimation {
+            self.syncStatus = status
+        }
+    }
+}
+
+struct NetworkSyncView: View {
+    @StateObject var viewModel: NetworkSyncViewModel
+
+    var body: some View {
+        VStack(spacing: 10) {
+            Text(syncMessage(for: viewModel.syncStatus))
+        }
+    }
+
+    private func syncMessage(for status: NetworkSyncStatus) -> String {
+        switch status {
+        case .none:
+            return ""
+        case .syncing:
+            return RuuviLocalization.TagCharts.Status.serving
+        case .complete:
+            return RuuviLocalization.synchronized
+        case .onError:
+            return RuuviLocalization.ErrorPresenterAlert.error
+        }
     }
 }
