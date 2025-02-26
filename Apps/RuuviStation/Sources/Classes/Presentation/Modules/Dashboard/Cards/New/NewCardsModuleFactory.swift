@@ -51,6 +51,7 @@ final class NewCardsViewModuleFactoryImpl: NewCardsViewModuleFactory {
         presenter.interactor = interactor
 
         viewProvider.measurementService = presenter.measurementService
+        viewProvider.ruuviStorage = presenter.ruuviStorage
         viewProvider.output = presenter
 
         return viewProvider

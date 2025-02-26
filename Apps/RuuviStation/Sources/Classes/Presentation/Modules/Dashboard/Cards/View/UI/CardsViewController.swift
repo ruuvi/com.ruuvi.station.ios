@@ -22,6 +22,12 @@ class CardsViewController: UIViewController {
         }
     }
 
+    var ruuviTags: [AnyRuuviTagSensor] = [] {
+        didSet {
+            // No op.
+        }
+    }
+
     var scrollIndex: Int = 0
 
     private var currentPage: Int = 0 {

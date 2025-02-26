@@ -200,7 +200,7 @@ extension SensorCardView {
                     .trim(from: 0, to: gaugeTrim)
                     .stroke(
                         Color.black.opacity(0.8),
-                        lineWidth: 8
+                        style: StrokeStyle(lineWidth: 8, lineCap: .round)
                     )
                     .frame(width: gaugeDiameter, height: gaugeDiameter)
                     .rotationEffect(.degrees(gaugeRotationDegrees))

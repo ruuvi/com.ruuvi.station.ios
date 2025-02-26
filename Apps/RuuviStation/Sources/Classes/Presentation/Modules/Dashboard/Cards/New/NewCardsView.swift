@@ -3,6 +3,7 @@ import Combine
 import RuuviLocalization
 import RuuviOntology
 import RuuviService
+import RuuviStorage
 
 enum SensorCardSelectedTab {
     case home
@@ -17,6 +18,7 @@ struct NewCardsView: View {
     @State private var selectedTab: SensorCardSelectedTab = .home
 
     var measurementService: RuuviServiceMeasurement?
+    var ruuviStorage: RuuviStorage?
 
     var body: some View {
 
@@ -238,6 +240,7 @@ struct TabItem {
 class NewCardsViewProvider: NSObject {
     var output: CardsModuleOutput?
     var measurementService: RuuviServiceMeasurement?
+    var ruuviStorage: RuuviStorage?
 
     private let state = NewCardsViewState()
     private var cancellables = Set<AnyCancellable>()
@@ -247,6 +250,12 @@ class NewCardsViewProvider: NSObject {
     var viewModels: [CardsViewModel] = [] {
         didSet {
             state.viewModels = viewModels
+        }
+    }
+
+    var ruuviTags: [AnyRuuviTagSensor] = [] {
+        didSet {
+            state.ruuviTags = ruuviTags
         }
     }
 
@@ -264,7 +273,8 @@ class NewCardsViewProvider: NSObject {
         // Create the hosting controller with the state injected
         let hostingController = UIHostingController(
             rootView: NewCardsView(
-                measurementService: measurementService
+                measurementService: measurementService,
+                ruuviStorage: ruuviStorage
             )
             .environmentObject(state)
         )
@@ -339,6 +349,7 @@ class NewCardsViewState: ObservableObject {
     // MARK: Properties
     @Published var currentPage: Int = 0
     @Published var viewModels: [CardsViewModel] = []
+    @Published var ruuviTags: [AnyRuuviTagSensor] = []
 
     // MARK: Actions
     let backButtonTapped = PassthroughSubject<Void, Never>()

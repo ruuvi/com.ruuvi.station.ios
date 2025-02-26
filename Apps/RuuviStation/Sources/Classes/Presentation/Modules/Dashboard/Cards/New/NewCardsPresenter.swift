@@ -48,8 +48,8 @@ extension NewCardsPresenter: NewCardsModuleInput {
         openWith: SensorCardSelectedTab,
         output: CardsModuleOutput
     ) {
-        print("NewCardsViewProvider: configure", viewModels.count)
         view?.viewModels = viewModels
+        view?.ruuviTags = ruuviTagSensors
         if let scrollTo = scrollTo, let index = viewModels.firstIndex(of: scrollTo) {
             view?.scrollIndex = index
         }
