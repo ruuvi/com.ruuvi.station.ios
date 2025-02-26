@@ -148,21 +148,15 @@ extension SensorCardView {
     func gradientForAirQualityScore(_ score: CGFloat, maxScore: CGFloat) -> LinearGradient {
         let normalizedScore = min(max(score, 0), 100) / 100.0 // Normalize to 0-1
 
-        if normalizedScore <= 0.25 {
+        if normalizedScore <= 0.33 {
             return LinearGradient(
                 gradient: Gradient(colors: [Color.red, Color.red.opacity(0.8)]), // Red gradient for 0-25
                 startPoint: .leading,
                 endPoint: .trailing
             )
-        } else if normalizedScore <= 0.5 {
+        } else if normalizedScore <= 0.66 {
             return LinearGradient(
                 gradient: Gradient(colors: [Color.orange, Color.orange.opacity(0.8)]), // Orange gradient for 26-50
-                startPoint: .leading,
-                endPoint: .trailing
-            )
-        } else if normalizedScore <= 0.75 {
-            return LinearGradient(
-                gradient: Gradient(colors: [Color.yellow, Color.yellow.opacity(0.8)]), // Yellow gradient for 51-75
                 startPoint: .leading,
                 endPoint: .trailing
             )
@@ -182,7 +176,7 @@ extension SensorCardView {
             if let (
                 currentAirQIndex,
                 maximumAirQIndex,
-                _
+                state
             ) = measurementService?.aqiString(
                 for: viewModel.co2,
                 pm25: viewModel.pm2_5,
@@ -218,6 +212,40 @@ extension SensorCardView {
                     )
                     .frame(width: gaugeDiameter, height: gaugeDiameter)
                     .rotationEffect(.degrees(gaugeRotationDegrees))
+
+                // currentAirQIndex / maxAirQIndex => fraction from 0..1
+                let fraction = (CGFloat(currentAirQIndex) / CGFloat(maximumAirQIndex)) * gaugeTrim
+                // gaugeTrim * 360 => total degrees of that partial arc
+                let endAngle = gaugeRotationDegrees + (Double(fraction) * 360)
+
+                // Pulsating circle at the tip
+                // Add shadow to the circle.
+
+                ZStack {
+                    // The main circle
+                    Circle()
+                        .fill(Color(state.color))
+                        .frame(width: 8, height: 8)
+
+                    // Glow layer behind it
+                    Circle()
+                        .fill(
+                            RadialGradient(
+                                gradient: Gradient(colors: [
+                                    Color(state.color),
+                                    Color(state.color).opacity(0.5),
+                                    Color(state.color).opacity(0.2),
+                                    Color(state.color).opacity(0),
+                                ]),
+                                center: .center,
+                                startRadius: 0,
+                                endRadius: 14
+                            )
+                        )
+                        .frame(width: 30, height: 30)
+                }
+                .offset(x: gaugeDiameter / 2)
+                .rotationEffect(.degrees(endAngle))
 
                 // Main reading in the center
                 Text(currentAirQIndex.stringValue)
