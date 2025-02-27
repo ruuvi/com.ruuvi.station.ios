@@ -16,7 +16,7 @@ enum TagChartsHelper {
         let lineChartDataSet = LineChartDataSet(entries: entries)
         lineChartDataSet.axisDependency = .left
         lineChartDataSet.setColor(RuuviColor.graphLineColor.color)
-        lineChartDataSet.lineWidth = 1.5
+        lineChartDataSet.lineWidth = 1
         lineChartDataSet.drawCirclesEnabled = false
         lineChartDataSet.circleRadius = 0.8
         lineChartDataSet.drawValuesEnabled = false
