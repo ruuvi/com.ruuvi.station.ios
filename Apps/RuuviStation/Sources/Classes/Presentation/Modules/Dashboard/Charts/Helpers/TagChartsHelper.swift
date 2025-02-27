@@ -20,7 +20,7 @@ enum TagChartsHelper {
         lineChartDataSet.drawCirclesEnabled = false
         lineChartDataSet.circleRadius = 0.8
         lineChartDataSet.drawValuesEnabled = false
-        lineChartDataSet.fillAlpha = 1
+        lineChartDataSet.fillAlpha = 0.3
         lineChartDataSet.fillColor = RuuviColor.graphFillColor.color
         lineChartDataSet.highlightColor = RuuviColor.graphFillColor.color
         lineChartDataSet.highlightLineDashLengths = [2, 1, 0]
@@ -29,7 +29,8 @@ enum TagChartsHelper {
         lineChartDataSet.drawFilledEnabled = true
         lineChartDataSet.highlightEnabled = true
         lineChartDataSet.maximumGapBetweenPoints = 3600
-        lineChartDataSet.gapCircleRadius = 1.5
+        lineChartDataSet.gapCircleRadius = 1.2
+        lineChartDataSet.gapLineWidth = 1
 
         if showAlertRangeInGraph {
             let lineColor = RuuviColor.graphLineColor.color
