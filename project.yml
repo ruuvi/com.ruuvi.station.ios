@@ -85,7 +85,7 @@ targetTemplates:
 packages:
   BTKit:
     url: https://github.com/ruuvi/BTKit
-    branch: "master"
+    version: "0.6.0"
   DGCharts:
     url: https://github.com/ruuvi/Charts
     from: 5.1.1
