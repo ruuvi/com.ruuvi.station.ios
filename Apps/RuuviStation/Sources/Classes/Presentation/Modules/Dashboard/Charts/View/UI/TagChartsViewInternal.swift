@@ -55,6 +55,7 @@ class TagChartsViewInternal: LineChartView {
         xAxis.labelTextColor = UIColor.white
         xAxis.drawAxisLineEnabled = true
         xAxis.drawGridLinesEnabled = true
+        xAxis.gridColor = xAxis.gridColor.withAlphaComponent(0.4)
         xAxis.centerAxisLabelsEnabled = false
         xAxis.granularity = 1
         xAxis.granularityEnabled = true
@@ -69,6 +70,7 @@ class TagChartsViewInternal: LineChartView {
         leftAxis.labelFont = .Muli(.regular, size: UIDevice.isTablet() ? 12 : 10)
         leftAxis.setLabelCount(6, force: false)
         leftAxis.drawGridLinesEnabled = true
+        leftAxis.gridColor = leftAxis.gridColor.withAlphaComponent(0.4)
         leftAxis.labelTextColor = UIColor.white
         leftAxis.minWidth = UIDevice.isTablet() ? 70.0 : 44.0
         leftAxis.maxWidth = UIDevice.isTablet() ? 70.0 : 44.0
@@ -76,7 +78,6 @@ class TagChartsViewInternal: LineChartView {
         leftAxis.granularityEnabled = true
         leftAxis.granularity = 1
         leftAxis.spaceBottom = 0.2
-        leftAxis.drawZeroLineEnabled = true
         leftAxis.forceLabelsEnabled = true
 
         rightAxis.enabled = false
