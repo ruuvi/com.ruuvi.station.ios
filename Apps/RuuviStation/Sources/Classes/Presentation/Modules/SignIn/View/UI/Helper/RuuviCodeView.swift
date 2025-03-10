@@ -37,7 +37,7 @@ class RuuviCodeView: UIStackView {
 
 extension RuuviCodeView {
     func activate() {
-        let _ = codeEntries.first?.becomeFirstResponder()
+        _ = codeEntries.first?.becomeFirstResponder()
     }
 
     // Fill the view with pasted code
@@ -168,7 +168,7 @@ extension RuuviCodeView: UITextFieldDelegate {
         if isStringValid {
             let code = string.trimmingCharacters(in: .whitespacesAndNewlines)
             if code.count > 1 {
-                let _ = textField.resignFirstResponder()
+                _ = textField.resignFirstResponder()
                 populateRuuviCodeFields(with: code)
                 return false
             } else {
@@ -181,9 +181,9 @@ extension RuuviCodeView: UITextFieldDelegate {
                 } else if range.length == 0 {
                     textField.text = code.uppercased()
                     if textField.nextEntry == nil {
-                        let _ = textField.resignFirstResponder()
+                        _ = textField.resignFirstResponder()
                     } else {
-                        let _ = textField.nextEntry?.becomeFirstResponder()
+                        _ = textField.nextEntry?.becomeFirstResponder()
                     }
                     return false
                 }

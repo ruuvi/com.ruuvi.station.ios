@@ -67,7 +67,7 @@ class RuuviCodeTextField: UITextField {
     override func deleteBackward() {
         text = ""
         previousEntry?.text = ""
-        let _ = previousEntry?.becomeFirstResponder()
+        _ = previousEntry?.becomeFirstResponder()
     }
 
     private func startBlinkingAnimation() {
