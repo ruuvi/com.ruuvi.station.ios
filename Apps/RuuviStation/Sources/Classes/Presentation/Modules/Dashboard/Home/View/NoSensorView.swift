@@ -19,7 +19,6 @@ class NoSensorView: UIView {
     }
 
     weak var delegate: NoSensorViewDelegate?
-    var showSignInButtonOnNoSensorView: Bool = false
 
     private lazy var scrollView: UIScrollView = {
         let scroll = UIScrollView()
@@ -125,21 +124,18 @@ extension NoSensorView {
 // MARK: - Public
 
 extension NoSensorView {
-    func updateView(showSignInButtonOnNoSensorView: Bool) {
+    func updateView() {
         if centerButtonStackView.subviews.count > 0 {
             centerButtonStackView.subviews.forEach { $0.removeFromSuperview() }
         }
 
-        let buttons = showSignInButtonOnNoSensorView ? [signInButton, addSensorButton] : [addSensorButton]
+        let buttons = [signInButton, addSensorButton]
         for button in buttons {
             centerButtonStackView.addArrangedSubview(button)
         }
-        messageLabel.text = showSignInButtonOnNoSensorView ?
-            RuuviLocalization.dashboardNoSensorsMessageSignedOut :
-            RuuviLocalization.dashboardNoSensorsMessage
+        messageLabel.text = RuuviLocalization.dashboardNoSensorsMessageSignedOut
 
-        centerButtonCenterYAnchor.isActive =
-            showSignInButtonOnNoSensorView ? activateCenterButtonStackConstraint() : true
+        centerButtonCenterYAnchor.isActive = activateCenterButtonStackConstraint()
     }
 }
 
@@ -246,9 +242,6 @@ extension NoSensorView {
     }
 
     private func activateCenterButtonStackConstraint() -> Bool {
-        if !showSignInButtonOnNoSensorView {
-            return true
-        }
 
         if UIDevice.isTablet() {
             return true
