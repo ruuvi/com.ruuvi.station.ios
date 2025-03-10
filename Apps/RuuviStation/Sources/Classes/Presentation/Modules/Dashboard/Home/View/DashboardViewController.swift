@@ -43,29 +43,6 @@ class DashboardViewController: UIViewController {
         }
     }
 
-    var showSignInButtonOnNoSensorView: Bool {
-        switch (isAuthorized, userSignedInOnce) {
-        case (true, _):
-            return false
-        case (false, true):
-            return true
-        case (false, false):
-            return false
-        }
-    }
-
-    var userSignedInOnce: Bool = false {
-        didSet {
-            noSensorView.showSignInButtonOnNoSensorView = showSignInButtonOnNoSensorView
-        }
-    }
-
-    var isAuthorized: Bool = false {
-        didSet {
-            noSensorView.showSignInButtonOnNoSensorView = showSignInButtonOnNoSensorView
-        }
-    }
-
     var shouldShowSignInBanner: Bool = false {
         didSet {
             showNoSignInBannerIfNeeded()
@@ -122,7 +99,6 @@ class DashboardViewController: UIViewController {
         view.layer.cornerRadius = 12
         view.clipsToBounds = true
         view.delegate = self
-        view.showSignInButtonOnNoSensorView = showSignInButtonOnNoSensorView
         return view
     }()
 
@@ -934,9 +910,7 @@ extension DashboardViewController: DashboardViewInput {
     }
 
     func showNoSensorsAddedMessage(show: Bool) {
-        noSensorView.updateView(
-            showSignInButtonOnNoSensorView: showSignInButtonOnNoSensorView
-        )
+        noSensorView.updateView()
         noSensorView.isHidden = !show
         collectionView.isHidden = show
     }

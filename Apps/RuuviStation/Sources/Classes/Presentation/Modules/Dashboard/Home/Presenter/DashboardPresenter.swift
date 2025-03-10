@@ -662,8 +662,6 @@ extension DashboardPresenter {
 
     // swiftlint:disable:next function_body_length
     private func syncViewModels() {
-        view?.userSignedInOnce = settings.signedInAtleastOnce
-        view?.isAuthorized = ruuviUser.isAuthorized
         view?.dashboardType = settings.dashboardType
         view?.dashboardTapActionType = settings.dashboardTapActionType
         view?.dashboardSortingType = dashboardSortingType()
