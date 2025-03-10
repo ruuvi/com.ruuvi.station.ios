@@ -107,6 +107,7 @@ private extension SignInViewController {
         view.bind(viewModel.showVerficationScreen) { [weak self] _, verificationPage in
             let showVerificationPage = GlobalHelpers.getBool(from: verificationPage)
             self?.signInVerifyView.alpha = showVerificationPage ? 1 : 0
+            self?.signInVerifyView.activate()
             self?.signInView.alpha = showVerificationPage ? 0 : 1
             self?.useWithoutAccountButton.alpha = showVerificationPage ? 0 : 1
         }
