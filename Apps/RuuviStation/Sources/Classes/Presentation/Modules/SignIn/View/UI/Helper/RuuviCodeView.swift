@@ -36,6 +36,10 @@ class RuuviCodeView: UIStackView {
 // MARK: - Public methods
 
 extension RuuviCodeView {
+    func activate() {
+        let _ = codeEntries.first?.becomeFirstResponder()
+    }
+
     // Fill the view with pasted code
     func autofill(with code: String?) {
         guard let code
@@ -97,7 +101,7 @@ extension RuuviCodeView {
         addArrangedSubview(textField)
         textField.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         textField.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
-        textField.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        textField.widthAnchor.constraint(equalToConstant: 44).isActive = true
         textField.backgroundColor = textBackgroundColor
         textField.textAlignment = .center
         textField.adjustsFontSizeToFitWidth = false
@@ -108,7 +112,6 @@ extension RuuviCodeView {
         textField.layer.borderColor = inactiveBorderColor.cgColor
         textField.autocorrectionType = .no
         textField.tintColor = .clear
-        textField.placeholder = "\u{2022}"
     }
 
     private func populateRuuviCodeFields(with string: String) {
@@ -165,7 +168,7 @@ extension RuuviCodeView: UITextFieldDelegate {
         if isStringValid {
             let code = string.trimmingCharacters(in: .whitespacesAndNewlines)
             if code.count > 1 {
-                textField.resignFirstResponder()
+                let _ = textField.resignFirstResponder()
                 populateRuuviCodeFields(with: code)
                 return false
             } else {
@@ -178,9 +181,9 @@ extension RuuviCodeView: UITextFieldDelegate {
                 } else if range.length == 0 {
                     textField.text = code.uppercased()
                     if textField.nextEntry == nil {
-                        textField.resignFirstResponder()
+                        let _ = textField.resignFirstResponder()
                     } else {
-                        textField.nextEntry?.becomeFirstResponder()
+                        let _ = textField.nextEntry?.becomeFirstResponder()
                     }
                     return false
                 }
