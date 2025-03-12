@@ -149,6 +149,7 @@ extension SignInPresenter {
         ruuviCloud.requestCode(email: email)
             .on(success: { [weak self] email in
                 guard let sSelf = self else { return }
+                sSelf.activityPresenter.dismiss()
                 sSelf.ruuviUser.email = email
                 sSelf.viewModel.showVerficationScreen.value = true
                 sSelf.state = .enterVerificationCode(nil)

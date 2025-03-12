@@ -184,6 +184,10 @@ extension SignInView {
 }
 
 extension SignInView {
+    func activate() {
+        emailTextField.becomeFirstResponder()
+    }
+
     func enteredEmail() -> String? {
         let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         return email?.lowercased()
