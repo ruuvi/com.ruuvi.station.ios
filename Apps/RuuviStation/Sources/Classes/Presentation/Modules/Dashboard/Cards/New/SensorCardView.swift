@@ -103,16 +103,17 @@ struct SensorCardView: View {
                             }
                         }
                         Spacer()
-                    }.padding()
+                    }
+                    .padding()
 
                     Spacer()
                     VStack {
                         Spacer()
                         metricsGrid
+                            .padding()
+                            .frame(maxWidth: .infinity)
                         Spacer()
-                        statusBar
                     }
-                    .padding()
                 }
             } else {
                 VStack(spacing: 0) {
@@ -143,9 +144,6 @@ struct SensorCardView: View {
                     // 3. Metrics Grid
                     metricsGrid
                         .padding(.bottom, 30)
-
-                    // 4. Bottom Status Bar
-                    statusBar
                 }
             }
         }
@@ -488,145 +486,5 @@ extension SensorCardView {
         .padding([.top, .horizontal])
     }
 
-    private var statusBar: some View {
-        HStack {
-            NetworkSyncView(
-                viewModel: NetworkSyncViewModel(macId: viewModel.mac)
-            )
-            .foregroundColor(.white.opacity(0.7))
 
-            Spacer()
-
-            HStack(spacing: 8) {
-                UpdatedAtTextView(viewModel: viewModel)
-
-                Group {
-                    if let source = viewModel.source {
-                        switch source {
-                        case .advertisement, .bgAdvertisement:
-                            Image(uiImage: RuuviAsset.iconBluetooth.image)
-                                .renderingMode(.template)
-                                .resizable()
-                                .scaledToFit()
-                                .foregroundColor(.white.opacity(0.7))
-                                .frame(width: 24, height: 24)
-                        case .heartbeat, .log:
-                            Image(uiImage: RuuviAsset.iconBluetoothConnected.image)
-                                .renderingMode(.template)
-                                .resizable()
-                                .scaledToFit()
-                                .foregroundColor(.white.opacity(0.7))
-                                .frame(width: 24, height: 24)
-                        case .ruuviNetwork:
-                            Image(uiImage: RuuviAsset.iconGateway.image)
-                                .renderingMode(.template)
-                                .resizable()
-                                .scaledToFit()
-                                .foregroundColor(.white.opacity(0.7))
-                                .frame(width: 24, height: 24)
-                        default:
-                            EmptyView()
-                        }
-                    }
-                }
-            }
-
-            // Low battery indicator (only if hasLowBattery == true)
-            if viewModel.batteryNeedsReplacement ?? false {
-                HStack(spacing: 4) {
-                    Image(systemName: "battery.25")
-                        .foregroundColor(.orange)
-                    Text("Low battery")
-                        .foregroundColor(.orange)
-                }
-                .padding(.leading, 8)
-            }
-        }
-        .font(.system(size: 14))
-        .padding(.horizontal)
-    }
-}
-
-struct UpdatedAtTextView: View {
-    @ObservedObject var viewModel: CardsViewModel
-    @State private var timeAgo: String = ""
-
-    var body: some View {
-        Text(timeAgo)
-            .onAppear { startTimer() }
-            .onChange(of: viewModel.date) { _ in
-                updateText()
-            }
-    }
-
-    private func startTimer() {
-        updateText()
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            updateText()
-        }
-    }
-
-    private func updateText() {
-        timeAgo = viewModel.date?
-            .ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
-    }
-}
-
-class NetworkSyncViewModel: ObservableObject {
-    @Published var syncStatus: NetworkSyncStatus = .none
-    private var notificationCancellable: AnyCancellable?
-
-    let macId: AnyMACIdentifier?
-
-    init(macId: AnyMACIdentifier?) {
-        self.macId = macId
-        startObservingNetworkSyncNotification()
-    }
-
-    private func startObservingNetworkSyncNotification() {
-        notificationCancellable = NotificationCenter.default
-            .publisher(for: .NetworkSyncDidChangeStatus)
-            .compactMap { notification -> NetworkSyncStatus? in
-                guard let mac = notification.userInfo?[NetworkSyncStatusKey.mac] as? MACIdentifier,
-                      let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus,
-                      mac.any == self.macId
-                else {
-                    return nil
-                }
-                return status
-            }
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] status in
-                self?.updateSyncState(with: status)
-            }
-    }
-
-    private func updateSyncState(with status: NetworkSyncStatus) {
-        withAnimation {
-            self.syncStatus = status
-        }
-    }
-}
-
-struct NetworkSyncView: View {
-    @StateObject var viewModel: NetworkSyncViewModel
-
-    var body: some View {
-        VStack(spacing: 10) {
-            Text(syncMessage(for: viewModel.syncStatus))
-        }
-    }
-
-    private func syncMessage(for status: NetworkSyncStatus) -> String {
-        switch status {
-        case .none:
-            return ""
-        case .syncing:
-            return RuuviLocalization.TagCharts.Status.serving
-        case .complete:
-            return RuuviLocalization.synchronized
-        case .onError:
-            return RuuviLocalization.ErrorPresenterAlert.error
-        }
-    }
 }
