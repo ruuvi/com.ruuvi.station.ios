@@ -31,8 +31,6 @@ class AppStateServiceImpl: AppStateService {
             advertisementDaemon.start()
         }
         if ruuviUser.isAuthorized {
-            cloudSyncDaemon.start()
-
             if !settings.signedInAtleastOnce {
                 settings.signedInAtleastOnce = true
             }
@@ -55,6 +53,17 @@ class AppStateServiceImpl: AppStateService {
     }
 
     func applicationDidBecomeActive(_: UIApplication) {
+
+        // Start cloud sync daemon only if user is authorized and app is
+        // in foreground and active. Otherwise cloud sync daemon can be triggered
+        // by other system events that may make the app active in the background
+        // such as background scanning.
+        if ruuviUser.isAuthorized &&
+            settings.appIsOnForeground &&
+            !cloudSyncDaemon.isRunning() {
+            cloudSyncDaemon.start()
+        }
+
         if let cardToOpen = settings.cardToOpenFromWidget() {
             universalLinkCoordinator.processWidgetLink(macId: cardToOpen)
         }
@@ -86,9 +95,6 @@ class AppStateServiceImpl: AppStateService {
     func applicationWillEnterForeground(_: UIApplication) {
         if settings.isAdvertisementDaemonOn {
             advertisementDaemon.start()
-        }
-        if ruuviUser.isAuthorized {
-            cloudSyncDaemon.start()
         }
         propertiesDaemon.start()
         settings.appIsOnForeground = true

@@ -7,6 +7,7 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
     private var localSyncState: RuuviLocalSyncState
     private let cloudSyncService: RuuviServiceCloudSync
     private var pullTimer: Timer?
+    private var running = false
 
     init(
         localSettings: RuuviLocalSettings,
@@ -34,6 +35,7 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
             )
             RunLoop.current.add(timer, forMode: .common)
             sSelf.pullTimer = timer
+            sSelf.running = true
         }
     }
 
@@ -51,9 +53,8 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
         )
     }
 
-    @objc private func stopDaemon() {
-        pullTimer?.invalidate()
-        stopWork()
+    func isRunning() -> Bool {
+        running
     }
 
     @objc
@@ -67,5 +68,11 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
         DispatchQueue.global(qos: .default).async { [weak self] in
             self?.cloudSyncService.refreshLatestRecord()
         }
+    }
+
+    @objc private func stopDaemon() {
+        pullTimer?.invalidate()
+        stopWork()
+        running = false
     }
 }
