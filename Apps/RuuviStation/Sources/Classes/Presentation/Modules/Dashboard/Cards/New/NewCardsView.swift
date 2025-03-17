@@ -21,6 +21,9 @@ struct NewCardsView: View {
     var settings: RuuviLocalSettings
     var flags: RuuviLocalFlags
 
+    @State private var selectedHistoryLength = HistoryLengthOptions.all
+    @State private var selectedMoreAction = MoreActions.exportCSV
+
     var body: some View {
 
         ZStack {
@@ -92,7 +95,7 @@ struct NewCardsView: View {
                         }
                     }) {
                         Image(systemName: "chevron.left")
-                            .font(.system(size: 24))
+                            .font(.system(size: 20))
                             .foregroundColor(.white)
                     }
                     .opacity(state.currentPage == 0 ? 0 : 1)
@@ -113,7 +116,7 @@ struct NewCardsView: View {
                         }
                     }) {
                         Image(systemName: "chevron.right")
-                            .font(.system(size: 24))
+                            .font(.system(size: 20))
                             .foregroundColor(.white)
                     }
                     .opacity(
@@ -136,26 +139,83 @@ struct NewCardsView: View {
                         .environmentObject(state)
                     case .graph:
                         VStack(spacing: 0) {
-                            Spacer()
-                            switch state.graphLoadingState {
-                            case .initial:
-                                Text("Graph")
-                                    .foregroundColor(.white)
-                            case .loading:
-                                ProgressView("Loading")
-                                    .progressViewStyle(
-                                        CircularProgressViewStyle(tint: Color.white)
-                                    )
-                                    .foregroundColor(.white)
-                            case .finished:
-                                let activeViewModel = state.viewModels[state.currentPage]
-                                if let chartViewModel = state.chartViewModel,
-                                   let graphId = chartViewModel.chartViewData.first?.ruuviTagId,
-                                   activeViewModel.id == graphId {
-                                    ChartContainerView(
-                                        viewModel: chartViewModel
-                                    )
+                            HStack(spacing: 2) {
+                                Button(action: {
+                                    // Sync
+                                }) {
+                                    HStack {
+                                        RuuviAsset.iconSyncBt.swiftUIImage
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 22, height: 22)
+                                        Text(RuuviLocalization.TagCharts.Sync.title)
+                                            .font(.muli(.bold, size: 14))
+                                    }
                                 }
+                                .foregroundColor(.white)
+//                                    .hidden()
+
+                                Button(action: {
+                                    // Syncing
+                                }) {
+                                    HStack {
+                                        Image(systemName: "xmark")
+                                        Text(RuuviLocalization.TagCharts.Status.connecting)
+                                            .font(.muli(.regular, size: 16))
+                                    }
+                                    .foregroundColor(.white)
+                                }
+                                .hidden()
+
+                                Spacer()
+
+                                Menu {
+                                    Picker("History", selection: $selectedHistoryLength) {
+                                        ForEach(HistoryLengthOptions.allCases) {
+                                            Text($0.title)
+                                        }
+                                    }
+                                } label: {
+                                    HStack {
+                                        Text(RuuviLocalization.all)
+                                            .font(.muli(.bold, size: 14))
+                                        RuuviAsset.arrowDropDown.swiftUIImage
+                                            .renderingMode(.template)
+                                            .foregroundColor(
+                                                RuuviColor.logoTintColor.swiftUIColor
+                                            )
+                                    }
+                                    .foregroundColor(.white)
+                                }
+
+                                Menu {
+                                    ForEach(MoreActions.allCases) { action in
+                                        Button {
+                                            // Handle the action when tapped
+                                            handleMoreAction(action)
+                                        } label: {
+                                            Text(action.title)
+                                        }
+                                    }
+                                } label: {
+                                    RuuviAsset.more3dot.swiftUIImage
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: 24, height: 18)
+                                        .foregroundColor(.white)
+                                }
+                            }
+                            .padding(.leading)
+                            .padding([.top, .trailing], 8)
+
+                            Spacer()
+                            let activeViewModel = state.viewModels[state.currentPage]
+                            if let chartViewModel = state.chartViewModel,
+                               let graphId = chartViewModel.chartViewData.first?.ruuviTagId,
+                               activeViewModel.id == graphId {
+                                ChartContainerView(
+                                    viewModel: chartViewModel
+                                ).environmentObject(state)
                             }
                             Spacer()
                         }
@@ -183,6 +243,71 @@ struct NewCardsView: View {
                 }
 
             }
+        }
+    }
+
+    func handleMoreAction(_ action: MoreActions) {
+        switch action {
+        case .exportCSV:
+            // Handle edit action
+            print("Edit tapped")
+        case .exportXlsx:
+            // Handle delete action
+            print("Delete tapped")
+        case .clearData:
+            // Handle share action
+            print("Share tapped")
+        case .hideMinMaxAvg:
+            // Handle hide action
+            print("Hide tapped")
+        case .increaseGraphHeight:
+            // Handle increase action
+            print("Increase tapped")
+        }
+    }
+}
+
+enum HistoryLengthOptions: String, CaseIterable, Identifiable {
+    case all
+    case day1
+    case day2
+    case day3
+    var id: Self { return self }
+
+    var title: String {
+        switch self {
+        case .all:
+            return "All"
+        case .day1:
+            return "1 Day"
+        case .day2:
+            return "2 Days"
+        case .day3:
+            return "3 Days"
+        }
+    }
+}
+
+enum MoreActions: String, CaseIterable, Identifiable {
+    case exportCSV
+    case exportXlsx
+    case clearData
+    case hideMinMaxAvg
+    case increaseGraphHeight
+    var id: Self { return self }
+
+    var title: String {
+        switch self {
+        case .exportCSV:
+            return "Export CSV"
+        case .exportXlsx:
+            return "Export XLSX"
+        case .clearData:
+            return "Clear Data"
+        case .hideMinMaxAvg:
+            return "Hide Min/Max/Avg"
+        case .increaseGraphHeight:
+            return "Increase Graph Height"
         }
     }
 }
@@ -216,21 +341,21 @@ struct CustomTabBar: View {
     // Define tab items
     private let tabs: [TabItem] = [
         TabItem(
-            image: Image(uiImage: RuuviAsset.ruuviActivityPresenterLogo.image),
+            image: Image(systemName: "thermometer.medium"),
             type: .home
         ),
         TabItem(
-            image: Image(systemName: "chart.bar.xaxis.ascending"),
+            image: RuuviAsset.iconChartsButton.swiftUIImage,
             type: .graph
         ),
         TabItem(
-            image: Image(systemName: "bell.fill"),
+            image: RuuviAsset.iconAlertOn.swiftUIImage,
             type: .alerts
         ),
         TabItem(
-            image: Image(systemName: "gearshape.fill"),
+            image: RuuviAsset.baselineSettingsWhite48pt.swiftUIImage,
             type: .settings
-        )
+        ),
     ]
 
     var body: some View {
