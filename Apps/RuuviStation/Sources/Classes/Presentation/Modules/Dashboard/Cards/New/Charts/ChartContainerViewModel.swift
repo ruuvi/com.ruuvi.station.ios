@@ -7,8 +7,10 @@ import Combine
 
 class ChartContainerViewModel: ObservableObject {
 
-    /// Property to hold all the chart data collections,
-    @Published var chartViewData: [NewTagChartViewData] = []
+    /// Property to hold all the chart data collections for a single RuuviTag.
+    @Published var chartEntities: [NewTagChartEntity] = []
+
+    @Published var chartEmpty: Bool = false
 
     /// Whether to show the chart statistics i.e. min, max, avg, latest values
     @Published var showChartStat: Bool
@@ -28,8 +30,11 @@ class ChartContainerViewModel: ObservableObject {
 
     private(set) var chartViewModels: [UUID: ChartViewModel] = [:]
 
-    /// The manager that syncs all TagChartsView transforms/highlights
-    let chartSync: ChartSyncManager = ChartSyncManager()
+    @Published var isFirstEntry: Bool = false
+    @Published var updateDataSet: Bool = false
+
+    @Published var highlightedX: Double?
+    @Published var scaledChart: TagChartsView?
 
     let measurementService: RuuviServiceMeasurement
     let settings: RuuviLocalSettings
@@ -48,23 +53,29 @@ class ChartContainerViewModel: ObservableObject {
         self.settings = settings
     }
 
-    func getOrCreateViewModel(for chartData: NewTagChartViewData) -> ChartViewModel {
-        if let existingViewModel = chartViewModels[chartData.id] {
+    func getOrCreateViewModel(for entity: NewTagChartEntity) -> ChartViewModel {
+        if let existingViewModel = chartViewModels[entity.id] {
             // Update existing view model with latest data if needed
-            existingViewModel.updateChartData(chartData)
+            existingViewModel.updateChartEntity(entity)
             return existingViewModel
         } else {
             // Create new view model if none exists
             let newViewModel = ChartViewModel(
-                chartData: chartData,
+                entity: entity,
                 parentViewModel: self
             )
-            chartViewModels[chartData.id] = newViewModel
+            chartViewModels[entity.id] = newViewModel
             return newViewModel
         }
     }
 
-    func setChartViewData(_ data: [NewTagChartViewData]) {
+    func updateEntity(_ entity: NewTagChartEntity) {
+        if let viewModel = chartViewModels[entity.id] {
+            viewModel.updateChartEntity(entity)
+        }
+    }
+
+    func setChartViewData(_ data: [NewTagChartEntity]) {
         // Clean up any view models that are no longer needed
         let newIds = Set(data.map { $0.id })
         let oldIds = Set(chartViewModels.keys)
@@ -74,6 +85,14 @@ class ChartContainerViewModel: ObservableObject {
         }
 
         // Update chart data
-        chartViewData = data
+        chartEntities = data
+    }
+
+    func updateHighlight(x: Double?) {
+        highlightedX = x
+    }
+
+    func chartDidTranslate(_ chartView: TagChartsView) {
+        scaledChart = chartView
     }
 }

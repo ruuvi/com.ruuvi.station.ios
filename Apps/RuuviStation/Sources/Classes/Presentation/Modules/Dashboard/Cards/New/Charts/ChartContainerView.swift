@@ -16,13 +16,15 @@ struct ChartContainerView: View {
         VStack {
             switch state.graphLoadingState {
             case .loading:
+                Spacer()
                 ProgressView("Loading")
                     .progressViewStyle(
                         CircularProgressViewStyle(tint: Color.white)
                     )
                     .foregroundColor(.white)
+                Spacer()
             case .initial, .finished:
-                if viewModel.chartViewData.isEmpty {
+                if viewModel.chartEmpty {
                     Spacer()
                     Text("No data available for the selected period")
                         .foregroundColor(.white)
@@ -33,7 +35,10 @@ struct ChartContainerView: View {
                         GeometryReader { geometry in
                             ScrollView {
                                 VStack(spacing: 0) {
-                                    ForEach(viewModel.chartViewData, id: \.id) { chartData in
+                                    ForEach(
+                                        viewModel.chartEntities,
+                                        id: \.id
+                                    ) { chartData in
                                         createChartView(for: chartData)
                                             .frame(
                                                 height:
@@ -58,13 +63,12 @@ struct ChartContainerView: View {
 
     @ViewBuilder
     private func createChartView(
-        for chartData: NewTagChartViewData
+        for entity: NewTagChartEntity
     ) -> some View {
-        let chartViewModel = viewModel.getOrCreateViewModel(for: chartData)
         TagChartViewRepresentable(
-            viewModel: chartViewModel,
-            chartSync: viewModel.chartSync
+            viewModel: viewModel.getOrCreateViewModel(for: entity),
+            chartContainerModel: viewModel
         )
-        .id(chartData.id)
+        .id(entity.id)
     }
 }

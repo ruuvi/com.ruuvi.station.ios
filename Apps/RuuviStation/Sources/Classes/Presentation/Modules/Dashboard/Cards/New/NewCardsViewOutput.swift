@@ -1,5 +1,6 @@
 protocol NewCardsViewOutput {
     func showGraphForViewModel(_ viewModel: CardsViewModel)
+    func clearGraphForViewModel(_ viewModel: CardsViewModel, confirmed: Bool)
 //    func viewDidLoad()
 //    func viewWillAppear()
 //    func viewDidAppear()

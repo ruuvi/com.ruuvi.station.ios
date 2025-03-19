@@ -64,6 +64,13 @@ class NewCardsViewProvider: NSObject {
             }
             .store(in: &cancellables)
 
+        state.graphClearButtonTapped
+            .sink { [weak self] (viewModel, confirmed) in
+                self?.output?
+                    .clearGraphForViewModel(viewModel, confirmed: confirmed)
+            }
+            .store(in: &cancellables)
+
         // Subscribe to graph button tap events
         state.$currentPage
             .sink { [weak self] currentPage in
@@ -81,28 +88,29 @@ extension NewCardsViewProvider: NewCardsViewInput {
 
     func createChartViews(from: [MeasurementType], for sensor: RuuviTagSensor) {
         state.chartViewModel?.setChartViewData(from.compactMap({ type in
-            NewTagChartViewData(ruuviTagId: sensor.id, chartType: type)
+            NewTagChartEntity(ruuviTagId: sensor.id, chartType: type)
         }))
     }
 
     func setChartViewData(
-        from chartViewData: [NewTagChartViewData],
+        from entities: [NewTagChartEntity],
         for sensor: RuuviTagSensor,
         settings: RuuviLocalSettings
     ) {
-        for newItem in chartViewData {
+        print("setChartViewData: ", entities.count)
+        state.chartViewModel?.chartEmpty = entities.isEmpty
+        for newItem in entities {
             // 1) Find the matching item in existingData
-            if let index = state.chartViewModel?.chartViewData.firstIndex(where: {
+            if let index = state.chartViewModel?.chartEntities.firstIndex(where: {
                 $0.ruuviTagId == newItem.ruuviTagId &&
                 $0.chartType == newItem.chartType
             }) {
                 // 2) Update the matching item’s published properties
-                state.chartViewModel?.chartViewData[index].upperAlertValue = newItem.upperAlertValue
-                state.chartViewModel?.chartViewData[index].chartData       = newItem.chartData
-                state.chartViewModel?.chartViewData[index].lowerAlertValue = newItem.lowerAlertValue
+                state.chartViewModel?.chartEntities[index].upperAlertValue = newItem.upperAlertValue
+                state.chartViewModel?.chartEntities[index].chartData       = newItem.chartData
+                state.chartViewModel?.chartEntities[index].lowerAlertValue = newItem.lowerAlertValue
             }
         }
-
         state.graphLoadingState = .finished
     }
 
@@ -125,14 +133,17 @@ extension NewCardsViewProvider: NewCardsViewInput {
         flags: RuuviLocalFlags
     ) {
         print("updateChartViewData")
-
-        if let index = state.chartViewModel?.chartViewData.firstIndex(where: {
-            $0.ruuviTagId == sensor.id
+        state.chartViewModel?.chartEmpty = temperatureEntries.isEmpty
+        state.chartViewModel?.isFirstEntry = isFirstEntry
+        state.chartViewModel?.updateDataSet = true
+        if let index = state.chartViewModel?.chartEntities.firstIndex(where: {
+            $0.chartType == .temperature
         }) {
-            if state.chartViewModel?.chartViewData[index].chartType == .temperature {
-                state.chartViewModel?.chartViewData[index].dataSet = temperatureEntries
-            }
+            print("updateChartViewData 123")
+            state.chartViewModel?.chartEntities[index].dataSet = temperatureEntries
         }
+
+        state.chartViewModel?.updateDataSet = false
     }
 
     // swiftlint:disable:next function_parameter_count
@@ -216,6 +227,7 @@ class NewCardsViewState: ObservableObject {
     // MARK: Actions
     let backButtonTapped = PassthroughSubject<Void, Never>()
     let graphButtonTapped = PassthroughSubject<CardsViewModel, Never>()
+    let graphClearButtonTapped = PassthroughSubject<(CardsViewModel, Bool), Never>()
 }
 
 enum GraphLoadingState {

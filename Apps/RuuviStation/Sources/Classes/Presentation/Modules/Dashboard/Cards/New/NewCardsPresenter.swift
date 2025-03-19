@@ -15,7 +15,7 @@ import RuuviStorage
 import UIKit
 import DGCharts
 
-class NewTagChartViewData: NSObject, ObservableObject {
+class NewTagChartEntity: NSObject, ObservableObject {
     let id = UUID()
 
     @Published var ruuviTagId: String
@@ -73,8 +73,8 @@ class NewCardsPresenter {
     }
 
     private var graphData: [RuuviMeasurement] = []
-    private var graphDataSource: [NewTagChartViewData] = []
-    private var newGraphPoints: [NewTagChartViewData] = []
+    private var graphDataSource: [NewTagChartEntity] = []
+    private var newGraphPoints: [NewTagChartEntity] = []
     private var graphModules: [MeasurementType] = []
 
     // MARK: - OBSERVERS
@@ -1577,11 +1577,27 @@ extension NewCardsPresenter: NewCardsViewOutput {
                    ($0.luid?.any != nil && $0.luid?.any == viewModel.luid)
                        || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac)
                }) {
+
             view?.state.graphLoadingState = .loading
+
             interactor.configure(
                 withTag: ruuviTagSensor,
                 andSettings: sensorSettings
             )
+        }
+    }
+
+    func clearGraphForViewModel(_ viewModel: CardsViewModel, confirmed: Bool) {
+        if confirmed {
+            if let ruuviTagSensor = view?.state.ruuviTags.first(where: { $0.id == viewModel.id }) {
+               view?.state.graphLoadingState = .loading
+               interactor.deleteAllRecords(for: ruuviTagSensor)
+                   .on(failure: { [weak self] error in
+                       self?.errorPresenter.present(error: error)
+                   }, completion: { [weak self] in
+                       self?.view?.state.graphLoadingState = .finished
+                   })
+            }
         }
     }
 }
@@ -2047,7 +2063,7 @@ extension NewCardsPresenter: NewCardsInteractorOutput {
                     }.map { measurementService.double(for: $0) } : nil,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
-            let temperatureChartData = NewTagChartViewData(
+            let temperatureChartData = NewTagChartEntity(
                 ruuviTagId: ruuviTag.id,
                 chartType: .temperature,
                 chartData: LineChartData(
@@ -2081,7 +2097,7 @@ extension NewCardsPresenter: NewCardsInteractorOutput {
                 ).map { $0 * 100 } : nil,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
-            let humidityChartData = NewTagChartViewData(
+            let humidityChartData = NewTagChartEntity(
                 ruuviTagId: ruuviTag.id,
                 chartType: .humidity,
                 chartData: LineChartData(dataSet: humidityChartDataSet),
@@ -2113,7 +2129,7 @@ extension NewCardsPresenter: NewCardsInteractorOutput {
                     }.map { measurementService.double(for: $0) } : nil,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
-            let pressureChartData = NewTagChartViewData(
+            let pressureChartData = NewTagChartEntity(
                 ruuviTagId: ruuviTag.id,
                 chartType: .pressure,
                 chartData: LineChartData(dataSet: pressureChartDataSet),
@@ -2137,7 +2153,7 @@ extension NewCardsPresenter: NewCardsInteractorOutput {
                 lowerAlertValue: nil,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
-            let aqiChartData = NewTagChartViewData(
+            let aqiChartData = NewTagChartEntity(
                 ruuviTagId: ruuviTag.id,
                 chartType: .aqi,
                 chartData: LineChartData(dataSet: aqiChartDataSet),
@@ -2165,7 +2181,7 @@ extension NewCardsPresenter: NewCardsInteractorOutput {
                 ).map { $0 } : nil,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
-            let co2ChartData = NewTagChartViewData(
+            let co2ChartData = NewTagChartEntity(
                 ruuviTagId: ruuviTag.id,
                 chartType: .co2,
                 chartData: LineChartData(dataSet: co2ChartDataSet),
@@ -2199,7 +2215,7 @@ extension NewCardsPresenter: NewCardsInteractorOutput {
                 ).map { $0 } : nil,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
-            let pm10ChartData = NewTagChartViewData(
+            let pm10ChartData = NewTagChartEntity(
                 ruuviTagId: ruuviTag.id,
                 chartType: .pm10,
                 chartData: LineChartData(dataSet: pm10ChartDataSet),
@@ -2233,7 +2249,7 @@ extension NewCardsPresenter: NewCardsInteractorOutput {
                 ).map { $0 } : nil,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
-            let pm25ChartData = NewTagChartViewData(
+            let pm25ChartData = NewTagChartEntity(
                 ruuviTagId: ruuviTag.id,
                 chartType: .pm25,
                 chartData: LineChartData(dataSet: pm25ChartDataSet),
@@ -2267,7 +2283,7 @@ extension NewCardsPresenter: NewCardsInteractorOutput {
                 ).map { $0 } : nil,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
-            let vocChartData = NewTagChartViewData(
+            let vocChartData = NewTagChartEntity(
                 ruuviTagId: ruuviTag.id,
                 chartType: .voc,
                 chartData: LineChartData(dataSet: vocChartDataSet),
@@ -2301,7 +2317,7 @@ extension NewCardsPresenter: NewCardsInteractorOutput {
                 ).map { $0 } : nil,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
-            let noxChartData = NewTagChartViewData(
+            let noxChartData = NewTagChartEntity(
                 ruuviTagId: ruuviTag.id,
                 chartType: .nox,
                 chartData: LineChartData(dataSet: noxChartDataSet),
@@ -2335,7 +2351,7 @@ extension NewCardsPresenter: NewCardsInteractorOutput {
                 ).map { $0 } : nil,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
-            let luminosityChartData = NewTagChartViewData(
+            let luminosityChartData = NewTagChartEntity(
                 ruuviTagId: ruuviTag.id,
                 chartType: .nox,
                 chartData: LineChartData(dataSet: luminosityChartDataSet),
@@ -2369,7 +2385,7 @@ extension NewCardsPresenter: NewCardsInteractorOutput {
                 ).map { $0 } : nil,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
-            let soundChartData = NewTagChartViewData(
+            let soundChartData = NewTagChartEntity(
                 ruuviTagId: ruuviTag.id,
                 chartType: .nox,
                 chartData: LineChartData(dataSet: soundChartDataSet),

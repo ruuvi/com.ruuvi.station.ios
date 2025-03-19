@@ -13,30 +13,30 @@ class ChartViewModel: ObservableObject {
     @Published var chartTitle: String = ""
     @Published var unit: String = ""
 
-    private(set) var chartData: NewTagChartViewData
+    private(set) var chartEntity: NewTagChartEntity
 
     @Published var needsUpdate: Bool = false
     unowned let parenViewModel: ChartContainerViewModel
     private var cancellables = Set<AnyCancellable>()
 
     init(
-        chartData: NewTagChartViewData,
+        entity: NewTagChartEntity,
         parentViewModel: ChartContainerViewModel
     ) {
-        self.id = chartData.id
-        self.chartData = chartData
+        self.id = entity.id
+        self.chartEntity = entity
         self.parenViewModel = parentViewModel
 
-        configureChartTitle(self, for: chartData.chartType)
+        configureChartTitle(self, for: entity.chartType)
 
         setupSettingsObservers()
     }
 
-    func updateChartData(_ newChartData: NewTagChartViewData) {
-        if chartData.chartData !== newChartData.chartData ||
-            chartData.lowerAlertValue != newChartData.lowerAlertValue ||
-            chartData.upperAlertValue != newChartData.upperAlertValue {
-            chartData = newChartData
+    func updateChartEntity(_ entity: NewTagChartEntity) {
+        if chartEntity.chartData !== entity.chartData ||
+            chartEntity.lowerAlertValue != entity.lowerAlertValue ||
+            chartEntity.upperAlertValue != entity.upperAlertValue {
+            chartEntity = entity
             needsUpdate = true
         }
     }
@@ -48,7 +48,7 @@ class ChartViewModel: ObservableObject {
     }
 
     func getType() -> MeasurementType {
-        return chartData.chartType
+        return chartEntity.chartType
     }
 
     private func setupSettingsObservers() {

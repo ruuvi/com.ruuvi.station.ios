@@ -10,7 +10,7 @@ protocol NewCardsViewInput: ViewInput {
 
     func createChartViews(from: [MeasurementType], for sensor: RuuviTagSensor)
     func setChartViewData(
-        from chartViewData: [NewTagChartViewData],
+        from entities: [NewTagChartEntity],
         for sensor: RuuviTagSensor,
         settings: RuuviLocalSettings
     )

@@ -209,10 +209,7 @@ struct NewCardsView: View {
                             .padding([.top, .trailing], 8)
 
                             Spacer()
-                            let activeViewModel = state.viewModels[state.currentPage]
-                            if let chartViewModel = state.chartViewModel,
-                               let graphId = chartViewModel.chartViewData.first?.ruuviTagId,
-                               activeViewModel.id == graphId {
+                            if let chartViewModel = state.chartViewModel {
                                 ChartContainerView(
                                     viewModel: chartViewModel
                                 ).environmentObject(state)
@@ -257,6 +254,13 @@ struct NewCardsView: View {
         case .clearData:
             // Handle share action
             print("Share tapped")
+            state.graphClearButtonTapped
+                .send(
+                    (
+                        state.viewModels[state.currentPage],
+                        true
+                    )
+                )
         case .hideMinMaxAvg:
             // Handle hide action
             print("Hide tapped")

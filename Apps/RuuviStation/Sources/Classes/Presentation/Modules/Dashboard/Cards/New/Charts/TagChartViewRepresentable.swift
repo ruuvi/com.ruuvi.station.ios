@@ -7,52 +7,85 @@ import UIKit
 
 struct TagChartViewRepresentable: UIViewRepresentable, Equatable {
     @ObservedObject var viewModel: ChartViewModel
-    var chartSync: ChartSyncManager
+    @ObservedObject var chartContainerModel: ChartContainerViewModel
 
     static func == (lhs: TagChartViewRepresentable, rhs: TagChartViewRepresentable) -> Bool {
-        // Only update if the view model needs an update
-        return lhs.viewModel.id == rhs.viewModel.id &&
-               !lhs.viewModel.needsUpdate
+        return lhs.viewModel.id == rhs.viewModel.id
     }
 
     func makeUIView(context: Context) -> TagChartsView {
         let chartView = TagChartsView()
         chartView.chartDelegate = context.coordinator
-        chartSync.register(chartView: chartView)
         updateChartDataIfNeeded(chartView, force: true)
         return chartView
     }
 
     func updateUIView(_ chartView: TagChartsView, context: Context) {
-//        if viewModel.needsUpdate {
-//
-//            // Reset the update flag after applying changes
-//            DispatchQueue.main.async {
-//                viewModel.needsUpdate = false
-//            }
-//        }
-
         updateChartDataIfNeeded(chartView)
+        syncHighlighting(chartView)
+        syncScaling(chartView)
+    }
+
+    private func syncHighlighting(_ chartView: TagChartsView) {
+        if let x = chartContainerModel.highlightedX {
+            let highlight = Highlight(x: x, y: 0, dataSetIndex: 0)
+            chartView.underlyingView
+                .highlightValue(highlight, callDelegate: false)
+        } else {
+            chartView.underlyingView.highlightValues(nil)
+        }
+    }
+
+    private func syncScaling(_ chartView: TagChartsView) {
+        if let sourceChart = chartContainerModel.scaledChart,
+           chartContainerModel.scaledChart != chartView {
+            let sourceMatrix = sourceChart.underlyingView.viewPortHandler.touchMatrix
+            var targetMatrix = chartView.underlyingView.viewPortHandler.touchMatrix
+            targetMatrix.a = sourceMatrix.a
+            targetMatrix.tx = sourceMatrix.tx
+            chartView.underlyingView.viewPortHandler.refresh(
+                newMatrix: targetMatrix,
+                chart: sourceChart.underlyingView,
+                invalidate: true
+            )
+        }
     }
 
     private func updateChartDataIfNeeded(_ chartView: TagChartsView, force: Bool = false) {
         // Set chart title and unit
         chartView.setChartLabel(
             with: viewModel.chartTitle,
-            type: viewModel.chartData.chartType,
+            type: viewModel.chartEntity.chartType,
             unit: viewModel.unit
         )
 
         //  Only set chart data if it changed or force update
-        if force || viewModel.chartData.chartData?.dataSets.count !=
+        if force || viewModel.chartEntity.chartData?.dataSets.count !=
             chartView.underlyingView.data?.dataSets.count {
-            chartView.setChartData(from: viewModel.chartData.chartData)
+            chartView.setChartData(from: viewModel.chartEntity.chartData)
         }
+//
+        if viewModel.parenViewModel.updateDataSet {
+            print(
+                "updateDataSet",
+                viewModel.chartEntity.ruuviTagId,
+                viewModel.chartEntity.chartType,
+                viewModel.chartEntity.dataSet.count
+            )
+        }
+//        if viewModel.chartEntity.dataSet.count != chartView.underlyingView.data?.dataSets.count {
+//            chartView
+//                .updateDataSet(
+//                    with: viewModel.chartEntity.dataSet,
+//                    isFirstEntry: viewModel.parenViewModel.isFirstEntry,
+//                    showAlertRangeInGraph: viewModel.parenViewModel.showAlertRangeInGraph
+//                )
+//        }
 
         // Set alert limits
         chartView.setAlertLimit(
-            lower: viewModel.chartData.lowerAlertValue,
-            upper: viewModel.chartData.upperAlertValue
+            lower: viewModel.chartEntity.lowerAlertValue,
+            upper: viewModel.chartEntity.upperAlertValue
         )
 
         // Configure chart
@@ -64,8 +97,8 @@ struct TagChartViewRepresentable: UIViewRepresentable, Equatable {
         // Apply other settings
         chartView.localize()
         chartView.setYAxisLimit(
-            min: viewModel.chartData.chartData?.yMin ?? 0,
-            max: viewModel.chartData.chartData?.yMax ?? 0
+            min: viewModel.chartEntity.chartData?.yMin ?? 0,
+            max: viewModel.chartEntity.chartData?.yMax ?? 0
         )
         chartView.setXAxisRenderer()
         chartView.setChartStatVisible(show: viewModel.parenViewModel.showChartStat)
@@ -105,7 +138,7 @@ struct TagChartViewRepresentable: UIViewRepresentable, Equatable {
                 min: minVisibleYValue,
                 max: maxVisibleYValue,
                 avg: averageYValue,
-                type: viewModel.chartData.chartType,
+                type: viewModel.chartEntity.chartType,
                 measurementService: viewModel.parenViewModel.measurementService
             )
         }
@@ -160,7 +193,7 @@ struct TagChartViewRepresentable: UIViewRepresentable, Equatable {
         }
 
         func chartDidTranslate(_ chartView: TagChartsView) {
-            parent.chartSync.chartDidTranslate(chartView)
+            parent.chartContainerModel.chartDidTranslate(chartView)
         }
 
         func chartValueDidSelect(
@@ -168,11 +201,11 @@ struct TagChartViewRepresentable: UIViewRepresentable, Equatable {
             entry: ChartDataEntry,
             highlight: Highlight
         ) {
-            parent.chartSync.chartValueDidSelect(chartView, highlight: highlight)
+            parent.chartContainerModel.updateHighlight(x: entry.x)
         }
 
         func chartValueDidDeselect(_ chartView: TagChartsView) {
-            parent.chartSync.chartValueDidDeselect(chartView)
+            parent.chartContainerModel.updateHighlight(x: nil)
         }
     }
 }
