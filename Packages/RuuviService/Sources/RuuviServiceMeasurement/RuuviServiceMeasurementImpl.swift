@@ -66,7 +66,7 @@ public final class RuuviServiceMeasurementImpl: NSObject {
         let formatter = NumberFormatter()
         formatter.locale = Locale.autoupdatingCurrent
         formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 2
+        formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
         formatter.roundingMode = NumberFormatter.RoundingMode.halfUp
         return formatter
@@ -483,7 +483,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: carbonDiOxide)
+        let number = NSNumber(value: Int(carbonDiOxide))
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 
@@ -492,7 +492,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: pm10)
+        let number = NSNumber(value: Int(pm10))
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 
@@ -501,7 +501,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: pm25)
+        let number = NSNumber(value: Int(pm25))
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 
@@ -510,7 +510,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: pm40)
+        let number = NSNumber(value: Int(pm40))
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 
@@ -519,7 +519,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: pm100)
+        let number = NSNumber(value: Int(pm100))
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 
@@ -528,7 +528,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: voc)
+        let number = NSNumber(value: Int(voc))
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 
@@ -537,7 +537,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: nox)
+        let number = NSNumber(value: Int(nox))
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 
@@ -546,7 +546,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: soundAvg)
+        let number = NSNumber(value: Int(soundAvg))
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 
@@ -555,7 +555,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: luminosity)
+        let number = NSNumber(value: Int(luminosity))
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 
