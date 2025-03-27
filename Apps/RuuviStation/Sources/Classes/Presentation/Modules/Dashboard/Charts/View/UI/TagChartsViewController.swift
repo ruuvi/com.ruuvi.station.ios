@@ -1588,7 +1588,11 @@ extension TagChartsViewController {
             if !compactChartView {
                 totalHeight / 2
             } else {
-                totalHeight / 3
+                if count >= 3 {
+                    totalHeight / 3
+                } else {
+                    totalHeight / count
+                }
             }
         }
     }
