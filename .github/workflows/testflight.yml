@@ -93,8 +93,6 @@ jobs:
 
       - name: Build app
         run: |
-          xcodebuild -project Ruuvi.xcodeproj -scheme station -configuration Release -archivePath ./Build/Station.xcarchive archive -allowProvisioningUpdates -quiet
-
           xcodebuild \
               -project Ruuvi.xcodeproj \
               -scheme station \
