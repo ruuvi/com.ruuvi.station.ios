@@ -29,7 +29,7 @@ enum TagChartsHelper {
         lineChartDataSet.drawFilledEnabled = true
         lineChartDataSet.highlightEnabled = true
         lineChartDataSet.maximumGapBetweenPoints = 3600
-        lineChartDataSet.gapCircleRadius = 1.2
+        lineChartDataSet.gapCircleRadius = 0.5
         lineChartDataSet.gapLineWidth = 1
 
         if showAlertRangeInGraph {
