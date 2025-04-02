@@ -8,8 +8,9 @@ public class YAxisValueFormatter: NSObject, AxisValueFormatter {
         super.init()
         numberFormatter.locale = Locale.autoupdatingCurrent
         numberFormatter.numberStyle = .decimal
+        numberFormatter.usesGroupingSeparator = true
         numberFormatter.minimumFractionDigits = 0
-        numberFormatter.maximumFractionDigits = 1
+        numberFormatter.maximumFractionDigits = 2
     }
 
     public func stringForValue(_ value: Double, axis _: AxisBase?) -> String {
