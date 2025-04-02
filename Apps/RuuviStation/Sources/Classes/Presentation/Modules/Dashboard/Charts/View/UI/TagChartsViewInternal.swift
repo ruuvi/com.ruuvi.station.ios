@@ -78,7 +78,6 @@ class TagChartsViewInternal: LineChartView {
         leftAxis.granularityEnabled = true
         leftAxis.granularity = 1
         leftAxis.spaceBottom = 0.2
-        leftAxis.forceLabelsEnabled = true
 
         rightAxis.enabled = false
 
@@ -167,6 +166,7 @@ extension TagChartsViewInternal {
         leftAxis.drawTopYLabelEntryEnabled = !entriesNotZero
         leftAxis.drawBottomYLabelEntryEnabled = !entriesNotZero
     }
+
     func setXAxisRenderer() {
         let axisRenderer = CustomXAxisRenderer(
             from: 0,
@@ -201,6 +201,7 @@ extension TagChartsViewInternal {
     func updateDataSet(
         with newData: [ChartDataEntry],
         isFirstEntry: Bool,
+        firstEntry: RuuviMeasurement?,
         showAlertRangeInGraph: Bool
     ) {
         if isFirstEntry {
@@ -215,9 +216,39 @@ extension TagChartsViewInternal {
         }
 
         for point in newData {
-            data?.appendEntry(point, toDataSet: 0)
-            setYAxisLimit(min: data?.yMin ?? 0, max: data?.yMax ?? 0)
+            if let set = data?.dataSets.first as? LineChartDataSet,
+                let index = data?.index(
+                of: set
+            ) {
+                data?.appendEntry(point, toDataSet: index)
+                setYAxisLimit(min: data?.yMin ?? 0, max: data?.yMax ?? 0)
+            }
         }
+
+        if !settings.chartShowAll {
+            let from = Calendar.autoupdatingCurrent.date(
+                byAdding: .hour,
+                value: -settings.chartDurationHours,
+                to: Date()
+            ) ?? Date.distantFuture
+            xAxis.axisMinimum = from.timeIntervalSince1970
+            xAxis.axisMaximum = Date().timeIntervalSince1970
+        } else {
+            if let from = firstEntry?.date.timeIntervalSince1970 {
+
+                let axisRenderer = CustomXAxisRenderer(
+                    from: from,
+                    viewPortHandler: viewPortHandler,
+                    axis: xAxis,
+                    transformer: getTransformer(forAxis: .left)
+                )
+                xAxisRenderer = axisRenderer
+
+                xAxis.axisMinimum = from
+                xAxis.axisMaximum = Date().timeIntervalSince1970
+            }
+        }
+
         reloadData()
     }
 
