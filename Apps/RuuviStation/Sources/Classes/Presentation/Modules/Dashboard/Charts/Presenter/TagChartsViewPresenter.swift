@@ -79,6 +79,7 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
     private var chartDrawDotsDidChangeToken: NSObjectProtocol?
     private var chartShowStatsStateDidChangeToken: NSObjectProtocol?
     private var sensorSettingsToken: RuuviReactorToken?
+    private var syncNotificationToken: NSObjectProtocol?
     private var lastSyncViewModelDate = Date()
     private var lastChartSyncDate = Date()
 
@@ -159,6 +160,7 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
 
 extension TagChartsViewPresenter: TagChartsViewOutput {
     func viewDidLoad() {
+        startObservingAppState()
         startObservingBackgroundChanges()
         startObservingAlertChanges()
         startObservingDidConnectDisconnectNotifications()
@@ -366,9 +368,55 @@ extension TagChartsViewPresenter {
         startListeningToSettings()
         startObservingBluetoothState()
         startListeningToAlertStatus()
+        startObservingNetworkSyncNotification(for: ruuviTag)
         tryToShowSwipeUpHint()
         interactor.configure(withTag: ruuviTag, andSettings: sensorSettings)
         interactor.restartObservingTags()
+    }
+
+    private func startObservingAppState() {
+        NotificationCenter
+            .default
+            .addObserver(
+                self,
+                selector: #selector(reloadChartsData),
+                name: UIApplication.willEnterForegroundNotification,
+                object: nil
+            )
+    }
+
+    @objc private func reloadChartsData() {
+        interactor.configure(withTag: ruuviTag, andSettings: sensorSettings)
+        interactor.restartObservingTags()
+    }
+
+    private func startObservingNetworkSyncNotification(
+        for ruuviTag: RuuviTagSensor
+    ) {
+        syncNotificationToken?.invalidate()
+        syncNotificationToken = nil
+
+        syncNotificationToken = NotificationCenter
+            .default
+            .addObserver(
+                forName: .NetworkSyncDidChangeStatus,
+                object: nil,
+                queue: .main,
+                using: { [weak self] notification in
+                    guard let mac = notification.userInfo?[NetworkSyncStatusKey.mac] as? MACIdentifier,
+                          let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus,
+                          mac.any == ruuviTag.macId?.any
+                    else {
+                        return
+                    }
+                    switch status {
+                    case .complete:
+                        self?.reloadChartsData()
+                    default:
+                        break
+                    }
+                }
+            )
     }
 
     private func shutDownModule() {
@@ -825,6 +873,7 @@ extension TagChartsViewPresenter {
             luminosityEntries: luminosityData,
             soundEntries: soundData,
             isFirstEntry: ruuviTagData.count == 1,
+            firstEntry: ruuviTagData.first,
             settings: settings
         )
 

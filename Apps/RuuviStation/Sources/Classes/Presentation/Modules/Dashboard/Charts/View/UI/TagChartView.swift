@@ -165,11 +165,13 @@ extension TagChartsView {
     func updateDataSet(
         with newData: [ChartDataEntry],
         isFirstEntry: Bool,
+        firstEntry: RuuviMeasurement?,
         showAlertRangeInGraph: Bool
     ) {
         chartView.updateDataSet(
             with: newData,
             isFirstEntry: isFirstEntry,
+            firstEntry: firstEntry,
             showAlertRangeInGraph: showAlertRangeInGraph
         )
     }

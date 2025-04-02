@@ -1015,6 +1015,7 @@ extension TagChartsViewController: TagChartsViewInput {
         luminosityEntries: [ChartDataEntry],
         soundEntries: [ChartDataEntry],
         isFirstEntry: Bool,
+        firstEntry: RuuviMeasurement?,
         settings: RuuviLocalSettings
     ) {
         if useNewGraphRendering {
@@ -1027,6 +1028,7 @@ extension TagChartsViewController: TagChartsViewInput {
             temperatureChartView.updateDataSet(
                 with: temperatureEntries,
                 isFirstEntry: isFirstEntry,
+                firstEntry: firstEntry,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
 
@@ -1034,6 +1036,7 @@ extension TagChartsViewController: TagChartsViewInput {
             humidityChartView.updateDataSet(
                 with: humidityEntries,
                 isFirstEntry: isFirstEntry,
+                firstEntry: firstEntry,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
 
@@ -1041,6 +1044,7 @@ extension TagChartsViewController: TagChartsViewInput {
             pressureChartView.updateDataSet(
                 with: pressureEntries,
                 isFirstEntry: isFirstEntry,
+                firstEntry: firstEntry,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
 
@@ -1048,6 +1052,7 @@ extension TagChartsViewController: TagChartsViewInput {
             aqiChartView.updateDataSet(
                 with: aqiEntries,
                 isFirstEntry: isFirstEntry,
+                firstEntry: firstEntry,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
 
@@ -1055,6 +1060,7 @@ extension TagChartsViewController: TagChartsViewInput {
             co2ChartView.updateDataSet(
                 with: co2Entries,
                 isFirstEntry: isFirstEntry,
+                firstEntry: firstEntry,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
 
@@ -1062,6 +1068,7 @@ extension TagChartsViewController: TagChartsViewInput {
             pm10ChartView.updateDataSet(
                 with: pm10Entries,
                 isFirstEntry: isFirstEntry,
+                firstEntry: firstEntry,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
 
@@ -1069,6 +1076,7 @@ extension TagChartsViewController: TagChartsViewInput {
             pm25ChartView.updateDataSet(
                 with: pm25Entries,
                 isFirstEntry: isFirstEntry,
+                firstEntry: firstEntry,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
 
@@ -1076,6 +1084,7 @@ extension TagChartsViewController: TagChartsViewInput {
             vocChartView.updateDataSet(
                 with: vocEntries,
                 isFirstEntry: isFirstEntry,
+                firstEntry: firstEntry,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
 
@@ -1083,6 +1092,7 @@ extension TagChartsViewController: TagChartsViewInput {
             noxChartView.updateDataSet(
                 with: noxEntries,
                 isFirstEntry: isFirstEntry,
+                firstEntry: firstEntry,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
 
@@ -1090,6 +1100,7 @@ extension TagChartsViewController: TagChartsViewInput {
             luminosityChartView.updateDataSet(
                 with: luminosityEntries,
                 isFirstEntry: isFirstEntry,
+                firstEntry: firstEntry,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
 
@@ -1097,6 +1108,7 @@ extension TagChartsViewController: TagChartsViewInput {
             soundChartView.updateDataSet(
                 with: soundEntries,
                 isFirstEntry: isFirstEntry,
+                firstEntry: firstEntry,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
         }

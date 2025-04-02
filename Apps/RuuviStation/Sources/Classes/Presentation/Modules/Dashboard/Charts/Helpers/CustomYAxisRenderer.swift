@@ -51,8 +51,7 @@ class CustomYAxisRenderer: YAxisRenderer {
             return
         }
 
-        let rawInterval = Double(range) / Double(labelCount)
-        let interval = getClosestPredefinedInterval(rawInterval)
+        let interval = getClosestPredefinedInterval(range: range, labelCount: labelCount)
 
         var firstPoint = round(min / CGFloat(interval)) * CGFloat(interval)
         var lastPoint = round(max / CGFloat(interval)) * CGFloat(interval)
@@ -75,7 +74,9 @@ class CustomYAxisRenderer: YAxisRenderer {
         ).map { Double($0) }
     }
 
-    private func getClosestPredefinedInterval(_ rawInterval: Double) -> Double {
-        intervals.min(by: { abs($0 - rawInterval) < abs($1 - rawInterval) }) ?? 0.0
+    private func getClosestPredefinedInterval(range: Double, labelCount: Int) -> Double {
+        return intervals.min(
+            by: { abs(range / $0 - Double(labelCount)) < abs(range / $1 - Double(labelCount)) }
+        ) ?? 0
     }
 }
