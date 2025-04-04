@@ -15,9 +15,12 @@ class TagChartsViewController: UIViewController {
     var output: TagChartsViewOutput!
     private var chartModules: [MeasurementType] = [] {
         didSet {
-            moreButton.menu = moreButtonOptions(
-                showChartStat: showChartStat,
-                compactChartView: compactChartView
+            moreButton.updateMenu(
+                with:
+                    moreButtonOptions(
+                        showChartStat: showChartStat,
+                        compactChartView: compactChartView
+                    )
             )
         }
     }
@@ -48,9 +51,12 @@ class TagChartsViewController: UIViewController {
 
     var showChartStat: Bool = true {
         didSet {
-            moreButton.menu = moreButtonOptions(
-                showChartStat: showChartStat,
-                compactChartView: compactChartView
+            moreButton.updateMenu(
+                with:
+                    moreButtonOptions(
+                        showChartStat: showChartStat,
+                        compactChartView: compactChartView
+                    )
             )
         }
     }
@@ -58,9 +64,12 @@ class TagChartsViewController: UIViewController {
     var compactChartView: Bool = true {
         didSet {
             updateChartsCollectionConstaints(from: self.chartModules)
-            moreButton.menu = moreButtonOptions(
-                showChartStat: showChartStat,
-                compactChartView: compactChartView
+            moreButton.updateMenu(
+                with:
+                    moreButtonOptions(
+                        showChartStat: showChartStat,
+                        compactChartView: compactChartView
+                    )
             )
         }
     }
@@ -108,19 +117,20 @@ class TagChartsViewController: UIViewController {
             icon: RuuviAsset.arrowDropDown.image,
             iconTintColor: RuuviColor.logoTintColor.color,
             iconSize: .init(width: 14, height: 14),
+            leadingPadding: 6,
+            trailingPadding: 6,
             preccedingIcon: false
         )
 
-    // Chart toolbar
-    private lazy var moreButton: UIButton = {
-        let button = UIButton()
-        button.tintColor = .white
-        button.setImage(RuuviAsset.more3dot.image, for: .normal)
-        button.imageView?.contentMode = .scaleAspectFit
-        button.showsMenuAsPrimaryAction = true
-        button.menu = moreButtonOptions()
-        return button
-    }()
+    private lazy var moreButton: RuuviCustomButton =
+        .init(
+            menu: moreButtonOptions(),
+            icon: RuuviAsset.more3dot.image,
+            tintColor: .white,
+            iconSize: .init(width: 24, height: 18),
+            leadingPadding: 0,
+            trailingPadding: 12
+        )
 
     // Charts
     lazy var scrollView: UIScrollView = {
@@ -194,6 +204,7 @@ class TagChartsViewController: UIViewController {
             icon: RuuviAsset.iconSyncBt.image,
             iconTintColor: .white,
             iconSize: .init(width: 22, height: 22),
+            leadingPadding: 12,
             preccedingIcon: true
         )
         button.button.showsMenuAsPrimaryAction = false
@@ -313,9 +324,9 @@ class TagChartsViewController: UIViewController {
             trailing: view.safeRightAnchor,
             padding: .init(
                 top: 8,
-                left: 12,
+                left: 0,
                 bottom: 0,
-                right: 8
+                right: 0
             ),
             size: .init(width: 0, height: 36)
         )
@@ -325,14 +336,7 @@ class TagChartsViewController: UIViewController {
             top: nil,
             leading: nil,
             bottom: nil,
-            trailing: chartToolbarView.trailingAnchor,
-            padding: .init(
-                top: 0,
-                left: 0,
-                bottom: 0,
-                right: 8
-            ),
-            size: .init(width: 24, height: 18)
+            trailing: chartToolbarView.trailingAnchor
         )
         moreButton.centerYInSuperview()
 
@@ -350,7 +354,7 @@ class TagChartsViewController: UIViewController {
             ),
             size: .init(
                 width: 0,
-                height: 24
+                height: 28
             )
         )
         historySelectionButton.centerYInSuperview()
@@ -375,6 +379,7 @@ class TagChartsViewController: UIViewController {
             leading: syncProgressView.leadingAnchor,
             bottom: nil,
             trailing: nil,
+            padding: .init(top: 0, left: 12, bottom: 0, right: 0),
             size: .init(width: 32, height: 32)
         )
         syncCancelButton.centerYInSuperview()
