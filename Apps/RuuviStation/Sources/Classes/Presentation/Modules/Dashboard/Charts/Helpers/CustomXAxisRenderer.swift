@@ -39,6 +39,7 @@ public class CustomXAxisRenderer: XAxisRenderer {
         from = time
     }
 
+    // swiftlint:disable:next function_body_length
     override public func computeAxisValues(
         min: Double,
         max: Double
