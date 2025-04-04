@@ -180,7 +180,7 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         set(.gatewayEnabled(false))
         set(.graphDrawDots(settings.chartDrawDotsOn))
         set(.graphPointInterval(settings.chartIntervalSeconds / 60))
-        set(.graphShowAllPoints(!settings.chartDownsamplingOn))
+        set(.graphShowAllPoints(settings.chartShowAllMeasurements))
         set(.graphViewPeriod(settings.dataPruningOffsetHours / 24))
         set(.humidityUnit(settings.humidityUnit))
         set(.pressureUnit(settings.pressureUnit))

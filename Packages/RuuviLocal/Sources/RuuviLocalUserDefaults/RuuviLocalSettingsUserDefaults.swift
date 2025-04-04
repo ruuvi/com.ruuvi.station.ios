@@ -373,8 +373,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     private let humidityUnitIntUDKey = "SettingsUserDegaults.humidityUnitInt"
 
-    @UserDefault("SettingsUserDefaults.chartDownsamplingOn", defaultValue: true)
-    var chartDownsamplingOn: Bool {
+    @UserDefault("SettingsUserDefaults.chartDownsamplingOn", defaultValue: false)
+    var chartDownsamplingOn: Bool
+
+    @UserDefault("SettingsUserDefaults.chartShowAllMeasurements", defaultValue: false)
+    var chartShowAllMeasurements: Bool {
         didSet {
             NotificationCenter
                 .default
