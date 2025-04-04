@@ -70,7 +70,13 @@ public protocol RuuviLocalSettings {
     var dataPruningOffsetHours: Int { get set }
     var chartIntervalSeconds: Int { get set }
     var chartDurationHours: Int { get set }
+    // This is the property that is synced to cloud.
+    // However, it is disabled for now because of performance issue on iOS.
+    // Once we fix the performance issue, we will enable this property.
     var chartDownsamplingOn: Bool { get set }
+    // This is the property to enable/disable downsampling on the device.
+    // This property is not synced to cloud.
+    var chartShowAllMeasurements: Bool { get set }
     var chartDrawDotsOn: Bool { get set }
     var chartStatsOn: Bool { get set }
     var chartShowAll: Bool { get set }

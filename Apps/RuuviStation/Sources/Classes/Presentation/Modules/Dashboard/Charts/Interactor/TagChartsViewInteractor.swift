@@ -246,7 +246,7 @@ extension TagChartsViewInteractor {
     }
 
     private func removeFirst() {
-        guard !settings.chartDownsamplingOn else { return }
+        guard settings.chartShowAllMeasurements else { return }
         let cropDate = Calendar.autoupdatingCurrent.date(
             byAdding: .hour,
             value: -settings.dataPruningOffsetHours,
@@ -347,7 +347,9 @@ extension TagChartsViewInteractor {
     }
 
     private func fetchPoints(_ completion: (() -> Void)? = nil) {
-        if settings.chartDownsamplingOn {
+        if settings.chartShowAllMeasurements {
+            fetchAll(completion)
+        } else {
             fetchAll { [weak self] in
                 guard let self
                 else {
@@ -359,8 +361,6 @@ extension TagChartsViewInteractor {
                     fetchDownSampled(completion)
                 }
             }
-        } else {
-            fetchAll(completion)
         }
     }
 

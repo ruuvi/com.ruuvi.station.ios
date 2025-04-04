@@ -57,7 +57,7 @@ extension ChartSettingsPresenter: ChartSettingsViewOutput {
 extension ChartSettingsPresenter {
     private func buildChartDownsampling() -> ChartSettingsCell {
         let title = RuuviLocalization.ChartSettings.AllPoints.title
-        let value = !settings.chartDownsamplingOn
+        let value = settings.chartShowAllMeasurements
         let type: ChartSettingsCellType = .switcher(
             title: title,
             value: value,
@@ -65,10 +65,9 @@ extension ChartSettingsPresenter {
         )
         let cell = ChartSettingsCell(type: type)
         cell.boolean.value = value
-        bind(cell.boolean, fire: false) { [weak self] observer, value in
+        bind(cell.boolean, fire: false) { observer, value in
             guard let value else { return }
-            observer.settings.chartDownsamplingOn = !value
-            self?.ruuviAppSettingsService.set(showAllData: value)
+            observer.settings.chartShowAllMeasurements = value
         }
         return cell
     }
