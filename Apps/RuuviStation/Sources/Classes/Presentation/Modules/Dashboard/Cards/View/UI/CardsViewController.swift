@@ -182,6 +182,13 @@ class CardsViewController: UIViewController {
         return cv
     }()
 
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let ai = UIActivityIndicatorView(style: .medium)
+        ai.color = .white
+        ai.hidesWhenStopped = true
+        return ai
+    }()
+
     private var currentVisibleCancellables = Set<AnyCancellable>()
     private var currentVisibleItem: CardsViewModel? {
         didSet {
@@ -269,6 +276,7 @@ private extension CardsViewController {
         chartViewBackground.alpha = 0
     }
 
+    // swiftlint:disable:next function_body_length
     func setUpHeaderView() {
         let leftBarButtonView = UIView(color: .clear)
 
@@ -288,8 +296,8 @@ private extension CardsViewController {
             leading: backButton.trailingAnchor,
             bottom: nil,
             trailing: leftBarButtonView.trailingAnchor,
-            padding: .init(top: 0, left: 8, bottom: 0, right: 0),
-            size: .init(width: 110, height: 22)
+            padding: .init(top: 0, left: 0, bottom: 0, right: 0),
+            size: .init(width: 90, height: 22)
         )
         ruuviLogoView.centerYInSuperview()
 
@@ -326,6 +334,14 @@ private extension CardsViewController {
         )
         settingsButton.centerYInSuperview()
 
+        let titleView = UIView(
+            color: .clear
+        )
+        titleView.addSubview(activityIndicator)
+        activityIndicator.fillSuperview()
+        activityIndicator.startAnimating()
+
+        navigationItem.titleView = titleView
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonView)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButtonView)
     }

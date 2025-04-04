@@ -228,13 +228,18 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     @discardableResult
     public func refreshLatestRecord() -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
+        ruuviLocalSyncState.setSyncStatus(.syncing)
         syncSensors()
             .observe(on: .global(qos: .utility))
             .on(success: { [weak self] _ in
+                self?.ruuviLocalSyncState.setSyncStatus(.complete)
                 self?.ruuviLocalSyncState.setSyncDate(Date())
                 promise.succeed(value: true)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                self?.ruuviLocalSyncState.setSyncStatus(.onError)
                 promise.fail(error: error)
+            }, completion: { [weak self] in
+                self?.ruuviLocalSyncState.setSyncStatus(.none)
             })
         return promise.future
     }
@@ -243,14 +248,18 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     public func syncAllRecords() -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
         ruuviLocalSettings.isSyncing = true
+        ruuviLocalSyncState.setSyncStatus(.syncing)
         let syncAll = syncAll()
         syncAll
             .observe(on: .global(qos: .utility))
-            .on(success: { _ in
+            .on(success: { [weak self] _ in
+                self?.ruuviLocalSyncState.setSyncStatus(.complete)
                 promise.succeed(value: true)
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                self?.ruuviLocalSyncState.setSyncStatus(.onError)
                 promise.fail(error: error)
             }, completion: { [weak self] in
+                self?.ruuviLocalSyncState.setSyncStatus(.none)
                 self?.ruuviLocalSettings.isSyncing = false
             })
         return promise.future

@@ -9,6 +9,12 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     private let gattSyncDatePrefix = "RuuviLocalSyncStateUserDefaults.gattSyncDate."
     private var syncingEnqueue: [AnyMACIdentifier] = []
 
+    func setSyncStatus(_ status: NetworkSyncStatus) {
+        DispatchQueue.main.async { [weak self] in
+            self?.syncStatus = status
+        }
+    }
+
     func setSyncStatus(_ status: NetworkSyncStatus, for macId: MACIdentifier) {
         UserDefaults.standard.set(status.rawValue, forKey: syncStatusPrefix + macId.mac)
         DispatchQueue.main.async {
@@ -20,17 +26,21 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
                 ])
         }
         switch status {
-        case .complete, .onError:
-            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) { [weak self] in
-                self?.setSyncStatus(.none, for: macId)
-            }
         case .syncing:
             DispatchQueue.main.async { [weak self] in
-                self?.syncStatus = .syncing
+                self?.setSyncStatus(.syncing, for: macId)
             }
-        case .none:
+        case .complete:
             DispatchQueue.main.async { [weak self] in
-                self?.syncStatus = .none
+                self?.setSyncStatus(.complete, for: macId)
+            }
+        case .onError:
+            DispatchQueue.main.async { [weak self] in
+                self?.setSyncStatus(.onError, for: macId)
+            }
+        default:
+            DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) { [weak self] in
+                self?.setSyncStatus(.none, for: macId)
             }
         }
     }
@@ -71,10 +81,7 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
 
     func setSyncDate(_ date: Date?) {
         UserDefaults.standard.set(date, forKey: syncDateAllIDKey)
-
-        NotificationCenter
-            .default
-            .post(name: .NetworkSyncDidComplete, object: self, userInfo: nil)
+        setSyncStatus(.none)
     }
 
     func getSyncDate() -> Date? {
