@@ -7,6 +7,7 @@ protocol DashboardViewInput: ViewInput {
     var dashboardType: DashboardType! { get set }
     var dashboardTapActionType: DashboardTapActionType! { get set }
     var dashboardSortingType: DashboardSortingType! { get set }
+    var isRefreshing: Bool { get set }
     var shouldShowSignInBanner: Bool { get set }
     func showNoSensorsAddedMessage(show: Bool)
     func showBluetoothDisabled(userDeclined: Bool)

@@ -399,7 +399,7 @@ extension TagChartsViewPresenter {
         syncNotificationToken = NotificationCenter
             .default
             .addObserver(
-                forName: .NetworkSyncDidChangeStatus,
+                forName: .NetworkSyncHistoryDidChangeStatus,
                 object: nil,
                 queue: .main,
                 using: { [weak self] notification in
@@ -411,7 +411,7 @@ extension TagChartsViewPresenter {
                     }
                     switch status {
                     case .complete:
-                        self?.reloadChartsData()
+                        self?.interactor.restartObservingData()
                     default:
                         break
                     }
@@ -751,16 +751,19 @@ extension TagChartsViewPresenter {
         historySyncToken = NotificationCenter
             .default
             .addObserver(
-                forName: .NetworkHistorySyncDidCompleteForSensor,
+                forName: .NetworkSyncHistoryDidChangeStatus,
                 object: nil,
                 queue: .main,
                 using: { [weak self] notification in
                     guard let mac = notification.userInfo?[NetworkSyncStatusKey.mac] as? MACIdentifier,
+                          let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus,
                           mac.any == self?.ruuviTag.macId?.any
                     else {
                         return
                     }
-                    self?.interactor.restartObservingData()
+                    if status == .complete {
+                        self?.interactor.restartObservingData()
+                    }
                 }
             )
     }

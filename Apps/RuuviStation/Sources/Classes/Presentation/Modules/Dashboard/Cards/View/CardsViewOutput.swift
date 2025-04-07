@@ -1,6 +1,7 @@
 import Foundation
 
 protocol CardsViewOutput {
+    var showingChart: Bool { get set }
     func viewDidLoad()
     func viewWillAppear()
     func viewDidAppear()

@@ -677,7 +677,7 @@ extension DashboardPresenter {
             if let luid = ruuviTag.luid {
                 viewModel.isConnected = background.isConnected(uuid: luid.value)
             } else if let macId = ruuviTag.macId {
-                viewModel.networkSyncStatus = localSyncState.getSyncStatus(for: macId)
+                viewModel.networkSyncStatus = localSyncState.getSyncStatusLatestRecord(for: macId)
                 viewModel.isConnected = false
             } else {
                 assertionFailure()
@@ -742,7 +742,7 @@ extension DashboardPresenter {
             if let luid = ruuviTag.luid {
                 viewModel.isConnected = background.isConnected(uuid: luid.value)
             } else if let macId = ruuviTag.macId {
-                viewModel.networkSyncStatus = localSyncState.getSyncStatus(for: macId)
+                viewModel.networkSyncStatus = localSyncState.getSyncStatusLatestRecord(for: macId)
                 viewModel.isConnected = false
             } else {
                 assertionFailure()
@@ -1651,11 +1651,22 @@ extension DashboardPresenter {
         cloudSyncSuccessStateToken = NotificationCenter
             .default
             .addObserver(
-                forName: .NetworkSyncDidComplete,
+                forName: .NetworkSyncDidChangeCommonStatus,
                 object: nil,
                 queue: .main,
-                using: { [weak self] _ in
-                    self?.triggerAlertsIfNeeded()
+                using: { [weak self] notification in
+                    guard let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus
+                    else {
+                        return
+                    }
+                    switch status {
+                    case .syncing:
+                        self?.view?.isRefreshing = true
+                    case .complete:
+                        self?.triggerAlertsIfNeeded()
+                    default:
+                        self?.view?.isRefreshing = false
+                    }
                 }
             )
     }

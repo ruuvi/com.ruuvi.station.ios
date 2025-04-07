@@ -43,6 +43,16 @@ class DashboardViewController: UIViewController {
         }
     }
 
+    var isRefreshing: Bool = false {
+        didSet {
+            if isRefreshing {
+                activityIndicator.startAnimating()
+            } else {
+                activityIndicator.stopAnimating()
+            }
+        }
+    }
+
     var shouldShowSignInBanner: Bool = false {
         didSet {
             showNoSignInBannerIfNeeded()
@@ -115,17 +125,20 @@ class DashboardViewController: UIViewController {
     }()
 
     // Action Buttons
-    private lazy var menuButton: UIButton = {
-        let button = UIButton()
-        button.tintColor = RuuviColor.menuTintColor.color
-        let menuImage = RuuviAsset.baselineMenuWhite48pt.image
-        button.setImage(menuImage, for: .normal)
-        button.setImage(menuImage, for: .highlighted)
-        button.backgroundColor = .clear
-        button.addTarget(
-            self,
-            action: #selector(handleMenuButtonTap),
-            for: .touchUpInside
+
+    private lazy var menuButton: RuuviCustomButton = {
+        let button = RuuviCustomButton(
+            icon: RuuviAsset.baselineMenuWhite48pt.image,
+            tintColor: RuuviColor.menuTintColor.color,
+            iconSize: .init(width: 36, height: 36),
+            leadingPadding: 6,
+            trailingPadding: 6
+        )
+        button.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(handleMenuButtonTap)
+            )
         )
         return button
     }()
@@ -169,8 +182,15 @@ class DashboardViewController: UIViewController {
         rc.tintColor = RuuviColor.tintColor.color
         rc.layer.zPosition = -1
         rc.alpha = 0
-        rc.addTarget(self, action: #selector(didPullToRefresh), for: .valueChanged)
+        rc.addTarget(self, action: #selector(handleRefreshValueChanged), for: .valueChanged)
         return rc
+    }()
+
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let ai = UIActivityIndicatorView(style: .medium)
+        ai.color = RuuviColor.dashboardIndicator.color
+        ai.hidesWhenStopped = true
+        return ai
     }()
 
     private var showSignInBannerConstraint: NSLayoutConstraint!
@@ -182,7 +202,7 @@ class DashboardViewController: UIViewController {
     private var appDidBecomeActiveToken: NSObjectProtocol?
 
     private var isListRefreshable: Bool = true
-    private var isRefreshing: Bool = false
+    private var isPulling: Bool = false
 
     deinit {
         appDidBecomeActiveToken?.invalidate()
@@ -245,19 +265,18 @@ private extension DashboardViewController {
         }
     }
 
-    @objc func didPullToRefresh() {
-        guard !isRefreshing
-        else {
+    @objc func handleRefreshValueChanged() {
+        // This gets called when refresh control is triggered
+        // But we won't make the API call yet - just track that we're in refresh state
+        isPulling = true
+    }
+
+    @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+        if gesture.state == .ended && isPulling {
+            // User released their finger and we were in a pulling state
+            isPulling = false
             refresher.endRefreshing()
-            return
-        }
-        refresher.fadeIn()
-        isRefreshing = true
-        output.viewDidTriggerPullToRefresh()
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) { [weak self] in
-            self?.refresher.endRefreshing()
-            self?.isRefreshing = false
-            self?.refresher.fadeOut()
+            output.viewDidTriggerPullToRefresh()
         }
     }
 }
@@ -566,8 +585,7 @@ private extension DashboardViewController {
             leading: leftBarButtonView.leadingAnchor,
             bottom: leftBarButtonView.bottomAnchor,
             trailing: nil,
-            padding: .init(top: 0, left: 0, bottom: 0, right: 0),
-            size: .init(width: 32, height: 32)
+            padding: .init(top: 0, left: -16, bottom: 0, right: 0)
         )
 
         leftBarButtonView.addSubview(ruuviLogoView)
@@ -576,8 +594,8 @@ private extension DashboardViewController {
             leading: menuButton.trailingAnchor,
             bottom: nil,
             trailing: leftBarButtonView.trailingAnchor,
-            padding: .init(top: 0, left: 8, bottom: 0, right: 0),
-            size: .init(width: 110, height: 22)
+            padding: .init(top: 0, left: 0, bottom: 0, right: 0),
+            size: .init(width: 90, height: 22)
         )
         ruuviLogoView.centerYInSuperview()
 
@@ -595,6 +613,13 @@ private extension DashboardViewController {
             )
         )
 
+        let titleView = UIView(
+            color: .clear
+        )
+        titleView.addSubview(activityIndicator)
+        activityIndicator.fillSuperview()
+
+        navigationItem.titleView = titleView
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonView)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButtonView)
     }
@@ -635,6 +660,11 @@ private extension DashboardViewController {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.register(DashboardImageCell.self, forCellWithReuseIdentifier: "cellId")
         collectionView.register(DashboardPlainCell.self, forCellWithReuseIdentifier: "cellIdPlain")
+
+        // Add gesture recognizer to detect when user stops pulling
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        panGesture.delegate = self
+        collectionView.addGestureRecognizer(panGesture)
     }
 
     func createLayout() -> UICollectionViewLayout {
@@ -712,6 +742,15 @@ private extension DashboardViewController {
         previewParameters.visiblePath = path
         previewParameters.backgroundColor = .clear
         return previewParameters
+    }
+}
+
+extension DashboardViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        return true
     }
 }
 
