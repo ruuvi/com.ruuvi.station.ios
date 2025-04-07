@@ -33,6 +33,9 @@ class CardsPresenter {
     var permissionPresenter: PermissionPresenter!
     var permissionsManager: RuuviCorePermission!
 
+    // MARK: - CardsViewOutput
+    var showingChart: Bool = false
+
     // MARK: - PRIVATE VARIABLES
 
     /// Collection of the sensor
@@ -92,6 +95,8 @@ class CardsPresenter {
     private var didDisconnectToken: NSObjectProtocol?
     private var cloudModeToken: NSObjectProtocol?
     private var sensorOrderChangeToken: NSObjectProtocol?
+    private var latestDataSyncToken: NSObjectProtocol?
+    private var historySyncToken: NSObjectProtocol?
 
     func dismiss(completion: (() -> Void)?) {
         shutdownModule()
@@ -144,6 +149,8 @@ extension CardsPresenter {
         startObservingDaemonsErrors()
         startObservingDidConnectDisconnectNotifications()
         startObservingCloudModeNotification()
+        startObservingCloudLatestDataSyncNotification()
+        startObservingCloudHistorySyncNotification()
         reloadMutedTill()
     }
 
@@ -704,7 +711,7 @@ extension CardsPresenter {
             if let luid = ruuviTag.luid {
                 viewModel.isConnected = background.isConnected(uuid: luid.value)
             } else if let macId = ruuviTag.macId {
-                viewModel.networkSyncStatus = localSyncState.getSyncStatus(for: macId)
+                viewModel.networkSyncStatus = localSyncState.getSyncStatusLatestRecord(for: macId)
                 viewModel.isConnected = false
             } else {
                 assertionFailure()
@@ -843,6 +850,8 @@ extension CardsPresenter {
         cloudModeToken?.invalidate()
         mutedTillTimer?.invalidate()
         sensorOrderChangeToken?.invalidate()
+        latestDataSyncToken?.invalidate()
+        historySyncToken?.invalidate()
         router.dismiss()
         NotificationCenter.default.removeObserver(
             self,
@@ -1689,6 +1698,64 @@ extension CardsPresenter {
                 name: .RuuviTagHeartBeatDaemonShouldRestart,
                 object: nil,
                 userInfo: nil
+            )
+    }
+
+    private func startObservingCloudLatestDataSyncNotification() {
+        latestDataSyncToken?.invalidate()
+        latestDataSyncToken = nil
+        latestDataSyncToken = NotificationCenter
+            .default
+            .addObserver(
+                forName: .NetworkSyncLatestDataDidChangeStatus,
+                object: nil,
+                queue: .main,
+                using: { [weak self] notification in
+                    guard let sSelf = self,
+                          let mac = notification.userInfo?[NetworkSyncStatusKey.mac] as? MACIdentifier,
+                          let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus,
+                          mac.any == sSelf.currentVisibleViewModel?.mac,
+                          !sSelf.showingChart
+                    else {
+                        return
+                    }
+
+                    switch status {
+                    case .syncing:
+                        sSelf.view?.isRefreshing = true
+                    default:
+                        sSelf.view?.isRefreshing = false
+                    }
+                }
+            )
+    }
+
+    private func startObservingCloudHistorySyncNotification() {
+        historySyncToken?.invalidate()
+        historySyncToken = nil
+        historySyncToken = NotificationCenter
+            .default
+            .addObserver(
+                forName: .NetworkSyncHistoryDidChangeStatus,
+                object: nil,
+                queue: .main,
+                using: { [weak self] notification in
+                    guard let sSelf = self,
+                          let mac = notification.userInfo?[NetworkSyncStatusKey.mac] as? MACIdentifier,
+                          let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus,
+                          mac.any == sSelf.currentVisibleViewModel?.mac,
+                          sSelf.showingChart
+                    else {
+                        return
+                    }
+
+                    switch status {
+                    case .syncing:
+                        sSelf.view?.isRefreshing = true
+                    default:
+                        sSelf.view?.isRefreshing = false
+                    }
+                }
             )
     }
 }

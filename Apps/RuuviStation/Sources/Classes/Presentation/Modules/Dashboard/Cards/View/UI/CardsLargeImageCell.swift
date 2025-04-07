@@ -2,7 +2,6 @@ import RuuviLocal
 import RuuviLocalization
 import RuuviOntology
 import RuuviService
-// swiftlint:disable file_length
 import UIKit
 
 class CardsLargeImageCell: UICollectionViewCell {
@@ -30,15 +29,6 @@ class CardsLargeImageCell: UICollectionViewCell {
 
     private lazy var batteryLevelView = BatteryLevelView(fontSize: 10, iconSize: 16)
 
-    private lazy var syncStateLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white.withAlphaComponent(0.8)
-        label.textAlignment = .left
-        label.numberOfLines = 0
-        label.font = UIFont.preferredFont(forTextStyle: .footnote)
-        return label
-    }()
-
     private lazy var updatedAtLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white.withAlphaComponent(0.8)
@@ -63,7 +53,6 @@ class CardsLargeImageCell: UICollectionViewCell {
     private var batteryLevelViewHeight: NSLayoutConstraint!
 
     private var timer: Timer?
-    private var notificationToken: NSObjectProtocol?
     private var isSyncing: Bool = false
 
     override init(frame: CGRect) {
@@ -195,18 +184,10 @@ class CardsLargeImageCell: UICollectionViewCell {
             size: .init(width: 0, height: 24)
         )
 
-        footerView.addSubview(syncStateLabel)
-        syncStateLabel.anchor(
-            top: footerView.topAnchor,
-            leading: footerView.leadingAnchor,
-            bottom: footerView.bottomAnchor,
-            trailing: nil
-        )
-
         footerView.addSubview(updatedAtLabel)
         updatedAtLabel.anchor(
             top: footerView.topAnchor,
-            leading: syncStateLabel.trailingAnchor,
+            leading: nil,
             bottom: footerView.bottomAnchor,
             trailing: nil,
             padding: .init(
@@ -246,10 +227,8 @@ extension CardsLargeImageCell {
         movementView.clearValues()
         updatedAtLabel.text = nil
         dataSourceIconView.image = nil
-        syncStateLabel.text = nil
         timer?.invalidate()
         timer = nil
-        notificationToken?.invalidate()
         batteryLevelView.isHidden = true
         batteryLevelViewHeight.constant = 0
     }
@@ -354,13 +333,6 @@ extension CardsLargeImageCell {
             batteryLevelView.isHidden = true
             batteryLevelViewHeight.constant = 0
         }
-
-        // Sync status
-        guard let macId = viewModel.mac
-        else {
-            return
-        }
-        startObservingNetworkSyncNotification(for: macId.any)
     }
 }
 
@@ -376,44 +348,6 @@ extension CardsLargeImageCell {
                 self?.updatedAtLabel.text = date?.ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
             }
         )
-    }
-
-    private func startObservingNetworkSyncNotification(for macId: AnyMACIdentifier) {
-        notificationToken?.invalidate()
-        notificationToken = nil
-
-        notificationToken = NotificationCenter
-            .default
-            .addObserver(
-                forName: .NetworkSyncDidChangeStatus,
-                object: nil,
-                queue: .main,
-                using: { [weak self] notification in
-                    guard let mac = notification.userInfo?[NetworkSyncStatusKey.mac] as? MACIdentifier,
-                          let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus,
-                          mac.any == macId
-                    else {
-                        return
-                    }
-                    self?.updateSyncLabel(with: status)
-                }
-            )
-    }
-
-    private func updateSyncLabel(with status: NetworkSyncStatus) {
-        switch status {
-        case .none:
-            isSyncing = false
-        case .syncing:
-            isSyncing = true
-            syncStateLabel.text = RuuviLocalization.TagCharts.Status.serving
-        case .complete:
-            syncStateLabel.text = RuuviLocalization.synchronized
-            hideSyncStatusLabel()
-        case .onError:
-            syncStateLabel.text = RuuviLocalization.ErrorPresenterAlert.error
-            hideSyncStatusLabel()
-        }
     }
 
     private func hideHumidityView(hide: Bool) {
@@ -444,11 +378,5 @@ extension CardsLargeImageCell {
             movementView.isHidden = false
             movementViewHeight.constant = 66
         }
-    }
-
-    private func hideSyncStatusLabel() {
-        UIView.animate(withDuration: 0, delay: 0.2, animations: { [weak self] in
-            self?.syncStateLabel.text = nil
-        })
     }
 }

@@ -14,12 +14,10 @@ public enum NetworkSyncStatusKey: String {
 }
 
 public extension Notification.Name {
-    static let NetworkSyncDidChangeStatus =
-        Notification.Name("NetworkPersistence.DidChangeStatus")
-    static let NetworkSyncDidComplete =
-        Notification.Name("NetworkPersistence.NetworkSyncDidComplete")
-    static let NetworkHistorySyncDidCompleteForSensor =
-        Notification.Name("NetworkPersistence.NetworkHistorySyncDidCompleteForSensor")
+    static let NetworkSyncLatestDataDidChangeStatus =
+        Notification.Name("NetworkPersistence.NetworkSyncLatestDataDidChangeStatus")
+    static let NetworkSyncHistoryDidChangeStatus =
+        Notification.Name("NetworkPersistence.NetworkSyncHistoryDidChangeStatus")
     static let NetworkSyncDidChangeCommonStatus =
         Notification.Name("NetworkPersistence.DidChangeCommonStatus")
     static let NetworkSyncDidFailForAuthorization =
@@ -27,8 +25,10 @@ public extension Notification.Name {
 }
 
 public protocol RuuviLocalSyncState {
-    func setSyncStatus(_ status: NetworkSyncStatus, for macId: MACIdentifier)
-    func getSyncStatus(for macId: MACIdentifier) -> NetworkSyncStatus
+    func setSyncStatus(_ status: NetworkSyncStatus)
+    func setSyncStatusLatestRecord(_ status: NetworkSyncStatus, for macId: MACIdentifier)
+    func getSyncStatusLatestRecord(for macId: MACIdentifier) -> NetworkSyncStatus
+    func setSyncStatusHistory(_ status: NetworkSyncStatus, for macId: MACIdentifier?)
     func setSyncDate(_ date: Date?, for macId: MACIdentifier?)
     func getSyncDate(for macId: MACIdentifier?) -> Date?
     func setGattSyncDate(_ date: Date?, for macId: MACIdentifier?)

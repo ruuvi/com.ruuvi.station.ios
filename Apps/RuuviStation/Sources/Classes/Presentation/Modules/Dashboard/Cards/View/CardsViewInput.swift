@@ -6,6 +6,7 @@ import UIKit
 protocol CardsViewInput: ViewInput {
     var viewModels: [CardsViewModel] { get set }
     var scrollIndex: Int { get set }
+    var isRefreshing: Bool { get set }
     func applyUpdate(to viewModel: CardsViewModel)
     func scroll(to index: Int)
     func showBluetoothDisabled(userDeclined: Bool)
