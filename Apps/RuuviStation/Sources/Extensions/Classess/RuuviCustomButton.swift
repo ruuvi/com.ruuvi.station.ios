@@ -70,7 +70,7 @@ extension RuuviCustomButton {
                 )
             )
 
-        if let menu {
+        if menu != nil {
             addSubview(button)
             button.fillSuperview()
         }
