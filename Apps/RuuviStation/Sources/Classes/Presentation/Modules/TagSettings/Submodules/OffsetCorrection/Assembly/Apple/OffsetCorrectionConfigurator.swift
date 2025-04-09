@@ -1,4 +1,3 @@
-import BTKit
 import RuuviLocal
 import RuuviPresenters
 import RuuviReactor
@@ -16,8 +15,6 @@ class OffsetCorrectionConfigurator {
         let presenter = OffsetCorrectionPresenter()
         presenter.view = view
         presenter.router = router
-        presenter.foreground = r.resolve(BTForeground.self)
-        presenter.background = r.resolve(BTBackground.self)
         presenter.ruuviOffsetCalibrationService = r.resolve(RuuviServiceOffsetCalibration.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)

@@ -471,7 +471,10 @@ extension RuuviTagHeartbeatDaemonBTKit {
                     [weak self] _, device in
                     guard let sSelf = self else { return }
 
-                    if let ruuviTag = device.ruuvi?.tag, ruuviTag.vC5?.serviceUUID != nil {
+                    if let ruuviTag = device.ruuvi?.tag,
+                       ruuviTag.vC5?.serviceUUID != nil ||
+                       ruuviTag.vE0_F0?.serviceUUID != nil,
+                       ruuviTag.version != 0xF0 { // Do not store F0 data, we only store E0 among E0/F0
                         var sensorSettings: SensorSettings?
                         if let ruuviTagSensor = sSelf.ruuviTags
                             .first(where: {
@@ -493,7 +496,11 @@ extension RuuviTagHeartbeatDaemonBTKit {
                         )
                         if sSelf.settings.saveHeartbeats {
                             let uuid = ruuviTag.uuid
-                            guard ruuviTag.luid != nil, ruuviTag.vC5?.serviceUUID != nil else { return }
+                            guard ruuviTag.luid != nil,
+                                  ruuviTag.vC5?.serviceUUID != nil ||
+                                  ruuviTag.vE0_F0?.serviceUUID != nil,
+                                  ruuviTag.version != 0xF0 // Do not store F0 data, we only store E0 among E0/F0
+                            else { return }
                             let interval = sSelf.settings.saveHeartbeatsForegroundIntervalSeconds
                             if let date = sSelf.savedDate[uuid] {
                                 if Date().timeIntervalSince(date) > TimeInterval(interval) {

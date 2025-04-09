@@ -62,7 +62,6 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var ruuviTagSensorRecordToken: RuuviReactorToken?
     private var ruuviTagSensorOwnerCheckToken: NSObjectProtocol?
     private var advertisementToken: ObservationToken?
-    private var heartbeatToken: ObservationToken?
     private var sensorSettingsToken: RuuviReactorToken?
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
@@ -93,7 +92,6 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         ruuviTagSensorRecordToken?.invalidate()
         ruuviTagSensorOwnerCheckToken?.invalidate()
         advertisementToken?.invalidate()
-        heartbeatToken?.invalidate()
         sensorSettingsToken?.invalidate()
         temperatureUnitToken?.invalidate()
         humidityUnitToken?.invalidate()
@@ -1158,7 +1156,10 @@ extension TagSettingsPresenter {
                     sensorSettings: self?.sensorSettings
                 ) {
                     self?.lastMeasurement = lastRecord
+                    self?.viewModel.humidityOffsetCorrectionVisible.value = !(lastRecord.humidity == nil)
+                    self?.viewModel.pressureOffsetCorrectionVisible.value = !(lastRecord.pressure == nil)
                     self?.viewModel.updateRecord(lastRecord)
+                    self?.reloadMutedTill()
                     self?.processAlerts()
                 }
             case let .error(error):
@@ -1194,7 +1195,6 @@ extension TagSettingsPresenter {
 
     private func startScanningRuuviTag() {
         advertisementToken?.invalidate()
-        heartbeatToken?.invalidate()
         guard let luid = ruuviTag.luid
         else {
             return
@@ -1204,84 +1204,19 @@ extension TagSettingsPresenter {
         else {
             return
         }
+
         advertisementToken = foreground.observe(self, uuid: luid.value, closure: { [weak self] _, device in
-            if let tag = device.ruuvi?.tag, tag.luid?.value == luid.value {
-                self?.handleMeasurementPoint(tag: tag, luid: luid, source: .advertisement)
-            }
-        })
-
-        heartbeatToken = background.observe(self, uuid: luid.value, closure: { [weak self] _, device in
-            if let tag = device.ruuvi?.tag, tag.luid?.value == luid.value {
-                self?.handleMeasurementPoint(tag: tag, luid: luid, source: .heartbeat)
+            // If advertisement is E0, then we should not use it for connectable check. In that case F0 will be used.
+            if let tag = device.ruuvi?.tag, tag.luid?.value == luid.value, tag.version != 0xE0 {
+                self?.syncConnectable(device: tag, source: .advertisement)
             }
         })
     }
 
-    private func handleMeasurementPoint(
-        tag: RuuviTag,
-        luid: LocalIdentifier,
-        source: RuuviTagSensorRecordSource
-    ) {
-        // Trigger firmware aler dialog for DF3 tags.
-        if !firmwareUpdateDialogShown, tag.version < 5 {
-            view.showFirmwareUpdateDialog()
-            firmwareUpdateDialogShown = true
-        }
-
-        // RuuviTag with data format 5 or above has the measurements sequence number
-        if tag.version >= 5 {
-            if previousAdvertisementSequence != nil {
-                if tag.measurementSequenceNumber != previousAdvertisementSequence {
-                    sync(device: tag, luid: luid, source: source)
-                    previousAdvertisementSequence = nil
-                }
-            } else {
-                previousAdvertisementSequence = tag.measurementSequenceNumber
-            }
-        } else {
-            sync(device: tag, luid: luid, source: source)
-        }
-    }
-
-    // swiftlint:disable:next function_body_length
-    private func sync(
+    private func syncConnectable(
         device: RuuviTag,
-        luid _: LocalIdentifier,
         source: RuuviTagSensorRecordSource
     ) {
-        let record = RuuviTagSensorRecordStruct(
-            luid: device.luid,
-            date: device.date,
-            source: source,
-            macId: device.mac?.mac,
-            rssi: device.rssi,
-            version: device.version,
-            temperature: device.temperature,
-            humidity: device.humidity,
-            pressure: device.pressure,
-            acceleration: device.acceleration,
-            voltage: device.voltage,
-            movementCounter: device.movementCounter,
-            measurementSequenceNumber: device.measurementSequenceNumber,
-            txPower: device.txPower,
-            pm1: device.pm1,
-            pm2_5: device.pm2_5,
-            pm4: device.pm4,
-            pm10: device.pm10,
-            co2: device.co2,
-            voc: device.voc,
-            nox: device.nox,
-            luminance: device.luminance,
-            dbaAvg: device.dbaAvg,
-            dbaPeak: device.dbaPeak,
-            temperatureOffset: sensorSettings?.temperatureOffset ?? 0.0,
-            humidityOffset: sensorSettings?.humidityOffset ?? 0.0,
-            pressureOffset: sensorSettings?.pressureOffset ?? 0.0
-        ).with(sensorSettings: sensorSettings)
-        if viewModel.version.value != device.version {
-            viewModel.version.value = device.version
-        }
-
         // Some important notes:
         // FW v2.5.9 DF3 and DF5 tags always returns connectable 'false' and source is always advertisement.
         // FW v3+ tags returns connectable 'true' in advertisement source when not connected.
@@ -1314,18 +1249,6 @@ extension TagSettingsPresenter {
             viewModel.isConnectable.value = false
         }
 
-        if let mac = device.mac {
-            viewModel.mac.value = mac
-        }
-        if let rssi = device.rssi {
-            viewModel.rssi.value = rssi
-        }
-
-        viewModel.humidityOffsetCorrectionVisible.value = !(device.humidity == nil)
-        viewModel.pressureOffsetCorrectionVisible.value = !(device.pressure == nil)
-
-        viewModel.updateRecord(record)
-        reloadMutedTill()
     }
 
     private func bindOffsetCorrection() {
@@ -2700,6 +2623,12 @@ extension TagSettingsPresenter {
               ruuviTag.firmwareVersion == nil ||
               !ruuviTag.firmwareVersion.hasText()
         else {
+            return
+        }
+
+        // TODO: Remove this check once fw revision is supported for E0/F0
+        let fwVersion = RuuviFirmwareVersion.firmwareVersion(from: ruuviTag.version)
+        if fwVersion == .e0 || fwVersion == .f0 {
             return
         }
 

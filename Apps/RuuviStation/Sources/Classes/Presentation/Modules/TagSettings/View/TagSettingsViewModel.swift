@@ -181,6 +181,7 @@ struct TagSettingsViewModel {
     let hideSwitchStatusLabel: Observable<Bool?> = .init(false)
 
     func updateRecord(_ record: RuuviTagSensorRecord) {
+        version.value = record.version
         humidity.value = record.humidity
         temperature.value = record.temperature
         voltage.value = record.voltage?.value

@@ -77,8 +77,6 @@ class CardsPresenter {
 
     private var ruuviTagToken: RuuviReactorToken?
     private var ruuviTagObserveLastRecordTokens = [RuuviReactorToken]()
-    private var advertisementTokens = [ObservationToken]()
-    private var heartbeatTokens = [ObservationToken]()
     private var sensorSettingsTokens = [RuuviReactorToken]()
     private var stateToken: ObservationToken?
     private var backgroundToken: NSObjectProtocol?
@@ -87,8 +85,6 @@ class CardsPresenter {
     private var ruuviTagPropertiesDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagHeartbeatDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagReadLogsOperationFailureToken: NSObjectProtocol?
-    private var startKeepingConnectionToken: NSObjectProtocol?
-    private var stopKeepingConnectionToken: NSObjectProtocol?
     private var readRSSIToken: NSObjectProtocol?
     private var readRSSIIntervalToken: NSObjectProtocol?
     private var didConnectToken: NSObjectProtocol?
@@ -141,7 +137,6 @@ extension CardsPresenter {
     private func startObservingVisibleTag() {
         startObservingRuuviTags()
         observeSensorSettings()
-        observeRuuviTagBTMesurements()
         startListeningLatestRecords()
         startListeningToRuuviTagsAlertStatus()
         startObservingAlertChanges()
@@ -347,49 +342,6 @@ extension CardsPresenter {
                 guard let sSelf = self else { timer.invalidate(); return }
                 sSelf.reloadMutedTill()
             }
-    }
-
-    private func observeRuuviTagBTMesurements() {
-        advertisementTokens.forEach { $0.invalidate() }
-        advertisementTokens.removeAll()
-        heartbeatTokens.forEach { $0.invalidate() }
-        heartbeatTokens.removeAll()
-
-        for viewModel in viewModels {
-            let skip = settings.cloudModeEnabled && viewModel.isCloud
-            if skip {
-                continue
-            }
-            if viewModel.type == .ruuvi,
-               let luid = viewModel.luid {
-                advertisementTokens.append(foreground.observe(
-                    self,
-                    uuid: luid.value,
-                    closure: { [weak self] _, device in
-                        if let tag = device.ruuvi?.tag {
-                            self?.handleMeasurementPoint(
-                                tag: tag,
-                                source: .advertisement
-                            )
-                        }
-                    }
-                ))
-
-                heartbeatTokens.append(background.observe(
-                    self,
-                    uuid: luid.value,
-                    closure: { [weak self] _, device in
-                        guard let sSelf = self else { return }
-                        if let tag = device.ruuvi?.tag {
-                            sSelf.handleMeasurementPoint(
-                                tag: tag,
-                                source: sSelf.settings.appIsOnForeground ? .advertisement : .heartbeat
-                            )
-                        }
-                    }
-                ))
-            }
-        }
     }
 
     private func handleMeasurementPoint(
@@ -831,8 +783,6 @@ extension CardsPresenter {
     private func shutdownModule() {
         ruuviTagToken?.invalidate()
         ruuviTagObserveLastRecordTokens.forEach { $0.invalidate() }
-        advertisementTokens.forEach { $0.invalidate() }
-        heartbeatTokens.forEach { $0.invalidate() }
         sensorSettingsTokens.forEach { $0.invalidate() }
         stateToken?.invalidate()
         backgroundToken?.invalidate()
@@ -841,8 +791,6 @@ extension CardsPresenter {
         ruuviTagPropertiesDaemonFailureToken?.invalidate()
         ruuviTagHeartbeatDaemonFailureToken?.invalidate()
         ruuviTagReadLogsOperationFailureToken?.invalidate()
-        startKeepingConnectionToken?.invalidate()
-        stopKeepingConnectionToken?.invalidate()
         readRSSIToken?.invalidate()
         readRSSIIntervalToken?.invalidate()
         didConnectToken?.invalidate()
