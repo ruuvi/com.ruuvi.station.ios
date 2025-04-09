@@ -53,16 +53,12 @@ class DashboardPresenter: DashboardModuleInput {
     var cloudSyncService: RuuviServiceCloudSync!
     private var ruuviTagToken: RuuviReactorToken?
     private var ruuviTagObserveLastRecordTokens = [RuuviReactorToken]()
-    private var advertisementTokens = [ObservationToken]()
-    private var heartbeatTokens = [ObservationToken]()
     private var sensorSettingsTokens = [RuuviReactorToken]()
     private var backgroundToken: NSObjectProtocol?
     private var ruuviTagAdvertisementDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagPropertiesDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagHeartbeatDaemonFailureToken: NSObjectProtocol?
     private var ruuviTagReadLogsOperationFailureToken: NSObjectProtocol?
-    private var startKeepingConnectionToken: NSObjectProtocol?
-    private var stopKeepingConnectionToken: NSObjectProtocol?
     private var readRSSIToken: NSObjectProtocol?
     private var readRSSIIntervalToken: NSObjectProtocol?
     private var didConnectToken: NSObjectProtocol?
@@ -105,17 +101,12 @@ class DashboardPresenter: DashboardModuleInput {
     deinit {
         ruuviTagToken?.invalidate()
         ruuviTagObserveLastRecordTokens.forEach { $0.invalidate() }
-        advertisementTokens.forEach { $0.invalidate() }
-        heartbeatTokens.forEach { $0.invalidate() }
         sensorSettingsTokens.forEach { $0.invalidate() }
         stateToken?.invalidate()
         backgroundToken?.invalidate()
         ruuviTagAdvertisementDaemonFailureToken?.invalidate()
         ruuviTagHeartbeatDaemonFailureToken?.invalidate()
         ruuviTagReadLogsOperationFailureToken?.invalidate()
-        startKeepingConnectionToken?.invalidate()
-        stopKeepingConnectionToken?.invalidate()
-        ruuviTagPropertiesDaemonFailureToken?.invalidate()
         didConnectToken?.invalidate()
         didDisconnectToken?.invalidate()
         alertDidChangeToken?.invalidate()
@@ -153,7 +144,6 @@ extension DashboardPresenter: DashboardViewOutput {
         startObservingRuuviTags()
         startObservingBackgroundChanges()
         startObservingDaemonsErrors()
-        startObservingConnectionPersistenceNotifications()
         startObservingDidConnectDisconnectNotifications()
         startObservingAlertChanges()
         startObservingCloudModeNotification()
@@ -934,69 +924,6 @@ extension DashboardPresenter {
 
     private func observeRuuviTags() {
         observeSensorSettings()
-        restartObserveRuuviTagAdvertisements()
-        observeRuuviTagHeartbeats()
-    }
-
-    private func observeRuuviTagHeartbeats() {
-        heartbeatTokens.forEach { $0.invalidate() }
-        heartbeatTokens.removeAll()
-        connectionPersistence.keepConnectionUUIDs.filter { luid -> Bool in
-            ruuviTags.filter { !(settings.cloudModeEnabled && $0.isCloud) && $0.isOwner }
-                .contains(where: { $0.luid?.any != nil && $0.luid?.any == luid })
-        }.forEach { luid in
-            heartbeatTokens.append(background.observe(self, uuid: luid.value) { [weak self] _, device in
-                if let ruuviTag = device.ruuvi?.tag,
-                   let viewModel = self?.viewModels.first(
-                    where: { $0.luid?.value == ruuviTag.uuid.luid.value }
-                   ) {
-                    let sensorSettings = self?.sensorSettingsList
-                        .first(where: {
-                            ($0.luid?.any != nil && $0.luid?.any == viewModel.luid)
-                                || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac)
-                        })
-                    let record = ruuviTag
-                        .with(source: .heartbeat)
-                        .with(sensorSettings: sensorSettings)
-                    viewModel.update(
-                        record
-                    )
-                    self?.alertHandler.process(record: record, trigger: false)
-                }
-            })
-        }
-    }
-
-    private func restartObserveRuuviTagAdvertisements() {
-        advertisementTokens.forEach { $0.invalidate() }
-        advertisementTokens.removeAll()
-        for viewModel in viewModels {
-            let shouldAvoidObserving =
-                ruuviUser.isAuthorized &&
-                settings.cloudModeEnabled &&
-                viewModel.isCloud
-            if shouldAvoidObserving {
-                continue
-            }
-            if viewModel.type == .ruuvi,
-               let luid = viewModel.luid {
-                advertisementTokens.append(foreground.observe(self, uuid: luid.value) { [weak self] _, device in
-                    if let ruuviTag = device.ruuvi?.tag,
-                       let viewModel = self?.viewModels.first(where: { $0.luid == ruuviTag.uuid.luid.any }) {
-                        let sensorSettings = self?.sensorSettingsList
-                            .first(where: {
-                                ($0.luid?.any != nil && $0.luid?.any == viewModel.luid)
-                                    || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac)
-                            })
-                        let record = ruuviTag
-                            .with(source: .advertisement)
-                            .with(sensorSettings: sensorSettings)
-                        viewModel.update(record)
-                        self?.alertHandler.process(record: record, trigger: false)
-                    }
-                })
-            }
-        }
     }
 
     private func updateSensorSettings(
@@ -1096,6 +1023,7 @@ extension DashboardPresenter {
                                    || ($0.mac != nil && ($0.mac == anyRecord?.macId?.any))
                            }),
                            let record = anyRecord {
+//                        print("Last record received for \(record.macId?.value ?? "unknown")")
                         let sensorSettings = self?.sensorSettingsList
                             .first(where: {
                                 ($0.luid?.any != nil && $0.luid?.any == viewModel.luid)
@@ -1181,7 +1109,6 @@ extension DashboardPresenter {
                         }) {
                     sSelf.ruuviTags[index] = sensor
                     sSelf.syncViewModels()
-                    sSelf.restartObserveRuuviTagAdvertisements()
                 }
                 sSelf.syncHasCloudSensorToAppGroupContainer(with: sSelf.ruuviTags)
             }
@@ -1280,31 +1207,6 @@ extension DashboardPresenter {
                        let error = userInfo[RuuviTagReadLogsOperationDidFailKey.error] as? RUError {
                         self?.errorPresenter.present(error: error)
                     }
-                }
-            )
-    }
-
-    func startObservingConnectionPersistenceNotifications() {
-        startKeepingConnectionToken?.invalidate()
-        startKeepingConnectionToken = NotificationCenter
-            .default
-            .addObserver(
-                forName: .ConnectionPersistenceDidStartToKeepConnection,
-                object: nil,
-                queue: .main,
-                using: { [weak self] _ in
-                    self?.observeRuuviTagHeartbeats()
-                }
-            )
-        stopKeepingConnectionToken?.invalidate()
-        stopKeepingConnectionToken = NotificationCenter
-            .default
-            .addObserver(
-                forName: .ConnectionPersistenceDidStopToKeepConnection,
-                object: nil,
-                queue: .main,
-                using: { [weak self] _ in
-                    self?.observeRuuviTagHeartbeats()
                 }
             )
     }
@@ -1509,9 +1411,6 @@ extension DashboardPresenter {
     private func handleCloudModeState() {
         // Disconnect the owned cloud tags
         removeConnectionsForCloudTags()
-        // Restart observing
-        restartObserveRuuviTagAdvertisements()
-        observeRuuviTagHeartbeats()
         syncViewModels()
     }
 

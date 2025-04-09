@@ -174,6 +174,7 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
         let op = gattService.syncLogs(
             uuid: luid.value,
             mac: ruuviTagSensor.macId?.value,
+            firmware: ruuviTagSensor.version,
             from: syncFrom ?? Date.distantPast,
             settings: sensorSettings,
             progress: progress,

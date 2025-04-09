@@ -426,9 +426,14 @@ extension DiscoverPresenter {
 
     private func startScanning() {
         scanToken = foreground.scan(self) { observer, device in
-            if let ruuviTag = device.ruuvi?.tag {
+            // If advertisement type is 0xE0 skip it as we will store the F0 version
+            // of the tag. Reason is E0 and F0 are the same tag but with different Apple Provided UUID.
+            // And, we do not support connecting E0.
+            if let ruuviTag = device.ruuvi?.tag, ruuviTag.version != 0xE0 {
                 // when mode is changed, the device should be replaced
-                if let sameUUID = observer.ruuviTags.first(where: { $0.uuid == ruuviTag.uuid }), sameUUID != ruuviTag {
+                if let sameUUID = observer.ruuviTags.first(
+                    where: { $0.uuid == ruuviTag.uuid || $0.mac == ruuviTag.macId?.value
+                }), sameUUID != ruuviTag {
                     observer.ruuviTags.remove(sameUUID)
                 }
                 observer.ruuviTags.update(with: ruuviTag)

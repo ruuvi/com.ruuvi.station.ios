@@ -6300,6 +6300,10 @@ extension TagSettingsViewController {
     private func formattedVersion(value: Int?) -> String {
         if value == 0xC5 {
             return "C5"
+        } else if value == 0xE0 {
+            return "E0"
+        } else if value == 0xF0 {
+            return "F0"
         } else {
             return value.stringValue
         }
