@@ -117,8 +117,8 @@ public class CustomXAxisRenderer: XAxisRenderer {
 
             let date = Date(timeIntervalSince1970: from + value)
 
-            // Apply timezone offset only for larger intervals (>= 1h)
-            let localOffset = (interval >= 3600)
+            // Apply timezone offset only for larger intervals (> 1h)
+            let localOffset = (interval > 3600)
                 ? TimeZone.autoupdatingCurrent.secondsFromGMT(for: date)
                 : 0
 

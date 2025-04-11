@@ -245,7 +245,7 @@ class TagChartsViewController: UIViewController {
 
     // UI END
 
-    private let historyHoursOptions: [Int] = [1, 2, 3, 12]
+    private let historyHoursOptions: [Int] = [1, 2, 3, 6, 12]
     private let minimumHistoryLimit: Int = 1 // Day
     private let maximumHistoryLimit: Int = 10 // Days
     private var timer: Timer?
