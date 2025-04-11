@@ -87,8 +87,7 @@ packages:
     url: https://github.com/ruuvi/BTKit
     version: "0.6.0"
   DGCharts:
-    url: https://github.com/ruuvi/Charts
-    from: 5.1.1
+    path: /Users/ipriyonto/Desktop/Ruuvi/Charts
   LightRoute:
     url: https://github.com/rinat-enikeev/LightRoute
     from: 2.2.2

@@ -57,13 +57,8 @@ class TagChartsViewInternal: LineChartView {
         xAxis.drawGridLinesEnabled = true
         xAxis.gridColor = xAxis.gridColor.withAlphaComponent(0.4)
         xAxis.centerAxisLabelsEnabled = false
-        xAxis.granularity = 1
-        xAxis.granularityEnabled = true
-        viewPortHandler.setMaximumScaleX(5000)
-        viewPortHandler.setMaximumScaleY(30)
         xAxis.setLabelCount(5, force: false)
         xAxis.valueFormatter = XAxisValueFormatter()
-        xAxis.forceLabelsEnabled = true
 
         leftAxis.labelPosition = .outsideChart
         leftAxis.labelAlignment = .right
@@ -82,9 +77,11 @@ class TagChartsViewInternal: LineChartView {
         rightAxis.enabled = false
 
         legend.form = .line
-        noDataTextColor = UIColor.clear
         scaleXEnabled = true
         scaleYEnabled = true
+        viewPortHandler.setMaximumScaleX(5000)
+        viewPortHandler.setMaximumScaleY(30)
+        noDataTextColor = UIColor.clear
 
         drawMarkers = true
         markerView.chartView = self
