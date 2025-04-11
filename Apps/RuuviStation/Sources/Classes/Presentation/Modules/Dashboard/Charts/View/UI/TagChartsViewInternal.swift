@@ -233,20 +233,6 @@ extension TagChartsViewInternal {
             ) ?? Date.distantFuture
             xAxis.axisMinimum = from.timeIntervalSince1970
             xAxis.axisMaximum = Date().timeIntervalSince1970
-        } else {
-            if let from = firstEntry?.date.timeIntervalSince1970 {
-
-                let axisRenderer = CustomXAxisRenderer(
-                    from: from,
-                    viewPortHandler: viewPortHandler,
-                    axis: xAxis,
-                    transformer: getTransformer(forAxis: .left)
-                )
-                xAxisRenderer = axisRenderer
-
-                xAxis.axisMinimum = from
-                xAxis.axisMaximum = Date().timeIntervalSince1970
-            }
         }
 
         reloadData()
