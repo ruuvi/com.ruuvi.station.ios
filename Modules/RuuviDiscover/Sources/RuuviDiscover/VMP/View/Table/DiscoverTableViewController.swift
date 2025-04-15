@@ -326,6 +326,9 @@ extension DiscoverTableViewController {
             } else {
                 cell.rssiImageView.image = RuuviAsset.iconConnection3.image
             }
+
+            cell.rssiImageView?.image = cell.rssiImageView?.image?.withRenderingMode(.alwaysTemplate)
+            cell.rssiImageView?.tintColor = RuuviColor.tintColor.color
         } else {
             cell.rssiImageView.image = nil
             cell.rssiLabel.text = nil
