@@ -212,27 +212,29 @@ extension TagChartsViewInternal {
             data = emptyDataSet
         }
 
-        for point in newData {
-            if let set = data?.dataSets.first as? LineChartDataSet,
-                let index = data?.index(
-                of: set
-            ) {
-                data?.appendEntry(point, toDataSet: index)
-                setYAxisLimit(min: data?.yMin ?? 0, max: data?.yMax ?? 0)
+        if highestVisibleX >= data?.xMax ?? 0 {
+            for point in newData {
+                if let set = data?.dataSets.first as? LineChartDataSet,
+                    let index = data?.index(
+                    of: set
+                ) {
+                    data?.appendEntry(point, toDataSet: index)
+                    setYAxisLimit(min: data?.yMin ?? 0, max: data?.yMax ?? 0)
+                }
             }
-        }
 
-        if !settings.chartShowAll {
-            let from = Calendar.autoupdatingCurrent.date(
-                byAdding: .hour,
-                value: -settings.chartDurationHours,
-                to: Date()
-            ) ?? Date.distantFuture
-            xAxis.axisMinimum = from.timeIntervalSince1970
-            xAxis.axisMaximum = Date().timeIntervalSince1970
-        }
+            if !settings.chartShowAll {
+                let from = Calendar.autoupdatingCurrent.date(
+                    byAdding: .hour,
+                    value: -settings.chartDurationHours,
+                    to: Date()
+                ) ?? Date.distantFuture
+                xAxis.axisMinimum = from.timeIntervalSince1970
+                xAxis.axisMaximum = Date().timeIntervalSince1970
+            }
 
-        reloadData()
+            reloadData()
+        }
     }
 
     func setMarker(
