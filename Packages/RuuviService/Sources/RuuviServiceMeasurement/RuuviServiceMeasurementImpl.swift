@@ -492,7 +492,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: Int(pm10))
+        let number = NSNumber(value: pm10)
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 
@@ -501,7 +501,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: Int(pm25))
+        let number = NSNumber(value: pm25)
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 
@@ -510,7 +510,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: Int(pm40))
+        let number = NSNumber(value: pm40)
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 
@@ -519,7 +519,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: Int(pm100))
+        let number = NSNumber(value: pm100)
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 
