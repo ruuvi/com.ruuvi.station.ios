@@ -164,6 +164,23 @@ final class CardsViewModel: NSObject, ObservableObject {
 
     // MARK: - Update Methods
 
+    func update(_ ruuviTag: RuuviTagSensor) {
+        id = ruuviTag.id
+        luid = ruuviTag.luid?.any
+        if let macId = ruuviTag.macId?.any {
+            mac = macId
+        }
+        serviceUUID = ruuviTag.serviceUUID
+        name = ruuviTag.name
+        version = ruuviTag.version
+        isConnectable = ruuviTag.isConnectable
+        isChartAvailable = ruuviTag.isConnectable || ruuviTag.isCloud || ruuviTag.serviceUUID != nil
+        isAlertAvailable = ruuviTag.isCloud || isConnected || ruuviTag.serviceUUID != nil
+        isCloud = ruuviTag.isCloud
+        isOwner = ruuviTag.isOwner
+        canShareTag = (ruuviTag.isOwner && ruuviTag.isClaimed) || ruuviTag.canShare
+    }
+
     func update(_ record: RuuviTagSensorRecord) {
         latestMeasurement = record
         temperature = record.temperature

@@ -194,15 +194,7 @@ extension NewCardsViewProvider: NewCardsViewInput {
 //    ) {
 //
 //    }
-//
-//    func showReverseGeocodingFailed() {
-//
-//    }
-//
-//    func showAlreadyLoggedInAlert(with email: String) {
-//
-//    }
-//
+
 //    func viewShouldDismiss() {
 //
 //    }

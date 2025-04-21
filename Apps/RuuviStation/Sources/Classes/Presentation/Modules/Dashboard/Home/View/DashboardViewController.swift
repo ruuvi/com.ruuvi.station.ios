@@ -982,13 +982,6 @@ extension DashboardViewController: DashboardViewInput {
         present(alert, animated: true)
     }
 
-    func showReverseGeocodingFailed() {
-        let message = RuuviLocalization.Cards.Error.ReverseGeocodingFailed.message
-        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
-        present(alert, animated: true)
-    }
-
     func showAlreadyLoggedInAlert(with email: String) {
         let message = RuuviLocalization.Cards.Alert.AlreadyLoggedIn.message(email)
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)

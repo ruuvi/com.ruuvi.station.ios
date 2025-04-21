@@ -132,31 +132,35 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         output: CardsModuleOutput
     ) {
         if flags.showNewFullSensorCardView {
-            let factory: NewCardsViewModuleFactory = NewCardsViewModuleFactoryImpl()
-            let moduleProvider = factory.create()
-            if let output = moduleProvider.output as? NewCardsModuleInput {
-                newCardsInput = output
-            }
-            cardsViewProvider = moduleProvider
-
-            if let newCardsInput {
-                newCardsInput.configure(
-                    viewModels: viewModels,
-                    ruuviTagSensors: ruuviTagSensors,
-                    sensorSettings: sensorSettings,
-                    scrollTo: scrollTo,
-                    openWith: showCharts ? .graph : .home,
-                    output: output
-                )
-            }
+            let factory: CardsModuleFactoryImpl = CardsModuleFactoryImpl()
+            let viewController = factory.createTabsModule(
+                selectedTab: .measurement,
+                selectedCard: scrollTo,
+                viewModels: viewModels,
+                ruuviTagSensors: ruuviTagSensors,
+                sensorSettings: sensorSettings,
+                transitionHandler: transitionHandler
+            )
+//            if let output = moduleProvider.output as? NewCardsModuleInput {
+//                newCardsInput = output
+//            }
+//            cardsViewProvider = moduleProvider
+//
+//            if let newCardsInput {
+//                newCardsInput.configure(
+//                    viewModels: viewModels,
+//                    ruuviTagSensors: ruuviTagSensors,
+//                    sensorSettings: sensorSettings,
+//                    scrollTo: scrollTo,
+//                    openWith: showCharts ? .graph : .home,
+//                    output: output
+//                )
+//            }
 
             transitionHandler
                 .navigationController?
                 .pushViewController(
-                    moduleProvider
-                        .makeViewController(
-                            transitionHandler: transitionHandler
-                        ),
+                    viewController,
                     animated: true
                 )
         } else {

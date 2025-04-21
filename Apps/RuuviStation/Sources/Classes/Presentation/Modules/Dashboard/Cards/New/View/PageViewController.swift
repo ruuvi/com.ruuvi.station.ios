@@ -6,6 +6,7 @@ struct PageViewController<Page: View>: UIViewControllerRepresentable {
     @Binding var currentPage: Int
     @Binding var scrollProgress: CGFloat
     @Binding var isScrolling: Bool
+    var onPageChanged: ((Int) -> Void)?
 
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -117,6 +118,7 @@ struct PageViewController<Page: View>: UIViewControllerRepresentable {
                    let visibleViewController = pageViewController.viewControllers?.first,
                    let index = controllers.firstIndex(of: visibleViewController) {
                     parent.currentPage = index
+                    parent.onPageChanged?(index)
 
                     guard let scrollView = visibleViewController.view.subviews
                         .compactMap({ $0 as? UIScrollView })
