@@ -877,7 +877,6 @@ extension TagChartsViewPresenter {
             luminosityEntries: luminosityData,
             soundEntries: soundData,
             isFirstEntry: ruuviTagData.count == 1,
-            firstEntry: ruuviTagData.first,
             settings: settings,
             flags: flags
         )

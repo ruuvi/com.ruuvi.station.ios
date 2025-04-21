@@ -1,6 +1,48 @@
 import RuuviLocalization
 import UIKit
+import SwiftUI
 
+struct CardsBackgroundViewRepresentable: UIViewRepresentable {
+    @ObservedObject var viewModel: CardsViewModel
+    var withAnimation: Bool
+
+    class Coordinator {
+        var view: CardsBackgroundView?
+
+        init(view: CardsBackgroundView?) {
+            self.view = view
+        }
+
+        func updateImage(_ image: UIImage?, withAnimation: Bool) {
+            view?.setBackgroundImage(with: image, withAnimation: withAnimation)
+        }
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(view: nil)
+    }
+
+    func makeUIView(context: Context) -> CardsBackgroundView {
+        let view = CardsBackgroundView()
+        context.coordinator.view = view
+        view
+            .setBackgroundImage(
+                with: viewModel.background,
+                withAnimation: withAnimation
+            )
+        return view
+    }
+
+    func updateUIView(_ uiView: CardsBackgroundView, context: Context) {
+        uiView
+            .setBackgroundImage(
+                with: viewModel.background,
+                withAnimation: withAnimation
+            )
+    }
+}
+
+// MARK: - CardsBackgroundView
 class CardsBackgroundView: UIView {
     private lazy var cardImageView: UIImageView = {
         let iv = UIImageView()

@@ -25,6 +25,7 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
         let router = DashboardRouter()
         router.transitionHandler = view
         router.settings = r.resolve(RuuviLocalSettings.self)
+        router.flags = r.resolve(RuuviLocalFlags.self)
 
         let presenter = DashboardPresenter()
         presenter.router = router

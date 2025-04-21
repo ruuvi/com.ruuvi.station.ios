@@ -1029,77 +1029,121 @@ extension TagChartsViewController: TagChartsViewInput {
             hideNoDataLabel()
             showChartViews()
 
-            temperatureChartView.setSettings(settings: settings)
+            temperatureChartView
+                .setChartConfiguration(
+                    showAll: settings.chartShowAll,
+                    durationHours: settings.chartDurationHours
+                )
             temperatureChartView.updateDataSet(
                 with: temperatureEntries,
                 isFirstEntry: isFirstEntry,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
-            humidityChartView.setSettings(settings: settings)
+            humidityChartView
+                .setChartConfiguration(
+                    showAll: settings.chartShowAll,
+                    durationHours: settings.chartDurationHours
+                )
             humidityChartView.updateDataSet(
                 with: humidityEntries,
                 isFirstEntry: isFirstEntry,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
-            pressureChartView.setSettings(settings: settings)
+            pressureChartView
+                .setChartConfiguration(
+                    showAll: settings.chartShowAll,
+                    durationHours: settings.chartDurationHours
+                )
             pressureChartView.updateDataSet(
                 with: pressureEntries,
                 isFirstEntry: isFirstEntry,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
-            aqiChartView.setSettings(settings: settings)
+            aqiChartView
+                .setChartConfiguration(
+                    showAll: settings.chartShowAll,
+                    durationHours: settings.chartDurationHours
+                )
             aqiChartView.updateDataSet(
                 with: aqiEntries,
                 isFirstEntry: isFirstEntry,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
-            co2ChartView.setSettings(settings: settings)
+            co2ChartView
+                .setChartConfiguration(
+                    showAll: settings.chartShowAll,
+                    durationHours: settings.chartDurationHours
+                )
             co2ChartView.updateDataSet(
                 with: co2Entries,
                 isFirstEntry: isFirstEntry,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
-            pm10ChartView.setSettings(settings: settings)
+            pm10ChartView
+                .setChartConfiguration(
+                    showAll: settings.chartShowAll,
+                    durationHours: settings.chartDurationHours
+                )
             pm10ChartView.updateDataSet(
                 with: pm10Entries,
                 isFirstEntry: isFirstEntry,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
-            pm25ChartView.setSettings(settings: settings)
+            pm25ChartView
+                .setChartConfiguration(
+                    showAll: settings.chartShowAll,
+                    durationHours: settings.chartDurationHours
+                )
             pm25ChartView.updateDataSet(
                 with: pm25Entries,
                 isFirstEntry: isFirstEntry,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
-            vocChartView.setSettings(settings: settings)
+            vocChartView
+                .setChartConfiguration(
+                    showAll: settings.chartShowAll,
+                    durationHours: settings.chartDurationHours
+                )
             vocChartView.updateDataSet(
                 with: vocEntries,
                 isFirstEntry: isFirstEntry,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
-            noxChartView.setSettings(settings: settings)
+            noxChartView
+                .setChartConfiguration(
+                    showAll: settings.chartShowAll,
+                    durationHours: settings.chartDurationHours
+                )
             noxChartView.updateDataSet(
                 with: noxEntries,
                 isFirstEntry: isFirstEntry,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
-            luminosityChartView.setSettings(settings: settings)
+            luminosityChartView
+                .setChartConfiguration(
+                    showAll: settings.chartShowAll,
+                    durationHours: settings.chartDurationHours
+                )
             luminosityChartView.updateDataSet(
                 with: luminosityEntries,
                 isFirstEntry: isFirstEntry,
                 showAlertRangeInGraph: flags.showAlertsRangeInGraph
             )
 
-            soundChartView.setSettings(settings: settings)
+            soundChartView
+                .setChartConfiguration(
+                    showAll: settings.chartShowAll,
+                    durationHours: settings.chartDurationHours
+                )
             soundChartView.updateDataSet(
                 with: soundEntries,
                 isFirstEntry: isFirstEntry,
@@ -1658,13 +1702,17 @@ extension TagChartsViewController {
         view.setChartLabel(
             with: title,
             type: data.chartType,
-            measurementService: measurementService,
             unit: unit
         )
-        view.underlyingView.data = data.chartData
-        view.underlyingView.lowerAlertValue = data.lowerAlertValue
-        view.underlyingView.upperAlertValue = data.upperAlertValue
-        view.setSettings(settings: settings)
+        view.setChartData(from: data.chartData)
+        view.setAlertLimit(
+                lower: data.lowerAlertValue,
+                upper: data.upperAlertValue
+            )
+        view.setChartConfiguration(
+            showAll: settings.chartShowAll,
+            durationHours: settings.chartDurationHours
+        )
         view.localize()
         view.setYAxisLimit(min: data.chartData?.yMin ?? 0, max: data.chartData?.yMax ?? 0)
         view.setXAxisRenderer()
@@ -1812,8 +1860,8 @@ extension TagChartsViewController {
             let colorRegular = RuuviColor.graphFillColor.color
             let colorAlert = RuuviColor.graphAlertColor.color
 
-            if let upperAlertValue = view.underlyingView.upperAlertValue,
-                let lowerAlertValue = view.underlyingView.lowerAlertValue {
+            if let upperAlertValue = view.upperAlertValue,
+                let lowerAlertValue = view.lowerAlertValue {
                 let colorLocations: [CGFloat]
                 let gradientColors: CFArray
                 if lowerAlertValue <= minY && upperAlertValue >= maxY {

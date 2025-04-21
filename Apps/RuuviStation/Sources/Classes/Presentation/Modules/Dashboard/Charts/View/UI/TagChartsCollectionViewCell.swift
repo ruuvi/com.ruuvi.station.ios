@@ -59,13 +59,19 @@ class TagChartsCollectionViewCell: UICollectionViewCell {
         chartView.setChartLabel(
             with: title,
             type: data.chartType,
-            measurementService: measurementService,
             unit: unit
         )
-        chartView.underlyingView.data = data.chartData
-        chartView.underlyingView.lowerAlertValue = data.lowerAlertValue
-        chartView.underlyingView.upperAlertValue = data.upperAlertValue
-        chartView.setSettings(settings: settings)
+        chartView.setChartData(from: data.chartData)
+        chartView
+            .setAlertLimit(
+                lower: data.lowerAlertValue,
+                upper: data.upperAlertValue
+            )
+        chartView
+            .setChartConfiguration(
+                showAll: settings.chartShowAll,
+                durationHours: settings.chartDurationHours
+            )
         chartView.localize()
         chartView.setYAxisLimit(min: data.chartData?.yMin ?? 0, max: data.chartData?.yMax ?? 0)
         chartView.setXAxisRenderer()
@@ -99,8 +105,8 @@ class TagChartsCollectionViewCell: UICollectionViewCell {
             let colorRegular = RuuviColor.graphFillColor.color
             let colorAlert = RuuviColor.graphAlertColor.color
 
-            if let upperAlertValue = view.underlyingView.upperAlertValue,
-               let lowerAlertValue = view.underlyingView.lowerAlertValue {
+            if let upperAlertValue = view.upperAlertValue,
+               let lowerAlertValue = view.lowerAlertValue {
                 let colorLocations: [CGFloat]
                 let gradientColors: CFArray
                 if lowerAlertValue <= minY && upperAlertValue >= maxY {

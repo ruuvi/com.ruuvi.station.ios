@@ -134,49 +134,65 @@ extension TagChartsView: TagChartsViewInternalDelegate {
     }
 }
 
+// MARK: - Public methods
 extension TagChartsView {
-    func localize() {
+    public func localize() {
         chartView.localize()
     }
 
-    func clearChartData() {
+    public func clearChartData() {
         chartView.clearChartData()
     }
 
-    func setYAxisLimit(min: Double, max: Double) {
+    public func setYAxisLimit(min: Double, max: Double) {
         chartView.setYAxisLimit(min: min, max: max)
     }
 
-    func setXAxisRenderer() {
+    public func setAlertLimit(
+        lower: Double?,
+        upper: Double?
+    ) {
+        chartView.setAlertLimit(
+            lower: lower,
+            upper: upper
+        )
+    }
+
+    public func setChartConfiguration(
+        showAll: Bool,
+        durationHours: Int
+    ) {
+        chartView.setChartConfiguration(
+            showAll: showAll,
+            durationHours: durationHours
+        )
+    }
+
+    public func setXAxisRenderer() {
         chartView.setXAxisRenderer()
     }
 
-    func resetCustomAxisMinMax() {
+    public func resetCustomAxisMinMax() {
         chartView.resetCustomAxisMinMax()
     }
 
-    func setSettings(settings: RuuviLocalSettings) {
-        self.settings = settings
-        chartView.setSettings(settings: settings)
+    public func setChartData(from data: LineChartData?) {
+        chartView.data = data
     }
 
-    // MARK: - UpdateUI
-
-    func updateDataSet(
+    public func updateDataSet(
         with newData: [ChartDataEntry],
         isFirstEntry: Bool,
-        firstEntry: RuuviMeasurement?,
         showAlertRangeInGraph: Bool
     ) {
         chartView.updateDataSet(
             with: newData,
             isFirstEntry: isFirstEntry,
-            firstEntry: firstEntry,
             showAlertRangeInGraph: showAlertRangeInGraph
         )
     }
 
-    func updateLatest(
+    public func updateLatest(
         with entry: ChartDataEntry?,
         type: MeasurementType,
         measurementService: RuuviServiceMeasurement,
@@ -192,22 +208,20 @@ extension TagChartsView {
         )
     }
 
-    func setChartLabel(
+    public func setChartLabel(
         with name: String,
         type: MeasurementType,
-        measurementService: RuuviServiceMeasurement,
         unit: String
     ) {
         chartName = name
         chartNameLabel.text = name + " (\(unit))"
         chartView.setMarker(
             with: type,
-            measurementService: measurementService,
             unit: unit
         )
     }
 
-    func setChartStat(
+    public func setChartStat(
         min: Double?,
         max: Double?,
         avg: Double?,
@@ -224,7 +238,7 @@ extension TagChartsView {
         chartMinMaxAvgLabel.text = measurement
     }
 
-    func setChartStatVisible(show: Bool) {
+    public func setChartStatVisible(show: Bool) {
         chartMinMaxAvgLabel.isHidden = !show
         if show {
             NSLayoutConstraint.deactivate(chartMinMaxAvgHiddenConstraints)
@@ -234,17 +248,27 @@ extension TagChartsView {
     }
 
     /// The lowest y-index (value on the y-axis) that is still visible on he chart.
-    var lowestVisibleY: Double {
+    public var lowestVisibleY: Double {
         chartView.lowestVisibleY
     }
 
     /// The highest y-index (value on the y-axis) that is still visible on the chart.
-    var highestVisibleY: Double {
+    public var highestVisibleY: Double {
         chartView.highestVisibleY
     }
 
+    /// Returns the lower alert value.
+    public var lowerAlertValue: Double? {
+        chartView.lowerAlertValue
+    }
+
+    /// Returns the upper alert value
+    public var upperAlertValue: Double? {
+        chartView.upperAlertValue
+    }
+
     /// Returns the underlying LineChartView.
-    var underlyingView: TagChartsViewInternal {
+    public var underlyingView: TagChartsViewInternal {
         return chartView
     }
 }
