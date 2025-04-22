@@ -54,4 +54,22 @@ public final class RuuviNotifierImpl: RuuviNotifier {
             return false
         }
     }
+
+    public func unsubscribe(_ observer: some RuuviNotifierObserver, to uuid: String) {
+        guard isSubscribed(observer, to: uuid) else { return }
+        let observerPointer = Unmanaged.passUnretained(observer).toOpaque()
+        if let array = observations[uuid] {
+            let newArray = NSPointerArray.weakObjects()
+            for i in 0 ..< array.count {
+                if let pointer = array.pointer(at: i), pointer != observerPointer {
+                    newArray.addPointer(pointer)
+                }
+            }
+            observations[uuid] = newArray
+            newArray.compact()
+            if newArray.count == 0 {
+                observations.removeValue(forKey: uuid)
+            }
+        }
+    }
 }

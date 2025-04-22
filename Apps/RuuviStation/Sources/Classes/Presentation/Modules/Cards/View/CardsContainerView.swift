@@ -1,9 +1,11 @@
 import SwiftUI
 import RuuviLocalization
 import Combine
+import RuuviOntology
 
 // MARK: - CardsContainerView
 
+// swiftlint:disable:next type_body_length
 struct CardsContainerView: View {
     // MARK: - Properties
 
@@ -66,16 +68,100 @@ struct CardsContainerView: View {
         .onChange(of: selectedTab) { newTab in
             coordinator.setActiveTab(newTab)
         }
+        .alert(item: $containerViewModel.activeDialog) { alertType in
+            switch alertType {
+            case .bluetoothDisabled:
+                return Alert(
+                    title: Text(RuuviLocalization.Cards.BluetoothDisabledAlert.title),
+                    message: Text(RuuviLocalization.Cards.BluetoothDisabledAlert.message),
+                    primaryButton: .default(
+                        Text(RuuviLocalization.PermissionPresenter.settings),
+                        action: {
+                            coordinator.handleBluetoothPermissionDialog()
+                        }
+                    ),
+                    secondaryButton: .cancel(
+                        Text(RuuviLocalization.ok),
+                        action: {
+                            coordinator.dismissAlert()
+                        }
+                    )
+                )
+
+            case .keepConnection(let viewModel, let targetTab):
+                return Alert(
+                    title: Text(""),
+                    message: Text(RuuviLocalization.Cards.KeepConnectionDialog.message),
+                    primaryButton: .default(
+                        Text(RuuviLocalization.Cards.KeepConnectionDialog.KeepConnection.title),
+                        action: {
+                            coordinator
+                                .handleKeepConnectionConfirmed(
+                                    true,
+                                    for: viewModel,
+                                    targetTab: targetTab
+                                )
+                        }
+                    ),
+                    secondaryButton: .cancel(
+                        Text(RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title),
+                        action: {
+                            coordinator
+                                .handleKeepConnectionConfirmed(
+                                    false,
+                                    for: viewModel,
+                                    targetTab: targetTab
+                                )
+                        }
+                    )
+                )
+
+            case .firmwareUpdate(let viewModel):
+                return Alert(
+                    title: Text(""),
+                    message: Text(RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.message),
+                    primaryButton: .default(
+                        Text(RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title),
+                        action: {
+                            coordinator.handleFirmwareUpdateConfirmed(for: viewModel)
+                        }
+                    ),
+                    secondaryButton: .cancel(
+                        Text(RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title),
+                        action: {
+                            coordinator.handleFirmwareUpdateDialogIgnored(for: viewModel)
+                        }
+                    )
+                )
+
+            case .firmwareDismissConfirmation(let viewModel):
+                return Alert(
+                    title: Text(""),
+                    message: Text(RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message),
+                    primaryButton: .default(
+                        Text(RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title),
+                        action: {
+                            coordinator.handleFirmwareUpdateConfirmed(for: viewModel)
+                        }
+                    ),
+                    secondaryButton: .cancel(
+                        Text(RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title),
+                        action: {
+                            coordinator.handleFirmwareUpdateDialogDismissed(for: viewModel)
+                        }
+                    )
+                )
+            }
+        }
     }
 
     // MARK: - UI Components
 
     private var backgroundView: some View {
         Group {
-            if hasValidCardViewModel {
+            if let activeCard = containerViewModel.activeCard {
                 CardsBackgroundViewRepresentable(
-                    viewModel: containerViewModel
-                        .cardViewModels[containerViewModel.activeCardIndex],
+                    viewModel: activeCard,
                     withAnimation: true
                 )
                 .edgesIgnoringSafeArea(.all)
@@ -105,8 +191,11 @@ struct CardsContainerView: View {
             HStack {
                 backButtonWithLogo
                 Spacer()
-                CardsTabBar(selectedTab: $selectedTab)
-                    .frame(height: Constants.TabBarHeight)
+                CardsTabBar(
+                    selectedTab: $selectedTab,
+                    alertState: $containerViewModel.alertState
+                )
+                .frame(height: Constants.TabBarHeight)
             }
             .padding(.trailing)
         }
@@ -325,27 +414,53 @@ extension CardsContainerView {
         // MARK: - Properties
 
         @Binding var selectedTab: CardsTabType
+        @Binding var alertState: AlertState?
         @Namespace private var namespace
 
         // Define tab items
-        private let tabs: [CardsTabItem] = [
-            CardsTabItem(
-                image: Image(systemName: "thermometer.medium"),
-                type: .measurement
-            ),
-            CardsTabItem(
-                image: Image(systemName: "chart.bar.xaxis"),
-                type: .graph
-            ),
-            CardsTabItem(
-                image: Image(systemName: "bell.fill"),
-                type: .alerts
-            ),
-            CardsTabItem(
-                image: Image(systemName: "gearshape.fill"),
-                type: .settings
-            ),
-        ]
+        private var tabs: [CardsTabItem] {
+            [
+                CardsTabItem(
+                    image: Image(
+                        systemName: "thermometer.medium"
+                    ),
+                    type: .measurement
+                ),
+
+                CardsTabItem(
+                    image: Image(
+                        systemName: "chart.bar.xaxis"
+                    ),
+                    type: .graph
+                ),
+
+                CardsTabItem(
+                    image: alertIcon,
+                    type: .alerts
+                ),
+
+                CardsTabItem(
+                    image: Image(
+                        systemName: "gearshape.fill"
+                    ),
+                    type: .settings
+                ),
+            ]
+        }
+
+        // computed alert icon – derives from `alertState`
+        private var alertIcon: Image {
+            switch alertState {
+            case .empty:
+                return Image(systemName: "bell")
+            case .registered:
+                return Image(systemName: "bell.fill")
+            case .firing:
+                return Image(systemName: "bell.badge.fill")
+            default:
+                return Image(systemName: "bell")
+            }
+        }
 
         // MARK: - Body
 

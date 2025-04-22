@@ -12,6 +12,7 @@ import RuuviCore
 import RuuviStorage
 import CoreBluetooth
 import RuuviDaemon
+import RuuviPool
 
 // swiftlint:disable:next type_body_length
 class CardsCoordinator: ObservableObject {
@@ -29,14 +30,15 @@ class CardsCoordinator: ObservableObject {
     @Published private(set) var sensorSettings: [SensorSettings] = []
 
     // UI State
-    @Published var isRefreshing: Bool = false
-    @Published var showBluetoothDisabledAlert: Bool = false
-    @Published var bluetoothPermissionDeclined: Bool = false
+    @Published private(set) var isRefreshing: Bool = false
+    @Published private(set) var activeDialog: CardsDialogType?
 
     // MARK: - Dependencies
+    private let router: CardsRouterInput
     private let errorPresenter: ErrorPresenter
     private let settings: RuuviLocalSettings
     private let flags: RuuviLocalFlags
+    private let ruuviPool: RuuviPool
     private let ruuviReactor: RuuviReactor
     private let alertService: RuuviServiceAlert
     private let alertHandler: RuuviNotifier
@@ -80,7 +82,8 @@ class CardsCoordinator: ObservableObject {
 
     // MARK: - Initialization
 
-    init(transitionHandler: UIViewController?) {
+    init(transitionHandler: UIViewController?, router: CardsRouterInput) {
+        self.router = router
         self.transitionHandler = transitionHandler
         self.transitionHandler?.navigationController?.navigationBar.isHidden = true
         self.transitionHandler?.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
@@ -89,6 +92,7 @@ class CardsCoordinator: ObservableObject {
         errorPresenter = r.resolve(ErrorPresenter.self)!
         settings = r.resolve(RuuviLocalSettings.self)!
         flags = r.resolve(RuuviLocalFlags.self)!
+        ruuviPool = r.resolve(RuuviPool.self)!
         ruuviReactor = r.resolve(RuuviReactor.self)!
         alertService = r.resolve(RuuviServiceAlert.self)!
         alertHandler = r.resolve(RuuviNotifier.self)!
@@ -146,13 +150,21 @@ class CardsCoordinator: ObservableObject {
             self.activeCardViewModel = viewModels.first
         }
 
+        triggerFirmwareUpdateDialogIfNeeded(for: activeCardViewModel)
+
         // Start observations
         setupObservers()
     }
 
     /// Sets the active tab and handles tab-specific initialization
     func setActiveTab(_ tab: CardsTabType) {
-        activeTab = tab
+        if tab == .graph, let activeCardViewModel = activeCardViewModel {
+            showGraph(for: activeCardViewModel)
+        } else if tab == .settings, let activeCardViewModel = activeCardViewModel {
+            showSettings(for: activeCardViewModel)
+        } else {
+            activeTab = tab
+        }
     }
 
     /// Sets the active card by index
@@ -164,6 +176,8 @@ class CardsCoordinator: ObservableObject {
 
         // Update observations for the active card
         restartObservingForActiveCard()
+        triggerFirmwareUpdateDialogIfNeeded(for: activeCardViewModel)
+        triggerFirmwareVersionCheckIfNeeded(for: activeCardViewModel)
     }
 
     /// Sets the active card by finding matching LUID or MAC address
@@ -175,13 +189,69 @@ class CardsCoordinator: ObservableObject {
             currentCardIndex = index
             activeCardViewModel = cardViewModels[index]
             restartObservingForActiveCard()
+            triggerFirmwareUpdateDialogIfNeeded(for: activeCardViewModel)
+            triggerFirmwareVersionCheckIfNeeded(for: activeCardViewModel)
         }
+    }
+
+    // MARK: Dialogs
+    func handleBluetoothPermissionDialog() {
+        guard let url = URL(string: !isBluetoothPermissionGranted ?
+            UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
+            UIApplication.shared.canOpenURL(url)
+        else {
+            return
+        }
+        UIApplication.shared.open(url)
+    }
+
+    func handleKeepConnectionConfirmed(
+        _ confirmed: Bool,
+        for viewModel: CardsViewModel,
+        targetTab: CardsTabType
+    ) {
+        dismissAlert()
+        if let luid = viewModel.luid {
+            if confirmed {
+                connectionPersistence.setKeepConnection(true, for: luid)
+            }
+            settings.setKeepConnectionDialogWasShown(for: luid)
+            activeTab = targetTab
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+
+    func handleFirmwareUpdateConfirmed(for viewModel: CardsViewModel) {
+        dismissAlert()
+        if let sensor = ruuviTags
+            .first(where: {
+                $0.luid != nil && ($0.luid?.any == viewModel.luid)
+            }) {
+            router.openUpdateFirmware(ruuviTag: sensor)
+        }
+    }
+
+    func handleFirmwareUpdateDialogIgnored(for viewModel: CardsViewModel) {
+        dismissAlert()
+        activeDialog = .firmwareDismissConfirmation(viewModel: viewModel)
+    }
+
+    func handleFirmwareUpdateDialogDismissed(for viewModel: CardsViewModel) {
+        dismissAlert()
+        guard let luid = viewModel.luid else { return }
+        settings.setFirmwareUpdateDialogWasShown(for: luid)
+    }
+
+    func dismissAlert() {
+        activeDialog = nil
     }
 
     // MARK: - Private Methods
 
     private func setupObservers() {
         startObservingRuuviTags()
+        startObservingAlertStatus()
         startObservingBluetoothState()
         startObservingAlertChanges()
         startObservingBackgroundChanges()
@@ -224,14 +294,17 @@ class CardsCoordinator: ObservableObject {
         notifyRestartAdvertisementDaemon()
         notifyRestartHeartBeatDaemon()
 
-        // Check firmware version
-        checkFirmwareVersion(for: sensor)
+        // Start observing alert status for the new sensor
+        startObservingAlertStatus(for: sensor)
 
         // Add to tags collection
         ruuviTags.append(sensor.any)
 
         // Create a single new view model for this sensor
         let viewModel = createViewModel(for: sensor)
+
+        // Check firmware version
+        triggerFirmwareVersionCheckIfNeeded(for: viewModel)
 
         // Add to collection and sort
         var updatedViewModels = cardViewModels
@@ -269,6 +342,9 @@ class CardsCoordinator: ObservableObject {
     private func handleSensorDelete(_ sensor: AnyRuuviTagSensor) {
         // Remove from tags collection
         ruuviTags.removeAll(where: { $0.id == sensor.id })
+
+        // Stop observing this sensor for alert
+        stopObservingAlertStatus(for: sensor)
 
         // Remove from view models
         cardViewModels.removeAll(where: { $0.id == sensor.id })
@@ -343,6 +419,40 @@ class CardsCoordinator: ObservableObject {
                 if self?.activeCardViewModel?.id == viewModel.id {
                     self?.objectWillChange.send()
                 }
+            }
+        }
+    }
+
+    private func startObservingAlertStatus() {
+        ruuviTags.forEach { ruuviTag in
+            startObservingAlertStatus(for: ruuviTag)
+        }
+    }
+
+    private func startObservingAlertStatus(for sensor: AnyRuuviTagSensor) {
+        if sensor.isCloud {
+            if let macId = sensor.macId {
+                alertHandler.subscribe(self, to: macId.value)
+            }
+        } else {
+            if let luid = sensor.luid {
+                alertHandler.subscribe(self, to: luid.value)
+            } else if let macId = sensor.macId {
+                alertHandler.subscribe(self, to: macId.value)
+            }
+        }
+    }
+
+    private func stopObservingAlertStatus(for sensor: AnyRuuviTagSensor) {
+        if sensor.isCloud {
+            if let macId = sensor.macId {
+                alertHandler.unsubscribe(self, to: macId.value)
+            }
+        } else {
+            if let luid = sensor.luid {
+                alertHandler.unsubscribe(self, to: luid.value)
+            } else if let macId = sensor.macId {
+                alertHandler.unsubscribe(self, to: macId.value)
             }
         }
     }
@@ -513,12 +623,8 @@ class CardsCoordinator: ObservableObject {
     private func startObservingBluetoothState() {
         bluetoothPermissionStateToken = foreground.state(self, closure: { [weak self] _, state in
             guard let self = self else { return }
-
             if state != .poweredOn || !self.isBluetoothPermissionGranted {
-                self.showBluetoothDisabledAlert = true
-                self.bluetoothPermissionDeclined = !self.isBluetoothPermissionGranted
-            } else {
-                self.showBluetoothDisabledAlert = false
+                self.activeDialog = .bluetoothDisabled
             }
         })
     }
@@ -735,6 +841,12 @@ class CardsCoordinator: ObservableObject {
         }
     }
 
+    private func triggerFirmwareUpdateDialogIfNeeded(for viewModel: CardsViewModel?) {
+        if let viewModel = viewModel {
+            viewDidTriggerFirmwareUpdateDialog(for: viewModel)
+        }
+    }
+
     private func startMutedTillTimer() {
         mutedTillTimer?.invalidate()
         mutedTillTimer = Timer.scheduledTimer(
@@ -746,32 +858,23 @@ class CardsCoordinator: ObservableObject {
     }
 
     private func reloadMutedTill() {
-//        var didUpdate = false
-//
-//        // Check and update muted state for all view models
-//        for viewModel in cardViewModels {
-//            let alertTypes: [(Date?, KeyPath<CardsViewModel, Date?>)] = [
-//                (viewModel.temperatureAlertMutedTill, \.temperatureAlertMutedTill),
-//                (viewModel.relativeHumidityAlertMutedTill, \.relativeHumidityAlertMutedTill),
-//                (viewModel.pressureAlertMutedTill, \.pressureAlertMutedTill),
-//                (viewModel.signalAlertMutedTill, \.signalAlertMutedTill),
-//                (viewModel.connectionAlertMutedTill, \.connectionAlertMutedTill),
-//                (viewModel.movementAlertMutedTill, \.movementAlertMutedTill),
-//                // Add other alert types as needed
-//            ]
-//
-//            for (mutedTill, keyPath) in alertTypes {
-//                if let mutedTill = mutedTill, mutedTill < Date() {
-//                    viewModel[keyPath: keyPath] = nil
-//                    didUpdate = true
-//                }
-//            }
-//        }
-//
-//        // Trigger UI update if needed
-//        if didUpdate {
-//            objectWillChange.send()
-//        }
+        var needsRefresh = false
+        let now = Date()
+
+        for vm in cardViewModels {
+            // for every `Date?` property whose name ends with `MutedTill`
+            Mirror(reflecting: vm).children
+                .filter { $0.label?.hasSuffix("MutedTill") == true }
+                .forEach { child in
+                    if let key = child.label,
+                       let date = child.value as? Date,
+                       date < now {
+                        vm.setValue(nil, forKey: key)
+                        needsRefresh = true
+                    }
+                }
+        }
+        if needsRefresh { objectWillChange.send() }
     }
 
     private func syncAlerts(for sensor: RuuviTagSensor, viewModel: CardsViewModel) {
@@ -785,78 +888,94 @@ class CardsCoordinator: ObservableObject {
         updateAlertRegistrations(for: viewModel, sensor: sensor)
     }
 
-    private func updateAlertRegistrations(for viewModel: CardsViewModel? = nil, sensor: PhysicalSensor? = nil) {
+    /// Updates the alert state for a view model consistently
+    /// - Parameters:
+    ///   - viewModel: The view model to update
+    ///   - sensor: The sensor associated with the view model
+    ///   - forceUIUpdate: Whether to force UI update even if not the active card
+    private func updateAlertState(for viewModel: CardsViewModel,
+                                sensor: PhysicalSensor,
+                                forceUIUpdate: Bool = false) {
+        let hasRegistrations = alertService.hasRegistrations(for: sensor)
+        let isFiring = viewModel.hasAnyFiringAlert()
+
+        // Only update if needed to avoid UI flickers
+        let newState: AlertState = !hasRegistrations ? .empty :
+                                    isFiring ? .firing : .registered
+
+        // Only update if the state is actually changing
+        if viewModel.alertState != newState {
+            viewModel.alertState = newState
+
+            // Trigger UI update if this is the active card or force update is requested
+            if forceUIUpdate || activeCardViewModel?.id == viewModel.id {
+                objectWillChange.send()
+            }
+        }
+    }
+
+    private func updateAlertRegistrations(
+        for viewModel: CardsViewModel? = nil,
+        sensor: PhysicalSensor? = nil
+    ) {
         if let viewModel = viewModel, let sensor = sensor {
             // Update a single view model
-            if alertService.hasRegistrations(for: sensor) {
-                if viewModel.hasAnyFiringAlert() {
-                    viewModel.alertState = .firing
-                } else {
-                    viewModel.alertState = .registered
-                }
-            } else {
-                viewModel.alertState = .empty
-            }
+            updateAlertState(for: viewModel, sensor: sensor)
         } else {
             // Update all view models
             for viewModel in cardViewModels {
                 if let sensor = ruuviTags.first(where: { $0.id == viewModel.id }) {
-                    if alertService.hasRegistrations(for: sensor) {
-                        if viewModel.hasAnyFiringAlert() {
-                            viewModel.alertState = .firing
-                        } else {
-                            viewModel.alertState = .registered
-                        }
-                    } else {
-                        viewModel.alertState = .empty
-                    }
+                    updateAlertState(for: viewModel, sensor: sensor)
                 }
             }
         }
-
-        // Trigger UI update
-        objectWillChange.send()
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func updateIsOnState(of type: AlertType, for uuid: String, viewModel: CardsViewModel) {
         let isOn = alertService.isOn(type: type, for: uuid)
-
         switch type {
-        case .temperature:
-            viewModel.isTemperatureAlertOn = isOn
-        case .relativeHumidity:
-            viewModel.isRelativeHumidityAlertOn = isOn
-        case .pressure:
-            viewModel.isPressureAlertOn = isOn
-        case .signal:
-            viewModel.isSignalAlertOn = isOn
-        case .connection:
-            viewModel.isConnectionAlertOn = isOn
-        case .movement:
-            viewModel.isMovementAlertOn = isOn
-        // Add other alert types as needed
+        case .temperature:          viewModel.isTemperatureAlertOn      = isOn
+        case .relativeHumidity:     viewModel.isRelativeHumidityAlertOn = isOn
+        case .pressure:             viewModel.isPressureAlertOn         = isOn
+        case .signal:               viewModel.isSignalAlertOn           = isOn
+        case .carbonDioxide:        viewModel.isCarbonDioxideAlertOn    = isOn
+        case .pMatter1:             viewModel.isPMatter1AlertOn         = isOn
+        case .pMatter2_5:           viewModel.isPMatter2_5AlertOn       = isOn
+        case .pMatter4:             viewModel.isPMatter4AlertOn         = isOn
+        case .pMatter10:            viewModel.isPMatter10AlertOn        = isOn
+        case .voc:                  viewModel.isVOCAlertOn              = isOn
+        case .nox:                  viewModel.isNOXAlertOn              = isOn
+        case .sound:                viewModel.isSoundAlertOn            = isOn
+        case .luminosity:           viewModel.isLuminosityAlertOn       = isOn
+        case .connection:           viewModel.isConnectionAlertOn       = isOn
+        case .movement:             viewModel.isMovementAlertOn         = isOn
+        case .cloudConnection:      viewModel.isCloudConnectionAlertOn  = isOn
         default:
             break
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func updateMutedTill(of type: AlertType, for uuid: String, viewModel: CardsViewModel) {
         let date = alertService.mutedTill(type: type, for: uuid)
-
         switch type {
-        case .temperature:
-            viewModel.temperatureAlertMutedTill = date
-        case .relativeHumidity:
-            viewModel.relativeHumidityAlertMutedTill = date
-        case .pressure:
-            viewModel.pressureAlertMutedTill = date
-        case .signal:
-            viewModel.signalAlertMutedTill = date
-        case .connection:
-            viewModel.connectionAlertMutedTill = date
-        case .movement:
-            viewModel.movementAlertMutedTill = date
-        // Add other alert types as needed
+        case .temperature:          viewModel.temperatureAlertMutedTill      = date
+        case .relativeHumidity:     viewModel.relativeHumidityAlertMutedTill = date
+        case .pressure:             viewModel.pressureAlertMutedTill         = date
+        case .signal:               viewModel.signalAlertMutedTill           = date
+        case .carbonDioxide:        viewModel.carbonDioxideAlertMutedTill    = date
+        case .pMatter1:             viewModel.pMatter1AlertMutedTill         = date
+        case .pMatter2_5:           viewModel.pMatter2_5AlertMutedTill       = date
+        case .pMatter4:             viewModel.pMatter4AlertMutedTill         = date
+        case .pMatter10:            viewModel.pMatter10AlertMutedTill        = date
+        case .voc:                  viewModel.vocAlertMutedTill              = date
+        case .nox:                  viewModel.noxAlertMutedTill              = date
+        case .sound:                viewModel.soundAlertMutedTill            = date
+        case .luminosity:           viewModel.luminosityAlertMutedTill       = date
+        case .connection:           viewModel.connectionAlertMutedTill       = date
+        case .movement:             viewModel.movementAlertMutedTill         = date
+        case .cloudConnection:      /* nothing to mute */                    break
         default:
             break
         }
@@ -913,7 +1032,7 @@ class CardsCoordinator: ObservableObject {
                 trigger: false,
                 for: macId
             )
-        } else if let luid = viewModel.luid {
+        } else if viewModel.luid != nil {
             alertHandler.process(record: record, trigger: false)
         } else if let macId = viewModel.mac {
             alertHandler.processNetwork(record: record, trigger: false, for: macId)
@@ -936,10 +1055,93 @@ class CardsCoordinator: ObservableObject {
         )
     }
 
-    private func checkFirmwareVersion(for sensor: RuuviTagSensor) {
-        // TODO: Implement firmware version check logic
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            // Check firmware version logic would go here
+    private func triggerFirmwareVersionCheckIfNeeded(for viewModel: CardsViewModel?) {
+        guard let viewModel = viewModel,
+                let sensor = ruuviTags
+            .first(where: {
+                ($0.luid != nil && ($0.luid?.any == viewModel.luid))
+                    || ($0.macId != nil && ($0.macId?.any == viewModel.mac))
+            }) else { return }
+
+        guard let luid = sensor.luid,
+              sensor.firmwareVersion == nil ||
+              !sensor.firmwareVersion.hasText()
+        else {
+            return
+        }
+
+        // TODO: Remove this check once fw revision is supported for E0/F0
+        let fwVersion = RuuviFirmwareVersion.firmwareVersion(from: sensor.version)
+        if fwVersion == .e0 || fwVersion == .f0 {
+            return
+        }
+
+        background.services.gatt.firmwareRevision(
+            for: self,
+            uuid: luid.value,
+            options: [.connectionTimeout(15)]
+        ) { [weak self] _, result in
+            switch result {
+            case let .success(version):
+                let tagWithVersion = sensor.with(firmwareVersion: version)
+                self?.ruuviPool.update(tagWithVersion)
+            default:
+                break
+            }
+        }
+    }
+
+    private func showGraph(for viewModel: CardsViewModel) {
+        if let luid = viewModel.luid {
+            if settings.keepConnectionDialogWasShown(for: luid)
+                || background.isConnected(uuid: luid.value)
+                || !viewModel.isConnectable
+                || !viewModel.isOwner
+                || (settings.cloudModeEnabled && viewModel.isCloud) {
+                activeTab = .graph
+            } else {
+                activeDialog =
+                    .keepConnection(viewModel: viewModel, targetTab: .graph)
+            }
+        } else if viewModel.mac != nil {
+            activeTab = .graph
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+
+    private func showSettings(for viewModel: CardsViewModel) {
+        if viewModel.type == .ruuvi {
+            if let luid = viewModel.luid {
+                if settings.keepConnectionDialogWasShown(for: luid)
+                    || background.isConnected(uuid: luid.value)
+                    || !viewModel.isConnectable
+                    || !viewModel.isOwner
+                    || (settings.cloudModeEnabled && viewModel.isCloud) {
+                    activeTab = .settings
+                } else {
+                    activeDialog =
+                        .keepConnection(
+                            viewModel: viewModel,
+                            targetTab: .settings
+                        )
+                }
+            } else {
+                activeTab = .settings
+            }
+        }
+    }
+
+    private func viewDidTriggerFirmwareUpdateDialog(for viewModel: CardsViewModel) {
+        guard let luid = viewModel.luid,
+              let version = viewModel.version, version < 5,
+              viewModel.isOwner,
+              featureToggleService.isEnabled(.legacyFirmwareUpdatePopup)
+        else {
+            return
+        }
+        if !settings.firmwareUpdateDialogWasShown(for: luid) {
+            activeDialog = .firmwareUpdate(viewModel: viewModel)
         }
     }
 
@@ -1003,6 +1205,36 @@ extension CardsCoordinator {
             .eraseToAnyPublisher()
     }
 
+    /// Publisher that emits when the active dialog changes
+    var dialogTriggered: AnyPublisher<CardsDialogType?, Never> {
+        $activeDialog
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
+    /// Publisher that emits every time the *current* card’s `alertState`
+    /// changes – and also when the user swipes to a different card.
+    var alertStateDidChange: AnyPublisher<AlertState?, Never> {
+        // Combine card changes with alert state changes
+        Publishers.Merge(
+            // Emit when card changes
+            $currentCardIndex
+                .map { [weak self] _ in self?.activeCardViewModel?.alertState },
+
+            // Emit when alert state changes for current card
+            $activeCardViewModel
+                .flatMap { vm -> AnyPublisher<AlertState?, Never> in
+                    if let vm = vm {
+                        return vm.$alertState.eraseToAnyPublisher()
+                    } else {
+                        return Empty().eraseToAnyPublisher()
+                    }
+                }
+        )
+        .removeDuplicates()
+        .eraseToAnyPublisher()
+    }
+
     /// Publisher that emits when the active tab changes
     var tabDidChange: AnyPublisher<CardsTabType, Never> {
         $activeTab
@@ -1011,23 +1243,29 @@ extension CardsCoordinator {
     }
 }
 
-// MARK: - CardsViewModel Extension
+// MARK: - RuuviNotifierObserver
+extension CardsCoordinator: RuuviNotifierObserver {
+    func ruuvi(notifier _: RuuviNotifier, isTriggered: Bool, for uuid: String) {
+        cardViewModels
+            .filter { $0.luid?.value == uuid || $0.mac?.value == uuid }
+            .forEach { viewModel in
+                if let sensor = ruuviTags.first(where: {
+                    ($0.luid?.value == uuid) || ($0.macId?.value == uuid)
+                }) {
+                    // Check if there are any alert registrations at all
+                    if alertService.hasRegistrations(for: sensor) {
+                        viewModel.alertState = isTriggered ? .firing : .registered
+                    } else {
+                        viewModel.alertState = .empty
+                    }
 
-extension CardsViewModel {
-    func hasAnyFiringAlert() -> Bool {
-        return temperatureAlertState == .firing ||
-            relativeHumidityAlertState == .firing ||
-            pressureAlertState == .firing ||
-            signalAlertState == .firing ||
-            connectionAlertState == .firing ||
-            movementAlertState == .firing
-        // Add other alert types as needed
+//                    // Only trigger UI update if this is the active card
+//                    if activeCardViewModel?.id == viewModel.id {
+//                        objectWillChange.send()
+//                    }
+                }
+            }
     }
 }
-
-//func showBluetoothDisabled(userDeclined: Bool)
-//func showKeepConnectionDialog(for viewModel: CardsViewModel)
-//func showFirmwareUpdateDialog(for viewModel: CardsViewModel)
-//func showFirmwareDismissConfirmationUpdateDialog(for viewModel: CardsViewModel)
 
 // swiftlint:enable file_length

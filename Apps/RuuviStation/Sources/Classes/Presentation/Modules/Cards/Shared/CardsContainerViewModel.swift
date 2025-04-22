@@ -1,5 +1,6 @@
 import Combine
 import SwiftUI
+import RuuviOntology
 
 class CardsContainerViewModel: ObservableObject {
     // Published properties for UI
@@ -7,6 +8,8 @@ class CardsContainerViewModel: ObservableObject {
     @Published var activeCard: CardsViewModel?
     @Published var activeCardIndex: Int = 0
     @Published var isRefreshing: Bool = false
+    @Published var alertState: AlertState?
+    @Published var activeDialog: CardsDialogType?
 
     // Dependencies
     private let coordinator: CardsCoordinator
@@ -27,6 +30,7 @@ class CardsContainerViewModel: ObservableObject {
             .receive(on: RunLoop.main)
             .sink { [weak self] activeCard in
                 self?.activeCard = activeCard
+                self?.alertState = activeCard?.alertState
             }
             .store(in: &cancellables)
 
@@ -41,6 +45,21 @@ class CardsContainerViewModel: ObservableObject {
             .receive(on: RunLoop.main)
             .sink { [weak self] refreshing in
                 self?.isRefreshing = refreshing
+            }
+            .store(in: &cancellables)
+
+        coordinator.alertStateDidChange
+            .receive(on: RunLoop.main)
+            .sink { [weak self] state in
+                print("Alert state did change: \(state)")
+                self?.alertState = state
+            }
+            .store(in: &cancellables)
+
+        coordinator.dialogTriggered
+            .receive(on: RunLoop.main)
+            .sink { [weak self] dialogType in
+                self?.activeDialog = dialogType
             }
             .store(in: &cancellables)
     }

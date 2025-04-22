@@ -39,8 +39,12 @@ final class CardsModuleFactoryImpl: CardsModuleFactory {
         sensorSettings: [SensorSettings],
         transitionHandler: UIViewController? = nil
     ) -> UIViewController {
-        let coordinator = createCoordinator(
-            transitionHandler: transitionHandler
+        let router = CardsRouter()
+        router.transitionHandler = transitionHandler
+
+        let coordinator = CardsCoordinator(
+            transitionHandler: transitionHandler,
+            router: router
         )
 
         coordinator.configure(
@@ -59,10 +63,6 @@ final class CardsModuleFactoryImpl: CardsModuleFactory {
     }
 
     // MARK: - Private Methods
-
-    private func createCoordinator(transitionHandler: UIViewController?) -> CardsCoordinator {
-        return CardsCoordinator(transitionHandler: transitionHandler)
-    }
 
     private func createDIContainer(with coordinator: CardsCoordinator) -> DIContainer {
         let container = DIContainer()

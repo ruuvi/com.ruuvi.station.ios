@@ -332,3 +332,27 @@ extension CardsViewModel {
             .eraseToAnyPublisher()
     }
 }
+
+extension CardsViewModel {
+    func hasAnyFiringAlert() -> Bool {
+        [
+            temperatureAlertState,
+            relativeHumidityAlertState,
+            pressureAlertState,
+            signalAlertState,
+            carbonDioxideAlertState,
+            pMatter1AlertState,
+            pMatter2_5AlertState,
+            pMatter4AlertState,
+            pMatter10AlertState,
+            vocAlertState,
+            noxAlertState,
+            soundAlertState,
+            luminosityAlertState,
+            connectionAlertState,
+            movementAlertState,
+            cloudConnectionAlertState,
+        ]
+        .contains(.firing)
+    }
+}
