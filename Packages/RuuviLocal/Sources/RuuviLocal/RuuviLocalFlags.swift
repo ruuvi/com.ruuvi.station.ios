@@ -22,4 +22,7 @@ public protocol RuuviLocalFlags {
 
     /// When enabled new and improved full sensor card view is shown
     var showNewFullSensorCardView: Bool { get set }
+
+    /// When enabled new tab style menu is shown on sensor card view
+    var showNewMenuStyleOnSensorCardView: Bool { get set }
 }

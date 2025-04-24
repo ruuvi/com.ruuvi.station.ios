@@ -74,6 +74,7 @@ extension DefaultsPresenter {
             buildDoHistorySyncAfterSignIn(),
             buildIncludeDataSourceInHistoryExport(),
             buildShowNewFullSensorCard(),
+            buildShowNewMenuOnFullSensorCard()
         ]
     }
 
@@ -501,6 +502,21 @@ extension DefaultsPresenter {
 
         bind(viewModel.boolean, fire: false) { observer, bool in
             observer.flags.showNewFullSensorCardView = GlobalHelpers.getBool(from: bool)
+        }
+
+        return viewModel
+    }
+
+    private func buildShowNewMenuOnFullSensorCard() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Show New Menu Style"
+        viewModel.boolean.value = flags.showNewMenuStyleOnSensorCardView
+        viewModel.hideStatusLabel.value = !flags.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, bool in
+            observer.flags.showNewMenuStyleOnSensorCardView = GlobalHelpers
+                .getBool(from: bool)
         }
 
         return viewModel

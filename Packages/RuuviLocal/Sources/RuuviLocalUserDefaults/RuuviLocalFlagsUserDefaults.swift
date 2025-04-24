@@ -32,6 +32,13 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     var includeDataSourceInHistoryExport: Bool
     // MARK: End Legacy flags
 
+#if DEBUG || ALPHA
+    @UserDefault("RuuviLocalFlags.showNewFullSensorCardView", defaultValue: true)
+#else
     @UserDefault("RuuviLocalFlags.showNewFullSensorCardView", defaultValue: false)
+#endif
     var showNewFullSensorCardView: Bool
+
+    @UserDefault("RuuviLocalFlags.showNewMenuStyleOnSensorCardView", defaultValue: false)
+    var showNewMenuStyleOnSensorCardView: Bool
 }

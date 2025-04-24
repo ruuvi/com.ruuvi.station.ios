@@ -117,6 +117,43 @@ class CardsCoordinator: ObservableObject {
         transitionHandler?.navigationController?.popViewController(animated: true)
     }
 
+    // MARK: - Legacy Toolbar Support
+    func onAlertButtonTapped() {
+        transitionHandler?.navigationController?.navigationBar.isHidden = false
+        let sensorSettings = sensorSettings
+            .first(where: {
+                ($0.luid?.any != nil && $0.luid?.any == activeCardViewModel?.luid)
+                    || ($0.macId?.any != nil && $0.macId?.any == activeCardViewModel?.mac)
+            })
+        if let ruuviTag = ruuviTags.first(where: { $0.id == activeCardViewModel?.id }) {
+            router.openTagSettings(
+                ruuviTag: ruuviTag,
+                latestMeasurement: activeCardViewModel?.latestMeasurement,
+                sensorSettings: sensorSettings,
+                output: self
+            )
+        }
+    }
+
+    func onSettingsButtonTapped() {
+        transitionHandler?.navigationController?.navigationBar.isHidden = false
+        let sensorSettings = sensorSettings
+            .first(where: {
+                ($0.luid?.any != nil && $0.luid?.any == activeCardViewModel?.luid)
+                    || ($0.macId?.any != nil && $0.macId?.any == activeCardViewModel?.mac)
+            })
+        if let ruuviTag = ruuviTags.first(where: { $0.id == activeCardViewModel?.id }) {
+            router.openTagSettings(
+                ruuviTag: ruuviTag,
+                latestMeasurement: activeCardViewModel?.latestMeasurement,
+                sensorSettings: sensorSettings,
+                output: self
+            )
+        }
+    }
+
+    // MARK: - Legacy Toolbar Support end
+
     func onCardSwiped(to index: Int) {
         setActiveCardIndex(index)
     }
@@ -1265,6 +1302,22 @@ extension CardsCoordinator: RuuviNotifierObserver {
 //                    }
                 }
             }
+    }
+}
+
+// MARK: - TagSettingsModuleOutput
+extension CardsCoordinator: TagSettingsModuleOutput {
+    func tagSettingsDidDeleteTag(
+        module: TagSettingsModuleInput,
+        ruuviTag: RuuviOntology.RuuviTagSensor
+    ) {
+        transitionHandler?.navigationController?.navigationBar.isHidden = true
+        // TODO: Implement this method
+    }
+
+    func tagSettingsDidDismiss(module: TagSettingsModuleInput) {
+        transitionHandler?.navigationController?.navigationBar.isHidden = true
+        module.dismiss(completion: nil)
     }
 }
 

@@ -191,11 +191,28 @@ struct CardsContainerView: View {
             HStack {
                 backButtonWithLogo
                 Spacer()
-                CardsTabBar(
-                    selectedTab: $selectedTab,
-                    alertState: $containerViewModel.alertState
-                )
-                .frame(height: Constants.TabBarHeight)
+                if containerViewModel.showNewMenu {
+                    CardsTabBar(
+                        selectedTab: $selectedTab,
+                        alertState: $containerViewModel.alertState
+                    )
+                    .frame(height: Constants.TabBarHeight)
+                } else {
+                    CardsTabBarLegacyView(
+                        onAlertTapped: {
+                            containerViewModel.onAlertButtonTapped()
+                        },
+                        onCardStateTapped: { state in
+                            withAnimation {
+                                selectedTab = state == .measurement ? .measurement : .graph
+                            }
+                        },
+                        onSettingsTapped: {
+                            containerViewModel.onSettingsButtonTapped()
+                        }
+                    )
+                    .frame(height: Constants.TabBarHeight)
+                }
             }
             .padding(.trailing)
         }
@@ -204,7 +221,7 @@ struct CardsContainerView: View {
     }
 
     private var backButtonWithLogo: some View {
-        HStack {
+        HStack(spacing: 0) {
             Button(action: {
                 containerViewModel.onBackButtonTapped()
             }) { // swiftlint:disable:this multiple_closures_with_trailing_closure
@@ -221,7 +238,7 @@ struct CardsContainerView: View {
             Image(uiImage: RuuviAsset.ruuviLogo.image)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(height: Constants.LogoHeight)
+                .frame(width: Constants.LogoWidth, height: Constants.LogoHeight)
                 .foregroundColor(Constants.LogoColor)
                 .padding(.leading, Constants.LogoPadding)
         }
@@ -372,14 +389,15 @@ struct CardsContainerView: View {
         static let TabBarHeight: CGFloat = 30
         static let NavigationSpacing: CGFloat = 8
         static let BackButtonSize: CGFloat = 44
-        static let LogoHeight: CGFloat = 24
+        static let LogoHeight: CGFloat = 22
+        static let LogoWidth: CGFloat = 90
         static let CardTitleSize: CGFloat = 20
         static let NavigationArrowSize: CGFloat = 20
 
         // Padding
         static let CompactVerticalPadding: CGFloat = 12
         static let NavigationBottomPadding: CGFloat = 8
-        static let LogoPadding: CGFloat = 8
+        static let LogoPadding: CGFloat = 0
         static let HorizontalPadding: CGFloat = 15
         static let NavigationArrowTopPadding: CGFloat = 4
 

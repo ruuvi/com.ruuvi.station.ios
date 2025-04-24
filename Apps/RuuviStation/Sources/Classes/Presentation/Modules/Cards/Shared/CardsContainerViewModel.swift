@@ -1,6 +1,7 @@
 import Combine
 import SwiftUI
 import RuuviOntology
+import RuuviLocal
 
 class CardsContainerViewModel: ObservableObject {
     // Published properties for UI
@@ -11,12 +12,20 @@ class CardsContainerViewModel: ObservableObject {
     @Published var alertState: AlertState?
     @Published var activeDialog: CardsDialogType?
 
+    // Feature flags
+    @Published var showNewMenu: Bool = false
+
     // Dependencies
     private let coordinator: CardsCoordinator
+    private let flags: RuuviLocalFlags
     private var cancellables = Set<AnyCancellable>()
 
     init(coordinator: CardsCoordinator) {
         self.coordinator = coordinator
+
+        let r = AppAssembly.shared.assembler.resolver
+        self.flags = r.resolve(RuuviLocalFlags.self)!
+        self.showNewMenu = flags.showNewMenuStyleOnSensorCardView
 
         // Subscribe to coordinator's publishers
         coordinator.viewModelsData
@@ -73,4 +82,14 @@ class CardsContainerViewModel: ObservableObject {
     func onBackButtonTapped() {
         coordinator.onBackButtonTapped()
     }
+
+    // MARK: - Legacy Toolbar Support
+    func onAlertButtonTapped() {
+        coordinator.onAlertButtonTapped()
+    }
+
+    func onSettingsButtonTapped() {
+        coordinator.onSettingsButtonTapped()
+    }
+    // MARK: - Legacy Toolbar Support end
 }
