@@ -87,11 +87,6 @@ extension SignInViewController {
         super.viewWillDisappear(animated)
         navigationController?.resetStyleToDefault()
     }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        signInView.activate()
-    }
 }
 
 private extension SignInViewController {
