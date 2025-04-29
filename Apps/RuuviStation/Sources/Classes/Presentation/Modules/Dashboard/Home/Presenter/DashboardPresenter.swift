@@ -1018,20 +1018,21 @@ extension DashboardPresenter {
                 let token = ruuviReactor.observeLatest(ruuviTagSensor) { [weak self] changes in
                     if case let .update(anyRecord) = changes,
                        let viewModel = self?.viewModels
-                           .first(where: {
-                               ($0.luid != nil && ($0.luid == anyRecord?.luid?.any))
-                                   || ($0.mac != nil && ($0.mac == anyRecord?.macId?.any))
-                           }),
-                           let record = anyRecord {
-//                        print("Last record received for \(record.macId?.value ?? "unknown")")
+                        .first(where: {
+                            ($0.luid != nil && ($0.luid == anyRecord?.luid?.any))
+                            || ($0.mac != nil && ($0.mac == anyRecord?.macId?.any))
+                        }),
+                       let record = anyRecord {
                         let sensorSettings = self?.sensorSettingsList
                             .first(where: {
                                 ($0.luid?.any != nil && $0.luid?.any == viewModel.luid)
-                                    || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac)
+                                || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac)
                             })
                         let sensorRecord = record.with(sensorSettings: sensorSettings)
                         viewModel.update(sensorRecord)
-                        self?.processAlert(record: sensorRecord, viewModel: viewModel)
+                        DispatchQueue.global(qos: .utility).async {
+                            self?.processAlert(record: sensorRecord, viewModel: viewModel)
+                        }
                     }
                 }
                 ruuviTagObserveLastRecordTokens.append(token)
@@ -1097,6 +1098,8 @@ extension DashboardPresenter {
                 sSelf.observeRuuviTags()
                 sSelf.restartObservingRuuviTagLastRecords()
                 sSelf.syncHasCloudSensorToAppGroupContainer(with: sSelf.ruuviTags)
+                sSelf.notifyRestartAdvertisementDaemon()
+                sSelf.notifyRestartHeartBeatDaemon()
             case let .error(error):
                 sSelf.errorPresenter.present(error: error)
             case let .update(sensor):

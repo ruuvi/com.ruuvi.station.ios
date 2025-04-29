@@ -184,7 +184,7 @@ extension CardsPresenter {
         startObservingVisibleTag()
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func startObservingRuuviTags() {
         ruuviTagToken?.invalidate()
         ruuviTagToken = ruuviReactor.observe { [weak self] change in
@@ -220,6 +220,8 @@ extension CardsPresenter {
                 }
 
             case let .delete(sensor):
+                sSelf.notifyRestartAdvertisementDaemon()
+                sSelf.notifyRestartHeartBeatDaemon()
                 sSelf.ruuviTags.removeAll(where: { $0.id == sensor.id })
                 sSelf.syncViewModels()
                 // If a sensor is deleted, and there's no more sensor take
@@ -268,7 +270,9 @@ extension CardsPresenter {
                         viewModel.update(sensorRecord)
                         self?.notifyUpdate(for: viewModel)
 
-                        self?.processAlert(record: sensorRecord, viewModel: viewModel)
+                        DispatchQueue.global(qos: .utility).async {
+                            self?.processAlert(record: sensorRecord, viewModel: viewModel)
+                        }
                     }
                 }
                 ruuviTagObserveLastRecordTokens.append(token)

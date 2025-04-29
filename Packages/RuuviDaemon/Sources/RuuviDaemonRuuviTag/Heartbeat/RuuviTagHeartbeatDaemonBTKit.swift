@@ -305,18 +305,29 @@ extension RuuviTagHeartbeatDaemonBTKit {
         uuid: String,
         source: RuuviTagSensorRecordSource
     ) {
-        observer.ruuviPool.create(
-            ruuviTag
-                .with(source: source)
-        ).on(
-            success: { [weak self] _ in
-                self?.createLastRecord(
-                    observer: observer,
-                    ruuviTag: ruuviTag,
-                    uuid: uuid,
-                    source: source
-                )
-        })
+        // Do not store advertisement for history only if it is F0 firmware and legacy advertisement.
+        if ruuviTag.version == 0xF0 {
+            createLastRecord(
+                observer: observer,
+                ruuviTag: ruuviTag,
+                uuid: uuid,
+                source: source
+            )
+        } else {
+            observer.ruuviPool.create(
+                ruuviTag
+                    .with(source: source)
+            ).on(
+                success: { [weak self] _ in
+                    self?.createLastRecord(
+                        observer: observer,
+                        ruuviTag: ruuviTag,
+                        uuid: uuid,
+                        source: source
+                    )
+
+            })
+        }
     }
 
     private func createLastRecord(
@@ -325,17 +336,8 @@ extension RuuviTagHeartbeatDaemonBTKit {
         uuid: String,
         source: RuuviTagSensorRecordSource
     ) {
-        if let tag = ruuviTags.first(where: { $0.luid?.value == uuid }) {
-            ruuviStorage.readLatest(tag).on(success: { localRecord in
-                let record = ruuviTag.with(source: source)
-                if let localRecord,
-                   record.macId?.value == localRecord.macId?.value {
-                    observer.ruuviPool.updateLast(record)
-                } else {
-                    observer.ruuviPool.createLast(record)
-                }
-            })
-        }
+        let record = ruuviTag.with(source: source)
+        observer.ruuviPool.createLast(record)
     }
 }
 
@@ -461,7 +463,11 @@ extension RuuviTagHeartbeatDaemonBTKit {
             if shouldAvoidObserving {
                 continue
             }
-            guard let serviceUUID = ruuviTag.serviceUUID else { continue }
+            guard let serviceUUID = ruuviTag.serviceUUID,
+                    let luid = ruuviTag.luid,
+                    !background.isConnected(uuid: luid.value) else {
+                continue
+            }
             observeTokens.append(
                 background.observe(
                     self,
@@ -473,8 +479,8 @@ extension RuuviTagHeartbeatDaemonBTKit {
 
                     if let ruuviTag = device.ruuvi?.tag,
                        ruuviTag.vC5?.serviceUUID != nil ||
-                       ruuviTag.vE0_F0?.serviceUUID != nil,
-                       ruuviTag.version != 0xF0 { // Do not store F0 data, we only store E0 among E0/F0
+                        ruuviTag.vE0_F0?.serviceUUID != nil,
+                       !ruuviTag.isConnected {
                         var sensorSettings: SensorSettings?
                         if let ruuviTagSensor = sSelf.ruuviTags
                             .first(where: {
@@ -499,7 +505,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                             guard ruuviTag.luid != nil,
                                   ruuviTag.vC5?.serviceUUID != nil ||
                                   ruuviTag.vE0_F0?.serviceUUID != nil,
-                                  ruuviTag.version != 0xF0 // Do not store F0 data, we only store E0 among E0/F0
+                                  !ruuviTag.isConnected
                             else { return }
                             let interval = sSelf.settings.saveHeartbeatsForegroundIntervalSeconds
                             if let date = sSelf.savedDate[uuid] {

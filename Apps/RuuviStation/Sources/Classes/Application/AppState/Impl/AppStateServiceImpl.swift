@@ -88,7 +88,7 @@ class AppStateServiceImpl: AppStateService {
 #endif
         }
         if settings.saveHeartbeats {
-            heartbeatDaemon.start()
+            heartbeatDaemon.restart()
         }
         propertiesDaemon.stop()
         backgroundProcessService.schedule()

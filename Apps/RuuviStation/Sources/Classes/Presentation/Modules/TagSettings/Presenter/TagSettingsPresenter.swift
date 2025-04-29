@@ -62,6 +62,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     private var ruuviTagSensorRecordToken: RuuviReactorToken?
     private var ruuviTagSensorOwnerCheckToken: NSObjectProtocol?
     private var advertisementToken: ObservationToken?
+    private var heartbeatToken: ObservationToken?
     private var sensorSettingsToken: RuuviReactorToken?
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
@@ -1195,6 +1196,7 @@ extension TagSettingsPresenter {
 
     private func startScanningRuuviTag() {
         advertisementToken?.invalidate()
+        heartbeatToken?.invalidate()
         guard let luid = ruuviTag.luid
         else {
             return
@@ -1206,9 +1208,14 @@ extension TagSettingsPresenter {
         }
 
         advertisementToken = foreground.observe(self, uuid: luid.value, closure: { [weak self] _, device in
-            // If advertisement is E0, then we should not use it for connectable check. In that case F0 will be used.
-            if let tag = device.ruuvi?.tag, tag.luid?.value == luid.value, tag.version != 0xE0 {
+            if let tag = device.ruuvi?.tag, tag.luid?.value == luid.value {
                 self?.syncConnectable(device: tag, source: .advertisement)
+            }
+        })
+
+        heartbeatToken = background.observe(self, uuid: luid.value, closure: { [weak self] _, device in
+            if let tag = device.ruuvi?.tag {
+                self?.syncConnectable(device: tag, source: .heartbeat)
             }
         })
     }
@@ -1233,12 +1240,18 @@ extension TagSettingsPresenter {
             if device.isConnected {
                 viewModel.isConnected.value = device.isConnected
                 if source == .heartbeat {
-                    viewModel.isConnectable.value = device.isConnectable
+                    if viewModel.isConnectable.value != device.isConnectable {
+                        viewModel.isConnectable.value = device.isConnectable
+                    }
                 } else {
-                    viewModel.isConnectable.value = device.isConnected
+                    if viewModel.isConnectable.value != device.isConnected {
+                        viewModel.isConnectable.value = device.isConnected
+                    }
                 }
             } else {
-                viewModel.isConnectable.value = device.isConnectable
+                if viewModel.isConnectable.value != device.isConnectable {
+                    viewModel.isConnectable.value = device.isConnectable
+                }
             }
         } else {
             guard !device.isConnected

@@ -141,12 +141,6 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
     }
 
     @objc private func tryToUpdate(pair: RuuviTagPropertiesDaemonPair) {
-
-        // TODO: Revisit this when OTA update for E0/F0 is supported
-        if pair.device.version == 0xE0 || pair.device.version == 0xF0 {
-            return
-        }
-
         if let mac = pair.device.mac, mac != pair.ruuviTag.macId?.value {
             // this is the case when data format 3 tag (2.5.9) changes format
             // either by pressing B or by upgrading firmware
@@ -183,31 +177,21 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
     }
 
     private func listenToUuidChangesForMac() {
-        let scanToken = foreground.scan(self) { observer, device in
+        let scanToken = foreground.scan(self, closure: { observer, device in
             guard let tag = device.ruuvi?.tag,
-                  let macId = tag.macId else {
+                  let luid = tag.luid,
+                  let macId = tag.macId
+            else {
                 return
             }
-            // If the advertisement version is 0xE0, store extendedLuid
-            // Otherwise store normal LUID
-            if tag.version == 0xE0 {
-                if observer.idPersistence.extendedLuid(for: macId)?.any != tag.luid?.any {
-                    if let eluid = tag.luid {
-                        observer.idPersistence.set(extendedLuid: eluid, for: macId)
-                        observer.postLuidChangeNotification()
+            if observer.idPersistence.luid(for: macId)?.any != luid.any {
+                observer.idPersistence.set(luid: luid, for: macId)
+                observer.sqiltePersistence.readOne(macId.mac)
+                    .on { [weak observer] sensor in
+                        observer?.ruuviPool.update(sensor.with(luid: luid))
                     }
-                }
-            } else {
-                if observer.idPersistence.luid(for: macId)?.any != tag.luid?.any {
-                    if let luid = tag.luid {
-                        observer.idPersistence.set(luid: luid, for: macId)
-                        observer.sqiltePersistence.readOne(macId.mac).on { sensor in
-                            observer.ruuviPool.update(sensor.with(luid: luid))
-                        }
-                    }
-                }
             }
-        }
+        })
         scanTokens.append(scanToken)
     }
 
@@ -264,18 +248,6 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                     name: .RuuviTagPropertiesDaemonDidFail,
                     object: nil,
                     userInfo: [RuuviTagPropertiesDaemonDidFailKey.error: error]
-                )
-        }
-    }
-
-    private func postLuidChangeNotification() {
-        DispatchQueue.main.async {
-            NotificationCenter
-                .default
-                .post(
-                    name: .RuuviTagPropertiesExtendedLUIDChanged,
-                    object: nil,
-                    userInfo: nil
                 )
         }
     }
