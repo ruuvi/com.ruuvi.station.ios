@@ -1235,6 +1235,26 @@ extension CardsCoordinator {
             .eraseToAnyPublisher()
     }
 
+    /// Publisher for the active RuuviTag data
+    var activeSensorData: AnyPublisher<AnyRuuviTagSensor?, Never> {
+        $ruuviTags
+            .combineLatest($currentCardIndex)
+            .map { [weak self] ruuviTags, index in
+                guard let sSelf = self,
+                      !sSelf.cardViewModels.isEmpty,
+                      index < sSelf.cardViewModels.count else { return nil }
+                let activeViewModel = sSelf.cardViewModels[index]
+                if let sensor = ruuviTags.first(where: {
+                    ($0.luid?.value == activeViewModel.luid?.value) ||
+                    ($0.macId?.value == activeViewModel.mac?.value)
+                }) {
+                    return sensor
+                }
+                return nil
+            }
+            .eraseToAnyPublisher()
+    }
+
     /// Publisher that emits when the either latest data or history sync is in progress
     var cloudSyncInProgress: AnyPublisher<Bool, Never> {
         $isRefreshing
@@ -1309,7 +1329,7 @@ extension CardsCoordinator: RuuviNotifierObserver {
 extension CardsCoordinator: TagSettingsModuleOutput {
     func tagSettingsDidDeleteTag(
         module: TagSettingsModuleInput,
-        ruuviTag: RuuviOntology.RuuviTagSensor
+        ruuviTag: RuuviTagSensor
     ) {
         transitionHandler?.navigationController?.navigationBar.isHidden = true
         // TODO: Implement this method

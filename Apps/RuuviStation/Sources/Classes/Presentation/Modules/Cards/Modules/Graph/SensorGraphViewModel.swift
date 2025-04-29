@@ -1,43 +1,32 @@
+import Foundation
+import RuuviOntology
+import RuuviService
+import DGCharts
 import Combine
 import SwiftUI
 
-class SensorGraphViewModel: ObservableObject {
-    // Published properties for UI
-//    @Published var sensors: [SensorViewModel] = []
-    @Published var activeCardIndex: Int = 0
-    @Published var isLoading: Bool = false
+class SensorGraphViewModel: ObservableObject, Identifiable {
+    @Published var graphEntity: SensorGraphEntity
+    @Published var graphTitle: String
+    @Published var unit: String
 
-    // Dependencies
-    private let coordinator: CardsCoordinator
-    private var cancellables = Set<AnyCancellable>()
+    var id: String { "\(graphEntity.ruuviTagId)_\(graphEntity.graphType.rawValue)" }
+    weak var parentViewModel: SensorGraphContainerViewModel!
 
-    init(coordinator: CardsCoordinator) {
-        self.coordinator = coordinator
-
-//        // Subscribe to coordinator's publishers
-//        coordinator.measurementTabData
-//            .receive(on: RunLoop.main)
-//            .sink { [weak self] sensors in
-//                self?.sensors = sensors
-//            }
-//            .store(in: &cancellables)
-//
-//        coordinator.activeCardData
-//            .receive(on: RunLoop.main)
-//            .sink { [weak self] _ in
-//                // Process active card data
-//            }
-//            .store(in: &cancellables)
+    init(graphEntity: SensorGraphEntity, parentViewModel: SensorGraphContainerViewModel) {
+        self.graphEntity = graphEntity
+        self.parentViewModel = parentViewModel
+        self.graphTitle = graphEntity.graphType.rawValue
+        self.unit = graphEntity.unit
     }
 
-    // MARK: - User Actions
-
-    func onCardSwiped(to index: Int) {
-        activeCardIndex = index
-//        coordinator.setActiveCard(index: index)
+    func updateChartData(with newData: LineChartData) {
+        graphEntity.graphData = newData
+        objectWillChange.send()
     }
 
-    func refresh() {
-        // Refresh data
+    func updateDataSet(with dataSet: [LineChartDataSet]) {
+        graphEntity.dataSet = dataSet
+        objectWillChange.send()
     }
 }

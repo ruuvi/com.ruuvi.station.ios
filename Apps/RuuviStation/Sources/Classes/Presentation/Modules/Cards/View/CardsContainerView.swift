@@ -13,7 +13,7 @@ struct CardsContainerView: View {
 
     @StateObject private var containerViewModel: CardsContainerViewModel
     @StateObject private var measurementVM: SensorMeasurementViewModel
-    @StateObject private var graphVM: SensorGraphViewModel
+    @StateObject private var graphVM: SensorGraphContainerViewModel
     @StateObject private var alertsVM: SensorAlertsViewModel
     @StateObject private var settingsVM: SensorSettingsViewModel
 
@@ -37,7 +37,7 @@ struct CardsContainerView: View {
             wrappedValue: container.resolve(SensorMeasurementViewModel.self)
         )
         self._graphVM = StateObject(
-            wrappedValue: container.resolve(SensorGraphViewModel.self)
+            wrappedValue: container.resolve(SensorGraphContainerViewModel.self)
         )
         self._alertsVM = StateObject(
             wrappedValue: container.resolve(SensorAlertsViewModel.self)
@@ -315,7 +315,10 @@ struct CardsContainerView: View {
                 )
                 .tag(0)
             case .graph:
-                graphTabContent
+                SensorGraphContainerView(viewModel: graphVM)
+                    .onAppear {
+                        graphVM.onAppear()
+                    }
             case .alerts:
                 alertsTabContent
             case .settings:

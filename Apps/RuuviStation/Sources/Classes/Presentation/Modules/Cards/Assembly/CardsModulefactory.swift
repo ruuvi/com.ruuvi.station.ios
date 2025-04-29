@@ -54,7 +54,26 @@ final class CardsModuleFactoryImpl: CardsModuleFactory {
             sensorSettings: sensorSettings
         )
 
-        let container = createDIContainer(with: coordinator)
+        // TODO: Cleanup
+        let interactor = NewCardsInteractor()
+        let r = AppAssembly.shared.assembler.resolver
+        interactor.gattService = r.resolve(GATTService.self)
+        interactor.settings = r.resolve(RuuviLocalSettings.self)
+        interactor.flags = r.resolve(RuuviLocalFlags.self)
+        interactor.exportService = r.resolve(RuuviServiceExport.self)
+        interactor.ruuviReactor = r.resolve(RuuviReactor.self)
+        interactor.ruuviPool = r.resolve(RuuviPool.self)
+        interactor.ruuviStorage = r.resolve(RuuviStorage.self)
+        interactor.cloudSyncService = r.resolve(RuuviServiceCloudSync.self)
+        interactor.ruuviSensorRecords = r.resolve(RuuviServiceSensorRecords.self)
+        interactor.featureToggleService = r.resolve(FeatureToggleService.self)
+        interactor.localSyncState = r.resolve(RuuviLocalSyncState.self)
+        interactor.ruuviAppSettingsService = r.resolve(RuuviServiceAppSettings.self)
+
+        let container = createDIContainer(
+            with: coordinator,
+            graphInteractor: interactor
+        )
         let tabsView = CardsContainerView(
             container: container,
             initialTab: selectedTab ?? .measurement
@@ -64,7 +83,10 @@ final class CardsModuleFactoryImpl: CardsModuleFactory {
 
     // MARK: - Private Methods
 
-    private func createDIContainer(with coordinator: CardsCoordinator) -> DIContainer {
+    private func createDIContainer(
+        with coordinator: CardsCoordinator,
+        graphInteractor: NewCardsInteractor
+    ) -> DIContainer {
         let container = DIContainer()
 
         // Register coordinator
@@ -73,7 +95,13 @@ final class CardsModuleFactoryImpl: CardsModuleFactory {
         // Register view models
         container.register(CardsContainerViewModel(coordinator: coordinator))
         container.register(SensorMeasurementViewModel(coordinator: coordinator))
-        container.register(SensorGraphViewModel(coordinator: coordinator))
+        container
+            .register(
+                SensorGraphContainerViewModel(
+                    coordinator: coordinator,
+                    interactor: graphInteractor
+                )
+            )
         container.register(SensorAlertsViewModel(coordinator: coordinator))
         container.register(SensorSettingsViewModel(coordinator: coordinator))
 
