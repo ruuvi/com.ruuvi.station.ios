@@ -60,8 +60,10 @@ class CardsContainerViewModel: ObservableObject {
         coordinator.alertStateDidChange
             .receive(on: RunLoop.main)
             .sink { [weak self] state in
-                print("Alert state did change: \(state)")
-                self?.alertState = state
+                if self?.alertState != state {
+                    print("Alert state did change: \(state) for \(String(describing: self?.activeCard?.name))")
+                    self?.alertState = state
+                }
             }
             .store(in: &cancellables)
 

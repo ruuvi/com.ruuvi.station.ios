@@ -56,7 +56,15 @@ struct CardsContainerView: View {
             backgroundView
 
             VStack(spacing: 0) {
-                topNavigationBar
+                if verticalSizeClass == .compact {
+                    topNavigationBar
+                } else {
+                    // TODO: This is a temporary fix. Proper fix it.
+                    topNavigationBar
+                        .frame(
+                            height: 34
+                        )
+                }
                 cardNavigationBar
                 contentView
                 footerView
@@ -199,6 +207,7 @@ struct CardsContainerView: View {
                     .frame(height: Constants.TabBarHeight)
                 } else {
                     CardsTabBarLegacyView(
+                        alertState: $containerViewModel.alertState,
                         onAlertTapped: {
                             containerViewModel.onAlertButtonTapped()
                         },
@@ -216,8 +225,7 @@ struct CardsContainerView: View {
             }
             .padding(.trailing)
         }
-        .padding(.top, verticalSizeClass == .regular ? 0 : Constants.CompactVerticalPadding)
-        .padding(.bottom, Constants.NavigationBottomPadding)
+//        .padding(.bottom, Constants.NavigationBottomPadding)
     }
 
     private var backButtonWithLogo: some View {
@@ -252,6 +260,7 @@ struct CardsContainerView: View {
         }
         .padding(.leading, Constants.HorizontalPadding)
         .padding(.trailing, Constants.HorizontalPadding)
+        .padding(.top, Constants.NavigationArrowTopPadding)
     }
 
     private var cardNameView: some View {
@@ -395,8 +404,7 @@ struct CardsContainerView: View {
         static let NavigationArrowSize: CGFloat = 20
 
         // Padding
-        static let CompactVerticalPadding: CGFloat = 12
-        static let NavigationBottomPadding: CGFloat = 8
+//        static let NavigationBottomPadding: CGFloat = 8
         static let LogoPadding: CGFloat = 0
         static let HorizontalPadding: CGFloat = 15
         static let NavigationArrowTopPadding: CGFloat = 4

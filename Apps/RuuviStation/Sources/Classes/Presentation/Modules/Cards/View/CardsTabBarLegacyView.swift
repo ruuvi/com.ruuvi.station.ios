@@ -8,8 +8,9 @@ enum FullSensorCardState {
 
 // MARK: - Main View
 struct CardsTabBarLegacyView: View {
+    @Binding var alertState: AlertState?
+
     @State private var sensorCardState: FullSensorCardState = .measurement
-    @State private var alertState: AlertState = .empty
     @State private var isBlinking = false
 
     var onAlertTapped: () -> Void
@@ -70,7 +71,7 @@ struct CardsTabBarLegacyView: View {
 
 // MARK: - Bell Icon Component
 struct BellIconView: View {
-    @Binding var alertState: AlertState
+    @Binding var alertState: AlertState?
     @Binding var isBlinking: Bool
 
     var body: some View {
@@ -84,14 +85,18 @@ struct BellIconView: View {
     }
 
     private var iconName: String {
-        switch alertState {
-        case .empty:
-            return "bell.slash"
-        case .registered:
-            return "bell.fill"
-        case .firing:
-            return "bell.badge.waveform"
+        if let alertState = alertState {
+            switch alertState {
+            case .empty:
+                return "bell.slash"
+            case .registered:
+                return "bell.fill"
+            case .firing:
+                return "bell.badge.waveform"
+            }
         }
+
+        return "bell.slash"
     }
 
     private var opacity: Double {
