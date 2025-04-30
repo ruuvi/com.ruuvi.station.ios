@@ -1876,7 +1876,7 @@ extension NewCardsPresenter: NewCardsInteractorOutput {
         errorPresenter.present(error: error)
     }
 
-    func interactorDidUpdate(sensor: AnyRuuviTagSensor) {
+    func interactorDidUpdate(sensor: RuuviTagSensor) {
         graphData = interactor.ruuviTagData
         createChartData(for: sensor)
     }

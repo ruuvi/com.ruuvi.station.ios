@@ -3,7 +3,7 @@ import RuuviOntology
 
 protocol NewCardsInteractorOutput: AnyObject {
     func createChartModules(
-        from: [MeasurementType],
+        from types: [MeasurementType],
         for sensor: RuuviTagSensor
     )
     func insertMeasurements(
@@ -15,7 +15,7 @@ protocol NewCardsInteractorOutput: AnyObject {
         for sensor: RuuviTagSensor
     )
     func interactorDidUpdate(
-        sensor: AnyRuuviTagSensor
+        sensor: RuuviTagSensor
     )
     func interactorDidError(
         _ error: RUError,

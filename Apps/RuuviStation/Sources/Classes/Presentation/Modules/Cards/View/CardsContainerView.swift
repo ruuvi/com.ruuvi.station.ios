@@ -260,7 +260,7 @@ struct CardsContainerView: View {
         }
         .padding(.leading, Constants.HorizontalPadding)
         .padding(.trailing, Constants.HorizontalPadding)
-        .padding(.top, Constants.NavigationArrowTopPadding)
+        .padding(.top, 8)
     }
 
     private var cardNameView: some View {

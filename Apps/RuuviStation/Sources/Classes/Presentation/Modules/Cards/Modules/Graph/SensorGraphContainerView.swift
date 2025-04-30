@@ -5,19 +5,11 @@ struct GraphCardView: View {
     @ObservedObject var containerModel: SensorGraphContainerViewModel
 
     var body: some View {
-        VStack(alignment: .leading) {
-            Text(viewModel.graphTitle)
-                .font(.headline)
-
-            SensorGraphView(
-                viewModel: viewModel,
-                chartContainerModel: containerModel
-            )
-            .frame(height: 220)
-        }
-        .padding()
-        .background(Color(.secondarySystemBackground))
-        .cornerRadius(12)
+        SensorGraphView(
+            viewModel: viewModel,
+            chartContainerModel: containerModel
+        )
+        .frame(height: 220)
     }
 }
 
@@ -29,7 +21,7 @@ struct SensorGraphContainerView: View {
 
     var body: some View {
         VStack {
-            chartControlsView
+//            chartControlsView
 
             ScrollView {
                 LazyVStack(spacing: 16) {
@@ -38,7 +30,6 @@ struct SensorGraphContainerView: View {
                                      containerModel: viewModel)
                     }
                 }
-                .padding()
             }
         }
         .onAppear {

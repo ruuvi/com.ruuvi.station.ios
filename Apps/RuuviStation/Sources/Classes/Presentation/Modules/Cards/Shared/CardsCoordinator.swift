@@ -1237,21 +1237,19 @@ extension CardsCoordinator {
 
     /// Publisher for the active RuuviTag data
     var activeSensorData: AnyPublisher<AnyRuuviTagSensor?, Never> {
-        $ruuviTags
-            .combineLatest($currentCardIndex)
-            .map { [weak self] ruuviTags, index in
-                guard let sSelf = self,
-                      !sSelf.cardViewModels.isEmpty,
-                      index < sSelf.cardViewModels.count else { return nil }
-                let activeViewModel = sSelf.cardViewModels[index]
-                if let sensor = ruuviTags.first(where: {
-                    ($0.luid?.value == activeViewModel.luid?.value) ||
-                    ($0.macId?.value == activeViewModel.mac?.value)
-                }) {
-                    return sensor
-                }
-                return nil
+        $activeCardViewModel
+            .combineLatest($ruuviTags)
+            .debounce(for: .milliseconds(50), scheduler: DispatchQueue.main)
+            .map { activeViewModel, ruuviTags in
+                guard let activeViewModel = activeViewModel else { return nil }
+                return ruuviTags.first(where: {
+                    ($0.luid?.any != nil && $0.luid?.any == activeViewModel.luid) ||
+                    ($0.macId?.any != nil && $0.macId?.any == activeViewModel.mac)
+                })
             }
+            .removeDuplicates(by: { prev, curr in
+                prev?.id == curr?.id
+            })
             .eraseToAnyPublisher()
     }
 

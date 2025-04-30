@@ -39,7 +39,7 @@ class CardsContainerViewModel: ObservableObject {
             .receive(on: RunLoop.main)
             .sink { [weak self] activeCard in
                 self?.activeCard = activeCard
-                self?.alertState = activeCard?.alertState
+//                self?.alertState = activeCard?.alertState
             }
             .store(in: &cancellables)
 
@@ -61,8 +61,8 @@ class CardsContainerViewModel: ObservableObject {
             .receive(on: RunLoop.main)
             .sink { [weak self] state in
                 if self?.alertState != state {
-                    print("Alert state did change: \(state) for \(String(describing: self?.activeCard?.name))")
-                    self?.alertState = state
+//                    print("Alert state did change: \(state) for \(String(describing: self?.activeCard?.name))")
+//                    self?.alertState = state
                 }
             }
             .store(in: &cancellables)
