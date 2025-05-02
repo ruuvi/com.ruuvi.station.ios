@@ -39,6 +39,7 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
         numberFormatter.decimalSeparator = "."
+        numberFormatter.usesGroupingSeparator = false
         return numberFormatter
     }()
 
@@ -147,6 +148,7 @@ extension RuuviServiceExportImpl {
         }
 
         // MARK: Common columns
+        // swiftlint:disable:next function_body_length
         func buildCommonColumns() -> [ColumnDefinition] {
             // Temperature, humidity, rssi, voltage, etc
             return [
@@ -189,7 +191,10 @@ extension RuuviServiceExportImpl {
                     header: "RSSI (\(RuuviLocalization.dBm))",
                     cellExtractor: { [weak self] record in
                         guard let sSelf = self else { return "" }
-                        return record.rssi.map { "\($0)" } ?? sSelf.emptyValueString
+                        if let rssi = record.rssi {
+                            return "\(rssi)"
+                        }
+                        return sSelf.emptyValueString
                     }
                 ),
                 ColumnDefinition(
@@ -306,14 +311,22 @@ extension RuuviServiceExportImpl {
                 ColumnDefinition(
                     header: RuuviLocalization.ExportService.movementCounter +
                         " (\(RuuviLocalization.Cards.Movements.title))",
-                    cellExtractor: { record in
-                        record.movementCounter.map { "\($0)" } ?? self.emptyValueString
+                    cellExtractor: { [weak self] record in
+                        if let movementCounter = record.movementCounter {
+                            return "\(movementCounter)"
+                        }
+                        guard let sSelf = self else { return "" }
+                        return sSelf.emptyValueString
                     }
                 ),
                 ColumnDefinition(
                     header: RuuviLocalization.ExportService.txPower + " (\(RuuviLocalization.dBm))",
-                    cellExtractor: { record in
-                        record.txPower.map { "\($0)" } ?? self.emptyValueString
+                    cellExtractor: { [weak self] record in
+                        if let txPower = record.txPower {
+                            return "\(txPower)"
+                        }
+                        guard let sSelf = self else { return "" }
+                        return sSelf.emptyValueString
                     }
                 ),
             ]
@@ -334,9 +347,11 @@ extension RuuviServiceExportImpl {
         columns.append(ColumnDefinition(
             header: RuuviLocalization.ExportService.measurementSequenceNumber,
             cellExtractor: { [weak self] record in
+                if let measurementSequenceNumber = record.measurementSequenceNumber {
+                    return "\(measurementSequenceNumber)"
+                }
                 guard let sSelf = self else { return "" }
-                return record.measurementSequenceNumber
-                    .map { "\($0)" } ?? sSelf.emptyValueString
+                return sSelf.emptyValueString
             }
         ))
 
