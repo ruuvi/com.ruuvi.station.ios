@@ -1812,130 +1812,26 @@ extension TagChartsViewController {
         )
     }
 
-    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func calculateAlertFillIfNeeded(for view: TagChartsView) {
-        if let data = view.underlyingView.data,
-           let dataSet = data.dataSets.first as? LineChartDataSet {
-
-            let maxY = view.highestVisibleY
-            let minY = view.lowestVisibleY
-
-            let colorRegular = RuuviColor.graphFillColor.color
-            let colorAlert = RuuviColor.graphAlertColor.color
-
-            if let upperAlertValue = view.underlyingView.upperAlertValue,
-                let lowerAlertValue = view.underlyingView.lowerAlertValue {
-                let colorLocations: [CGFloat]
-                let gradientColors: CFArray
-                if lowerAlertValue <= minY && upperAlertValue >= maxY {
-                    colorLocations = [
-                        0,
-                        1,
-                    ]
-                    gradientColors = [
-                        colorRegular.cgColor,
-                        colorRegular.cgColor,
-                    ] as CFArray
-                    if let gradient = CGGradient(
-                        colorsSpace: CGColorSpaceCreateDeviceRGB(),
-                        colors: gradientColors,
-                        locations: colorLocations
-                    ) {
-                        dataSet.drawFilledEnabled = true
-                        dataSet.fill = LinearGradientFill(gradient: gradient, angle: 90)
-                    }
-                } else if minY >= lowerAlertValue && minY >= upperAlertValue {
-                    colorLocations = [
-                        0,
-                        1,
-                    ]
-                    gradientColors = [
-                        colorAlert.cgColor,
-                        colorAlert.cgColor,
-                    ] as CFArray
-                    if let gradient = CGGradient(
-                        colorsSpace: CGColorSpaceCreateDeviceRGB(),
-                        colors: gradientColors,
-                        locations: colorLocations
-                    ) {
-                        dataSet.drawFilledEnabled = true
-                        dataSet.fill = LinearGradientFill(gradient: gradient, angle: 90)
-                    }
-                } else if lowerAlertValue <= minY && upperAlertValue <= maxY {
-                    let alertRelativeY = (upperAlertValue - minY) / (maxY - minY)
-                    colorLocations = [
-                        0,
-                        alertRelativeY,
-                        alertRelativeY + .leastNonzeroMagnitude,
-                        1,
-                    ]
-                    gradientColors = [
-                        colorRegular.cgColor,
-                        colorRegular.cgColor,
-                        colorAlert.cgColor,
-                        colorAlert.cgColor,
-                    ] as CFArray
-                    if let gradient = CGGradient(
-                        colorsSpace: CGColorSpaceCreateDeviceRGB(),
-                        colors: gradientColors,
-                        locations: colorLocations
-                    ) {
-                        dataSet.drawFilledEnabled = true
-                        dataSet.fill = LinearGradientFill(gradient: gradient, angle: 90)
-                    }
-                } else if lowerAlertValue >= minY && upperAlertValue >= maxY {
-                    let alertRelativeY = (lowerAlertValue - minY) / (maxY - minY)
-                    colorLocations = [
-                        0,
-                        alertRelativeY,
-                        alertRelativeY + .leastNonzeroMagnitude,
-                        1,
-                    ]
-                    gradientColors = [
-                        colorAlert.cgColor,
-                        colorAlert.cgColor,
-                        colorRegular.cgColor,
-                        colorRegular.cgColor,
-                    ] as CFArray
-                    if let gradient = CGGradient(
-                        colorsSpace: CGColorSpaceCreateDeviceRGB(),
-                        colors: gradientColors,
-                        locations: colorLocations
-                    ) {
-                        dataSet.drawFilledEnabled = true
-                        dataSet.fill = LinearGradientFill(gradient: gradient, angle: 90)
-                    }
-                } else if lowerAlertValue >= minY && upperAlertValue <= maxY {
-                    let lowerAlertRelativeY = (lowerAlertValue - minY) / (maxY - minY)
-                    let upperAlertRelativeY = (upperAlertValue - minY) / (maxY - minY)
-                    colorLocations = [
-                        0,
-                        lowerAlertRelativeY,
-                        lowerAlertRelativeY + .leastNonzeroMagnitude,
-                        upperAlertRelativeY,
-                        upperAlertRelativeY + .leastNonzeroMagnitude,
-                        1,
-                    ]
-                    gradientColors = [
-                        colorAlert.cgColor,
-                        colorAlert.cgColor,
-                        colorRegular.cgColor,
-                        colorRegular.cgColor,
-                        colorAlert.cgColor,
-                        colorAlert.cgColor,
-                    ] as CFArray
-
-                    if let gradient = CGGradient(
-                        colorsSpace: CGColorSpaceCreateDeviceRGB(),
-                        colors: gradientColors,
-                        locations: colorLocations
-                    ) {
-                        dataSet.drawFilledEnabled = true
-                        dataSet.fill = LinearGradientFill(gradient: gradient, angle: 90)
-                    }
-                }
+        guard let data = view.underlyingView.data,
+              let dataSet = data.dataSets.first as? LineChartDataSet,
+              let upperAlertValue = view.underlyingView.upperAlertValue,
+              let lowerAlertValue = view.underlyingView.lowerAlertValue else {
+            // Ensure alert range is disabled if thresholds aren't available
+            if let dataSet = view.underlyingView.data?.dataSets.first as? LineChartDataSet {
+                dataSet.hasAlertRange = false
             }
+            return
         }
+
+        // Always reset alert state first
+        dataSet.hasAlertRange = false
+
+        // Set the alert range if the thresholds are valid
+        dataSet.lowerAlertLimit = lowerAlertValue
+        dataSet.upperAlertLimit = upperAlertValue
+        dataSet.alertColor = RuuviColor.graphAlertColor.color
+        dataSet.hasAlertRange = true
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length

@@ -6,7 +6,6 @@ import UIKit
 
 enum TagChartsHelper {
 
-    // swiftlint:disable:next function_body_length
     static func newDataSet(
         upperAlertValue: Double?,
         entries: [ChartDataEntry] = [],
@@ -31,40 +30,23 @@ enum TagChartsHelper {
         lineChartDataSet.maximumGapBetweenPoints = 3600
         lineChartDataSet.gapCircleRadius = 0.5
         lineChartDataSet.gapLineWidth = 1
+        lineChartDataSet.hasAlertRange = false
 
         if showAlertRangeInGraph {
-            let lineColor = RuuviColor.graphLineColor.color
             let alertColor = RuuviColor.graphAlertColor.color
-
             if let upperAlertValue, let lowerAlertValue {
-                lineChartDataSet.isDrawLineWithGradientEnabled = true
-                lineChartDataSet.colors = [alertColor, alertColor, lineColor, lineColor, alertColor, alertColor]
-                lineChartDataSet.gradientPositions = [
-                    -.infinity,
-                     lowerAlertValue,
-                     lowerAlertValue + .leastNonzeroMagnitude,
-                     upperAlertValue,
-                     upperAlertValue + .leastNonzeroMagnitude,
-                     .infinity,
-                ]
+                lineChartDataSet.lowerAlertLimit = lowerAlertValue
+                lineChartDataSet.upperAlertLimit = upperAlertValue
+                lineChartDataSet.alertColor = alertColor
+                lineChartDataSet.hasAlertRange = true
             } else if let upperAlertValue {
-                lineChartDataSet.isDrawLineWithGradientEnabled = true
-                lineChartDataSet.colors = [lineColor, lineColor, alertColor, alertColor]
-                lineChartDataSet.gradientPositions = [
-                    -.infinity,
-                     upperAlertValue,
-                     upperAlertValue + .leastNonzeroMagnitude,
-                     .infinity,
-                ]
+                lineChartDataSet.upperAlertLimit = upperAlertValue
+                lineChartDataSet.alertColor = alertColor
+                lineChartDataSet.hasAlertRange = true
             } else if let lowerAlertValue {
-                lineChartDataSet.isDrawLineWithGradientEnabled = true
-                lineChartDataSet.colors = [alertColor, alertColor, lineColor, lineColor]
-                lineChartDataSet.gradientPositions = [
-                    -.infinity,
-                     lowerAlertValue,
-                     lowerAlertValue + .leastNonzeroMagnitude,
-                     .infinity,
-                ]
+                lineChartDataSet.lowerAlertLimit = lowerAlertValue
+                lineChartDataSet.alertColor = alertColor
+                lineChartDataSet.hasAlertRange = true
             }
         }
 
