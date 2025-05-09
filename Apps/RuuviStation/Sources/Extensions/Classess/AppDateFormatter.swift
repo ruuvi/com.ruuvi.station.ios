@@ -23,7 +23,16 @@ class AppDateFormatter {
     private let graphXAxisDateFormatter: DateFormatter = {
         let df = DateFormatter()
         df.locale = Locale.autoupdatingCurrent
-        df.setLocalizedDateFormatFromTemplate("ddMM")
+        let localeId = Locale.autoupdatingCurrent.identifier.lowercased()
+
+        // Check if the region is Finnish.
+        // They do not use leading zeros in date format hence we use "dM"
+        if localeId.contains("_fi") ||
+            localeId.hasPrefix("fi") {
+            df.setLocalizedDateFormatFromTemplate("dM")
+        } else {
+            df.setLocalizedDateFormatFromTemplate("ddMM")
+        }
         return df
     }()
 }
