@@ -88,7 +88,7 @@ packages:
     from: 0.6.6
   DGCharts:
     url: https://github.com/ruuvi/Charts
-    from: 5.1.1
+    from: 5.1.8
   LightRoute:
     url: https://github.com/rinat-enikeev/LightRoute
     from: 2.2.2
