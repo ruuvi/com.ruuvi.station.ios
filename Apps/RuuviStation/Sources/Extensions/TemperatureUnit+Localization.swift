@@ -30,4 +30,10 @@ extension TemperatureUnit {
         let upperTemp = Temperature(value: 85, unit: .celsius).converted(to: unitTemperature).value
         return .init(uncheckedBounds: (lowerTemp, upperTemp))
     }
+
+    var customAlertRange: Range<Double> {
+        let lowerTemp = Temperature(value: -55, unit: .celsius).converted(to: unitTemperature).value
+        let upperTemp = Temperature(value: 150, unit: .celsius).converted(to: unitTemperature).value
+        return .init(uncheckedBounds: (lowerTemp, upperTemp))
+    }
 }
