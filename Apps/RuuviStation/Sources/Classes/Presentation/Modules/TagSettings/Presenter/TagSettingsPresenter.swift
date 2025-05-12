@@ -1753,9 +1753,16 @@ extension TagSettingsPresenter {
         let lowerBound = Temperature(Double(lower), unit: tu.unitTemperature)
         viewModel.temperatureLowerBound.value = lowerBound
 
+        // Convert the standard minimum to current unit for proper comparison
         let temperatureUnit = viewModel?.temperatureUnit.value ?? .celsius
-        let standardMinmimumBound = temperatureUnit.alertRange.lowerBound
-        if lower < standardMinmimumBound {
+        let standardMinimumInCelsius = temperatureUnit.alertRange.lowerBound
+        let standardMinimumTemperature = Temperature(standardMinimumInCelsius, unit: .celsius)
+        let standardMinimumInCurrentUnit = standardMinimumTemperature?.converted(
+            to: temperatureUnit.unitTemperature
+        ).value ?? standardMinimumInCelsius
+
+        // Compare in the current unit
+        if lower < CGFloat(standardMinimumInCurrentUnit) {
             settings.setShowCustomTempAlertBound(for: ruuviTag.id)
             viewModel.showCustomTempAlertBound.value = true
         }
@@ -1774,10 +1781,16 @@ extension TagSettingsPresenter {
         let upperBound = Temperature(Double(upper), unit: tu.unitTemperature)
         viewModel.temperatureUpperBound.value = upperBound
 
+        // Convert the standard maximum to current unit for proper comparison
         let temperatureUnit = viewModel?.temperatureUnit.value ?? .celsius
-        let standardMaximumBound = temperatureUnit.alertRange.upperBound
+        let standardMaximumInCelsius = temperatureUnit.alertRange.upperBound
+        let standardMaximumTemperature = Temperature(standardMaximumInCelsius, unit: .celsius)
+        let standardMaximumInCurrentUnit = standardMaximumTemperature?.converted(
+            to: temperatureUnit.unitTemperature
+        ).value ?? standardMaximumInCelsius
 
-        if upper > standardMaximumBound {
+        // Compare in the current unit
+        if upper > CGFloat(standardMaximumInCurrentUnit) {
             settings.setShowCustomTempAlertBound(for: ruuviTag.id)
             viewModel.showCustomTempAlertBound.value = true
         }

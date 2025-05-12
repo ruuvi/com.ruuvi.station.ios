@@ -3804,11 +3804,8 @@ extension TagSettingsViewController {
     }
 
     private func customTempAlertBound() -> (lower: Double, upper: Double) {
-        let customLowerBound = viewModel?.customTemperatureLowerBound.value?.value ??
-            TagSettingsAlertConstants.Temperature.customLowerBound
-        let customUpperBound = viewModel?.customTemperatureUpperBound.value?.value ??
-            TagSettingsAlertConstants.Temperature.customUpperBound
-        return (lower: customLowerBound, upper: customUpperBound)
+        let tu = viewModel?.temperatureUnit.value ?? .celsius
+        return (lower: tu.customAlertRange.lowerBound, upper: tu.customAlertRange.upperBound)
     }
 
     private func formatNumber(from value: CGFloat?) -> String {
