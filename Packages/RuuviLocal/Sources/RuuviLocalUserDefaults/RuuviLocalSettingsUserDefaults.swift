@@ -737,7 +737,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         UserDefaults.standard.set(true, forKey: showCustomTempAlertBoundUDKey + id)
     }
 
-    @UserDefault("SettingsUserDefaults.showAlertsRangeInGraph", defaultValue: false)
+    @UserDefault("SettingsUserDefaults.showAlertsRangeInGraph", defaultValue: true)
     var showAlertsRangeInGraph: Bool
     @UserDefault("SettingsUserDefaults.useNewGraphRendering", defaultValue: false)
     var useNewGraphRendering: Bool
