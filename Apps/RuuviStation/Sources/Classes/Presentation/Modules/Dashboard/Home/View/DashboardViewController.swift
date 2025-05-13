@@ -76,6 +76,12 @@ class DashboardViewController: UIViewController {
                   cell.configure(with: viewModel, measurementService: self?.measurementService)
               }
               .store(in: &cell.cancellables)
+            viewModel.$alertState
+              .receive(on: DispatchQueue.main)
+              .sink { _ in
+                  cell.restartAlertAnimation(for: viewModel)
+              }
+              .store(in: &cell.cancellables)
             cell.configure(with: viewModel, measurementService: measurementService)
             cell.restartAlertAnimation(for: viewModel)
             cell.delegate = self
@@ -90,6 +96,12 @@ class DashboardViewController: UIViewController {
               .receive(on: DispatchQueue.main)
               .sink { [weak self] _ in
                   cell.configure(with: viewModel, measurementService: self?.measurementService)
+              }
+              .store(in: &cell.cancellables)
+            viewModel.$alertState
+              .receive(on: DispatchQueue.main)
+              .sink { _ in
+                  cell.restartAlertAnimation(for: viewModel)
               }
               .store(in: &cell.cancellables)
             cell.configure(with: viewModel, measurementService: measurementService)
