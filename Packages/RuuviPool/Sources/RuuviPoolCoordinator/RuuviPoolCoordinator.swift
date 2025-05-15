@@ -174,8 +174,7 @@ final class RuuviPoolCoordinator: RuuviPool {
     func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RuuviPoolError> {
         let promise = Promise<Bool, RuuviPoolError>()
         let sqliteOperation = sqlite.deleteAllRecords(ruuviTagId)
-        let cleanUpOperation = sqlite.cleanupDBSpace()
-        Future.zip(sqliteOperation, cleanUpOperation).on(success: { _ in
+        sqliteOperation.on(success: { _ in
             promise.succeed(value: true)
         }, failure: { error in
             promise.fail(error: .ruuviPersistence(error))
@@ -186,8 +185,7 @@ final class RuuviPoolCoordinator: RuuviPool {
     func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RuuviPoolError> {
         let promise = Promise<Bool, RuuviPoolError>()
         let sqliteOperation = sqlite.deleteAllRecords(ruuviTagId, before: date)
-        let cleanUpOperation = sqlite.cleanupDBSpace()
-        Future.zip(sqliteOperation, cleanUpOperation).on(success: { _ in
+        sqliteOperation.on(success: { _ in
             promise.succeed(value: true)
         }, failure: { error in
             promise.fail(error: .ruuviPersistence(error))

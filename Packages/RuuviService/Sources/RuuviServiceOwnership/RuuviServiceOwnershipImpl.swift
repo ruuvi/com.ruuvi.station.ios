@@ -205,7 +205,6 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         let deleteTagOperation = pool.delete(sensor)
         let deleteRecordsOperation = pool.deleteAllRecords(sensor.id)
         let deleteLastRecordOperation = pool.deleteLast(sensor.id)
-        let cleanUpOperation = pool.cleanupDBSpace()
         var unshareOperation: Future<MACIdentifier, RuuviServiceError>?
         var unclaimOperation: Future<AnyRuuviTagSensor, RuuviServiceError>?
         if let macId = sensor.macId,
@@ -237,8 +236,6 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
             }
         }, failure: { error in
             promise.fail(error: .ruuviPool(error))
-        }, completion: {
-            cleanUpOperation.on()
         })
         return promise.future
     }
