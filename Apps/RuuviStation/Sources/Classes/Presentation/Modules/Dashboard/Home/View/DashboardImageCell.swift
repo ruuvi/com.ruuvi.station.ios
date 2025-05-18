@@ -9,7 +9,7 @@ import Combine
 // swiftlint:disable file_length
 // swiftlint:disable:next type_body_length
 class DashboardImageCell: DashboardCell {
-    var cancellables = Set<AnyCancellable>()
+//    var cancellables = Set<AnyCancellable>()
 
     private lazy var cardBackgroundView = CardsBackgroundView()
 
@@ -681,14 +681,14 @@ extension DashboardImageCell {
             indicators.append(pressureView)
         }
 
-        // Movement
-        if let movement = viewModel.movementCounter {
-            movementView.setValue(
-                with: "\(movement)",
-                unit: RuuviLocalization.Cards.Movements.title
-            )
-            indicators.append(movementView)
-        }
+//        // Movement
+//        if let movement = viewModel.movementCounter {
+//            movementView.setValue(
+//                with: "\(movement)",
+//                unit: RuuviLocalization.Cards.Movements.title
+//            )
+//            indicators.append(movementView)
+//        }
 
         return indicators
     }
@@ -759,14 +759,14 @@ extension DashboardImageCell {
         }
 
         // PM10
-        if let pm10 = viewModel.pm10,
-           let pm10Value = measurementService?.pm10String(for: pm10) {
-            pm10View.setValue(
-                with: pm10Value,
-                unit: "\(RuuviLocalization.pm10) \(RuuviLocalization.unitPm10)"
-            )
-            indicators.append(pm10View)
-        }
+//        if let pm10 = viewModel.pm10,
+//           let pm10Value = measurementService?.pm10String(for: pm10) {
+//            pm10View.setValue(
+//                with: pm10Value,
+//                unit: "\(RuuviLocalization.pm10) \(RuuviLocalization.unitPm10)"
+//            )
+//            indicators.append(pm10View)
+//        }
 
         // NOx
         if let nox = viewModel.nox,

@@ -8,7 +8,7 @@ import Combine
 
 // swiftlint:disable:next type_body_length
 class DashboardPlainCell: DashboardCell {
-    var cancellables = Set<AnyCancellable>()
+//    var cancellables = Set<AnyCancellable>()
 
     private lazy var ruuviTagNameLabel: UILabel = {
         let label = UILabel()
@@ -589,13 +589,13 @@ extension DashboardPlainCell {
         }
 
         // Movement
-        if let movement = viewModel.movementCounter {
-            movementView.setValue(
-                with: "\(movement)",
-                unit: RuuviLocalization.Cards.Movements.title
-            )
-            indicators.append(movementView)
-        }
+//        if let movement = viewModel.movementCounter {
+//            movementView.setValue(
+//                with: "\(movement)",
+//                unit: RuuviLocalization.Cards.Movements.title
+//            )
+//            indicators.append(movementView)
+//        }
 
         return indicators
     }
@@ -684,14 +684,14 @@ extension DashboardPlainCell {
         }
 
         // PM10
-        if let pm10 = viewModel.pm10,
-           let pm10Value = measurementService?.pm10String(for: pm10) {
-            pm10View.setValue(
-                with: pm10Value,
-                unit: "\(RuuviLocalization.pm10) \(RuuviLocalization.unitPm10)"
-            )
-            indicators.append(pm10View)
-        }
+//        if let pm10 = viewModel.pm10,
+//           let pm10Value = measurementService?.pm10String(for: pm10) {
+//            pm10View.setValue(
+//                with: pm10Value,
+//                unit: "\(RuuviLocalization.pm10) \(RuuviLocalization.unitPm10)"
+//            )
+//            indicators.append(pm10View)
+//        }
 
         // NOx
         if let nox = viewModel.nox,

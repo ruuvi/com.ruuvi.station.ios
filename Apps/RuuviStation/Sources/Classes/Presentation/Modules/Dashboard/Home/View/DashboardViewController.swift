@@ -7,8 +7,185 @@ import RuuviService
 import UIKit
 import Combine
 
+@objc protocol MasonryLayoutDelegate: AnyObject {
+    @objc optional func collectionView(
+        _ collectionView: UICollectionView,
+        heightForItemAt indexPath: IndexPath,
+        with width: CGFloat
+    ) -> CGFloat
+}
+
+// MARK: - MasonryLayout
+// MARK: - MasonryLayout
+class MasonryLayout: UICollectionViewLayout {
+
+    var delegate: MasonryLayoutDelegate?
+    // MARK: - Properties
+    private let numberOfColumns: Int
+    private let cellPadding: CGFloat
+
+    private var cache: [UICollectionViewLayoutAttributes] = []
+    private var contentHeight: CGFloat = 0
+
+    // Track which item is being dragged
+    private var draggedItemIndexPath: IndexPath?
+    private var draggedItemAttributes: UICollectionViewLayoutAttributes?
+
+    private var contentWidth: CGFloat {
+        guard let collectionView = collectionView else { return 0 }
+        let insets = collectionView.contentInset
+        return collectionView.bounds.width - (insets.left + insets.right)
+    }
+
+    // MARK: - Initialization
+    init(numberOfColumns: Int = 2, cellPadding: CGFloat = 4) {
+        self.numberOfColumns = numberOfColumns
+        self.cellPadding = cellPadding
+        super.init()
+    }
+
+    required init?(coder: NSCoder) {
+        self.numberOfColumns = 2
+        self.cellPadding = 0
+        super.init(coder: coder)
+    }
+
+    // MARK: - Layout Preparation
+    override func prepare() {
+        guard let collectionView = collectionView else { return }
+
+        cache.removeAll(keepingCapacity: true)
+        contentHeight = 0
+
+        // Calculate column width
+        let columnWidth = contentWidth / CGFloat(numberOfColumns)
+
+        // Track the Y position for each column
+        var xOffsets: [CGFloat] = []
+        for column in 0..<numberOfColumns {
+            xOffsets.append(CGFloat(column) * columnWidth)
+        }
+
+        var yOffsets = [CGFloat](repeating: 0, count: numberOfColumns)
+
+        // Iterate through each item
+        for item in 0..<collectionView.numberOfItems(inSection: 0) {
+            let indexPath = IndexPath(item: item, section: 0)
+
+            // Skip the dragged item as we'll handle it separately
+            if indexPath == draggedItemIndexPath, let draggedAttributes = draggedItemAttributes {
+                cache.append(draggedAttributes)
+                continue
+            }
+
+            // Find the column with the shortest height
+            var column = 0
+            for index in 1..<numberOfColumns {
+                if yOffsets[index] < yOffsets[column] {
+                    column = index
+                }
+            }
+
+            // Get the height for this cell
+            let cellHeight = getCellHeight(for: indexPath, width: columnWidth)
+
+            // Calculate the frame
+            let xOffset = xOffsets[column]
+            let yOffset = yOffsets[column]
+
+            let frame = CGRect(
+                x: xOffset + cellPadding,
+                y: yOffset + cellPadding,
+                width: columnWidth - (cellPadding * 2),
+                height: cellHeight - (cellPadding * 2)
+            )
+
+            // Create the attributes
+            let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
+            attributes.frame = frame
+            cache.append(attributes)
+
+            // Update the content height and column heights
+            contentHeight = max(contentHeight, frame.maxY + cellPadding)
+            yOffsets[column] = frame.maxY + (cellPadding * 2)
+        }
+    }
+
+    // MARK: - Private methods
+    private func getCellHeight(for indexPath: IndexPath, width: CGFloat) -> CGFloat {
+        return delegate?.collectionView?(
+                    collectionView!,
+                    heightForItemAt: indexPath,
+                    with: width
+                ) ?? 200 // Default height if no delegate method is implemented
+    }
+
+    // MARK: - Collection View Layout Methods
+    override var collectionViewContentSize: CGSize {
+        return CGSize(width: contentWidth, height: contentHeight)
+    }
+
+    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+        return cache.filter { $0.frame.intersects(rect) }
+    }
+
+    override func layoutAttributesForItem(at indexPath: IndexPath) -> UICollectionViewLayoutAttributes? {
+        return cache.first(where: { $0.indexPath == indexPath })
+    }
+
+    // Reset cache when layout is invalidated
+    override func invalidateLayout() {
+        super.invalidateLayout()
+        // We'll recalculate in prepare()
+    }
+
+    // MARK: - Dragging Support
+
+    // Return true to make sure the layout updates during dragging
+    override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+        return true
+    }
+
+    // This integrates with the native drag & drop system
+    override func layoutAttributesForInteractivelyMovingItem(at indexPath: IndexPath, withTargetPosition position: CGPoint) -> UICollectionViewLayoutAttributes {
+        let attributes = super.layoutAttributesForInteractivelyMovingItem(at: indexPath, withTargetPosition: position)
+
+        // Calculate proper size for the dragged item
+        let columnWidth = contentWidth / CGFloat(numberOfColumns)
+        let cellHeight = getCellHeight(for: indexPath, width: columnWidth)
+
+        // Keep the width consistent but use our calculated height
+        attributes.frame = CGRect(
+            x: position.x - columnWidth/2 + cellPadding,
+            y: position.y - cellHeight/2 + cellPadding,
+            width: columnWidth - (cellPadding * 2),
+            height: cellHeight - (cellPadding * 2)
+        )
+
+        // Visual feedback for dragging
+        attributes.alpha = 0.95
+        attributes.zIndex = 99
+
+        // Store attributes for the dragged item
+        draggedItemIndexPath = indexPath
+        draggedItemAttributes = attributes.copy() as? UICollectionViewLayoutAttributes
+
+        return attributes
+    }
+
+    // Clear dragging state when done
+    func clearDraggingState() {
+        draggedItemIndexPath = nil
+        draggedItemAttributes = nil
+        invalidateLayout()
+    }
+}
+
+private enum Section { case main }
+
 class DashboardViewController: UIViewController {
     // Configuration
+    private let sizingCell = DashboardPlainCell()
     var output: DashboardViewOutput!
     var menuPresentInteractiveTransition: UIViewControllerInteractiveTransitioning!
     var menuDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
@@ -18,11 +195,13 @@ class DashboardViewController: UIViewController {
         }
     }
 
+    private var dataSource: UICollectionViewDiffableDataSource<Section, CardsViewModel>!
     var viewModels: [CardsViewModel] = [] {
         didSet {
             updateUI()
         }
     }
+    private var ticker: AnyCancellable?
 
     var dashboardType: DashboardType! {
         didSet {
@@ -70,12 +249,12 @@ class DashboardViewController: UIViewController {
                 withReuseIdentifier: "cellId",
                 for: indexPath
             ) as? DashboardImageCell else { return nil }
-            viewModel.combinedPublisher()
-              .receive(on: DispatchQueue.main)
-              .sink { [weak self] _ in
-                  cell.configure(with: viewModel, measurementService: self?.measurementService)
-              }
-              .store(in: &cell.cancellables)
+//            viewModel.combinedPublisher()
+//              .receive(on: DispatchQueue.main)
+//              .sink { [weak self] _ in
+//                  cell.configure(with: viewModel, measurementService: self?.measurementService)
+//              }
+//              .store(in: &cell.cancellables)
             viewModel.$alertState
               .receive(on: DispatchQueue.main)
               .sink { _ in
@@ -92,12 +271,12 @@ class DashboardViewController: UIViewController {
                 withReuseIdentifier: "cellIdPlain",
                 for: indexPath
             ) as? DashboardPlainCell else { return nil }
-            viewModel.combinedPublisher()
-              .receive(on: DispatchQueue.main)
-              .sink { [weak self] _ in
-                  cell.configure(with: viewModel, measurementService: self?.measurementService)
-              }
-              .store(in: &cell.cancellables)
+//            viewModel.combinedPublisher()
+//              .receive(on: DispatchQueue.main)
+//              .sink { [weak self] _ in
+//                  cell.configure(with: viewModel, measurementService: self?.measurementService)
+//              }
+//              .store(in: &cell.cancellables)
             viewModel.$alertState
               .receive(on: DispatchQueue.main)
               .sink { _ in
@@ -174,14 +353,16 @@ class DashboardViewController: UIViewController {
     }()
 
     private lazy var collectionView: UICollectionView = {
+        let layout = MasonryLayout(numberOfColumns: 3, cellPadding: 4)
+        layout.delegate = self
         let cv = UICollectionView(
             frame: .zero,
-            collectionViewLayout: createLayout()
+            collectionViewLayout: layout
         )
         cv.backgroundColor = .clear
         cv.showsVerticalScrollIndicator = false
         cv.delegate = self
-        cv.dataSource = self
+//        cv.dataSource = self
         cv.dragDelegate = self
         cv.dropDelegate = self
         cv.alwaysBounceVertical = true
@@ -218,6 +399,7 @@ class DashboardViewController: UIViewController {
 
     deinit {
         appDidBecomeActiveToken?.invalidate()
+        ticker?.cancel()
     }
 }
 
@@ -227,6 +409,8 @@ extension DashboardViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
+        configureDiffableDataSource()      // A-1
+        startGlobalTicker()                // A-5
         configureRestartAnimationsOnAppDidBecomeActive()
         localize()
         output.viewDidLoad()
@@ -257,6 +441,188 @@ extension DashboardViewController {
     ) {
         super.viewWillTransition(to: size, with: coordinator)
         reloadCollectionView(redrawLayout: true)
+    }
+
+    private func configureDiffableDataSource() {
+        dataSource = UICollectionViewDiffableDataSource<Section, CardsViewModel>(
+            collectionView: collectionView
+        ) { [weak self] cv, indexPath, model -> UICollectionViewCell? in
+            return self?.cell(collectionView: cv,
+                               indexPath: indexPath,
+                               viewModel: model)
+        }
+        applySnapshot(animating: false)
+    }
+
+    private func applySnapshot(animating: Bool = true) {
+        var snapshot = NSDiffableDataSourceSnapshot<Section, CardsViewModel>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(viewModels, toSection: .main)
+        print("viewModels.count: \(viewModels.count)")
+        dataSource.apply(snapshot, animatingDifferences: animating)
+    }
+
+    // MARK: ––––– A-5  1 Hz ticker updates only visible cells
+    private func startGlobalTicker() {
+        ticker = Timer
+            .publish(every: 1, on: .main, in: .common)
+            .autoconnect()
+            .sink { [weak self] _ in
+                self?.refreshVisibleCells()
+            }
+    }
+
+    private func refreshVisibleCells() {
+        collectionView.visibleCells.forEach { cell in
+            guard let dashCell = cell as? DashboardCell,
+                  let indexPath = collectionView.indexPath(for: cell),
+                  indexPath.item < viewModels.count else { return }
+            dashCell.restartAlertAnimation(for: viewModels[indexPath.item])
+        }
+    }
+
+    func createLayout() -> UICollectionViewLayout {
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0), // Item takes full width of its group
+            heightDimension: .estimated(100) // ESTIMATED height, cell will self-size
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+
+        // Adjust columnCount to how many columns you want
+        let columnCount = 2
+
+        // Group to hold items horizontally (for columns)
+        // The group's height is also estimated, as it depends on the tallest item in that "row"
+        // for a true masonry, each column is independent.
+        // For a simpler "waterfall" that fills row by row, this approach is a good start.
+        // For true independent column masonry, you'd typically create a custom NSCollectionLayoutGroup.
+        // However, a common approach is to make items in a group have estimated height
+        // and let the layout engine arrange them.
+
+        // This creates a group that effectively represents one "row" in the masonry.
+        // For a more traditional masonry where columns are independent, you might need a custom layout subclass
+        // or a more complex group structure. A simpler approach for "columns" is often to
+        // have a group that spans the full width and contains multiple items side-by-side.
+
+        // Let's define a group that represents a single column's width.
+        // Then the section will lay these out.
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0 / CGFloat(columnCount)),
+            heightDimension: .estimated(100) // Group height is also estimated
+        )
+
+        // If you want items to be laid out vertically within each column before moving to the next:
+        // This is a bit more complex with standard compositional layout for true masonry.
+        // A common simplification is to have a horizontal group with 'columnCount' items.
+        // The layout will try to fit them.
+
+        // Simpler approach for multi-column:
+        // Create a group that contains 'columnCount' items horizontally.
+        let groupHorizontalSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .estimated(100) // Height is estimated
+        )
+        let group = NSCollectionLayoutGroup.horizontal(
+            layoutSize: groupHorizontalSize,
+            subitem: item, // This item will be repeated 'columnCount' times
+            count: columnCount
+        )
+        group.interItemSpacing = .fixed(0) // Spacing between items in the row (columns)
+
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 0 // Spacing between rows
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+
+        return UICollectionViewCompositionalLayout(section: section)
+    }
+
+    // MARK: ––––– reloading pipeline replaced (A-4)
+    /// Was `reloadCollectionView`; now only mutates the snapshot.
+    private func syncAndApplySnapshot(redrawLayout: Bool = false) {
+        if redrawLayout {
+            collectionView.collectionViewLayout.invalidateLayout()
+        }
+        applySnapshot(animating: true)
+    }
+
+    // Whenever `viewModels` changes from outside → rebuild snapshot
+    private func updateUI() {
+        showNoSensorsAddedMessage(show: viewModels.isEmpty)
+        syncAndApplySnapshot()
+    }
+
+    // MARK: ––––– Drag & Drop (A-6)    — only changed performDropWith / reorder
+//    func collectionView(_ collectionView: UICollectionView,
+//                        performDropWith coordinator: UICollectionViewDropCoordinator) {
+//
+//        let dest = coordinator.destinationIndexPath ?? IndexPath(item: viewModels.count-1, section: 0)
+//        guard coordinator.proposal.operation == .move,
+//              let item = coordinator.items.first,
+//              let src = item.sourceIndexPath,
+//              let model = item.dragItem.localObject as? CardsViewModel else { return }
+//
+//        // mutate model array
+//        viewModels.remove(at: src.item)
+//        viewModels.insert(model, at: dest.item)
+//
+//        // persist order & re-apply snapshot
+//        syncAndApplySnapshot()
+//
+//        coordinator.drop(item.dragItem, toItemAt: dest)
+//
+//        let macIds = viewModels.compactMap { $0.mac?.value }
+//        output.viewDidReorderSensors(with: .manual, orderedIds: macIds)
+//    }
+
+    func collectionView(_ collectionView: UICollectionView, performDropWith coordinator: UICollectionViewDropCoordinator) {
+        // Get the destination index path
+        guard let destinationIndexPath = coordinator.destinationIndexPath else { return }
+
+        // Handle the drop for each item
+        for item in coordinator.items {
+            if let sourceIndexPath = item.sourceIndexPath {
+                // This is a reordering operation within the same collection view
+
+                // Update the data source
+                if let itemToMove = dataSource.itemIdentifier(
+                    for: sourceIndexPath
+                ) {
+                    var snapshot = dataSource.snapshot()
+                    snapshot.deleteItems([itemToMove])
+
+                    if destinationIndexPath.item >= snapshot
+                        .numberOfItems(inSection: .main) {
+                        snapshot.appendItems([itemToMove], toSection: .main)
+                    } else {
+                        let destinationItem = dataSource.itemIdentifier(for: destinationIndexPath)!
+                        snapshot.insertItems([itemToMove], beforeItem: destinationItem)
+                    }
+
+                    // Apply the snapshot with animation
+                    dataSource.apply(snapshot, animatingDifferences: true)
+
+                    // Update our items array to match the new order
+                    viewModels = dataSource.snapshot().itemIdentifiers(
+                        inSection: .main
+                    )
+
+                    // Tell the coordinator we've handled the drop
+                    coordinator.drop(item.dragItem, toItemAt: destinationIndexPath)
+
+                    // Clear dragging state in layout
+                    if let layout = collectionView.collectionViewLayout as? MasonryLayout {
+                        layout.clearDraggingState()
+                    }
+                }
+            }
+        }
+    }
+
+    func collectionView(_ collectionView: UICollectionView, dragSessionDidEnd session: UIDragSession) {
+        // Make sure to clear any dragging state
+        if let layout = collectionView.collectionViewLayout as? MasonryLayout {
+            layout.clearDraggingState()
+        }
     }
 }
 
@@ -679,56 +1045,56 @@ private extension DashboardViewController {
         collectionView.addGestureRecognizer(panGesture)
     }
 
-    func createLayout() -> UICollectionViewLayout {
-        let sectionProvider = { (
-            _: Int,
-            _: NSCollectionLayoutEnvironment
-        ) -> NSCollectionLayoutSection? in
-
-        let widthMultiplier = GlobalHelpers.isDeviceTablet() ?
-            (!GlobalHelpers.isDeviceLandscape() ? 0.5 : 0.3333) :
-            (GlobalHelpers.isDeviceLandscape() ? 0.5 : 1.0)
-
-        let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(widthMultiplier),
-            heightDimension: .estimated(200)
-        )
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        let itemHorizontalSpacing: CGFloat = GlobalHelpers.isDeviceTablet() ? 6 : 4
-        item.contentInsets = NSDirectionalEdgeInsets(
-            top: 0,
-            leading: itemHorizontalSpacing,
-            bottom: 0,
-            trailing: itemHorizontalSpacing
-        )
-
-        let groupSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .estimated(1)
-        )
-        let group = NSCollectionLayoutGroup.horizontal(
-            layoutSize: groupSize, subitems: [item]
-        )
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = GlobalHelpers.isDeviceTablet() ? 12 : 8
-        section.contentInsets = NSDirectionalEdgeInsets(
-            top: 0,
-            leading: 0,
-            bottom: 12,
-            trailing: 0
-        )
-        return section
-        }
-
-        let config = UICollectionViewCompositionalLayoutConfiguration()
-        config.scrollDirection = .vertical
-        let layout = UICollectionViewCompositionalLayout(
-            sectionProvider: sectionProvider,
-            configuration: config
-        )
-        return layout
-    }
+//    func createLayout() -> UICollectionViewLayout {
+//        let sectionProvider = { (
+//            _: Int,
+//            _: NSCollectionLayoutEnvironment
+//        ) -> NSCollectionLayoutSection? in
+//
+//        let widthMultiplier = GlobalHelpers.isDeviceTablet() ?
+//            (!GlobalHelpers.isDeviceLandscape() ? 0.5 : 0.3333) :
+//            (GlobalHelpers.isDeviceLandscape() ? 0.5 : 1.0)
+//
+//        let itemSize = NSCollectionLayoutSize(
+//            widthDimension: .fractionalWidth(widthMultiplier),
+//            heightDimension: .estimated(200)
+//        )
+//        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+//        let itemHorizontalSpacing: CGFloat = GlobalHelpers.isDeviceTablet() ? 6 : 4
+//        item.contentInsets = NSDirectionalEdgeInsets(
+//            top: 0,
+//            leading: itemHorizontalSpacing,
+//            bottom: 0,
+//            trailing: itemHorizontalSpacing
+//        )
+//
+//        let groupSize = NSCollectionLayoutSize(
+//            widthDimension: .fractionalWidth(1.0),
+//            heightDimension: .estimated(1)
+//        )
+//        let group = NSCollectionLayoutGroup.horizontal(
+//            layoutSize: groupSize, subitems: [item]
+//        )
+//
+//        let section = NSCollectionLayoutSection(group: group)
+//        section.interGroupSpacing = GlobalHelpers.isDeviceTablet() ? 12 : 8
+//        section.contentInsets = NSDirectionalEdgeInsets(
+//            top: 0,
+//            leading: 0,
+//            bottom: 12,
+//            trailing: 0
+//        )
+//        return section
+//        }
+//
+//        let config = UICollectionViewCompositionalLayoutConfiguration()
+//        config.scrollDirection = .vertical
+//        let layout = UICollectionViewCompositionalLayout(
+//            sectionProvider: sectionProvider,
+//            configuration: config
+//        )
+//        return layout
+//    }
 
     private func configureRestartAnimationsOnAppDidBecomeActive() {
         appDidBecomeActiveToken = NotificationCenter
@@ -766,29 +1132,29 @@ extension DashboardViewController: UIGestureRecognizerDelegate {
     }
 }
 
-extension DashboardViewController: UICollectionViewDataSource {
-    func collectionView(
-        _: UICollectionView,
-        numberOfItemsInSection _: Int
-    ) -> Int {
-        viewModels.count
-    }
-
-    func collectionView(
-        _ collectionView: UICollectionView,
-        cellForItemAt indexPath: IndexPath
-    ) -> UICollectionViewCell {
-        guard let cell = cell(
-            collectionView: collectionView,
-            indexPath: indexPath,
-            viewModel: viewModels[indexPath.item]
-        )
-        else {
-            fatalError()
-        }
-        return cell
-    }
-}
+//extension DashboardViewController: UICollectionViewDataSource {
+//    func collectionView(
+//        _: UICollectionView,
+//        numberOfItemsInSection _: Int
+//    ) -> Int {
+//        viewModels.count
+//    }
+//
+//    func collectionView(
+//        _ collectionView: UICollectionView,
+//        cellForItemAt indexPath: IndexPath
+//    ) -> UICollectionViewCell {
+//        guard let cell = cell(
+//            collectionView: collectionView,
+//            indexPath: indexPath,
+//            viewModel: viewModels[indexPath.item]
+//        )
+//        else {
+//            fatalError()
+//        }
+//        return cell
+//    }
+//}
 
 extension DashboardViewController: UICollectionViewDelegate {
 
@@ -874,29 +1240,29 @@ extension DashboardViewController: UICollectionViewDropDelegate {
         return UICollectionViewDropProposal(operation: .forbidden)
     }
 
-    func collectionView(
-        _ collectionView: UICollectionView,
-        performDropWith coordinator: UICollectionViewDropCoordinator
-    ) {
-        let destinationIndexPath: IndexPath
-
-        if let indexPath = coordinator.destinationIndexPath {
-            destinationIndexPath = indexPath
-        } else {
-            let row = collectionView.numberOfItems(inSection: 0)
-            destinationIndexPath = IndexPath(row: row, section: 0)
-        }
-
-        guard destinationIndexPath.row < viewModels.count else { return }
-
-        if coordinator.proposal.operation == .move {
-            reorderItems(
-                coordinator,
-                destinationIndexPath: destinationIndexPath,
-                collectionView: collectionView
-            )
-        }
-    }
+//    func collectionView(
+//        _ collectionView: UICollectionView,
+//        performDropWith coordinator: UICollectionViewDropCoordinator
+//    ) {
+//        let destinationIndexPath: IndexPath
+//
+//        if let indexPath = coordinator.destinationIndexPath {
+//            destinationIndexPath = indexPath
+//        } else {
+//            let row = collectionView.numberOfItems(inSection: 0)
+//            destinationIndexPath = IndexPath(row: row, section: 0)
+//        }
+//
+//        guard destinationIndexPath.row < viewModels.count else { return }
+//
+//        if coordinator.proposal.operation == .move {
+//            reorderItems(
+//                coordinator,
+//                destinationIndexPath: destinationIndexPath,
+//                collectionView: collectionView
+//            )
+//        }
+//    }
 
     func reorderItems(
         _ coordinator: UICollectionViewDropCoordinator,
@@ -928,6 +1294,39 @@ extension DashboardViewController: UICollectionViewDropDelegate {
     ) -> UIDragPreviewParameters? {
         guard let cell = collectionView.cellForItem(at: indexPath) else { return nil }
         return dragPreviewParameters(for: cell)
+    }
+}
+
+// MARK: - Masonry Layout Delegate
+extension DashboardViewController: MasonryLayoutDelegate {
+    func collectionView(_ collectionView: UICollectionView, heightForItemAt indexPath: IndexPath, with width: CGFloat) -> CGFloat {
+        // Get the data for this cell
+        let viewModel = viewModels[indexPath.item]
+
+        // Calculate the height using the sizing cell
+        return calculateHeight(for: viewModel, width: width)
+    }
+
+    // Calculate the height by configuring the sizing cell and measuring its height
+    private func calculateHeight(for viewModel: CardsViewModel, width: CGFloat) -> CGFloat {
+        // Configure the sizing cell with the same data
+        sizingCell.frame = CGRect(x: 0, y: 0, width: width, height: 1000) // Height will be determined by autolayout
+        sizingCell.configure(with: viewModel, measurementService: measurementService)
+
+        // Layout the cell
+        sizingCell.setNeedsLayout()
+        sizingCell.layoutIfNeeded()
+
+        // Calculate the height using systemLayoutSizeFitting
+        let targetSize = CGSize(width: width, height: UIView.layoutFittingCompressedSize.height)
+        let fittingSize = sizingCell.systemLayoutSizeFitting(
+            targetSize,
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        )
+
+        // Return the calculated height
+        return fittingSize.height
     }
 }
 
@@ -1107,10 +1506,10 @@ extension DashboardViewController: NoSensorViewDelegate {
 }
 
 private extension DashboardViewController {
-    func updateUI() {
-        showNoSensorsAddedMessage(show: viewModels.isEmpty)
-        collectionView.reloadWithoutAnimation()
-    }
+//    func updateUI() {
+//        showNoSensorsAddedMessage(show: viewModels.isEmpty)
+//        collectionView.reloadWithoutAnimation()
+//    }
 }
 
 // MARK: - UITextFieldDelegate

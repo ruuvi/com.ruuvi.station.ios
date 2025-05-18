@@ -687,10 +687,10 @@ extension DashboardPresenter {
             } else {
                 assertionFailure()
             }
-            viewModel.rhAlertLowerBound = alertService
-                .lowerRelativeHumidity(for: ruuviTag)
-            viewModel.rhAlertUpperBound = alertService
-                .upperRelativeHumidity(for: ruuviTag)
+//            viewModel.rhAlertLowerBound = alertService
+//                .lowerRelativeHumidity(for: ruuviTag)
+//            viewModel.rhAlertUpperBound = alertService
+//                .upperRelativeHumidity(for: ruuviTag)
 
             // Inject previous record if available that will prevent showing nil
             // value while this method is rebuilding the collection and fetching
@@ -752,10 +752,10 @@ extension DashboardPresenter {
             } else {
                 assertionFailure()
             }
-            viewModel.rhAlertLowerBound = alertService
-                .lowerRelativeHumidity(for: ruuviTag)
-            viewModel.rhAlertUpperBound = alertService
-                .upperRelativeHumidity(for: ruuviTag)
+//            viewModel.rhAlertLowerBound = alertService
+//                .lowerRelativeHumidity(for: ruuviTag)
+//            viewModel.rhAlertUpperBound = alertService
+//                .upperRelativeHumidity(for: ruuviTag)
 
             // Inject previous record if available that will prevent showing nil
             // value while this method is rebuilding the collection and fetching
@@ -1292,15 +1292,15 @@ extension DashboardPresenter {
                                 ($0.luid != nil && ($0.luid == physicalSensor.luid?.any))
                                     || ($0.mac != nil && ($0.mac == physicalSensor.macId?.any))
                             }.forEach { viewModel in
-                                if sSelf.alertService.hasRegistrations(for: physicalSensor) {
-                                    viewModel.rhAlertLowerBound = sSelf.alertService
-                                        .lowerRelativeHumidity(for: physicalSensor)
-                                    viewModel.rhAlertUpperBound = sSelf.alertService
-                                        .upperRelativeHumidity(for: physicalSensor)
-                                } else {
-                                    viewModel.rhAlertLowerBound = 0
-                                    viewModel.rhAlertUpperBound = 100
-                                }
+//                                if sSelf.alertService.hasRegistrations(for: physicalSensor) {
+//                                    viewModel.rhAlertLowerBound = sSelf.alertService
+//                                        .lowerRelativeHumidity(for: physicalSensor)
+//                                    viewModel.rhAlertUpperBound = sSelf.alertService
+//                                        .upperRelativeHumidity(for: physicalSensor)
+//                                } else {
+//                                    viewModel.rhAlertLowerBound = 0
+//                                    viewModel.rhAlertUpperBound = 100
+//                                }
                                 sSelf.syncAlerts(
                                     ruuviTag: physicalSensor,
                                     viewModel: viewModel

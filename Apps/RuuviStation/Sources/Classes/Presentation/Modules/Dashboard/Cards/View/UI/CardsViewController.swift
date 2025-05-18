@@ -772,9 +772,9 @@ extension CardsViewController {
             item.$movementAlertMutedTill,
             item.$connectionAlertMutedTill,
             item.$carbonDioxideAlertMutedTill,
-            item.$pMatter1AlertMutedTill,
+//            item.$pMatter1AlertMutedTill,
             item.$pMatter2_5AlertMutedTill,
-            item.$pMatter4AlertMutedTill,
+//            item.$pMatter4AlertMutedTill,
             item.$pMatter10AlertMutedTill,
             item.$vocAlertMutedTill,
             item.$noxAlertMutedTill,
@@ -796,18 +796,18 @@ extension CardsViewController {
             }
             .store(in: &currentVisibleCancellables)
 
-        // 3) Observe properties that change top-action-button visibility
-        item.$isChartAvailable
-            .sink { [weak self] _ in
-                self?.updateTopActionButtonVisibility()
-            }
-            .store(in: &currentVisibleCancellables)
-
-        item.$isAlertAvailable
-            .sink { [weak self] _ in
-                self?.updateTopActionButtonVisibility()
-            }
-            .store(in: &currentVisibleCancellables)
+//        // 3) Observe properties that change top-action-button visibility
+//        item.$isChartAvailable
+//            .sink { [weak self] _ in
+//                self?.updateTopActionButtonVisibility()
+//            }
+//            .store(in: &currentVisibleCancellables)
+//
+//        item.$isAlertAvailable
+//            .sink { [weak self] _ in
+//                self?.updateTopActionButtonVisibility()
+//            }
+//            .store(in: &currentVisibleCancellables)
 
         item.$isConnected
             .sink { [weak self] _ in
@@ -829,9 +829,9 @@ extension CardsViewController {
             currentVisibleItem?.movementAlertMutedTill,
             currentVisibleItem?.connectionAlertMutedTill,
             currentVisibleItem?.carbonDioxideAlertMutedTill,
-            currentVisibleItem?.pMatter1AlertMutedTill,
+//            currentVisibleItem?.pMatter1AlertMutedTill,
             currentVisibleItem?.pMatter2_5AlertMutedTill,
-            currentVisibleItem?.pMatter4AlertMutedTill,
+//            currentVisibleItem?.pMatter4AlertMutedTill,
             currentVisibleItem?.pMatter10AlertMutedTill,
             currentVisibleItem?.vocAlertMutedTill,
             currentVisibleItem?.noxAlertMutedTill,
@@ -889,25 +889,25 @@ extension CardsViewController {
             return
         }
 
-        if let isChartAvaiable = viewModel.isChartAvailable {
-            chartButton.isHidden = !isChartAvaiable
-        } else {
-            chartButton.isHidden = true
-        }
-
-        let type = viewModel.type
-        switch type {
-        case .ruuvi:
-            if let isAlertAvailable = viewModel.isAlertAvailable {
-                alertButton.isHidden = !isAlertAvailable
-                alertButtonHidden.isUserInteractionEnabled = isAlertAvailable
-            } else {
-                alertButton.isHidden =
-                    !viewModel.isConnected || viewModel.serviceUUID == nil
-                alertButtonHidden.isUserInteractionEnabled =
-                    viewModel.isConnected || viewModel.serviceUUID != nil
-            }
-        }
+//        if let isChartAvaiable = viewModel.isChartAvailable {
+//            chartButton.isHidden = !isChartAvaiable
+//        } else {
+//            chartButton.isHidden = true
+//        }
+//
+//        let type = viewModel.type
+//        switch type {
+//        case .ruuvi:
+//            if let isAlertAvailable = viewModel.isAlertAvailable {
+//                alertButton.isHidden = !isAlertAvailable
+//                alertButtonHidden.isUserInteractionEnabled = isAlertAvailable
+//            } else {
+//                alertButton.isHidden =
+//                    !viewModel.isConnected || viewModel.serviceUUID == nil
+//                alertButtonHidden.isUserInteractionEnabled =
+//                    viewModel.isConnected || viewModel.serviceUUID != nil
+//            }
+//        }
     }
 
     private func setArrowButtonsVisibility(hidden: Bool, animated: Bool) {

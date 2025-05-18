@@ -286,19 +286,19 @@ extension CardsLargeImageCell {
             hidePressureView(hide: true)
         }
 
-        // Movement
-        switch viewModel.type {
-        case .ruuvi:
-            if let movement = viewModel.movementCounter {
-                hideMovementView(hide: false)
-                movementView.setValue(
-                    with: "\(movement)",
-                    unit: RuuviLocalization.Cards.Movements.title
-                )
-            } else {
-                hideMovementView(hide: true)
-            }
-        }
+//        // Movement
+//        switch viewModel.type {
+//        case .ruuvi:
+//            if let movement = viewModel.movementCounter {
+//                hideMovementView(hide: false)
+//                movementView.setValue(
+//                    with: "\(movement)",
+//                    unit: RuuviLocalization.Cards.Movements.title
+//                )
+//            } else {
+//                hideMovementView(hide: true)
+//            }
+//        }
 
         // Ago
         if let date = viewModel.date?.ruuviAgo() {

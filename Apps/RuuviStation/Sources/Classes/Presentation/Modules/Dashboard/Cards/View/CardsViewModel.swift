@@ -6,98 +6,92 @@ import UIKit
 import MobileCoreServices
 import Combine
 
+// MARK: - Card type
+
 enum CardType {
     case ruuvi
 }
 
+// MARK: - View‑model
+
 final class CardsViewModel: NSObject, ObservableObject {
-    // MARK: - Basic
+
+    // MARK: Immutable identity (for diffable DS)
+    private let identity: String
+    /// `Identifiable` conformance
+    var id: String { identity }
+
+    /// `Hashable` – only the immutable identity participates
+    override var hash: Int { identity.hashValue }
+    static func == (lhs: CardsViewModel, rhs: CardsViewModel) -> Bool { lhs.identity == rhs.identity }
+
+    // MARK: Dirty flag driving cell refresh
+    @Published var dirtyVersion = UUID()
+    private func markDirty() { dirtyVersion = UUID() }
+
+    // MARK: - Basic metadata (fields that change UI)
 
     @Published var type: CardType = .ruuvi
 
-    // Core sensor identifiers
-    @Published var id: String?
-    @Published var luid: AnyLocalIdentifier?
-    @Published var mac: AnyMACIdentifier?
-    @Published var serviceUUID: String?
+    // Core sensor identifiers (mutable for legacy code, excluded from hash)
+    @Published var sensorId: String?            { didSet { markDirty() } }
+    @Published var luid: AnyLocalIdentifier?    { didSet { markDirty() } }
+    @Published var mac: AnyMACIdentifier?       { didSet { markDirty() } }
+    @Published var serviceUUID: String?         { didSet { markDirty() } }
 
-    // Basic metadata
-    @Published var name: String = ""
-    @Published var version: Int?
-    @Published var isConnectable: Bool = false
-    @Published var isConnected: Bool = false
-    @Published var isCloud: Bool = false
+    @Published var name: String = ""            { didSet { markDirty() } }
+    @Published var version: Int?                { didSet { markDirty() } }
+    @Published var isConnectable: Bool = false  { didSet { markDirty() } }
+    @Published var isConnected: Bool = false    { didSet { markDirty() } }
+    @Published var isCloud: Bool = false        { didSet { markDirty() } }
     @Published var isOwner: Bool = false
     @Published var canShareTag: Bool = false
 
     // Data reading source
-    @Published var source: RuuviTagSensorRecordSource?
+    @Published var source: RuuviTagSensorRecordSource? { didSet { markDirty() } }
 
-    // Measurement fields
-    @Published var temperature: Temperature?
-    @Published var humidity: Humidity?
-    @Published var pressure: Pressure?
-    @Published var rssi: Int?
-    @Published var voltage: Voltage?
-    @Published var pm1: Double?
-    @Published var pm2_5: Double?
-    @Published var pm4: Double?
-    @Published var pm10: Double?
-    @Published var co2: Double?
-    @Published var voc: Double?
-    @Published var nox: Double?
-    @Published var luminance: Double?
-    @Published var dbaAvg: Double?
-    @Published var dbaPeak: Double?
+    // Measurements displayed in cells
+    @Published var temperature: Temperature? { didSet { markDirty() } }
+    @Published var humidity: Humidity?       { didSet { markDirty() } }
+    @Published var pressure: Pressure?       { didSet { markDirty() } }
+    @Published var pm2_5: Double?            { didSet { markDirty() } }
+    @Published var co2: Double?              { didSet { markDirty() } }
+    @Published var voc: Double?              { didSet { markDirty() } }
+    @Published var nox: Double?              { didSet { markDirty() } }
+    @Published var luminance: Double?        { didSet { markDirty() } }
+    @Published var dbaAvg: Double?           { didSet { markDirty() } }
 
-    // Battery
-    @Published var batteryNeedsReplacement: Bool?
+    // Battery + background
+    @Published var batteryNeedsReplacement: Bool? { didSet { markDirty() } }
+    @Published var background: UIImage?          { didSet { markDirty() } }
 
-    // Background
-    @Published var background: UIImage?
+    // Misc UI flags
+    @Published var date: Date? { didSet { markDirty() } }
+    @Published var alertState: AlertState? { didSet { markDirty() } }
+    @Published var networkSyncStatus: NetworkSyncStatus = .none { didSet { markDirty() } }
 
-    // Date & location
-    @Published var date: Date?
-
-    // Others
-    @Published var animateRSSI: Bool?
-    @Published var alertState: AlertState?
-    @Published var rhAlertLowerBound: Double?
-    @Published var rhAlertUpperBound: Double?
-    @Published var networkSyncStatus: NetworkSyncStatus = .none
-    @Published var movementCounter: Int?
-    @Published var isChartAvailable: Bool?
-    @Published var isAlertAvailable: Bool?
-
-    // Latest measurement record
+    // Keep latest record for detail screens (doesn’t mark dirty)
     @Published var latestMeasurement: RuuviTagSensorRecord?
 
-    // MARK: - Alerts
-
+    // ---- Alerts (kept verbatim, mutate rarely, still observed by cells)
     @Published var isTemperatureAlertOn: Bool?
     @Published var temperatureAlertState: AlertState?
     @Published var temperatureAlertMutedTill: Date?
-
     @Published var isRelativeHumidityAlertOn: Bool?
     @Published var relativeHumidityAlertState: AlertState?
     @Published var relativeHumidityAlertMutedTill: Date?
-
     @Published var isPressureAlertOn: Bool?
     @Published var pressureAlertState: AlertState?
     @Published var pressureAlertMutedTill: Date?
-
     @Published var isSignalAlertOn: Bool?
     @Published var signalAlertState: AlertState?
     @Published var signalAlertMutedTill: Date?
-
     @Published var isMovementAlertOn: Bool?
     @Published var movementAlertState: AlertState?
     @Published var movementAlertMutedTill: Date?
-
     @Published var isConnectionAlertOn: Bool?
     @Published var connectionAlertState: AlertState?
     @Published var connectionAlertMutedTill: Date?
-
     @Published var isCarbonDioxideAlertOn: Bool?
     @Published var carbonDioxideAlertState: AlertState?
     @Published var carbonDioxideAlertMutedTill: Date?
@@ -117,19 +111,15 @@ final class CardsViewModel: NSObject, ObservableObject {
     @Published var isPMatter10AlertOn: Bool?
     @Published var pMatter10AlertState: AlertState?
     @Published var pMatter10AlertMutedTill: Date?
-
     @Published var isVOCAlertOn: Bool?
     @Published var vocAlertState: AlertState?
     @Published var vocAlertMutedTill: Date?
-
     @Published var isNOXAlertOn: Bool?
     @Published var noxAlertState: AlertState?
     @Published var noxAlertMutedTill: Date?
-
     @Published var isSoundAlertOn: Bool?
     @Published var soundAlertState: AlertState?
     @Published var soundAlertMutedTill: Date?
-
     @Published var isLuminosityAlertOn: Bool?
     @Published var luminosityAlertState: AlertState?
     @Published var luminosityAlertMutedTill: Date?
@@ -137,181 +127,70 @@ final class CardsViewModel: NSObject, ObservableObject {
     @Published var isCloudConnectionAlertOn: Bool?
     @Published var cloudConnectionAlertState: AlertState?
 
-    // MARK: - Private
-
+    // MARK: Private helpers
     private let batteryStatusProvider = RuuviTagBatteryStatusProvider()
 
-    // MARK: - Init
-
+    // MARK: Init
     init(_ ruuviTag: RuuviTagSensor) {
+        self.identity = ruuviTag.id
         super.init()
-        type = .ruuvi
-        id = ruuviTag.id
-        luid = ruuviTag.luid?.any
-        if let macId = ruuviTag.macId?.any {
-            mac = macId
-        }
-        serviceUUID = ruuviTag.serviceUUID
-        name = ruuviTag.name
-        version = ruuviTag.version
-        isConnectable = ruuviTag.isConnectable
-        isChartAvailable = ruuviTag.isConnectable || ruuviTag.isCloud || ruuviTag.serviceUUID != nil
-        isAlertAvailable = ruuviTag.isCloud || isConnected || ruuviTag.serviceUUID != nil
-        isCloud = ruuviTag.isCloud
-        isOwner = ruuviTag.isOwner
-        canShareTag = (ruuviTag.isOwner && ruuviTag.isClaimed) || ruuviTag.canShare
+
+        self.type = .ruuvi
+        self.sensorId = ruuviTag.id
+        self.luid = ruuviTag.luid?.any
+        self.mac  = ruuviTag.macId?.any
+        self.serviceUUID = ruuviTag.serviceUUID
+        self.name = ruuviTag.name
+        self.version = ruuviTag.version
+        self.isConnectable = ruuviTag.isConnectable
+        self.isCloud = ruuviTag.isCloud
+        self.isOwner = ruuviTag.isOwner
+        self.canShareTag = (ruuviTag.isOwner && ruuviTag.isClaimed) || ruuviTag.canShare
+        self.isConnected = false
+        markDirty()
     }
 
-    // MARK: - Update Methods
-
+    // MARK: Update with measurement
     func update(_ record: RuuviTagSensorRecord) {
         latestMeasurement = record
+
         temperature = record.temperature
-        humidity = record.humidity
-        pressure = record.pressure
+        humidity    = record.humidity
+        pressure    = record.pressure
+        pm2_5       = record.pm2_5
+        co2         = record.co2
+        voc         = record.voc
+        nox         = record.nox
+        luminance   = record.luminance
+        dbaAvg      = record.dbaAvg
 
-        if let macId = record.macId?.any {
-            mac = macId
-        }
-
-        date = record.date
-        rssi = record.rssi
-        movementCounter = record.movementCounter
-        pm1 = record.pm1
-        pm2_5 = record.pm2_5
-        pm4 = record.pm4
-        pm10 = record.pm10
-        co2 = record.co2
-        voc = record.voc
-        nox = record.nox
-        luminance = record.luminance
-        dbaAvg = record.dbaAvg
-        dbaPeak = record.dbaPeak
+        date   = record.date
         source = record.source
+        if let macId = record.macId?.any { mac = macId }
 
         batteryNeedsReplacement = batteryStatusProvider.batteryNeedsReplacement(
             temperature: record.temperature,
-            voltage: record.voltage
+            voltage:     record.voltage
         )
-
-        // isAlertAvailable might change if data source changed
-        isAlertAvailable = isCloud || isConnected || serviceUUID != nil
     }
 }
 
-// MARK: - Reorderable
+// MARK: - Drag & drop support
+
 extension CardsViewModel: Reorderable {
-    var orderElement: String {
-        id ?? UUID().uuidString
-    }
+    var orderElement: String { identity }
 }
 
-// MARK: - NSItemProviderWriting for Drag & Drop
 extension CardsViewModel: NSItemProviderWriting {
     public static var writableTypeIdentifiersForItemProvider: [String] {
-        return [kUTTypePlainText as String]
+        [kUTTypePlainText as String]
     }
 
-    public func loadData(
-        withTypeIdentifier typeIdentifier: String,
-        forItemProviderCompletionHandler completionHandler: @escaping (Data?, Error?) -> Void
-    ) -> Progress? {
-        return Progress()
-    }
-}
-
-extension CardsViewModel {
-
-    // Combines all `@Published` properties into a single publisher
-    // swiftlint:disable:next function_body_length
-    func combinedPublisher() -> AnyPublisher<Void, Never> {
-        let publishers: [AnyPublisher<Void, Never>] = [
-            $name.map { _ in }.eraseToAnyPublisher(),
-            $version.map { _ in }.eraseToAnyPublisher(),
-            $isConnectable.map { _ in }.eraseToAnyPublisher(),
-            $isConnected.map { _ in }.eraseToAnyPublisher(),
-            $isCloud.map { _ in }.eraseToAnyPublisher(),
-            $isOwner.map { _ in }.eraseToAnyPublisher(),
-            $canShareTag.map { _ in }.eraseToAnyPublisher(),
-            $source.map { _ in }.eraseToAnyPublisher(),
-            $temperature.map { _ in }.eraseToAnyPublisher(),
-            $humidity.map { _ in }.eraseToAnyPublisher(),
-            $pressure.map { _ in }.eraseToAnyPublisher(),
-            $rssi.map { _ in }.eraseToAnyPublisher(),
-            $voltage.map { _ in }.eraseToAnyPublisher(),
-            $pm1.map { _ in }.eraseToAnyPublisher(),
-            $pm2_5.map { _ in }.eraseToAnyPublisher(),
-            $pm4.map { _ in }.eraseToAnyPublisher(),
-            $pm10.map { _ in }.eraseToAnyPublisher(),
-            $co2.map { _ in }.eraseToAnyPublisher(),
-            $voc.map { _ in }.eraseToAnyPublisher(),
-            $nox.map { _ in }.eraseToAnyPublisher(),
-            $luminance.map { _ in }.eraseToAnyPublisher(),
-            $dbaAvg.map { _ in }.eraseToAnyPublisher(),
-            $dbaPeak.map { _ in }.eraseToAnyPublisher(),
-            $batteryNeedsReplacement.map { _ in }.eraseToAnyPublisher(),
-            $background.map { _ in }.eraseToAnyPublisher(),
-            $date.map { _ in }.eraseToAnyPublisher(),
-            $animateRSSI.map { _ in }.eraseToAnyPublisher(),
-            $alertState.map { _ in }.eraseToAnyPublisher(),
-            $rhAlertLowerBound.map { _ in }.eraseToAnyPublisher(),
-            $rhAlertUpperBound.map { _ in }.eraseToAnyPublisher(),
-            $networkSyncStatus.map { _ in }.eraseToAnyPublisher(),
-            $movementCounter.map { _ in }.eraseToAnyPublisher(),
-            $isChartAvailable.map { _ in }.eraseToAnyPublisher(),
-            $isAlertAvailable.map { _ in }.eraseToAnyPublisher(),
-            $latestMeasurement.map { _ in }.eraseToAnyPublisher(),
-            $isTemperatureAlertOn.map { _ in }.eraseToAnyPublisher(),
-            $temperatureAlertState.map { _ in }.eraseToAnyPublisher(),
-            $temperatureAlertMutedTill.map { _ in }.eraseToAnyPublisher(),
-            $isRelativeHumidityAlertOn.map { _ in }.eraseToAnyPublisher(),
-            $relativeHumidityAlertState.map { _ in }.eraseToAnyPublisher(),
-            $relativeHumidityAlertMutedTill.map { _ in }.eraseToAnyPublisher(),
-            $isPressureAlertOn.map { _ in }.eraseToAnyPublisher(),
-            $pressureAlertState.map { _ in }.eraseToAnyPublisher(),
-            $pressureAlertMutedTill.map { _ in }.eraseToAnyPublisher(),
-            $isSignalAlertOn.map { _ in }.eraseToAnyPublisher(),
-            $signalAlertState.map { _ in }.eraseToAnyPublisher(),
-            $signalAlertMutedTill.map { _ in }.eraseToAnyPublisher(),
-            $isMovementAlertOn.map { _ in }.eraseToAnyPublisher(),
-            $movementAlertState.map { _ in }.eraseToAnyPublisher(),
-            $movementAlertMutedTill.map { _ in }.eraseToAnyPublisher(),
-            $isConnectionAlertOn.map { _ in }.eraseToAnyPublisher(),
-            $connectionAlertState.map { _ in }.eraseToAnyPublisher(),
-            $connectionAlertMutedTill.map { _ in }.eraseToAnyPublisher(),
-            $isCarbonDioxideAlertOn.map { _ in }.eraseToAnyPublisher(),
-            $carbonDioxideAlertState.map { _ in }.eraseToAnyPublisher(),
-            $carbonDioxideAlertMutedTill.map { _ in }.eraseToAnyPublisher(),
-            $isPMatter1AlertOn.map { _ in }.eraseToAnyPublisher(),
-            $pMatter1AlertState.map { _ in }.eraseToAnyPublisher(),
-            $pMatter1AlertMutedTill.map { _ in }.eraseToAnyPublisher(),
-            $isPMatter2_5AlertOn.map { _ in }.eraseToAnyPublisher(),
-            $pMatter2_5AlertState.map { _ in }.eraseToAnyPublisher(),
-            $pMatter2_5AlertMutedTill.map { _ in }.eraseToAnyPublisher(),
-            $isPMatter4AlertOn.map { _ in }.eraseToAnyPublisher(),
-            $pMatter4AlertState.map { _ in }.eraseToAnyPublisher(),
-            $pMatter4AlertMutedTill.map { _ in }.eraseToAnyPublisher(),
-            $isPMatter10AlertOn.map { _ in }.eraseToAnyPublisher(),
-            $pMatter10AlertState.map { _ in }.eraseToAnyPublisher(),
-            $pMatter10AlertMutedTill.map { _ in }.eraseToAnyPublisher(),
-            $isVOCAlertOn.map { _ in }.eraseToAnyPublisher(),
-            $vocAlertState.map { _ in }.eraseToAnyPublisher(),
-            $vocAlertMutedTill.map { _ in }.eraseToAnyPublisher(),
-            $isNOXAlertOn.map { _ in }.eraseToAnyPublisher(),
-            $noxAlertState.map { _ in }.eraseToAnyPublisher(),
-            $noxAlertMutedTill.map { _ in }.eraseToAnyPublisher(),
-            $isSoundAlertOn.map { _ in }.eraseToAnyPublisher(),
-            $soundAlertState.map { _ in }.eraseToAnyPublisher(),
-            $soundAlertMutedTill.map { _ in }.eraseToAnyPublisher(),
-            $isLuminosityAlertOn.map { _ in }.eraseToAnyPublisher(),
-            $luminosityAlertState.map { _ in }.eraseToAnyPublisher(),
-            $luminosityAlertMutedTill.map { _ in }.eraseToAnyPublisher(),
-            $isCloudConnectionAlertOn.map { _ in }.eraseToAnyPublisher(),
-            $cloudConnectionAlertState.map { _ in }.eraseToAnyPublisher(),
-        ]
-
-        return Publishers.MergeMany(publishers)
-            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
-            .eraseToAnyPublisher()
+    public func loadData(withTypeIdentifier typeIdentifier: String,
+                         forItemProviderCompletionHandler completionHandler: @escaping (Data?, Error?) -> Void) -> Progress? {
+        let progress = Progress(totalUnitCount: 100)
+        progress.completedUnitCount = 100
+        completionHandler(identity.data(using: .utf8), nil)
+        return progress
     }
 }

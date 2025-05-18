@@ -2,6 +2,7 @@ import RuuviLocal
 import RuuviOntology
 import RuuviService
 import UIKit
+import Combine
 
 class DashboardCell: UICollectionViewCell {
     func configure(
@@ -17,4 +18,6 @@ class DashboardCell: UICollectionViewCell {
     func resetMenu(
         menu: UIMenu
     ) {}
+
+    var cancellables = Set<AnyCancellable>()
 }

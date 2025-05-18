@@ -674,10 +674,10 @@ extension CardsPresenter {
             }
             viewModel.alertState = alertService
                 .hasRegistrations(for: ruuviTag) ? .registered : .empty
-            viewModel.rhAlertLowerBound = alertService
-                .lowerRelativeHumidity(for: ruuviTag)
-            viewModel.rhAlertUpperBound = alertService
-                .upperRelativeHumidity(for: ruuviTag)
+//            viewModel.rhAlertLowerBound = alertService
+//                .lowerRelativeHumidity(for: ruuviTag)
+//            viewModel.rhAlertUpperBound = alertService
+//                .upperRelativeHumidity(for: ruuviTag)
             // Inject previous record if available that will prevent showing nil
             // value while this method is rebuilding the collection and fetching
             // latest record from storage asynchronously.
