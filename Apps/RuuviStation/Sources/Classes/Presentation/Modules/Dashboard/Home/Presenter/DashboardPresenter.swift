@@ -97,6 +97,8 @@ class DashboardPresenter: DashboardModuleInput {
     private var isBluetoothPermissionGranted: Bool {
         CBCentralManager.authorization == .allowedAlways
     }
+    private var syncViewModelsWorkItem: DispatchWorkItem?
+    private let syncViewModelsDebounceInterval: TimeInterval = 0.5
 
     deinit {
         ruuviTagToken?.invalidate()
@@ -650,6 +652,19 @@ extension DashboardPresenter: SensorRemovalModuleOutput {
 
 extension DashboardPresenter {
 
+    private func debounceSyncViewModels() {
+        syncViewModelsWorkItem?.cancel()
+        syncViewModelsWorkItem = DispatchWorkItem { [weak self] in
+            self?.syncViewModels()
+        }
+        if let workItem = syncViewModelsWorkItem {
+            DispatchQueue.main.asyncAfter(
+                deadline: .now() + syncViewModelsDebounceInterval,
+                execute: workItem
+            )
+        }
+    }
+
     // swiftlint:disable:next function_body_length
     private func syncViewModels() {
         view?.dashboardType = settings.dashboardType
@@ -1050,7 +1065,7 @@ extension DashboardPresenter {
                 let ruuviTags = ruuviTags.reordered()
                 sSelf.didLoadInitialRuuviTags = true
                 sSelf.ruuviTags = ruuviTags
-                sSelf.syncViewModels()
+                sSelf.debounceSyncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
                 sSelf.restartObservingRuuviTagLastRecords()
@@ -1093,7 +1108,7 @@ extension DashboardPresenter {
                 }
             case let .delete(sensor):
                 sSelf.ruuviTags.removeAll(where: { $0.id == sensor.id })
-                sSelf.syncViewModels()
+                sSelf.debounceSyncViewModels()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
                 sSelf.restartObservingRuuviTagLastRecords()
@@ -1111,7 +1126,7 @@ extension DashboardPresenter {
                                 || ($0.luid != nil && $0.luid?.any == sensor.luid?.any)
                         }) {
                     sSelf.ruuviTags[index] = sensor
-                    sSelf.syncViewModels()
+                    sSelf.debounceSyncViewModels()
                 }
                 sSelf.syncHasCloudSensorToAppGroupContainer(with: sSelf.ruuviTags)
             }
@@ -1414,7 +1429,7 @@ extension DashboardPresenter {
     private func handleCloudModeState() {
         // Disconnect the owned cloud tags
         removeConnectionsForCloudTags()
-        syncViewModels()
+        debounceSyncViewModels()
     }
 
     private func removeConnectionsForCloudTags() {
@@ -2188,7 +2203,7 @@ extension DashboardPresenter {
                 self?.cloudModeToken?.invalidate()
                 self?.cloudModeToken = nil
                 self?.settings.cloudModeEnabled = false
-                self?.syncViewModels()
+                self?.debounceSyncViewModels()
                 self?.reloadWidgets()
                 self?.handleCloudModeState()
             }, completion: { [weak self] in
