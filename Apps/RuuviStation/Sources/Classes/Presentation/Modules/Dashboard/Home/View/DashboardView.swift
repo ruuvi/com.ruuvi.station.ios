@@ -2,6 +2,7 @@ import SwiftUI
 import RuuviLocalization
 import RuuviOntology
 import RuuviService
+import SwiftUIMasonry
 
 struct CustomRefreshableScrollView<Content: View>: UIViewRepresentable {
     @Binding var isRefreshing: Bool
@@ -76,8 +77,11 @@ struct DashboardView: View {
     @EnvironmentObject var state: DashboardViewState
     @GestureState private var isScrolling = false
     let measurementService: RuuviServiceMeasurement
+    @Environment(\.verticalSizeClass) var verticalSizeClass
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
     @State private var isRefreshing = false
+    @State private var draggedItem: CardsViewModel?
 
     private func refreshData() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -86,25 +90,93 @@ struct DashboardView: View {
         }
     }
 
-    let columns = [
-        GridItem(.adaptive(minimum: 300))
-    ]
+    private func calculateColumns(for width: CGFloat) -> Int {
+        let cardMinWidth: CGFloat = 300
+        let spacing: CGFloat = 8
+        let padding: CGFloat = 16
+
+        let availableWidth = width - (padding * 2)
+        let maxColumns = max(1, Int(availableWidth / (cardMinWidth + spacing)))
+
+        // Apply device-specific logic
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            return min(maxColumns, horizontalSizeClass == .regular ? 3 : 2)
+        } else {
+            return min(maxColumns, verticalSizeClass == .compact ? 2 : 1)
+        }
+    }
 
     var body: some View {
-
-        ScrollView(showsIndicators: false) {
-            LazyVGrid(columns: columns, spacing: 6) {
-                ForEach(state.items, id: \.id) { viewModel in
-                    DashboardViewRowSwiftUI(
-                        viewModel: viewModel,
-                        measurementService: measurementService
-                    )
-                    .environmentObject(state)
-                    .id(viewModel.id)
+        GeometryReader { geometry in
+            ScrollView {
+                VMasonry(columns: calculateColumns(for: geometry.size.width), spacing: 0) {
+                    ForEach(state.items, id: \.id) { viewModel in
+                        DashboardViewRowSwiftUI(
+                            viewModel: viewModel,
+                            measurementService: measurementService
+                        )
+                        .environmentObject(state)
+                        .id(viewModel.id)
+                        .onDrag {
+                            draggedItem = viewModel
+                            return NSItemProvider(
+                                object: viewModel.id! as NSItemProviderWriting
+                            )
+                        }
+                        .onDrop(
+                            of: [.plainText],
+                            delegate: CardDropDelegate(
+                                targetItem: viewModel,
+                                items: $state.items,
+                                draggedItem: $draggedItem
+                            )
+                        )
+                        .padding(4)
+                    }
                 }
+                .animation(.easeInOut(duration: 0.3), value: calculateColumns(for: geometry.size.width))
             }
-            .padding(.horizontal, 6)
         }
+    }
+}
+
+/// DropDelegate that reorders the array `items` when the user drags
+/// one card onto another. This delegate is attached to each item in the layout.
+struct CardDropDelegate: DropDelegate {
+    /// The item into whose "space" we’re dropping
+    let targetItem: CardsViewModel
+
+    /// A binding to the entire items array so we can reorder it
+    @Binding var items: [CardsViewModel]
+
+    /// A binding that stores the currently dragged item
+    @Binding var draggedItem: CardsViewModel?
+
+    func validateDrop(info: DropInfo) -> Bool {
+        info.hasItemsConforming(to: [.plainText])
+    }
+
+    func dropEntered(info: DropInfo) {
+        guard let dragged = draggedItem,
+              dragged != targetItem,
+              let fromIndex = items.firstIndex(of: dragged),
+              let toIndex = items.firstIndex(of: targetItem)
+        else { return }
+
+        // Reorder as user drags over a new target
+        if fromIndex != toIndex {
+            withAnimation {
+                items.move(
+                    fromOffsets: IndexSet(integer: fromIndex),
+                    toOffset: (fromIndex < toIndex) ? toIndex+1 : toIndex
+                )
+            }
+        }
+    }
+
+    func performDrop(info: DropInfo) -> Bool {
+        draggedItem = nil
+        return true
     }
 }
 

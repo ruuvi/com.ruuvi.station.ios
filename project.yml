@@ -86,6 +86,9 @@ packages:
   BTKit:
     url: https://github.com/ruuvi/BTKit
     from: 0.6.6
+  SwiftUIMasonry:
+    url: https://github.com/ciaranrobrien/SwiftUIMasonry
+    branch: "main"
   DGCharts:
     url: https://github.com/ruuvi/Charts
     from: 5.1.8
