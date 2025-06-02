@@ -1026,34 +1026,34 @@ extension DashboardPresenter {
     }
 
     private func restartObservingRuuviTagLastRecords() {
-//        ruuviTagObserveLastRecordTokens.forEach { $0.invalidate() }
-//        ruuviTagObserveLastRecordTokens.removeAll()
-//        for viewModel in viewModels {
-//            if viewModel.type == .ruuvi,
-//               let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id }) {
-//                let token = ruuviReactor.observeLatest(ruuviTagSensor) { [weak self] changes in
-//                    if case let .update(anyRecord) = changes,
-//                       let viewModel = self?.viewModels
-//                        .first(where: {
-//                            ($0.luid != nil && ($0.luid == anyRecord?.luid?.any))
-//                            || ($0.mac != nil && ($0.mac == anyRecord?.macId?.any))
-//                        }),
-//                       let record = anyRecord {
-//                        let sensorSettings = self?.sensorSettingsList
-//                            .first(where: {
-//                                ($0.luid?.any != nil && $0.luid?.any == viewModel.luid)
-//                                || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac)
-//                            })
-//                        let sensorRecord = record.with(sensorSettings: sensorSettings)
-//                        viewModel.update(sensorRecord)
-//                        DispatchQueue.global(qos: .utility).async {
-//                            self?.processAlert(record: sensorRecord, viewModel: viewModel)
-//                        }
-//                    }
-//                }
-//                ruuviTagObserveLastRecordTokens.append(token)
-//            }
-//        }
+        ruuviTagObserveLastRecordTokens.forEach { $0.invalidate() }
+        ruuviTagObserveLastRecordTokens.removeAll()
+        for viewModel in viewModels {
+            if viewModel.type == .ruuvi,
+               let ruuviTagSensor = ruuviTags.first(where: { $0.id == viewModel.id }) {
+                let token = ruuviReactor.observeLatest(ruuviTagSensor) { [weak self] changes in
+                    if case let .update(anyRecord) = changes,
+                       let viewModel = self?.viewModels
+                        .first(where: {
+                            ($0.luid != nil && ($0.luid == anyRecord?.luid?.any))
+                            || ($0.mac != nil && ($0.mac == anyRecord?.macId?.any))
+                        }),
+                       let record = anyRecord {
+                        let sensorSettings = self?.sensorSettingsList
+                            .first(where: {
+                                ($0.luid?.any != nil && $0.luid?.any == viewModel.luid)
+                                || ($0.macId?.any != nil && $0.macId?.any == viewModel.mac)
+                            })
+                        let sensorRecord = record.with(sensorSettings: sensorSettings)
+                        viewModel.update(sensorRecord)
+                        DispatchQueue.global(qos: .utility).async {
+                            self?.processAlert(record: sensorRecord, viewModel: viewModel)
+                        }
+                    }
+                }
+                ruuviTagObserveLastRecordTokens.append(token)
+            }
+        }
     }
 
     // swiftlint:disable:next function_body_length cyclomatic_complexity

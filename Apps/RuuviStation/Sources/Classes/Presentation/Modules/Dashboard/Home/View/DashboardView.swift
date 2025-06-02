@@ -4,75 +4,6 @@ import RuuviOntology
 import RuuviService
 import SwiftUIMasonry
 
-struct CustomRefreshableScrollView<Content: View>: UIViewRepresentable {
-    @Binding var isRefreshing: Bool
-    let content: Content
-    @State private var contentHeight: CGFloat = 0
-
-    init(isRefreshing: Binding<Bool>, @ViewBuilder content: () -> Content) {
-        self._isRefreshing = isRefreshing
-        self.content = content()
-    }
-
-    func makeUIView(context: Context) -> UIScrollView {
-        let scrollView = UIScrollView()
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(context.coordinator, action: #selector(Coordinator.handleRefresh), for: .valueChanged)
-        scrollView.refreshControl = refreshControl
-
-        let hostingController = UIHostingController(rootView: content)
-        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
-
-        scrollView.addSubview(hostingController.view)
-        NSLayoutConstraint.activate([
-            hostingController.view.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            hostingController.view.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            hostingController.view.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            hostingController.view.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
-        ])
-
-        context.coordinator.hostingController = hostingController
-        return scrollView
-    }
-
-    func updateUIView(_ uiView: UIScrollView, context: Context) {
-        if isRefreshing {
-            uiView.refreshControl?.beginRefreshing()
-        } else {
-            uiView.refreshControl?.endRefreshing()
-        }
-
-        if let hostingView = context.coordinator.hostingController?.view {
-            hostingView.frame.size.height = contentHeight
-        }
-    }
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator(isRefreshing: $isRefreshing)
-    }
-
-    class Coordinator: NSObject {
-        @Binding var isRefreshing: Bool
-        var hostingController: UIHostingController<Content>?
-
-        init(isRefreshing: Binding<Bool>) {
-            self._isRefreshing = isRefreshing
-        }
-
-        @objc func handleRefresh() {
-            isRefreshing = true
-        }
-    }
-}
-
-struct ContentHeightKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
-    }
-}
-
 struct DashboardView: View {
     @EnvironmentObject var state: DashboardViewState
     @GestureState private var isScrolling = false
@@ -85,7 +16,6 @@ struct DashboardView: View {
 
     private func refreshData() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            print("ekhane...")
             isRefreshing = false
         }
     }
