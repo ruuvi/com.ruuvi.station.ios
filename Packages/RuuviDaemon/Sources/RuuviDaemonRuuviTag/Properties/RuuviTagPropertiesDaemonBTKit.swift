@@ -122,7 +122,7 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                     options: [.callbackQueue(.untouch)]
                 ) {
                     [weak self] _, device in
-                    guard let sSelf = self else { return }
+                    guard let sSelf = self, sSelf.thread != nil else { return }
                     if let tag = device.ruuvi?.tag {
                         let pair = RuuviTagPropertiesDaemonPair(ruuviTag: ruuviTag, device: tag)
                         sSelf.perform(

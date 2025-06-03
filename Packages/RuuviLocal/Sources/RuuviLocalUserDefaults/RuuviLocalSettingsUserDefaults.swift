@@ -97,7 +97,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
-    @UserDefault("SettingsUserDefaults.humidityAccuracyInt", defaultValue: MeasurementAccuracyType.two.value)
+    @UserDefault("SettingsUserDefaults.humidityAccuracyInt", defaultValue: 2)
     private var humidityAccuracyInt: Int
 
     var humidityAccuracy: MeasurementAccuracyType {
@@ -160,7 +160,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
-    @UserDefault("SettingsUserDefaults.temperatureAccuracyInt", defaultValue: MeasurementAccuracyType.two.value)
+    @UserDefault("SettingsUserDefaults.temperatureAccuracyInt", defaultValue: 2)
     private var temperatureAccuracyInt: Int
 
     var temperatureAccuracy: MeasurementAccuracyType {
@@ -211,7 +211,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
-    @UserDefault("SettingsUserDefaults.pressureAccuracyInt", defaultValue: MeasurementAccuracyType.two.value)
+    @UserDefault("SettingsUserDefaults.pressureAccuracyInt", defaultValue: 2)
     private var pressureAccuracyInt: Int
 
     var pressureAccuracy: MeasurementAccuracyType {

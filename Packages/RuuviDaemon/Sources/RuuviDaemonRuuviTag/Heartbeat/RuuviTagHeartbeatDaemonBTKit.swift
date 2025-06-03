@@ -41,7 +41,7 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
 
     private let heartbeatQueue = DispatchQueue(label: "RuuviTagHeartbeatDaemonBTKit.heartbeatQueue")
     private let savedDateQueue = DispatchQueue(label: "RuuviTagHeartbeatDaemonBTKit.savedDateQueue")
-    private let sequenceNumberQueue = DispatchQueue(label:"RuuviTagHeartbeatDaemonBTKit.sequenceNumberQueue")
+    private let sequenceNumberQueue = DispatchQueue(label: "RuuviTagHeartbeatDaemonBTKit.sequenceNumberQueue")
 
     // swiftlint:disable:next function_body_length
     public init(
@@ -74,7 +74,7 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
                 object: nil,
                 queue: .main,
                 using: { [weak self] notification in
-                    guard let sSelf = self else { return }
+                    guard let sSelf = self, sSelf.thread != nil else { return }
                     if let userInfo = notification.userInfo,
                        let uuid = userInfo[CPDidStartToKeepConnectionKey.uuid] as? String {
                         sSelf.perform(
