@@ -19,10 +19,34 @@ class DashboardViewController: UIViewController {
         }
     }
 
-    var viewModels: [CardsViewModel] = [] {
-        didSet {
-            state.items = viewModels
-        }
+    var viewModels: [CardsViewModel] {
+        get { state.items }
+        set { state.updateItems(newValue) }
+    }
+
+//    var dashboardType: DashboardType! {
+//        get { state.dashboardViewType }
+//        set { state.updateDashboardType(newValue) }
+//    }
+//
+//    var dashboardTapActionType: DashboardTapActionType! {
+//        get { state.dashboardTapActionType }
+//        set { state.updateTapActionType(newValue) }
+//    }
+//
+//    var dashboardSortingType: DashboardSortingType! {
+//        get { state.dashboardSortingType }
+//        set { state.updateSortingType(newValue) }
+//    }
+//
+//    var shouldShowSignInBanner: Bool {
+//        get { state.shouldShowSignInBanner }
+//        set { state.updateSignInBanner(newValue) }
+//    }
+
+    var isRefreshing: Bool {
+        get { state.isRefreshing }
+        set { state.updateRefreshState(newValue) }
     }
 
     var dashboardType: DashboardType! {
@@ -44,15 +68,15 @@ class DashboardViewController: UIViewController {
         }
     }
 
-    var isRefreshing: Bool = false {
-        didSet {
-            if isRefreshing {
-                activityIndicator.startAnimating()
-            } else {
-                activityIndicator.stopAnimating()
-            }
-        }
-    }
+//    var isRefreshing: Bool = false {
+//        didSet {
+//            if isRefreshing {
+//                activityIndicator.startAnimating()
+//            } else {
+//                activityIndicator.stopAnimating()
+//            }
+//        }
+//    }
 
     var shouldShowSignInBanner: Bool = false {
         didSet {
@@ -121,7 +145,9 @@ class DashboardViewController: UIViewController {
 
     private lazy var dashboardViewHostingController: UIViewController = {
         let view = DashboardView(measurementService: measurementService)
-        return UIHostingController(rootView: view.environmentObject(state))
+        return UIHostingController(
+            rootView: view.environmentObject(state).environmentObject(actions)
+        )
     }()
 
 //    private lazy var collectionView: UICollectionView = {
@@ -167,6 +193,8 @@ class DashboardViewController: UIViewController {
     private var isPulling: Bool = false
 
     private var state = DashboardViewState()
+    private var actions = DashboardViewActions()
+    var cancellables = Set<AnyCancellable>()
 
     private enum DashboardSection {
         case main
@@ -188,6 +216,11 @@ extension DashboardViewController {
         configureRestartAnimationsOnAppDidBecomeActive()
         localize()
         output.viewDidLoad()
+
+        actions.cardDidTap.sink { [weak self] viewModel in
+            guard let self else { return }
+            self.output.viewDidTriggerDashboardCard(for: viewModel)
+        }.store(in: &cancellables)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -980,13 +1013,6 @@ extension DashboardViewController: DashboardViewInput {
         alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidConfirmToKeepConnectionSettings(to: viewModel)
         }))
-        present(alert, animated: true)
-    }
-
-    func showReverseGeocodingFailed() {
-        let message = RuuviLocalization.Cards.Error.ReverseGeocodingFailed.message
-        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alert, animated: true)
     }
 
