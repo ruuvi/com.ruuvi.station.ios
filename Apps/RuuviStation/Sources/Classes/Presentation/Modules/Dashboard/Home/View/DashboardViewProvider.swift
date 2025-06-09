@@ -92,7 +92,7 @@ class DashboardViewActions: ObservableObject {
 class DashboardBridge: NSObject, DashboardViewInput {
 
     let state: DashboardViewState
-    weak var presenter: DashboardPresenter?
+    weak var presenter: DashboardPresenterRefactored?
 
     init(state: DashboardViewState) {
         self.state = state

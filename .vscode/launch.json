@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug iOS App",
+            "type": "lldb",
+            "request": "attach",
+            "program": "${workspaceFolder}/Build/Products/Debug-iphonesimulator/station.app/station",
+            "waitFor": true,
+            "preLaunchTask": "Build and Run iOS App"
+        }
+    ]
+}

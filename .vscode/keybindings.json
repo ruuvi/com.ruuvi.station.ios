@@ -1,0 +1,26 @@
+[
+    {
+        "key": "cmd+r",
+        "command": "workbench.action.tasks.runTask",
+        "args": "Build and Run iOS App",
+        "when": "!terminalFocus"
+    },
+    {
+        "key": "cmd+shift+r", 
+        "command": "workbench.action.tasks.runTask",
+        "args": "Build iOS App",
+        "when": "!terminalFocus"
+    },
+    {
+        "key": "cmd+shift+g",
+        "command": "workbench.action.tasks.runTask", 
+        "args": "Regenerate Xcode Project",
+        "when": "!terminalFocus"
+    },
+    {
+        "key": "cmd+shift+s",
+        "command": "workbench.action.tasks.runTask",
+        "args": "Launch Simulator",
+        "when": "!terminalFocus"
+    }
+]

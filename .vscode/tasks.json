@@ -1,0 +1,147 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Regenerate Xcode Project",
+            "type": "shell",
+            "command": "xcodegen",
+            "args": ["generate"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "detail": "Regenerates the Xcode project after making changes in VS Code"
+        },
+        {
+            "label": "Build iOS App",
+            "type": "shell",
+            "command": "xcodebuild",
+            "args": [
+                "-project",
+                "Ruuvi.xcodeproj",
+                "-scheme",
+                "station",
+                "-configuration",
+                "Debug",
+                "-sdk",
+                "iphonesimulator",
+                "-destination",
+                "platform=iOS Simulator,name=iPhone 16 Pro",
+                "build"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": {
+                "owner": "xcode",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            },
+            "detail": "Builds the iOS app for simulator",
+            "dependsOn": "Regenerate Xcode Project"
+        },
+        {
+            "label": "Build and Run iOS App",
+            "type": "shell",
+            "command": "sh",
+            "args": [
+                "-c",
+                "xcodebuild -project Ruuvi.xcodeproj -scheme station -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16 Pro' build && xcrun simctl boot 'iPhone 16 Pro' 2>/dev/null || true && xcrun simctl install booted $(find ~/Library/Developer/Xcode/DerivedData -name 'station.app' -type d | head -1) && xcrun simctl launch booted com.ruuvi.station"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared"
+            },
+            "problemMatcher": {
+                "owner": "xcode",
+                "fileLocation": ["relative", "${workspaceFolder}"],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "column": 3,
+                    "severity": 4,
+                    "message": 5
+                }
+            },
+            "detail": "Builds and runs the iOS app in simulator",
+            "dependsOn": "Regenerate Xcode Project"
+        },
+        {
+            "label": "Clean Build",
+            "type": "shell",
+            "command": "xcodebuild",
+            "args": [
+                "-project",
+                "Ruuvi.xcodeproj",
+                "-scheme",
+                "station",
+                "clean"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "detail": "Cleans the build directory"
+        },
+        {
+            "label": "Launch Simulator",
+            "type": "shell",
+            "command": "xcrun",
+            "args": [
+                "simctl",
+                "boot",
+                "iPhone 16 Pro"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "detail": "Launches the iOS Simulator"
+        },
+        {
+            "label": "Open iOS Simulator",
+            "type": "shell",
+            "command": "open",
+            "args": [
+                "-a",
+                "Simulator"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared"
+            },
+            "problemMatcher": [],
+            "detail": "Opens the iOS Simulator app"
+        }
+    ]
+}
