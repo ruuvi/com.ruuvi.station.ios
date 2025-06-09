@@ -10,6 +10,7 @@ import RuuviReactor
 import RuuviService
 import RuuviStorage
 import RuuviUser
+import Swinject
 import UIKit
 
 protocol DashboardModuleFactory {
@@ -26,37 +27,44 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
         router.transitionHandler = view
         router.settings = r.resolve(RuuviLocalSettings.self)
 
-        let presenter = DashboardPresenter()
+        // Create services for refactored architecture
+        let sensorDataService = createSensorDataService(resolver: r)
+        let alertManagementService = createAlertManagementService(resolver: r)
+        let cloudSyncService = createCloudSyncService(resolver: r)
+        let connectionService = createConnectionService(resolver: r)
+        let settingsObservationService = createSettingsObservationService(resolver: r)
+        let viewModelManagementService = createViewModelManagementService(resolver: r)
+        let daemonErrorService = createDaemonErrorService(resolver: r)
+        let universalLinkService = createUniversalLinkService(resolver: r)
+
+        // Create service coordinator
+        let serviceCoordinator = DashboardServiceCoordinator(
+            sensorDataService: sensorDataService,
+            alertManagementService: alertManagementService,
+            cloudSyncService: cloudSyncService,
+            connectionService: connectionService,
+            settingsObservationService: settingsObservationService,
+            viewModelManagementService: viewModelManagementService,
+            daemonErrorService: daemonErrorService,
+            universalLinkService: universalLinkService
+        )
+
+        // Use refactored presenter
+        let presenter = DashboardPresenterRefactored()
         presenter.router = router
         presenter.view = view
+        presenter.serviceCoordinator = serviceCoordinator
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
-        presenter.settings = r.resolve(RuuviLocalSettings.self)
-        presenter.foreground = r.resolve(BTForeground.self)
-        presenter.background = r.resolve(BTBackground.self)
         presenter.permissionPresenter = r.resolve(PermissionPresenter.self)
         presenter.pushNotificationsManager = r.resolve(RuuviCorePN.self)
         presenter.permissionsManager = r.resolve(RuuviCorePermission.self)
-        presenter.connectionPersistence = r.resolve(RuuviLocalConnections.self)
-        presenter.alertService = r.resolve(RuuviServiceAlert.self)
-        presenter.alertHandler = r.resolve(RuuviNotifier.self)
         presenter.mailComposerPresenter = r.resolve(MailComposerPresenter.self)
         presenter.feedbackEmail = PresentationConstants.feedbackEmail
         presenter.feedbackSubject = PresentationConstants.feedbackSubject
         presenter.infoProvider = r.resolve(InfoProvider.self)
-        presenter.ruuviReactor = r.resolve(RuuviReactor.self)
-        presenter.ruuviStorage = r.resolve(RuuviStorage.self)
-        presenter.measurementService = r.resolve(RuuviServiceMeasurement.self)
-        presenter.localSyncState = r.resolve(RuuviLocalSyncState.self)
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.ruuviSensorPropertiesService = r.resolve(RuuviServiceSensorProperties.self)
-        presenter.ruuviUser = r.resolve(RuuviUser.self)
-        presenter.featureToggleService = r.resolve(FeatureToggleService.self)
-        presenter.cloudSyncDaemon = r.resolve(RuuviDaemonCloudSync.self)
-        presenter.ruuviAppSettingsService = r.resolve(RuuviServiceAppSettings.self)
         presenter.activityPresenter = r.resolve(ActivityPresenter.self)
-        presenter.authService = r.resolve(RuuviServiceAuth.self)
-        presenter.pnManager = r.resolve(RuuviCorePN.self)
-        presenter.cloudNotificationService = r.resolve(RuuviServiceCloudNotification.self)
-        presenter.cloudSyncService = r.resolve(RuuviServiceCloudSync.self)
         router.delegate = presenter
 
         let interactor = DashboardInteractor()
@@ -91,11 +99,70 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
         view.menuDismissInteractiveTransition = menuTransition.dismiss
 
         // MARK: VIEW
-
         view.measurementService = r.resolve(RuuviServiceMeasurement.self)
 
         view.output = presenter
+        presenter.start()
 
         return view
+    }
+
+    // MARK: - Service Creation Methods
+    private func createSensorDataService(resolver: Resolver) -> SensorDataServiceProtocol {
+        return SensorDataService(
+            ruuviReactor: resolver.resolve(RuuviReactor.self)!,
+            ruuviStorage: resolver.resolve(RuuviStorage.self)!,
+            ruuviSensorPropertiesService: resolver.resolve(RuuviServiceSensorProperties.self)!
+        )
+    }
+
+    private func createAlertManagementService(resolver: Resolver) -> AlertManagementServiceProtocol {
+        return AlertManagementService(
+            alertService: resolver.resolve(RuuviServiceAlert.self)!,
+            alertHandler: resolver.resolve(RuuviNotifier.self)!
+        )
+    }
+
+    private func createCloudSyncService(resolver: Resolver) -> CloudSyncServiceProtocol {
+        return CloudSyncService(
+            cloudSyncDaemon: resolver.resolve(RuuviDaemonCloudSync.self)!,
+            cloudSyncService: resolver.resolve(RuuviServiceCloudSync.self)!,
+            localSyncState: resolver.resolve(RuuviLocalSyncState.self)!,
+            ruuviUser: resolver.resolve(RuuviUser.self)!,
+            settings: resolver.resolve(RuuviLocalSettings.self)!
+        )
+    }
+
+    private func createConnectionService(resolver: Resolver) -> ConnectionServiceProtocol {
+        return ConnectionService(
+            background: resolver.resolve(BTBackground.self)!,
+            foreground: resolver.resolve(BTForeground.self)!,
+            connectionPersistence: resolver.resolve(RuuviLocalConnections.self)!
+        )
+    }
+
+    private func createSettingsObservationService(resolver: Resolver) -> SettingsObservationServiceProtocol {
+        return SettingsObservationService(
+            settings: resolver.resolve(RuuviLocalSettings.self)!,
+            ruuviAppSettingsService: resolver.resolve(RuuviServiceAppSettings.self)!
+        )
+    }
+
+    private func createViewModelManagementService(resolver: Resolver) -> ViewModelManagementServiceProtocol {
+        return ViewModelManagementService(
+            settings: resolver.resolve(RuuviLocalSettings.self)!,
+            ruuviUser: resolver.resolve(RuuviUser.self)!,
+            sensorDataService: createSensorDataService(resolver: resolver)
+        )
+    }
+    
+    private func createDaemonErrorService(resolver: Resolver) -> DaemonErrorServiceProtocol {
+        return DaemonErrorService()
+    }
+    
+    private func createUniversalLinkService(resolver: Resolver) -> UniversalLinkServiceProtocol {
+        return UniversalLinkService(
+            ruuviUser: resolver.resolve(RuuviUser.self)!
+        )
     }
 }

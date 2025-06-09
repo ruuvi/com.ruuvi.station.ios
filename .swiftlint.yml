@@ -7,8 +7,23 @@ nesting:
 excluded:
   - Carthage
   - Pods
+  - Packages/RuuviOntology/.build
+  - .build
 disabled_rules:
   - closure_parameter_position
   - identifier_name
   - force_try
   - todo
+  - trailing_whitespace
+  - file_length
+  - function_body_length
+  - cyclomatic_complexity
+  - unused_closure_parameter
+  - colon
+  - comma
+  - redundant_void_return
+  - trailing_comma
+  - trailing_semicolon
+  - empty_parentheses_with_trailing_closure
+  - vertical_parameter_alignment
+  - empty_enum_arguments

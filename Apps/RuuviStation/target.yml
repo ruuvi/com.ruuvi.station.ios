@@ -14,6 +14,8 @@ targets:
       - target: "station.intents"
       - target: "station.pnservice"
       - package: BTKit
+      - package: SwiftUIMasonry
+      - package: Dragula
       - package: DGCharts
       - package: GRDB
       - package: LightRoute

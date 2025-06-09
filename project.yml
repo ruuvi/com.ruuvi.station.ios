@@ -19,7 +19,7 @@ options:
   bundleIdPrefix: *BUNDLE_ID_PREFIX
   developmentLanguage: en
   deploymentTarget:
-    iOS: 14.0
+    iOS: 15.0
 
 targetTemplates:
   Framework:
@@ -86,6 +86,12 @@ packages:
   BTKit:
     url: https://github.com/ruuvi/BTKit
     from: 0.6.6
+  SwiftUIMasonry:
+    url: https://github.com/ciaranrobrien/SwiftUIMasonry
+    branch: "main"
+  Dragula:
+    url: https://github.com/mufasayc/dragula
+    branch: "main"
   DGCharts:
     url: https://github.com/ruuvi/Charts
     from: 5.1.8
