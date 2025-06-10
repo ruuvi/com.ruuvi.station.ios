@@ -40,17 +40,17 @@ struct DashboardView: View {
         verticalSizeClass: UserInterfaceSizeClass?,
         horizontalSizeClass: UserInterfaceSizeClass?
     ) -> Int {
-        let cardMinWidth: CGFloat = 300
-        let spacing: CGFloat = 8
-        let padding: CGFloat = 16
+        let cardMinWidth: CGFloat = 280 // Slightly reduced for better fit
+        let spacing: CGFloat = 12 // Match the VMasonry spacing
+        let padding: CGFloat = 32 // Account for both side paddings
 
-        let availableWidth = width - (padding * 2)
+        let availableWidth = width - padding
         let maxColumns = max(1, Int(availableWidth / (cardMinWidth + spacing)))
 
         if UIDevice.current.userInterfaceIdiom == .pad {
             return min(maxColumns, horizontalSizeClass == .regular ? 3 : 2)
         } else {
-            return verticalSizeClass == .regular ? 1 : 2
+            return verticalSizeClass == .regular ? 1 : min(maxColumns, 2)
         }
     }
 
@@ -63,7 +63,7 @@ struct DashboardView: View {
                 } else {
                     VMasonry(
                         columns: cachedColumns,
-                        spacing: 8
+                        spacing: 12
                     ) {
                         DragulaView(items: $state.items) { viewModel in
                             Group {
@@ -81,18 +81,9 @@ struct DashboardView: View {
                                     )
                                 }
                             }
-//                            .onDragStart {
-//                                isDragging = true
-//                                optimizeForDragPerformance()
-//                                // Reduce timer frequency during drag
-//                                isTimerActive = false
-//                            }
-//                            .onDragEnd {
-//                                isDragging = false
-//                                restoreNormalPerformance()
-//                                // Restore timer after drag
-//                                isTimerActive = true
-//                            }
+                            .frame(maxWidth: .infinity)
+                            .layoutPriority(1)
+                            .animation(.easeInOut(duration: 0.2), value: viewModel.id)
                         } dropView: { viewModel in
                             Group {
                                 if state.dashboardViewType == .image {
@@ -109,6 +100,9 @@ struct DashboardView: View {
                                     )
                                 }
                             }
+                            .frame(maxWidth: .infinity)
+                            .layoutPriority(1)
+                            .animation(.easeInOut(duration: 0.2), value: viewModel.id)
                         } dropCompleted: {
                             // Handle drop completion - save to database
                             print("Items reordered - saving to database")
@@ -171,9 +165,10 @@ struct DashboardView: View {
 //                            .padding(4)
 //                        }
                     }
-//                    .animation(.easeInOut(duration: 0.3), value: state.items)
-                    .animation(.easeInOut(duration: isDragging ? 0.0 : 0.3), value: cachedColumns)
-                    .animation(.easeInOut(duration: isDragging ? 0.0 : 0.3), value: state.dashboardViewType)
+                    .animation(.easeInOut(duration: isDragging ? 0.1 : 0.3), value: cachedColumns)
+                    .animation(.easeInOut(duration: isDragging ? 0.1 : 0.3), value: state.dashboardViewType)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 8)
                 }
             }
            .refreshable {
@@ -382,7 +377,14 @@ struct DashboardPlainCardView: View {
                     timeUpdateTrigger: timeUpdateTrigger
                 )
             }
+            .padding(.horizontal, 8)
+            .padding(.vertical, 8)
+            .frame(maxWidth: .infinity, minHeight: 120)
+            .contentShape(Rectangle())
         }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 4)
+        .padding(.vertical, 6)
     }
 }
 
@@ -441,8 +443,11 @@ struct DashboardImageCardView: View {
                 .padding(.vertical, 8)
             }
             .frame(maxWidth: .infinity, minHeight: 120)
+            .contentShape(Rectangle())
         }
-        .fixedSize(horizontal: false, vertical: true)
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 4)
+        .padding(.vertical, 6)
     }
 }
 
@@ -473,9 +478,7 @@ struct CardHeaderView: View {
                 currentIndex: getCurrentIndex()
             )
         }
-        .padding(.top, 8)
-        .padding(.leading, 8)
-        .padding(.trailing, 0)
+        .frame(maxWidth: .infinity)
     }
     
     private func getCurrentIndex() -> Int {

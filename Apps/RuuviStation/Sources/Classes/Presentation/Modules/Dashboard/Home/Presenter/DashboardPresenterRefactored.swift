@@ -260,16 +260,16 @@ private extension DashboardPresenterRefactored {
                 switch syncStatus {
                 case .syncing:
                     self?.view?.isRefreshing = true
-                    self?.activityPresenter.show(with: .loading(message: nil), atPosition: .center)
+//                    self?.activityPresenter.show(with: .loading(message: nil), atPosition: .center)
                 case .success:
                     self?.view?.isRefreshing = false
-                    self?.activityPresenter.dismiss(immediately: false)
+//                    self?.activityPresenter.dismiss(immediately: false)
                 case .failure(let error):
                     self?.view?.isRefreshing = false
-                    self?.activityPresenter.dismiss(immediately: false)
+//                    self?.activityPresenter.dismiss(immediately: false)
                     self?.errorPresenter.present(error: error)
                 case .idle:
-                    self?.activityPresenter.dismiss(immediately: false)
+//                    self?.activityPresenter.dismiss(immediately: false)
                     break
                 }
             }
