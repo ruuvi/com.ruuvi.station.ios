@@ -82,6 +82,44 @@ class DashboardViewState: ObservableObject {
             self?.shouldShowSignInBanner = show
         }
     }
+    
+    // MARK: - Single Item Update for Performance Optimization
+    func updateSingleItem(_ updatedViewModel: CardsViewModel) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            
+            // Find and update the specific view model
+            if let index = self.items.firstIndex(where: { $0.id == updatedViewModel.id }) {
+                self.items[index] = updatedViewModel
+                // This will trigger the @Published update for just this item
+                self.objectWillChange.send()
+                
+                // Update the individual observation for this view model
+                if let id = updatedViewModel.id {
+                    self.setupSingleViewModelObservation(for: updatedViewModel, id: id)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Helper Methods for Single View Model Observation
+    private func setupSingleViewModelObservation(for viewModel: CardsViewModel, id: String) {
+        // Clear existing observation for this view model
+        viewModelCancellables[id]?.removeAll()
+        
+        var cancellables = Set<AnyCancellable>()
+        
+        // Observe changes in the view model
+        viewModel.objectWillChange
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                // Propagate the change to our own objectWillChange
+                self?.objectWillChange.send()
+            }
+            .store(in: &cancellables)
+        
+        viewModelCancellables[id] = cancellables
+    }
 }
 
 class DashboardViewActions: ObservableObject {
@@ -180,20 +218,13 @@ class DashboardBridge: NSObject, DashboardViewInput {
             )
         }
     }
-
-    func showNoSensorsAddedMessage(show: Bool) {
-        state.updateNoSensorsMessage(show)
-    }
-
+    
     func showSensorSortingResetConfirmationDialog() {
         DispatchQueue.main.async {
-            NotificationCenter.default.post(
-                name: .showSensorSortingResetConfirmationDialog,
-                object: nil
-            )
+            NotificationCenter.default.post(name: .showSensorSortingResetConfirmationDialog, object: nil)
         }
     }
-
+    
     func showAlreadyLoggedInAlert(with email: String) {
         DispatchQueue.main.async {
             NotificationCenter.default.post(
@@ -202,6 +233,15 @@ class DashboardBridge: NSObject, DashboardViewInput {
                 userInfo: ["email": email]
             )
         }
+    }
+    
+    func showNoSensorsAddedMessage(show: Bool) {
+        state.updateNoSensorsMessage(show)
+    }
+    
+    // MARK: - Single View Model Update
+    func applyUpdate(to viewModel: CardsViewModel) {
+        state.updateSingleItem(viewModel)
     }
 }
 

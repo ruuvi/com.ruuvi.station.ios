@@ -16,6 +16,7 @@ protocol DashboardServiceCoordinatorProtocol: AnyObject {
     var syncStatus: CloudSyncStatus { get }
     
     var onViewModelsChanged: (([CardsViewModel]) -> Void)? { get set }
+    var onSingleViewModelChanged: ((CardsViewModel) -> Void)? { get set }
     var onShouldShowSignInBannerChanged: ((Bool) -> Void)? { get set }
     var onNoSensorsMessageChanged: ((Bool) -> Void)? { get set }
     var onBluetoothStateChanged: ((BTScannerState) -> Void)? { get set }
@@ -92,6 +93,7 @@ final class DashboardServiceCoordinator: DashboardServiceCoordinatorProtocol {
     }
     
     var onViewModelsChanged: (([CardsViewModel]) -> Void)?
+    var onSingleViewModelChanged: ((CardsViewModel) -> Void)?
     var onShouldShowSignInBannerChanged: ((Bool) -> Void)?
     var onNoSensorsMessageChanged: ((Bool) -> Void)?
     var onBluetoothStateChanged: ((BTScannerState) -> Void)?
@@ -231,24 +233,34 @@ final class DashboardServiceCoordinator: DashboardServiceCoordinatorProtocol {
         sensorDataService.onLatestRecordChanged = { [weak self] sensorId, record in
             guard let self = self, let record = record else { return }
             
-            // Find the corresponding view model and update it
-            if let viewModel = self._viewModels.first(where: { $0.id == sensorId }) {
-                let sensorSettings = self._sensorSettings.first { settings in
-                    (settings.luid?.any != nil && settings.luid?.any == viewModel.luid) ||
-                    (settings.macId?.any != nil && settings.macId?.any == viewModel.mac)
-                }
-                let updatedRecord = record.with(sensorSettings: sensorSettings)
-                viewModel.update(updatedRecord)
-                
-                // Trigger view models changed callback to update the UI
-                self.onViewModelsChanged?(self._viewModels)
-            }
+//            // Find the corresponding sensor settings for this record
+//            let sensorSettings = self._sensorSettings.first { settings in
+//                (settings.luid?.any != nil && settings.luid?.any?.value == sensorId) ||
+//                (settings.macId?.any != nil && settings.macId?.any?.value == sensorId)
+//            }
+            
+            // Use optimized single view model update instead of full coordinateSensorDataUpdate
+            self.viewModelManagementService.updateSingleViewModel(
+                for: sensorId,
+                with: record,
+                sensorSettings: nil
+            )
+        }
+        
+        // Handle individual sensor settings changes for optimized updates
+        sensorDataService.onSingleSensorSettingsChanged = { [weak self] sensorId, settings in
+            guard let self = self else { return }
+            self.viewModelManagementService.updateSingleViewModelSettings(
+                for: sensorId,
+                settings: settings
+            )
         }
     }
     
     private func setupAlertCoordination() {
         alertManagementService.onAlertStateChanged = { [weak self] alertStates in
             for (sensorId, alerts) in alertStates {
+                // Use optimized single view model update for alert states
                 self?.viewModelManagementService.updateAlertStates(for: sensorId, alertStates: alerts)
             }
         }
@@ -260,8 +272,20 @@ final class DashboardServiceCoordinator: DashboardServiceCoordinatorProtocol {
             self?.onBluetoothStateChanged?(newState)
         }
         
-        connectionService.onConnectionStatusChanged = { [weak self] _ in
-            self?.coordinateSensorDataUpdate()
+        connectionService.onConnectionStatusChanged = { [weak self] connectionStates in
+            guard let self = self else { return }
+            // Update connection states for individual sensors using optimized updates
+            for (uuid, isConnected) in connectionStates {
+                // Find sensor by UUID and update only that view model
+                if let sensorId = self._ruuviTags.first(where: { 
+                    $0.luid?.value == uuid || $0.macId?.value == uuid 
+                })?.id {
+                    self.viewModelManagementService.updateSingleViewModelConnection(
+                        for: sensorId,
+                        isConnected: isConnected
+                    )
+                }
+            }
         }
     }
     
@@ -298,6 +322,19 @@ final class DashboardServiceCoordinator: DashboardServiceCoordinatorProtocol {
         viewModelManagementService.onViewModelsChanged = { [weak self] newViewModels in
             self?._viewModels = newViewModels
             self?.onViewModelsChanged?(newViewModels)
+        }
+        
+        // Handle single view model updates for optimal performance
+        viewModelManagementService.onSingleViewModelChanged = { [weak self] updatedViewModel in
+            guard let self = self else { return }
+            
+            // Update the specific view model in our local array
+            if let index = self._viewModels.firstIndex(where: { $0.id == updatedViewModel.id }) {
+                self._viewModels[index] = updatedViewModel
+            }
+            
+            // Trigger single view model update callback for optimized UI updates
+            self.onSingleViewModelChanged?(updatedViewModel)
         }
         
         viewModelManagementService.onSignInBannerVisibilityChanged = { [weak self] newValue in

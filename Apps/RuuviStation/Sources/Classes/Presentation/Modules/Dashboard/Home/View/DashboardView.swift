@@ -3,6 +3,7 @@ import RuuviLocalization
 import RuuviOntology
 import RuuviService
 import SwiftUIMasonry
+import Dragula
 
 struct DashboardView: View {
     @EnvironmentObject var state: DashboardViewState
@@ -14,14 +15,18 @@ struct DashboardView: View {
     @Environment(\.verticalSizeClass) var verticalSizeClass
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
-    // Global timer for time updates
+    // Optimized timer for time updates - only update when needed
     @State private var timeUpdateTrigger = UUID()
-    private let updateTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    @State private var isTimerActive = false
+    private let updateTimer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
 
     // Cache the calculated columns to prevent repeated calculations
     @State private var cachedColumns: Int = 1
     @State private var lastKnownWidth: CGFloat = 0
     @State private var draggedItem: CardsViewModel?
+    
+    // Performance optimization - reduce UI updates during drag
+    @State private var isDragging = false
 
     // UI State
     @State private var showingBluetoothAlert = false
@@ -58,9 +63,9 @@ struct DashboardView: View {
                 } else {
                     VMasonry(
                         columns: cachedColumns,
-                        spacing: 0
+                        spacing: 8
                     ) {
-                        ForEach(state.items, id: \.id) { viewModel in
+                        DragulaView(items: $state.items) { viewModel in
                             Group {
                                 if state.dashboardViewType == .image {
                                     DashboardImageCardView(
@@ -76,50 +81,119 @@ struct DashboardView: View {
                                     )
                                 }
                             }
-                            .contextMenu {
-                                CardContextMenu(viewModel: viewModel)
+//                            .onDragStart {
+//                                isDragging = true
+//                                optimizeForDragPerformance()
+//                                // Reduce timer frequency during drag
+//                                isTimerActive = false
+//                            }
+//                            .onDragEnd {
+//                                isDragging = false
+//                                restoreNormalPerformance()
+//                                // Restore timer after drag
+//                                isTimerActive = true
+//                            }
+                        } dropView: { viewModel in
+                            Group {
+                                if state.dashboardViewType == .image {
+                                    DashboardImageCardView(
+                                        viewModel: viewModel,
+                                        measurementService: measurementService,
+                                        timeUpdateTrigger: timeUpdateTrigger
+                                    )
+                                } else {
+                                    DashboardPlainCardView(
+                                        viewModel: viewModel,
+                                        measurementService: measurementService,
+                                        timeUpdateTrigger: timeUpdateTrigger
+                                    )
+                                }
                             }
-                            .onTapGesture {
-                                actions.cardDidTap.send(viewModel)
+                        } dropCompleted: {
+                            // Handle drop completion - save to database
+                            print("Items reordered - saving to database")
+                            // Add haptic feedback for better UX
+                            let impact = UIImpactFeedbackGenerator(style: .medium)
+                            impact.impactOccurred()
+                            
+                            // Force UI update on main thread for better performance on physical devices
+                            DispatchQueue.main.async {
+                                actions.cardDidReorder.send(state.items)
                             }
-                            .onDrag {
-                                draggedItem = viewModel
-                                return NSItemProvider(
-                                    object: viewModel.id! as NSItemProviderWriting
-                                )
-                            }
-                            .onDrop(
-                                of: [.plainText],
-                                delegate: CardDropDelegate(
-                                    targetItem: viewModel,
-                                    items: Binding(
-                                        get: { state.items },
-                                        set: { newItems in
-                                            state.updateItems(newItems)
-                                        }
-                                    ),
-                                    draggedItem: $draggedItem,
-                                    onReorder: { reorderedItems in
-                                        actions.cardDidReorder.send(reorderedItems)
-                                    }
-                                )
-                            )
-                            .padding(4)
                         }
+//                        .environment(\.dragPreviewCornerRadius, 12)
+//                        .contentShape(Rectangle())
+//                        .clipped()
+//                        ForEach(state.items, id: \.id) { viewModel in
+//                            Group {
+//                                if state.dashboardViewType == .image {
+//                                    DashboardImageCardView(
+//                                        viewModel: viewModel,
+//                                        measurementService: measurementService,
+//                                        timeUpdateTrigger: timeUpdateTrigger
+//                                    )
+//                                } else {
+//                                    DashboardPlainCardView(
+//                                        viewModel: viewModel,
+//                                        measurementService: measurementService,
+//                                        timeUpdateTrigger: timeUpdateTrigger
+//                                    )
+//                                }
+//                            }
+//                            .contextMenu {
+//                                CardContextMenu(viewModel: viewModel)
+//                            }
+//                            .onTapGesture {
+//                                actions.cardDidTap.send(viewModel)
+//                            }
+//                            .onDrag {
+//                                draggedItem = viewModel
+//                                return NSItemProvider(
+//                                    object: viewModel.id! as NSItemProviderWriting
+//                                )
+//                            }
+//                            .onDrop(
+//                                of: [.plainText],
+//                                delegate: CardDropDelegate(
+//                                    targetItem: viewModel,
+//                                    items: Binding(
+//                                        get: { state.items },
+//                                        set: { newItems in
+//                                            state.updateItems(newItems)
+//                                        }
+//                                    ),
+//                                    draggedItem: $draggedItem,
+//                                    onReorder: { reorderedItems in
+//                                        actions.cardDidReorder.send(reorderedItems)
+//                                    }
+//                                )
+//                            )
+//                            .padding(4)
+//                        }
                     }
-                    .animation(.easeInOut(duration: 0.3), value: state.items)
-                    .animation(.easeInOut(duration: 0.3), value: cachedColumns)
-                    .animation(.easeInOut(duration: 0.3), value: state.dashboardViewType)
+//                    .animation(.easeInOut(duration: 0.3), value: state.items)
+                    .animation(.easeInOut(duration: isDragging ? 0.0 : 0.3), value: cachedColumns)
+                    .animation(.easeInOut(duration: isDragging ? 0.0 : 0.3), value: state.dashboardViewType)
                 }
             }
            .refreshable {
                onPullToRefresh()
            }
             .onReceive(updateTimer) { _ in
-                timeUpdateTrigger = UUID()
+                // Only update time if not dragging to prevent performance issues
+                if !isDragging && isTimerActive {
+                    timeUpdateTrigger = UUID()
+                }
+            }
+            .onAppear {
+                isTimerActive = true
+            }
+            .onDisappear {
+                isTimerActive = false
             }
             .onChange(of: geometry.size.width) { newWidth in
-                if abs(newWidth - lastKnownWidth) > 1 {
+                // Debounce geometry changes to prevent excessive recalculations
+                if abs(newWidth - lastKnownWidth) > 10 { // Increased threshold for better performance
                     let newColumns = calculateColumns(
                         for: newWidth,
                         verticalSizeClass: verticalSizeClass,
@@ -459,13 +533,17 @@ struct CardMenuView: View {
             if state.items.count > 1 {
                 if currentIndex > 0 {
                     Button(RuuviLocalization.moveUp) {
-                        actions.cardDidTriggerMoveUp.send(viewModel)
+                        withAnimation {
+                            actions.cardDidTriggerMoveUp.send(viewModel)
+                        }
                     }
                 }
                 
                 if currentIndex < state.items.count - 1 {
                     Button(RuuviLocalization.moveDown) {
-                        actions.cardDidTriggerMoveDown.send(viewModel)
+                        withAnimation {
+                            actions.cardDidTriggerMoveDown.send(viewModel)
+                        }
                     }
                 }
             }
@@ -1062,5 +1140,40 @@ struct CardsBackgroundViewWrapper: UIViewRepresentable {
 extension UIColor {
     func toColor() -> Color {
         Color(self)
+    }
+}
+
+// MARK: - Performance Helpers
+
+extension DashboardView {
+    
+    /// Provides device-specific performance optimizations
+    private var isPerformanceOptimized: Bool {
+        // Detect if running on a physical device vs simulator
+        #if targetEnvironment(simulator)
+        return false
+        #else
+        return true
+        #endif
+    }
+    
+    /// Optimized animation duration based on device capability
+    private var optimizedAnimationDuration: Double {
+        return isPerformanceOptimized ? 0.2 : 0.3
+    }
+    
+    /// Helper to manage performance during drag operations
+    private func optimizeForDragPerformance() {
+        if isPerformanceOptimized {
+            // Reduce update frequency during drag on physical devices
+            UIView.setAnimationsEnabled(false)
+        }
+    }
+    
+    /// Helper to restore normal performance after drag operations
+    private func restoreNormalPerformance() {
+        if isPerformanceOptimized {
+            UIView.setAnimationsEnabled(true)
+        }
     }
 }

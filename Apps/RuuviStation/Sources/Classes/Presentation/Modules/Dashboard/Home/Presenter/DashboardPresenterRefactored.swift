@@ -236,6 +236,13 @@ private extension DashboardPresenterRefactored {
             }
         }
         
+        // Handle single view model updates for optimized performance
+        serviceCoordinator.onSingleViewModelChanged = { [weak self] updatedViewModel in
+            DispatchQueue.main.async {
+                self?.view?.applyUpdate(to: updatedViewModel)
+            }
+        }
+        
         serviceCoordinator.onBluetoothStateChanged = { [weak self] state in
             DispatchQueue.main.async {
                 self?.handleBluetoothStateChange(state)
@@ -454,6 +461,7 @@ private extension DashboardPresenterRefactored {
         serviceCoordinator.onViewModelsChanged = nil
         serviceCoordinator.onShouldShowSignInBannerChanged = nil
         serviceCoordinator.onNoSensorsMessageChanged = nil
+        serviceCoordinator.onSingleViewModelChanged = nil
         serviceCoordinator.onBluetoothStateChanged = nil
         serviceCoordinator.onCloudModeChanged = nil
         serviceCoordinator.onSyncStatusChanged = nil

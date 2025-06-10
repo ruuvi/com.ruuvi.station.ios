@@ -5,12 +5,13 @@ import RuuviOntology
 import UIKit
 import MobileCoreServices
 import Combine
+import Dragula
 
 enum CardType {
     case ruuvi
 }
 
-final class CardsViewModel: NSObject, ObservableObject {
+final class CardsViewModel: NSObject, ObservableObject, DragulaItem {
     // MARK: - Basic
 
     @Published var type: CardType = .ruuvi

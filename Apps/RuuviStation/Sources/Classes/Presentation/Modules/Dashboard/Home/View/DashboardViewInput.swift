@@ -19,4 +19,5 @@ protocol DashboardViewInput: ViewInput {
         sortingType: DashboardSortingType
     )
     func showSensorSortingResetConfirmationDialog()
+    func applyUpdate(to viewModel: CardsViewModel)
 }

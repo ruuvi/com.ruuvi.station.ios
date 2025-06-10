@@ -28,11 +28,11 @@ class DashboardViewController: UIViewController {
         get { state.isRefreshing }
         set {
             state.updateRefreshState(newValue)
-            if isRefreshing {
-                activityIndicator.startAnimating()
-            } else {
-                activityIndicator.stopAnimating()
-            }
+//            if isRefreshing {
+//                activityIndicator.startAnimating()
+//            } else {
+//                activityIndicator.stopAnimating()
+//            }
         }
     }
 
@@ -660,14 +660,8 @@ private extension DashboardViewController {
 
 extension DashboardViewController: DashboardViewInput {
     func applyUpdate(to viewModel: CardsViewModel) {
-        // SwiftUI dashboard updates automatically via state binding
-        // Update the corresponding item in the state
-        if let index = viewModels.firstIndex(where: { vm in
-            vm.luid != nil && vm.luid == viewModel.luid ||
-                vm.mac != nil && vm.mac == viewModel.mac
-        }) {
-            viewModels[index] = viewModel
-        }
+        // Use optimized single item update for better performance
+        state.updateSingleItem(viewModel)
     }
 
     func localize() {

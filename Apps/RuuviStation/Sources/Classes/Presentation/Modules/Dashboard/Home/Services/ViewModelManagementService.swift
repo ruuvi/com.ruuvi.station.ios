@@ -9,6 +9,7 @@ protocol ViewModelManagementServiceProtocol: AnyObject {
     var noSensorsMessage: Bool { get }
     
     var onViewModelsChanged: (([CardsViewModel]) -> Void)? { get set }
+    var onSingleViewModelChanged: ((CardsViewModel) -> Void)? { get set }
     var onSignInBannerVisibilityChanged: ((Bool) -> Void)? { get set }
     var onNoSensorsMessageChanged: ((Bool) -> Void)? { get set }
     
@@ -18,6 +19,13 @@ protocol ViewModelManagementServiceProtocol: AnyObject {
         connectionStates: [String: Bool],
         syncStates: [String: NetworkSyncStatus?]
     )
+    func updateSingleViewModel(
+        for sensorId: String,
+        with record: RuuviTagSensorRecord?,
+        sensorSettings: SensorSettings?
+    )
+    func updateSingleViewModelConnection(for sensorId: String, isConnected: Bool)
+    func updateSingleViewModelSettings(for sensorId: String, settings: SensorSettings?)
     func reorderSensors(with type: DashboardSortingType, orderedIds: [String])
     func updateSensorName(_ name: String, for sensorId: String)
     func processLatestRecord(_ record: RuuviTagSensorRecord?, for sensorId: String)
@@ -53,6 +61,7 @@ final class ViewModelManagementService: ViewModelManagementServiceProtocol {
     }
     
     var onViewModelsChanged: (([CardsViewModel]) -> Void)?
+    var onSingleViewModelChanged: ((CardsViewModel) -> Void)?
     var onSignInBannerVisibilityChanged: ((Bool) -> Void)?
     var onNoSensorsMessageChanged: ((Bool) -> Void)?
     
@@ -130,22 +139,24 @@ final class ViewModelManagementService: ViewModelManagementServiceProtocol {
     func updateSensorName(_ name: String, for sensorId: String) {
         if let index = _viewModels.firstIndex(where: { $0.id == sensorId }) {
             _viewModels[index].name = name
-            onViewModelsChanged?(_viewModels)
+            
+            // Use single view model update for performance
+            onSingleViewModelChanged?(_viewModels[index])
         }
     }
     
     func processLatestRecord(_ record: RuuviTagSensorRecord?, for sensorId: String) {
-        if let index = _viewModels.firstIndex(where: { $0.id == sensorId }),
-           let record = record {
-            _viewModels[index].update(record)
-            onViewModelsChanged?(_viewModels)
-        }
+        // Use optimized single view model update instead of full array update
+        updateSingleViewModel(for: sensorId, with: record, sensorSettings: nil)
     }
     
     func updateAlertStates(for sensorId: String, alertStates: [AlertType: AlertState]) {
         if let index = _viewModels.firstIndex(where: { $0.id == sensorId }) {
-            applyAlertStates(alertStates, to: _viewModels[index])
-            onViewModelsChanged?(_viewModels)
+            let viewModel = _viewModels[index]
+            applyAlertStates(alertStates, to: viewModel)
+            
+            // Use single view model update for performance
+            onSingleViewModelChanged?(viewModel)
         }
     }
     
@@ -282,6 +293,61 @@ final class ViewModelManagementService: ViewModelManagementServiceProtocol {
     
     private func currentAppVersion() -> String? {
         return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+    }
+    
+    // MARK: - Optimized Single View Model Updates
+    
+    func updateSingleViewModel(
+        for sensorId: String,
+        with record: RuuviTagSensorRecord?,
+        sensorSettings: SensorSettings?
+    ) {
+        guard let index = _viewModels.firstIndex(where: { $0.id == sensorId }) else {
+            return
+        }
+        
+        let viewModel = _viewModels[index]
+        
+        // Update the view model with new record
+        if let record = record {
+            let updatedRecord = record.with(sensorSettings: sensorSettings)
+            viewModel.update(updatedRecord)
+        }
+        
+        // Apply sensor settings if provided
+        if let settings = sensorSettings {
+            applySensorSettings(settings, to: viewModel)
+        }
+        
+        // Trigger single view model update instead of full array update
+        onSingleViewModelChanged?(viewModel)
+    }
+    
+    func updateSingleViewModelConnection(for sensorId: String, isConnected: Bool) {
+        guard let index = _viewModels.firstIndex(where: { $0.id == sensorId }) else {
+            return
+        }
+        
+        let viewModel = _viewModels[index]
+        viewModel.isConnected = isConnected
+        
+        // Trigger single view model update
+        onSingleViewModelChanged?(viewModel)
+    }
+    
+    func updateSingleViewModelSettings(for sensorId: String, settings: SensorSettings?) {
+        guard let index = _viewModels.firstIndex(where: { $0.id == sensorId }) else {
+            return
+        }
+        
+        let viewModel = _viewModels[index]
+        
+        if let settings = settings {
+            applySensorSettings(settings, to: viewModel)
+        }
+        
+        // Trigger single view model update
+        onSingleViewModelChanged?(viewModel)
     }
     
     func loadBackgroundImages(for sensors: [AnyRuuviTagSensor]) {

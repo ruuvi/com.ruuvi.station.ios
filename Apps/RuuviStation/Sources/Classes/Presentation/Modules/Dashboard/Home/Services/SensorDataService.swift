@@ -12,6 +12,7 @@ protocol SensorDataServiceProtocol: AnyObject {
     var onSensorsChanged: (([AnyRuuviTagSensor]) -> Void)? { get set }
     var onSensorSettingsChanged: (([SensorSettings]) -> Void)? { get set }
     var onLatestRecordChanged: ((String, RuuviTagSensorRecord?) -> Void)? { get set }
+    var onSingleSensorSettingsChanged: ((String, SensorSettings?) -> Void)? { get set }
     
     func startObservingSensors()
     func stopObservingSensors()
@@ -44,6 +45,7 @@ final class SensorDataService: SensorDataServiceProtocol {
     var onSensorsChanged: (([AnyRuuviTagSensor]) -> Void)?
     var onSensorSettingsChanged: (([SensorSettings]) -> Void)?
     var onLatestRecordChanged: ((String, RuuviTagSensorRecord?) -> Void)?
+    var onSingleSensorSettingsChanged: ((String, SensorSettings?) -> Void)?
     
     // MARK: - Initialization
     init(
@@ -136,6 +138,8 @@ final class SensorDataService: SensorDataServiceProtocol {
                     if let index = self._sensorSettings.firstIndex(where: { $0.id == settings.id }) {
                         self._sensorSettings[index] = settings
                         self.onSensorSettingsChanged?(self._sensorSettings)
+                        // Notify individual sensor settings change for optimized updates
+                        self.onSingleSensorSettingsChanged?(sensor.id, settings)
                     }
                 case .delete(let settings):
                     self._sensorSettings.removeAll { $0.id == settings.id }
