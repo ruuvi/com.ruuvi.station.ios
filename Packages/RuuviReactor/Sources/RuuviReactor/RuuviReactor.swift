@@ -21,6 +21,13 @@ public protocol RuuviReactor {
         _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void
     ) -> RuuviReactorToken
 
+    func observeAllLatestRecords(
+        for ruuviTags: [RuuviTagSensor],
+        _ block: @escaping (
+            [AnyRuuviTagSensor: AnyRuuviTagSensorRecord?]
+        ) -> Void
+    ) -> RuuviReactorToken
+
     func observe(
         _ ruuviTag: RuuviTagSensor,
         _ block: @escaping (RuuviReactorChange<SensorSettings>) -> Void

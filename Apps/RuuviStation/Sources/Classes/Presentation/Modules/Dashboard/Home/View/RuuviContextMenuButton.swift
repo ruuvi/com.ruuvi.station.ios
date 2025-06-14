@@ -11,6 +11,8 @@ class RuuviContextMenuButton: UIView {
     lazy var buttonTitleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.Muli(.bold, size: 14)
+        label.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
         return label
     }()
 
@@ -18,6 +20,8 @@ class RuuviContextMenuButton: UIView {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.backgroundColor = .clear
+        iv.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        iv.setContentCompressionResistancePriority(.defaultLow, for: .vertical) // Allow compression
         return iv
     }()
 
@@ -78,28 +82,50 @@ private extension RuuviContextMenuButton {
                 buttonTitleLabel, buttonIconView
             ])
         }
-        buttonIconView.heightAnchor.constraint(
-            lessThanOrEqualToConstant: iconSize.height
-        ).isActive = true
-        buttonIconView.widthAnchor.constraint(
-            lessThanOrEqualToConstant: iconSize.width
-        ).isActive = true
+
+        // Use priority-based constraints instead of hard constraints
+        let heightConstraint = buttonIconView.heightAnchor.constraint(lessThanOrEqualToConstant: iconSize.height)
+        heightConstraint.priority = UILayoutPriority(999) // High priority but not required
+        heightConstraint.isActive = true
+
+        let widthConstraint = buttonIconView.widthAnchor.constraint(lessThanOrEqualToConstant: iconSize.width)
+        widthConstraint.priority = UILayoutPriority(999) // High priority but not required
+        widthConstraint.isActive = true
+
+        // Add aspect ratio constraint to maintain image proportions
+        if iconSize.width > 0 && iconSize.height > 0 {
+            let aspectRatio = iconSize.width / iconSize.height
+            buttonIconView.widthAnchor.constraint(
+                equalTo: buttonIconView.heightAnchor,
+                multiplier: aspectRatio
+            ).isActive = true
+        }
+
         stackView.axis = .horizontal
         stackView.spacing = interimSpacing
         stackView.distribution = .fill
+        stackView.alignment = .center // Center alignment instead of fill
+
         addSubview(stackView)
-        stackView
-            .fillSuperview(
-                padding: .init(
-                    top: 0,
-                    left: leadingPadding,
-                    bottom: 0,
-                    right: trailingPadding
-                )
-            )
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Use safe constraints for stack view
+        NSLayoutConstraint.activate([
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: leadingPadding),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -trailingPadding),
+            stackView.centerYAnchor.constraint(equalTo: centerYAnchor), // Center vertically
+            stackView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor),
+            stackView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor),
+        ])
 
         addSubview(button)
-        button.fillSuperview()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            button.leadingAnchor.constraint(equalTo: leadingAnchor),
+            button.trailingAnchor.constraint(equalTo: trailingAnchor),
+            button.topAnchor.constraint(equalTo: topAnchor),
+            button.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
     }
 }
 

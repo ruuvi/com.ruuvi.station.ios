@@ -35,6 +35,8 @@ targets:
       - package: Humidity
       - package: Future
       - package: FLEX
+      - package: SwiftUIMasonry
+      - package: Dragula
       - target: RuuviAnalytics
       - target: RuuviCloud
       - target: RuuviContext

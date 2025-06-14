@@ -21,14 +21,22 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
     func create() -> UIViewController {
         let r = AppAssembly.shared.assembler.resolver
 
-        let view = DashboardViewController()
+        let viewState = DashboardViewState()
+        let store: SensorStore = MainActor.assumeIsolated {
+            SensorStoreFactory.create()
+        }
+        let view = NewDashboardViewController(viewState: viewState, store: store)
+
+//        let view = DashboardViewController()
         let router = DashboardRouter()
         router.transitionHandler = view
         router.settings = r.resolve(RuuviLocalSettings.self)
-
-        let presenter = DashboardPresenter()
+//
+//        let presenter = DashboardPresenter()
+        let presenter = NewDashboardPresenter()
         presenter.router = router
         presenter.view = view
+        presenter.snapshotFactory = SnapshotFactory(measurement: r.resolve(RuuviServiceMeasurement.self)!)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.foreground = r.resolve(BTForeground.self)
@@ -58,42 +66,42 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
         presenter.cloudNotificationService = r.resolve(RuuviServiceCloudNotification.self)
         presenter.cloudSyncService = r.resolve(RuuviServiceCloudSync.self)
         router.delegate = presenter
-
-        let interactor = DashboardInteractor()
-        interactor.background = r.resolve(BTBackground.self)
-        interactor.connectionPersistence = r.resolve(RuuviLocalConnections.self)
-        interactor.ruuviPool = r.resolve(RuuviPool.self)
-        interactor.ruuviOwnershipService = r.resolve(RuuviServiceOwnership.self)
-        interactor.settings = r.resolve(RuuviLocalSettings.self)
-        interactor.ruuviUser = r.resolve(RuuviUser.self)
-        presenter.interactor = interactor
-
-        // MARK: - MENU
-
-        // swiftlint:disable force_cast
-        let menu = UIStoryboard(
-            name: "Menu",
-            bundle: .main
-        )
-        .instantiateInitialViewController() as! UINavigationController
-        menu.modalPresentationStyle = .custom
-        let menuTable = menu.topViewController as! MenuTableViewController
-        let menuPresenter = menuTable.output as! MenuPresenter
-        // swiftlint:enable force_cast
-        menuPresenter.configure(output: presenter)
-
-        let menuManager = MenuTableTransitionManager(container: view, menu: menu)
-        let menuTransition = MenuTableTransitioningDelegate(manager: menuManager)
-        router.menuTableInteractiveTransition = menuTransition
-        menu.transitioningDelegate = menuTransition
-
-        view.menuPresentInteractiveTransition = menuTransition.present
-        view.menuDismissInteractiveTransition = menuTransition.dismiss
-
-        // MARK: VIEW
-
-        view.measurementService = r.resolve(RuuviServiceMeasurement.self)
-
+//
+//        let interactor = DashboardInteractor()
+//        interactor.background = r.resolve(BTBackground.self)
+//        interactor.connectionPersistence = r.resolve(RuuviLocalConnections.self)
+//        interactor.ruuviPool = r.resolve(RuuviPool.self)
+//        interactor.ruuviOwnershipService = r.resolve(RuuviServiceOwnership.self)
+//        interactor.settings = r.resolve(RuuviLocalSettings.self)
+//        interactor.ruuviUser = r.resolve(RuuviUser.self)
+//        presenter.interactor = interactor
+//
+//        // MARK: - MENU
+//
+//        // swiftlint:disable force_cast
+//        let menu = UIStoryboard(
+//            name: "Menu",
+//            bundle: .main
+//        )
+//        .instantiateInitialViewController() as! UINavigationController
+//        menu.modalPresentationStyle = .custom
+//        let menuTable = menu.topViewController as! MenuTableViewController
+//        let menuPresenter = menuTable.output as! MenuPresenter
+//        // swiftlint:enable force_cast
+//        menuPresenter.configure(output: presenter)
+//
+//        let menuManager = MenuTableTransitionManager(container: view, menu: menu)
+//        let menuTransition = MenuTableTransitioningDelegate(manager: menuManager)
+//        router.menuTableInteractiveTransition = menuTransition
+//        menu.transitioningDelegate = menuTransition
+//
+//        view.menuPresentInteractiveTransition = menuTransition.present
+//        view.menuDismissInteractiveTransition = menuTransition.dismiss
+//
+//        // MARK: VIEW
+//
+//        view.measurementService = r.resolve(RuuviServiceMeasurement.self)
+//
         view.output = presenter
 
         return view
