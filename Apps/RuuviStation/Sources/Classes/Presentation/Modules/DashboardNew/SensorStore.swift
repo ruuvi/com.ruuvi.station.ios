@@ -77,6 +77,7 @@ final class LegacySensorStore: ObservableObject, SensorStoreProtocol {
             snapshotDict[id] = newSnapshot
         }
 
+        // TODO: Implement following manual or auto oder setting.
         snapshots = snapshotDict.values.sorted {
             $0.displayName.localizedCaseInsensitiveCompare($1.displayName) == .orderedAscending
         }
@@ -143,6 +144,7 @@ final class ModernSensorStore: SensorStoreProtocol {
             snapshotDict[id] = newSnapshot
         }
 
+        // TODO: Implement following manual or auto oder setting.
         snapshots = snapshotDict.values.sorted {
             $0.displayName.localizedCaseInsensitiveCompare($1.displayName) == .orderedAscending
         }

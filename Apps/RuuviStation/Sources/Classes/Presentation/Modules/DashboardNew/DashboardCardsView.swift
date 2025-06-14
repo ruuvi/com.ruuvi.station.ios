@@ -92,6 +92,9 @@ struct DashboardCardsViewLegacy: View {
                         CardHost(snapshot: snapshot)
                             .equatable()
                             .id(snapshot.id)
+                            .onTapGesture {
+                                // TODO: Implement tap
+                            }
                     } dropView: { snapshot in
                         CardHost(snapshot: snapshot)
                             .equatable()
@@ -99,6 +102,7 @@ struct DashboardCardsViewLegacy: View {
                     } dragWillBegin: {
                         isDragging = true
                     } dropCompleted: {
+                        // TODO: Implement Reorder
                         let newOrder = localSnapshots.map(\.id)
                         Task { @MainActor in
                             store.reorder(by: newOrder)
@@ -130,9 +134,15 @@ private struct CardHost: View, Equatable {
         Group {
             switch viewState.dashboardType {
             case .image:
-                DashboardCardImage(snapshot: snapshot)
+                DashboardCardImage(
+                    snapshot: snapshot,
+                    dashboardType: viewState.dashboardType
+                )
             case .simple:
-                DashboardCardPlain(snapshot: snapshot)
+                DashboardCardPlain(
+                    snapshot: snapshot,
+                    dashboardType: viewState.dashboardType
+                )
             }
         }
         .transition(.opacity)
@@ -158,6 +168,7 @@ private struct CardHeader: View {
 
             Spacer(minLength: 0)
 
+            // TODO: Implement alerts and menu actions
             // Alert - rebuilds only when alert state changes
 //            AlertIconView(alertState: snapshot.meta.alertState)
 //                .id(snapshot.alertKey) // Rebuilds when alert state changes
@@ -176,57 +187,81 @@ private struct CardBackground: View {
     let snapshot: SensorSnapshot
 
     var body: some View {
-        Group {
-            if let img = snapshot.background {
-                Image(uiImage: img)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 100)
-                    .id(snapshot.displayKey)
-            }
-        }
+        CardsBackgroundViewWrapper(
+            image: snapshot.background
+        )
+        .clipped()
+        .id(snapshot.displayKey)
     }
 }
+
+struct CardsBackgroundViewWrapper: UIViewRepresentable {
+    var image: UIImage?
+    var animate: Bool = true
+
+    func makeUIView(context: Context) -> CardsBackgroundView {
+        let view = CardsBackgroundView()
+        view.setBackgroundImage(with: image, withAnimation: false)
+        return view
+    }
+
+    func updateUIView(_ uiView: CardsBackgroundView, context: Context) {
+        uiView.setBackgroundImage(with: image, withAnimation: animate)
+    }
+}
+
 // MARK: - Image Card Styles with Granular Component Updates
 private struct DashboardCardImage: View {
     let snapshot: SensorSnapshot
+    let dashboardType: DashboardType
 
     var body: some View {
         HStack(spacing: 0) {
             CardBackground(snapshot: snapshot)
-            VStack(alignment: .leading, spacing: 6) {
+                .aspectRatio(contentMode: .fill)
+                .frame(width: 110)
+                .cornerRadius(8, corners: [.topLeft, .bottomLeft])
+
+            VStack(alignment: .leading, spacing: 8) {
                 CardHeader(snapshot: snapshot)
-
-//                // Prominent indicator - rebuilds when indicators change
-//                if let prom = snapshot.indicators.first(where: { $0.isProminent }) {
-//                    ProminentIndicatorView(model: prom)
-//                        .id(snapshot.indicatorKey)
-//                }
-
-                IndicatorsGrid(snapshot: snapshot)
+                if let prominentIndicator = snapshot.indicators.first(
+                    where: {
+                        $0.isProminent
+                    }) {
+                    ProminentIndicatorView(model: prominentIndicator)
+                }
+                IndicatorsGrid(
+                    snapshot: snapshot,
+                    dashboardType: dashboardType
+                )
                 CardFooter(snapshot: snapshot)
             }
-            .padding(8)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 8)
         }
         .background(
             RoundedRectangle(cornerRadius: 8)
                 .fill(RuuviColor.dashboardCardBG.swiftUIColor)
         )
+//        .frame(minHeight: 100) // TODO: Discuss this with Denis.
     }
 }
 
 private struct DashboardCardPlain: View {
     let snapshot: SensorSnapshot
+    let dashboardType: DashboardType
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             CardHeader(snapshot: snapshot)
-            IndicatorsGrid(snapshot: snapshot)
+            IndicatorsGrid(
+                snapshot: snapshot,
+                dashboardType: dashboardType
+            )
             CardFooter(snapshot: snapshot)
         }
         .padding(.horizontal, 10)
-        .padding(.top, 8)
-        .padding(.bottom, 8)
+        .padding(.vertical, 8)
         .background(
             RoundedRectangle(cornerRadius: 8)
                 .fill(RuuviColor.dashboardCardBG.swiftUIColor)
@@ -298,10 +333,13 @@ private struct SourceIconView: View {
 // MARK: - Optimized Indicator Grid with Selective Updates
 private struct IndicatorsGrid: View {
     let snapshot: SensorSnapshot
+    let dashboardType: DashboardType
 
     var body: some View {
         IndicatorGridContent(
-            indicators: snapshot.indicators
+            indicators: dashboardType == .simple ?
+                snapshot.indicators :
+                snapshot.indicators.filter({ !$0.isProminent })
         )
         .id(snapshot.indicatorKey)
     }
@@ -310,10 +348,11 @@ private struct IndicatorsGrid: View {
 private struct IndicatorGridContent: View {
     let indicators: [IndicatorModel]
 
-    private let columns = [
-        GridItem(.flexible(), spacing: 8),
-        GridItem(.flexible(), spacing: 8),
-    ]
+    private var columns: [GridItem] {
+        return indicators.count <= 2 ?
+                [GridItem(.flexible(minimum: 0))] :
+                [GridItem(.flexible(), spacing: 8), GridItem(.flexible(), spacing: 8)]
+    }
 
     var body: some View {
         LazyVGrid(columns: columns, alignment: .leading, spacing: 2) {
@@ -323,7 +362,6 @@ private struct IndicatorGridContent: View {
         }
     }
 }
-
 
 // MARK: – Indicator  -----------------------------------------------------------
 
@@ -362,12 +400,19 @@ private struct ProminentIndicatorView: View {
     let model: IndicatorModel
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 2) {
+        VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .firstTextBaseline, spacing: 2) {
                 Text(model.value)
-                    .font(.custom("Oswald-Bold", size: 30))
-                    .foregroundColor(Color.red)
-//                    .foregroundColor(Color(model.tint))
+                    .font(
+                        .Oswald(.bold, size: 30)
+                    )
+                    .foregroundColor(
+                        model.alertState == .firing ?
+                            Color(RuuviColor.orangeColor.color) :
+                            Color(RuuviColor.dashboardIndicator.color)
+                    )
+                    .multilineTextAlignment(.leading)
+
 //                if let sup = model.superscript {
 //                    Text(sup)
 //                        .font(.custom("Oswald-Regular", size: 12))
@@ -389,7 +434,6 @@ private struct ProminentIndicatorView: View {
         }
     }
 }
-
 
 
 // MARK: - Alert Icon View
@@ -434,5 +478,32 @@ struct AlertIconView: View {
         default:
             return .clear
         }
+    }
+}
+
+struct CornerRadiusStyle: ViewModifier {
+    var radius: CGFloat
+    var corners: UIRectCorner
+
+    struct CornerRadiusShape: Shape {
+
+        var radius = CGFloat.infinity
+        var corners = UIRectCorner.allCorners
+
+        func path(in rect: CGRect) -> Path {
+            let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+            return Path(path.cgPath)
+        }
+    }
+
+    func body(content: Content) -> some View {
+        content
+            .clipShape(CornerRadiusShape(radius: radius, corners: corners))
+    }
+}
+
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        ModifiedContent(content: self, modifier: CornerRadiusStyle(radius: radius, corners: corners))
     }
 }

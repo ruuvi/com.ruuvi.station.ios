@@ -785,23 +785,55 @@ extension NewDashboardPresenter {
 
             var dict = [String: RuuviSensorCardItem]()
 
+            // Create a dispatch group to wait for all background fetches
+            let backgroundGroup = DispatchGroup()
+
             for tag in self.ruuviTags {
-                let record   = self.ruuviStorage.cachedLatestBlocking(for: tag)
+                let record = self.ruuviStorage.cachedLatestBlocking(for: tag)
+                print("tag: \(tag.name), record: \(record?.temperature?.value)")
                 let settings = self.sensorSettingsList.first { $0.id == tag.id }
 
-                // background == nil  ➜  will be filled in step 3
                 var snap = self.snapshotFactory.make(
                     tag: tag,
                     record: record,
                     settings: settings
                 )
-                snap.background = nil          // <— make sure the field exists
+                snap.background = nil
 
                 dict[tag.id] = RuuviSensorCardItem(initialSnapshot: snap)
+
+                // Start background fetch immediately in parallel
+                backgroundGroup.enter()
+                self.ruuviSensorPropertiesService.getImage(for: tag).on(
+                    success: { [weak self] image in
+                        guard let self,
+                              let item = self.itemsByID[tag.id] else {
+                            backgroundGroup.leave()
+                            return
+                        }
+
+                        // Build an updated snapshot that only changes `background`
+                        var updated = item.snapshot
+                        updated.background = image
+                        updated.displayVersion += 1
+
+                        // Keep local cache in sync
+                        item.apply(updated)
+
+                        // Bubble the change to the store
+                        Task { @MainActor in
+                            self.view?.store?.apply(updated)
+                        }
+                        backgroundGroup.leave()
+                    },
+                    failure: { [weak self] error in
+                        self?.errorPresenter.present(error: error)
+                        backgroundGroup.leave()
+                    }
+                )
             }
 
             self.itemsByID = dict
-            // thread-safe local cache
 
             // -- 2. Publish the complete list once on the main actor --
             Task { @MainActor in
@@ -814,34 +846,6 @@ extension NewDashboardPresenter {
             }
 
             restartObservingLastRecords()
-
-            // -- 3. Fetch backgrounds for every tag (still on bg queue) --
-            for tag in self.ruuviTags {
-                self.ruuviSensorPropertiesService.getImage(for: tag).on(
-                    success: { [weak self] image in
-                        guard let self,
-                              let item = self.itemsByID[tag.id] else { return }
-
-                        // Build an updated snapshot that only changes `background`
-                        var updated = item.snapshot
-                        updated.background = image     // inject the bitmap
-
-                        // Increment display version since background changed
-                        updated.displayVersion += 1
-
-                        // Keep local cache in sync
-                        item.apply(updated)
-
-                        // Bubble the change to the store
-                        Task { @MainActor in
-                            self.view?.store?.apply(updated)
-                        }
-                    },
-                    failure: { [weak self] error in
-                        self?.errorPresenter.present(error: error)
-                    }
-                )
-            }
         }
     }
 
@@ -939,6 +943,7 @@ extension NewDashboardPresenter {
 
         lastRecordObserveToken = ruuviReactor.observeAllLatestRecords(for: ruuviTags) { recordsDictionary in
             for (tag, record) in recordsDictionary {
+                print("Balda: ", tag.name, record?.temperature)
                 let settings = self.sensorSettingsList.first {
                     $0.luid?.value == tag.luid?.value ||
                     $0.macId?.value == tag.macId?.value
@@ -1017,6 +1022,7 @@ extension NewDashboardPresenter {
 
         Task { @MainActor in
             self.view?.store?.apply(newSnap)
+            self.view?.store?.commitImmediate()
         }
     }
 
