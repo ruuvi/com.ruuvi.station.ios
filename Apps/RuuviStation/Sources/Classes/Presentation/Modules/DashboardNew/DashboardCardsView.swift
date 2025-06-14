@@ -50,7 +50,7 @@ struct DashboardCardsView: View {
                     }
                 }
                 .animation(.easeInOut(duration: 0.2), value: cols)
-                .padding(.horizontal, 12)
+                .padding(.horizontal, 14)
             }
             .onAppear {
                 localSnapshots = store.snapshots
@@ -107,7 +107,7 @@ struct DashboardCardsViewLegacy: View {
                     }
                 }
                 .animation(.easeInOut(duration: 0.2), value: cols)
-                .padding(.horizontal, 12)
+                .padding(.horizontal, 14)
             }
             .onAppear {
                 localSnapshots = store.snapshots
@@ -150,12 +150,11 @@ private struct CardHeader: View {
 
     var body: some View {
         HStack(alignment: .top, spacing: 6) {
-            // Title - rebuilds only when display info changes
             Text(snapshot.displayName)
-                .font(.custom("Montserrat-Bold", size: 14))
+                .font(.Montserrat(.bold, size: 14))
                 .foregroundColor(Color(RuuviColor.dashboardIndicatorBig.color))
                 .lineLimit(2)
-                .id(snapshot.displayKey) // Rebuilds when displayName changes
+                .id(snapshot.displayKey)
 
             Spacer(minLength: 0)
 
@@ -163,12 +162,12 @@ private struct CardHeader: View {
 //            AlertIconView(alertState: snapshot.meta.alertState)
 //                .id(snapshot.alertKey) // Rebuilds when alert state changes
 
-            Menu { /* presenter fills */ } label: {
-                Image(uiImage: RuuviAsset.more3dot.image)
-                    .renderingMode(.template)
-                    .foregroundColor(Color(RuuviColor.dashboardIndicatorBig.color))
-                    .padding(.top, 4)
-            }
+//            Menu { /* presenter fills */ } label: {
+//                Image(uiImage: RuuviAsset.more3dot.image)
+//                    .renderingMode(.template)
+//                    .foregroundColor(Color(RuuviColor.dashboardIndicatorBig.color))
+//                    .padding(.top, 4)
+//            }
         }
     }
 }
@@ -182,23 +181,20 @@ private struct CardBackground: View {
                 Image(uiImage: img)
                     .resizable()
                     .scaledToFit()
-                    .frame(maxWidth: .infinity)
-                    .id(snapshot.displayKey) // Rebuilds when background changes
+                    .frame(width: 100)
+                    .id(snapshot.displayKey)
             }
         }
     }
 }
-// MARK: - Optimized Card Styles with Granular Component Updates
+// MARK: - Image Card Styles with Granular Component Updates
 private struct DashboardCardImage: View {
     let snapshot: SensorSnapshot
 
     var body: some View {
         HStack(spacing: 0) {
-            // Background - only rebuilds when background changes
             CardBackground(snapshot: snapshot)
-
             VStack(alignment: .leading, spacing: 6) {
-                // Header - only rebuilds when display name or alert changes
                 CardHeader(snapshot: snapshot)
 
 //                // Prominent indicator - rebuilds when indicators change
@@ -207,17 +203,15 @@ private struct DashboardCardImage: View {
 //                        .id(snapshot.indicatorKey)
 //                }
 
-                // Indicators grid - rebuilds when indicators change
                 IndicatorsGrid(snapshot: snapshot)
-
-                Spacer(minLength: 0)
-
-                // Footer - granular updates for each component
                 CardFooter(snapshot: snapshot)
             }
             .padding(8)
         }
-        .background(RoundedRectangle(cornerRadius: 8).fill(Color(RuuviColor.dashboardCardBG.color)))
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(RuuviColor.dashboardCardBG.swiftUIColor)
+        )
     }
 }
 
@@ -225,20 +219,18 @@ private struct DashboardCardPlain: View {
     let snapshot: SensorSnapshot
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            // Header - only rebuilds when display name or alert changes
+        VStack(alignment: .leading, spacing: 8) {
             CardHeader(snapshot: snapshot)
-
-            // Indicators grid - rebuilds when indicators change
             IndicatorsGrid(snapshot: snapshot)
-
-            Spacer(minLength: 0)
-
-            // Footer - granular updates for each component
             CardFooter(snapshot: snapshot)
         }
-        .padding(8)
-        .background(RoundedRectangle(cornerRadius: 8).fill(Color(RuuviColor.dashboardCardBG.color)))
+        .padding(.horizontal, 10)
+        .padding(.top, 8)
+        .padding(.bottom, 8)
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(RuuviColor.dashboardCardBG.swiftUIColor)
+        )
     }
 }
 
@@ -248,15 +240,19 @@ private struct TimestampView: View {
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 1)) { _ in
-            if let ts = snapshot.meta.timestamp {
-                Text(ts.ruuviAgo())
+            if let timestamp = snapshot.meta.timestamp {
+                Text(timestamp.ruuviAgo())
                     .monospacedDigit()
-                    .font(.custom("Muli-Regular", size: 10))
-                    .foregroundColor(Color(RuuviColor.dashboardIndicator.color).opacity(0.8))
+                    .font(.Muli(.regular, size: 10))
+                    .foregroundColor(
+                        RuuviColor.dashboardIndicator.swiftUIColor.opacity(0.8)
+                    )
             } else {
                 Text(RuuviLocalization.Cards.UpdatedLabel.NoData.message)
-                    .font(.custom("Muli-Regular", size: 10))
-                    .foregroundColor(Color(RuuviColor.dashboardIndicator.color).opacity(0.8))
+                    .font(.Muli(.regular, size: 10))
+                    .foregroundColor(
+                        RuuviColor.dashboardIndicator.swiftUIColor.opacity(0.8)
+                    )
             }
         }
     }
@@ -268,24 +264,13 @@ private struct CardFooter: View {
     var body: some View {
         HStack(spacing: 6) {
             SourceIconView(meta: snapshot.meta)
-
             TimestampView(snapshot: snapshot)
                 .id(snapshot.timestampKey)
-
             Spacer(minLength: 0)
-
-            BatteryView(snapshot: snapshot)
-                .id(snapshot.batteryKey)
-        }
-    }
-}
-
-private struct BatteryView: View {
-    let snapshot: SensorSnapshot
-
-    var body: some View {
-        if snapshot.meta.batteryLow {
-            LowBatteryLevelView()
+            if snapshot.meta.batteryLow {
+                LowBatteryLevelView()
+                    .id(snapshot.batteryKey)
+            }
         }
     }
 }
@@ -300,11 +285,12 @@ private struct SourceIconView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(
-                    width: meta.source == .ruuviNetwork ? 22 : 16,
-                    height: 22
+                    width: meta.source == .ruuviNetwork ? 20 : 16
                 )
                 .opacity(0.7)
-                .tint(Color(RuuviColor.dashboardIndicator.color).opacity(0.8))
+                .foregroundStyle(
+                    RuuviColor.dashboardIndicator.swiftUIColor.opacity(0.8)
+                )
         }
     }
 }
@@ -314,40 +300,25 @@ private struct IndicatorsGrid: View {
     let snapshot: SensorSnapshot
 
     var body: some View {
-        // Only rebuild when indicators actually change
-        IndicatorGridContent(indicators: snapshot.indicators)
-            .id(snapshot.indicatorKey)
+        IndicatorGridContent(
+            indicators: snapshot.indicators
+        )
+        .id(snapshot.indicatorKey)
     }
 }
 
 private struct IndicatorGridContent: View {
     let indicators: [IndicatorModel]
 
-    private var rows: [[IndicatorModel]] {
-        var temp: [[IndicatorModel]] = []
-        var row: [IndicatorModel] = []
-        for m in indicators {
-            row.append(m)
-            if row.count == 2 {
-                temp.append(row); row = []
-            }
-        }
-        if !row.isEmpty { temp.append(row) }
-        return temp
-    }
+    private let columns = [
+        GridItem(.flexible(), spacing: 8),
+        GridItem(.flexible(), spacing: 8),
+    ]
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            ForEach(rows, id: \.[0].id) { row in
-                HStack(spacing: 8) {
-                    IndicatorView(model: row[0])
-                    Spacer()
-                    if row.count == 2 {
-                        IndicatorView(model: row[1])
-                    } else {
-                        Spacer(minLength: 0)
-                    }
-                }
+        LazyVGrid(columns: columns, alignment: .leading, spacing: 2) {
+            ForEach(indicators) { indicator in
+                IndicatorView(model: indicator)
             }
         }
     }
@@ -362,20 +333,24 @@ private struct IndicatorView: View {
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 4) {
             Text(model.value)
-                .font(.custom("Montserrat-Bold", size: 14))
+                .font(.Montserrat(.bold, size: 14))
+                .lineLimit(1)
                 .foregroundColor(
-                    model.alertState == .firing ? Color(RuuviColor.orangeColor.color) : Color(
-                        RuuviColor.dashboardIndicator.color
-                    )
+                    model.alertState == .firing ?
+                        Color(RuuviColor.orangeColor.color) :
+                        Color(RuuviColor.dashboardIndicator.color)
                 )
+                .multilineTextAlignment(.leading)
             if let unit = model.unit {
                 Text(unit)
-                    .font(.custom("Muli-Regular", size: 12))
+                    .font(.Muli(.regular, size: 12))
+                    .lineLimit(1)
                     .foregroundColor(
-                        model.alertState == .firing ? Color(RuuviColor.orangeColor.color) : Color(
-                            RuuviColor.dashboardIndicator.color
-                        )
+                        model.alertState == .firing ?
+                            Color(RuuviColor.orangeColor.color) :
+                            Color(RuuviColor.dashboardIndicator.color)
                     )
+                    .multilineTextAlignment(.leading)
             }
         }
     }

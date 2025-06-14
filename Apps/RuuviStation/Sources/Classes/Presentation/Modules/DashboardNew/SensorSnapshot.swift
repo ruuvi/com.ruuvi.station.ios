@@ -23,7 +23,6 @@ struct SensorSnapshot: Identifiable, DragulaItem {
     var sourceVersion: Int = 0         // Only for alert state changes
 
     struct Meta {
-        let updatedAt: String?
         let timestamp: Date?
         let source: RuuviTagSensorRecordSource?
         let sourceIcon: Image?
@@ -78,51 +77,52 @@ extension SensorSnapshot: Equatable {
     }
 }
 
-/// Updated struct (matches the one in your last message but
-///  *replaces* `isHighlighted` with a real `AlertState`)
+// MARK: - IndicatorModel
+
 struct IndicatorModel: Identifiable, Hashable {
     let id = UUID()
     let kind: Kind
 
-    let title: String
+    let title: String?
     let value: String
     let unit: String?
 
-    // extras
     let progress: Float?
     let tint: UIColor?
     let alertState: AlertState?
 
-    // presentation flags
     let isProminent: Bool
 }
 
-
-// MARK: - IndicatorModel refresh
 extension IndicatorModel {
     enum Kind: Hashable {
         case temperature, humidity, pressure, movement
-        case co2, pm25, pm10, nox, voc, luminosity, sound
+        case measurementSequence, voltage, txPower, signalStrength
+        case accelerationX, accelerationY, accelerationZ
+        case co2, pm1, pm25, pm40, pm10, nox, voc, luminosity, soundAvg, soundPeak
         case aqi
     }
 
     /// convenience ctor
-    static func make(kind: Kind,
-                     title: String,
-                     value: String,
-                     unit: String? = nil,
-                     progress: Float? = nil,
-                     tint: UIColor? = nil,
-                     alertState: AlertState? = nil,
-                     prominent: Bool = false) -> IndicatorModel {
-
-        .init(kind: kind,
-              title: title,
-              value: value,
-              unit: unit,
-              progress: progress,
-              tint: tint,
-              alertState: alertState,
-              isProminent: prominent)
+    static func make(
+        kind: Kind,
+        title: String? = nil,
+        value: String,
+        unit: String? = nil,
+        progress: Float? = nil,
+        tint: UIColor? = nil,
+        alertState: AlertState? = nil,
+        prominent: Bool = false
+    ) -> IndicatorModel {
+        .init(
+            kind: kind,
+            title: title,
+            value: value,
+            unit: unit,
+            progress: progress,
+            tint: tint,
+            alertState: alertState,
+            isProminent: prominent
+        )
     }
 }

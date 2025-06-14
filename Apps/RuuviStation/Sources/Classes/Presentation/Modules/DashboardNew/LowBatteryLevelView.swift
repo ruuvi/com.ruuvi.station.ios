@@ -6,16 +6,13 @@ struct LowBatteryLevelView: View {
 
     var fontSize: CGFloat = 10
     var iconSize: CGFloat = 22
-    var textColor: Color = Color(
-        .white.withAlphaComponent(0.8)
-    )
-
+    var textColor: Color = RuuviColor.dashboardIndicator.swiftUIColor.opacity(0.5)
     var iconTint: Color = Color(RuuviColor.orangeColor.color)
 
     var body: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 6) {
             Text(RuuviLocalization.lowBattery)
-                .font(.custom("Muli-Regular", size: fontSize))
+                .font(.Muli(.regular, size: fontSize))
                 .foregroundColor(textColor)
                 .multilineTextAlignment(.trailing)
 

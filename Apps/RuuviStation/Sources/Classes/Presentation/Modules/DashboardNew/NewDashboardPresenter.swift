@@ -777,7 +777,7 @@ extension NewDashboardPresenter {
         }
     }
 
-    // **MARK: - Build the very first list of SensorCardItems**
+    // Build initial list
     private func buildItemsInitial() {
         // -- 1. Resolve latest records in the background --
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in

@@ -215,7 +215,7 @@ extension NewDashboardViewController {
             leading: headerView.leadingAnchor,
             bottom: headerView.bottomAnchor,
             trailing: nil,
-            padding: .init(top: 0, left: 12, bottom: 0, right: 0)
+            padding: .init(top: 0, left: 8, bottom: 0, right: 0)
         )
 
         headerView.addSubview(ruuviLogoView)
@@ -234,7 +234,7 @@ extension NewDashboardViewController {
             leading: nil,
             bottom: headerView.bottomAnchor,
             trailing: headerView.trailingAnchor,
-            padding: .init(top: 0, left: 0, bottom: 0, right: 12)
+            padding: .init(top: 0, left: 0, bottom: 0, right: 8)
         )
 
         headerView.addSubview(activityIndicator)
