@@ -183,15 +183,43 @@ private struct CardHeader: View {
     }
 }
 
+//private struct CardBackground: View {
+//    let snapshot: SensorSnapshot
+//
+//    var body: some View {
+//        CardsBackgroundViewWrapper(
+//            image: snapshot.background
+//        )
+//        .clipped()
+//        .id(snapshot.backgroundVersionKey)
+//        .onChange(of: snapshot.backgroundVersionKey) { _ in
+//            print("Name: ", snapshot.displayName, snapshot.background)
+//        }
+//    }
+//}
+
 private struct CardBackground: View {
     let snapshot: SensorSnapshot
+    @State private var currentImage: UIImage?
 
     var body: some View {
         CardsBackgroundViewWrapper(
-            image: snapshot.background
+            image: currentImage
         )
         .clipped()
-        .id(snapshot.displayKey)
+        .onAppear {
+            currentImage = snapshot.background
+            print("📸 CardBackground onAppear: \(snapshot.displayName) has image: \(snapshot.background != nil)")
+        }
+        .onChange(of: snapshot.background) { newImage in
+            currentImage = newImage
+            print("📸 CardBackground updated: \(snapshot.displayName) has image: \(newImage != nil)")
+        }
+        .onChange(of: snapshot.backgroundVersionKey) { newKey in
+            // Force update when version changes
+            currentImage = snapshot.background
+            print("📸 CardBackground version changed: \(snapshot.displayName) version: \(newKey) has image: \(snapshot.background != nil)")
+        }
     }
 }
 
@@ -206,7 +234,15 @@ struct CardsBackgroundViewWrapper: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: CardsBackgroundView, context: Context) {
-        uiView.setBackgroundImage(with: image, withAnimation: animate)
+        // Only animate if image actually changed
+        let shouldAnimate = animate && image != nil
+        uiView.setBackgroundImage(with: image, withAnimation: shouldAnimate)
+
+        if image != nil {
+            print("🖼️ CardsBackgroundView updated with image: \(image!)")
+        } else {
+            print("🖼️ CardsBackgroundView updated with nil image")
+        }
     }
 }
 
@@ -225,6 +261,11 @@ private struct DashboardCardImage: View {
             VStack(alignment: .leading, spacing: 8) {
                 CardHeader(snapshot: snapshot)
                 if let prominentIndicator = snapshot.indicators.first(
+                    where: {
+                        $0.kind == .aqiProminent && $0.isProminent
+                    }) {
+                    ProminentIndicatorViewAQI(model: prominentIndicator)
+                } else if let prominentIndicator = snapshot.indicators.first(
                     where: {
                         $0.isProminent
                     }) {
@@ -282,12 +323,14 @@ private struct TimestampView: View {
                     .foregroundColor(
                         RuuviColor.dashboardIndicator.swiftUIColor.opacity(0.8)
                     )
+                    .lineLimit(1)
             } else {
                 Text(RuuviLocalization.Cards.UpdatedLabel.NoData.message)
                     .font(.Muli(.regular, size: 10))
                     .foregroundColor(
                         RuuviColor.dashboardIndicator.swiftUIColor.opacity(0.8)
                     )
+                    .lineLimit(1)
             }
         }
     }
@@ -338,7 +381,7 @@ private struct IndicatorsGrid: View {
     var body: some View {
         IndicatorGridContent(
             indicators: dashboardType == .simple ?
-                snapshot.indicators :
+                snapshot.indicators.filter({ $0.kind != .aqiProminent }) :
                 snapshot.indicators.filter({ !$0.isProminent })
         )
         .id(snapshot.indicatorKey)
@@ -375,8 +418,8 @@ private struct IndicatorView: View {
                 .lineLimit(1)
                 .foregroundColor(
                     model.alertState == .firing ?
-                        Color(RuuviColor.orangeColor.color) :
-                        Color(RuuviColor.dashboardIndicator.color)
+                        RuuviColor.orangeColor.swiftUIColor :
+                        RuuviColor.dashboardIndicator.swiftUIColor
                 )
                 .multilineTextAlignment(.leading)
             if let unit = model.unit {
@@ -385,8 +428,8 @@ private struct IndicatorView: View {
                     .lineLimit(1)
                     .foregroundColor(
                         model.alertState == .firing ?
-                            Color(RuuviColor.orangeColor.color) :
-                            Color(RuuviColor.dashboardIndicator.color)
+                            RuuviColor.orangeColor.swiftUIColor :
+                            RuuviColor.dashboardIndicator.swiftUIColor
                     )
                     .multilineTextAlignment(.leading)
             }
@@ -400,35 +443,90 @@ private struct ProminentIndicatorView: View {
     let model: IndicatorModel
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            HStack(alignment: .firstTextBaseline, spacing: 2) {
+        HStack(alignment: .center, spacing: 4) {
+            Text(model.value)
+                .font(
+                    .Oswald(.bold, size: 30)
+                )
+                .foregroundColor(
+                    model.alertState == .firing ?
+                        RuuviColor.orangeColor.swiftUIColor :
+                        RuuviColor.dashboardIndicator.swiftUIColor
+                )
+                .multilineTextAlignment(.leading)
+                .lineLimit(1)
+
+            HStack(alignment: .firstTextBaseline, spacing: 0) {
+                if let unit = model.unit {
+                    Text(unit)
+                        .font(.Oswald(.regular, size: 12))
+                        .foregroundColor(
+                            model.alertState == .firing ?
+                                RuuviColor.orangeColor.swiftUIColor :
+                                RuuviColor.dashboardIndicator.swiftUIColor.opacity(0.6)
+                        )
+                        .multilineTextAlignment(.leading)
+                        .lineLimit(1)
+                        .padding(.bottom, 12)
+                }
+                Spacer()
+            }
+        }
+        .frame(height: 34)
+    }
+}
+
+private struct ProminentIndicatorViewAQI: View {
+    let model: IndicatorModel
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(alignment: .center, spacing: 4) {
                 Text(model.value)
                     .font(
                         .Oswald(.bold, size: 30)
                     )
                     .foregroundColor(
                         model.alertState == .firing ?
-                            Color(RuuviColor.orangeColor.color) :
-                            Color(RuuviColor.dashboardIndicator.color)
+                            RuuviColor.orangeColor.swiftUIColor :
+                            RuuviColor.dashboardIndicator.swiftUIColor
                     )
                     .multilineTextAlignment(.leading)
+                    .lineLimit(1)
 
-//                if let sup = model.superscript {
-//                    Text(sup)
-//                        .font(.custom("Oswald-Regular", size: 12))
-////                        .foregroundColor(model.tint)
-//                        .baselineOffset(4)
-//                }
+                VStack(alignment: .leading, spacing: 0) {
+                    if let maximum = model.maximumValue {
+                        Text("/\(maximum.stringValue)")
+                            .font(.Oswald(.regular, size: 10))
+                            .foregroundColor(
+                                model.alertState == .firing ?
+                                    RuuviColor.orangeColor.swiftUIColor :
+                                    RuuviColor.dashboardIndicator.swiftUIColor
+                            )
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(1)
+                    }
+
+                    if let unit = model.unit {
+                        Text(unit)
+                            .font(
+                                .Muli(.bold, size: 10)
+                            )
+                            .foregroundColor(
+                                model.alertState == .firing ?
+                                    RuuviColor.orangeColor.swiftUIColor :
+                                    RuuviColor.dashboardIndicator.swiftUIColor.opacity(0.6)
+                            )
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(1)
+                    }
+                }
             }
-//            if let sub = model.subscriptValue {
-//                Text(sub)
-//                    .font(.custom("Muli-Bold", size: 12))
-//                    .foregroundColor(Color(RuuviColor.dashboardIndicator.color).opacity(0.6))
-//            }
-            if let progress = model.progress {
+            .frame(height: 36)
+            if let progress = model.progress,
+                let tintColor  = model.tint {
                 ProgressView(value: Double(progress))
-//                    .progressViewStyle(LinearProgressViewStyle(tint: model.tint))
-                    .progressViewStyle(LinearProgressViewStyle(tint: Color.red))
+                    .progressViewStyle(LinearProgressViewStyle(tint: Color(tintColor)))
                     .frame(maxWidth: 120)
             }
         }

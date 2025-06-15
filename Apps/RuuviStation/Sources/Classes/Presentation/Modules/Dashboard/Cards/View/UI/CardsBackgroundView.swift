@@ -43,7 +43,10 @@ extension CardsBackgroundView {
         with image: UIImage?,
         withAnimation: Bool = true
     ) {
-        if withAnimation {
+        // Don't animate if setting the same image or setting to nil
+        let shouldAnimate = withAnimation && image != nil && cardImageView.image != image
+
+        if shouldAnimate {
             UIView.transition(
                 with: cardImageView,
                 duration: 0.3,
@@ -56,5 +59,7 @@ extension CardsBackgroundView {
         } else {
             cardImageView.image = image
         }
+
+        print("🎨 CardsBackgroundView.setBackgroundImage: \(image != nil ? "Set image" : "Set nil"), animated: \(shouldAnimate)")
     }
 }

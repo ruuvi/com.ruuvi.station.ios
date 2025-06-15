@@ -56,11 +56,91 @@ final class SnapshotFactory {
         return SensorSnapshot(
             id: tag.id,
             displayName: name,
-            background: nil,
             indicators: indicators,
-            meta: meta,
-            displayVersion: 0
+            meta: meta
         )
+    }
+
+    /// Update existing snapshot fields without creating new one
+    func updateFields(
+        in snapshot: inout SensorSnapshot,
+        tag: AnyRuuviTagSensor,
+        record: RuuviTagSensorRecord?,
+        settings: SensorSettings?
+    ) -> Bool {
+        var hasChanges = false
+
+        // Update display name
+        let newDisplayName = tag.name
+        if snapshot.displayName != newDisplayName {
+            snapshot.displayName = newDisplayName
+            snapshot.displayVersion += 1
+            hasChanges = true
+        }
+
+        // Update indicators
+        let newIndicators = IndicatorComposer.compose(
+            tag: tag,
+            record: record,
+            settings: settings,
+            measurement: measurement
+        )
+        if snapshot.indicators != newIndicators {
+            snapshot.indicators = newIndicators
+            snapshot.indicatorVersion += 1
+            hasChanges = true
+        }
+
+        // Update meta data
+        var newMeta = snapshot.meta
+
+        // Update timestamp
+        if newMeta.timestamp != record?.date {
+            newMeta.timestamp = record?.date
+            snapshot.timestampVersion += 1
+            hasChanges = true
+        }
+
+        // Update source
+        let newSource = record?.source
+        var newSourceIcon: Image?
+        if let source = newSource {
+            switch source {
+            case .advertisement, .bgAdvertisement:
+                newSourceIcon = RuuviAsset.iconBluetooth.swiftUIImage
+            case .heartbeat, .log:
+                newSourceIcon = RuuviAsset.iconBluetoothConnected.swiftUIImage
+            case .ruuviNetwork:
+                newSourceIcon = RuuviAsset.iconGateway.swiftUIImage
+            default:
+                newSourceIcon = nil
+            }
+        }
+
+        if newMeta.source != newSource || newMeta.sourceIcon != newSourceIcon {
+            newMeta.source = newSource
+            newMeta.sourceIcon = newSourceIcon
+            snapshot.sourceVersion += 1
+            hasChanges = true
+        }
+
+        // Update battery status
+        let newBatteryLow = batteryStatusProvider.batteryNeedsReplacement(
+            temperature: record?.temperature,
+            voltage: record?.voltage
+        )
+        if newMeta.batteryLow != newBatteryLow {
+            newMeta.batteryLow = newBatteryLow
+            snapshot.batteryVersion += 1
+            hasChanges = true
+        }
+
+        // Apply meta changes
+        if hasChanges {
+            snapshot.meta = newMeta
+        }
+
+        return hasChanges
     }
 }
 
@@ -113,6 +193,19 @@ enum IndicatorComposer {
                     kind: .aqi,
                     value: "\(current.stringValue)/\(max.stringValue)",
                     unit: RuuviLocalization.airQuality,
+                    maximumValue: max,
+                    progress: progress,
+                    tint: state.color,
+                    prominent: true
+                )
+            )
+
+            indicators.append(
+                .make(
+                    kind: .aqiProminent,
+                    value: current.stringValue,
+                    unit: RuuviLocalization.airQuality,
+                    maximumValue: max,
                     progress: progress,
                     tint: state.color,
                     prominent: true

@@ -7,8 +7,8 @@ protocol NewDashboardViewInput: ViewInput {
 
 
     var viewModels: [CardsViewModel] { get set }
-    var dashboardType: DashboardType { get set }
-    var dashboardTapActionType: DashboardTapActionType { get set }
+    var dashboardType: DashboardType! { get set }
+    var dashboardTapActionType: DashboardTapActionType! { get set }
     var dashboardSortingType: DashboardSortingType { get set }
     var isRefreshing: Bool { get set }
     var shouldShowSignInBanner: Bool { get set }

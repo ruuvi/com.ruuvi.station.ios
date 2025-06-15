@@ -8,13 +8,14 @@ struct SensorSnapshot: Identifiable, DragulaItem {
     let id: String
 
     // MARK: – All changeable properties
-    let displayName: String
+    var displayName: String
     var background: UIImage?
-    let indicators: [IndicatorModel]
-    let meta: Meta
+    var indicators: [IndicatorModel]
+    var meta: Meta
 
     // MARK: – Granular change tracking
-    var displayVersion: Int = 0       // displayName and background changes
+    var displayVersion: Int = 0       // displayName changes
+    var backgroundVersion: Int = 0       // background changes
     var timestampVersion: Int = 0     // Only for timestamp changes
     // TODO: Remove battery as it depends on indicator anyway
     var batteryVersion: Int = 0       // Only for battery changes
@@ -23,16 +24,20 @@ struct SensorSnapshot: Identifiable, DragulaItem {
     var sourceVersion: Int = 0         // Only for alert state changes
 
     struct Meta {
-        let timestamp: Date?
-        let source: RuuviTagSensorRecordSource?
-        let sourceIcon: Image?
-        let batteryLow: Bool
-        let alertState: AlertState?
+        var timestamp: Date?
+        var source: RuuviTagSensorRecordSource?
+        var sourceIcon: Image?
+        var batteryLow: Bool
+        var alertState: AlertState?
     }
 
     // MARK: - Granular change detection keys
     var displayKey: String {
         "\(id)-d\(displayVersion)"
+    }
+
+    var backgroundVersionKey: String {
+        "\(id)-d\(backgroundVersion)"
     }
 
     var timestampKey: String {
@@ -59,7 +64,7 @@ struct SensorSnapshot: Identifiable, DragulaItem {
 extension SensorSnapshot {
     /// Changes whenever *any* visible part of the card changes.
     var changeToken: String? {
-        "\(id)-\(displayVersion)-\(timestampVersion)-\(batteryVersion)-\(indicatorVersion)-\(alertVersion)-\(sourceVersion)"
+        "\(id)-\(displayVersion)-\(backgroundVersion)-\(timestampVersion)-\(batteryVersion)-\(indicatorVersion)-\(alertVersion)-\(sourceVersion)"
     }
 }
 
@@ -69,6 +74,7 @@ extension SensorSnapshot: Equatable {
         // Compare ID and all version numbers for granular change detection
         return lhs.id == rhs.id &&
                lhs.displayVersion == rhs.displayVersion &&
+               lhs.backgroundVersion == rhs.backgroundVersion &&
                lhs.timestampVersion == rhs.timestampVersion &&
                lhs.batteryVersion == rhs.batteryVersion &&
                lhs.indicatorVersion == rhs.indicatorVersion &&
@@ -84,15 +90,32 @@ struct IndicatorModel: Identifiable, Hashable {
     let kind: Kind
 
     let title: String?
-    let value: String
-    let unit: String?
+    var value: String
+    var unit: String?
 
-    let progress: Float?
-    let tint: UIColor?
-    let alertState: AlertState?
+    var progress: Float?
+    var maximumValue: Int?
+    var tint: UIColor?
+    var alertState: AlertState?
 
-    let isProminent: Bool
+    var isProminent: Bool
 }
+
+extension IndicatorModel: Equatable {
+    public static func == (lhs: IndicatorModel, rhs: IndicatorModel) -> Bool {
+        return lhs.id == rhs.id &&
+               lhs.kind == rhs.kind &&
+               lhs.title == rhs.title &&
+               lhs.value == rhs.value &&
+               lhs.unit == rhs.unit &&
+               lhs.progress == rhs.progress &&
+               lhs.maximumValue == rhs.maximumValue &&
+               lhs.tint == rhs.tint &&
+               lhs.alertState == rhs.alertState &&
+               lhs.isProminent == rhs.isProminent
+    }
+}
+
 
 extension IndicatorModel {
     enum Kind: Hashable {
@@ -100,7 +123,7 @@ extension IndicatorModel {
         case measurementSequence, voltage, txPower, signalStrength
         case accelerationX, accelerationY, accelerationZ
         case co2, pm1, pm25, pm40, pm10, nox, voc, luminosity, soundAvg, soundPeak
-        case aqi
+        case aqi, aqiProminent
     }
 
     /// convenience ctor
@@ -109,6 +132,7 @@ extension IndicatorModel {
         title: String? = nil,
         value: String,
         unit: String? = nil,
+        maximumValue: Int? = nil,
         progress: Float? = nil,
         tint: UIColor? = nil,
         alertState: AlertState? = nil,
@@ -120,6 +144,7 @@ extension IndicatorModel {
             value: value,
             unit: unit,
             progress: progress,
+            maximumValue: maximumValue,
             tint: tint,
             alertState: alertState,
             isProminent: prominent

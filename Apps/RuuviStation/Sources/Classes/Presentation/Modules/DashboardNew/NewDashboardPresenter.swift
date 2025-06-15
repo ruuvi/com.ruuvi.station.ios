@@ -139,6 +139,7 @@ class NewDashboardPresenter: DashboardModuleInput {
     private var sensorItems: [RuuviSensorCardItem] {
         itemsByID.values.sorted { $0.snapshot.displayName < $1.snapshot.displayName }
     }
+    private var hasInitialized = false
 
     deinit {
         ruuviTagToken?.invalidate()
@@ -199,6 +200,10 @@ extension NewDashboardPresenter: DashboardViewOutput {
     }
 
     func viewWillAppear() {
+        view?.dashboardType = settings.dashboardType
+        view?.dashboardTapActionType = settings.dashboardTapActionType
+        view?.dashboardSortingType = dashboardSortingType()
+
         startObservingUniversalLinks()
         startObservingBluetoothState()
         syncAppSettingsToAppGroupContainer()
@@ -777,186 +782,55 @@ extension NewDashboardPresenter {
         }
     }
 
-    // Build initial list
     private func buildItemsInitial() {
-        // -- 1. Resolve latest records in the background --
+        guard !hasInitialized else {
+            print("⚠️ buildItemsInitial already called, skipping")
+            return
+        }
+        hasInitialized = true
+
+        print("🚀 Starting buildItemsInitial")
+
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
 
+            let serialQueue = DispatchQueue(label: "itemsByID.updates")
             var dict = [String: RuuviSensorCardItem]()
 
-            // Create a dispatch group to wait for all background fetches
-            let backgroundGroup = DispatchGroup()
-
+            // Build all items first (without backgrounds for speed)
             for tag in self.ruuviTags {
                 let record = self.ruuviStorage.cachedLatestBlocking(for: tag)
-                print("tag: \(tag.name), record: \(record?.temperature?.value)")
                 let settings = self.sensorSettingsList.first { $0.id == tag.id }
 
-                var snap = self.snapshotFactory.make(
+                let snap = self.snapshotFactory.make(
                     tag: tag,
                     record: record,
                     settings: settings
                 )
-                snap.background = nil
-
                 dict[tag.id] = RuuviSensorCardItem(initialSnapshot: snap)
-
-                // Start background fetch immediately in parallel
-                backgroundGroup.enter()
-                self.ruuviSensorPropertiesService.getImage(for: tag).on(
-                    success: { [weak self] image in
-                        guard let self,
-                              let item = self.itemsByID[tag.id] else {
-                            backgroundGroup.leave()
-                            return
-                        }
-
-                        // Build an updated snapshot that only changes `background`
-                        var updated = item.snapshot
-                        updated.background = image
-                        updated.displayVersion += 1
-
-                        // Keep local cache in sync
-                        item.apply(updated)
-
-                        // Bubble the change to the store
-                        Task { @MainActor in
-                            self.view?.store?.apply(updated)
-                        }
-                        backgroundGroup.leave()
-                    },
-                    failure: { [weak self] error in
-                        self?.errorPresenter.present(error: error)
-                        backgroundGroup.leave()
-                    }
-                )
             }
 
-            self.itemsByID = dict
+            // Thread-safe assignment
+            serialQueue.sync {
+                self.itemsByID = dict
+            }
 
-            // -- 2. Publish the complete list once on the main actor --
+            // Publish initial snapshots immediately for instant UI
             Task { @MainActor in
-                // Apply all snapshots to the new store
                 for item in dict.values {
                     self.view?.store?.apply(item.snapshot)
                 }
-                // Force immediate commit for initial load
                 self.view?.store?.commitImmediate()
+                print("📱 Initial snapshots published - UI ready!")
             }
 
-            restartObservingLastRecords()
-        }
-    }
-
-    func handleTagInserted(_ tag: AnyRuuviTagSensor) {
-        // Get settings if needed
-        let settings = sensorSettingsList.first { $0.id == tag.id }
-        let snap = snapshotFactory.make(
-            tag: tag,
-            record: ruuviStorage.cachedLatestBlocking(for: tag),
-            settings: settings
-        )
-
-        // Update local cache
-        itemsByID[tag.id] = RuuviSensorCardItem(initialSnapshot: snap)
-
-        // Update store on main actor
-        Task { @MainActor in
-            self.view?.store?.apply(snap)
-        }
-
-        // Fetch background image asynchronously
-        fetchBackgroundImage(for: tag)
-    }
-
-    func handleTagDeleted(_ tag: AnyRuuviTagSensor) {
-        // Remove from local cache
-        itemsByID.removeValue(forKey: tag.id)
-
-        // Remove from store on main actor
-        Task { @MainActor in
-            self.view?.store?.remove(tag.id)
-        }
-    }
-
-    func handleTagUpdated(_ tag: AnyRuuviTagSensor) {
-        // Get updated settings
-        let settings = sensorSettingsList.first { $0.id == tag.id }
-        var snap = snapshotFactory.make(
-            tag: tag,
-            record: ruuviStorage.cachedLatestBlocking(for: tag),
-            settings: settings
-        )
-
-        // Preserve existing background if available
-        if let existingItem = itemsByID[tag.id] {
-            snap.background = existingItem.snapshot.background
-
-            // Increment appropriate version numbers based on what changed
-            // This depends on your snapshotFactory.make implementation
-            // but generally you'd want to increment versions for changed data
-            if existingItem.snapshot.displayName != snap.displayName {
-                snap.displayVersion = existingItem.snapshot.displayVersion + 1
+            // Start background image loading
+            for tag in self.ruuviTags {
+                self.loadBackgroundImage(for: tag)
             }
-            // TODO: Add similar checks for other properties...
-        }
 
-        // Update local cache
-        itemsByID[tag.id] = RuuviSensorCardItem(initialSnapshot: snap)
-
-        // Update store on main actor
-        Task { @MainActor in
-            self.view?.store?.apply(snap)
-        }
-    }
-
-    // MARK: - Helper Methods
-
-    private func fetchBackgroundImage(for tag: AnyRuuviTagSensor) {
-        ruuviSensorPropertiesService.getImage(for: tag).on(
-            success: { [weak self] image in
-                guard let self,
-                      let item = self.itemsByID[tag.id] else { return }
-
-                var updated = item.snapshot
-                updated.background = image
-                updated.displayVersion += 1  // Background changed
-
-                // Update local cache
-                item.apply(updated)
-
-                // Update store
-                Task { @MainActor in
-                    self.view?.store?.apply(updated)
-                }
-            },
-            failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            }
-        )
-    }
-
-    private func restartObservingLastRecords() {
-        lastRecordObserveToken?.invalidate()
-        lastRecordObserveToken = nil
-
-        lastRecordObserveToken = ruuviReactor.observeAllLatestRecords(for: ruuviTags) { recordsDictionary in
-            for (tag, record) in recordsDictionary {
-                print("Balda: ", tag.name, record?.temperature)
-                let settings = self.sensorSettingsList.first {
-                    $0.luid?.value == tag.luid?.value ||
-                    $0.macId?.value == tag.macId?.value
-                }
-
-                Task { @MainActor in
-                    self.updateSnapshot(
-                        tag: tag,
-                        record: record,
-                        settings: settings
-                    )
-                }
-            }
+            // Start observing AFTER initial load
+            self.restartObservingLastRecords()
         }
     }
 
@@ -965,66 +839,164 @@ extension NewDashboardPresenter {
         record: RuuviTagSensorRecord?,
         settings: SensorSettings?
     ) {
-        let existingSnap = self.view?.store?.snapshots.first { $0.id == tag.id }
-        var newSnap = self.snapshotFactory.make(tag: tag, record: record, settings: settings)
+        guard let existingSnap = self.view?.store?.snapshots.first(where: { $0.id == tag.id }) else {
+            // Create new snapshot only if none exists
+            let newSnap = self.snapshotFactory.make(tag: tag, record: record, settings: settings)
+            print("🆕 Created new snapshot for: \(newSnap.displayName)")
 
-        // Initialize versions from existing snapshot or start fresh
-        if let existing = existingSnap {
-            newSnap.displayVersion = existing.displayVersion
-            newSnap.timestampVersion = existing.timestampVersion
-            newSnap.batteryVersion = existing.batteryVersion
-            newSnap.indicatorVersion = existing.indicatorVersion
-            newSnap.alertVersion = existing.alertVersion
-            newSnap.sourceVersion = existing.sourceVersion
+            // Update local cache
+            itemsByID[tag.id] = RuuviSensorCardItem(initialSnapshot: newSnap)
 
-            // Only increment versions for properties that actually changed
-
-            // Check display-related changes (name + background)
-            if existing.displayName != newSnap.displayName ||
-               existing.background != newSnap.background {
-                newSnap.displayVersion += 1
-            }
-
-            // Check timestamp changes
-            if existing.meta.timestamp != newSnap.meta.timestamp {
-                newSnap.timestampVersion += 1
-            }
-
-            // Check battery changes
-            if existing.meta.batteryLow != newSnap.meta.batteryLow {
-                newSnap.batteryVersion += 1
-            }
-
-            // Check indicator changes (values, units, alert states)
-            if existing.indicators != newSnap.indicators {
-                newSnap.indicatorVersion += 1
-            }
-
-            // Check alert state changes
-            if existing.meta.alertState != newSnap.meta.alertState {
-                newSnap.alertVersion += 1
-            }
-
-            // Check source changes
-            if existing.meta.source != newSnap.meta.source {
-                newSnap.sourceVersion += 1
-            }
-
-        } else {
-            // New snapshot - initialize all versions
-            newSnap.displayVersion = 1
-            newSnap.timestampVersion = 1
-            newSnap.batteryVersion = 1
-            newSnap.indicatorVersion = 1
-            newSnap.alertVersion = 1
-            newSnap.sourceVersion = 1
+            self.view?.store?.apply(newSnap)
+            self.view?.store?.commitImmediate()
+            return
         }
 
-        Task { @MainActor in
-            self.view?.store?.apply(newSnap)
+        // Update existing snapshot in-place
+        var updatedSnap = existingSnap
+        let hasChanges = self.snapshotFactory.updateFields(
+            in: &updatedSnap,
+            tag: tag,
+            record: record,
+            settings: settings
+        )
+
+        if hasChanges {
+            print("🔄 Updated snapshot for: \(updatedSnap.displayName)")
+
+            // Update local cache
+            if let item = self.itemsByID[tag.id] {
+                item.apply(updatedSnap)
+            }
+
+            self.view?.store?.apply(updatedSnap)
             self.view?.store?.commitImmediate()
         }
     }
+
+    @MainActor private func updateSnapshotBackground(
+        tagId: String,
+        image: UIImage?
+    ) {
+        guard let existingSnap = self.view?.store?.snapshots.first(where: { $0.id == tagId }) else {
+            print("❌ No existing snapshot found for background update: \(tagId)")
+            return
+        }
+
+        // Only update if background actually changed
+        guard existingSnap.background != image else {
+            print("⏭️ Background unchanged for: \(existingSnap.displayName)")
+            return
+        }
+
+        var updatedSnap = existingSnap
+        updatedSnap.background = image
+        updatedSnap.backgroundVersion += 1
+
+        print("🎨 Updated background for: \(updatedSnap.displayName), hasImage: \(image != nil)")
+
+        // Update local cache
+        if let item = self.itemsByID[tagId] {
+            item.apply(updatedSnap)
+        }
+
+        self.view?.store?.apply(updatedSnap)
+        self.view?.store?.commitImmediate()
+    }
+
+    // MARK: - Background image loading
+    private func loadBackgroundImage(for tag: AnyRuuviTagSensor) {
+        ruuviSensorPropertiesService.getImage(for: tag).on(
+            success: { [weak self] image in
+                Task { @MainActor in
+                    self?.updateSnapshotBackground(tagId: tag.id, image: image)
+                }
+            },
+            failure: { [weak self] error in
+                print("❌ Failed to get image for tag: \(tag.name), error: \(error)")
+                self?.errorPresenter.present(error: error)
+            }
+        )
+    }
+
+    // MARK: - Tag Management
+    func handleTagInserted(_ tag: AnyRuuviTagSensor) {
+        print("➕ Tag inserted: \(tag.name)")
+
+        let settings = sensorSettingsList.first { $0.id == tag.id }
+        let record = ruuviStorage.cachedLatestBlocking(for: tag)
+
+        Task { @MainActor in
+            // Use updateSnapshot which handles new snapshots properly
+            self.updateSnapshot(tag: tag, record: record, settings: settings)
+
+            // Load background image
+            self.loadBackgroundImage(for: tag)
+        }
+    }
+
+    func handleTagDeleted(_ tag: AnyRuuviTagSensor) {
+        print("➖ Tag deleted: \(tag.name)")
+
+        // Remove from local cache
+        itemsByID.removeValue(forKey: tag.id)
+
+        Task { @MainActor in
+            self.view?.store?.remove(tag.id)
+            self.view?.store?.commitImmediate()
+        }
+    }
+
+    func handleTagUpdated(_ tag: AnyRuuviTagSensor) {
+        print("🔄 Tag updated: \(tag.name)")
+
+        let settings = sensorSettingsList.first { $0.id == tag.id }
+        let record = ruuviStorage.cachedLatestBlocking(for: tag)
+
+        Task { @MainActor in
+            self.updateSnapshot(tag: tag, record: record, settings: settings)
+        }
+    }
+
+    // MARK: - Observing
+    private func restartObservingLastRecords() {
+//        lastRecordObserveToken?.invalidate()
+//        lastRecordObserveToken = nil
+//
+//        lastRecordObserveToken = ruuviReactor.observeAllLatestRecords(for: ruuviTags) { [weak self] recordsDictionary in
+//            guard let self = self else { return }
+//
+//            // Batch process all updates for efficiency
+//            Task { @MainActor in
+//                for (tag, record) in recordsDictionary {
+//                    print("BALDA AMAR: ", tag.name, record?.date)
+//                    let settings = self.sensorSettingsList.first {
+//                        $0.luid?.value == tag.luid?.value ||
+//                        $0.macId?.value == tag.macId?.value
+//                    }
+//
+//                    self.updateSnapshot(
+//                        tag: tag,
+//                        record: record,
+//                        settings: settings
+//                    )
+//                }
+//            }
+//        }
+    }
+
+    // MARK: - Batch Operations for Settings Updates
+    @MainActor private func updateSnapshotsForSettingsChange() {
+        print("⚙️ Updating snapshots for settings change")
+
+        for tag in ruuviTags {
+            let record = ruuviStorage.cachedLatestBlocking(for: tag)
+            let settings = sensorSettingsList.first { $0.id == tag.id }
+
+            updateSnapshot(tag: tag, record: record, settings: settings)
+        }
+    }
+
 
     private func syncViewModel(ruuviTagSensor: RuuviTagSensor?) {
         if let ruuviTag = ruuviTagSensor {
@@ -1336,6 +1308,10 @@ extension NewDashboardPresenter {
                             })
                         let sensorRecord = record.with(sensorSettings: sensorSettings)
                         viewModel.update(sensorRecord)
+                        Task { @MainActor in
+                            self?.updateSnapshot(
+                                tag: ruuviTagSensor, record: record, settings: sensorSettings)
+                        }
                         DispatchQueue.global(qos: .utility).async {
                             self?.processAlert(record: sensorRecord, viewModel: viewModel)
                         }
@@ -1357,6 +1333,7 @@ extension NewDashboardPresenter {
                 sSelf.didLoadInitialRuuviTags = true
                 sSelf.ruuviTags = ruuviTags
                 sSelf.debounceSyncViewModels()
+                sSelf.buildItemsInitial()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
 //                sSelf.restartObservingRuuviTagLastRecords()
@@ -1403,6 +1380,7 @@ extension NewDashboardPresenter {
             case let .delete(sensor):
                 sSelf.ruuviTags.removeAll(where: { $0.id == sensor.id })
                 sSelf.debounceSyncViewModels()
+                sSelf.buildItemsInitial()
                 sSelf.startListeningToRuuviTagsAlertStatus()
                 sSelf.observeRuuviTags()
 //                sSelf.restartObservingRuuviTagLastRecords()
@@ -1424,6 +1402,7 @@ extension NewDashboardPresenter {
                         }) {
                     sSelf.ruuviTags[index] = sensor
                     sSelf.debounceSyncViewModels()
+                    sSelf.buildItemsInitial()
                 }
                 sSelf.syncHasCloudSensorToAppGroupContainer(with: sSelf.ruuviTags)
             }

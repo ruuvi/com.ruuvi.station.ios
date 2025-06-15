@@ -15,13 +15,13 @@ class NewDashboardViewController: UIViewController, NewDashboardViewInput {
         }
     }
 
-    var dashboardType: DashboardType = .simple {
+    var dashboardType: DashboardType! {
         didSet {
             viewState.dashboardType = dashboardType
         }
     }
 
-    var dashboardTapActionType: DashboardTapActionType = .card {
+    var dashboardTapActionType: DashboardTapActionType! {
         didSet {
             viewState.cardTapAction = dashboardTapActionType
         }
