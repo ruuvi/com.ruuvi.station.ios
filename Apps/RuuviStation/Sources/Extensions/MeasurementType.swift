@@ -36,4 +36,21 @@ extension MeasurementType {
             .sound,
         ]
     }
+
+    static var all: [MeasurementType] {
+        [
+            .temperature,
+            .humidity,
+            .pressure,
+            .movementCounter,
+            .aqi,
+            .co2,
+            .pm25,
+            .pm10,
+            .nox,
+            .voc,
+            .luminosity,
+            .sound,
+        ]
+    }
 }

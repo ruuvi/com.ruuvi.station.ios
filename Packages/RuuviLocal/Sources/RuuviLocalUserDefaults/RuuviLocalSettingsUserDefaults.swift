@@ -9,6 +9,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDefaults.isSyncing", defaultValue: false)
     var isSyncing: Bool
 
+    @UserDefault("SettingsUserDefaults.syncExtensiveChangesInProgress", defaultValue: false)
+    var syncExtensiveChangesInProgress: Bool
+
     private let keepConnectionDialogWasShownUDPrefix = "SettingsUserDegaults.keepConnectionDialogWasShownUDPrefix."
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool {

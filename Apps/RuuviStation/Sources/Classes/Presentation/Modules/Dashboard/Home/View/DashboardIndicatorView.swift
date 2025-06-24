@@ -6,9 +6,9 @@ class DashboardIndicatorView: UIView {
         let label = UILabel()
         label.textColor = RuuviColor.dashboardIndicator.color
         label.textAlignment = .left
-        label.numberOfLines = 0
+        label.numberOfLines = 1
         label.font = UIFont.Montserrat(.bold, size: 14)
-        label.sizeToFit()
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         return label
     }()
 
@@ -16,10 +16,19 @@ class DashboardIndicatorView: UIView {
         let label = UILabel()
         label.textColor = RuuviColor.dashboardIndicator.color
         label.textAlignment = .left
-        label.numberOfLines = 0
+        label.numberOfLines = 1
         label.font = UIFont.Muli(.regular, size: 12)
-        label.sizeToFit()
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         return label
+    }()
+
+    private lazy var textStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.alignment = .center
+        stack.distribution = .fill
+        stack.spacing = 4
+        return stack
     }()
 
     override init(frame: CGRect) {
@@ -33,30 +42,17 @@ class DashboardIndicatorView: UIView {
     }
 
     fileprivate func setUpUI() {
-        let indicatorValueLabelView = UIView(color: .clear)
-        indicatorValueLabelView.addSubview(indicatorValueLabel)
-        indicatorValueLabel.fillSuperview()
+        // Add labels to stack
+        textStack.addArrangedSubview(indicatorValueLabel)
+        textStack.addArrangedSubview(indicatorUnitLabel)
 
-        let indicatorUnitLabelView = UIView(color: .clear)
-        indicatorUnitLabelView.addSubview(indicatorUnitLabel)
-        indicatorUnitLabel.fillSuperview()
-
-        let textStack = UIStackView(
-            arrangedSubviews: [indicatorValueLabelView, indicatorUnitLabelView]
-        )
-        textStack.axis = .horizontal
-        textStack.alignment = .center
-        textStack.distribution = .fill
-        textStack.spacing = 4
-
-        indicatorValueLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        indicatorUnitLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-
-        indicatorValueLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
-        indicatorUnitLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-
+        // Add stack to view
         addSubview(textStack)
         textStack.fillSuperview()
+
+        // Set content hugging priorities
+        indicatorValueLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+        indicatorUnitLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
     }
 }
 
@@ -65,21 +61,20 @@ extension DashboardIndicatorView {
         indicatorValueLabel.text = value
         indicatorUnitLabel.text = unit
 
-        indicatorValueLabel.sizeToFit()
-        indicatorUnitLabel.sizeToFit()
-        layoutIfNeeded()
+        // Hide unit label if no unit
+        indicatorUnitLabel.isHidden = unit?.isEmpty ?? true
     }
 
     func changeColor(highlight: Bool) {
-        indicatorValueLabel.textColor =
-        highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicator.color
-        indicatorUnitLabel.textColor =
-        highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicator.color
+        let color = highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicator.color
+        indicatorValueLabel.textColor = color
+        indicatorUnitLabel.textColor = color
     }
 
     func clearValues() {
         indicatorValueLabel.text = nil
         indicatorUnitLabel.text = nil
+        indicatorUnitLabel.isHidden = false
         indicatorValueLabel.textColor = RuuviColor.dashboardIndicator.color
         indicatorUnitLabel.textColor = RuuviColor.dashboardIndicator.color
     }

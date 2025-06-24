@@ -67,7 +67,7 @@ final class AppRouter {
 
     /// Return dashboard view controller
     private func dashboardViewController() -> UIViewController {
-        let factory: DashboardModuleFactory = DashboardModuleFactoryImpl()
+        let factory: NewDashboardModuleFactory = NewDashboardModuleFactoryImpl()
         let module = factory.create()
         weakDashboardController = module
         return module
