@@ -8,7 +8,10 @@ class DashboardIndicatorProminentView: UIView {
         label.textColor = RuuviColor.dashboardIndicatorBig.color
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.font = UIFont.Oswald(.bold, size: 30)
+        label.font = UIFont.Oswald(.bold, size: 32)
+        label.backgroundColor = .clear
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         return label
     }()
 
@@ -18,24 +21,28 @@ class DashboardIndicatorProminentView: UIView {
         label.textAlignment = .left
         label.numberOfLines = 1
         label.font = UIFont.Oswald(.regular, size: 12)
+        label.backgroundColor = .clear
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         return label
     }()
 
     private lazy var indicatorSubscriptLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.dashboardIndicator.color
-            .withAlphaComponent(0.6)
+        label.textColor = RuuviColor.dashboardIndicator.color.withAlphaComponent(0.6)
         label.textAlignment = .left
         label.numberOfLines = 1
         label.font = UIFont.Muli(.bold, size: 12)
+        label.backgroundColor = .clear
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         return label
     }()
 
     private lazy var progressView: UIProgressView = {
         let progressView = UIProgressView()
         progressView.progressViewStyle = .bar
-        progressView.trackTintColor = RuuviColor.dashboardIndicator.color
-            .withAlphaComponent(0.3)
+        progressView.trackTintColor = RuuviColor.dashboardIndicator.color.withAlphaComponent(0.3)
         progressView.layer.cornerRadius = 2.5
         progressView.clipsToBounds = true
         return progressView
@@ -43,6 +50,7 @@ class DashboardIndicatorProminentView: UIView {
 
     private var progressViewVisibleConstraints: [NSLayoutConstraint] = []
     private var progressViewHiddenConstraints: [NSLayoutConstraint] = []
+    private var valueContainer: UIView!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -55,8 +63,8 @@ class DashboardIndicatorProminentView: UIView {
     }
 
     // swiftlint:disable:next function_body_length
-    fileprivate func setUpUI() {
-        let valueContainer = UIView(color: .clear)
+    private func setUpUI() {
+        valueContainer = UIView(color: .clear)
         addSubview(valueContainer)
         valueContainer.anchor(
             top: topAnchor,
@@ -65,6 +73,7 @@ class DashboardIndicatorProminentView: UIView {
             trailing: trailingAnchor
         )
 
+        // Add main value label
         valueContainer.addSubview(indicatorValueLabel)
         indicatorValueLabel.anchor(
             top: valueContainer.topAnchor,
@@ -73,35 +82,25 @@ class DashboardIndicatorProminentView: UIView {
             trailing: nil
         )
 
-        let scriptsVStack = UIStackView(
-            arrangedSubviews: [
-                indicatorSuperscriptLabel,
-                indicatorSubscriptLabel,
-            ]
+        let scriptsStackView = UIStackView(
+            arrangedSubviews: [indicatorSuperscriptLabel, indicatorSubscriptLabel]
         )
-        scriptsVStack.axis = .vertical
-        scriptsVStack.alignment = .leading
-        scriptsVStack.distribution = .fill
-        scriptsVStack.spacing = 0
-        valueContainer.addSubview(scriptsVStack)
-
-        scriptsVStack.anchor(
-            top: indicatorValueLabel.topAnchor,
+        scriptsStackView.axis = .vertical
+        scriptsStackView.distribution = .fillEqually
+        scriptsStackView.spacing = 0
+        valueContainer.addSubview(scriptsStackView)
+        scriptsStackView.anchor(
+            top: nil,
             leading: indicatorValueLabel.trailingAnchor,
-            bottom: indicatorValueLabel.bottomAnchor,
+            bottom: nil,
             trailing: nil,
-            padding: .init(
-                top: 8,
-                left: 2,
-                bottom: 6,
-                right: 0
-            )
+            padding: .init(top: 0, left: 2, bottom: 0, right: 0)
         )
+        scriptsStackView.centerYAnchor.constraint(
+            equalTo: indicatorValueLabel.centerYAnchor
+        ).isActive = true
 
-        scriptsVStack.trailingAnchor
-            .constraint(greaterThanOrEqualTo: trailingAnchor)
-            .isActive = true
-
+        // Progress view setup
         addSubview(progressView)
         progressView.anchor(
             top: nil,
@@ -112,18 +111,17 @@ class DashboardIndicatorProminentView: UIView {
         )
 
         progressViewVisibleConstraints = [
-            progressView.topAnchor.constraint(
-                equalTo: valueContainer.bottomAnchor
-            ),
-            progressView.bottomAnchor.constraint(
-                equalTo: bottomAnchor,
-                constant: -4
-            ),
+            progressView.topAnchor.constraint(equalTo: valueContainer.bottomAnchor, constant: 2),
+            progressView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: 0),
         ]
 
         progressViewHiddenConstraints = [
             valueContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
         ]
+
+        // Initially hide progress view
+        NSLayoutConstraint.activate(progressViewHiddenConstraints)
+        progressView.isHidden = true
     }
 }
 
@@ -139,32 +137,34 @@ extension DashboardIndicatorProminentView {
         indicatorSuperscriptLabel.text = superscriptValue
         indicatorSubscriptLabel.text = subscriptValue
 
-        indicatorValueLabel.sizeToFit()
-        indicatorSuperscriptLabel.sizeToFit()
-        indicatorSubscriptLabel.sizeToFit()
-
+        // Handle progress view visibility
         progressView.isHidden = !showProgress
-        if showProgress, let progress = value?.intValue {
+
+        if showProgress {
             NSLayoutConstraint.deactivate(progressViewHiddenConstraints)
             NSLayoutConstraint.activate(progressViewVisibleConstraints)
-            progressView.progress = Float(progress) / 100
-            progressView.progressTintColor = progressColor
+
+            if let progress = value?.intValue {
+                progressView.progress = Float(progress) / 100
+                progressView.progressTintColor = progressColor
+            }
         } else {
             NSLayoutConstraint.deactivate(progressViewVisibleConstraints)
             NSLayoutConstraint.activate(progressViewHiddenConstraints)
         }
 
+        setNeedsLayout()
         layoutIfNeeded()
     }
 
     func changeColor(highlight: Bool) {
-        indicatorValueLabel.textColor =
-            highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicatorBig.color
-        indicatorSuperscriptLabel.textColor =
-            highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicatorBig.color
-        indicatorSubscriptLabel.textColor =
-            highlight ? RuuviColor.orangeColor.color :
-                RuuviColor.dashboardIndicator.color.withAlphaComponent(0.6)
+        let mainColor = highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicatorBig.color
+        let subscriptColor = highlight ? RuuviColor.orangeColor.color :
+                            RuuviColor.dashboardIndicator.color.withAlphaComponent(0.6)
+
+        indicatorValueLabel.textColor = mainColor
+        indicatorSuperscriptLabel.textColor = mainColor
+        indicatorSubscriptLabel.textColor = subscriptColor
     }
 
     func clearValues() {
@@ -174,5 +174,9 @@ extension DashboardIndicatorProminentView {
         indicatorValueLabel.textColor = RuuviColor.dashboardIndicatorBig.color
         indicatorSuperscriptLabel.textColor = RuuviColor.dashboardIndicatorBig.color
         indicatorSubscriptLabel.textColor = RuuviColor.dashboardIndicator.color.withAlphaComponent(0.6)
+
+        progressView.isHidden = true
+        NSLayoutConstraint.deactivate(progressViewVisibleConstraints)
+        NSLayoutConstraint.activate(progressViewHiddenConstraints)
     }
 }

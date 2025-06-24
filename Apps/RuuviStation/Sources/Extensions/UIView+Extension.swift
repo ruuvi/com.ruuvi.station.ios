@@ -42,3 +42,14 @@ extension UIView {
         }
     }
 }
+
+extension UIView {
+    static func flexibleSpacer() -> UIView {
+        let spacer = UIView()
+        spacer.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        spacer.setContentHuggingPriority(.defaultLow, for: .vertical)
+        spacer.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        spacer.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        return spacer
+    }
+}
