@@ -81,6 +81,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         let appRouter = AppRouter()
         appRouter.settings = r.resolve(RuuviLocalSettings.self)
+        appRouter.flags = r.resolve(RuuviLocalFlags.self)
         appRouter.ruuviAnalytics = r.resolve(RuuviAnalytics.self)
         window?.rootViewController = appRouter.viewController
         window?.makeKeyAndVisible()

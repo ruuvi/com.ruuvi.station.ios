@@ -11,6 +11,7 @@ final class AppRouter {
     }
 
     var settings: RuuviLocalSettings!
+    var flags: RuuviLocalFlags!
     var ruuviAnalytics: RuuviAnalytics!
 
     private var analyticsConsentGiven: Bool = false
@@ -67,10 +68,17 @@ final class AppRouter {
 
     /// Return dashboard view controller
     private func dashboardViewController() -> UIViewController {
-        let factory: DashboardModuleFactory = DashboardModuleFactoryImpl()
-        let module = factory.create()
-        weakDashboardController = module
-        return module
+        if flags.useImprovedDashboard {
+            let factory: NewDashboardModuleFactory = NewDashboardModuleFactoryImpl()
+            let module = factory.create()
+            weakDashboardController = module
+            return module
+        } else {
+            let factory: DashboardModuleFactory = DashboardModuleFactoryImpl()
+            let module = factory.create()
+            weakDashboardController = module
+            return module
+        }
     }
 }
 
