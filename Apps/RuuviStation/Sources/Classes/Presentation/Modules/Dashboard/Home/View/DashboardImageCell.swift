@@ -165,7 +165,7 @@ class DashboardImageCell: DashboardCell {
                 if let (
                     currentAirQIndex,
                     maximumAirQIndex,
-                    currentAirQState
+                    _
                 ) = measurementService?.aqiString(
                     for: viewModel.co2,
                     pm25: viewModel.pm2_5,
@@ -176,9 +176,7 @@ class DashboardImageCell: DashboardCell {
                         .setValue(
                             with: currentAirQIndex.stringValue,
                             superscriptValue: "/\(maximumAirQIndex.stringValue)",
-                            subscriptValue: RuuviLocalization.airQuality,
-                            showProgress: true,
-                            progressColor: currentAirQState.color
+                            subscriptValue: RuuviLocalization.airQuality
                         )
                 }
 

@@ -208,50 +208,6 @@ extension Notification.Name {
     static let DashboardBackgroundDidChange = Notification.Name("DashboardBackgroundDidChange")
 }
 
-// MARK: - Background Loading Optimization
-extension RuuviTagBackgroundService {
-
-    func preloadBackgrounds(for sensors: [AnyRuuviTagSensor]) {
-        // Load backgrounds in background queue
-        DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard let self = self else { return }
-
-            let group = DispatchGroup()
-
-            for sensor in sensors {
-                // Skip if already cached
-                guard self.backgroundCache[sensor.id] == nil else { continue }
-
-                group.enter()
-                self.ruuviSensorPropertiesService.getImage(for: sensor)
-                    .on(success: { [weak self] image in
-                        self?.backgroundCache[sensor.id] = image
-                        group.leave()
-                    }, failure: { _ in
-                        group.leave()
-                    })
-            }
-
-            group.notify(queue: .main) {
-                // All backgrounds loaded
-                // TODO: Implement if needed.
-            }
-        }
-    }
-
-    func getCachedBackground(for sensorId: String) -> UIImage? {
-        return backgroundCache[sensorId]
-    }
-
-    func setCachedBackground(_ image: UIImage?, for sensorId: String) {
-        if let image = image {
-            backgroundCache[sensorId] = image
-        } else {
-            backgroundCache.removeValue(forKey: sensorId)
-        }
-    }
-}
-
 // MARK: - Memory Management
 extension RuuviTagBackgroundService {
 

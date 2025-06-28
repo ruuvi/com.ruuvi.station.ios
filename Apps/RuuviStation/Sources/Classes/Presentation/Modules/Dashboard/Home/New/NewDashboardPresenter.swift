@@ -1,3 +1,5 @@
+// swiftlint:disable file_length
+
 import Foundation
 import UIKit
 import RuuviOntology
@@ -150,27 +152,47 @@ extension NewDashboardPresenter: NewDashboardViewOutput {
     func viewDidTriggerSettings(for snapshot: RuuviTagCardSnapshot) {
         guard let sensor = sensorDataService.getSensor(for: snapshot.id) else { return }
 
-        if snapshot.connectionData.isConnectable {
-            if shouldShowKeepConnectionDialog(for: snapshot) {
+        let (isConnected, _ ) = connectionService.getConnectionStatus(
+            for: snapshot
+        )
+        if snapshot.identifierData.luid != nil {
+            if settingsService.keepConnectionDialogWasShown(for: snapshot)
+                || isConnected
+                || !snapshot.connectionData.isConnectable
+                || !snapshot.metadata.isOwner
+                || (
+                    cloudSyncService.isCloudModeEnabled() && snapshot.metadata.isCloud
+                ) {
+                openTagSettings(for: snapshot, sensor: sensor)
+            } else {
                 view?.showKeepConnectionDialogSettings(for: snapshot)
-                return
             }
+        } else {
+            openTagSettings(for: snapshot, sensor: sensor)
         }
-
-        openTagSettings(for: snapshot, sensor: sensor)
     }
 
     func viewDidTriggerChart(for snapshot: RuuviTagCardSnapshot) {
         guard let sensor = sensorDataService.getSensor(for: snapshot.id) else { return }
 
-        if snapshot.connectionData.isConnectable {
-            if shouldShowKeepConnectionDialog(for: snapshot) {
+        let (isConnected, _ ) = connectionService.getConnectionStatus(
+            for: snapshot
+        )
+        if snapshot.identifierData.luid != nil {
+            if settingsService.keepConnectionDialogWasShown(for: snapshot)
+                || isConnected
+                || !snapshot.connectionData.isConnectable
+                || !snapshot.metadata.isOwner
+                || (
+                    cloudSyncService.isCloudModeEnabled() && snapshot.metadata.isCloud
+                ) {
+                openCardView(for: snapshot, sensor: sensor, showCharts: true)
+            } else {
                 view?.showKeepConnectionDialogChart(for: snapshot)
-                return
             }
+        } else {
+            openCardView(for: snapshot, sensor: sensor, showCharts: true)
         }
-
-        openCardView(for: snapshot, sensor: sensor, showCharts: true)
     }
 
     func viewDidTriggerOpenCardImageView(for snapshot: RuuviTagCardSnapshot?) {
@@ -297,17 +319,8 @@ private extension NewDashboardPresenter {
         view?.dashboardSortingType = settingsService.getCurrentDashboardSortingType()
     }
 
-    func shouldShowKeepConnectionDialog(for snapshot: RuuviTagCardSnapshot) -> Bool {
-        guard let luid = snapshot.identifierData.luid else { return false }
-
-        // Check if dialog was already shown, or sensor is connected, or not connectable, etc.
-        // This logic would need access to settings service
-        return false // Simplified for now
-    }
-
     func markKeepConnectionDialogShown(for snapshot: RuuviTagCardSnapshot) {
-        // Mark that keep connection dialog was shown for this sensor
-        // This would need access to settings service
+        settingsService.setKeepConnectionDialogWasShown(for: snapshot)
     }
 
     func openTagSettings(for snapshot: RuuviTagCardSnapshot, sensor: AnyRuuviTagSensor) {
@@ -915,3 +928,5 @@ private extension NewDashboardPresenter {
         }
     }
 }
+
+// swiftlint:enable file_length

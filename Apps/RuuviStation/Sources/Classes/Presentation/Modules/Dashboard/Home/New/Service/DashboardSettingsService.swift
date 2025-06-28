@@ -161,6 +161,19 @@ class DashboardSettingsService {
     func setUserActivelyDraggingCards(_ value: Bool) {
         isActivelyDraggingCards = value
     }
+
+    func setKeepConnectionDialogWasShown(for snapshot: RuuviTagCardSnapshot) {
+        if let luid = snapshot.identifierData.luid {
+            settings.setKeepConnectionDialogWasShown(for: luid)
+        }
+    }
+
+    func keepConnectionDialogWasShown(for snapshot: RuuviTagCardSnapshot) -> Bool {
+        if let luid = snapshot.identifierData.luid {
+            return settings.keepConnectionDialogWasShown(for: luid)
+        }
+        return false
+    }
 }
 
 // MARK: - Private Implementation
@@ -386,26 +399,6 @@ extension DashboardSettingsService {
 
     func getSensorOrder() -> [String] {
         return settings.dashboardSensorOrder
-    }
-
-    func getTemperatureUnit() -> TemperatureUnit {
-        return settings.temperatureUnit
-    }
-
-    func getHumidityUnit() -> HumidityUnit {
-        return settings.humidityUnit
-    }
-
-    func getPressureUnit() -> UnitPressure {
-        return settings.pressureUnit
-    }
-
-    func isCloudModeEnabled() -> Bool {
-        return settings.cloudModeEnabled
-    }
-
-    func getWidgetRefreshInterval() -> Int {
-        return settings.widgetRefreshIntervalMinutes
     }
 }
 

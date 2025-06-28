@@ -1,3 +1,5 @@
+// swiftlint:disable file_length
+
 import Foundation
 import RuuviOntology
 import RuuviService
@@ -170,7 +172,7 @@ class RuuviTagAlertService {
                     self.alertHandler.processNetwork(record: record, trigger: false, for: macId)
                 }
             } else {
-                if let luid = snapshot.identifierData.luid {
+                if snapshot.identifierData.luid != nil {
                     self.alertHandler.process(record: record, trigger: false)
                 } else if let macId = snapshot.identifierData.mac {
                     self.alertHandler.processNetwork(record: record, trigger: false, for: macId)
@@ -192,7 +194,7 @@ class RuuviTagAlertService {
                             self.alertHandler.processNetwork(record: lastRecord, trigger: false, for: macId)
                         }
                     } else {
-                        if let luid = snapshot.identifierData.luid {
+                        if snapshot.identifierData.luid != nil {
                             self.alertHandler.process(record: lastRecord, trigger: false)
                         } else if let macId = snapshot.identifierData.mac {
                             self.alertHandler.processNetwork(record: lastRecord, trigger: false, for: macId)
@@ -215,7 +217,7 @@ class RuuviTagAlertService {
                         self.alertHandler.processNetwork(record: lastRecord, trigger: false, for: macId)
                     }
                 } else {
-                    if let luid = snapshot.identifierData.luid {
+                    if snapshot.identifierData.luid != nil {
                         self.alertHandler.process(record: lastRecord, trigger: false)
                     } else if let macId = snapshot.identifierData.mac {
                         self.alertHandler.processNetwork(record: lastRecord, trigger: false, for: macId)
@@ -390,7 +392,12 @@ private extension RuuviTagAlertService {
         }
     }
 
-    func setCachedAlertState(for sensorId: String, alertType: AlertType, isOn: Bool, mutedTill: Date?) {
+    func setCachedAlertState(
+        for sensorId: String,
+        alertType: AlertType,
+        isOn: Bool,
+        mutedTill: Date?
+    ) {
         cacheQueue.async(flags: .barrier) { [weak self] in
             if self?.alertStateCache[sensorId] == nil {
                 self?.alertStateCache[sensorId] = [:]
@@ -417,7 +424,10 @@ private extension RuuviTagAlertService {
         }
     }
 
-    func cacheAlertStatesForSnapshot(_ snapshot: RuuviTagCardSnapshot, physicalSensor: PhysicalSensor) {
+    func cacheAlertStatesForSnapshot(
+        _ snapshot: RuuviTagCardSnapshot,
+        physicalSensor: PhysicalSensor
+    ) {
         guard let indicators = snapshot.displayData.indicatorGrid?.indicators else { return }
 
         for indicator in indicators {
@@ -425,7 +435,12 @@ private extension RuuviTagAlertService {
             let isOn = indicator.alertConfig.isActive
             let mutedTill = indicator.alertConfig.mutedTill
 
-            setCachedAlertState(for: physicalSensor.id, alertType: alertType, isOn: isOn, mutedTill: mutedTill)
+            setCachedAlertState(
+                for: physicalSensor.id,
+                alertType: alertType,
+                isOn: isOn,
+                mutedTill: mutedTill
+            )
         }
     }
 }
@@ -555,8 +570,9 @@ extension RuuviTagAlertService {
     }
 }
 
-// MARK: - Alert State Mapping Extensions (Reused from your code)
+// MARK: - Alert State Mapping Extensions
 extension AlertType {
+    // swiftlint:disable:next cyclomatic_complexity
     func toMeasurementType() -> MeasurementType? {
         switch self {
         case .temperature:
@@ -588,6 +604,7 @@ extension AlertType {
 }
 
 extension MeasurementType {
+    // swiftlint:disable:next cyclomatic_complexity
     func toAlertType() -> AlertType {
         switch self {
         case .temperature:
@@ -617,3 +634,4 @@ extension MeasurementType {
         }
     }
 }
+// swiftlint:enable file_length

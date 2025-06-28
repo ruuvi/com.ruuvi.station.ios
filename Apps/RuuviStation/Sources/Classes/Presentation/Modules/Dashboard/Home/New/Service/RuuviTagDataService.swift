@@ -1,3 +1,5 @@
+// swiftlint:disable file_length
+
 import Foundation
 import RuuviOntology
 import RuuviReactor
@@ -84,6 +86,7 @@ class RuuviTagDataService {
     // MARK: - Public Interface
     func startObservingSensors() {
         observeRuuviTags()
+        observeUnitChanges()
     }
 
     func stopObservingSensors() {
@@ -154,6 +157,12 @@ class RuuviTagDataService {
     }
 }
 
+extension RuuviTagDataService: RuuviServiceMeasurementDelegate {
+    func measurementServiceDidUpdateUnit() {
+        buildInitialSnapshots()
+    }
+}
+
 // MARK: - Private Implementation
 private extension RuuviTagDataService {
 
@@ -207,6 +216,10 @@ private extension RuuviTagDataService {
                 }
             }
         }
+    }
+
+    func observeUnitChanges() {
+        measurementService.add(self)
     }
 
     func buildInitialSnapshots() {
@@ -381,9 +394,19 @@ private extension RuuviTagDataService {
         guard let snapshot = snapshots.first(where: { $0.id == sensor.id }) else { return }
 
         // If we have a current record, update it with new settings
-        if let lastUpdated = snapshot.lastUpdated {
-            // Create a record from current data and apply settings
-            // This is a simplified approach - in a real scenario you'd want to maintain the full record
+        if snapshot.lastUpdated != nil,
+            let lastRecord = snapshot.latestRawRecord {
+            snapshot.updateFromRecord(
+                lastRecord.with(sensorSettings: sensorSettings),
+                sensor: sensor,
+                measurementService: self.measurementService,
+                sensorSettings: sensorSettings
+            )
+
+            if !self.settings.syncExtensiveChangesInProgress {
+                self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+            }
+        } else {
             ruuviStorage.readLatest(sensor).on { [weak self] record in
                 guard let self = self, let record = record else { return }
 
@@ -513,3 +536,5 @@ extension RuuviStorage {
         return record
     }
 }
+
+// swiftlint:enable file_length

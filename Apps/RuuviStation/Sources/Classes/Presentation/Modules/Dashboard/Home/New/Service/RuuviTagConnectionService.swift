@@ -75,7 +75,6 @@ class RuuviTagConnectionService {
     }
 
     func updateConnectionData(for snapshots: [RuuviTagCardSnapshot]) {
-        // Move to background thread for processing
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
 
@@ -86,7 +85,6 @@ class RuuviTagConnectionService {
                 updatedSnapshots.append(snapshot)
             }
 
-            // Batch notify on main thread
             DispatchQueue.main.async {
                 for snapshot in updatedSnapshots {
                     self.delegate?.connectionService(self, didUpdateSnapshot: snapshot)

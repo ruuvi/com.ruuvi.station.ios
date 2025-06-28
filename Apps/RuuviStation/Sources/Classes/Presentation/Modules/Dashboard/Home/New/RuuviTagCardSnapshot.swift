@@ -1,3 +1,5 @@
+// swiftlint:disable file_length
+
 import UIKit
 import Combine
 import RuuviOntology
@@ -383,9 +385,6 @@ extension RuuviTagCardSnapshot {
 
         latestRawRecord = finalRecord
 
-        // Track what changed to minimize updates
-        var displayDataChanged = false
-
         // Update display data only if record changed
         if recordChanged {
             let oldSource = self.displayData.source
@@ -416,9 +415,7 @@ extension RuuviTagCardSnapshot {
                oldHasNoData != self.displayData.hasNoData ||
                oldBatteryNeedsReplacement != newBatteryNeedsReplacement ||
                self.displayData.indicatorGrid != newIndicatorGrid {
-
                 self.displayData.indicatorGrid = newIndicatorGrid
-                displayDataChanged = true
             }
         }
 
@@ -426,7 +423,6 @@ extension RuuviTagCardSnapshot {
         if self.displayData.name != sensor.name || self.displayData.version != sensor.version {
             self.displayData.name = sensor.name
             self.displayData.version = sensor.version
-            displayDataChanged = true
         }
 
         // Update timestamp only if it actually changed
@@ -440,6 +436,7 @@ extension RuuviTagCardSnapshot {
 extension RuuviTagCardSnapshot {
 
     // MARK: - Create from Basic Parameters
+    // swiftlint:disable:next function_parameter_count
     static func create(
         id: String,
         name: String,
@@ -527,3 +524,4 @@ extension RuuviTagCardSnapshot {
         return changes.isEmpty ? "no changes" : changes.joined(separator: ", ")
     }
 }
+// swiftlint:enable file_length

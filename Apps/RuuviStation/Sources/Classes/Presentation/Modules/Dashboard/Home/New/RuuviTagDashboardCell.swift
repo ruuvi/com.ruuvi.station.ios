@@ -1,3 +1,5 @@
+// swiftlint:disable file_length
+
 import UIKit
 import Combine
 import RuuviOntology
@@ -330,6 +332,7 @@ class RuuviTagDashboardCell: UICollectionViewCell, TimestampUpdateable {
         updateIndicatorValues(configuration.indicators)
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func createIndicatorViews(
         from indicatorData: [RuuviTagCardSnapshotIndicatorData]
     ) -> [DashboardIndicatorView] {
@@ -386,6 +389,7 @@ class RuuviTagDashboardCell: UICollectionViewCell, TimestampUpdateable {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func getIndicatorView(for type: MeasurementType) -> DashboardIndicatorView? {
         switch type {
         case .aqi: return airQIndexView
@@ -739,3 +743,4 @@ extension RuuviTagDashboardCell {
         return max(min(calculatedHeight, maxHeight), singleLineHeight)
     }
 }
+// swiftlint:enable file_length

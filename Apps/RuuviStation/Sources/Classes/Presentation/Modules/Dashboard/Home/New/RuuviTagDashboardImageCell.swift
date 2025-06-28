@@ -1,3 +1,5 @@
+// swiftlint:disable file_length
+
 import UIKit
 import Combine
 import RuuviOntology
@@ -30,28 +32,22 @@ struct DashboardImageCellLayout {
     // Image cell specific properties
     static let imageWidthRatio: CGFloat = 0.25
     static let nameToImageSpacing: CGFloat = 8
-    static let nameToProminentSpacing: CGFloat = 4
-    static let prominentToGridSpacing: CGFloat = 10
-    static let prominentViewHeightAQI: CGFloat = 46  // For AQI indicators
-    static let prominentViewHeightDefault: CGFloat = 42  // For other indicators
+
+    // Fixed 10px spacing between groups
+    static let groupSpacing: CGFloat = 10
+    static let prominentViewHeight: CGFloat = 36
+    static let progressViewHeight: CGFloat = 5
+    static let progressViewTopSpacing: CGFloat = 3
 
     // Derived calculations
     static var headerFixedWidth: CGFloat {
         return nameToAlertSpacing + alertIconSize.width + alertToMoreSpacing + moreIconSize
     }
 
-    static var totalVerticalSpacingWithProminent: CGFloat {
-        return topPadding + nameToProminentSpacing + prominentToGridSpacing + gridToFooterSpacing + bottomPadding
-    }
-
     static func availableNameWidth(containerWidth: CGFloat) -> CGFloat {
         let imageWidth = containerWidth * imageWidthRatio
         let reservedWidth = imageWidth + nameToImageSpacing + headerFixedWidth
         return max(containerWidth - reservedWidth, 80)
-    }
-
-    static func prominentViewHeight(hasAQI: Bool) -> CGFloat {
-        return hasAQI ? prominentViewHeightAQI : prominentViewHeightDefault
     }
 
     static func gridHeight(indicatorCount: Int, hasAQI: Bool) -> CGFloat {
@@ -135,6 +131,13 @@ class RuuviTagDashboardImageCell: UICollectionViewCell, TimestampUpdateable {
         return button
     }()
 
+    // Container for prominent view (fixed height)
+    private lazy var prominentGroupContainer: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
+    }()
+
     private lazy var rowsStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -179,8 +182,25 @@ class RuuviTagDashboardImageCell: UICollectionViewCell, TimestampUpdateable {
     private lazy var batteryLevelView = BatteryLevelView()
     private lazy var noDataView = NoDataView()
 
+    private lazy var progressViewContainer: UIView = {
+        let container = UIView()
+        container.backgroundColor = .clear
+        container.layer.cornerRadius = 2.5
+        container.clipsToBounds = true
+        return container
+    }()
+
+    private lazy var progressView: UIProgressView = {
+        let progressView = UIProgressView()
+        progressView.progressViewStyle = .bar
+        progressView.trackTintColor = RuuviColor.dashboardIndicator.color.withAlphaComponent(0.3)
+        progressView.layer.cornerRadius = 0
+        progressView.clipsToBounds = false
+        return progressView
+    }()
+
     private var dataSourceIconViewWidthConstraint: NSLayoutConstraint!
-    private var prominentViewHeightConstraint: NSLayoutConstraint!
+    private var gridTopConstraint: NSLayoutConstraint!
 
     // MARK: - Properties
     private var currentSnapshot: RuuviTagCardSnapshot?
@@ -209,14 +229,28 @@ class RuuviTagDashboardImageCell: UICollectionViewCell, TimestampUpdateable {
         currentIndicators.removeAll()
         prominentView.clearValues()
 
-        [temperatureView, humidityView, pressureView, movementView,
-         co2View, pm25View, pm10View, noxView, vocView,
-         luminosityView, soundView].forEach { $0.clearValues() }
+        [
+            temperatureView,
+            humidityView,
+            pressureView,
+            movementView,
+            co2View,
+            pm25View,
+            pm10View,
+            noxView,
+            vocView,
+            luminosityView,
+            soundView,
+        ].forEach {
+            $0.clearValues()
+        }
 
         noDataView.isHidden = true
         batteryLevelView.isHidden = true
         alertButton.isUserInteractionEnabled = false
         dataSourceIconViewWidthConstraint.constant = DashboardImageCellLayout.sourceIconCompactWidth
+        progressViewContainer.isHidden = true
+        gridTopConstraint?.isActive = false
     }
 
     deinit {
@@ -300,6 +334,8 @@ class RuuviTagDashboardImageCell: UICollectionViewCell, TimestampUpdateable {
             rowsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
             currentIndicators.removeAll()
             prominentView.clearValues()
+            progressViewContainer.isHidden = true
+            updateGridPosition(hasAQI: false)
             noDataView.isHidden = false
             return
         }
@@ -320,9 +356,6 @@ class RuuviTagDashboardImageCell: UICollectionViewCell, TimestampUpdateable {
     private func updateProminentView(with configuration: RuuviTagCardSnapshotIndicatorGridConfiguration) {
         let hasAQI = configuration.indicators.contains { $0.type == .aqi }
 
-        // Update prominent view height constraint
-        prominentViewHeightConstraint.constant = DashboardImageCellLayout.prominentViewHeight(hasAQI: hasAQI)
-
         if hasAQI {
             // E0/F0 version - show Air Quality Index as prominent
             if let airQualityIndicator = configuration.indicators.first(where: { $0.type == .aqi }) {
@@ -333,10 +366,15 @@ class RuuviTagDashboardImageCell: UICollectionViewCell, TimestampUpdateable {
                 prominentView.setValue(
                     with: mainValue,
                     superscriptValue: superscriptValue,
-                    subscriptValue: airQualityIndicator.unit,
-                    showProgress: true,
-                    progressColor: airQualityIndicator.isHighlighted ? .systemOrange : .systemGreen
+                    subscriptValue: airQualityIndicator.unit
                 )
+
+                // Show progress view
+                progressViewContainer.isHidden = false
+                if let progress = mainValue.intValue {
+                    progressView.progress = Float(progress) / 100
+                    progressView.progressTintColor = airQualityIndicator.isHighlighted ? .systemOrange : .systemGreen
+                }
             }
         } else {
             // V5 version - show Temperature as prominent
@@ -347,13 +385,40 @@ class RuuviTagDashboardImageCell: UICollectionViewCell, TimestampUpdateable {
                 prominentView.setValue(
                     with: tempValue,
                     superscriptValue: temperatureIndicator.unit,
-                    subscriptValue: "Temperature"
+                    subscriptValue: RuuviLocalization.TagSettings.OffsetCorrection.temperature
                 )
             }
+            // Hide progress view
+            progressViewContainer.isHidden = true
         }
+
+        // Update grid position based on progress view visibility
+        updateGridPosition(hasAQI: hasAQI)
     }
 
-    private func createIndicatorViews(from indicatorData: [RuuviTagCardSnapshotIndicatorData]) -> [DashboardIndicatorView] {
+    private func updateGridPosition(hasAQI: Bool) {
+        gridTopConstraint?.isActive = false
+
+        if hasAQI && !progressViewContainer.isHidden {
+            // Grid positioned 10px from progress view
+            gridTopConstraint = rowsStackView.topAnchor.constraint(
+                equalTo: progressViewContainer.bottomAnchor,
+                constant: DashboardImageCellLayout.groupSpacing
+            )
+        } else {
+            // Grid positioned 10px from prominent view
+            gridTopConstraint = rowsStackView.topAnchor.constraint(
+                equalTo: prominentGroupContainer.bottomAnchor,
+                constant: DashboardImageCellLayout.groupSpacing
+            )
+        }
+        gridTopConstraint.isActive = true
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity
+    private func createIndicatorViews(
+        from indicatorData: [RuuviTagCardSnapshotIndicatorData]
+    ) -> [DashboardIndicatorView] {
         var indicators: [DashboardIndicatorView] = []
         let hasAdvancedSensors = indicatorData.contains { $0.type == .aqi }
 
@@ -409,6 +474,7 @@ class RuuviTagDashboardImageCell: UICollectionViewCell, TimestampUpdateable {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func getIndicatorView(for type: MeasurementType) -> DashboardIndicatorView? {
         switch type {
         case .temperature: return temperatureView
@@ -426,7 +492,10 @@ class RuuviTagDashboardImageCell: UICollectionViewCell, TimestampUpdateable {
         }
     }
 
-    private func indicatorsEqual(_ lhs: [DashboardIndicatorView], _ rhs: [DashboardIndicatorView]) -> Bool {
+    private func indicatorsEqual(
+        _ lhs: [DashboardIndicatorView],
+        _ rhs: [DashboardIndicatorView]
+    ) -> Bool {
         guard lhs.count == rhs.count else { return false }
         return zip(lhs, rhs).allSatisfy { $0 === $1 }
     }
@@ -580,7 +649,7 @@ extension RuuviTagDashboardImageCell {
             multiplier: DashboardImageCellLayout.imageWidthRatio
         ).isActive = true
 
-        // Header Section
+        // Header Section - More and Alert icons (don't change their positioning)
         containerView.addSubview(moreIconView)
         moreIconView.anchor(
             top: containerView.topAnchor,
@@ -620,6 +689,7 @@ extension RuuviTagDashboardImageCell {
         containerView.addSubview(alertButton)
         alertButton.match(view: alertIcon)
 
+        // Group 1: Name with 10px top padding
         containerView.addSubview(ruuviTagNameLabel)
         ruuviTagNameLabel.anchor(
             top: containerView.topAnchor,
@@ -627,49 +697,71 @@ extension RuuviTagDashboardImageCell {
             bottom: nil,
             trailing: alertIcon.leadingAnchor,
             padding: .init(
-                top: DashboardImageCellLayout.topPadding,
+                top: DashboardImageCellLayout.groupSpacing, // 10px top padding
                 left: DashboardImageCellLayout.nameToImageSpacing,
                 bottom: 0,
                 right: DashboardImageCellLayout.nameToAlertSpacing
             )
         )
 
-        // Prominent view
-        containerView.addSubview(prominentView)
-        prominentView.anchor(
+        // Group 2: Prominent view container
+        containerView.addSubview(prominentGroupContainer)
+        prominentGroupContainer.anchor(
             top: ruuviTagNameLabel.bottomAnchor,
             leading: ruuviTagNameLabel.leadingAnchor,
             bottom: nil,
             trailing: containerView.trailingAnchor,
             padding: .init(
-                top: DashboardImageCellLayout.nameToProminentSpacing,
+                top: DashboardImageCellLayout.groupSpacing, // 10px from name
                 left: 0,
                 bottom: 0,
                 right: DashboardImageCellLayout.trailingPadding
             )
         )
+        prominentGroupContainer.constrainHeight(constant: DashboardImageCellLayout.prominentViewHeight)
 
-        prominentViewHeightConstraint = prominentView.heightAnchor.constraint(
-            equalToConstant: DashboardImageCellLayout.prominentViewHeightDefault
+        // Prominent view fills the container
+        prominentGroupContainer.addSubview(prominentView)
+        prominentView.fillSuperview()
+
+        // Progress view positioned separately OUTSIDE the container
+        containerView.addSubview(progressViewContainer)
+        progressViewContainer.anchor(
+            top: prominentGroupContainer.bottomAnchor,
+            leading: prominentGroupContainer.leadingAnchor,
+            bottom: nil,
+            trailing: nil,
+            padding: .init(top: DashboardImageCellLayout.progressViewTopSpacing, left: 0, bottom: 0, right: 0),
+            size: .init(width: 120, height: DashboardImageCellLayout.progressViewHeight)
         )
-        prominentViewHeightConstraint.isActive = true
 
-        // Grid Section
+        progressViewContainer.addSubview(progressView)
+        progressView.fillSuperview()
+        progressViewContainer.isHidden = true
+
+        // Group 3: Grid Section - positioned dynamically
         containerView.addSubview(rowsStackView)
         rowsStackView.anchor(
-            top: prominentView.bottomAnchor,
+            top: nil, // Will be set dynamically
             leading: ruuviTagNameLabel.leadingAnchor,
             bottom: nil,
             trailing: containerView.trailingAnchor,
             padding: .init(
-                top: DashboardImageCellLayout.prominentToGridSpacing,
+                top: 0, // Will be set dynamically
                 left: 0,
                 bottom: 0,
                 right: DashboardImageCellLayout.trailingPadding
             )
         )
 
-        // Footer Section
+        // Initial grid position (will be updated based on progress view visibility)
+        gridTopConstraint = rowsStackView.topAnchor.constraint(
+            equalTo: prominentGroupContainer.bottomAnchor,
+            constant: DashboardImageCellLayout.groupSpacing
+        )
+        gridTopConstraint.isActive = true
+
+        // Group 4: Footer Section - 10px from grid, 10px bottom padding
         let sourceAndUpdateStack = UIStackView(arrangedSubviews: [dataSourceIconView, updatedAtLabel])
         sourceAndUpdateStack.axis = .horizontal
         sourceAndUpdateStack.spacing = DashboardImageCellLayout.sourceIconToTextSpacing
@@ -697,9 +789,9 @@ extension RuuviTagDashboardImageCell {
             bottom: containerView.bottomAnchor,
             trailing: containerView.trailingAnchor,
             padding: .init(
-                top: DashboardImageCellLayout.gridToFooterSpacing,
+                top: DashboardImageCellLayout.groupSpacing, // 10px from grid
                 left: 0,
-                bottom: DashboardImageCellLayout.bottomPadding,
+                bottom: DashboardImageCellLayout.groupSpacing, // 10px bottom padding
                 right: DashboardImageCellLayout.trailingPadding
             )
         )
@@ -710,14 +802,14 @@ extension RuuviTagDashboardImageCell {
         // No data view
         containerView.insertSubview(noDataView, belowSubview: moreIconView)
         noDataView.anchor(
-            top: prominentView.bottomAnchor,
+            top: prominentGroupContainer.bottomAnchor,
             leading: cardBackgroundView.trailingAnchor,
             bottom: footerStack.topAnchor,
             trailing: containerView.trailingAnchor,
             padding: .init(
-                top: DashboardImageCellLayout.prominentToGridSpacing,
+                top: DashboardImageCellLayout.groupSpacing,
                 left: DashboardImageCellLayout.nameToImageSpacing,
-                bottom: DashboardImageCellLayout.gridToFooterSpacing,
+                bottom: DashboardImageCellLayout.groupSpacing,
                 right: DashboardImageCellLayout.trailingPadding
             )
         )
@@ -732,23 +824,41 @@ extension RuuviTagDashboardImageCell {
         width: CGFloat,
         numberOfColumns: Int = 2
     ) -> CGFloat {
-        let nameHeight = calculateNameLabelHeight(text: snapshot.displayData.name, containerWidth: width)
+        let nameHeight = calculateNameLabelHeight(
+            text: snapshot.displayData.name,
+            containerWidth: width
+        )
         let hasAQI = snapshot.displayData.indicatorGrid?.indicators.contains { $0.type == .aqi } ?? false
-        let prominentHeight = DashboardImageCellLayout.prominentViewHeight(hasAQI: hasAQI)
+        let prominentHeight = DashboardImageCellLayout.prominentViewHeight
+        let progressHeight = hasAQI ? (
+            DashboardImageCellLayout.progressViewTopSpacing +
+            DashboardImageCellLayout.progressViewHeight
+        ) : 0
         let indicatorCount = snapshot.displayData.indicatorGrid?.indicators.count ?? 0
         let gridHeight = DashboardImageCellLayout.gridHeight(indicatorCount: indicatorCount, hasAQI: hasAQI)
 
-        let totalHeight = nameHeight +
-                         DashboardImageCellLayout.totalVerticalSpacingWithProminent +
+        // Calculate total height with consistent 10px spacing between all groups
+        let totalHeight = DashboardImageCellLayout.groupSpacing + // Top padding
+                         nameHeight +
+                         DashboardImageCellLayout.groupSpacing + // Name to prominent
                          prominentHeight +
+                         progressHeight + // Progress view space (0 when not visible)
+                         DashboardImageCellLayout.groupSpacing + // To grid (always 10px from last element)
                          gridHeight +
-                         DashboardImageCellLayout.footerHeight
+                         DashboardImageCellLayout.groupSpacing + // Grid to footer
+                         DashboardImageCellLayout.footerHeight +
+                         DashboardImageCellLayout.groupSpacing   // Bottom padding
 
         return ceil(totalHeight)
     }
 
-    private static func calculateNameLabelHeight(text: String, containerWidth: CGFloat) -> CGFloat {
-        let availableWidth = DashboardImageCellLayout.availableNameWidth(containerWidth: containerWidth)
+    private static func calculateNameLabelHeight(
+        text: String,
+        containerWidth: CGFloat
+    ) -> CGFloat {
+        let availableWidth = DashboardImageCellLayout.availableNameWidth(
+            containerWidth: containerWidth
+        )
         let maxSize = CGSize(width: availableWidth, height: CGFloat.greatestFiniteMagnitude)
 
         let textRect = (text as NSString).boundingRect(
@@ -760,8 +870,10 @@ extension RuuviTagDashboardImageCell {
 
         let calculatedHeight = ceil(textRect.height)
         let singleLineHeight = ceil(DashboardImageCellLayout.nameFont.lineHeight)
-        let maxHeight = singleLineHeight * CGFloat(DashboardImageCellLayout.maxNameLines)
+        let maxHeight =
+        singleLineHeight * CGFloat(DashboardImageCellLayout.maxNameLines)
 
         return max(min(calculatedHeight, maxHeight), singleLineHeight)
     }
 }
+// swiftlint:enable file_length
