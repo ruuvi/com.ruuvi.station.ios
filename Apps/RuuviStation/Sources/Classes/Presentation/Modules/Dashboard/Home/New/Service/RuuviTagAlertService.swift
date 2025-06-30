@@ -489,13 +489,15 @@ extension RuuviTagAlertService: RuuviNotifierObserver {
 
                 let isTriggeredAndFireable = isTriggered && isFireable
                 let alertState: AlertState? = isTriggeredAndFireable ? .firing : .registered
-
-                snapshot.updateAlert(
-                    for: measurementType,
-                    isOn: true, // If we're getting a notification, alert is on
-                    alertState: alertState,
-                    mutedTill: nil
-                )
+                if let alertConfig = snapshot.displayData.indicatorGrid?.indicators.first(
+                    where: { $0.type == measurementType })?.alertConfig {
+                    snapshot.updateAlert(
+                        for: measurementType,
+                        isOn: alertConfig.isActive,
+                        alertState: alertState,
+                        mutedTill: alertConfig.mutedTill
+                    )
+                }
 
                 self.processingLock.lock()
                 self.isProcessingAlertChange = false
