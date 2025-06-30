@@ -31,7 +31,7 @@ struct DashboardCellLayout {
     static let gridRowSpacing: CGFloat = 2
 
     // Footer section
-    static let gridToFooterSpacing: CGFloat = 10
+    static let gridToFooterSpacing: CGFloat = 6
     static let footerHeight: CGFloat = 24
     static let sourceIconToTextSpacing: CGFloat = 6
     static let sourceIconRegularWidth: CGFloat = 22
@@ -731,7 +731,7 @@ extension RuuviTagDashboardCell {
 
         let textRect = (text as NSString).boundingRect(
             with: maxSize,
-            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            options: [.usesLineFragmentOrigin],
             attributes: [.font: DashboardCellLayout.nameFont],
             context: nil
         )

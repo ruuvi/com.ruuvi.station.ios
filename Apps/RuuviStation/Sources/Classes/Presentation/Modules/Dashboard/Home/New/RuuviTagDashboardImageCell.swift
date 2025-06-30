@@ -863,7 +863,7 @@ extension RuuviTagDashboardImageCell {
 
         let textRect = (text as NSString).boundingRect(
             with: maxSize,
-            options: [.usesLineFragmentOrigin, .usesFontLeading],
+            options: [.usesLineFragmentOrigin],
             attributes: [.font: DashboardImageCellLayout.nameFont],
             context: nil
         )
