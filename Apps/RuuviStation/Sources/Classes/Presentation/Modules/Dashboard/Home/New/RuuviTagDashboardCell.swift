@@ -14,15 +14,15 @@ struct DashboardCellLayout {
     // Card padding
     static let topPadding: CGFloat = 10
     static let bottomPadding: CGFloat = 8
-    static let leadingPadding: CGFloat = 8
-    static let trailingPadding: CGFloat = 8
+    static let leadingPadding: CGFloat = 16
+    static let trailingPadding: CGFloat = 12
 
     // Header section
     static let nameToAlertSpacing: CGFloat = 10
     static let alertToMoreSpacing: CGFloat = 0
     static let alertIconSize = CGSize(width: 24, height: 22)
-    static let alertIconTopOffset: CGFloat = 2 // Additional offset for alert icon alignment
-    static let moreIconPadding: CGFloat = 7
+    static let alertIconTopOffset: CGFloat = 3 // Additional offset for alert icon alignment
+    static let moreIconPadding: CGFloat = 8
     static let moreIconSize: CGFloat = 36
 
     // Grid section
@@ -682,12 +682,12 @@ extension RuuviTagDashboardCell {
         noDataView.anchor(
             top: ruuviTagNameLabel.bottomAnchor,
             leading: containerView.leadingAnchor,
-            bottom: footerStack.topAnchor,
+            bottom: containerView.bottomAnchor,
             trailing: containerView.trailingAnchor,
             padding: .init(
                 top: DashboardCellLayout.headerToGridSpacing,
                 left: 0,
-                bottom: DashboardCellLayout.gridToFooterSpacing,
+                bottom: 0,
                 right: 0
             )
         )

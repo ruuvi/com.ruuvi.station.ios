@@ -31,7 +31,7 @@ struct DashboardImageCellLayout {
 
     // Image cell specific properties
     static let imageWidthRatio: CGFloat = 0.25
-    static let nameToImageSpacing: CGFloat = 8
+    static let nameToImageSpacing: CGFloat = 14
 
     // Fixed 10px spacing between groups
     static let groupSpacing: CGFloat = 10
@@ -789,9 +789,9 @@ extension RuuviTagDashboardImageCell {
             bottom: containerView.bottomAnchor,
             trailing: containerView.trailingAnchor,
             padding: .init(
-                top: DashboardImageCellLayout.groupSpacing, // 10px from grid
+                top: DashboardImageCellLayout.gridToFooterSpacing, // 10px from grid
                 left: 0,
-                bottom: DashboardImageCellLayout.groupSpacing, // 10px bottom padding
+                bottom: DashboardImageCellLayout.bottomPadding, // 10px bottom padding
                 right: DashboardImageCellLayout.trailingPadding
             )
         )

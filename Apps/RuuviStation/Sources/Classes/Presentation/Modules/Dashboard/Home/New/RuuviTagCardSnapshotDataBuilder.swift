@@ -196,7 +196,7 @@ extension RuuviTagCardSnapshotDataBuilder {
     ) -> (value: String, unit: String)? {
         guard let pm25 = record.pm2_5,
               let pm25Value = measurementService?.pm25String(for: pm25) else { return nil }
-        return (pm25Value, "\(RuuviLocalization.pm25) \(RuuviLocalization.unitPm25)")
+        return (pm25Value, "\(RuuviLocalization.unitPm25)")
     }
 
     private static func getPM10Value(
@@ -205,7 +205,7 @@ extension RuuviTagCardSnapshotDataBuilder {
     ) -> (value: String, unit: String)? {
         guard let pm10 = record.pm10,
               let pm10Value = measurementService?.pm10String(for: pm10) else { return nil }
-        return (pm10Value, "\(RuuviLocalization.pm10) \(RuuviLocalization.unitPm10)")
+        return (pm10Value, "\(RuuviLocalization.unitPm10)")
     }
 
     private static func getNOXValue(
