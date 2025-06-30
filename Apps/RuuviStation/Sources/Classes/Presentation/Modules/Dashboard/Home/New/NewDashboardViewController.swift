@@ -14,19 +14,9 @@ final class NewDashboardViewController: UIViewController {
     var output: NewDashboardViewOutput!
     var menuPresentInteractiveTransition: UIViewControllerInteractiveTransitioning!
     var menuDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
-    var measurementService: RuuviServiceMeasurement! {
-        didSet {
-            measurementService?.add(self)
-        }
-    }
+    var measurementService: RuuviServiceMeasurement!
 
     // MARK: - Data Properties
-    var snapshots: [RuuviTagCardSnapshot] = [] {
-        didSet {
-            updateUI()
-        }
-    }
-
     var dashboardType: DashboardType! {
         didSet {
             viewButton.updateMenu(with: viewToggleMenuOptions())
@@ -59,6 +49,7 @@ final class NewDashboardViewController: UIViewController {
     }
 
     // MARK: - Private Properties
+    private var snapshots: [RuuviTagCardSnapshot] = []
     private var dataSource: UICollectionViewDiffableDataSource<MasonrySection, RuuviTagCardSnapshot>!
     private let heightCache = DashboardCardHeightCache()
 
@@ -777,10 +768,11 @@ extension NewDashboardViewController: MasonryReorderableLayoutDelegate {
     }
 
     func numberOfColumns(in collectionView: UICollectionView) -> Int {
-        if UIDevice.current.userInterfaceIdiom == .pad {
-            return UIDevice.current.orientation.isLandscape ? 3 : 2
+        if view.frame.width > view.frame.height {
+            return UIDevice.current.userInterfaceIdiom == .pad ? 3 : 2
+        } else {
+            return UIDevice.current.userInterfaceIdiom == .pad ? 2 : 1
         }
-        return UIDevice.current.orientation.isLandscape ? 2 : 1
     }
 
     func columnSpacing(in collectionView: UICollectionView) -> CGFloat {
@@ -914,11 +906,16 @@ extension NewDashboardViewController: NewDashboardViewInput {
         // No-op for now
     }
 
+    func updateSnapshots(_ snapshots: [RuuviTagCardSnapshot]) {
+        self.snapshots = snapshots
+        updateUI()
+    }
+
     func updateSnapshot(from record: RuuviTagSensorRecord, for ruuviTag: RuuviTagSensor) {
         if let snapshot = snapshots.first(where: { $0.id == ruuviTag.id }) {
             snapshot.updateFromRecord(record, sensor: ruuviTag.any, measurementService: measurementService)
         }
-        updateData(with: snapshots, animated: false)
+//        updateData(with: snapshots, animated: false)
     }
 
     func updateSnapshot(
@@ -928,7 +925,7 @@ extension NewDashboardViewController: NewDashboardViewInput {
         if let snapshotIndex = snapshots.firstIndex(of: snapshot) {
             snapshots[snapshotIndex] = snapshot
         }
-        updateData(with: snapshots, animated: false)
+//        updateData(with: snapshots, animated: false)
         if invalidateLayout {
             forceCompleteReload()
         }
@@ -1068,14 +1065,6 @@ extension NewDashboardViewController: NewDashboardViewInput {
         alert.addAction(confirmAction)
 
         present(alert, animated: true)
-    }
-}
-
-// MARK: - RuuviServiceMeasurementDelegate
-extension NewDashboardViewController: RuuviServiceMeasurementDelegate {
-    func measurementServiceDidUpdateUnit() {
-        guard isViewLoaded else { return }
-        reloadCollectionView()
     }
 }
 

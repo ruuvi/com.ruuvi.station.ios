@@ -471,7 +471,7 @@ extension NewDashboardPresenter: RuuviTagDataServiceDelegate {
         _ service: RuuviTagDataService,
         didUpdateSnapshots snapshots: [RuuviTagCardSnapshot]
     ) {
-        view?.snapshots = snapshots
+        view?.updateSnapshots(snapshots)
         view?.showNoSensorsAddedMessage(show: snapshots.isEmpty)
 
         if didLoadInitialSensors {
@@ -666,7 +666,7 @@ extension NewDashboardPresenter: DashboardSettingsServiceDelegate {
     ) {
         // Trigger view reload for unit changes
         let snapshots = sensorDataService.getAllSnapshots()
-        view?.snapshots = snapshots
+        view?.updateSnapshots(snapshots)
     }
 
     func settingsService(
@@ -686,7 +686,7 @@ extension NewDashboardPresenter: DashboardSettingsServiceDelegate {
     ) {
         // Trigger view reload for language changes
         let snapshots = sensorDataService.getAllSnapshots()
-        view?.snapshots = snapshots
+        view?.updateSnapshots(snapshots)
     }
 }
 

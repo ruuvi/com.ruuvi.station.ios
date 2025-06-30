@@ -156,14 +156,12 @@ private class MasonryDragPreviewView: UIView {
     private func setupImageViews() {
         guard let cell = cell else { return }
 
-        cellImageView = UIImageView(frame: CGRect(origin: .zero,
-                                                  size: cell.bounds.size))
+        cellImageView = UIImageView(frame: CGRect(origin: .zero, size: cell.bounds.size))
         cellImageView?.contentMode = .scaleAspectFill
         cellImageView?.clipsToBounds = true
         cellImageView?.layer.cornerRadius = 8
 
-        cellHighlightedView = UIImageView(frame: CGRect(origin: .zero,
-                                                        size: cell.bounds.size))
+        cellHighlightedView = UIImageView(frame: CGRect(origin: .zero, size: cell.bounds.size))
         cellHighlightedView?.contentMode = .scaleAspectFill
         cellHighlightedView?.clipsToBounds = true
         cellHighlightedView?.layer.cornerRadius = 8
@@ -189,13 +187,13 @@ private class MasonryDragPreviewView: UIView {
             withDuration: 0.25,
             delay: 0,
             options: [.curveEaseOut, .beginFromCurrentState],
-            animations: {
-                self.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
-                self.layer.shadowOpacity = 0.3
-                self.cellHighlightedView?.alpha = 0
+            animations: { [weak self] in
+                self?.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
+                self?.layer.shadowOpacity = 0.3
+                self?.cellHighlightedView?.alpha = 0
             }
-        ) { _ in
-            self.cellHighlightedView?.removeFromSuperview()
+        ) { [weak self] _ in
+            self?.cellHighlightedView?.removeFromSuperview()
         }
     }
 
@@ -211,14 +209,11 @@ private class MasonryDragPreviewView: UIView {
             usingSpringWithDamping: 0.8,
             initialSpringVelocity: 0.2,
             options: [.allowUserInteraction, .beginFromCurrentState],
-            animations: {
-                self.transform = .identity
-                self.frame = targetFrame
-                self.layer.shadowOpacity = 0
-                self.cellImageView?.frame = CGRect(
-                    origin: .zero,
-                    size: targetFrame.size
-                )
+            animations: { [weak self] in
+                self?.transform = .identity
+                self?.frame = targetFrame
+                self?.layer.shadowOpacity = 0
+                self?.cellImageView?.frame = CGRect(origin: .zero, size: targetFrame.size)
             }
         ) { _ in
             completion?()
@@ -226,11 +221,59 @@ private class MasonryDragPreviewView: UIView {
     }
 
     private func getCellImage() -> UIImage {
-        let size = originalSize ?? cell!.bounds.size
+        guard let cell = cell else { return UIImage() }
+        let size = originalSize ?? cell.bounds.size
         let renderer = UIGraphicsImageRenderer(size: size)
         return renderer.image { context in
-            cell!.layer.render(in: context.cgContext)
+            cell.layer.render(in: context.cgContext)
         }
+    }
+}
+
+// MARK: - Layout Configuration
+private struct LayoutConfiguration {
+    let numberOfColumns: Int
+    let columnSpacing: CGFloat
+    let sectionInsets: UIEdgeInsets
+    let itemWidth: CGFloat
+    let columnXOffsets: [CGFloat]
+
+    init(collectionView: UICollectionView, delegate: MasonryReorderableLayoutDelegate?) {
+        numberOfColumns = delegate?.numberOfColumns(in: collectionView) ?? 2
+        columnSpacing = delegate?.columnSpacing(in: collectionView) ?? 12
+        sectionInsets = delegate?.sectionInsets(in: collectionView) ??
+            UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+
+        let safeAreaInsets: UIEdgeInsets
+        if #available(iOS 11.0, *) {
+            safeAreaInsets = collectionView.safeAreaInsets
+        } else {
+            safeAreaInsets = UIEdgeInsets.zero
+        }
+
+        let adjustedSectionInsets = UIEdgeInsets(
+            top: sectionInsets.top + safeAreaInsets.top,
+            left: sectionInsets.left,
+            bottom: sectionInsets.bottom + safeAreaInsets.bottom,
+            right: sectionInsets.right
+        )
+
+        let contentWidth = collectionView.bounds.width -
+            collectionView.contentInset.left -
+            collectionView.contentInset.right
+
+        let totalSpacing = columnSpacing * CGFloat(numberOfColumns - 1)
+        let availableWidth = contentWidth - adjustedSectionInsets.left -
+            adjustedSectionInsets.right - totalSpacing
+
+        itemWidth = availableWidth / CGFloat(numberOfColumns)
+
+        var offsets: [CGFloat] = []
+        for column in 0..<numberOfColumns {
+            let xOffset = adjustedSectionInsets.left + CGFloat(column) * (itemWidth + columnSpacing)
+            offsets.append(xOffset)
+        }
+        columnXOffsets = offsets
     }
 }
 
@@ -261,13 +304,12 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
     // Layout cache
     private var layoutAttributes: [UICollectionViewLayoutAttributes] = []
     private var contentHeight: CGFloat = 0
+    private var cachedConfiguration: LayoutConfiguration?
 
     // Auto-scroll properties
     private var displayLink: CADisplayLink?
     private var continuousScrollDirection: ScrollDirection = .stay
-    private var triggerInsets = UIEdgeInsets(
-        top: 100, left: 100, bottom: 100, right: 100
-    )
+    private var triggerInsets = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100)
     private var triggerPadding = UIEdgeInsets.zero
     private var scrollSpeedValue: CGFloat = 10.0
     private var previewCellCenter: CGPoint?
@@ -306,89 +348,20 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
     }
 
     // MARK: - Computed Properties
-    private var offsetFromTop: CGFloat {
-        return collectionView!.contentOffset.y
+    private var safeCollectionView: UICollectionView? {
+        return collectionView
     }
 
-    private var insetsTop: CGFloat {
-        return collectionView!.contentInset.top
-    }
+    private func getLayoutConfiguration() -> LayoutConfiguration? {
+        guard let collectionView = safeCollectionView else { return nil }
 
-    private var insetsEnd: CGFloat {
-        return collectionView!.contentInset.bottom
-    }
-
-    private var collectionViewLength: CGFloat {
-        return collectionView!.bounds.height
-    }
-
-    private var previewCellTopEdge: CGFloat? {
-        return cellPreviewView?.frame.minY
-    }
-
-    private var previewCellEndEdge: CGFloat? {
-        return cellPreviewView?.frame.maxY
-    }
-
-    private var triggerInsetTop: CGFloat {
-        return triggerInsets.top
-    }
-
-    private var triggerInsetEnd: CGFloat {
-        return triggerInsets.bottom
-    }
-
-    private var triggerPaddingTop: CGFloat {
-        return triggerPadding.top
-    }
-
-    private var triggerPaddingEnd: CGFloat {
-        return triggerPadding.bottom
-    }
-
-    private var safeAreaInsets: UIEdgeInsets {
-        if #available(iOS 11.0, *) {
-            return collectionView?.safeAreaInsets ?? UIEdgeInsets.zero
-        } else {
-            return UIEdgeInsets.zero
+        if let cached = cachedConfiguration {
+            return cached
         }
-    }
 
-    private var adjustedSectionInsets: UIEdgeInsets {
-        let originalInsets = sectionInsets
-        return UIEdgeInsets(
-            top: originalInsets.top + safeAreaInsets.top,
-            left: originalInsets.left,
-            bottom: originalInsets.bottom + safeAreaInsets.bottom,
-            right: originalInsets.right
-        )
-    }
-
-    private var numberOfColumns: Int {
-        delegate?.numberOfColumns(in: collectionView!) ?? 2
-    }
-
-    private var columnSpacing: CGFloat {
-        delegate?.columnSpacing(in: collectionView!) ?? 12
-    }
-
-    private var sectionInsets: UIEdgeInsets {
-        delegate?.sectionInsets(in: collectionView!) ??
-        UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
-    }
-
-    private var contentWidth: CGFloat {
-        guard let collectionView = collectionView else { return 0 }
-        return collectionView.bounds.width -
-        collectionView.contentInset.left -
-        collectionView.contentInset.right
-    }
-
-    private var itemWidth: CGFloat {
-        let totalSpacing = columnSpacing * CGFloat(numberOfColumns - 1)
-        let availableWidth = contentWidth -
-            adjustedSectionInsets.left - adjustedSectionInsets.right - totalSpacing
-        return availableWidth / CGFloat(numberOfColumns)
+        let config = LayoutConfiguration(collectionView: collectionView, delegate: delegate)
+        cachedConfiguration = config
+        return config
     }
 
     // MARK: - Initialization
@@ -403,8 +376,13 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
     }
 
     deinit {
+        cleanupResources()
+    }
+
+    private func cleanupResources() {
         collectionViewObservation?.invalidate()
         invalidateDisplayLink()
+        removeGestureRecognizers()
     }
 
     private func configureObserver() {
@@ -418,9 +396,7 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
 
     // MARK: - Auto-scroll Configuration
     public func configureAutoScroll(
-        triggerInsets: UIEdgeInsets = UIEdgeInsets(
-            top: 100, left: 100, bottom: 100, right: 100
-        ),
+        triggerInsets: UIEdgeInsets = UIEdgeInsets(top: 100, left: 100, bottom: 100, right: 100),
         triggerPadding: UIEdgeInsets = .zero,
         scrollSpeed: CGFloat = 10.0
     ) {
@@ -433,10 +409,8 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
     private func setUpDisplayLink() {
         guard displayLink == nil else { return }
 
-        displayLink = CADisplayLink(
-            target: self, selector: #selector(continuousScroll)
-        )
-        displayLink!.add(to: RunLoop.main, forMode: RunLoop.Mode.common)
+        displayLink = CADisplayLink(target: self, selector: #selector(continuousScroll))
+        displayLink?.add(to: RunLoop.main, forMode: RunLoop.Mode.common)
     }
 
     private func invalidateDisplayLink() {
@@ -460,82 +434,94 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
 
     // MARK: - Layout Core
     public override var collectionViewContentSize: CGSize {
-        CGSize(width: contentWidth, height: contentHeight)
+        guard getLayoutConfiguration() != nil else { return .zero }
+        let contentWidth = safeCollectionView?.bounds.width ?? 0
+        return CGSize(width: contentWidth, height: contentHeight)
     }
 
     public override func prepare() {
         super.prepare()
-        guard let collectionView = collectionView else { return }
+        guard let collectionView = safeCollectionView,
+              let config = getLayoutConfiguration(),
+              let dataSource = diffableDataSource else { return }
 
         layoutAttributes.removeAll()
 
-        var columnHeights = Array(repeating: adjustedSectionInsets.top,
-                                  count: numberOfColumns)
-        var columnXOffsets: [CGFloat] = []
+        var columnHeights = Array(repeating: config.sectionInsets.top, count: config.numberOfColumns)
+        let snapshot = dataSource.snapshot()
+        let itemCount = snapshot.numberOfItems(inSection: .main)
 
-        for column in 0..<numberOfColumns {
-            let xOffset = adjustedSectionInsets.left +
-            CGFloat(column) * (itemWidth + columnSpacing)
-            columnXOffsets.append(xOffset)
+        guard itemCount > 0 else {
+            contentHeight = config.sectionInsets.top + config.sectionInsets.bottom
+            return
         }
-
-        guard let itemCount = diffableDataSource?.snapshot().numberOfItems(
-            inSection: .main
-        ), itemCount > 0 else { return }
 
         for item in 0..<itemCount {
             let indexPath = IndexPath(item: item, section: 0)
+            let attributes = createLayoutAttributes(
+                for: indexPath,
+                config: config,
+                columnHeights: &columnHeights,
+                collectionView: collectionView
+            )
+            layoutAttributes.append(attributes)
+        }
 
-            let isDraggedItem = isDragging &&
+        contentHeight = (columnHeights.max() ?? 0) + config.sectionInsets.bottom
+    }
+
+    private func createLayoutAttributes(
+        for indexPath: IndexPath,
+        config: LayoutConfiguration,
+        columnHeights: inout [CGFloat],
+        collectionView: UICollectionView
+    ) -> UICollectionViewLayoutAttributes {
+
+        let isDraggedItem = isDragging &&
             draggedItemIdentifier != nil &&
             isItemAtIndexPathDragged(indexPath)
 
-            let height: CGFloat
-            if isDraggedItem {
-                height = originalCellSize?.height ?? 100
-            } else {
-                height = delegate?.collectionView(
-                    collectionView, heightForItemAt: indexPath
-                ) ?? 100
-            }
-
-            let targetColumn = shortestColumnIndex(columnHeights)
-
-            let frame = CGRect(
-                x: columnXOffsets[targetColumn],
-                y: columnHeights[targetColumn],
-                width: itemWidth,
-                height: height
-            )
-
-            let attributes = UICollectionViewLayoutAttributes(
-                forCellWith: indexPath
-            )
-            attributes.frame = frame
-
-            if isDraggedItem {
-                attributes.alpha = 0.0
-            }
-
-            layoutAttributes.append(attributes)
-            columnHeights[targetColumn] = frame.maxY + columnSpacing
+        let height: CGFloat
+        if isDraggedItem {
+            height = originalCellSize?.height ?? 100
+        } else {
+            height = delegate?.collectionView(collectionView, heightForItemAt: indexPath) ?? 100
         }
 
-        contentHeight = (columnHeights.max() ?? 0) + adjustedSectionInsets.bottom
+        let targetColumn = shortestColumnIndex(columnHeights)
+        let frame = CGRect(
+            x: config.columnXOffsets[targetColumn],
+            y: columnHeights[targetColumn],
+            width: config.itemWidth,
+            height: height
+        )
+
+        let attributes = UICollectionViewLayoutAttributes(forCellWith: indexPath)
+        attributes.frame = frame
+
+        if isDraggedItem {
+            attributes.alpha = 0.0
+        }
+
+        columnHeights[targetColumn] = frame.maxY + config.columnSpacing
+        return attributes
     }
 
     // MARK: - Auto-scroll Logic
     private func beginScrollIfNeeded() {
-        guard cellPreviewView != nil,
-              let previewCellTopEdge = previewCellTopEdge,
-              let previewCellEndEdge = previewCellEndEdge else { return }
+        guard let collectionView = safeCollectionView,
+              cellPreviewView != nil,
+              let previewCellTopEdge = cellPreviewView?.frame.minY,
+              let previewCellEndEdge = cellPreviewView?.frame.maxY else { return }
 
-        if previewCellTopEdge <= offsetFromTop + triggerPaddingTop +
-            triggerInsetTop {
+        let offsetFromTop = collectionView.contentOffset.y
+        let collectionViewLength = collectionView.bounds.height
+
+        if previewCellTopEdge <= offsetFromTop + triggerPadding.top + triggerInsets.top {
             continuousScrollDirection = .toTop
             setUpDisplayLink()
         } else if previewCellEndEdge >= offsetFromTop + collectionViewLength -
-                    triggerPaddingEnd - triggerInsetEnd {
+                    triggerPadding.bottom - triggerInsets.bottom {
             continuousScrollDirection = .toEnd
             setUpDisplayLink()
         } else {
@@ -544,16 +530,16 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
     }
 
     @objc private func continuousScroll() {
-        guard let previewCell = cellPreviewView else { return }
+        guard let collectionView = safeCollectionView,
+              let previewCell = cellPreviewView else { return }
 
         let percentage = calcTriggerPercentage()
-        var scrollRate = continuousScrollDirection.scrollValue(
-            self.scrollSpeedValue,
-            percentage: percentage
-        )
+        var scrollRate = continuousScrollDirection.scrollValue(scrollSpeedValue, percentage: percentage)
 
-        let offset = offsetFromTop
-        let length = collectionViewLength
+        let offset = collectionView.contentOffset.y
+        let length = collectionView.bounds.height
+        let insetsTop = collectionView.contentInset.top
+        let insetsEnd = collectionView.contentInset.bottom
 
         if contentHeight + insetsTop + insetsEnd <= length {
             return
@@ -565,76 +551,75 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
             scrollRate = contentHeight + insetsEnd - length - offset
         }
 
-        collectionView!.performBatchUpdates({
-            self.previewCellCenter?.y += scrollRate
-            previewCell.center.y = self.previewCellCenter!.y +
-            (self.panTranslation?.y ?? 0)
-            self.collectionView?.contentOffset.y += scrollRate
+        collectionView.performBatchUpdates({ [weak self] in
+            self?.previewCellCenter?.y += scrollRate
+            if let previewCellCenter = self?.previewCellCenter,
+               let panTranslation = self?.panTranslation {
+                previewCell.center.y = previewCellCenter.y + panTranslation.y
+            }
+            collectionView.contentOffset.y += scrollRate
         }, completion: nil)
 
         handleRealtimeReordering()
     }
 
     private func calcTriggerPercentage() -> CGFloat {
-        guard cellPreviewView != nil else { return 0 }
+        guard let collectionView = safeCollectionView,
+              let previewCell = cellPreviewView else { return 0 }
 
-        let offset = offsetFromTop
-        let offsetEnd = offsetFromTop + collectionViewLength
-        let paddingEnd = triggerPaddingEnd
+        let offset = collectionView.contentOffset.y
+        let offsetEnd = offset + collectionView.bounds.height
+        let insetsTop = collectionView.contentInset.top
 
         var percentage: CGFloat = 0
 
-        if self.continuousScrollDirection == .toTop {
-            if let previewCellEdge = previewCellTopEdge {
-                percentage = 1.0 - ((previewCellEdge -
-                                     (offset + triggerPaddingTop)) /
-                                    triggerInsetTop)
-            }
+        if continuousScrollDirection == .toTop {
+            let previewCellEdge = previewCell.frame.minY
+            percentage = 1.0 - ((previewCellEdge - (offset + triggerPadding.top)) / triggerInsets.top)
         } else if continuousScrollDirection == .toEnd {
-            if let previewCellEdge = previewCellEndEdge {
-                percentage = 1.0 - (((insetsTop + offsetEnd - paddingEnd) -
-                                     (previewCellEdge + insetsTop)) /
-                                    triggerInsetEnd)
-            }
+            let previewCellEdge = previewCell.frame.maxY
+            percentage = 1.0 - (((insetsTop + offsetEnd - triggerPadding.bottom) -
+                                 (previewCellEdge + insetsTop)) / triggerInsets.bottom)
         }
 
-        percentage = min(1.0, percentage)
-        percentage = max(0, percentage)
-        return percentage
+        return max(0, min(1.0, percentage))
     }
 
     // MARK: - Gesture Handlers
     @objc private func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
-        let location = gesture.location(in: collectionView)
-        var indexPath: IndexPath? = collectionView?.indexPathForItem(at: location)
+        guard let collectionView = safeCollectionView else { return }
 
-        if let previewFakeView = cellPreviewView {
-            indexPath = previewFakeView.indexPath
+        let location = gesture.location(in: collectionView)
+        var indexPath: IndexPath? = collectionView.indexPathForItem(at: location)
+
+        if let previewView = cellPreviewView {
+            indexPath = previewView.indexPath
         }
 
-        guard let indexPath = indexPath else { return }
+        guard let validIndexPath = indexPath else { return }
 
         switch gesture.state {
         case .began:
-            beginDrag(at: indexPath)
+            beginDrag(at: validIndexPath)
         case .cancelled, .ended:
-            endDrag(indexPath)
+            endDrag(validIndexPath)
         default:
             break
         }
     }
 
     @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
-        guard let previewFakeView = cellPreviewView,
-              let previewCellCenter = previewCellCenter else { return }
+        guard let collectionView = safeCollectionView,
+              let previewView = cellPreviewView,
+              let centerPoint = previewCellCenter else { return }
 
-        panTranslation = gesture.translation(in: collectionView!)
+        panTranslation = gesture.translation(in: collectionView)
 
         switch gesture.state {
         case .changed:
-            if let panTranslation = panTranslation {
-                previewFakeView.center.x = previewCellCenter.x + panTranslation.x
-                previewFakeView.center.y = previewCellCenter.y + panTranslation.y
+            if let translation = panTranslation {
+                previewView.center.x = centerPoint.x + translation.x
+                previewView.center.y = centerPoint.y + translation.y
 
                 beginScrollIfNeeded()
                 handleRealtimeReordering()
@@ -650,93 +635,68 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
 
     // MARK: - Drag Management
     private func beginDrag(at indexPath: IndexPath) {
-        guard let collectionView = collectionView else {
-            return
-        }
-        guard delegate?.collectionView(
-            collectionView,
-            allowMoveAt: indexPath
-        ) != false else {
+        guard let collectionView = safeCollectionView else { return }
+
+        guard delegate?.collectionView(collectionView, allowMoveAt: indexPath) != false else {
             return
         }
 
         guard let dataSource = diffableDataSource,
-              let item = dataSource.itemIdentifier(for: indexPath) else {
+              let item = dataSource.itemIdentifier(for: indexPath),
+              let currentCell = collectionView.cellForItem(at: indexPath) else {
             return
         }
 
         isDragging = true
         draggedItemIdentifier = item
 
-        delegate?.collectionView(
-            collectionView,
-            layout: self,
-            willBeginDraggingItemAt: indexPath
-        )
-
+        delegate?.collectionView(collectionView, layout: self, willBeginDraggingItemAt: indexPath)
         collectionView.scrollsToTop = false
 
-        guard let currentCell = collectionView.cellForItem(at: indexPath) else {
-            return
-        }
-
         originalCellSize = currentCell.bounds.size
-
         cellPreviewView = MasonryDragPreviewView(cell: currentCell)
-        if let cellPreviewView = cellPreviewView,
-            let cellFrame = layoutAttributesForItem(at: indexPath)?.frame {
-            cellPreviewView.indexPath = indexPath
-            cellPreviewView.originalCenter = currentCell.center
-            cellPreviewView.cellFrame = cellFrame
-            collectionView.addSubview(cellPreviewView)
-            dragStartCenter = cellPreviewView.center
-            previewCellCenter = cellPreviewView.center
+
+        if let previewView = cellPreviewView,
+           let cellFrame = layoutAttributesForItem(at: indexPath)?.frame {
+            previewView.indexPath = indexPath
+            previewView.originalCenter = currentCell.center
+            previewView.cellFrame = cellFrame
+            collectionView.addSubview(previewView)
+            dragStartCenter = previewView.center
+            previewCellCenter = previewView.center
         }
 
         invalidateLayout()
         cellPreviewView?.pushForwardView()
 
-        delegate?.collectionView(
-            collectionView,
-            layout: self,
-            didBeginDraggingItemAt: indexPath
-        )
+        delegate?.collectionView(collectionView, layout: self, didBeginDraggingItemAt: indexPath)
     }
 
     private func endDrag(_ indexPath: IndexPath?) {
-        guard let collectionView = collectionView,
-              let cellPreviewView = cellPreviewView else { return }
+        guard let collectionView = safeCollectionView,
+              let previewView = cellPreviewView else { return }
 
-        let finalIndexPath = cellPreviewView.indexPath ??
-            IndexPath(item: 0, section: 0)
+        let finalIndexPath = previewView.indexPath ?? IndexPath(item: 0, section: 0)
 
-        delegate?
-            .collectionView(
-                collectionView,
-                layout: self,
-                willEndDraggingItemTo: finalIndexPath
-            )
+        delegate?.collectionView(collectionView, layout: self, willEndDraggingItemTo: finalIndexPath)
 
         collectionView.scrollsToTop = true
-
         invalidateDisplayLink()
 
         let finalTargetFrame = calculateFreshTargetFrame(for: finalIndexPath)
-        cellPreviewView.cellFrame = finalTargetFrame
+        previewView.cellFrame = finalTargetFrame
 
         previewCellCenter = nil
         panTranslation = nil
 
-        cellPreviewView.pushBackView { [weak self] in
-            guard let sSelf = self else { return }
-            sSelf.cleanupDragState()
-            cellPreviewView.removeFromSuperview()
-            sSelf.cellPreviewView = nil
-
-            sSelf.invalidateLayout()
-            sSelf.delegate?.collectionView(
+        previewView.pushBackView { [weak self] in
+            self?.cleanupDragState()
+            previewView.removeFromSuperview()
+            self?.cellPreviewView = nil
+            self?.invalidateLayout()
+            self?.delegate?.collectionView(
                 collectionView,
-                layout: sSelf,
+                layout: self ?? MasonryReorderableLayout(),
                 didEndDraggingItemTo: finalIndexPath
             )
         }
@@ -749,11 +709,12 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
         originalCellSize = nil
         lastMoveTime = 0
         recentMoves.removeAll()
+        cachedConfiguration = nil // Force recalculation
     }
 
     // MARK: - Reordering Logic
     private func handleRealtimeReordering() {
-        guard let collectionView = collectionView,
+        guard let collectionView = safeCollectionView,
               let previewCell = cellPreviewView,
               let draggedItem = draggedItemIdentifier,
               let dataSource = diffableDataSource else { return }
@@ -763,36 +724,26 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
             return
         }
 
-        guard let currentIndexPath = dataSource.indexPath(for: draggedItem) else {
-            return
-        }
+        guard let currentIndexPath = dataSource.indexPath(for: draggedItem) else { return }
 
-        let targetIndexPath = findTargetIndexPathWithHysteresis(
+        guard let targetIndexPath = findTargetIndexPathWithHysteresis(
             for: previewCell.center,
             currentIndex: currentIndexPath.item
-        )
-        guard let targetIndexPath = targetIndexPath else { return }
+        ) else { return }
 
         guard currentIndexPath != targetIndexPath else { return }
 
         let distance = abs(currentIndexPath.item - targetIndexPath.item)
-        if distance == 0 { return }
+        guard distance > 0 else { return }
 
-        if hasRecentMoveConflict(
-            from: currentIndexPath.item,
-            to: targetIndexPath.item
-        ) {
+        guard !hasRecentMoveConflict(from: currentIndexPath.item, to: targetIndexPath.item) else {
             return
         }
 
         lastMoveTime = currentTime
         recordMove(from: currentIndexPath.item, to: targetIndexPath.item)
 
-        if delegate?.collectionView(
-            collectionView,
-            at: currentIndexPath,
-            canMoveTo: targetIndexPath
-        ) == false {
+        guard delegate?.collectionView(collectionView, at: currentIndexPath, canMoveTo: targetIndexPath) != false else {
             return
         }
 
@@ -825,28 +776,22 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
         for point: CGPoint,
         currentIndex: Int
     ) -> IndexPath? {
-        // swiftlint:disable:next large_tuple
         var candidates: [(IndexPath, CGFloat, CGRect)] = []
 
         for attributes in layoutAttributes where attributes.alpha > 0 {
             let frame = attributes.frame
             let center = attributes.center
 
-            let distance = sqrt(pow(center.x - point.x, 2) +
-                                pow(center.y - point.y, 2))
-
+            let distance = sqrt(pow(center.x - point.x, 2) + pow(center.y - point.y, 2))
             candidates.append((attributes.indexPath, distance, frame))
         }
 
         candidates.sort { $0.1 < $1.1 }
 
-        if let currentCandidate = candidates.first(where: {
-            $0.0.item == currentIndex
-        }) {
+        if let currentCandidate = candidates.first(where: { $0.0.item == currentIndex }) {
             let currentDistance = currentCandidate.1
 
-            if let closest = candidates.first,
-               closest.0.item != currentIndex {
+            if let closest = candidates.first, closest.0.item != currentIndex {
                 let hysteresisThreshold: CGFloat = 30.0
 
                 if currentDistance < closest.1 + hysteresisThreshold {
@@ -857,7 +802,6 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
 
         if let closest = candidates.first {
             let targetFrame = closest.2
-
             let intersection = targetFrame.intersection(CGRect(
                 x: point.x - 20, y: point.y - 20,
                 width: 40, height: 40
@@ -871,14 +815,9 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
         return nil
     }
 
-    private func performDataSourceReorder(
-        from fromIndexPath: IndexPath,
-        to toIndexPath: IndexPath
-    ) {
-        guard let collectionView = collectionView,
-              let dataSource = diffableDataSource else {
-            return
-        }
+    private func performDataSourceReorder(from fromIndexPath: IndexPath, to toIndexPath: IndexPath) {
+        guard let collectionView = safeCollectionView,
+              let dataSource = diffableDataSource else { return }
 
         let currentSnapshot = dataSource.snapshot()
         var items = currentSnapshot.itemIdentifiers(inSection: .main)
@@ -886,34 +825,22 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
         guard fromIndexPath.item < items.count &&
                 toIndexPath.item < items.count &&
                 fromIndexPath.item >= 0 &&
-                toIndexPath.item >= 0 else {
-            return
-        }
-
-        guard fromIndexPath.item != toIndexPath.item else { return }
+                toIndexPath.item >= 0 &&
+                fromIndexPath.item != toIndexPath.item else { return }
 
         let movedItem = items.remove(at: fromIndexPath.item)
         items.insert(movedItem, at: toIndexPath.item)
 
-        var newSnapshot = NSDiffableDataSourceSnapshot<MasonrySection,
-                                                       RuuviTagCardSnapshot>()
+        var newSnapshot = NSDiffableDataSourceSnapshot<MasonrySection, RuuviTagCardSnapshot>()
         newSnapshot.appendSections([.main])
         newSnapshot.appendItems(items, toSection: .main)
 
-        delegate?
-            .collectionView(
-                collectionView,
-                at: fromIndexPath,
-                willMoveTo: toIndexPath
-            )
+        delegate?.collectionView(collectionView, at: fromIndexPath, willMoveTo: toIndexPath)
 
         dataSource.apply(newSnapshot, animatingDifferences: true) { [weak self] in
-            guard let self else { return }
             DispatchQueue.main.async {
-                self.updatePreviewCellFrameAfterReorder(
-                    targetIndexPath: toIndexPath
-                )
-                self.delegate?.collectionView(
+                self?.updatePreviewCellFrameAfterReorder(targetIndexPath: toIndexPath)
+                self?.delegate?.collectionView(
                     collectionView,
                     at: fromIndexPath,
                     didMoveTo: toIndexPath,
@@ -925,18 +852,10 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
 
     // MARK: - Frame Calculations
     private func calculateFreshTargetFrame(for indexPath: IndexPath) -> CGRect {
-        guard let collectionView = collectionView else { return CGRect.zero }
+        guard let collectionView = safeCollectionView,
+              let config = getLayoutConfiguration() else { return CGRect.zero }
 
-        var columnHeights = Array(repeating: adjustedSectionInsets.top,
-                                  count: numberOfColumns)
-        var columnXOffsets: [CGFloat] = []
-
-        for column in 0..<numberOfColumns {
-            let xOffset = adjustedSectionInsets.left +
-            CGFloat(column) * (itemWidth + columnSpacing)
-            columnXOffsets.append(xOffset)
-        }
-
+        var columnHeights = Array(repeating: config.sectionInsets.top, count: config.numberOfColumns)
         let itemCount = collectionView.numberOfItems(inSection: 0)
 
         for item in 0..<itemCount {
@@ -946,16 +865,14 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
             if currentIndexPath == indexPath {
                 height = originalCellSize?.height ?? 100
             } else {
-                height = delegate?.collectionView(collectionView,
-                                                  heightForItemAt: currentIndexPath) ?? 100
+                height = delegate?.collectionView(collectionView, heightForItemAt: currentIndexPath) ?? 100
             }
 
             let targetColumn = shortestColumnIndex(columnHeights)
-
             let frame = CGRect(
-                x: columnXOffsets[targetColumn],
+                x: config.columnXOffsets[targetColumn],
                 y: columnHeights[targetColumn],
-                width: itemWidth,
+                width: config.itemWidth,
                 height: height
             )
 
@@ -963,7 +880,7 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
                 return frame
             }
 
-            columnHeights[targetColumn] = frame.maxY + columnSpacing
+            columnHeights[targetColumn] = frame.maxY + config.columnSpacing
         }
 
         return CGRect.zero
@@ -975,7 +892,6 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
         invalidateLayout()
 
         let targetFrame = calculateFreshTargetFrame(for: targetIndexPath)
-
         previewCell.cellFrame = targetFrame
         previewCell.indexPath = targetIndexPath
     }
@@ -1001,16 +917,20 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
         return layoutAttributes.first { $0.indexPath == indexPath }
     }
 
-    public override func shouldInvalidateLayout(
-        forBoundsChange newBounds: CGRect
-    ) -> Bool {
-        guard let collectionView = collectionView else { return false }
-        return !newBounds.size.equalTo(collectionView.bounds.size)
+    public override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
+        guard let collectionView = safeCollectionView else { return false }
+        let shouldInvalidate = !newBounds.size.equalTo(collectionView.bounds.size)
+        if shouldInvalidate {
+            cachedConfiguration = nil // Clear cache when bounds change
+        }
+        return shouldInvalidate
     }
 
     private func setupGestureRecognizers() {
-        guard let collectionView = collectionView else { return }
+        guard let collectionView = safeCollectionView else { return }
         guard longPress == nil && panGesture == nil else { return }
+
+        removeGestureRecognizers() // Ensure clean state
 
         longPress = UILongPressGestureRecognizer(
             target: self,
@@ -1021,18 +941,35 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
             action: #selector(handlePanGesture(_:))
         )
 
-        longPress?.delegate = self
-        panGesture?.delegate = self
-        panGesture?.maximumNumberOfTouches = 1
+        guard let longPress = longPress, let panGesture = panGesture else { return }
 
-        if let gestures = collectionView.gestureRecognizers {
-            for gestureRecognizer in gestures where gestureRecognizer is UILongPressGestureRecognizer {
-                gestureRecognizer.require(toFail: self.longPress!)
+        longPress.delegate = self
+        panGesture.delegate = self
+        panGesture.maximumNumberOfTouches = 1
+
+        // Configure gesture priority
+        if let existingGestures = collectionView.gestureRecognizers {
+            for gestureRecognizer in existingGestures {
+                if let existingLongPress = gestureRecognizer as? UILongPressGestureRecognizer {
+                    existingLongPress.require(toFail: longPress)
+                }
             }
         }
 
-        collectionView.addGestureRecognizer(longPress!)
-        collectionView.addGestureRecognizer(panGesture!)
+        collectionView.addGestureRecognizer(longPress)
+        collectionView.addGestureRecognizer(panGesture)
+    }
+
+    private func removeGestureRecognizers() {
+        if let longPress = longPress {
+            safeCollectionView?.removeGestureRecognizer(longPress)
+            self.longPress = nil
+        }
+
+        if let panGesture = panGesture {
+            safeCollectionView?.removeGestureRecognizer(panGesture)
+            self.panGesture = nil
+        }
     }
 
     public func cancelDrag() {
@@ -1040,30 +977,27 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
     }
 
     private func shortestColumnIndex(_ columnHeights: [CGFloat]) -> Int {
-        return columnHeights.enumerated().min(by: {
-            $0.element < $1.element
-        })?.offset ?? 0
+        return columnHeights.enumerated().min(by: { $0.element < $1.element })?.offset ?? 0
     }
 }
 
 // MARK: - UIGestureRecognizerDelegate
 extension MasonryReorderableLayout: UIGestureRecognizerDelegate {
-    public func gestureRecognizerShouldBegin(
-        _ gestureRecognizer: UIGestureRecognizer
-    ) -> Bool {
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        guard let collectionView = safeCollectionView else { return false }
+
         let location = gestureRecognizer.location(in: collectionView)
-        if let indexPath = collectionView?.indexPathForItem(at: location),
-           delegate?.collectionView(collectionView!,
-                                    allowMoveAt: indexPath) == false {
+        if let indexPath = collectionView.indexPathForItem(at: location),
+           delegate?.collectionView(collectionView, allowMoveAt: indexPath) == false {
             return false
         }
 
         if gestureRecognizer == longPress {
-            return !(collectionView!.panGestureRecognizer.state != .possible &&
-                     collectionView!.panGestureRecognizer.state != .failed)
+            return !(collectionView.panGestureRecognizer.state != .possible &&
+                     collectionView.panGestureRecognizer.state != .failed)
         } else if gestureRecognizer == panGesture {
-            return !(longPress!.state == .possible ||
-                     longPress!.state == .failed)
+            guard let longPress = longPress else { return false }
+            return !(longPress.state == .possible || longPress.state == .failed)
         }
 
         return true
@@ -1071,14 +1005,13 @@ extension MasonryReorderableLayout: UIGestureRecognizerDelegate {
 
     public func gestureRecognizer(
         _ gestureRecognizer: UIGestureRecognizer,
-        shouldRecognizeSimultaneouslyWith otherGestureRecognizer:
-        UIGestureRecognizer
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
     ) -> Bool {
         if gestureRecognizer == panGesture {
             return otherGestureRecognizer == longPress
-        } else if gestureRecognizer == collectionView?.panGestureRecognizer {
-            return longPress!.state != .possible ||
-            longPress!.state != .failed
+        } else if gestureRecognizer == safeCollectionView?.panGestureRecognizer {
+            guard let longPress = longPress else { return false }
+            return longPress.state != .possible || longPress.state != .failed
         }
 
         return true
