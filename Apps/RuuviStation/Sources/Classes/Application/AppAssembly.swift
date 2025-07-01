@@ -152,6 +152,11 @@ private final class PersistenceAssembly: Assembly {
             return factory
         }
 
+        container.register(RuuviLocalFlags.self) { r in
+            let factory = r.resolve(RuuviLocalFactory.self)!
+            return factory.createLocalFlags()
+        }
+
         container.register(RuuviLocalSettings.self) { r in
             let factory = r.resolve(RuuviLocalFactory.self)!
             return factory.createLocalSettings()
