@@ -1,59 +1,59 @@
 import UIKit
 import RuuviOntology
 
-// MARK: - Height Cache
-final class DashboardCardHeightCache {
-    private var heightCache: [String: CGFloat] = [:]
-    private var lastKnownWidth: CGFloat = 0
+class DashboardCardHeightCache {
+    private var cache: [String: CGFloat] = [:]
 
     func height(
         for snapshot: RuuviTagCardSnapshot,
         width: CGFloat,
-        numberOfColumns: Int = 2,
-        dashboardType: DashboardType
+        displayType: DashboardType,
+        numberOfColumns: Int
     ) -> CGFloat {
-        // Clear cache if width changed significantly
-        if abs(lastKnownWidth - width) > 1.0 {
-            heightCache.removeAll()
-            lastKnownWidth = width
-        }
+        let key = cacheKey(
+            for: snapshot,
+            width: width,
+            displayType: displayType,
+            numberOfColumns: numberOfColumns
+        )
 
-        let cacheKey = createCacheKey(for: snapshot, width: width)
-
-        if let cachedHeight = heightCache[cacheKey] {
+        if let cachedHeight = cache[key] {
             return cachedHeight
         }
 
-        let calculatedHeight: CGFloat
-        switch dashboardType {
-        case .image:
-            calculatedHeight = RuuviTagDashboardImageCell.calculateHeight(
-                for: snapshot,
-                width: width,
-                numberOfColumns: numberOfColumns
-            )
-        case .simple:
-            calculatedHeight = RuuviTagDashboardCell.calculateHeight(
-                for: snapshot,
-                width: width,
-                numberOfColumns: numberOfColumns
-            )
-        }
+        let height = RuuviTagDashboardCell.calculateHeight(
+            for: snapshot,
+            width: width,
+            dashboardType: displayType,
+            numberOfColumns: numberOfColumns
+        )
 
-        heightCache[cacheKey] = calculatedHeight
-        return calculatedHeight
-    }
-
-    private func createCacheKey(for snapshot: RuuviTagCardSnapshot, width: CGFloat) -> String {
-        let indicatorCount = snapshot.displayData.indicatorGrid?.indicators.count ?? 0
-        let layoutType = snapshot.displayData.indicatorGrid?.layoutType.rawValue ?? "empty"
-        let hasNoData = snapshot.displayData.hasNoData
-        let widthRounded = Int(width)
-
-        return "\(snapshot.id)_\(indicatorCount)_\(layoutType)_\(hasNoData)_\(widthRounded)"
+        cache[key] = height
+        return height
     }
 
     func clearCache() {
-        heightCache.removeAll()
+        cache.removeAll()
+    }
+
+    private func cacheKey(
+        for snapshot: RuuviTagCardSnapshot,
+        width: CGFloat,
+        displayType: DashboardType,
+        numberOfColumns: Int
+    ) -> String {
+        let indicatorCount = snapshot.displayData.indicatorGrid?.indicators.count ?? 0
+        let hasAQI = snapshot.displayData.indicatorGrid?.indicators.contains { $0.type == .aqi } ?? false
+        let displayTypeString = displayType == .image ? "image" : "simple"
+
+        let components = [
+            snapshot.displayData.name,
+            "\(width)",
+            "\(indicatorCount)",
+            "\(hasAQI)",
+            displayTypeString,
+            "\(numberOfColumns)",
+        ]
+        return components.joined(separator: "_")
     }
 }

@@ -329,6 +329,7 @@ extension RuuviTagCardSnapshotDataBuilder {
         )
     }
 
+    // swiftlint:disable:next function_parameter_count
     static func createIndicator(
         type: MeasurementType,
         value: String,

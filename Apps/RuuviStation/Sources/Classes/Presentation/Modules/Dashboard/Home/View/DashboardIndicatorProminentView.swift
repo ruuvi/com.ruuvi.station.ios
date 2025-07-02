@@ -28,7 +28,7 @@ class DashboardIndicatorProminentView: UIView {
         label.textColor = RuuviColor.dashboardIndicator.color.withAlphaComponent(0.6)
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.font = UIFont.MuliTight(.regular, size: 16)
+        label.font = UIFont.MuliTight(.regular, size: 14)
         label.backgroundColor = .clear
         return label
     }()
@@ -73,7 +73,7 @@ class DashboardIndicatorProminentView: UIView {
             leading: scriptsContainer.leadingAnchor,
             bottom: nil,
             trailing: scriptsContainer.trailingAnchor,
-            padding: .init(top: 2, left: 0, bottom: 0, right: 0)
+            padding: .init(top: -0.5, left: 0, bottom: 0, right: 0)
         )
 
         // Position subscript below superscript
@@ -83,7 +83,7 @@ class DashboardIndicatorProminentView: UIView {
             leading: scriptsContainer.leadingAnchor,
             bottom: scriptsContainer.bottomAnchor,
             trailing: scriptsContainer.trailingAnchor,
-            padding: .init(top: -4, left: 0, bottom: 0, right: 0)
+            padding: .init(top: 0, left: 0, bottom: 0, right: 0)
         )
 
         let valueStackView = UIStackView(arrangedSubviews: [

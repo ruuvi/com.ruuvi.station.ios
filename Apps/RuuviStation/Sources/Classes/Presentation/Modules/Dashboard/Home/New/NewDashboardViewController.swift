@@ -306,7 +306,7 @@ private extension NewDashboardViewController {
         )
 
         setupCollectionViewConstraints()
-        registerCollectionViewCells()
+        registerCollectionViewCell()
     }
 
     func setupCollectionViewConstraints() {
@@ -321,11 +321,7 @@ private extension NewDashboardViewController {
         hideSignInBannerConstraint.isActive = true
     }
 
-    func registerCollectionViewCells() {
-        collectionView.register(
-            RuuviTagDashboardImageCell.self,
-            forCellWithReuseIdentifier: Constants.CellIdentifiers.dashboardImageCell
-        )
+    func registerCollectionViewCell() {
         collectionView.register(
             RuuviTagDashboardCell.self,
             forCellWithReuseIdentifier: Constants.CellIdentifiers.dashboardCell
@@ -357,39 +353,6 @@ private extension NewDashboardViewController {
         indexPath: IndexPath,
         snapshot: RuuviTagCardSnapshot
     ) -> UICollectionViewCell {
-        switch dashboardType {
-        case .image:
-            return configureImageCell(collectionView: collectionView, indexPath: indexPath, snapshot: snapshot)
-        case .simple:
-            return configureSimpleCell(collectionView: collectionView, indexPath: indexPath, snapshot: snapshot)
-        case .none:
-            return UICollectionViewCell()
-        }
-    }
-
-    func configureImageCell(
-        collectionView: UICollectionView,
-        indexPath: IndexPath,
-        snapshot: RuuviTagCardSnapshot
-    ) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: Constants.CellIdentifiers.dashboardImageCell,
-            for: indexPath
-        ) as? RuuviTagDashboardImageCell else {
-            return UICollectionViewCell()
-        }
-
-        cell.configure(with: snapshot)
-        cell.delegate = self
-        cell.setMenu(cardContextMenuOption(for: indexPath))
-        return cell
-    }
-
-    func configureSimpleCell(
-        collectionView: UICollectionView,
-        indexPath: IndexPath,
-        snapshot: RuuviTagCardSnapshot
-    ) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: Constants.CellIdentifiers.dashboardCell,
             for: indexPath
@@ -397,7 +360,7 @@ private extension NewDashboardViewController {
             return UICollectionViewCell()
         }
 
-        cell.configure(with: snapshot)
+        cell.configure(with: snapshot, dashboardType: dashboardType)
         cell.delegate = self
         cell.setMenu(cardContextMenuOption(for: indexPath))
         return cell
@@ -439,9 +402,7 @@ private extension NewDashboardViewController {
     func restartAlertAnimations() {
         let visibleIndexPaths = collectionView.indexPathsForVisibleItems
         for indexPath in visibleIndexPaths {
-            if let cell = collectionView.cellForItem(at: indexPath) as? RuuviTagDashboardImageCell {
-                cell.restartAlertAnimationIfNeeded()
-            } else if let cell = collectionView.cellForItem(at: indexPath) as? RuuviTagDashboardCell {
+            if let cell = collectionView.cellForItem(at: indexPath) as? RuuviTagDashboardCell {
                 cell.restartAlertAnimationIfNeeded()
             }
         }
@@ -755,7 +716,6 @@ private extension NewDashboardViewController {
 private extension NewDashboardViewController {
     enum Constants {
         enum CellIdentifiers {
-            static let dashboardImageCell = "RuuviTagDashboardImageCell"
             static let dashboardCell = "RuuviTagDashboardCell"
         }
     }
@@ -763,26 +723,45 @@ private extension NewDashboardViewController {
 
 // MARK: - Masonry Layout Delegate
 extension NewDashboardViewController: MasonryReorderableLayoutDelegate {
-    func collectionView(_ collectionView: UICollectionView, heightForItemAt indexPath: IndexPath) -> CGFloat {
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        heightForItemAt indexPath: IndexPath
+    ) -> CGFloat {
         let snapshot = dataSource.snapshot()
-        let items = snapshot.itemIdentifiers(inSection: .main)
+        let items = snapshot.itemIdentifiers(
+            inSection: .main
+        )
         guard indexPath.item < items.count,
-              dashboardType != .none else { return 200 }
+              dashboardType != .none else {
+            return 200
+        }
 
         let cardSnapshot = items[indexPath.item]
-        let numberOfColumns = self.numberOfColumns(in: collectionView)
-        let columnSpacing = self.columnSpacing(in: collectionView)
-        let sectionInsets = self.sectionInsets(in: collectionView)
+        let numberOfColumns = self.numberOfColumns(
+            in: collectionView
+        )
+        let columnSpacing = self.columnSpacing(
+            in: collectionView
+        )
+        let sectionInsets = self.sectionInsets(
+            in: collectionView
+        )
 
-        let totalSpacing = columnSpacing * CGFloat(numberOfColumns - 1)
+        let totalSpacing = columnSpacing * CGFloat(
+            numberOfColumns - 1
+        )
         let availableWidth = collectionView.bounds.width - sectionInsets.left - sectionInsets.right - totalSpacing
-        let itemWidth = availableWidth / CGFloat(numberOfColumns)
+        let itemWidth = availableWidth / CGFloat(
+            numberOfColumns
+        )
 
-        return heightCache.height(
+        return heightCache
+            .height(
             for: cardSnapshot,
             width: itemWidth,
-            numberOfColumns: numberOfColumns,
-            dashboardType: dashboardType
+            displayType: dashboardType,
+            numberOfColumns: numberOfColumns
         )
     }
 
@@ -866,9 +845,7 @@ extension NewDashboardViewController: MasonryReorderableLayoutDelegate {
         // Force reload visible cells to update context menus
         let visibleIndexPaths = collectionView.indexPathsForVisibleItems
         for indexPath in visibleIndexPaths {
-            if let cell = collectionView.cellForItem(at: indexPath) as? RuuviTagDashboardImageCell {
-                cell.setMenu(cardContextMenuOption(for: indexPath))
-            } else if let cell = collectionView.cellForItem(at: indexPath) as? RuuviTagDashboardCell {
+            if let cell = collectionView.cellForItem(at: indexPath) as? RuuviTagDashboardCell {
                 cell.setMenu(cardContextMenuOption(for: indexPath))
             }
         }
