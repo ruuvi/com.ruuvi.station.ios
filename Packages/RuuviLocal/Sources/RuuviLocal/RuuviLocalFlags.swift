@@ -11,4 +11,7 @@ public protocol RuuviLocalFlags {
 
     /// When enabled show redesigned Dashboard
     var showRedesignedDashboardUI: Bool { get set }
+
+    /// When enabled show redesigned Sensor Card UI with New Menu
+    var showRedesignedCardsUIWithNewMenu: Bool { get set }
 }

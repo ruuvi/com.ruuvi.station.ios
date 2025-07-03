@@ -75,6 +75,7 @@ extension DefaultsPresenter {
             buildIncludeDataSourceInHistoryExport(),
             buildUseImprovedDashboard(),
             buildShowRedesignedDashboardUI(),
+            buildShowRedesignedCardsUIWithMenu(),
         ]
     }
 
@@ -516,6 +517,21 @@ extension DefaultsPresenter {
 
         bind(viewModel.boolean, fire: false) { observer, bool in
             observer.flags.showRedesignedDashboardUI = GlobalHelpers
+                .getBool(from: bool)
+        }
+
+        return viewModel
+    }
+
+    private func buildShowRedesignedCardsUIWithMenu() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Show new Cards UI with New Menu"
+        viewModel.boolean.value = flags.showRedesignedCardsUIWithNewMenu
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, bool in
+            observer.flags.showRedesignedCardsUIWithNewMenu = GlobalHelpers
                 .getBool(from: bool)
         }
 
