@@ -3,13 +3,15 @@ import Foundation
 import RuuviOntology
 
 protocol NewDashboardViewInput: ViewInput {
-//    var snapshots: [RuuviTagCardSnapshot] { get set }
     var dashboardType: DashboardType! { get set }
     var dashboardTapActionType: DashboardTapActionType! { get set }
     var dashboardSortingType: DashboardSortingType! { get set }
     var isRefreshing: Bool { get set }
     var shouldShowSignInBanner: Bool { get set }
-    func updateSnapshots(_ snapshots: [RuuviTagCardSnapshot])
+    func updateSnapshots(
+        _ snapshots: [RuuviTagCardSnapshot],
+        withAnimation: Bool
+    )
     func updateSnapshot(
         from record: RuuviTagSensorRecord,
         for ruuviTag: RuuviTagSensor

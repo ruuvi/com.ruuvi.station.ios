@@ -11,7 +11,8 @@ import RuuviDaemon
 protocol RuuviTagDataServiceDelegate: AnyObject {
     func sensorDataService(
         _ service: RuuviTagDataService,
-        didUpdateSnapshots snapshots: [RuuviTagCardSnapshot]
+        didUpdateSnapshots snapshots: [RuuviTagCardSnapshot],
+        withAnimation: Bool
     )
     func sensorDataService(
         _ service: RuuviTagDataService, didUpdateSnapshot
@@ -128,7 +129,12 @@ class RuuviTagDataService {
         let reorderedSnapshots = reorderSnapshots(snapshots, with: orderedIds)
         snapshots = reorderedSnapshots
         if !settings.syncExtensiveChangesInProgress {
-            delegate?.sensorDataService(self, didUpdateSnapshots: snapshots)
+            delegate?
+                .sensorDataService(
+                    self,
+                    didUpdateSnapshots: snapshots,
+                    withAnimation: true
+                )
         }
     }
 
@@ -196,7 +202,12 @@ private extension RuuviTagDataService {
                 self.ruuviTags.removeAll { $0.id == sensor.id }
                 self.snapshots.removeAll { $0.id == sensor.id }
                 if !self.settings.syncExtensiveChangesInProgress {
-                    self.delegate?.sensorDataService(self, didUpdateSnapshots: self.snapshots)
+                    self.delegate?
+                        .sensorDataService(
+                            self,
+                            didUpdateSnapshots: self.snapshots,
+                            withAnimation: true
+                        )
                 }
                 self.observeSensorSettings()
                 self.restartObservingRuuviTagLastRecords()
@@ -262,7 +273,8 @@ private extension RuuviTagDataService {
                 if !self.settings.syncExtensiveChangesInProgress {
                     self.delegate?.sensorDataService(
                         self,
-                        didUpdateSnapshots: self.snapshots
+                        didUpdateSnapshots: self.snapshots,
+                        withAnimation: false
                     )
                 }
             }
@@ -303,7 +315,12 @@ private extension RuuviTagDataService {
         }
 
         if !self.settings.syncExtensiveChangesInProgress {
-            delegate?.sensorDataService(self, didUpdateSnapshots: snapshots)
+            delegate?
+                .sensorDataService(
+                    self,
+                    didUpdateSnapshots: snapshots,
+                    withAnimation: true
+                )
         }
 
         // Load latest record asynchronously

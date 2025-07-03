@@ -895,10 +895,13 @@ extension NewDashboardViewController: NewDashboardViewInput {
         // No-op for now
     }
 
-    func updateSnapshots(_ snapshots: [RuuviTagCardSnapshot]) {
+    func updateSnapshots(
+        _ snapshots: [RuuviTagCardSnapshot],
+        withAnimation: Bool
+    ) {
         self.snapshots = snapshots
         showNoSensorsAddedMessage(show: snapshots.isEmpty)
-        updateData(with: snapshots, animated: false)
+        updateData(with: snapshots, animated: withAnimation)
     }
 
     func updateSnapshot(from record: RuuviTagSensorRecord, for ruuviTag: RuuviTagSensor) {
