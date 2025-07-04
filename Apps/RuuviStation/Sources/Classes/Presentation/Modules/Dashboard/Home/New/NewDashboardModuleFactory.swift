@@ -26,7 +26,6 @@ final class NewDashboardModuleFactoryImpl: NewDashboardModuleFactory {
         let router = DashboardRouter()
         router.transitionHandler = view
         router.settings = r.resolve(RuuviLocalSettings.self)
-        router.flags = r.resolve(RuuviLocalFlags.self)
 
         // Create services using the factory
         let serviceFactory = DashboardServiceFactory.create(from: r)
@@ -41,7 +40,8 @@ final class NewDashboardModuleFactoryImpl: NewDashboardModuleFactory {
             feedbackEmail: PresentationConstants.feedbackEmail,
             feedbackSubject: PresentationConstants.feedbackSubject,
             infoProvider: r.resolve(InfoProvider.self)!,
-            activityPresenter: r.resolve(ActivityPresenter.self)!
+            activityPresenter: r.resolve(ActivityPresenter.self)!,
+            flags: r.resolve(RuuviLocalFlags.self)!
         )
 
         // Set up presenter dependencies
@@ -124,7 +124,8 @@ extension NewDashboardModuleFactoryImpl {
             feedbackEmail: customFeedbackEmail ?? PresentationConstants.feedbackEmail,
             feedbackSubject: customFeedbackSubject ?? PresentationConstants.feedbackSubject,
             infoProvider: r.resolve(InfoProvider.self)!,
-            activityPresenter: r.resolve(ActivityPresenter.self)!
+            activityPresenter: r.resolve(ActivityPresenter.self)!,
+            flags: r.resolve(RuuviLocalFlags.self)!
         )
 
         presenter.view = view

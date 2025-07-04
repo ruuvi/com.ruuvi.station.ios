@@ -12,7 +12,6 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     private weak var backgroundSelectionModule: BackgroundSelectionModuleInput?
     weak var cards: CardsModuleInput?
     var settings: RuuviLocalSettings!
-    var flags: RuuviLocalFlags!
 
     // swiftlint:disable weak_delegate
     var menuTableInteractiveTransition: MenuTableTransitioningDelegate!
@@ -120,137 +119,47 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         }
     }
 
-    // swiftlint:disable:next function_parameter_count
-    func openCardImageView(
-        with viewModels: [CardsViewModel],
+    func openFullSensorCard(
+        for snapshot: RuuviTagCardSnapshot,
+        snapshots: [RuuviTagCardSnapshot],
         ruuviTagSensors: [AnyRuuviTagSensor],
         sensorSettings: [SensorSettings],
-        scrollTo: CardsViewModel?,
-        showCharts: Bool,
-        output: CardsModuleOutput
+        activeMenu: CardsMenuType,
+        output: NewCardsModuleOutput
     ) {
-        if flags.showRedesignedCardsUIWithNewMenu {
-            let factory: NewCardsModuleFactory = NewCardsModuleFactoryImpl()
-            let module = factory.create()
-//            if let output = module.output as? CardsModuleInput {
-//                cards = output
-//            }
-//
-//            if let cards {
-//                cards.configure(output: output)
-//                cards.configure(
-//                    viewModels: viewModels,
-//                    ruuviTagSensors: ruuviTagSensors,
-//                    sensorSettings: sensorSettings
-//                )
-//                cards.configure(
-//                    scrollTo: scrollTo,
-//                    openChart: showCharts
-//                )
-//            }
-
-            // Remove any cards view controller from stack if exists already
-            if let navigationController = transitionHandler.navigationController,
-               navigationController
-                .containsViewController(
-                    ofKind: NewCardsLandingViewController.self
-                ) {
-                transitionHandler
-                    .navigationController?
-                    .removeAnyViewControllers(ofKind: NewCardsLandingViewController.self)
-            }
-
-            transitionHandler.navigationController?
-                .setNavigationBarHidden(true, animated: true)
-            transitionHandler
-                .navigationController?
-                .pushViewController(
-                    module,
-                    animated: true
-                )
-        } else {
-            let factory: CardsViewModuleFactory = CardsViewModuleFactoryImpl()
-            let module = factory.create()
-            if let output = module.output as? CardsModuleInput {
-                cards = output
-            }
-
-            if let cards {
-                cards.configure(output: output)
-                cards.configure(
-                    viewModels: viewModels,
+        let factory: NewCardsModuleFactory = NewCardsModuleFactoryImpl()
+        let module = factory.create()
+        if let moduleOutput = module.output as? NewCardsModuleInput {
+            moduleOutput
+                .configure(
+                    activeSnapshot: snapshot,
+                    snapshots: snapshots,
                     ruuviTagSensors: ruuviTagSensors,
-                    sensorSettings: sensorSettings
+                    sensorSettings: sensorSettings,
+                    activeMenu: activeMenu,
+                    output: output
                 )
-                cards.configure(
-                    scrollTo: scrollTo,
-                    openChart: showCharts
-                )
-            }
+        }
 
-            // Remove any cards view controller from stack if exists already
-            if let navigationController = transitionHandler.navigationController,
-               navigationController
-                   .containsViewController(ofKind: CardsViewController.self) {
-                transitionHandler
-                    .navigationController?
-                    .removeAnyViewControllers(ofKind: CardsViewController.self)
-            }
-
+        // Remove any cards view controller from stack if exists already
+        if let navigationController = transitionHandler.navigationController,
+           navigationController
+            .containsViewController(
+                ofKind: NewCardsLandingViewController.self
+            ) {
             transitionHandler
                 .navigationController?
-                .pushViewController(
-                    module,
-                    animated: true
-                )
-        }
-    }
-
-    // swiftlint:disable:next function_parameter_count
-    func openTagSettings(
-        with viewModels: [CardsViewModel],
-        ruuviTagSensors: [AnyRuuviTagSensor],
-        sensorSettings: [SensorSettings],
-        scrollTo: CardsViewModel?,
-        ruuviTag: RuuviTagSensor,
-        latestMeasurement: RuuviTagSensorRecord?,
-        sensorSetting: SensorSettings?,
-        output: CardsModuleOutput
-    ) {
-        let cardsFactory: CardsViewModuleFactory = CardsViewModuleFactoryImpl()
-        let cardsModule = cardsFactory.create()
-
-        let settingsFactory: TagSettingsModuleFactory = TagSettingsModuleFactoryImpl()
-        let settingsModule = settingsFactory.create()
-
-        if let cardsPresenter = cardsModule.output as? CardsModuleInput,
-           let cardsPresenterOutput = cardsPresenter as? TagSettingsModuleOutput,
-           let settingsPresenter = settingsModule.output as? TagSettingsModuleInput {
-            cardsPresenter.configure(output: output)
-            cardsPresenter.configure(
-                viewModels: viewModels,
-                ruuviTagSensors: ruuviTagSensors,
-                sensorSettings: sensorSettings
-            )
-            cardsPresenter.configure(
-                scrollTo: scrollTo,
-                openChart: false
-            )
-            if let cardsOutput = cardsModule as? CardsViewOutput {
-                cardsOutput.viewDidLoad()
-            }
-
-            settingsPresenter.configure(output: cardsPresenterOutput)
-            settingsPresenter.configure(
-                ruuviTag: ruuviTag,
-                latestMeasurement: latestMeasurement,
-                sensorSettings: sensorSetting
-            )
+                .removeAnyViewControllers(ofKind: NewCardsLandingViewController.self)
         }
 
-        transitionHandler.navigationController?.setViewControllers([
-            transitionHandler, cardsModule, settingsModule
-        ], animated: true)
+        transitionHandler.navigationController?
+            .setNavigationBarHidden(true, animated: true)
+        transitionHandler
+            .navigationController?
+            .pushViewController(
+                module,
+                animated: true
+            )
     }
 
     func openUpdateFirmware(ruuviTag: RuuviTagSensor) {
@@ -316,6 +225,99 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         if let presenter = module.output as? SensorRemovalModuleInput {
             presenter.configure(ruuviTag: ruuviTag, output: output)
         }
+    }
+
+    // MARK: Legacy
+    // swiftlint:disable:next function_parameter_count
+    func openCardImageView(
+        with viewModels: [CardsViewModel],
+        ruuviTagSensors: [AnyRuuviTagSensor],
+        sensorSettings: [SensorSettings],
+        scrollTo: CardsViewModel?,
+        showCharts: Bool,
+        output: CardsModuleOutput
+    ) {
+        let factory: CardsViewModuleFactory = CardsViewModuleFactoryImpl()
+        let module = factory.create()
+        if let output = module.output as? CardsModuleInput {
+            cards = output
+        }
+
+        if let cards {
+            cards.configure(output: output)
+            cards.configure(
+                viewModels: viewModels,
+                ruuviTagSensors: ruuviTagSensors,
+                sensorSettings: sensorSettings
+            )
+            cards.configure(
+                scrollTo: scrollTo,
+                openChart: showCharts
+            )
+        }
+
+        // Remove any cards view controller from stack if exists already
+        if let navigationController = transitionHandler.navigationController,
+           navigationController
+            .containsViewController(ofKind: CardsViewController.self) {
+            transitionHandler
+                .navigationController?
+                .removeAnyViewControllers(ofKind: CardsViewController.self)
+        }
+
+        transitionHandler
+            .navigationController?
+            .pushViewController(
+                module,
+                animated: true
+            )
+    }
+
+    // swiftlint:disable:next function_parameter_count
+    func openTagSettings(
+        with viewModels: [CardsViewModel],
+        ruuviTagSensors: [AnyRuuviTagSensor],
+        sensorSettings: [SensorSettings],
+        scrollTo: CardsViewModel?,
+        ruuviTag: RuuviTagSensor,
+        latestMeasurement: RuuviTagSensorRecord?,
+        sensorSetting: SensorSettings?,
+        output: CardsModuleOutput
+    ) {
+        let cardsFactory: CardsViewModuleFactory = CardsViewModuleFactoryImpl()
+        let cardsModule = cardsFactory.create()
+
+        let settingsFactory: TagSettingsModuleFactory = TagSettingsModuleFactoryImpl()
+        let settingsModule = settingsFactory.create()
+
+        if let cardsPresenter = cardsModule.output as? CardsModuleInput,
+           let cardsPresenterOutput = cardsPresenter as? TagSettingsModuleOutput,
+           let settingsPresenter = settingsModule.output as? TagSettingsModuleInput {
+            cardsPresenter.configure(output: output)
+            cardsPresenter.configure(
+                viewModels: viewModels,
+                ruuviTagSensors: ruuviTagSensors,
+                sensorSettings: sensorSettings
+            )
+            cardsPresenter.configure(
+                scrollTo: scrollTo,
+                openChart: false
+            )
+            if let cardsOutput = cardsModule as? CardsViewOutput {
+                cardsOutput.viewDidLoad()
+            }
+
+            settingsPresenter.configure(output: cardsPresenterOutput)
+            settingsPresenter.configure(
+                ruuviTag: ruuviTag,
+                latestMeasurement: latestMeasurement,
+                sensorSettings: sensorSetting
+            )
+        }
+
+        transitionHandler.navigationController?.setViewControllers([
+            transitionHandler, cardsModule, settingsModule
+        ], animated: true)
     }
 }
 

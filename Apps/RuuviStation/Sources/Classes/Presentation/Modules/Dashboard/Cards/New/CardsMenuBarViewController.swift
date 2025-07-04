@@ -1,4 +1,5 @@
 import UIKit
+import RuuviLocalization
 
 // MARK: - Models
 enum CardsMenuType: String, CaseIterable {
@@ -7,12 +8,16 @@ enum CardsMenuType: String, CaseIterable {
     case alerts
     case settings
 
-    var systemImageName: String {
+    var icon: UIImage {
         switch self {
-        case .measurement: return "thermometer.medium"
-        case .graph: return "chart.bar.xaxis"
-        case .alerts: return "bell.fill"
-        case .settings: return "gearshape.fill"
+        case .measurement:
+            return RuuviAsset.CardsMenu.iconMeasurement.image
+        case .graph:
+            return RuuviAsset.CardsMenu.iconGraph.image
+        case .alerts:
+            return RuuviAsset.CardsMenu.iconAlerts.image
+        case .settings:
+            return RuuviAsset.CardsMenu.iconSettings.image
         }
     }
 }
@@ -34,7 +39,7 @@ private class CardsMenuButton: UIButton {
 
     private func setupUI() {
         // Configure icon
-        iconImageView.image = UIImage(systemName: menuType.systemImageName)
+        iconImageView.image = menuType.icon
         iconImageView.tintColor = .white
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -44,8 +49,8 @@ private class CardsMenuButton: UIButton {
         NSLayoutConstraint.activate([
             iconImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
             iconImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            iconImageView.widthAnchor.constraint(equalToConstant: 22),
-            iconImageView.heightAnchor.constraint(equalToConstant: 22),
+            iconImageView.widthAnchor.constraint(equalToConstant: 30),
+            iconImageView.heightAnchor.constraint(equalToConstant: 30),
         ])
 
         // Button configuration

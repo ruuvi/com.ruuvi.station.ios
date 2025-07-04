@@ -13,4 +13,15 @@ extension AirQualityState {
             return .red
         }
     }
+
+    var title: String {
+        switch self {
+        case .excellent:
+            return "Excellent"
+        case .medium:
+            return "Medium"
+        case .unhealthy:
+            return "Unhealthy"
+        }
+    }
 }

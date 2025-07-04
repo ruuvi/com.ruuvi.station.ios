@@ -200,7 +200,8 @@ extension DashboardServiceFactory {
         feedbackEmail: String,
         feedbackSubject: String,
         infoProvider: InfoProvider,
-        activityPresenter: ActivityPresenter
+        activityPresenter: ActivityPresenter,
+        flags: RuuviLocalFlags
     ) -> NewDashboardPresenter {
 
         let presenter = createDashboardPresenter()
@@ -215,6 +216,7 @@ extension DashboardServiceFactory {
         presenter.feedbackSubject = feedbackSubject
         presenter.infoProvider = infoProvider
         presenter.activityPresenter = activityPresenter
+        presenter.flags = flags
 
         return presenter
     }
