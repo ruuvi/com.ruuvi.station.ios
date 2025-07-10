@@ -7,6 +7,11 @@ import RuuviService
 import UIKit
 import Combine
 
+// MARK: - Diffable Data Source Configuration
+enum CardSection {
+    case main
+}
+
 class CardsViewController: UIViewController {
     // Configuration
     var output: CardsViewOutput!
@@ -18,7 +23,7 @@ class CardsViewController: UIViewController {
 
     var viewModels: [CardsViewModel] = [] {
         didSet {
-            updateUI()
+            updateSnapshot(animated: true, forceReload: true)
         }
     }
 
@@ -41,25 +46,85 @@ class CardsViewController: UIViewController {
 
     private static let reuseIdentifier: String = "reuseIdentifier"
 
-    func cell(
+    // MARK: - Diffable Data Source
+    private var dataSource: UICollectionViewDiffableDataSource<CardSection, CardsViewModel>!
+    private var isUserScrolling: Bool = false
+    private var pendingScrollIndex: Int?
+
+    func configureCell(
         collectionView: UICollectionView,
         indexPath: IndexPath,
         viewModel: CardsViewModel
-    ) -> UICollectionViewCell? {
+    ) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(
             withReuseIdentifier: Self.reuseIdentifier,
             for: indexPath
         ) as? CardsLargeImageCell
         cell?.configure(with: viewModel, measurementService: measurementService)
-        return cell
+        return cell ?? UICollectionViewCell()
+    }
+
+    private func setupDataSource() {
+        dataSource = UICollectionViewDiffableDataSource<CardSection, CardsViewModel>(
+            collectionView: collectionView
+        ) { [weak self] collectionView, indexPath, viewModel in
+            self?.configureCell(collectionView: collectionView, indexPath: indexPath, viewModel: viewModel)
+        }
+    }
+
+    private func updateSnapshot(animated: Bool, forceReload: Bool = false) {
+        // Don't update if user is actively scrolling to prevent jumps
+        guard !isUserScrolling else {
+            return
+        }
+
+        if dataSource == nil {
+            setupDataSource()
+        }
+
+        var snapshot = NSDiffableDataSourceSnapshot<CardSection, CardsViewModel>()
+        snapshot.appendSections([.main])
+        snapshot.appendItems(viewModels)
+
+        // Force reload of all items if requested
+        if forceReload {
+            if #available(iOS 15.0, *) {
+                snapshot.reconfigureItems(viewModels)
+            } else {
+                snapshot.reloadItems(viewModels)
+            }
+        }
+
+        dataSource.apply(snapshot, animatingDifferences: animated) { [weak self] in
+            // Handle any pending scroll after the snapshot is applied
+            if let pendingIndex = self?.pendingScrollIndex {
+                self?.pendingScrollIndex = nil
+                self?.scrollToIndexAfterUpdate(pendingIndex)
+            }
+        }
+    }
+
+    private func scrollToIndexAfterUpdate(_ index: Int) {
+        guard index < viewModels.count else { return }
+        currentPage = index
+        collectionView.scrollTo(index: index, animated: false)
+    }
+
+    // Force refresh all visible cells - useful when data has changed but objects are the same
+    private func forceRefreshVisibleCells() {
+        let visibleIndexPaths = collectionView.indexPathsForVisibleItems
+        for indexPath in visibleIndexPaths {
+            if let cell = collectionView.cellForItem(at: indexPath) as? CardsLargeImageCell,
+               indexPath.item < viewModels.count {
+                cell.configure(with: viewModels[indexPath.item], measurementService: measurementService)
+            }
+        }
     }
 
     func applySnapshot() {
         currentPage = scrollIndex
-        collectionView.reloadWithoutAnimation()
-        if currentPage < viewModels.count {
-            collectionView.scrollTo(index: currentPage)
-        }
+        pendingScrollIndex = scrollIndex
+        updateSnapshot(animated: false, forceReload: true)
     }
 
     private var appDidBecomeActiveToken: NSObjectProtocol?
@@ -183,7 +248,6 @@ class CardsViewController: UIViewController {
         cv.isPagingEnabled = true
         cv.alwaysBounceVertical = false
         cv.delegate = self
-        cv.dataSource = self
         cv.register(
             CardsLargeImageCell.self,
             forCellWithReuseIdentifier: Self.reuseIdentifier
@@ -224,6 +288,7 @@ extension CardsViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
+        setupDataSource()
         configureGestureViews()
         localize()
         output.viewDidLoad()
@@ -452,7 +517,12 @@ private extension CardsViewController {
 }
 
 extension CardsViewController: UICollectionViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        isUserScrolling = true
+    }
+
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        isUserScrolling = false
         let xPoint = scrollView.contentOffset.x + scrollView.frame.size.width / 2
         let yPoint = scrollView.frame.size.height / 2
         let center = CGPoint(x: xPoint, y: yPoint)
@@ -460,29 +530,9 @@ extension CardsViewController: UICollectionViewDelegate {
             performPostScrollActions(with: currentIndexPath.row)
         }
     }
-}
 
-extension CardsViewController: UICollectionViewDataSource {
-    func collectionView(
-        _: UICollectionView,
-        numberOfItemsInSection _: Int
-    ) -> Int {
-        viewModels.count
-    }
-
-    func collectionView(
-        _ collectionView: UICollectionView,
-        cellForItemAt indexPath: IndexPath
-    ) -> UICollectionViewCell {
-        guard let cell = cell(
-            collectionView: collectionView,
-            indexPath: indexPath,
-            viewModel: viewModels[indexPath.item]
-        )
-        else {
-            fatalError()
-        }
-        return cell
+    func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
+        isUserScrolling = false
     }
 }
 
@@ -591,18 +641,37 @@ extension CardsViewController: CardsViewInput {
     }
 
     func applyUpdate(to viewModel: CardsViewModel) {
-        if let index = viewModels.firstIndex(where: { vm in
+        // Find the view model in current snapshot and update it
+        guard let index = viewModels.firstIndex(where: { vm in
             vm.luid != nil && vm.luid == viewModel.luid ||
                 vm.mac != nil && vm.mac == viewModel.mac
-        }) {
-            let indexPath = IndexPath(item: index, section: 0)
-            if let cell = collectionView
-                .cellForItem(at: indexPath) as? CardsLargeImageCell {
-                cell.configure(
-                    with: viewModel, measurementService: measurementService
-                )
-                restartAnimations()
-                updateTopActionButtonVisibility()
+        }) else { return }
+
+        // Update the model in our array
+        viewModels[index] = viewModel
+
+        // Update the specific cell if visible
+        let indexPath = IndexPath(item: index, section: 0)
+        if let cell = collectionView.cellForItem(at: indexPath) as? CardsLargeImageCell {
+            cell.configure(with: viewModel, measurementService: measurementService)
+            restartAnimations()
+            updateTopActionButtonVisibility()
+        }
+
+        // Apply snapshot update only if user is not scrolling
+        if !isUserScrolling {
+            var currentSnapshot = dataSource.snapshot()
+            // For individual updates, we need to force reload the specific item
+            if currentSnapshot.itemIdentifiers.contains(viewModel) {
+                if #available(iOS 15.0, *) {
+                    currentSnapshot.reconfigureItems([viewModel])
+                } else {
+                    currentSnapshot.reloadItems([viewModel])
+                }
+                dataSource.apply(currentSnapshot, animatingDifferences: true)
+            } else {
+                // If item not found in snapshot, do a full reload
+                updateSnapshot(animated: true, forceReload: true)
             }
         }
     }
@@ -641,10 +710,18 @@ extension CardsViewController: CardsViewInput {
         let viewModel = viewModels[index]
         currentVisibleItem = viewModel
         currentPage = index
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) { [weak self] in
-            guard let sSelf = self else { return }
-            sSelf.collectionView.scrollTo(index: index, animated: false)
-            sSelf.output.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
+
+        // If user is scrolling, defer the scroll operation
+        if isUserScrolling {
+            pendingScrollIndex = index
+        } else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(100)) { [weak self] in
+                guard let sSelf = self else { return }
+                sSelf.collectionView.scrollTo(index: index, animated: false)
+                sSelf.output.viewDidTriggerFirmwareUpdateDialog(for: viewModel)
+                // Force refresh to ensure the scrolled-to cell displays the latest data
+                sSelf.forceRefreshVisibleCells()
+            }
         }
 
         restartAnimations()
@@ -734,7 +811,7 @@ extension CardsViewController: RuuviServiceMeasurementDelegate {
 
 extension CardsViewController {
     private func updateUI() {
-        applySnapshot()
+        updateSnapshot(animated: true, forceReload: true)
 
         if scrollIndex < viewModels.count {
             let item = viewModels[scrollIndex]
