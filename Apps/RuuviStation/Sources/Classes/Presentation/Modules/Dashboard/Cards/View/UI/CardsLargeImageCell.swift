@@ -52,12 +52,13 @@ class CardsLargeImageCell: UICollectionViewCell {
     private var movementViewHeight: NSLayoutConstraint!
     private var batteryLevelViewHeight: NSLayoutConstraint!
 
-    private var timer: Timer?
+    private var viewModel: CardsViewModel?
     private var isSyncing: Bool = false
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpUI()
+        TimestampUpdateService.shared.addSubscriber(self)
     }
 
     @available(*, unavailable)
@@ -227,10 +228,9 @@ extension CardsLargeImageCell {
         movementView.clearValues()
         updatedAtLabel.text = nil
         dataSourceIconView.image = nil
-        timer?.invalidate()
-        timer = nil
         batteryLevelView.isHidden = true
         batteryLevelViewHeight.constant = 0
+        TimestampUpdateService.shared.removeSubscriber(self)
     }
 }
 
@@ -240,6 +240,8 @@ extension CardsLargeImageCell {
         with viewModel: CardsViewModel,
         measurementService: RuuviServiceMeasurement?
     ) {
+        self.viewModel = viewModel
+
         // Temp
         if let temp = measurementService?.stringWithoutSign(for: viewModel.temperature) {
             temperatureLabel.text = temp.components(separatedBy: String.nbsp).first
@@ -301,12 +303,7 @@ extension CardsLargeImageCell {
         }
 
         // Ago
-        if let date = viewModel.date?.ruuviAgo() {
-            updatedAtLabel.text = date
-        } else {
-            updatedAtLabel.text = RuuviLocalization.Cards.UpdatedLabel.NoData.message
-        }
-        startTimer(with: viewModel.date)
+        updateTimestampLabel()
 
         // Source
         if let source = viewModel.source {
@@ -336,19 +333,17 @@ extension CardsLargeImageCell {
     }
 }
 
-extension CardsLargeImageCell {
-    private func startTimer(with date: Date?) {
-        timer?.invalidate()
-        timer = nil
-
-        timer = Timer.scheduledTimer(
-            withTimeInterval: 1,
-            repeats: true,
-            block: { [weak self] _ in
-                self?.updatedAtLabel.text = date?.ruuviAgo() ?? RuuviLocalization.Cards.UpdatedLabel.NoData.message
-            }
-        )
+extension CardsLargeImageCell: TimestampUpdateable {
+    func updateTimestampLabel() {
+        if let ago = viewModel?.date?.ruuviAgo() {
+            updatedAtLabel.text = ago
+        } else {
+            updatedAtLabel.text = RuuviLocalization.Cards.UpdatedLabel.NoData.message
+        }
     }
+}
+
+extension CardsLargeImageCell {
 
     private func hideHumidityView(hide: Bool) {
         if hide {
