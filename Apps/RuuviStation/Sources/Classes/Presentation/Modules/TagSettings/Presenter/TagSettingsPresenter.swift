@@ -1630,82 +1630,114 @@ extension TagSettingsPresenter: RuuviNotifierObserver {
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isTemperatureAlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
-                viewModel.temperatureAlertState.value = newValue
+                if viewModel.temperatureAlertState.value != newValue {
+                    viewModel.temperatureAlertState.value = newValue
+                }
             case .relativeHumidity:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isRelativeHumidityAlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
-                viewModel.relativeHumidityAlertState.value = newValue
+                if viewModel.relativeHumidityAlertState.value != newValue {
+                    viewModel.relativeHumidityAlertState.value = newValue
+                }
             case .pressure:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isPressureAlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
-                viewModel.pressureAlertState.value = newValue
+                if viewModel.pressureAlertState.value != newValue {
+                    viewModel.pressureAlertState.value = newValue
+                }
             case .signal:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isSignalAlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
-                viewModel.signalAlertState.value = newValue
+                if viewModel.signalAlertState.value != newValue {
+                    viewModel.signalAlertState.value = newValue
+                }
             case .carbonDioxide:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isCarbonDioxideAlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
-                viewModel.carbonDioxideAlertState.value = newValue
+                if viewModel.carbonDioxideAlertState.value != newValue {
+                    viewModel.carbonDioxideAlertState.value = newValue
+                }
             case .pMatter1:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isPMatter1AlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
-                viewModel.pMatter1AlertState.value = newValue
+                if viewModel.pMatter1AlertState.value != newValue {
+                    viewModel.pMatter1AlertState.value = newValue
+                }
             case .pMatter2_5:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isPMatter2_5AlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
-                viewModel.pMatter2_5AlertState.value = newValue
+                if viewModel.pMatter2_5AlertState.value != newValue {
+                    viewModel.pMatter2_5AlertState.value = newValue
+                }
             case .pMatter4:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isPMatter4AlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
-                viewModel.pMatter4AlertState.value = newValue
+                if viewModel.pMatter4AlertState.value != newValue {
+                    viewModel.pMatter4AlertState.value = newValue
+                }
             case .pMatter10:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isPMatter10AlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
-                viewModel.pMatter10AlertState.value = newValue
+                if viewModel.pMatter10AlertState.value != newValue {
+                    viewModel.pMatter10AlertState.value = newValue
+                }
             case .voc:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isVOCAlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
-                viewModel.vocAlertState.value = newValue
+                if viewModel.vocAlertState.value != newValue {
+                    viewModel.vocAlertState.value = newValue
+                }
             case .nox:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isNOXAlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
-                viewModel.noxAlertState.value = newValue
+                if viewModel.noxAlertState.value != newValue {
+                    viewModel.noxAlertState.value = newValue
+                }
             case .sound:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isSoundAlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
-                viewModel.soundAlertState.value = newValue
+                if viewModel.soundAlertState.value != newValue {
+                    viewModel.soundAlertState.value = newValue
+                }
             case .luminosity:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isLuminosityAlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
-                viewModel.luminosityAlertState.value = newValue
+                if viewModel.luminosityAlertState.value != newValue {
+                    viewModel.luminosityAlertState.value = newValue
+                }
             case .connection:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isConnectionAlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
-                viewModel.connectionAlertState.value = newValue
+                if viewModel.connectionAlertState.value != newValue {
+                    viewModel.connectionAlertState.value = newValue
+                }
             case .movement:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isMovementAlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
-                viewModel.movementAlertState.value = newValue
+                if viewModel.movementAlertState.value != newValue {
+                    viewModel.movementAlertState.value = newValue
+                }
             case .cloudConnection:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isCloudConnectionAlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
-                viewModel.cloudConnectionAlertState.value = newValue
+                if viewModel.cloudConnectionAlertState.value != newValue {
+                    viewModel.cloudConnectionAlertState.value = newValue
+                }
             default:
                 break
             }

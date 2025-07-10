@@ -1049,8 +1049,10 @@ extension CardsPresenter: RuuviNotifierObserver {
             .filter { $0.luid?.value == uuid || $0.mac?.value == uuid }
             .forEach { viewModel in
                 let newValue: AlertState = isTriggered ? .firing : .registered
-                viewModel.alertState = newValue
-                notifyUpdate(for: viewModel)
+                if newValue != viewModel.alertState {
+                    viewModel.alertState = newValue
+                    notifyUpdate(for: viewModel)
+                }
             }
     }
 }
@@ -1168,15 +1170,22 @@ extension CardsPresenter {
             if alertStates.first(where: { alert in
                 alert == .firing
             }) != nil {
-                viewModel.alertState = .firing
+                if viewModel.alertState != .firing {
+                    viewModel.alertState = .firing
+                    notifyUpdate(for: viewModel)
+                }
             } else {
-                viewModel.alertState = .registered
+                if viewModel.alertState != .registered {
+                    viewModel.alertState = .registered
+                    notifyUpdate(for: viewModel)
+                }
             }
         } else {
-            viewModel.alertState = .empty
+            if viewModel.alertState != .empty {
+                viewModel.alertState = .empty
+                notifyUpdate(for: viewModel)
+            }
         }
-
-        notifyUpdate(for: viewModel)
     }
 
     private func sync(

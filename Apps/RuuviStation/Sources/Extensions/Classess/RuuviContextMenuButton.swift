@@ -65,6 +65,19 @@ class RuuviContextMenuButton: UIView {
 
 private extension RuuviContextMenuButton {
     func setUpUI() {
+
+        let containerView = UIView(color: .clear)
+        addSubview(containerView)
+        containerView
+            .fillSuperview(
+                padding: .init(
+                    top: 0,
+                    left: leadingPadding,
+                    bottom: 0,
+                    right: trailingPadding
+                )
+            )
+
         var stackView = UIStackView()
 
         if preccedingIcon {
@@ -87,16 +100,16 @@ private extension RuuviContextMenuButton {
         stackView.axis = .horizontal
         stackView.spacing = interimSpacing
         stackView.distribution = .fill
-        addSubview(stackView)
+
+        containerView.addSubview(stackView)
         stackView
-            .fillSuperview(
-                padding: .init(
-                    top: 0,
-                    left: leadingPadding,
-                    bottom: 0,
-                    right: trailingPadding
-                )
+            .anchor(
+                top: nil,
+                leading: containerView.leadingAnchor,
+                bottom: nil,
+                trailing: containerView.trailingAnchor
             )
+        stackView.centerYInSuperview()
 
         addSubview(button)
         button.fillSuperview()
