@@ -1,6 +1,6 @@
 import Foundation
 
-public enum AlertType: CaseIterable {
+public enum AlertType: CaseIterable, Hashable {
     case temperature(lower: Double, upper: Double) // celsius
     case humidity(lower: Humidity, upper: Humidity)
     case relativeHumidity(lower: Double, upper: Double) // fraction of one

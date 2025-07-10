@@ -173,6 +173,7 @@ extension SignInPresenter {
                     sSelf.reloadWidgets()
                     sSelf.state = .isSyncing
                     sSelf.settings.isSyncing = true
+                    sSelf.settings.syncExtensiveChangesInProgress = true
                     sSelf.registerFCMToken()
                     sSelf.syncAllRecords()
                 } else if let requestedEmail = sSelf.ruuviUser.email {
@@ -212,6 +213,7 @@ extension SignInPresenter {
         cloudSyncDaemon.start()
         output?.signIn(module: self, didSuccessfulyLogin: nil)
         settings.isSyncing = false
+        settings.syncExtensiveChangesInProgress = false
         activityPresenter.dismiss()
     }
 

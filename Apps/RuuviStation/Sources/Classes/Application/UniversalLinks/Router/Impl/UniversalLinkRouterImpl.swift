@@ -23,11 +23,18 @@ class UniversalLinkRouterImpl: UniversalLinkRouter {
         from transitionHandler: TransitionHandler
     ) {
         if let dashboardViewController = transitionHandler as? DashboardViewController {
-            if let viewModel = dashboardViewController.viewModels.first(where: { viewModel in
-                viewModel.mac?.value == macId || viewModel.luid?.value == macId
-            }) {
-                dashboardViewController.output.viewDidTriggerOpenSensorCardFromWidget(for: viewModel)
-                settings.setCardToOpenFromWidget(for: nil)
+            if let snapshot = dashboardViewController.snapshots.first(
+                where: { snapshot in
+                    snapshot.identifierData.mac?.value == macId || snapshot.identifierData.luid?.value == macId
+                }) {
+                dashboardViewController.output
+                    .viewDidTriggerOpenSensorCardFromWidget(
+                        for: snapshot
+                    )
+                settings
+                    .setCardToOpenFromWidget(
+                        for: nil
+                    )
             }
         }
     }

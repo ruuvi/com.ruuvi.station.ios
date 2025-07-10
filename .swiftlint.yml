@@ -12,3 +12,4 @@ disabled_rules:
   - identifier_name
   - force_try
   - todo
+  - multiple_closures_with_trailing_closure

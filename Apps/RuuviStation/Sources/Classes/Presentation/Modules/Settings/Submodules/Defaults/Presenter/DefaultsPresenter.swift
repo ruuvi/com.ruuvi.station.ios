@@ -10,6 +10,7 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
     weak var view: DefaultsViewInput!
     var router: DefaultsRouterInput!
     var settings: RuuviLocalSettings!
+    var flags: RuuviLocalFlags!
     var ruuviUser: RuuviUser!
     var output: DefaultsModuleOutput?
 
@@ -72,6 +73,7 @@ extension DefaultsPresenter {
             buildDoLegacyHistorySync(),
             buildDoHistorySyncAfterSignIn(),
             buildIncludeDataSourceInHistoryExport(),
+            buildShowRedesignedDashboardUI(),
         ]
     }
 
@@ -485,6 +487,21 @@ extension DefaultsPresenter {
 
         bind(viewModel.boolean, fire: false) { observer, bool in
             observer.settings.includeDataSourceInHistoryExport = GlobalHelpers.getBool(from: bool)
+        }
+
+        return viewModel
+    }
+
+    private func buildShowRedesignedDashboardUI() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Show redesigned Dashboard UI"
+        viewModel.boolean.value = flags.showRedesignedDashboardUI
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, bool in
+            observer.flags.showRedesignedDashboardUI = GlobalHelpers
+                .getBool(from: bool)
         }
 
         return viewModel
