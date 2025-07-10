@@ -45,6 +45,7 @@ public protocol RuuviLocalSettings {
     /// When syncing for the first time (after sign in) or extensive changes
     /// like cloud sync
     var isSyncing: Bool { get set }
+    var syncExtensiveChangesInProgress: Bool { get set }
     var temperatureUnit: TemperatureUnit { get set }
     var temperatureAccuracy: MeasurementAccuracyType { get set }
     var humidityUnit: HumidityUnit { get set }

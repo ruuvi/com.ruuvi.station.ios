@@ -207,6 +207,7 @@ class CardsViewController: UIViewController {
     }
 
     private var isChartsShowing: Bool = false
+    private var previousAlertState: String?
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent

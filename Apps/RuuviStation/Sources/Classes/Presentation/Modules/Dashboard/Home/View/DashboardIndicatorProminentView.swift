@@ -8,7 +8,8 @@ class DashboardIndicatorProminentView: UIView {
         label.textColor = RuuviColor.dashboardIndicatorBig.color
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.font = UIFont.Oswald(.bold, size: 30)
+        label.font = UIFont.OswaldTight(.bold, size: 40)
+        label.backgroundColor = .clear
         return label
     }()
 
@@ -17,32 +18,22 @@ class DashboardIndicatorProminentView: UIView {
         label.textColor = RuuviColor.dashboardIndicatorBig.color
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.font = UIFont.Oswald(.regular, size: 12)
+        label.font = UIFont.OswaldTight(.regular, size: 16)
+        label.backgroundColor = .clear
         return label
     }()
 
     private lazy var indicatorSubscriptLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.dashboardIndicator.color
-            .withAlphaComponent(0.6)
+        label.textColor = RuuviColor.dashboardIndicator.color.withAlphaComponent(0.6)
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.font = UIFont.Muli(.bold, size: 12)
+        label.font = UIFont.Muli(.regular, size: 14)
+        label.backgroundColor = .clear
         return label
     }()
 
-    private lazy var progressView: UIProgressView = {
-        let progressView = UIProgressView()
-        progressView.progressViewStyle = .bar
-        progressView.trackTintColor = RuuviColor.dashboardIndicator.color
-            .withAlphaComponent(0.3)
-        progressView.layer.cornerRadius = 2.5
-        progressView.clipsToBounds = true
-        return progressView
-    }()
-
-    private var progressViewVisibleConstraints: [NSLayoutConstraint] = []
-    private var progressViewHiddenConstraints: [NSLayoutConstraint] = []
+    private var valueContainer: UIView!
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -54,76 +45,55 @@ class DashboardIndicatorProminentView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // swiftlint:disable:next function_body_length
-    fileprivate func setUpUI() {
-        let valueContainer = UIView(color: .clear)
-        addSubview(valueContainer)
-        valueContainer.anchor(
-            top: topAnchor,
-            leading: leadingAnchor,
-            bottom: nil,
-            trailing: trailingAnchor
-        )
+    private func setUpUI() {
 
+        valueContainer = UIView(color: .clear)
+        addSubview(valueContainer)
+        valueContainer.fillSuperview()
+
+        // Add main value label
         valueContainer.addSubview(indicatorValueLabel)
         indicatorValueLabel.anchor(
             top: valueContainer.topAnchor,
             leading: valueContainer.leadingAnchor,
             bottom: valueContainer.bottomAnchor,
-            trailing: nil
+            trailing: valueContainer.trailingAnchor,
+            // -1 to adjust padding comes from the font,
+            // to make it visually center in container.
+            padding: .init(top: -2, left: 0, bottom: 0, right: 0)
         )
 
-        let scriptsVStack = UIStackView(
-            arrangedSubviews: [
-                indicatorSuperscriptLabel,
-                indicatorSubscriptLabel,
-            ]
-        )
-        scriptsVStack.axis = .vertical
-        scriptsVStack.alignment = .leading
-        scriptsVStack.distribution = .fill
-        scriptsVStack.spacing = 0
-        valueContainer.addSubview(scriptsVStack)
+        // Create scripts container with proper baseline alignment
+        let scriptsContainer = UIView(color: .clear)
 
-        scriptsVStack.anchor(
-            top: indicatorValueLabel.topAnchor,
-            leading: indicatorValueLabel.trailingAnchor,
-            bottom: indicatorValueLabel.bottomAnchor,
-            trailing: nil,
-            padding: .init(
-                top: 8,
-                left: 2,
-                bottom: 6,
-                right: 0
-            )
-        )
-
-        scriptsVStack.trailingAnchor
-            .constraint(greaterThanOrEqualTo: trailingAnchor)
-            .isActive = true
-
-        addSubview(progressView)
-        progressView.anchor(
-            top: nil,
-            leading: leadingAnchor,
+        // Position superscript aligned with top of main value
+        scriptsContainer.addSubview(indicatorSuperscriptLabel)
+        indicatorSuperscriptLabel.anchor(
+            top: scriptsContainer.topAnchor,
+            leading: scriptsContainer.leadingAnchor,
             bottom: nil,
-            trailing: nil,
-            size: .init(width: 120, height: 4)
+            trailing: scriptsContainer.trailingAnchor,
+            padding: .init(top: -0.5, left: 0, bottom: 0, right: 0)
         )
 
-        progressViewVisibleConstraints = [
-            progressView.topAnchor.constraint(
-                equalTo: valueContainer.bottomAnchor
-            ),
-            progressView.bottomAnchor.constraint(
-                equalTo: bottomAnchor,
-                constant: -4
-            ),
-        ]
+        // Position subscript below superscript
+        scriptsContainer.addSubview(indicatorSubscriptLabel)
+        indicatorSubscriptLabel.anchor(
+            top: indicatorSuperscriptLabel.bottomAnchor,
+            leading: scriptsContainer.leadingAnchor,
+            bottom: scriptsContainer.bottomAnchor,
+            trailing: scriptsContainer.trailingAnchor,
+            padding: .init(top: 0, left: 0, bottom: 0, right: 0)
+        )
 
-        progressViewHiddenConstraints = [
-            valueContainer.bottomAnchor.constraint(equalTo: bottomAnchor),
-        ]
+        let valueStackView = UIStackView(arrangedSubviews: [
+            valueContainer, scriptsContainer, UIView.flexibleSpacer()
+        ])
+        valueStackView.axis = .horizontal
+        valueStackView.distribution = .fill
+        valueStackView.spacing = 4
+        addSubview(valueStackView)
+        valueStackView.fillSuperview()
     }
 }
 
@@ -131,40 +101,21 @@ extension DashboardIndicatorProminentView {
     func setValue(
         with value: String?,
         superscriptValue: String? = nil,
-        subscriptValue: String? = nil,
-        showProgress: Bool = false,
-        progressColor: UIColor? = .clear
+        subscriptValue: String? = nil
     ) {
         indicatorValueLabel.text = value
         indicatorSuperscriptLabel.text = superscriptValue
         indicatorSubscriptLabel.text = subscriptValue
-
-        indicatorValueLabel.sizeToFit()
-        indicatorSuperscriptLabel.sizeToFit()
-        indicatorSubscriptLabel.sizeToFit()
-
-        progressView.isHidden = !showProgress
-        if showProgress, let progress = value?.intValue {
-            NSLayoutConstraint.deactivate(progressViewHiddenConstraints)
-            NSLayoutConstraint.activate(progressViewVisibleConstraints)
-            progressView.progress = Float(progress) / 100
-            progressView.progressTintColor = progressColor
-        } else {
-            NSLayoutConstraint.deactivate(progressViewVisibleConstraints)
-            NSLayoutConstraint.activate(progressViewHiddenConstraints)
-        }
-
-        layoutIfNeeded()
     }
 
     func changeColor(highlight: Bool) {
-        indicatorValueLabel.textColor =
-            highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicatorBig.color
-        indicatorSuperscriptLabel.textColor =
-            highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicatorBig.color
-        indicatorSubscriptLabel.textColor =
-            highlight ? RuuviColor.orangeColor.color :
-                RuuviColor.dashboardIndicator.color.withAlphaComponent(0.6)
+        let mainColor = highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicatorBig.color
+        let subscriptColor = highlight ? RuuviColor.orangeColor.color :
+                            RuuviColor.dashboardIndicator.color.withAlphaComponent(0.6)
+
+        indicatorValueLabel.textColor = mainColor
+        indicatorSuperscriptLabel.textColor = mainColor
+        indicatorSubscriptLabel.textColor = subscriptColor
     }
 
     func clearValues() {
