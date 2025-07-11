@@ -9,6 +9,11 @@ protocol DashboardCellDelegate: AnyObject {
     func didTapAlertButton(
         for snapshot: RuuviTagCardSnapshot
     )
+
+    func didChangeMoreButtonMenuPresentationState(
+        for snapshot: RuuviTagCardSnapshot,
+        isPresented: Bool
+    )
 }
 
 // MARK: - Layout Configuration
@@ -275,10 +280,29 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         return view
     }()
 
-    private lazy var moreButton: UIButton = {
-        let button = UIButton()
+    private lazy var moreButton: DashboardContextMenuButton = {
+        let button = DashboardContextMenuButton()
         button.backgroundColor = .clear
         button.showsMenuAsPrimaryAction = true
+        button.onMenuPresent = { [weak self] in
+            if let currentSnapshot = self?.currentSnapshot {
+                self?.delegate?
+                    .didChangeMoreButtonMenuPresentationState(
+                        for: currentSnapshot,
+                        isPresented: true
+                    )
+            }
+        }
+
+        button.onMenuDismiss = { [weak self] in
+            if let currentSnapshot = self?.currentSnapshot {
+                self?.delegate?
+                    .didChangeMoreButtonMenuPresentationState(
+                        for: currentSnapshot,
+                        isPresented: false
+                    )
+            }
+        }
         return button
     }()
 
