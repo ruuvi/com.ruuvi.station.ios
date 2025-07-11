@@ -145,6 +145,7 @@ final class DashboardViewController: UIViewController {
     // MARK: - Refresh Control Properties
     private var isListRefreshable: Bool = true
     private var isPulling: Bool = false
+    private var isContextMenuPresented: Bool = false
 
     // MARK: - Drag and reorder Properties
     private var currentSnapshotIdentifiers: [RuuviTagCardSnapshot] = []
@@ -416,7 +417,7 @@ private extension DashboardViewController {
         with newSnapshots: [RuuviTagCardSnapshot],
         animated: Bool = true
     ) {
-        guard !isDragSessionInProgress else { return }
+        guard !isDragSessionInProgress, !isContextMenuPresented else { return }
         var snapshot = NSDiffableDataSourceSnapshot<MasonrySection, RuuviTagCardSnapshot>()
         snapshot.appendSections([.main])
         snapshot.appendItems(newSnapshots)
@@ -437,7 +438,8 @@ private extension DashboardViewController {
     func updateSnapshot(redrawLayout: Bool, animated: Bool) {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
-            guard !self.isDragSessionInProgress else { return }
+            guard !self.isDragSessionInProgress,
+            !self.isContextMenuPresented else { return }
 
             if redrawLayout {
                 self.heightCache.clearCache()
@@ -616,7 +618,13 @@ private extension DashboardViewController {
             }
         }
 
-        return [fullImageViewAction, historyViewAction, settingsAction, changeBackgroundAction, renameAction]
+        return [
+            fullImageViewAction,
+            historyViewAction,
+            settingsAction,
+            changeBackgroundAction,
+            renameAction,
+        ]
     }
 
     func createReorderActions(for indexPath: IndexPath) -> [UIAction] {
@@ -626,6 +634,7 @@ private extension DashboardViewController {
         // Add move up action (not for first item)
         if indexPath.item > 0 {
             let moveUpAction = UIAction(title: RuuviLocalization.moveUp) { [weak self] _ in
+                self?.isContextMenuPresented = false
                 self?.handleMoveUp(at: indexPath)
             }
             actions.append(moveUpAction)
@@ -634,6 +643,7 @@ private extension DashboardViewController {
         // Add move down action (not for last item)
         if indexPath.item < totalItems - 1 {
             let moveDownAction = UIAction(title: RuuviLocalization.moveDown) { [weak self] _ in
+                self?.isContextMenuPresented = false
                 self?.handleMoveDown(at: indexPath)
             }
             actions.append(moveDownAction)
@@ -660,6 +670,7 @@ private extension DashboardViewController {
 
     func handleContextMenuAction(at indexPath: IndexPath, action: (RuuviTagCardSnapshot) -> Void) {
         guard let snapshot = dataSource.itemIdentifier(for: indexPath) else { return }
+        isContextMenuPresented = false
         action(snapshot)
     }
 
@@ -1067,6 +1078,13 @@ extension DashboardViewController: NewDashboardViewInput {
 extension DashboardViewController: DashboardCellDelegate {
     func didTapAlertButton(for snapshot: RuuviTagCardSnapshot) {
         output.viewDidTriggerSettings(for: snapshot)
+    }
+
+    func didChangeMoreButtonMenuPresentationState(
+        for snapshot: RuuviTagCardSnapshot,
+        isPresented: Bool
+    ) {
+        isContextMenuPresented = isPresented
     }
 }
 
