@@ -18,7 +18,7 @@ class DashboardIndicatorProminentView: UIView {
         label.textColor = RuuviColor.dashboardIndicatorBig.color
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.font = UIFont.OswaldTight(.regular, size: 16)
+        label.font = UIFont.OswaldTight(.regular, size: 14)
         label.backgroundColor = .clear
         return label
     }()
@@ -28,7 +28,7 @@ class DashboardIndicatorProminentView: UIView {
         label.textColor = RuuviColor.dashboardIndicator.color.withAlphaComponent(0.6)
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.font = UIFont.Muli(.regular, size: 14)
+        label.font = UIFont.Muli(.regular, size: 11)
         label.backgroundColor = .clear
         return label
     }()

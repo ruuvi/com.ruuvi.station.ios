@@ -15,6 +15,13 @@ class RuuviCustomButton: UIView {
         return iv
     }()
 
+    private lazy var iconViewContainer: UIView = {
+        let view = UIView(color: .clear)
+        view.addSubview(iconView)
+        iconView.centerInSuperview(size: iconSize)
+        return view
+    }()
+
     lazy var button: UIButton = {
         let button = UIButton()
         button.backgroundColor = .clear
@@ -58,17 +65,23 @@ class RuuviCustomButton: UIView {
 
 extension RuuviCustomButton {
     private func setUpUI() {
-        addSubview(iconView)
-        iconView.size(width: iconSize.width, height: iconSize.height)
-        iconView
+        addSubview(iconViewContainer)
+        iconViewContainer
             .fillSuperview(
                 padding: .init(
-                    top: 6,
+                    top: 0,
                     left: leadingPadding,
-                    bottom: 6,
+                    bottom: 0,
                     right: trailingPadding
                 )
             )
+
+        iconViewContainer.heightAnchor.constraint(
+            greaterThanOrEqualToConstant: iconSize.height
+        ).isActive = true
+        iconViewContainer.widthAnchor.constraint(
+            equalToConstant: iconSize.width
+        ).isActive = true
 
         if menu != nil {
             addSubview(button)
