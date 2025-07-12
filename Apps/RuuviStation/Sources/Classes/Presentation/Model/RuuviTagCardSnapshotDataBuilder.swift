@@ -156,9 +156,7 @@ struct AQIMeasurementExtractor: MeasurementExtractor {
     ) -> MeasurementResult? {
         guard let (currentAirQIndex, maximumAirQIndex, state) = measurementService?.aqiString(
             for: record.co2,
-            pm25: record.pm2_5,
-            voc: record.voc,
-            nox: record.nox
+            pm25: record.pm2_5
         ) else { return nil }
 
         return MeasurementResult(

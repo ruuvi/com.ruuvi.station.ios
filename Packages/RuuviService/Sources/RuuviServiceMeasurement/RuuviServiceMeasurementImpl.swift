@@ -409,73 +409,28 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
 
     public func aqiString(
         for co2: Double?,
-        pm25: Double?,
-        voc: Double?,
-        nox: Double?
+        pm25: Double?
     ) -> ( // swiftlint:disable:this large_tuple
         currentScore: Int,
         maxScore: Int,
         state: AirQualityState
     ) {
-        func scorePpm(_ ppm: Double) -> Double {
-            return max(0, (ppm - 12) * 2)
-        }
-
-        func scoreVoc(_ voc: Double) -> Double {
-            return max(0, voc - 200)
-        }
-
-        func scoreNox(_ nox: Double) -> Double {
-            return max(0, nox - 200)
-        }
-
-        func scoreCo2(_ co2: Double) -> Double {
-            return max(0, (co2 - 600) / 10)
-        }
-
-        var distances = [Double]()
-
-        if let co2 = co2 {
-            distances.append(scoreCo2(co2))
-        }
-        if let pm25 = pm25 {
-            distances.append(scorePpm(pm25))
-        }
-        if let voc = voc {
-            distances.append(scoreVoc(voc))
-        }
-        if let nox = nox {
-            distances.append(scoreNox(nox))
-        }
-
-        let maxScore = 100.0
-
-        guard !distances.isEmpty else {
-            return (
-                currentScore: 0, maxScore: Int(maxScore), state: .unhealthy
-            )
-        }
-
-        let squaredSum = distances.reduce(0) { $0 + $1 * $1 }
-        let meanSquared = squaredSum / Double(distances.count)
-        let distance = sqrt(meanSquared)
-        let currentScore = max(0, maxScore - distance)
-
-        let state: AirQualityState
-        switch currentScore {
-        case 66...maxScore:
-            state = .excellent
-        case 33..<66:
-            state = .medium
-        default:
-            state = .unhealthy
-        }
+        let currentScore = calculateAQI(co2: co2, pm25: pm25)
+        let maxScore = 100
+        let state = airQualityState(for: currentScore)
 
         return (
             currentScore: Int(currentScore),
-            maxScore: Int(maxScore),
+            maxScore: maxScore,
             state: state
         )
+    }
+
+    public func aqi(
+        for co2: Double?,
+        pm25: Double?
+    ) -> Double {
+        return calculateAQI(co2: co2, pm25: pm25)
     }
 
     public func co2String(for carbonDiOxide: Double?) -> String {
@@ -650,6 +605,56 @@ public extension RuuviServiceMeasurementImpl {
             pressureOffsetCorrection(for: pressure),
             unit: units.pressureUnit
         ), allowSettings: false)
+    }
+
+    private func calculateAQI(co2: Double?, pm25: Double?) -> Double {
+        var distances = [Double]()
+
+        if let co2 = co2 {
+            let roundedCo2 = roundToOneDecimal(co2)
+            distances.append(scoreCo2(roundedCo2))
+        }
+
+        if let pm25 = pm25 {
+            let roundedPm25 = roundToOneDecimal(pm25)
+            distances.append(scorePpm(roundedPm25))
+        }
+
+        let maxScore = 100.0
+
+        guard !distances.isEmpty else {
+            return 0
+        }
+
+        let squaredSum = distances.reduce(0) { $0 + $1 * $1 }
+        let meanSquared = squaredSum / Double(distances.count)
+        let distance = sqrt(meanSquared)
+        let currentScore = max(0, maxScore - distance)
+
+        return currentScore
+    }
+
+    private func scorePpm(_ ppm: Double) -> Double {
+        return max(0, (ppm - 12) * 2)
+    }
+
+    private func scoreCo2(_ co2: Double) -> Double {
+        return max(0, (co2 - 600) / 10)
+    }
+
+    private func roundToOneDecimal(_ value: Double) -> Double {
+        return (value * 10).rounded() / 10
+    }
+
+    private func airQualityState(for score: Double) -> AirQualityState {
+        switch score {
+        case 66...100:
+            return .excellent
+        case 33..<66:
+            return .medium
+        default:
+            return .unhealthy
+        }
     }
 }
 

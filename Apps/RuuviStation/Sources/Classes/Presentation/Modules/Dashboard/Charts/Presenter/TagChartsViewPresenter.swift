@@ -1477,14 +1477,9 @@ extension TagChartsViewPresenter {
                 return nil
             }
         case .aqi:
-            let (aqi, _, _) = measurementService.aqiString(
+            let value = measurementService.aqi(
                 for: data.co2,
-                pm25: data.pm2_5,
-                voc: data.voc,
-                nox: data.nox
-            )
-            let value = measurementService.double(
-                for: Double(aqi)
+                pm25: data.pm2_5
             )
             return ChartDataEntry(x: data.date.timeIntervalSince1970, y: value)
 

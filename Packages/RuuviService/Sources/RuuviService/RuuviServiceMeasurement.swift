@@ -84,14 +84,18 @@ public protocol RuuviServiceMeasurement {
 
     func aqiString(
         for co2: Double?,
-        pm25: Double?,
-        voc: Double?,
-        nox: Double?
+        pm25: Double?
     ) -> ( // swiftlint:disable:this large_tuple
         currentScore: Int,
         maxScore: Int,
         state: AirQualityState
     )
+
+    func aqi(
+        for co2: Double?,
+        pm25: Double?
+    ) -> Double
+
     func co2String(for carbonDiOxide: Double?) -> String
     func pm10String(for pm10: Double?) -> String
     func pm25String(for pm25: Double?) -> String
