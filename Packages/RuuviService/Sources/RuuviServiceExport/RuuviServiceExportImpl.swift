@@ -217,9 +217,7 @@ extension RuuviServiceExportImpl {
                         guard let sSelf = self else { return "" }
                         let (aqi, _, _) = sSelf.measurementService.aqiString(
                             for: record.co2,
-                            pm25: record.pm2_5,
-                            voc: record.voc,
-                            nox: record.nox
+                            pm25: record.pm2_5
                         )
                         return "\(aqi)"
                     }
