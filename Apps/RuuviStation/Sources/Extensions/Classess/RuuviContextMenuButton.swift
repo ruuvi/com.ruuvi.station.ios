@@ -14,11 +14,19 @@ class RuuviContextMenuButton: UIView {
         return label
     }()
 
-    lazy var buttonIconView: UIImageView = {
+    lazy var buttonIcon: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.backgroundColor = .clear
         return iv
+    }()
+
+    lazy var buttonIconView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.addSubview(buttonIcon)
+        buttonIcon.centerInSuperview(size: iconSize)
+        return view
     }()
 
     private var preccedingIcon: Bool = false
@@ -53,8 +61,8 @@ class RuuviContextMenuButton: UIView {
         button.menu = menu
         buttonTitleLabel.text = title
         buttonTitleLabel.textColor = titleColor
-        buttonIconView.tintColor = iconTintColor
-        buttonIconView.image = icon
+        buttonIcon.tintColor = iconTintColor
+        buttonIcon.image = icon
         self.iconSize = iconSize
         self.interimSpacing = interimSpacing
         self.leadingPadding = leadingPadding
@@ -91,25 +99,19 @@ private extension RuuviContextMenuButton {
                 buttonTitleLabel, buttonIconView
             ])
         }
+        buttonIcon.size(width: iconSize.width, height: iconSize.height)
         buttonIconView.heightAnchor.constraint(
-            lessThanOrEqualToConstant: iconSize.height
+            greaterThanOrEqualToConstant: iconSize.height
         ).isActive = true
         buttonIconView.widthAnchor.constraint(
-            lessThanOrEqualToConstant: iconSize.width
+            equalToConstant: iconSize.width
         ).isActive = true
         stackView.axis = .horizontal
         stackView.spacing = interimSpacing
         stackView.distribution = .fill
 
         containerView.addSubview(stackView)
-        stackView
-            .anchor(
-                top: nil,
-                leading: containerView.leadingAnchor,
-                bottom: nil,
-                trailing: containerView.trailingAnchor
-            )
-        stackView.centerYInSuperview()
+        stackView.fillSuperview()
 
         addSubview(button)
         button.fillSuperview()
