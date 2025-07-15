@@ -48,7 +48,7 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
             for: self,
             uuid: uuid,
             from: from,
-            service: firmwareVersion == .e0 || firmwareVersion == .f0 ? .e0 : .all,
+            service: firmwareVersion == .e1 || firmwareVersion == .v6 ? .e1 : .all,
             options: [
                 .callbackQueue(.untouch),
                 .connectionTimeout(connectionTimeout ?? 0),

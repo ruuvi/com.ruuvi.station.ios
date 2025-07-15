@@ -39,7 +39,7 @@ public enum LowHighNotificationType: String {
     case signal
     case carbonDioxide
     case pMatter1
-    case pMatter2_5
+    case pMatter25
     case pMatter4
     case pMatter10
     case voc

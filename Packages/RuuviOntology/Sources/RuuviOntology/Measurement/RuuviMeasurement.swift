@@ -27,14 +27,14 @@ public struct RuuviMeasurement {
     // v5
     public var movementCounter: Int?
     public var txPower: Int?
-    // E0/F0
+    // E1/V6
     public var co2: Double?
-    public var pm2_5: Double?
+    public var pm25: Double?
     public var pm10: Double?
     public var voc: Double?
     public var nox: Double?
     public var luminosity: Double?
-    public var sound: Double?
+    public var sound: Double? // Avg
     // Backword compatibility for the users using versions < 0.7.7
     public var temperatureOffset: Double?
     public var humidityOffset: Double?
@@ -50,7 +50,7 @@ public struct RuuviMeasurement {
         humidity: Humidity?,
         pressure: Pressure?,
         co2: Double?,
-        pm2_5: Double?,
+        pm25: Double?,
         pm10: Double?,
         voc: Double?,
         nox: Double?,
@@ -73,7 +73,7 @@ public struct RuuviMeasurement {
         self.humidity = humidity
         self.pressure = pressure
         self.co2 = co2
-        self.pm2_5 = pm2_5
+        self.pm25 = pm25
         self.pm10 = pm10
         self.voc = voc
         self.nox = nox

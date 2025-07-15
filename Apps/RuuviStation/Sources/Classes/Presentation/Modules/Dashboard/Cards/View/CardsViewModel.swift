@@ -40,7 +40,7 @@ final class CardsViewModel: NSObject, ObservableObject {
     @Published var rssi: Int?
     @Published var voltage: Voltage?
     @Published var pm1: Double?
-    @Published var pm2_5: Double?
+    @Published var pm25: Double?
     @Published var pm4: Double?
     @Published var pm10: Double?
     @Published var co2: Double?
@@ -106,9 +106,9 @@ final class CardsViewModel: NSObject, ObservableObject {
     @Published var pMatter1AlertState: AlertState?
     @Published var pMatter1AlertMutedTill: Date?
 
-    @Published var isPMatter2_5AlertOn: Bool?
-    @Published var pMatter2_5AlertState: AlertState?
-    @Published var pMatter2_5AlertMutedTill: Date?
+    @Published var isPMatter25AlertOn: Bool?
+    @Published var pMatter25AlertState: AlertState?
+    @Published var pMatter25AlertMutedTill: Date?
 
     @Published var isPMatter4AlertOn: Bool?
     @Published var pMatter4AlertState: AlertState?
@@ -178,7 +178,7 @@ final class CardsViewModel: NSObject, ObservableObject {
         rssi = record.rssi
         movementCounter = record.movementCounter
         pm1 = record.pm1
-        pm2_5 = record.pm2_5
+        pm25 = record.pm25
         pm4 = record.pm4
         pm10 = record.pm10
         co2 = record.co2
@@ -240,7 +240,7 @@ extension CardsViewModel {
             $rssi.map { _ in }.eraseToAnyPublisher(),
             $voltage.map { _ in }.eraseToAnyPublisher(),
             $pm1.map { _ in }.eraseToAnyPublisher(),
-            $pm2_5.map { _ in }.eraseToAnyPublisher(),
+            $pm25.map { _ in }.eraseToAnyPublisher(),
             $pm4.map { _ in }.eraseToAnyPublisher(),
             $pm10.map { _ in }.eraseToAnyPublisher(),
             $co2.map { _ in }.eraseToAnyPublisher(),
@@ -285,9 +285,9 @@ extension CardsViewModel {
             $isPMatter1AlertOn.map { _ in }.eraseToAnyPublisher(),
             $pMatter1AlertState.map { _ in }.eraseToAnyPublisher(),
             $pMatter1AlertMutedTill.map { _ in }.eraseToAnyPublisher(),
-            $isPMatter2_5AlertOn.map { _ in }.eraseToAnyPublisher(),
-            $pMatter2_5AlertState.map { _ in }.eraseToAnyPublisher(),
-            $pMatter2_5AlertMutedTill.map { _ in }.eraseToAnyPublisher(),
+            $isPMatter25AlertOn.map { _ in }.eraseToAnyPublisher(),
+            $pMatter25AlertState.map { _ in }.eraseToAnyPublisher(),
+            $pMatter25AlertMutedTill.map { _ in }.eraseToAnyPublisher(),
             $isPMatter4AlertOn.map { _ in }.eraseToAnyPublisher(),
             $pMatter4AlertState.map { _ in }.eraseToAnyPublisher(),
             $pMatter4AlertMutedTill.map { _ in }.eraseToAnyPublisher(),

@@ -1,8 +1,8 @@
 public enum RuuviFirmwareVersion: String {
     case v5
     case vC5
-    case e0
-    case f0
+    case e1
+    case v6
 }
 
 extension RuuviFirmwareVersion {
@@ -12,10 +12,10 @@ extension RuuviFirmwareVersion {
             return .v5
         case 0xC5:
             return .vC5
-        case 224:
-            return .e0
-        case 240:
-            return .f0
+        case 225:
+            return .e1
+        case 6:
+            return .v6
         default:
             return .v5
         }

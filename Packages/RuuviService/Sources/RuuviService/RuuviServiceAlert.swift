@@ -54,9 +54,9 @@ public protocol RuuviServiceAlertRuuviTag {
     func setPM1(description: String?, ruuviTag: RuuviTagSensor)
 
     // PM2.5
-    func setLower(pm2_5: Double?, ruuviTag: RuuviTagSensor)
-    func setUpper(pm2_5: Double?, ruuviTag: RuuviTagSensor)
-    func setPM2_5(description: String?, ruuviTag: RuuviTagSensor)
+    func setLower(pm25: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(pm25: Double?, ruuviTag: RuuviTagSensor)
+    func setPM25(description: String?, ruuviTag: RuuviTagSensor)
 
     // PM4
     func setLower(pm4: Double?, ruuviTag: RuuviTagSensor)
@@ -141,9 +141,9 @@ public protocol RuuviServiceAlertDeprecated {
     func pm1Description(for uuid: String) -> String?
 
     // PM2.5
-    func lowerPM2_5(for uuid: String) -> Double?
-    func upperPM2_5(for uuid: String) -> Double?
-    func pm2_5Description(for uuid: String) -> String?
+    func lowerPM25(for uuid: String) -> Double?
+    func upperPM25(for uuid: String) -> Double?
+    func pm25Description(for uuid: String) -> String?
 
     // PM4
     func lowerPM4(for uuid: String) -> Double?
@@ -234,9 +234,9 @@ public protocol RuuviServiceAlertPhysicalSensor {
     func pm1Description(for sensor: PhysicalSensor) -> String?
 
     // PM2.5
-    func lowerPM2_5(for sensor: PhysicalSensor) -> Double?
-    func upperPM2_5(for sensor: PhysicalSensor) -> Double?
-    func pm2_5Description(for sensor: PhysicalSensor) -> String?
+    func lowerPM25(for sensor: PhysicalSensor) -> Double?
+    func upperPM25(for sensor: PhysicalSensor) -> Double?
+    func pm25Description(for sensor: PhysicalSensor) -> String?
 
     // PM4
     func lowerPM4(for sensor: PhysicalSensor) -> Double?

@@ -23,7 +23,7 @@ struct TagSettingsViewModel {
     let measurementSequenceNumber: Observable<Int?> = .init()
     let txPower: Observable<Int?> = .init()
     let pm1: Observable<Double?> = .init()
-    let pm2_5: Observable<Double?> = .init()
+    let pm25: Observable<Double?> = .init()
     let pm4: Observable<Double?> = .init()
     let pm10: Observable<Double?> = .init()
     let co2: Observable<Double?> = .init()
@@ -87,12 +87,12 @@ struct TagSettingsViewModel {
     let pMatter1AlertDescription: Observable<String?> = .init()
     let pMatter1AlertState: Observable<AlertState?> = .init()
 
-    let isPMatter2_5AlertOn: Observable<Bool?> = .init(false)
-    let pMatter2_5AlertMutedTill: Observable<Date?> = .init(nil)
-    let pMatter2_5LowerBound: Observable<Double?> = .init(0)
-    let pMatter2_5UpperBound: Observable<Double?> = .init(250)
-    let pMatter2_5AlertDescription: Observable<String?> = .init()
-    let pMatter2_5AlertState: Observable<AlertState?> = .init()
+    let isPMatter25AlertOn: Observable<Bool?> = .init(false)
+    let pMatter25AlertMutedTill: Observable<Date?> = .init(nil)
+    let pMatter25LowerBound: Observable<Double?> = .init(0)
+    let pMatter25UpperBound: Observable<Double?> = .init(250)
+    let pMatter25AlertDescription: Observable<String?> = .init()
+    let pMatter25AlertState: Observable<AlertState?> = .init()
 
     let isPMatter4AlertOn: Observable<Bool?> = .init(false)
     let pMatter4AlertMutedTill: Observable<Date?> = .init(nil)
@@ -192,7 +192,7 @@ struct TagSettingsViewModel {
         measurementSequenceNumber.value = record.measurementSequenceNumber
         txPower.value = record.txPower
         pm1.value = record.pm1
-        pm2_5.value = record.pm2_5
+        pm25.value = record.pm25
         pm4.value = record.pm4
         pm10.value = record.pm10
         co2.value = record.co2
@@ -261,10 +261,10 @@ struct TagSettingsViewModel {
         pMatter1UpperBound.value = TagSettingsAlertConstants.ParticulateMatter.upperBound
         pMatter1AlertDescription.value = nil
 
-        isPMatter2_5AlertOn.value = false
-        pMatter2_5LowerBound.value = TagSettingsAlertConstants.ParticulateMatter.lowerBound
-        pMatter2_5UpperBound.value = TagSettingsAlertConstants.ParticulateMatter.upperBound
-        pMatter2_5AlertDescription.value = nil
+        isPMatter25AlertOn.value = false
+        pMatter25LowerBound.value = TagSettingsAlertConstants.ParticulateMatter.lowerBound
+        pMatter25UpperBound.value = TagSettingsAlertConstants.ParticulateMatter.upperBound
+        pMatter25AlertDescription.value = nil
 
         isPMatter4AlertOn.value = false
         pMatter4LowerBound.value = TagSettingsAlertConstants.ParticulateMatter.lowerBound
@@ -299,7 +299,7 @@ struct TagSettingsViewModel {
         latestMeasurement.value = nil
 
         pm1.value = nil
-        pm2_5.value = nil
+        pm25.value = nil
         pm4.value = nil
         pm10.value = nil
         co2.value = nil

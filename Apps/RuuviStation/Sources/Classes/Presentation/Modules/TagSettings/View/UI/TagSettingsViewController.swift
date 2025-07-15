@@ -22,7 +22,7 @@ enum TagSettingsSectionIdentifier {
     case alertCloudConnection
     case alertCarbonDioxide
     case alertPMatter1
-    case alertPMatter2_5
+    case alertPMatter25
     case alertPMatter4
     case alertPMatter10
     case alertVOC
@@ -290,10 +290,10 @@ class TagSettingsViewController: UIViewController {
     )
 
     // PM2.5
-    private lazy var pm2_5AlertSectionHeaderView:
+    private lazy var pm25AlertSectionHeaderView:
         TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
 
-    private lazy var pm2_5AlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var pm25AlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
@@ -476,8 +476,8 @@ class TagSettingsViewController: UIViewController {
         co2AlertCell = nil
         pm1AlertSectionHeaderView = nil
         pm1AlertCell = nil
-        pm2_5AlertSectionHeaderView = nil
-        pm2_5AlertCell = nil
+        pm25AlertSectionHeaderView = nil
+        pm25AlertCell = nil
         pm4AlertSectionHeaderView = nil
         pm4AlertCell = nil
         pm10AlertSectionHeaderView = nil
@@ -1712,51 +1712,51 @@ extension TagSettingsViewController {
                 }
         }
 
-        // PM2_5
-        if let pm2_5AlertCell {
-            pm2_5AlertCell.bind(viewModel.isPMatter2_5AlertOn) { cell, value in
+        // PM2.5
+        if let pm25AlertCell {
+            pm25AlertCell.bind(viewModel.isPMatter25AlertOn) { cell, value in
                 cell.setStatus(
                     with: value,
                     hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
                 )
             }
 
-            pm2_5AlertCell.bind(viewModel.pMatter2_5AlertDescription) {
+            pm25AlertCell.bind(viewModel.pMatter25AlertDescription) {
                 [weak self] cell, value in
                 cell.setCustomDescription(with: self?.alertCustomDescription(from: value))
             }
 
-            pm2_5AlertCell.bind(viewModel.pMatter2_5UpperBound) {
+            pm25AlertCell.bind(viewModel.pMatter25UpperBound) {
                 [weak self] cell, _ in
                 cell
                     .setAlertLimitDescription(
-                        description: self?.pm2_5AlertRangeDescription()
+                        description: self?.pm25AlertRangeDescription()
                     )
                 cell.setAlertRange(
-                    selectedMinValue: self?.pm2_5LowerBound(),
-                    selectedMaxValue: self?.pm2_5UpperBound()
+                    selectedMinValue: self?.pm25LowerBound(),
+                    selectedMaxValue: self?.pm25UpperBound()
                 )
             }
 
-            pm2_5AlertCell.bind(viewModel.pMatter2_5LowerBound) {
+            pm25AlertCell.bind(viewModel.pMatter25LowerBound) {
                 [weak self] cell, _ in
-                cell.setAlertLimitDescription(description: self?.pm2_5AlertRangeDescription())
+                cell.setAlertLimitDescription(description: self?.pm25AlertRangeDescription())
                 cell.setAlertRange(
-                    selectedMinValue: self?.pm2_5LowerBound(),
-                    selectedMaxValue: self?.pm2_5UpperBound()
+                    selectedMinValue: self?.pm25LowerBound(),
+                    selectedMaxValue: self?.pm25UpperBound()
                 )
             }
 
-            pm2_5AlertCell.bind(viewModel.latestMeasurement) { [weak self]
+            pm25AlertCell.bind(viewModel.latestMeasurement) { [weak self]
                 cell, measurement in
                 cell.disableEditing(
                     disable: measurement == nil,
-                    identifier: .alertPMatter2_5
+                    identifier: .alertPMatter25
                 )
                 guard let sSelf = self else { return }
                 cell.setLatestMeasurementText(
                     with: sSelf.latestValue(
-                        for: .pMatter2_5(
+                        for: .pMatter25(
                             lower: 0,
                             upper: 0
                         )
@@ -1765,40 +1765,40 @@ extension TagSettingsViewController {
             }
         }
 
-        if let pm2_5AlertSectionHeaderView {
-            pm2_5AlertSectionHeaderView.bind(
-                viewModel.pMatter2_5AlertMutedTill) {
+        if let pm25AlertSectionHeaderView {
+            pm25AlertSectionHeaderView.bind(
+                viewModel.pMatter25AlertMutedTill) {
                     [weak self] header,
                     mutedTill in
                     guard let self else { return }
                     let isOn = alertsAvailable() &&
                     GlobalHelpers
-                        .getBool(from: viewModel.isPMatter2_5AlertOn.value)
-                    let alertState = viewModel.pMatter2_5AlertState.value
+                        .getBool(from: viewModel.isPMatter25AlertOn.value)
+                    let alertState = viewModel.pMatter25AlertState.value
                     header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
                 }
 
-            pm2_5AlertSectionHeaderView
-                .bind(viewModel.isPMatter2_5AlertOn) {
+            pm25AlertSectionHeaderView
+                .bind(viewModel.isPMatter25AlertOn) {
                     [weak self] header,
                     isOn in
                     guard let self else { return }
                     let isOn = alertsAvailable() &&
                         GlobalHelpers.getBool(from: isOn)
-                    let alertState = viewModel.pMatter2_5AlertState.value
-                    let mutedTill = viewModel.pMatter2_5AlertMutedTill.value
+                    let alertState = viewModel.pMatter25AlertState.value
+                    let mutedTill = viewModel.pMatter25AlertMutedTill.value
                     header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
                 }
 
-            pm2_5AlertSectionHeaderView
-                .bind(viewModel.pMatter2_5AlertState) {
+            pm25AlertSectionHeaderView
+                .bind(viewModel.pMatter25AlertState) {
                     [weak self] header,
                     state in
                     guard let self else { return }
                     let isOn = alertsAvailable() &&
                     GlobalHelpers
-                        .getBool(from: viewModel.isPMatter2_5AlertOn.value)
-                    let mutedTill = viewModel.pMatter2_5AlertMutedTill.value
+                        .getBool(from: viewModel.isPMatter25AlertOn.value)
+                    let mutedTill = viewModel.pMatter25AlertMutedTill.value
                     header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
                 }
         }
@@ -2544,8 +2544,8 @@ extension TagSettingsViewController {
             sections.append(configurePM1AlertSection())
         }
 
-        if viewModel?.latestMeasurement.value?.pm2_5 != nil {
-            sections.append(configurePM2_5AlertSection())
+        if viewModel?.latestMeasurement.value?.pm25 != nil {
+            sections.append(configurePM25AlertSection())
         }
 
         if viewModel?.latestMeasurement.value?.pm4 != nil {
@@ -2910,15 +2910,15 @@ extension TagSettingsViewController {
 
     // MARK: - PM2.5 ALERTS
 
-    private func configurePM2_5AlertSection() -> TagSettingsSection {
+    private func configurePM25AlertSection() -> TagSettingsSection {
         let title = RuuviLocalization.TagSettings.Pm25AlertTitleLabel.text(
             RuuviLocalization.unitPm25
         )
         let section = TagSettingsSection(
-            identifier: .alertPMatter2_5,
+            identifier: .alertPMatter25,
             title: title,
             cells: [
-                pm2_5AlertItem()
+                pm25AlertItem()
             ],
             collapsed: true,
             headerType: .expandable
@@ -2926,43 +2926,43 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func pm2_5AlertItem() -> TagSettingsItem {
+    private func pm25AlertItem() -> TagSettingsItem {
         let (minRange, maxRange) = pmAlertRange()
         let disablePM = !hasMeasurement()
         let latestMeasurement = latestValue(
-            for: .pMatter2_5(lower: 0, upper: 0)
+            for: .pMatter25(lower: 0, upper: 0)
         )
         let settingItem = TagSettingsItem(
             createdCell: {
                 [weak self] in
-                self?.pm2_5AlertCell?.hideNoticeView()
-                self?.pm2_5AlertCell?.showAlertRangeSetter()
-                self?.pm2_5AlertCell?
+                self?.pm25AlertCell?.hideNoticeView()
+                self?.pm25AlertCell?.showAlertRangeSetter()
+                self?.pm25AlertCell?
                     .setStatus(
-                        with: self?.viewModel?.isPMatter2_5AlertOn.value,
+                        with: self?.viewModel?.isPMatter25AlertOn.value,
                         hideStatusLabel: self?.viewModel?.hideSwitchStatusLabel.value ?? false
                     )
-                self?.pm2_5AlertCell?
+                self?.pm25AlertCell?
                     .setCustomDescription(
                         with: self?.alertCustomDescription(from: self?.viewModel?
-                            .pMatter2_5AlertDescription.value))
-                self?.pm2_5AlertCell?
+                            .pMatter25AlertDescription.value))
+                self?.pm25AlertCell?
                     .setAlertLimitDescription(
-                        description: self?.pm2_5AlertRangeDescription()
+                        description: self?.pm25AlertRangeDescription()
                     )
-                self?.pm2_5AlertCell?.setAlertRange(
+                self?.pm25AlertCell?.setAlertRange(
                     minValue: minRange,
-                    selectedMinValue: self?.pm2_5LowerBound(),
+                    selectedMinValue: self?.pm25LowerBound(),
                     maxValue: maxRange,
-                    selectedMaxValue: self?.pm2_5UpperBound()
+                    selectedMaxValue: self?.pm25UpperBound()
                 )
-                self?.pm2_5AlertCell?.setLatestMeasurementText(with: latestMeasurement)
-                self?.pm2_5AlertCell?.disableEditing(
+                self?.pm25AlertCell?.setLatestMeasurementText(with: latestMeasurement)
+                self?.pm25AlertCell?.disableEditing(
                     disable: disablePM,
-                    identifier: .alertPMatter2_5
+                    identifier: .alertPMatter25
                 )
-                self?.pm2_5AlertCell?.delegate = self
-                return self?.pm2_5AlertCell ?? UITableViewCell()
+                self?.pm25AlertCell?.delegate = self
+                return self?.pm25AlertCell ?? UITableViewCell()
             },
             action: nil
         )
@@ -3468,7 +3468,7 @@ extension TagSettingsViewController {
         reloadSignalAlertSectionHeader()
         reloadCo2AlertSectionHeader()
         reloadPM1AlertSectionHeader()
-        reloadPM2_5AlertSectionHeader()
+        reloadPM25AlertSectionHeader()
         reloadPM4AlertSectionHeader()
         reloadPM10AlertSectionHeader()
         reloadVOCAlertSectionHeader()
@@ -3563,13 +3563,13 @@ extension TagSettingsViewController {
             )
     }
 
-    private func reloadPM2_5AlertSectionHeader() {
+    private func reloadPM25AlertSectionHeader() {
         let isOn = alertsAvailable() && GlobalHelpers.getBool(
-            from: viewModel?.isPMatter2_5AlertOn.value
+            from: viewModel?.isPMatter25AlertOn.value
         )
-        let mutedTill = viewModel?.pMatter2_5AlertMutedTill.value
-        let alertState = viewModel?.pMatter2_5AlertState.value
-        pm2_5AlertSectionHeaderView?
+        let mutedTill = viewModel?.pMatter25AlertMutedTill.value
+        let alertState = viewModel?.pMatter25AlertState.value
+        pm25AlertSectionHeaderView?
             .setAlertState(
                 with: mutedTill,
                 isOn: isOn,
@@ -3867,10 +3867,10 @@ extension TagSettingsViewController {
             } else {
                 return RuuviLocalization.na
             }
-        case .pMatter2_5:
-            if let pm2_5 = viewModel?.latestMeasurement.value?.pm2_5?.round(to: 2) {
+        case .pMatter25:
+            if let pm25 = viewModel?.latestMeasurement.value?.pm25?.round(to: 2) {
                 let symbol = RuuviLocalization.unitPm25
-                return "\(pm2_5)" + " \(symbol)"
+                return "\(pm25)" + " \(symbol)"
             } else {
                 return RuuviLocalization.na
             }
@@ -4318,7 +4318,7 @@ extension TagSettingsViewController {
     }
 
     // PM2.5
-    private func pm2_5AlertRangeDescription(
+    private func pm25AlertRangeDescription(
         from min: CGFloat? = nil,
         max: CGFloat? = nil
     ) -> NSMutableAttributedString? {
@@ -4338,8 +4338,8 @@ extension TagSettingsViewController {
             )
         }
 
-        if let lower = viewModel?.pMatter2_5LowerBound.value,
-           let upper = viewModel?.pMatter2_5UpperBound.value {
+        if let lower = viewModel?.pMatter25LowerBound.value,
+           let upper = viewModel?.pMatter25UpperBound.value {
             return attributedString(
                 from: format(
                     formatNumber(
@@ -4355,24 +4355,24 @@ extension TagSettingsViewController {
         }
     }
 
-    private func pm2_5LowerBound() -> CGFloat {
+    private func pm25LowerBound() -> CGFloat {
         guard isViewLoaded else {
             return TagSettingsAlertConstants.ParticulateMatter.lowerBound
         }
         let (minRange, _) = pmAlertRange()
-        if let lower = viewModel?.pMatter2_5LowerBound.value {
+        if let lower = viewModel?.pMatter25LowerBound.value {
             return CGFloat(lower)
         } else {
             return minRange
         }
     }
 
-    private func pm2_5UpperBound() -> CGFloat {
+    private func pm25UpperBound() -> CGFloat {
         guard isViewLoaded else {
             return TagSettingsAlertConstants.ParticulateMatter.upperBound
         }
         let (_, maxRange) = pmAlertRange()
-        if let upper = viewModel?.pMatter2_5UpperBound.value {
+        if let upper = viewModel?.pMatter25UpperBound.value {
             return CGFloat(upper)
         } else {
             return maxRange
@@ -4826,8 +4826,8 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
             description = viewModel?.carbonDioxideAlertDescription.value
         case pm1AlertCell:
             description = viewModel?.pMatter1AlertDescription.value
-        case pm2_5AlertCell:
-            description = viewModel?.pMatter2_5AlertDescription.value
+        case pm25AlertCell:
+            description = viewModel?.pMatter25AlertDescription.value
         case pm4AlertCell:
             description = viewModel?.pMatter4AlertDescription.value
         case pm10AlertCell:
@@ -4871,8 +4871,8 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
             showCo2AlertSetDialog(sender: sender)
         case pm1AlertCell:
             showPM1AlertSetDialog(sender: sender)
-        case pm2_5AlertCell:
-            showPM2_5AlertSetDialog(sender: sender)
+        case pm25AlertCell:
+            showPM25AlertSetDialog(sender: sender)
         case pm4AlertCell:
             showPM4AlertSetDialog(sender: sender)
         case pm10AlertCell:
@@ -4931,9 +4931,9 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
                 isOn: isOn
             )
 
-        case pm2_5AlertCell:
+        case pm25AlertCell:
             output.viewDidChangeAlertState(
-                for: .pMatter2_5(lower: 0, upper: 0),
+                for: .pMatter25(lower: 0, upper: 0),
                 isOn: isOn
             )
 
@@ -5094,17 +5094,17 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
                 )
             }
 
-        case pm2_5AlertCell:
-            if minValue != viewModel?.pMatter2_5LowerBound.value {
+        case pm25AlertCell:
+            if minValue != viewModel?.pMatter25LowerBound.value {
                 output.viewDidChangeAlertLowerBound(
-                    for: .pMatter2_5(lower: 0, upper: 0),
+                    for: .pMatter25(lower: 0, upper: 0),
                     lower: minValue
                 )
             }
 
-            if maxValue != viewModel?.pMatter2_5UpperBound.value {
+            if maxValue != viewModel?.pMatter25UpperBound.value {
                 output.viewDidChangeAlertUpperBound(
-                    for: .pMatter2_5(lower: 0, upper: 0),
+                    for: .pMatter25(lower: 0, upper: 0),
                     upper: maxValue
                 )
             }
@@ -5246,9 +5246,9 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
                     from: minValue,
                     max: maxValue
                 ))
-        case pm2_5AlertCell:
-            pm2_5AlertCell?.setAlertLimitDescription(
-                description: pm2_5AlertRangeDescription(
+        case pm25AlertCell:
+            pm25AlertCell?.setAlertLimitDescription(
+                description: pm25AlertRangeDescription(
                     from: minValue,
                     max: maxValue
                 ))
@@ -5399,13 +5399,13 @@ extension TagSettingsViewController {
         )
     }
 
-    private func showPM2_5AlertSetDialog(sender: TagSettingsAlertConfigCell) {
+    private func showPM25AlertSetDialog(sender: TagSettingsAlertConfigCell) {
         let title = RuuviLocalization.TagSettings.Pm25AlertTitleLabel.text(
             RuuviLocalization.unitPm25
         )
 
         let (minimumRange, maximumRange) = pmAlertRange()
-        let (minimumValue, maximumValue) = pm2_5Value()
+        let (minimumValue, maximumValue) = pm25Value()
         showSensorCustomAlertRangeDialog(
             title: title,
             minimumBound: minimumRange,
@@ -5646,9 +5646,9 @@ extension TagSettingsViewController {
     }
 
     // PM1
-    private func pm2_5Value() -> (minimum: Double?, maximum: Double?) {
-        if let lower = viewModel?.pMatter2_5LowerBound.value,
-           let upper = viewModel?.pMatter2_5UpperBound.value {
+    private func pm25Value() -> (minimum: Double?, maximum: Double?) {
+        if let lower = viewModel?.pMatter25LowerBound.value,
+           let upper = viewModel?.pMatter25UpperBound.value {
             return (minimum: lower, maximum: upper)
         } else {
             return (minimum: nil, maximum: nil)
@@ -6297,10 +6297,10 @@ extension TagSettingsViewController {
     private func formattedVersion(value: Int?) -> String {
         if value == 0xC5 {
             return "C5"
-        } else if value == 0xE0 {
-            return "E0"
-        } else if value == 0xF0 {
-            return "F0"
+        } else if value == 0xE1 {
+            return "E1"
+        } else if value == 0x06 {
+            return "6"
         } else {
             return value.stringValue
         }
@@ -6542,15 +6542,15 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
                     alertState: viewModel?.pMatter1AlertState.value,
                     section: section
                 )
-            case .alertPMatter2_5:
+            case .alertPMatter25:
                 return alertSectionHeaderView(
-                    from: pm2_5AlertSectionHeaderView,
+                    from: pm25AlertSectionHeaderView,
                     sectionItem: sectionItem,
-                    mutedTill: viewModel?.pMatter2_5AlertMutedTill.value,
+                    mutedTill: viewModel?.pMatter25AlertMutedTill.value,
                     isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
-                        from: viewModel?.isPMatter2_5AlertOn.value
+                        from: viewModel?.isPMatter25AlertOn.value
                     ),
-                    alertState: viewModel?.pMatter2_5AlertState.value,
+                    alertState: viewModel?.pMatter25AlertState.value,
                     section: section
                 )
             case .alertPMatter4:
@@ -6752,8 +6752,8 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
             reloadCo2AlertSectionHeader()
         case .alertPMatter1:
             reloadPM1AlertSectionHeader()
-        case .alertPMatter2_5:
-            reloadPM2_5AlertSectionHeader()
+        case .alertPMatter25:
+            reloadPM25AlertSectionHeader()
         case .alertPMatter4:
             reloadPM4AlertSectionHeader()
         case .alertPMatter10:
@@ -6899,24 +6899,24 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                         identifier: currentSection.identifier
                     )
                 }
-            case .alertPMatter2_5:
-                if let pm2_5AlertCell {
+            case .alertPMatter25:
+                if let pm25AlertCell {
                     let (minRange, maxRange) = pmAlertRange()
                     let latest = latestValue(
-                        for: .pMatter2_5(lower: 0, upper: 0)
+                        for: .pMatter25(lower: 0, upper: 0)
                     )
-                    pm2_5AlertCell
+                    pm25AlertCell
                         .setAlertLimitDescription(
-                            description: pm2_5AlertRangeDescription()
+                            description: pm25AlertRangeDescription()
                         )
-                    pm2_5AlertCell.setAlertRange(
+                    pm25AlertCell.setAlertRange(
                         minValue: minRange,
-                        selectedMinValue: pm2_5LowerBound(),
+                        selectedMinValue: pm25LowerBound(),
                         maxValue: maxRange,
-                        selectedMaxValue: pm2_5UpperBound()
+                        selectedMaxValue: pm25UpperBound()
                     )
-                    pm2_5AlertCell.setLatestMeasurementText(with: latest)
-                    pm2_5AlertCell.disableEditing(
+                    pm25AlertCell.setLatestMeasurementText(with: latest)
+                    pm25AlertCell.disableEditing(
                         disable: GlobalHelpers.getBool(
                             from: !hasMeasurement()
                         ),
@@ -7288,9 +7288,9 @@ extension TagSettingsViewController {
                 for: .pMatter1(lower: 0, upper: 0),
                 description: inputText
             )
-        case pm2_5AlertCell:
+        case pm25AlertCell:
             output.viewDidChangeAlertDescription(
-                for: .pMatter2_5(lower: 0, upper: 0),
+                for: .pMatter25(lower: 0, upper: 0),
                 description: inputText
             )
         case pm4AlertCell:
@@ -7376,7 +7376,7 @@ extension TagSettingsViewController {
             if sender == temperatureAlertCell || sender == humidityAlertCell ||
                 sender == pressureAlertCell || sender == rssiAlertCell ||
                 sender == co2AlertCell || sender == pm1AlertCell ||
-                sender == pm2_5AlertCell || sender == pm4AlertCell ||
+                sender == pm25AlertCell || sender == pm4AlertCell ||
                 sender == pm10AlertCell || sender == vocAlertCell ||
                 sender == noxAlertCell || sender == soundAlertCell ||
                 sender == luminosityAlertCell {
@@ -7401,7 +7401,7 @@ extension TagSettingsViewController {
             if sender == temperatureAlertCell || sender == humidityAlertCell ||
                 sender == pressureAlertCell || sender == rssiAlertCell ||
                 sender == co2AlertCell || sender == pm1AlertCell ||
-                sender == pm2_5AlertCell || sender == pm4AlertCell ||
+                sender == pm25AlertCell || sender == pm4AlertCell ||
                 sender == pm10AlertCell || sender == vocAlertCell ||
                 sender == noxAlertCell || sender == soundAlertCell ||
                 sender == luminosityAlertCell {

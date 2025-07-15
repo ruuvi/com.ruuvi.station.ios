@@ -11,7 +11,7 @@ enum MeasurementType: String {
     // v5
     case movementCounter
     case txPower
-    // E0/F0
+    // E1/V6
     case aqi
     case co2
     case pm25
@@ -72,7 +72,7 @@ extension MeasurementType {
         case .co2:
             return .carbonDioxide(lower: 0, upper: 0)
         case .pm25:
-            return .pMatter2_5(lower: 0, upper: 0)
+            return .pMatter25(lower: 0, upper: 0)
         case .pm10:
             return .pMatter10(lower: 0, upper: 0)
         case .nox:

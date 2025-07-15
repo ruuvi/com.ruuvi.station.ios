@@ -335,8 +335,8 @@ extension RuuviTagHeartbeatDaemonBTKit {
         // Check for duplicate sequence number
         let measurementSequenceNumber = ruuviTag.measurementSequenceNumber
 
-        // Skip if we already processed this sequence number (except version F0)
-        if ruuviTag.version != 0xF0, let sequenceNumber = measurementSequenceNumber {
+        // Skip if we already processed this sequence number (except version v6)
+        if ruuviTag.version != 0x06, let sequenceNumber = measurementSequenceNumber {
             var shouldCreate = false
             sequenceNumberQueue.sync {
                 if lastSavedSequenceNumbers[uuid] != sequenceNumber {
@@ -363,9 +363,9 @@ extension RuuviTagHeartbeatDaemonBTKit {
         uuid: String,
         source: RuuviTagSensorRecordSource
     ) {
-        // Do not store advertisement for history only if it is F0 firmware and legacy advertisement.
+        // Do not store advertisement for history only if it is v6 firmware and legacy advertisement.
         guard !uuid.isEmpty else { return }
-        if ruuviTag.version == 0xF0 {
+        if ruuviTag.version == 0x06 {
             createLastRecord(observer: observer, ruuviTag: ruuviTag, uuid: uuid, source: source)
         } else {
             observer.ruuviPool.create(ruuviTag.with(source: source)).on(
@@ -512,8 +512,8 @@ extension RuuviTagHeartbeatDaemonBTKit {
                     options: [.callbackQueue(.untouch)]
                 ) { [weak self] _, device in
                     guard let sSelf = self else { return }
-                    if let ruuviTag = device.ruuvi?.tag, // swiftlint:disable:this control_statement
-                       (ruuviTag.vC5?.serviceUUID != nil || ruuviTag.vE0_F0?.serviceUUID != nil),
+                    if let ruuviTag = device.ruuvi?.tag,
+                        ruuviTag.vC5?.serviceUUID != nil || ruuviTag.vE1_V6?.serviceUUID != nil,
                        !ruuviTag.isConnected, !sSelf.settings.appIsOnForeground {
                         sSelf.processRuuviTag(ruuviTag, source: .bgAdvertisement)
                     }

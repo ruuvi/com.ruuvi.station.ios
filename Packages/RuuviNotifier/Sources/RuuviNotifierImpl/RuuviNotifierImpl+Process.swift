@@ -72,15 +72,15 @@ public extension RuuviNotifierImpl {
                 )
                 isTriggered = isTriggered || isPM1
                 notify(alertType: type, uuid: luid.value, isTriggered: isPM1)
-            case .pMatter2_5:
-                let isPM2_5 = process(
-                    pMatter2_5: record.pm2_5,
+            case .pMatter25:
+                let isPM25 = process(
+                    pMatter25: record.pm25,
                     alertType: type,
                     identifier: record.luid,
                     trigger: trigger
                 )
-                isTriggered = isTriggered || isPM2_5
-                notify(alertType: type, uuid: luid.value, isTriggered: isPM2_5)
+                isTriggered = isTriggered || isPM25
+                notify(alertType: type, uuid: luid.value, isTriggered: isPM25)
             case .pMatter4:
                 let isPM4 = process(
                     pMatter4: record.pm4,
@@ -253,18 +253,18 @@ public extension RuuviNotifierImpl {
                     uuid: identifier.value,
                     isTriggered: isPM1
                 )
-            case .pMatter2_5:
-                let isPM2_5 = process(
-                    pMatter2_5: record.pm2_5,
+            case .pMatter25:
+                let isPM25 = process(
+                    pMatter25: record.pm25,
                     alertType: type,
                     identifier: record.luid,
                     trigger: trigger
                 )
-                isTriggered = isTriggered || isPM2_5
+                isTriggered = isTriggered || isPM25
                 notify(
                     alertType: type,
                     uuid: identifier.value,
-                    isTriggered: isPM2_5
+                    isTriggered: isPM25
                 )
             case .pMatter4:
                 let isPM4 = process(
@@ -724,20 +724,20 @@ extension RuuviNotifierImpl {
     }
 
     private func process(
-        pMatter2_5: Double?,
+        pMatter25: Double?,
         alertType: AlertType,
         identifier: Identifier?,
         trigger: Bool = true
     ) -> Bool {
         guard let identifier else { return false }
-        if case let .pMatter2_5(lower, upper) = ruuviAlertService
+        if case let .pMatter25(lower, upper) = ruuviAlertService
             .alert(
                 for: identifier.value,
                 of: alertType
             ),
-           let pMatter2_5 {
-            let isLower = pMatter2_5 < lower
-            let isUpper = pMatter2_5 > upper
+           let pMatter25 {
+            let isLower = pMatter25 < lower
+            let isUpper = pMatter25 > upper
             if trigger {
                 if isLower {
                     let lowerString = measurementService.pm25String(
@@ -747,9 +747,9 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
-                            .pMatter2_5,
+                            .pMatter25,
                             for: identifier.value,
-                            title: sSelf.titles.lowPMatter2_5(
+                            title: sSelf.titles.lowPMatter25(
                                 "\(lowerString) \(RuuviLocalization.unitPm25)"
                             )
                         )
@@ -762,9 +762,9 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
-                            .pMatter2_5,
+                            .pMatter25,
                             for: identifier.value,
-                            title: sSelf.titles.highPMatter2_5(
+                            title: sSelf.titles.highPMatter25(
                                 "\(upperString) \(RuuviLocalization.unitPm25)"
                             )
                         )
