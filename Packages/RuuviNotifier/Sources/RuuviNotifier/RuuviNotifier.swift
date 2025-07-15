@@ -43,8 +43,8 @@ public protocol RuuviNotifierTitles {
     func highCarbonDioxide(_ value: String) -> String
     func lowPMatter1(_ value: String) -> String
     func highPMatter1(_ value: String) -> String
-    func lowPMatter2_5(_ value: String) -> String
-    func highPMatter2_5(_ value: String) -> String
+    func lowPMatter25(_ value: String) -> String
+    func highPMatter25(_ value: String) -> String
     func lowPMatter4(_ value: String) -> String
     func highPMatter4(_ value: String) -> String
     func lowPMatter10(_ value: String) -> String

@@ -313,8 +313,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setCarbonDioxideAlertState(isOn: isOn)
         case .pMatter1:
             setPMatter1AlertState(isOn: isOn)
-        case .pMatter2_5:
-            setPMatter2_5AlertState(isOn: isOn)
+        case .pMatter25:
+            setPMatter25AlertState(isOn: isOn)
         case .pMatter4:
             setPMatter4AlertState(isOn: isOn)
         case .pMatter10:
@@ -350,8 +350,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setCarbonDioxideAlertLowerBound(lower: lower)
         case .pMatter1:
             setPMatter1AlertLowerBound(lower: lower)
-        case .pMatter2_5:
-            setPMatter2_5AlertLowerBound(lower: lower)
+        case .pMatter25:
+            setPMatter25AlertLowerBound(lower: lower)
         case .pMatter4:
             setPMatter4AlertLowerBound(lower: lower)
         case .pMatter10:
@@ -383,8 +383,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setCarbonDioxideAlertUpperBound(upper: upper)
         case .pMatter1:
             setPMatter1AlertUpperBound(upper: upper)
-        case .pMatter2_5:
-            setPMatter2_5AlertUpperBound(upper: upper)
+        case .pMatter25:
+            setPMatter25AlertUpperBound(upper: upper)
         case .pMatter4:
             setPMatter4AlertUpperBound(upper: upper)
         case .pMatter10:
@@ -425,8 +425,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setCarbonDioxideAlertDescription(description: description)
         case .pMatter1:
             setPMatter1AlertDescription(description: description)
-        case .pMatter2_5:
-            setPMatter2_5AlertDescription(description: description)
+        case .pMatter25:
+            setPMatter25AlertDescription(description: description)
         case .pMatter4:
             setPMatter4AlertDescription(description: description)
         case .pMatter10:
@@ -756,8 +756,8 @@ extension TagSettingsPresenter {
             sync(carbonDioxide: type, ruuviTag: ruuviTag)
         case .pMatter1:
             sync(pMatter1: type, ruuviTag: ruuviTag)
-        case .pMatter2_5:
-            sync(pMatter2_5: type, ruuviTag: ruuviTag)
+        case .pMatter25:
+            sync(pMatter25: type, ruuviTag: ruuviTag)
         case .pMatter4:
             sync(pMatter4: type, ruuviTag: ruuviTag)
         case .pMatter10:
@@ -917,24 +917,24 @@ extension TagSettingsPresenter {
             .mutedTill(type: pMatter1, for: ruuviTag)
     }
 
-    private func sync(pMatter2_5: AlertType, ruuviTag: RuuviTagSensor) {
-        viewModel.pMatter2_5AlertDescription.value = alertService.pm2_5Description(for: ruuviTag)
-        if case let .pMatter2_5(lower, upper) = alertService
-            .alert(for: ruuviTag, of: pMatter2_5) {
-            viewModel.isPMatter2_5AlertOn.value = true
-            viewModel.pMatter2_5LowerBound.value = Double(lower)
-            viewModel.pMatter2_5UpperBound.value = Double(upper)
+    private func sync(pMatter25: AlertType, ruuviTag: RuuviTagSensor) {
+        viewModel.pMatter25AlertDescription.value = alertService.pm25Description(for: ruuviTag)
+        if case let .pMatter25(lower, upper) = alertService
+            .alert(for: ruuviTag, of: pMatter25) {
+            viewModel.isPMatter25AlertOn.value = true
+            viewModel.pMatter25LowerBound.value = Double(lower)
+            viewModel.pMatter25UpperBound.value = Double(upper)
         } else {
-            viewModel.isPMatter2_5AlertOn.value = false
-            if let pMatter2_5LowerBound = alertService.lowerPM2_5(for: ruuviTag) {
-                viewModel.pMatter2_5LowerBound.value = pMatter2_5LowerBound
+            viewModel.isPMatter25AlertOn.value = false
+            if let pMatter25LowerBound = alertService.lowerPM25(for: ruuviTag) {
+                viewModel.pMatter25LowerBound.value = pMatter25LowerBound
             }
-            if let pMatter2_5UpperBound = alertService.upperPM2_5(for: ruuviTag) {
-                viewModel.pMatter2_5UpperBound.value = pMatter2_5UpperBound
+            if let pMatter25UpperBound = alertService.upperPM25(for: ruuviTag) {
+                viewModel.pMatter25UpperBound.value = pMatter25UpperBound
             }
         }
-        viewModel.pMatter2_5AlertMutedTill.value = alertService
-            .mutedTill(type: pMatter2_5, for: ruuviTag)
+        viewModel.pMatter25AlertMutedTill.value = alertService
+            .mutedTill(type: pMatter25, for: ruuviTag)
     }
 
     private func sync(pMatter4: AlertType, ruuviTag: RuuviTagSensor) {
@@ -1479,8 +1479,8 @@ extension TagSettingsPresenter {
             observable = viewModel.carbonDioxideAlertMutedTill
         case .pMatter1:
             observable = viewModel.pMatter1AlertMutedTill
-        case .pMatter2_5:
-            observable = viewModel.pMatter2_5AlertMutedTill
+        case .pMatter25:
+            observable = viewModel.pMatter25AlertMutedTill
         case .pMatter4:
             observable = viewModel.pMatter4AlertMutedTill
         case .pMatter10:
@@ -1524,8 +1524,8 @@ extension TagSettingsPresenter {
             observable = viewModel.isCarbonDioxideAlertOn
         case .pMatter1:
             observable = viewModel.isPMatter1AlertOn
-        case .pMatter2_5:
-            observable = viewModel.isPMatter2_5AlertOn
+        case .pMatter25:
+            observable = viewModel.isPMatter25AlertOn
         case .pMatter4:
             observable = viewModel.isPMatter4AlertOn
         case .pMatter10:
@@ -1668,12 +1668,12 @@ extension TagSettingsPresenter: RuuviNotifierObserver {
                 if viewModel.pMatter1AlertState.value != newValue {
                     viewModel.pMatter1AlertState.value = newValue
                 }
-            case .pMatter2_5:
+            case .pMatter25:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
-                let isOn = viewModel.isPMatter2_5AlertOn.value ?? false
+                let isOn = viewModel.isPMatter25AlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
-                if viewModel.pMatter2_5AlertState.value != newValue {
-                    viewModel.pMatter2_5AlertState.value = newValue
+                if viewModel.pMatter25AlertState.value != newValue {
+                    viewModel.pMatter25AlertState.value = newValue
                 }
             case .pMatter4:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
@@ -2154,14 +2154,14 @@ extension TagSettingsPresenter {
     }
 }
 
-// MARK: - PMatter2_5
+// MARK: - PMatter25
 
 extension TagSettingsPresenter {
-    private func setPMatter2_5AlertState(isOn: Bool) {
-        viewModel.isPMatter2_5AlertOn.value = isOn
-        if let pMatter2_5Lower = viewModel.pMatter2_5LowerBound.value,
-           let pMatter2_5Upper = viewModel.pMatter2_5UpperBound.value {
-            let type: AlertType = .pMatter2_5(lower: pMatter2_5Lower, upper: pMatter2_5Upper)
+    private func setPMatter25AlertState(isOn: Bool) {
+        viewModel.isPMatter25AlertOn.value = isOn
+        if let pMatter25Lower = viewModel.pMatter25LowerBound.value,
+           let pMatter25Upper = viewModel.pMatter25UpperBound.value {
+            let type: AlertType = .pMatter25(lower: pMatter25Lower, upper: pMatter25Upper)
             let currentState = alertService.isOn(type: type, for: ruuviTag)
             if currentState != isOn {
                 if isOn {
@@ -2175,31 +2175,31 @@ extension TagSettingsPresenter {
         }
     }
 
-    private func setPMatter2_5AlertLowerBound(lower: CGFloat) {
-        let lowPMatter2_5Debouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
-        viewModel.pMatter2_5LowerBound.value = lower
+    private func setPMatter25AlertLowerBound(lower: CGFloat) {
+        let lowPMatter25Debouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.pMatter25LowerBound.value = lower
 
-        lowPMatter2_5Debouncer.run { [weak self] in
+        lowPMatter25Debouncer.run { [weak self] in
             guard let sSelf = self else { return }
-            sSelf.alertService.setLower(pm2_5: lower, ruuviTag: sSelf.ruuviTag)
+            sSelf.alertService.setLower(pm25: lower, ruuviTag: sSelf.ruuviTag)
             sSelf.processAlerts()
         }
     }
 
-    private func setPMatter2_5AlertUpperBound(upper: CGFloat) {
-        let upperPMatter2_5Debouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
-        viewModel.pMatter2_5UpperBound.value = upper
+    private func setPMatter25AlertUpperBound(upper: CGFloat) {
+        let upperPMatter25Debouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.pMatter25UpperBound.value = upper
 
-        upperPMatter2_5Debouncer.run { [weak self] in
+        upperPMatter25Debouncer.run { [weak self] in
             guard let sSelf = self else { return }
-            sSelf.alertService.setUpper(pm2_5: upper, ruuviTag: sSelf.ruuviTag)
+            sSelf.alertService.setUpper(pm25: upper, ruuviTag: sSelf.ruuviTag)
             sSelf.processAlerts()
         }
     }
 
-    private func setPMatter2_5AlertDescription(description: String?) {
-        viewModel.pMatter2_5AlertDescription.value = description
-        alertService.setPM2_5(
+    private func setPMatter25AlertDescription(description: String?) {
+        viewModel.pMatter25AlertDescription.value = description
+        alertService.setPM25(
             description: description,
             ruuviTag: ruuviTag
         )
@@ -2684,9 +2684,9 @@ extension TagSettingsPresenter {
             return
         }
 
-        // TODO: Remove this check once fw revision is supported for E0/F0
+        // TODO: Remove this check once fw revision is supported for E1/V6
         let fwVersion = RuuviFirmwareVersion.firmwareVersion(from: ruuviTag.version)
-        if fwVersion == .e0 || fwVersion == .f0 {
+        if fwVersion == .e1 || fwVersion == .v6 {
             return
         }
 

@@ -149,9 +149,9 @@ extension DFUInteractor: DFUInteractorInput {
                 promise(.failure(BTError.logic(.connectionTimedOut)))
             }
 
-            // TODO: Remove this check once fw revision is supported for E0/F0
+            // TODO: Remove this check once fw revision is supported for E1/V6
             let fwVersion = RuuviFirmwareVersion.firmwareVersion(from: ruuviTag.version)
-            if fwVersion == .e0 || fwVersion == .f0 {
+            if fwVersion == .e1 || fwVersion == .v6 {
                 return
             }
 

@@ -14,7 +14,7 @@ extension AlertType {
             return .movementCounter
         case .carbonDioxide:
             return .co2
-        case .pMatter2_5:
+        case .pMatter25:
             return .pm25
         case .pMatter10:
             return .pm10

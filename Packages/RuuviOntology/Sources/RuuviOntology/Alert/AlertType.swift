@@ -8,7 +8,7 @@ public enum AlertType: CaseIterable, Hashable {
     case signal(lower: Double, upper: Double) // dB
     case carbonDioxide(lower: Double, upper: Double) // ppm
     case pMatter1(lower: Double, upper: Double) // µg/m³
-    case pMatter2_5(lower: Double, upper: Double) // µg/m³
+    case pMatter25(lower: Double, upper: Double) // µg/m³
     case pMatter4(lower: Double, upper: Double) // µg/m³
     case pMatter10(lower: Double, upper: Double) // µg/m³
     case voc(lower: Double, upper: Double) // VOC Index
@@ -31,7 +31,7 @@ public enum AlertType: CaseIterable, Hashable {
             .signal(lower: 0, upper: 0),
             .carbonDioxide(lower: 0, upper: 0),
             .pMatter1(lower: 0, upper: 0),
-            .pMatter2_5(lower: 0, upper: 0),
+            .pMatter25(lower: 0, upper: 0),
             .pMatter4(lower: 0, upper: 0),
             .pMatter10(lower: 0, upper: 0),
             .voc(lower: 0, upper: 0),

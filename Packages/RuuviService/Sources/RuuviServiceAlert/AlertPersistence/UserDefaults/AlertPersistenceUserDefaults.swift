@@ -118,19 +118,19 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         = "AlertPersistenceUserDefaults.pm1AlertTriggeredAtUDKeyPrefix."
 
     // pm2.5
-    private let pm2_5LowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm2_5LowerBoundUDKeyPrefix."
-    private let pm2_5UpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm2_5UpperBoundUDKeyPrefix."
-    private let pm2_5AlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm2_5AlertIsOnUDKeyPrefix."
-    private let pm2_5AlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm2_5AlertDescriptionUDKeyPrefix."
-    private let pm2_5AlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm2_5AlertMuteTillDateUDKeyPrefix."
-    private let pm2_5AlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm2_5AlertIsTriggeredUDKeyPrefix."
-    private let pm2_5AlertTriggeredAtUDKeyPrefix
+    private let pm25LowerBoundUDKeyPrefix
+        = "AlertPeristenceUserDefaults.pm2_5LowerBoundUDKeyPrefix."
+    private let pm25UpperBoundUDKeyPrefix
+        = "AlertPeristenceUserDefaults.pm2_5UpperBoundUDKeyPrefix."
+    private let pm25AlertIsOnUDKeyPrefix
+        = "AlertPeristenceUserDefaults.pm2_5AlertIsOnUDKeyPrefix."
+    private let pm25AlertDescriptionUDKeyPrefix
+        = "AlertPeristenceUserDefaults.pm2_5AlertDescriptionUDKeyPrefix."
+    private let pm25AlertMuteTillDateUDKeyPrefix
+        = "AlertPeristenceUserDefaults.pm2_5AlertMuteTillDateUDKeyPrefix."
+    private let pm25AlertIsTriggeredUDKeyPrefix
+        = "AlertPeristenceUserDefaults.pm2_5AlertIsTriggeredUDKeyPrefix."
+    private let pm25AlertTriggeredAtUDKeyPrefix
         = "AlertPersistenceUserDefaults.pm2_5AlertTriggeredAtUDKeyPrefix."
 
     // pm4
@@ -330,11 +330,11 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             } else {
                 return nil
             }
-        case .pMatter2_5:
-            if prefs.bool(forKey: pm2_5AlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.optionalDouble(forKey: pm2_5LowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: pm2_5UpperBoundUDKeyPrefix + uuid) {
-                return .pMatter2_5(lower: lower, upper: upper)
+        case .pMatter25:
+            if prefs.bool(forKey: pm25AlertIsOnUDKeyPrefix + uuid),
+               let lower = prefs.optionalDouble(forKey: pm25LowerBoundUDKeyPrefix + uuid),
+               let upper = prefs.optionalDouble(forKey: pm25UpperBoundUDKeyPrefix + uuid) {
+                return .pMatter25(lower: lower, upper: upper)
             } else {
                 return nil
             }
@@ -446,10 +446,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(true, forKey: pm1AlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: pm1LowerBoundUDKeyPrefix + uuid)
             prefs.set(upper, forKey: pm1UpperBoundUDKeyPrefix + uuid)
-        case let .pMatter2_5(lower, upper):
-            prefs.set(true, forKey: pm2_5AlertIsOnUDKeyPrefix + uuid)
-            prefs.set(lower, forKey: pm2_5LowerBoundUDKeyPrefix + uuid)
-            prefs.set(upper, forKey: pm2_5UpperBoundUDKeyPrefix + uuid)
+        case let .pMatter25(lower, upper):
+            prefs.set(true, forKey: pm25AlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: pm25LowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: pm25UpperBoundUDKeyPrefix + uuid)
         case let .pMatter4(lower, upper):
             prefs.set(true, forKey: pm4AlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: pm4LowerBoundUDKeyPrefix + uuid)
@@ -530,12 +530,12 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(upper, forKey: pm1UpperBoundUDKeyPrefix + uuid)
             prefs.set(false, forKey: pm1AlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(nil, forKey: pm1AlertTriggeredAtUDKeyPrefix + uuid)
-        case let .pMatter2_5(lower, upper):
-            prefs.set(false, forKey: pm2_5AlertIsOnUDKeyPrefix + uuid)
-            prefs.set(lower, forKey: pm2_5LowerBoundUDKeyPrefix + uuid)
-            prefs.set(upper, forKey: pm2_5UpperBoundUDKeyPrefix + uuid)
-            prefs.set(false, forKey: pm2_5AlertIsTriggeredUDKeyPrefix + uuid)
-            prefs.set(nil, forKey: pm2_5AlertTriggeredAtUDKeyPrefix + uuid)
+        case let .pMatter25(lower, upper):
+            prefs.set(false, forKey: pm25AlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: pm25LowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: pm25UpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: pm25AlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: pm25AlertTriggeredAtUDKeyPrefix + uuid)
         case let .pMatter4(lower, upper):
             prefs.set(false, forKey: pm4AlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: pm4LowerBoundUDKeyPrefix + uuid)
@@ -632,12 +632,12 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.removeObject(forKey: pm1UpperBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: pm1AlertIsTriggeredUDKeyPrefix + uuid)
             prefs.removeObject(forKey: pm1AlertTriggeredAtUDKeyPrefix + uuid)
-        case .pMatter2_5:
-            prefs.removeObject(forKey: pm2_5AlertIsOnUDKeyPrefix + uuid)
-            prefs.removeObject(forKey: pm2_5LowerBoundUDKeyPrefix + uuid)
-            prefs.removeObject(forKey: pm2_5UpperBoundUDKeyPrefix + uuid)
-            prefs.removeObject(forKey: pm2_5AlertIsTriggeredUDKeyPrefix + uuid)
-            prefs.removeObject(forKey: pm2_5AlertTriggeredAtUDKeyPrefix + uuid)
+        case .pMatter25:
+            prefs.removeObject(forKey: pm25AlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm25LowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm25UpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm25AlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: pm25AlertTriggeredAtUDKeyPrefix + uuid)
         case .pMatter4:
             prefs.removeObject(forKey: pm4AlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: pm4LowerBoundUDKeyPrefix + uuid)
@@ -706,8 +706,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(date, forKey: co2AlertMuteTillDateUDKeyPrefix + uuid)
         case .pMatter1:
             prefs.set(date, forKey: pm1AlertMuteTillDateUDKeyPrefix + uuid)
-        case .pMatter2_5:
-            prefs.set(date, forKey: pm2_5AlertMuteTillDateUDKeyPrefix + uuid)
+        case .pMatter25:
+            prefs.set(date, forKey: pm25AlertMuteTillDateUDKeyPrefix + uuid)
         case .pMatter4:
             prefs.set(date, forKey: pm4AlertMuteTillDateUDKeyPrefix + uuid)
         case .pMatter10:
@@ -746,8 +746,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(nil, forKey: co2AlertMuteTillDateUDKeyPrefix + uuid)
         case .pMatter1:
             prefs.set(nil, forKey: pm1AlertMuteTillDateUDKeyPrefix + uuid)
-        case .pMatter2_5:
-            prefs.set(nil, forKey: pm2_5AlertMuteTillDateUDKeyPrefix + uuid)
+        case .pMatter25:
+            prefs.set(nil, forKey: pm25AlertMuteTillDateUDKeyPrefix + uuid)
         case .pMatter4:
             prefs.set(nil, forKey: pm4AlertMuteTillDateUDKeyPrefix + uuid)
         case .pMatter10:
@@ -786,8 +786,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             return prefs.value(forKey: co2AlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .pMatter1:
             return prefs.value(forKey: pm1AlertMuteTillDateUDKeyPrefix + uuid) as? Date
-        case .pMatter2_5:
-            return prefs.value(forKey: pm2_5AlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .pMatter25:
+            return prefs.value(forKey: pm25AlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .pMatter4:
             return prefs.value(forKey: pm4AlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .pMatter10:
@@ -833,9 +833,9 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         case .pMatter1:
             prefs.set(trigerred, forKey: pm1AlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(trigerredAt, forKey: pm1AlertTriggeredAtUDKeyPrefix + uuid)
-        case .pMatter2_5:
-            prefs.set(trigerred, forKey: pm2_5AlertIsTriggeredUDKeyPrefix + uuid)
-            prefs.set(trigerredAt, forKey: pm2_5AlertTriggeredAtUDKeyPrefix + uuid)
+        case .pMatter25:
+            prefs.set(trigerred, forKey: pm25AlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: pm25AlertTriggeredAtUDKeyPrefix + uuid)
         case .pMatter4:
             prefs.set(trigerred, forKey: pm4AlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(trigerredAt, forKey: pm4AlertTriggeredAtUDKeyPrefix + uuid)
@@ -883,8 +883,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.bool(forKey: co2AlertIsTriggeredUDKeyPrefix + uuid)
         case .pMatter1:
             prefs.bool(forKey: pm1AlertIsTriggeredUDKeyPrefix + uuid)
-        case .pMatter2_5:
-            prefs.bool(forKey: pm2_5AlertIsTriggeredUDKeyPrefix + uuid)
+        case .pMatter25:
+            prefs.bool(forKey: pm25AlertIsTriggeredUDKeyPrefix + uuid)
         case .pMatter4:
             prefs.bool(forKey: pm4AlertIsTriggeredUDKeyPrefix + uuid)
         case .pMatter10:
@@ -923,8 +923,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.string(forKey: co2AlertTriggeredAtUDKeyPrefix + uuid)
         case .pMatter1:
             prefs.string(forKey: pm1AlertTriggeredAtUDKeyPrefix + uuid)
-        case .pMatter2_5:
-            prefs.string(forKey: pm2_5AlertTriggeredAtUDKeyPrefix + uuid)
+        case .pMatter25:
+            prefs.string(forKey: pm25AlertTriggeredAtUDKeyPrefix + uuid)
         case .pMatter4:
             prefs.string(forKey: pm4AlertTriggeredAtUDKeyPrefix + uuid)
         case .pMatter10:
@@ -1162,28 +1162,28 @@ extension AlertPersistenceUserDefaults {
 // MARK: - Particulate Matter 2.5
 
 extension AlertPersistenceUserDefaults {
-    func lowerPM2_5(for uuid: String) -> Double? {
-        prefs.optionalDouble(forKey: pm2_5LowerBoundUDKeyPrefix + uuid)
+    func lowerPM25(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: pm25LowerBoundUDKeyPrefix + uuid)
     }
 
-    func setLower(pm2_5: Double?, for uuid: String) {
-        prefs.set(pm2_5, forKey: pm2_5LowerBoundUDKeyPrefix + uuid)
+    func setLower(pm25: Double?, for uuid: String) {
+        prefs.set(pm25, forKey: pm25LowerBoundUDKeyPrefix + uuid)
     }
 
-    func upperPM2_5(for uuid: String) -> Double? {
-        prefs.optionalDouble(forKey: pm2_5UpperBoundUDKeyPrefix + uuid)
+    func upperPM25(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: pm25UpperBoundUDKeyPrefix + uuid)
     }
 
-    func setUpper(pm2_5: Double?, for uuid: String) {
-        prefs.set(pm2_5, forKey: pm2_5UpperBoundUDKeyPrefix + uuid)
+    func setUpper(pm25: Double?, for uuid: String) {
+        prefs.set(pm25, forKey: pm25UpperBoundUDKeyPrefix + uuid)
     }
 
-    func pm2_5Description(for uuid: String) -> String? {
-        prefs.string(forKey: pm2_5AlertDescriptionUDKeyPrefix + uuid)
+    func pm25Description(for uuid: String) -> String? {
+        prefs.string(forKey: pm25AlertDescriptionUDKeyPrefix + uuid)
     }
 
-    func setPM2_5(description: String?, for uuid: String) {
-        prefs.set(description, forKey: pm2_5AlertDescriptionUDKeyPrefix + uuid)
+    func setPM25(description: String?, for uuid: String) {
+        prefs.set(description, forKey: pm25AlertDescriptionUDKeyPrefix + uuid)
     }
 }
 

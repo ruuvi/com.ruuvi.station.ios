@@ -164,8 +164,8 @@ extension AnyCloudSensorDense: RuuviTagSensorRecord {
         record.pm1
     }
 
-    public var pm2_5: Double? {
-        record.pm2_5
+    public var pm25: Double? {
+        record.pm25
     }
 
     public var pm4: Double? {
@@ -190,6 +190,10 @@ extension AnyCloudSensorDense: RuuviTagSensorRecord {
 
     public var luminance: Double? {
         record.luminance
+    }
+
+    public var dbaInstant: Double? {
+        record.dbaInstant
     }
 
     public var dbaAvg: Double? {

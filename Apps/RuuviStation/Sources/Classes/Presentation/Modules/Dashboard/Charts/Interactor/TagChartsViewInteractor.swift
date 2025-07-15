@@ -285,7 +285,7 @@ extension TagChartsViewInteractor {
             }
             // TODO: Double check this logic
             if record.co2 == nil &&
-                record.pm2_5 == nil &&
+                record.pm25 == nil &&
                 record.voc == nil &&
                 record.nox == nil {
                 chartsCases.removeAll { $0 == .aqi }
@@ -293,7 +293,7 @@ extension TagChartsViewInteractor {
             if record.co2 == nil {
                 chartsCases.removeAll { $0 == .co2 }
             }
-            if record.pm2_5 == nil {
+            if record.pm25 == nil {
                 chartsCases.removeAll { $0 == .pm25 }
             }
             if record.pm10 == nil {

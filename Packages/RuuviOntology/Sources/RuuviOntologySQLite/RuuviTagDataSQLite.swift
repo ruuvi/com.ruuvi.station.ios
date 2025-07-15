@@ -18,13 +18,14 @@ public struct RuuviTagDataSQLite: RuuviTagSensorRecord {
     public var measurementSequenceNumber: Int?
     public var txPower: Int?
     public var pm1: Double?
-    public var pm2_5: Double?
+    public var pm25: Double?
     public var pm4: Double?
     public var pm10: Double?
     public var co2: Double?
     public var voc: Double?
     public var nox: Double?
     public var luminance: Double?
+    public var dbaInstant: Double?
     public var dbaAvg: Double?
     public var dbaPeak: Double?
     public var temperatureOffset: Double
@@ -47,13 +48,14 @@ public struct RuuviTagDataSQLite: RuuviTagSensorRecord {
         measurementSequenceNumber: Int?,
         txPower: Int?,
         pm1: Double?,
-        pm2_5: Double?,
+        pm25: Double?,
         pm4: Double?,
         pm10: Double?,
         co2: Double?,
         voc: Double?,
         nox: Double?,
         luminance: Double?,
+        dbaInstant: Double?,
         dbaAvg: Double?,
         dbaPeak: Double?,
         temperatureOffset: Double,
@@ -75,13 +77,14 @@ public struct RuuviTagDataSQLite: RuuviTagSensorRecord {
         self.measurementSequenceNumber = measurementSequenceNumber
         self.txPower = txPower
         self.pm1 = pm1
-        self.pm2_5 = pm2_5
+        self.pm25 = pm25
         self.pm4 = pm4
         self.pm10 = pm10
         self.co2 = co2
         self.voc = voc
         self.nox = nox
         self.luminance = luminance
+        self.dbaInstant = dbaInstant
         self.dbaAvg = dbaAvg
         self.dbaPeak = dbaPeak
         self.temperatureOffset = temperatureOffset
@@ -110,13 +113,14 @@ public extension RuuviTagDataSQLite {
     static let measurementSequenceNumberColumn = Column("measurementSequenceNumber")
     static let txPowerColumn = Column("txPower")
     static let pm1Column = Column("pm1")
-    static let pm2_5Column = Column("pm2_5")
+    static let pm25Column = Column("pm2_5")
     static let pm4Column = Column("pm4")
     static let pm10Column = Column("pm10")
     static let co2Column = Column("co2")
     static let vocColumn = Column("voc")
     static let noxColumn = Column("nox")
     static let luminanceColumn = Column("luminance")
+    static let dbaInstantColumn = Column("dbaInstant")
     static let dbaAvgColumn = Column("dbaAvg")
     static let dbaPeakColumn = Column("dbaPeak")
     static let temperatureOffsetColumn = Column("temperatureOffset")
@@ -180,13 +184,14 @@ extension RuuviTagDataSQLite: FetchableRecord {
         measurementSequenceNumber = row[RuuviTagDataSQLite.measurementSequenceNumberColumn]
         txPower = row[RuuviTagDataSQLite.txPowerColumn]
         pm1 = row[RuuviTagDataSQLite.pm1Column]
-        pm2_5 = row[RuuviTagDataSQLite.pm2_5Column]
+        pm25 = row[RuuviTagDataSQLite.pm25Column]
         pm4 = row[RuuviTagDataSQLite.pm4Column]
         pm10 = row[RuuviTagDataSQLite.pm10Column]
         co2 = row[RuuviTagDataSQLite.co2Column]
         voc = row[RuuviTagDataSQLite.vocColumn]
         nox = row[RuuviTagDataSQLite.noxColumn]
         luminance = row[RuuviTagDataSQLite.luminanceColumn]
+        dbaInstant = row[RuuviTagDataSQLite.dbaInstantColumn]
         dbaAvg = row[RuuviTagDataSQLite.dbaAvgColumn]
         dbaPeak = row[RuuviTagDataSQLite.dbaPeakColumn]
         temperatureOffset = row[RuuviTagDataSQLite.temperatureOffsetColumn]
@@ -220,13 +225,14 @@ extension RuuviTagDataSQLite: PersistableRecord {
         container[RuuviTagDataSQLite.measurementSequenceNumberColumn] = measurementSequenceNumber
         container[RuuviTagDataSQLite.txPowerColumn] = txPower
         container[RuuviTagDataSQLite.pm1Column] = pm1
-        container[RuuviTagDataSQLite.pm2_5Column] = pm2_5
+        container[RuuviTagDataSQLite.pm25Column] = pm25
         container[RuuviTagDataSQLite.pm4Column] = pm4
         container[RuuviTagDataSQLite.pm10Column] = pm10
         container[RuuviTagDataSQLite.co2Column] = co2
         container[RuuviTagDataSQLite.vocColumn] = voc
         container[RuuviTagDataSQLite.noxColumn] = nox
         container[RuuviTagDataSQLite.luminanceColumn] = luminance
+        container[RuuviTagDataSQLite.dbaInstantColumn] = dbaInstant
         container[RuuviTagDataSQLite.dbaAvgColumn] = dbaAvg
         container[RuuviTagDataSQLite.dbaPeakColumn] = dbaPeak
         container[RuuviTagDataSQLite.temperatureOffsetColumn] = temperatureOffset
@@ -257,13 +263,14 @@ public extension RuuviTagDataSQLite {
             table.column(RuuviTagDataSQLite.measurementSequenceNumberColumn.name, .integer)
             table.column(RuuviTagDataSQLite.txPowerColumn.name, .integer)
             table.column(RuuviTagDataSQLite.pm1Column.name, .double)
-            table.column(RuuviTagDataSQLite.pm2_5Column.name, .double)
+            table.column(RuuviTagDataSQLite.pm25Column.name, .double)
             table.column(RuuviTagDataSQLite.pm4Column.name, .double)
             table.column(RuuviTagDataSQLite.pm10Column.name, .double)
             table.column(RuuviTagDataSQLite.co2Column.name, .double)
             table.column(RuuviTagDataSQLite.vocColumn.name, .double)
             table.column(RuuviTagDataSQLite.noxColumn.name, .double)
             table.column(RuuviTagDataSQLite.luminanceColumn.name, .double)
+            table.column(RuuviTagDataSQLite.dbaInstantColumn.name, .double)
             table.column(RuuviTagDataSQLite.dbaAvgColumn.name, .double)
             table.column(RuuviTagDataSQLite.dbaPeakColumn.name, .double)
             table.column(RuuviTagDataSQLite.temperatureOffsetColumn.name, .double).notNull()

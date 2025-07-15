@@ -51,11 +51,11 @@ struct RuuviNotifierTitlesImpl: RuuviNotifierTitles {
         RuuviLocalization.alertNotificationPm1HighThreshold(value)
     }
 
-    func lowPMatter2_5(_ value: String) -> String {
+    func lowPMatter25(_ value: String) -> String {
         RuuviLocalization.alertNotificationPm25LowThreshold(value)
     }
 
-    func highPMatter2_5(_ value: String) -> String {
+    func highPMatter25(_ value: String) -> String {
         RuuviLocalization.alertNotificationPm25HighThreshold(value)
     }
 

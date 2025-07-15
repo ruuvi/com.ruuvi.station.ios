@@ -71,11 +71,11 @@ extension RuuviTag: RuuviTagSensorRecord {
     }
 
     public var pm1: Double? {
-        pMatter1_0
+        pMatter1
     }
 
-    public var pm2_5: Double? {
-        pMatter2_5
+    public var pm25: Double? {
+        pMatter25
     }
 
     public var pm4: Double? {
@@ -100,6 +100,10 @@ extension RuuviTag: RuuviTagSensorRecord {
 
     public var luminance: Double? {
         luminanceValue
+    }
+
+    public var dbaInstant: Double? {
+        decibelInstant
     }
 
     public var dbaAvg: Double? {

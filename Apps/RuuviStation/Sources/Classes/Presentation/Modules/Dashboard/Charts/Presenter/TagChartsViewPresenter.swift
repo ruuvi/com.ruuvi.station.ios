@@ -1188,31 +1188,31 @@ extension TagChartsViewPresenter {
 
         if pm25Data.count > 0 {
             let isOn = alertService.isOn(
-                type: .pMatter2_5(lower: 0, upper: 0),
+                type: .pMatter25(lower: 0, upper: 0),
                 for: ruuviTag
             )
             let pm25ChartDataSet = TagChartsHelper.newDataSet(
-                upperAlertValue: isOn ? alertService.upperPM2_5(
+                upperAlertValue: isOn ? alertService.upperPM25(
                     for: ruuviTag
                 ).map {
                     $0
                 } : nil,
                 entries: pm25Data,
                 lowerAlertValue: isOn ? alertService
-                    .lowerPM2_5(
+                    .lowerPM25(
                     for: ruuviTag
                 ).map { $0 } : nil,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
             let pm25ChartData = TagChartViewData(
                 upperAlertValue: isOn ? alertService
-                    .upperPM2_5(for: ruuviTag)
+                    .upperPM25(for: ruuviTag)
                     .map {
                     $0
                 } : nil,
                 chartType: .pm25,
                 chartData: LineChartData(dataSet: pm25ChartDataSet),
-                lowerAlertValue: isOn ? alertService.lowerPM2_5(
+                lowerAlertValue: isOn ? alertService.lowerPM25(
                     for: ruuviTag
                 ).map { $0 } : nil
             )
@@ -1479,7 +1479,7 @@ extension TagChartsViewPresenter {
         case .aqi:
             let value = measurementService.aqi(
                 for: data.co2,
-                pm25: data.pm2_5
+                pm25: data.pm25
             )
             return ChartDataEntry(x: data.date.timeIntervalSince1970, y: value)
 
@@ -1491,7 +1491,7 @@ extension TagChartsViewPresenter {
 
         case .pm25:
             let value = measurementService.double(
-                for: data.pm2_5
+                for: data.pm25
             )
             return ChartDataEntry(x: data.date.timeIntervalSince1970, y: value)
 

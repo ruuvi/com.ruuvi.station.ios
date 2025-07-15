@@ -197,19 +197,12 @@ extension RuuviServiceExportImpl {
                         return sSelf.emptyValueString
                     }
                 ),
-                ColumnDefinition(
-                    header: RuuviLocalization.ExportService.voltage,
-                    cellExtractor: { record in
-                        let v = record.voltage?.converted(to: .volts).value
-                        return toString(v)
-                    }
-                ),
             ]
         }
 
-        // MARK: E0/F0 columns
+        // MARK: E1/V6 columns
         // swiftlint:disable:next function_body_length
-        func buildE0F0Columns() -> [ColumnDefinition] {
+        func buildE1V6Columns() -> [ColumnDefinition] {
             return [
                 ColumnDefinition(
                     header: RuuviLocalization.aqi + " (%)",
@@ -217,7 +210,7 @@ extension RuuviServiceExportImpl {
                         guard let sSelf = self else { return "" }
                         let (aqi, _, _) = sSelf.measurementService.aqiString(
                             for: record.co2,
-                            pm25: record.pm2_5
+                            pm25: record.pm25
                         )
                         return "\(aqi)"
                     }
@@ -237,7 +230,7 @@ extension RuuviServiceExportImpl {
                 ColumnDefinition(
                     header: RuuviLocalization.pm25 + " (\(RuuviLocalization.unitPm25))",
                     cellExtractor: { record in
-                        toString(record.pm2_5)
+                        toString(record.pm25)
                     }
                 ),
                 ColumnDefinition(
@@ -289,6 +282,13 @@ extension RuuviServiceExportImpl {
         func buildV5Columns() -> [ColumnDefinition] {
             return [
                 ColumnDefinition(
+                    header: RuuviLocalization.ExportService.voltage,
+                    cellExtractor: { record in
+                        let v = record.voltage?.converted(to: .volts).value
+                        return toString(v)
+                    }
+                ),
+                ColumnDefinition(
                     header: RuuviLocalization.ExportService.accelerationX + " (\(RuuviLocalization.g))",
                     cellExtractor: { record in
                         toString(record.acceleration?.x.value)
@@ -333,8 +333,8 @@ extension RuuviServiceExportImpl {
         // Start assembling the columns
         var columns = buildCommonColumns()
         switch firmware {
-        case .e0, .f0:
-            columns += buildE0F0Columns()
+        case .e1, .v6:
+            columns += buildE1V6Columns()
         case .v5:
             columns += buildV5Columns()
         default:

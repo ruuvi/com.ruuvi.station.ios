@@ -1123,8 +1123,8 @@ extension CardsPresenter {
                 sync(carbonDioxide: type, ruuviTag: ruuviTag, viewModel: viewModel)
             case .pMatter1:
                 sync(pMatter1: type, ruuviTag: ruuviTag, viewModel: viewModel)
-            case .pMatter2_5:
-                sync(pMatter2_5: type, ruuviTag: ruuviTag, viewModel: viewModel)
+            case .pMatter25:
+                sync(pMatter25: type, ruuviTag: ruuviTag, viewModel: viewModel)
             case .pMatter4:
                 sync(pMatter4: type, ruuviTag: ruuviTag, viewModel: viewModel)
             case .pMatter10:
@@ -1154,7 +1154,7 @@ extension CardsPresenter {
             viewModel.signalAlertState,
             viewModel.carbonDioxideAlertState,
             viewModel.pMatter1AlertState,
-            viewModel.pMatter2_5AlertState,
+            viewModel.pMatter25AlertState,
             viewModel.pMatter4AlertState,
             viewModel.pMatter10AlertState,
             viewModel.vocAlertState,
@@ -1301,19 +1301,19 @@ extension CardsPresenter {
     }
 
     private func sync(
-        pMatter2_5: AlertType,
+        pMatter25: AlertType,
         ruuviTag: PhysicalSensor,
         viewModel: CardsViewModel
     ) {
-        if case .pMatter2_5 = alertService
-            .alert(for: ruuviTag, of: pMatter2_5) {
-            viewModel.isPMatter2_5AlertOn = true
+        if case .pMatter25 = alertService
+            .alert(for: ruuviTag, of: pMatter25) {
+            viewModel.isPMatter25AlertOn = true
         } else {
-            viewModel.isPMatter2_5AlertOn = false
+            viewModel.isPMatter25AlertOn = false
         }
-        viewModel.pMatter2_5AlertMutedTill =
+        viewModel.pMatter25AlertMutedTill =
             alertService.mutedTill(
-                type: pMatter2_5,
+                type: pMatter25,
                 for: ruuviTag
             )
     }
@@ -1501,9 +1501,9 @@ extension CardsPresenter {
                 viewModel.pMatter1AlertMutedTill = nil
             }
 
-            if let mutedTill = viewModel.pMatter2_5AlertMutedTill,
+            if let mutedTill = viewModel.pMatter25AlertMutedTill,
                mutedTill < Date() {
-                viewModel.pMatter2_5AlertMutedTill = nil
+                viewModel.pMatter25AlertMutedTill = nil
             }
 
             if let mutedTill = viewModel.pMatter4AlertMutedTill,
@@ -1569,8 +1569,8 @@ extension CardsPresenter {
             viewModel.carbonDioxideAlertMutedTill = date
         case .pMatter1:
             viewModel.pMatter1AlertMutedTill = date
-        case .pMatter2_5:
-            viewModel.pMatter2_5AlertMutedTill = date
+        case .pMatter25:
+            viewModel.pMatter25AlertMutedTill = date
         case .pMatter4:
             viewModel.pMatter4AlertMutedTill = date
         case .pMatter10:
@@ -1614,8 +1614,8 @@ extension CardsPresenter {
             viewModel.isCarbonDioxideAlertOn = isOn
         case .pMatter1:
             viewModel.isPMatter1AlertOn = isOn
-        case .pMatter2_5:
-            viewModel.isPMatter2_5AlertOn = isOn
+        case .pMatter25:
+            viewModel.isPMatter25AlertOn = isOn
         case .pMatter4:
             viewModel.isPMatter4AlertOn = isOn
         case .pMatter10:

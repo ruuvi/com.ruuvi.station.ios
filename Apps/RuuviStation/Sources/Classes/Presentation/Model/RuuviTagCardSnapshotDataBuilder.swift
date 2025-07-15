@@ -71,7 +71,7 @@ struct TemperatureMeasurementExtractor: MeasurementExtractor {
         let value = measurementService.stringWithoutSign(for: temperature)
         let unit = measurementService.units.temperatureUnit.symbol
         let firmware = RuuviFirmwareVersion.firmwareVersion(from: record.version)
-        let isProminent = firmware == .e0 || firmware == .f0
+        let isProminent = firmware == .e1 || firmware == .v6
 
         return MeasurementResult(
             value: value,
@@ -156,7 +156,7 @@ struct AQIMeasurementExtractor: MeasurementExtractor {
     ) -> MeasurementResult? {
         guard let (currentAirQIndex, maximumAirQIndex, state) = measurementService?.aqiString(
             for: record.co2,
-            pm25: record.pm2_5
+            pm25: record.pm25
         ) else { return nil }
 
         return MeasurementResult(
@@ -195,7 +195,7 @@ struct PM25MeasurementExtractor: MeasurementExtractor {
         measurementService: RuuviServiceMeasurement?,
         flags: RuuviLocalFlags
     ) -> MeasurementResult? {
-        guard let pm25 = record.pm2_5,
+        guard let pm25 = record.pm25,
               let pm25Value = measurementService?.pm25String(for: pm25) else { return nil }
 
         return MeasurementResult(
@@ -329,7 +329,7 @@ struct MeasurementExtractorFactory {
 struct FirmwareVersionManager {
     static func getMeasurementTypes(for firmwareVersion: RuuviFirmwareVersion) -> [MeasurementType] {
         switch firmwareVersion {
-        case .e0, .f0:
+        case .e1, .v6:
             return MeasurementConfiguration.advancedFirmwareMeasurements
         default:
             return MeasurementConfiguration.basicFirmwareMeasurements
@@ -343,7 +343,7 @@ struct FirmwareVersionManager {
 
     static func isAdvancedFirmware(_ version: Int?) -> Bool {
         let firmwareVersion = RuuviFirmwareVersion.firmwareVersion(from: version.bound)
-        return firmwareVersion == .e0 || firmwareVersion == .f0
+        return firmwareVersion == .e1 || firmwareVersion == .v6
     }
 }
 

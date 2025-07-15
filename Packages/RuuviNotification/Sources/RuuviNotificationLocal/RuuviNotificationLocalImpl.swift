@@ -261,8 +261,8 @@ public extension RuuviNotificationLocalImpl {
                 sSelf.ruuviAlertService.carbonDioxideDescription(for: uuid) ?? ""
             case .pMatter1:
                 sSelf.ruuviAlertService.pm1Description(for: uuid) ?? ""
-            case .pMatter2_5:
-                sSelf.ruuviAlertService.pm2_5Description(for: uuid) ?? ""
+            case .pMatter25:
+                sSelf.ruuviAlertService.pm25Description(for: uuid) ?? ""
             case .pMatter4:
                 sSelf.ruuviAlertService.pm4Description(for: uuid) ?? ""
             case .pMatter10:
@@ -320,8 +320,8 @@ extension RuuviNotificationLocalImpl {
             .carbonDioxide(lower: 0, upper: 0)
         case .pMatter1:
             .pMatter1(lower: 0, upper: 0)
-        case .pMatter2_5:
-            .pMatter2_5(lower: 0, upper: 0)
+        case .pMatter25:
+            .pMatter25(lower: 0, upper: 0)
         case .pMatter4:
             .pMatter4(lower: 0, upper: 0)
         case .pMatter10:
@@ -394,9 +394,9 @@ extension RuuviNotificationLocalImpl {
                             if !isOn {
                                 self?.cancel(.pMatter1, for: uuid)
                             }
-                        case .pMatter2_5:
+                        case .pMatter25:
                             if !isOn {
-                                self?.cancel(.pMatter2_5, for: uuid)
+                                self?.cancel(.pMatter25, for: uuid)
                             }
                         case .pMatter4:
                             if !isOn {

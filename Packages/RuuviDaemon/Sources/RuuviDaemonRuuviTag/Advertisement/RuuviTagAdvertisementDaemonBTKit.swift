@@ -280,8 +280,8 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     }
 
     private func persist(_ record: RuuviTag, _ uuid: String) {
-        // Do not store advertisement for history only if it is F0 firmware and legacy advertisement.
-        if record.version == 0xF0 {
+        // Do not store advertisement for history only if it is v6 firmware and legacy advertisement.
+        if record.version == 0x06 {
             createLatestRecord(with: record)
         } else {
             createRecord(with: record, uuid: uuid)

@@ -733,7 +733,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         }
 
         if hasAQI {
-            // E0/F0 version - show Air Quality Index as prominent
+            // E1/V6 version - show Air Quality Index as prominent
             if let airQualityIndicator = configuration.indicators.first(
                 where: {
                     $0.type == .aqi
