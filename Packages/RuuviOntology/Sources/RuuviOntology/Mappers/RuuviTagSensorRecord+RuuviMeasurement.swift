@@ -12,7 +12,7 @@ public extension RuuviTagSensorRecord {
             humidity: humidity,
             pressure: pressure,
             co2: co2,
-            pm2_5: pm2_5,
+            pm25: pm25,
             pm10: pm10,
             voc: voc,
             nox: nox,

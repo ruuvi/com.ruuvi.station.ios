@@ -27,15 +27,16 @@ public protocol RuuviTagSensorRecord: PhysicalSensor {
     var movementCounter: Int? { get }
     var measurementSequenceNumber: Int? { get }
     var txPower: Int? { get }
-    // E0/F0
+    // E1/V6
     var pm1: Double? { get }
-    var pm2_5: Double? { get }
+    var pm25: Double? { get }
     var pm4: Double? { get }
     var pm10: Double? { get }
     var co2: Double? { get }
     var voc: Double? { get }
     var nox: Double? { get }
     var luminance: Double? { get }
+    var dbaInstant: Double? { get }
     var dbaAvg: Double? { get }
     var dbaPeak: Double? { get }
 
@@ -92,13 +93,14 @@ public extension RuuviTagSensorRecord {
             measurementSequenceNumber: measurementSequenceNumber,
             txPower: txPower,
             pm1: pm1,
-            pm2_5: pm2_5,
+            pm25: pm25,
             pm4: pm4,
             pm10: pm10,
             co2: co2,
             voc: voc,
             nox: nox,
             luminance: luminance,
+            dbaInstant: dbaInstant,
             dbaAvg: dbaAvg,
             dbaPeak: dbaPeak,
             temperatureOffset: temperatureOffset,
@@ -124,13 +126,14 @@ public extension RuuviTagSensorRecord {
             measurementSequenceNumber: measurementSequenceNumber,
             txPower: txPower,
             pm1: pm1,
-            pm2_5: pm2_5,
+            pm25: pm25,
             pm4: pm4,
             pm10: pm10,
             co2: co2,
             voc: voc,
             nox: nox,
             luminance: luminance,
+            dbaInstant: dbaInstant,
             dbaAvg: dbaAvg,
             dbaPeak: dbaPeak,
             temperatureOffset: temperatureOffset,
@@ -158,13 +161,14 @@ public extension RuuviTagSensorRecord {
             measurementSequenceNumber: measurementSequenceNumber,
             txPower: txPower,
             pm1: pm1,
-            pm2_5: pm2_5,
+            pm25: pm25,
             pm4: pm4,
             pm10: pm10,
             co2: co2,
             voc: voc,
             nox: nox,
             luminance: luminance,
+            dbaInstant: dbaInstant,
             dbaAvg: dbaAvg,
             dbaPeak: dbaPeak,
             temperatureOffset: temperatureOffset,
@@ -196,13 +200,14 @@ public extension RuuviTagSensorRecord {
             measurementSequenceNumber: measurementSequenceNumber,
             txPower: txPower,
             pm1: pm1,
-            pm2_5: pm2_5,
+            pm25: pm25,
             pm4: pm4,
             pm10: pm10,
             co2: co2,
             voc: voc,
             nox: nox,
             luminance: luminance,
+            dbaInstant: dbaInstant,
             dbaAvg: dbaAvg,
             dbaPeak: dbaPeak,
             temperatureOffset: sensorSettings?.temperatureOffset ?? 0.0,
@@ -229,15 +234,16 @@ public struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
     public var movementCounter: Int?
     public var measurementSequenceNumber: Int?
     public var txPower: Int?
-    // E0/F0
+    // E1/V6
     public var pm1: Double?
-    public var pm2_5: Double?
+    public var pm25: Double?
     public var pm4: Double?
     public var pm10: Double?
     public var co2: Double?
     public var voc: Double?
     public var nox: Double?
     public var luminance: Double?
+    public var dbaInstant: Double?
     public var dbaAvg: Double?
     public var dbaPeak: Double?
 
@@ -262,13 +268,14 @@ public struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
         measurementSequenceNumber: Int?,
         txPower: Int?,
         pm1: Double?,
-        pm2_5: Double?,
+        pm25: Double?,
         pm4: Double?,
         pm10: Double?,
         co2: Double?,
         voc: Double?,
         nox: Double?,
         luminance: Double?,
+        dbaInstant: Double?,
         dbaAvg: Double?,
         dbaPeak: Double?,
         temperatureOffset: Double,
@@ -290,13 +297,14 @@ public struct RuuviTagSensorRecordStruct: RuuviTagSensorRecord {
         self.measurementSequenceNumber = measurementSequenceNumber
         self.txPower = txPower
         self.pm1 = pm1
-        self.pm2_5 = pm2_5
+        self.pm25 = pm25
         self.pm4 = pm4
         self.pm10 = pm10
         self.co2 = co2
         self.voc = voc
         self.nox = nox
         self.luminance = luminance
+        self.dbaInstant = dbaInstant
         self.dbaAvg = dbaAvg
         self.dbaPeak = dbaPeak
         self.temperatureOffset = temperatureOffset
@@ -372,8 +380,8 @@ public struct AnyRuuviTagSensorRecord: RuuviTagSensorRecord, Equatable, Hashable
         object.pm1
     }
 
-    public var pm2_5: Double? {
-        object.pm2_5
+    public var pm25: Double? {
+        object.pm25
     }
 
     public var pm4: Double? {
@@ -398,6 +406,10 @@ public struct AnyRuuviTagSensorRecord: RuuviTagSensorRecord, Equatable, Hashable
 
     public var luminance: Double? {
         object.luminance
+    }
+
+    public var dbaInstant: Double? {
+        object.dbaInstant
     }
 
     public var dbaAvg: Double? {

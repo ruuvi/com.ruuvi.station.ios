@@ -70,12 +70,12 @@ protocol AlertPersistence {
     func setPM1(description: String?, for uuid: String)
 
     // PM2.5
-    func lowerPM2_5(for uuid: String) -> Double?
-    func setLower(pm2_5: Double?, for uuid: String)
-    func upperPM2_5(for uuid: String) -> Double?
-    func setUpper(pm2_5: Double?, for uuid: String)
-    func pm2_5Description(for uuid: String) -> String?
-    func setPM2_5(description: String?, for uuid: String)
+    func lowerPM25(for uuid: String) -> Double?
+    func setLower(pm25: Double?, for uuid: String)
+    func upperPM25(for uuid: String) -> Double?
+    func setUpper(pm25: Double?, for uuid: String)
+    func pm25Description(for uuid: String) -> String?
+    func setPM25(description: String?, for uuid: String)
 
     // PM4
     func lowerPM4(for uuid: String) -> Double?
