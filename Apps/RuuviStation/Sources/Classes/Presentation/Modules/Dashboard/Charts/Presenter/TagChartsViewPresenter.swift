@@ -856,7 +856,8 @@ extension TagChartsViewPresenter {
             // Sound
             if let soundEntry = chartEntry(
                 for: measurement,
-                type: .sound
+                type: .soundInstant
+
             ) {
                 soundData.append(soundEntry)
             }
@@ -925,7 +926,7 @@ extension TagChartsViewPresenter {
                 ),
                 sound: chartEntry(
                     for: lastMeasurement,
-                    type: .sound
+                    type: .soundInstant
                 ),
                 settings: settings
             )
@@ -1010,7 +1011,7 @@ extension TagChartsViewPresenter {
             // Sound
             if let soundEntry = chartEntry(
                 for: measurement,
-                type: .sound
+                type: .soundInstant
             ) {
                 soundData.append(soundEntry)
             }
@@ -1296,7 +1297,7 @@ extension TagChartsViewPresenter {
                 ).map {
                     $0
                 } : nil,
-                entries: noxData,
+                entries: luminosityData,
                 lowerAlertValue: isOn ? alertService
                     .lowerLuminosity(
                     for: ruuviTag
@@ -1309,7 +1310,7 @@ extension TagChartsViewPresenter {
                     .map {
                     $0
                 } : nil,
-                chartType: .nox,
+                chartType: .luminosity,
                 chartData: LineChartData(dataSet: luminosityChartDataSet),
                 lowerAlertValue: isOn ? alertService.lowerLuminosity(
                     for: ruuviTag
@@ -1320,31 +1321,31 @@ extension TagChartsViewPresenter {
 
         if soundData.count > 0 {
             let isOn = alertService.isOn(
-                type: .sound(lower: 0, upper: 0),
+                type: .soundInstant(lower: 0, upper: 0),
                 for: ruuviTag
             )
             let soundChartDataSet = TagChartsHelper.newDataSet(
-                upperAlertValue: isOn ? alertService.upperSound(
+                upperAlertValue: isOn ? alertService.upperSoundInstant(
                     for: ruuviTag
                 ).map {
                     $0
                 } : nil,
-                entries: noxData,
+                entries: soundData,
                 lowerAlertValue: isOn ? alertService
-                    .lowerSound(
+                    .lowerSoundInstant(
                     for: ruuviTag
                 ).map { $0 } : nil,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
             let soundChartData = TagChartViewData(
                 upperAlertValue: isOn ? alertService
-                    .upperSound(for: ruuviTag)
+                    .upperSoundInstant(for: ruuviTag)
                     .map {
                     $0
                 } : nil,
-                chartType: .nox,
+                chartType: .soundInstant,
                 chartData: LineChartData(dataSet: soundChartDataSet),
-                lowerAlertValue: isOn ? alertService.lowerSound(
+                lowerAlertValue: isOn ? alertService.lowerSoundInstant(
                     for: ruuviTag
                 ).map { $0 } : nil
             )
@@ -1399,7 +1400,7 @@ extension TagChartsViewPresenter {
                 ),
                 sound: chartEntry(
                     for: lastMeasurement,
-                    type: .sound
+                    type: .soundInstant
                 ),
                 settings: settings
             )
@@ -1430,47 +1431,17 @@ extension TagChartsViewPresenter {
         var value: Double?
         switch type {
         case .temperature:
-            let temp: Temperature?
-                // Backword compatibility for the users who used earlier versions than 0.7.7
-                // 1: If local record has temperature offset added, calculate and get original temp data
-                // 2: Apply current sensor settings
-                = if let offset = data.temperatureOffset, offset != 0 {
-                data.temperature?
-                    .minus(value: offset)?
-                    .plus(sensorSettings: sensorSettings)
-            } else {
-                data.temperature?.plus(sensorSettings: sensorSettings)
-            }
+            let temp = data.temperature?.plus(sensorSettings: sensorSettings)
             value = measurementService.double(for: temp) ?? 0
         case .humidity:
-            let humidity: Humidity?
-                // Backword compatibility for the users who used earlier versions than 0.7.7
-                // 1: If local record has humidity offset added, calculate and get original humidity data
-                // 2: Apply current sensor settings
-                = if let offset = data.humidityOffset, offset != 0 {
-                data.humidity?
-                    .minus(value: offset)?
-                    .plus(sensorSettings: sensorSettings)
-            } else {
-                data.humidity?.plus(sensorSettings: sensorSettings)
-            }
+            let humidity = data.humidity?.plus(sensorSettings: sensorSettings)
             value = measurementService.double(
                 for: humidity,
                 temperature: data.temperature,
                 isDecimal: false
             )
         case .pressure:
-            let pressure: Pressure?
-                // Backword compatibility for the users who used earlier versions than 0.7.7
-                // 1: If local record has pressure offset added, calculate and get original pressure data
-                // 2: Apply current sensor settings
-                = if let offset = data.pressureOffset, offset != 0 {
-                data.pressure?
-                    .minus(value: offset)?
-                    .plus(sensorSettings: sensorSettings)
-            } else {
-                data.pressure?.plus(sensorSettings: sensorSettings)
-            }
+            let pressure = data.pressure?.plus(sensorSettings: sensorSettings)
             if let value = measurementService.double(for: pressure) {
                 return ChartDataEntry(x: data.date.timeIntervalSince1970, y: value)
             } else {
@@ -1519,9 +1490,9 @@ extension TagChartsViewPresenter {
             )
             return ChartDataEntry(x: data.date.timeIntervalSince1970, y: value)
 
-        case .sound:
+        case .soundInstant:
             let value = measurementService.double(
-                for: data.sound
+                for: data.soundInstant
             )
             return ChartDataEntry(x: data.date.timeIntervalSince1970, y: value)
 

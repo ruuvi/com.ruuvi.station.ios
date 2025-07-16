@@ -103,7 +103,7 @@ public protocol RuuviServiceMeasurement {
     func pm100String(for pm100: Double?) -> String
     func vocString(for voc: Double?) -> String
     func noxString(for nox: Double?) -> String
-    func soundAvgString(for soundAvg: Double?) -> String
+    func soundString(for sound: Double?) -> String
     func luminosityString(for luminosity: Double?) -> String
 
     // Common

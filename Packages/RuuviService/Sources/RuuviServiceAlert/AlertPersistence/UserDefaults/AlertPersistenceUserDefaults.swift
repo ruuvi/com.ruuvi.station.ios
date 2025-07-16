@@ -85,6 +85,22 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     private let signalAlertTriggeredAtUDKeyPrefix
         = "AlertPersistenceUserDefaults.signalAlertTriggeredAtUDKeyPrefix."
 
+    // AQI
+    private let aqiLowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.aqiInstantLowerBoundUDKeyPrefix."
+    private let aqiUpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.aqiInstantUpperBoundUDKeyPrefix."
+    private let aqiAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.aqiInstantAlertIsOnUDKeyPrefix."
+    private let aqiAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.aqiInstantAlertDescriptionUDKeyPrefix."
+    private let aqiAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.aqiInstantAlertMuteTillDateUDKeyPrefix."
+    private let aqiAlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.aqiInstantAlertIsTriggeredUDKeyPrefix."
+    private let aqiAlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.aqiInstantAlertTriggeredAtUDKeyPrefix."
+
     // carbon dioxide
     private let co2LowerBoundUDKeyPrefix
         = "AlertPersistenceUserDefaults.co2LowerBoundUDKeyPrefix."
@@ -197,21 +213,53 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     private let noxAlertTriggeredAtUDKeyPrefix
         = "AlertPersistenceUserDefaults.noxAlertTriggeredAtUDKeyPrefix."
 
-    // sound
-    private let soundLowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundLowerBoundUDKeyPrefix."
-    private let soundUpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundUpperBoundUDKeyPrefix."
-    private let soundAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundAlertIsOnUDKeyPrefix."
-    private let soundAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundAlertDescriptionUDKeyPrefix."
-    private let soundAlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundAlertMuteTillDateUDKeyPrefix."
-    private let soundAlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundAlertIsTriggeredUDKeyPrefix."
-    private let soundAlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundAlertTriggeredAtUDKeyPrefix."
+    // sound instant
+    private let soundInstantLowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundInstantLowerBoundUDKeyPrefix."
+    private let soundInstantUpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundInstantUpperBoundUDKeyPrefix."
+    private let soundInstantAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundInstantAlertIsOnUDKeyPrefix."
+    private let soundInstantAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundInstantAlertDescriptionUDKeyPrefix."
+    private let soundInstantAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundInstantAlertMuteTillDateUDKeyPrefix."
+    private let soundInstantAlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundInstantAlertIsTriggeredUDKeyPrefix."
+    private let soundInstantAlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundInstantAlertTriggeredAtUDKeyPrefix."
+
+    // sound average
+    private let soundAverageLowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundAverageLowerBoundUDKeyPrefix."
+    private let soundAverageUpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundAverageUpperBoundUDKeyPrefix."
+    private let soundAverageAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundAverageAlertIsOnUDKeyPrefix."
+    private let soundAverageAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundAverageAlertDescriptionUDKeyPrefix."
+    private let soundAverageAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundAverageAlertMuteTillDateUDKeyPrefix."
+    private let soundAverageAlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundAverageAlertIsTriggeredUDKeyPrefix."
+    private let soundAverageAlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundAverageAlertTriggeredAtUDKeyPrefix."
+
+    // sound peak
+    private let soundPeakLowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundPeakLowerBoundUDKeyPrefix."
+    private let soundPeakUpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundPeakUpperBoundUDKeyPrefix."
+    private let soundPeakAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundPeakAlertIsOnUDKeyPrefix."
+    private let soundPeakAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundPeakAlertDescriptionUDKeyPrefix."
+    private let soundPeakAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundPeakAlertMuteTillDateUDKeyPrefix."
+    private let soundPeakAlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundPeakAlertIsTriggeredUDKeyPrefix."
+    private let soundPeakAlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.soundPeakAlertTriggeredAtUDKeyPrefix."
 
     // luminosity
     private let luminosityLowerBoundUDKeyPrefix
@@ -314,6 +362,14 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             } else {
                 return nil
             }
+        case .aqi:
+            if prefs.bool(forKey: aqiAlertIsOnUDKeyPrefix + uuid),
+                let lower = prefs.optionalDouble(forKey: aqiLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: aqiUpperBoundUDKeyPrefix + uuid) {
+                return .aqi(lower: lower, upper: upper)
+            } else {
+                return nil
+            }
         case .carbonDioxide:
             if prefs.bool(forKey: co2AlertIsOnUDKeyPrefix + uuid),
                 let lower = prefs.optionalDouble(forKey: co2LowerBoundUDKeyPrefix + uuid),
@@ -374,11 +430,27 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             } else {
                 return nil
             }
-        case .sound:
-            if prefs.bool(forKey: soundAlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.optionalDouble(forKey: soundLowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: soundUpperBoundUDKeyPrefix + uuid) {
-                return .sound(lower: lower, upper: upper)
+        case .soundInstant:
+            if prefs.bool(forKey: soundInstantAlertIsOnUDKeyPrefix + uuid),
+               let lower = prefs.optionalDouble(forKey: soundInstantLowerBoundUDKeyPrefix + uuid),
+               let upper = prefs.optionalDouble(forKey: soundInstantUpperBoundUDKeyPrefix + uuid) {
+                return .soundInstant(lower: lower, upper: upper)
+            } else {
+                return nil
+            }
+        case .soundAverage:
+            if prefs.bool(forKey: soundAverageAlertIsOnUDKeyPrefix + uuid),
+               let lower = prefs.optionalDouble(forKey: soundAverageLowerBoundUDKeyPrefix + uuid),
+               let upper = prefs.optionalDouble(forKey: soundAverageUpperBoundUDKeyPrefix + uuid) {
+                return .soundInstant(lower: lower, upper: upper)
+            } else {
+                return nil
+            }
+        case .soundPeak:
+            if prefs.bool(forKey: soundPeakAlertIsOnUDKeyPrefix + uuid),
+               let lower = prefs.optionalDouble(forKey: soundPeakLowerBoundUDKeyPrefix + uuid),
+               let upper = prefs.optionalDouble(forKey: soundPeakUpperBoundUDKeyPrefix + uuid) {
+                return .soundPeak(lower: lower, upper: upper)
             } else {
                 return nil
             }
@@ -438,6 +510,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(true, forKey: signalAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: signalLowerBoundUDKeyPrefix + uuid)
             prefs.set(upper, forKey: signalUpperBoundUDKeyPrefix + uuid)
+        case let .aqi(lower, upper):
+            prefs.set(true, forKey: aqiAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: aqiLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: aqiUpperBoundUDKeyPrefix + uuid)
         case let .carbonDioxide(lower, upper):
             prefs.set(true, forKey: co2AlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: co2LowerBoundUDKeyPrefix + uuid)
@@ -466,10 +542,18 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(true, forKey: noxAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: noxLowerBoundUDKeyPrefix + uuid)
             prefs.set(upper, forKey: noxUpperBoundUDKeyPrefix + uuid)
-        case let .sound(lower, upper):
-            prefs.set(true, forKey: soundAlertIsOnUDKeyPrefix + uuid)
-            prefs.set(lower, forKey: soundLowerBoundUDKeyPrefix + uuid)
-            prefs.set(upper, forKey: soundUpperBoundUDKeyPrefix + uuid)
+        case let .soundInstant(lower, upper):
+            prefs.set(true, forKey: soundInstantAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: soundInstantLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: soundInstantUpperBoundUDKeyPrefix + uuid)
+        case let .soundAverage(lower, upper):
+            prefs.set(true, forKey: soundAverageAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: soundAverageLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: soundAverageUpperBoundUDKeyPrefix + uuid)
+        case let .soundPeak(lower, upper):
+            prefs.set(true, forKey: soundPeakAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: soundPeakLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: soundPeakUpperBoundUDKeyPrefix + uuid)
         case let .luminosity(lower, upper):
             prefs.set(true, forKey: luminosityAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: luminosityLowerBoundUDKeyPrefix + uuid)
@@ -518,6 +602,12 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(upper, forKey: signalUpperBoundUDKeyPrefix + uuid)
             prefs.set(false, forKey: signalAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(nil, forKey: signalAlertTriggeredAtUDKeyPrefix + uuid)
+        case let .aqi(lower, upper):
+            prefs.set(false, forKey: aqiAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: aqiLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: aqiUpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: aqiAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: aqiAlertTriggeredAtUDKeyPrefix + uuid)
         case let .carbonDioxide(lower, upper):
             prefs.set(false, forKey: co2AlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: co2LowerBoundUDKeyPrefix + uuid)
@@ -560,12 +650,24 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(upper, forKey: noxUpperBoundUDKeyPrefix + uuid)
             prefs.set(false, forKey: noxAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(nil, forKey: noxAlertTriggeredAtUDKeyPrefix + uuid)
-        case let .sound(lower, upper):
-            prefs.set(false, forKey: soundAlertIsOnUDKeyPrefix + uuid)
-            prefs.set(lower, forKey: soundLowerBoundUDKeyPrefix + uuid)
-            prefs.set(upper, forKey: soundUpperBoundUDKeyPrefix + uuid)
-            prefs.set(false, forKey: soundAlertIsTriggeredUDKeyPrefix + uuid)
-            prefs.set(nil, forKey: soundAlertTriggeredAtUDKeyPrefix + uuid)
+        case let .soundInstant(lower, upper):
+            prefs.set(false, forKey: soundInstantAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: soundInstantLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: soundInstantUpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: soundInstantAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: soundInstantAlertTriggeredAtUDKeyPrefix + uuid)
+        case let .soundAverage(lower, upper):
+            prefs.set(false, forKey: soundAverageAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: soundAverageLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: soundAverageUpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: soundAverageAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: soundAverageAlertTriggeredAtUDKeyPrefix + uuid)
+        case let .soundPeak(lower, upper):
+            prefs.set(false, forKey: soundPeakAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: soundPeakLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: soundPeakUpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: soundPeakAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: soundPeakAlertTriggeredAtUDKeyPrefix + uuid)
         case let .luminosity(lower, upper):
             prefs.set(false, forKey: luminosityAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: luminosityLowerBoundUDKeyPrefix + uuid)
@@ -620,6 +722,12 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.removeObject(forKey: signalUpperBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: signalAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.removeObject(forKey: signalAlertTriggeredAtUDKeyPrefix + uuid)
+        case .aqi:
+            prefs.removeObject(forKey: aqiAlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: aqiLowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: aqiUpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: aqiAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: aqiAlertTriggeredAtUDKeyPrefix + uuid)
         case .carbonDioxide:
             prefs.removeObject(forKey: co2AlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: co2LowerBoundUDKeyPrefix + uuid)
@@ -662,12 +770,24 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.removeObject(forKey: noxUpperBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: noxAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.removeObject(forKey: noxAlertTriggeredAtUDKeyPrefix + uuid)
-        case .sound:
-            prefs.removeObject(forKey: soundAlertIsOnUDKeyPrefix + uuid)
-            prefs.removeObject(forKey: soundLowerBoundUDKeyPrefix + uuid)
-            prefs.removeObject(forKey: soundUpperBoundUDKeyPrefix + uuid)
-            prefs.removeObject(forKey: soundAlertIsTriggeredUDKeyPrefix + uuid)
-            prefs.removeObject(forKey: soundAlertTriggeredAtUDKeyPrefix + uuid)
+        case .soundInstant:
+            prefs.removeObject(forKey: soundInstantAlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: soundInstantLowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: soundInstantUpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: soundInstantAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: soundInstantAlertTriggeredAtUDKeyPrefix + uuid)
+        case .soundAverage:
+            prefs.removeObject(forKey: soundAverageAlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: soundAverageLowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: soundAverageUpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: soundAverageAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: soundAverageAlertTriggeredAtUDKeyPrefix + uuid)
+        case .soundPeak:
+            prefs.removeObject(forKey: soundPeakAlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: soundPeakLowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: soundPeakUpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: soundPeakAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: soundPeakAlertTriggeredAtUDKeyPrefix + uuid)
         case .luminosity:
             prefs.removeObject(forKey: luminosityAlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: luminosityLowerBoundUDKeyPrefix + uuid)
@@ -702,6 +822,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(date, forKey: pressureAlertMuteTillDateUDKeyPrefix + uuid)
         case .signal:
             prefs.set(date, forKey: signalAlertMuteTillDateUDKeyPrefix + uuid)
+        case .aqi:
+            prefs.set(date, forKey: aqiAlertMuteTillDateUDKeyPrefix + uuid)
         case .carbonDioxide:
             prefs.set(date, forKey: co2AlertMuteTillDateUDKeyPrefix + uuid)
         case .pMatter1:
@@ -716,8 +838,12 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(date, forKey: vocAlertMuteTillDateUDKeyPrefix + uuid)
         case .nox:
             prefs.set(date, forKey: noxAlertMuteTillDateUDKeyPrefix + uuid)
-        case .sound:
-            prefs.set(date, forKey: soundAlertMuteTillDateUDKeyPrefix + uuid)
+        case .soundInstant:
+            prefs.set(date, forKey: soundInstantAlertMuteTillDateUDKeyPrefix + uuid)
+        case .soundAverage:
+            prefs.set(date, forKey: soundAverageAlertMuteTillDateUDKeyPrefix + uuid)
+        case .soundPeak:
+            prefs.set(date, forKey: soundPeakAlertMuteTillDateUDKeyPrefix + uuid)
         case .luminosity:
             prefs.set(date, forKey: luminosityAlertMuteTillDateUDKeyPrefix + uuid)
         case .connection:
@@ -742,6 +868,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(nil, forKey: pressureAlertMuteTillDateUDKeyPrefix + uuid)
         case .signal:
             prefs.set(nil, forKey: signalAlertMuteTillDateUDKeyPrefix + uuid)
+        case .aqi:
+            prefs.set(nil, forKey: aqiAlertMuteTillDateUDKeyPrefix + uuid)
         case .carbonDioxide:
             prefs.set(nil, forKey: co2AlertMuteTillDateUDKeyPrefix + uuid)
         case .pMatter1:
@@ -756,8 +884,12 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(nil, forKey: vocAlertMuteTillDateUDKeyPrefix + uuid)
         case .nox:
             prefs.set(nil, forKey: noxAlertMuteTillDateUDKeyPrefix + uuid)
-        case .sound:
-            prefs.set(nil, forKey: soundAlertMuteTillDateUDKeyPrefix + uuid)
+        case .soundInstant:
+            prefs.set(nil, forKey: soundInstantAlertMuteTillDateUDKeyPrefix + uuid)
+        case .soundAverage:
+            prefs.set(nil, forKey: soundAverageAlertMuteTillDateUDKeyPrefix + uuid)
+        case .soundPeak:
+            prefs.set(nil, forKey: soundPeakAlertMuteTillDateUDKeyPrefix + uuid)
         case .luminosity:
             prefs.set(nil, forKey: luminosityAlertMuteTillDateUDKeyPrefix + uuid)
         case .connection:
@@ -782,6 +914,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             return prefs.value(forKey: pressureAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .signal:
             return prefs.value(forKey: signalAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .aqi:
+            return prefs.value(forKey: aqiAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .carbonDioxide:
             return prefs.value(forKey: co2AlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .pMatter1:
@@ -796,8 +930,12 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             return prefs.value(forKey: vocAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .nox:
             return prefs.value(forKey: noxAlertMuteTillDateUDKeyPrefix + uuid) as? Date
-        case .sound:
-            return prefs.value(forKey: soundAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .soundInstant:
+            return prefs.value(forKey: soundInstantAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .soundAverage:
+            return prefs.value(forKey: soundAverageAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .soundPeak:
+            return prefs.value(forKey: soundPeakAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .luminosity:
             return prefs.value(forKey: luminosityAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .connection:
@@ -830,6 +968,9 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         case .carbonDioxide:
             prefs.set(trigerred, forKey: co2AlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(trigerredAt, forKey: co2AlertTriggeredAtUDKeyPrefix + uuid)
+        case .aqi:
+            prefs.set(trigerred, forKey: aqiAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: aqiAlertTriggeredAtUDKeyPrefix + uuid)
         case .pMatter1:
             prefs.set(trigerred, forKey: pm1AlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(trigerredAt, forKey: pm1AlertTriggeredAtUDKeyPrefix + uuid)
@@ -848,9 +989,15 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         case .nox:
             prefs.set(trigerred, forKey: noxAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(trigerredAt, forKey: noxAlertTriggeredAtUDKeyPrefix + uuid)
-        case .sound:
-            prefs.set(trigerred, forKey: soundAlertIsTriggeredUDKeyPrefix + uuid)
-            prefs.set(trigerredAt, forKey: soundAlertTriggeredAtUDKeyPrefix + uuid)
+        case .soundInstant:
+            prefs.set(trigerred, forKey: soundInstantAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: soundInstantAlertTriggeredAtUDKeyPrefix + uuid)
+        case .soundAverage:
+            prefs.set(trigerred, forKey: soundAverageAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: soundAverageAlertTriggeredAtUDKeyPrefix + uuid)
+        case .soundPeak:
+            prefs.set(trigerred, forKey: soundPeakAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: soundPeakAlertTriggeredAtUDKeyPrefix + uuid)
         case .luminosity:
             prefs.set(trigerred, forKey: luminosityAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(trigerredAt, forKey: luminosityAlertTriggeredAtUDKeyPrefix + uuid)
@@ -879,6 +1026,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.bool(forKey: pressureAlertIsTriggeredUDKeyPrefix + uuid)
         case .signal:
             prefs.bool(forKey: signalAlertIsTriggeredUDKeyPrefix + uuid)
+        case .aqi:
+            prefs.bool(forKey: aqiAlertIsTriggeredUDKeyPrefix + uuid)
         case .carbonDioxide:
             prefs.bool(forKey: co2AlertIsTriggeredUDKeyPrefix + uuid)
         case .pMatter1:
@@ -893,8 +1042,12 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.bool(forKey: vocAlertIsTriggeredUDKeyPrefix + uuid)
         case .nox:
             prefs.bool(forKey: noxAlertIsTriggeredUDKeyPrefix + uuid)
-        case .sound:
-            prefs.bool(forKey: soundAlertIsTriggeredUDKeyPrefix + uuid)
+        case .soundInstant:
+            prefs.bool(forKey: soundInstantAlertIsTriggeredUDKeyPrefix + uuid)
+        case .soundAverage:
+            prefs.bool(forKey: soundAverageAlertIsTriggeredUDKeyPrefix + uuid)
+        case .soundPeak:
+            prefs.bool(forKey: soundPeakAlertIsTriggeredUDKeyPrefix + uuid)
         case .luminosity:
             prefs.bool(forKey: luminosityAlertIsTriggeredUDKeyPrefix + uuid)
         case .cloudConnection:
@@ -919,6 +1072,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.string(forKey: pressureAlertTriggeredAtUDKeyPrefix + uuid)
         case .signal:
             prefs.string(forKey: signalAlertTriggeredAtUDKeyPrefix + uuid)
+        case .aqi:
+            prefs.string(forKey: aqiAlertTriggeredAtUDKeyPrefix + uuid)
         case .carbonDioxide:
             prefs.string(forKey: co2AlertTriggeredAtUDKeyPrefix + uuid)
         case .pMatter1:
@@ -933,8 +1088,12 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.string(forKey: vocAlertTriggeredAtUDKeyPrefix + uuid)
         case .nox:
             prefs.string(forKey: noxAlertTriggeredAtUDKeyPrefix + uuid)
-        case .sound:
-            prefs.string(forKey: soundAlertTriggeredAtUDKeyPrefix + uuid)
+        case .soundInstant:
+            prefs.string(forKey: soundInstantAlertTriggeredAtUDKeyPrefix + uuid)
+        case .soundAverage:
+            prefs.string(forKey: soundAverageAlertTriggeredAtUDKeyPrefix + uuid)
+        case .soundPeak:
+            prefs.string(forKey: soundPeakAlertTriggeredAtUDKeyPrefix + uuid)
         case .luminosity:
             prefs.string(forKey: luminosityAlertTriggeredAtUDKeyPrefix + uuid)
         case .cloudConnection:
@@ -1100,6 +1259,34 @@ extension AlertPersistenceUserDefaults {
 
     func setSignal(description: String?, for uuid: String) {
         prefs.set(description, forKey: signalAlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - AQI
+
+extension AlertPersistenceUserDefaults {
+    func lowerAQI(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: aqiLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func setLower(aqi: Double?, for uuid: String) {
+        prefs.set(aqi, forKey: aqiLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func upperAQI(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: aqiUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func setUpper(aqi: Double?, for uuid: String) {
+        prefs.set(aqi, forKey: aqiUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func aqiDescription(for uuid: String) -> String? {
+        prefs.string(forKey: aqiAlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setAQI(description: String?, for uuid: String) {
+        prefs.set(description, forKey: aqiAlertDescriptionUDKeyPrefix + uuid)
     }
 }
 
@@ -1299,32 +1486,90 @@ extension AlertPersistenceUserDefaults {
     }
 }
 
-// MARK: - Sound
+// MARK: - Sound Instant
 
 extension AlertPersistenceUserDefaults {
 
-    func lowerSound(for uuid: String) -> Double? {
-        prefs.optionalDouble(forKey: soundLowerBoundUDKeyPrefix + uuid)
+    func lowerSoundInstant(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: soundInstantLowerBoundUDKeyPrefix + uuid)
     }
 
-    func setLower(sound: Double?, for uuid: String) {
-        prefs.set(sound, forKey: soundLowerBoundUDKeyPrefix + uuid)
+    func setLower(soundInstant: Double?, for uuid: String) {
+        prefs.set(soundInstant, forKey: soundInstantLowerBoundUDKeyPrefix + uuid)
     }
 
-    func upperSound(for uuid: String) -> Double? {
-        prefs.optionalDouble(forKey: soundUpperBoundUDKeyPrefix + uuid)
+    func upperSoundInstant(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: soundInstantUpperBoundUDKeyPrefix + uuid)
     }
 
-    func setUpper(sound: Double?, for uuid: String) {
-        prefs.set(sound, forKey: soundUpperBoundUDKeyPrefix + uuid)
+    func setUpper(soundInstant: Double?, for uuid: String) {
+        prefs.set(soundInstant, forKey: soundInstantUpperBoundUDKeyPrefix + uuid)
     }
 
-    func soundDescription(for uuid: String) -> String? {
-        prefs.string(forKey: soundAlertDescriptionUDKeyPrefix + uuid)
+    func soundInstantDescription(for uuid: String) -> String? {
+        prefs.string(forKey: soundInstantAlertDescriptionUDKeyPrefix + uuid)
     }
 
-    func setSound(description: String?, for uuid: String) {
-        prefs.set(description, forKey: soundAlertDescriptionUDKeyPrefix + uuid)
+    func setSoundInstant(description: String?, for uuid: String) {
+        prefs.set(description, forKey: soundInstantAlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - Sound Average
+
+extension AlertPersistenceUserDefaults {
+
+    func lowerSoundAverage(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: soundAverageLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func setLower(soundAverage: Double?, for uuid: String) {
+        prefs.set(soundAverage, forKey: soundAverageLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func upperSoundAverage(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: soundAverageUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func setUpper(soundAverage: Double?, for uuid: String) {
+        prefs.set(soundAverage, forKey: soundAverageUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func soundAverageDescription(for uuid: String) -> String? {
+        prefs.string(forKey: soundAverageAlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setSoundAverage(description: String?, for uuid: String) {
+        prefs.set(description, forKey: soundAverageAlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - Sound Peak
+
+extension AlertPersistenceUserDefaults {
+
+    func lowerSoundPeak(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: soundPeakLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func setLower(soundPeak: Double?, for uuid: String) {
+        prefs.set(soundPeak, forKey: soundPeakLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func upperSoundPeak(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: soundPeakUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func setUpper(soundPeak: Double?, for uuid: String) {
+        prefs.set(soundPeak, forKey: soundPeakUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func soundPeakDescription(for uuid: String) -> String? {
+        prefs.string(forKey: soundPeakAlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setSoundPeak(description: String?, for uuid: String) {
+        prefs.set(description, forKey: soundPeakAlertDescriptionUDKeyPrefix + uuid)
     }
 }
 

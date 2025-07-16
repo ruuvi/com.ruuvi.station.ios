@@ -39,6 +39,8 @@ public protocol RuuviNotifierTitles {
     func highPressure(_ value: String) -> String
     func lowSignal(_ value: String) -> String
     func highSignal(_ value: String) -> String
+    func lowAQI(_ value: String) -> String
+    func highAQI(_ value: String) -> String
     func lowCarbonDioxide(_ value: String) -> String
     func highCarbonDioxide(_ value: String) -> String
     func lowPMatter1(_ value: String) -> String
@@ -53,8 +55,12 @@ public protocol RuuviNotifierTitles {
     func highVOC(_ value: String) -> String
     func lowNOx(_ value: String) -> String
     func highNOx(_ value: String) -> String
-    func lowSound(_ value: String) -> String
-    func highSound(_ value: String) -> String
+    func lowSoundInstant(_ value: String) -> String
+    func highSoundInstant(_ value: String) -> String
+    func lowSoundAverage(_ value: String) -> String
+    func highSoundAverage(_ value: String) -> String
+    func lowSoundPeak(_ value: String) -> String
+    func highSoundPeak(_ value: String) -> String
     func lowLuminosity(_ value: String) -> String
     func highLuminosity(_ value: String) -> String
 

@@ -17,14 +17,11 @@ public extension RuuviTagSensorRecord {
             voc: voc,
             nox: nox,
             luminosity: luminance,
-            sound: dbaAvg,
+            soundInstant: dbaInstant,
             acceleration: acceleration,
             voltage: voltage,
             movementCounter: movementCounter,
-            txPower: txPower,
-            temperatureOffset: temperatureOffset,
-            humidityOffset: humidityOffset,
-            pressureOffset: pressureOffset
+            txPower: txPower
         )
     }
 }

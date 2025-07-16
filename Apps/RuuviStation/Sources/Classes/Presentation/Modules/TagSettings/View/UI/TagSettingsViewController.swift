@@ -2207,7 +2207,7 @@ extension TagSettingsViewController {
                 guard let sSelf = self else { return }
                 cell.setLatestMeasurementText(
                     with: sSelf.latestValue(
-                        for: .sound(
+                        for: .soundInstant(
                             lower: 0,
                             upper: 0
                         )
@@ -2513,7 +2513,7 @@ extension TagSettingsViewController {
         }
     }
 
-    // swiftlint:disable:next function_body_length cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity
     private func configureAlertSections() -> [TagSettingsSection] {
         var sections: [TagSettingsSection] = []
 
@@ -2540,20 +2540,8 @@ extension TagSettingsViewController {
             sections.append(configureCO2AlertSection())
         }
 
-        if viewModel?.latestMeasurement.value?.pm1 != nil {
-            sections.append(configurePM1AlertSection())
-        }
-
         if viewModel?.latestMeasurement.value?.pm25 != nil {
             sections.append(configurePM25AlertSection())
-        }
-
-        if viewModel?.latestMeasurement.value?.pm4 != nil {
-            sections.append(configurePM4AlertSection())
-        }
-
-        if viewModel?.latestMeasurement.value?.pm10 != nil {
-            sections.append(configurePM10AlertSection())
         }
 
         if viewModel?.latestMeasurement.value?.voc != nil {
@@ -2564,7 +2552,7 @@ extension TagSettingsViewController {
             sections.append(configureNOXAlertSection())
         }
 
-        if viewModel?.latestMeasurement.value?.dbaAvg != nil {
+        if viewModel?.latestMeasurement.value?.dbaInstant != nil {
             sections.append(configureSoundAlertSection())
         }
 
@@ -3235,7 +3223,7 @@ extension TagSettingsViewController {
         let (minRange, maxRange) = soundAlertRange()
         let disableSound = !hasMeasurement()
         let latestMeasurement = latestValue(
-            for: .sound(lower: 0, upper: 0)
+            for: .soundInstant(lower: 0, upper: 0)
         )
         let settingItem = TagSettingsItem(
             createdCell: {
@@ -3902,8 +3890,10 @@ extension TagSettingsViewController {
             } else {
                 return RuuviLocalization.na
             }
-        case .sound:
-            if let sound = viewModel?.latestMeasurement.value?.dbaAvg?.round(to: 2) {
+        case .soundInstant:
+            if let sound = viewModel?.latestMeasurement.value?.dbaInstant?.round(
+                to: 2
+            ) {
                 let symbol = RuuviLocalization.unitSound
                 return "\(sound)" + " \(symbol)"
             } else {
@@ -4963,7 +4953,7 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
 
         case soundAlertCell:
             output.viewDidChangeAlertState(
-                for: .sound(lower: 0, upper: 0),
+                for: .soundInstant(lower: 0, upper: 0),
                 isOn: isOn
             )
 
@@ -5172,14 +5162,14 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
         case soundAlertCell:
             if minValue != viewModel?.soundLowerBound.value {
                 output.viewDidChangeAlertLowerBound(
-                    for: .sound(lower: 0, upper: 0),
+                    for: .soundInstant(lower: 0, upper: 0),
                     lower: minValue
                 )
             }
 
             if maxValue != viewModel?.soundUpperBound.value {
                 output.viewDidChangeAlertUpperBound(
-                    for: .sound(lower: 0, upper: 0),
+                    for: .soundInstant(lower: 0, upper: 0),
                     upper: maxValue
                 )
             }
@@ -7023,7 +7013,7 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                 if let soundAlertCell {
                     let (minRange, maxRange) = soundAlertRange()
                     let latest = latestValue(
-                        for: .sound(lower: 0, upper: 0)
+                        for: .soundInstant(lower: 0, upper: 0)
                     )
                     soundAlertCell
                         .setAlertLimitDescription(
@@ -7315,7 +7305,7 @@ extension TagSettingsViewController {
             )
         case soundAlertCell:
             output.viewDidChangeAlertDescription(
-                for: .sound(lower: 0, upper: 0),
+                for: .soundInstant(lower: 0, upper: 0),
                 description: inputText
             )
         case luminosityAlertCell:

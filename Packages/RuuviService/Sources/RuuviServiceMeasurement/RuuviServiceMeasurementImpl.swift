@@ -496,12 +496,12 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 
-    public func soundAvgString(for soundAvg: Double?) -> String {
-        guard let soundAvg
+    public func soundString(for sound: Double?) -> String {
+        guard let sound
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: Int(soundAvg))
+        let number = NSNumber(value: Int(sound))
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 

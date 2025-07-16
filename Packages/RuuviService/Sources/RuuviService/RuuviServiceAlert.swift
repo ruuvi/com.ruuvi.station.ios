@@ -79,9 +79,9 @@ public protocol RuuviServiceAlertRuuviTag {
     func setNOX(description: String?, ruuviTag: RuuviTagSensor)
 
     // Sound
-    func setLower(sound: Double?, ruuviTag: RuuviTagSensor)
-    func setUpper(sound: Double?, ruuviTag: RuuviTagSensor)
-    func setSound(description: String?, ruuviTag: RuuviTagSensor)
+    func setLower(soundInstant: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(soundInstant: Double?, ruuviTag: RuuviTagSensor)
+    func setSoundInstant(description: String?, ruuviTag: RuuviTagSensor)
 
     // Luminosity
     func setLower(luminosity: Double?, ruuviTag: RuuviTagSensor)
@@ -130,6 +130,11 @@ public protocol RuuviServiceAlertDeprecated {
     func upperSignal(for uuid: String) -> Double?
     func signalDescription(for uuid: String) -> String?
 
+    // AQI
+    func lowerAQI(for uuid: String) -> Double?
+    func upperAQI(for uuid: String) -> Double?
+    func aqiDescription(for uuid: String) -> String?
+
     // Carbon Dioxide
     func lowerCarbonDioxide(for uuid: String) -> Double?
     func upperCarbonDioxide(for uuid: String) -> Double?
@@ -165,10 +170,20 @@ public protocol RuuviServiceAlertDeprecated {
     func upperNOX(for uuid: String) -> Double?
     func noxDescription(for uuid: String) -> String?
 
-    // Sound
-    func lowerSound(for uuid: String) -> Double?
-    func upperSound(for uuid: String) -> Double?
-    func soundDescription(for uuid: String) -> String?
+    // Sound Instant
+    func lowerSoundInstant(for uuid: String) -> Double?
+    func upperSoundInstant(for uuid: String) -> Double?
+    func soundInstantDescription(for uuid: String) -> String?
+
+    // Sound Average
+    func lowerSoundAverage(for uuid: String) -> Double?
+    func upperSoundAverage(for uuid: String) -> Double?
+    func soundAverageDescription(for uuid: String) -> String?
+
+    // Sound Peak
+    func lowerSoundPeak(for uuid: String) -> Double?
+    func upperSoundPeak(for uuid: String) -> Double?
+    func soundPeakDescription(for uuid: String) -> String?
 
     // Luminosity
     func lowerLuminosity(for uuid: String) -> Double?
@@ -223,6 +238,11 @@ public protocol RuuviServiceAlertPhysicalSensor {
     func upperSignal(for sensor: PhysicalSensor) -> Double?
     func signalDescription(for sensor: PhysicalSensor) -> String?
 
+    // AQI
+    func lowerAQI(for sensor: PhysicalSensor) -> Double?
+    func upperAQI(for sensor: PhysicalSensor) -> Double?
+    func aqiDescription(for sensor: PhysicalSensor) -> String?
+
     // Carbon Dioxide
     func lowerCarbonDioxide(for sensor: PhysicalSensor) -> Double?
     func upperCarbonDioxide(for sensor: PhysicalSensor) -> Double?
@@ -258,10 +278,20 @@ public protocol RuuviServiceAlertPhysicalSensor {
     func upperNOX(for sensor: PhysicalSensor) -> Double?
     func noxDescription(for sensor: PhysicalSensor) -> String?
 
-    // Sound
-    func lowerSound(for sensor: PhysicalSensor) -> Double?
-    func upperSound(for sensor: PhysicalSensor) -> Double?
-    func soundDescription(for sensor: PhysicalSensor) -> String?
+    // Sound Instant
+    func lowerSoundInstant(for sensor: PhysicalSensor) -> Double?
+    func upperSoundInstant(for sensor: PhysicalSensor) -> Double?
+    func soundInstantDescription(for sensor: PhysicalSensor) -> String?
+
+    // Sound Average
+    func lowerSoundAverage(for sensor: PhysicalSensor) -> Double?
+    func upperSoundAverage(for sensor: PhysicalSensor) -> Double?
+    func soundAverageDescription(for sensor: PhysicalSensor) -> String?
+
+    // Sound Peak
+    func lowerSoundPeak(for sensor: PhysicalSensor) -> Double?
+    func upperSoundPeak(for sensor: PhysicalSensor) -> Double?
+    func soundPeakDescription(for sensor: PhysicalSensor) -> String?
 
     // Luminosity
     func lowerLuminosity(for sensor: PhysicalSensor) -> Double?

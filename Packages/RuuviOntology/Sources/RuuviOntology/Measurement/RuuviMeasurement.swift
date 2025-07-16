@@ -34,11 +34,7 @@ public struct RuuviMeasurement {
     public var voc: Double?
     public var nox: Double?
     public var luminosity: Double?
-    public var sound: Double? // Avg
-    // Backword compatibility for the users using versions < 0.7.7
-    public var temperatureOffset: Double?
-    public var humidityOffset: Double?
-    public var pressureOffset: Double?
+    public var soundInstant: Double? // Instant
 
     public init(
         luid: LocalIdentifier?,
@@ -55,14 +51,11 @@ public struct RuuviMeasurement {
         voc: Double?,
         nox: Double?,
         luminosity: Double?,
-        sound: Double?,
+        soundInstant: Double?,
         acceleration: Acceleration?,
         voltage: Voltage?,
         movementCounter: Int?,
-        txPower: Int?,
-        temperatureOffset: Double?,
-        humidityOffset: Double?,
-        pressureOffset: Double?
+        txPower: Int?
     ) {
         self.luid = luid
         self.macId = macId
@@ -78,13 +71,10 @@ public struct RuuviMeasurement {
         self.voc = voc
         self.nox = nox
         self.luminosity = luminosity
-        self.sound = sound
+        self.soundInstant = soundInstant
         self.acceleration = acceleration
         self.voltage = voltage
         self.movementCounter = movementCounter
         self.txPower = txPower
-        self.temperatureOffset = temperatureOffset
-        self.humidityOffset = humidityOffset
-        self.pressureOffset = pressureOffset
     }
 }

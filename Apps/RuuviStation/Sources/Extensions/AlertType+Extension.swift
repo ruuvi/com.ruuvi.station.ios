@@ -22,8 +22,8 @@ extension AlertType {
             return .nox
         case .voc:
             return .voc
-        case .sound:
-            return .sound
+        case .soundInstant:
+            return .soundInstant
         case .luminosity:
             return .luminosity
         default:
