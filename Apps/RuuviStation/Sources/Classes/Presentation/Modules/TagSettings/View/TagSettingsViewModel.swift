@@ -30,8 +30,7 @@ struct TagSettingsViewModel {
     let voc: Observable<Double?> = .init()
     let nox: Observable<Double?> = .init()
     let luminance: Observable<Double?> = .init()
-    let dbaAvg: Observable<Double?> = .init()
-    let dbaPeak: Observable<Double?> = .init()
+    let dbaInstant: Observable<Double?> = .init()
     let isConnectable: Observable<Bool?> = .init()
     let isConnected: Observable<Bool?> = .init()
     let isNetworkConnected: Observable<Bool?> = .init()
@@ -199,8 +198,7 @@ struct TagSettingsViewModel {
         voc.value = record.voc
         nox.value = record.nox
         luminance.value = record.luminance
-        dbaAvg.value = record.dbaAvg
-        dbaPeak.value = record.dbaPeak
+        dbaInstant.value = record.dbaInstant
         source.value = record.source
         let batteryStatusProvider = RuuviTagBatteryStatusProvider()
         batteryNeedsReplacement.value = batteryStatusProvider.batteryNeedsReplacement(
@@ -306,8 +304,7 @@ struct TagSettingsViewModel {
         voc.value = nil
         nox.value = nil
         luminance.value = nil
-        dbaAvg.value = nil
-        dbaPeak.value = nil
+        dbaInstant.value = nil
     }
 }
 // swiftlint:enable type_body_length

@@ -2,6 +2,7 @@ import DGCharts
 import RuuviLocalization
 import RuuviService
 import UIKit
+import RuuviOntology
 
 class TagChartsMarkerView: MarkerImage {
     private(set) var color: UIColor

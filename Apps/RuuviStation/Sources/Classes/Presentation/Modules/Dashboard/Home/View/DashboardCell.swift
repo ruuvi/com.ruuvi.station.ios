@@ -896,7 +896,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                     .append(
                         luminosityView
                     )
-            case .sound:
+            case .soundInstant:
                 indicators
                     .append(
                         soundView
@@ -976,7 +976,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         case .nox: return noxView
         case .voc: return vocView
         case .luminosity: return luminosityView
-        case .sound: return soundView
+        case .soundInstant: return soundView
         default: return nil
         }
     }

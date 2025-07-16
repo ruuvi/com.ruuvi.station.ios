@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 protocol UnitSettingsItemProtocol {
     var title: String { get }

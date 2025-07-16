@@ -219,11 +219,11 @@ public extension RuuviNotificationLocalImpl {
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     func notify(
         _ reason: LowHighNotificationReason,
-        _ type: LowHighNotificationType,
+        _ type: AlertType,
         for uuid: String,
         title: String
     ) {
-        isMuted(for: Self.alertType(from: type), uuid: uuid) { [weak self] muted in
+        isMuted(for: type, uuid: uuid) { [weak self] muted in
             guard !muted else { return }
             guard let sSelf = self else { return }
 
@@ -257,6 +257,8 @@ public extension RuuviNotificationLocalImpl {
                 sSelf.ruuviAlertService.pressureDescription(for: uuid) ?? ""
             case .signal:
                 sSelf.ruuviAlertService.signalDescription(for: uuid) ?? ""
+            case .aqi:
+                sSelf.ruuviAlertService.aqiDescription(for: uuid) ?? ""
             case .carbonDioxide:
                 sSelf.ruuviAlertService.carbonDioxideDescription(for: uuid) ?? ""
             case .pMatter1:
@@ -271,10 +273,16 @@ public extension RuuviNotificationLocalImpl {
                 sSelf.ruuviAlertService.vocDescription(for: uuid) ?? ""
             case .nox:
                 sSelf.ruuviAlertService.noxDescription(for: uuid) ?? ""
-            case .sound:
-                sSelf.ruuviAlertService.soundDescription(for: uuid) ?? ""
+            case .soundInstant:
+                sSelf.ruuviAlertService.soundInstantDescription(for: uuid) ?? ""
+            case .soundAverage:
+                sSelf.ruuviAlertService.soundAverageDescription(for: uuid) ?? ""
+            case .soundPeak:
+                sSelf.ruuviAlertService.soundPeakDescription(for: uuid) ?? ""
             case .luminosity:
                 sSelf.ruuviAlertService.luminosityDescription(for: uuid) ?? ""
+            default:
+                ""
             }
             content.body = body
 
@@ -290,7 +298,7 @@ public extension RuuviNotificationLocalImpl {
                     trigger: trigger
                 )
                 UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-                self?.setTriggered(for: Self.alertType(from: type), uuid: uuid)
+                self?.setTriggered(for: type, uuid: uuid)
             })
         }
     }
@@ -299,43 +307,6 @@ public extension RuuviNotificationLocalImpl {
 // MARK: - Private
 
 extension RuuviNotificationLocalImpl {
-
-    // swiftlint:disable:next cyclomatic_complexity
-    private static func alertType(from type: LowHighNotificationType) -> AlertType {
-        switch type {
-        case .temperature:
-            .temperature(lower: 0, upper: 0)
-        case .relativeHumidity:
-            .relativeHumidity(lower: 0, upper: 0)
-        case .humidity:
-            .humidity(
-                lower: Humidity(value: 0, unit: .absolute),
-                upper: Humidity(value: 0, unit: .absolute)
-            )
-        case .pressure:
-            .pressure(lower: 0, upper: 0)
-        case .signal:
-            .signal(lower: 0, upper: 0)
-        case .carbonDioxide:
-            .carbonDioxide(lower: 0, upper: 0)
-        case .pMatter1:
-            .pMatter1(lower: 0, upper: 0)
-        case .pMatter25:
-            .pMatter25(lower: 0, upper: 0)
-        case .pMatter4:
-            .pMatter4(lower: 0, upper: 0)
-        case .pMatter10:
-            .pMatter10(lower: 0, upper: 0)
-        case .voc:
-            .voc(lower: 0, upper: 0)
-        case .nox:
-            .nox(lower: 0, upper: 0)
-        case .sound:
-            .sound(lower: 0, upper: 0)
-        case .luminosity:
-            .luminosity(lower: 0, upper: 0)
-        }
-    }
 
     private static func alertType(from type: BlastNotificationType) -> AlertType {
         switch type {
@@ -355,78 +326,58 @@ extension RuuviNotificationLocalImpl {
                 object: nil,
                 queue: .main
             ) { [weak self] notification in
-                if let userInfo = notification.userInfo,
-                   let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType {
-                    let physicalSensor = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor
+                guard
+                    let userInfo = notification.userInfo,
+                    let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType,
+                    let physicalSensor = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
+                    let uuid = physicalSensor.luid?.value ?? physicalSensor.macId?.value
+                else {
+                    return
+                }
 
-                    var isOn = false
-                    if let physicalSensor {
-                        isOn = self?.ruuviAlertService.isOn(type: type, for: physicalSensor) ?? false
-                    }
+                let isOn = self?.ruuviAlertService.isOn(type: type, for: physicalSensor) ?? false
+                guard !isOn else { return }
 
-                    if let uuid = physicalSensor?.luid?.value ?? physicalSensor?.macId?.value {
-                        switch type {
-                        case .temperature:
-                            if !isOn {
-                                self?.cancel(.temperature, for: uuid)
-                            }
-                        case .relativeHumidity:
-                            if !isOn {
-                                self?.cancel(.relativeHumidity, for: uuid)
-                            }
-                        case .humidity:
-                            if !isOn {
-                                self?.cancel(.humidity, for: uuid)
-                            }
-                        case .pressure:
-                            if !isOn {
-                                self?.cancel(.pressure, for: uuid)
-                            }
-                        case .signal:
-                            if !isOn {
-                                self?.cancel(.signal, for: uuid)
-                            }
-                        case .carbonDioxide:
-                            if !isOn {
-                                self?.cancel(.carbonDioxide, for: uuid)
-                            }
-                        case .pMatter1:
-                            if !isOn {
-                                self?.cancel(.pMatter1, for: uuid)
-                            }
-                        case .pMatter25:
-                            if !isOn {
-                                self?.cancel(.pMatter25, for: uuid)
-                            }
-                        case .pMatter4:
-                            if !isOn {
-                                self?.cancel(.pMatter4, for: uuid)
-                            }
-                        case .pMatter10:
-                            if !isOn {
-                                self?.cancel(.pMatter10, for: uuid)
-                            }
-                        case .voc:
-                            if !isOn {
-                                self?.cancel(.voc, for: uuid)
-                            }
-                        case .nox:
-                            if !isOn {
-                                self?.cancel(.nox, for: uuid)
-                            }
-                        case .sound:
-                            if !isOn {
-                                self?.cancel(.sound, for: uuid)
-                            }
-                        case .luminosity:
-                            if !isOn {
-                                self?.cancel(.luminosity, for: uuid)
-                            }
-                        case .connection, .cloudConnection, .movement:
-                            // do nothing
-                            break
-                        }
-                    }
+                switch type {
+                case .temperature:
+                    self?.cancel(.temperature(lower: 0, upper: 0), for: uuid)
+                case .relativeHumidity:
+                    self?.cancel(.relativeHumidity(lower: 0, upper: 0), for: uuid)
+                case .humidity:
+                    self?.cancel(
+                        .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute),
+                        for: uuid
+                    )
+                case .pressure:
+                    self?.cancel(.pressure(lower: 0, upper: 0), for: uuid)
+                case .signal:
+                    self?.cancel(.signal(lower: 0, upper: 0), for: uuid)
+                case .carbonDioxide:
+                    self?.cancel(.carbonDioxide(lower: 0, upper: 0), for: uuid)
+                case .aqi:
+                    self?.cancel(.aqi(lower: 0, upper: 0), for: uuid)
+                case .pMatter1:
+                    self?.cancel(.pMatter1(lower: 0, upper: 0), for: uuid)
+                case .pMatter25:
+                    self?.cancel(.pMatter25(lower: 0, upper: 0), for: uuid)
+                case .pMatter4:
+                    self?.cancel(.pMatter4(lower: 0, upper: 0), for: uuid)
+                case .pMatter10:
+                    self?.cancel(.pMatter10(lower: 0, upper: 0), for: uuid)
+                case .voc:
+                    self?.cancel(.voc(lower: 0, upper: 0), for: uuid)
+                case .nox:
+                    self?.cancel(.nox(lower: 0, upper: 0), for: uuid)
+                case .soundInstant:
+                    self?.cancel(.soundInstant(lower: 0, upper: 0), for: uuid)
+                case .soundAverage:
+                    self?.cancel(.soundAverage(lower: 0, upper: 0), for: uuid)
+                case .soundPeak:
+                    self?.cancel(.soundPeak(lower: 0, upper: 0), for: uuid)
+                case .luminosity:
+                    self?.cancel(.luminosity(lower: 0, upper: 0), for: uuid)
+                case .connection, .cloudConnection, .movement:
+                    break
                 }
             }
     }
@@ -494,7 +445,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         let userInfo = response.notification.request.content.userInfo
         if let uuid = userInfo[lowHigh.uuidKey] as? String,
            let typeString = userInfo[lowHigh.typeKey] as? String,
-           let type = LowHighNotificationType(rawValue: typeString) {
+           let type = AlertType.alertType(from: typeString) {
             switch response.actionIdentifier {
             case lowHigh.disable:
                 // TODO: @rinat go with sensors instead of pure uuid
@@ -515,7 +466,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                     sharedTo: [],
                     maxHistoryDays: nil
                 )
-                ruuviAlertService.unregister(type: Self.alertType(from: type), ruuviTag: ruuviTag)
+                ruuviAlertService.unregister(type: type, ruuviTag: ruuviTag)
             case lowHigh.mute:
                 mute(type: type, uuid: uuid)
             default:
@@ -566,20 +517,20 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         completionHandler()
     }
 
-    private func cancel(_ type: LowHighNotificationType, for uuid: String) {
+    private func cancel(_ type: AlertType, for uuid: String) {
         let nc = UNUserNotificationCenter.current()
         nc.removePendingNotificationRequests(withIdentifiers: [uuid + type.rawValue])
         nc.removeDeliveredNotifications(withIdentifiers: [uuid + type.rawValue])
     }
 
-    private func mute(type: LowHighNotificationType, uuid: String) {
+    private func mute(type: AlertType, uuid: String) {
         guard let date = muteOffset()
         else {
             assertionFailure(); return
         }
         ruuviStorage.readOne(uuid).on(success: { [weak self] ruuviTag in
             self?.ruuviAlertService.mute(
-                type: Self.alertType(from: type),
+                type: type,
                 for: ruuviTag,
                 till: date
             )
