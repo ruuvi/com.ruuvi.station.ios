@@ -35,6 +35,14 @@ struct RuuviNotifierTitlesImpl: RuuviNotifierTitles {
         RuuviLocalization.alertNotificationRssiHighThreshold(value)
     }
 
+    func lowAQI(_ value: String) -> String {
+        RuuviLocalization.alertNotificationAqiLowThreshold(value)
+    }
+
+    func highAQI(_ value: String) -> String {
+        RuuviLocalization.alertNotificationAqiHighThreshold(value)
+    }
+
     func lowCarbonDioxide(_ value: String) -> String {
         RuuviLocalization.alertNotificationCo2LowThreshold(value)
     }
@@ -91,12 +99,28 @@ struct RuuviNotifierTitlesImpl: RuuviNotifierTitles {
         RuuviLocalization.alertNotificationNoxHighThreshold(value)
     }
 
-    func lowSound(_ value: String) -> String {
-        RuuviLocalization.alertNotificationSoundLowThreshold(value)
+    func lowSoundInstant(_ value: String) -> String {
+        RuuviLocalization.alertNotificationSoundInstantLowThreshold(value)
     }
 
-    func highSound(_ value: String) -> String {
-        RuuviLocalization.alertNotificationSoundHighThreshold(value)
+    func highSoundInstant(_ value: String) -> String {
+        RuuviLocalization.alertNotificationSoundInstantHighThreshold(value)
+    }
+
+    func lowSoundAverage(_ value: String) -> String {
+        RuuviLocalization.alertNotificationSoundAverageLowThreshold(value)
+    }
+
+    func highSoundAverage(_ value: String) -> String {
+        RuuviLocalization.alertNotificationSoundAverageHighThreshold(value)
+    }
+
+    func lowSoundPeak(_ value: String) -> String {
+        RuuviLocalization.alertNotificationSoundPeakLowThreshold(value)
+    }
+
+    func highSoundPeak(_ value: String) -> String {
+        RuuviLocalization.alertNotificationSoundPeakHighThreshold(value)
     }
 
     func lowLuminosity(_ value: String) -> String {

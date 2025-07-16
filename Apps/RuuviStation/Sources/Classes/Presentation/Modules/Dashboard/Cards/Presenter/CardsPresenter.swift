@@ -1133,7 +1133,7 @@ extension CardsPresenter {
                 sync(voc: type, ruuviTag: ruuviTag, viewModel: viewModel)
             case .nox:
                 sync(nox: type, ruuviTag: ruuviTag, viewModel: viewModel)
-            case .sound:
+            case .soundInstant:
                 sync(sound: type, ruuviTag: ruuviTag, viewModel: viewModel)
             case .luminosity:
                 sync(luminosity: type, ruuviTag: ruuviTag, viewModel: viewModel)
@@ -1393,7 +1393,7 @@ extension CardsPresenter {
         ruuviTag: PhysicalSensor,
         viewModel: CardsViewModel
     ) {
-        if case .sound = alertService.alert(for: ruuviTag, of: sound) {
+        if case .soundInstant = alertService.alert(for: ruuviTag, of: sound) {
             viewModel.isSignalAlertOn = true
         } else {
             viewModel.isSoundAlertOn = false
@@ -1579,7 +1579,7 @@ extension CardsPresenter {
             viewModel.vocAlertMutedTill = date
         case .nox:
             viewModel.noxAlertMutedTill = date
-        case .sound:
+        case .soundInstant:
             viewModel.soundAlertMutedTill = date
         case .luminosity:
             viewModel.luminosityAlertMutedTill = date
@@ -1624,7 +1624,7 @@ extension CardsPresenter {
             viewModel.isVOCAlertOn = isOn
         case .nox:
             viewModel.isNOXAlertOn = isOn
-        case .sound:
+        case .soundInstant:
             viewModel.isSoundAlertOn = isOn
         case .luminosity:
             viewModel.isLuminosityAlertOn = isOn

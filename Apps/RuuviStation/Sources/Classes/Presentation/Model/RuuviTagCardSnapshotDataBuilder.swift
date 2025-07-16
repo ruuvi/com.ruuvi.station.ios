@@ -15,12 +15,12 @@ struct MeasurementConfiguration {
 
     static let measurementPriority: [MeasurementType] = [
         .aqi, .temperature, .humidity, .pressure, .co2,
-        .pm25, .pm10, .voc, .nox, .luminosity, .sound, .movementCounter,
+        .pm25, .voc, .nox, .luminosity, .soundInstant, .movementCounter,
     ]
 
     static let advancedFirmwareMeasurements: [MeasurementType] = [
         .aqi, .temperature, .humidity, .pressure, .co2,
-        .pm25, .pm10, .nox, .voc, .luminosity, .sound,
+        .pm25, .nox, .voc, .luminosity, .soundInstant,
     ]
 
     static let basicFirmwareMeasurements: [MeasurementType] = [
@@ -290,8 +290,8 @@ struct SoundMeasurementExtractor: MeasurementExtractor {
         measurementService: RuuviServiceMeasurement?,
         flags: RuuviLocalFlags
     ) -> MeasurementResult? {
-        guard let sound = record.dbaAvg,
-              let soundValue = measurementService?.soundAvgString(for: sound) else { return nil }
+        guard let sound = record.dbaInstant,
+              let soundValue = measurementService?.soundString(for: sound) else { return nil }
 
         return MeasurementResult(
             value: soundValue,
@@ -317,7 +317,7 @@ struct MeasurementExtractorFactory {
         .nox: NOXMeasurementExtractor(),
         .voc: VOCMeasurementExtractor(),
         .luminosity: LuminosityMeasurementExtractor(),
-        .sound: SoundMeasurementExtractor(),
+        .soundInstant: SoundMeasurementExtractor(),
     ]
 
     static func extractor(for type: MeasurementType) -> MeasurementExtractor? {

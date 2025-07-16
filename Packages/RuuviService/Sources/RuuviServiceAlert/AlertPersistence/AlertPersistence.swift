@@ -53,6 +53,14 @@ protocol AlertPersistence {
     func signalDescription(for uuid: String) -> String?
     func setSignal(description: String?, for uuid: String)
 
+    // AQI
+    func lowerAQI(for uuid: String) -> Double?
+    func setLower(aqi: Double?, for uuid: String)
+    func upperAQI(for uuid: String) -> Double?
+    func setUpper(aqi: Double?, for uuid: String)
+    func aqiDescription(for uuid: String) -> String?
+    func setAQI(description: String?, for uuid: String)
+
     // Carbon Dioxide
     func lowerCarbonDioxide(for uuid: String) -> Double?
     func setLower(carbonDioxide: Double?, for uuid: String)
@@ -109,13 +117,29 @@ protocol AlertPersistence {
     func noxDescription(for uuid: String) -> String?
     func setNOX(description: String?, for uuid: String)
 
-    // Sound
-    func lowerSound(for uuid: String) -> Double?
-    func setLower(sound: Double?, for uuid: String)
-    func upperSound(for uuid: String) -> Double?
-    func setUpper(sound: Double?, for uuid: String)
-    func soundDescription(for uuid: String) -> String?
-    func setSound(description: String?, for uuid: String)
+    // Sound Instant
+    func lowerSoundInstant(for uuid: String) -> Double?
+    func setLower(soundInstant: Double?, for uuid: String)
+    func upperSoundInstant(for uuid: String) -> Double?
+    func setUpper(soundInstant: Double?, for uuid: String)
+    func soundInstantDescription(for uuid: String) -> String?
+    func setSoundInstant(description: String?, for uuid: String)
+
+    // Sound Average
+    func lowerSoundAverage(for uuid: String) -> Double?
+    func setLower(soundAverage: Double?, for uuid: String)
+    func upperSoundAverage(for uuid: String) -> Double?
+    func setUpper(soundAverage: Double?, for uuid: String)
+    func soundAverageDescription(for uuid: String) -> String?
+    func setSoundAverage(description: String?, for uuid: String)
+
+    // Sound Peak
+    func lowerSoundPeak(for uuid: String) -> Double?
+    func setLower(soundPeak: Double?, for uuid: String)
+    func upperSoundPeak(for uuid: String) -> Double?
+    func setUpper(soundPeak: Double?, for uuid: String)
+    func soundPeakDescription(for uuid: String) -> String?
+    func setSoundPeak(description: String?, for uuid: String)
 
     // Luminosity
     func lowerLuminosity(for uuid: String) -> Double?

@@ -63,6 +63,18 @@ public extension RuuviServiceAlertImpl {
                     description: signalDescription(for: ruuviTag),
                     for: macId
                 )
+            case let .aqi(lower, upper):
+                cloud.setAlert(
+                    type: .aqi,
+                    settingType: .state,
+                    isEnabled: true,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: aqiDescription(for: ruuviTag),
+                    for: macId
+                )
             case let .carbonDioxide(lower, upper):
                 cloud.setAlert(
                     type: .co2,
@@ -147,16 +159,40 @@ public extension RuuviServiceAlertImpl {
                     description: noxDescription(for: ruuviTag),
                     for: macId
                 )
-            case let .sound(lower, upper):
+            case let .soundInstant(lower, upper):
                 cloud.setAlert(
-                    type: .sound,
+                    type: .soundInstant,
                     settingType: .state,
                     isEnabled: true,
                     min: lower,
                     max: upper,
                     counter: nil,
                     delay: nil,
-                    description: soundDescription(for: ruuviTag),
+                    description: soundInstantDescription(for: ruuviTag),
+                    for: macId
+                )
+            case let .soundAverage(lower, upper):
+                cloud.setAlert(
+                    type: .soundAverage,
+                    settingType: .state,
+                    isEnabled: true,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: soundAverageDescription(for: ruuviTag),
+                    for: macId
+                )
+            case let .soundPeak(lower, upper):
+                cloud.setAlert(
+                    type: .soundPeak,
+                    settingType: .state,
+                    isEnabled: true,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: soundPeakDescription(for: ruuviTag),
                     for: macId
                 )
             case let .luminosity(lower, upper):
@@ -256,6 +292,18 @@ public extension RuuviServiceAlertImpl {
                     description: signalDescription(for: ruuviTag),
                     for: macId
                 )
+            case let .aqi(lower, upper):
+                cloud.setAlert(
+                    type: .aqi,
+                    settingType: .state,
+                    isEnabled: false,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: aqiDescription(for: ruuviTag),
+                    for: macId
+                )
             case let .carbonDioxide(lower, upper):
                 cloud.setAlert(
                     type: .co2,
@@ -340,16 +388,40 @@ public extension RuuviServiceAlertImpl {
                     description: noxDescription(for: ruuviTag),
                     for: macId
                 )
-            case let .sound(lower, upper):
+            case let .soundInstant(lower, upper):
                 cloud.setAlert(
-                    type: .sound,
+                    type: .soundInstant,
                     settingType: .state,
                     isEnabled: false,
                     min: lower,
                     max: upper,
                     counter: nil,
                     delay: nil,
-                    description: noxDescription(for: ruuviTag),
+                    description: soundInstantDescription(for: ruuviTag),
+                    for: macId
+                )
+            case let .soundAverage(lower, upper):
+                cloud.setAlert(
+                    type: .soundAverage,
+                    settingType: .state,
+                    isEnabled: false,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: soundAverageDescription(for: ruuviTag),
+                    for: macId
+                )
+            case let .soundPeak(lower, upper):
+                cloud.setAlert(
+                    type: .soundPeak,
+                    settingType: .state,
+                    isEnabled: false,
+                    min: lower,
+                    max: upper,
+                    counter: nil,
+                    delay: nil,
+                    description: soundPeakDescription(for: ruuviTag),
                     for: macId
                 )
             case let .luminosity(lower, upper):
@@ -603,6 +675,67 @@ public extension RuuviServiceAlertImpl {
                 ),
                 min: lowerSignal(for: ruuviTag) ?? 0,
                 max: upperSignal(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: description,
+                for: macId
+            )
+        }
+    }
+
+    // MARK: - AQI
+    func setLower(aqi: Double?, ruuviTag: RuuviTagSensor) {
+        setLower(aqi: aqi, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .aqi,
+                settingType: .lowerBound,
+                isEnabled: isOn(
+                    type: .aqi(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: aqi ?? 0,
+                max: upperAQI(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: aqiDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setUpper(aqi: Double?, ruuviTag: RuuviTagSensor) {
+        setUpper(aqi: aqi, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .aqi,
+                settingType: .upperBound,
+                isEnabled: isOn(
+                    type: .aqi(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerAQI(for: ruuviTag) ?? 0,
+                max: aqi ?? 0,
+                counter: nil,
+                delay: nil,
+                description: aqiDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setAQI(description: String?, ruuviTag: RuuviTagSensor) {
+        setAQI(description: description, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .aqi,
+                settingType: .description,
+                isEnabled: isOn(
+                    type: .aqi(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerAQI(for: ruuviTag) ?? 0,
+                max: upperAQI(for: ruuviTag) ?? 0,
                 counter: nil,
                 delay: nil,
                 description: description,
@@ -1038,59 +1171,181 @@ public extension RuuviServiceAlertImpl {
         }
     }
 
-    // MARK: - Sound
-    func setLower(sound: Double?, ruuviTag: RuuviTagSensor) {
-        setLower(sound: sound, for: ruuviTag)
+    // MARK: - Sound Instant
+    func setLower(soundInstant: Double?, ruuviTag: RuuviTagSensor) {
+        setLower(soundInstant: soundInstant, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
-                type: .sound,
+                type: .soundInstant,
                 settingType: .lowerBound,
                 isEnabled: isOn(
-                    type: .sound(lower: 0, upper: 0),
+                    type: .soundInstant(lower: 0, upper: 0),
                     for: ruuviTag
                 ),
-                min: sound ?? 0,
-                max: upperSound(for: ruuviTag) ?? 0,
+                min: soundInstant ?? 0,
+                max: upperSoundInstant(for: ruuviTag) ?? 0,
                 counter: nil,
                 delay: nil,
-                description: soundDescription(for: ruuviTag),
+                description: soundInstantDescription(for: ruuviTag),
                 for: macId
             )
         }
     }
 
-    func setUpper(sound: Double?, ruuviTag: RuuviTagSensor) {
-        setUpper(sound: sound, for: ruuviTag)
+    func setUpper(soundInstant: Double?, ruuviTag: RuuviTagSensor) {
+        setUpper(soundInstant: soundInstant, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
-                type: .sound,
+                type: .soundInstant,
                 settingType: .upperBound,
                 isEnabled: isOn(
-                    type: .sound(lower: 0, upper: 0),
+                    type: .soundInstant(lower: 0, upper: 0),
                     for: ruuviTag
                 ),
-                min: lowerSound(for: ruuviTag) ?? 0,
-                max: sound ?? 0,
+                min: lowerSoundInstant(for: ruuviTag) ?? 0,
+                max: soundInstant ?? 0,
                 counter: nil,
                 delay: nil,
-                description: soundDescription(for: ruuviTag),
+                description: soundInstantDescription(for: ruuviTag),
                 for: macId
             )
         }
     }
 
-    func setSound(description: String?, ruuviTag: RuuviTagSensor) {
-        setSound(description: description, for: ruuviTag)
+    func setSoundInstant(description: String?, ruuviTag: RuuviTagSensor) {
+        setSoundInstant(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
-                type: .sound,
+                type: .soundInstant,
                 settingType: .description,
                 isEnabled: isOn(
-                    type: .sound(lower: 0, upper: 0),
+                    type: .soundInstant(lower: 0, upper: 0),
                     for: ruuviTag
                 ),
-                min: lowerSound(for: ruuviTag) ?? 0,
-                max: upperSound(for: ruuviTag) ?? 0,
+                min: lowerSoundInstant(for: ruuviTag) ?? 0,
+                max: upperSoundInstant(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: description,
+                for: macId
+            )
+        }
+    }
+
+    // MARK: - Sound Average
+    func setLower(soundAverage: Double?, ruuviTag: RuuviTagSensor) {
+        setLower(soundAverage: soundAverage, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .soundAverage,
+                settingType: .lowerBound,
+                isEnabled: isOn(
+                    type: .soundAverage(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: soundAverage ?? 0,
+                max: upperSoundAverage(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: soundAverageDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setUpper(soundAverage: Double?, ruuviTag: RuuviTagSensor) {
+        setUpper(soundAverage: soundAverage, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .soundAverage,
+                settingType: .upperBound,
+                isEnabled: isOn(
+                    type: .soundAverage(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerSoundAverage(for: ruuviTag) ?? 0,
+                max: soundAverage ?? 0,
+                counter: nil,
+                delay: nil,
+                description: soundAverageDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setSoundAverage(description: String?, ruuviTag: RuuviTagSensor) {
+        setSoundAverage(description: description, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .soundAverage,
+                settingType: .description,
+                isEnabled: isOn(
+                    type: .soundAverage(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerSoundAverage(for: ruuviTag) ?? 0,
+                max: upperSoundAverage(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: description,
+                for: macId
+            )
+        }
+    }
+
+    // MARK: - Sound Peak
+    func setLower(soundPeak: Double?, ruuviTag: RuuviTagSensor) {
+        setLower(soundPeak: soundPeak, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .soundPeak,
+                settingType: .lowerBound,
+                isEnabled: isOn(
+                    type: .soundPeak(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: soundPeak ?? 0,
+                max: upperSoundPeak(for: ruuviTag) ?? 0,
+                counter: nil,
+                delay: nil,
+                description: soundPeakDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setUpper(soundPeak: Double?, ruuviTag: RuuviTagSensor) {
+        setUpper(soundPeak: soundPeak, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .soundPeak,
+                settingType: .upperBound,
+                isEnabled: isOn(
+                    type: .soundPeak(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerSoundPeak(for: ruuviTag) ?? 0,
+                max: soundPeak ?? 0,
+                counter: nil,
+                delay: nil,
+                description: soundPeakDescription(for: ruuviTag),
+                for: macId
+            )
+        }
+    }
+
+    func setSoundPeak(description: String?, ruuviTag: RuuviTagSensor) {
+        setSoundPeak(description: description, for: ruuviTag)
+        if ruuviTag.isCloud, let macId = ruuviTag.macId {
+            cloud.setAlert(
+                type: .soundPeak,
+                settingType: .description,
+                isEnabled: isOn(
+                    type: .soundPeak(lower: 0, upper: 0),
+                    for: ruuviTag
+                ),
+                min: lowerSoundPeak(for: ruuviTag) ?? 0,
+                max: upperSoundPeak(for: ruuviTag) ?? 0,
                 counter: nil,
                 delay: nil,
                 description: description,
@@ -1282,6 +1537,16 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         upper: max
                     )
                     setSignal(description: cloudAlert.description, for: physicalSensor)
+                case .aqi:
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    type = .aqi(
+                        lower: min,
+                        upper: max
+                    )
+                    setAQI(
+                        description: cloudAlert.description,
+                        for: physicalSensor
+                    )
                 case .co2:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     type = .carbonDioxide(
@@ -1352,13 +1617,33 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         description: cloudAlert.description,
                         for: physicalSensor
                     )
-                case .sound:
+                case .soundInstant:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
-                    type = .sound(
+                    type = .soundInstant(
                         lower: min,
                         upper: max
                     )
-                    setSound(
+                    setSoundInstant(
+                        description: cloudAlert.description,
+                        for: physicalSensor
+                    )
+                case .soundAverage:
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    type = .soundAverage(
+                        lower: min,
+                        upper: max
+                    )
+                    setSoundAverage(
+                        description: cloudAlert.description,
+                        for: physicalSensor
+                    )
+                case .soundPeak:
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    type = .soundPeak(
+                        lower: min,
+                        upper: max
+                    )
+                    setSoundPeak(
                         description: cloudAlert.description,
                         for: physicalSensor
                     )
@@ -2165,6 +2450,101 @@ public extension RuuviServiceAlertImpl {
     }
 }
 
+// MARK: - AQI
+public extension RuuviServiceAlertImpl {
+
+    func lowerAQI(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.lowerAQI(for: luid.value)
+                ?? alertPersistence.lowerAQI(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.lowerAQI(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.lowerAQI(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func upperAQI(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.upperAQI(for: luid.value)
+                ?? alertPersistence.upperAQI(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.upperAQI(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.upperAQI(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func aqiDescription(for sensor: PhysicalSensor) -> String? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.aqiDescription(for: luid.value)
+                ?? alertPersistence.aqiDescription(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.aqiDescription(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.aqiDescription(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func lowerAQI(for uuid: String) -> Double? {
+        alertPersistence.lowerAQI(for: uuid)
+    }
+
+    func upperAQI(for uuid: String) -> Double? {
+        alertPersistence.upperAQI(for: uuid)
+    }
+
+    func aqiDescription(for uuid: String) -> String? {
+        alertPersistence.aqiDescription(for: uuid)
+    }
+
+    // Private helpers
+    private func setLower(aqi: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(aqi: aqi, for: luid.value)
+            alertPersistence.setLower(aqi: aqi, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(aqi: aqi, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(aqi: aqi, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setUpper(aqi: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(aqi: aqi, for: luid.value)
+            alertPersistence.setUpper(aqi: aqi, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(aqi: aqi, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(aqi: aqi, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setAQI(description: String?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setAQI(description: description, for: luid.value)
+            alertPersistence.setAQI(description: description, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setAQI(description: description, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setAQI(description: description, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+}
+
 // MARK: - Carbon Dioxide
 
 public extension RuuviServiceAlertImpl {
@@ -2847,95 +3227,285 @@ public extension RuuviServiceAlertImpl {
     }
 }
 
-// MARK: - Sound
+// MARK: - Sound Instant
 public extension RuuviServiceAlertImpl {
 
-    func lowerSound(for sensor: PhysicalSensor) -> Double? {
+    func lowerSoundInstant(for sensor: PhysicalSensor) -> Double? {
         if let luid = sensor.luid, let macId = sensor.macId {
-            return alertPersistence.lowerSound(for: luid.value)
-                ?? alertPersistence.lowerSound(for: macId.value)
+            return alertPersistence.lowerSoundInstant(for: luid.value)
+                ?? alertPersistence.lowerSoundInstant(for: macId.value)
         } else if let luid = sensor.luid {
-            return alertPersistence.lowerSound(for: luid.value)
+            return alertPersistence.lowerSoundInstant(for: luid.value)
         } else if let macId = sensor.macId {
-            return alertPersistence.lowerSound(for: macId.value)
+            return alertPersistence.lowerSoundInstant(for: macId.value)
         } else {
             return nil
         }
     }
 
-    func upperSound(for sensor: PhysicalSensor) -> Double? {
+    func upperSoundInstant(for sensor: PhysicalSensor) -> Double? {
         if let luid = sensor.luid, let macId = sensor.macId {
-            return alertPersistence.upperSound(for: luid.value)
-                ?? alertPersistence.upperSound(for: macId.value)
+            return alertPersistence.upperSoundInstant(for: luid.value)
+                ?? alertPersistence.upperSoundInstant(for: macId.value)
         } else if let luid = sensor.luid {
-            return alertPersistence.upperSound(for: luid.value)
+            return alertPersistence.upperSoundInstant(for: luid.value)
         } else if let macId = sensor.macId {
-            return alertPersistence.upperSound(for: macId.value)
+            return alertPersistence.upperSoundInstant(for: macId.value)
         } else {
             return nil
         }
     }
 
-    func soundDescription(for sensor: PhysicalSensor) -> String? {
+    func soundInstantDescription(for sensor: PhysicalSensor) -> String? {
         if let luid = sensor.luid, let macId = sensor.macId {
-            return alertPersistence.soundDescription(for: luid.value)
-                ?? alertPersistence.soundDescription(for: macId.value)
+            return alertPersistence.soundInstantDescription(for: luid.value)
+                ?? alertPersistence.soundInstantDescription(for: macId.value)
         } else if let luid = sensor.luid {
-            return alertPersistence.soundDescription(for: luid.value)
+            return alertPersistence.soundInstantDescription(for: luid.value)
         } else if let macId = sensor.macId {
-            return alertPersistence.soundDescription(for: macId.value)
+            return alertPersistence.soundInstantDescription(for: macId.value)
         } else {
             return nil
         }
     }
 
-    func lowerSound(for uuid: String) -> Double? {
-        alertPersistence.lowerSound(for: uuid)
+    func lowerSoundInstant(for uuid: String) -> Double? {
+        alertPersistence.lowerSoundInstant(for: uuid)
     }
 
-    func upperSound(for uuid: String) -> Double? {
-        alertPersistence.upperSound(for: uuid)
+    func upperSoundInstant(for uuid: String) -> Double? {
+        alertPersistence.upperSoundInstant(for: uuid)
     }
 
-    func soundDescription(for uuid: String) -> String? {
-        alertPersistence.soundDescription(for: uuid)
+    func soundInstantDescription(for uuid: String) -> String? {
+        alertPersistence.soundInstantDescription(for: uuid)
     }
 
     // Private helpers
-    private func setLower(sound: Double?, for sensor: PhysicalSensor) {
+    private func setLower(soundInstant: Double?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
-            alertPersistence.setLower(sound: sound, for: luid.value)
-            alertPersistence.setLower(sound: sound, for: macId.value)
+            alertPersistence.setLower(soundInstant: soundInstant, for: luid.value)
+            alertPersistence.setLower(soundInstant: soundInstant, for: macId.value)
         } else if let luid = sensor.luid {
-            alertPersistence.setLower(sound: sound, for: luid.value)
+            alertPersistence.setLower(soundInstant: soundInstant, for: luid.value)
         } else if let macId = sensor.macId {
-            alertPersistence.setLower(sound: sound, for: macId.value)
+            alertPersistence.setLower(soundInstant: soundInstant, for: macId.value)
         } else {
             assertionFailure()
         }
     }
 
-    private func setUpper(sound: Double?, for sensor: PhysicalSensor) {
+    private func setUpper(soundInstant: Double?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
-            alertPersistence.setUpper(sound: sound, for: luid.value)
-            alertPersistence.setUpper(sound: sound, for: macId.value)
+            alertPersistence.setUpper(soundInstant: soundInstant, for: luid.value)
+            alertPersistence.setUpper(soundInstant: soundInstant, for: macId.value)
         } else if let luid = sensor.luid {
-            alertPersistence.setUpper(sound: sound, for: luid.value)
+            alertPersistence.setUpper(soundInstant: soundInstant, for: luid.value)
         } else if let macId = sensor.macId {
-            alertPersistence.setUpper(sound: sound, for: macId.value)
+            alertPersistence.setUpper(soundInstant: soundInstant, for: macId.value)
         } else {
             assertionFailure()
         }
     }
 
-    private func setSound(description: String?, for sensor: PhysicalSensor) {
+    private func setSoundInstant(description: String?, for sensor: PhysicalSensor) {
         if let luid = sensor.luid, let macId = sensor.macId {
-            alertPersistence.setSound(description: description, for: luid.value)
-            alertPersistence.setSound(description: description, for: macId.value)
+            alertPersistence.setSoundInstant(description: description, for: luid.value)
+            alertPersistence.setSoundInstant(description: description, for: macId.value)
         } else if let luid = sensor.luid {
-            alertPersistence.setSound(description: description, for: luid.value)
+            alertPersistence.setSoundInstant(description: description, for: luid.value)
         } else if let macId = sensor.macId {
-            alertPersistence.setSound(description: description, for: macId.value)
+            alertPersistence.setSoundInstant(description: description, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+}
+
+// MARK: - Sound Average
+public extension RuuviServiceAlertImpl {
+
+    func lowerSoundAverage(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.lowerSoundAverage(for: luid.value)
+                ?? alertPersistence.lowerSoundAverage(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.lowerSoundAverage(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.lowerSoundAverage(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func upperSoundAverage(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.upperSoundAverage(for: luid.value)
+                ?? alertPersistence.upperSoundAverage(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.upperSoundAverage(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.upperSoundAverage(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func soundAverageDescription(for sensor: PhysicalSensor) -> String? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.soundAverageDescription(for: luid.value)
+                ?? alertPersistence.soundAverageDescription(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.soundAverageDescription(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.soundAverageDescription(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func lowerSoundAverage(for uuid: String) -> Double? {
+        alertPersistence.lowerSoundAverage(for: uuid)
+    }
+
+    func upperSoundAverage(for uuid: String) -> Double? {
+        alertPersistence.upperSoundAverage(for: uuid)
+    }
+
+    func soundAverageDescription(for uuid: String) -> String? {
+        alertPersistence.soundAverageDescription(for: uuid)
+    }
+
+    // Private helpers
+    private func setLower(soundAverage: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(soundAverage: soundAverage, for: luid.value)
+            alertPersistence.setLower(soundAverage: soundAverage, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(soundAverage: soundAverage, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(soundAverage: soundAverage, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setUpper(soundAverage: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(soundAverage: soundAverage, for: luid.value)
+            alertPersistence.setUpper(soundAverage: soundAverage, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(soundAverage: soundAverage, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(soundAverage: soundAverage, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setSoundAverage(description: String?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setSoundAverage(description: description, for: luid.value)
+            alertPersistence.setSoundAverage(description: description, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setSoundAverage(description: description, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setSoundAverage(description: description, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+}
+
+// MARK: - Sound Peak
+public extension RuuviServiceAlertImpl {
+
+    func lowerSoundPeak(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.lowerSoundPeak(for: luid.value)
+                ?? alertPersistence.lowerSoundPeak(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.lowerSoundPeak(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.lowerSoundPeak(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func upperSoundPeak(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.upperSoundPeak(for: luid.value)
+                ?? alertPersistence.upperSoundPeak(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.upperSoundPeak(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.upperSoundPeak(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func soundPeakDescription(for sensor: PhysicalSensor) -> String? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.soundPeakDescription(for: luid.value)
+                ?? alertPersistence.soundPeakDescription(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.soundPeakDescription(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.soundPeakDescription(for: macId.value)
+        } else {
+            return nil
+        }
+    }
+
+    func lowerSoundPeak(for uuid: String) -> Double? {
+        alertPersistence.lowerSoundPeak(for: uuid)
+    }
+
+    func upperSoundPeak(for uuid: String) -> Double? {
+        alertPersistence.upperSoundPeak(for: uuid)
+    }
+
+    func soundPeakDescription(for uuid: String) -> String? {
+        alertPersistence.soundPeakDescription(for: uuid)
+    }
+
+    // Private helpers
+    private func setLower(soundPeak: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(soundPeak: soundPeak, for: luid.value)
+            alertPersistence.setLower(soundPeak: soundPeak, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(soundPeak: soundPeak, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(soundPeak: soundPeak, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setUpper(soundPeak: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(soundPeak: soundPeak, for: luid.value)
+            alertPersistence.setUpper(soundPeak: soundPeak, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(soundPeak: soundPeak, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(soundPeak: soundPeak, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+    }
+
+    private func setSoundPeak(description: String?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setSoundPeak(description: description, for: luid.value)
+            alertPersistence.setSoundPeak(description: description, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setSoundPeak(description: description, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setSoundPeak(description: description, for: macId.value)
         } else {
             assertionFailure()
         }

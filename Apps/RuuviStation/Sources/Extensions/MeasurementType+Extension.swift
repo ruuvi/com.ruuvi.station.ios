@@ -1,27 +1,5 @@
 import RuuviOntology
 
-enum MeasurementType: String {
-    case rssi
-    case temperature
-    case humidity
-    case pressure
-    // v3 & v5
-    case acceleration
-    case voltage
-    // v5
-    case movementCounter
-    case txPower
-    // E1/V6
-    case aqi
-    case co2
-    case pm25
-    case pm10
-    case nox
-    case voc
-    case luminosity
-    case sound
-}
-
 extension MeasurementType {
     static var chartsCases: [MeasurementType] {
         [
@@ -31,11 +9,10 @@ extension MeasurementType {
             .aqi,
             .co2,
             .pm25,
-            .pm10,
             .nox,
             .voc,
             .luminosity,
-            .sound,
+            .soundInstant,
         ]
     }
 
@@ -52,7 +29,7 @@ extension MeasurementType {
             .nox,
             .voc,
             .luminosity,
-            .sound,
+            .soundInstant,
         ]
     }
 }
@@ -79,8 +56,8 @@ extension MeasurementType {
             return .nox(lower: 0, upper: 0)
         case .voc:
             return .voc(lower: 0, upper: 0)
-        case .sound:
-            return .sound(lower: 0, upper: 0)
+        case .soundInstant:
+            return .soundInstant(lower: 0, upper: 0)
         case .luminosity:
             return .luminosity(lower: 0, upper: 0)
         default:

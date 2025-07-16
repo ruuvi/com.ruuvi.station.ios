@@ -148,7 +148,6 @@ extension RuuviServiceExportImpl {
         }
 
         // MARK: Common columns
-        // swiftlint:disable:next function_body_length
         func buildCommonColumns() -> [ColumnDefinition] {
             // Temperature, humidity, rssi, voltage, etc
             return [
@@ -255,6 +254,12 @@ extension RuuviServiceExportImpl {
                     header: RuuviLocalization.nox + " (\(RuuviLocalization.unitNox))",
                     cellExtractor: { record in
                         toString(record.nox)
+                    }
+                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.soundInstant + " (\(RuuviLocalization.unitSound))",
+                    cellExtractor: { record in
+                        toString(record.dbaInstant)
                     }
                 ),
                 ColumnDefinition(

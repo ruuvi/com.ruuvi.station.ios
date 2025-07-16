@@ -168,7 +168,6 @@ class TagChartsViewController: UIViewController {
     lazy var aqiChartView = TagChartsView()
     lazy var co2ChartView = TagChartsView()
     lazy var pm25ChartView = TagChartsView()
-    lazy var pm10ChartView = TagChartsView()
     lazy var vocChartView = TagChartsView()
     lazy var noxChartView = TagChartsView()
     lazy var luminosityChartView = TagChartsView()
@@ -180,7 +179,6 @@ class TagChartsViewController: UIViewController {
     private var aqiChartViewHeight: NSLayoutConstraint!
     private var co2ChartViewHeight: NSLayoutConstraint!
     private var pm25ChartViewHeight: NSLayoutConstraint!
-    private var pm10ChartViewHeight: NSLayoutConstraint!
     private var vocChartViewHeight: NSLayoutConstraint!
     private var noxChartViewHeight: NSLayoutConstraint!
     private var luminosityChartViewHeight: NSLayoutConstraint!
@@ -501,21 +499,9 @@ class TagChartsViewController: UIViewController {
             pm25ChartViewHeight.isActive = true
             pm25ChartView.chartDelegate = self
 
-            scrollView.addSubview(pm10ChartView)
-            pm10ChartView.anchor(
-                top: pm25ChartView.bottomAnchor,
-                leading: scrollView.leadingAnchor,
-                bottom: nil,
-                trailing: scrollView.trailingAnchor
-            )
-            pm10ChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-            pm10ChartViewHeight = pm10ChartView.heightAnchor.constraint(equalToConstant: 0)
-            pm10ChartViewHeight.isActive = true
-            pm10ChartView.chartDelegate = self
-
             scrollView.addSubview(vocChartView)
             vocChartView.anchor(
-                top: pm10ChartView.bottomAnchor,
+                top: pm25ChartView.bottomAnchor,
                 leading: scrollView.leadingAnchor,
                 bottom: nil,
                 trailing: scrollView.trailingAnchor
@@ -951,14 +937,6 @@ extension TagChartsViewController: TagChartsViewInput {
                         settings: settings,
                         view: co2ChartView
                     )
-                case .pm10:
-                    populateChartView(
-                        from: data,
-                        title: RuuviLocalization.pm10,
-                        unit: RuuviLocalization.unitPm10,
-                        settings: settings,
-                        view: pm10ChartView
-                    )
                 case .pm25:
                     populateChartView(
                         from: data,
@@ -991,10 +969,10 @@ extension TagChartsViewController: TagChartsViewInput {
                         settings: settings,
                         view: luminosityChartView
                     )
-                case .sound:
+                case .soundInstant:
                     populateChartView(
                         from: data,
-                        title: RuuviLocalization.sound,
+                        title: RuuviLocalization.soundInstant,
                         unit: RuuviLocalization.unitSound,
                         settings: settings,
                         view: soundChartView
@@ -1064,14 +1042,6 @@ extension TagChartsViewController: TagChartsViewInput {
             co2ChartView.setSettings(settings: settings)
             co2ChartView.updateDataSet(
                 with: co2Entries,
-                isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
-
-            pm10ChartView.setSettings(settings: settings)
-            pm10ChartView.updateDataSet(
-                with: pm10Entries,
                 isFirstEntry: isFirstEntry,
                 firstEntry: firstEntry,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
@@ -1169,12 +1139,6 @@ extension TagChartsViewController: TagChartsViewInput {
                 measurementService: measurementService,
                 unit: RuuviLocalization.unitCo2
             )
-            pm10ChartView.updateLatest(
-                with: pm10,
-                type: .pm10,
-                measurementService: measurementService,
-                unit: RuuviLocalization.unitPm10
-            )
             pm25ChartView.updateLatest(
                 with: pm25,
                 type: .pm25,
@@ -1201,7 +1165,7 @@ extension TagChartsViewController: TagChartsViewInput {
             )
             soundChartView.updateLatest(
                 with: sound,
-                type: .sound,
+                type: .soundInstant,
                 measurementService: measurementService,
                 unit: RuuviLocalization.unitSound
             )
@@ -1454,15 +1418,6 @@ extension TagChartsViewController {
             pm25ChartView.isHidden = false
         }
 
-        if !from.contains(.pm10) {
-            pm10ChartView.isHidden = true
-            if pm10ChartViewHeight.constant != 0 {
-                pm10ChartViewHeight.constant = 0
-            }
-        } else {
-            pm10ChartView.isHidden = false
-        }
-
         if !from.contains(.voc) {
             vocChartView.isHidden = true
             if vocChartViewHeight.constant != 0 {
@@ -1490,7 +1445,7 @@ extension TagChartsViewController {
             luminosityChartView.isHidden = false
         }
 
-        if !from.contains(.sound) {
+        if !from.contains(.soundInstant) {
             soundChartView.isHidden = true
             if soundChartViewHeight.constant != 0 {
                 soundChartViewHeight.constant = 0
@@ -1541,14 +1496,6 @@ extension TagChartsViewController {
                     itemCount: from.count,
                     withAnimation: withAnimation
                 )
-            case .pm10:
-                chartViews.append(pm10ChartView)
-                updateChartViewConstaints(
-                    constaint: pm10ChartViewHeight,
-                    totalHeight: scrollViewHeight,
-                    itemCount: from.count,
-                    withAnimation: withAnimation
-                )
             case .pm25:
                 chartViews.append(pm25ChartView)
                 updateChartViewConstaints(
@@ -1581,7 +1528,7 @@ extension TagChartsViewController {
                     itemCount: from.count,
                     withAnimation: withAnimation
                 )
-            case .sound:
+            case .soundInstant:
                 chartViews.append(soundChartView)
                 updateChartViewConstaints(
                     constaint: soundChartViewHeight,
@@ -1703,7 +1650,6 @@ extension TagChartsViewController {
          pressureChartView,
          aqiChartView,
          co2ChartView,
-         pm10ChartView,
          pm25ChartView,
          vocChartView,
          noxChartView,
@@ -1718,7 +1664,6 @@ extension TagChartsViewController {
          pressureChartView,
          aqiChartView,
          co2ChartView,
-         pm10ChartView,
          pm25ChartView,
          vocChartView,
          noxChartView,
@@ -1735,7 +1680,6 @@ extension TagChartsViewController {
          pressureChartView,
          aqiChartView,
          co2ChartView,
-         pm10ChartView,
          pm25ChartView,
          vocChartView,
          noxChartView,
@@ -1759,7 +1703,6 @@ extension TagChartsViewController {
          pressureChartView,
          aqiChartView,
          co2ChartView,
-         pm10ChartView,
          pm25ChartView,
          vocChartView,
          noxChartView,
@@ -1776,7 +1719,6 @@ extension TagChartsViewController {
          pressureChartView,
          aqiChartView,
          co2ChartView,
-         pm10ChartView,
          pm25ChartView,
          vocChartView,
          noxChartView,
@@ -1868,8 +1810,6 @@ extension TagChartsViewController {
                 type = .co2
             } else if view == pm25ChartView {
                 type = .pm25
-            } else if view == pm10ChartView {
-                type = .pm10
             } else if view == vocChartView {
                 type = .voc
             } else if view == noxChartView {
@@ -1877,7 +1817,7 @@ extension TagChartsViewController {
             } else if view == luminosityChartView {
                 type = .luminosity
             } else if view == soundChartView {
-                type = .sound
+                type = .soundInstant
             }
 
             if minVisibleYValue == Double.greatestFiniteMagnitude {

@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import RuuviOntology
 
 public extension Notification.Name {
     static let LNMDidReceive = Notification.Name("LNMDidReceive")
@@ -25,27 +26,10 @@ public protocol RuuviNotificationLocal: AnyObject {
     func notifyDidMove(for uuid: String, counter: Int, title: String)
     func notify(
         _ reason: LowHighNotificationReason,
-        _ type: LowHighNotificationType,
+        _ type: AlertType,
         for uuid: String,
         title: String
     )
-}
-
-public enum LowHighNotificationType: String {
-    case temperature
-    case relativeHumidity
-    case humidity
-    case pressure
-    case signal
-    case carbonDioxide
-    case pMatter1
-    case pMatter25
-    case pMatter4
-    case pMatter10
-    case voc
-    case nox
-    case sound
-    case luminosity
 }
 
 public enum LowHighNotificationReason {

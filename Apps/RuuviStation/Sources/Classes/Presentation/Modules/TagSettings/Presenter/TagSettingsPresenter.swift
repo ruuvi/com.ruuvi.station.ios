@@ -323,7 +323,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setVOCAlertState(isOn: isOn)
         case .nox:
             setNOXAlertState(isOn: isOn)
-        case .sound:
+        case .soundInstant:
             setSoundAlertState(isOn: isOn)
         case .luminosity:
             setLuminosityAlertState(isOn: isOn)
@@ -333,6 +333,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setCloudConnectionAlertState(isOn: isOn)
         case .movement:
             setMovementAlertState(isOn: isOn)
+        default:
+            break
         }
     }
 
@@ -360,7 +362,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setVOCAlertLowerBound(lower: lower)
         case .nox:
             setNOXAlertLowerBound(lower: lower)
-        case .sound:
+        case .soundInstant:
             setSoundAlertLowerBound(lower: lower)
         case .luminosity:
             setLuminosityAlertLowerBound(lower: lower)
@@ -393,7 +395,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setVOCAlertUpperBound(upper: upper)
         case .nox:
             setNOXAlertUpperBound(upper: upper)
-        case .sound:
+        case .soundInstant:
             setSoundAlertUpperBound(upper: upper)
         case .luminosity:
             setLuminosityAlertUpperBound(upper: upper)
@@ -435,7 +437,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setVOCAlertDescription(description: description)
         case .nox:
             setNOXAlertDescription(description: description)
-        case .sound:
+        case .soundInstant:
             setSoundAlertDescription(description: description)
         case .luminosity:
             setLuminosityAlertDescription(description: description)
@@ -445,6 +447,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setCloudConnectionAlertDescription(description: description)
         case .movement:
             setMovementAlertDescription(description: description)
+        default:
+            break
         }
     }
 
@@ -766,8 +770,8 @@ extension TagSettingsPresenter {
             sync(voc: type, ruuviTag: ruuviTag)
         case .nox:
             sync(nox: type, ruuviTag: ruuviTag)
-        case .sound:
-            sync(sound: type, ruuviTag: ruuviTag)
+        case .soundInstant:
+            sync(soundInstant: type, ruuviTag: ruuviTag)
         case .luminosity:
             sync(luminosity: type, ruuviTag: ruuviTag)
         case .connection:
@@ -776,6 +780,8 @@ extension TagSettingsPresenter {
             sync(cloudConnection: type, ruuviTag: ruuviTag)
         case .movement:
             sync(movement: type, ruuviTag: ruuviTag)
+        default:
+            break
         }
     }
 
@@ -1015,24 +1021,24 @@ extension TagSettingsPresenter {
             .mutedTill(type: nox, for: ruuviTag)
     }
 
-    private func sync(sound: AlertType, ruuviTag: RuuviTagSensor) {
-        viewModel.soundAlertDescription.value = alertService.soundDescription(for: ruuviTag)
-        if case let .sound(lower, upper) = alertService
-            .alert(for: ruuviTag, of: sound) {
+    private func sync(soundInstant: AlertType, ruuviTag: RuuviTagSensor) {
+        viewModel.soundAlertDescription.value = alertService.soundInstantDescription(for: ruuviTag)
+        if case let .soundInstant(lower, upper) = alertService
+            .alert(for: ruuviTag, of: soundInstant) {
             viewModel.isSoundAlertOn.value = true
             viewModel.soundLowerBound.value = Double(lower)
             viewModel.soundUpperBound.value = Double(upper)
         } else {
             viewModel.isSoundAlertOn.value = false
-            if let soundLowerBound = alertService.lowerSound(for: ruuviTag) {
+            if let soundLowerBound = alertService.lowerSoundInstant(for: ruuviTag) {
                 viewModel.soundLowerBound.value = soundLowerBound
             }
-            if let soundUpperBound = alertService.upperSound(for: ruuviTag) {
+            if let soundUpperBound = alertService.upperSoundInstant(for: ruuviTag) {
                 viewModel.soundUpperBound.value = soundUpperBound
             }
         }
         viewModel.soundAlertMutedTill.value = alertService
-            .mutedTill(type: sound, for: ruuviTag)
+            .mutedTill(type: soundInstant, for: ruuviTag)
     }
 
     private func sync(luminosity: AlertType, ruuviTag: RuuviTagSensor) {
@@ -1489,7 +1495,7 @@ extension TagSettingsPresenter {
             observable = viewModel.vocAlertMutedTill
         case .nox:
             observable = viewModel.noxAlertMutedTill
-        case .sound:
+        case .soundInstant:
             observable = viewModel.soundAlertMutedTill
         case .luminosity:
             observable = viewModel.luminosityAlertMutedTill
@@ -1499,6 +1505,8 @@ extension TagSettingsPresenter {
             observable = viewModel.cloudConnectionAlertMutedTill
         case .movement:
             observable = viewModel.movementAlertMutedTill
+        default:
+            return
         }
 
         let date = alertService.mutedTill(type: type, for: uuid)
@@ -1534,7 +1542,7 @@ extension TagSettingsPresenter {
             observable = viewModel.isVOCAlertOn
         case .nox:
             observable = viewModel.isNOXAlertOn
-        case .sound:
+        case .soundInstant:
             observable = viewModel.isSoundAlertOn
         case .luminosity:
             observable = viewModel.isLuminosityAlertOn
@@ -1544,6 +1552,8 @@ extension TagSettingsPresenter {
             observable = viewModel.isCloudConnectionAlertOn
         case .movement:
             observable = viewModel.isMovementAlertOn
+        default:
+            return
         }
 
         let isOn = alertService.isOn(type: type, for: uuid)
@@ -1703,7 +1713,7 @@ extension TagSettingsPresenter: RuuviNotifierObserver {
                 if viewModel.noxAlertState.value != newValue {
                     viewModel.noxAlertState.value = newValue
                 }
-            case .sound:
+            case .soundInstant:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isSoundAlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
@@ -2445,7 +2455,7 @@ extension TagSettingsPresenter {
         viewModel.isSoundAlertOn.value = isOn
         if let soundLowerBound = viewModel.soundLowerBound.value,
               let soundUpperBound = viewModel.soundUpperBound.value {
-            let type: AlertType = .sound(lower: soundLowerBound, upper: soundUpperBound)
+            let type: AlertType = .soundInstant(lower: soundLowerBound, upper: soundUpperBound)
             let currentState = alertService.isOn(type: type, for: ruuviTag)
             if currentState != isOn {
                 if isOn {
@@ -2466,7 +2476,7 @@ extension TagSettingsPresenter {
         lowSoundDebouncer.run { [weak self] in
             guard let sSelf = self else { return }
             sSelf.alertService.setLower(
-                sound: lower,
+                soundInstant: lower,
                 ruuviTag: sSelf.ruuviTag
             )
             sSelf.processAlerts()
@@ -2480,7 +2490,7 @@ extension TagSettingsPresenter {
         upperSoundDebouncer.run { [weak self] in
             guard let sSelf = self else { return }
             sSelf.alertService.setUpper(
-                sound: upper,
+                soundInstant: upper,
                 ruuviTag: sSelf.ruuviTag
             )
             sSelf.processAlerts()
@@ -2489,7 +2499,7 @@ extension TagSettingsPresenter {
 
     private func setSoundAlertDescription(description: String?) {
         viewModel.soundAlertDescription.value = description
-        alertService.setSound(
+        alertService.setSoundInstant(
             description: description,
             ruuviTag: ruuviTag
         )

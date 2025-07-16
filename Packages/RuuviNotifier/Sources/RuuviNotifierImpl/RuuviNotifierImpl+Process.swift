@@ -117,9 +117,9 @@ public extension RuuviNotifierImpl {
                 )
                 isTriggered = isTriggered || isNOX
                 notify(alertType: type, uuid: luid.value, isTriggered: isNOX)
-            case .sound:
+            case .soundInstant:
                 let isSound = process(
-                    sound: record.dbaAvg,
+                    soundInstant: record.dbaAvg,
                     alertType: type,
                     identifier: record.luid,
                     trigger: trigger
@@ -227,6 +227,23 @@ public extension RuuviNotifierImpl {
                     uuid: identifier.value,
                     isTriggered: isSignal
                 )
+            case .aqi:
+                let currentAQI = measurementService.aqi(
+                    for: record.co2,
+                    pm25: record.pm25
+                )
+                let isAQI = process(
+                    carbonDioxide: currentAQI,
+                    alertType: type,
+                    identifier: record.luid,
+                    trigger: trigger
+                )
+                isTriggered = isTriggered || isAQI
+                notify(
+                    alertType: type,
+                    uuid: identifier.value,
+                    isTriggered: isAQI
+                )
             case .carbonDioxide:
                 let isCarbonDioxide = process(
                     carbonDioxide: record.co2,
@@ -318,18 +335,44 @@ public extension RuuviNotifierImpl {
                     uuid: identifier.value,
                     isTriggered: isNOX
                 )
-            case .sound:
-                let isSound = process(
-                    sound: record.dbaAvg,
+            case .soundInstant:
+                let isSoundInstant = process(
+                    soundInstant: record.dbaInstant,
                     alertType: type,
                     identifier: record.luid,
                     trigger: trigger
                 )
-                isTriggered = isTriggered || isSound
+                isTriggered = isTriggered || isSoundInstant
                 notify(
                     alertType: type,
                     uuid: identifier.value,
-                    isTriggered: isSound
+                    isTriggered: isSoundInstant
+                )
+            case .soundAverage:
+                let isSoundAverage = process(
+                    soundAverage: record.dbaAvg,
+                    alertType: type,
+                    identifier: record.luid,
+                    trigger: trigger
+                )
+                isTriggered = isTriggered || isSoundAverage
+                notify(
+                    alertType: type,
+                    uuid: identifier.value,
+                    isTriggered: isSoundAverage
+                )
+            case .soundPeak:
+                let isSoundPeak = process(
+                    soundPeak: record.dbaPeak,
+                    alertType: type,
+                    identifier: record.luid,
+                    trigger: trigger
+                )
+                isTriggered = isTriggered || isSoundPeak
+                notify(
+                    alertType: type,
+                    uuid: identifier.value,
+                    isTriggered: isSoundPeak
                 )
             case .luminosity:
                 let isLuminosity = process(
@@ -434,7 +477,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
-                            .temperature,
+                            .temperature(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.lowTemperature(lowerString)
                         )
@@ -448,7 +491,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
-                            .temperature,
+                            .temperature(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.highTemperature(upperString)
                         )
@@ -483,7 +526,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
-                            .relativeHumidity,
+                            .relativeHumidity(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.lowHumidity(
                                 "\(lowerString) %"
@@ -498,7 +541,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
-                            .relativeHumidity,
+                            .relativeHumidity(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.highHumidity(
                                 "\(upperString) %"
@@ -535,7 +578,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
-                            .pressure,
+                            .pressure(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.lowPressure(lowerString)
                         )
@@ -548,7 +591,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
-                            .pressure,
+                            .pressure(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.highPressure(upperString)
                         )
@@ -585,7 +628,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
-                            .signal,
+                            .signal(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.lowSignal(
                                 "\(lowerString) \(RuuviLocalization.dBm)"
@@ -600,10 +643,66 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
-                            .signal,
+                            .signal(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.highSignal(
                                 "\(upperString) \(RuuviLocalization.dBm)"
+                            )
+                        )
+                    }
+                }
+            }
+            return isLower || isUpper
+        } else {
+            return false
+        }
+    }
+
+    private func process(
+        aqi: Double?,
+        alertType: AlertType,
+        identifier: Identifier?,
+        trigger: Bool = true
+    ) -> Bool {
+        guard let identifier else { return false }
+        if case let .aqi(lower, upper) = ruuviAlertService
+            .alert(
+                for: identifier.value,
+                of: alertType
+            ),
+           let aqi {
+            let isLower = aqi < lower
+            let isUpper = aqi > upper
+            if trigger {
+                if isLower {
+                    // TODO:
+                    let lowerString = measurementService.co2String(
+                        for: lower
+                    )
+                    DispatchQueue.main.async { [weak self] in
+                        guard let sSelf = self else { return }
+                        sSelf.localNotificationsManager.notify(
+                            .low,
+                            .aqi(lower: 0, upper: 0),
+                            for: identifier.value,
+                            title: sSelf.titles.lowAQI(
+                                "\(lowerString) %"
+                            )
+                        )
+                    }
+                } else if isUpper {
+                    // TODO:
+                    let upperString = measurementService.co2String(
+                        for: upper
+                    )
+                    DispatchQueue.main.async { [weak self] in
+                        guard let sSelf = self else { return }
+                        sSelf.localNotificationsManager.notify(
+                            .high,
+                            .aqi(lower: 0, upper: 0),
+                            for: identifier.value,
+                            title: sSelf.titles.highAQI(
+                                "\(upperString) %"
                             )
                         )
                     }
@@ -639,7 +738,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
-                            .carbonDioxide,
+                            .carbonDioxide(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.lowCarbonDioxide(
                                 "\(lowerString) \(RuuviLocalization.unitCo2)"
@@ -654,7 +753,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
-                            .carbonDioxide,
+                            .carbonDioxide(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.highCarbonDioxide(
                                 "\(upperString) \(RuuviLocalization.unitCo2)"
@@ -693,7 +792,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
-                            .pMatter1,
+                            .pMatter1(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.lowPMatter1(
                                 "\(lowerString) \(RuuviLocalization.unitPm10)"
@@ -708,7 +807,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
-                            .pMatter1,
+                            .pMatter1(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.highPMatter1(
                                 "\(upperString) \(RuuviLocalization.unitPm10)"
@@ -747,7 +846,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
-                            .pMatter25,
+                            .pMatter25(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.lowPMatter25(
                                 "\(lowerString) \(RuuviLocalization.unitPm25)"
@@ -762,7 +861,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
-                            .pMatter25,
+                            .pMatter25(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.highPMatter25(
                                 "\(upperString) \(RuuviLocalization.unitPm25)"
@@ -801,7 +900,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
-                            .pMatter4,
+                            .pMatter4(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.lowPMatter4(
                                 "\(lowerString) \(RuuviLocalization.unitPm40)"
@@ -816,7 +915,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
-                            .pMatter4,
+                            .pMatter4(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.highPMatter4(
                                 "\(upperString) \(RuuviLocalization.unitPm40)"
@@ -855,7 +954,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
-                            .pMatter10,
+                            .pMatter10(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.lowPMatter10(
                                 "\(lowerString) \(RuuviLocalization.unitPm100)"
@@ -870,7 +969,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
-                            .pMatter10,
+                            .pMatter10(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.highPMatter10(
                                 "\(upperString) \(RuuviLocalization.unitPm100)"
@@ -909,7 +1008,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
-                            .voc,
+                            .voc(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.lowVOC(
                                 "\(lowerString) \(RuuviLocalization.unitVoc)"
@@ -924,7 +1023,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
-                            .voc,
+                            .voc(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.highVOC(
                                 "\(upperString) \(RuuviLocalization.unitVoc)"
@@ -963,7 +1062,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
-                            .nox,
+                            .nox(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.lowNOx(
                                 "\(lowerString) \(RuuviLocalization.unitNox)"
@@ -978,7 +1077,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
-                            .nox,
+                            .nox(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.highNOx(
                                 "\(upperString) \(RuuviLocalization.unitNox)"
@@ -994,47 +1093,155 @@ extension RuuviNotifierImpl {
     }
 
     private func process(
-        sound: Double?,
+        soundInstant: Double?,
         alertType: AlertType,
         identifier: Identifier?,
         trigger: Bool = true
     ) -> Bool {
         guard let identifier else { return false }
-        if case let .sound(lower, upper) = ruuviAlertService
+        if case let .soundInstant(lower, upper) = ruuviAlertService
             .alert(
                 for: identifier.value,
                 of: alertType
             ),
-           let sound {
-            let isLower = sound < lower
-            let isUpper = sound > upper
+           let soundInstant {
+            let isLower = soundInstant < lower
+            let isUpper = soundInstant > upper
             if trigger {
                 if isLower {
-                    let lowerString = measurementService.soundAvgString(
+                    let lowerString = measurementService.soundString(
                         for: lower
                     )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
-                            .sound,
+                            .soundInstant(lower: 0, upper: 0),
                             for: identifier.value,
-                            title: sSelf.titles.lowSound(
+                            title: sSelf.titles.lowSoundInstant(
                                 "\(lowerString) \(RuuviLocalization.unitSound)"
                             )
                         )
                     }
                 } else if isUpper {
-                    let upperString = measurementService.soundAvgString(
+                    let upperString = measurementService.soundString(
                         for: upper
                     )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
-                            .sound,
+                            .soundInstant(lower: 0, upper: 0),
                             for: identifier.value,
-                            title: sSelf.titles.highSound(
+                            title: sSelf.titles.highSoundInstant(
+                                "\(upperString) \(RuuviLocalization.unitSound)"
+                            )
+                        )
+                    }
+                }
+            }
+            return isLower || isUpper
+        } else {
+            return false
+        }
+    }
+
+    private func process(
+        soundAverage: Double?,
+        alertType: AlertType,
+        identifier: Identifier?,
+        trigger: Bool = true
+    ) -> Bool {
+        guard let identifier else { return false }
+        if case let .soundAverage(lower, upper) = ruuviAlertService
+            .alert(
+                for: identifier.value,
+                of: alertType
+            ),
+           let soundAverage {
+            let isLower = soundAverage < lower
+            let isUpper = soundAverage > upper
+            if trigger {
+                if isLower {
+                    let lowerString = measurementService.soundString(
+                        for: lower
+                    )
+                    DispatchQueue.main.async { [weak self] in
+                        guard let sSelf = self else { return }
+                        sSelf.localNotificationsManager.notify(
+                            .low,
+                            .soundAverage(lower: 0, upper: 0),
+                            for: identifier.value,
+                            title: sSelf.titles.lowSoundAverage(
+                                "\(lowerString) \(RuuviLocalization.unitSound)"
+                            )
+                        )
+                    }
+                } else if isUpper {
+                    let upperString = measurementService.soundString(
+                        for: upper
+                    )
+                    DispatchQueue.main.async { [weak self] in
+                        guard let sSelf = self else { return }
+                        sSelf.localNotificationsManager.notify(
+                            .high,
+                            .soundAverage(lower: 0, upper: 0),
+                            for: identifier.value,
+                            title: sSelf.titles.highSoundAverage(
+                                "\(upperString) \(RuuviLocalization.unitSound)"
+                            )
+                        )
+                    }
+                }
+            }
+            return isLower || isUpper
+        } else {
+            return false
+        }
+    }
+
+    private func process(
+        soundPeak: Double?,
+        alertType: AlertType,
+        identifier: Identifier?,
+        trigger: Bool = true
+    ) -> Bool {
+        guard let identifier else { return false }
+        if case let .soundInstant(lower, upper) = ruuviAlertService
+            .alert(
+                for: identifier.value,
+                of: alertType
+            ),
+           let soundPeak {
+            let isLower = soundPeak < lower
+            let isUpper = soundPeak > upper
+            if trigger {
+                if isLower {
+                    let lowerString = measurementService.soundString(
+                        for: lower
+                    )
+                    DispatchQueue.main.async { [weak self] in
+                        guard let sSelf = self else { return }
+                        sSelf.localNotificationsManager.notify(
+                            .low,
+                            .soundPeak(lower: 0, upper: 0),
+                            for: identifier.value,
+                            title: sSelf.titles.lowSoundPeak(
+                                "\(lowerString) \(RuuviLocalization.unitSound)"
+                            )
+                        )
+                    }
+                } else if isUpper {
+                    let upperString = measurementService.soundString(
+                        for: upper
+                    )
+                    DispatchQueue.main.async { [weak self] in
+                        guard let sSelf = self else { return }
+                        sSelf.localNotificationsManager.notify(
+                            .high,
+                            .soundPeak(lower: 0, upper: 0),
+                            for: identifier.value,
+                            title: sSelf.titles.highSoundPeak(
                                 "\(upperString) \(RuuviLocalization.unitSound)"
                             )
                         )
@@ -1071,7 +1278,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .low,
-                            .luminosity,
+                            .luminosity(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.lowLuminosity(
                                 "\(lowerString) \(RuuviLocalization.unitLuminosity)"
@@ -1086,7 +1293,7 @@ extension RuuviNotifierImpl {
                         guard let sSelf = self else { return }
                         sSelf.localNotificationsManager.notify(
                             .high,
-                            .luminosity,
+                            .luminosity(lower: 0, upper: 0),
                             for: identifier.value,
                             title: sSelf.titles.highLuminosity(
                                 "\(upperString) \(RuuviLocalization.unitLuminosity)"

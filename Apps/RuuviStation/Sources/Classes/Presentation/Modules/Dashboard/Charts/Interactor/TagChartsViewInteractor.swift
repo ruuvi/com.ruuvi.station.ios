@@ -283,11 +283,8 @@ extension TagChartsViewInteractor {
             if record.pressure == nil {
                 chartsCases.removeAll { $0 == .pressure }
             }
-            // TODO: Double check this logic
             if record.co2 == nil &&
-                record.pm25 == nil &&
-                record.voc == nil &&
-                record.nox == nil {
+                record.pm25 == nil {
                 chartsCases.removeAll { $0 == .aqi }
             }
             if record.co2 == nil {
@@ -296,20 +293,17 @@ extension TagChartsViewInteractor {
             if record.pm25 == nil {
                 chartsCases.removeAll { $0 == .pm25 }
             }
-            if record.pm10 == nil {
-                chartsCases.removeAll { $0 == .pm10 }
-            }
             if record.voc == nil {
                 chartsCases.removeAll { $0 == .voc }
             }
             if record.nox == nil {
                 chartsCases.removeAll { $0 == .nox }
             }
-            if record.luminance == nil || record.luminance == 0 {
+            if record.luminance == nil {
                 chartsCases.removeAll { $0 == .luminosity }
             }
-            if record.dbaAvg == nil || record.luminance == 0 {
-                chartsCases.removeAll { $0 == .sound }
+            if record.dbaInstant == nil {
+                chartsCases.removeAll { $0 == .soundInstant }
             }
             sSelf.presenter.createChartModules(from: chartsCases)
             sSelf.presenter.updateLatestRecord(record)

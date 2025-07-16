@@ -330,8 +330,8 @@ extension TagChartsView {
             return measurementService.noxString(for: value)
         case .luminosity:
             return measurementService.luminosityString(for: value)
-        case .sound:
-            return measurementService.soundAvgString(for: value)
+        case .soundInstant:
+            return measurementService.soundString(for: value)
         default:
             return ""
         }
