@@ -309,6 +309,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setPressureAlertState(isOn: isOn)
         case .signal:
             setSignalAlertState(isOn: isOn)
+        case .aqi:
+            setAQIAlertState(isOn: isOn)
         case .carbonDioxide:
             setCarbonDioxideAlertState(isOn: isOn)
         case .pMatter1:
@@ -324,7 +326,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         case .nox:
             setNOXAlertState(isOn: isOn)
         case .soundInstant:
-            setSoundAlertState(isOn: isOn)
+            setSoundInstantAlertState(isOn: isOn)
         case .luminosity:
             setLuminosityAlertState(isOn: isOn)
         case .connection:
@@ -348,6 +350,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setPressureAlertLowerBound(lower: lower)
         case .signal:
             setSignalAlertLowerBound(lower: lower)
+        case .aqi:
+            setAQIAlertLowerBound(lower: lower)
         case .carbonDioxide:
             setCarbonDioxideAlertLowerBound(lower: lower)
         case .pMatter1:
@@ -363,7 +367,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         case .nox:
             setNOXAlertLowerBound(lower: lower)
         case .soundInstant:
-            setSoundAlertLowerBound(lower: lower)
+            setSoundInstantAlertLowerBound(lower: lower)
         case .luminosity:
             setLuminosityAlertLowerBound(lower: lower)
         default:
@@ -381,6 +385,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setPressureAlertUpperBound(upper: upper)
         case .signal:
             setSignalAlertUpperBound(upper: upper)
+        case .aqi:
+            setAQIAlertUpperBound(upper: upper)
         case .carbonDioxide:
             setCarbonDioxideAlertUpperBound(upper: upper)
         case .pMatter1:
@@ -396,7 +402,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         case .nox:
             setNOXAlertUpperBound(upper: upper)
         case .soundInstant:
-            setSoundAlertUpperBound(upper: upper)
+            setSoundInstantAlertUpperBound(upper: upper)
         case .luminosity:
             setLuminosityAlertUpperBound(upper: upper)
         default:
@@ -423,6 +429,8 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
             setPressureAlertDescription(description: description)
         case .signal:
             setSignalAlertDescription(description: description)
+        case .aqi:
+            setAQIAlertDescription(description: description)
         case .carbonDioxide:
             setCarbonDioxideAlertDescription(description: description)
         case .pMatter1:
@@ -438,7 +446,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
         case .nox:
             setNOXAlertDescription(description: description)
         case .soundInstant:
-            setSoundAlertDescription(description: description)
+            setSoundInstantAlertDescription(description: description)
         case .luminosity:
             setLuminosityAlertDescription(description: description)
         case .connection:
@@ -758,6 +766,8 @@ extension TagSettingsPresenter {
             sync(signal: type, ruuviTag: ruuviTag)
         case .carbonDioxide:
             sync(carbonDioxide: type, ruuviTag: ruuviTag)
+        case .aqi:
+            sync(aqi: type, ruuviTag: ruuviTag)
         case .pMatter1:
             sync(pMatter1: type, ruuviTag: ruuviTag)
         case .pMatter25:
@@ -881,6 +891,25 @@ extension TagSettingsPresenter {
         }
         viewModel.signalAlertMutedTill.value =
             alertService.mutedTill(type: signal, for: ruuviTag)
+    }
+
+    private func sync(aqi: AlertType, ruuviTag: RuuviTagSensor) {
+        viewModel.aqiAlertDescription.value =
+            alertService.aqiDescription(for: ruuviTag)
+        if case let .aqi(lower, upper) = alertService.alert(for: ruuviTag, of: aqi) {
+            viewModel.isAQIAlertOn.value = true
+            viewModel.aqiLowerBound.value = Double(lower)
+            viewModel.aqiUpperBound.value = Double(upper)
+        } else {
+            viewModel.isAQIAlertOn.value = false
+            if let aqiLowerBound = alertService.lowerAQI(for: ruuviTag) {
+                viewModel.aqiLowerBound.value = aqiLowerBound
+            }
+            if let aqiUpperBound = alertService.upperAQI(for: ruuviTag) {
+                viewModel.aqiUpperBound.value = aqiUpperBound
+            }
+        }
+        viewModel.aqiAlertMutedTill.value = alertService.mutedTill(type: aqi, for: ruuviTag)
     }
 
     private func sync(carbonDioxide: AlertType, ruuviTag: RuuviTagSensor) {
@@ -1022,22 +1051,22 @@ extension TagSettingsPresenter {
     }
 
     private func sync(soundInstant: AlertType, ruuviTag: RuuviTagSensor) {
-        viewModel.soundAlertDescription.value = alertService.soundInstantDescription(for: ruuviTag)
+        viewModel.soundInstantAlertDescription.value = alertService.soundInstantDescription(for: ruuviTag)
         if case let .soundInstant(lower, upper) = alertService
             .alert(for: ruuviTag, of: soundInstant) {
-            viewModel.isSoundAlertOn.value = true
-            viewModel.soundLowerBound.value = Double(lower)
-            viewModel.soundUpperBound.value = Double(upper)
+            viewModel.isSoundInstantAlertOn.value = true
+            viewModel.soundInstantLowerBound.value = Double(lower)
+            viewModel.soundInstantUpperBound.value = Double(upper)
         } else {
-            viewModel.isSoundAlertOn.value = false
+            viewModel.isSoundInstantAlertOn.value = false
             if let soundLowerBound = alertService.lowerSoundInstant(for: ruuviTag) {
-                viewModel.soundLowerBound.value = soundLowerBound
+                viewModel.soundInstantLowerBound.value = soundLowerBound
             }
             if let soundUpperBound = alertService.upperSoundInstant(for: ruuviTag) {
-                viewModel.soundUpperBound.value = soundUpperBound
+                viewModel.soundInstantUpperBound.value = soundUpperBound
             }
         }
-        viewModel.soundAlertMutedTill.value = alertService
+        viewModel.soundInstantAlertMutedTill.value = alertService
             .mutedTill(type: soundInstant, for: ruuviTag)
     }
 
@@ -1441,29 +1470,75 @@ extension TagSettingsPresenter {
             }
     }
 
+    // swiftlint:disable:next function_body_length
     private func reloadMutedTill() {
-        if let mutedTill = viewModel.temperatureAlertMutedTill.value,
-           mutedTill < Date() {
+        let now = Date()
+
+        if let date = viewModel.temperatureAlertMutedTill.value, date < now {
             viewModel.temperatureAlertMutedTill.value = nil
         }
 
-        if let mutedTill = viewModel.pressureAlertMutedTill.value,
-           mutedTill < Date() {
+        if let date = viewModel.relativeHumidityAlertMutedTill.value, date < now {
+            viewModel.relativeHumidityAlertMutedTill.value = nil
+        }
+
+        if let date = viewModel.pressureAlertMutedTill.value, date < now {
             viewModel.pressureAlertMutedTill.value = nil
         }
 
-        if let mutedTill = viewModel.signalAlertMutedTill.value,
-           mutedTill < Date() {
+        if let date = viewModel.signalAlertMutedTill.value, date < now {
             viewModel.signalAlertMutedTill.value = nil
         }
 
-        if let mutedTill = viewModel.connectionAlertMutedTill.value,
-           mutedTill < Date() {
+        if let date = viewModel.aqiAlertMutedTill.value, date < now {
+            viewModel.aqiAlertMutedTill.value = nil
+        }
+
+        if let date = viewModel.carbonDioxideAlertMutedTill.value, date < now {
+            viewModel.carbonDioxideAlertMutedTill.value = nil
+        }
+
+        if let date = viewModel.pMatter1AlertMutedTill.value, date < now {
+            viewModel.pMatter1AlertMutedTill.value = nil
+        }
+
+        if let date = viewModel.pMatter25AlertMutedTill.value, date < now {
+            viewModel.pMatter25AlertMutedTill.value = nil
+        }
+
+        if let date = viewModel.pMatter4AlertMutedTill.value, date < now {
+            viewModel.pMatter4AlertMutedTill.value = nil
+        }
+
+        if let date = viewModel.pMatter10AlertMutedTill.value, date < now {
+            viewModel.pMatter10AlertMutedTill.value = nil
+        }
+
+        if let date = viewModel.vocAlertMutedTill.value, date < now {
+            viewModel.vocAlertMutedTill.value = nil
+        }
+
+        if let date = viewModel.noxAlertMutedTill.value, date < now {
+            viewModel.noxAlertMutedTill.value = nil
+        }
+
+        if let date = viewModel.soundInstantAlertMutedTill.value, date < now {
+            viewModel.soundInstantAlertMutedTill.value = nil
+        }
+
+        if let date = viewModel.luminosityAlertMutedTill.value, date < now {
+            viewModel.luminosityAlertMutedTill.value = nil
+        }
+
+        if let date = viewModel.connectionAlertMutedTill.value, date < now {
             viewModel.connectionAlertMutedTill.value = nil
         }
 
-        if let mutedTill = viewModel.movementAlertMutedTill.value,
-           mutedTill < Date() {
+        if let date = viewModel.cloudConnectionAlertMutedTill.value, date < now {
+            viewModel.cloudConnectionAlertMutedTill.value = nil
+        }
+
+        if let date = viewModel.movementAlertMutedTill.value, date < now {
             viewModel.movementAlertMutedTill.value = nil
         }
     }
@@ -1481,6 +1556,8 @@ extension TagSettingsPresenter {
             observable = viewModel.pressureAlertMutedTill
         case .signal:
             observable = viewModel.signalAlertMutedTill
+        case .aqi:
+            observable = viewModel.aqiAlertMutedTill
         case .carbonDioxide:
             observable = viewModel.carbonDioxideAlertMutedTill
         case .pMatter1:
@@ -1496,7 +1573,7 @@ extension TagSettingsPresenter {
         case .nox:
             observable = viewModel.noxAlertMutedTill
         case .soundInstant:
-            observable = viewModel.soundAlertMutedTill
+            observable = viewModel.soundInstantAlertMutedTill
         case .luminosity:
             observable = viewModel.luminosityAlertMutedTill
         case .connection:
@@ -1528,6 +1605,8 @@ extension TagSettingsPresenter {
             observable = viewModel.isPressureAlertOn
         case .signal:
             observable = viewModel.isSignalAlertOn
+        case .aqi:
+            observable = viewModel.isAQIAlertOn
         case .carbonDioxide:
             observable = viewModel.isCarbonDioxideAlertOn
         case .pMatter1:
@@ -1543,7 +1622,7 @@ extension TagSettingsPresenter {
         case .nox:
             observable = viewModel.isNOXAlertOn
         case .soundInstant:
-            observable = viewModel.isSoundAlertOn
+            observable = viewModel.isSoundInstantAlertOn
         case .luminosity:
             observable = viewModel.isLuminosityAlertOn
         case .connection:
@@ -1664,6 +1743,13 @@ extension TagSettingsPresenter: RuuviNotifierObserver {
                 if viewModel.signalAlertState.value != newValue {
                     viewModel.signalAlertState.value = newValue
                 }
+            case .aqi:
+                let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
+                let isOn = viewModel.isAQIAlertOn.value ?? false
+                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                if viewModel.aqiAlertState.value != newValue {
+                    viewModel.aqiAlertState.value = newValue
+                }
             case .carbonDioxide:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
                 let isOn = viewModel.isCarbonDioxideAlertOn.value ?? false
@@ -1715,10 +1801,10 @@ extension TagSettingsPresenter: RuuviNotifierObserver {
                 }
             case .soundInstant:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
-                let isOn = viewModel.isSoundAlertOn.value ?? false
+                let isOn = viewModel.isSoundInstantAlertOn.value ?? false
                 let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
-                if viewModel.soundAlertState.value != newValue {
-                    viewModel.soundAlertState.value = newValue
+                if viewModel.soundInstantAlertState.value != newValue {
+                    viewModel.soundInstantAlertState.value = newValue
                 }
             case .luminosity:
                 let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
@@ -2043,6 +2129,69 @@ extension TagSettingsPresenter {
     private func setSignalAlertDescription(description: String?) {
         viewModel.signalAlertDescription.value = description
         alertService.setSignal(
+            description: description,
+            ruuviTag: ruuviTag
+        )
+    }
+}
+
+// MARK: - AQI
+
+extension TagSettingsPresenter {
+    private func setAQIAlertState(isOn: Bool) {
+        viewModel.isAQIAlertOn.value = isOn
+        let aqiLower = viewModel.aqiLowerBound.value
+        let aqiUpper = viewModel.aqiUpperBound.value
+
+        if let l = aqiLower, let u = aqiUpper {
+            let type: AlertType = .aqi(
+                lower: l,
+                upper: u
+            )
+            let currentState = alertService.isOn(type: type, for: ruuviTag)
+            if currentState != isOn {
+                if isOn {
+                    alertService.register(type: type, ruuviTag: ruuviTag)
+                    processAlerts()
+                } else {
+                    alertService.unregister(type: type, ruuviTag: ruuviTag)
+                }
+                alertService.unmute(type: type, for: ruuviTag)
+            }
+        }
+    }
+
+    private func setAQIAlertLowerBound(lower: CGFloat) {
+        let lowAQIDebouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.aqiLowerBound.value = lower
+
+        lowAQIDebouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setLower(
+                aqi: lower,
+                ruuviTag: sSelf.ruuviTag
+            )
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setAQIAlertUpperBound(upper: CGFloat) {
+        let upperAQIDebouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
+        viewModel.aqiUpperBound.value = upper
+
+        upperAQIDebouncer.run { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.alertService.setUpper(
+                aqi: upper,
+                ruuviTag: sSelf.ruuviTag
+            )
+            sSelf.processAlerts()
+        }
+    }
+
+    private func setAQIAlertDescription(description: String?) {
+        viewModel.aqiAlertDescription.value = description
+        alertService.setAQI(
             description: description,
             ruuviTag: ruuviTag
         )
@@ -2448,13 +2597,13 @@ extension TagSettingsPresenter {
     }
 }
 
-// MARK: - SOUND
+// MARK: - SOUND Instant
 
 extension TagSettingsPresenter {
-    private func setSoundAlertState(isOn: Bool) {
-        viewModel.isSoundAlertOn.value = isOn
-        if let soundLowerBound = viewModel.soundLowerBound.value,
-              let soundUpperBound = viewModel.soundUpperBound.value {
+    private func setSoundInstantAlertState(isOn: Bool) {
+        viewModel.isSoundInstantAlertOn.value = isOn
+        if let soundLowerBound = viewModel.soundInstantLowerBound.value,
+              let soundUpperBound = viewModel.soundInstantUpperBound.value {
             let type: AlertType = .soundInstant(lower: soundLowerBound, upper: soundUpperBound)
             let currentState = alertService.isOn(type: type, for: ruuviTag)
             if currentState != isOn {
@@ -2469,9 +2618,9 @@ extension TagSettingsPresenter {
         }
     }
 
-    private func setSoundAlertLowerBound(lower: CGFloat) {
+    private func setSoundInstantAlertLowerBound(lower: CGFloat) {
         let lowSoundDebouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
-        viewModel.soundLowerBound.value = lower
+        viewModel.soundInstantLowerBound.value = lower
 
         lowSoundDebouncer.run { [weak self] in
             guard let sSelf = self else { return }
@@ -2483,9 +2632,9 @@ extension TagSettingsPresenter {
         }
     }
 
-    private func setSoundAlertUpperBound(upper: CGFloat) {
+    private func setSoundInstantAlertUpperBound(upper: CGFloat) {
         let upperSoundDebouncer = Debouncer(delay: Self.lowUpperDebounceDelay)
-        viewModel.soundUpperBound.value = upper
+        viewModel.soundInstantUpperBound.value = upper
 
         upperSoundDebouncer.run { [weak self] in
             guard let sSelf = self else { return }
@@ -2497,8 +2646,8 @@ extension TagSettingsPresenter {
         }
     }
 
-    private func setSoundAlertDescription(description: String?) {
-        viewModel.soundAlertDescription.value = description
+    private func setSoundInstantAlertDescription(description: String?) {
+        viewModel.soundInstantAlertDescription.value = description
         alertService.setSoundInstant(
             description: description,
             ruuviTag: ruuviTag

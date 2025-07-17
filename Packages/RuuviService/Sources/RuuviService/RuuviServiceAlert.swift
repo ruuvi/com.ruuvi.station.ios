@@ -44,6 +44,11 @@ public protocol RuuviServiceAlertRuuviTag {
     func setSignal(description: String?, ruuviTag: RuuviTagSensor)
 
     // Carbon Dioxide
+    func setLower(aqi: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(aqi: Double?, ruuviTag: RuuviTagSensor)
+    func setAQI(description: String?, ruuviTag: RuuviTagSensor)
+
+    // Carbon Dioxide
     func setLower(carbonDioxide: Double?, ruuviTag: RuuviTagSensor)
     func setUpper(carbonDioxide: Double?, ruuviTag: RuuviTagSensor)
     func setCarbonDioxide(description: String?, ruuviTag: RuuviTagSensor)
@@ -78,10 +83,20 @@ public protocol RuuviServiceAlertRuuviTag {
     func setUpper(nox: Double?, ruuviTag: RuuviTagSensor)
     func setNOX(description: String?, ruuviTag: RuuviTagSensor)
 
-    // Sound
+    // Sound Instant
     func setLower(soundInstant: Double?, ruuviTag: RuuviTagSensor)
     func setUpper(soundInstant: Double?, ruuviTag: RuuviTagSensor)
     func setSoundInstant(description: String?, ruuviTag: RuuviTagSensor)
+
+    // Sound Average
+    func setLower(soundAverage: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(soundAverage: Double?, ruuviTag: RuuviTagSensor)
+    func setSoundAverage(description: String?, ruuviTag: RuuviTagSensor)
+
+    // Sound Peak
+    func setLower(soundPeak: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(soundPeak: Double?, ruuviTag: RuuviTagSensor)
+    func setSoundPeak(description: String?, ruuviTag: RuuviTagSensor)
 
     // Luminosity
     func setLower(luminosity: Double?, ruuviTag: RuuviTagSensor)

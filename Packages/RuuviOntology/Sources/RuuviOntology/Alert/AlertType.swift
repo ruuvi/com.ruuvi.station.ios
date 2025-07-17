@@ -28,6 +28,7 @@ public enum AlertType: CaseIterable, Hashable {
             .relativeHumidity(lower: 0, upper: 0),
             .pressure(lower: 0, upper: 0),
             .signal(lower: 0, upper: 0),
+            .aqi(lower: 0, upper: 0),
             .carbonDioxide(lower: 0, upper: 0),
             .pMatter25(lower: 0, upper: 0),
             .voc(lower: 0, upper: 0),
@@ -42,49 +43,50 @@ public enum AlertType: CaseIterable, Hashable {
 
     public var rawValue: String {
         switch self {
-        case .temperature(lower: _, upper: _):
+        case .temperature:
             return "temperature"
-        case .relativeHumidity(lower: _, upper: _):
+        case .relativeHumidity:
             return "relativeHumidity"
-        case .pressure(lower: _, upper: _):
+        case .pressure:
             return "pressure"
-        case .signal(lower: _, upper: _):
+        case .signal:
             return "signal"
-        case .aqi(lower: _, upper: _):
+        case .aqi:
             return "aqi"
-        case .carbonDioxide(lower: _, upper: _):
+        case .carbonDioxide:
             return "carbonDioxide"
-        case .pMatter1(lower: _, upper: _):
+        case .pMatter1:
             return "pMatter1"
-        case .pMatter25(lower: _, upper: _):
+        case .pMatter25:
             return "pMatter25"
-        case .pMatter4(lower: _, upper: _):
+        case .pMatter4:
             return "pMatter4"
-        case .pMatter10(lower: _, upper: _):
+        case .pMatter10:
             return "pMatter10"
-        case .voc(lower: _, upper: _):
+        case .voc:
             return "voc"
-        case .nox(lower: _, upper: _):
+        case .nox:
             return "nox"
-        case .soundInstant(lower: _, upper: _):
+        case .soundInstant:
             return "soundInstant"
-        case .soundPeak(lower: _, upper: _):
+        case .soundPeak:
             return "soundPeak"
-        case .soundAverage(lower: _, upper: _):
+        case .soundAverage:
             return "soundAverage"
-        case .luminosity(lower: _, upper: _):
+        case .luminosity:
             return "luminosity"
         case .connection:
             return "connection"
-        case .cloudConnection(unseenDuration: _):
+        case .cloudConnection:
             return "cloudConnection"
-        case .movement(last: _):
+        case .movement:
             return "movement"
         default:
             return ""
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     static public func alertType(from rawValue: String) -> AlertType? {
         switch rawValue {
         case "temperature":
