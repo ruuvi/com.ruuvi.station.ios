@@ -37,6 +37,7 @@ class DashboardPresenter {
     var feedbackSubject: String!
     var infoProvider: InfoProvider!
     var activityPresenter: ActivityPresenter!
+    var flags: RuuviLocalFlags!
 
     // MARK: - Observation Tokens
     private var universalLinkObservationToken: NSObjectProtocol?
@@ -330,12 +331,24 @@ private extension DashboardPresenter {
             (setting.macId?.any != nil && setting.macId?.any == snapshot.identifierData.mac?.any)
         }
 
-        router.openTagSettings(
-            ruuviTag: sensor,
-            latestMeasurement: snapshot.latestRawRecord,
-            sensorSettings: relevantSetting,
-            output: self
-        )
+        if flags.showRedesignedCardsUIWithNewMenu ||
+            flags.showRedesignedCardsUIWithoutNewMenu {
+            router.openFullSensorCard(
+                for: snapshot,
+                snapshots: sensorDataService.getAllSnapshots(),
+                ruuviTagSensors: sensorDataService.getAllSensors(),
+                sensorSettings: sensorSettings,
+                activeMenu: .settings,
+                output: self
+            )
+        } else {
+            router.openTagSettings(
+                ruuviTag: sensor,
+                latestMeasurement: snapshot.latestRawRecord,
+                sensorSettings: relevantSetting,
+                output: self
+            )
+        }
     }
 
     func openCardView(for snapshot: RuuviTagCardSnapshot, sensor: AnyRuuviTagSensor, showCharts: Bool) {
@@ -347,14 +360,26 @@ private extension DashboardPresenter {
         let viewModel = createViewModelFromSnapshot(snapshot)
         let allViewModels = allSnapshots.compactMap { createViewModelFromSnapshot($0) }
 
-        router.openCardImageView(
-            with: allViewModels,
-            ruuviTagSensors: allSensors,
-            sensorSettings: sensorSettings,
-            scrollTo: viewModel,
-            showCharts: showCharts,
-            output: self
-        )
+        if flags.showRedesignedCardsUIWithNewMenu ||
+            flags.showRedesignedCardsUIWithoutNewMenu {
+            router.openFullSensorCard(
+                for: snapshot,
+                snapshots: sensorDataService.getAllSnapshots(),
+                ruuviTagSensors: sensorDataService.getAllSensors(),
+                sensorSettings: sensorSettings,
+                activeMenu: showCharts ? .graph : .measurement,
+                output: self
+            )
+        } else {
+            router.openCardImageView(
+                with: allViewModels,
+                ruuviTagSensors: allSensors,
+                sensorSettings: sensorSettings,
+                scrollTo: viewModel,
+                showCharts: showCharts,
+                output: self
+            )
+        }
     }
 
     func createViewModelFromSnapshot(_ snapshot: RuuviTagCardSnapshot) -> CardsViewModel {
@@ -879,6 +904,17 @@ extension DashboardPresenter: CardsModuleOutput {
     }
 
     func cardsViewDidRefresh(module: CardsModuleInput) {
+        // No op.
+    }
+}
+
+extension DashboardPresenter: NewCardsModuleOutput {
+
+    func cardsViewDidDismiss(module: NewCardsModuleInput) {
+        module.dismiss(completion: nil)
+    }
+
+    func cardsViewDidRefresh(module: NewCardsModuleInput) {
         // No op.
     }
 }

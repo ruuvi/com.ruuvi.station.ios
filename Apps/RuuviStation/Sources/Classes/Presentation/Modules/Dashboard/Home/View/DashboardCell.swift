@@ -759,9 +759,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                     progressView.progress = Float(
                         progress
                     ) / 100
-                    progressView.progressTintColor =
-                    airQualityIndicator.isHighlighted ?
-                    RuuviColor.orangeColor.color : airQualityIndicator.tintColor
+                    progressView.progressTintColor = airQualityIndicator.tintColor
                 }
             }
         } else {
@@ -948,7 +946,13 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                                 highlight: indicatorData.isHighlighted
                             )
                     }
+                } else if dashboardType == .image && indicatorData.type == .aqi {
+                    prominentView
+                        .changeColor(
+                            highlight: indicatorData.isHighlighted
+                        )
                 } else {
+
                     let indicatorView = getIndicatorView(
                         for: indicatorData.type
                     )

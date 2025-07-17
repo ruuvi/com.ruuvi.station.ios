@@ -454,6 +454,7 @@ extension RuuviTagCardSnapshot {
         name: String,
         luid: LocalIdentifier?,
         mac: MACIdentifier?,
+        serviceUUID: String?,
         isCloud: Bool,
         isOwner: Bool,
         isConnectable: Bool,
@@ -463,7 +464,7 @@ extension RuuviTagCardSnapshot {
         let identifierData = RuuviTagCardSnapshotIdentityData(
             luid: luid,
             mac: mac,
-            serviceUUID: nil
+            serviceUUID: serviceUUID
         )
 
         let displayData = RuuviTagCardSnapshotDisplayData(

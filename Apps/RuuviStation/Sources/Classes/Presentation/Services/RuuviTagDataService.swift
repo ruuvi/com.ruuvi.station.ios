@@ -169,6 +169,12 @@ class RuuviTagDataService {
     func getSensorSettings() -> [SensorSettings] {
         return sensorSettingsList
     }
+
+    func getSensorSettings(for sensorId: String) -> SensorSettings? {
+        return sensorSettingsList.first(where: { settings in
+            settings.luid?.value == sensorId || settings.macId?.value == sensorId
+        })
+    }
 }
 
 extension RuuviTagDataService: RuuviServiceMeasurementDelegate {
@@ -305,6 +311,7 @@ private extension RuuviTagDataService {
             name: sensor.name,
             luid: sensor.luid,
             mac: sensor.macId,
+            serviceUUID: sensor.serviceUUID,
             isCloud: sensor.isCloud,
             isOwner: sensor.isOwner,
             isConnectable: sensor.isConnectable,
