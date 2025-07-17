@@ -631,7 +631,7 @@ public extension RuuviServiceMeasurementImpl {
         let distance = sqrt(meanSquared)
         let currentScore = max(0, maxScore - distance)
 
-        return currentScore
+        return currentScore.rounded(.toNearestOrAwayFromZero)
     }
 
     private func scorePpm(_ ppm: Double) -> Double {
@@ -648,12 +648,16 @@ public extension RuuviServiceMeasurementImpl {
 
     private func airQualityState(for score: Double) -> AirQualityState {
         switch score {
-        case 66...100:
-            return .excellent
-        case 33..<66:
-            return .medium
-        default:
-            return .unhealthy
+        case 81...100:
+            return .excellent(score)
+        case 61...80:
+            return .good(score)
+        case 41...60:
+            return .moderate(score)
+        case 21...40:
+            return .poor(score)
+        default: // 0...20
+            return .unhealthy(score)
         }
     }
 }

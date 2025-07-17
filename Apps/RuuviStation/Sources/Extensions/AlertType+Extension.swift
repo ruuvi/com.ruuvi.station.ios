@@ -12,6 +12,8 @@ extension AlertType {
             return .pressure
         case .movement:
             return .movementCounter
+        case .aqi:
+            return .aqi
         case .carbonDioxide:
             return .co2
         case .pMatter25:

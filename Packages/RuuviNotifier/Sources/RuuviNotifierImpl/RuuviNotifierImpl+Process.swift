@@ -233,7 +233,7 @@ public extension RuuviNotifierImpl {
                     pm25: record.pm25
                 )
                 let isAQI = process(
-                    carbonDioxide: currentAQI,
+                    aqi: currentAQI,
                     alertType: type,
                     identifier: record.luid,
                     trigger: trigger
