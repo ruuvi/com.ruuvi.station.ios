@@ -40,7 +40,8 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
             feedbackEmail: PresentationConstants.feedbackEmail,
             feedbackSubject: PresentationConstants.feedbackSubject,
             infoProvider: r.resolve(InfoProvider.self)!,
-            activityPresenter: r.resolve(ActivityPresenter.self)!
+            activityPresenter: r.resolve(ActivityPresenter.self)!,
+            flags: r.resolve(RuuviLocalFlags.self)!
         )
 
         // Set up presenter dependencies
@@ -123,7 +124,8 @@ extension DashboardModuleFactoryImpl {
             feedbackEmail: customFeedbackEmail ?? PresentationConstants.feedbackEmail,
             feedbackSubject: customFeedbackSubject ?? PresentationConstants.feedbackSubject,
             infoProvider: r.resolve(InfoProvider.self)!,
-            activityPresenter: r.resolve(ActivityPresenter.self)!
+            activityPresenter: r.resolve(ActivityPresenter.self)!,
+            flags: r.resolve(RuuviLocalFlags.self)!
         )
 
         presenter.view = view

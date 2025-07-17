@@ -8,4 +8,11 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
 
     @UserDefault("RuuviFeatureFlags.showRedesignedDashboardUI", defaultValue: false)
     var showRedesignedDashboardUI: Bool
+
+#if DEBUG || ALPHA
+    @UserDefault("RuuviFeatureFlags.showRedesignedCardsUIWithNewMenu", defaultValue: true)
+#else
+    @UserDefault("RuuviFeatureFlags.showRedesignedCardsUIWithNewMenu", defaultValue: false)
+#endif
+    var showRedesignedCardsUIWithNewMenu: Bool
 }
