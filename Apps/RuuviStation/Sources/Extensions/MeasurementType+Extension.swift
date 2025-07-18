@@ -102,6 +102,63 @@ extension MeasurementType {
         }
     }
 
+    var aboutTitle: String {
+        switch self {
+        case .temperature:
+            return RuuviLocalization.descriptionHeaderTemperature
+        case .humidity:
+            return RuuviLocalization.descriptionHeaderHumidity
+        case .pressure:
+            return RuuviLocalization.descriptionHeaderPressure
+        case .movementCounter:
+            return RuuviLocalization.descriptionHeaderMovement
+        case .aqi:
+            return RuuviLocalization.descriptionHeaderAirQuality
+        case .co2:
+            return RuuviLocalization.descriptionHeaderCo2
+        case .pm25, .pm10:
+            return RuuviLocalization.descriptionHeaderPm
+        case .nox:
+            return RuuviLocalization.descriptionHeaderNox
+        case .voc:
+            return RuuviLocalization.descriptionHeaderVoc
+        case .soundInstant:
+            return RuuviLocalization.descriptionHeaderSoundLevel
+        case .luminosity:
+            return RuuviLocalization.descriptionHeaderLuminosity
+        default:
+            return self.displayName
+        }
+    }
+
+    var descriptionText: String {
+        switch self {
+        case .temperature:
+            return RuuviLocalization.descriptionTextTemperature
+        case .humidity:
+            return RuuviLocalization.descriptionTextHumidity
+        case .pressure:
+            return RuuviLocalization.descriptionTextPressure
+        case .movementCounter:
+            return RuuviLocalization.descriptionTextMovement
+        case .aqi:
+            return RuuviLocalization.descriptionTextAirQuality
+        case .co2:
+            return RuuviLocalization.descriptionTextCo2
+        case .pm25, .pm10:
+            return RuuviLocalization.descriptionTextPm
+        case .nox:
+            return RuuviLocalization.descriptionTextNox
+        case .voc:
+            return RuuviLocalization.descriptionTextVoc
+        case .soundInstant:
+            return RuuviLocalization.descriptionTextSoundLevel
+        case .luminosity:
+            return RuuviLocalization.descriptionTextLuminosity
+        default:
+            return ""
+        }
+    }
 }
 
 extension MeasurementType {

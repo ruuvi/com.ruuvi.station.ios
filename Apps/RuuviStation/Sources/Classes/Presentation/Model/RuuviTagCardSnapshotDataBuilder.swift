@@ -14,8 +14,9 @@ struct MeasurementConfiguration {
     static let pressureFormat = "%.0f"
 
     static let measurementPriority: [MeasurementType] = [
-        .aqi, .temperature, .humidity, .pressure, .co2,
-        .pm25, .voc, .nox, .luminosity, .soundInstant, .movementCounter,
+        .aqi, .co2, .pm25, .voc, .nox,
+        .temperature, .humidity, .pressure,
+        .luminosity, .movementCounter, .soundInstant,
     ]
 
     static let advancedFirmwareMeasurements: [MeasurementType] = [
@@ -94,13 +95,18 @@ struct HumidityMeasurementExtractor: MeasurementExtractor {
 
         let value = measurementService.stringWithoutSign(for: humidity, temperature: record.temperature)
         let humidityUnit = measurementService.units.humidityUnit
-        let unit = humidityUnit == .dew
+        let unitSymbol = humidityUnit == .dew
                   ? measurementService.units.temperatureUnit.symbol
                   : humidityUnit.symbol
+        // For certain measurements we show type of measurements so that people
+        // can understand what that value is. When dew point is the unit it can
+        // confuse people with C symbol. Hence we add the type of measurement.
+        let formattedUnit =
+                humidityUnit == .dew ? "\(RuuviLocalization.dewpoint), \(unitSymbol)" : unitSymbol
 
         return MeasurementResult(
             value: value,
-            unit: unit,
+            unit: formattedUnit,
             isProminent: false,
             showSubscript: false,
             tintColor: nil
@@ -200,7 +206,7 @@ struct PM25MeasurementExtractor: MeasurementExtractor {
 
         return MeasurementResult(
             value: pm25Value,
-            unit: "\(RuuviLocalization.unitPm25)",
+            unit: "\(RuuviLocalization.pm25), \(RuuviLocalization.unitPm25)",
             isProminent: false,
             showSubscript: false,
             tintColor: nil
@@ -219,7 +225,7 @@ struct PM10MeasurementExtractor: MeasurementExtractor {
 
         return MeasurementResult(
             value: pm10Value,
-            unit: "\(RuuviLocalization.unitPm10)",
+            unit: "\(RuuviLocalization.pm10), \(RuuviLocalization.unitPm10)",
             isProminent: false,
             showSubscript: false,
             tintColor: nil
@@ -295,7 +301,7 @@ struct SoundMeasurementExtractor: MeasurementExtractor {
 
         return MeasurementResult(
             value: soundValue,
-            unit: RuuviLocalization.unitSound,
+            unit: "\(RuuviLocalization.realTime), \(RuuviLocalization.unitSound)",
             isProminent: false,
             showSubscript: false,
             tintColor: nil

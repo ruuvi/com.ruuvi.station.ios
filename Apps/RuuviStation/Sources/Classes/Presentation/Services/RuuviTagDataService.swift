@@ -287,6 +287,7 @@ private extension RuuviTagDataService {
             name: sensor.name,
             luid: sensor.luid,
             mac: sensor.macId,
+            serviceUUID: sensor.serviceUUID,
             isCloud: sensor.isCloud,
             isOwner: sensor.isOwner,
             isConnectable: sensor.isConnectable,

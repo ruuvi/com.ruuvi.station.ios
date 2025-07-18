@@ -32,7 +32,7 @@ protocol CardsMeasurementViewInput: AnyObject {
     func updateCurrentSnapshotData(_ snapshot: RuuviTagCardSnapshot)
     func navigateToIndex(_ index: Int, animated: Bool)
     func presentIndicatorDetailsSheet(
-        for type: MeasurementType, with snapshot: RuuviTagCardSnapshot
+        for indicator: RuuviTagCardSnapshotIndicatorData
     )
 }
 

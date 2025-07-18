@@ -78,7 +78,7 @@ final class CardsMeasurementPresenter: CardsMeasurementViewOutput {
         // Get specific measurement data
         if let indicators = currentSnapshot.displayData.indicatorGrid?.indicators,
            let indicator = indicators.first(where: { $0.type == type }) {
-            view?.presentIndicatorDetailsSheet(for: type, with: currentSnapshot)
+            view?.presentIndicatorDetailsSheet(for: indicator)
             print("Measurement value: \(indicator.value) \(indicator.unit)")
         }
     }

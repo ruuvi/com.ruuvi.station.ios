@@ -235,7 +235,6 @@ private extension RuuviTagAlertService {
     func processAlertsForSnapshot(_ snapshot: RuuviTagCardSnapshot) {
         guard let lastRecord = snapshot.latestRawRecord else { return }
 
-        // CRITICAL FIX: Use try-catch equivalent to prevent crashes
         do {
             if snapshot.metadata.isCloud {
                 if let macId = snapshot.identifierData.mac {

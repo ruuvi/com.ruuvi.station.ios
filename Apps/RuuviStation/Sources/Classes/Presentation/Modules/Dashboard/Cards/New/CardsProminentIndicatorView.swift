@@ -1,6 +1,12 @@
 import UIKit
 import RuuviOntology
 
+protocol CardsProminentIndicatorViewDelegate: AnyObject {
+    func cardsProminentIndicatorViewDidTap(
+        _ view: CardsProminentIndicatorView
+    )
+}
+
 class CardsProminentIndicatorView: UIView {
 
     // MARK: - Height Constants (Must match SingleMeasurementPageViewController)
@@ -25,6 +31,8 @@ class CardsProminentIndicatorView: UIView {
             updateUI()
         }
     }
+
+    var delegate: CardsProminentIndicatorViewDelegate?
 
     // MARK: Private
     // MARK: AQI
@@ -150,6 +158,12 @@ class CardsProminentIndicatorView: UIView {
 
         // Initially hide both modes
         showMeasurementMode()
+
+        indicatorTitleContainer.isUserInteractionEnabled = true
+        indicatorTitleContainer.addGestureRecognizer(
+            UITapGestureRecognizer(target: self,
+                                   action: #selector(handleTap))
+        )
     }
 
     private func setupConstraintSets() {
@@ -240,6 +254,11 @@ class CardsProminentIndicatorView: UIView {
 
         setNeedsLayout()
         layoutIfNeeded()
+    }
+
+    @objc private func handleTap() {
+        print("tap")
+        delegate?.cardsProminentIndicatorViewDidTap(self)
     }
 
     // MARK: - Mode Switching

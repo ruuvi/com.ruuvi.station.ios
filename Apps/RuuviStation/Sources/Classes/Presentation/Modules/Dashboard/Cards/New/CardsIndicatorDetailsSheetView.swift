@@ -36,7 +36,7 @@ class CardsIndicatorDetailsSheetView: UIViewController {
 
     private lazy var lblTitle: UILabel = {
         let label = UILabel()
-        label.textColor = .white
+        label.textColor = RuuviColor.dashboardIndicator.color
         label.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
         label.textAlignment = .left
         label.numberOfLines = 1
@@ -48,7 +48,7 @@ class CardsIndicatorDetailsSheetView: UIViewController {
 
     private lazy var valueLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .white
+        label.textColor = RuuviColor.dashboardIndicator.color
         label.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         label.textAlignment = .right
         label.numberOfLines = 1
@@ -60,7 +60,7 @@ class CardsIndicatorDetailsSheetView: UIViewController {
 
     private lazy var subtitleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .white
+        label.textColor = RuuviColor.dashboardIndicator.color
         label.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         label.textAlignment = .left
         label.numberOfLines = 0
@@ -72,7 +72,7 @@ class CardsIndicatorDetailsSheetView: UIViewController {
 
     private lazy var lblDescription: UILabel = {
         let label = UILabel()
-        label.textColor = UIColor.white.withAlphaComponent(0.8)
+        label.textColor = RuuviColor.dashboardIndicator.color
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
@@ -147,8 +147,8 @@ class CardsIndicatorDetailsSheetView: UIViewController {
             // Icon constraints
             imgView.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
             imgView.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
-            imgView.widthAnchor.constraint(equalToConstant: 16),
-            imgView.heightAnchor.constraint(equalToConstant: 16),
+            imgView.widthAnchor.constraint(equalToConstant: 24),
+            imgView.heightAnchor.constraint(equalToConstant: 24),
 
             // Title constraints
             lblTitle.leadingAnchor.constraint(equalTo: imgView.trailingAnchor, constant: 8),
@@ -215,7 +215,7 @@ class CardsIndicatorDetailsSheetView: UIViewController {
         title: String? = nil,
         value: String? = nil,
         subtitle: String? = nil,
-        description: String? = nil,
+        description: NSAttributedString? = nil,
         icon: UIImage? = nil
     ) {
         if let title = title {
@@ -231,7 +231,7 @@ class CardsIndicatorDetailsSheetView: UIViewController {
         }
 
         if let description = description {
-            lblDescription.text = description
+            lblDescription.attributedText = description
         }
 
         if let icon = icon {
@@ -245,19 +245,41 @@ class CardsIndicatorDetailsSheetView: UIViewController {
     }
 }
 
-// MARK: - Usage Example
 extension CardsIndicatorDetailsSheetView {
-    static func createPM25Sheet() -> CardsIndicatorDetailsSheetView {
+    static func createSheet(
+        from indicator: RuuviTagCardSnapshotIndicatorData
+    ) -> CardsIndicatorDetailsSheetView {
         let vc = CardsIndicatorDetailsSheetView.instantiate()
         vc.configure(
-            title: "PM2.5",
-            value: "11,4 μg/m³",
-            subtitle: "About particulate matter",
-            // swiftlint:disable:next line_length
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            icon: UIImage(systemName: "aqi.medium")
+            title: indicator.type.displayName,
+            value: "\(indicator.value) \(indicator.unit)",
+            subtitle: indicator.type.aboutTitle,
+            description: attributedText(from: indicator.type.descriptionText),
+            icon: indicator.type.icon
         )
         return vc
+    }
+
+    static func attributedText(from htmlString: String) -> NSAttributedString? {
+        guard let data = htmlString
+            .replacingOccurrences(of: "&lt;", with: "<")
+            .replacingOccurrences(of: "&gt;", with: ">")
+            .data(using: .utf8)
+        else { return nil }
+
+        do {
+            return try NSAttributedString(
+                data: data,
+                options: [
+                    .documentType: NSAttributedString.DocumentType.html,
+                    .characterEncoding: String.Encoding.utf8.rawValue
+                ],
+                documentAttributes: nil
+            )
+        } catch {
+            print("HTML parsing failed: \(error)")
+            return nil
+        }
     }
 }
 

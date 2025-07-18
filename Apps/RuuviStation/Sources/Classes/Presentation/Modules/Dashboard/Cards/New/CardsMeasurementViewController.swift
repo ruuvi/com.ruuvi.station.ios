@@ -217,10 +217,10 @@ extension CardsMeasurementViewController: CardsMeasurementViewInput {
         }
     }
 
-    func presentIndicatorDetailsSheet(
-        for type: MeasurementType, with snapshot: RuuviTagCardSnapshot
-    ) {
-        let bottomSheetVC = CardsIndicatorDetailsSheetView.createPM25Sheet()
+    func presentIndicatorDetailsSheet(for indicator: RuuviTagCardSnapshotIndicatorData) {
+        let bottomSheetVC = CardsIndicatorDetailsSheetView.createSheet(
+            from: indicator
+        )
         presentDynamicBottomSheet(vc: bottomSheetVC)
     }
 }

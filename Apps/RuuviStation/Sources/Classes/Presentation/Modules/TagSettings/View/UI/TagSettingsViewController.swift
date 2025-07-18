@@ -2883,9 +2883,7 @@ extension TagSettingsViewController {
     // MARK: - AQI ALERTS
 
     private func configureAQIAlertSection() -> TagSettingsSection {
-        let sectionTitle = RuuviLocalization.TagSettings.AqiAlertTitleLabel.text(
-            HumidityUnit.percent.symbol
-        )
+        let sectionTitle = RuuviLocalization.aqi
         let section = TagSettingsSection(
             identifier: .alertAQI,
             title: sectionTitle,
@@ -4028,7 +4026,7 @@ extension TagSettingsViewController {
                 for: viewModel?.latestMeasurement.value?.co2,
                 pm25: viewModel?.latestMeasurement.value?.pm25
             )
-            return "\(aqi)" + " \(HumidityUnit.percent.symbol)"
+            return "\(aqi)"
         case .carbonDioxide:
             if let co2 = viewModel?.latestMeasurement.value?.co2?.round(to: 2) {
                 let symbol = RuuviLocalization.unitCo2
@@ -5647,7 +5645,7 @@ extension TagSettingsViewController {
     }
 
     private func showAQIAlertSetDialog(sender: TagSettingsAlertConfigCell) {
-        let title = RuuviLocalization.aqi + " (\(HumidityUnit.percent.symbol))"
+        let title = RuuviLocalization.aqi
 
         let (minimumRange, maximumRange) = aqiAlertRange()
         let (minimumValue, maximumValue) = aqiValue()
