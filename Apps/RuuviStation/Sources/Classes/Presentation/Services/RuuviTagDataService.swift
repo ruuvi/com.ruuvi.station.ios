@@ -112,16 +112,20 @@ class RuuviTagDataService {
             (settings.macId?.any != nil && settings.macId?.any == sensor.macId?.any)
         }
 
-        snapshots[snapshotIndex].updateFromRecord(
-            record,
-            sensor: sensor,
-            measurementService: measurementService,
-            flags: flags,
-            sensorSettings: sensorSettings
-        )
+        let snapshot = snapshots[snapshotIndex] // Capture the snapshot object
 
-        if !settings.syncExtensiveChangesInProgress {
-            delegate?.sensorDataService(self, didUpdateSnapshot: snapshots[snapshotIndex])
+        DispatchQueue.main.async {
+            snapshot.updateFromRecord(
+                record,
+                sensor: sensor,
+                measurementService: self.measurementService,
+                flags: self.flags,
+                sensorSettings: sensorSettings
+            )
+
+            if !self.settings.syncExtensiveChangesInProgress {
+                self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+            }
         }
     }
 
@@ -238,10 +242,18 @@ private extension RuuviTagDataService {
     }
 
     func buildInitialSnapshots() {
-        var newSnapshots: [RuuviTagCardSnapshot] = []
-
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
+
+            var snapshotsWithRecords: [
+                // swiftlint:disable:next large_tuple
+                (
+                    RuuviTagCardSnapshot,
+                    RuuviTagSensorRecord?,
+                    SensorSettings?,
+                    AnyRuuviTagSensor
+                )
+            ] = []
 
             for tag in self.ruuviTags {
                 let snapshot = self.createSnapshot(from: tag)
@@ -250,21 +262,27 @@ private extension RuuviTagDataService {
                 let record = self.ruuviStorage.cachedLatestBlocking(for: tag)
                 let settings = self.sensorSettingsList.first { $0.id == tag.id }
 
-                if let record = record {
-                    let updatedRecord = record.with(sensorSettings: settings)
-                    snapshot.updateFromRecord(
-                        updatedRecord,
-                        sensor: tag,
-                        measurementService: self.measurementService,
-                        flags: self.flags,
-                        sensorSettings: settings
-                    )
-                }
-
-                newSnapshots.append(snapshot)
+                snapshotsWithRecords.append((snapshot, record, settings, tag))
             }
 
             DispatchQueue.main.async {
+                var newSnapshots: [RuuviTagCardSnapshot] = []
+
+                // Update snapshots on main thread to avoid @Published property race conditions
+                for (snapshot, record, settings, sensor) in snapshotsWithRecords {
+                    if let record = record {
+                        let updatedRecord = record.with(sensorSettings: settings)
+                        snapshot.updateFromRecord(
+                            updatedRecord,
+                            sensor: sensor,
+                            measurementService: self.measurementService,
+                            flags: self.flags,
+                            sensorSettings: settings
+                        )
+                    }
+                    newSnapshots.append(snapshot)
+                }
+
                 let orderedSnapshots = self.reorderSnapshots(
                     newSnapshots,
                     with: self.settings.dashboardSensorOrder
@@ -330,16 +348,18 @@ private extension RuuviTagDataService {
             let settings = self.sensorSettingsList.first { $0.id == sensor.id }
             let updatedRecord = record.with(sensorSettings: settings)
 
-            snapshot.updateFromRecord(
-                updatedRecord,
-                sensor: sensor,
-                measurementService: self.measurementService,
-                flags: self.flags,
-                sensorSettings: settings
-            )
+            DispatchQueue.main.async {
+                snapshot.updateFromRecord(
+                    updatedRecord,
+                    sensor: sensor,
+                    measurementService: self.measurementService,
+                    flags: self.flags,
+                    sensorSettings: settings
+                )
 
-            if !self.settings.syncExtensiveChangesInProgress {
-                self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+                if !self.settings.syncExtensiveChangesInProgress {
+                    self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+                }
             }
         }
     }
@@ -349,21 +369,24 @@ private extension RuuviTagDataService {
 
         let snapshot = snapshots[snapshotIndex]
 
-        // Update basic sensor information
-        let invalidateLayout = snapshot.displayData.name != sensor.name
-        snapshot.displayData.name = sensor.name
-        snapshot.displayData.version = sensor.version
-        snapshot.metadata.isCloud = sensor.isCloud
-        snapshot.metadata.isOwner = sensor.isOwner
-        snapshot.connectionData.isConnectable = sensor.isConnectable
+        // Ensure we update @Published properties on the main thread
+        DispatchQueue.main.async {
+            // Update basic sensor information
+            let invalidateLayout = snapshot.displayData.name != sensor.name
+            snapshot.displayData.name = sensor.name
+            snapshot.displayData.version = sensor.version
+            snapshot.metadata.isCloud = sensor.isCloud
+            snapshot.metadata.isOwner = sensor.isOwner
+            snapshot.connectionData.isConnectable = sensor.isConnectable
 
-        if !settings.syncExtensiveChangesInProgress {
-            delegate?
-                .sensorDataService(
-                    self,
-                    didUpdateSnapshot: snapshot,
-                    invalidateLayout: invalidateLayout
-                )
+            if !self.settings.syncExtensiveChangesInProgress {
+                self.delegate?
+                    .sensorDataService(
+                        self,
+                        didUpdateSnapshot: snapshot,
+                        invalidateLayout: invalidateLayout
+                    )
+            }
         }
     }
 
@@ -419,24 +442,10 @@ private extension RuuviTagDataService {
         // If we have a current record, update it with new settings
         if snapshot.lastUpdated != nil,
             let lastRecord = snapshot.latestRawRecord {
-            snapshot.updateFromRecord(
-                lastRecord.with(sensorSettings: sensorSettings),
-                sensor: sensor,
-                measurementService: self.measurementService,
-                flags: self.flags,
-                sensorSettings: sensorSettings
-            )
 
-            if !self.settings.syncExtensiveChangesInProgress {
-                self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
-            }
-        } else {
-            ruuviStorage.readLatest(sensor).on { [weak self] record in
-                guard let self = self, let record = record else { return }
-
-                let updatedRecord = record.with(sensorSettings: sensorSettings)
+            DispatchQueue.main.async {
                 snapshot.updateFromRecord(
-                    updatedRecord,
+                    lastRecord.with(sensorSettings: sensorSettings),
                     sensor: sensor,
                     measurementService: self.measurementService,
                     flags: self.flags,
@@ -445,6 +454,26 @@ private extension RuuviTagDataService {
 
                 if !self.settings.syncExtensiveChangesInProgress {
                     self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+                }
+            }
+        } else {
+            ruuviStorage.readLatest(sensor).on { [weak self] record in
+                guard let self = self, let record = record else { return }
+
+                let updatedRecord = record.with(sensorSettings: sensorSettings)
+
+                DispatchQueue.main.async {
+                    snapshot.updateFromRecord(
+                        updatedRecord,
+                        sensor: sensor,
+                        measurementService: self.measurementService,
+                        flags: self.flags,
+                        sensorSettings: sensorSettings
+                    )
+
+                    if !self.settings.syncExtensiveChangesInProgress {
+                        self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+                    }
                 }
             }
         }
@@ -468,19 +497,27 @@ private extension RuuviTagDataService {
                             (settings.macId?.any != nil && settings.macId?.any == sensor.macId?.any)
                         }
 
-                        let updatedRecord = record.with(sensorSettings: sensorSettings)
-                        snapshot.updateFromRecord(
-                            updatedRecord,
-                            sensor: sensor,
-                            measurementService: self.measurementService,
-                            flags: self.flags,
+                        let updatedRecord = record.with(
                             sensorSettings: sensorSettings
                         )
 
-                        // Update UI on main thread
-                        DispatchQueue.main.async {
-                            if !self.settings.syncExtensiveChangesInProgress {
-                                self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+                        DispatchQueue.main
+                            .async {
+                                snapshot
+                                    .updateFromRecord(
+                                        updatedRecord,
+                                        sensor: sensor,
+                                        measurementService: self.measurementService,
+                                        flags: self.flags,
+                                        sensorSettings: sensorSettings
+                                    )
+
+                                if !self.settings.syncExtensiveChangesInProgress {
+                                    self.delegate?
+                                        .sensorDataService(
+                                            self,
+                                            didUpdateSnapshot: snapshot
+                                        )
                             }
                         }
                     }

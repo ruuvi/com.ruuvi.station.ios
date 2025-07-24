@@ -78,42 +78,40 @@ class RuuviTagConnectionService {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
 
-            var updatedSnapshots: [RuuviTagCardSnapshot] = []
+            // swiftlint:disable:next large_tuple
+            var snapshotUpdates: [(RuuviTagCardSnapshot, Bool, Bool, NetworkSyncStatus)] = []
 
             for snapshot in snapshots {
-                self.updateConnectionDataSync(for: snapshot)
-                updatedSnapshots.append(snapshot)
+                var isConnected = false
+                var keepConnection = false
+                var syncStatus: NetworkSyncStatus = .none
+
+                if let luid = snapshot.identifierData.luid {
+                    isConnected = self.background.isConnected(uuid: luid.value)
+                    keepConnection = self.connectionPersistence.keepConnection(to: luid)
+                } else if snapshot.identifierData.mac != nil {
+                    syncStatus = snapshot.identifierData.mac.map {
+                        self.localSyncState.getSyncStatusLatestRecord(for: $0)
+                    } ?? .none
+                    isConnected = false
+                    keepConnection = false
+                }
+
+                snapshotUpdates.append((snapshot, isConnected, keepConnection, syncStatus))
             }
 
             DispatchQueue.main.async {
-                for snapshot in updatedSnapshots {
+                for (snapshot, isConnected, keepConnection, syncStatus) in snapshotUpdates {
+                    snapshot.updateNetworkSyncStatus(syncStatus)
+                    snapshot.updateConnectionData(
+                        isConnected: isConnected,
+                        isConnectable: snapshot.connectionData.isConnectable,
+                        keepConnection: keepConnection
+                    )
                     self.delegate?.connectionService(self, didUpdateSnapshot: snapshot)
                 }
             }
         }
-    }
-
-    private func updateConnectionDataSync(for snapshot: RuuviTagCardSnapshot) {
-        var isConnected = false
-        var keepConnection = false
-
-        if let luid = snapshot.identifierData.luid {
-            isConnected = background.isConnected(uuid: luid.value)
-            keepConnection = connectionPersistence.keepConnection(to: luid)
-        } else if snapshot.identifierData.mac != nil {
-            let syncStatus = snapshot.identifierData.mac.map {
-                localSyncState.getSyncStatusLatestRecord(for: $0)
-            } ?? .none
-            snapshot.updateNetworkSyncStatus(syncStatus)
-            isConnected = false
-            keepConnection = false
-        }
-
-        snapshot.updateConnectionData(
-            isConnected: isConnected,
-            isConnectable: snapshot.connectionData.isConnectable,
-            keepConnection: keepConnection
-        )
     }
 
     func setKeepConnection(
@@ -242,8 +240,11 @@ extension RuuviTagConnectionService {
               !snapshot.metadata.isCloud else { return }
 
         let syncStatus = localSyncState.getSyncStatusLatestRecord(for: macId)
-        snapshot.updateNetworkSyncStatus(syncStatus)
-        delegate?.connectionService(self, didUpdateSnapshot: snapshot)
+
+        DispatchQueue.main.async {
+            snapshot.updateNetworkSyncStatus(syncStatus)
+            self.delegate?.connectionService(self, didUpdateSnapshot: snapshot)
+        }
     }
 }
 

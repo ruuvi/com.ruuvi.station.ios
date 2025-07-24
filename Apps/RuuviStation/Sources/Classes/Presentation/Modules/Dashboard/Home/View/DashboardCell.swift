@@ -35,7 +35,7 @@ struct DashboardCellLayoutConstants {
     // Grid section
     static let headerToGridSpacing: CGFloat = 10
     static let gridRowHeight: CGFloat = 20
-    static let gridRowSpacing: CGFloat = 2
+    static let gridRowSpacing: CGFloat = -2
 
     // Footer section
     static let gridToFooterSpacing: CGFloat = 4
