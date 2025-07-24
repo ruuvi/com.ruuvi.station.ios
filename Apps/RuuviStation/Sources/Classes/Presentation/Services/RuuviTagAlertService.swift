@@ -144,8 +144,10 @@ class RuuviTagAlertService {
             // Clear cache for this sensor to force refresh
             self.clearCacheForSensor(sensorId: physicalSensor.id)
 
-            // Sync alerts using the optimized snapshot method
-            snapshot.syncAllAlerts(from: self.alertService, physicalSensor: physicalSensor)
+            DispatchQueue.main.async {
+                // Sync alerts using the optimized snapshot method
+                snapshot.syncAllAlerts(from: self.alertService, physicalSensor: physicalSensor)
+            }
 
             // Cache the alert states after sync
             self.cacheAlertStatesForSnapshot(snapshot, physicalSensor: physicalSensor)
@@ -239,12 +241,14 @@ class RuuviTagAlertService {
         let alertType = type.toAlertType()
         setCachedAlertState(for: snapshot.id, alertType: alertType, isOn: isOn, mutedTill: mutedTill)
 
-        snapshot.updateAlert(
-            for: type,
-            isOn: isOn,
-            alertState: alertState,
-            mutedTill: mutedTill
-        )
+        DispatchQueue.main.async {
+            snapshot.updateAlert(
+                for: type,
+                isOn: isOn,
+                alertState: alertState,
+                mutedTill: mutedTill
+            )
+        }
 
         // Debounce delegate notifications to prevent CPU spinning
         addToPendingUpdates(snapshotId: snapshot.id)
@@ -279,7 +283,8 @@ private extension RuuviTagAlertService {
 
             for snapshotId in updatedSnapshotIds {
                 if let snapshot = self.snapshots[snapshotId] {
-                    DispatchQueue.main.async {
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self = self else { return }
                         self.delegate?.alertService(self, didUpdateSnapshot: snapshot)
                     }
                 }
@@ -329,7 +334,8 @@ private extension RuuviTagAlertService {
                           let snapshot = self.snapshots[physicalSensor.id] else { return }
 
                     // Process on background thread
-                    self.processingQueue.async {
+                    self.processingQueue.async { [weak self] in
+                        guard let self = self else { return }
                         self.updateAlertStateForSnapshot(
                             snapshot: snapshot,
                             alertType: type,
@@ -351,12 +357,15 @@ private extension RuuviTagAlertService {
         // Try cache first
         if let cached = getCachedAlertState(for: physicalSensor.id, alertType: alertType) {
             let alertState: AlertState? = cached.isOn ? .registered : nil
-            snapshot.updateAlert(
-                for: measurementType,
-                isOn: cached.isOn,
-                alertState: alertState,
-                mutedTill: cached.mutedTill
-            )
+
+            DispatchQueue.main.async {
+                snapshot.updateAlert(
+                    for: measurementType,
+                    isOn: cached.isOn,
+                    alertState: alertState,
+                    mutedTill: cached.mutedTill
+                )
+            }
 
             // Use debounced update
             addToPendingUpdates(snapshotId: snapshot.id)
@@ -386,12 +395,15 @@ private extension RuuviTagAlertService {
                 alertState = .empty
             }
         }
-        snapshot.updateAlert(
-            for: measurementType,
-            isOn: isOn,
-            alertState: alertState,
-            mutedTill: mutedTill
-        )
+
+        DispatchQueue.main.async {
+            snapshot.updateAlert(
+                for: measurementType,
+                isOn: isOn,
+                alertState: alertState,
+                mutedTill: mutedTill
+            )
+        }
 
         // Use debounced update
         addToPendingUpdates(snapshotId: snapshot.id)
@@ -479,7 +491,9 @@ extension RuuviTagAlertService: RuuviNotifierObserver {
                   let snapshot = self.findSnapshotByIdentifier(uuid) else { return }
 
             // Process on background thread with loop protection
-            self.processingQueue.async {
+            self.processingQueue.async { [weak self] in
+                guard let self = self else { return }
+
                 self.processingLock.lock()
                 guard !self.isProcessingAlertChange else {
                     self.processingLock.unlock()
@@ -503,12 +517,15 @@ extension RuuviTagAlertService: RuuviNotifierObserver {
 
                 let isTriggeredAndFireable = isTriggered && isFireable
                 let alertState: AlertState? = isTriggeredAndFireable ? .firing : .registered
-                snapshot.updateAlert(
-                    for: measurementType,
-                    isOn: self.alertService.isOn(type: alertType, for: uuid),
-                    alertState: alertState,
-                    mutedTill: self.alertService.mutedTill(type: alertType, for: uuid)
-                )
+
+                DispatchQueue.main.async {
+                    snapshot.updateAlert(
+                        for: measurementType,
+                        isOn: self.alertService.isOn(type: alertType, for: uuid),
+                        alertState: alertState,
+                        mutedTill: self.alertService.mutedTill(type: alertType, for: uuid)
+                    )
+                }
 
                 self.processingLock.lock()
                 self.isProcessingAlertChange = false

@@ -72,9 +72,10 @@ class RuuviTagBackgroundService {
     func loadBackground(for snapshot: RuuviTagCardSnapshot, sensor: AnyRuuviTagSensor) {
         // Check cache first
         if let cachedImage = backgroundCache[sensor.id] {
-            snapshot.updateBackgroundImage(cachedImage)
+
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
+                snapshot.updateBackgroundImage(cachedImage)
                 self.delegate?.backgroundService(self, didUpdateSnapshot: snapshot)
             }
             return
@@ -90,11 +91,8 @@ class RuuviTagBackgroundService {
                       // Cache on background thread
                       self.backgroundCache[sensor.id] = image
 
-                      // Update snapshot on background thread
-                      snapshot.updateBackgroundImage(image)
-
-                      // Notify delegate on main thread
                       DispatchQueue.main.async {
+                          snapshot.updateBackgroundImage(image)
                           self.delegate?.backgroundService(self, didUpdateSnapshot: snapshot)
                       }
 
