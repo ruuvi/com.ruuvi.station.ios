@@ -386,6 +386,13 @@ private extension RuuviTagDataService {
             snapshot.metadata.isOwner = sensor.isOwner
             snapshot.connectionData.isConnectable = sensor.isConnectable
 
+            // Update metadata with new sensor information
+            snapshot.updateMetadata(
+                isCloud: sensor.isCloud,
+                isOwner: sensor.isOwner,
+                isConnectable: sensor.isConnectable
+            )
+
             if !self.settings.syncExtensiveChangesInProgress {
                 self.delegate?
                     .sensorDataService(

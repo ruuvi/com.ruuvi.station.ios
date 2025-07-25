@@ -1,5 +1,6 @@
 import UIKit
 import RuuviLocalization
+import RuuviOntology
 
 enum CardsMenuMode {
     case legacy
@@ -80,6 +81,63 @@ private class CardsMenuButton: UIButton {
         backgroundColor = .clear
         widthAnchor.constraint(equalToConstant: 34).isActive = true
     }
+
+    // MARK: - Alert State Updates
+    func updateAlertState(for snapshot: RuuviTagCardSnapshot?) {
+        guard menuType == .alerts else { return }
+
+        // Remove existing animations
+        iconImageView.layer.removeAllAnimations()
+
+        guard let snapshot = snapshot,
+              snapshot.metadata.isAlertAvailable else {
+            iconImageView.image = nil
+            isUserInteractionEnabled = false
+            return
+        }
+
+        isUserInteractionEnabled = true
+
+        switch snapshot.alertData.alertState {
+        case .empty, .none:
+            if snapshot.metadata.isAlertAvailable {
+                iconImageView.image = RuuviAsset.CardsMenu.iconAlertsOff.image
+                iconImageView.tintColor = .white
+                removeAlertAnimations(alpha: 0.5)
+            }
+
+        case .registered:
+            iconImageView.image = RuuviAsset.CardsMenu.iconAlerts.image
+            iconImageView.tintColor = .white
+            removeAlertAnimations(alpha: 1.0)
+
+        case .firing:
+            iconImageView.image = RuuviAsset.CardsMenu.iconAlertActive.image
+            iconImageView.tintColor = RuuviColor.orangeColor.color
+            iconImageView.alpha = 1.0
+            startAlertAnimation()
+        }
+    }
+
+    private func startAlertAnimation() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            UIView.animate(
+                withDuration: 0.5,
+                delay: 0,
+                options: [.repeat, .autoreverse, .beginFromCurrentState],
+                animations: {
+                    self?.iconImageView.alpha = 0.0
+                }
+            )
+        }
+    }
+
+    private func removeAlertAnimations(alpha: Double = 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.iconImageView.layer.removeAllAnimations()
+            self?.iconImageView.alpha = alpha
+        }
+    }
 }
 
 // MARK: - Custom Tab Button (Legacy)
@@ -130,7 +188,8 @@ private class LegacyMenuButton: UIButton {
     private func updateIcon() {
         if menuType == .measurementGraph {
             // Show the opposite icon - what will happen when tapped
-            iconImageView.image = currentSubType == .measurement ? CardsMenuType.graph.icon : CardsMenuType.measurement.icon
+            iconImageView.image =
+                    currentSubType == .measurement ? CardsMenuType.graph.icon : CardsMenuType.measurement.icon
         } else {
             // For alerts and settings, show the normal icon
             iconImageView.image = menuType.icon
@@ -139,6 +198,64 @@ private class LegacyMenuButton: UIButton {
 
     func setCurrentSubType(_ subType: CardsMenuType) {
         currentSubType = subType
+    }
+
+    // MARK: - Alert State Updates (Legacy)
+    func updateAlertState(for snapshot: RuuviTagCardSnapshot?) {
+        guard menuType == .alerts else { return }
+
+        // Remove existing animations
+        iconImageView.layer.removeAllAnimations()
+
+        guard let snapshot = snapshot,
+              snapshot.metadata.isAlertAvailable else {
+            iconImageView.image = nil
+            isUserInteractionEnabled = false
+            return
+        }
+
+        isUserInteractionEnabled = true
+
+        // Check for muted alerts
+        switch snapshot.alertData.alertState {
+        case .empty, .none:
+            if snapshot.metadata.isAlertAvailable {
+                iconImageView.image = RuuviAsset.CardsMenu.iconAlertsOff.image
+                iconImageView.tintColor = .white
+                removeAlertAnimations(alpha: 0.5)
+            }
+
+        case .registered:
+            iconImageView.image = RuuviAsset.CardsMenu.iconAlerts.image
+            iconImageView.tintColor = .white
+            removeAlertAnimations(alpha: 1.0)
+
+        case .firing:
+            iconImageView.image = RuuviAsset.CardsMenu.iconAlertActive.image
+            iconImageView.tintColor = RuuviColor.orangeColor.color
+            iconImageView.alpha = 1.0
+            startAlertAnimation()
+        }
+    }
+
+    private func startAlertAnimation() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            UIView.animate(
+                withDuration: 0.5,
+                delay: 0,
+                options: [.repeat, .autoreverse, .beginFromCurrentState],
+                animations: {
+                    self?.iconImageView.alpha = 0.0
+                }
+            )
+        }
+    }
+
+    private func removeAlertAnimations(alpha: Double = 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.iconImageView.layer.removeAllAnimations()
+            self?.iconImageView.alpha = alpha
+        }
     }
 }
 
@@ -160,6 +277,9 @@ class CardsMenuBarView: UIView {
     private var selectedMenu: CardsMenuType = .measurement
     private let mode: CardsMenuMode
     private var hasAppeared = false
+
+    // MARK: - Alert State Tracking
+    private var currentAlertSnapshot: RuuviTagCardSnapshot?
 
     // MARK: - Callbacks
     var onTabChanged: ((CardsMenuType) -> Void)?
@@ -191,6 +311,29 @@ class CardsMenuBarView: UIView {
 
     func getCurrentTab() -> CardsMenuType {
         return selectedMenu
+    }
+
+    // MARK: - Alert State Management
+    func updateAlertState(for snapshot: RuuviTagCardSnapshot?) {
+        // Only update if snapshot actually changed
+        guard currentAlertSnapshot?.id != snapshot?.id ||
+              currentAlertSnapshot?.alertData != snapshot?.alertData ||
+              currentAlertSnapshot?.metadata.isAlertAvailable != snapshot?.metadata.isAlertAvailable else {
+            return
+        }
+
+        currentAlertSnapshot = snapshot
+
+        // Update the appropriate buttons based on mode
+        if mode == .modern {
+            if let alertButton = modernButtons.first(where: { $0.menuType == .alerts }) {
+                alertButton.updateAlertState(for: snapshot)
+            }
+        } else {
+            if let alertButton = legacyButtons.first(where: { $0.menuType == .alerts }) {
+                alertButton.updateAlertState(for: snapshot)
+            }
+        }
     }
 
     // MARK: - Layout

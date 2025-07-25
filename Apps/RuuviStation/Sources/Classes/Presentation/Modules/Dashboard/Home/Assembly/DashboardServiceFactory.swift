@@ -121,8 +121,8 @@ class DashboardServiceFactory {
         )
     }
 
-    func createCloudSyncService() -> DashboardCloudSyncService {
-        return DashboardCloudSyncService(
+    func createCloudSyncService() -> RuuviCloudService {
+        return RuuviCloudService(
             cloudSyncDaemon: cloudSyncDaemon,
             cloudSyncService: cloudSyncService,
             cloudNotificationService: cloudNotificationService,
@@ -249,7 +249,7 @@ extension DashboardServiceFactory {
         backgrounds: RuuviTagBackgroundService,
         connections: RuuviTagConnectionService,
         settings: DashboardSettingsService,
-        cloudSync: DashboardCloudSyncService
+        cloudSync: RuuviCloudService
     ) {
 
         let sensorDataService = createSensorDataService()

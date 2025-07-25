@@ -41,7 +41,7 @@ final class CardsMainPresenter: CardsLandingViewOutput {
     private let alertService: RuuviTagAlertService
     private let backgroundService: RuuviTagBackgroundService
     private let connectionService: RuuviTagConnectionService
-    private let dashboardCloudSyncService: DashboardCloudSyncService
+    private let dashboardCloudSyncService: RuuviCloudService
     private let settings: RuuviLocalSettings
     private let flags: RuuviLocalFlags
 
@@ -56,7 +56,7 @@ final class CardsMainPresenter: CardsLandingViewOutput {
         alertService: RuuviTagAlertService,
         backgroundService: RuuviTagBackgroundService,
         connectionService: RuuviTagConnectionService,
-        dashboardCloudSyncService: DashboardCloudSyncService,
+        dashboardCloudSyncService: RuuviCloudService,
         settings: RuuviLocalSettings,
         flags: RuuviLocalFlags,
         router: CardsRouterInput
@@ -710,44 +710,65 @@ extension CardsMainPresenter: RuuviTagConnectionServiceDelegate {
     }
 }
 
-extension CardsMainPresenter: DashboardCloudSyncServiceDelegate {
-    func cloudSyncService(
-        _ service: DashboardCloudSyncService,
+extension CardsMainPresenter: RuuviCloudServiceDelegate {
+    func ruuviCloudService(
+        _ service: RuuviCloudService,
         userDidLogin loggedIn: Bool
     ) {
         //
     }
 
-    func cloudSyncService(
-        _ service: DashboardCloudSyncService,
+    func ruuviCloudService(
+        _ service: RuuviCloudService,
         userDidLogOut loggedOut: Bool
     ) {
         //
     }
 
-    func cloudSyncService(
-        _ service: DashboardCloudSyncService,
+    func ruuviCloudService(
+        _ service: RuuviCloudService,
         syncStatusDidChange isRefreshing: Bool
     ) {
-        view?.isRefreshing = isRefreshing
+        switch currentTab {
+        case .measurement, .alerts, .settings:
+            view?.isRefreshing = isRefreshing
+        default:
+            break
+        }
     }
 
-    func cloudSyncService(
-        _ service: DashboardCloudSyncService,
+    func ruuviCloudService(
+        _ service: RuuviCloudService,
+        historySyncInProgress inProgress: Bool,
+        for macId: String
+    ) {
+        switch currentTab {
+        case .graph:
+            if let currentSnapshot = getCurrentSnapshot(),
+                currentSnapshot.identifierData.mac?.value == macId {
+                view?.isRefreshing = inProgress
+            }
+        default:
+            break
+        }
+    }
+
+    func ruuviCloudService(
+        _ service: RuuviCloudService,
         syncDidComplete: Bool
     ) {
         //
     }
 
-    func cloudSyncService(
-        _ service: DashboardCloudSyncService,
+    func ruuviCloudService(
+        _ service: RuuviCloudService,
         authorizationFailed: Bool
     ) {
         //
     }
 
-    func cloudSyncService(
-        _ service: DashboardCloudSyncService,
+    func ruuviCloudService(
+        _ service: RuuviCloudService,
         cloudModeDidChange isEnabled: Bool
     ) {
         //

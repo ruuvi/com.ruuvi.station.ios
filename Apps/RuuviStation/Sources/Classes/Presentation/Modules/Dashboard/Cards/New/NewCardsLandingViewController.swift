@@ -164,7 +164,7 @@ class NewCardsLandingViewController: UIViewController, CardsLandingViewInput, Ti
     private var currentSnapshots: [RuuviTagCardSnapshot] = []
     private var currentSnapshotIndex: Int = 0
 
-    // MARK: - FIXED: Background State Tracking
+    // MARK: - Background State Tracking
     private var currentBackgroundImage: UIImage?
     private var isInitialLoad = true
     private var lastUpdatedSnapshotId: String?
@@ -521,10 +521,18 @@ private extension NewCardsLandingViewController {
 
         let currentSnapshot = currentSnapshots[currentSnapshotIndex]
         let currentSnapshotId = currentSnapshot.id
-        let isNewSnapshot = lastUpdatedSnapshotId != currentSnapshotId
+//        let isNewSnapshot = lastUpdatedSnapshotId != currentSnapshotId
         lastUpdatedSnapshotId = currentSnapshotId
 
-        // FIXED: Always check for background changes, not just new snapshots
+        menuBarView.updateAlertState(for: currentSnapshot)
+
+        print(
+            "Snapshot: ",
+            currentSnapshot.displayData.name,
+            currentSnapshot.alertData
+                .hasActiveAlerts,
+            currentSnapshot.alertData.alertState)
+
         updateBackgroundIfNeeded(currentSnapshot.displayData.background, snapshotId: currentSnapshotId)
 
         ruuviTagNameLabel.text = currentSnapshot.displayData.name
@@ -640,8 +648,6 @@ extension NewCardsLandingViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .cancel))
         present(alert, animated: true)
     }
-
-
 }
 
 // MARK: - Common Dialog Handling

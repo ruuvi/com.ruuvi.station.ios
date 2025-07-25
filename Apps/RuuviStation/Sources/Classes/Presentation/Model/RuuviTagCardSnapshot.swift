@@ -208,6 +208,52 @@ struct RuuviTagCardSnapshotAlertConfig: Equatable {
 // MARK: - Snapshot Update Methods
 extension RuuviTagCardSnapshot {
 
+    // MARK: - Update Metadata
+    func updateMetadata(
+        isConnected: Bool? = nil,
+        serviceUUID: String? = nil,
+        isCloud: Bool? = nil,
+        isOwner: Bool? = nil,
+        isConnectable: Bool? = nil
+    ) {
+        // Calculate isAlertAvailable based on connection status, serviceUUID, and cloud status
+        let currentIsConnected = isConnected ?? self.connectionData.isConnected
+        let currentServiceUUID = serviceUUID ?? self.identifierData.serviceUUID
+        let currentIsCloud = isCloud ?? self.metadata.isCloud
+
+        let newIsAlertAvailable = currentIsConnected ||
+                                  currentServiceUUID != nil ||
+                                  currentIsCloud
+
+        // Update isAlertAvailable if it changed
+        if self.metadata.isAlertAvailable != newIsAlertAvailable {
+            self.metadata.isAlertAvailable = newIsAlertAvailable
+        }
+
+        // Update other metadata properties if provided
+        if let isCloud = isCloud, self.metadata.isCloud != isCloud {
+            self.metadata.isCloud = isCloud
+        }
+
+        if let isOwner = isOwner, self.metadata.isOwner != isOwner {
+            self.metadata.isOwner = isOwner
+        }
+
+        let currentIsConnectable = isConnectable ?? self.connectionData.isConnectable
+        let newIsChartAvailable = currentIsConnectable ||
+                                  currentServiceUUID != nil ||
+                                  currentIsCloud
+        if self.metadata.isChartAvailable != newIsChartAvailable {
+            self.metadata.isChartAvailable = newIsChartAvailable
+        }
+
+        // Update canShareTag based on current values
+        let newCanShareTag = self.metadata.isOwner && !self.metadata.isCloud
+        if self.metadata.canShareTag != newCanShareTag {
+            self.metadata.canShareTag = newCanShareTag
+        }
+    }
+
     // MARK: - Update Connection Data
     func updateConnectionData(
         isConnected: Bool,
@@ -224,6 +270,9 @@ extension RuuviTagCardSnapshot {
         guard self.connectionData != newConnectionData else { return }
 
         self.connectionData = newConnectionData
+
+        // Update metadata when connection data changes
+        updateMetadata(isConnected: isConnected, isConnectable: isConnectable)
     }
 
     // MARK: - Update Background Image
@@ -485,8 +534,8 @@ extension RuuviTagCardSnapshot {
         )
 
         let metadata = RuuviTagCardSnapshotMetadata(
-            isChartAvailable: isConnectable,
-            isAlertAvailable: true,
+            isChartAvailable: isConnectable || isCloud,
+            isAlertAvailable: serviceUUID != nil || isCloud,
             isCloud: isCloud,
             isOwner: isOwner,
             canShareTag: isOwner && !isCloud
@@ -508,6 +557,13 @@ extension RuuviTagCardSnapshot {
 
 // MARK: - Helper Methods for Change Detection
 extension RuuviTagCardSnapshot {
+
+    // MARK: - Calculate Alert Availability
+    private func calculateIsAlertAvailable() -> Bool {
+        return connectionData.isConnected ||
+               identifierData.serviceUUID != nil ||
+               metadata.isCloud
+    }
 
     /// Check if this snapshot has significant changes compared to another
     func hasSignificantChanges(from other: RuuviTagCardSnapshot) -> Bool {

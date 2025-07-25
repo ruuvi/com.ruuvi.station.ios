@@ -27,7 +27,7 @@ class DashboardPresenter {
     private let backgroundService: RuuviTagBackgroundService
     private let connectionService: RuuviTagConnectionService
     private let settingsService: DashboardSettingsService
-    private let cloudSyncService: DashboardCloudSyncService
+    private let cloudSyncService: RuuviCloudService
 
     // MARK: - Additional Dependencies
     var permissionPresenter: PermissionPresenter!
@@ -55,7 +55,7 @@ class DashboardPresenter {
         backgroundService: RuuviTagBackgroundService,
         connectionService: RuuviTagConnectionService,
         settingsService: DashboardSettingsService,
-        cloudSyncService: DashboardCloudSyncService
+        cloudSyncService: RuuviCloudService
     ) {
         self.sensorDataService = sensorDataService
         self.alertService = alertService
@@ -331,24 +331,12 @@ private extension DashboardPresenter {
             (setting.macId?.any != nil && setting.macId?.any == snapshot.identifierData.mac?.any)
         }
 
-        if flags.showRedesignedCardsUIWithNewMenu ||
-            flags.showRedesignedCardsUIWithoutNewMenu {
-            router.openFullSensorCard(
-                for: snapshot,
-                snapshots: sensorDataService.getAllSnapshots(),
-                ruuviTagSensors: sensorDataService.getAllSensors(),
-                sensorSettings: sensorSettings,
-                activeMenu: .settings,
-                output: self
-            )
-        } else {
-            router.openTagSettings(
-                ruuviTag: sensor,
-                latestMeasurement: snapshot.latestRawRecord,
-                sensorSettings: relevantSetting,
-                output: self
-            )
-        }
+        router.openTagSettings(
+            ruuviTag: sensor,
+            latestMeasurement: snapshot.latestRawRecord,
+            sensorSettings: relevantSetting,
+            output: self
+        )
     }
 
     func openCardView(for snapshot: RuuviTagCardSnapshot, sensor: AnyRuuviTagSensor, showCharts: Bool) {
@@ -716,31 +704,39 @@ extension DashboardPresenter: DashboardSettingsServiceDelegate {
     }
 }
 
-extension DashboardPresenter: DashboardCloudSyncServiceDelegate {
+extension DashboardPresenter: RuuviCloudServiceDelegate {
 
-    func cloudSyncService(
-        _ service: DashboardCloudSyncService,
+    func ruuviCloudService(
+        _ service: RuuviCloudService,
         userDidLogin loggedIn: Bool
     ) {
         // No op.
     }
 
-    func cloudSyncService(
-        _ service: DashboardCloudSyncService,
+    func ruuviCloudService(
+        _ service: RuuviCloudService,
         userDidLogOut loggedOut: Bool
     ) {
         sensorDataService.startObservingSensors()
     }
 
-    func cloudSyncService(
-        _ service: DashboardCloudSyncService,
+    func ruuviCloudService(
+        _ service: RuuviCloudService,
         syncStatusDidChange isRefreshing: Bool
     ) {
         view?.isRefreshing = isRefreshing
     }
 
-    func cloudSyncService(
-        _ service: DashboardCloudSyncService,
+    func ruuviCloudService(
+        _ service: RuuviCloudService,
+        historySyncInProgress inProgress: Bool,
+        for macId: String
+    ) {
+        // No op.
+    }
+
+    func ruuviCloudService(
+        _ service: RuuviCloudService,
         syncDidComplete: Bool
     ) {
         if syncDidComplete {
@@ -752,8 +748,8 @@ extension DashboardPresenter: DashboardCloudSyncServiceDelegate {
         }
     }
 
-    func cloudSyncService(
-        _ service: DashboardCloudSyncService,
+    func ruuviCloudService(
+        _ service: RuuviCloudService,
         authorizationFailed: Bool
     ) {
         if authorizationFailed {
@@ -769,8 +765,8 @@ extension DashboardPresenter: DashboardCloudSyncServiceDelegate {
         }
     }
 
-    func cloudSyncService(
-        _ service: DashboardCloudSyncService,
+    func ruuviCloudService(
+        _ service: RuuviCloudService,
         cloudModeDidChange isEnabled: Bool
     ) {
         // Remove connections for cloud tags when cloud mode changes

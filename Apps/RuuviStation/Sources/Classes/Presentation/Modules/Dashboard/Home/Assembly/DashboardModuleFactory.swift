@@ -183,7 +183,7 @@ extension DashboardModuleFactoryImpl {
         return factory.createSettingsService()
     }
 
-    func createCloudSyncService() -> DashboardCloudSyncService {
+    func createCloudSyncService() -> RuuviCloudService {
         let r = AppAssembly.shared.assembler.resolver
         let factory = DashboardServiceFactory.create(from: r)
         return factory.createCloudSyncService()

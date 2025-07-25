@@ -77,11 +77,15 @@ class CardsIndicatorDetailsSheetView: UIViewController {
         label.setContentHuggingPriority(.required, for: .vertical)
         label.setContentCompressionResistancePriority(.required, for: .vertical)
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.isUserInteractionEnabled = true
         return label
     }()
 
     // MARK: - Properties
     private var heightConstraint: NSLayoutConstraint?
+    private var linkTapHandler: ((String) -> Void)?
+    private var linkRanges: [(range: NSRange, url: String)] = []
+    private var tapGestureRecognizer: UITapGestureRecognizer!
 
     // MARK: - Initialization
     static func instantiate() -> CardsIndicatorDetailsSheetView {
@@ -92,6 +96,7 @@ class CardsIndicatorDetailsSheetView: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        setupLinkTapGesture()
     }
 
     override func viewDidLayoutSubviews() {
@@ -168,6 +173,60 @@ class CardsIndicatorDetailsSheetView: UIViewController {
         ])
     }
 
+    private func setupLinkTapGesture() {
+        tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleLabelTap(_:)))
+        tapGestureRecognizer.cancelsTouchesInView = false
+        lblDescription.addGestureRecognizer(tapGestureRecognizer)
+    }
+
+    @objc private func handleLabelTap(_ gesture: UITapGestureRecognizer) {
+        guard gesture.state == .ended else { return }
+
+        let location = gesture.location(in: lblDescription)
+
+        // Check if tap is on a link using UILabel-specific method
+        if let tappedLinkURL = getLinkAtLocation(location, in: lblDescription) {
+            linkTapHandler?(tappedLinkURL)
+        }
+    }
+
+    private func getLinkAtLocation(_ location: CGPoint, in label: UILabel) -> String? {
+        guard let attributedText = label.attributedText,
+              attributedText.length > 0 else { return nil }
+
+        // Create text container and layout manager for the label
+        let textContainer = NSTextContainer(size: label.bounds.size)
+        textContainer.lineFragmentPadding = 0
+        textContainer.maximumNumberOfLines = label.numberOfLines
+        textContainer.lineBreakMode = label.lineBreakMode
+
+        let layoutManager = NSLayoutManager()
+        let textStorage = NSTextStorage(attributedString: attributedText)
+
+        textStorage.addLayoutManager(layoutManager)
+        layoutManager.addTextContainer(textContainer)
+
+        // Get the character index for the tap location
+        let characterIndex = layoutManager.characterIndex(
+            for: location,
+            in: textContainer,
+            fractionOfDistanceBetweenInsertionPoints: nil
+        )
+
+        // Check if this character has a custom link URL
+        if characterIndex < attributedText.length {
+            let linkURL = attributedText.attribute(
+                .init("CustomLinkURL"),
+                at: characterIndex,
+                effectiveRange: nil
+            ) as? String
+
+            return linkURL
+        }
+
+        return nil
+    }
+
     private func updatePreferredContentSize() {
         // Force layout to get accurate measurements
         view.layoutIfNeeded()
@@ -212,7 +271,8 @@ class CardsIndicatorDetailsSheetView: UIViewController {
         value: String? = nil,
         unit: String? = nil,
         description: NSAttributedString? = nil,
-        icon: UIImage? = nil
+        icon: UIImage? = nil,
+        linkHandler: ((String) -> Void)? = nil
     ) {
         if let title = title {
             lblTitle.text = title
@@ -233,6 +293,8 @@ class CardsIndicatorDetailsSheetView: UIViewController {
         if let icon = icon {
             imgView.image = icon.withRenderingMode(.alwaysOriginal)
         }
+
+        self.linkTapHandler = linkHandler
 
         // Trigger layout update after configuration
         DispatchQueue.main.async { [weak self] in
@@ -257,21 +319,28 @@ extension CardsIndicatorDetailsSheetView {
             title: indicator.type.displayName,
             value: value,
             unit: indicator.unit,
-            description: NSAttributedString
-                .fromFormattedDescription(
-                    indicator.type.descriptionText,
-                    titleFont: UIFont.Montserrat(.bold, size: 16),
-                    paragraphFont: UIFont.Muli(.regular, size: 14),
-                    titleColor: .white,
-                    paragraphColor: .white.withAlphaComponent(0.8)
-                ),
-            icon: indicator.type.icon
+            description: NSAttributedString.fromFormattedDescription(
+                indicator.type.descriptionText,
+                titleFont: UIFont.Montserrat(.bold, size: 16),
+                paragraphFont: UIFont.Muli(.regular, size: 14),
+                titleColor: .white,
+                paragraphColor: .white.withAlphaComponent(0.8)
+            ),
+            icon: indicator.type.icon,
+            linkHandler: { url in
+                guard let linkURL = URL(string: url) else {
+                    return
+                }
+                DispatchQueue.main.async {
+                    UIApplication.shared.open(linkURL)
+                }
+            }
         )
         return vc
     }
 }
 
-// MARK: - Fixed UIViewController Extension
+// MARK: - UIViewController Extension
 extension UIViewController {
     func presentDynamicBottomSheet(vc: UIViewController) {
         vc.modalPresentationStyle = .pageSheet
@@ -327,6 +396,7 @@ extension UIViewController {
 
         self.present(nav, animated: true)
     }
+    
 }
 
 extension NSAttributedString {
@@ -338,63 +408,131 @@ extension NSAttributedString {
         paragraphColor: UIColor
     ) -> NSAttributedString {
         let unescaped = escapedHTML.replacingOccurrences(of: "\\n", with: "\n")
-                                   .replacingOccurrences(of: "&lt;", with: "<")
-                                   .replacingOccurrences(of: "&gt;", with: ">")
+            .replacingOccurrences(of: "&lt;", with: "<")
+            .replacingOccurrences(of: "&gt;", with: ">")
+
+        return processFormattedText(
+            unescaped,
+            titleFont: titleFont,
+            paragraphFont: paragraphFont,
+            titleColor: titleColor,
+            paragraphColor: paragraphColor
+        )
+    }
+
+    private static func processFormattedText(
+        _ text: String,
+        titleFont: UIFont,
+        paragraphFont: UIFont,
+        titleColor: UIColor,
+        paragraphColor: UIColor
+    ) -> NSAttributedString {
 
         let result = NSMutableAttributedString()
+        var remainingText = text
 
-        let pattern = "<title>(.*?)</title>"
-        let regex = try! NSRegularExpression(pattern: pattern, options: [])
+        let titlePattern = "<title>(.*?)</title>"
+        let linkPattern = "<link url=\"(.*?)\">(.*?)</link>"
 
-        var remainingText = unescaped
-        var lastIndex = remainingText.startIndex
+        let titleRegex = try! NSRegularExpression(pattern: titlePattern, options: [])
+        let linkRegex = try! NSRegularExpression(pattern: linkPattern, options: [])
 
-        while let match = regex.firstMatch(in: remainingText, range: NSRange(location: 0, length: remainingText.utf16.count)) {
+        while !remainingText.isEmpty {
+            let titleMatch = titleRegex.firstMatch(
+                in: remainingText,
+                range: NSRange(location: 0, length: remainingText.utf16.count)
+            )
+            let linkMatch = linkRegex.firstMatch(
+                in: remainingText,
+                range: NSRange(location: 0, length: remainingText.utf16.count)
+            )
+
+            var nextMatch: NSTextCheckingResult?
+            var isTitle = false
+
+            if let title = titleMatch, let link = linkMatch {
+                if title.range.location < link.range.location {
+                    nextMatch = title
+                    isTitle = true
+                } else {
+                    nextMatch = link
+                    isTitle = false
+                }
+            } else if let title = titleMatch {
+                nextMatch = title
+                isTitle = true
+            } else if let link = linkMatch {
+                nextMatch = link
+                isTitle = false
+            }
+
+            guard let match = nextMatch else {
+                if !remainingText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    let attr = NSAttributedString(
+                        string: remainingText,
+                        attributes: [
+                            .font: paragraphFont,
+                            .foregroundColor: paragraphColor,
+                        ]
+                    )
+                    result.append(attr)
+                }
+                break
+            }
+
             let matchRange = match.range
             let nsString = remainingText as NSString
-            let beforeTitleRange = NSRange(location: 0, length: matchRange.location)
-            let beforeTitleText = nsString.substring(with: beforeTitleRange)
 
-            // Append paragraph text before the title
-            if !beforeTitleText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            let beforeTagRange = NSRange(location: 0, length: matchRange.location)
+            let beforeTagText = nsString.substring(with: beforeTagRange)
+
+            if !beforeTagText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 let attr = NSAttributedString(
-                    string: beforeTitleText,
+                    string: beforeTagText,
                     attributes: [
                         .font: paragraphFont,
-                        .foregroundColor: paragraphColor
+                        .foregroundColor: paragraphColor,
                     ]
                 )
                 result.append(attr)
             }
 
-            // Extract title text
-            if let titleRange = Range(match.range(at: 1), in: remainingText) {
-                let titleText = String(remainingText[titleRange])
-                let attr = NSAttributedString(
-                    string: titleText,
-                    attributes: [
-                        .font: titleFont,
-                        .foregroundColor: titleColor
+            if isTitle {
+                if let titleRange = Range(match.range(at: 1), in: remainingText) {
+                    let titleText = String(remainingText[titleRange])
+                    let attr = NSAttributedString(
+                        string: titleText,
+                        attributes: [
+                            .font: titleFont,
+                            .foregroundColor: titleColor,
+                        ]
+                    )
+                    result.append(attr)
+                }
+            } else {
+                if let urlRange = Range(match.range(at: 1), in: remainingText),
+                   let textRange = Range(match.range(at: 2), in: remainingText) {
+                    let url = String(remainingText[urlRange])
+                    let linkText = String(remainingText[textRange])
+
+                    var linkAttributes: [NSAttributedString.Key: Any] = [
+                        .font: paragraphFont,
+                        .foregroundColor: paragraphColor,
+                        .underlineStyle: NSUnderlineStyle.single.rawValue,
                     ]
-                )
-                result.append(attr)
+
+                    linkAttributes[.init("CustomLinkURL")] = url
+
+                    let attr = NSAttributedString(
+                        string: linkText,
+                        attributes: linkAttributes
+                    )
+                    result.append(attr)
+                }
             }
 
-            // Move remainingText forward
             let matchEnd = matchRange.location + matchRange.length
             remainingText = nsString.substring(from: matchEnd)
-        }
-
-        // Append any trailing paragraph text
-        if !remainingText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            let attr = NSAttributedString(
-                string: remainingText,
-                attributes: [
-                    .font: paragraphFont,
-                    .foregroundColor: paragraphColor
-                ]
-            )
-            result.append(attr)
         }
 
         return result

@@ -63,7 +63,7 @@ final class NewCardsModuleFactoryImpl: NewCardsModuleFactory {
         alertService: RuuviTagAlertService,
         backgroundService: RuuviTagBackgroundService,
         connectionService: RuuviTagConnectionService,
-        dashboardCloudSyncService: DashboardCloudSyncService,
+        dashboardCloudSyncService: RuuviCloudService,
         settings: RuuviLocalSettings,
         flags: RuuviLocalFlags
     ) {
@@ -94,7 +94,7 @@ final class NewCardsModuleFactoryImpl: NewCardsModuleFactory {
             localSyncState: resolver.resolve(RuuviLocalSyncState.self)!
         )
 
-        let dashboardCloudSyncService = DashboardCloudSyncService(
+        let dashboardCloudSyncService = RuuviCloudService(
             cloudSyncDaemon: resolver.resolve(RuuviDaemonCloudSync.self)!,
             cloudSyncService: resolver.resolve(RuuviServiceCloudSync.self)!,
             cloudNotificationService: resolver.resolve(RuuviServiceCloudNotification.self)!,
