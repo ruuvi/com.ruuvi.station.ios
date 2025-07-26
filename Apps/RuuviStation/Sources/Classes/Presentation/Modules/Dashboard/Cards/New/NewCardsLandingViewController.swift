@@ -578,10 +578,6 @@ private extension NewCardsLandingViewController {
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationController?.popViewController(animated: true)
     }
-
-    @objc func refreshButtonDidTap() {
-        output?.viewDidTriggerRefresh()
-    }
 }
 
 // MARK: - CardsLandingViewInput

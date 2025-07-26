@@ -431,26 +431,21 @@ class CardsMenuBarView: UIView {
 
     @objc private func legacyButtonTapped(_ sender: LegacyMenuButton) {
         switch sender.menuType {
-        case .alerts:
-            selectedMenu = .alerts
-
         case .measurementGraph:
             // Toggle between measurement and graph
             if selectedMenu == .measurement {
                 selectedMenu = .graph
             } else if selectedMenu == .graph {
                 selectedMenu = .measurement
-            } else {
-                // Coming from another tab, default to measurement
-                selectedMenu = .measurement
             }
-
+            onTabChanged?(selectedMenu)
+        case .alerts:
+            onTabChanged?(.alerts)
         case .settings:
-            selectedMenu = .settings
+            onTabChanged?(.settings)
         }
 
         updateLegacySelection()
-        onTabChanged?(selectedMenu)
     }
 
     private func updateLegacySelection() {

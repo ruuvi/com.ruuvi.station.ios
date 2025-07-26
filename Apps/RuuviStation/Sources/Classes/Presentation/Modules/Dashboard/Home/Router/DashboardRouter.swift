@@ -12,6 +12,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     private weak var backgroundSelectionModule: BackgroundSelectionModuleInput?
     weak var cards: CardsModuleInput?
     var settings: RuuviLocalSettings!
+    var cardsCoordinator: CardsCoordinator!
 
     // swiftlint:disable weak_delegate
     var menuTableInteractiveTransition: MenuTableTransitioningDelegate!
@@ -127,39 +128,48 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         activeMenu: CardsMenuType,
         output: NewCardsModuleOutput
     ) {
-        let factory: NewCardsModuleFactory = NewCardsModuleFactoryImpl()
-        let module = factory.create()
-        if let moduleOutput = module.output as? NewCardsModuleInput {
-            moduleOutput
-                .configure(
-                    activeSnapshot: snapshot,
-                    snapshots: snapshots,
-                    ruuviTagSensors: ruuviTagSensors,
-                    sensorSettings: sensorSettings,
-                    activeMenu: activeMenu,
-                    output: output
-                )
-        }
+        cardsCoordinator = CardsCoordinator(
+            baseViewController: transitionHandler,
+            for: snapshot,
+            snapshots: snapshots,
+            ruuviTagSensors: ruuviTagSensors,
+            sensorSettings: sensorSettings,
+            activeMenu: activeMenu,
+            output: output
+        )
+        cardsCoordinator.start()
 
-        // Remove any cards view controller from stack if exists already
-        if let navigationController = transitionHandler.navigationController,
-           navigationController
-            .containsViewController(
-                ofKind: NewCardsLandingViewController.self
-            ) {
-            transitionHandler
-                .navigationController?
-                .removeAnyViewControllers(ofKind: NewCardsLandingViewController.self)
-        }
-
-//        transitionHandler.navigationController?
-//            .setNavigationBarHidden(true, animated: true)
-        transitionHandler
-            .navigationController?
-            .pushViewController(
-                module,
-                animated: true
-            )
+//        let factory: NewCardsModuleFactory = NewCardsModuleFactoryImpl()
+//        let module = factory.create()
+//        if let moduleOutput = module.output as? NewCardsModuleInput {
+//            moduleOutput
+//                .configure(
+//                    activeSnapshot: snapshot,
+//                    snapshots: snapshots,
+//                    ruuviTagSensors: ruuviTagSensors,
+//                    sensorSettings: sensorSettings,
+//                    activeMenu: activeMenu,
+//                    output: output
+//                )
+//        }
+//
+//        // Remove any cards view controller from stack if exists already
+//        if let navigationController = transitionHandler.navigationController,
+//           navigationController
+//            .containsViewController(
+//                ofKind: NewCardsLandingViewController.self
+//            ) {
+//            transitionHandler
+//                .navigationController?
+//                .removeAnyViewControllers(ofKind: NewCardsLandingViewController.self)
+//        }
+//
+//        transitionHandler
+//            .navigationController?
+//            .pushViewController(
+//                module,
+//                animated: true
+//            )
     }
 
     func openUpdateFirmware(ruuviTag: RuuviTagSensor) {
