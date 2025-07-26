@@ -141,6 +141,9 @@ class CardsMeasurementPageViewController: UIViewController {
     private var measurementsStackTrailingConstraint: NSLayoutConstraint!
     private var isContentScrollable = false
 
+    // MARK: - Alert Management
+    private var currentMeasurementCards: [MeasurementType: CardsMeasurementIndicatorView] = [:]
+
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -160,6 +163,11 @@ class CardsMeasurementPageViewController: UIViewController {
         }, completion: { _ in
             self.updateDynamicSpacing()
         })
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        restartAlertAnimations()
     }
 
     deinit {
@@ -264,6 +272,13 @@ class CardsMeasurementPageViewController: UIViewController {
                 self?.updateMeasurements()
                 self?.updateProminentIndicator()
                 self?.updateDynamicSpacing()
+            }
+            .store(in: &cancellables)
+
+        snapshot.$alertData
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] alertData in
+                self?.updateAlertData(alertData)
             }
             .store(in: &cancellables)
     }
@@ -470,6 +485,10 @@ class CardsMeasurementPageViewController: UIViewController {
     }
 
     private func updateMeasurements() {
+        // Clear existing cards tracking
+        currentMeasurementCards.removeAll()
+
+        // Remove existing views
         measurementsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
         guard let measurements = getFilteredIndicators() else {
@@ -478,6 +497,44 @@ class CardsMeasurementPageViewController: UIViewController {
 
         let columnConfig = ColumnConfig.forCurrentDevice(containerWidth: view.bounds.width)
         buildGrid(with: measurements, columnConfig: columnConfig)
+    }
+
+    private func updateAlertData(_ alertData: RuuviTagCardSnapshotAlertData?) {
+        // Update alert states for all measurement cards
+        updateIndicatorAlerts()
+
+        // Restart animations if needed (with slight delay to ensure state is updated)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            self.restartAlertAnimations()
+        }
+    }
+
+    private func updateIndicatorAlerts() {
+        guard let snapshot = snapshot else { return }
+
+        // Update alert states for each indicator
+        snapshot.displayData.indicatorGrid?.indicators.forEach { indicatorData in
+            // Update measurement cards only if they exist
+            if let card = currentMeasurementCards[indicatorData.type] {
+                card.configure(with: indicatorData)
+            }
+        }
+
+        // The prominent indicator view updates itself when indicatorData is set
+        updateProminentIndicator()
+    }
+
+    private func restartAlertAnimations() {
+        // Only restart if we have a snapshot with alert data
+        guard snapshot != nil else { return }
+
+        // Restart animations for prominent indicator
+        prominentIndicatorView.restartAlertAnimationIfNeeded()
+
+        // Restart animations for all measurement cards
+        currentMeasurementCards.values.forEach { card in
+            card.restartAlertAnimationIfNeeded()
+        }
     }
 
     // MARK: Grid Building with Proper Column Width Constraints
@@ -496,6 +553,9 @@ class CardsMeasurementPageViewController: UIViewController {
             // Add actual measurement cards with fixed widths
             while cardsInRow < columnConfig.columns && index < indicators.count {
                 let card = createMeasurementCard(for: indicators[index])
+
+                // Track the card for alert updates
+                currentMeasurementCards[indicators[index].type] = card
 
                 // CRITICAL FIX: Set both width constraint AND content hugging/compression resistance
                 let widthConstraint = card.widthAnchor.constraint(equalToConstant: columnConfig.itemWidth)
@@ -557,8 +617,8 @@ class CardsMeasurementPageViewController: UIViewController {
 
     private func createMeasurementCard(
         for measurement: RuuviTagCardSnapshotIndicatorData
-    ) -> UIView {
-        let card = MeasurementCardView()
+    ) -> CardsMeasurementIndicatorView {
+        let card = CardsMeasurementIndicatorView()
         card.configure(with: measurement)
         card.onTap = { [weak self] in
             guard let self = self else { return }

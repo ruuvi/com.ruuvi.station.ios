@@ -1,7 +1,8 @@
 import UIKit
 import RuuviOntology
+import RuuviLocalization
 
-class MeasurementCardView: UIView {
+class CardsMeasurementIndicatorView: UIView {
 
     // MARK: - Layout Constants
     private struct Constants {
@@ -16,9 +17,14 @@ class MeasurementCardView: UIView {
         static let valueFontSize: CGFloat = 24
         static let unitFontSize: CGFloat = 14
         static let titleFontSize: CGFloat = 14
+        static let borderWidth: CGFloat = 1
     }
 
     var onTap: (() -> Void)?
+
+    // MARK: - Alert Properties
+    private let alertBorderLayer = CAShapeLayer()
+    private var isAlertFiring = false
 
     private lazy var iconImageView: UIImageView = {
         let imageView = UIImageView()
@@ -59,11 +65,22 @@ class MeasurementCardView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
+        setupAlertBorder()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setupUI()
+        setupAlertBorder()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateAlertBorderPath()
+    }
+
+    deinit {
+        alertBorderLayer.removeAllAnimations()
     }
 
     private func setupUI() {
@@ -124,6 +141,24 @@ class MeasurementCardView: UIView {
         addGestureRecognizer(tapGesture)
     }
 
+    private func setupAlertBorder() {
+        alertBorderLayer.fillColor = UIColor.clear.cgColor
+        alertBorderLayer.strokeColor = RuuviColor.orangeColor.color.cgColor
+        alertBorderLayer.lineWidth = Constants.borderWidth
+        alertBorderLayer.opacity = 0
+        alertBorderLayer.isHidden = false
+        layer.addSublayer(alertBorderLayer)
+    }
+
+    private func updateAlertBorderPath() {
+        guard alertBorderLayer.superlayer != nil else { return }
+        let borderPath = UIBezierPath(
+            roundedRect: bounds,
+            cornerRadius: Constants.cornerRadius
+        )
+        alertBorderLayer.path = borderPath.cgPath
+    }
+
     @objc private func handleTap() {
         onTap?()
     }
@@ -138,5 +173,58 @@ class MeasurementCardView: UIView {
         // Update tint color based on alert state
         let tintColor = indicator.isHighlighted ? UIColor.orange : UIColor.cyan
         iconImageView.tintColor = tintColor
+
+        // Update alert border
+        updateAlertState(isHighlighted: indicator.isHighlighted)
+    }
+
+    // MARK: - Alert State Management
+    private func updateAlertState(isHighlighted: Bool) {
+        let wasAlertFiring = isAlertFiring
+        isAlertFiring = isHighlighted
+
+        if isAlertFiring && !wasAlertFiring {
+            // Start alert animation
+            startAlertBorderAnimation()
+        } else if !isAlertFiring && wasAlertFiring {
+            // Stop alert animation
+            stopAlertBorderAnimation()
+        } else if !isAlertFiring {
+            // Ensure border is hidden
+            alertBorderLayer.opacity = 0
+        }
+    }
+
+    private func startAlertBorderAnimation() {
+        alertBorderLayer.removeAllAnimations()
+        alertBorderLayer.opacity = 1.0
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            guard let self = self, self.isAlertFiring else { return }
+
+            let animation = CABasicAnimation(keyPath: "opacity")
+            animation.fromValue = 1.0
+            animation.toValue = 0.3
+            animation.duration = 1.0
+            animation.autoreverses = true
+            animation.repeatCount = .infinity
+            animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+
+            self.alertBorderLayer.add(animation, forKey: "pulseAnimation")
+        }
+    }
+
+    private func stopAlertBorderAnimation() {
+        alertBorderLayer.removeAllAnimations()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.alertBorderLayer.opacity = 0
+        }
+    }
+
+    func restartAlertAnimationIfNeeded() {
+        if isAlertFiring {
+            startAlertBorderAnimation()
+        }
     }
 }

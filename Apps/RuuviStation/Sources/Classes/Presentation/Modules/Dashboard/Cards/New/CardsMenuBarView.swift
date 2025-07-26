@@ -91,51 +91,29 @@ private class CardsMenuButton: UIButton {
 
         guard let snapshot = snapshot,
               snapshot.metadata.isAlertAvailable else {
-            iconImageView.image = nil
             isUserInteractionEnabled = false
             return
         }
 
-        isUserInteractionEnabled = true
-
         switch snapshot.alertData.alertState {
         case .empty, .none:
+            iconImageView.tintColor = .white
             if snapshot.metadata.isAlertAvailable {
-                iconImageView.image = RuuviAsset.CardsMenu.iconAlertsOff.image
-                iconImageView.tintColor = .white
-                removeAlertAnimations(alpha: 0.5)
+                isUserInteractionEnabled = true
+                iconImageView.alpha = 1
+            } else {
+                iconImageView.alpha = 0.5
             }
 
         case .registered:
-            iconImageView.image = RuuviAsset.CardsMenu.iconAlerts.image
+            isUserInteractionEnabled = true
             iconImageView.tintColor = .white
-            removeAlertAnimations(alpha: 1.0)
+            iconImageView.alpha = 1.0
 
         case .firing:
-            iconImageView.image = RuuviAsset.CardsMenu.iconAlertActive.image
+            isUserInteractionEnabled = true
             iconImageView.tintColor = RuuviColor.orangeColor.color
             iconImageView.alpha = 1.0
-            startAlertAnimation()
-        }
-    }
-
-    private func startAlertAnimation() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-            UIView.animate(
-                withDuration: 0.5,
-                delay: 0,
-                options: [.repeat, .autoreverse, .beginFromCurrentState],
-                animations: {
-                    self?.iconImageView.alpha = 0.0
-                }
-            )
-        }
-    }
-
-    private func removeAlertAnimations(alpha: Double = 1.0) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-            self?.iconImageView.layer.removeAllAnimations()
-            self?.iconImageView.alpha = alpha
         }
     }
 }
@@ -189,7 +167,8 @@ private class LegacyMenuButton: UIButton {
         if menuType == .measurementGraph {
             // Show the opposite icon - what will happen when tapped
             iconImageView.image =
-                    currentSubType == .measurement ? CardsMenuType.graph.icon : CardsMenuType.measurement.icon
+                    currentSubType == .measurement ?
+                            RuuviAsset.CardsMenu.iconGraphOld.image : CardsMenuType.measurement.icon
         } else {
             // For alerts and settings, show the normal icon
             iconImageView.image = menuType.icon
@@ -214,23 +193,24 @@ private class LegacyMenuButton: UIButton {
             return
         }
 
-        isUserInteractionEnabled = true
-
         // Check for muted alerts
         switch snapshot.alertData.alertState {
         case .empty, .none:
             if snapshot.metadata.isAlertAvailable {
+                isUserInteractionEnabled = true
                 iconImageView.image = RuuviAsset.CardsMenu.iconAlertsOff.image
                 iconImageView.tintColor = .white
                 removeAlertAnimations(alpha: 0.5)
             }
 
         case .registered:
+            isUserInteractionEnabled = true
             iconImageView.image = RuuviAsset.CardsMenu.iconAlerts.image
             iconImageView.tintColor = .white
             removeAlertAnimations(alpha: 1.0)
 
         case .firing:
+            isUserInteractionEnabled = true
             iconImageView.image = RuuviAsset.CardsMenu.iconAlertActive.image
             iconImageView.tintColor = RuuviColor.orangeColor.color
             iconImageView.alpha = 1.0

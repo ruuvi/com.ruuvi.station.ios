@@ -1,5 +1,6 @@
 import UIKit
 import RuuviOntology
+import RuuviLocalization
 
 protocol CardsProminentIndicatorViewDelegate: AnyObject {
     func cardsProminentIndicatorViewDidTap(
@@ -16,6 +17,7 @@ class CardsProminentIndicatorView: UIView {
         static let titleContainerHeight: CGFloat = 48
         static let spacingToTitle: CGFloat = 8
         static let measurementContainerHeight: CGFloat = 80
+        static let borderWidth: CGFloat = 1
 
         static var aqiModeHeight: CGFloat {
             return aqiCircularViewSize + spacingToTitle + titleContainerHeight
@@ -34,6 +36,10 @@ class CardsProminentIndicatorView: UIView {
     }
 
     var delegate: CardsProminentIndicatorViewDelegate?
+
+    // MARK: - Alert Properties
+    private let titleContainerAlertBorderLayer = CAShapeLayer()
+    private var isAlertFiring = false
 
     // MARK: Private
     // MARK: AQI
@@ -124,6 +130,15 @@ class CardsProminentIndicatorView: UIView {
         setupView()
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateTitleContainerAlertBorderPath()
+    }
+
+    deinit {
+        titleContainerAlertBorderLayer.removeAllAnimations()
+    }
+
     // MARK: - Setup
     private func setupView() {
         addSubview(aqiIndicatorView)
@@ -165,6 +180,27 @@ class CardsProminentIndicatorView: UIView {
             UITapGestureRecognizer(target: self,
                                    action: #selector(handleTap))
         )
+
+        // Setup alert border
+        setupTitleContainerAlertBorder()
+    }
+
+    private func setupTitleContainerAlertBorder() {
+        titleContainerAlertBorderLayer.fillColor = UIColor.clear.cgColor
+        titleContainerAlertBorderLayer.strokeColor = RuuviColor.orangeColor.color.cgColor
+        titleContainerAlertBorderLayer.lineWidth = HeightConstants.borderWidth
+        titleContainerAlertBorderLayer.opacity = 0
+        titleContainerAlertBorderLayer.isHidden = false
+        indicatorTitleContainer.layer.addSublayer(titleContainerAlertBorderLayer)
+    }
+
+    private func updateTitleContainerAlertBorderPath() {
+        guard titleContainerAlertBorderLayer.superlayer != nil else { return }
+        let borderPath = UIBezierPath(
+            roundedRect: indicatorTitleContainer.bounds,
+            cornerRadius: 24
+        )
+        titleContainerAlertBorderLayer.path = borderPath.cgPath
     }
 
     private func setupConstraintSets() {
@@ -213,6 +249,7 @@ class CardsProminentIndicatorView: UIView {
             measurementIndicatorContainer.isHidden = true
             indicatorTitleContainer.isHidden = true
             updateViewHeight(for: .measurement) // Default height
+            updateAlertState(isHighlighted: false)
             return
         }
 
@@ -222,6 +259,9 @@ class CardsProminentIndicatorView: UIView {
         // Update common elements
         indicatorIcon.image = indicatorData.type.icon
         indicatorTitleLabel.text = indicatorData.type.displayName
+
+        // Update alert state
+        updateAlertState(isHighlighted: indicatorData.isHighlighted)
 
         switch indicatorData.type {
         case .aqi:
@@ -285,6 +325,56 @@ class CardsProminentIndicatorView: UIView {
 
         // Activate measurement constraints
         NSLayoutConstraint.activate(aqiIndicatorHiddenConstraints)
+    }
+
+    // MARK: - Alert State Management
+    private func updateAlertState(isHighlighted: Bool) {
+        let wasAlertFiring = isAlertFiring
+        isAlertFiring = isHighlighted
+
+        if isAlertFiring && !wasAlertFiring {
+            // Start alert animation
+            startTitleContainerAlertAnimation()
+        } else if !isAlertFiring && wasAlertFiring {
+            // Stop alert animation
+            stopTitleContainerAlertAnimation()
+        } else if !isAlertFiring {
+            // Ensure border is hidden
+            titleContainerAlertBorderLayer.opacity = 0
+        }
+    }
+
+    private func startTitleContainerAlertAnimation() {
+        titleContainerAlertBorderLayer.removeAllAnimations()
+        titleContainerAlertBorderLayer.opacity = 1.0
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            guard let self = self, self.isAlertFiring else { return }
+
+            let animation = CABasicAnimation(keyPath: "opacity")
+            animation.fromValue = 1.0
+            animation.toValue = 0.3
+            animation.duration = 1.0
+            animation.autoreverses = true
+            animation.repeatCount = .infinity
+            animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+
+            self.titleContainerAlertBorderLayer.add(animation, forKey: "pulseAnimation")
+        }
+    }
+
+    private func stopTitleContainerAlertAnimation() {
+        titleContainerAlertBorderLayer.removeAllAnimations()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.titleContainerAlertBorderLayer.opacity = 0
+        }
+    }
+
+    func restartAlertAnimationIfNeeded() {
+        if isAlertFiring {
+            startTitleContainerAlertAnimation()
+        }
     }
 
     // MARK: - Public Height Methods
