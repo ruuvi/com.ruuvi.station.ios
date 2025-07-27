@@ -115,7 +115,7 @@ private extension CardsCoordinator {
             graphPresenter: cardsGraphViewPresenter,
             alertsPresenter: cardsAlertsViewPresenter,
             settingsPresenter: cardsSettingsViewPresenter,
-            ruuviCloudService: ruuviCloudService,
+            ruuviCloudService: ruuviCloudService
         )
         presenter.configure(
             for: snapshot,
