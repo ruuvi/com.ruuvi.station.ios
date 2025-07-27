@@ -1,6 +1,15 @@
 import UIKit
 import RuuviOntology
 import RuuviLocal
+import RuuviService
+import RuuviCore
+import RuuviDaemon
+import RuuviUser
+import RuuviPresenters
+import BTKit
+import RuuviReactor
+import RuuviPool
+import RuuviStorage
 
 class CardsCoordinator: RuuviCoordinator {
     private var cardsBaseViewController: NewCardsBaseViewController!
@@ -16,6 +25,7 @@ class CardsCoordinator: RuuviCoordinator {
     private var cardsSettingsViewPresenter: NewCardsSettingsPresenter!
 
     private var cardsRouter: CardsRouter!
+    private var graphInteractor: TagChartsViewInteractor!
 
     private var snapshot: RuuviTagCardSnapshot!
     private var snapshots: [RuuviTagCardSnapshot] = []
@@ -84,6 +94,16 @@ private extension CardsCoordinator {
     func createBaseViewController() -> NewCardsBaseViewController {
         let r = AppAssembly.shared.assembler.resolver
 
+        let ruuviCloudService = RuuviCloudService(
+            cloudSyncDaemon: r.resolve(RuuviDaemonCloudSync.self)!,
+            cloudSyncService: r.resolve(RuuviServiceCloudSync.self)!,
+            cloudNotificationService: r.resolve(RuuviServiceCloudNotification.self)!,
+            authService: r.resolve(RuuviServiceAuth.self)!,
+            ruuviUser: r.resolve(RuuviUser.self)!,
+            settings: r.resolve(RuuviLocalSettings.self)!,
+            pnManager: r.resolve(RuuviCorePN.self)!
+        )
+
         let viewController = NewCardsBaseViewController(
             tabs: tabs,
             activeTab: activeMenu,
@@ -95,6 +115,7 @@ private extension CardsCoordinator {
             graphPresenter: cardsGraphViewPresenter,
             alertsPresenter: cardsAlertsViewPresenter,
             settingsPresenter: cardsSettingsViewPresenter,
+            ruuviCloudService: ruuviCloudService,
         )
         presenter.configure(
             for: snapshot,
@@ -120,7 +141,7 @@ private extension CardsCoordinator {
 private extension CardsCoordinator {
     func createMeasurementViewController() -> NewCardsMeasurementViewController {
         let viewController = NewCardsMeasurementViewController()
-        viewController.view.backgroundColor = .systemRed
+        viewController.view.backgroundColor = .clear
         let presenter = NewCardsMeasurementPresenter()
         presenter.view = viewController
         viewController.output = presenter
@@ -132,11 +153,46 @@ private extension CardsCoordinator {
 // MARK: Graph
 private extension CardsCoordinator {
     func createGraphViewController() -> NewCardsGraphViewController {
-        let viewController = NewCardsGraphViewController()
-        viewController.view.backgroundColor = .systemBlue
-        let presenter = NewCardsGraphPresenter()
-        presenter.view = viewController
+        let r = AppAssembly.shared.assembler.resolver
+
+        let interactor = TagChartsViewInteractor()
+        graphInteractor = interactor
+        let presenter = NewCardsGraphPresenter(
+            errorPresenter: r.resolve(ErrorPresenter.self)!,
+            settings: r.resolve(RuuviLocalSettings.self)!,
+            foreground: r.resolve(BTForeground.self)!,
+            ruuviReactor: r.resolve(RuuviReactor.self)!,
+            activityPresenter: r.resolve(ActivityPresenter.self)!,
+            alertPresenter: r.resolve(AlertPresenter.self)!,
+            measurementService: r.resolve(RuuviServiceMeasurement.self)!,
+            exportService: r.resolve(RuuviServiceExport.self)!,
+            alertService: r.resolve(RuuviServiceAlert.self)!,
+            background: r.resolve(BTBackground.self)!,
+            flags: r.resolve(RuuviLocalFlags.self)!
+        )
+        presenter.interactor = interactor
+
+        interactor.gattService = r.resolve(GATTService.self)
+        interactor.settings = r.resolve(RuuviLocalSettings.self)
+        interactor.exportService = r.resolve(RuuviServiceExport.self)
+        interactor.ruuviReactor = r.resolve(RuuviReactor.self)
+        interactor.ruuviPool = r.resolve(RuuviPool.self)
+        interactor.ruuviStorage = r.resolve(RuuviStorage.self)
+        interactor.cloudSyncService = r.resolve(RuuviServiceCloudSync.self)
+        interactor.ruuviSensorRecords = r.resolve(RuuviServiceSensorRecords.self)
+        interactor.featureToggleService = r.resolve(FeatureToggleService.self)
+        interactor.localSyncState = r.resolve(RuuviLocalSyncState.self)
+        interactor.ruuviAppSettingsService = r.resolve(RuuviServiceAppSettings.self)
+        interactor.presenter = presenter
+
+        let viewController = NewCardsGraphViewController(
+            output: presenter
+        )
+        viewController.view.backgroundColor = .clear
         viewController.output = presenter
+        presenter.view = viewController
+        viewController.measurementService = r.resolve(RuuviServiceMeasurement.self)!
+
         cardsGraphViewPresenter = presenter
         return viewController
     }
@@ -171,75 +227,41 @@ private extension CardsCoordinator {
 // ROUGH works
 
 // Presenters
-class NewCardsMeasurementPresenter: NSObject, NewCardsMeasurementViewOutput,
-                                    CardsMeasurementPresenterInput {
-    func start() {
-        print("Measurement Start")
-    }
-
-    func stop() {
-        print("Measurement Stop")
-    }
-
-    func activeSnapshotDidChange(to snapshot: RuuviTagCardSnapshot) {
-        //
-    }
-
-    weak var view: NewCardsMeasurementViewInput?
-}
-class NewCardsGraphPresenter: NSObject, NewCardsGraphViewOutput, CardsGraphPresenterInput {
-    func start() {
-        print("Graph Start")
-    }
-
-    func stop() {
-        print("Graph Stop")
-    }
-
-    func activeSnapshotDidChange(to snapshot: RuuviTagCardSnapshot) {
-        print("Graph")
-    }
-
-    weak var view: NewCardsGraphViewInput?
-}
 class NewCardsAlertsPresenter: NSObject, NewCardsAlertsViewOutput, CardsAlertsPresenterInput {
-    func start() {
-        print("Alert start")
-    }
-
-    func stop() {
-        print("Alert stop")
-    }
-
-    func activeSnapshotDidChange(to snapshot: RuuviTagCardSnapshot) {
-        //
-    }
+    func configure(
+        with snapshots: [RuuviTagCardSnapshot],
+        snapshot: RuuviTagCardSnapshot,
+        sensor: AnyRuuviTagSensor?
+    ) {}
+    func configure(
+        with snapshot: RuuviTagCardSnapshot,
+        sensor: AnyRuuviTagSensor?
+    ) {}
+    func start() {}
+    func stop() {}
+    func scroll(to index: Int, animated: Bool) {}
 
     weak var view: NewCardsAlertsViewInput?
 }
+
 class NewCardsSettingsPresenter: NSObject, NewCardsSettingsViewOutput, CardsSettingsPresenterInput {
+    func configure(
+        with snapshots: [RuuviTagCardSnapshot],
+        snapshot: RuuviTagCardSnapshot,
+        sensor: AnyRuuviTagSensor?
+    ) {}
+    func configure(
+        with snapshot: RuuviTagCardSnapshot,
+        sensor: AnyRuuviTagSensor?
+    ) {}
+    func start() {}
+    func stop() {}
+    func scroll(to index: Int, animated: Bool) {}
+
     weak var view: NewCardsSettingsViewInput?
-
-    func start() {
-        print("Alert start")
-    }
-
-    func stop() {
-        print("Alert stop")
-    }
-
-    func activeSnapshotDidChange(to snapshot: RuuviTagCardSnapshot) {
-        //
-    }
 }
 
 // Views
-class NewCardsMeasurementViewController: UIViewController, NewCardsMeasurementViewInput {
-    weak var output: NewCardsMeasurementViewOutput?
-}
-class NewCardsGraphViewController: UIViewController, NewCardsGraphViewInput {
-    weak var output: NewCardsGraphViewOutput?
-}
 class NewCardsAlertsViewController: UIViewController, NewCardsAlertsViewInput {
     weak var output: NewCardsAlertsViewOutput?
 }
@@ -248,33 +270,13 @@ class NewCardsSettingsViewController: UIViewController, NewCardsSettingsViewInpu
 }
 
 // Protocols view
-protocol NewCardsMeasurementViewOutput: AnyObject {}
-protocol NewCardsGraphViewOutput: AnyObject {}
 protocol NewCardsAlertsViewOutput: AnyObject {}
 protocol NewCardsSettingsViewOutput: AnyObject {}
 
-
-protocol NewCardsMeasurementViewInput: AnyObject {}
-protocol NewCardsGraphViewInput: AnyObject {}
 protocol NewCardsAlertsViewInput: AnyObject {}
 protocol NewCardsSettingsViewInput: AnyObject {}
 
 // Protocols Presenters
-protocol CardsMeasurementPresenterOutput: AnyObject {
-    func measurementPresenter(
-        _ presenter: NewCardsMeasurementPresenter,
-        didSelectSnapshot snapshot: RuuviTagCardSnapshot
-    )
-    func measurementPresenter(
-        _ presenter: NewCardsMeasurementPresenter,
-        didNavigateToIndex index: Int
-    )
-    func measurementPresenter(
-        _ presenter: NewCardsMeasurementPresenter,
-        didRequestMeasurementDetails type: MeasurementType
-    )
-}
-protocol CardsGraphPresenterOutput: AnyObject {}
 protocol CardsAlertsPresenterOutput: AnyObject {}
 protocol CardsSettingsPresenterOutput: AnyObject {}
 
@@ -290,26 +292,5 @@ protocol CardsBasePresenterInput: AnyObject {
     )
 }
 
-protocol CardsMeasurementPresenterInput: AnyObject {
-    func start()
-    func stop()
-    func activeSnapshotDidChange(to snapshot: RuuviTagCardSnapshot)
-}
-
-protocol CardsGraphPresenterInput: AnyObject {
-    func start()
-    func stop()
-    func activeSnapshotDidChange(to snapshot: RuuviTagCardSnapshot)
-}
-
-protocol CardsAlertsPresenterInput: AnyObject {
-    func start()
-    func stop()
-    func activeSnapshotDidChange(to snapshot: RuuviTagCardSnapshot)
-}
-
-protocol CardsSettingsPresenterInput: AnyObject {
-    func start()
-    func stop()
-    func activeSnapshotDidChange(to snapshot: RuuviTagCardSnapshot)
-}
+protocol CardsAlertsPresenterInput: CardsPresenterInput {}
+protocol CardsSettingsPresenterInput: CardsPresenterInput {}

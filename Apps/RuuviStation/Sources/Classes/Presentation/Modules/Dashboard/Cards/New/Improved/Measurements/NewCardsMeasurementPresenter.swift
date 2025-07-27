@@ -1,0 +1,67 @@
+import RuuviOntology
+import Foundation
+
+class NewCardsMeasurementPresenter: NSObject {
+    weak var view: NewCardsMeasurementViewInput?
+    weak var output: CardsMeasurementPresenterOutput?
+
+    private var snapshots: [RuuviTagCardSnapshot] = []
+    private var snapshot: RuuviTagCardSnapshot?
+    private var sensor: AnyRuuviTagSensor?
+}
+
+// MARK: CardsMeasurementPresenterInput
+extension NewCardsMeasurementPresenter: CardsMeasurementPresenterInput {
+    func configure(
+        with snapshots: [RuuviTagCardSnapshot],
+        snapshot: RuuviTagCardSnapshot,
+        sensor: AnyRuuviTagSensor?
+    ) {
+        self.snapshots = snapshots
+        configure(with: snapshot, sensor: sensor)
+    }
+
+    func scroll(to index: Int, animated: Bool) {
+        view?.navigateToIndex(index, animated: animated)
+    }
+
+    func configure(
+        with snapshot: RuuviTagCardSnapshot,
+        sensor: AnyRuuviTagSensor?
+    ) {
+        self.snapshot = snapshot
+        self.sensor = sensor
+    }
+
+    func configure(
+        output: CardsMeasurementPresenterOutput?
+    ) {
+        self.output = output
+    }
+
+    func start() {
+        var currentIndex: Int = 0
+        if let snapshot = snapshot {
+            currentIndex = snapshots.firstIndex(of: snapshot) ?? 0
+        }
+        view?.updateSnapshots(snapshots, currentIndex: currentIndex)
+    }
+
+    func stop() {
+        print("Measurement Stop")
+    }
+}
+
+// MARK: NewCardsMeasurementViewOutput
+extension NewCardsMeasurementPresenter: NewCardsMeasurementViewOutput {
+    func viewWillAppear(sender: NewCardsMeasurementViewController) {
+        start()
+    }
+
+    func viewDidScroll(
+        to index: Int,
+        sender: NewCardsMeasurementViewController
+    ) {
+        output?.measurementPresenter(self, didNavigateToIndex: index)
+    }
+}

@@ -79,7 +79,7 @@ class CardsProminentIndicatorView: UIView {
     // MARK: Common
     private lazy var indicatorTitleContainer: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor.white.withAlphaComponent(0.2)
+        view.backgroundColor = UIColor.white.withAlphaComponent(0.15)
         view.layer.cornerRadius = 24
         view.translatesAutoresizingMaskIntoConstraints = false
         return view

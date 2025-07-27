@@ -6,4 +6,5 @@ protocol NewCardsBaseViewInput: AnyObject {
     func setSnapshots(_ snapshots: [RuuviTagCardSnapshot])
     func setActiveSnapshot(_ snapshot: RuuviTagCardSnapshot)
     func setActiveSnapshotIndex(_ index: Int)
+    func setActivityIndicatorVisible(_ visible: Bool)
 }

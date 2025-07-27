@@ -1,14 +1,15 @@
 import UIKit
 import RuuviOntology
 
-// MARK: - Measurement View Controller (Combined with Page Controller)
-final class CardsMeasurementViewController: UIViewController {
+// MARK: - Measurement View Controller
+// View that holds a PageViewController for each Snapshot.
+class NewCardsMeasurementViewController: UIViewController {
 
     // MARK: - Properties
-    var output: CardsMeasurementViewOutput?
+    weak var output: NewCardsMeasurementViewOutput?
 
     // MARK: - State
-    private var allSnapshots: [RuuviTagCardSnapshot] = []
+    private var snapshots: [RuuviTagCardSnapshot] = []
     private var currentIndex: Int = 0
     private var isRebuildingPageViewController = false
     private var lastRebuildTime: Date = Date.distantPast
@@ -28,12 +29,11 @@ final class CardsMeasurementViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        output?.measurementViewDidLoad()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        output?.measurementViewDidBecomeActive()
+        output?.viewWillAppear(sender: self)
     }
 
     // MARK: - UI Setup
@@ -46,43 +46,25 @@ final class CardsMeasurementViewController: UIViewController {
         pageViewController.didMove(toParent: self)
     }
 
-    // MARK: - Navigation Methods
-    func navigateToIndex(_ index: Int, animated: Bool = true) {
-        guard index >= 0 && index < allSnapshots.count && index != currentIndex else { return }
-
-        let direction: UIPageViewController.NavigationDirection = index > currentIndex ? .forward : .reverse
-        currentIndex = index
-
-        if let targetVC = createCardsMeasurementPageViewController(for: index) {
-            pageViewController.setViewControllers(
-                [targetVC],
-                direction: direction,
-                animated: animated
-            ) { [weak self] finished in
-                if finished {
-                    self?.notifyIndexChange()
-                }
-            }
-        }
-    }
-
     // MARK: - Page Creation
-    private func createCardsMeasurementPageViewController(for index: Int) -> CardsMeasurementPageViewController? {
-        guard index >= 0 && index < allSnapshots.count else {
+    private func createCardsMeasurementPageViewController(
+        for index: Int
+    ) -> CardsMeasurementPageViewController? {
+        guard index >= 0 && index < snapshots.count else {
             return nil
         }
 
         let pageVC = CardsMeasurementPageViewController()
         pageVC.pageIndex = index
-        pageVC.configure(with: allSnapshots[index])
+        pageVC.configure(with: snapshots[index])
         pageVC.delegate = self
         return pageVC
     }
 
     // MARK: - Initial Setup
     private func setupInitialPage() {
-        guard !allSnapshots.isEmpty,
-              currentIndex >= 0 && currentIndex < allSnapshots.count,
+        guard !snapshots.isEmpty,
+              currentIndex >= 0 && currentIndex < snapshots.count,
               let initialVC = createCardsMeasurementPageViewController(for: currentIndex) else {
             return
         }
@@ -96,11 +78,11 @@ final class CardsMeasurementViewController: UIViewController {
 
     // MARK: - State Validation and Recovery
     private func shouldRebuildPageViewController() -> Bool {
-        if isRebuildingPageViewController || allSnapshots.isEmpty {
+        if isRebuildingPageViewController || snapshots.isEmpty {
             return false
         }
 
-        if currentIndex < 0 || currentIndex >= allSnapshots.count {
+        if currentIndex < 0 || currentIndex >= snapshots.count {
             return true
         }
 
@@ -131,39 +113,20 @@ final class CardsMeasurementViewController: UIViewController {
 
     // MARK: - Index Change Notification
     private func notifyIndexChange() {
-        output?.measurementViewDidChangeSnapshotIndex(currentIndex)
+        output?.viewDidScroll(to: currentIndex, sender: self)
     }
 }
 
-// MARK: - CardsMeasurementViewInput
-extension CardsMeasurementViewController: CardsMeasurementViewInput {
-
-    func showSelectedSnapshot(_ snapshot: RuuviTagCardSnapshot?) {
-        // Single snapshot mode for backward compatibility ONLY
-        // This should only be called during initial setup, not for updates
-        if let snapshot = snapshot {
-            allSnapshots = [snapshot]
-            currentIndex = 0
-            setupInitialPage()
-        }
-    }
-
-    func updateMeasurementData() {
-        // Only check state if we have snapshots and no valid current page
-        if !allSnapshots.isEmpty && pageViewController.viewControllers?.isEmpty == true {
-            ensureValidPageViewControllerState()
-        } else if currentIndex < allSnapshots.count,
-                  let currentPageVC = pageViewController.viewControllers?.first as? CardsMeasurementPageViewController {
-            // Just update the existing page content
-            currentPageVC.configure(with: allSnapshots[currentIndex])
-        }
-    }
-
-    func updateSnapshots(_ snapshots: [RuuviTagCardSnapshot], currentIndex: Int) {
-        let oldCount = allSnapshots.count
+// MARK: - NewCardsMeasurementViewInput
+extension NewCardsMeasurementViewController: NewCardsMeasurementViewInput {
+    func updateSnapshots(
+        _ snapshots: [RuuviTagCardSnapshot],
+        currentIndex: Int
+    ) {
+        let oldCount = snapshots.count
         let oldIndex = self.currentIndex
 
-        allSnapshots = snapshots
+        self.snapshots = snapshots
         self.currentIndex = max(0, min(currentIndex, snapshots.count - 1))
 
         if snapshots.isEmpty {
@@ -186,8 +149,8 @@ extension CardsMeasurementViewController: CardsMeasurementViewInput {
             if timeSinceLastRebuild < 0.1 {
                 // Just update content instead
                 if let currentPageVC = pageViewController.viewControllers?.first as? CardsMeasurementPageViewController,
-                   self.currentIndex < allSnapshots.count {
-                    currentPageVC.configure(with: allSnapshots[self.currentIndex])
+                   self.currentIndex < snapshots.count {
+                    currentPageVC.configure(with: snapshots[self.currentIndex])
                 }
                 return
             }
@@ -197,42 +160,55 @@ extension CardsMeasurementViewController: CardsMeasurementViewInput {
         } else {
             // Just update existing page content
             if let currentPageVC = pageViewController.viewControllers?.first as? CardsMeasurementPageViewController,
-               self.currentIndex < allSnapshots.count {
-                currentPageVC.configure(with: allSnapshots[self.currentIndex])
+               self.currentIndex < snapshots.count {
+                currentPageVC.configure(with: snapshots[self.currentIndex])
             }
         }
+
     }
 
-    // NEW: Update single snapshot data without rebuilding
-    func updateCurrentSnapshotData(_ snapshot: RuuviTagCardSnapshot) {
-        // Find and update the specific snapshot in our array
-        if let index = allSnapshots.firstIndex(where: { $0.id == snapshot.id }) {
-            allSnapshots[index] = snapshot
+//    func updateSnapshot(_ snapshot: RuuviTagCardSnapshot) {
+//        if let index = snapshots.firstIndex(where: { $0.id == snapshot.id }) {
+//            snapshots[index] = snapshot
+//
+//            // If it's the currently displayed page, update it
+//            if index == currentIndex,
+//               let currentPageVC = pageViewController.viewControllers?.first as? CardsMeasurementPageViewController {
+//                currentPageVC.configure(with: snapshot)
+//            }
+//        }
+//    }
 
-            // If it's the currently displayed page, update it
-            if index == currentIndex,
-               let currentPageVC = pageViewController.viewControllers?.first as? CardsMeasurementPageViewController {
-                currentPageVC.configure(with: snapshot)
+    func navigateToIndex(_ index: Int, animated: Bool) {
+        guard index >= 0 && index < snapshots.count && index != currentIndex else {
+            return
+        }
+
+        let direction: UIPageViewController.NavigationDirection = index > currentIndex ? .forward : .reverse
+        currentIndex = index
+
+        if let targetVC = createCardsMeasurementPageViewController(for: index) {
+            pageViewController.setViewControllers(
+                [targetVC],
+                direction: direction,
+                animated: animated
+            ) { [weak self] finished in
+                if finished {
+                    self?.notifyIndexChange()
+                }
             }
         }
-    }
-
-    func presentIndicatorDetailsSheet(for indicator: RuuviTagCardSnapshotIndicatorData) {
-        let bottomSheetVC = CardsIndicatorDetailsSheetView.createSheet(
-            from: indicator
-        )
-        presentDynamicBottomSheet(vc: bottomSheetVC)
     }
 }
 
 // MARK: - UIPageViewControllerDataSource
-extension CardsMeasurementViewController: UIPageViewControllerDataSource {
+extension NewCardsMeasurementViewController: UIPageViewControllerDataSource {
 
     func pageViewController(
         _ pageViewController: UIPageViewController,
         viewControllerBefore viewController: UIViewController
     ) -> UIViewController? {
-        guard allSnapshots.count > 1 else {
+        guard snapshots.count > 1 else {
             return nil
         }
 
@@ -252,7 +228,7 @@ extension CardsMeasurementViewController: UIPageViewControllerDataSource {
         _ pageViewController: UIPageViewController,
         viewControllerAfter viewController: UIViewController
     ) -> UIViewController? {
-        guard allSnapshots.count > 1 else {
+        guard snapshots.count > 1 else {
             return nil
         }
 
@@ -261,7 +237,7 @@ extension CardsMeasurementViewController: UIPageViewControllerDataSource {
         }
 
         let targetIndex = pageVC.pageIndex + 1
-        guard targetIndex < allSnapshots.count else {
+        guard targetIndex < snapshots.count else {
             return nil
         }
 
@@ -270,7 +246,7 @@ extension CardsMeasurementViewController: UIPageViewControllerDataSource {
 }
 
 // MARK: - UIPageViewControllerDelegate
-extension CardsMeasurementViewController: UIPageViewControllerDelegate {
+extension NewCardsMeasurementViewController: UIPageViewControllerDelegate {
 
     func pageViewController(
         _ pageViewController: UIPageViewController,
@@ -280,7 +256,7 @@ extension CardsMeasurementViewController: UIPageViewControllerDelegate {
     ) {
         guard completed,
               let currentVC = pageViewController.viewControllers?.first as? CardsMeasurementPageViewController,
-              currentVC.pageIndex >= 0 && currentVC.pageIndex < allSnapshots.count else {
+              currentVC.pageIndex >= 0 && currentVC.pageIndex < snapshots.count else {
             return
         }
 
@@ -293,11 +269,14 @@ extension CardsMeasurementViewController: UIPageViewControllerDelegate {
 }
 
 // MARK: - CardsMeasurementPageViewControllerDelegate
-extension CardsMeasurementViewController: CardsMeasurementPageViewControllerDelegate {
+extension NewCardsMeasurementViewController: CardsMeasurementPageViewControllerDelegate {
     func cardsPageDidSelectMeasurementIndicator(
         _ indicator: RuuviTagCardSnapshotIndicatorData,
         in pageViewController: CardsMeasurementPageViewController
     ) {
-        output?.measurementViewDidSelectMeasurement(indicator.type)
+        let bottomSheetVC = CardsIndicatorDetailsSheetView.createSheet(
+            from: indicator
+        )
+        presentDynamicBottomSheet(vc: bottomSheetVC)
     }
 }

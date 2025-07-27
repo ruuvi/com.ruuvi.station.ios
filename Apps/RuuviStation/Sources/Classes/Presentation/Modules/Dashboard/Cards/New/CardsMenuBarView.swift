@@ -84,8 +84,6 @@ private class CardsMenuButton: UIButton {
 
     // MARK: - Alert State Updates
     func updateAlertState(for snapshot: RuuviTagCardSnapshot?) {
-        guard menuType == .alerts else { return }
-
         // Remove existing animations
         iconImageView.layer.removeAllAnimations()
 
@@ -181,7 +179,6 @@ private class LegacyMenuButton: UIButton {
 
     // MARK: - Alert State Updates (Legacy)
     func updateAlertState(for snapshot: RuuviTagCardSnapshot?) {
-        guard menuType == .alerts else { return }
 
         // Remove existing animations
         iconImageView.layer.removeAllAnimations()
@@ -295,16 +292,6 @@ class CardsMenuBarView: UIView {
 
     // MARK: - Alert State Management
     func updateAlertState(for snapshot: RuuviTagCardSnapshot?) {
-        // Only update if snapshot actually changed
-        guard currentAlertSnapshot?.id != snapshot?.id ||
-              currentAlertSnapshot?.alertData != snapshot?.alertData ||
-              currentAlertSnapshot?.metadata.isAlertAvailable != snapshot?.metadata.isAlertAvailable else {
-            return
-        }
-
-        currentAlertSnapshot = snapshot
-
-        // Update the appropriate buttons based on mode
         if mode == .modern {
             if let alertButton = modernButtons.first(where: { $0.menuType == .alerts }) {
                 alertButton.updateAlertState(for: snapshot)

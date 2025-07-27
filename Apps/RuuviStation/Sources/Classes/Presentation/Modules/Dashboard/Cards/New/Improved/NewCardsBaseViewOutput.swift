@@ -2,6 +2,7 @@ import Foundation
 import RuuviOntology
 
 protocol NewCardsBaseViewOutput: AnyObject {
+    func viewWillAppear()
     func viewDidChangeTab(_ tab: CardsMenuType)
-    func viewDidNavigateTo(_ snapshot: RuuviTagCardSnapshot)
+    func viewDidNavigateToSnapshot(at index: Int)
 }

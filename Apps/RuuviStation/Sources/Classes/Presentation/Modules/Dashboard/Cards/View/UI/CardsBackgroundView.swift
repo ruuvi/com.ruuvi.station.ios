@@ -64,4 +64,8 @@ extension CardsBackgroundView {
             cardImageView.image = image
         }
     }
+
+    func backgroundImage() -> UIImage? {
+        return cardImageView.image
+    }
 }

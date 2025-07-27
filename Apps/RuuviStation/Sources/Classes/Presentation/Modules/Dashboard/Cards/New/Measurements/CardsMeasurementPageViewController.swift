@@ -5,8 +5,13 @@ import RuuviLocalization
 
 // MARK: - Single Page Delegate Protocol
 protocol CardsMeasurementPageViewControllerDelegate: AnyObject {
-    func cardsPageDidSelectMeasurement(
-        _ type: MeasurementType,
+//    func cardsPageDidSelectMeasurement(
+//        _ type: MeasurementType,
+//        in pageViewController: CardsMeasurementPageViewController
+//    )
+
+    func cardsPageDidSelectMeasurementIndicator(
+        _ indicator: RuuviTagCardSnapshotIndicatorData,
         in pageViewController: CardsMeasurementPageViewController
     )
 }
@@ -622,7 +627,9 @@ class CardsMeasurementPageViewController: UIViewController {
         card.configure(with: measurement)
         card.onTap = { [weak self] in
             guard let self = self else { return }
-            self.delegate?.cardsPageDidSelectMeasurement(measurement.type, in: self)
+            self.delegate?
+                .cardsPageDidSelectMeasurementIndicator(measurement, in: self)
+//            self.delegate?.cardsPageDidSelectMeasurement(measurement.type, in: self)
         }
         return card
     }
@@ -643,6 +650,6 @@ extension CardsMeasurementPageViewController: CardsProminentIndicatorViewDelegat
         for indicator: RuuviTagCardSnapshotIndicatorData,
         sender: CardsProminentIndicatorView
     ) {
-        delegate?.cardsPageDidSelectMeasurement(indicator.type, in: self)
+        delegate?.cardsPageDidSelectMeasurementIndicator(indicator, in: self)
     }
 }
