@@ -122,7 +122,12 @@ private extension CardsCoordinator {
             graphPresenter: cardsGraphViewPresenter,
             alertsPresenter: cardsAlertsViewPresenter,
             settingsPresenter: cardsSettingsViewPresenter,
-            ruuviCloudService: ruuviCloudService
+            foreground: r.resolve(BTForeground.self)!,
+            ruuviCloudService: ruuviCloudService,
+            settings: r.resolve(RuuviLocalSettings.self)!,
+            connectionPersistence: r.resolve(RuuviLocalConnections.self)!,
+            errorPresenter: r.resolve(ErrorPresenter.self)!,
+            featureToggleService: r.resolve(FeatureToggleService.self)!
         )
         presenter.configure(
             for: snapshot,

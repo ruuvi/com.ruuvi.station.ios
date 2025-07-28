@@ -1,5 +1,9 @@
 import Foundation
 
 protocol CardsGraphPresenterOutput: AnyObject {
-    func graphSyncInProgress() -> Bool
+    func setGraphGattSyncInProgress(_ inProgress: Bool)
+    func graphGattSyncAborted(
+        for snapshot: RuuviTagCardSnapshot,
+        source: AbortSyncSource
+    )
 }

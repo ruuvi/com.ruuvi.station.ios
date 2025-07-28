@@ -12,7 +12,7 @@ protocol NewCardsGraphViewOutput: AnyObject {
     func viewDidTriggerStopSync(for snapshot: RuuviTagCardSnapshot?)
     func viewDidTriggerClear(for snapshot: RuuviTagCardSnapshot?)
     func viewDidConfirmToClear(for snapshot: RuuviTagCardSnapshot?)
-    func viewDidConfirmAbortSync(dismiss: Bool)
+    func viewDidConfirmAbortSync(source: AbortSyncSource)
     func viewDidTapOnExportCSV()
     func viewDidTapOnExportXLSX()
     func viewDidSelectChartHistoryLength(hours: Int)

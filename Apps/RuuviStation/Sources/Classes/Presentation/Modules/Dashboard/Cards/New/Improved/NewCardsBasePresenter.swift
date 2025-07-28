@@ -1,5 +1,10 @@
 import Foundation
 import RuuviOntology
+import RuuviLocal
+import RuuviPresenters
+import RuuviPersistence
+import BTKit
+import CoreBluetooth
 
 class NewCardsBasePresenter: NSObject {
 
@@ -16,7 +21,12 @@ class NewCardsBasePresenter: NSObject {
     weak private var output: CardsBasePresenterOutput?
 
     // MARK: Dependencies
+    private let foreground: BTForeground
     private let ruuviCloudService: RuuviCloudService
+    private let settings: RuuviLocalSettings
+    private let connectionPersistence: RuuviLocalConnections
+    private let errorPresenter: ErrorPresenter
+    private let featureToggleService: FeatureToggleService
 
     // MARK: Properties
     private var snapshot: RuuviTagCardSnapshot!
@@ -25,28 +35,51 @@ class NewCardsBasePresenter: NSObject {
     private var sensorSettings: [SensorSettings] = []
     private var activeMenu: CardsMenuType = .measurement
 
+    private var graphGattSyncInProgress: Bool = false
+
+    private var isBluetoothPermissionGranted: Bool {
+        CBCentralManager.authorization == .allowedAlways
+    }
+
+    // MARK: Observations
+    private var stateToken: ObservationToken?
+
     init(
         measurementPresenter: NewCardsMeasurementPresenter,
         graphPresenter: NewCardsGraphPresenter,
         alertsPresenter: NewCardsAlertsPresenter,
         settingsPresenter: NewCardsSettingsPresenter,
-        ruuviCloudService: RuuviCloudService
+        foreground: BTForeground,
+        ruuviCloudService: RuuviCloudService,
+        settings: RuuviLocalSettings,
+        connectionPersistence: RuuviLocalConnections,
+        errorPresenter: ErrorPresenter,
+        featureToggleService: FeatureToggleService
     ) {
         self.measurementPresenter = measurementPresenter
         self.graphPresenter = graphPresenter
         self.alertsPresenter = alertsPresenter
         self.settingsPresenter = settingsPresenter
 
+        self.foreground = foreground
         self.ruuviCloudService = ruuviCloudService
+        self.settings = settings
+        self.connectionPersistence = connectionPersistence
+        self.errorPresenter = errorPresenter
+        self.featureToggleService = featureToggleService
         super.init()
 
         self.startServices()
+        self.startObservingBluetoothState()
         self.measurementPresenter?.configure(output: self)
+        self.graphPresenter?.configure(output: self)
     }
 }
 
 // MARK: CardsBasePresenterInput
 extension NewCardsBasePresenter: CardsBasePresenterInput {
+
+    // swiftlint:disable:next function_parameter_count
     func configure(
         for snapshot: RuuviTagCardSnapshot,
         snapshots: [RuuviTagCardSnapshot],
@@ -68,6 +101,8 @@ extension NewCardsBasePresenter: CardsBasePresenterInput {
 
     func dismiss(completion: (() -> Void)?) {
         // TODO: Cleanup
+        stopServices()
+        stopObservingBluetoothState()
         // Call Completetion
         completion?()
     }
@@ -97,37 +132,46 @@ extension NewCardsBasePresenter: NewCardsBaseViewOutput {
     }
 
     func viewDidChangeTab(_ tab: CardsMenuType) {
-        if tab == .measurement || tab == .graph {
-            activeMenu = tab
-            if tab == .graph {
-                graphPresenter?.start()
-            }
-        } else {
-            if let sensor = ruuviTagSensors.first(where: {
-                $0.id == snapshot.id
-            }) {
-                let settings = sensorSettings.first(where: {
-                    $0.luid?.value == sensor.luid?.value ||
-                    $0.macId?.value == sensor.macId?.value
-                })
-                router?.openTagSettings(
-                    ruuviTag: sensor,
-                    latestMeasurement: snapshot.latestRawRecord,
-                    sensorSettings: settings,
-                    output: self
-                )
-            }
+        switch tab {
+        case .measurement:
+            viewDidRequestToShowMeasurement(for: snapshot, tab: tab)
+        case .graph:
+            viewDidRequestToShowGraph(for: snapshot, tab: tab)
+        case .alerts, .settings:
+            viewDidRequestToShowSettings(for: snapshot, tab: tab)
         }
     }
 
-    func viewDidNavigateToSnapshot(at index: Int) {
-        guard index >= 0 && index < snapshots.count && index != currentSnapshotIndex() else {
+    func viewDidRequestNavigateToSnapshotIndex(_ index: Int) {
+        switch activeMenu {
+        case .graph:
+            if graphGattSyncInProgress {
+                graphPresenter?
+                    .showAbortSyncConfirmationDialog(
+                        for: snapshot,
+                        from: .rootNavigationButton
+                    )
+            } else {
+                viewShouldNavigateToSnapshotIndex(index)
+            }
+        // For other tabs than graph we do not have a precondition yet.
+        // So, navigate immediately.
+        default:
+            viewShouldNavigateToSnapshotIndex(index)
+        }
+    }
+
+    func viewShouldNavigateToSnapshotIndex(_ index: Int) {
+        guard index >= 0 && index < snapshots.count &&
+                index != currentSnapshotIndex() else {
             return
         }
-        self.snapshot = snapshots[index]
+
+        snapshot = snapshots[index]
 
         // Configure all presenter with active snapshot and associated sensor
         syncPresenters()
+        triggerFirmwareUpdateDialogIfNeeded(for: snapshot)
 
         // Update main view
         view?.setActiveSnapshotIndex(index)
@@ -148,6 +192,68 @@ extension NewCardsBasePresenter: NewCardsBaseViewOutput {
         // Otherwise call the dismiss
         output?.cardsViewDidDismiss(module: self)
     }
+
+    func viewDidConfirmToKeepConnectionChart(to snapshot: RuuviTagCardSnapshot) {
+        if let luid = snapshot.identifierData.luid {
+            connectionPersistence.setKeepConnection(true, for: luid)
+            settings.setKeepConnectionDialogWasShown(for: luid)
+            graphPresenter?.start()
+            view?.showContentsForTab(.graph)
+            activeMenu = .graph
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+
+    func viewDidDismissKeepConnectionDialogChart(for snapshot: RuuviTagCardSnapshot) {
+        if let luid = snapshot.identifierData.luid {
+            settings.setKeepConnectionDialogWasShown(for: luid)
+            graphPresenter?.start()
+            view?.showContentsForTab(.graph)
+            activeMenu = .graph
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+
+    func viewDidConfirmToKeepConnectionSettings(to snapshot: RuuviTagCardSnapshot) {
+        if let luid = snapshot.identifierData.luid {
+            connectionPersistence.setKeepConnection(true, for: luid)
+            settings.setKeepConnectionDialogWasShown(for: luid)
+            showTagSettings(for: snapshot)
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+
+    func viewDidDismissKeepConnectionDialogSettings(for snapshot: RuuviTagCardSnapshot) {
+        if let luid = snapshot.identifierData.luid {
+            settings.setKeepConnectionDialogWasShown(for: luid)
+            showTagSettings(for: snapshot)
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+
+    func viewDidConfirmFirmwareUpdate(for snapshot: RuuviTagCardSnapshot) {
+        if let sensor = ruuviTagSensors
+            .first(where: {
+                $0.luid != nil && ($0.luid?.any == snapshot.identifierData.luid?.any)
+            }) {
+            router?.openUpdateFirmware(ruuviTag: sensor)
+        }
+    }
+
+    /// Trigger this method when user cancel the legacy firmware update dialog for the first time
+    func viewDidIgnoreFirmwareUpdateDialog(for snapshot: RuuviTagCardSnapshot) {
+        view?.showFirmwareDismissConfirmationUpdateDialog(for: snapshot)
+    }
+
+    /// Trigger this method when user confirms the lagacy firmware update dialog dismiss for the second time
+    func viewDidDismissFirmwareUpdateDialog(for snapshot: RuuviTagCardSnapshot) {
+        guard let luid = snapshot.identifierData.luid else { return }
+        settings.setFirmwareUpdateDialogWasShown(for: luid)
+    }
 }
 
 // MARK: CardsMeasurementPresenterOutput
@@ -156,7 +262,39 @@ extension NewCardsBasePresenter: CardsMeasurementPresenterOutput {
         _ presenter: NewCardsMeasurementPresenter,
         didNavigateToIndex index: Int
     ) {
-        viewDidNavigateToSnapshot(at: index)
+        switch activeMenu {
+        case .measurement:
+            viewShouldNavigateToSnapshotIndex(index)
+        default:
+            break
+        }
+    }
+}
+
+// MARK: CardsGraphPresenterOutput
+extension NewCardsBasePresenter: CardsGraphPresenterOutput {
+    func setGraphGattSyncInProgress(_ inProgress: Bool) {
+        graphGattSyncInProgress = inProgress
+    }
+
+    func graphGattSyncAborted(
+        for snapshot: RuuviTagCardSnapshot,
+        source: AbortSyncSource
+    ) {
+        switch source {
+        case .rootBackButton:
+            // Go back to root
+            break
+        case .rootNavigationButton:
+            // Navigate to next/previous
+            break
+        case .topMenuSwitch:
+            // Just switch to measurement
+            break
+        case .inPageCancel:
+            // Do nothing as it is handled on the graph presenter.
+            break
+        }
     }
 }
 
@@ -261,6 +399,127 @@ private extension NewCardsBasePresenter {
                 with: snapshot,
                 sensor: currentSensor()
             )
+    }
+
+    func startObservingBluetoothState() {
+        stateToken = foreground.state(self, closure: { [weak self] observer, state in
+            guard let sSelf = self else { return }
+            if state != .poweredOn || !sSelf.isBluetoothPermissionGranted {
+                observer.view?.showBluetoothDisabled(userDeclined: !sSelf.isBluetoothPermissionGranted)
+            }
+        })
+    }
+
+    func stopObservingBluetoothState() {
+        stateToken?.invalidate()
+    }
+
+    func viewDidRequestToShowGraph(
+        for snapshot: RuuviTagCardSnapshot,
+        tab: CardsMenuType
+    ) {
+        if let luid = snapshot.identifierData.luid {
+            let skipDialogShown   = settings.keepConnectionDialogWasShown(for: luid)
+            let isConnected       = snapshot.connectionData.isConnected
+            let isNotConnectable  = !snapshot.connectionData.isConnectable
+            let isNotOwner        = !snapshot.metadata.isOwner
+            let cloudModeBypass   = settings.cloudModeEnabled && snapshot.metadata.isCloud
+
+            if skipDialogShown
+                || isConnected
+                || isNotConnectable
+                || isNotOwner
+                || cloudModeBypass {
+                graphPresenter?.start()
+                view?.showContentsForTab(tab)
+                activeMenu = tab
+            } else {
+                view?.showKeepConnectionDialogChart(for: snapshot)
+            }
+        } else if snapshot.identifierData.mac != nil {
+            graphPresenter?.start()
+            view?.showContentsForTab(tab)
+            activeMenu = tab
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+
+    func viewDidRequestToShowMeasurement(
+        for snapshot: RuuviTagCardSnapshot,
+        tab: CardsMenuType
+    ) {
+        if graphGattSyncInProgress {
+            graphPresenter?
+                .showAbortSyncConfirmationDialog(
+                    for: snapshot,
+                    from: .topMenuSwitch
+                )
+        } else {
+            // Update presenter
+            activeMenu = tab
+            // Update view
+            view?.showContentsForTab(tab)
+            // Stop graph
+            graphPresenter?.stop()
+        }
+    }
+
+    func viewDidRequestToShowSettings(
+        for snapshot: RuuviTagCardSnapshot,
+        tab: CardsMenuType
+    ) {
+        if let luid = snapshot.identifierData.luid {
+            let skipDialogShown   = settings.keepConnectionDialogWasShown(for: luid)
+            let isConnected       = snapshot.connectionData.isConnected
+            let isNotConnectable  = !snapshot.connectionData.isConnectable
+            let isNotOwner        = !snapshot.metadata.isOwner
+            let cloudModeBypass   = settings.cloudModeEnabled && snapshot.metadata.isCloud
+
+            if skipDialogShown
+                || isConnected
+                || isNotConnectable
+                || isNotOwner
+                || cloudModeBypass {
+                showTagSettings(for: snapshot)
+            } else {
+                view?.showKeepConnectionDialogSettings(for: snapshot)
+            }
+        } else if snapshot.identifierData.mac != nil {
+            showTagSettings(for: snapshot)
+        } else {
+            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
+        }
+    }
+
+    func showTagSettings(for snapshot: RuuviTagCardSnapshot) {
+        if let sensor = ruuviTagSensors.first(where: {
+            $0.id == snapshot.id
+        }) {
+            let settings = sensorSettings.first(where: {
+                $0.luid?.value == sensor.luid?.value ||
+                $0.macId?.value == sensor.macId?.value
+            })
+            router?.openTagSettings(
+                ruuviTag: sensor,
+                latestMeasurement: snapshot.latestRawRecord,
+                sensorSettings: settings,
+                output: self
+            )
+        }
+    }
+
+    func triggerFirmwareUpdateDialogIfNeeded(for snapshot: RuuviTagCardSnapshot) {
+        guard let luid = snapshot.identifierData.luid,
+              let version = snapshot.displayData.version, version < 5,
+              snapshot.metadata.isOwner,
+              featureToggleService.isEnabled(.legacyFirmwareUpdatePopup)
+        else {
+            return
+        }
+        if !settings.firmwareUpdateDialogWasShown(for: luid) {
+            view?.showFirmwareUpdateDialog(for: snapshot)
+        }
     }
 
     func currentSensor() -> AnyRuuviTagSensor? {

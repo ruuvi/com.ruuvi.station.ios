@@ -1,3 +1,5 @@
+// swiftlint:disable file_length
+
 import RuuviLocalization
 import UIKit
 import RuuviLocal
@@ -220,8 +222,10 @@ final class NewCardsBaseViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
         TimestampUpdateService.shared.removeSubscriber(self)
     }
+}
 
-    // MARK: - Setup
+// MARK: - UI Setup
+private extension NewCardsBaseViewController {
     func setUpUI() {
         setUpBaseView()
         setUpSecondaryToolbarView()
@@ -285,7 +289,6 @@ final class NewCardsBaseViewController: UIViewController {
                     size: .init(width: 120, height: 0)
                 )
             menuBarView.onTabChanged = { [weak self] tab in
-                print("Changed to: \(tab)")
                 self?.handleTabChange(tab)
             }
 
@@ -398,17 +401,6 @@ final class NewCardsBaseViewController: UIViewController {
             vc.view.isHidden = tab != activeTab
         }
     }
-
-    private func startObservingAppState() {
-        NotificationCenter
-            .default
-            .addObserver(
-                self,
-                selector: #selector(handleAppWillMoveToForeground),
-                name: UIApplication.willEnterForegroundNotification,
-                object: nil
-            )
-    }
 }
 
 // MARK: Actions
@@ -420,13 +412,13 @@ private extension NewCardsBaseViewController {
     @objc func cardLeftArrowButtonDidTap() {
         guard currentSnapshotIndex > 0 else { return }
         let newIndex = currentSnapshotIndex - 1
-        output?.viewDidNavigateToSnapshot(at: newIndex)
+        output?.viewDidRequestNavigateToSnapshotIndex(newIndex)
     }
 
     @objc func cardRightArrowButtonDidTap() {
         guard currentSnapshotIndex < currentSnapshots.count - 1 else { return }
         let newIndex = currentSnapshotIndex + 1
-        output?.viewDidNavigateToSnapshot(at: newIndex)
+        output?.viewDidRequestNavigateToSnapshotIndex(newIndex)
     }
 
     @objc func handleAppWillMoveToForeground() {
@@ -436,6 +428,17 @@ private extension NewCardsBaseViewController {
 
 // MARK: - Private Helpers
 private extension NewCardsBaseViewController {
+
+    func startObservingAppState() {
+        NotificationCenter
+            .default
+            .addObserver(
+                self,
+                selector: #selector(handleAppWillMoveToForeground),
+                name: UIApplication.willEnterForegroundNotification,
+                object: nil
+            )
+    }
 
     func showTabViewController(for tab: CardsMenuType) {
         guard let selectedVC = tabs[tab] else { return }
@@ -461,17 +464,7 @@ private extension NewCardsBaseViewController {
 
     func handleTabChange(_ tab: CardsMenuType) {
         if flags.showRedesignedCardsUIWithoutNewMenu {
-            switch tab {
-            case .measurement, .graph:
-                UIView.animate(withDuration: 0.3, animations: { [weak self] in
-                    self?.chartViewBackground.alpha = tab == .graph ? 1 : 0
-                })
-                showTabViewController(for: tab)
-                activeTab = tab
-                output?.viewDidChangeTab(tab)
-            case .alerts, .settings:
-                output?.viewDidChangeTab(tab)
-            }
+            output?.viewDidChangeTab(tab)
         } else if flags.showRedesignedCardsUIWithNewMenu {
             showTabViewController(for: tab)
             activeTab = tab
@@ -570,7 +563,7 @@ private extension NewCardsBaseViewController {
             .store(in: &cancellables)
 
         currentSnapshot.$alertData
-            .sink { [weak self] alertData in
+            .sink { [weak self] _ in
                 self?.menuBarView.updateAlertState(for: currentSnapshot)
             }
             .store(in: &cancellables)
@@ -600,16 +593,30 @@ extension NewCardsBaseViewController: NewCardsBaseViewInput {
         handleTabChange(tab)
     }
 
+    func showContentsForTab(_ tab: CardsMenuType) {
+        if flags.showRedesignedCardsUIWithoutNewMenu {
+            switch tab {
+            case .measurement, .graph:
+                UIView.animate(withDuration: 0.3, animations: { [weak self] in
+                    self?.chartViewBackground.alpha = tab == .graph ? 1 : 0
+                })
+                showTabViewController(for: tab)
+                activeTab = tab
+            default:
+                break
+            }
+        } else if flags.showRedesignedCardsUIWithNewMenu {
+            showTabViewController(for: tab)
+            activeTab = tab
+            menuBarView.setSelectedTab(tab, animated: true)
+        }
+    }
+
     func setSnapshots(_ snapshots: [RuuviTagCardSnapshot]) {
         currentSnapshots = snapshots
     }
 
-    func setActiveSnapshot(_ snapshot: RuuviTagCardSnapshot) {
-        // TODO: See if we need it
-    }
-
     func setActiveSnapshotIndex(_ index: Int) {
-        // TODO: See if we need it
         currentSnapshotIndex = index
         updateCurrentSnapshotUI()
     }
@@ -621,4 +628,90 @@ extension NewCardsBaseViewController: NewCardsBaseViewInput {
             activityIndicator.stopAnimating()
         }
     }
+
+    func showBluetoothDisabled(userDeclined: Bool) {
+        let title = RuuviLocalization.Cards.BluetoothDisabledAlert.title
+        let message = RuuviLocalization.Cards.BluetoothDisabledAlert.message
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(
+            title: RuuviLocalization.PermissionPresenter.settings,
+            style: .default,
+            handler: { _ in
+                guard let url = URL(string: userDeclined ?
+                    UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
+                    UIApplication.shared.canOpenURL(url)
+                else {
+                    return
+                }
+                UIApplication.shared.open(url)
+            }
+        ))
+        alertVC
+            .addAction(
+                UIAlertAction(
+                    title: RuuviLocalization.ok,
+                    style: .cancel,
+                    handler: nil
+                )
+        )
+        present(alertVC, animated: true)
+    }
+
+    func showKeepConnectionDialogChart(for snapshot: RuuviTagCardSnapshot) {
+        let message = RuuviLocalization.Cards.KeepConnectionDialog.message
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
+            self?.output?.viewDidDismissKeepConnectionDialogChart(for: snapshot)
+        }))
+        let keepTitle = RuuviLocalization.Cards.KeepConnectionDialog.KeepConnection.title
+        alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
+            self?.output?.viewDidConfirmToKeepConnectionChart(to: snapshot)
+        }))
+        present(alert, animated: true)
+    }
+
+    func showKeepConnectionDialogSettings(for snapshot: RuuviTagCardSnapshot) {
+        let message = RuuviLocalization.Cards.KeepConnectionDialog.message
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
+            self?.output?.viewDidDismissKeepConnectionDialogSettings(for: snapshot)
+        }))
+        let keepTitle = RuuviLocalization.Cards.KeepConnectionDialog.KeepConnection.title
+        alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
+            self?.output?.viewDidConfirmToKeepConnectionSettings(to: snapshot)
+        }))
+        present(alert, animated: true)
+    }
+
+    func showFirmwareUpdateDialog(for snapshot: RuuviTagCardSnapshot) {
+        let message = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.message
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
+            self?.output?.viewDidIgnoreFirmwareUpdateDialog(for: snapshot)
+        }))
+        let checkForUpdateTitle = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title
+        alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
+            self?.output?.viewDidConfirmFirmwareUpdate(for: snapshot)
+        }))
+        present(alert, animated: true)
+    }
+
+    func showFirmwareDismissConfirmationUpdateDialog(for snapshot: RuuviTagCardSnapshot) {
+        let message = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
+            self?.output?.viewDidDismissFirmwareUpdateDialog(for: snapshot)
+        }))
+        let checkForUpdateTitle = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title
+        alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
+            self?.output?.viewDidConfirmFirmwareUpdate(for: snapshot)
+        }))
+        present(alert, animated: true)
+    }
 }
+
+// swiftlint:enable file_length

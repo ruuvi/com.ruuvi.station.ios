@@ -1109,15 +1109,15 @@ extension NewCardsGraphViewController: NewCardsGraphViewInput {
         present(alertVC, animated: true)
     }
 
-    func showSyncAbortAlert(dismiss: Bool) {
+    func showSyncAbortAlert(source: AbortSyncSource) {
         let title = RuuviLocalization.TagCharts.DeleteHistoryConfirmationDialog.title
-        let message = dismiss ? RuuviLocalization.TagCharts.Dismiss.Alert.message :
+        let message = source != .inPageCancel ? RuuviLocalization.TagCharts.Dismiss.Alert.message :
         RuuviLocalization.TagCharts.AbortSync.Alert.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         let actionTitle = RuuviLocalization.TagCharts.AbortSync.Button.title
         alertVC.addAction(UIAlertAction(title: actionTitle, style: .destructive, handler: { [weak self] _ in
-            self?.output?.viewDidConfirmAbortSync(dismiss: dismiss)
+            self?.output?.viewDidConfirmAbortSync(source: source)
         }))
         present(alertVC, animated: true)
     }
@@ -1129,7 +1129,7 @@ extension NewCardsGraphViewController: NewCardsGraphViewInput {
         alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         let actionTitle = RuuviLocalization.TagCharts.AbortSync.Button.title
         alertVC.addAction(UIAlertAction(title: actionTitle, style: .destructive, handler: { [weak self] _ in
-            self?.output?.viewDidConfirmAbortSync(dismiss: false)
+            self?.output?.viewDidConfirmAbortSync(source: .rootNavigationButton)
         }))
         present(alertVC, animated: true)
     }

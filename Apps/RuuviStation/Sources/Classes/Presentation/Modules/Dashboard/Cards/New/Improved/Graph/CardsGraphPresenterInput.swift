@@ -1,7 +1,18 @@
 import Foundation
 import RuuviOntology
 
+enum AbortSyncSource {
+    case rootBackButton
+    case rootNavigationButton
+    case topMenuSwitch
+    case inPageCancel
+}
+
 protocol CardsGraphPresenterInput: CardsPresenterInput {
     func configure(sensorSettings: SensorSettings?)
     func configure(output: CardsGraphPresenterOutput?)
+    func showAbortSyncConfirmationDialog(
+        for snapshot: RuuviTagCardSnapshot,
+        from source: AbortSyncSource
+    )
 }

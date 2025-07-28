@@ -339,7 +339,11 @@ private extension DashboardPresenter {
         )
     }
 
-    func openCardView(for snapshot: RuuviTagCardSnapshot, sensor: AnyRuuviTagSensor, showCharts: Bool) {
+    func openCardView(
+        for snapshot: RuuviTagCardSnapshot,
+        sensor: AnyRuuviTagSensor,
+        showCharts: Bool
+    ) {
         let allSnapshots = sensorDataService.getAllSnapshots()
         let allSensors = sensorDataService.getAllSensors()
         let sensorSettings = sensorDataService.getSensorSettings()

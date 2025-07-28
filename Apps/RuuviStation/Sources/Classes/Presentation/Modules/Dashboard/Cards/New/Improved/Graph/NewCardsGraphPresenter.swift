@@ -38,7 +38,6 @@ class NewCardsGraphPresenter: NSObject {
     // MARK: Observation Tokens
     private var advertisementToken: ObservationToken?
     private var heartbeatToken: ObservationToken?
-    private var stateToken: ObservationToken?
     private var temperatureUnitToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var pressureUnitToken: NSObjectProtocol?
@@ -56,7 +55,11 @@ class NewCardsGraphPresenter: NSObject {
     private var syncNotificationToken: NSObjectProtocol?
 
     // MARK: Helper Properties
-    private var isSyncing: Bool = false
+    private var isSyncing: Bool = false {
+        didSet {
+            output?.setGraphGattSyncInProgress(isSyncing)
+        }
+    }
     private var lastSyncSnapshotDate = Date()
     private var lastChartSyncDate = Date()
     private var isBluetoothPermissionGranted: Bool {
@@ -131,7 +134,6 @@ extension NewCardsGraphPresenter: CardsGraphPresenterInput {
     func start() {
         observeLastOpenedChart()
         startListeningToSettings()
-        startObservingBluetoothState()
         tryToShowSwipeUpHint()
         reloadChartsData()
         stopGattSync()
@@ -142,6 +144,15 @@ extension NewCardsGraphPresenter: CardsGraphPresenterInput {
     func scroll(to index: Int, animated: Bool) {
         view?.setActiveSnapshot(snapshot)
         restartObserving()
+    }
+
+    func showAbortSyncConfirmationDialog(
+        for snapshot: RuuviTagCardSnapshot,
+        from source: AbortSyncSource
+    ) {
+        if self.snapshot == snapshot {
+            view?.showSyncAbortAlert(source: source)
+        }
     }
 }
 
@@ -228,7 +239,7 @@ extension NewCardsGraphPresenter: NewCardsGraphViewOutput {
     }
 
     func viewDidTriggerStopSync(for snapshot: RuuviTagCardSnapshot?) {
-        view?.showSyncAbortAlert(dismiss: false)
+        view?.showSyncAbortAlert(source: .inPageCancel)
     }
 
     func viewDidTriggerClear(for snapshot: RuuviTagCardSnapshot?) {
@@ -248,14 +259,15 @@ extension NewCardsGraphPresenter: NewCardsGraphViewOutput {
         }
     }
 
-    func viewDidConfirmAbortSync(dismiss: Bool) {
-        if dismiss {
-//            output?.cardsGraphSafeToClose(
-//                module: self,
-//                dismissParent: dismiss
-//            )
-        } else {
-            stopGattSync()
+    func viewDidConfirmAbortSync(source: AbortSyncSource) {
+        stopGattSync()
+        isSyncing = false
+
+        if source != .inPageCancel {
+            if let snapshot = snapshot {
+                output?
+                    .graphGattSyncAborted(for: snapshot, source: source)
+            }
         }
     }
 
@@ -331,7 +343,6 @@ extension NewCardsGraphPresenter {
         startObservingCloudSyncNotification()
         observeLastOpenedChart()
         startListeningToSettings()
-        startObservingBluetoothState()
         startObservingNetworkSyncNotification(for: sensor)
         tryToShowSwipeUpHint()
 
@@ -386,7 +397,6 @@ extension NewCardsGraphPresenter {
     }
 
     private func shutDownModule() {
-        stateToken?.invalidate()
         advertisementToken?.invalidate()
         heartbeatToken?.invalidate()
         temperatureUnitToken?.invalidate()
@@ -509,19 +519,6 @@ extension NewCardsGraphPresenter {
             )
     }
 
-    private func startObservingBluetoothState() {
-        stateToken = foreground.state(self, closure: { [weak self] observer, state in
-            guard let sSelf = self else { return }
-            if state != .poweredOn || !sSelf.isBluetoothPermissionGranted {
-                observer.view?.showBluetoothDisabled(userDeclined: !sSelf.isBluetoothPermissionGranted)
-            }
-        })
-    }
-
-    private func stopObservingBluetoothState() {
-        stateToken?.invalidate()
-    }
-
     private func startObservingSensorSettingsChanges() {
         if let ruuviTag = sensor {
             sensorSettingsToken = ruuviReactor.observe(ruuviTag) { [weak self] reactorChange in
@@ -571,7 +568,6 @@ extension NewCardsGraphPresenter {
     }
 
     private func stopRunningProcesses() {
-        stopObservingBluetoothState()
         interactor?.stopObservingTags()
         interactor?.stopObservingRuuviTagsData()
         stopGattSync()
