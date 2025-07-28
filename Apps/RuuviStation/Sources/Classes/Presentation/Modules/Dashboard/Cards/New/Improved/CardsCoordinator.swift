@@ -11,6 +11,10 @@ import RuuviReactor
 import RuuviPool
 import RuuviStorage
 
+protocol CardsCoordinatorDelegate: AnyObject {
+    func cardsCoordinatorDidDismiss(_ coordinator: CardsCoordinator)
+}
+
 class CardsCoordinator: RuuviCoordinator {
     private var cardsBaseViewController: NewCardsBaseViewController!
     private var cardsMeasurementViewController: NewCardsMeasurementViewController!
@@ -32,9 +36,10 @@ class CardsCoordinator: RuuviCoordinator {
     private var ruuviTagSensors: [AnyRuuviTagSensor] = []
     private var sensorSettings: [SensorSettings] = []
     private var activeMenu: CardsMenuType = .measurement
-    private var output: NewCardsModuleOutput!
 
     private var tabs: [CardsMenuType: UIViewController] = [:]
+
+    private weak var delegate: CardsCoordinatorDelegate?
 
     init(
         baseViewController: UIViewController,
@@ -43,7 +48,7 @@ class CardsCoordinator: RuuviCoordinator {
         ruuviTagSensors: [AnyRuuviTagSensor],
         sensorSettings: [SensorSettings],
         activeMenu: CardsMenuType,
-        output: NewCardsModuleOutput
+        delegate: CardsCoordinatorDelegate?
     ) {
         super.init(baseViewController: baseViewController)
         self.snapshot = snapshot
@@ -51,7 +56,7 @@ class CardsCoordinator: RuuviCoordinator {
         self.ruuviTagSensors = ruuviTagSensors
         self.sensorSettings = sensorSettings
         self.activeMenu = activeMenu
-        self.output = output
+        self.delegate = delegate
     }
 
     override func start() {
@@ -68,7 +73,9 @@ class CardsCoordinator: RuuviCoordinator {
 
     override func stop() {
         super.stop()
+        delegate = nil
         // TODO: Cleanup
+        print("Stopped")
     }
 }
 
@@ -122,7 +129,8 @@ private extension CardsCoordinator {
             snapshots: snapshots,
             ruuviTagSensors: ruuviTagSensors,
             sensorSettings: sensorSettings,
-            activeMenu: activeMenu
+            activeMenu: activeMenu,
+            output: self
         )
         presenter.view = viewController
         viewController.output = presenter
@@ -224,6 +232,16 @@ private extension CardsCoordinator {
     }
 }
 
+extension CardsCoordinator: CardsBasePresenterOutput {
+    func cardsViewDidDismiss(module: CardsBasePresenterInput) {
+        module.dismiss(completion: { [weak self] in
+            guard let self else { return }
+            self.baseViewController.navigationController?.popViewController(animated: true)
+            self.delegate?.cardsCoordinatorDidDismiss(self)
+        })
+    }
+}
+
 // ROUGH works
 
 // Presenters
@@ -281,16 +299,6 @@ protocol CardsAlertsPresenterOutput: AnyObject {}
 protocol CardsSettingsPresenterOutput: AnyObject {}
 
 // MARK: - Input Protocols for Cross-Presenter Communication
-
-protocol CardsBasePresenterInput: AnyObject {
-    func configure(
-        for snapshot: RuuviTagCardSnapshot,
-        snapshots: [RuuviTagCardSnapshot],
-        ruuviTagSensors: [AnyRuuviTagSensor],
-        sensorSettings: [SensorSettings],
-        activeMenu: CardsMenuType
-    )
-}
 
 protocol CardsAlertsPresenterInput: CardsPresenterInput {}
 protocol CardsSettingsPresenterInput: CardsPresenterInput {}

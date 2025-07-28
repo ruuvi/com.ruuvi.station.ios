@@ -12,6 +12,9 @@ class NewCardsBasePresenter: NSObject {
     private weak var alertsPresenter: CardsAlertsPresenterInput?
     private weak var settingsPresenter: CardsSettingsPresenterInput?
 
+    // MARK: Module Output
+    weak private var output: CardsBasePresenterOutput?
+
     // MARK: Dependencies
     private let ruuviCloudService: RuuviCloudService
 
@@ -49,16 +52,24 @@ extension NewCardsBasePresenter: CardsBasePresenterInput {
         snapshots: [RuuviTagCardSnapshot],
         ruuviTagSensors: [AnyRuuviTagSensor],
         sensorSettings: [SensorSettings],
-        activeMenu: CardsMenuType
+        activeMenu: CardsMenuType,
+        output: CardsBasePresenterOutput?
     ) {
         self.snapshot = snapshot
         self.snapshots = snapshots
         self.ruuviTagSensors = ruuviTagSensors
         self.sensorSettings = sensorSettings
         self.activeMenu = activeMenu
+        self.output = output
 
         // Configure all presenter with active snapshot and associated sensor
         syncPresenters()
+    }
+
+    func dismiss(completion: (() -> Void)?) {
+        // TODO: Cleanup
+        // Call Completetion
+        completion?()
     }
 }
 
@@ -130,6 +141,12 @@ extension NewCardsBasePresenter: NewCardsBaseViewOutput {
         case .alerts, .settings:
             break // TODO: Implement
         }
+    }
+
+    func viewDidTapBackButton() {
+        // TODO: Check if GATT sync is in progress, show abort sync modal
+        // Otherwise call the dismiss
+        output?.cardsViewDidDismiss(module: self)
     }
 }
 
@@ -210,8 +227,6 @@ extension NewCardsBasePresenter: RuuviCloudServiceDelegate {
     ) {
         //
     }
-
-
 }
 
 // MARK: Private Helpers

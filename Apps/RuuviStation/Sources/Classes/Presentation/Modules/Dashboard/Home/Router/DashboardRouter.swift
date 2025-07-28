@@ -125,8 +125,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         snapshots: [RuuviTagCardSnapshot],
         ruuviTagSensors: [AnyRuuviTagSensor],
         sensorSettings: [SensorSettings],
-        activeMenu: CardsMenuType,
-        output: NewCardsModuleOutput
+        activeMenu: CardsMenuType
     ) {
         cardsCoordinator = CardsCoordinator(
             baseViewController: transitionHandler,
@@ -135,7 +134,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
             ruuviTagSensors: ruuviTagSensors,
             sensorSettings: sensorSettings,
             activeMenu: activeMenu,
-            output: output
+            delegate: self
         )
         cardsCoordinator.start()
 
@@ -340,6 +339,13 @@ extension DashboardRouter: UIAdaptivePresentationControllerDelegate {
         } else {
             delegate.shouldDismissDiscover()
         }
+    }
+}
+
+extension DashboardRouter: CardsCoordinatorDelegate {
+    func cardsCoordinatorDidDismiss(_ coordinator: CardsCoordinator) {
+        cardsCoordinator.stop()
+        cardsCoordinator = nil
     }
 }
 

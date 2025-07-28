@@ -355,8 +355,7 @@ private extension DashboardPresenter {
                 snapshots: sensorDataService.getAllSnapshots(),
                 ruuviTagSensors: sensorDataService.getAllSensors(),
                 sensorSettings: sensorSettings,
-                activeMenu: showCharts ? .graph : .measurement,
-                output: self
+                activeMenu: showCharts ? .graph : .measurement
             )
         } else {
             router.openCardImageView(
@@ -900,17 +899,6 @@ extension DashboardPresenter: CardsModuleOutput {
     }
 
     func cardsViewDidRefresh(module: CardsModuleInput) {
-        // No op.
-    }
-}
-
-extension DashboardPresenter: NewCardsModuleOutput {
-
-    func cardsViewDidDismiss(module: NewCardsModuleInput) {
-        module.dismiss(completion: nil)
-    }
-
-    func cardsViewDidRefresh(module: NewCardsModuleInput) {
         // No op.
     }
 }

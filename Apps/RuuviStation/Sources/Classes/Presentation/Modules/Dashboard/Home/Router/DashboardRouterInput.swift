@@ -15,8 +15,7 @@ protocol DashboardRouterInput {
         snapshots: [RuuviTagCardSnapshot],
         ruuviTagSensors: [AnyRuuviTagSensor],
         sensorSettings: [SensorSettings],
-        activeMenu: CardsMenuType,
-        output: NewCardsModuleOutput
+        activeMenu: CardsMenuType
     )
     func openUpdateFirmware(ruuviTag: RuuviTagSensor)
     func openBackgroundSelectionView(ruuviTag: RuuviTagSensor)

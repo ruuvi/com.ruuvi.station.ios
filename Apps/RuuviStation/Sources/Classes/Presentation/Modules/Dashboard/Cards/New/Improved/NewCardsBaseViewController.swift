@@ -414,9 +414,7 @@ final class NewCardsBaseViewController: UIViewController {
 // MARK: Actions
 private extension NewCardsBaseViewController {
     @objc func backButtonDidTap() {
-        // TODO: Clean properly
-//        output?.backButtonDidTap()
-        navigationController?.popViewController(animated: true)
+        output?.viewDidTapBackButton()
     }
 
     @objc func cardLeftArrowButtonDidTap() {
