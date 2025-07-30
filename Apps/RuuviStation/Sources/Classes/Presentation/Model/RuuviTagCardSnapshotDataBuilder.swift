@@ -561,7 +561,7 @@ struct RuuviTagCardSnapshotDataBuilder {
         sensor: RuuviTagSensor,
         measurementService: RuuviServiceMeasurement?,
         flags: RuuviLocalFlags,
-        alertConfigs: [RuuviTagCardSnapshotAlertConfig],
+        alertConfigs: [RuuviTagCardSnapshotAlertConfig]
     ) -> RuuviTagCardSnapshotIndicatorGridConfiguration? {
         let indicators = createIndicators(
             from: record,
