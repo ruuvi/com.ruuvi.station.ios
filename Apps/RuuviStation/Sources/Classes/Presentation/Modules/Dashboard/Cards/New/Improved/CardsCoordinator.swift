@@ -175,7 +175,7 @@ private extension CardsCoordinator {
             sensorDataService: dataService,
             alertService: alertService,
             backgroundService: backgroundService,
-            connectionService: connectionService,
+            connectionService: connectionService
 
         )
         presenter.configure(
