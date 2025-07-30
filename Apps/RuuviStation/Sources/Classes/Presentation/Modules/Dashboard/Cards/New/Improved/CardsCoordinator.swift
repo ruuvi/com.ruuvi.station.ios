@@ -10,6 +10,7 @@ import BTKit
 import RuuviReactor
 import RuuviPool
 import RuuviStorage
+import RuuviNotifier
 
 protocol CardsCoordinatorDelegate: AnyObject {
     func cardsCoordinatorDidDismiss(_ coordinator: CardsCoordinator)
@@ -76,6 +77,23 @@ class CardsCoordinator: RuuviCoordinator {
         delegate = nil
         // TODO: Cleanup
         print("Stopped")
+        cardsBaseViewPresenter.dismiss(completion: { [weak self] in
+            self?.cardsMeasurementViewPresenter.stop()
+            self?.cardsGraphViewPresenter.stop()
+            self?.cardsAlertsViewPresenter.stop()
+            self?.cardsSettingsViewPresenter.stop()
+
+            
+            self?.cardsMeasurementViewPresenter = nil
+            self?.cardsGraphViewPresenter = nil
+            self?.cardsAlertsViewPresenter = nil
+            self?.cardsSettingsViewPresenter = nil
+
+            self?.cardsMeasurementViewController = nil
+            self?.cardsGraphViewController = nil
+            self?.cardsAlertsViewController = nil
+            self?.cardsSettingsViewController = nil
+        })
     }
 }
 
@@ -100,6 +118,32 @@ private extension CardsCoordinator {
 private extension CardsCoordinator {
     func createBaseViewController() -> NewCardsBaseViewController {
         let r = AppAssembly.shared.assembler.resolver
+
+        let dataService = RuuviTagDataService(
+            ruuviReactor: r.resolve(RuuviReactor.self)!,
+            ruuviStorage: r.resolve(RuuviStorage.self)!,
+            measurementService: r.resolve(RuuviServiceMeasurement.self)!,
+            ruuviSensorPropertiesService: r.resolve(RuuviServiceSensorProperties.self)!,
+            settings: r.resolve(RuuviLocalSettings.self)!,
+            flags: r.resolve(RuuviLocalFlags.self)!
+        )
+
+        let alertService = RuuviTagAlertService(
+            alertService: r.resolve(RuuviServiceAlert.self)!,
+            alertHandler: r.resolve(RuuviNotifier.self)!,
+            settings: r.resolve(RuuviLocalSettings.self)!
+        )
+
+        let backgroundService = RuuviTagBackgroundService(
+            ruuviSensorPropertiesService: r.resolve(RuuviServiceSensorProperties.self)!
+        )
+
+        let connectionService = RuuviTagConnectionService(
+            foreground: r.resolve(BTForeground.self)!,
+            background: r.resolve(BTBackground.self)!,
+            connectionPersistence: r.resolve(RuuviLocalConnections.self)!,
+            localSyncState: r.resolve(RuuviLocalSyncState.self)!
+        )
 
         let ruuviCloudService = RuuviCloudService(
             cloudSyncDaemon: r.resolve(RuuviDaemonCloudSync.self)!,
@@ -127,7 +171,12 @@ private extension CardsCoordinator {
             settings: r.resolve(RuuviLocalSettings.self)!,
             connectionPersistence: r.resolve(RuuviLocalConnections.self)!,
             errorPresenter: r.resolve(ErrorPresenter.self)!,
-            featureToggleService: r.resolve(FeatureToggleService.self)!
+            featureToggleService: r.resolve(FeatureToggleService.self)!,
+            sensorDataService: dataService,
+            alertService: alertService,
+            backgroundService: backgroundService,
+            connectionService: connectionService,
+
         )
         presenter.configure(
             for: snapshot,

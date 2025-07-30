@@ -28,6 +28,11 @@ class NewCardsBasePresenter: NSObject {
     private let errorPresenter: ErrorPresenter
     private let featureToggleService: FeatureToggleService
 
+    private let sensorDataService: RuuviTagDataService
+    private let alertService: RuuviTagAlertService
+    private let backgroundService: RuuviTagBackgroundService
+    private let connectionService: RuuviTagConnectionService
+
     // MARK: Properties
     private var snapshot: RuuviTagCardSnapshot!
     private var snapshots: [RuuviTagCardSnapshot] = []
@@ -54,7 +59,11 @@ class NewCardsBasePresenter: NSObject {
         settings: RuuviLocalSettings,
         connectionPersistence: RuuviLocalConnections,
         errorPresenter: ErrorPresenter,
-        featureToggleService: FeatureToggleService
+        featureToggleService: FeatureToggleService,
+        sensorDataService: RuuviTagDataService,
+        alertService: RuuviTagAlertService,
+        backgroundService: RuuviTagBackgroundService,
+        connectionService: RuuviTagConnectionService
     ) {
         self.measurementPresenter = measurementPresenter
         self.graphPresenter = graphPresenter
@@ -67,6 +76,10 @@ class NewCardsBasePresenter: NSObject {
         self.connectionPersistence = connectionPersistence
         self.errorPresenter = errorPresenter
         self.featureToggleService = featureToggleService
+        self.sensorDataService = sensorDataService
+        self.alertService = alertService
+        self.backgroundService = backgroundService
+        self.connectionService = connectionService
         super.init()
 
         self.startServices()

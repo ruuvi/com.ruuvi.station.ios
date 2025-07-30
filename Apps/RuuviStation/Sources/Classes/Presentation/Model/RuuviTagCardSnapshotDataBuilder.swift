@@ -36,13 +36,16 @@ struct MeasurementResult {
     let isProminent: Bool
     let showSubscript: Bool
     let tintColor: UIColor?
+    let alertConfig: RuuviTagCardSnapshotAlertConfig
 
-    func toIndicatorData(type: MeasurementType) -> RuuviTagCardSnapshotIndicatorData {
+    func toIndicatorData(
+        type: MeasurementType
+    ) -> RuuviTagCardSnapshotIndicatorData {
         return RuuviTagCardSnapshotIndicatorData(
             type: type,
             value: value,
             unit: unit,
-            alertConfig: .inactive,
+            alertConfig: alertConfig,
             isProminent: isProminent,
             showSubscript: showSubscript,
             tintColor: tintColor
@@ -55,6 +58,7 @@ protocol MeasurementExtractor {
     func extract(
         from record: RuuviTagSensorRecord,
         measurementService: RuuviServiceMeasurement?,
+        alertConfig: RuuviTagCardSnapshotAlertConfig,
         flags: RuuviLocalFlags
     ) -> MeasurementResult?
 }
@@ -64,6 +68,7 @@ struct TemperatureMeasurementExtractor: MeasurementExtractor {
     func extract(
         from record: RuuviTagSensorRecord,
         measurementService: RuuviServiceMeasurement?,
+        alertConfig: RuuviTagCardSnapshotAlertConfig,
         flags: RuuviLocalFlags
     ) -> MeasurementResult? {
         guard let temperature = record.temperature,
@@ -79,7 +84,8 @@ struct TemperatureMeasurementExtractor: MeasurementExtractor {
             unit: unit,
             isProminent: isProminent,
             showSubscript: flags.showRedesignedDashboardUI,
-            tintColor: nil
+            tintColor: nil,
+            alertConfig: alertConfig
         )
     }
 }
@@ -88,6 +94,7 @@ struct HumidityMeasurementExtractor: MeasurementExtractor {
     func extract(
         from record: RuuviTagSensorRecord,
         measurementService: RuuviServiceMeasurement?,
+        alertConfig: RuuviTagCardSnapshotAlertConfig,
         flags: RuuviLocalFlags
     ) -> MeasurementResult? {
         guard let humidity = record.humidity,
@@ -109,7 +116,8 @@ struct HumidityMeasurementExtractor: MeasurementExtractor {
             unit: formattedUnit,
             isProminent: false,
             showSubscript: false,
-            tintColor: nil
+            tintColor: nil,
+            alertConfig: alertConfig
         )
     }
 }
@@ -118,6 +126,7 @@ struct PressureMeasurementExtractor: MeasurementExtractor {
     func extract(
         from record: RuuviTagSensorRecord,
         measurementService: RuuviServiceMeasurement?,
+        alertConfig: RuuviTagCardSnapshotAlertConfig,
         flags: RuuviLocalFlags
     ) -> MeasurementResult? {
         guard let pressure = record.pressure,
@@ -131,7 +140,8 @@ struct PressureMeasurementExtractor: MeasurementExtractor {
             unit: unit,
             isProminent: false,
             showSubscript: false,
-            tintColor: nil
+            tintColor: nil,
+            alertConfig: alertConfig
         )
     }
 }
@@ -140,6 +150,7 @@ struct MovementMeasurementExtractor: MeasurementExtractor {
     func extract(
         from record: RuuviTagSensorRecord,
         measurementService: RuuviServiceMeasurement?,
+        alertConfig: RuuviTagCardSnapshotAlertConfig,
         flags: RuuviLocalFlags
     ) -> MeasurementResult? {
         guard let movement = record.movementCounter else { return nil }
@@ -149,7 +160,8 @@ struct MovementMeasurementExtractor: MeasurementExtractor {
             unit: RuuviLocalization.Cards.Movements.title,
             isProminent: false,
             showSubscript: false,
-            tintColor: nil
+            tintColor: nil,
+            alertConfig: alertConfig
         )
     }
 }
@@ -158,6 +170,7 @@ struct AQIMeasurementExtractor: MeasurementExtractor {
     func extract(
         from record: RuuviTagSensorRecord,
         measurementService: RuuviServiceMeasurement?,
+        alertConfig: RuuviTagCardSnapshotAlertConfig,
         flags: RuuviLocalFlags
     ) -> MeasurementResult? {
         guard let (currentAirQIndex, maximumAirQIndex, state) = measurementService?.aqiString(
@@ -170,7 +183,8 @@ struct AQIMeasurementExtractor: MeasurementExtractor {
             unit: RuuviLocalization.airQuality,
             isProminent: true,
             showSubscript: true,
-            tintColor: state.color
+            tintColor: state.color,
+            alertConfig: alertConfig
         )
     }
 }
@@ -180,6 +194,7 @@ struct CO2MeasurementExtractor: MeasurementExtractor {
     func extract(
         from record: RuuviTagSensorRecord,
         measurementService: RuuviServiceMeasurement?,
+        alertConfig: RuuviTagCardSnapshotAlertConfig,
         flags: RuuviLocalFlags
     ) -> MeasurementResult? {
         guard let co2 = record.co2,
@@ -190,7 +205,8 @@ struct CO2MeasurementExtractor: MeasurementExtractor {
             unit: RuuviLocalization.unitCo2,
             isProminent: false,
             showSubscript: false,
-            tintColor: nil
+            tintColor: nil,
+            alertConfig: alertConfig
         )
     }
 }
@@ -199,6 +215,7 @@ struct PM25MeasurementExtractor: MeasurementExtractor {
     func extract(
         from record: RuuviTagSensorRecord,
         measurementService: RuuviServiceMeasurement?,
+        alertConfig: RuuviTagCardSnapshotAlertConfig,
         flags: RuuviLocalFlags
     ) -> MeasurementResult? {
         guard let pm25 = record.pm25,
@@ -209,7 +226,8 @@ struct PM25MeasurementExtractor: MeasurementExtractor {
             unit: "\(RuuviLocalization.pm25), \(RuuviLocalization.unitPm25)",
             isProminent: false,
             showSubscript: false,
-            tintColor: nil
+            tintColor: nil,
+            alertConfig: alertConfig
         )
     }
 }
@@ -218,6 +236,7 @@ struct PM10MeasurementExtractor: MeasurementExtractor {
     func extract(
         from record: RuuviTagSensorRecord,
         measurementService: RuuviServiceMeasurement?,
+        alertConfig: RuuviTagCardSnapshotAlertConfig,
         flags: RuuviLocalFlags
     ) -> MeasurementResult? {
         guard let pm10 = record.pm10,
@@ -228,7 +247,8 @@ struct PM10MeasurementExtractor: MeasurementExtractor {
             unit: "\(RuuviLocalization.pm10), \(RuuviLocalization.unitPm10)",
             isProminent: false,
             showSubscript: false,
-            tintColor: nil
+            tintColor: nil,
+            alertConfig: alertConfig
         )
     }
 }
@@ -237,6 +257,7 @@ struct NOXMeasurementExtractor: MeasurementExtractor {
     func extract(
         from record: RuuviTagSensorRecord,
         measurementService: RuuviServiceMeasurement?,
+        alertConfig: RuuviTagCardSnapshotAlertConfig,
         flags: RuuviLocalFlags
     ) -> MeasurementResult? {
         guard let nox = record.nox,
@@ -247,7 +268,8 @@ struct NOXMeasurementExtractor: MeasurementExtractor {
             unit: RuuviLocalization.unitNox,
             isProminent: false,
             showSubscript: false,
-            tintColor: nil
+            tintColor: nil,
+            alertConfig: alertConfig
         )
     }
 }
@@ -256,6 +278,7 @@ struct VOCMeasurementExtractor: MeasurementExtractor {
     func extract(
         from record: RuuviTagSensorRecord,
         measurementService: RuuviServiceMeasurement?,
+        alertConfig: RuuviTagCardSnapshotAlertConfig,
         flags: RuuviLocalFlags
     ) -> MeasurementResult? {
         guard let voc = record.voc,
@@ -266,7 +289,8 @@ struct VOCMeasurementExtractor: MeasurementExtractor {
             unit: RuuviLocalization.unitVoc,
             isProminent: false,
             showSubscript: false,
-            tintColor: nil
+            tintColor: nil,
+            alertConfig: alertConfig
         )
     }
 }
@@ -275,6 +299,7 @@ struct LuminosityMeasurementExtractor: MeasurementExtractor {
     func extract(
         from record: RuuviTagSensorRecord,
         measurementService: RuuviServiceMeasurement?,
+        alertConfig: RuuviTagCardSnapshotAlertConfig,
         flags: RuuviLocalFlags
     ) -> MeasurementResult? {
         guard let luminosity = record.luminance,
@@ -285,7 +310,8 @@ struct LuminosityMeasurementExtractor: MeasurementExtractor {
             unit: RuuviLocalization.unitLuminosity,
             isProminent: false,
             showSubscript: false,
-            tintColor: nil
+            tintColor: nil,
+            alertConfig: alertConfig
         )
     }
 }
@@ -294,6 +320,7 @@ struct SoundMeasurementExtractor: MeasurementExtractor {
     func extract(
         from record: RuuviTagSensorRecord,
         measurementService: RuuviServiceMeasurement?,
+        alertConfig: RuuviTagCardSnapshotAlertConfig,
         flags: RuuviLocalFlags
     ) -> MeasurementResult? {
         guard let sound = record.dbaInstant,
@@ -304,7 +331,8 @@ struct SoundMeasurementExtractor: MeasurementExtractor {
             unit: "\(RuuviLocalization.realTime), \(RuuviLocalization.unitSound)",
             isProminent: false,
             showSubscript: false,
-            tintColor: nil
+            tintColor: nil,
+            alertConfig: alertConfig
         )
     }
 }
@@ -422,6 +450,7 @@ struct AlertConfigurationManager {
         let mutedTill = alertService.mutedTill(type: alertType, for: physicalSensor)
 
         return RuuviTagCardSnapshotAlertConfig(
+            type: type,
             isActive: isOn,
             isFiring: false,
             mutedTill: mutedTill
@@ -532,12 +561,13 @@ struct RuuviTagCardSnapshotDataBuilder {
         sensor: RuuviTagSensor,
         measurementService: RuuviServiceMeasurement?,
         flags: RuuviLocalFlags,
-        alertData: RuuviTagCardSnapshotAlertData
+        alertConfigs: [RuuviTagCardSnapshotAlertConfig],
     ) -> RuuviTagCardSnapshotIndicatorGridConfiguration? {
         let indicators = createIndicators(
             from: record,
             sensor: sensor,
             measurementService: measurementService,
+            alertConfigs: alertConfigs,
             flags: flags
         )
 
@@ -549,16 +579,21 @@ struct RuuviTagCardSnapshotDataBuilder {
         from record: RuuviTagSensorRecord,
         sensor: RuuviTagSensor,
         measurementService: RuuviServiceMeasurement?,
+        alertConfigs: [RuuviTagCardSnapshotAlertConfig],
         flags: RuuviLocalFlags
     ) -> [RuuviTagCardSnapshotIndicatorData] {
         let firmwareVersion = RuuviFirmwareVersion.firmwareVersion(from: sensor.version)
         let measurementTypes = FirmwareVersionManager.getMeasurementTypes(for: firmwareVersion)
 
         return measurementTypes.compactMap { type in
+            let alertConfig = alertConfigs.first(
+                where: { $0.type == type
+                }) ?? RuuviTagCardSnapshotAlertConfig.inactive
             guard let extractor = MeasurementExtractorFactory.extractor(for: type),
                   let result = extractor.extract(
                     from: record,
                     measurementService: measurementService,
+                    alertConfig: alertConfig,
                     flags: flags
                   ) else {
                 return nil

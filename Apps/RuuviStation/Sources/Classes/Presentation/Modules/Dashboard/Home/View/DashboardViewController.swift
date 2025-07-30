@@ -393,7 +393,7 @@ private extension DashboardViewController {
         appDidBecomeActiveToken = NotificationCenter
                 .default
                 .addObserver(
-                    forName: UIApplication.didBecomeActiveNotification,
+                    forName: UIApplication.willEnterForegroundNotification,
                     object: nil,
                     queue: .main
                 ) { [weak self] _ in
@@ -876,6 +876,16 @@ extension DashboardViewController: UIGestureRecognizerDelegate {
 
 // MARK: - UICollectionViewDelegate
 extension DashboardViewController: UICollectionViewDelegate {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        willDisplay cell: UICollectionViewCell,
+        forItemAt indexPath: IndexPath
+    ) {
+        if let cell = cell as? DashboardCell {
+            cell.restartAlertAnimationIfNeeded()
+        }
+    }
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let snapshot = dataSource.itemIdentifier(for: indexPath) else { return }
         output.viewDidTriggerDashboardCard(for: snapshot)

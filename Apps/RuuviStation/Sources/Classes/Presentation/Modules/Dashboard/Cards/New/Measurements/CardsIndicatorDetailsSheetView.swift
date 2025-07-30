@@ -126,7 +126,8 @@ class CardsIndicatorDetailsSheetView: UIViewController {
     }
 
     private func setupConstraints() {
-        NSLayoutConstraint.activate([
+        NSLayoutConstraint.activate(
+[
             // Scroll view constraints
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
@@ -169,8 +170,13 @@ class CardsIndicatorDetailsSheetView: UIViewController {
             lblDescription.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 12),
             lblDescription.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             lblDescription.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
-            lblDescription.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-        ])
+            lblDescription.bottomAnchor
+                .constraint(
+                    equalTo: contentView.bottomAnchor,
+                    constant: UIDevice
+                        .current.userInterfaceIdiom == .pad ? -20 : 0)
+        ]
+)
     }
 
     private func setupLinkTapGesture() {

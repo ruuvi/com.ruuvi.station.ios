@@ -34,7 +34,6 @@ class DashboardIndicatorProminentView: UIView {
     }()
 
     private var valueContainer: UIView!
-    private var isHighlighted: Bool = false
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -110,10 +109,6 @@ extension DashboardIndicatorProminentView {
     }
 
     func changeColor(highlight: Bool) {
-        if isHighlighted == highlight {
-            return
-        }
-        isHighlighted = highlight
         let mainColor = highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicatorBig.color
         let subscriptColor = highlight ? RuuviColor.orangeColor.color :
                             RuuviColor.dashboardIndicator.color.withAlphaComponent(0.6)

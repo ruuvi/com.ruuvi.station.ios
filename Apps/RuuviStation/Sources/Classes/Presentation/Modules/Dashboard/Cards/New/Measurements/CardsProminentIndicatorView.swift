@@ -39,7 +39,10 @@ class CardsProminentIndicatorView: UIView {
 
     // MARK: - Alert Properties
     private let titleContainerAlertBorderLayer = CAShapeLayer()
-    private var isAlertFiring = false
+
+    // MARK: - Alert State Tracking
+    private var currentAlertState: Bool = false
+    private var currentIndicatorData: RuuviTagCardSnapshotIndicatorData?
 
     // MARK: Private
     // MARK: AQI
@@ -59,7 +62,7 @@ class CardsProminentIndicatorView: UIView {
     private lazy var measurementValueLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont.Oswald(.bold, size: 42)
+        label.font = UIFont.Oswald(.bold, size: 60)
         label.textColor = .white
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -69,7 +72,7 @@ class CardsProminentIndicatorView: UIView {
     private lazy var measurementUnitLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
-        label.font = UIFont.Oswald(.regular, size: 16)
+        label.font = UIFont.Oswald(.regular, size: 30)
         label.numberOfLines = 1
         label.textColor = UIColor.white.withAlphaComponent(0.8)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -224,18 +227,28 @@ class CardsProminentIndicatorView: UIView {
                 equalTo: indicatorTitleContainer.topAnchor,
                 constant: -HeightConstants.spacingToTitle
             ),
-            measurementIndicatorContainer.centerXAnchor.constraint(equalTo: centerXAnchor),
+            measurementIndicatorContainer.leadingAnchor
+                .constraint(equalTo: leadingAnchor),
+            measurementIndicatorContainer.trailingAnchor
+                .constraint(equalTo: trailingAnchor),
             measurementIndicatorContainer.heightAnchor.constraint(
                 equalToConstant: HeightConstants.measurementContainerHeight
             ),
 
             // Value label constraints - centered in container but aligned to create superscript effect
             measurementValueLabel.centerYAnchor.constraint(equalTo: measurementIndicatorContainer.centerYAnchor),
-            measurementValueLabel.leadingAnchor.constraint(equalTo: measurementIndicatorContainer.leadingAnchor),
+            measurementValueLabel.centerXAnchor
+                .constraint(
+                    equalTo: measurementIndicatorContainer.centerXAnchor
+                ),
 
             // Unit label constraints - positioned as superscript (top-right)
-            measurementUnitLabel.topAnchor.constraint(equalTo: measurementValueLabel.topAnchor, constant: 10),
-            measurementUnitLabel.leadingAnchor.constraint(equalTo: measurementValueLabel.trailingAnchor, constant: 4),
+            measurementUnitLabel.topAnchor.constraint(
+                equalTo: measurementValueLabel.topAnchor, constant: 12
+            ),
+            measurementUnitLabel.leadingAnchor.constraint(
+                equalTo: measurementValueLabel.trailingAnchor, constant: 4
+            ),
             measurementUnitLabel.trailingAnchor.constraint(
                 lessThanOrEqualTo: measurementIndicatorContainer.trailingAnchor
             ),
@@ -259,9 +272,6 @@ class CardsProminentIndicatorView: UIView {
         // Update common elements
         indicatorIcon.image = indicatorData.type.icon
         indicatorTitleLabel.text = indicatorData.type.displayName
-
-        // Update alert state
-        updateAlertState(isHighlighted: indicatorData.isHighlighted)
 
         switch indicatorData.type {
         case .aqi:
@@ -328,53 +338,62 @@ class CardsProminentIndicatorView: UIView {
     }
 
     // MARK: - Alert State Management
-    private func updateAlertState(isHighlighted: Bool) {
-        let wasAlertFiring = isAlertFiring
-        isAlertFiring = isHighlighted
+    func updateAlertState(isHighlighted: Bool) {
+        guard currentAlertState != isHighlighted else {
+            return
+        }
 
-        if isAlertFiring && !wasAlertFiring {
+        let wasAlertFiring = currentAlertState
+        currentAlertState = isHighlighted
+
+        if currentAlertState && !wasAlertFiring {
             // Start alert animation
-            startTitleContainerAlertAnimation()
-        } else if !isAlertFiring && wasAlertFiring {
+            startAlertBorderAnimation()
+        } else if !currentAlertState && wasAlertFiring {
             // Stop alert animation
-            stopTitleContainerAlertAnimation()
-        } else if !isAlertFiring {
-            // Ensure border is hidden
-            titleContainerAlertBorderLayer.opacity = 0
+            stopAlertBorderAnimation()
         }
     }
 
-    private func startTitleContainerAlertAnimation() {
+    private func startAlertBorderAnimation() {
+        // Check if animation is already running - don't interfere
+        guard titleContainerAlertBorderLayer.animation(forKey: "pulseAnimation") == nil else {
+            return
+        }
+
         titleContainerAlertBorderLayer.removeAllAnimations()
         titleContainerAlertBorderLayer.opacity = 1.0
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-            guard let self = self, self.isAlertFiring else { return }
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.fromValue = 1.0
+        animation.toValue = 0.3
+        animation.duration = 1.0
+        animation.autoreverses = true
+        animation.repeatCount = .infinity
+        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
 
-            let animation = CABasicAnimation(keyPath: "opacity")
-            animation.fromValue = 1.0
-            animation.toValue = 0.3
-            animation.duration = 1.0
-            animation.autoreverses = true
-            animation.repeatCount = .infinity
-            animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-
-            self.titleContainerAlertBorderLayer.add(animation, forKey: "pulseAnimation")
-        }
+        self.titleContainerAlertBorderLayer.add(animation, forKey: "pulseAnimation")
     }
 
-    private func stopTitleContainerAlertAnimation() {
+    private func stopAlertBorderAnimation() {
         titleContainerAlertBorderLayer.removeAllAnimations()
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-            self?.titleContainerAlertBorderLayer.opacity = 0
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self] in
+            guard let self = self, !self.currentAlertState else { return }
+            self.titleContainerAlertBorderLayer.opacity = 0
         }
     }
 
     func restartAlertAnimationIfNeeded() {
-        if isAlertFiring {
-            startTitleContainerAlertAnimation()
+        // Only restart if we should be alerting but aren't currently animating
+        if currentAlertState && titleContainerAlertBorderLayer.animation(forKey: "pulseAnimation") == nil {
+            startAlertBorderAnimation()
         }
+    }
+
+    // MARK: - Public getter for current alert state
+    var isCurrentlyAlerting: Bool {
+        return currentAlertState
     }
 
     // MARK: - Public Height Methods

@@ -567,6 +567,12 @@ private extension NewCardsBaseViewController {
                 self?.menuBarView.updateAlertState(for: currentSnapshot)
             }
             .store(in: &cancellables)
+
+        currentSnapshot.$metadata
+            .sink { [weak self] _ in
+                self?.menuBarView.updateAlertState(for: currentSnapshot)
+            }
+            .store(in: &cancellables)
     }
 }
 

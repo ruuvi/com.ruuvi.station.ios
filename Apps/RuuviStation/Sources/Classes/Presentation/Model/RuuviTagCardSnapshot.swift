@@ -23,6 +23,15 @@ public final class RuuviTagCardSnapshot: ObservableObject, Hashable, Equatable {
     @Published var connectionData: RuuviTagCardSnapshotConnectionData
     @Published var lastUpdated: Date?
 
+    public var anyIndicatorAlertPublisher: AnyPublisher<[RuuviTagCardSnapshotAlertConfig], Never> {
+        return $displayData
+            .map { displayData -> [RuuviTagCardSnapshotAlertConfig] in
+                return displayData.indicatorGrid?.indicators.map { $0.alertConfig } ?? []
+            }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
     // MARK: - Internal properties for change detection
     private var cancellables = Set<AnyCancellable>()
 
@@ -189,12 +198,14 @@ struct RuuviTagCardSnapshotIndicatorData: Equatable, Hashable {
     }
 }
 
-struct RuuviTagCardSnapshotAlertConfig: Equatable {
+public struct RuuviTagCardSnapshotAlertConfig: Equatable {
+    let type: MeasurementType
     let isActive: Bool
     let isFiring: Bool
     let mutedTill: Date?
 
     static let inactive = RuuviTagCardSnapshotAlertConfig(
+        type: .temperature,
         isActive: false,
         isFiring: false,
         mutedTill: nil
@@ -300,11 +311,14 @@ extension RuuviTagCardSnapshot {
     ) {
         guard let currentGrid = self.displayData.indicatorGrid else { return }
 
+//        print("Cultprit: updateAlert", type, isOn, alertState, mutedTill)
+
         // Check if any indicator actually needs updating
         var hasChanges = false
         let updatedIndicators = currentGrid.indicators.map { indicator -> RuuviTagCardSnapshotIndicatorData in
             if indicator.type == type {
                 let newAlertConfig = RuuviTagCardSnapshotAlertConfig(
+                    type: type,
                     isActive: isOn,
                     isFiring: alertState == .firing,
                     mutedTill: mutedTill
@@ -396,8 +410,9 @@ extension RuuviTagCardSnapshot {
             let mutedTill = alertService.mutedTill(type: alertType, for: physicalSensor)
 
             let newAlertConfig = RuuviTagCardSnapshotAlertConfig(
+                type: indicator.type,
                 isActive: isOn,
-                isFiring: false, // Will be updated by alert handler when alerts fire
+                isFiring: true,
                 mutedTill: mutedTill
             )
 
@@ -468,7 +483,7 @@ extension RuuviTagCardSnapshot {
                 sensor: sensor,
                 measurementService: measurementService,
                 flags: flags,
-                alertData: self.alertData
+                alertConfigs: self.displayData.indicatorGrid?.indicators.compactMap { $0.alertConfig } ?? []
             )
 
             // Check if any display data actually changed

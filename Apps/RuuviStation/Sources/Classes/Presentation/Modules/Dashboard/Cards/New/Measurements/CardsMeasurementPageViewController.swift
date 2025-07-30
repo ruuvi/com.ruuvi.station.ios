@@ -5,10 +5,10 @@ import RuuviLocalization
 
 // MARK: - Single Page Delegate Protocol
 protocol CardsMeasurementPageViewControllerDelegate: AnyObject {
-//    func cardsPageDidSelectMeasurement(
-//        _ type: MeasurementType,
-//        in pageViewController: CardsMeasurementPageViewController
-//    )
+    //    func cardsPageDidSelectMeasurement(
+    //        _ type: MeasurementType,
+    //        in pageViewController: CardsMeasurementPageViewController
+    //    )
 
     func cardsPageDidSelectMeasurementIndicator(
         _ indicator: RuuviTagCardSnapshotIndicatorData,
@@ -153,6 +153,7 @@ class CardsMeasurementPageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
+        startObservingAppState()
     }
 
     override func viewDidLayoutSubviews() {
@@ -177,6 +178,7 @@ class CardsMeasurementPageViewController: UIViewController {
 
     deinit {
         cancellables.removeAll()
+        NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: - Setup Methods
@@ -266,6 +268,21 @@ class CardsMeasurementPageViewController: UIViewController {
     }
 
     // MARK: - Snapshot Observation
+    func startObservingAppState() {
+        NotificationCenter
+            .default
+            .addObserver(
+                self,
+                selector: #selector(handleAppWillMoveToForeground),
+                name: UIApplication.willEnterForegroundNotification,
+                object: nil
+            )
+    }
+
+    @objc func handleAppWillMoveToForeground() {
+        restartAllAlertAnimations()
+    }
+
     private func setupSnapshotObservation() {
         guard let snapshot = snapshot else { return }
 
@@ -273,19 +290,197 @@ class CardsMeasurementPageViewController: UIViewController {
 
         snapshot.$displayData
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.updateMeasurements()
-                self?.updateProminentIndicator()
-                self?.updateDynamicSpacing()
+            .sink { [weak self] displayData in
+                self?.handleDisplayDataUpdate(displayData)
             }
             .store(in: &cancellables)
 
         snapshot.$alertData
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] alertData in
-                self?.updateAlertData(alertData)
+            .sink { [weak self] _ in
+                self?.updateIndicatorAlerts()
             }
             .store(in: &cancellables)
+
+        snapshot.anyIndicatorAlertPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] alertData in
+                print("Some alert changed")
+                dump(alertData)
+                self?.updateIndicatorAlerts()
+            }
+            .store(in: &cancellables)
+
+        snapshot.$metadata
+            .receive(
+                on: DispatchQueue.main
+            )
+            .sink { [weak self] _ in
+                self?.updateIndicatorAlerts()
+            }
+            .store(
+                in: &cancellables
+            )
+    }
+
+    private func handleDisplayDataUpdate(_ displayData: RuuviTagCardSnapshotDisplayData) {
+        let needsGridRebuild = checkIfGridRebuildNeeded(for: displayData)
+
+        if needsGridRebuild {
+            rebuildMeasurementGrid()
+            updateProminentIndicator()
+        } else {
+            updateExistingMeasurementValues()
+            updateProminentIndicator()
+        }
+
+        updateDynamicSpacing()
+    }
+
+    // MARK: - Grid Rebuild Detection
+    private var lastGridIndicatorTypes: Set<MeasurementType> = []
+
+    private func checkIfGridRebuildNeeded(for displayData: RuuviTagCardSnapshotDisplayData) -> Bool {
+        guard let indicators = displayData.indicatorGrid?.indicators else {
+            let needsRebuild = !lastGridIndicatorTypes.isEmpty
+            if needsRebuild {
+                lastGridIndicatorTypes.removeAll()
+            }
+            return needsRebuild
+        }
+
+        // Get filtered indicators (same logic as getFilteredIndicators)
+        let hasAQI = indicators.contains { $0.type == .aqi }
+        let filteredIndicators = indicators.filter { indicator in
+            if hasAQI && indicator.type == .aqi {
+                return false
+            }
+            if !hasAQI && indicator.type == .temperature {
+                return false
+            }
+            return true
+        }
+
+        let currentTypes = Set(filteredIndicators.map { $0.type })
+        let needsRebuild = currentTypes != lastGridIndicatorTypes
+
+        if needsRebuild {
+            lastGridIndicatorTypes = currentTypes
+        }
+
+        return needsRebuild
+    }
+
+    // MARK: - Value Updates (No Grid Rebuild)
+    private func updateExistingMeasurementValues() {
+        guard let indicators = getFilteredIndicators() else {
+            return
+        }
+
+        // Update existing cards with new values
+        for indicator in indicators {
+            if let existingCard = currentMeasurementCards[indicator.type] {
+                existingCard.configure(with: indicator)
+            }
+        }
+    }
+
+    // MARK: - Grid Rebuild (Only When Structure Changes)
+    private func rebuildMeasurementGrid() {
+        print("rebuilding")
+        // Clear existing cards tracking
+        currentMeasurementCards.removeAll()
+
+        // Remove existing views
+        measurementsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+
+        guard let measurements = getFilteredIndicators() else {
+            return
+        }
+
+        let columnConfig = ColumnConfig.forCurrentDevice(containerWidth: view.bounds.width)
+        buildGrid(with: measurements, columnConfig: columnConfig)
+    }
+
+    private func forceRebuildMeasurements() {
+        lastGridIndicatorTypes.removeAll() // Force rebuild detection
+        rebuildMeasurementGrid()
+    }
+
+    // MARK: - Updated Layout Rotation Method
+    private func updateLayoutForRotation(containerWidth: CGFloat) {
+        let columnConfig = ColumnConfig.forCurrentDevice(containerWidth: containerWidth)
+
+        // Update padding constraints
+        measurementsStackLeadingConstraint.constant = columnConfig.horizontalPadding
+        measurementsStackTrailingConstraint.constant = -columnConfig.horizontalPadding
+
+        // Force rebuild for orientation changes since column count might change
+        forceRebuildMeasurements()
+
+        view.layoutIfNeeded()
+    }
+
+    // MARK: - Updated UI Method
+    private func updateUI() {
+        updateProminentIndicator()
+        forceRebuildMeasurements() // Force rebuild on initial setup
+
+        DispatchQueue.main.async {
+            self.updateDynamicSpacing()
+        }
+    }
+
+    private func updateIndicatorAlerts() {
+        guard let snapshot = snapshot else { return }
+
+        snapshot.displayData.indicatorGrid?.indicators.forEach { indicatorData in
+            // Only update alert state for existing measurement cards
+            if let card = currentMeasurementCards[indicatorData.type] {
+                card
+                    .updateAlertState(
+                        isHighlighted: indicatorData.isHighlighted &&
+                            snapshot.metadata.isAlertAvailable
+                    )
+            }
+        }
+
+        // Update prominent indicator alert
+        updateProminentIndicatorAlert()
+    }
+
+    private func updateProminentIndicatorAlert() {
+        guard let indicators = snapshot?.displayData.indicatorGrid?.indicators else {
+            prominentIndicatorView.indicatorData = nil
+            return
+        }
+
+        let prominentIndicator: RuuviTagCardSnapshotIndicatorData?
+
+        if let aqiIndicator = indicators.first(where: { $0.type == .aqi }) {
+            prominentIndicator = aqiIndicator
+        } else if let tempIndicator = indicators.first(where: { $0.type == .temperature }) {
+            prominentIndicator = tempIndicator
+        } else {
+            prominentIndicator = indicators.first
+        }
+
+        if let highlighted = prominentIndicator?.isHighlighted,
+            let metadata = snapshot?.metadata {
+            prominentIndicatorView
+                .updateAlertState(isHighlighted: highlighted && metadata.isAlertAvailable)
+        }
+    }
+
+    private func restartAllAlertAnimations() {
+        guard snapshot != nil else { return }
+        // Restart animations for all measurement cards
+        currentMeasurementCards.values.forEach { card in
+            card.restartAlertAnimationIfNeeded()
+        }
+
+        // Restart animation for prominent indicator
+        prominentIndicatorView.restartAlertAnimationIfNeeded()
     }
 
     // MARK: - Height Calculation Methods
@@ -429,29 +624,6 @@ class CardsMeasurementPageViewController: UIViewController {
         scrollView.layer.mask = gradientLayer
     }
 
-    private func updateLayoutForRotation(containerWidth: CGFloat) {
-        let columnConfig = ColumnConfig.forCurrentDevice(containerWidth: containerWidth)
-
-        // Update padding constraints
-        measurementsStackLeadingConstraint.constant = columnConfig.horizontalPadding
-        measurementsStackTrailingConstraint.constant = -columnConfig.horizontalPadding
-
-        // Rebuild the measurement grid with new configuration
-        updateMeasurements()
-
-        view.layoutIfNeeded()
-    }
-
-    // MARK: - Data Update Methods
-    private func updateUI() {
-        updateProminentIndicator()
-        updateMeasurements()
-
-        DispatchQueue.main.async {
-            self.updateDynamicSpacing()
-        }
-    }
-
     private func updateProminentIndicator() {
         guard let indicators = snapshot?.displayData.indicatorGrid?.indicators else {
             prominentIndicatorView.indicatorData = nil
@@ -504,47 +676,22 @@ class CardsMeasurementPageViewController: UIViewController {
         buildGrid(with: measurements, columnConfig: columnConfig)
     }
 
-    private func updateAlertData(_ alertData: RuuviTagCardSnapshotAlertData?) {
-        // Update alert states for all measurement cards
-        updateIndicatorAlerts()
-
-        // Restart animations if needed (with slight delay to ensure state is updated)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-            self.restartAlertAnimations()
-        }
-    }
-
-    private func updateIndicatorAlerts() {
-        guard let snapshot = snapshot else { return }
-
-        // Update alert states for each indicator
-        snapshot.displayData.indicatorGrid?.indicators.forEach { indicatorData in
-            // Update measurement cards only if they exist
-            if let card = currentMeasurementCards[indicatorData.type] {
-                card.configure(with: indicatorData)
-            }
-        }
-
-        // The prominent indicator view updates itself when indicatorData is set
-        updateProminentIndicator()
-    }
-
     private func restartAlertAnimations() {
-        // Only restart if we have a snapshot with alert data
         guard snapshot != nil else { return }
 
-        // Restart animations for prominent indicator
-        prominentIndicatorView.restartAlertAnimationIfNeeded()
-
-        // Restart animations for all measurement cards
+        // Only restart animations for cards that should be alerting but aren't animating
         currentMeasurementCards.values.forEach { card in
             card.restartAlertAnimationIfNeeded()
         }
+
+        prominentIndicatorView.restartAlertAnimationIfNeeded()
     }
 
     // MARK: Grid Building with Proper Column Width Constraints
-    private func buildGrid(with indicators: [RuuviTagCardSnapshotIndicatorData], columnConfig: ColumnConfig) {
-        // FIXED: Always use grid layout to maintain consistent column widths
+    private func buildGrid(
+        with indicators: [RuuviTagCardSnapshotIndicatorData],
+        columnConfig: ColumnConfig
+    ) {
         var index = 0
         while index < indicators.count {
             let rowStackView = UIStackView()
@@ -583,7 +730,9 @@ class CardsMeasurementPageViewController: UIViewController {
                 placeholder.isHidden = false // Keep visible for layout but transparent
 
                 // Set same width as cards to maintain proper spacing
-                let placeholderWidthConstraint = placeholder.widthAnchor.constraint(equalToConstant: columnConfig.itemWidth)
+                let placeholderWidthConstraint = placeholder.widthAnchor.constraint(
+                    equalToConstant: columnConfig.itemWidth
+                )
                 placeholderWidthConstraint.priority = UILayoutPriority(999)
                 placeholderWidthConstraint.isActive = true
 
@@ -594,7 +743,7 @@ class CardsMeasurementPageViewController: UIViewController {
                 cardsInRow += 1
             }
 
-            // FIXED: Handle centering for iPad landscape
+            // Handle centering for iPad landscape
             if columnConfig.shouldCenter {
                 let containerStack = UIStackView()
                 containerStack.axis = .horizontal
@@ -624,13 +773,17 @@ class CardsMeasurementPageViewController: UIViewController {
         for measurement: RuuviTagCardSnapshotIndicatorData
     ) -> CardsMeasurementIndicatorView {
         let card = CardsMeasurementIndicatorView()
+
+        print("Creating measurement card for \(measurement.type)")
+        // Configure the card with initial data
         card.configure(with: measurement)
+
+        // Set up tap handler
         card.onTap = { [weak self] in
             guard let self = self else { return }
-            self.delegate?
-                .cardsPageDidSelectMeasurementIndicator(measurement, in: self)
-//            self.delegate?.cardsPageDidSelectMeasurement(measurement.type, in: self)
+            self.delegate?.cardsPageDidSelectMeasurementIndicator(measurement, in: self)
         }
+
         return card
     }
 }

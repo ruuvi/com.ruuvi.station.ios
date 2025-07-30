@@ -1,6 +1,7 @@
 import UIKit
 import RuuviOntology
 import RuuviLocalization
+import RuuviLocal
 
 class CardsMeasurementIndicatorView: UIView {
 
@@ -24,7 +25,10 @@ class CardsMeasurementIndicatorView: UIView {
 
     // MARK: - Alert Properties
     private let alertBorderLayer = CAShapeLayer()
-    private var isAlertFiring = false
+
+    // MARK: - Alert State Tracking
+    private var currentAlertState: Bool = false
+    private var currentIndicatorData: RuuviTagCardSnapshotIndicatorData?
 
     private lazy var iconImageView: UIImageView = {
         let imageView = UIImageView()
@@ -165,66 +169,78 @@ class CardsMeasurementIndicatorView: UIView {
 
     // MARK: - Configuration
     func configure(with indicator: RuuviTagCardSnapshotIndicatorData) {
-        valueLabel.text = indicator.value
-        unitLabel.text = indicator.unit
-        titleLabel.text = indicator.type.displayName
-        iconImageView.image = indicator.type.icon
+        let dataChanged = currentIndicatorData?.value != indicator.value ||
+        currentIndicatorData?.unit != indicator.unit ||
+        currentIndicatorData?.type != indicator.type
 
-        // Update tint color based on alert state
-        let tintColor = indicator.isHighlighted ? UIColor.orange : UIColor.cyan
-        iconImageView.tintColor = tintColor
+        currentIndicatorData = indicator
 
-        // Update alert border
-        updateAlertState(isHighlighted: indicator.isHighlighted)
+        if dataChanged {
+            valueLabel.text = indicator.value
+            unitLabel.text = indicator.unit
+            titleLabel.text = indicator.type.displayName
+            iconImageView.image = indicator.type.icon
+        }
+
     }
 
-    // MARK: - Alert State Management
-    private func updateAlertState(isHighlighted: Bool) {
-        let wasAlertFiring = isAlertFiring
-        isAlertFiring = isHighlighted
+    func updateAlertState(isHighlighted: Bool) {
+        guard currentAlertState != isHighlighted else {
+            return
+        }
 
-        if isAlertFiring && !wasAlertFiring {
+        print("Called: updateAlertState(\(isHighlighted))")
+
+        let wasAlertFiring = currentAlertState
+        currentAlertState = isHighlighted
+
+        if currentAlertState && !wasAlertFiring {
             // Start alert animation
             startAlertBorderAnimation()
-        } else if !isAlertFiring && wasAlertFiring {
+        } else if !currentAlertState && wasAlertFiring {
             // Stop alert animation
             stopAlertBorderAnimation()
-        } else if !isAlertFiring {
-            // Ensure border is hidden
-            alertBorderLayer.opacity = 0
         }
     }
 
     private func startAlertBorderAnimation() {
+        // Check if animation is already running - don't interfere
+        guard alertBorderLayer.animation(forKey: "pulseAnimation") == nil else {
+            return
+        }
+
         alertBorderLayer.removeAllAnimations()
         alertBorderLayer.opacity = 1.0
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-            guard let self = self, self.isAlertFiring else { return }
+        let animation = CABasicAnimation(keyPath: "opacity")
+        animation.fromValue = 1.0
+        animation.toValue = 0.3
+        animation.duration = 1.0
+        animation.autoreverses = true
+        animation.repeatCount = .infinity
+        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
 
-            let animation = CABasicAnimation(keyPath: "opacity")
-            animation.fromValue = 1.0
-            animation.toValue = 0.3
-            animation.duration = 1.0
-            animation.autoreverses = true
-            animation.repeatCount = .infinity
-            animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-
-            self.alertBorderLayer.add(animation, forKey: "pulseAnimation")
-        }
+        self.alertBorderLayer.add(animation, forKey: "pulseAnimation")
     }
 
     private func stopAlertBorderAnimation() {
         alertBorderLayer.removeAllAnimations()
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-            self?.alertBorderLayer.opacity = 0
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) { [weak self] in
+            guard let self = self, !self.currentAlertState else { return }
+            self.alertBorderLayer.opacity = 0
         }
     }
 
     func restartAlertAnimationIfNeeded() {
-        if isAlertFiring {
+        // Only restart if we should be alerting but aren't currently animating
+        if currentAlertState && alertBorderLayer.animation(forKey: "pulseAnimation") == nil {
             startAlertBorderAnimation()
         }
+    }
+
+    // MARK: - Public getter for current alert state
+    var isCurrentlyAlerting: Bool {
+        return currentAlertState
     }
 }

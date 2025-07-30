@@ -486,6 +486,19 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                     in: &cancellables
                 )
 
+            snapshot.$metadata
+                .receive(
+                    on: DispatchQueue.main
+                )
+                .sink { [weak self] _ in
+                    self?.updateAlertData(
+                        snapshot.alertData
+                    )
+                }
+                .store(
+                    in: &cancellables
+                )
+
             snapshot.$lastUpdated
                 .receive(
                     on: DispatchQueue.main
@@ -1116,7 +1129,9 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         alertIcon.layer
             .removeAllAnimations()
 
-        guard let alertState = alertState else {
+        guard let alertState = alertState,
+              let currentSnapshot = currentSnapshot,
+        currentSnapshot.metadata.isAlertAvailable else {
             alertIcon.alpha = 0
             alertIcon.image = nil
             alertButton.isUserInteractionEnabled = false

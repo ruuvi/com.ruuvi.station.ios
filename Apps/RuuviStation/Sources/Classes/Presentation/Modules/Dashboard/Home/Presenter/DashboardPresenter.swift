@@ -130,8 +130,7 @@ extension DashboardPresenter: DashboardViewOutput {
     }
 
     func viewWillDisappear() {
-        // Stop bluetooth state observation to avoid unnecessary alerts
-        connectionService.stopObservingConnections()
+        // No op.
     }
 
     func viewDidTriggerMenu() {
@@ -457,7 +456,6 @@ private extension DashboardPresenter {
                   let userInfo = notification.userInfo,
                   let uuid = userInfo["uuid"] as? String,
                   let isConnected = userInfo["isConnected"] as? Bool else { return }
-
             // Find snapshot by UUID and update connection status
             let snapshots = self.sensorDataService.getAllSnapshots()
             if let snapshot = snapshots.first(where: { $0.identifierData.luid?.value == uuid }) {
@@ -466,6 +464,7 @@ private extension DashboardPresenter {
                     isConnectable: snapshot.connectionData.isConnectable,
                     keepConnection: snapshot.connectionData.keepConnection
                 )
+                self.alertService.triggerAlertsIfNeeded(for: snapshot)
                 self.view?.updateSnapshot(from: snapshot)
             }
         }

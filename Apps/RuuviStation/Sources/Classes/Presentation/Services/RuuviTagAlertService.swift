@@ -340,7 +340,6 @@ private extension RuuviTagAlertService {
 
         if let cached = getCachedAlertState(for: physicalSensor.id, alertType: alertType) {
             let alertState: AlertState? = cached.isOn ? .registered : nil
-
             DispatchQueue.main.async {
                 snapshot.updateAlert(
                     for: measurementType,
@@ -552,6 +551,7 @@ extension RuuviTagAlertService {
                         value: indicator.value,
                         unit: indicator.unit,
                         alertConfig: RuuviTagCardSnapshotAlertConfig(
+                            type: indicator.type,
                             isActive: indicator.alertConfig.isActive,
                             isFiring: indicator.alertConfig.isFiring,
                             mutedTill: nil

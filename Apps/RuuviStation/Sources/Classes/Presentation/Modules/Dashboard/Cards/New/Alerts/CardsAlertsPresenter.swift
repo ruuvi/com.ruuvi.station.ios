@@ -41,8 +41,6 @@ final class CardsAlertsPresenter: CardsAlertsViewOutput {
     }
 
     func alertsViewDidToggleAlert(_ type: MeasurementType, isOn: Bool) {
-        print("Alert toggle for \(type): \(isOn)")
-
         guard let snapshot = currentSnapshot else { return }
 
         // TODO: Update alert configuration
