@@ -546,8 +546,6 @@ class CircularProgressView: UIView {
         static let progressLineWidth: CGFloat = 8
         static let glowLineWidthOffset: CGFloat = 6
         static let tipCircleRadius: CGFloat = 5
-        static let glowRadius: CGFloat = 8
-        static let glowOpacity: Float = 0.8
         static let mainGlowSize: CGFloat = 25
         static let outerGlowSize: CGFloat = 30
         static let animationDuration: TimeInterval = 0.5

@@ -50,8 +50,9 @@ struct DashboardCellLayoutConstants {
     static let nameToImageSpacing: CGFloat = 14
     static let groupSpacing: CGFloat = 10
     static let prominentViewHeight: CGFloat = 30
-    static let progressViewHeight: CGFloat = 5
-    static let progressViewTopSpacing: CGFloat = 3
+    static let progressViewHeight: CGFloat = 16
+    static let progressViewTopSpacing: CGFloat = 4
+    static let progressViewToGridSpacing: CGFloat = 7
 
     // Font configuration
     static let nameFont = UIFont.Montserrat(
@@ -173,15 +174,8 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         container.clipsToBounds = true
         return container
     }()
-    private lazy var progressView: UIProgressView = {
-        let progressView = UIProgressView()
-        progressView.progressViewStyle = .bar
-        progressView.trackTintColor = RuuviColor.dashboardIndicator.color
-            .withAlphaComponent(
-                0.3
-            )
-        progressView.layer.cornerRadius = 0
-        progressView.clipsToBounds = false
+    private lazy var progressView: DashboardLinearProgressView = {
+        let progressView = DashboardLinearProgressView()
         return progressView
     }()
 
@@ -769,10 +763,10 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                 if let progress = Int(
                     mainValue
                 ) {
-                    progressView.progress = Float(
-                        progress
-                    ) / 100
-                    progressView.progressTintColor = airQualityIndicator.tintColor
+                    progressView.setValue(
+                        progress,
+                        progressTintColor: airQualityIndicator.tintColor
+                    )
                 }
             }
         } else {
@@ -818,7 +812,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
             gridTopConstraint = rowsStackView.topAnchor
                 .constraint(
                     equalTo: progressViewContainer.bottomAnchor,
-                    constant: DashboardCellLayoutConstants.groupSpacing
+                    constant: DashboardCellLayoutConstants.progressViewToGridSpacing
                 )
         } else {
             // Grid positioned after prominent view
@@ -1371,12 +1365,12 @@ extension DashboardCell {
                 trailing: nil,
                 padding: .init(
                     top: DashboardCellLayoutConstants.progressViewTopSpacing,
-                    left: 0,
+                    left: -5.5, // Progress view need this padding adjustment to show glow
                     bottom: 0,
                     right: 0
                 ),
                 size: .init(
-                    width: 120,
+                    width: 134,
                     height: DashboardCellLayoutConstants.progressViewHeight
                 )
             )
@@ -1560,7 +1554,9 @@ extension DashboardCell {
         let prominentHeight = DashboardCellLayoutConstants.prominentViewHeight
         let progressHeight = hasAQI ? (
             DashboardCellLayoutConstants.progressViewTopSpacing +
-            DashboardCellLayoutConstants.progressViewHeight
+            DashboardCellLayoutConstants.progressViewHeight -
+            (DashboardCellLayoutConstants.groupSpacing -
+             DashboardCellLayoutConstants.progressViewToGridSpacing)
         ) : 0
         let indicatorCount = snapshot.displayData.indicatorGrid?.indicators.count ?? 0
         let gridHeight = DashboardCellLayoutConstants.gridHeight(
