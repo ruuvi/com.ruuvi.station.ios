@@ -20,14 +20,14 @@ class DashboardLinearProgressView: UIView {
 
     private lazy var progressBackgroundLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
-        layer.fillColor = RuuviColor.dashboardIndicator.color.withAlphaComponent(0.2).cgColor
+        layer.fillColor = RuuviColor.ruuviAQILinePlaceholderColor.color.cgColor
         layer.strokeColor = UIColor.clear.cgColor
         return layer
     }()
 
     private lazy var progressLayer: CAShapeLayer = {
         let layer = CAShapeLayer()
-        layer.fillColor = RuuviColor.dashboardIndicator.color.cgColor
+        layer.fillColor = RuuviColor.ruuviAQILinePlaceholderColor.color.cgColor
         layer.strokeColor = UIColor.clear.cgColor
         return layer
     }()
@@ -42,7 +42,7 @@ class DashboardLinearProgressView: UIView {
 
     private var currentProgress: Float = 0
 
-    var progressColor: UIColor = RuuviColor.dashboardIndicator.color {
+    var progressColor: UIColor = RuuviColor.ruuviAQILinePlaceholderColor.color {
         didSet {
             updateProgressAppearance()
         }
@@ -68,6 +68,14 @@ class DashboardLinearProgressView: UIView {
         super.layoutSubviews()
         setupLayers()
         updateProgressAppearance()
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            progressBackgroundLayer.fillColor = RuuviColor.ruuviAQILinePlaceholderColor.color.cgColor
+        }
     }
 
     override var intrinsicContentSize: CGSize {
@@ -414,7 +422,7 @@ class DashboardLinearProgressView: UIView {
         if let tintColor = progressTintColor {
             progressColor = tintColor
         } else {
-            progressColor = RuuviColor.dashboardIndicator.color
+            progressColor = RuuviColor.ruuviAQILinePlaceholderColor.color
         }
 
         setProgress(progress, animated: animated)

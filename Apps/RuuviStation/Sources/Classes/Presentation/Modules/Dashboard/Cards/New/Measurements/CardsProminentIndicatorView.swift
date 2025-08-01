@@ -13,7 +13,7 @@ class CardsProminentIndicatorView: UIView {
 
     // MARK: - Height Constants (Must match SingleMeasurementPageViewController)
     private struct HeightConstants {
-        static let aqiCircularViewSize: CGFloat = 150
+        static let aqiCircularViewSize: CGFloat = 176
         static let titleContainerHeight: CGFloat = 48
         static let spacingToTitle: CGFloat = 8
         static let measurementContainerHeight: CGFloat = 80
@@ -278,13 +278,15 @@ class CardsProminentIndicatorView: UIView {
             showAQIMode()
             updateViewHeight(for: .aqi)
 
-            // Safe conversion with fallback
-            let aqiValue = indicatorData.value.aqiIntValue ?? 0
-            aqiIndicatorView.setValue(
-                aqiValue,
-                maxValue: 100,
-                state: .excellent(Double(aqiValue))
-            )
+            if let aqiValue = indicatorData.value.aqiIntValue,
+                let aqiState = indicatorData.aqiState {
+                aqiIndicatorView
+                    .setValue(
+                        aqiValue,
+                        maxValue: 100,
+                        state: aqiState
+                    )
+            }
 
         default:
             showMeasurementMode()
@@ -425,7 +427,7 @@ class CardsProminentIndicatorView: UIView {
     }
 }
 
-// MARK: - Air Quality Circular View (Unchanged)
+// MARK: - Air Quality Circular View
 class AirQualityCircularView: UIView {
 
     // MARK: - Layout Constants
@@ -437,6 +439,7 @@ class AirQualityCircularView: UIView {
     // MARK: - UI Components
     private lazy var circularProgressView: CircularProgressView = {
         let view = CircularProgressView()
+        view.overrideUserInterfaceStyle = .dark
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -452,7 +455,7 @@ class AirQualityCircularView: UIView {
 
     private lazy var maxValueLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.Oswald(.regular, size: 16)
+        label.font = UIFont.Muli(.regular, size: 16)
         label.textColor = UIColor.white.withAlphaComponent(0.7)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -461,7 +464,7 @@ class AirQualityCircularView: UIView {
 
     private lazy var statusLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.Muli(.bold, size: 24)
+        label.font = UIFont.Muli(.bold, size: 20)
         label.textColor = .white
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -514,7 +517,8 @@ class AirQualityCircularView: UIView {
             top: circularProgressView.bottomAnchor,
             leading: nil,
             bottom: bottomAnchor,
-            trailing: nil
+            trailing: nil,
+            padding: .init(top: 0, left: 0, bottom: 8, right: 0)
         )
     }
 
@@ -543,7 +547,7 @@ class CircularProgressView: UIView {
     // MARK: - Layout Constants
     private struct Constants {
         static let radiusOffset: CGFloat = 15
-        static let progressLineWidth: CGFloat = 8
+        static let progressLineWidth: CGFloat = 6
         static let glowLineWidthOffset: CGFloat = 6
         static let tipCircleRadius: CGFloat = 5
         static let mainGlowSize: CGFloat = 25
@@ -600,7 +604,7 @@ class CircularProgressView: UIView {
 
         // Background layer - full path drawn in gray
         backgroundLayer.path = arcPath.cgPath
-        backgroundLayer.strokeColor = UIColor.gray.withAlphaComponent(0.3).cgColor
+        backgroundLayer.strokeColor = RuuviColor.ruuviAQILinePlaceholderColor.color.cgColor
         backgroundLayer.lineWidth = Constants.progressLineWidth
         backgroundLayer.fillColor = UIColor.clear.cgColor
         backgroundLayer.lineCap = .round

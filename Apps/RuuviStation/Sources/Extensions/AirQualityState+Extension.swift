@@ -15,12 +15,12 @@ extension AirQualityState {
         }
 
         switch index {
-        case 66.0...100.0:
-            return RuuviColor.green.color
-        case 33.0..<66.0:
-            return .systemOrange
-        default:
-            return .systemRed
+        case 79.5...:
+            return UIColor(red: 140/255, green: 198/255, blue: 63/255, alpha: 1.0) // Green
+        case 19.5..<79.5:
+            return UIColor(red: 247/255, green: 225/255, blue: 62/255, alpha: 1.0) // Yellow
+        default: // index < 19.5
+            return UIColor(red: 241/255, green: 90/255, blue: 36/255, alpha: 1.0) // Red
         }
     }
 

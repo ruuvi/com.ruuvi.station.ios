@@ -188,6 +188,7 @@ struct RuuviTagCardSnapshotIndicatorData: Equatable, Hashable {
     let isProminent: Bool
     let showSubscript: Bool
     let tintColor: UIColor?
+    let aqiState: AirQualityState?
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(type)
@@ -336,7 +337,8 @@ extension RuuviTagCardSnapshot {
                     alertConfig: newAlertConfig,
                     isProminent: indicator.isProminent,
                     showSubscript: indicator.showSubscript,
-                    tintColor: indicator.tintColor
+                    tintColor: indicator.tintColor,
+                    aqiState: indicator.aqiState
                 )
             } else {
                 return indicator
@@ -428,7 +430,8 @@ extension RuuviTagCardSnapshot {
                 alertConfig: newAlertConfig,
                 isProminent: indicator.isProminent,
                 showSubscript: indicator.showSubscript,
-                tintColor: indicator.tintColor
+                tintColor: indicator.tintColor,
+                aqiState: indicator.aqiState
             )
         }
 

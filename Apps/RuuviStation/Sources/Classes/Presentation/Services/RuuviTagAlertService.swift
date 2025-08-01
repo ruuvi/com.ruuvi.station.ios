@@ -558,7 +558,8 @@ extension RuuviTagAlertService {
                         ),
                         isProminent: indicator.isProminent,
                         showSubscript: indicator.showSubscript,
-                        tintColor: indicator.tintColor
+                        tintColor: indicator.tintColor,
+                        aqiState: indicator.aqiState
                     )
                 } else {
                     return indicator

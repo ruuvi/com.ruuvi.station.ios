@@ -648,15 +648,15 @@ public extension RuuviServiceMeasurementImpl {
 
     private func airQualityState(for score: Double) -> AirQualityState {
         switch score {
-        case 81...100:
+        case 79.5...:
             return .excellent(score)
-        case 61...80:
+        case 59.5..<79.5:
             return .good(score)
-        case 41...60:
+        case 39.5..<59.5:
             return .moderate(score)
-        case 21...40:
+        case 19.5..<39.5:
             return .poor(score)
-        default: // 0...20
+        default: // score < 19.5
             return .unhealthy(score)
         }
     }

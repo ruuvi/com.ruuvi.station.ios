@@ -31,11 +31,30 @@ struct MeasurementConfiguration {
 
 // MARK: - Measurement Result
 struct MeasurementResult {
+    init(
+        value: String,
+        unit: String,
+        isProminent: Bool,
+        showSubscript: Bool,
+        tintColor: UIColor? = nil,
+        aqiState: AirQualityState? = nil,
+        alertConfig: RuuviTagCardSnapshotAlertConfig
+    ) {
+        self.value = value
+        self.unit = unit
+        self.isProminent = isProminent
+        self.showSubscript = showSubscript
+        self.tintColor = tintColor
+        self.alertConfig = alertConfig
+        self.aqiState = aqiState
+    }
+
     let value: String
     let unit: String
     let isProminent: Bool
     let showSubscript: Bool
     let tintColor: UIColor?
+    let aqiState: AirQualityState?
     let alertConfig: RuuviTagCardSnapshotAlertConfig
 
     func toIndicatorData(
@@ -48,7 +67,8 @@ struct MeasurementResult {
             alertConfig: alertConfig,
             isProminent: isProminent,
             showSubscript: showSubscript,
-            tintColor: tintColor
+            tintColor: tintColor,
+            aqiState: aqiState
         )
     }
 }
@@ -184,6 +204,7 @@ struct AQIMeasurementExtractor: MeasurementExtractor {
             isProminent: true,
             showSubscript: true,
             tintColor: state.color,
+            aqiState: state,
             alertConfig: alertConfig
         )
     }
@@ -476,7 +497,8 @@ struct AlertConfigurationManager {
                 alertConfig: alertConfig,
                 isProminent: indicator.isProminent,
                 showSubscript: indicator.showSubscript,
-                tintColor: indicator.tintColor
+                tintColor: indicator.tintColor,
+                aqiState: indicator.aqiState
             )
         }
     }
@@ -489,6 +511,7 @@ struct AlertConfigurationManager {
         isProminent: Bool,
         showSubscript: Bool,
         tintColor: UIColor?,
+        aqiState: AirQualityState? = nil,
         alertService: RuuviServiceAlert?,
         physicalSensor: PhysicalSensor?
     ) -> RuuviTagCardSnapshotIndicatorData {
@@ -511,7 +534,8 @@ struct AlertConfigurationManager {
             alertConfig: alertConfig,
             isProminent: isProminent,
             showSubscript: showSubscript,
-            tintColor: tintColor
+            tintColor: tintColor,
+            aqiState: aqiState
         )
     }
 }
