@@ -162,7 +162,7 @@ extension NewCardsBasePresenter: NewCardsBaseViewOutput {
                 graphPresenter?
                     .showAbortSyncConfirmationDialog(
                         for: snapshot,
-                        from: .rootNavigationButton
+                        from: .rootNavigationButton(index)
                     )
             } else {
                 viewShouldNavigateToSnapshotIndex(index)
@@ -201,9 +201,15 @@ extension NewCardsBasePresenter: NewCardsBaseViewOutput {
     }
 
     func viewDidTapBackButton() {
-        // TODO: Check if GATT sync is in progress, show abort sync modal
-        // Otherwise call the dismiss
-        output?.cardsViewDidDismiss(module: self)
+        if graphGattSyncInProgress {
+            graphPresenter?
+                .showAbortSyncConfirmationDialog(
+                    for: snapshot,
+                    from: .rootBackButton
+                )
+        } else {
+            output?.cardsViewDidDismiss(module: self)
+        }
     }
 
     func viewDidConfirmToKeepConnectionChart(to snapshot: RuuviTagCardSnapshot) {
@@ -297,13 +303,18 @@ extension NewCardsBasePresenter: CardsGraphPresenterOutput {
         switch source {
         case .rootBackButton:
             // Go back to root
-            break
-        case .rootNavigationButton:
+            graphPresenter?.stop()
+            viewDidTapBackButton()
+        case .rootNavigationButton(let targetIndex):
             // Navigate to next/previous
-            break
+            viewShouldNavigateToSnapshotIndex(targetIndex)
         case .topMenuSwitch:
-            // Just switch to measurement
-            break
+            // Update presenter
+            activeMenu = .measurement
+            // Update view
+            view?.showContentsForTab(activeMenu)
+            // Stop graph
+            graphPresenter?.stop()
         case .inPageCancel:
             // Do nothing as it is handled on the graph presenter.
             break
@@ -317,7 +328,10 @@ extension NewCardsBasePresenter: TagSettingsModuleOutput {
         module: TagSettingsModuleInput,
         ruuviTag: RuuviTagSensor
     ) {
-        //
+        module.dismiss(completion: {
+            // No need to anything on completion.
+            // View should get updated state from Data Service.
+        })
     }
 
     func tagSettingsDidDismiss(module: any TagSettingsModuleInput) {
@@ -325,6 +339,121 @@ extension NewCardsBasePresenter: TagSettingsModuleOutput {
     }
 }
 
+// MARK: RuuviTagDataServiceDelegate
+extension NewCardsBasePresenter: RuuviTagDataServiceDelegate {
+    func sensorDataService(
+        _ service: RuuviTagDataService,
+        didUpdateSnapshots snapshots: [RuuviTagCardSnapshot],
+        withAnimation: Bool
+    ) {
+//        if snapshots.count > 0 {
+//            // If new snapshots collection does not contain the active snapshot
+//            // that means active snapshot is removed from collection either by
+//            // user from this client or via sync.
+//            // In that case update the active snapshot with first item
+//            // from the collection.
+//            if snapshots.count < self.snapshots.count,
+//               !snapshots.contains(self.snapshot) {
+//                self.snapshots = snapshots
+//                snapshot = snapshots.first
+//            }
+//
+//            // Order is very important for next calls.
+//            self.ruuviTagSensors = sensorDataService.getAllSensors()
+//            self.sensorSettings = sensorDataService.getSensorSettings()
+//
+//            view?.setSnapshots(snapshots)
+//            view?.setActiveSnapshotIndex(currentSnapshotIndex())
+//
+//            measurementPresenter?
+//                .configure(
+//                    with: snapshots,
+//                    snapshot: snapshot,
+//                    sensor: currentSensor()
+//                )
+//
+//            graphPresenter?
+//                .configure(
+//                    with: snapshots,
+//                    snapshot: snapshot,
+//                    sensor: currentSensor()
+//                )
+//            graphPresenter?.configure(sensorSettings: currentSensorSettings())
+//
+//            loadBackgroundsIfNeeded()
+//        } else {
+//            viewDidTapBackButton()
+//        }
+    }
+
+    func loadBackgroundsIfNeeded() {
+        DispatchQueue.global(qos: .utility).async { [weak self] in
+            guard let self = self else { return }
+
+            let snapshotsNeedingBackgrounds = self.snapshots.filter { snapshot in
+                snapshot.displayData.background == nil
+            }
+
+            if !snapshotsNeedingBackgrounds.isEmpty {
+                self.backgroundService.loadBackgrounds(
+                    for: snapshotsNeedingBackgrounds,
+                    sensors: self.ruuviTagSensors
+                )
+            }
+        }
+    }
+
+    func sensorDataService(
+        _ service: RuuviTagDataService,
+        didUpdateSnapshot snapshot: RuuviTagCardSnapshot,
+        invalidateLayout: Bool
+    ) {
+        // No op May be?
+    }
+
+    func sensorDataService(
+        _ service: RuuviTagDataService,
+        didAddNewSensor sensor: RuuviTagSensor,
+        newOrder: [String]
+    ) {
+        // TODO: See if we need to implement this.
+    }
+
+    func sensorDataService(
+        _ service: RuuviTagDataService,
+        didEncounterError error: Error
+    ) {
+        // No op.
+    }
+
+}
+
+// MARK: RuuviTagBackgroundServiceDelegate
+extension NewCardsBasePresenter: RuuviTagBackgroundServiceDelegate {
+
+    func backgroundService(
+        _ service: RuuviTagBackgroundService,
+        didUpdateSnapshot snapshot: RuuviTagCardSnapshot
+    ) {
+        if let snapshotIndex = snapshots.firstIndex(of: snapshot) {
+            snapshots[snapshotIndex] = snapshot
+            self.snapshot = snapshot
+            view?.updateSnapshot(snapshot)
+        }
+    }
+
+    func backgroundService(
+        _ service: RuuviTagBackgroundService,
+        didEncounterError error: Error
+    ) {
+        errorPresenter
+            .present(
+                error: error
+            )
+    }
+}
+
+// MARK: RuuviCloudServiceDelegate
 extension NewCardsBasePresenter: RuuviCloudServiceDelegate {
     func ruuviCloudService(
         _ service: RuuviCloudService,
@@ -383,11 +512,18 @@ extension NewCardsBasePresenter: RuuviCloudServiceDelegate {
 // MARK: Private Helpers
 private extension NewCardsBasePresenter {
     func startServices() {
+        sensorDataService.startObservingSensors(with: snapshots)
         ruuviCloudService.startObserving()
+//        backgroundService.startObservingBackgroundChanges()
+
+        sensorDataService.delegate = self
+        backgroundService.delegate = self
         ruuviCloudService.delegate = self
     }
 
     func stopServices() {
+        sensorDataService.stopObservingSensors()
+        backgroundService.stopObservingBackgroundChanges()
         ruuviCloudService.stopObserving()
     }
 

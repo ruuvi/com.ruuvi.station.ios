@@ -2621,22 +2621,9 @@ extension TagSettingsViewController {
         // Fixed items
         sections += [
             configureAlertHeaderSection(),
-            configureTemperatureAlertSection(),
         ]
 
         // Variable items
-        if viewModel?.latestMeasurement.value?.humidity != nil {
-            sections.append(configureHumidityAlertSection())
-        }
-
-        if viewModel?.latestMeasurement.value?.pressure != nil {
-            sections.append(configurePressureAlertSection())
-        }
-
-        if viewModel?.latestMeasurement.value?.rssi != nil {
-            sections.append(configureRSSIAlertSection())
-        }
-
         if viewModel?.latestMeasurement.value?.co2 != nil &&
             viewModel?.latestMeasurement.value?.pm25 != nil {
             sections.append(configureAQIAlertSection())
@@ -2658,8 +2645,16 @@ extension TagSettingsViewController {
             sections.append(configureNOXAlertSection())
         }
 
-        if viewModel?.latestMeasurement.value?.dbaInstant != nil {
-            sections.append(configureSoundAlertSection())
+        if viewModel?.latestMeasurement.value?.temperature != nil {
+            sections.append(configureTemperatureAlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.humidity != nil {
+            sections.append(configureHumidityAlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.pressure != nil {
+            sections.append(configurePressureAlertSection())
         }
 
         if viewModel?.latestMeasurement.value?.luminance != nil {
@@ -2668,6 +2663,14 @@ extension TagSettingsViewController {
 
         if viewModel?.latestMeasurement.value?.movementCounter != nil {
             sections.append(configureMovementAlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.dbaInstant != nil {
+            sections.append(configureSoundAlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.rssi != nil {
+            sections.append(configureRSSIAlertSection())
         }
 
         if viewModel?.isConnectable != nil {

@@ -15,7 +15,8 @@ protocol DashboardRouterInput {
         snapshots: [RuuviTagCardSnapshot],
         ruuviTagSensors: [AnyRuuviTagSensor],
         sensorSettings: [SensorSettings],
-        activeMenu: CardsMenuType
+        activeMenu: CardsMenuType,
+        openSettings: Bool // Legacy flow support, we can remove this with new menu.
     )
     func openUpdateFirmware(ruuviTag: RuuviTagSensor)
     func openBackgroundSelectionView(ruuviTag: RuuviTagSensor)

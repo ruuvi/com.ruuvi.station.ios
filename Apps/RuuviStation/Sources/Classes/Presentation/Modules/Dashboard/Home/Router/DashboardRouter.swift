@@ -125,7 +125,8 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         snapshots: [RuuviTagCardSnapshot],
         ruuviTagSensors: [AnyRuuviTagSensor],
         sensorSettings: [SensorSettings],
-        activeMenu: CardsMenuType
+        activeMenu: CardsMenuType,
+        openSettings: Bool
     ) {
         cardsCoordinator = CardsCoordinator(
             baseViewController: transitionHandler,
@@ -134,7 +135,8 @@ class DashboardRouter: NSObject, DashboardRouterInput {
             ruuviTagSensors: ruuviTagSensors,
             sensorSettings: sensorSettings,
             activeMenu: activeMenu,
-            delegate: self
+            delegate: self,
+            showSettings: openSettings
         )
         cardsCoordinator.start()
 

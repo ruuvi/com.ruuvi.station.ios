@@ -88,6 +88,12 @@ class RuuviTagDataService {
     }
 
     // MARK: - Public Interface
+    func startObservingSensors(with snapshots: [RuuviTagCardSnapshot]) {
+        self.snapshots = snapshots
+        observeRuuviTags()
+        observeUnitChanges()
+    }
+
     func startObservingSensors() {
         observeRuuviTags()
         observeUnitChanges()

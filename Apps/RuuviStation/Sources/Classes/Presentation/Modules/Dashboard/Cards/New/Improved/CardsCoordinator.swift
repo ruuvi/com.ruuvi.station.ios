@@ -37,6 +37,7 @@ class CardsCoordinator: RuuviCoordinator {
     private var ruuviTagSensors: [AnyRuuviTagSensor] = []
     private var sensorSettings: [SensorSettings] = []
     private var activeMenu: CardsMenuType = .measurement
+    private var showSettings: Bool = false // Legacy
 
     private var tabs: [CardsMenuType: UIViewController] = [:]
 
@@ -49,7 +50,8 @@ class CardsCoordinator: RuuviCoordinator {
         ruuviTagSensors: [AnyRuuviTagSensor],
         sensorSettings: [SensorSettings],
         activeMenu: CardsMenuType,
-        delegate: CardsCoordinatorDelegate?
+        delegate: CardsCoordinatorDelegate?,
+        showSettings: Bool
     ) {
         super.init(baseViewController: baseViewController)
         self.snapshot = snapshot
@@ -57,6 +59,7 @@ class CardsCoordinator: RuuviCoordinator {
         self.ruuviTagSensors = ruuviTagSensors
         self.sensorSettings = sensorSettings
         self.activeMenu = activeMenu
+        self.showSettings = showSettings
         self.delegate = delegate
     }
 
@@ -66,10 +69,40 @@ class CardsCoordinator: RuuviCoordinator {
         tabs = createTabViewControllers()
         cardsBaseViewController = createBaseViewController()
 
-        baseViewController.navigationController?.pushViewController(
-            cardsBaseViewController,
-            animated: true
-        )
+        if showSettings {
+            let settingsFactory: TagSettingsModuleFactory = TagSettingsModuleFactoryImpl()
+            let settingsModule = settingsFactory.create()
+
+            if let settingsPresenter = settingsModule.output as? TagSettingsModuleInput,
+               let ruuviTag = ruuviTagSensors.first(where: {
+                   $0.luid?.value == snapshot.identifierData.luid?.value ||
+                   $0.macId?.value == snapshot.identifierData.mac?.value
+               }) {
+                settingsPresenter.configure(output: cardsBaseViewPresenter)
+                settingsPresenter.configure(
+                    ruuviTag: ruuviTag,
+                    latestMeasurement: snapshot.latestRawRecord,
+                    sensorSettings: sensorSettings.first(where: {
+                        $0.luid?.value == ruuviTag.luid?.value ||
+                        $0.macId?.value == ruuviTag.macId?.value
+                    })
+                )
+            }
+
+            baseViewController.navigationController?.setViewControllers(
+                [
+                    baseViewController,
+                    cardsBaseViewController,
+                    settingsModule
+                ],
+                animated: true
+            )
+        } else {
+            baseViewController.navigationController?.pushViewController(
+                cardsBaseViewController,
+                animated: true
+            )
+        }
     }
 
     override func stop() {
@@ -83,7 +116,6 @@ class CardsCoordinator: RuuviCoordinator {
             self?.cardsAlertsViewPresenter.stop()
             self?.cardsSettingsViewPresenter.stop()
 
-            
             self?.cardsMeasurementViewPresenter = nil
             self?.cardsGraphViewPresenter = nil
             self?.cardsAlertsViewPresenter = nil

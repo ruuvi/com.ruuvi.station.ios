@@ -3,7 +3,7 @@ import RuuviOntology
 
 enum AbortSyncSource {
     case rootBackButton
-    case rootNavigationButton
+    case rootNavigationButton(Int) // Target Index
     case topMenuSwitch
     case inPageCancel
 }

@@ -991,14 +991,25 @@ extension DashboardViewController: NewDashboardViewInput {
         )
     }
 
-    func showKeepConnectionDialogSettings(for snapshot: RuuviTagCardSnapshot) {
+    func showKeepConnectionDialogSettings(
+        for snapshot: RuuviTagCardSnapshot,
+        newlyAddedSensor: Bool
+    ) {
         showKeepConnectionDialog(
             for: snapshot,
             onDismiss: { [weak self] in
-                self?.output.viewDidDismissKeepConnectionDialogSettings(for: snapshot)
+                self?.output
+                    .viewDidDismissKeepConnectionDialogSettings(
+                        for: snapshot,
+                        newlyAddedSensor: newlyAddedSensor
+                    )
             },
             onKeep: { [weak self] in
-                self?.output.viewDidConfirmToKeepConnectionSettings(to: snapshot)
+                self?.output
+                    .viewDidConfirmToKeepConnectionSettings(
+                        to: snapshot,
+                        newlyAddedSensor: newlyAddedSensor
+                    )
             }
         )
     }

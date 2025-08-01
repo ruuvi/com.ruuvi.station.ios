@@ -263,11 +263,8 @@ extension NewCardsGraphPresenter: NewCardsGraphViewOutput {
         stopGattSync()
         isSyncing = false
 
-        if source != .inPageCancel {
-            if let snapshot = snapshot {
-                output?
-                    .graphGattSyncAborted(for: snapshot, source: source)
-            }
+        if let snapshot = snapshot {
+            output?.graphGattSyncAborted(for: snapshot, source: source)
         }
     }
 

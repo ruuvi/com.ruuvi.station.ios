@@ -9,6 +9,7 @@ protocol NewCardsBaseViewInput: AnyObject {
     /// and precondition steps are completed.
     func showContentsForTab(_ tab: CardsMenuType)
     func setSnapshots(_ snapshots: [RuuviTagCardSnapshot])
+    func updateSnapshot(_ snapshot: RuuviTagCardSnapshot)
     func setActiveSnapshotIndex(_ index: Int)
     func setActivityIndicatorVisible(_ visible: Bool)
     func showBluetoothDisabled(userDeclined: Bool)

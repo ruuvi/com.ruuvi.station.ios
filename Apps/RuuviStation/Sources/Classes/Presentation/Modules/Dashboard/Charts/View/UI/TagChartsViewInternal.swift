@@ -46,7 +46,7 @@ class TagChartsViewInternal: LineChartView {
         dragEnabled = true
         setScaleEnabled(true)
         pinchZoomEnabled = false
-        highlightPerDragEnabled = true
+        highlightPerDragEnabled = false
         backgroundColor = .clear
         legend.enabled = false
 

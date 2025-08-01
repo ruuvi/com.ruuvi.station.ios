@@ -60,7 +60,7 @@ protocol NewCardsGraphViewInput: ViewInput {
     func showSwipeUpInstruction()
     func showSyncConfirmationDialog(for snapshot: RuuviTagCardSnapshot)
     func showSyncAbortAlert(source: AbortSyncSource)
-    func showSyncAbortAlertForSwipe()
+    func showSyncAbortAlertForSwipe(to index: Int)
     func showExportSheet(with path: URL)
     func showLongerHistoryDialog()
 }

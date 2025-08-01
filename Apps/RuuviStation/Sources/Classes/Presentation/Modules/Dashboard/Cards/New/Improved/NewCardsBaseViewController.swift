@@ -60,7 +60,16 @@ final class NewCardsBaseViewController: UIViewController {
         iv.backgroundColor = .clear
         iv.tintColor = .white
         view.addSubview(iv)
-        iv.fillSuperview(padding: .init(top: 10, left: 8, bottom: 10, right: 0))
+        iv.anchor(
+            top: nil,
+            leading: view.leadingAnchor,
+            bottom: nil,
+            trailing: nil,
+            padding: .init(top: 0, left: 15, bottom: 0, right: 0),
+            size: .init(width: 18, height: 18)
+        )
+        iv.centerYAnchor
+            .constraint(equalTo: view.centerYAnchor, constant: -3).isActive = true
 
         view.addSubview(backButton)
         backButton.fillSuperview()
@@ -272,7 +281,7 @@ private extension NewCardsBaseViewController {
             ruuviLogoView.centerYAnchor
                 .constraint(
                     equalTo: headerView.centerYAnchor,
-                    constant: -2
+                    constant: -3
                 ).isActive = true
 
             headerView.addSubview(activityIndicator)
@@ -620,6 +629,13 @@ extension NewCardsBaseViewController: NewCardsBaseViewInput {
 
     func setSnapshots(_ snapshots: [RuuviTagCardSnapshot]) {
         currentSnapshots = snapshots
+    }
+
+    func updateSnapshot(_ snapshot: RuuviTagCardSnapshot) {
+        if let snapshotIndex = currentSnapshots.firstIndex(of: snapshot) {
+            currentSnapshots[snapshotIndex] = snapshot
+            updateCurrentSnapshotUI()
+        }
     }
 
     func setActiveSnapshotIndex(_ index: Int) {
