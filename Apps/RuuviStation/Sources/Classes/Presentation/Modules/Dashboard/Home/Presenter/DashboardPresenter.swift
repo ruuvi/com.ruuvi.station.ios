@@ -24,7 +24,6 @@ class DashboardPresenter {
     // MARK: - Services
     private let sensorDataService: RuuviTagDataService
     private let alertService: RuuviTagAlertService
-    private let backgroundService: RuuviTagBackgroundService
     private let connectionService: RuuviTagConnectionService
     private let settingsService: DashboardSettingsService
     private let cloudSyncService: RuuviCloudService
@@ -52,14 +51,12 @@ class DashboardPresenter {
     init(
         sensorDataService: RuuviTagDataService,
         alertService: RuuviTagAlertService,
-        backgroundService: RuuviTagBackgroundService,
         connectionService: RuuviTagConnectionService,
         settingsService: DashboardSettingsService,
         cloudSyncService: RuuviCloudService
     ) {
         self.sensorDataService = sensorDataService
         self.alertService = alertService
-        self.backgroundService = backgroundService
         self.connectionService = connectionService
         self.settingsService = settingsService
         self.cloudSyncService = cloudSyncService
@@ -75,7 +72,6 @@ class DashboardPresenter {
     private func setupServiceDelegates() {
         sensorDataService.delegate = self
         alertService.delegate = self
-        backgroundService.delegate = self
         connectionService.delegate = self
         settingsService.delegate = self
         cloudSyncService.delegate = self
@@ -84,21 +80,18 @@ class DashboardPresenter {
     private func startAllServices() {
         sensorDataService.startObservingSensors()
         alertService.startObservingAlerts()
-        backgroundService.startObservingBackgroundChanges()
         connectionService.startObservingConnections()
         settingsService.startObservingSettings()
         cloudSyncService.startObserving()
 
         startObservingUniversalLinks()
         startObservingDaemonErrors()
-        startObservingBackgroundChanges()
         startObservingConnectionChanges()
     }
 
     private func stopAllObservations() {
         sensorDataService.stopObservingSensors()
         alertService.stopObservingAlerts()
-        backgroundService.stopObservingBackgroundChanges()
         connectionService.stopObservingConnections()
         settingsService.stopObservingSettings()
         cloudSyncService.stopObserving()
@@ -122,6 +115,7 @@ extension DashboardPresenter: DashboardViewOutput {
         startAllServices()
         cloudSyncService.triggerFullHistorySync()
         pushNotificationsManager.registerForRemoteNotifications()
+        RuuviTagServiceCoordinatorManager.shared.initialize()
     }
 
     func viewWillAppear() {
@@ -514,21 +508,7 @@ private extension DashboardPresenter {
         }
     }
 
-    func startObservingBackgroundChanges() {
-        backgroundChangeToken = NotificationCenter.default.addObserver(
-            forName: .DashboardBackgroundDidChange,
-            object: nil,
-            queue: .main
-        ) { [weak self] notification in
-            guard let self = self,
-                  let userInfo = notification.userInfo,
-                  let sensorId = userInfo["sensorId"] as? String,
-                  let snapshot = self.sensorDataService.getSnapshot(for: sensorId),
-                  let sensor = self.sensorDataService.getSensor(for: sensorId) else { return }
-
-            self.backgroundService.loadBackground(for: snapshot, sensor: sensor)
-        }
-    }
+//b
 
     func startObservingConnectionChanges() {
         connectionChangeToken = NotificationCenter.default.addObserver(
@@ -587,10 +567,6 @@ extension DashboardPresenter: RuuviTagDataServiceDelegate {
 
             // Subscribe to alerts
             self.alertService.subscribeToAlerts(for: snapshots)
-
-            // Load backgrounds
-            let sensors = self.sensorDataService.getAllSensors()
-            self.backgroundService.loadBackgrounds(for: snapshots, sensors: sensors)
 
             // Update sign in banner and cloud sensor info on main thread
             DispatchQueue.main.async {
@@ -664,28 +640,28 @@ extension DashboardPresenter: RuuviTagAlertServiceDelegate {
     }
 }
 
-extension DashboardPresenter: RuuviTagBackgroundServiceDelegate {
-
-    func backgroundService(
-        _ service: RuuviTagBackgroundService,
-        didUpdateSnapshot snapshot: RuuviTagCardSnapshot
-    ) {
-        view?
-            .updateSnapshot(
-                from: snapshot
-            )
-    }
-
-    func backgroundService(
-        _ service: RuuviTagBackgroundService,
-        didEncounterError error: Error
-    ) {
-        errorPresenter
-            .present(
-                error: error
-            )
-    }
-}
+//extension DashboardPresenter: RuuviTagBackgroundServiceDelegate {
+//
+//    func backgroundService(
+//        _ service: RuuviTagBackgroundService,
+//        didUpdateSnapshot snapshot: RuuviTagCardSnapshot
+//    ) {
+//        view?
+//            .updateSnapshot(
+//                from: snapshot
+//            )
+//    }
+//
+//    func backgroundService(
+//        _ service: RuuviTagBackgroundService,
+//        didEncounterError error: Error
+//    ) {
+//        errorPresenter
+//            .present(
+//                error: error
+//            )
+//    }
+//}
 
 extension DashboardPresenter: RuuviTagConnectionServiceDelegate {
 

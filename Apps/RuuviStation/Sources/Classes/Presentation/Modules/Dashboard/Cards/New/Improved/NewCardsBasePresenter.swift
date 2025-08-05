@@ -28,11 +28,6 @@ class NewCardsBasePresenter: NSObject {
     private let errorPresenter: ErrorPresenter
     private let featureToggleService: FeatureToggleService
 
-    private let sensorDataService: RuuviTagDataService
-    private let alertService: RuuviTagAlertService
-    private let backgroundService: RuuviTagBackgroundService
-    private let connectionService: RuuviTagConnectionService
-
     // MARK: Properties
     private var snapshot: RuuviTagCardSnapshot!
     private var snapshots: [RuuviTagCardSnapshot] = []
@@ -59,11 +54,7 @@ class NewCardsBasePresenter: NSObject {
         settings: RuuviLocalSettings,
         connectionPersistence: RuuviLocalConnections,
         errorPresenter: ErrorPresenter,
-        featureToggleService: FeatureToggleService,
-        sensorDataService: RuuviTagDataService,
-        alertService: RuuviTagAlertService,
-        backgroundService: RuuviTagBackgroundService,
-        connectionService: RuuviTagConnectionService
+        featureToggleService: FeatureToggleService
     ) {
         self.measurementPresenter = measurementPresenter
         self.graphPresenter = graphPresenter
@@ -76,10 +67,6 @@ class NewCardsBasePresenter: NSObject {
         self.connectionPersistence = connectionPersistence
         self.errorPresenter = errorPresenter
         self.featureToggleService = featureToggleService
-        self.sensorDataService = sensorDataService
-        self.alertService = alertService
-        self.backgroundService = backgroundService
-        self.connectionService = connectionService
         super.init()
 
         self.startServices()
@@ -339,117 +326,85 @@ extension NewCardsBasePresenter: TagSettingsModuleOutput {
     }
 }
 
-// MARK: RuuviTagDataServiceDelegate
-extension NewCardsBasePresenter: RuuviTagDataServiceDelegate {
-    func sensorDataService(
-        _ service: RuuviTagDataService,
-        didUpdateSnapshots snapshots: [RuuviTagCardSnapshot],
-        withAnimation: Bool
+// MARK: RuuviTagServiceCoordinatorObserver
+extension NewCardsBasePresenter: RuuviTagServiceCoordinatorObserver {
+    func coordinatorDidReceiveEvent(
+        _ coordinator: RuuviTagServiceCoordinator,
+        event: RuuviTagServiceCoordinatorEvent
     ) {
-//        if snapshots.count > 0 {
-//            // If new snapshots collection does not contain the active snapshot
-//            // that means active snapshot is removed from collection either by
-//            // user from this client or via sync.
-//            // In that case update the active snapshot with first item
-//            // from the collection.
-//            if snapshots.count < self.snapshots.count,
-//               !snapshots.contains(self.snapshot) {
-//                self.snapshots = snapshots
-//                snapshot = snapshots.first
-//            }
-//
-//            // Order is very important for next calls.
-//            self.ruuviTagSensors = sensorDataService.getAllSensors()
-//            self.sensorSettings = sensorDataService.getSensorSettings()
-//
-//            view?.setSnapshots(snapshots)
-//            view?.setActiveSnapshotIndex(currentSnapshotIndex())
-//
-//            measurementPresenter?
-//                .configure(
-//                    with: snapshots,
-//                    snapshot: snapshot,
-//                    sensor: currentSensor()
-//                )
-//
-//            graphPresenter?
-//                .configure(
-//                    with: snapshots,
-//                    snapshot: snapshot,
-//                    sensor: currentSensor()
-//                )
-//            graphPresenter?.configure(sensorSettings: currentSensorSettings())
-//
-//            loadBackgroundsIfNeeded()
-//        } else {
-//            viewDidTapBackButton()
-//        }
-    }
+        switch event {
+        case .snapshotsUpdated(let snapshots, _):
+            if snapshots.count > 0 {
+                // If new snapshots collection does not contain the active snapshot
+                // that means active snapshot is removed from collection either by
+                // user from this client or via sync.
+                // In that case update the active snapshot with first item
+                // from the collection.
+                if snapshots.count < self.snapshots.count,
+                   !snapshots.contains(self.snapshot) {
+                    self.snapshots = snapshots
+                    snapshot = snapshots.first
+                }
 
-    func loadBackgroundsIfNeeded() {
-        DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard let self = self else { return }
+                // Order is very important for next calls.
+                self.ruuviTagSensors = coordinator.getAllSensors()
+                self.sensorSettings = coordinator.getSensorSettings()
 
-            let snapshotsNeedingBackgrounds = self.snapshots.filter { snapshot in
-                snapshot.displayData.background == nil
+                view?.setSnapshots(snapshots)
+                view?.setActiveSnapshotIndex(currentSnapshotIndex())
+
+                measurementPresenter?
+                    .configure(
+                        with: snapshots,
+                        snapshot: snapshot,
+                        sensor: currentSensor()
+                    )
+
+                graphPresenter?
+                    .configure(
+                        with: snapshots,
+                        snapshot: snapshot,
+                        sensor: currentSensor()
+                    )
+                graphPresenter?.configure(sensorSettings: currentSensorSettings())
+            } else {
+                viewDidTapBackButton()
             }
-
-            if !snapshotsNeedingBackgrounds.isEmpty {
-                self.backgroundService.loadBackgrounds(
-                    for: snapshotsNeedingBackgrounds,
-                    sensors: self.ruuviTagSensors
-                )
-            }
+        default:
+            break
+//        case .snapshotUpdated(let ruuviTagCardSnapshot, let invalidateLayout):
+//            <#code#>
+//        case .newSensorAdded(let ruuviTagSensor, let newOrder):
+//            <#code#>
+//        case .dataServiceError(let error):
+//            <#code#>
+//        case .backgroundUpdated(let sensorId, let luid, let macId):
+//            <#code#>
+//        case .userLoginStateChanged(let bool):
+//            <#code#>
+//        case .userLogoutStateChanged(let bool):
+//            <#code#>
+//        case .cloudSyncStatusChanged(let bool):
+//            <#code#>
+//        case .cloudSyncCompleted:
+//            <#code#>
+//        case .historySyncInProgress(let bool, let macId):
+//            <#code#>
+//        case .authorizationFailed:
+//            <#code#>
+//        case .cloudModeChanged(let bool):
+//            <#code#>
+//        case .alertSnapshotUpdated(let ruuviTagCardSnapshot):
+//            <#code#>
+//        case .alertsChanged:
+//            <#code#>
+//        case .connectionSnapshotUpdated(let ruuviTagCardSnapshot):
+//            <#code#>
+//        case .bluetoothStateChanged(let isEnabled, let userDeclined):
+//            <#code#>
+//        case .connectionServiceError(let error):
+//            <#code#>
         }
-    }
-
-    func sensorDataService(
-        _ service: RuuviTagDataService,
-        didUpdateSnapshot snapshot: RuuviTagCardSnapshot,
-        invalidateLayout: Bool
-    ) {
-        // No op May be?
-    }
-
-    func sensorDataService(
-        _ service: RuuviTagDataService,
-        didAddNewSensor sensor: RuuviTagSensor,
-        newOrder: [String]
-    ) {
-        // TODO: See if we need to implement this.
-    }
-
-    func sensorDataService(
-        _ service: RuuviTagDataService,
-        didEncounterError error: Error
-    ) {
-        // No op.
-    }
-
-}
-
-// MARK: RuuviTagBackgroundServiceDelegate
-extension NewCardsBasePresenter: RuuviTagBackgroundServiceDelegate {
-
-    func backgroundService(
-        _ service: RuuviTagBackgroundService,
-        didUpdateSnapshot snapshot: RuuviTagCardSnapshot
-    ) {
-        if let snapshotIndex = snapshots.firstIndex(of: snapshot) {
-            snapshots[snapshotIndex] = snapshot
-            self.snapshot = snapshot
-            view?.updateSnapshot(snapshot)
-        }
-    }
-
-    func backgroundService(
-        _ service: RuuviTagBackgroundService,
-        didEncounterError error: Error
-    ) {
-        errorPresenter
-            .present(
-                error: error
-            )
     }
 }
 
@@ -512,18 +467,14 @@ extension NewCardsBasePresenter: RuuviCloudServiceDelegate {
 // MARK: Private Helpers
 private extension NewCardsBasePresenter {
     func startServices() {
-        sensorDataService.startObservingSensors(with: snapshots)
+        RuuviTagServiceCoordinatorManager.shared.addObserver(self)
         ruuviCloudService.startObserving()
-//        backgroundService.startObservingBackgroundChanges()
 
-        sensorDataService.delegate = self
-        backgroundService.delegate = self
         ruuviCloudService.delegate = self
     }
 
     func stopServices() {
-        sensorDataService.stopObservingSensors()
-        backgroundService.stopObservingBackgroundChanges()
+        RuuviTagServiceCoordinatorManager.shared.removeObserver(self)
         ruuviCloudService.stopObserving()
     }
 

@@ -33,7 +33,6 @@ final class NewCardsModuleFactoryImpl: NewCardsModuleFactory {
         let mainPresenter = CardsMainPresenter(
             dataService: services.dataService,
             alertService: services.alertService,
-            backgroundService: services.backgroundService,
             connectionService: services.connectionService,
             dashboardCloudSyncService: services.dashboardCloudSyncService,
             settings: services.settings,
@@ -61,7 +60,6 @@ final class NewCardsModuleFactoryImpl: NewCardsModuleFactory {
     private func createServices(resolver: Resolver) -> (
         dataService: RuuviTagDataService,
         alertService: RuuviTagAlertService,
-        backgroundService: RuuviTagBackgroundService,
         connectionService: RuuviTagConnectionService,
         dashboardCloudSyncService: RuuviCloudService,
         settings: RuuviLocalSettings,
@@ -81,10 +79,6 @@ final class NewCardsModuleFactoryImpl: NewCardsModuleFactory {
             alertService: resolver.resolve(RuuviServiceAlert.self)!,
             alertHandler: resolver.resolve(RuuviNotifier.self)!,
             settings: resolver.resolve(RuuviLocalSettings.self)!
-        )
-
-        let backgroundService = RuuviTagBackgroundService(
-            ruuviSensorPropertiesService: resolver.resolve(RuuviServiceSensorProperties.self)!
         )
 
         let connectionService = RuuviTagConnectionService(
@@ -110,7 +104,6 @@ final class NewCardsModuleFactoryImpl: NewCardsModuleFactory {
         return (
             dataService: dataService,
             alertService: alertService,
-            backgroundService: backgroundService,
             connectionService: connectionService,
             dashboardCloudSyncService: dashboardCloudSyncService,
             settings: settings,
@@ -179,7 +172,6 @@ extension NewCardsModuleFactoryImpl {
         let mainPresenter = CardsMainPresenter(
             dataService: services.dataService,
             alertService: services.alertService,
-            backgroundService: services.backgroundService,
             connectionService: services.connectionService,
             dashboardCloudSyncService: services.dashboardCloudSyncService,
             settings: services.settings,

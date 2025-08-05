@@ -165,12 +165,6 @@ extension DashboardModuleFactoryImpl {
         return factory.createAlertService()
     }
 
-    func createBackgroundService() -> RuuviTagBackgroundService {
-        let r = AppAssembly.shared.assembler.resolver
-        let factory = DashboardServiceFactory.create(from: r)
-        return factory.createBackgroundService()
-    }
-
     func createConnectionService() -> RuuviTagConnectionService {
         let r = AppAssembly.shared.assembler.resolver
         let factory = DashboardServiceFactory.create(from: r)

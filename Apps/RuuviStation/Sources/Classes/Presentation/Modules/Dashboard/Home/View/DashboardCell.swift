@@ -645,7 +645,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         cardBackgroundView
             .setBackgroundImage(
                 with: displayData.background,
-                withAnimation: true
+                withAnimation: false
             )
     }
 

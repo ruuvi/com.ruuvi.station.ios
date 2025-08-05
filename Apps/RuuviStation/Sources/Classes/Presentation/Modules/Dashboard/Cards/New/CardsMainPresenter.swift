@@ -39,7 +39,6 @@ final class CardsMainPresenter: CardsLandingViewOutput {
     // MARK: - Services
     private let dataService: RuuviTagDataService
     private let alertService: RuuviTagAlertService
-    private let backgroundService: RuuviTagBackgroundService
     private let connectionService: RuuviTagConnectionService
     private let dashboardCloudSyncService: RuuviCloudService
     private let settings: RuuviLocalSettings
@@ -54,7 +53,6 @@ final class CardsMainPresenter: CardsLandingViewOutput {
     init(
         dataService: RuuviTagDataService,
         alertService: RuuviTagAlertService,
-        backgroundService: RuuviTagBackgroundService,
         connectionService: RuuviTagConnectionService,
         dashboardCloudSyncService: RuuviCloudService,
         settings: RuuviLocalSettings,
@@ -63,7 +61,6 @@ final class CardsMainPresenter: CardsLandingViewOutput {
     ) {
         self.dataService = dataService
         self.alertService = alertService
-        self.backgroundService = backgroundService
         self.connectionService = connectionService
         self.dashboardCloudSyncService = dashboardCloudSyncService
         self.settings = settings
@@ -108,7 +105,6 @@ final class CardsMainPresenter: CardsLandingViewOutput {
             print("Failed to start alert service: \(error)")
         }
 
-        backgroundService.startObservingBackgroundChanges()
         connectionService.startObservingConnections()
         dashboardCloudSyncService.startObserving()
     }
@@ -116,7 +112,6 @@ final class CardsMainPresenter: CardsLandingViewOutput {
     private func stopServices() {
         dataService.stopObservingSensors()
         alertService.stopObservingAlerts()
-        backgroundService.stopObservingBackgroundChanges()
         connectionService.stopObservingConnections()
         dashboardCloudSyncService.stopObserving()
     }
@@ -322,7 +317,6 @@ extension CardsMainPresenter: NewCardsModuleInput {
         view?.updateCurrentTab(initialActiveMenu)
 
         updateAllTabsWithConfiguredData()
-        loadMissingBackgrounds()
     }
 
     private func updateAllTabsWithConfiguredData() {
@@ -502,21 +496,6 @@ private extension CardsMainPresenter {
         view?.updateCurrentSnapshotIndex(currentSnapshotIndex)
         updateTabWithCurrentSnapshot(currentTab)
     }
-
-    func loadMissingBackgrounds() {
-        DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard let self = self else { return }
-
-            let sensors = self.dataService.getAllSensors()
-            let snapshotsNeedingBackgrounds = self.snapshots.filter { snapshot in
-                snapshot.displayData.background == nil
-            }
-
-            if !snapshotsNeedingBackgrounds.isEmpty {
-                self.backgroundService.loadBackgrounds(for: snapshotsNeedingBackgrounds, sensors: sensors)
-            }
-        }
-    }
 }
 
 // MARK: - Service Delegates
@@ -525,7 +504,6 @@ private extension CardsMainPresenter {
     func setupServiceDelegates() {
         dataService.delegate = self
         alertService.delegate = self
-        backgroundService.delegate = self
         connectionService.delegate = self
         dashboardCloudSyncService.delegate = self
     }
@@ -569,8 +547,6 @@ extension CardsMainPresenter: RuuviTagDataServiceDelegate {
             self.view?.updateSnapshots(self.snapshots)
             self.view?.updateCurrentSnapshotIndex(self.currentSnapshotIndex)
         }
-
-        loadMissingBackgrounds()
     }
 
     func sensorDataService(
@@ -617,68 +593,6 @@ extension CardsMainPresenter: RuuviTagAlertServiceDelegate {
         alertsDidChange: Bool
     ) {
         // No action needed
-    }
-}
-
-// MARK: - FIXED: Background Service Delegate with Proper View Updates
-extension CardsMainPresenter: RuuviTagBackgroundServiceDelegate {
-
-    func backgroundService(
-        _ service: RuuviTagBackgroundService,
-        didUpdateSnapshot snapshot: RuuviTagCardSnapshot
-    ) {
-        print("CardsMainPresenter: Background service updated snapshot \(snapshot.id)")
-
-        DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.applyBackgroundUpdate(snapshot)
-        }
-    }
-
-    // FIXED: Enhanced background update method
-    private func applyBackgroundUpdate(_ snapshot: RuuviTagCardSnapshot) {
-        guard let index = snapshots.firstIndex(where: { $0.id == snapshot.id }),
-              index >= 0 && index < snapshots.count else {
-            print("CardsMainPresenter: Cannot find snapshot for background update with ID: \(snapshot.id)")
-            return
-        }
-
-        let oldBackground = snapshots[index].displayData.background
-        let newBackground = snapshot.displayData.background
-
-        print("CardsMainPresenter: Updating background for snapshot \(snapshot.id)")
-        print("  Old background: \(oldBackground != nil ? "present" : "nil")")
-        print("  New background: \(newBackground != nil ? "present" : "nil")")
-
-        if let newBackground = newBackground {
-            // Update the background in our snapshot
-            snapshots[index].displayData.background = newBackground
-
-            // Update measurement presenter immediately
-            measurementPresenter?.updateCurrentSnapshot(snapshots[index])
-
-            // Update other tabs if this is the current snapshot
-            if index == currentSnapshotIndex && currentTab != .measurement {
-                updateTabWithCurrentSnapshot(currentTab)
-            }
-
-            // FIXED: Always call updateSnapshots to trigger view refresh
-            print("CardsMainPresenter: Triggering view update for background change")
-            view?.updateSnapshots(snapshots)
-
-            // FIXED: Also trigger a force refresh for the landing view if available
-            if let landingView = view as? NewCardsLandingViewController {
-                landingView.forceBackgroundRefresh()
-            }
-        } else {
-            print("CardsMainPresenter: Warning - Background update has nil background image")
-        }
-    }
-
-    func backgroundService(
-        _ service: RuuviTagBackgroundService,
-        didEncounterError error: Error
-    ) {
     }
 }
 
