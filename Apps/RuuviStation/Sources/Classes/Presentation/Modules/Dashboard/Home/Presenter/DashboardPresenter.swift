@@ -508,8 +508,6 @@ private extension DashboardPresenter {
         }
     }
 
-//b
-
     func startObservingConnectionChanges() {
         connectionChangeToken = NotificationCenter.default.addObserver(
             forName: .DashboardConnectionDidChange,
@@ -528,7 +526,7 @@ private extension DashboardPresenter {
                     isConnectable: snapshot.connectionData.isConnectable,
                     keepConnection: snapshot.connectionData.keepConnection
                 )
-                self.alertService.triggerAlertsIfNeeded(for: snapshot)
+//                self.alertService.triggerAlertsIfNeeded(for: snapshot)
                 self.view?.updateSnapshot(from: snapshot)
             }
         }
@@ -584,7 +582,7 @@ extension DashboardPresenter: RuuviTagDataServiceDelegate {
         invalidateLayout: Bool
     ) {
         view?.updateSnapshot(from: snapshot, invalidateLayout: invalidateLayout)
-        alertService.triggerAlertsIfNeeded(for: snapshot)
+//        alertService.triggerAlertsIfNeeded(for: snapshot)
     }
 
     func sensorDataService(
@@ -639,29 +637,6 @@ extension DashboardPresenter: RuuviTagAlertServiceDelegate {
         return sensorDataService.getSnapshot(for: sensorId)
     }
 }
-
-//extension DashboardPresenter: RuuviTagBackgroundServiceDelegate {
-//
-//    func backgroundService(
-//        _ service: RuuviTagBackgroundService,
-//        didUpdateSnapshot snapshot: RuuviTagCardSnapshot
-//    ) {
-//        view?
-//            .updateSnapshot(
-//                from: snapshot
-//            )
-//    }
-//
-//    func backgroundService(
-//        _ service: RuuviTagBackgroundService,
-//        didEncounterError error: Error
-//    ) {
-//        errorPresenter
-//            .present(
-//                error: error
-//            )
-//    }
-//}
 
 extension DashboardPresenter: RuuviTagConnectionServiceDelegate {
 

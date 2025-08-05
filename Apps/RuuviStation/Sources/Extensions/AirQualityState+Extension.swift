@@ -5,6 +5,7 @@ import RuuviOntology
 extension AirQualityState {
     var color: UIColor {
         let index: Double
+
         switch self {
         case .excellent(let value),
              .good(let value),
@@ -15,12 +16,16 @@ extension AirQualityState {
         }
 
         switch index {
-        case 79.5...:
-            return UIColor(red: 140/255, green: 198/255, blue: 63/255, alpha: 1.0) // Green
-        case 19.5..<79.5:
-            return UIColor(red: 247/255, green: 225/255, blue: 62/255, alpha: 1.0) // Yellow
-        default: // index < 19.5
-            return UIColor(red: 241/255, green: 90/255, blue: 36/255, alpha: 1.0) // Red
+        case 90...: // Excellent (green-blue)
+            return UIColor(red: 75/255, green: 200/255, blue: 185/255, alpha: 1.0)
+        case 80..<90: // Good (green)
+            return UIColor(red: 150/255, green: 204/255, blue: 72/255, alpha: 1.0)
+        case 60..<80: // Moderate (yellow)
+            return UIColor(red: 247/255, green: 225/255, blue: 62/255, alpha: 1.0)
+        case 40..<60: // Poor (orange)
+            return UIColor(red: 247/255, green: 156/255, blue: 33/255, alpha: 1.0)
+        default: // <40, Unhealthy (red)
+            return UIColor(red: 237/255, green: 80/255, blue: 33/255, alpha: 1.0)
         }
     }
 

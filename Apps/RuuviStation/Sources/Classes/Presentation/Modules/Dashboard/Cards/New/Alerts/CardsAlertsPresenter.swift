@@ -49,14 +49,6 @@ final class CardsAlertsPresenter: CardsAlertsViewOutput {
         // - Save alert preferences
         // - Update UI to reflect changes
 
-        alertService.updateAlertForMeasurement(
-            snapshot: snapshot,
-            type: type,
-            isOn: isOn,
-            alertState: isOn ? .registered : .empty,
-            mutedTill: nil
-        )
-
         view?.updateAlertsData()
     }
 }

@@ -190,6 +190,12 @@ private class LegacyMenuButton: UIButton {
             return
         }
 
+        print(
+            "update] updateAlertState",
+            snapshot.displayData.name,
+            snapshot.alertData.alertState
+        )
+
         // Check for muted alerts
         switch snapshot.alertData.alertState {
         case .empty, .none:

@@ -355,6 +355,7 @@ extension RuuviTagServiceCoordinator: RuuviTagDataServiceDelegate {
         if !initialSetupCompleted && !snapshots.isEmpty {
             initialSetupCompleted = true
             alertService.subscribeToAlerts(for: snapshots)
+            alertService.triggerAlertsIfNeeded(for: snapshots)
         }
 
         notifyEvent(.snapshotsUpdated(snapshots, withAnimation: withAnimation))
@@ -465,6 +466,13 @@ extension RuuviTagServiceCoordinator: RuuviTagAlertServiceDelegate {
         alertsDidChange: Bool
     ) {
         notifyEvent(.alertsChanged)
+        if alertsDidChange {
+            // Trigger alerts if needed
+            service
+                .triggerAlertsIfNeeded(
+                    for: getAllSnapshots()
+                )
+        }
     }
 }
 

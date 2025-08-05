@@ -436,10 +436,13 @@ class CardsMeasurementPageViewController: UIViewController {
 
         snapshot.displayData.indicatorGrid?.indicators.forEach { indicatorData in
             // Only update alert state for existing measurement cards
-            if let card = currentMeasurementCards[indicatorData.type] {
+            if let card = currentMeasurementCards[indicatorData.type],
+               let alertConfig = snapshot.getAlertConfig(
+                   for: indicatorData.type
+               ) {
                 card
                     .updateAlertState(
-                        isHighlighted: indicatorData.isHighlighted &&
+                        isHighlighted: alertConfig.isHighlighted &&
                             snapshot.metadata.isAlertAvailable
                     )
             }
@@ -465,10 +468,13 @@ class CardsMeasurementPageViewController: UIViewController {
             prominentIndicator = indicators.first
         }
 
-        if let highlighted = prominentIndicator?.isHighlighted,
+        if let type = prominentIndicator?.type,
+            let alertConfig = snapshot?.getAlertConfig(for: type),
             let metadata = snapshot?.metadata {
             prominentIndicatorView
-                .updateAlertState(isHighlighted: highlighted && metadata.isAlertAvailable)
+                .updateAlertState(
+                    isHighlighted: alertConfig.isHighlighted && metadata.isAlertAvailable
+                )
         }
     }
 

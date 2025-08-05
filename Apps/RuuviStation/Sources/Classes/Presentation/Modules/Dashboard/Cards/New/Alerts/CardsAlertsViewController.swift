@@ -89,14 +89,7 @@ final class CardsAlertsViewController: UIViewController, CardsAlertsViewInput {
 
     // MARK: - CardsAlertsViewInput
     func showSelectedSnapshot(_ snapshot: RuuviTagCardSnapshot?) {
-        DispatchQueue.main.async { [weak self] in
-            if let snapshot = snapshot {
-                let alertCount = snapshot.displayData.indicatorGrid?.indicators.filter { $0.alertConfig.isActive }.count ?? 0
-                self?.snapshotLabel.text = "Alerts for: \(snapshot.displayData.name)\nActive alerts: \(alertCount)"
-            } else {
-                self?.snapshotLabel.text = "No sensor selected"
-            }
-        }
+        // Implement
     }
 
     func updateAlertsData() {

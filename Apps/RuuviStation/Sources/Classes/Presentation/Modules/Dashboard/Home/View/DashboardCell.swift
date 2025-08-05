@@ -937,6 +937,11 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         // Update each indicator's alert state
         snapshot.displayData.indicatorGrid?.indicators
             .forEach { indicatorData in
+                let isHighlighted = snapshot.getAlertConfig(
+                    for: indicatorData.type
+                )?.isHighlighted ?? false
+                let alertsAvailable = snapshot.metadata.isAlertAvailable
+
                 if dashboardType == .image && indicatorData.type == .temperature {
                     let hasAdvancedSensors = snapshot.displayData.indicatorGrid?.indicators.contains {
                         $0.type == .aqi
@@ -945,18 +950,18 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                     if hasAdvancedSensors {
                         temperatureView
                             .changeColor(
-                                highlight: indicatorData.isHighlighted
+                                highlight: isHighlighted && alertsAvailable
                             )
                     } else {
                         prominentView
                             .changeColor(
-                                highlight: indicatorData.isHighlighted
+                                highlight: isHighlighted && alertsAvailable
                             )
                     }
                 } else if dashboardType == .image && indicatorData.type == .aqi {
                     prominentView
                         .changeColor(
-                            highlight: indicatorData.isHighlighted
+                            highlight: isHighlighted && alertsAvailable
                         )
                 } else {
 
@@ -965,7 +970,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                     )
                     indicatorView?
                         .changeColor(
-                            highlight: indicatorData.isHighlighted
+                            highlight: isHighlighted && alertsAvailable
                         )
                 }
             }

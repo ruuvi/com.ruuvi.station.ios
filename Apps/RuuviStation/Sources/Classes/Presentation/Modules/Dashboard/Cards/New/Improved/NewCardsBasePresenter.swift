@@ -41,6 +41,8 @@ class NewCardsBasePresenter: NSObject {
         CBCentralManager.authorization == .allowedAlways
     }
 
+    private var sensorOrderChangeToken: NSObjectProtocol?
+
     // MARK: Observations
     private var stateToken: ObservationToken?
 
@@ -69,10 +71,31 @@ class NewCardsBasePresenter: NSObject {
         self.featureToggleService = featureToggleService
         super.init()
 
+        self.startObservingSensorOrderChanges()
         self.startServices()
         self.startObservingBluetoothState()
         self.measurementPresenter?.configure(output: self)
         self.graphPresenter?.configure(output: self)
+    }
+
+    // TODO: Move this to coordinator
+    private func startObservingSensorOrderChanges() {
+        sensorOrderChangeToken?.invalidate()
+        sensorOrderChangeToken = nil
+        sensorOrderChangeToken = NotificationCenter
+            .default
+            .addObserver(
+                forName: .DashboardSensorOrderDidChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] _ in
+                    guard let self = self else { return }
+                    DispatchQueue.main.async {
+                        RuuviTagServiceCoordinatorManager.shared
+                            .reorderSnapshots(with: self.settings.dashboardSensorOrder)
+                    }
+                }
+            )
     }
 }
 
