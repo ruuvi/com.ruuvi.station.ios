@@ -42,7 +42,11 @@ extension NewCardsMeasurementPresenter: CardsMeasurementPresenterInput {
     func start() {
         var currentIndex: Int = 0
         if let snapshot = snapshot {
-            currentIndex = snapshots.firstIndex(of: snapshot) ?? 0
+            currentIndex = snapshots.firstIndex(where: {
+                $0.id == snapshot.id &&
+                $0.identifierData.luid?.value == snapshot.identifierData.luid?.value &&
+                $0.identifierData.mac?.value == snapshot.identifierData.mac?.value
+            }) ?? 0
         }
         view?.updateSnapshots(snapshots, currentIndex: currentIndex)
     }

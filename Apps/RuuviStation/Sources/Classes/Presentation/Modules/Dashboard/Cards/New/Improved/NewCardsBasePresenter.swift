@@ -364,19 +364,39 @@ extension NewCardsBasePresenter: RuuviTagServiceCoordinatorObserver {
         event: RuuviTagServiceCoordinatorEvent
     ) {
         switch event {
-        case .snapshotsUpdated(let snapshots, _):
+        case .snapshotsUpdated(let snapshots, let reason, _):
             if snapshots.count > 0 {
                 // If new snapshots collection does not contain the active snapshot
                 // that means active snapshot is removed from collection either by
                 // user from this client or via sync.
                 // In that case update the active snapshot with first item
                 // from the collection.
-                if snapshots.count < self.snapshots.count,
-                   snapshots.first(where: {
-                       $0.id == self.snapshot.id &&
-                       $0.identifierData.luid?.value == self.snapshot.identifierData.luid?.value &&
-                       $0.identifierData.mac?.value == self.snapshot.identifierData.mac?.value }) == nil {
-                    snapshot = snapshots.first
+
+                print("Snapshots updated with reason: \(reason)")
+                switch reason {
+                case .delete(let deleted):
+                    // If current snapshot was deleted, select first
+                    if deleted.first(where: {
+                           $0.id == self.snapshot.id &&
+                           $0.identifierData.luid?.value == self.snapshot.identifierData.luid?.value &&
+                           $0.identifierData.mac?.value == self.snapshot.identifierData.mac?.value }) != nil {
+                        self.snapshots = snapshots
+                        self.snapshot = snapshots.first
+                    } else {
+                        // Current snapshot still exists, just update array
+                        self.snapshots = snapshots
+                    }
+                case .initial, .reorder, .insert, .update, .mixed:
+                    // For all other cases, keep current snapshot if it still exists
+                    if snapshots.first(where: {
+                           $0.id == self.snapshot.id &&
+                           $0.identifierData.luid?.value == self.snapshot.identifierData.luid?.value &&
+                           $0.identifierData.mac?.value == self.snapshot.identifierData.mac?.value }) != nil {
+                        self.snapshots = snapshots
+                    } else {
+                        self.snapshots = snapshots
+                        self.snapshot = snapshots.first
+                    }
                 }
 
                 // Order is very important for next calls.
@@ -400,6 +420,17 @@ extension NewCardsBasePresenter: RuuviTagServiceCoordinatorObserver {
                         sensor: currentSensor()
                     )
                 graphPresenter?.configure(sensorSettings: currentSensorSettings())
+
+                switch reason {
+                case .reorder, .delete:
+                    // If snapshots were reordered or deleted, we need to rebuild the presenters
+                    measurementPresenter?.start()
+                    measurementPresenter?
+                        .scroll(to: currentSnapshotIndex(), animated: false)
+                    graphPresenter?.start()
+                default:
+                    break
+                }
             } else {
                 viewDidTapBackButton()
             }

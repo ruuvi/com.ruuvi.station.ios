@@ -1,3 +1,5 @@
+// swiftlint:disable file_length
+
 import Foundation
 import RuuviOntology
 import RuuviReactor
@@ -10,11 +12,31 @@ import RuuviNotifier
 import RuuviLocal
 import BTKit
 
+// MARK: - Snapshot Update Reason
+enum SnapshotUpdateReason {
+    case initial                                    // First load
+    case reorder                                   // Order changed
+    case insert([RuuviTagCardSnapshot])           // New items added
+    case delete([RuuviTagCardSnapshot])           // Items removed
+    case update([RuuviTagCardSnapshot])           // Values changed
+    case mixed(
+        inserted: [RuuviTagCardSnapshot],
+        // Multiple changes
+        deleted: [RuuviTagCardSnapshot],
+        updated: [RuuviTagCardSnapshot],
+        reordered: Bool
+    )
+}
+
 // MARK: - RuuviTagServiceCoordinatorEvent
 enum RuuviTagServiceCoordinatorEvent {
-    // Data Service Events
-    case snapshotsUpdated([RuuviTagCardSnapshot], withAnimation: Bool)
-    case snapshotsUpdatedWithReorder([RuuviTagCardSnapshot], withAnimation: Bool)
+    case snapshotsUpdated(
+        [RuuviTagCardSnapshot],
+        reason: SnapshotUpdateReason,
+        withAnimation: Bool
+    )
+
+    // Individual snapshot events
     case snapshotUpdated(RuuviTagCardSnapshot, invalidateLayout: Bool)
     case newSensorAdded(RuuviTagSensor, newOrder: [String])
     case dataServiceError(Error)
@@ -68,6 +90,10 @@ class RuuviTagServiceCoordinator {
     private var isStarted = false
     private var initialSetupCompleted = false
 
+    // MARK: - Snapshot Tracking
+    private var previousSnapshots: [RuuviTagCardSnapshot] = []
+    private var snapshotIdMap: [String: RuuviTagCardSnapshot] = [:]
+
     // MARK: - Initialization
     init(
         dataService: RuuviTagDataService,
@@ -120,7 +146,15 @@ class RuuviTagServiceCoordinator {
 
         // Only send if we have data
         if !snapshots.isEmpty {
-            observer.coordinatorDidReceiveEvent(self, event: .snapshotsUpdated(snapshots, withAnimation: false))
+            let reason: SnapshotUpdateReason = initialSetupCompleted ? .update([]) : .initial
+            observer.coordinatorDidReceiveEvent(
+                self,
+                event: .snapshotsUpdated(
+                    snapshots,
+                    reason: reason,
+                    withAnimation: false
+                )
+            )
         }
 
         // Send current cloud state
@@ -173,6 +207,8 @@ class RuuviTagServiceCoordinator {
 
         isStarted = false
         initialSetupCompleted = false
+        previousSnapshots = []
+        snapshotIdMap = [:]
 
         dataService.stopObservingSensors()
         cloudService.stopObserving()
@@ -191,10 +227,14 @@ class RuuviTagServiceCoordinator {
         guard !initialSetupCompleted else { return }
         initialSetupCompleted = true
 
+        // Store initial state
+        previousSnapshots = snapshots
+        updateSnapshotIdMap(snapshots)
+
         alertService.subscribeToAlerts(for: snapshots)
         connectionService.updateConnectionData(for: snapshots)
 
-        notifyEvent(.snapshotsUpdated(snapshots, withAnimation: false))
+        notifySnapshotChange(snapshots, reason: .initial, withAnimation: false)
     }
 
     // MARK: - Service Access
@@ -311,6 +351,100 @@ private extension RuuviTagServiceCoordinator {
         connectionService.delegate = self
     }
 
+    // MARK: - Snapshot Change Detection
+    func detectSnapshotChanges(_ newSnapshots: [RuuviTagCardSnapshot]) -> SnapshotUpdateReason {
+        // Initial load case
+        if previousSnapshots.isEmpty && !newSnapshots.isEmpty {
+            return .initial
+        }
+
+        let oldIds = Set(previousSnapshots.map { $0.id })
+        let newIds = Set(newSnapshots.map { $0.id })
+
+        // Detect insertions and deletions
+        let insertedIds = newIds.subtracting(oldIds)
+        let deletedIds = oldIds.subtracting(newIds)
+
+        let inserted = newSnapshots.filter { insertedIds.contains($0.id) }
+        let deleted = previousSnapshots.filter { deletedIds.contains($0.id) }
+
+        // Detect updates (comparing snapshots with same ID)
+        var updated: [RuuviTagCardSnapshot] = []
+        for snapshot in newSnapshots {
+            if let oldSnapshot = snapshotIdMap[snapshot.id],
+               oldIds.contains(snapshot.id),
+               hasSnapshotChanged(old: oldSnapshot, new: snapshot) {
+                updated.append(snapshot)
+            }
+        }
+
+        // Detect reorder (if no insertions/deletions but order changed)
+        let reordered = detectReorder(oldSnapshots: previousSnapshots, newSnapshots: newSnapshots)
+
+        // Determine the reason
+        if inserted.isEmpty && deleted.isEmpty && updated.isEmpty && reordered {
+            return .reorder
+        } else if !inserted.isEmpty && deleted.isEmpty && updated.isEmpty && !reordered {
+            return .insert(inserted)
+        } else if inserted.isEmpty && !deleted.isEmpty && updated.isEmpty && !reordered {
+            return .delete(deleted)
+        } else if inserted.isEmpty && deleted.isEmpty && !updated.isEmpty && !reordered {
+            return .update(updated)
+        } else if !inserted.isEmpty || !deleted.isEmpty || !updated.isEmpty || reordered {
+            return .mixed(
+                inserted: inserted,
+                deleted: deleted,
+                updated: updated,
+                reordered: reordered
+            )
+        }
+
+        // No changes
+        return .update([])
+    }
+
+    func detectReorder(oldSnapshots: [RuuviTagCardSnapshot], newSnapshots: [RuuviTagCardSnapshot]) -> Bool {
+        // Only check reorder if counts are same
+        guard oldSnapshots.count == newSnapshots.count else { return false }
+
+        let oldIds = oldSnapshots.map { $0.id }
+        let newIds = newSnapshots.map { $0.id }
+
+        // Check if same elements but different order
+        return Set(oldIds) == Set(newIds) && oldIds != newIds
+    }
+
+    func hasSnapshotChanged(old: RuuviTagCardSnapshot, new: RuuviTagCardSnapshot) -> Bool {
+        // Compare relevant properties that indicate a value change
+        // You can customize this based on what properties matter
+        return old.latestRawRecord?.date != new.latestRawRecord?.date ||
+               old.displayData.name != new.displayData.name ||
+               old.displayData.background != new.displayData.background ||
+               old.metadata.isOwner != new.metadata.isOwner ||
+               old.metadata.isCloud != new.metadata.isCloud
+    }
+
+    func updateSnapshotIdMap(_ snapshots: [RuuviTagCardSnapshot]) {
+        snapshotIdMap = Dictionary(uniqueKeysWithValues: snapshots.map { ($0.id, $0) })
+    }
+
+    func notifySnapshotChange(
+        _ snapshots: [RuuviTagCardSnapshot],
+        reason: SnapshotUpdateReason,
+        withAnimation: Bool
+    ) {
+        // Update tracking state
+        previousSnapshots = snapshots
+        updateSnapshotIdMap(snapshots)
+
+        // Send new detailed event
+        notifyEvent(.snapshotsUpdated(
+            snapshots,
+            reason: reason,
+            withAnimation: withAnimation
+        ))
+    }
+
     func notifyEvent(_ event: RuuviTagServiceCoordinatorEvent) {
         // Always notify on main thread to ensure consistent ordering
         if Thread.isMainThread {
@@ -348,6 +482,9 @@ extension RuuviTagServiceCoordinator: RuuviTagDataServiceDelegate {
         didUpdateSnapshots snapshots: [RuuviTagCardSnapshot],
         withAnimation: Bool
     ) {
+        // Detect what changed
+        let reason = detectSnapshotChanges(snapshots)
+
         // Update other services with new snapshots
         alertService.updateSnapshots(snapshots)
         connectionService.updateConnectionData(for: snapshots)
@@ -355,11 +492,13 @@ extension RuuviTagServiceCoordinator: RuuviTagDataServiceDelegate {
         // Perform initial setup if not done yet
         if !initialSetupCompleted && !snapshots.isEmpty {
             initialSetupCompleted = true
+            previousSnapshots = snapshots
+            updateSnapshotIdMap(snapshots)
             alertService.subscribeToAlerts(for: snapshots)
             alertService.triggerAlertsIfNeeded(for: snapshots)
         }
 
-        notifyEvent(.snapshotsUpdated(snapshots, withAnimation: withAnimation))
+        notifySnapshotChange(snapshots, reason: reason, withAnimation: withAnimation)
     }
 
     func sensorDataService(
@@ -367,6 +506,14 @@ extension RuuviTagServiceCoordinator: RuuviTagDataServiceDelegate {
         didUpdateSnapshot snapshot: RuuviTagCardSnapshot,
         invalidateLayout: Bool
     ) {
+        // Update the snapshot in our tracking map
+        snapshotIdMap[snapshot.id] = snapshot
+
+        // Update the snapshot in previousSnapshots if it exists
+        if let index = previousSnapshots.firstIndex(where: { $0.id == snapshot.id }) {
+            previousSnapshots[index] = snapshot
+        }
+
         notifyEvent(.snapshotUpdated(snapshot, invalidateLayout: invalidateLayout))
     }
 
@@ -379,6 +526,10 @@ extension RuuviTagServiceCoordinator: RuuviTagDataServiceDelegate {
         let snapshots = dataService.getAllSnapshots()
         alertService.subscribeToAlerts(for: snapshots)
         connectionService.updateConnectionData(for: snapshots)
+
+        // Update tracking
+        previousSnapshots = snapshots
+        updateSnapshotIdMap(snapshots)
 
         notifyEvent(.newSensorAdded(sensor, newOrder: newOrder))
     }
@@ -619,6 +770,10 @@ class RuuviTagServiceCoordinatorManager {
         return withCoordinator { $0.getSensor(for: sensorId) } ?? nil
     }
 
+    func getSensorSettings() -> [SensorSettings] {
+        return withCoordinator { $0.getSensorSettings() } ?? []
+    }
+
     func triggerCloudSync() {
         withCoordinator { $0.triggerCloudSync() }
     }
@@ -768,7 +923,8 @@ struct RuuviTagServiceCoordinatorEventFilter {
 
         // Check category filters
         switch eventType {
-        case .snapshotsUpdated, .snapshotsUpdatedWithReorder, .snapshotUpdated, .newSensorAdded, .dataServiceError, .backgroundUpdated:
+        case .snapshotsUpdated,
+             .snapshotUpdated, .newSensorAdded, .dataServiceError, .backgroundUpdated:
             return includeDataEvents
         case .userLoginStateChanged, .userLogoutStateChanged, .cloudSyncStatusChanged,
                 .cloudSyncCompleted, .historySyncInProgress, .authorizationFailed, .cloudModeChanged:
@@ -784,7 +940,6 @@ struct RuuviTagServiceCoordinatorEventFilter {
 enum RuuviTagCoordinatorEventType: String, CaseIterable {
     // Data Service Events
     case snapshotsUpdated
-    case snapshotsUpdatedWithReorder
     case snapshotUpdated
     case newSensorAdded
     case dataServiceError
@@ -814,8 +969,6 @@ extension RuuviTagServiceCoordinatorEvent {
         switch self {
         case .snapshotsUpdated:
             return .snapshotsUpdated
-        case .snapshotsUpdatedWithReorder:
-            return .snapshotsUpdatedWithReorder
         case .snapshotUpdated:
             return .snapshotUpdated
         case .newSensorAdded:
@@ -851,3 +1004,4 @@ extension RuuviTagServiceCoordinatorEvent {
         }
     }
 }
+// swiftlint:enable file_length
