@@ -154,12 +154,18 @@ extension NewCardsGraphPresenter: CardsGraphPresenterInput {
             view?.showSyncAbortAlert(source: source)
         }
     }
+
+    func reloadChartsData() {
+        if let sensor {
+            interactor?.configure(withTag: sensor, andSettings: sensorSettings)
+        }
+        interactor?.restartObservingTags()
+    }
 }
 
 // MARK: NewCardsGraphViewOutput
 extension NewCardsGraphPresenter: NewCardsGraphViewOutput {
     func viewDidLoad() {
-        startObservingAppState()
         startObservingSensorSettingsChanges()
         startObservingCloudSyncNotification()
     }
@@ -344,24 +350,6 @@ extension NewCardsGraphPresenter {
         tryToShowSwipeUpHint()
 
         reloadChartsData()
-    }
-
-    private func startObservingAppState() {
-        NotificationCenter
-            .default
-            .addObserver(
-                self,
-                selector: #selector(reloadChartsData),
-                name: UIApplication.willEnterForegroundNotification,
-                object: nil
-            )
-    }
-
-    @objc private func reloadChartsData() {
-        if let sensor {
-            interactor?.configure(withTag: sensor, andSettings: sensorSettings)
-        }
-        interactor?.restartObservingTags()
     }
 
     private func startObservingNetworkSyncNotification(

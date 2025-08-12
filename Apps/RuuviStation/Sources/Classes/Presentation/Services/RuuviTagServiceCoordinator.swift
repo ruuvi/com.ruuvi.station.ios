@@ -14,6 +14,7 @@ import BTKit
 enum RuuviTagServiceCoordinatorEvent {
     // Data Service Events
     case snapshotsUpdated([RuuviTagCardSnapshot], withAnimation: Bool)
+    case snapshotsUpdatedWithReorder([RuuviTagCardSnapshot], withAnimation: Bool)
     case snapshotUpdated(RuuviTagCardSnapshot, invalidateLayout: Bool)
     case newSensorAdded(RuuviTagSensor, newOrder: [String])
     case dataServiceError(Error)
@@ -767,7 +768,7 @@ struct RuuviTagServiceCoordinatorEventFilter {
 
         // Check category filters
         switch eventType {
-        case .snapshotsUpdated, .snapshotUpdated, .newSensorAdded, .dataServiceError, .backgroundUpdated:
+        case .snapshotsUpdated, .snapshotsUpdatedWithReorder, .snapshotUpdated, .newSensorAdded, .dataServiceError, .backgroundUpdated:
             return includeDataEvents
         case .userLoginStateChanged, .userLogoutStateChanged, .cloudSyncStatusChanged,
                 .cloudSyncCompleted, .historySyncInProgress, .authorizationFailed, .cloudModeChanged:
@@ -783,6 +784,7 @@ struct RuuviTagServiceCoordinatorEventFilter {
 enum RuuviTagCoordinatorEventType: String, CaseIterable {
     // Data Service Events
     case snapshotsUpdated
+    case snapshotsUpdatedWithReorder
     case snapshotUpdated
     case newSensorAdded
     case dataServiceError
@@ -812,6 +814,8 @@ extension RuuviTagServiceCoordinatorEvent {
         switch self {
         case .snapshotsUpdated:
             return .snapshotsUpdated
+        case .snapshotsUpdatedWithReorder:
+            return .snapshotsUpdatedWithReorder
         case .snapshotUpdated:
             return .snapshotUpdated
         case .newSensorAdded:

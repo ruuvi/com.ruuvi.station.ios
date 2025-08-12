@@ -304,9 +304,7 @@ class CardsMeasurementPageViewController: UIViewController {
 
         snapshot.anyIndicatorAlertPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] alertData in
-                print("Some alert changed")
-                dump(alertData)
+            .sink { [weak self] _ in
                 self?.updateIndicatorAlerts()
             }
             .store(in: &cancellables)

@@ -133,6 +133,14 @@ extension NewCardsBasePresenter: CardsBasePresenterInput {
 
 // MARK: NewCardsBaseViewOutput
 extension NewCardsBasePresenter: NewCardsBaseViewOutput {
+    func appWillMoveToForeground() {
+        if activeMenu == .graph {
+            // If graph is active, we need to reconfigure the graph presenter
+            // to ensure it has the latest data.
+            graphPresenter?.reloadChartsData()
+        }
+    }
+
     func viewWillAppear() {
         view?.setActiveTab(activeMenu)
         view?.setSnapshots(snapshots)
@@ -364,8 +372,10 @@ extension NewCardsBasePresenter: RuuviTagServiceCoordinatorObserver {
                 // In that case update the active snapshot with first item
                 // from the collection.
                 if snapshots.count < self.snapshots.count,
-                   !snapshots.contains(self.snapshot) {
-                    self.snapshots = snapshots
+                   snapshots.first(where: {
+                       $0.id == self.snapshot.id &&
+                       $0.identifierData.luid?.value == self.snapshot.identifierData.luid?.value &&
+                       $0.identifierData.mac?.value == self.snapshot.identifierData.mac?.value }) == nil {
                     snapshot = snapshots.first
                 }
 
@@ -652,7 +662,11 @@ private extension NewCardsBasePresenter {
     }
 
     func currentSnapshotIndex() -> Int {
-        return snapshots.firstIndex(of: snapshot) ?? 0
+        return snapshots.firstIndex(where: {
+            $0.id == snapshot.id &&
+            $0.identifierData.luid?.value == snapshot.identifierData.luid?.value &&
+            $0.identifierData.mac?.value == snapshot.identifierData.mac?.value
+        }) ?? 0
     }
 
     func currentSensorSettings() -> SensorSettings? {

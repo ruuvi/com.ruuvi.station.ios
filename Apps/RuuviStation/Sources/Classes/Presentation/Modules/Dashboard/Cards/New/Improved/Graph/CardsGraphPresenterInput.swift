@@ -15,4 +15,5 @@ protocol CardsGraphPresenterInput: CardsPresenterInput {
         for snapshot: RuuviTagCardSnapshot,
         from source: AbortSyncSource
     )
+    func reloadChartsData()
 }

@@ -431,6 +431,7 @@ private extension NewCardsBaseViewController {
     }
 
     @objc func handleAppWillMoveToForeground() {
+        output?.appWillMoveToForeground()
         menuBarView.updateAlertState(for: currentSnapshot)
     }
 }
