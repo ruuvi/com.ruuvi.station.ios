@@ -99,12 +99,6 @@ class DashboardServiceFactory {
         )
     }
 
-    func createBackgroundService() -> RuuviTagBackgroundService {
-        return RuuviTagBackgroundService(
-            ruuviSensorPropertiesService: ruuviSensorPropertiesService
-        )
-    }
-
     func createConnectionService() -> RuuviTagConnectionService {
         return RuuviTagConnectionService(
             foreground: foreground,
@@ -121,8 +115,8 @@ class DashboardServiceFactory {
         )
     }
 
-    func createCloudSyncService() -> DashboardCloudSyncService {
-        return DashboardCloudSyncService(
+    func createCloudSyncService() -> RuuviCloudService {
+        return RuuviCloudService(
             cloudSyncDaemon: cloudSyncDaemon,
             cloudSyncService: cloudSyncService,
             cloudNotificationService: cloudNotificationService,
@@ -137,7 +131,6 @@ class DashboardServiceFactory {
     func createDashboardPresenter() -> DashboardPresenter {
         let sensorDataService = createSensorDataService()
         let alertService = createAlertService()
-        let backgroundService = createBackgroundService()
         let connectionService = createConnectionService()
         let settingsService = createSettingsService()
         let cloudSyncService = createCloudSyncService()
@@ -145,7 +138,6 @@ class DashboardServiceFactory {
         return DashboardPresenter(
             sensorDataService: sensorDataService,
             alertService: alertService,
-            backgroundService: backgroundService,
             connectionService: connectionService,
             settingsService: settingsService,
             cloudSyncService: cloudSyncService
@@ -200,7 +192,8 @@ extension DashboardServiceFactory {
         feedbackEmail: String,
         feedbackSubject: String,
         infoProvider: InfoProvider,
-        activityPresenter: ActivityPresenter
+        activityPresenter: ActivityPresenter,
+        flags: RuuviLocalFlags
     ) -> DashboardPresenter {
 
         let presenter = createDashboardPresenter()
@@ -215,6 +208,7 @@ extension DashboardServiceFactory {
         presenter.feedbackSubject = feedbackSubject
         presenter.infoProvider = infoProvider
         presenter.activityPresenter = activityPresenter
+        presenter.flags = flags
 
         return presenter
     }
@@ -223,36 +217,19 @@ extension DashboardServiceFactory {
 // MARK: - Service Configuration
 extension DashboardServiceFactory {
 
-    /// Configures services with optimal settings for dashboard usage
-    func configureServicesForOptimalPerformance() {
-        // Configure background service for memory efficiency
-        let backgroundService = createBackgroundService()
-
-        // Setup memory warning handling
-        NotificationCenter.default.addObserver(
-            forName: UIApplication.didReceiveMemoryWarningNotification,
-            object: nil,
-            queue: .main
-        ) { _ in
-            backgroundService.handleMemoryWarning()
-        }
-    }
-
     // swiftlint:disable:next orphaned_doc_comment
     /// Creates services with shared caching for better performance
     // swiftlint:disable:next large_tuple
     func createServicesWithSharedCaching() -> (
         sensorData: RuuviTagDataService,
         alerts: RuuviTagAlertService,
-        backgrounds: RuuviTagBackgroundService,
         connections: RuuviTagConnectionService,
         settings: DashboardSettingsService,
-        cloudSync: DashboardCloudSyncService
+        cloudSync: RuuviCloudService
     ) {
 
         let sensorDataService = createSensorDataService()
         let alertService = createAlertService()
-        let backgroundService = createBackgroundService()
         let connectionService = createConnectionService()
         let settingsService = createSettingsService()
         let cloudSyncService = createCloudSyncService()
@@ -260,7 +237,6 @@ extension DashboardServiceFactory {
         return (
             sensorData: sensorDataService,
             alerts: alertService,
-            backgrounds: backgroundService,
             connections: connectionService,
             settings: settingsService,
             cloudSync: cloudSyncService

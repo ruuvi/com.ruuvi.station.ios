@@ -11,6 +11,25 @@ protocol DashboardRouterInput {
     func openRuuviProductsPageFromMenu()
     func openSignIn(output: SignInBenefitsModuleOutput)
     // swiftlint:disable:next function_parameter_count
+    func openFullSensorCard(
+        for snapshot: RuuviTagCardSnapshot,
+        snapshots: [RuuviTagCardSnapshot],
+        ruuviTagSensors: [AnyRuuviTagSensor],
+        sensorSettings: [SensorSettings],
+        activeMenu: CardsMenuType,
+        openSettings: Bool // Legacy flow support, we can remove this with new menu.
+    )
+    func openUpdateFirmware(ruuviTag: RuuviTagSensor)
+    func openBackgroundSelectionView(ruuviTag: RuuviTagSensor)
+    func openMyRuuviAccount()
+    func openShare(for sensor: RuuviTagSensor)
+    func openRemove(
+      for sensor: RuuviTagSensor,
+      output: SensorRemovalModuleOutput
+    )
+
+    // MARK: Legacy
+    // swiftlint:disable:next function_parameter_count
     func openCardImageView(
         with viewModels: [LegacyCardsViewModel],
         ruuviTagSensors: [AnyRuuviTagSensor],
@@ -38,12 +57,4 @@ protocol DashboardRouterInput {
         output: LegacyCardsModuleOutput
     )
     // swiftlint:enable function_parameter_count
-    func openUpdateFirmware(ruuviTag: RuuviTagSensor)
-    func openBackgroundSelectionView(ruuviTag: RuuviTagSensor)
-    func openMyRuuviAccount()
-    func openShare(for sensor: RuuviTagSensor)
-    func openRemove(
-      for sensor: RuuviTagSensor,
-      output: SensorRemovalModuleOutput
-    )
 }

@@ -44,6 +44,7 @@ targetTemplates:
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         MERGEABLE_LIBRARY: false
         NSAppPrivacyManifestFile: PrivacyInfo.xcprivacy
+        DEFINES_MODULE: true
   Module:
     name: "${target_name}"
     type: framework
@@ -63,6 +64,7 @@ targetTemplates:
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         MERGEABLE_LIBRARY: false
+        DEFINES_MODULE: true
   CommonFramework:
     name: "${target_name}"
     type: framework
@@ -82,6 +84,7 @@ targetTemplates:
         CFBundleShortVersionString: "$(MARKETING_VERSION)"
         CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         MERGEABLE_LIBRARY: false
+        DEFINES_MODULE: true
 packages:
   BTKit:
     url: https://github.com/ruuvi/BTKit

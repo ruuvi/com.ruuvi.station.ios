@@ -224,6 +224,27 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
             deleteRecordsOperation,
             deleteLastRecordOperation,
         ])
+        // TODO: Remove this tag data from local prefs
+//        func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
+//        func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)
+//
+//        func firmwareUpdateDialogWasShown(for luid: LocalIdentifier) -> Bool
+//        func setFirmwareUpdateDialogWasShown(for luid: LocalIdentifier)
+//
+//        func cardToOpenFromWidget() -> String?
+//        func setCardToOpenFromWidget(for macId: String?)
+//
+//        func lastOpenedChart() -> String?
+//        func setLastOpenedChart(with id: String)
+//
+//        func setOwnerCheckDate(for macId: MACIdentifier?, value: Date?)
+//        func ownerCheckDate(for macId: MACIdentifier?) -> Date?
+//
+//        func syncDialogHidden(for luid: LocalIdentifier) -> Bool
+//        func setSyncDialogHidden(for luid: LocalIdentifier)
+//
+//        func showCustomTempAlertBound(for id: String) -> Bool
+//        func setShowCustomTempAlertBound(for id: String)
         .on(success: { _ in
             if let unclaimOperation {
                 unclaimOperation.on()

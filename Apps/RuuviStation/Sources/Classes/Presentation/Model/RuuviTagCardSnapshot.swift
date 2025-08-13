@@ -23,6 +23,17 @@ public final class RuuviTagCardSnapshot: ObservableObject, Hashable, Equatable {
     @Published var connectionData: RuuviTagCardSnapshotConnectionData
     @Published var lastUpdated: Date?
 
+    public var anyIndicatorAlertPublisher: AnyPublisher<[RuuviTagCardSnapshotAlertConfig], Never> {
+        return $displayData
+            .map { displayData -> [RuuviTagCardSnapshotAlertConfig] in
+                return displayData.indicatorGrid?.indicators.compactMap { indicator in
+                    self.getAlertConfig(for: indicator.type)
+                } ?? []
+            }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+    }
+
     // MARK: - Internal properties for change detection
     private var cancellables = Set<AnyCancellable>()
 
@@ -136,16 +147,71 @@ struct RuuviTagCardSnapshotMetadata: Equatable {
     }
 }
 
+// MARK: - Alert Data Structures
 struct RuuviTagCardSnapshotAlertData: Equatable {
     var alertState: AlertState?
     var hasActiveAlerts: Bool = false
+    var alertConfigurations: [MeasurementType: RuuviTagCardSnapshotAlertConfig] = [:]
+    var nonMeasurementAlerts: [AlertType: RuuviTagCardSnapshotAlertConfig] = [:]
 
     static func == (
         lhs: RuuviTagCardSnapshotAlertData,
         rhs: RuuviTagCardSnapshotAlertData
     ) -> Bool {
         return lhs.alertState == rhs.alertState &&
-        lhs.hasActiveAlerts == rhs.hasActiveAlerts
+        lhs.hasActiveAlerts == rhs.hasActiveAlerts &&
+        lhs.alertConfigurations == rhs.alertConfigurations &&
+        lhs.nonMeasurementAlerts == rhs.nonMeasurementAlerts
+    }
+}
+
+public struct RuuviTagCardSnapshotAlertConfig: Equatable {
+    let type: MeasurementType?
+    let alertType: AlertType?
+    let isActive: Bool
+    let isFiring: Bool
+    let mutedTill: Date?
+    let lowerBound: Double?
+    let upperBound: Double?
+    let description: String?
+    let unseenDuration: Double?
+
+    static let inactive = RuuviTagCardSnapshotAlertConfig(
+        type: .temperature,
+        alertType: .temperature(lower: 0, upper: 0),
+        isActive: false,
+        isFiring: false,
+        mutedTill: nil,
+        lowerBound: nil,
+        upperBound: nil,
+        description: nil,
+        unseenDuration: nil
+    )
+
+    var isHighlighted: Bool {
+        return isActive && isFiring
+    }
+
+    init(
+        type: MeasurementType? = nil,
+        alertType: AlertType? = nil,
+        isActive: Bool,
+        isFiring: Bool,
+        mutedTill: Date?,
+        lowerBound: Double? = nil,
+        upperBound: Double? = nil,
+        description: String? = nil,
+        unseenDuration: Double? = nil
+    ) {
+        self.type = type
+        self.alertType = alertType
+        self.isActive = isActive
+        self.isFiring = isFiring
+        self.mutedTill = mutedTill
+        self.lowerBound = lowerBound
+        self.upperBound = upperBound
+        self.description = description
+        self.unseenDuration = unseenDuration
     }
 }
 
@@ -174,39 +240,134 @@ struct RuuviTagCardSnapshotIndicatorData: Equatable, Hashable {
     let type: MeasurementType
     let value: String
     let unit: String
-    let alertConfig: RuuviTagCardSnapshotAlertConfig
-
     let isProminent: Bool
     let showSubscript: Bool
     let tintColor: UIColor?
+    let aqiState: AirQualityState?
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(type)
     }
-
-    var isHighlighted: Bool {
-        return alertConfig.isHighlighted
-    }
 }
 
-struct RuuviTagCardSnapshotAlertConfig: Equatable {
-    let isActive: Bool
-    let isFiring: Bool
-    let mutedTill: Date?
+// MARK: - Alert Access Methods
+extension RuuviTagCardSnapshot {
 
-    static let inactive = RuuviTagCardSnapshotAlertConfig(
-        isActive: false,
-        isFiring: false,
-        mutedTill: nil
-    )
+    // MARK: - Alert Configuration Access
+    func getAlertConfig(for measurementType: MeasurementType) -> RuuviTagCardSnapshotAlertConfig? {
+        return alertData.alertConfigurations[measurementType]
+    }
 
-    var isHighlighted: Bool {
-        return isActive && isFiring
+    func getAlertConfig(for alertType: AlertType) -> RuuviTagCardSnapshotAlertConfig? {
+        if let measurementType = alertType.toMeasurementType() {
+            return alertData.alertConfigurations[measurementType]
+        }
+        return alertData.nonMeasurementAlerts[alertType]
+    }
+
+    func getAllActiveAlerts() -> [RuuviTagCardSnapshotAlertConfig] {
+        let measurementAlerts = alertData.alertConfigurations.values.filter { $0.isActive }
+        let nonMeasurementAlerts = alertData.nonMeasurementAlerts.values.filter { $0.isActive }
+        return Array(measurementAlerts) + Array(nonMeasurementAlerts)
+    }
+
+    func getAllFiringAlerts() -> [RuuviTagCardSnapshotAlertConfig] {
+        return getAllActiveAlerts().filter { $0.isFiring }
+    }
+
+    // MARK: - Indicator Alert Access
+    func getIndicatorAlertConfig(for indicator: RuuviTagCardSnapshotIndicatorData) -> RuuviTagCardSnapshotAlertConfig {
+        return getAlertConfig(for: indicator.type) ?? .inactive
+    }
+
+    func isIndicatorHighlighted(for indicator: RuuviTagCardSnapshotIndicatorData) -> Bool {
+        return getIndicatorAlertConfig(for: indicator).isHighlighted
+    }
+
+    // MARK: - Alert Configuration Updates
+    func updateAlertConfig(
+        for measurementType: MeasurementType,
+        config: RuuviTagCardSnapshotAlertConfig
+    ) {
+        alertData.alertConfigurations[measurementType] = config
+        updateOverallAlertState()
+    }
+
+    func updateAlertConfig(
+        for alertType: AlertType,
+        config: RuuviTagCardSnapshotAlertConfig
+    ) {
+        if let measurementType = alertType.toMeasurementType() {
+            alertData.alertConfigurations[measurementType] = config
+        } else {
+            alertData.nonMeasurementAlerts[alertType] = config
+        }
+        updateOverallAlertState()
+    }
+
+    func removeAlertConfig(for measurementType: MeasurementType) {
+        alertData.alertConfigurations.removeValue(forKey: measurementType)
+        updateOverallAlertState()
+    }
+
+    func removeAlertConfig(for alertType: AlertType) {
+        if let measurementType = alertType.toMeasurementType() {
+            alertData.alertConfigurations.removeValue(forKey: measurementType)
+        } else {
+            alertData.nonMeasurementAlerts.removeValue(forKey: alertType)
+        }
+        updateOverallAlertState()
     }
 }
 
 // MARK: - Snapshot Update Methods
 extension RuuviTagCardSnapshot {
+
+    // MARK: - Update Metadata
+    func updateMetadata(
+        isConnected: Bool? = nil,
+        serviceUUID: String? = nil,
+        isCloud: Bool? = nil,
+        isOwner: Bool? = nil,
+        isConnectable: Bool? = nil
+    ) {
+        // Calculate isAlertAvailable based on connection status, serviceUUID, and cloud status
+        let currentIsConnected = isConnected ?? self.connectionData.isConnected
+        let currentServiceUUID = serviceUUID ?? self.identifierData.serviceUUID
+        let currentIsCloud = isCloud ?? self.metadata.isCloud
+
+        let newIsAlertAvailable = currentIsConnected ||
+                                  currentServiceUUID != nil ||
+                                  currentIsCloud
+
+        // Update isAlertAvailable if it changed
+        if self.metadata.isAlertAvailable != newIsAlertAvailable {
+            self.metadata.isAlertAvailable = newIsAlertAvailable
+        }
+
+        // Update other metadata properties if provided
+        if let isCloud = isCloud, self.metadata.isCloud != isCloud {
+            self.metadata.isCloud = isCloud
+        }
+
+        if let isOwner = isOwner, self.metadata.isOwner != isOwner {
+            self.metadata.isOwner = isOwner
+        }
+
+        let currentIsConnectable = isConnectable ?? self.connectionData.isConnectable
+        let newIsChartAvailable = currentIsConnectable ||
+                                  currentServiceUUID != nil ||
+                                  currentIsCloud
+        if self.metadata.isChartAvailable != newIsChartAvailable {
+            self.metadata.isChartAvailable = newIsChartAvailable
+        }
+
+        // Update canShareTag based on current values
+        let newCanShareTag = self.metadata.isOwner && !self.metadata.isCloud
+        if self.metadata.canShareTag != newCanShareTag {
+            self.metadata.canShareTag = newCanShareTag
+        }
+    }
 
     // MARK: - Update Connection Data
     func updateConnectionData(
@@ -224,6 +385,9 @@ extension RuuviTagCardSnapshot {
         guard self.connectionData != newConnectionData else { return }
 
         self.connectionData = newConnectionData
+
+        // Update metadata when connection data changes
+        updateMetadata(isConnected: isConnected, isConnectable: isConnectable)
     }
 
     // MARK: - Update Background Image
@@ -242,74 +406,29 @@ extension RuuviTagCardSnapshot {
         self.displayData.networkSyncStatus = status
     }
 
-    // MARK: - Update Alert for Specific Measurement Type
+    // MARK: - Legacy Alert Update Method (for backward compatibility)
     func updateAlert(
         for type: MeasurementType,
         isOn: Bool,
         alertState: AlertState?,
         mutedTill: Date?
     ) {
-        guard let currentGrid = self.displayData.indicatorGrid else { return }
-
-        // Check if any indicator actually needs updating
-        var hasChanges = false
-        let updatedIndicators = currentGrid.indicators.map { indicator -> RuuviTagCardSnapshotIndicatorData in
-            if indicator.type == type {
-                let newAlertConfig = RuuviTagCardSnapshotAlertConfig(
-                    isActive: isOn,
-                    isFiring: alertState == .firing,
-                    mutedTill: mutedTill
-                )
-
-                // Only mark as changed if the alert config actually changed
-                if indicator.alertConfig != newAlertConfig {
-                    hasChanges = true
-                }
-
-                return RuuviTagCardSnapshotIndicatorData(
-                    type: indicator.type,
-                    value: indicator.value,
-                    unit: indicator.unit,
-                    alertConfig: newAlertConfig,
-                    isProminent: indicator.isProminent,
-                    showSubscript: indicator.showSubscript,
-                    tintColor: indicator.tintColor
-                )
-            } else {
-                return indicator
-            }
-        }
-
-        // Only update if there are actual changes
-        guard hasChanges else { return }
-
-        // Update the grid
-        self.displayData.indicatorGrid = RuuviTagCardSnapshotIndicatorGridConfiguration(
-            indicators: updatedIndicators
+        let config = RuuviTagCardSnapshotAlertConfig(
+            type: type,
+            alertType: type.toAlertType(),
+            isActive: isOn,
+            isFiring: alertState == .firing,
+            mutedTill: mutedTill
         )
 
-        // Update overall alert state
-        updateOverallAlertState()
+        updateAlertConfig(for: type, config: config)
     }
 
     // MARK: - Update Overall Alert State
     private func updateOverallAlertState() {
-        guard let indicators = self.displayData.indicatorGrid?.indicators else {
-            // Only update if current state is different
-            let newAlertState: AlertState = .empty
-            let newHasActiveAlerts = false
-
-            if self.alertData.alertState != newAlertState ||
-               self.alertData.hasActiveAlerts != newHasActiveAlerts {
-                self.alertData.alertState = newAlertState
-                self.alertData.hasActiveAlerts = newHasActiveAlerts
-            }
-            return
-        }
-
-        // Calculate new state
-        let hasFiringAlert = indicators.contains { $0.alertConfig.isFiring }
-        let hasActiveAlert = indicators.contains { $0.alertConfig.isActive }
+        let allAlerts = getAllActiveAlerts()
+        let hasFiringAlert = allAlerts.contains { $0.isFiring }
+        let hasActiveAlert = !allAlerts.isEmpty
 
         let newAlertState: AlertState
         let newHasActiveAlerts: Bool
@@ -338,45 +457,41 @@ extension RuuviTagCardSnapshot {
         from alertService: RuuviServiceAlert,
         physicalSensor: PhysicalSensor
     ) {
-        guard let currentGrid = self.displayData.indicatorGrid else { return }
-
-        var hasChanges = false
-        let updatedIndicators = currentGrid.indicators.map { indicator -> RuuviTagCardSnapshotIndicatorData in
-            let alertType = indicator.type.toAlertType()
+        // Sync measurement-based alerts
+        for measurementType in MeasurementType.all {
+            let alertType = measurementType.toAlertType()
             let isOn = alertService.isOn(type: alertType, for: physicalSensor)
             let mutedTill = alertService.mutedTill(type: alertType, for: physicalSensor)
 
-            let newAlertConfig = RuuviTagCardSnapshotAlertConfig(
+            let config = RuuviTagCardSnapshotAlertConfig(
+                type: measurementType,
+                alertType: alertType,
                 isActive: isOn,
-                isFiring: false, // Will be updated by alert handler when alerts fire
+                isFiring: false, // Will be updated by alert handler
                 mutedTill: mutedTill
             )
 
-            // Check if this indicator's alert config changed
-            if indicator.alertConfig != newAlertConfig {
-                hasChanges = true
-            }
-
-            return RuuviTagCardSnapshotIndicatorData(
-                type: indicator.type,
-                value: indicator.value,
-                unit: indicator.unit,
-                alertConfig: newAlertConfig,
-                isProminent: indicator.isProminent,
-                showSubscript: indicator.showSubscript,
-                tintColor: indicator.tintColor
-            )
+            alertData.alertConfigurations[measurementType] = config
         }
 
-        // Only update if there are actual changes
-        guard hasChanges else { return }
+        // Sync non-measurement alerts
+        let nonMeasurementAlertTypes: [AlertType] = [
+            .connection, .cloudConnection(unseenDuration: 0), .movement(last: 0)
+        ]
+        for alertType in nonMeasurementAlertTypes {
+            let isOn = alertService.isOn(type: alertType, for: physicalSensor)
+            let mutedTill = alertService.mutedTill(type: alertType, for: physicalSensor)
 
-        // Update the grid
-        self.displayData.indicatorGrid = RuuviTagCardSnapshotIndicatorGridConfiguration(
-            indicators: updatedIndicators
-        )
+            let config = RuuviTagCardSnapshotAlertConfig(
+                alertType: alertType,
+                isActive: isOn,
+                isFiring: false,
+                mutedTill: mutedTill
+            )
 
-        // Update overall state
+            alertData.nonMeasurementAlerts[alertType] = config
+        }
+
         updateOverallAlertState()
     }
 
@@ -419,7 +534,7 @@ extension RuuviTagCardSnapshot {
                 sensor: sensor,
                 measurementService: measurementService,
                 flags: flags,
-                alertData: self.alertData
+                snapshot: self
             )
 
             // Check if any display data actually changed
@@ -454,6 +569,7 @@ extension RuuviTagCardSnapshot {
         name: String,
         luid: LocalIdentifier?,
         mac: MACIdentifier?,
+        serviceUUID: String?,
         isCloud: Bool,
         isOwner: Bool,
         isConnectable: Bool,
@@ -463,7 +579,7 @@ extension RuuviTagCardSnapshot {
         let identifierData = RuuviTagCardSnapshotIdentityData(
             luid: luid,
             mac: mac,
-            serviceUUID: nil
+            serviceUUID: serviceUUID
         )
 
         let displayData = RuuviTagCardSnapshotDisplayData(
@@ -484,8 +600,8 @@ extension RuuviTagCardSnapshot {
         )
 
         let metadata = RuuviTagCardSnapshotMetadata(
-            isChartAvailable: isConnectable,
-            isAlertAvailable: true,
+            isChartAvailable: isConnectable || isCloud,
+            isAlertAvailable: serviceUUID != nil || isCloud,
             isCloud: isCloud,
             isOwner: isOwner,
             canShareTag: isOwner && !isCloud
@@ -507,6 +623,13 @@ extension RuuviTagCardSnapshot {
 
 // MARK: - Helper Methods for Change Detection
 extension RuuviTagCardSnapshot {
+
+    // MARK: - Calculate Alert Availability
+    private func calculateIsAlertAvailable() -> Bool {
+        return connectionData.isConnected ||
+               identifierData.serviceUUID != nil ||
+               metadata.isCloud
+    }
 
     /// Check if this snapshot has significant changes compared to another
     func hasSignificantChanges(from other: RuuviTagCardSnapshot) -> Bool {

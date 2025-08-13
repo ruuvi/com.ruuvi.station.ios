@@ -393,7 +393,7 @@ private extension DashboardViewController {
         appDidBecomeActiveToken = NotificationCenter
                 .default
                 .addObserver(
-                    forName: UIApplication.didBecomeActiveNotification,
+                    forName: UIApplication.willEnterForegroundNotification,
                     object: nil,
                     queue: .main
                 ) { [weak self] _ in
@@ -876,6 +876,16 @@ extension DashboardViewController: UIGestureRecognizerDelegate {
 
 // MARK: - UICollectionViewDelegate
 extension DashboardViewController: UICollectionViewDelegate {
+    func collectionView(
+        _ collectionView: UICollectionView,
+        willDisplay cell: UICollectionViewCell,
+        forItemAt indexPath: IndexPath
+    ) {
+        if let cell = cell as? DashboardCell {
+            cell.restartAlertAnimationIfNeeded()
+        }
+    }
+
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let snapshot = dataSource.itemIdentifier(for: indexPath) else { return }
         output.viewDidTriggerDashboardCard(for: snapshot)
@@ -981,14 +991,25 @@ extension DashboardViewController: NewDashboardViewInput {
         )
     }
 
-    func showKeepConnectionDialogSettings(for snapshot: RuuviTagCardSnapshot) {
+    func showKeepConnectionDialogSettings(
+        for snapshot: RuuviTagCardSnapshot,
+        newlyAddedSensor: Bool
+    ) {
         showKeepConnectionDialog(
             for: snapshot,
             onDismiss: { [weak self] in
-                self?.output.viewDidDismissKeepConnectionDialogSettings(for: snapshot)
+                self?.output
+                    .viewDidDismissKeepConnectionDialogSettings(
+                        for: snapshot,
+                        newlyAddedSensor: newlyAddedSensor
+                    )
             },
             onKeep: { [weak self] in
-                self?.output.viewDidConfirmToKeepConnectionSettings(to: snapshot)
+                self?.output
+                    .viewDidConfirmToKeepConnectionSettings(
+                        to: snapshot,
+                        newlyAddedSensor: newlyAddedSensor
+                    )
             }
         )
     }
