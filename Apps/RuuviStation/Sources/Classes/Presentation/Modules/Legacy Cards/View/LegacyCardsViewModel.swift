@@ -10,7 +10,7 @@ enum CardType {
     case ruuvi
 }
 
-final class CardsViewModel: NSObject, ObservableObject {
+final class LegacyCardsViewModel: NSObject, ObservableObject {
     // MARK: - Basic
 
     @Published var type: CardType = .ruuvi
@@ -204,14 +204,14 @@ final class CardsViewModel: NSObject, ObservableObject {
 }
 
 // MARK: - Reorderable
-extension CardsViewModel: Reorderable {
+extension LegacyCardsViewModel: Reorderable {
     var orderElement: String {
         id ?? UUID().uuidString
     }
 }
 
 // MARK: - NSItemProviderWriting for Drag & Drop
-extension CardsViewModel: NSItemProviderWriting {
+extension LegacyCardsViewModel: NSItemProviderWriting {
     public static var writableTypeIdentifiersForItemProvider: [String] {
         return [kUTTypePlainText as String]
     }
@@ -224,7 +224,7 @@ extension CardsViewModel: NSItemProviderWriting {
     }
 }
 
-extension CardsViewModel {
+extension LegacyCardsViewModel {
 
     // Combines all `@Published` properties into a single publisher
     // swiftlint:disable:next function_body_length

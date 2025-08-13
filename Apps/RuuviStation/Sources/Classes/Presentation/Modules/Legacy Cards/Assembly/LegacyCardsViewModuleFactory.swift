@@ -12,20 +12,20 @@ import RuuviStorage
 import RuuviUser
 import UIKit
 
-protocol CardsViewModuleFactory {
-    func create() -> CardsViewController
+protocol LegacyCardsViewModuleFactory {
+    func create() -> LegacyCardsViewController
 }
 
-final class CardsViewModuleFactoryImpl: CardsViewModuleFactory {
-    func create() -> CardsViewController {
+final class CardsViewModuleFactoryImpl: LegacyCardsViewModuleFactory {
+    func create() -> LegacyCardsViewController {
         let r = AppAssembly.shared.assembler.resolver
 
-        let view = CardsViewController()
+        let view = LegacyCardsViewController()
 
         let router = CardsRouter()
         router.transitionHandler = view
 
-        let presenter = CardsPresenter()
+        let presenter = LegacyCardsPresenter()
         presenter.router = router
         presenter.view = view
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)

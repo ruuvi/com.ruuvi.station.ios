@@ -12,12 +12,12 @@ protocol DashboardRouterInput {
     func openSignIn(output: SignInBenefitsModuleOutput)
     // swiftlint:disable:next function_parameter_count
     func openCardImageView(
-        with viewModels: [CardsViewModel],
+        with viewModels: [LegacyCardsViewModel],
         ruuviTagSensors: [AnyRuuviTagSensor],
         sensorSettings: [SensorSettings],
-        scrollTo: CardsViewModel?,
+        scrollTo: LegacyCardsViewModel?,
         showCharts: Bool,
-        output: CardsModuleOutput
+        output: LegacyCardsModuleOutput
     )
     func openTagSettings(
         ruuviTag: RuuviTagSensor,
@@ -28,14 +28,14 @@ protocol DashboardRouterInput {
     // swiftlint:disable function_parameter_count
     /// Used for only when a new sensor is added.
     func openTagSettings(
-        with viewModels: [CardsViewModel],
+        with viewModels: [LegacyCardsViewModel],
         ruuviTagSensors: [AnyRuuviTagSensor],
         sensorSettings: [SensorSettings],
-        scrollTo: CardsViewModel?,
+        scrollTo: LegacyCardsViewModel?,
         ruuviTag: RuuviTagSensor,
         latestMeasurement: RuuviTagSensorRecord?,
         sensorSetting: SensorSettings?,
-        output: CardsModuleOutput
+        output: LegacyCardsModuleOutput
     )
     // swiftlint:enable function_parameter_count
     func openUpdateFirmware(ruuviTag: RuuviTagSensor)

@@ -357,13 +357,13 @@ private extension DashboardPresenter {
         )
     }
 
-    func createViewModelFromSnapshot(_ snapshot: RuuviTagCardSnapshot) -> CardsViewModel {
+    func createViewModelFromSnapshot(_ snapshot: RuuviTagCardSnapshot) -> LegacyCardsViewModel {
         // Create a temporary CardsViewModel for backward compatibility
         // This should be removed once router is updated to use snapshots
         guard let sensor = sensorDataService.getSensor(for: snapshot.id) else {
             fatalError("Sensor not found for snapshot")
         }
-        let viewModel = CardsViewModel(sensor)
+        let viewModel = LegacyCardsViewModel(sensor)
         viewModel.background = snapshot.displayData.background
         if let record = snapshot.latestRawRecord {
             viewModel.update(record)
@@ -872,13 +872,13 @@ extension DashboardPresenter: DashboardRouterDelegate {
     }
 }
 
-extension DashboardPresenter: CardsModuleOutput {
+extension DashboardPresenter: LegacyCardsModuleOutput {
 
-    func cardsViewDidDismiss(module: CardsModuleInput) {
+    func cardsViewDidDismiss(module: LegacyCardsModuleInput) {
         module.dismiss(completion: nil)
     }
 
-    func cardsViewDidRefresh(module: CardsModuleInput) {
+    func cardsViewDidRefresh(module: LegacyCardsModuleInput) {
         // No op.
     }
 }
