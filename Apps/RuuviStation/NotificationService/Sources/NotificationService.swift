@@ -1,15 +1,8 @@
 import RuuviLocalization
 import UserNotifications
+import RuuviOntology
 
 class NotificationService: UNNotificationServiceExtension {
-    private enum AlertType: String {
-        case temperature
-        case humidity
-        case pressure
-        case signal
-        case movement
-        case offline
-    }
 
     private enum TriggerType: String {
         case under
@@ -75,20 +68,46 @@ class NotificationService: UNNotificationServiceExtension {
 }
 
 extension NotificationService {
+
+    // swiftlint:disable:next cyclomatic_complexity
     private func getAlertType(from value: String) -> AlertType? {
         switch value.lowercased() {
         case "temperature":
-            .temperature
+                .temperature(lower: 0, upper: 0)
         case "humidity":
-            .humidity
+            .relativeHumidity(lower: 0, upper: 0)
         case "pressure":
-            .pressure
+            .pressure(lower: 0, upper: 0)
         case "signal":
-            .signal
+            .signal(lower: 0, upper: 0)
         case "movement":
-            .movement
+                .movement(last: 0)
         case "offline":
-            .offline
+                .cloudConnection(unseenDuration: 0)
+        case "aqi":
+                .aqi(lower: 0, upper: 0)
+        case "co2":
+                .carbonDioxide(lower: 0, upper: 0)
+        case "pm1":
+                .pMatter1(lower: 0, upper: 0)
+        case "pm25":
+                .pMatter25(lower: 0, upper: 0)
+        case "pm40":
+                .pMatter4(lower: 0, upper: 0)
+        case "pm10":
+                .pMatter10(lower: 0, upper: 0)
+        case "voc":
+                .voc(lower: 0, upper: 0)
+        case "nox":
+                .nox(lower: 0, upper: 0)
+        case "luminosity":
+                .luminosity(lower: 0, upper: 0)
+        case "soundInstant":
+                .soundInstant(lower: 0, upper: 0)
+        case "soundAverage":
+                .soundAverage(lower: 0, upper: 0)
+        case "soundPeak":
+                .soundPeak(lower: 0, upper: 0)
         default:
             nil
         }
@@ -105,7 +124,7 @@ extension NotificationService {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func titleForAlert(
         from triggerType: String,
         alertType: String,
@@ -129,7 +148,7 @@ extension NotificationService {
             switch alertType {
             case .temperature:
                 return RuuviLocalization.alertNotificationTemperatureLowThreshold(threshold, locale)
-            case .humidity:
+            case .relativeHumidity:
                 return RuuviLocalization.alertNotificationHumidityLowThreshold(threshold, locale)
             case .pressure:
                 return RuuviLocalization.alertNotificationPressureLowThreshold(threshold, locale)
@@ -137,16 +156,42 @@ extension NotificationService {
                 return RuuviLocalization.alertNotificationRssiLowThreshold(threshold, locale)
             case .movement:
                 return RuuviLocalization.LocalNotificationsManager.DidMove.title(locale)
-            case .offline:
+            case .cloudConnection:
                 // No message for alert type under for offline since
                 // the trigger is always 'Over' i.e. Sensor has been offline over x mins.
+                return ""
+            case .aqi:
+                return RuuviLocalization.alertNotificationAqiLowThreshold(threshold, locale)
+            case .carbonDioxide:
+                return RuuviLocalization.alertNotificationCo2LowThreshold(threshold, locale)
+            case .pMatter1:
+                return RuuviLocalization.alertNotificationPm10LowThreshold(threshold, locale)
+            case .pMatter25:
+                return RuuviLocalization.alertNotificationPm25LowThreshold(threshold, locale)
+            case .pMatter4:
+                return RuuviLocalization.alertNotificationPm4LowThreshold(threshold, locale)
+            case .pMatter10:
+                return RuuviLocalization.alertNotificationPm10LowThreshold(threshold, locale)
+            case .voc:
+                return RuuviLocalization.alertNotificationVocLowThreshold(threshold, locale)
+            case .nox:
+                return RuuviLocalization.alertNotificationNoxLowThreshold(threshold, locale)
+            case .soundInstant:
+                return RuuviLocalization.alertNotificationSoundInstantLowThreshold(threshold, locale)
+            case .soundPeak:
+                return RuuviLocalization.alertNotificationSoundPeakLowThreshold(threshold, locale)
+            case .soundAverage:
+                return RuuviLocalization.alertNotificationSoundAverageLowThreshold(threshold, locale)
+            case .luminosity:
+                return RuuviLocalization.alertNotificationLuminosityLowThreshold(threshold, locale)
+            default:
                 return ""
             }
         case .over:
             switch alertType {
             case .temperature:
                 return RuuviLocalization.alertNotificationTemperatureHighThreshold(threshold, locale)
-            case .humidity:
+            case .relativeHumidity:
                 return RuuviLocalization.alertNotificationHumidityHighThreshold(threshold, locale)
             case .pressure:
                 return RuuviLocalization.alertNotificationPressureHighThreshold(threshold, locale)
@@ -154,8 +199,34 @@ extension NotificationService {
                 return RuuviLocalization.alertNotificationRssiHighThreshold(threshold, locale)
             case .movement:
                 return RuuviLocalization.LocalNotificationsManager.DidMove.title(locale)
-            case .offline:
+            case .cloudConnection:
                 return RuuviLocalization.alertNotificationOfflineMessage(threshold, locale)
+            case .aqi:
+                return RuuviLocalization.alertNotificationAqiHighThreshold(threshold, locale)
+            case .carbonDioxide:
+                return RuuviLocalization.alertNotificationCo2HighThreshold(threshold, locale)
+            case .pMatter1:
+                return RuuviLocalization.alertNotificationPm1HighThreshold(threshold, locale)
+            case .pMatter25:
+                return RuuviLocalization.alertNotificationPm25HighThreshold(threshold, locale)
+            case .pMatter4:
+                return RuuviLocalization.alertNotificationPm4HighThreshold(threshold, locale)
+            case .pMatter10:
+                return RuuviLocalization.alertNotificationPm10HighThreshold(threshold, locale)
+            case .voc:
+                return RuuviLocalization.alertNotificationVocHighThreshold(threshold, locale)
+            case .nox:
+                return RuuviLocalization.alertNotificationNoxHighThreshold(threshold, locale)
+            case .soundInstant:
+                return RuuviLocalization.alertNotificationSoundInstantHighThreshold(threshold, locale)
+            case .soundPeak:
+                return RuuviLocalization.alertNotificationSoundPeakHighThreshold(threshold, locale)
+            case .soundAverage:
+                return RuuviLocalization.alertNotificationSoundAverageHighThreshold(threshold, locale)
+            case .luminosity:
+                return RuuviLocalization.alertNotificationLuminosityHighThreshold(threshold, locale)
+            default:
+                return ""
             }
         }
     }

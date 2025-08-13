@@ -20,6 +20,7 @@ enum TagSettingsSectionIdentifier {
     case alertMovement
     case alertConnection
     case alertCloudConnection
+    case alertAQI
     case alertCarbonDioxide
     case alertPMatter1
     case alertPMatter25
@@ -27,7 +28,7 @@ enum TagSettingsSectionIdentifier {
     case alertPMatter10
     case alertVOC
     case alertNOx
-    case alertSound
+    case alertSoundInstant
     case alertLuminosity
     case offsetCorrection
     case moreInfo
@@ -271,6 +272,15 @@ class TagSettingsViewController: UIViewController {
         reuseIdentifier: Self.ReuseIdentifier
     )
 
+    // AQI
+    private lazy var aqiAlertSectionHeaderView:
+        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+
+    private lazy var aqiAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
+
     // Carbon Dioxide
     private lazy var co2AlertSectionHeaderView:
         TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
@@ -334,11 +344,11 @@ class TagSettingsViewController: UIViewController {
         reuseIdentifier: Self.ReuseIdentifier
     )
 
-    // Sound
-    private lazy var soundAlertSectionHeaderView:
+    // Sound Instant
+    private lazy var soundInstantAlertSectionHeaderView:
         TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
 
-    private lazy var soundAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var soundInstantAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
@@ -472,6 +482,8 @@ class TagSettingsViewController: UIViewController {
         pressureAlertCell = nil
         rssiAlertSectionHeaderView = nil
         rssiAlertCell = nil
+        aqiAlertSectionHeaderView = nil
+        aqiAlertCell = nil
         co2AlertSectionHeaderView = nil
         co2AlertCell = nil
         pm1AlertSectionHeaderView = nil
@@ -486,8 +498,8 @@ class TagSettingsViewController: UIViewController {
         vocAlertCell = nil
         noxAlertSectionHeaderView = nil
         noxAlertCell = nil
-        soundAlertSectionHeaderView = nil
-        soundAlertCell = nil
+        soundInstantAlertSectionHeaderView = nil
+        soundInstantAlertCell = nil
         luminosityAlertSectionHeaderView = nil
         luminosityAlertCell = nil
         movementAlertSectionHeaderView = nil
@@ -1532,6 +1544,94 @@ extension TagSettingsViewController {
                 }
         }
 
+        // AQI
+        if let aqiAlertCell {
+            aqiAlertCell.bind(viewModel.isAQIAlertOn) { cell, value in
+                cell.setStatus(
+                    with: value,
+                    hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
+                )
+            }
+
+            aqiAlertCell.bind(viewModel.aqiAlertDescription) {
+                [weak self] cell, value in
+                cell.setCustomDescription(with: self?.alertCustomDescription(from: value))
+            }
+
+            aqiAlertCell.bind(viewModel.aqiUpperBound) {
+                [weak self] cell, _ in
+                cell.setAlertLimitDescription(
+                        description: self?.aqiAlertRangeDescription()
+                    )
+                cell.setAlertRange(
+                    selectedMinValue: self?.aqiLowerBound(),
+                    selectedMaxValue: self?.aqiUpperBound()
+                )
+            }
+
+            aqiAlertCell.bind(viewModel.aqiLowerBound) {
+                [weak self] cell, _ in
+                cell.setAlertLimitDescription(description: self?.aqiAlertRangeDescription())
+                cell.setAlertRange(
+                    selectedMinValue: self?.aqiLowerBound(),
+                    selectedMaxValue: self?.aqiUpperBound()
+                )
+            }
+
+            aqiAlertCell.bind(viewModel.latestMeasurement) { [weak self]
+                cell, measurement in
+                cell.disableEditing(
+                    disable: measurement == nil,
+                    identifier: .alertAQI
+                )
+                guard let sSelf = self else { return }
+                cell.setLatestMeasurementText(
+                    with: sSelf.latestValue(
+                        for: .aqi(
+                            lower: 0,
+                            upper: 0
+                        )
+                    )
+                )
+            }
+        }
+
+        if let aqiAlertSectionHeaderView {
+            aqiAlertSectionHeaderView.bind(
+                viewModel.aqiAlertMutedTill) {
+                    [weak self] header,
+                    mutedTill in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isAQIAlertOn.value)
+                    let alertState = viewModel.aqiAlertState.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            aqiAlertSectionHeaderView
+                .bind(viewModel.isAQIAlertOn) { [weak self] header, isOn in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                        GlobalHelpers.getBool(from: isOn)
+                    let alertState = viewModel.aqiAlertState.value
+                    let mutedTill = viewModel.aqiAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
+                }
+
+            aqiAlertSectionHeaderView
+                .bind(viewModel.aqiAlertState) {
+                    [weak self] header,
+                    state in
+                    guard let self else { return }
+                    let isOn = alertsAvailable() &&
+                    GlobalHelpers
+                        .getBool(from: viewModel.isAQIAlertOn.value)
+                    let mutedTill = viewModel.aqiAlertMutedTill.value
+                    header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
+                }
+        }
+
         // Carbon Dioxide
         if let co2AlertCell {
             co2AlertCell.bind(viewModel.isCarbonDioxideAlertOn) { cell, value in
@@ -2163,21 +2263,21 @@ extension TagSettingsViewController {
                 }
         }
 
-        // Sound
-        if let soundAlertCell {
-            soundAlertCell.bind(viewModel.isSoundAlertOn) { cell, value in
+        // Sound Instant
+        if let soundInstantAlertCell {
+            soundInstantAlertCell.bind(viewModel.isSoundInstantAlertOn) { cell, value in
                 cell.setStatus(
                     with: value,
                     hideStatusLabel: viewModel.hideSwitchStatusLabel.value ?? false
                 )
             }
 
-            soundAlertCell.bind(viewModel.soundAlertDescription) {
+            soundInstantAlertCell.bind(viewModel.soundInstantAlertDescription) {
                 [weak self] cell, value in
                 cell.setCustomDescription(with: self?.alertCustomDescription(from: value))
             }
 
-            soundAlertCell.bind(viewModel.soundUpperBound) {
+            soundInstantAlertCell.bind(viewModel.soundInstantUpperBound) {
                 [weak self] cell, _ in
                 cell
                     .setAlertLimitDescription(
@@ -2189,7 +2289,7 @@ extension TagSettingsViewController {
                 )
             }
 
-            soundAlertCell.bind(viewModel.soundLowerBound) {
+            soundInstantAlertCell.bind(viewModel.soundInstantLowerBound) {
                 [weak self] cell, _ in
                 cell.setAlertLimitDescription(description: self?.soundAlertRangeDescription())
                 cell.setAlertRange(
@@ -2198,11 +2298,11 @@ extension TagSettingsViewController {
                 )
             }
 
-            soundAlertCell.bind(viewModel.latestMeasurement) { [weak self]
+            soundInstantAlertCell.bind(viewModel.latestMeasurement) { [weak self]
                 cell, measurement in
                 cell.disableEditing(
                     disable: measurement == nil,
-                    identifier: .alertSound
+                    identifier: .alertSoundInstant
                 )
                 guard let sSelf = self else { return }
                 cell.setLatestMeasurementText(
@@ -2216,38 +2316,39 @@ extension TagSettingsViewController {
             }
         }
 
-        if let soundAlertSectionHeaderView {
-            soundAlertSectionHeaderView.bind(
-                viewModel.soundAlertMutedTill) {
+        if let soundInstantAlertSectionHeaderView {
+            soundInstantAlertSectionHeaderView.bind(viewModel.soundInstantAlertMutedTill) {
                     [weak self] header,
                     mutedTill in
                     guard let self else { return }
                     let isOn = alertsAvailable() &&
                     GlobalHelpers
-                        .getBool(from: viewModel.isSoundAlertOn.value)
-                    let alertState = viewModel.soundAlertState.value
+                        .getBool(from: viewModel.isSoundInstantAlertOn.value)
+                    let alertState = viewModel.soundInstantAlertState.value
                     header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
                 }
 
-            soundAlertSectionHeaderView
-                .bind(viewModel.isSignalAlertOn) { [weak self] header, isOn in
+            soundInstantAlertSectionHeaderView
+                .bind(viewModel.isSoundInstantAlertOn) {
+                    [weak self] header,
+                    isOn in
                     guard let self else { return }
                     let isOn = alertsAvailable() &&
                         GlobalHelpers.getBool(from: isOn)
-                    let alertState = viewModel.soundAlertState.value
-                    let mutedTill = viewModel.soundAlertMutedTill.value
+                    let alertState = viewModel.soundInstantAlertState.value
+                    let mutedTill = viewModel.soundInstantAlertMutedTill.value
                     header.setAlertState(with: mutedTill, isOn: isOn, alertState: alertState)
                 }
 
-            soundAlertSectionHeaderView
-                .bind(viewModel.soundAlertState) {
+            soundInstantAlertSectionHeaderView
+                .bind(viewModel.soundInstantAlertState) {
                     [weak self] header,
                     state in
                     guard let self else { return }
                     let isOn = alertsAvailable() &&
                     GlobalHelpers
-                        .getBool(from: viewModel.isSignalAlertOn.value)
-                    let mutedTill = viewModel.soundAlertMutedTill.value
+                        .getBool(from: viewModel.isSoundInstantAlertOn.value)
+                    let mutedTill = viewModel.soundInstantAlertMutedTill.value
                     header.setAlertState(with: mutedTill, isOn: isOn, alertState: state)
                 }
         }
@@ -2536,6 +2637,11 @@ extension TagSettingsViewController {
             sections.append(configureRSSIAlertSection())
         }
 
+        if viewModel?.latestMeasurement.value?.co2 != nil &&
+            viewModel?.latestMeasurement.value?.pm25 != nil {
+            sections.append(configureAQIAlertSection())
+        }
+
         if viewModel?.latestMeasurement.value?.co2 != nil {
             sections.append(configureCO2AlertSection())
         }
@@ -2768,6 +2874,67 @@ extension TagSettingsViewController {
                 )
                 self?.rssiAlertCell?.delegate = self
                 return self?.rssiAlertCell ?? UITableViewCell()
+            },
+            action: nil
+        )
+        return settingItem
+    }
+
+    // MARK: - AQI ALERTS
+
+    private func configureAQIAlertSection() -> TagSettingsSection {
+        let sectionTitle = RuuviLocalization.TagSettings.AqiAlertTitleLabel.text(
+            HumidityUnit.percent.symbol
+        )
+        let section = TagSettingsSection(
+            identifier: .alertAQI,
+            title: sectionTitle,
+            cells: [
+                aqiAlertItem()
+            ],
+            collapsed: true,
+            headerType: .expandable
+        )
+        return section
+    }
+
+    private func aqiAlertItem() -> TagSettingsItem {
+        let (minRange, maxRange) = aqiAlertRange()
+        let disableAQI = !hasMeasurement()
+        let latestMeasurement = latestValue(
+            for: .aqi(lower: 0, upper: 0)
+        )
+        let settingItem = TagSettingsItem(
+            createdCell: {
+                [weak self] in
+                self?.aqiAlertCell?.hideNoticeView()
+                self?.aqiAlertCell?.showAlertRangeSetter()
+                self?.aqiAlertCell?
+                    .setStatus(
+                        with: self?.viewModel?.isAQIAlertOn.value,
+                        hideStatusLabel: self?.viewModel?.hideSwitchStatusLabel.value ?? false
+                    )
+                self?.aqiAlertCell?
+                    .setCustomDescription(
+                        with: self?.alertCustomDescription(from: self?.viewModel?
+                            .aqiAlertDescription.value))
+                self?.aqiAlertCell?
+                    .setAlertLimitDescription(
+                        description: self?.aqiAlertRangeDescription()
+                    )
+                self?.aqiAlertCell?.setAlertRange(
+                    minValue: minRange,
+                    selectedMinValue: self?.aqiLowerBound(),
+                    maxValue: maxRange,
+                    selectedMaxValue: self?.aqiUpperBound()
+                )
+                self?.aqiAlertCell?.setLatestMeasurementText(with: latestMeasurement)
+                self?.aqiAlertCell?.disableEditing(
+                    disable: disableAQI,
+                    identifier: .alertAQI
+                )
+                self?.aqiAlertCell?.delegate = self
+                return self?.aqiAlertCell ?? UITableViewCell()
             },
             action: nil
         )
@@ -3204,11 +3371,11 @@ extension TagSettingsViewController {
     // MARK: - SOUND ALERTS
 
     private func configureSoundAlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.TagSettings.SoundAlertTitleLabel.text(
+        let title = RuuviLocalization.TagSettings.SoundInstantAlertTitleLabel.text(
             RuuviLocalization.unitSound
         )
         let section = TagSettingsSection(
-            identifier: .alertSound,
+            identifier: .alertSoundInstant,
             title: title,
             cells: [
                 soundAlertItem()
@@ -3228,34 +3395,34 @@ extension TagSettingsViewController {
         let settingItem = TagSettingsItem(
             createdCell: {
                 [weak self] in
-                self?.soundAlertCell?.hideNoticeView()
-                self?.soundAlertCell?.showAlertRangeSetter()
-                self?.soundAlertCell?
+                self?.soundInstantAlertCell?.hideNoticeView()
+                self?.soundInstantAlertCell?.showAlertRangeSetter()
+                self?.soundInstantAlertCell?
                     .setStatus(
-                        with: self?.viewModel?.isSoundAlertOn.value,
+                        with: self?.viewModel?.isSoundInstantAlertOn.value,
                         hideStatusLabel: self?.viewModel?.hideSwitchStatusLabel.value ?? false
                     )
-                self?.soundAlertCell?
+                self?.soundInstantAlertCell?
                     .setCustomDescription(
                         with: self?.alertCustomDescription(from: self?.viewModel?
-                            .soundAlertDescription.value))
-                self?.soundAlertCell?
+                            .soundInstantAlertDescription.value))
+                self?.soundInstantAlertCell?
                     .setAlertLimitDescription(
                         description: self?.soundAlertRangeDescription()
                     )
-                self?.soundAlertCell?.setAlertRange(
+                self?.soundInstantAlertCell?.setAlertRange(
                     minValue: minRange,
                     selectedMinValue: self?.soundLowerBound(),
                     maxValue: maxRange,
                     selectedMaxValue: self?.soundUpperBound()
                 )
-                self?.soundAlertCell?.setLatestMeasurementText(with: latestMeasurement)
-                self?.soundAlertCell?.disableEditing(
+                self?.soundInstantAlertCell?.setLatestMeasurementText(with: latestMeasurement)
+                self?.soundInstantAlertCell?.disableEditing(
                     disable: disableSound,
-                    identifier: .alertSound
+                    identifier: .alertSoundInstant
                 )
-                self?.soundAlertCell?.delegate = self
-                return self?.soundAlertCell ?? UITableViewCell()
+                self?.soundInstantAlertCell?.delegate = self
+                return self?.soundInstantAlertCell ?? UITableViewCell()
             },
             action: nil
         )
@@ -3454,6 +3621,7 @@ extension TagSettingsViewController {
         reloadRHAlertSectionHeader()
         reloadPressureAlertSectionHeader()
         reloadSignalAlertSectionHeader()
+        reloadAQIAlertSectionHeader()
         reloadCo2AlertSectionHeader()
         reloadPM1AlertSectionHeader()
         reloadPM25AlertSectionHeader()
@@ -3461,7 +3629,7 @@ extension TagSettingsViewController {
         reloadPM10AlertSectionHeader()
         reloadVOCAlertSectionHeader()
         reloadNOXAlertSectionHeader()
-        reloadSoundAlertSectionHeader()
+        reloadSoundInstantAlertSectionHeader()
         reloadLuminosityAlertSectionHeader()
         reloadMovementAlertSectionHeader()
         reloadConnectionAlertSectionHeader()
@@ -3516,6 +3684,20 @@ extension TagSettingsViewController {
         let mutedTill = viewModel?.signalAlertMutedTill.value
         let alertState = viewModel?.signalAlertState.value
         rssiAlertSectionHeaderView?
+            .setAlertState(
+                with: mutedTill,
+                isOn: isOn,
+                alertState: alertState
+            )
+    }
+
+    private func reloadAQIAlertSectionHeader() {
+        let isOn = alertsAvailable() && GlobalHelpers.getBool(
+            from: viewModel?.isAQIAlertOn.value
+        )
+        let mutedTill = viewModel?.aqiAlertMutedTill.value
+        let alertState = viewModel?.aqiAlertState.value
+        aqiAlertSectionHeaderView?
             .setAlertState(
                 with: mutedTill,
                 isOn: isOn,
@@ -3621,13 +3803,13 @@ extension TagSettingsViewController {
             )
     }
 
-    private func reloadSoundAlertSectionHeader() {
+    private func reloadSoundInstantAlertSectionHeader() {
         let isOn = alertsAvailable() && GlobalHelpers.getBool(
-            from: viewModel?.isSoundAlertOn.value
+            from: viewModel?.isSoundInstantAlertOn.value
         )
-        let mutedTill = viewModel?.soundAlertMutedTill.value
-        let alertState = viewModel?.soundAlertState.value
-        soundAlertSectionHeaderView?
+        let mutedTill = viewModel?.soundInstantAlertMutedTill.value
+        let alertState = viewModel?.soundInstantAlertState.value
+        soundInstantAlertSectionHeaderView?
             .setAlertState(
                 with: mutedTill,
                 isOn: isOn,
@@ -3841,6 +4023,12 @@ extension TagSettingsViewController {
             } else {
                 return RuuviLocalization.na
             }
+        case .aqi:
+            let aqi = measurementService.aqi(
+                for: viewModel?.latestMeasurement.value?.co2,
+                pm25: viewModel?.latestMeasurement.value?.pm25
+            )
+            return "\(aqi)" + " \(HumidityUnit.percent.symbol)"
         case .carbonDioxide:
             if let co2 = viewModel?.latestMeasurement.value?.co2?.round(to: 2) {
                 let symbol = RuuviLocalization.unitCo2
@@ -4161,6 +4349,78 @@ extension TagSettingsViewController {
         } else {
             return nil
         }
+    }
+
+    // AQI
+    private func aqiAlertRangeDescription(
+        from min: CGFloat? = nil,
+        max: CGFloat? = nil
+    ) -> NSMutableAttributedString? {
+        guard isViewLoaded else { return nil }
+        let format = RuuviLocalization.TagSettings.Alerts.description
+
+        if let min, let max {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: min
+                    ),
+                    formatNumber(
+                        from: max
+                    )
+                )
+            )
+        }
+
+        if let lower = viewModel?.aqiLowerBound.value,
+           let upper = viewModel?.aqiUpperBound.value {
+            return attributedString(
+                from: format(
+                    formatNumber(
+                        from: lower
+                    ),
+                    formatNumber(
+                        from: upper
+                    )
+                )
+            )
+        } else {
+            return nil
+        }
+    }
+
+    private func aqiLowerBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.AQI.lowerBound
+        }
+        let (minRange, _) = aqiAlertRange()
+        if let lower = viewModel?.aqiLowerBound.value {
+            return CGFloat(lower)
+        } else {
+            return minRange
+        }
+    }
+
+    private func aqiUpperBound() -> CGFloat {
+        guard isViewLoaded else {
+            return TagSettingsAlertConstants.AQI.upperBound
+        }
+        let (_, maxRange) = aqiAlertRange()
+        if let upper = viewModel?.aqiUpperBound.value {
+            return CGFloat(upper)
+        } else {
+            return maxRange
+        }
+    }
+
+    private func aqiAlertRange() -> (
+        minimum: CGFloat,
+        maximum: CGFloat
+    ) {
+        (
+            minimum: TagSettingsAlertConstants.AQI.lowerBound,
+            maximum: TagSettingsAlertConstants.AQI.upperBound
+        )
     }
 
     // Carbon Dioxide
@@ -4637,7 +4897,7 @@ extension TagSettingsViewController {
         )
     }
 
-    // Sound
+    // Sound Instant
     private func soundAlertRangeDescription(
         from min: CGFloat? = nil,
         max: CGFloat? = nil
@@ -4658,8 +4918,8 @@ extension TagSettingsViewController {
             )
         }
 
-        if let lower = viewModel?.soundLowerBound.value,
-           let upper = viewModel?.soundUpperBound.value {
+        if let lower = viewModel?.soundInstantLowerBound.value,
+           let upper = viewModel?.soundInstantUpperBound.value {
             return attributedString(
                 from: format(
                     formatNumber(
@@ -4680,7 +4940,7 @@ extension TagSettingsViewController {
             return TagSettingsAlertConstants.Sound.lowerBound
         }
         let (minRange, _) = soundAlertRange()
-        if let lower = viewModel?.soundLowerBound.value {
+        if let lower = viewModel?.soundInstantLowerBound.value {
             return CGFloat(lower)
         } else {
             return minRange
@@ -4692,7 +4952,7 @@ extension TagSettingsViewController {
             return TagSettingsAlertConstants.Sound.upperBound
         }
         let (_, maxRange) = soundAlertRange()
-        if let upper = viewModel?.soundUpperBound.value {
+        if let upper = viewModel?.soundInstantUpperBound.value {
             return CGFloat(upper)
         } else {
             return maxRange
@@ -4812,6 +5072,8 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
             description = viewModel?.pressureAlertDescription.value
         case rssiAlertCell:
             description = viewModel?.signalAlertDescription.value
+        case aqiAlertCell:
+            description = viewModel?.aqiAlertDescription.value
         case co2AlertCell:
             description = viewModel?.carbonDioxideAlertDescription.value
         case pm1AlertCell:
@@ -4826,8 +5088,8 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
             description = viewModel?.vocAlertDescription.value
         case noxAlertCell:
             description = viewModel?.noxAlertDescription.value
-        case soundAlertCell:
-            description = viewModel?.soundAlertDescription.value
+        case soundInstantAlertCell:
+            description = viewModel?.soundInstantAlertDescription.value
         case luminosityAlertCell:
             description = viewModel?.luminosityAlertDescription.value
         case movementAlertCell:
@@ -4857,6 +5119,8 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
             showPressureAlertSetDialog(sender: sender)
         case rssiAlertCell:
             showRSSIAlertSetDialog(sender: sender)
+        case aqiAlertCell:
+            showAQIAlertSetDialog(sender: sender)
         case co2AlertCell:
             showCo2AlertSetDialog(sender: sender)
         case pm1AlertCell:
@@ -4871,7 +5135,7 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
             showVOCAlertSetDialog(sender: sender)
         case noxAlertCell:
             showNOXAlertSetDialog(sender: sender)
-        case soundAlertCell:
+        case soundInstantAlertCell:
             showSoundAlertSetDialog(sender: sender)
         case luminosityAlertCell:
             showLuminosityAlertSetDialog(sender: sender)
@@ -4906,6 +5170,12 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
         case rssiAlertCell:
             output.viewDidChangeAlertState(
                 for: .signal(lower: 0, upper: 0),
+                isOn: isOn
+            )
+
+        case aqiAlertCell:
+            output.viewDidChangeAlertState(
+                for: .aqi(lower: 0, upper: 0),
                 isOn: isOn
             )
 
@@ -4951,7 +5221,7 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
                 isOn: isOn
             )
 
-        case soundAlertCell:
+        case soundInstantAlertCell:
             output.viewDidChangeAlertState(
                 for: .soundInstant(lower: 0, upper: 0),
                 isOn: isOn
@@ -5050,6 +5320,21 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
             if maxValue != viewModel?.signalUpperBound.value {
                 output.viewDidChangeAlertUpperBound(
                     for: .signal(lower: 0, upper: 0),
+                    upper: maxValue
+                )
+            }
+
+        case aqiAlertCell:
+            if minValue != viewModel?.aqiLowerBound.value {
+                output.viewDidChangeAlertLowerBound(
+                    for: .aqi(lower: 0, upper: 0),
+                    lower: minValue
+                )
+            }
+
+            if maxValue != viewModel?.aqiUpperBound.value {
+                output.viewDidChangeAlertUpperBound(
+                    for: .aqi(lower: 0, upper: 0),
                     upper: maxValue
                 )
             }
@@ -5159,15 +5444,15 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
                 )
             }
 
-        case soundAlertCell:
-            if minValue != viewModel?.soundLowerBound.value {
+        case soundInstantAlertCell:
+            if minValue != viewModel?.soundInstantLowerBound.value {
                 output.viewDidChangeAlertLowerBound(
                     for: .soundInstant(lower: 0, upper: 0),
                     lower: minValue
                 )
             }
 
-            if maxValue != viewModel?.soundUpperBound.value {
+            if maxValue != viewModel?.soundInstantUpperBound.value {
                 output.viewDidChangeAlertUpperBound(
                     for: .soundInstant(lower: 0, upper: 0),
                     upper: maxValue
@@ -5224,6 +5509,12 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
                     from: minValue,
                     max: maxValue
                 ))
+        case aqiAlertCell:
+            aqiAlertCell?.setAlertLimitDescription(
+                description: aqiAlertRangeDescription(
+                    from: minValue,
+                    max: maxValue
+                ))
         case co2AlertCell:
             co2AlertCell?.setAlertLimitDescription(
                 description: co2AlertRangeDescription(
@@ -5266,8 +5557,8 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
                     from: minValue,
                     max: maxValue
                 ))
-        case soundAlertCell:
-            soundAlertCell?.setAlertLimitDescription(
+        case soundInstantAlertCell:
+            soundInstantAlertCell?.setAlertLimitDescription(
                 description: soundAlertRangeDescription(
                     from: minValue,
                     max: maxValue
@@ -5345,6 +5636,21 @@ extension TagSettingsViewController {
 
         let (minimumRange, maximumRange) = rssiAlertRange()
         let (minimumValue, maximumValue) = rssiValue()
+        showSensorCustomAlertRangeDialog(
+            title: title,
+            minimumBound: minimumRange,
+            maximumBound: maximumRange,
+            currentLowerBound: minimumValue,
+            currentUpperBound: maximumValue,
+            sender: sender
+        )
+    }
+
+    private func showAQIAlertSetDialog(sender: TagSettingsAlertConfigCell) {
+        let title = RuuviLocalization.aqi + " (\(HumidityUnit.percent.symbol))"
+
+        let (minimumRange, maximumRange) = aqiAlertRange()
+        let (minimumValue, maximumValue) = aqiValue()
         showSensorCustomAlertRangeDialog(
             title: title,
             minimumBound: minimumRange,
@@ -5480,7 +5786,7 @@ extension TagSettingsViewController {
         )
 
         let (minimumRange, maximumRange) = soundAlertRange()
-        let (minimumValue, maximumValue) = soundValue()
+        let (minimumValue, maximumValue) = soundInstantValue()
         showSensorCustomAlertRangeDialog(
             title: title,
             minimumBound: minimumRange,
@@ -5615,6 +5921,16 @@ extension TagSettingsViewController {
         }
     }
 
+    // AQI
+    private func aqiValue() -> (minimum: Double?, maximum: Double?) {
+        if let lower = viewModel?.aqiLowerBound.value,
+           let upper = viewModel?.aqiUpperBound.value {
+            return (minimum: lower, maximum: upper)
+        } else {
+            return (minimum: nil, maximum: nil)
+        }
+    }
+
     // Carbon Dioxide
     private func co2Value() -> (minimum: Double?, maximum: Double?) {
         if let lower = viewModel?.carbonDioxideLowerBound.value,
@@ -5685,10 +6001,10 @@ extension TagSettingsViewController {
         }
     }
 
-    // Sound
-    private func soundValue() -> (minimum: Double?, maximum: Double?) {
-        if let lower = viewModel?.noxLowerBound.value,
-           let upper = viewModel?.noxUpperBound.value {
+    // Sound Instant
+    private func soundInstantValue() -> (minimum: Double?, maximum: Double?) {
+        if let lower = viewModel?.soundInstantLowerBound.value,
+           let upper = viewModel?.soundInstantUpperBound.value {
             return (minimum: lower, maximum: upper)
         } else {
             return (minimum: nil, maximum: nil)
@@ -6510,6 +6826,17 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
                     alertState: viewModel?.signalAlertState.value,
                     section: section
                 )
+            case .alertAQI:
+                return alertSectionHeaderView(
+                    from: aqiAlertSectionHeaderView,
+                    sectionItem: sectionItem,
+                    mutedTill: viewModel?.aqiAlertMutedTill.value,
+                    isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
+                        from: viewModel?.isAQIAlertOn.value
+                    ),
+                    alertState: viewModel?.aqiAlertState.value,
+                    section: section
+                )
             case .alertCarbonDioxide:
                 return alertSectionHeaderView(
                     from: co2AlertSectionHeaderView,
@@ -6587,15 +6914,15 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
                     alertState: viewModel?.noxAlertState.value,
                     section: section
                 )
-            case .alertSound:
+            case .alertSoundInstant:
                 return alertSectionHeaderView(
-                    from: soundAlertSectionHeaderView,
+                    from: soundInstantAlertSectionHeaderView,
                     sectionItem: sectionItem,
-                    mutedTill: viewModel?.soundAlertMutedTill.value,
+                    mutedTill: viewModel?.soundInstantAlertMutedTill.value,
                     isAlertOn: alertsAvailable() && GlobalHelpers.getBool(
-                        from: viewModel?.isSoundAlertOn.value
+                        from: viewModel?.isSoundInstantAlertOn.value
                     ),
-                    alertState: viewModel?.soundAlertState.value,
+                    alertState: viewModel?.soundInstantAlertState.value,
                     section: section
                 )
             case .alertLuminosity:
@@ -6738,6 +7065,8 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
             reloadPressureAlertSectionHeader()
         case .alertRSSI:
             reloadSignalAlertSectionHeader()
+        case .alertAQI:
+            reloadAQIAlertSectionHeader()
         case .alertCarbonDioxide:
             reloadCo2AlertSectionHeader()
         case .alertPMatter1:
@@ -6752,8 +7081,8 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
             reloadVOCAlertSectionHeader()
         case .alertNOx:
             reloadNOXAlertSectionHeader()
-        case .alertSound:
-            reloadSoundAlertSectionHeader()
+        case .alertSoundInstant:
+            reloadSoundInstantAlertSectionHeader()
         case .alertLuminosity:
             reloadLuminosityAlertSectionHeader()
         case .alertMovement:
@@ -6838,6 +7167,30 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                     rssiAlertCell.disableEditing(
                         disable: GlobalHelpers.getBool(from: !hasMeasurement()) ||
                             !GlobalHelpers.getBool(from: viewModel?.isClaimedTag.value),
+                        identifier: currentSection.identifier
+                    )
+                }
+            case .alertAQI:
+                if let aqiAlertCell {
+                    let (minRange, maxRange) = aqiAlertRange()
+                    let latest = latestValue(
+                        for: .aqi(lower: 0, upper: 0)
+                    )
+                    aqiAlertCell
+                        .setAlertLimitDescription(
+                            description: aqiAlertRangeDescription()
+                        )
+                    aqiAlertCell.setAlertRange(
+                        minValue: minRange,
+                        selectedMinValue: aqiLowerBound(),
+                        maxValue: maxRange,
+                        selectedMaxValue: aqiUpperBound()
+                    )
+                    aqiAlertCell.setLatestMeasurementText(with: latest)
+                    aqiAlertCell.disableEditing(
+                        disable: GlobalHelpers.getBool(
+                            from: !hasMeasurement()
+                        ),
                         identifier: currentSection.identifier
                     )
                 }
@@ -7009,24 +7362,24 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
                         identifier: currentSection.identifier
                     )
                 }
-            case .alertSound:
-                if let soundAlertCell {
+            case .alertSoundInstant:
+                if let soundInstantAlertCell {
                     let (minRange, maxRange) = soundAlertRange()
                     let latest = latestValue(
                         for: .soundInstant(lower: 0, upper: 0)
                     )
-                    soundAlertCell
+                    soundInstantAlertCell
                         .setAlertLimitDescription(
                             description: soundAlertRangeDescription()
                         )
-                    soundAlertCell.setAlertRange(
+                    soundInstantAlertCell.setAlertRange(
                         minValue: minRange,
                         selectedMinValue: soundLowerBound(),
                         maxValue: maxRange,
                         selectedMaxValue: soundUpperBound()
                     )
-                    soundAlertCell.setLatestMeasurementText(with: latest)
-                    soundAlertCell.disableEditing(
+                    soundInstantAlertCell.setLatestMeasurementText(with: latest)
+                    soundInstantAlertCell.disableEditing(
                         disable: GlobalHelpers.getBool(
                             from: !hasMeasurement()
                         ),
@@ -7268,6 +7621,11 @@ extension TagSettingsViewController {
                 for: .signal(lower: 0, upper: 0),
                 description: inputText
             )
+        case aqiAlertCell:
+            output.viewDidChangeAlertDescription(
+                for: .aqi(lower: 0, upper: 0),
+                description: inputText
+            )
         case co2AlertCell:
             output.viewDidChangeAlertDescription(
                 for: .carbonDioxide(lower: 0, upper: 0),
@@ -7303,7 +7661,7 @@ extension TagSettingsViewController {
                 for: .nox(lower: 0, upper: 0),
                 description: inputText
             )
-        case soundAlertCell:
+        case soundInstantAlertCell:
             output.viewDidChangeAlertDescription(
                 for: .soundInstant(lower: 0, upper: 0),
                 description: inputText
@@ -7365,10 +7723,11 @@ extension TagSettingsViewController {
             }
             if sender == temperatureAlertCell || sender == humidityAlertCell ||
                 sender == pressureAlertCell || sender == rssiAlertCell ||
-                sender == co2AlertCell || sender == pm1AlertCell ||
+                sender == co2AlertCell || sender == co2AlertCell ||
+                sender == pm1AlertCell ||
                 sender == pm25AlertCell || sender == pm4AlertCell ||
                 sender == pm10AlertCell || sender == vocAlertCell ||
-                sender == noxAlertCell || sender == soundAlertCell ||
+                sender == noxAlertCell || sender == soundInstantAlertCell ||
                 sender == luminosityAlertCell {
                 alertTextField.text = measurementService.string(
                     from: currentLowerBound
@@ -7390,10 +7749,11 @@ extension TagSettingsViewController {
             }
             if sender == temperatureAlertCell || sender == humidityAlertCell ||
                 sender == pressureAlertCell || sender == rssiAlertCell ||
+                sender == co2AlertCell ||
                 sender == co2AlertCell || sender == pm1AlertCell ||
                 sender == pm25AlertCell || sender == pm4AlertCell ||
                 sender == pm10AlertCell || sender == vocAlertCell ||
-                sender == noxAlertCell || sender == soundAlertCell ||
+                sender == noxAlertCell || sender == soundInstantAlertCell ||
                 sender == luminosityAlertCell {
                 alertTextField.text = measurementService.string(
                     from: currentUpperBound

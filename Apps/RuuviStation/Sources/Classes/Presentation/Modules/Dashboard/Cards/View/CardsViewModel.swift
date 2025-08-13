@@ -98,6 +98,10 @@ final class CardsViewModel: NSObject, ObservableObject {
     @Published var connectionAlertState: AlertState?
     @Published var connectionAlertMutedTill: Date?
 
+    @Published var isAQIAlertOn: Bool?
+    @Published var aqiAlertState: AlertState?
+    @Published var aqiAlertMutedTill: Date?
+
     @Published var isCarbonDioxideAlertOn: Bool?
     @Published var carbonDioxideAlertState: AlertState?
     @Published var carbonDioxideAlertMutedTill: Date?
@@ -279,6 +283,9 @@ extension CardsViewModel {
             $isConnectionAlertOn.map { _ in }.eraseToAnyPublisher(),
             $connectionAlertState.map { _ in }.eraseToAnyPublisher(),
             $connectionAlertMutedTill.map { _ in }.eraseToAnyPublisher(),
+            $isAQIAlertOn.map { _ in }.eraseToAnyPublisher(),
+            $aqiAlertState.map { _ in }.eraseToAnyPublisher(),
+            $aqiAlertMutedTill.map { _ in }.eraseToAnyPublisher(),
             $isCarbonDioxideAlertOn.map { _ in }.eraseToAnyPublisher(),
             $carbonDioxideAlertState.map { _ in }.eraseToAnyPublisher(),
             $carbonDioxideAlertMutedTill.map { _ in }.eraseToAnyPublisher(),

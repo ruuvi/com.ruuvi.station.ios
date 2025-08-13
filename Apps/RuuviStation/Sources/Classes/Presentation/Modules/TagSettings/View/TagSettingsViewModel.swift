@@ -72,6 +72,13 @@ struct TagSettingsViewModel {
     let signalAlertDescription: Observable<String?> = .init()
     let signalAlertState: Observable<AlertState?> = .init()
 
+    let isAQIAlertOn: Observable<Bool?> = .init(false)
+    let aqiAlertMutedTill: Observable<Date?> = .init(nil)
+    let aqiLowerBound: Observable<Double?> = .init(0)
+    let aqiUpperBound: Observable<Double?> = .init(100)
+    let aqiAlertDescription: Observable<String?> = .init()
+    let aqiAlertState: Observable<AlertState?> = .init()
+
     let isCarbonDioxideAlertOn: Observable<Bool?> = .init(false)
     let carbonDioxideAlertMutedTill: Observable<Date?> = .init(nil)
     let carbonDioxideLowerBound: Observable<Double?> = .init(350)
@@ -121,12 +128,12 @@ struct TagSettingsViewModel {
     let noxAlertDescription: Observable<String?> = .init()
     let noxAlertState: Observable<AlertState?> = .init()
 
-    let isSoundAlertOn: Observable<Bool?> = .init(false)
-    let soundAlertMutedTill: Observable<Date?> = .init(nil)
-    let soundLowerBound: Observable<Double?> = .init(0)
-    let soundUpperBound: Observable<Double?> = .init(127)
-    let soundAlertDescription: Observable<String?> = .init()
-    let soundAlertState: Observable<AlertState?> = .init()
+    let isSoundInstantAlertOn: Observable<Bool?> = .init(false)
+    let soundInstantAlertMutedTill: Observable<Date?> = .init(nil)
+    let soundInstantLowerBound: Observable<Double?> = .init(0)
+    let soundInstantUpperBound: Observable<Double?> = .init(127)
+    let soundInstantAlertDescription: Observable<String?> = .init()
+    let soundInstantAlertState: Observable<AlertState?> = .init()
 
     let isLuminosityAlertOn: Observable<Bool?> = .init(false)
     let luminosityAlertMutedTill: Observable<Date?> = .init(nil)
@@ -254,6 +261,11 @@ struct TagSettingsViewModel {
         carbonDioxideUpperBound.value = TagSettingsAlertConstants.CarbonDioxide.upperBound
         carbonDioxideAlertDescription.value = nil
 
+        isAQIAlertOn.value = false
+        aqiLowerBound.value = TagSettingsAlertConstants.CarbonDioxide.lowerBound
+        aqiUpperBound.value = TagSettingsAlertConstants.CarbonDioxide.upperBound
+        aqiAlertDescription.value = nil
+
         isPMatter1AlertOn.value = false
         pMatter1LowerBound.value = TagSettingsAlertConstants.ParticulateMatter.lowerBound
         pMatter1UpperBound.value = TagSettingsAlertConstants.ParticulateMatter.upperBound
@@ -284,10 +296,10 @@ struct TagSettingsViewModel {
         noxUpperBound.value = TagSettingsAlertConstants.NOX.upperBound
         noxAlertDescription.value = nil
 
-        isSoundAlertOn.value = false
-        soundLowerBound.value = TagSettingsAlertConstants.Sound.lowerBound
-        soundUpperBound.value = TagSettingsAlertConstants.Sound.upperBound
-        soundAlertDescription.value = nil
+        isSoundInstantAlertOn.value = false
+        soundInstantLowerBound.value = TagSettingsAlertConstants.Sound.lowerBound
+        soundInstantUpperBound.value = TagSettingsAlertConstants.Sound.upperBound
+        soundInstantAlertDescription.value = nil
 
         isLuminosityAlertOn.value = false
         luminosityLowerBound.value = TagSettingsAlertConstants.Luminosity.lowerBound

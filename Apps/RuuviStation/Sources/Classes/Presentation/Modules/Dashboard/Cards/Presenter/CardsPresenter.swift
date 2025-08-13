@@ -1119,6 +1119,8 @@ extension CardsPresenter {
                 sync(pressure: type, ruuviTag: ruuviTag, viewModel: viewModel)
             case .signal:
                 sync(signal: type, ruuviTag: ruuviTag, viewModel: viewModel)
+            case .aqi:
+                sync(aqi: type, ruuviTag: ruuviTag, viewModel: viewModel)
             case .carbonDioxide:
                 sync(carbonDioxide: type, ruuviTag: ruuviTag, viewModel: viewModel)
             case .pMatter1:
@@ -1152,6 +1154,7 @@ extension CardsPresenter {
             viewModel.relativeHumidityAlertState,
             viewModel.pressureAlertState,
             viewModel.signalAlertState,
+            viewModel.aqiAlertState,
             viewModel.carbonDioxideAlertState,
             viewModel.pMatter1AlertState,
             viewModel.pMatter25AlertState,
@@ -1260,6 +1263,24 @@ extension CardsPresenter {
         viewModel.signalAlertMutedTill =
             alertService.mutedTill(
                 type: signal,
+                for: ruuviTag
+            )
+    }
+
+    private func sync(
+        aqi: AlertType,
+        ruuviTag: PhysicalSensor,
+        viewModel: CardsViewModel
+    ) {
+        if case .aqi = alertService
+            .alert(for: ruuviTag, of: aqi) {
+            viewModel.isAQIAlertOn = true
+        } else {
+            viewModel.isAQIAlertOn = false
+        }
+        viewModel.aqiAlertMutedTill =
+            alertService.mutedTill(
+                type: aqi,
                 for: ruuviTag
             )
     }
@@ -1491,6 +1512,11 @@ extension CardsPresenter {
                 viewModel.signalAlertMutedTill = nil
             }
 
+            if let mutedTill = viewModel.aqiAlertMutedTill,
+               mutedTill < Date() {
+                viewModel.aqiAlertMutedTill = nil
+            }
+
             if let mutedTill = viewModel.carbonDioxideAlertMutedTill,
                mutedTill < Date() {
                 viewModel.carbonDioxideAlertMutedTill = nil
@@ -1565,6 +1591,8 @@ extension CardsPresenter {
             viewModel.pressureAlertMutedTill = date
         case .signal:
             viewModel.signalAlertMutedTill = date
+        case .aqi:
+            viewModel.aqiAlertMutedTill = date
         case .carbonDioxide:
             viewModel.carbonDioxideAlertMutedTill = date
         case .pMatter1:
@@ -1610,6 +1638,8 @@ extension CardsPresenter {
             viewModel.isPressureAlertOn = isOn
         case .signal:
             viewModel.isSignalAlertOn = isOn
+        case .aqi:
+            viewModel.isAQIAlertOn = isOn
         case .carbonDioxide:
             viewModel.isCarbonDioxideAlertOn = isOn
         case .pMatter1:

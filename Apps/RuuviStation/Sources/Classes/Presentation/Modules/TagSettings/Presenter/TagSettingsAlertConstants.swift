@@ -23,6 +23,11 @@ struct TagSettingsAlertConstants {
         static let upperBound = 0.0    // dBm
     }
 
+    struct AQI {
+        static let lowerBound = 0.0  // %
+        static let upperBound = 100.0 // %
+    }
+
     struct CarbonDioxide {
         static let lowerBound = 350.0  // ppm
         static let upperBound = 2500.0 // ppm
