@@ -1,7 +1,7 @@
 import Foundation
 import RuuviOntology
 
-protocol CardsModuleOutput: AnyObject {
+protocol LegacyCardsModuleOutput: AnyObject {
     func cardsViewDidRefresh(module: CardsModuleInput)
     func cardsViewDidDismiss(module: CardsModuleInput)
 }

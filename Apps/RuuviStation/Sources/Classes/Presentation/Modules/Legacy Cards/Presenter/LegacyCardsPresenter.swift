@@ -14,8 +14,8 @@ import RuuviService
 import RuuviStorage
 import UIKit
 
-class CardsPresenter {
-    weak var view: CardsViewInput?
+class LegacyCardsPresenter {
+    weak var view: LegacyCardsViewInput?
     var router: CardsRouterInput!
     var interactor: CardsInteractorInput!
     var errorPresenter: ErrorPresenter!
@@ -33,7 +33,7 @@ class CardsPresenter {
     var permissionPresenter: PermissionPresenter!
     var permissionsManager: RuuviCorePermission!
 
-    // MARK: - CardsViewOutput
+    // MARK: - LegacyCardsViewOutput
     var showingChart: Bool = false
 
     // MARK: - PRIVATE VARIABLES
@@ -42,7 +42,7 @@ class CardsPresenter {
     private var ruuviTags = [AnyRuuviTagSensor]()
     private var sensorSettings = [SensorSettings]()
     /// Collection of the card view model.
-    private var viewModels: [CardsViewModel] = [] {
+    private var viewModels: [LegacyCardsViewModel] = [] {
         didSet {
             guard let view else { return }
             view.viewModels = viewModels
@@ -58,7 +58,7 @@ class CardsPresenter {
         }
     }
 
-    private var currentVisibleViewModel: CardsViewModel?
+    private var currentVisibleViewModel: LegacyCardsViewModel?
 
     /// Whether bluetooth permission is already granted.
     private var isBluetoothPermissionGranted: Bool {
@@ -71,7 +71,7 @@ class CardsPresenter {
     private var shouldTriggerScroll: Bool = false
     private weak var tagCharts: TagChartsViewModuleInput?
     private weak var tagChartsModule: UIViewController?
-    private weak var output: CardsModuleOutput?
+    private weak var output: LegacyCardsModuleOutput?
 
     // MARK: - OBSERVERS
 
@@ -106,9 +106,9 @@ class CardsPresenter {
 
 // MARK: - CardsModuleInput
 
-extension CardsPresenter: CardsModuleInput {
+extension LegacyCardsPresenter: LegacyCardsModuleInput {
     func configure(
-        viewModels: [CardsViewModel],
+        viewModels: [LegacyCardsViewModel],
         ruuviTagSensors: [AnyRuuviTagSensor],
         sensorSettings: [SensorSettings]
     ) {
@@ -117,12 +117,12 @@ extension CardsPresenter: CardsModuleInput {
         self.sensorSettings = sensorSettings
     }
 
-    func configure(output: CardsModuleOutput) {
+    func configure(output: LegacyCardsModuleOutput) {
         self.output = output
     }
 
     func configure(
-        scrollTo: CardsViewModel?,
+        scrollTo: LegacyCardsViewModel?,
         openChart: Bool
     ) {
         updateVisibleCard(
@@ -133,7 +133,7 @@ extension CardsPresenter: CardsModuleInput {
     }
 }
 
-extension CardsPresenter {
+extension LegacyCardsPresenter {
     private func startObservingVisibleTag() {
         startObservingRuuviTags()
         observeSensorSettings()
@@ -165,7 +165,7 @@ extension CardsPresenter {
     }
 
     private func updateVisibleCard(
-        from viewModel: CardsViewModel?,
+        from viewModel: LegacyCardsViewModel?,
         openChart: Bool = false,
         triggerScroll: Bool = false
     ) {
@@ -445,7 +445,7 @@ extension CardsPresenter {
     }
 
     private func notifySensorSettingsUpdate(
-        sensorSettings: SensorSettings?, viewModel: CardsViewModel
+        sensorSettings: SensorSettings?, viewModel: LegacyCardsViewModel
     ) {
         let currentRecord = viewModel.latestMeasurement
         let updatedRecord = currentRecord?.with(sensorSettings: sensorSettings)
@@ -656,8 +656,8 @@ extension CardsPresenter {
 
     // ACTIONS
     private func syncViewModels() {
-        let ruuviViewModels = ruuviTags.compactMap { ruuviTag -> CardsViewModel in
-            let viewModel = CardsViewModel(ruuviTag)
+        let ruuviViewModels = ruuviTags.compactMap { ruuviTag -> LegacyCardsViewModel in
+            let viewModel = LegacyCardsViewModel(ruuviTag)
             ruuviSensorPropertiesService.getImage(for: ruuviTag)
                 .on(success: { image in
                     viewModel.background = image
@@ -708,10 +708,10 @@ extension CardsPresenter {
         }
     }
 
-    private func reorder(_ viewModels: [CardsViewModel]) -> [CardsViewModel] {
+    private func reorder(_ viewModels: [LegacyCardsViewModel]) -> [LegacyCardsViewModel] {
         let sortedSensors: [String] = settings.dashboardSensorOrder
         let sortedAndUniqueArray = viewModels.reduce(
-            into: [CardsViewModel]()
+            into: [LegacyCardsViewModel]()
         ) { result, element in
             if !result.contains(element) {
                 result.append(element)
@@ -735,7 +735,7 @@ extension CardsPresenter {
         }
     }
 
-    private func openTagSettingsScreens(viewModel: CardsViewModel) {
+    private func openTagSettingsScreens(viewModel: LegacyCardsViewModel) {
         let sensorSettings = sensorSettings
             .first(where: {
                 ($0.luid?.any != nil && $0.luid?.any == viewModel.luid)
@@ -751,14 +751,14 @@ extension CardsPresenter {
         }
     }
 
-    private func showTagCharts(for viewModel: CardsViewModel?) {
+    private func showTagCharts(for viewModel: LegacyCardsViewModel?) {
         guard let viewModel else { return }
         viewDidTriggerShowChart(for: viewModel)
     }
 
     private func processAlert(
         record: RuuviTagSensorRecord,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         if viewModel.isCloud,
            let macId = viewModel.mac {
@@ -780,7 +780,7 @@ extension CardsPresenter {
         }
     }
 
-    private func notifyUpdate(for viewModel: CardsViewModel) {
+    private func notifyUpdate(for viewModel: LegacyCardsViewModel) {
         view?.applyUpdate(to: viewModel)
     }
 
@@ -813,9 +813,9 @@ extension CardsPresenter {
     }
 }
 
-// MARK: - CardsViewOutput
+// MARK: - LegacyCardsViewOutput
 
-extension CardsPresenter: CardsViewOutput {
+extension LegacyCardsPresenter: LegacyCardsViewOutput {
     func viewDidLoad() {
         startObservingAppState()
         startMutedTillTimer()
@@ -839,7 +839,7 @@ extension CardsPresenter: CardsViewOutput {
         stopObservingBluetoothState()
     }
 
-    func viewDidTriggerSettings(for viewModel: CardsViewModel) {
+    func viewDidTriggerSettings(for viewModel: LegacyCardsViewModel) {
         if viewModel.type == .ruuvi {
             if let luid = viewModel.luid {
                 if settings.keepConnectionDialogWasShown(for: luid)
@@ -857,7 +857,7 @@ extension CardsPresenter: CardsViewOutput {
         }
     }
 
-    func viewDidTriggerShowChart(for viewModel: CardsViewModel) {
+    func viewDidTriggerShowChart(for viewModel: LegacyCardsViewModel) {
         if let luid = viewModel.luid {
             if settings.keepConnectionDialogWasShown(for: luid)
                 || background.isConnected(uuid: luid.value)
@@ -885,7 +885,7 @@ extension CardsPresenter: CardsViewOutput {
         }
     }
 
-    func viewDidTriggerNavigateChart(to viewModel: CardsViewModel) {
+    func viewDidTriggerNavigateChart(to viewModel: LegacyCardsViewModel) {
         if let tagCharts, let sensor = ruuviTags
             .first(where: {
                 $0.macId != nil && ($0.macId?.any == viewModel.mac)
@@ -895,7 +895,7 @@ extension CardsPresenter: CardsViewOutput {
     }
 
     func viewDidTriggerDismissChart(
-        for _: CardsViewModel,
+        for _: LegacyCardsViewModel,
         dismissParent: Bool
     ) {
         tagCharts?.notifyDismissInstruction(dismissParent: dismissParent)
@@ -913,7 +913,7 @@ extension CardsPresenter: CardsViewOutput {
         }
     }
 
-    func viewDidDismissKeepConnectionDialogChart(for viewModel: CardsViewModel) {
+    func viewDidDismissKeepConnectionDialogChart(for viewModel: LegacyCardsViewModel) {
         if let luid = viewModel.luid {
             settings.setKeepConnectionDialogWasShown(for: luid)
             if let sensor = ruuviTags
@@ -927,7 +927,7 @@ extension CardsPresenter: CardsViewOutput {
         }
     }
 
-    func viewDidConfirmToKeepConnectionChart(to viewModel: CardsViewModel) {
+    func viewDidConfirmToKeepConnectionChart(to viewModel: LegacyCardsViewModel) {
         if let luid = viewModel.luid {
             connectionPersistence.setKeepConnection(true, for: luid)
             settings.setKeepConnectionDialogWasShown(for: luid)
@@ -942,7 +942,7 @@ extension CardsPresenter: CardsViewOutput {
         }
     }
 
-    func viewDidDismissKeepConnectionDialogSettings(for viewModel: CardsViewModel) {
+    func viewDidDismissKeepConnectionDialogSettings(for viewModel: LegacyCardsViewModel) {
         if let luid = viewModel.luid {
             settings.setKeepConnectionDialogWasShown(for: luid)
             openTagSettingsScreens(viewModel: viewModel)
@@ -951,7 +951,7 @@ extension CardsPresenter: CardsViewOutput {
         }
     }
 
-    func viewDidConfirmToKeepConnectionSettings(to viewModel: CardsViewModel) {
+    func viewDidConfirmToKeepConnectionSettings(to viewModel: LegacyCardsViewModel) {
         if let luid = viewModel.luid {
             connectionPersistence.setKeepConnection(true, for: luid)
             settings.setKeepConnectionDialogWasShown(for: luid)
@@ -961,7 +961,7 @@ extension CardsPresenter: CardsViewOutput {
         }
     }
 
-    func viewDidTriggerFirmwareUpdateDialog(for viewModel: CardsViewModel) {
+    func viewDidTriggerFirmwareUpdateDialog(for viewModel: LegacyCardsViewModel) {
         guard let luid = viewModel.luid,
               let version = viewModel.version, version < 5,
               viewModel.isOwner,
@@ -974,7 +974,7 @@ extension CardsPresenter: CardsViewOutput {
         }
     }
 
-    func viewDidConfirmFirmwareUpdate(for viewModel: CardsViewModel) {
+    func viewDidConfirmFirmwareUpdate(for viewModel: LegacyCardsViewModel) {
         if let sensor = ruuviTags
             .first(where: {
                 $0.luid != nil && ($0.luid?.any == viewModel.luid)
@@ -983,16 +983,16 @@ extension CardsPresenter: CardsViewOutput {
         }
     }
 
-    func viewDidIgnoreFirmwareUpdateDialog(for viewModel: CardsViewModel) {
+    func viewDidIgnoreFirmwareUpdateDialog(for viewModel: LegacyCardsViewModel) {
         view?.showFirmwareDismissConfirmationUpdateDialog(for: viewModel)
     }
 
-    func viewDidDismissFirmwareUpdateDialog(for viewModel: CardsViewModel) {
+    func viewDidDismissFirmwareUpdateDialog(for viewModel: LegacyCardsViewModel) {
         guard let luid = viewModel.luid else { return }
         settings.setFirmwareUpdateDialogWasShown(for: luid)
     }
 
-    func viewDidScroll(to viewModel: CardsViewModel) {
+    func viewDidScroll(to viewModel: LegacyCardsViewModel) {
         if let sensor = ruuviTags
             .first(where: {
                 ($0.luid != nil && ($0.luid?.any == viewModel.luid))
@@ -1011,7 +1011,7 @@ extension CardsPresenter: CardsViewOutput {
 
 // MARK: - TagChartsModuleOutput
 
-extension CardsPresenter: TagChartsViewModuleOutput {
+extension LegacyCardsPresenter: TagChartsViewModuleOutput {
     func tagChartSafeToClose(
         module: TagChartsViewModuleInput,
         dismissParent: Bool
@@ -1043,7 +1043,7 @@ extension CardsPresenter: TagChartsViewModuleOutput {
 
 // MARK: - RuuviNotifierObserver
 
-extension CardsPresenter: RuuviNotifierObserver {
+extension LegacyCardsPresenter: RuuviNotifierObserver {
     func ruuvi(notifier _: RuuviNotifier, isTriggered: Bool, for uuid: String) {
         viewModels
             .filter { $0.luid?.value == uuid || $0.mac?.value == uuid }
@@ -1059,7 +1059,7 @@ extension CardsPresenter: RuuviNotifierObserver {
 
 // MARK: - TagSettingsModuleOutput
 
-extension CardsPresenter: TagSettingsModuleOutput {
+extension LegacyCardsPresenter: TagSettingsModuleOutput {
     func tagSettingsDidDeleteTag(
         module: TagSettingsModuleInput,
         ruuviTag: RuuviTagSensor
@@ -1092,7 +1092,7 @@ extension CardsPresenter: TagSettingsModuleOutput {
 
 // MARK: - Private
 
-extension CardsPresenter {
+extension LegacyCardsPresenter {
     private func checkFirmwareVersion(for ruuviTag: RuuviTagSensor) {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let sSelf = self else { return }
@@ -1104,7 +1104,7 @@ extension CardsPresenter {
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func syncAlerts(ruuviTag: RuuviTagSensor, viewModel: CardsViewModel) {
+    private func syncAlerts(ruuviTag: RuuviTagSensor, viewModel: LegacyCardsViewModel) {
         AlertType.allCases.forEach { type in
             switch type {
             case .temperature:
@@ -1194,7 +1194,7 @@ extension CardsPresenter {
     private func sync(
         temperature: AlertType,
         ruuviTag: RuuviTagSensor,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         if case .temperature = alertService.alert(
             for: ruuviTag,
@@ -1210,7 +1210,7 @@ extension CardsPresenter {
     private func sync(
         relativeHumidity: AlertType,
         ruuviTag: RuuviTagSensor,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         if case .relativeHumidity = alertService.alert(
             for: ruuviTag,
@@ -1230,7 +1230,7 @@ extension CardsPresenter {
     private func sync(
         pressure: AlertType,
         ruuviTag: RuuviTagSensor,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         if case .pressure = alertService.alert(
             for: ruuviTag,
@@ -1250,7 +1250,7 @@ extension CardsPresenter {
     private func sync(
         signal: AlertType,
         ruuviTag: RuuviTagSensor,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         if case .signal = alertService.alert(
             for: ruuviTag,
@@ -1270,7 +1270,7 @@ extension CardsPresenter {
     private func sync(
         aqi: AlertType,
         ruuviTag: PhysicalSensor,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         if case .aqi = alertService
             .alert(for: ruuviTag, of: aqi) {
@@ -1288,7 +1288,7 @@ extension CardsPresenter {
     private func sync(
         carbonDioxide: AlertType,
         ruuviTag: PhysicalSensor,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         if case .carbonDioxide = alertService
             .alert(for: ruuviTag, of: carbonDioxide) {
@@ -1306,7 +1306,7 @@ extension CardsPresenter {
     private func sync(
         pMatter1: AlertType,
         ruuviTag: PhysicalSensor,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         if case .pMatter1 = alertService
             .alert(for: ruuviTag, of: pMatter1) {
@@ -1324,7 +1324,7 @@ extension CardsPresenter {
     private func sync(
         pMatter25: AlertType,
         ruuviTag: PhysicalSensor,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         if case .pMatter25 = alertService
             .alert(for: ruuviTag, of: pMatter25) {
@@ -1342,7 +1342,7 @@ extension CardsPresenter {
     private func sync(
         pMatter4: AlertType,
         ruuviTag: PhysicalSensor,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         if case .pMatter4 = alertService
             .alert(for: ruuviTag, of: pMatter4) {
@@ -1360,7 +1360,7 @@ extension CardsPresenter {
     private func sync(
         pMatter10: AlertType,
         ruuviTag: PhysicalSensor,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         if case .pMatter10 = alertService
             .alert(for: ruuviTag, of: pMatter10) {
@@ -1378,7 +1378,7 @@ extension CardsPresenter {
     private func sync(
         voc: AlertType,
         ruuviTag: PhysicalSensor,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         if case .voc = alertService.alert(for: ruuviTag, of: voc) {
             viewModel.isVOCAlertOn = true
@@ -1395,7 +1395,7 @@ extension CardsPresenter {
     private func sync(
         nox: AlertType,
         ruuviTag: PhysicalSensor,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         if case .nox = alertService.alert(for: ruuviTag, of: nox) {
             viewModel.isNOXAlertOn = true
@@ -1412,7 +1412,7 @@ extension CardsPresenter {
     private func sync(
         sound: AlertType,
         ruuviTag: PhysicalSensor,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         if case .soundInstant = alertService.alert(for: ruuviTag, of: sound) {
             viewModel.isSignalAlertOn = true
@@ -1429,7 +1429,7 @@ extension CardsPresenter {
     private func sync(
         luminosity: AlertType,
         ruuviTag: PhysicalSensor,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         if case .luminosity = alertService.alert(for: ruuviTag, of: luminosity) {
             viewModel.isLuminosityAlertOn = true
@@ -1446,7 +1446,7 @@ extension CardsPresenter {
     private func sync(
         connection: AlertType,
         ruuviTag: RuuviTagSensor,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         if case .connection = alertService.alert(for: ruuviTag, of: connection) {
             viewModel.isConnectionAlertOn = true
@@ -1463,7 +1463,7 @@ extension CardsPresenter {
     private func sync(
         movement: AlertType,
         ruuviTag: RuuviTagSensor,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         if case .movement = alertService.alert(for: ruuviTag, of: movement) {
             viewModel.isMovementAlertOn = true
@@ -1480,7 +1480,7 @@ extension CardsPresenter {
     private func sync(
         cloudConnection: AlertType,
         ruuviTag: PhysicalSensor,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         if case .cloudConnection = alertService.alert(for: ruuviTag, of: cloudConnection) {
             viewModel.isCloudConnectionAlertOn = true
@@ -1578,7 +1578,7 @@ extension CardsPresenter {
     private func updateMutedTill(
         of type: AlertType,
         for uuid: String,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         let date = alertService.mutedTill(type: type, for: uuid)
 
@@ -1625,7 +1625,7 @@ extension CardsPresenter {
     private func updateIsOnState(
         of type: AlertType,
         for uuid: String,
-        viewModel: CardsViewModel
+        viewModel: LegacyCardsViewModel
     ) {
         let isOn = alertService.isOn(type: type, for: uuid)
 

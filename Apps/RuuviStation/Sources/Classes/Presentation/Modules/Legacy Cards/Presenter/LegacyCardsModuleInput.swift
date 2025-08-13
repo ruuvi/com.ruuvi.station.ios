@@ -1,21 +1,21 @@
 import Foundation
 import RuuviOntology
 
-protocol CardsModuleInput: AnyObject {
+protocol LegacyCardsModuleInput: AnyObject {
     func configure(
-        viewModels: [CardsViewModel],
+        viewModels: [LegacyCardsViewModel],
         ruuviTagSensors: [AnyRuuviTagSensor],
         sensorSettings: [SensorSettings]
     )
     func configure(
-        scrollTo: CardsViewModel?,
+        scrollTo: LegacyCardsViewModel?,
         openChart: Bool
     )
-    func configure(output: CardsModuleOutput)
+    func configure(output: LegacyCardsModuleOutput)
     func dismiss(completion: (() -> Void)?)
 }
 
-extension CardsModuleInput {
+extension LegacyCardsModuleInput {
     func dismiss() {
         dismiss(completion: nil)
     }

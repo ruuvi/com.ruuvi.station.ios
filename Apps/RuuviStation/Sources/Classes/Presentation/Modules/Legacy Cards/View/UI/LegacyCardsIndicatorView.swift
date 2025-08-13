@@ -1,6 +1,6 @@
 import UIKit
 
-class CardsIndicatorView: UIView {
+class LegacyCardsIndicatorView: UIView {
     private lazy var indicatorIconView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
@@ -94,7 +94,7 @@ class CardsIndicatorView: UIView {
     }
 }
 
-extension CardsIndicatorView {
+extension LegacyCardsIndicatorView {
     func setValue(with value: String?, unit: String? = nil) {
         indicatorValueLabel.text = value
         indicatorUnitLabel.text = unit

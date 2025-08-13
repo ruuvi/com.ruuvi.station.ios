@@ -4,7 +4,7 @@ import RuuviOntology
 import RuuviService
 import UIKit
 
-class CardsLargeImageCell: UICollectionViewCell {
+class LegacyCardsLargeImageCell: UICollectionViewCell {
     private lazy var temperatureLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
@@ -23,9 +23,9 @@ class CardsLargeImageCell: UICollectionViewCell {
         return label
     }()
 
-    private lazy var humidityView = CardsIndicatorView(icon: RuuviAsset.iconMeasureHumidity.image)
-    private lazy var pressureView = CardsIndicatorView(icon: RuuviAsset.iconMeasurePressure.image)
-    private lazy var movementView = CardsIndicatorView(icon: RuuviAsset.iconMeasureMovement.image)
+    private lazy var humidityView = LegacyCardsIndicatorView(icon: RuuviAsset.iconMeasureHumidity.image)
+    private lazy var pressureView = LegacyCardsIndicatorView(icon: RuuviAsset.iconMeasurePressure.image)
+    private lazy var movementView = LegacyCardsIndicatorView(icon: RuuviAsset.iconMeasureMovement.image)
 
     private lazy var batteryLevelView = BatteryLevelView(fontSize: 10, iconSize: 16)
 
@@ -52,7 +52,7 @@ class CardsLargeImageCell: UICollectionViewCell {
     private var movementViewHeight: NSLayoutConstraint!
     private var batteryLevelViewHeight: NSLayoutConstraint!
 
-    private var viewModel: CardsViewModel?
+    private var viewModel: LegacyCardsViewModel?
     private var isSyncing: Bool = false
 
     override init(frame: CGRect) {
@@ -218,7 +218,7 @@ class CardsLargeImageCell: UICollectionViewCell {
     }
 }
 
-extension CardsLargeImageCell {
+extension LegacyCardsLargeImageCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         temperatureLabel.text = nil
@@ -234,10 +234,10 @@ extension CardsLargeImageCell {
     }
 }
 
-extension CardsLargeImageCell {
+extension LegacyCardsLargeImageCell {
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     func configure(
-        with viewModel: CardsViewModel,
+        with viewModel: LegacyCardsViewModel,
         measurementService: RuuviServiceMeasurement?
     ) {
         self.viewModel = viewModel
@@ -333,7 +333,7 @@ extension CardsLargeImageCell {
     }
 }
 
-extension CardsLargeImageCell: TimestampUpdateable {
+extension LegacyCardsLargeImageCell: TimestampUpdateable {
     func updateTimestampLabel() {
         if let ago = viewModel?.date?.ruuviAgo() {
             updatedAtLabel.text = ago
@@ -343,7 +343,7 @@ extension CardsLargeImageCell: TimestampUpdateable {
     }
 }
 
-extension CardsLargeImageCell {
+extension LegacyCardsLargeImageCell {
 
     private func hideHumidityView(hide: Bool) {
         if hide {
