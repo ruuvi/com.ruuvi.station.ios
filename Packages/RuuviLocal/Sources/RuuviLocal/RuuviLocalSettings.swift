@@ -124,28 +124,28 @@ public protocol RuuviLocalSettings {
     var customTempAlertUpperBound: Double { get set }
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool
-    func setKeepConnectionDialogWasShown(for luid: LocalIdentifier)
+    func setKeepConnectionDialogWasShown(_ shown: Bool, for luid: LocalIdentifier)
 
     func firmwareUpdateDialogWasShown(for luid: LocalIdentifier) -> Bool
-    func setFirmwareUpdateDialogWasShown(for luid: LocalIdentifier)
+    func setFirmwareUpdateDialogWasShown(_ shown: Bool, for luid: LocalIdentifier)
 
     func cardToOpenFromWidget() -> String?
     func setCardToOpenFromWidget(for macId: String?)
 
     func lastOpenedChart() -> String?
-    func setLastOpenedChart(with id: String)
+    func setLastOpenedChart(with id: String?)
 
     func setOwnerCheckDate(for macId: MACIdentifier?, value: Date?)
     func ownerCheckDate(for macId: MACIdentifier?) -> Date?
 
     func syncDialogHidden(for luid: LocalIdentifier) -> Bool
-    func setSyncDialogHidden(for luid: LocalIdentifier)
+    func setSyncDialogHidden(_ hidden: Bool, for luid: LocalIdentifier)
 
     func setNotificationsBadgeCount(value: Int)
     func notificationsBadgeCount() -> Int
 
     func showCustomTempAlertBound(for id: String) -> Bool
-    func setShowCustomTempAlertBound(for id: String)
+    func setShowCustomTempAlertBound(_ show: Bool, for id: String)
 
     func dashboardSignInBannerHidden(for version: String) -> Bool
     func setDashboardSignInBannerHidden(for version: String)

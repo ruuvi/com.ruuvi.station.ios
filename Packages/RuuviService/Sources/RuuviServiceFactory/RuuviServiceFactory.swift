@@ -31,7 +31,9 @@ public protocol RuuviServiceFactory {
         localImages: RuuviLocalImages,
         storage: RuuviStorage,
         alertService: RuuviServiceAlert,
-        ruuviUser: RuuviUser
+        ruuviUser: RuuviUser,
+        localSyncState: RuuviLocalSyncState,
+        settings: RuuviLocalSettings
     ) -> RuuviServiceOwnership
 
     func createSensorProperties(
@@ -70,7 +72,8 @@ public protocol RuuviServiceFactory {
         propertiesService: RuuviServiceSensorProperties,
         localIDs: RuuviLocalIDs,
         localSyncState: RuuviLocalSyncState,
-        alertService: RuuviServiceAlert
+        alertService: RuuviServiceAlert,
+        settings: RuuviLocalSettings
     ) -> RuuviServiceAuth
 
     func createCloudNotification(
@@ -121,7 +124,9 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         localImages: RuuviLocalImages,
         storage: RuuviStorage,
         alertService: RuuviServiceAlert,
-        ruuviUser: RuuviUser
+        ruuviUser: RuuviUser,
+        localSyncState: RuuviLocalSyncState,
+        settings: RuuviLocalSettings
     ) -> RuuviServiceOwnership {
         RuuviServiceOwnershipImpl(
             cloud: ruuviCloud,
@@ -131,7 +136,9 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
             localImages: localImages,
             storage: storage,
             alertService: alertService,
-            ruuviUser: ruuviUser
+            ruuviUser: ruuviUser,
+            localSyncState: localSyncState,
+            settings: settings
         )
     }
 
@@ -199,7 +206,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         propertiesService: RuuviServiceSensorProperties,
         localIDs: RuuviLocalIDs,
         localSyncState: RuuviLocalSyncState,
-        alertService: RuuviServiceAlert
+        alertService: RuuviServiceAlert,
+        settings: RuuviLocalSettings
     ) -> RuuviServiceAuth {
         RuuviServiceAuthImpl(
             ruuviUser: ruuviUser,
@@ -208,7 +216,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
             propertiesService: propertiesService,
             localIDs: localIDs,
             localSyncState: localSyncState,
-            alertService: alertService
+            alertService: alertService,
+            settings: settings
         )
     }
 

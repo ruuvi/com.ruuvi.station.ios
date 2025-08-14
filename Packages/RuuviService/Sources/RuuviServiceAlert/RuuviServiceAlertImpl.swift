@@ -1505,7 +1505,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                     let standardMinmimumBound = temperatureUnit.alertRange.lowerBound
                     let standardMaximumBound = temperatureUnit.alertRange.upperBound
                     if min < standardMinmimumBound || max > standardMaximumBound {
-                        ruuviLocalSettings.setShowCustomTempAlertBound(for: physicalSensor.id)
+                        ruuviLocalSettings.setShowCustomTempAlertBound(true, for: physicalSensor.id)
                     }
 
                     type = .temperature(lower: min, upper: max)

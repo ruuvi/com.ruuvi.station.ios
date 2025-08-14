@@ -164,7 +164,7 @@ class DashboardSettingsService {
 
     func setKeepConnectionDialogWasShown(for snapshot: RuuviTagCardSnapshot) {
         if let luid = snapshot.identifierData.luid {
-            settings.setKeepConnectionDialogWasShown(for: luid)
+            settings.setKeepConnectionDialogWasShown(true, for: luid)
         }
     }
 

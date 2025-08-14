@@ -200,7 +200,7 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
 
     func viewDidTriggerDoNotShowSyncDialog() {
         guard let luid = ruuviTag.luid else { return }
-        settings.setSyncDialogHidden(for: luid)
+        settings.setSyncDialogHidden(true, for: luid)
     }
 
     func viewDidStartSync(for viewModel: TagChartsViewModel) {

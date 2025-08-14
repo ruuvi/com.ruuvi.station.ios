@@ -915,7 +915,7 @@ extension LegacyCardsPresenter: LegacyCardsViewOutput {
 
     func viewDidDismissKeepConnectionDialogChart(for viewModel: LegacyCardsViewModel) {
         if let luid = viewModel.luid {
-            settings.setKeepConnectionDialogWasShown(for: luid)
+            settings.setKeepConnectionDialogWasShown(true, for: luid)
             if let sensor = ruuviTags
                 .first(where: {
                     $0.macId != nil && ($0.macId?.any == viewModel.mac)
@@ -930,7 +930,7 @@ extension LegacyCardsPresenter: LegacyCardsViewOutput {
     func viewDidConfirmToKeepConnectionChart(to viewModel: LegacyCardsViewModel) {
         if let luid = viewModel.luid {
             connectionPersistence.setKeepConnection(true, for: luid)
-            settings.setKeepConnectionDialogWasShown(for: luid)
+            settings.setKeepConnectionDialogWasShown(true, for: luid)
             if let sensor = ruuviTags
                 .first(where: {
                     $0.macId != nil && ($0.macId?.any == viewModel.mac)
@@ -944,7 +944,7 @@ extension LegacyCardsPresenter: LegacyCardsViewOutput {
 
     func viewDidDismissKeepConnectionDialogSettings(for viewModel: LegacyCardsViewModel) {
         if let luid = viewModel.luid {
-            settings.setKeepConnectionDialogWasShown(for: luid)
+            settings.setKeepConnectionDialogWasShown(true, for: luid)
             openTagSettingsScreens(viewModel: viewModel)
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
@@ -954,7 +954,7 @@ extension LegacyCardsPresenter: LegacyCardsViewOutput {
     func viewDidConfirmToKeepConnectionSettings(to viewModel: LegacyCardsViewModel) {
         if let luid = viewModel.luid {
             connectionPersistence.setKeepConnection(true, for: luid)
-            settings.setKeepConnectionDialogWasShown(for: luid)
+            settings.setKeepConnectionDialogWasShown(true, for: luid)
             openTagSettingsScreens(viewModel: viewModel)
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
@@ -989,7 +989,7 @@ extension LegacyCardsPresenter: LegacyCardsViewOutput {
 
     func viewDidDismissFirmwareUpdateDialog(for viewModel: LegacyCardsViewModel) {
         guard let luid = viewModel.luid else { return }
-        settings.setFirmwareUpdateDialogWasShown(for: luid)
+        settings.setFirmwareUpdateDialogWasShown(true, for: luid)
     }
 
     func viewDidScroll(to viewModel: LegacyCardsViewModel) {

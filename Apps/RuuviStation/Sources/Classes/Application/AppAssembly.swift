@@ -451,6 +451,7 @@ private final class BusinessAssembly: Assembly {
             let localIDs = r.resolve(RuuviLocalIDs.self)!
             let localSyncState = r.resolve(RuuviLocalSyncState.self)!
             let alertService = r.resolve(RuuviServiceAlert.self)!
+            let settings = r.resolve(RuuviLocalSettings.self)!
             return factory.createAuth(
                 ruuviUser: user,
                 pool: pool,
@@ -458,7 +459,8 @@ private final class BusinessAssembly: Assembly {
                 propertiesService: propertiesService,
                 localIDs: localIDs,
                 localSyncState: localSyncState,
-                alertService: alertService
+                alertService: alertService,
+                settings: settings
             )
         }
 
@@ -498,6 +500,8 @@ private final class BusinessAssembly: Assembly {
             let storage = r.resolve(RuuviStorage.self)!
             let alertService = r.resolve(RuuviServiceAlert.self)!
             let user = r.resolve(RuuviUser.self)!
+            let localSyncState = r.resolve(RuuviLocalSyncState.self)!
+            let settings = r.resolve(RuuviLocalSettings.self)!
             return factory.createOwnership(
                 ruuviCloud: cloud,
                 ruuviPool: pool,
@@ -506,7 +510,9 @@ private final class BusinessAssembly: Assembly {
                 localImages: localImages,
                 storage: storage,
                 alertService: alertService,
-                ruuviUser: user
+                ruuviUser: user,
+                localSyncState: localSyncState,
+                settings: settings
             )
         }
 
