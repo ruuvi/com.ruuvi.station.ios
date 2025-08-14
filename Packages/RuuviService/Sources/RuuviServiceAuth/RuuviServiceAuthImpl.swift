@@ -14,6 +14,7 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
     private let localIDs: RuuviLocalIDs
     private let localSyncState: RuuviLocalSyncState
     private let alertService: RuuviServiceAlert
+    private let settings: RuuviLocalSettings
 
     public init(
         ruuviUser: RuuviUser,
@@ -22,7 +23,8 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
         propertiesService: RuuviServiceSensorProperties,
         localIDs: RuuviLocalIDs,
         localSyncState: RuuviLocalSyncState,
-        alertService: RuuviServiceAlert
+        alertService: RuuviServiceAlert,
+        settings: RuuviLocalSettings
     ) {
         self.ruuviUser = ruuviUser
         self.pool = pool
@@ -31,6 +33,7 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
         self.localIDs = localIDs
         self.localSyncState = localSyncState
         self.alertService = alertService
+        self.settings = settings
     }
 
     public func logout() -> Future<Bool, RuuviServiceError> {
@@ -45,6 +48,8 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
 
                 let sensorsToDelete = localSensors.filter { $0.isClaimed || $0.isCloud }
                 guard !sensorsToDelete.isEmpty else {
+                    // Clear global settings even if no sensors to delete
+                    sSelf.clearGlobalSettings()
                     promise.succeed(value: true)
                     sSelf.postNotification()
                     return
@@ -62,16 +67,8 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
                     allOperations.append(deleteRecordsOperation)
                     allOperations.append(deleteLatestRecordOperation)
 
-                    // Perform synchronous cleanup operations
-                    sSelf.propertiesService.removeImage(for: sensor)
-                    sSelf.localSyncState.setSyncDate(nil, for: sensor.macId)
-                    sSelf.localSyncState.setSyncDate(nil)
-                    sSelf.localSyncState.setGattSyncDate(nil, for: sensor.macId)
-
-                    // Remove all alert types for this sensor
-                    AlertType.allCases.forEach { type in
-                        sSelf.alertService.remove(type: type, ruuviTag: sensor)
-                    }
+                    // Perform comprehensive synchronous cleanup
+                    sSelf.cleanupSensorData(for: sensor)
                 }
 
                 // Add the global deleteQueuedRequests operation
@@ -80,6 +77,8 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
                 // Wait for all operations to complete
                 Future.zip(allOperations)
                     .on(success: { _ in
+                        // Clear any remaining global settings
+                        sSelf.clearGlobalSettings()
                         promise.succeed(value: true)
                         sSelf.postNotification()
                     }, failure: { error in
@@ -95,28 +94,52 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
 }
 
 private extension RuuviServiceAuthImpl {
-    func deleteSensor(_ sensor: RuuviTagSensor) -> Future<[Bool], RuuviPoolError> {
-        let deleteSensorOperation = pool.delete(sensor)
-        let deleteRecordsOperation = pool.deleteAllRecords(sensor.id)
-        let deleteLatestRecordOperation = pool.deleteLast(sensor.id)
-
-        // Perform synchronous cleanup operations
+    func cleanupSensorData(for sensor: RuuviTagSensor) {
+        // Remove custom image
         propertiesService.removeImage(for: sensor)
-        localSyncState.setSyncDate(nil, for: sensor.macId)
-        localSyncState.setSyncDate(nil)
-        localSyncState.setGattSyncDate(nil, for: sensor.macId)
+
+        // Clean up sync state data
+        if let macId = sensor.macId {
+            localSyncState.setSyncDate(nil, for: macId)
+            localSyncState.setGattSyncDate(nil, for: macId)
+            settings.setOwnerCheckDate(for: macId, value: nil)
+
+            // Clean up widget card reference if it matches this sensor
+            if let currentCardMacId = settings.cardToOpenFromWidget(),
+               currentCardMacId == macId.value {
+                settings.setCardToOpenFromWidget(for: nil)
+            }
+        }
+
+        // Clean up dialog states using local identifier
+        if let luid = sensor.luid {
+            settings.setKeepConnectionDialogWasShown(false, for: luid)
+            settings.setFirmwareUpdateDialogWasShown(false, for: luid)
+            settings.setSyncDialogHidden(false, for: luid)
+        }
+
+        // Clean up sensor-specific settings using sensor ID
+        settings.setShowCustomTempAlertBound(false, for: sensor.id)
+
+        // Clean up last opened chart if it matches this sensor
+        if let lastChart = settings.lastOpenedChart(),
+           lastChart == sensor.id {
+            settings.setLastOpenedChart(with: nil)
+        }
 
         // Remove all alert types for this sensor
         AlertType.allCases.forEach { type in
             alertService.remove(type: type, ruuviTag: sensor)
         }
+    }
 
-        // Return combined async operations
-        return Future.zip([
-            deleteSensorOperation,
-            deleteRecordsOperation,
-            deleteLatestRecordOperation,
-        ])
+    func clearGlobalSettings() {
+        // Clear global sync state
+        localSyncState.setSyncDate(nil)
+
+        // Clear global widget and chart settings
+        settings.setCardToOpenFromWidget(for: nil)
+        settings.setLastOpenedChart(with: nil)
     }
 
     func postNotification() {

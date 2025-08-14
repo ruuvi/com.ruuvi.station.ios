@@ -1891,7 +1891,7 @@ extension TagSettingsPresenter {
 
         // Compare in the current unit
         if lower < CGFloat(standardMinimumInCurrentUnit) {
-            settings.setShowCustomTempAlertBound(for: ruuviTag.id)
+            settings.setShowCustomTempAlertBound(true, for: ruuviTag.id)
             viewModel.showCustomTempAlertBound.value = true
         }
 
@@ -1919,7 +1919,7 @@ extension TagSettingsPresenter {
 
         // Compare in the current unit
         if upper > CGFloat(standardMaximumInCurrentUnit) {
-            settings.setShowCustomTempAlertBound(for: ruuviTag.id)
+            settings.setShowCustomTempAlertBound(true, for: ruuviTag.id)
             viewModel.showCustomTempAlertBound.value = true
         }
 

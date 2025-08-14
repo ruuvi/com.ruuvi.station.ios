@@ -18,8 +18,8 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         UserDefaults.standard.bool(forKey: keepConnectionDialogWasShownUDPrefix + luid.value)
     }
 
-    func setKeepConnectionDialogWasShown(for luid: LocalIdentifier) {
-        UserDefaults.standard.set(true, forKey: keepConnectionDialogWasShownUDPrefix + luid.value)
+    func setKeepConnectionDialogWasShown(_ shown: Bool, for luid: LocalIdentifier) {
+        UserDefaults.standard.set(shown, forKey: keepConnectionDialogWasShownUDPrefix + luid.value)
     }
 
     private let firmwareUpdateDialogWasShownUDPrefix = "SettingsUserDegaults.firmwareUpdateDialogWasShownUDPrefix."
@@ -28,8 +28,8 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         UserDefaults.standard.bool(forKey: firmwareUpdateDialogWasShownUDPrefix + luid.value)
     }
 
-    func setFirmwareUpdateDialogWasShown(for luid: LocalIdentifier) {
-        UserDefaults.standard.set(true, forKey: firmwareUpdateDialogWasShownUDPrefix + luid.value)
+    func setFirmwareUpdateDialogWasShown(_ shown: Bool, for luid: LocalIdentifier) {
+        UserDefaults.standard.set(shown, forKey: firmwareUpdateDialogWasShownUDPrefix + luid.value)
     }
 
     // TODO: - Deprecate this after version v1.3.2
@@ -468,7 +468,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         UserDefaults.standard.value(forKey: lastOpenedChartKey) as? String
     }
 
-    func setLastOpenedChart(with id: String) {
+    func setLastOpenedChart(with id: String?) {
         UserDefaults.standard.set(id, forKey: lastOpenedChartKey)
     }
 
@@ -634,8 +634,8 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         UserDefaults.standard.bool(forKey: syncDialogHiddenKey + luid.value)
     }
 
-    func setSyncDialogHidden(for luid: LocalIdentifier) {
-        UserDefaults.standard.set(true, forKey: syncDialogHiddenKey + luid.value)
+    func setSyncDialogHidden(_ hidden: Bool, for luid: LocalIdentifier) {
+        UserDefaults.standard.set(hidden, forKey: syncDialogHiddenKey + luid.value)
     }
 
     @UserDefault("SettingsUserDefaults.hideNFCForSensorContest", defaultValue: false)
@@ -736,8 +736,8 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         UserDefaults.standard.value(forKey: showCustomTempAlertBoundUDKey + id) as? Bool ?? false
     }
 
-    func setShowCustomTempAlertBound(for id: String) {
-        UserDefaults.standard.set(true, forKey: showCustomTempAlertBoundUDKey + id)
+    func setShowCustomTempAlertBound(_ show: Bool, for id: String) {
+        UserDefaults.standard.set(show, forKey: showCustomTempAlertBoundUDKey + id)
     }
 
     @UserDefault("SettingsUserDefaults.showAlertsRangeInGraph", defaultValue: true)
