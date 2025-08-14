@@ -8,13 +8,13 @@ class TimestampUpdateService {
 
     private init() {}
 
-    func addSubscriber(_ cell: AnyObject & TimestampUpdateable) {
-        subscribers.add(cell)
+    func addSubscriber(_ view: AnyObject & TimestampUpdateable) {
+        subscribers.add(view)
         startTimerIfNeeded()
     }
 
-    func removeSubscriber(_ cell: AnyObject) {
-        subscribers.remove(cell)
+    func removeSubscriber(_ view: AnyObject) {
+        subscribers.remove(view)
         stopTimerIfEmpty()
     }
 
@@ -33,8 +33,8 @@ class TimestampUpdateService {
 
     private func updateAllSubscribers() {
         for subscriber in subscribers.allObjects {
-            if let updateableCell = subscriber as? TimestampUpdateable {
-                updateableCell.updateTimestampLabel()
+            if let updateableView = subscriber as? TimestampUpdateable {
+                updateableView.updateTimestampLabel()
             }
         }
     }

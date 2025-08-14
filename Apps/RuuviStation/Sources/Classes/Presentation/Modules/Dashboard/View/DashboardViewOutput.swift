@@ -20,8 +20,14 @@ protocol DashboardViewOutput {
     func viewDidTriggerDashboardCard(for snapshot: RuuviTagCardSnapshot)
     func viewDidConfirmToKeepConnectionChart(to snapshot: RuuviTagCardSnapshot)
     func viewDidDismissKeepConnectionDialogChart(for snapshot: RuuviTagCardSnapshot)
-    func viewDidConfirmToKeepConnectionSettings(to snapshot: RuuviTagCardSnapshot)
-    func viewDidDismissKeepConnectionDialogSettings(for snapshot: RuuviTagCardSnapshot)
+    func viewDidConfirmToKeepConnectionSettings(
+        to snapshot: RuuviTagCardSnapshot,
+        newlyAddedSensor: Bool
+    )
+    func viewDidDismissKeepConnectionDialogSettings(
+        for snapshot: RuuviTagCardSnapshot,
+        newlyAddedSensor: Bool
+    )
     func viewDidChangeDashboardType(dashboardType: DashboardType)
     func viewDidChangeDashboardTapAction(type: DashboardTapActionType)
     func viewDidTriggerPullToRefresh()

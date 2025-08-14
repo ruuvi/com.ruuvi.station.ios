@@ -14,8 +14,9 @@ struct MeasurementConfiguration {
     static let pressureFormat = "%.0f"
 
     static let measurementPriority: [MeasurementType] = [
-        .aqi, .temperature, .humidity, .pressure, .co2,
-        .pm25, .voc, .nox, .luminosity, .soundInstant, .movementCounter,
+        .aqi, .co2, .pm25, .voc, .nox,
+        .temperature, .humidity, .pressure,
+        .luminosity, .movementCounter, .soundInstant,
     ]
 
     static let advancedFirmwareMeasurements: [MeasurementType] = [
@@ -30,21 +31,40 @@ struct MeasurementConfiguration {
 
 // MARK: - Measurement Result
 struct MeasurementResult {
+    init(
+        value: String,
+        unit: String,
+        isProminent: Bool,
+        showSubscript: Bool,
+        tintColor: UIColor? = nil,
+        aqiState: AirQualityState? = nil
+    ) {
+        self.value = value
+        self.unit = unit
+        self.isProminent = isProminent
+        self.showSubscript = showSubscript
+        self.tintColor = tintColor
+        self.aqiState = aqiState
+    }
+
     let value: String
     let unit: String
     let isProminent: Bool
     let showSubscript: Bool
     let tintColor: UIColor?
+    let aqiState: AirQualityState?
 
-    func toIndicatorData(type: MeasurementType) -> RuuviTagCardSnapshotIndicatorData {
+    func toIndicatorData(
+        type: MeasurementType
+    ) -> RuuviTagCardSnapshotIndicatorData {
         return RuuviTagCardSnapshotIndicatorData(
             type: type,
             value: value,
             unit: unit,
-            alertConfig: .inactive,
             isProminent: isProminent,
             showSubscript: showSubscript,
-            tintColor: tintColor
+            tintColor: tintColor,
+            aqiState: aqiState
         )
     }
 }
@@ -94,13 +114,18 @@ struct HumidityMeasurementExtractor: MeasurementExtractor {
 
         let value = measurementService.stringWithoutSign(for: humidity, temperature: record.temperature)
         let humidityUnit = measurementService.units.humidityUnit
-        let unit = humidityUnit == .dew
+        let unitSymbol = humidityUnit == .dew
                   ? measurementService.units.temperatureUnit.symbol
                   : humidityUnit.symbol
+        // For certain measurements we show type of measurements so that people
+        // can understand what that value is. When dew point is the unit it can
+        // confuse people with C symbol. Hence we add the type of measurement.
+        let formattedUnit =
+                humidityUnit == .dew ? "\(RuuviLocalization.dewpoint), \(unitSymbol)" : unitSymbol
 
         return MeasurementResult(
             value: value,
-            unit: unit,
+            unit: formattedUnit,
             isProminent: false,
             showSubscript: false,
             tintColor: nil
@@ -164,7 +189,8 @@ struct AQIMeasurementExtractor: MeasurementExtractor {
             unit: RuuviLocalization.airQuality,
             isProminent: true,
             showSubscript: true,
-            tintColor: state.color
+            tintColor: state.color,
+            aqiState: state
         )
     }
 }
@@ -200,7 +226,7 @@ struct PM25MeasurementExtractor: MeasurementExtractor {
 
         return MeasurementResult(
             value: pm25Value,
-            unit: "\(RuuviLocalization.unitPm25)",
+            unit: "\(RuuviLocalization.pm25), \(RuuviLocalization.unitPm25)",
             isProminent: false,
             showSubscript: false,
             tintColor: nil
@@ -219,7 +245,7 @@ struct PM10MeasurementExtractor: MeasurementExtractor {
 
         return MeasurementResult(
             value: pm10Value,
-            unit: "\(RuuviLocalization.unitPm10)",
+            unit: "\(RuuviLocalization.pm10), \(RuuviLocalization.unitPm10)",
             isProminent: false,
             showSubscript: false,
             tintColor: nil
@@ -295,7 +321,7 @@ struct SoundMeasurementExtractor: MeasurementExtractor {
 
         return MeasurementResult(
             value: soundValue,
-            unit: RuuviLocalization.unitSound,
+            unit: "\(RuuviLocalization.realTime), \(RuuviLocalization.unitSound)",
             isProminent: false,
             showSubscript: false,
             tintColor: nil
@@ -396,11 +422,11 @@ struct IndicatorDataManager {
     }
 
     static func extractAlertStates(
-        from indicators: [RuuviTagCardSnapshotIndicatorData]
+        from snapshot: RuuviTagCardSnapshot
     ) -> (hasActive: Bool, hasFiring: Bool) {
-        let hasActive = indicators.contains { $0.alertConfig.isActive }
-        let hasFiring = indicators.contains { $0.alertConfig.isFiring }
-        return (hasActive, hasFiring)
+        let activeAlerts = snapshot.getAllActiveAlerts()
+        let firingAlerts = snapshot.getAllFiringAlerts()
+        return (hasActive: !activeAlerts.isEmpty, hasFiring: !firingAlerts.isEmpty)
     }
 }
 
@@ -416,33 +442,45 @@ struct AlertConfigurationManager {
         let mutedTill = alertService.mutedTill(type: alertType, for: physicalSensor)
 
         return RuuviTagCardSnapshotAlertConfig(
+            type: type,
+            alertType: alertType,
             isActive: isOn,
             isFiring: false,
             mutedTill: mutedTill
         )
     }
 
-    static func updateIndicatorsWithAlerts(
-        indicators: [RuuviTagCardSnapshotIndicatorData],
+    static func updateSnapshotWithAlerts(
+        snapshot: RuuviTagCardSnapshot,
         alertService: RuuviServiceAlert,
         physicalSensor: PhysicalSensor
-    ) -> [RuuviTagCardSnapshotIndicatorData] {
-        return indicators.map { indicator in
+    ) {
+        // Update measurement-based alerts
+        for measurementType in MeasurementType.all {
             let alertConfig = createAlertConfig(
-                for: indicator.type,
+                for: measurementType,
                 alertService: alertService,
                 physicalSensor: physicalSensor
             )
+            snapshot.updateAlertConfig(for: measurementType, config: alertConfig)
+        }
 
-            return RuuviTagCardSnapshotIndicatorData(
-                type: indicator.type,
-                value: indicator.value,
-                unit: indicator.unit,
-                alertConfig: alertConfig,
-                isProminent: indicator.isProminent,
-                showSubscript: indicator.showSubscript,
-                tintColor: indicator.tintColor
+        // Update non-measurement alerts
+        let nonMeasurementAlertTypes: [AlertType] = [
+            .connection, .cloudConnection(unseenDuration: 0), .movement(last: 0)
+        ]
+        for alertType in nonMeasurementAlertTypes {
+            let isOn = alertService.isOn(type: alertType, for: physicalSensor)
+            let mutedTill = alertService.mutedTill(type: alertType, for: physicalSensor)
+
+            let config = RuuviTagCardSnapshotAlertConfig(
+                alertType: alertType,
+                isActive: isOn,
+                isFiring: false,
+                mutedTill: mutedTill
             )
+
+            snapshot.updateAlertConfig(for: alertType, config: config)
         }
     }
 
@@ -454,29 +492,18 @@ struct AlertConfigurationManager {
         isProminent: Bool,
         showSubscript: Bool,
         tintColor: UIColor?,
+        aqiState: AirQualityState? = nil,
         alertService: RuuviServiceAlert?,
         physicalSensor: PhysicalSensor?
     ) -> RuuviTagCardSnapshotIndicatorData {
-        let alertConfig: RuuviTagCardSnapshotAlertConfig
-
-        if let alertService = alertService, let physicalSensor = physicalSensor {
-            alertConfig = createAlertConfig(
-                for: type,
-                alertService: alertService,
-                physicalSensor: physicalSensor
-            )
-        } else {
-            alertConfig = .inactive
-        }
-
         return RuuviTagCardSnapshotIndicatorData(
             type: type,
             value: value,
             unit: unit,
-            alertConfig: alertConfig,
             isProminent: isProminent,
             showSubscript: showSubscript,
-            tintColor: tintColor
+            tintColor: tintColor,
+            aqiState: aqiState
         )
     }
 }
@@ -511,8 +538,7 @@ struct SnapshotChangeDetector {
         return zip(oldGrid.indicators, newGrid.indicators).contains { oldIndicator, newIndicator in
             oldIndicator.type != newIndicator.type ||
             oldIndicator.value != newIndicator.value ||
-            oldIndicator.unit != newIndicator.unit ||
-            oldIndicator.alertConfig != newIndicator.alertConfig
+            oldIndicator.unit != newIndicator.unit
         }
     }
 }
@@ -526,13 +552,14 @@ struct RuuviTagCardSnapshotDataBuilder {
         sensor: RuuviTagSensor,
         measurementService: RuuviServiceMeasurement?,
         flags: RuuviLocalFlags,
-        alertData: RuuviTagCardSnapshotAlertData
+        snapshot: RuuviTagCardSnapshot
     ) -> RuuviTagCardSnapshotIndicatorGridConfiguration? {
         let indicators = createIndicators(
             from: record,
             sensor: sensor,
             measurementService: measurementService,
-            flags: flags
+            flags: flags,
+            snapshot: snapshot
         )
 
         return IndicatorDataManager.createGridConfiguration(indicators: indicators)
@@ -543,7 +570,8 @@ struct RuuviTagCardSnapshotDataBuilder {
         from record: RuuviTagSensorRecord,
         sensor: RuuviTagSensor,
         measurementService: RuuviServiceMeasurement?,
-        flags: RuuviLocalFlags
+        flags: RuuviLocalFlags,
+        snapshot: RuuviTagCardSnapshot
     ) -> [RuuviTagCardSnapshotIndicatorData] {
         let firmwareVersion = RuuviFirmwareVersion.firmwareVersion(from: sensor.version)
         let measurementTypes = FirmwareVersionManager.getMeasurementTypes(for: firmwareVersion)
