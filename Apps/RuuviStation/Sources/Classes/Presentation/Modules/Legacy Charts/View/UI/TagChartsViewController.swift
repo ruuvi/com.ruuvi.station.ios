@@ -1110,64 +1110,52 @@ extension TagChartsViewController: TagChartsViewInput {
             temperatureChartView.updateLatest(
                 with: temperature,
                 type: .temperature,
-                measurementService: measurementService,
-                unit: settings.temperatureUnit.symbol
+                measurementService: measurementService
             )
             humidityChartView.updateLatest(
                 with: humidity,
                 type: .humidity,
-                measurementService: measurementService,
-                unit: settings.humidityUnit == .dew ?
-                settings.temperatureUnit.symbol :
-                    settings.humidityUnit.symbol
+                measurementService: measurementService
             )
             pressureChartView.updateLatest(
                 with: pressure,
                 type: .pressure,
-                measurementService: measurementService,
-                unit: settings.pressureUnit.symbol
+                measurementService: measurementService
             )
             aqiChartView.updateLatest(
                 with: aqi,
                 type: .aqi,
-                measurementService: measurementService,
-                unit: "%"
+                measurementService: measurementService
             )
             co2ChartView.updateLatest(
                 with: co2,
                 type: .co2,
-                measurementService: measurementService,
-                unit: RuuviLocalization.unitCo2
+                measurementService: measurementService
             )
             pm25ChartView.updateLatest(
                 with: pm25,
                 type: .pm25,
-                measurementService: measurementService,
-                unit: RuuviLocalization.unitPm25
+                measurementService: measurementService
             )
             vocChartView.updateLatest(
                 with: voc,
                 type: .voc,
-                measurementService: measurementService,
-                unit: RuuviLocalization.unitVoc
+                measurementService: measurementService
             )
             noxChartView.updateLatest(
                 with: nox,
                 type: .nox,
-                measurementService: measurementService,
-                unit: RuuviLocalization.unitNox
+                measurementService: measurementService
             )
             luminosityChartView.updateLatest(
                 with: luminosity,
                 type: .luminosity,
-                measurementService: measurementService,
-                unit: RuuviLocalization.unitLuminosity
+                measurementService: measurementService
             )
             soundChartView.updateLatest(
                 with: sound,
                 type: .soundInstant,
-                measurementService: measurementService,
-                unit: RuuviLocalization.unitSound
+                measurementService: measurementService
             )
         }
     }

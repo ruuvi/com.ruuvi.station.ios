@@ -1448,7 +1448,7 @@ extension TagChartsViewPresenter {
                 return nil
             }
         case .aqi:
-            let value = measurementService.aqi(
+            let (value, _, _) = measurementService.aqi(
                 for: data.co2,
                 pm25: data.pm25
             )

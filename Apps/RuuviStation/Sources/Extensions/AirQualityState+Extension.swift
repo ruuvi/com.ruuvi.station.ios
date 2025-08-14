@@ -4,23 +4,17 @@ import RuuviOntology
 
 extension AirQualityState {
     var color: UIColor {
-        let index: Double
         switch self {
-        case .excellent(let value),
-             .good(let value),
-             .moderate(let value),
-             .poor(let value),
-             .unhealthy(let value):
-            index = value
-        }
-
-        switch index {
-        case 66.0...100.0:
-            return RuuviColor.green.color
-        case 33.0..<66.0:
-            return .systemOrange
-        default:
-            return .systemRed
+        case .excellent:
+            return RuuviColor.ruuviAQIExcellent.color
+        case .good:
+            return RuuviColor.ruuviAQIGood.color
+        case .moderate:
+            return RuuviColor.ruuviAQIModerate.color
+        case .poor:
+            return RuuviColor.ruuviAQIPoor.color
+        case .unhealthy:
+            return RuuviColor.ruuviAQIUnhealthy.color
         }
     }
 

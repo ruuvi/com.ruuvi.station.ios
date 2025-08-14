@@ -82,6 +82,9 @@ public protocol RuuviServiceMeasurement {
     // Returns based on minimum 0 and maximum 2 decimal points fraction value.
     func string(from value: Double?) -> String
 
+    /// Returns rounded (toNearestOrAwayFromZero) value alongside
+    /// max score and state. This function should be used only on Dashboard and
+    /// Full Sensor card.
     func aqiString(
         for co2: Double?,
         pm25: Double?
@@ -91,10 +94,16 @@ public protocol RuuviServiceMeasurement {
         state: AirQualityState
     )
 
+    /// Returns value for two decimal places alongside max score and state.
+    /// Should be used on Graph, Alert settings, Info popup, Export.
     func aqi(
         for co2: Double?,
         pm25: Double?
-    ) -> Double
+    ) -> ( // swiftlint:disable:this large_tuple
+        currentScore: Double,
+        maxScore: Int,
+        state: AirQualityState
+    )
 
     func co2String(for carbonDiOxide: Double?) -> String
     func pm10String(for pm10: Double?) -> String

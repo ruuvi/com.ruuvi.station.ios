@@ -409,13 +409,14 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
 
     public func aqiString(
         for co2: Double?,
-        pm25: Double?
+        pm25: Double?,
     ) -> ( // swiftlint:disable:this large_tuple
         currentScore: Int,
         maxScore: Int,
         state: AirQualityState
     ) {
         let currentScore = calculateAQI(co2: co2, pm25: pm25)
+            .rounded(.toNearestOrAwayFromZero)
         let maxScore = 100
         let state = airQualityState(for: currentScore)
 
@@ -429,8 +430,20 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     public func aqi(
         for co2: Double?,
         pm25: Double?
-    ) -> Double {
-        return calculateAQI(co2: co2, pm25: pm25)
+    ) -> ( // swiftlint:disable:this large_tuple
+        currentScore: Double,
+        maxScore: Int,
+        state: AirQualityState
+    ) {
+        let currentScore = calculateAQI(co2: co2, pm25: pm25)
+            .round(to: commonNumberFormatter.maximumFractionDigits)
+        let maxScore = 100
+        let state = airQualityState(for: currentScore)
+        return (
+            currentScore: currentScore,
+            maxScore: maxScore,
+            state: state
+        )
     }
 
     public func co2String(for carbonDiOxide: Double?) -> String {
@@ -608,55 +621,59 @@ public extension RuuviServiceMeasurementImpl {
     }
 
     private func calculateAQI(co2: Double?, pm25: Double?) -> Double {
-        var distances = [Double]()
+        let AQI_MAX: Double = 100
+        let PM25_MAX: Double = 60
+        let PM25_MIN: Double = 0
+        let PM25_SCALE: Double = AQI_MAX / (PM25_MAX - PM25_MIN)  // ≈ 1.6667
+        let CO2_MAX: Double = 2300
+        let CO2_MIN: Double = 420
+        let CO2_SCALE: Double = AQI_MAX / (CO2_MAX - CO2_MIN)     // ≈ 0.05319
 
-        if let co2 = co2 {
-            let roundedCo2 = roundToOneDecimal(co2)
-            distances.append(scoreCo2(roundedCo2))
+        guard let pm25 = pm25, let co2 = co2, !pm25.isNaN, !co2.isNaN else {
+            return Double.nan
         }
 
-        if let pm25 = pm25 {
-            let roundedPm25 = roundToOneDecimal(pm25)
-            distances.append(scorePpm(roundedPm25))
-        }
+        // Clamp values to their respective ranges
+        let clampedPm25 = clamp(pm25, min: PM25_MIN, max: PM25_MAX)
+        let clampedCo2 = clamp(co2, min: CO2_MIN, max: CO2_MAX)
 
-        let maxScore = 100.0
+        // Scale both values to 0-100 range
+        let dx = (clampedPm25 - PM25_MIN) * PM25_SCALE  // 0..100
+        let dy = (clampedCo2 - CO2_MIN) * CO2_SCALE     // 0..100
 
-        guard !distances.isEmpty else {
-            return 0
-        }
+        // Calculate Euclidean distance
+        let r = sqrt(dx * dx + dy * dy)  // hypot(dx, dy)
 
-        let squaredSum = distances.reduce(0) { $0 + $1 * $1 }
-        let meanSquared = squaredSum / Double(distances.count)
-        let distance = sqrt(meanSquared)
-        let currentScore = max(0, maxScore - distance)
+        // Final AQI score
+        let aqi = clamp(AQI_MAX - r, min: 0, max: AQI_MAX)
 
-        return currentScore.rounded(.toNearestOrAwayFromZero)
+        return aqi
     }
 
-    private func scorePpm(_ ppm: Double) -> Double {
-        return max(0, (ppm - 12) * 2)
+    private func clamp(_ value: Double, min: Double, max: Double) -> Double {
+        return Swift.min(Swift.max(value, min), max)
     }
 
-    private func scoreCo2(_ co2: Double) -> Double {
-        return max(0, (co2 - 600) / 10)
-    }
-
-    private func roundToOneDecimal(_ value: Double) -> Double {
-        return (value * 10).rounded() / 10
-    }
-
+    /*
+        Score Range  | State       | Color       | Description
+        -------------|-------------|-------------|---------------------------
+        90.5-100     | Excellent   | Turquoise   | Optimal air quality
+        80.5-90      | Good        | Green       | Good air quality
+        50.5-80      | Moderate    | Yellow      | Moderate air quality
+        10.5-50      | Poor        | Orange      | Poor air quality
+        0-10         | Unhealthy   | Red         | Unhealthy air quality
+     */
     private func airQualityState(for score: Double) -> AirQualityState {
         switch score {
-        case 81...100:
+        case 90.5...:
             return .excellent(score)
-        case 61...80:
+        case 80.5...90:
             return .good(score)
-        case 41...60:
+        case 50.5...80:
             return .moderate(score)
-        case 21...40:
+        case 10.5...50:
             return .poor(score)
-        default: // 0...20
+        default: // score <= 10
             return .unhealthy(score)
         }
     }
