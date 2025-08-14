@@ -23,7 +23,10 @@ protocol NewDashboardViewInput: ViewInput {
     func showNoSensorsAddedMessage(show: Bool)
     func showBluetoothDisabled(userDeclined: Bool)
     func showKeepConnectionDialogChart(for snapshot: RuuviTagCardSnapshot)
-    func showKeepConnectionDialogSettings(for snapshot: RuuviTagCardSnapshot)
+    func showKeepConnectionDialogSettings(
+        for snapshot: RuuviTagCardSnapshot,
+        newlyAddedSensor: Bool
+    )
     func showAlreadyLoggedInAlert(with email: String)
     func showSensorNameRenameDialog(
         for snapshot: RuuviTagCardSnapshot,

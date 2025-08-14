@@ -41,8 +41,15 @@ class CardsBackgroundView: UIView {
 extension CardsBackgroundView {
     func setBackgroundImage(
         with image: UIImage?,
+        isDashboard: Bool = true,
         withAnimation: Bool = true
     ) {
+        if isDashboard {
+            cardImageViewOverlay.image = RuuviAsset.tagBgLayer.image
+        } else {
+            cardImageViewOverlay.image = RuuviAsset.bgOverlay.image
+        }
+        guard image != cardImageView.image else { return }
         if withAnimation {
             UIView.transition(
                 with: cardImageView,
@@ -56,5 +63,9 @@ extension CardsBackgroundView {
         } else {
             cardImageView.image = image
         }
+    }
+
+    func backgroundImage() -> UIImage? {
+        return cardImageView.image
     }
 }

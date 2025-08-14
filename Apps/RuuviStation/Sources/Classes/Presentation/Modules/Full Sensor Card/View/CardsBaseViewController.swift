@@ -1,0 +1,703 @@
+// swiftlint:disable file_length
+
+import RuuviLocalization
+import UIKit
+import RuuviLocal
+import Combine
+import RuuviOntology
+
+/// Base view controller that manages multiple tab view controllers
+final class CardsBaseViewController: UIViewController {
+
+    // MARK: - Public Properties
+    weak var output: CardsBaseViewOutput?
+
+    // MARK: Depenencies
+    private let flags: RuuviLocalFlags
+
+    // MARK: Properties
+    /// Mapping of tab identifier to its view controller
+    private let tabs: [CardsMenuType: UIViewController]
+
+    /// Currently visible tab
+    private var activeTab: CardsMenuType
+
+    // MARK: - State
+    private var currentSnapshots: [RuuviTagCardSnapshot] = []
+    private var currentSnapshotIndex: Int = 0
+    private var currentSnapshot: RuuviTagCardSnapshot? {
+        didSet {
+            reconfigureSnapshotObservation()
+        }
+    }
+    private var isUpdatingUI = false
+    private var cancellables: Set<AnyCancellable> = []
+
+    // MARK: - Base UI Components
+    private lazy var cardBackgroundView = CardsBackgroundView()
+    private lazy var chartViewBackground = UIView(color: RuuviColor.graphBGColor.color)
+
+    // Header
+    // Ruuvi Logo
+    private lazy var ruuviLogoView: UIImageView = {
+        let iv = UIImageView(
+            image: RuuviAsset.ruuviLogo.image.withRenderingMode(.alwaysTemplate),
+            contentMode: .scaleAspectFit
+        )
+        iv.tintColor = .white
+        return iv
+    }()
+
+    // Action Buttons
+    private lazy var backButton: UIButton = {
+        let button = UIButton()
+        button.tintColor = .white
+        let buttonImage = RuuviAsset.chevronBack.image
+        button.setImage(buttonImage, for: .normal)
+        button.setImage(buttonImage, for: .highlighted)
+        button.imageView?.tintColor = .white
+        button.backgroundColor = .clear
+        button.addTarget(self, action: #selector(backButtonDidTap), for: .touchUpInside)
+        return button
+    }()
+
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let ai = UIActivityIndicatorView(style: .medium)
+        ai.color = .white
+        ai.hidesWhenStopped = true
+        return ai
+    }()
+
+    private lazy var menuBarView: CardsMenuBarView = {
+        let view = CardsMenuBarView(
+            menuMode: flags.showRedesignedCardsUIWithNewMenu ? .modern : .legacy
+        )
+        view.backgroundColor = .clear
+        return view
+    }()
+
+    // Secondary Toolbar
+    private lazy var secondaryToolbarView = UIView(color: .clear)
+    private lazy var cardLeftArrowButton: RuuviCustomButton = {
+        let button = RuuviCustomButton(
+            icon: UIImage(systemName: "chevron.left")
+        )
+        button.backgroundColor = .clear
+        button.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(cardLeftArrowButtonDidTap)
+            )
+        )
+        return button
+    }()
+
+    private lazy var cardRightArrowButton: RuuviCustomButton = {
+        let button = RuuviCustomButton(
+            icon: UIImage(systemName: "chevron.right")
+        )
+        button.backgroundColor = .clear
+        button.addGestureRecognizer(
+            UITapGestureRecognizer(
+                target: self,
+                action: #selector(cardRightArrowButtonDidTap)
+            )
+        )
+        return button
+    }()
+
+    lazy var ruuviTagNameLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.font = UIFont.Muli(.extraBold, size: 20)
+        return label
+    }()
+
+    // MARK: - Tab Container
+    private lazy var tabContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    // MARK: - Footer Components
+    private lazy var footerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    private lazy var batteryLevelView: BatteryLevelView = {
+        let view = BatteryLevelView(
+            fontSize: 10,
+            iconSize: 16
+        )
+        view.updateTextColor(with: .white.withAlphaComponent(0.8))
+        return view
+    }()
+
+    private lazy var updatedAtLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white.withAlphaComponent(0.8)
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        label.font = UIFont.Muli(.regular, size: 10)
+        return label
+    }()
+
+    private lazy var dataSourceIconView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
+        iv.backgroundColor = .clear
+        iv.alpha = 0.7
+        iv.tintColor = .white.withAlphaComponent(0.8)
+        return iv
+    }()
+
+    private var dataSourceIconViewWidthConstraint: NSLayoutConstraint!
+
+    // MARK: - Init
+    init(
+        tabs: [CardsMenuType: UIViewController],
+        activeTab: CardsMenuType,
+        flags: RuuviLocalFlags
+    ) {
+        self.tabs = tabs
+        self.activeTab = activeTab
+        self.flags = flags
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - Lifecycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setUpUI()
+        startObservingAppState()
+        TimestampUpdateService.shared.addSubscriber(self)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        output?.viewWillAppear()
+    }
+
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+        if parent == nil {
+            TimestampUpdateService.shared.removeSubscriber(self)
+        }
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+        TimestampUpdateService.shared.removeSubscriber(self)
+    }
+}
+
+// MARK: - UI Setup
+private extension CardsBaseViewController {
+    func setUpUI() {
+        setUpBaseView()
+        setUpHeaderView()
+        setUpSecondaryToolbarView()
+        setUpTabContainer()
+        setUpFooterView()
+        embedChildViewControllers()
+    }
+
+    func setUpBaseView() {
+        view.backgroundColor = RuuviColor.primary.color
+
+        view.addSubview(cardBackgroundView)
+        cardBackgroundView.fillSuperview()
+
+        view.addSubview(chartViewBackground)
+        chartViewBackground.fillSuperview()
+        chartViewBackground.alpha = 0
+    }
+
+    func setUpHeaderView() {
+        let leftBarButtonView = UIView(color: .clear)
+
+        leftBarButtonView.addSubview(backButton)
+        backButton.anchor(
+            top: leftBarButtonView.topAnchor,
+            leading: leftBarButtonView.leadingAnchor,
+            bottom: leftBarButtonView.bottomAnchor,
+            trailing: nil,
+            padding: .init(top: 0, left: -16, bottom: 0, right: 0),
+            size: .init(width: 48, height: 48)
+        )
+
+        leftBarButtonView.addSubview(ruuviLogoView)
+        ruuviLogoView.anchor(
+            top: nil,
+            leading: backButton.trailingAnchor,
+            bottom: nil,
+            trailing: leftBarButtonView.trailingAnchor,
+            padding: .init(top: 0, left: 0, bottom: 0, right: 0),
+            size: .init(width: 90, height: 22)
+        )
+        ruuviLogoView.centerYInSuperview()
+
+        let rightBarButtonView = UIView(color: .clear)
+        rightBarButtonView.addSubview(menuBarView)
+        menuBarView
+            .anchor(
+                top: rightBarButtonView.topAnchor,
+                leading: rightBarButtonView.leadingAnchor,
+                bottom: rightBarButtonView.bottomAnchor,
+                trailing: rightBarButtonView.trailingAnchor,
+                padding: .init(top: 0, left: 0, bottom: 0, right: -6),
+                size: .init(width: 120, height: 0)
+            )
+        menuBarView.onTabChanged = { [weak self] tab in
+            self?.handleTabChange(tab)
+        }
+        let titleView = UIView(
+            color: .clear
+        )
+        titleView.addSubview(activityIndicator)
+        activityIndicator.fillSuperview()
+
+        navigationItem.titleView = titleView
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonView)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButtonView)
+    }
+
+    func setUpSecondaryToolbarView() {
+        view.addSubview(secondaryToolbarView)
+        secondaryToolbarView.anchor(
+            top: view.safeTopAnchor,
+            leading: view.safeLeftAnchor,
+            bottom: nil,
+            trailing: view.safeRightAnchor,
+            padding: .init(top: 2, left: 0, bottom: 0, right: 0)
+        )
+
+        secondaryToolbarView.addSubview(cardLeftArrowButton)
+        cardLeftArrowButton.anchor(
+            top: secondaryToolbarView.topAnchor,
+            leading: secondaryToolbarView.leadingAnchor,
+            bottom: nil,
+            trailing: nil,
+            padding: .init(top: 6, left: 4, bottom: 0, right: 0)
+        )
+
+        secondaryToolbarView.addSubview(cardRightArrowButton)
+        cardRightArrowButton.anchor(
+            top: secondaryToolbarView.topAnchor,
+            leading: nil,
+            bottom: nil,
+            trailing: secondaryToolbarView.trailingAnchor,
+            padding: .init(top: 6, left: 0, bottom: 0, right: 4)
+        )
+
+        secondaryToolbarView.addSubview(ruuviTagNameLabel)
+        ruuviTagNameLabel.anchor(
+            top: secondaryToolbarView.topAnchor,
+            leading: cardLeftArrowButton.trailingAnchor,
+            bottom: secondaryToolbarView.bottomAnchor,
+            trailing: cardRightArrowButton.leadingAnchor,
+            padding: .init(top: 4, left: 4, bottom: 6, right: 4)
+        )
+    }
+
+    func setUpTabContainer() {
+        view.addSubview(tabContainerView)
+
+        tabContainerView.anchor(
+            top: secondaryToolbarView.bottomAnchor,
+            leading: view.safeLeftAnchor,
+            bottom: nil,
+            trailing: view.safeRightAnchor,
+            padding: .init(top: 8, left: 0, bottom: 8, right: 0)
+        )
+    }
+
+    func setUpFooterView() {
+        view.addSubview(footerView)
+        footerView.anchor(
+            top: tabContainerView.bottomAnchor,
+            leading: view.safeLeftAnchor,
+            bottom: view.safeBottomAnchor,
+            trailing: view.safeRightAnchor
+        )
+
+        let sourceAndUpdateStack = UIStackView(
+            arrangedSubviews: [
+                dataSourceIconView,
+                updatedAtLabel,
+            ]
+        )
+        sourceAndUpdateStack.axis = .horizontal
+        sourceAndUpdateStack.spacing = 6
+        sourceAndUpdateStack.distribution = .fill
+
+        dataSourceIconViewWidthConstraint = dataSourceIconView.widthAnchor
+            .constraint(lessThanOrEqualToConstant: 22)
+        dataSourceIconViewWidthConstraint.isActive = true
+
+        let footerStack = UIStackView(
+            arrangedSubviews: [
+                sourceAndUpdateStack,
+                UIView.flexibleSpacer(),
+                batteryLevelView,
+            ]
+        )
+        footerStack.spacing = 4
+        footerStack.axis = .horizontal
+        footerStack.distribution = .fill
+
+        footerView.addSubview(footerStack)
+        footerStack.fillSuperview(padding: .init(top: 0, left: 20, bottom: 0, right: 20))
+
+        footerStack.constrainHeight(constant: 24)
+        batteryLevelView.isHidden = true
+    }
+
+    private func embedChildViewControllers() {
+        for (tab, vc) in tabs {
+            addChild(vc)
+            tabContainerView.addSubview(vc.view)
+            vc.view.fillSuperviewToSafeArea()
+            vc.didMove(toParent: self)
+            vc.view.isHidden = tab != activeTab
+        }
+    }
+}
+
+// MARK: Actions
+private extension CardsBaseViewController {
+    @objc func backButtonDidTap() {
+        output?.viewDidTapBackButton()
+    }
+
+    @objc func cardLeftArrowButtonDidTap() {
+        guard currentSnapshotIndex > 0 else { return }
+        let newIndex = currentSnapshotIndex - 1
+        output?.viewDidRequestNavigateToSnapshotIndex(newIndex)
+    }
+
+    @objc func cardRightArrowButtonDidTap() {
+        guard currentSnapshotIndex < currentSnapshots.count - 1 else { return }
+        let newIndex = currentSnapshotIndex + 1
+        output?.viewDidRequestNavigateToSnapshotIndex(newIndex)
+    }
+
+    @objc func handleAppWillMoveToForeground() {
+        output?.appWillMoveToForeground()
+        menuBarView.updateAlertState(for: currentSnapshot)
+    }
+}
+
+// MARK: - Private Helpers
+private extension CardsBaseViewController {
+
+    func startObservingAppState() {
+        NotificationCenter
+            .default
+            .addObserver(
+                self,
+                selector: #selector(handleAppWillMoveToForeground),
+                name: UIApplication.willEnterForegroundNotification,
+                object: nil
+            )
+    }
+
+    func showTabViewController(for tab: CardsMenuType) {
+        guard let selectedVC = tabs[tab] else { return }
+
+        UIView.animate(
+            withDuration: 0.2,
+            delay: 0,
+            usingSpringWithDamping: 0.6,
+            initialSpringVelocity: 0.4,
+            options: .curveEaseInOut,
+            animations: {
+            self.tabs.values.forEach { $0.view.alpha = 0 }
+            selectedVC.view.alpha = 1
+        }) { _ in
+            self.tabs.forEach { (tabType, vc) in
+                vc.view.isHidden = tabType != tab
+                if tabType != tab {
+                    vc.view.alpha = 1
+                }
+            }
+        }
+    }
+
+    func handleTabChange(_ tab: CardsMenuType) {
+        if flags.showRedesignedCardsUIWithoutNewMenu {
+            output?.viewDidChangeTab(tab)
+        } else if flags.showRedesignedCardsUIWithNewMenu {
+            showTabViewController(for: tab)
+            activeTab = tab
+            menuBarView.setSelectedTab(tab, animated: true)
+        }
+    }
+
+    func updateCurrentSnapshotUI() {
+        guard currentSnapshotIndex < currentSnapshots.count else {
+            return
+        }
+
+        guard !isUpdatingUI else {
+            return
+        }
+        isUpdatingUI = true
+        defer { isUpdatingUI = false }
+
+        let currentSnapshot = currentSnapshots[currentSnapshotIndex]
+        self.currentSnapshot = currentSnapshot
+        menuBarView.updateAlertState(for: currentSnapshot)
+        cardBackgroundView
+            .setBackgroundImage(
+                with: currentSnapshot.displayData.background,
+                isDashboard: false,
+                withAnimation: true
+            )
+
+        ruuviTagNameLabel.text = currentSnapshot.displayData.name
+
+        let showLeftArrow = currentSnapshotIndex > 0
+        let showRightArrow = currentSnapshotIndex < currentSnapshots.count - 1
+        cardLeftArrowButton.isHidden = !showLeftArrow
+        cardRightArrowButton.isHidden = !showRightArrow
+
+        updateFooter()
+    }
+
+    // MARK: - Footer Update Methods
+    private func updateFooter() {
+        guard currentSnapshotIndex < currentSnapshots.count else {
+            footerView.isHidden = true
+            return
+        }
+
+        let currentSnapshot = currentSnapshots[currentSnapshotIndex]
+        footerView.isHidden = false
+
+        updateSourceIcon(for: currentSnapshot.displayData.source)
+        batteryLevelView.isHidden = !currentSnapshot.displayData.batteryNeedsReplacement
+        updateTimestampLabel()
+    }
+
+    private func updateSourceIcon(for source: RuuviTagSensorRecordSource?) {
+        guard let source = source else {
+            dataSourceIconView.image = nil
+            return
+        }
+
+        switch source {
+        case .unknown:
+            dataSourceIconView.image = nil
+        case .advertisement, .bgAdvertisement:
+            dataSourceIconView.image = RuuviAsset.iconBluetooth.image
+        case .heartbeat, .log:
+            dataSourceIconView.image = RuuviAsset.iconBluetoothConnected.image
+        case .ruuviNetwork:
+            dataSourceIconView.image = RuuviAsset.iconGateway.image
+        }
+
+        dataSourceIconView.image = dataSourceIconView.image?
+            .withRenderingMode(.alwaysTemplate)
+    }
+
+    func reconfigureSnapshotObservation() {
+        cancellables.removeAll()
+
+        guard let currentSnapshot else { return }
+
+        currentSnapshot.$displayData
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] displayData in
+                if displayData.name != self?.ruuviTagNameLabel.text {
+                    self?.ruuviTagNameLabel.text = displayData.name
+                }
+
+                if displayData.background !=
+                    self?.cardBackgroundView.backgroundImage() {
+                    self?.cardBackgroundView.setBackgroundImage(
+                        with: displayData.background,
+                        isDashboard: false,
+                        withAnimation: true
+                    )
+                }
+            }
+            .store(in: &cancellables)
+
+        currentSnapshot.$alertData
+            .sink { [weak self] _ in
+                self?.menuBarView.updateAlertState(for: currentSnapshot)
+            }
+            .store(in: &cancellables)
+
+        currentSnapshot.$metadata
+            .sink { [weak self] _ in
+                self?.menuBarView.updateAlertState(for: currentSnapshot)
+            }
+            .store(in: &cancellables)
+    }
+}
+
+// MARK: - TimestampUpdateable
+extension CardsBaseViewController: TimestampUpdateable {
+    func updateTimestampLabel() {
+        guard currentSnapshotIndex < currentSnapshots.count else {
+            updatedAtLabel.text = RuuviLocalization.Cards.UpdatedLabel.NoData.message
+            return
+        }
+
+        let currentSnapshot = currentSnapshots[currentSnapshotIndex]
+        if let date = currentSnapshot.lastUpdated {
+            updatedAtLabel.text = date.ruuviAgo()
+        } else {
+            updatedAtLabel.text = RuuviLocalization.Cards.UpdatedLabel.NoData.message
+        }
+    }
+}
+
+// MARK: - CardsBaseViewInput
+extension CardsBaseViewController: CardsBaseViewInput {
+    func setActiveTab(_ tab: CardsMenuType) {
+        handleTabChange(tab)
+    }
+
+    func showContentsForTab(_ tab: CardsMenuType) {
+        if flags.showRedesignedCardsUIWithoutNewMenu {
+            switch tab {
+            case .measurement, .graph:
+                UIView.animate(withDuration: 0.3, animations: { [weak self] in
+                    self?.chartViewBackground.alpha = tab == .graph ? 1 : 0
+                })
+                showTabViewController(for: tab)
+                activeTab = tab
+            default:
+                break
+            }
+        } else if flags.showRedesignedCardsUIWithNewMenu {
+            showTabViewController(for: tab)
+            activeTab = tab
+            menuBarView.setSelectedTab(tab, animated: true)
+        }
+    }
+
+    func setSnapshots(_ snapshots: [RuuviTagCardSnapshot]) {
+        currentSnapshots = snapshots
+    }
+
+    func updateSnapshot(_ snapshot: RuuviTagCardSnapshot) {
+        if let snapshotIndex = currentSnapshots.firstIndex(of: snapshot) {
+            currentSnapshots[snapshotIndex] = snapshot
+            updateCurrentSnapshotUI()
+        }
+    }
+
+    func setActiveSnapshotIndex(_ index: Int) {
+        currentSnapshotIndex = index
+        updateCurrentSnapshotUI()
+    }
+
+    func setActivityIndicatorVisible(_ visible: Bool) {
+        if visible {
+            activityIndicator.startAnimating()
+        } else {
+            activityIndicator.stopAnimating()
+        }
+    }
+
+    func showBluetoothDisabled(userDeclined: Bool) {
+        let title = RuuviLocalization.Cards.BluetoothDisabledAlert.title
+        let message = RuuviLocalization.Cards.BluetoothDisabledAlert.message
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(
+            title: RuuviLocalization.PermissionPresenter.settings,
+            style: .default,
+            handler: { _ in
+                guard let url = URL(string: userDeclined ?
+                    UIApplication.openSettingsURLString : "App-prefs:Bluetooth"),
+                    UIApplication.shared.canOpenURL(url)
+                else {
+                    return
+                }
+                UIApplication.shared.open(url)
+            }
+        ))
+        alertVC
+            .addAction(
+                UIAlertAction(
+                    title: RuuviLocalization.ok,
+                    style: .cancel,
+                    handler: nil
+                )
+        )
+        present(alertVC, animated: true)
+    }
+
+    func showKeepConnectionDialogChart(for snapshot: RuuviTagCardSnapshot) {
+        let message = RuuviLocalization.Cards.KeepConnectionDialog.message
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
+            self?.output?.viewDidDismissKeepConnectionDialogChart(for: snapshot)
+        }))
+        let keepTitle = RuuviLocalization.Cards.KeepConnectionDialog.KeepConnection.title
+        alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
+            self?.output?.viewDidConfirmToKeepConnectionChart(to: snapshot)
+        }))
+        present(alert, animated: true)
+    }
+
+    func showKeepConnectionDialogSettings(for snapshot: RuuviTagCardSnapshot) {
+        let message = RuuviLocalization.Cards.KeepConnectionDialog.message
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
+            self?.output?.viewDidDismissKeepConnectionDialogSettings(for: snapshot)
+        }))
+        let keepTitle = RuuviLocalization.Cards.KeepConnectionDialog.KeepConnection.title
+        alert.addAction(UIAlertAction(title: keepTitle, style: .default, handler: { [weak self] _ in
+            self?.output?.viewDidConfirmToKeepConnectionSettings(to: snapshot)
+        }))
+        present(alert, animated: true)
+    }
+
+    func showFirmwareUpdateDialog(for snapshot: RuuviTagCardSnapshot) {
+        let message = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.message
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
+            self?.output?.viewDidIgnoreFirmwareUpdateDialog(for: snapshot)
+        }))
+        let checkForUpdateTitle = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title
+        alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
+            self?.output?.viewDidConfirmFirmwareUpdate(for: snapshot)
+        }))
+        present(alert, animated: true)
+    }
+
+    func showFirmwareDismissConfirmationUpdateDialog(for snapshot: RuuviTagCardSnapshot) {
+        let message = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
+        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel, handler: { [weak self] _ in
+            self?.output?.viewDidDismissFirmwareUpdateDialog(for: snapshot)
+        }))
+        let checkForUpdateTitle = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title
+        alert.addAction(UIAlertAction(title: checkForUpdateTitle, style: .default, handler: { [weak self] _ in
+            self?.output?.viewDidConfirmFirmwareUpdate(for: snapshot)
+        }))
+        present(alert, animated: true)
+    }
+}
+
+// swiftlint:enable file_length
