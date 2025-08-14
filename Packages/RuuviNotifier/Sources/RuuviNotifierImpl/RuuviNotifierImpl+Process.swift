@@ -54,6 +54,19 @@ public extension RuuviNotifierImpl {
                 )
                 isTriggered = isTriggered || isSignal
                 notify(alertType: type, uuid: luid.value, isTriggered: isSignal)
+            case .aqi:
+                let currentAQI = measurementService.aqi(
+                    for: record.co2,
+                    pm25: record.pm25
+                )
+                let isAQI = process(
+                    aqi: currentAQI,
+                    alertType: type,
+                    identifier: record.luid,
+                    trigger: trigger
+                )
+                isTriggered = isTriggered || isAQI
+                notify(alertType: type, uuid: luid.value, isTriggered: isAQI)
             case .carbonDioxide:
                 let isCarbonDioxide = process(
                     carbonDioxide: record.co2,
@@ -119,7 +132,25 @@ public extension RuuviNotifierImpl {
                 notify(alertType: type, uuid: luid.value, isTriggered: isNOX)
             case .soundInstant:
                 let isSound = process(
-                    soundInstant: record.dbaAvg,
+                    soundInstant: record.dbaInstant,
+                    alertType: type,
+                    identifier: record.luid,
+                    trigger: trigger
+                )
+                isTriggered = isTriggered || isSound
+                notify(alertType: type, uuid: luid.value, isTriggered: isSound)
+            case .soundAverage:
+                let isSound = process(
+                    soundAverage: record.dbaAvg,
+                    alertType: type,
+                    identifier: record.luid,
+                    trigger: trigger
+                )
+                isTriggered = isTriggered || isSound
+                notify(alertType: type, uuid: luid.value, isTriggered: isSound)
+            case .soundPeak:
+                let isSound = process(
+                    soundPeak: record.dbaPeak,
                     alertType: type,
                     identifier: record.luid,
                     trigger: trigger

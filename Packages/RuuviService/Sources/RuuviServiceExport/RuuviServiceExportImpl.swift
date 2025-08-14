@@ -204,10 +204,10 @@ extension RuuviServiceExportImpl {
         func buildE1V6Columns() -> [ColumnDefinition] {
             return [
                 ColumnDefinition(
-                    header: RuuviLocalization.aqi + " (%)",
+                    header: RuuviLocalization.aqi,
                     cellExtractor: { [weak self] record in
                         guard let sSelf = self else { return "" }
-                        let (aqi, _, _) = sSelf.measurementService.aqiString(
+                        let aqi = sSelf.measurementService.aqi(
                             for: record.co2,
                             pm25: record.pm25
                         )

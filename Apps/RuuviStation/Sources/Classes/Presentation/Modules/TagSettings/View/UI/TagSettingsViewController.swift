@@ -2621,22 +2621,9 @@ extension TagSettingsViewController {
         // Fixed items
         sections += [
             configureAlertHeaderSection(),
-            configureTemperatureAlertSection(),
         ]
 
         // Variable items
-        if viewModel?.latestMeasurement.value?.humidity != nil {
-            sections.append(configureHumidityAlertSection())
-        }
-
-        if viewModel?.latestMeasurement.value?.pressure != nil {
-            sections.append(configurePressureAlertSection())
-        }
-
-        if viewModel?.latestMeasurement.value?.rssi != nil {
-            sections.append(configureRSSIAlertSection())
-        }
-
         if viewModel?.latestMeasurement.value?.co2 != nil &&
             viewModel?.latestMeasurement.value?.pm25 != nil {
             sections.append(configureAQIAlertSection())
@@ -2658,8 +2645,16 @@ extension TagSettingsViewController {
             sections.append(configureNOXAlertSection())
         }
 
-        if viewModel?.latestMeasurement.value?.dbaInstant != nil {
-            sections.append(configureSoundAlertSection())
+        if viewModel?.latestMeasurement.value?.temperature != nil {
+            sections.append(configureTemperatureAlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.humidity != nil {
+            sections.append(configureHumidityAlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.pressure != nil {
+            sections.append(configurePressureAlertSection())
         }
 
         if viewModel?.latestMeasurement.value?.luminance != nil {
@@ -2668,6 +2663,14 @@ extension TagSettingsViewController {
 
         if viewModel?.latestMeasurement.value?.movementCounter != nil {
             sections.append(configureMovementAlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.dbaInstant != nil {
+            sections.append(configureSoundAlertSection())
+        }
+
+        if viewModel?.latestMeasurement.value?.rssi != nil {
+            sections.append(configureRSSIAlertSection())
         }
 
         if viewModel?.isConnectable != nil {
@@ -2883,9 +2886,7 @@ extension TagSettingsViewController {
     // MARK: - AQI ALERTS
 
     private func configureAQIAlertSection() -> TagSettingsSection {
-        let sectionTitle = RuuviLocalization.TagSettings.AqiAlertTitleLabel.text(
-            HumidityUnit.percent.symbol
-        )
+        let sectionTitle = RuuviLocalization.aqi
         let section = TagSettingsSection(
             identifier: .alertAQI,
             title: sectionTitle,
@@ -4024,11 +4025,11 @@ extension TagSettingsViewController {
                 return RuuviLocalization.na
             }
         case .aqi:
-            let aqi = measurementService.aqi(
+            let (aqi, _, _) = measurementService.aqi(
                 for: viewModel?.latestMeasurement.value?.co2,
                 pm25: viewModel?.latestMeasurement.value?.pm25
             )
-            return "\(aqi)" + " \(HumidityUnit.percent.symbol)"
+            return "\(aqi)"
         case .carbonDioxide:
             if let co2 = viewModel?.latestMeasurement.value?.co2?.round(to: 2) {
                 let symbol = RuuviLocalization.unitCo2
@@ -5647,8 +5648,7 @@ extension TagSettingsViewController {
     }
 
     private func showAQIAlertSetDialog(sender: TagSettingsAlertConfigCell) {
-        let title = RuuviLocalization.aqi + " (\(HumidityUnit.percent.symbol))"
-
+        let title = RuuviLocalization.aqi
         let (minimumRange, maximumRange) = aqiAlertRange()
         let (minimumValue, maximumValue) = aqiValue()
         showSensorCustomAlertRangeDialog(

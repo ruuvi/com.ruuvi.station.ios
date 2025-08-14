@@ -180,7 +180,6 @@ extension TagChartsView {
         with entry: ChartDataEntry?,
         type: MeasurementType,
         measurementService: RuuviServiceMeasurement,
-        unit: String
     ) {
         self.latestValue = entry
         setChartStat(
@@ -199,7 +198,7 @@ extension TagChartsView {
         unit: String
     ) {
         chartName = name
-        chartNameLabel.text = name + " (\(unit))"
+        chartNameLabel.text = name + (unit.isEmpty ? "" : " (\(unit))")
         chartView.setMarker(
             with: type,
             measurementService: measurementService,
@@ -317,7 +316,7 @@ extension TagChartsView {
                 pressure: value
             )
         case .aqi:
-            return value?.intValue.stringValue ?? RuuviLocalization.na
+            return measurementService.string(from: value)
         case .co2:
             return measurementService.co2String(for: value)
         case .pm25:
