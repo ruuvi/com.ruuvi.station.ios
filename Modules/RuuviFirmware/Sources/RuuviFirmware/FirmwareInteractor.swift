@@ -96,7 +96,10 @@ final class FirmwareInteractor {
             background.services.gatt.firmwareRevision(
                 for: self,
                 uuid: uuid,
-                options: [.connectionTimeout(15)]
+                options: [
+                    .connectionTimeout(15),
+                    .serviceTimeout(15),
+                ]
             ) { _, result in
                 switch result {
                 case let .success(version):

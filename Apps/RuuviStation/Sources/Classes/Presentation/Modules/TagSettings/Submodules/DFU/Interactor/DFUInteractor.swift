@@ -149,16 +149,13 @@ extension DFUInteractor: DFUInteractorInput {
                 promise(.failure(BTError.logic(.connectionTimedOut)))
             }
 
-            // TODO: Remove this check once fw revision is supported for E1/V6
-            let fwVersion = RuuviFirmwareVersion.firmwareVersion(from: ruuviTag.version)
-            if fwVersion == .e1 || fwVersion == .v6 {
-                return
-            }
-
             sSelf.background.services.gatt.firmwareRevision(
                 for: sSelf,
                 uuid: uuid,
-                options: [.connectionTimeout(15)]
+                options: [
+                    .connectionTimeout(sSelf.timeoutDuration),
+                    .serviceTimeout(sSelf.timeoutDuration),
+                ]
             ) { _, result in
                 switch result {
                 case let .success(version):
