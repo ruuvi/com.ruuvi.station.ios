@@ -204,13 +204,11 @@ private extension CardsCoordinator {
 // MARK: Measurement
 private extension CardsCoordinator {
     func createMeasurementViewController() -> CardsMeasurementViewController {
-        let r = AppAssembly.shared.assembler.resolver
         let viewController = CardsMeasurementViewController()
         viewController.view.backgroundColor = .clear
         let presenter = CardsMeasurementPresenter()
         presenter.view = viewController
         viewController.output = presenter
-        viewController.measurementService = r.resolve(RuuviServiceMeasurement.self)
         cardsMeasurementViewPresenter = presenter
         return viewController
     }

@@ -451,23 +451,16 @@ private extension CardsMeasurementDetailsView {
 extension CardsMeasurementDetailsView {
 
     static func createSheet(
-        from indicator: RuuviTagCardSnapshotIndicatorData,
-        for activeSnapshot: RuuviTagCardSnapshot,
-        measurementService: RuuviServiceMeasurement?
+        from indicator: RuuviTagCardSnapshotIndicatorData
     ) -> CardsMeasurementDetailsView {
         let viewController = CardsMeasurementDetailsView.instantiate()
 
-        let processedValue = processIndicatorValue(
-            indicator,
-            snapshot: activeSnapshot,
-            measurementService: measurementService
-        )
         let processedUnit = processIndicatorUnit(indicator)
         let attributedDescription = createAttributedDescription(for: indicator.type)
 
         viewController.configure(
             title: indicator.type.displayName,
-            value: processedValue,
+            value: indicator.value,
             unit: processedUnit,
             description: attributedDescription,
             icon: indicator.type.icon,
@@ -481,34 +474,6 @@ extension CardsMeasurementDetailsView {
 // MARK: - Private Factory Methods
 private extension CardsMeasurementDetailsView {
 
-    static func processIndicatorValue(
-        _ indicator: RuuviTagCardSnapshotIndicatorData,
-        snapshot: RuuviTagCardSnapshot,
-        measurementService: RuuviServiceMeasurement?
-    ) -> String {
-        var value = indicator.value
-
-        // AQI gets special treatment because AQI value in Dashboard and Full
-        // Sensor card comes formatted like 99/100 with rounded value.
-        // However, this screen is initiated from Full Sensor card but needs to
-        // show two decimal places. So, we use raw pm25 and co2 value to get
-        // full resolution data.
-        if indicator.type == .aqi {
-            if let measurementService = measurementService {
-                let (aqi, _, _) = measurementService.aqi(
-                    for: snapshot.latestRawRecord?.co2,
-                    pm25: snapshot.latestRawRecord?.pm25
-                )
-                value = "\(aqi)"
-            } else {
-                let components = indicator.value.components(separatedBy: "/")
-                value = components.first ?? indicator.value
-            }
-        }
-
-        return value
-    }
-
     static func processIndicatorUnit(_ indicator: RuuviTagCardSnapshotIndicatorData) -> String {
         var unit = indicator.unit
 
@@ -517,10 +482,7 @@ private extension CardsMeasurementDetailsView {
         // However, this screen shows the title already and
         // does not need the title as part of unit.
         if indicator.type == .aqi {
-            let components = indicator.value.components(separatedBy: "/")
-            if let last = components.last {
-                unit = "/\(last)"
-            }
+            unit = ""
         }
 
         if indicator.type == .pm25 {

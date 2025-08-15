@@ -12,7 +12,6 @@ final class CardsMeasurementViewController: UIViewController {
 
     // MARK: - Properties
     weak var output: CardsMeasurementViewOutput?
-    var measurementService: RuuviServiceMeasurement?
 
     // MARK: - State Management
     private var snapshots: [RuuviTagCardSnapshot] = []
@@ -297,9 +296,7 @@ extension CardsMeasurementViewController: CardsMeasurementPageViewControllerDele
         in pageViewController: CardsMeasurementPageViewController
     ) {
         let bottomSheetVC = CardsMeasurementDetailsView.createSheet(
-            from: indicator,
-            for: snapshots[pageViewController.pageIndex],
-            measurementService: measurementService
+            from: indicator
         )
         presentDynamicBottomSheet(vc: bottomSheetVC)
     }
