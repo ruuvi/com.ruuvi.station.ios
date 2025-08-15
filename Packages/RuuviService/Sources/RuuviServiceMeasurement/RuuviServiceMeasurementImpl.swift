@@ -421,7 +421,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         let state = airQualityState(for: currentScore)
 
         return (
-            currentScore: Int(currentScore),
+            currentScore: Int(exactly: currentScore) ?? 0,
             maxScore: maxScore,
             state: state
         )
