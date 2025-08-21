@@ -115,7 +115,7 @@ final class CardsLegacyMenuButton: UIButton {
 
     private func configureForFiringState() {
         isUserInteractionEnabled = true
-        iconImageView.image = RuuviAsset.CardsMenu.iconAlertActive.image
+        iconImageView.image = RuuviAsset.CardsMenu.iconAlertsActive.image
         iconImageView.tintColor = RuuviColor.orangeColor.color
         iconImageView.alpha = 1.0
         startAlertAnimation()
