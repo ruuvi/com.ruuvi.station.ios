@@ -16,9 +16,11 @@ public struct RuuviDFUImpl: RuuviDFU {
     @discardableResult
     public func scan<T: AnyObject>(
         _ observer: T,
+        includeScanServices: Bool,
         closure: @escaping (T, DFUDevice) -> Void
     ) -> RuuviDFUToken {
-        scanner.scan(observer, closure: closure)
+        scanner.setIncludeScanServices(includeScanServices)
+        return scanner.scan(observer, closure: closure)
     }
 
     @discardableResult
@@ -38,6 +40,13 @@ public struct RuuviDFUImpl: RuuviDFU {
         with firmware: DFUFirmware
     ) -> AnyPublisher<FlashResponse, Error> {
         flasher.flashFirmware(uuid: uuid, with: firmware)
+    }
+
+    public func flashFirmware(
+        dfuDevice: DFUDevice,
+        with firmwareURL: URL
+    ) -> AnyPublisher<FlashResponse, any Error> {
+        flasher.flashFirmware(dfuDevice: dfuDevice, with: firmwareURL)
     }
 
     public func stopFlashFirmware(device: DFUDevice) -> Bool {

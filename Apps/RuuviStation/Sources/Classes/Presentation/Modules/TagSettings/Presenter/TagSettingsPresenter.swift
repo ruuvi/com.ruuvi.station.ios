@@ -2836,9 +2836,7 @@ extension TagSettingsPresenter {
     }
 
     func checkAndUpdateFirmwareVersion() {
-        guard let luid = ruuviTag.luid,
-              ruuviTag.firmwareVersion == nil ||
-              !ruuviTag.firmwareVersion.hasText()
+        guard let luid = ruuviTag.luid
         else {
             return
         }

@@ -16,13 +16,6 @@ struct FirmwareView: View {
         let alreadyOnLatest = RuuviLocalization.DFUUIView.alreadyOnLatest
         let startUpdateProcess = RuuviLocalization.DFUUIView.startUpdateProcess
         let downloadingTitle = RuuviLocalization.DFUUIView.downloadingTitle
-        let prepareTitle = RuuviLocalization.DFUUIView.prepareTitle
-        let openCoverTitle = RuuviLocalization.DFUUIView.openCoverTitle
-        let localBootButtonTitle = RuuviLocalization.DFUUIView.locateBootButtonTitle
-        let setUpdatingModeTitle = RuuviLocalization.DFUUIView.setUpdatingModeTitle
-        let toBootModeTwoButtonsDescription = RuuviLocalization.DFUUIView.toBootModeTwoButtonsDescription
-        let toBootModeOneButtonDescription = RuuviLocalization.DFUUIView.toBootModeOneButtonDescription
-        let toBootModeSuccessTitle = RuuviLocalization.DFUUIView.toBootModeSuccessTitle
         let updatingTitle = RuuviLocalization.DFUUIView.updatingTitle
         let searchingTitle = RuuviLocalization.DFUUIView.searchingTitle
         let startTitle = RuuviLocalization.DFUUIView.startTitle
@@ -244,29 +237,7 @@ struct FirmwareView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 20) {
                         RuuviBoardView()
-                        VStack(alignment: .leading, spacing: 16) {
-                            Text(texts.prepareTitle).bold()
-                                .font(muliBold16)
-                                .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
-                            Text(texts.openCoverTitle)
-                                .font(muliRegular16)
-                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                            Text(texts.localBootButtonTitle)
-                                .font(muliRegular16)
-                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                            Text(texts.setUpdatingModeTitle)
-                                .font(muliRegular16)
-                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                            Text(texts.toBootModeTwoButtonsDescription)
-                                .font(muliRegular16)
-                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                            Text(texts.toBootModeOneButtonDescription)
-                                .font(muliRegular16)
-                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                            Text(texts.toBootModeSuccessTitle)
-                                .font(muliRegular16)
-                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                        }
+                        DFUInstructionsView()
                         Button(
                             action: {},
                             label: {
@@ -303,29 +274,7 @@ struct FirmwareView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 20) {
                         RuuviBoardView()
-                        VStack(alignment: .leading, spacing: 16) {
-                            Text(texts.prepareTitle).bold()
-                                .font(muliBold16)
-                                .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
-                            Text(texts.openCoverTitle)
-                                .font(muliRegular16)
-                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                            Text(texts.localBootButtonTitle)
-                                .font(muliRegular16)
-                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                            Text(texts.setUpdatingModeTitle)
-                                .font(muliRegular16)
-                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                            Text(texts.toBootModeTwoButtonsDescription)
-                                .font(muliRegular16)
-                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                            Text(texts.toBootModeOneButtonDescription)
-                                .font(muliRegular16)
-                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                            Text(texts.toBootModeSuccessTitle)
-                                .font(muliRegular16)
-                                .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                        }
+                        DFUInstructionsView()
                         Button(
                             action: {
                                 viewModel.send(
@@ -445,6 +394,57 @@ struct FirmwareView: View {
         .onDisappear {
             viewModel.restartPropertiesDaemon()
             UIApplication.shared.isIdleTimerDisabled = false
+        }
+    }
+
+    private struct AttributedText: UIViewRepresentable {
+        let attributedString: NSAttributedString
+        // This should match the padding of the super view.
+        let paddingX2: CGFloat = 40
+
+        func makeUIView(context: Context) -> UILabel {
+            let label = UILabel()
+            label.attributedText = attributedString
+            label.numberOfLines = 0
+            label.lineBreakMode = .byWordWrapping
+            label.textAlignment = .left
+
+            label.setContentCompressionResistancePriority(.required, for: .vertical)
+            label.setContentHuggingPriority(.required, for: .vertical)
+            label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+            label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+
+            label.preferredMaxLayoutWidth = UIScreen.main.bounds.width - paddingX2
+
+            return label
+        }
+
+        func updateUIView(_ uiView: UILabel, context: Context) {
+            uiView.preferredMaxLayoutWidth = UIScreen.main.bounds.width - paddingX2
+        }
+    }
+
+    struct DFUInstructionsView: View {
+        private var titleFont: UIFont {
+            UIFont(name: "Muli-Bold", size: 16) ??
+                UIFont.systemFont(ofSize: 16, weight: .bold)
+        }
+        private var paragraphFont: UIFont {
+            UIFont(name: "Muli-Regular", size: 16) ??
+                UIFont.systemFont(ofSize: 16, weight: .regular)
+        }
+
+        var body: some View {
+            AttributedText(
+                attributedString: NSAttributedString.fromFormattedDescription(
+                    RuuviLocalization.prepareYourSensorInstructions,
+                    titleFont: titleFont,
+                    paragraphFont: paragraphFont,
+                    titleColor: RuuviColor.menuTextColor.color,
+                    paragraphColor: RuuviColor.textColor.color
+                )
+            )
+            .fixedSize(horizontal: false, vertical: true)
         }
     }
 }

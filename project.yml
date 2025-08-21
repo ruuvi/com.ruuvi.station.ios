@@ -116,7 +116,10 @@ packages:
   NordicDFU:
     url: https://github.com/NordicSemiconductor/IOS-Pods-DFU-Library
     from: 4.15.3
-  KeychainAccess: 
+  iOSMcuManagerLibrary:
+    url: https://github.com/NordicSemiconductor/IOS-nRF-Connect-Device-Manager
+    from: 1.7.0
+  KeychainAccess:
     url: https://github.com/kishikawakatsumi/KeychainAccess
     from: 4.2.1
   GRDB: 

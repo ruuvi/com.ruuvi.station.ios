@@ -76,6 +76,8 @@ extension DefaultsPresenter {
             buildShowRedesignedDashboardUI(),
             buildShowRedesignedCardsUIWithMenu(),
             buildShowRedesignedCardsUIWithoutMenu(),
+            buildDownloadBetaFirmware(),
+            buildDownloadAlphaFirmware(),
         ]
     }
 
@@ -533,6 +535,36 @@ extension DefaultsPresenter {
 
         bind(viewModel.boolean, fire: false) { observer, bool in
             observer.flags.showRedesignedCardsUIWithoutNewMenu = GlobalHelpers
+                .getBool(from: bool)
+        }
+
+        return viewModel
+    }
+
+    private func buildDownloadBetaFirmware() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Download Beta Firmware"
+        viewModel.boolean.value = flags.downloadBetaFirmware
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, bool in
+            observer.flags.downloadBetaFirmware = GlobalHelpers
+                .getBool(from: bool)
+        }
+
+        return viewModel
+    }
+
+    private func buildDownloadAlphaFirmware() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Download Alpha Firmware (This overrides above settings)"
+        viewModel.boolean.value = flags.downloadAlphaFirmware
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, bool in
+            observer.flags.downloadAlphaFirmware = GlobalHelpers
                 .getBool(from: bool)
         }
 

@@ -1,19 +1,24 @@
+import CoreBluetooth
+
 public struct DFUDevice {
     public let uuid: String
     public let rssi: Int
     public let isConnectable: Bool
     public let name: String?
+    public let peripheral: CBPeripheral
 
     public init(
         uuid: String,
         rssi: Int,
         isConnectable: Bool,
-        name: String?
+        name: String?,
+        peripheral: CBPeripheral
     ) {
         self.uuid = uuid
         self.rssi = rssi
         self.isConnectable = isConnectable
         self.name = name
+        self.peripheral = peripheral
     }
 }
 

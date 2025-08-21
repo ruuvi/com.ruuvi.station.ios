@@ -5,14 +5,14 @@ import RuuviDFU
 import RuuviOntology
 
 protocol DFUInteractorInput {
-    func listen() -> Future<String, Never>
+    func listen(ruuviTag: RuuviTagSensor) -> Future<DFUDevice, Never>
     func observeLost(uuid: String) -> Future<String, Never>
     func read(release: LatestRelease) -> AnyPublisher<(appUrl: URL, fullUrl: URL), Error>
     func download(release: LatestRelease) -> AnyPublisher<FirmwareDownloadResponse, Error>
     func loadLatestRelease() -> AnyPublisher<LatestRelease, Error>
     func serveCurrentRelease(for ruuviTag: RuuviTagSensor) -> Future<CurrentRelease, Error>
     func flash(
-        uuid: String,
+        dfuDevice: DFUDevice,
         latestRelease: LatestRelease,
         currentRelease: CurrentRelease?,
         appUrl: URL,

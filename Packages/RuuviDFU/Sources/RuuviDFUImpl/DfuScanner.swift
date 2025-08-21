@@ -24,6 +24,13 @@ class DfuScanner: NSObject {
         lost: [UUID: LostObservation]()
     )
 
+    private var includeScanServices: Bool = true {
+        didSet {
+            stopIfNeeded()
+            startIfNeeded()
+        }
+    }
+
     private let scanServices = [
         CBUUID(string: "00001530-1212-EFDE-1523-785FEABCD123"),
         CBUUID(string: "FE59"),
@@ -98,7 +105,7 @@ class DfuScanner: NSObject {
     private func startIfNeeded() {
         if manager.state == .poweredOn, !manager.isScanning {
             manager.scanForPeripherals(
-                withServices: scanServices,
+                withServices: self.includeScanServices ? scanServices : nil,
                 options: [CBCentralManagerScanOptionAllowDuplicatesKey: NSNumber(value: true)]
             )
         }
@@ -116,6 +123,10 @@ class DfuScanner: NSObject {
         if !shouldObserveLostDevices, lostTimer != nil {
             stopLostDevicesTimer()
         }
+    }
+
+    func setIncludeScanServices(_ includeScanServices: Bool) {
+        self.includeScanServices = includeScanServices
     }
 
     @discardableResult
@@ -188,7 +199,13 @@ extension DfuScanner: CBCentralManagerDelegate {
         let uuid = peripheral.identifier.uuidString
         let isConnectable = (advertisementData[CBAdvertisementDataIsConnectable] as? NSNumber)?.boolValue ?? false
         let name = advertisementData[CBAdvertisementDataLocalNameKey] as? String
-        let dfuDevice = DFUDevice(uuid: uuid, rssi: RSSI.intValue, isConnectable: isConnectable, name: name)
+        let dfuDevice = DFUDevice(
+            uuid: uuid,
+            rssi: RSSI.intValue,
+            isConnectable: isConnectable,
+            name: name,
+            peripheral: peripheral
+        )
         lastSeen[dfuDevice] = Date()
         observations.device.values.forEach { closure in
             closure(dfuDevice)

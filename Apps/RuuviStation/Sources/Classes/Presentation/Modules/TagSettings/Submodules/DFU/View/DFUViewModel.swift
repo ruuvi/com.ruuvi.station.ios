@@ -10,6 +10,7 @@ import RuuviPersistence
 import RuuviPool
 import RuuviPresenters
 import RuuviStorage
+import RuuviDFU
 
 protocol DFUViewModelOutput: AnyObject {
     func firmwareUpgradeDidFinishSuccessfully()
@@ -105,17 +106,30 @@ final class DFUViewModel: ObservableObject {
         output?.firmwareUpgradeDidFinishSuccessfully()
     }
 
-    func storeUpdatedFirmware(currentRelease: CurrentRelease?) {
+    func storeUpdatedFirmware(
+        latestRelease: LatestRelease,
+        currentRelease: CurrentRelease?
+    ) {
         guard ruuviTag.luid != nil else { return }
         if ruuviTag.macId != nil {
-            guard let currentRelease
-            else {
-                return
+            var updatedVersion: String?
+            if let currentVersion = currentRelease?.version {
+                updatedVersion = currentVersion
+            } else {
+                let firmwareType = RuuviFirmwareVersion.firmwareVersion(
+                    from: ruuviTag.version
+                )
+                let prefix = (
+                    firmwareType == .e1 || firmwareType == .v6
+                ) ? RuuviDFUDeviceType.ruuviAir.fwVersionPrefix :
+                    RuuviDFUDeviceType.ruuviTag.fwVersionPrefix
+                updatedVersion = prefix + " " + latestRelease.version
             }
+            guard let updatedVersion = updatedVersion else { return }
             isLoading = true
             ruuviPool.update(ruuviTag
                 .with(isConnectable: true)
-                .with(firmwareVersion: currentRelease.version))
+                .with(firmwareVersion: updatedVersion))
                 .on(success: { [weak self] _ in
                     self?.isLoading = false
                 }, failure: { [weak self] _ in
@@ -155,6 +169,13 @@ final class DFUViewModel: ObservableObject {
                 completion(false)
             })
     }
+
+    func isRuuviAir() -> Bool {
+        let firmwareVersion = RuuviFirmwareVersion.firmwareVersion(
+            from: ruuviTag.version
+        )
+        return firmwareVersion == .e1 || firmwareVersion == .v6
+    }
 }
 
 extension DFUViewModel {
@@ -177,20 +198,20 @@ extension DFUViewModel {
         case readyToUpdate(
             LatestRelease,
             CurrentRelease?,
-            uuid: String,
+            dfuDevice: DFUDevice,
             appUrl: URL,
             fullUrl: URL
         )
         case flashing(
             LatestRelease,
             CurrentRelease?,
-            uuid: String,
+            dfuDevice: DFUDevice,
             appUrl: URL,
             fullUrl: URL
         )
         case successfulyFlashed(LatestRelease)
         case servingAfterUpdate(LatestRelease)
-        case firmwareAfterUpdate(CurrentRelease?)
+        case firmwareAfterUpdate(LatestRelease, CurrentRelease?)
         case error(Error)
     }
 
@@ -219,27 +240,27 @@ extension DFUViewModel {
         case onHeardRuuviBootDevice(
             LatestRelease,
             CurrentRelease?,
-            uuid: String,
+            dfuDevice: DFUDevice,
             appUrl: URL,
             fullUrl: URL
         )
         case onLostRuuviBootDevice(
             LatestRelease,
             CurrentRelease?,
-            uuid: String,
+            dfuDevice: DFUDevice,
             appUrl: URL,
             fullUrl: URL
         )
         case onUserDidConfirmToFlash(
             LatestRelease,
             CurrentRelease?,
-            uuid: String,
+            dfuDevice: DFUDevice,
             appUrl: URL,
             fullUrl: URL
         )
         case onSuccessfullyFlashedFirmware(LatestRelease)
-        case onServingAfterUpdate(CurrentRelease?)
-        case onServedAfterUpdate(CurrentRelease?)
+        case onServingAfterUpdate(LatestRelease, CurrentRelease?)
+        case onServedAfterUpdate(LatestRelease, CurrentRelease?)
         case onDidFailFlashingFirmware(Error)
     }
 }
@@ -319,8 +340,8 @@ extension DFUViewModel {
             }
         case .listening:
             switch event {
-            case let .onHeardRuuviBootDevice(latestRelease, currentRelease, uuid, appUrl, fullUrl):
-                .readyToUpdate(latestRelease, currentRelease, uuid: uuid, appUrl: appUrl, fullUrl: fullUrl)
+            case let .onHeardRuuviBootDevice(latestRelease, currentRelease, dfuDevice, appUrl, fullUrl):
+                .readyToUpdate(latestRelease, currentRelease, dfuDevice: dfuDevice, appUrl: appUrl, fullUrl: fullUrl)
             default:
                 state
             }
@@ -328,8 +349,8 @@ extension DFUViewModel {
             switch event {
             case let .onLostRuuviBootDevice(latestRelease, currentRelease, _, appUrl, fullUrl):
                 .listening(latestRelease, currentRelease, appUrl: appUrl, fullUrl: fullUrl)
-            case let .onUserDidConfirmToFlash(latestRelease, currentRelease, uuid, appUrl, fullUrl):
-                .flashing(latestRelease, currentRelease, uuid: uuid, appUrl: appUrl, fullUrl: fullUrl)
+            case let .onUserDidConfirmToFlash(latestRelease, currentRelease, dfuDevice, appUrl, fullUrl):
+                .flashing(latestRelease, currentRelease, dfuDevice: dfuDevice, appUrl: appUrl, fullUrl: fullUrl)
             default:
                 state
             }
@@ -346,8 +367,8 @@ extension DFUViewModel {
             .servingAfterUpdate(latestRelease)
         case .servingAfterUpdate:
             switch event {
-            case let .onServedAfterUpdate(currentRelease):
-                .firmwareAfterUpdate(currentRelease)
+            case let .onServedAfterUpdate(latestRelease, currentRelease):
+                .firmwareAfterUpdate(latestRelease, currentRelease)
             default:
                 state
             }
@@ -371,7 +392,7 @@ extension DFUViewModel {
             guard case let .flashing(
                 latestRelease,
                 currentRelease,
-                uuid,
+                dfuDevice,
                 appUrl,
                 fullUrl
             ) = state, let sSelf = self
@@ -379,7 +400,7 @@ extension DFUViewModel {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.flash(
-                uuid: uuid,
+                dfuDevice: dfuDevice,
                 latestRelease: latestRelease,
                 currentRelease: currentRelease,
                 appUrl: appUrl,
@@ -404,18 +425,18 @@ extension DFUViewModel {
 
     func whenReadyToUpdate() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case let .readyToUpdate(latestRelease, currentRelease, uuid, appUrl, fullUrl) = state,
+            guard case let .readyToUpdate(latestRelease, currentRelease, dfuDevice, appUrl, fullUrl) = state,
                   let sSelf = self
             else {
                 return Empty().eraseToAnyPublisher()
             }
-            return sSelf.interactor.observeLost(uuid: uuid)
+            return sSelf.interactor.observeLost(uuid: dfuDevice.uuid)
                 .receive(on: RunLoop.main)
-                .map { uuid in
+                .map { _ in
                     Event.onLostRuuviBootDevice(
                         latestRelease,
                         currentRelease,
-                        uuid: uuid,
+                        dfuDevice: dfuDevice,
                         appUrl: appUrl,
                         fullUrl: fullUrl
                     )
@@ -431,13 +452,13 @@ extension DFUViewModel {
             else {
                 return Empty().eraseToAnyPublisher()
             }
-            return sSelf.interactor.listen()
+            return sSelf.interactor.listen(ruuviTag: sSelf.ruuviTag)
                 .receive(on: RunLoop.main)
-                .map { uuid in
-                    Event.onHeardRuuviBootDevice(
+                .map { dfuDevice in
+                    return Event.onHeardRuuviBootDevice(
                         latestRelease,
                         currentRelease,
-                        uuid: uuid,
+                        dfuDevice: dfuDevice,
                         appUrl: appUrl,
                         fullUrl: fullUrl
                     )
@@ -520,28 +541,36 @@ extension DFUViewModel {
 
     func whenFlashed() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case .successfulyFlashed = state, let sSelf = self
+            guard case let .successfulyFlashed(latestRelease) = state, let sSelf = self
             else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.serveCurrentRelease(for: sSelf.ruuviTag)
                 .receive(on: RunLoop.main)
-                .map(Event.onServingAfterUpdate)
-                .catch { _ in Just(Event.onServingAfterUpdate(nil)) }
+                .map { currentRelease in
+                    Event.onServingAfterUpdate(latestRelease, currentRelease)
+                }
+                .catch { _ in
+                    Just(Event.onServingAfterUpdate(latestRelease, nil))
+                }
                 .eraseToAnyPublisher()
         }
     }
 
     func whenServingAfterUpdate() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case .servingAfterUpdate = state, let sSelf = self
+            guard case let .servingAfterUpdate(latestRelease) = state, let sSelf = self
             else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.serveCurrentRelease(for: sSelf.ruuviTag)
                 .receive(on: RunLoop.main)
-                .map(Event.onServedAfterUpdate)
-                .catch { _ in Just(Event.onServedAfterUpdate(nil)) }
+                .map { currentRelease in
+                    Event.onServedAfterUpdate(latestRelease, currentRelease)
+                }
+                .catch { _ in
+                    Just(Event.onServedAfterUpdate(latestRelease, nil))
+                }
                 .eraseToAnyPublisher()
         }
     }

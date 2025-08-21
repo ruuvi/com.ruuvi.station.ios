@@ -17,6 +17,7 @@ public protocol RuuviDFU {
     @discardableResult
     func scan<T: AnyObject>(
         _ observer: T,
+        includeScanServices: Bool,
         closure: @escaping (T, DFUDevice) -> Void
     ) -> RuuviDFUToken
     @discardableResult
@@ -28,6 +29,10 @@ public protocol RuuviDFU {
     func flashFirmware(
         uuid: String,
         with firmware: DFUFirmware
+    ) -> AnyPublisher<FlashResponse, Error>
+    func flashFirmware(
+        dfuDevice: DFUDevice,
+        with firmwareURL: URL
     ) -> AnyPublisher<FlashResponse, Error>
 
     func stopFlashFirmware(device: DFUDevice) -> Bool

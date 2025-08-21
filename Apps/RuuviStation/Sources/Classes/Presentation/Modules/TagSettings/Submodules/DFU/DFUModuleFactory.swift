@@ -16,7 +16,26 @@ protocol DFUModuleFactory {
 final class DFUModuleFactoryImpl: DFUModuleFactory {
     func create(for ruuviTag: RuuviTagSensor) -> DFUModuleInput {
         let r = AppAssembly.shared.assembler.resolver
-        let interactor = DFUInteractor()
+        let firmwareVersion = RuuviFirmwareVersion.firmwareVersion(
+            from: ruuviTag.version
+        )
+        let dfuDeviceType: RuuviDFUDeviceType =
+            firmwareVersion == .e1 || firmwareVersion == .v6 ? .ruuviAir : .ruuviTag
+        let flags = r.resolve(RuuviLocalFlags.self)
+        var firmwareType: RuuviDFUFirmwareType = .latest
+        if let flags = flags {
+            if flags.downloadBetaFirmware {
+                firmwareType = .beta
+            }
+            if flags.downloadAlphaFirmware {
+                firmwareType = .alpha
+            }
+        }
+
+        let interactor = DFUInteractor(
+            deviceType: dfuDeviceType,
+            firmwareType: firmwareType
+        )
         interactor.ruuviDFU = r.resolve(RuuviDFU.self)
         interactor.background = r.resolve(BTBackground.self)
         let foreground = r.resolve(BTForeground.self)!

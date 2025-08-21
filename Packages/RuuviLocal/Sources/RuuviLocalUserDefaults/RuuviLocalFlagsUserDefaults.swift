@@ -18,4 +18,10 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
 
     @UserDefault("RuuviFeatureFlags.showRedesignedCardsUIWithNewMenu", defaultValue: false)
     var showRedesignedCardsUIWithNewMenu: Bool
+
+    @UserDefault("RuuviFeatureFlags.downloadBetaFirmware", defaultValue: false)
+    var downloadBetaFirmware: Bool
+
+    @UserDefault("RuuviFeatureFlags.downloadAlphaFirmware", defaultValue: false)
+    var downloadAlphaFirmware: Bool
 }

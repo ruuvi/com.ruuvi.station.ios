@@ -20,6 +20,7 @@ targets:
       - package: Swinject
       - package: RangeSeekSlider
       - package: NordicDFU
+      - package: iOSMcuManagerLibrary
       - package: GestureInstructions
       - package: Firebase
         product: FirebaseAnalytics

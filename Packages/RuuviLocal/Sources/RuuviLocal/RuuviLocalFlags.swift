@@ -13,4 +13,10 @@ public protocol RuuviLocalFlags {
 
     /// When enabled show redesigned Sensor Card UI with New Menu
     var showRedesignedCardsUIWithNewMenu: Bool { get set }
+
+    /// When enabled downloads beta version instead of stable
+    var downloadBetaFirmware: Bool { get set }
+
+    /// When enabled downloads alpha version
+    var downloadAlphaFirmware: Bool { get set }
 }

@@ -18,16 +18,20 @@ let package = Package(
     ],
     dependencies: [
         .package(
-            name: "NordicDFU",
             url: "https://github.com/NordicSemiconductor/IOS-Pods-DFU-Library",
             from: "4.10.3"
+        ),
+        .package(
+            url: "https://github.com/NordicSemiconductor/IOS-nRF-Connect-Device-Manager",
+            from: "1.7.0"
         ),
     ],
     targets: [
         .target(
             name: "RuuviDFU",
             dependencies: [
-                "NordicDFU"
+                "NordicDFU",
+                "iOSMcuManagerLibrary"
             ]
         ),
         .target(
@@ -35,6 +39,7 @@ let package = Package(
             dependencies: [
                 "RuuviDFU",
                 "NordicDFU",
+                "iOSMcuManagerLibrary",
             ]
         ),
         .testTarget(

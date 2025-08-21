@@ -191,7 +191,7 @@ final class FirmwareInteractor {
     func listen() -> Future<String, Never> {
         Future { [weak self] promise in
             guard let self else { return }
-            ruuviDFU.scan(self) { _, device in
+            ruuviDFU.scan(self, includeScanServices: false) { _, device in
                 promise(.success(device.uuid))
             }
         }
