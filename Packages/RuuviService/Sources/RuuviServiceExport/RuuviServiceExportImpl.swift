@@ -207,9 +207,9 @@ extension RuuviServiceExportImpl {
                     header: RuuviLocalization.aqi,
                     cellExtractor: { [weak self] record in
                         guard let sSelf = self else { return "" }
-                        let (aqi, _, _) = sSelf.measurementService.aqi(
+                        let aqi = sSelf.measurementService.aqi(
                             for: record.co2,
-                            pm25: record.pm25
+                            and: record.pm25
                         )
                         return "\(aqi)"
                     }

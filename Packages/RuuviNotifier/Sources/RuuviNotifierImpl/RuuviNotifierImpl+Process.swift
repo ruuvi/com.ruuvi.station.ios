@@ -55,9 +55,9 @@ public extension RuuviNotifierImpl {
                 isTriggered = isTriggered || isSignal
                 notify(alertType: type, uuid: luid.value, isTriggered: isSignal)
             case .aqi:
-                let (currentAQI, _, _) = measurementService.aqi(
+                let currentAQI = measurementService.aqi(
                     for: record.co2,
-                    pm25: record.pm25
+                    and: record.pm25
                 )
                 let isAQI = process(
                     aqi: currentAQI,
@@ -259,9 +259,9 @@ public extension RuuviNotifierImpl {
                     isTriggered: isSignal
                 )
             case .aqi:
-                let (currentAQI, _, _) = measurementService.aqi(
+                let currentAQI = measurementService.aqi(
                     for: record.co2,
-                    pm25: record.pm25
+                    and: record.pm25
                 )
                 let isAQI = process(
                     aqi: currentAQI,

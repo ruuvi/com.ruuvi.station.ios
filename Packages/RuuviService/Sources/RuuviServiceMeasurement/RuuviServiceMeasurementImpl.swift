@@ -407,7 +407,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         return minimalNumberFormatter.string(from: number) ?? ""
     }
 
-    public func aqiString(
+    public func aqi(
         for co2: Double?,
         pm25: Double?,
     ) -> ( // swiftlint:disable:this large_tuple
@@ -429,21 +429,9 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
 
     public func aqi(
         for co2: Double?,
-        pm25: Double?
-    ) -> ( // swiftlint:disable:this large_tuple
-        currentScore: Double,
-        maxScore: Int,
-        state: AirQualityState
-    ) {
-        let currentScore = calculateAQI(co2: co2, pm25: pm25)
-            .round(to: commonNumberFormatter.maximumFractionDigits)
-        let maxScore = 100
-        let state = airQualityState(for: currentScore)
-        return (
-            currentScore: currentScore,
-            maxScore: maxScore,
-            state: state
-        )
+        and pm25: Double?,
+    ) -> Double {
+        return calculateAQI(co2: co2, pm25: pm25).round(to: 1)
     }
 
     public func co2String(for carbonDiOxide: Double?) -> String {

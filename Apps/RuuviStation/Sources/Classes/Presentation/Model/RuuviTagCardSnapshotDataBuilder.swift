@@ -179,7 +179,7 @@ struct AQIMeasurementExtractor: MeasurementExtractor {
         measurementService: RuuviServiceMeasurement?,
         flags: RuuviLocalFlags
     ) -> MeasurementResult? {
-        guard let (currentAirQIndex, maximumAirQIndex, state) = measurementService?.aqiString(
+        guard let (currentAirQIndex, maximumAirQIndex, state) = measurementService?.aqi(
             for: record.co2,
             pm25: record.pm25
         ) else { return nil }
