@@ -609,37 +609,37 @@ public extension RuuviServiceMeasurementImpl {
     }
 
     private func calculateAQI(co2: Double?, pm25: Double?) -> Double {
-        let AQI_MAX: Double = 100
-        let PM25_MAX: Double = 60
-        let PM25_MIN: Double = 0
-        let PM25_SCALE: Double = AQI_MAX / (PM25_MAX - PM25_MIN)  // ≈ 1.6667
-        let CO2_MAX: Double = 2300
-        let CO2_MIN: Double = 420
-        let CO2_SCALE: Double = AQI_MAX / (CO2_MAX - CO2_MIN)     // ≈ 0.05319
+        enum AQIConstants {
+            static let maxValue = 100.0
 
-        guard let pm25 = pm25, let co2 = co2, !pm25.isNaN, !co2.isNaN else {
-            return Double.nan
+            enum PM25 {
+                static let range = 0.0...60.0
+                static var scale: Double { AQIConstants.maxValue / (range.upperBound - range.lowerBound) }
+            }
+
+            enum CO2 {
+                static let range = 420.0...2300.0
+                static var scale: Double { AQIConstants.maxValue / (range.upperBound - range.lowerBound) }
+            }
         }
 
-        // Clamp values to their respective ranges
-        let clampedPm25 = clamp(pm25, min: PM25_MIN, max: PM25_MAX)
-        let clampedCo2 = clamp(co2, min: CO2_MIN, max: CO2_MAX)
+        func clamped(_ value: Double, to range: ClosedRange<Double>) -> Double {
+            min(max(value, range.lowerBound), range.upperBound)
+        }
 
-        // Scale both values to 0-100 range
-        let dx = (clampedPm25 - PM25_MIN) * PM25_SCALE  // 0..100
-        let dy = (clampedCo2 - CO2_MIN) * CO2_SCALE     // 0..100
+        guard let pm25, let co2, !pm25.isNaN, !co2.isNaN else {
+            return .nan
+        }
 
-        // Calculate Euclidean distance
-        let r = sqrt(dx * dx + dy * dy)  // hypot(dx, dy)
+        let clampedPM25 = clamped(pm25, to: AQIConstants.PM25.range)
+        let clampedCO2 = clamped(co2, to: AQIConstants.CO2.range)
 
-        // Final AQI score
-        let aqi = clamp(AQI_MAX - r, min: 0, max: AQI_MAX)
+        let dx = (clampedPM25 - AQIConstants.PM25.range.lowerBound) * AQIConstants.PM25.scale
+        let dy = (clampedCO2 - AQIConstants.CO2.range.lowerBound) * AQIConstants.CO2.scale
 
-        return aqi
-    }
+        let distance = hypot(dx, dy)
 
-    private func clamp(_ value: Double, min: Double, max: Double) -> Double {
-        return Swift.min(Swift.max(value, min), max)
+        return clamped((AQIConstants.maxValue - distance), to: 0...AQIConstants.maxValue)
     }
 
     /*
