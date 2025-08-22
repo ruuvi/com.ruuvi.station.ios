@@ -1452,7 +1452,10 @@ extension TagChartsViewPresenter {
                 for: data.co2,
                 pm25: data.pm25
             )
-            return ChartDataEntry(x: data.date.timeIntervalSince1970, y: value)
+            return ChartDataEntry(
+                x: data.date.timeIntervalSince1970,
+                y: Double(value)
+            )
 
         case .co2:
             let value = measurementService.double(
