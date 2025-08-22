@@ -35,7 +35,7 @@ final class CardsMeasurementDetailsView: UIViewController {
     private enum ContentViewFactory {
         static func create() -> UIView {
             let view = UIView()
-            view.backgroundColor = RuuviColor.ruuviGreenBackground.color
+            view.backgroundColor = .clear
             view.translatesAutoresizingMaskIntoConstraints = false
             return view
         }
@@ -62,7 +62,7 @@ final class CardsMeasurementDetailsView: UIViewController {
     private enum TitleLabelFactory {
         static func create() -> UILabel {
             let label = UILabel()
-            label.textColor = .white
+            label.textColor = RuuviColor.dashboardIndicatorBig.color
             label.font = UIFont.Montserrat(.bold, size: 16)
             label.textAlignment = .left
             label.numberOfLines = 1
@@ -76,7 +76,7 @@ final class CardsMeasurementDetailsView: UIViewController {
     private enum ValueLabelFactory {
         static func create() -> UILabel {
             let label = UILabel()
-            label.textColor = .white
+            label.textColor = RuuviColor.dashboardIndicatorBig.color
             label.font = UIFont.Montserrat(.bold, size: 16)
             label.textAlignment = .right
             label.numberOfLines = 1
@@ -90,7 +90,7 @@ final class CardsMeasurementDetailsView: UIViewController {
     private enum UnitLabelFactory {
         static func create() -> UILabel {
             let label = UILabel()
-            label.textColor = .white
+            label.textColor = RuuviColor.dashboardIndicatorBig.color
             label.font = UIFont.Muli(.bold, size: 12)
             label.textAlignment = .right
             label.numberOfLines = 1
@@ -176,7 +176,7 @@ final class CardsMeasurementDetailsView: UIViewController {
 private extension CardsMeasurementDetailsView {
 
     func setupUI() {
-        view.backgroundColor = RuuviColor.ruuviGreenBackground.color
+        view.backgroundColor = RuuviColor.dashboardCardBG.color
         addSubviews()
         setupConstraints()
     }
@@ -505,8 +505,8 @@ private extension CardsMeasurementDetailsView {
             type.descriptionText,
             titleFont: UIFont.Montserrat(.bold, size: 16),
             paragraphFont: UIFont.Muli(.regular, size: 14),
-            titleColor: .white,
-            paragraphColor: .white.withAlphaComponent(0.8)
+            titleColor: RuuviColor.dashboardIndicator.color,
+            paragraphColor: RuuviColor.dashboardIndicator.color.withAlphaComponent(0.8)
         )
     }
 
