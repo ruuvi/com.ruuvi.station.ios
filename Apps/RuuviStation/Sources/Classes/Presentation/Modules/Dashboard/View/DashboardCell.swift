@@ -34,8 +34,12 @@ struct DashboardCellLayoutConstants {
 
     // Grid section
     static let headerToGridSpacing: CGFloat = 10
+
     static let gridRowHeight: CGFloat = 20
     static let gridRowSpacing: CGFloat = -2
+
+    static let gridRowHeightWithIndicatorTitle: CGFloat = 28
+    static let gridRowSpacingWithIndicatorTitle: CGFloat = 8
 
     // Footer section
     static let gridToFooterSpacing: CGFloat = 4
@@ -74,12 +78,20 @@ struct DashboardCellLayoutConstants {
         return topPadding + headerToGridSpacing + gridToFooterSpacing + bottomPadding
     }
 
+    static func gridRowHeight(showIndicatorTitle: Bool) -> CGFloat {
+        return showIndicatorTitle ? gridRowHeightWithIndicatorTitle : gridRowHeight
+    }
+
+    static func gridRowSpacing(showIndicatorTitle: Bool) -> CGFloat {
+        return showIndicatorTitle ? gridRowSpacingWithIndicatorTitle : gridRowSpacing
+    }
+
     static func availableNameWidth(
         containerWidth: CGFloat,
         dashboardType: DashboardType
     ) -> CGFloat {
         let reservedWidth: CGFloat
-        if dashboardType == .image {
+        if dashboardType == .image || dashboardType == .imageExtended {
             let imageWidth = containerWidth * imageWidthRatio
             reservedWidth = imageWidth + nameToImageSpacing + headerFixedWidth
         } else {
@@ -94,11 +106,12 @@ struct DashboardCellLayoutConstants {
     static func gridHeight(
         indicatorCount: Int,
         dashboardType: DashboardType,
-        hasAQI: Bool = false
+        hasAQI: Bool = false,
+        showIndicatorTitle: Bool
     ) -> CGFloat {
         let actualIndicatorCount: Int
 
-        if dashboardType == .image {
+        if dashboardType == .image || dashboardType == .imageExtended {
             // Filter out indicators shown prominently in image mode
             actualIndicatorCount = hasAQI ? max(
                 0,
@@ -131,15 +144,11 @@ struct DashboardCellLayoutConstants {
             )
         }
 
-        let totalRowHeight = CGFloat(
-            numberOfRows
-        ) * gridRowHeight
-        let totalSpacing = CGFloat(
-            max(
-                0,
-                numberOfRows - 1
-            )
-        ) * gridRowSpacing
+        let rowHeight = gridRowHeight(showIndicatorTitle: showIndicatorTitle)
+        let rowSpacing = gridRowSpacing(showIndicatorTitle: showIndicatorTitle)
+
+        let totalRowHeight = CGFloat(numberOfRows) * rowHeight
+        let totalSpacing = CGFloat(max(0, numberOfRows - 1)) * rowSpacing
         return totalRowHeight + totalSpacing
     }
 }
@@ -149,6 +158,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
 
     // MARK: - Configuration
     private var dashboardType: DashboardType = .simple
+    private var showIndicatorTitle: Bool = true
 
     // MARK: - UI Components
     private lazy var containerView: UIView = {
@@ -304,7 +314,8 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
     private lazy var rowsStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.spacing = DashboardCellLayoutConstants.gridRowSpacing
+        stackView.spacing = DashboardCellLayoutConstants
+            .gridRowSpacing(showIndicatorTitle: showIndicatorTitle)
         stackView.distribution = .fillEqually
         return stackView
     }()
@@ -436,8 +447,12 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
     // swiftlint:disable:next function_body_length
     func configure(
         with snapshot: RuuviTagCardSnapshot,
-        dashboardType: DashboardType
+        dashboardType: DashboardType,
+        showRedesignedDashboardUI: Bool
     ) {
+        showIndicatorTitle = showRedesignedDashboardUI &&
+            (dashboardType == .imageExtended || dashboardType == .simpleExtended)
+
         let dashboardTypeChanged = self.dashboardType != dashboardType
         let snapshotChanged = currentSnapshot != snapshot
 
@@ -545,7 +560,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
 
     // MARK: - Layout Management
     private func updateLayoutForDashboardType() {
-        if dashboardType == .image {
+        if dashboardType == .image || dashboardType == .imageExtended {
             // Show image-specific views
             cardBackgroundView.isHidden = false
             prominentGroupContainer.isHidden = false
@@ -617,7 +632,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         ruuviTagNameLabel.text = displayData.name
 
         // Update background image if in image mode
-        if dashboardType == .image {
+        if dashboardType == .image || dashboardType == .imageExtended {
             updateBackgroundImage(
                 from: displayData
             )
@@ -684,7 +699,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                 }
             currentIndicators
                 .removeAll()
-            if dashboardType == .image {
+            if dashboardType == .image || dashboardType == .imageExtended {
                 prominentView
                     .clearValues()
                 progressViewContainer.isHidden = true
@@ -697,7 +712,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         }
 
         // Update prominent view only if in image mode
-        if dashboardType == .image {
+        if dashboardType == .image || dashboardType == .imageExtended {
             updateProminentView(
                 with: configuration
             )
@@ -801,7 +816,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
     private func updateGridPosition(
         hasAQI: Bool
     ) {
-        guard dashboardType == .image else {
+        guard dashboardType == .image || dashboardType == .imageExtended else {
             return
         }
 
@@ -836,7 +851,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
 
         for data in indicatorData {
             // Skip indicators that are shown prominently in image mode
-            if dashboardType == .image {
+            if dashboardType == .image || dashboardType == .imageExtended {
                 if hasAdvancedSensors && data.type == .aqi {
                     continue
                 }
@@ -924,7 +939,9 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
             indicatorView?
                 .setValue(
                     with: data.value,
-                    unit: data.unit
+                    unit: data.unit,
+                    for: data.type,
+                    showTitle: showIndicatorTitle,
                 )
         }
     }
@@ -942,7 +959,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                 )?.isHighlighted ?? false
                 let alertsAvailable = snapshot.metadata.isAlertAvailable
 
-                if dashboardType == .image && indicatorData.type == .temperature {
+                if (dashboardType == .image || dashboardType == .imageExtended) && indicatorData.type == .temperature {
                     let hasAdvancedSensors = snapshot.displayData.indicatorGrid?.indicators.contains {
                         $0.type == .aqi
                     } ?? false
@@ -958,7 +975,8 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                                 highlight: isHighlighted && alertsAvailable
                             )
                     }
-                } else if dashboardType == .image && indicatorData.type == .aqi {
+                } else if (dashboardType == .image || dashboardType == .imageExtended) &&
+                            indicatorData.type == .aqi {
                     prominentView
                         .changeColor(
                             highlight: isHighlighted && alertsAvailable
@@ -1026,7 +1044,8 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
 
         // Configure the rowsStackView
         rowsStackView.axis = .vertical
-        rowsStackView.spacing = DashboardCellLayoutConstants.gridRowSpacing
+        rowsStackView.spacing = DashboardCellLayoutConstants
+            .gridRowSpacing(showIndicatorTitle: showIndicatorTitle)
         rowsStackView.distribution = .fill
 
         if indicators.count < 3 {
@@ -1035,7 +1054,8 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                 // Set fixed height for each indicator
                 indicator
                     .constrainHeight(
-                        constant: DashboardCellLayoutConstants.gridRowHeight
+                        constant: DashboardCellLayoutConstants
+                            .gridRowHeight(showIndicatorTitle: showIndicatorTitle)
                     )
                 rowsStackView
                     .addArrangedSubview(
@@ -1055,7 +1075,8 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                 // Set fixed height for the row
                 rowStackView
                     .constrainHeight(
-                        constant: DashboardCellLayoutConstants.gridRowHeight
+                        constant: DashboardCellLayoutConstants
+                            .gridRowHeight(showIndicatorTitle: showIndicatorTitle)
                     )
 
                 // Add the first indicator
@@ -1498,38 +1519,47 @@ extension DashboardCell {
         for snapshot: RuuviTagCardSnapshot,
         width: CGFloat,
         dashboardType: DashboardType,
+        showRedesigndUI: Bool,
         numberOfColumns: Int = 2
     ) -> CGFloat {
-        if dashboardType == .image {
+        switch dashboardType {
+        case .image, .imageExtended:
             return calculateImageHeight(
                 for: snapshot,
                 width: width,
-                numberOfColumns: numberOfColumns
+                numberOfColumns: numberOfColumns,
+                dashboardType: dashboardType,
+                showRedesigndUI: showRedesigndUI
             )
-        } else {
+        case .simple, .simpleExtended:
             return calculateSimpleHeight(
                 for: snapshot,
-                width: width
+                width: width,
+                dashboardType: dashboardType,
+                showRedesigndUI: showRedesigndUI
             )
         }
     }
 
     private static func calculateSimpleHeight(
         for snapshot: RuuviTagCardSnapshot,
-        width: CGFloat
+        width: CGFloat,
+        dashboardType: DashboardType,
+        showRedesigndUI: Bool
     ) -> CGFloat {
         // Calculate name label height
         let nameHeight = calculateNameLabelHeight(
             text: snapshot.displayData.name,
             containerWidth: width,
-            dashboardType: .simple
+            dashboardType: dashboardType
         )
 
         // Calculate grid height
         let indicatorCount = snapshot.displayData.indicatorGrid?.indicators.count ?? 0
         let gridHeight = DashboardCellLayoutConstants.gridHeight(
             indicatorCount: indicatorCount,
-            dashboardType: .simple
+            dashboardType: .simple,
+            showIndicatorTitle: dashboardType == .simpleExtended && showRedesigndUI,
         )
 
         // Total height calculation
@@ -1546,12 +1576,14 @@ extension DashboardCell {
     private static func calculateImageHeight(
         for snapshot: RuuviTagCardSnapshot,
         width: CGFloat,
-        numberOfColumns: Int
+        numberOfColumns: Int,
+        dashboardType: DashboardType,
+        showRedesigndUI: Bool
     ) -> CGFloat {
         let nameHeight = calculateNameLabelHeight(
             text: snapshot.displayData.name,
             containerWidth: width,
-            dashboardType: .image
+            dashboardType: dashboardType
         )
         let hasAQI = snapshot.displayData.indicatorGrid?.indicators.contains {
             $0.type == .aqi
@@ -1566,8 +1598,9 @@ extension DashboardCell {
         let indicatorCount = snapshot.displayData.indicatorGrid?.indicators.count ?? 0
         let gridHeight = DashboardCellLayoutConstants.gridHeight(
             indicatorCount: indicatorCount,
-            dashboardType: .image,
-            hasAQI: hasAQI
+            dashboardType: dashboardType,
+            hasAQI: hasAQI,
+            showIndicatorTitle: dashboardType == .imageExtended && showRedesigndUI,
         )
 
         // Calculate total height with consistent 10px spacing between all groups

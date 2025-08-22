@@ -1,10 +1,11 @@
 import RuuviLocalization
 import UIKit
+import RuuviOntology
 
 class DashboardIndicatorView: UIView {
     private lazy var indicatorValueLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.dashboardIndicator.color
+        label.textColor = RuuviColor.dashboardIndicatorBig.color
         label.textAlignment = .left
         label.numberOfLines = 1
         label.font = UIFont.Montserrat(.bold, size: 14)
@@ -14,15 +15,25 @@ class DashboardIndicatorView: UIView {
 
     private lazy var indicatorUnitLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.dashboardIndicator.color
+        label.textColor = RuuviColor.dashboardIndicatorBig.color
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.font = UIFont.Muli(.regular, size: 12)
+        label.font = UIFont.Muli(.bold, size: 12)
         label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
         return label
     }()
 
-    private lazy var textStack: UIStackView = {
+    private lazy var indicatorTitleLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = RuuviColor.dashboardIndicator.color
+        label.textAlignment = .left
+        label.numberOfLines = 1
+        label.font = UIFont.Muli(.regular, size: 11)
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        return label
+    }()
+
+    private lazy var valueTextStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
         stack.alignment = .center
@@ -30,6 +41,17 @@ class DashboardIndicatorView: UIView {
         stack.spacing = 4
         return stack
     }()
+
+    private lazy var contentsStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.alignment = .leading
+        stack.distribution = .fill
+        stack.spacing = 1
+        return stack
+    }()
+
+    private var showTitle: Bool = false
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -43,12 +65,15 @@ class DashboardIndicatorView: UIView {
 
     fileprivate func setUpUI() {
         // Add labels to stack
-        textStack.addArrangedSubview(indicatorValueLabel)
-        textStack.addArrangedSubview(indicatorUnitLabel)
+        valueTextStack.addArrangedSubview(indicatorValueLabel)
+        valueTextStack.addArrangedSubview(indicatorUnitLabel)
+
+        contentsStack.addArrangedSubview(valueTextStack)
+        contentsStack.addArrangedSubview(indicatorTitleLabel)
 
         // Add stack to view
-        addSubview(textStack)
-        textStack.fillSuperview()
+        addSubview(contentsStack)
+        contentsStack.fillSuperview()
 
         // Set content hugging priorities
         indicatorValueLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -57,25 +82,41 @@ class DashboardIndicatorView: UIView {
 }
 
 extension DashboardIndicatorView {
-    func setValue(with value: String?, unit: String? = nil) {
+    func setValue(
+        with value: String?,
+        unit: String? = nil,
+        for type: MeasurementType,
+        showTitle: Bool
+    ) {
+        self.showTitle = showTitle
+
         indicatorValueLabel.text = value
         indicatorUnitLabel.text = unit
 
+        // Handle title visibility
+        indicatorTitleLabel.text = type.displayName
+        indicatorTitleLabel.isHidden = !showTitle
+
         // Hide unit label if no unit
-        indicatorUnitLabel.isHidden = unit?.isEmpty ?? true
+        let isUnitEmpty = unit?.isEmpty ?? true
+        indicatorUnitLabel.isHidden = isUnitEmpty || type == .aqi
     }
 
     func changeColor(highlight: Bool) {
-        let color = highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicator.color
+        let titleColor = showTitle ? RuuviColor.dashboardIndicatorBig.color : RuuviColor.dashboardIndicator.color
+        let color = highlight ? RuuviColor.orangeColor.color : titleColor
         indicatorValueLabel.textColor = color
         indicatorUnitLabel.textColor = color
     }
 
     func clearValues() {
+        indicatorTitleLabel.text = nil
+        indicatorTitleLabel.isHidden = false
         indicatorValueLabel.text = nil
         indicatorUnitLabel.text = nil
         indicatorUnitLabel.isHidden = false
-        indicatorValueLabel.textColor = RuuviColor.dashboardIndicator.color
-        indicatorUnitLabel.textColor = RuuviColor.dashboardIndicator.color
+        let titleColor = showTitle ? RuuviColor.dashboardIndicatorBig.color : RuuviColor.dashboardIndicator.color
+        indicatorValueLabel.textColor = titleColor
+        indicatorUnitLabel.textColor = titleColor
     }
 }

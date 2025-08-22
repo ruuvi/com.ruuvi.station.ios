@@ -125,7 +125,7 @@ struct HumidityMeasurementExtractor: MeasurementExtractor {
 
         return MeasurementResult(
             value: value,
-            unit: formattedUnit,
+            unit: flags.showRedesignedDashboardUI ? unitSymbol : formattedUnit,
             isProminent: false,
             showSubscript: false,
             tintColor: nil
@@ -226,7 +226,7 @@ struct PM25MeasurementExtractor: MeasurementExtractor {
 
         return MeasurementResult(
             value: pm25Value,
-            unit: "\(RuuviLocalization.pm25), \(RuuviLocalization.unitPm25)",
+            unit: RuuviLocalization.unitPm25,
             isProminent: false,
             showSubscript: false,
             tintColor: nil
@@ -245,7 +245,7 @@ struct PM10MeasurementExtractor: MeasurementExtractor {
 
         return MeasurementResult(
             value: pm10Value,
-            unit: "\(RuuviLocalization.pm10), \(RuuviLocalization.unitPm10)",
+            unit: RuuviLocalization.unitPm10,
             isProminent: false,
             showSubscript: false,
             tintColor: nil
@@ -321,7 +321,7 @@ struct SoundMeasurementExtractor: MeasurementExtractor {
 
         return MeasurementResult(
             value: soundValue,
-            unit: "\(RuuviLocalization.realTime), \(RuuviLocalization.unitSound)",
+            unit: RuuviLocalization.unitSound,
             isProminent: false,
             showSubscript: false,
             tintColor: nil

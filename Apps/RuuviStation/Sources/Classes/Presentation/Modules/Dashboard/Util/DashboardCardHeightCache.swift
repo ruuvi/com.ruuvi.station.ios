@@ -8,7 +8,8 @@ class DashboardCardHeightCache {
         for snapshot: RuuviTagCardSnapshot,
         width: CGFloat,
         displayType: DashboardType,
-        numberOfColumns: Int
+        numberOfColumns: Int,
+        showRedesignedUI: Bool
     ) -> CGFloat {
         let key = cacheKey(
             for: snapshot,
@@ -25,7 +26,8 @@ class DashboardCardHeightCache {
             for: snapshot,
             width: width,
             dashboardType: displayType,
-            numberOfColumns: numberOfColumns
+            showRedesigndUI: showRedesignedUI,
+            numberOfColumns: numberOfColumns,
         )
 
         cache[key] = height

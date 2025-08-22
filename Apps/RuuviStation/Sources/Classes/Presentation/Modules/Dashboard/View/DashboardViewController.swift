@@ -362,7 +362,12 @@ private extension DashboardViewController {
             return UICollectionViewCell()
         }
 
-        cell.configure(with: snapshot, dashboardType: dashboardType)
+        cell
+            .configure(
+                with: snapshot,
+                dashboardType: dashboardType,
+                showRedesignedDashboardUI: flags.showRedesignedDashboardUI
+            )
         cell.delegate = self
         cell.setMenu(cardContextMenuOption(for: indexPath))
         return cell
@@ -514,10 +519,37 @@ private extension DashboardViewController {
         simpleViewTypeAction.state = dashboardType == .simple ? .on : .off
         imageViewTypeAction.state = dashboardType == .image ? .on : .off
 
+        var children: [UIAction] = []
+        if flags.showRedesignedDashboardUI {
+            let imageExtendedViewTypeAction = UIAction(
+                title: RuuviLocalization.imageExtCards
+            ) { [weak self] _ in
+                self?.handleDashboardTypeChange(.imageExtended)
+            }
+
+            let simpleExtendedViewTypeAction = UIAction(
+                title: RuuviLocalization.simpleExtCards
+            ) { [weak self] _ in
+                self?.handleDashboardTypeChange(.simpleExtended)
+            }
+
+            simpleExtendedViewTypeAction.state = dashboardType == .simpleExtended ? .on : .off
+            imageExtendedViewTypeAction.state = dashboardType == .imageExtended ? .on : .off
+
+            children = [
+                imageViewTypeAction,
+                imageExtendedViewTypeAction,
+                simpleViewTypeAction,
+                simpleExtendedViewTypeAction,
+            ]
+        } else {
+            children = [imageViewTypeAction, simpleViewTypeAction]
+        }
+
         return UIMenu(
             title: RuuviLocalization.cardType,
             options: .displayInline,
-            children: [imageViewTypeAction, simpleViewTypeAction]
+            children: children
         )
     }
 
@@ -773,7 +805,8 @@ extension DashboardViewController: MasonryReorderableLayoutDelegate {
             for: cardSnapshot,
             width: itemWidth,
             displayType: dashboardType,
-            numberOfColumns: numberOfColumns
+            numberOfColumns: numberOfColumns,
+            showRedesignedUI: flags.showRedesignedDashboardUI,
         )
     }
 

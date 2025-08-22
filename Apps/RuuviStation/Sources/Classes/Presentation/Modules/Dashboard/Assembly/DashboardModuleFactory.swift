@@ -63,6 +63,7 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
 
         // MARK: - VIEW
         view.measurementService = r.resolve(RuuviServiceMeasurement.self)
+        view.flags = r.resolve(RuuviLocalFlags.self)!
         view.output = presenter
 
         return view
@@ -143,6 +144,7 @@ extension DashboardModuleFactoryImpl {
         setupMenuModule(for: view, presenter: presenter, resolver: r, router: router)
 
         view.measurementService = r.resolve(RuuviServiceMeasurement.self)
+        view.flags = r.resolve(RuuviLocalFlags.self)
         view.output = presenter
 
         return view

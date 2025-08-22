@@ -154,6 +154,10 @@ public extension String {
             .image
         case "simple":
             .simple
+        case "imageExtended":
+            .imageExtended
+        case "simpleExtended":
+            .simpleExtended
         default:
             .image
         }
