@@ -2,12 +2,17 @@ import UIKit
 
 extension UIViewController {
 
-    func presentDynamicBottomSheet(vc: UIViewController) {
+    func presentDynamicBottomSheet(
+        vc: UIViewController,
+        delegate: UIAdaptivePresentationControllerDelegate? = nil
+    ) {
         vc.modalPresentationStyle = .pageSheet
 
         if #available(iOS 15.0, *) {
             configureSheetPresentation(for: vc)
         }
+
+        vc.presentationController?.delegate = delegate
 
         present(vc, animated: true)
     }

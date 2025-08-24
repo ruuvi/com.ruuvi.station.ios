@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 protocol CardsMeasurementViewInput: AnyObject {
     func updateSnapshots(_ snapshots: [RuuviTagCardSnapshot], currentIndex: Int)

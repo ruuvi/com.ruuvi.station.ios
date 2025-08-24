@@ -4,11 +4,15 @@ import UIKit
 import RuuviOntology
 import RuuviLocalization
 import RuuviService
+import DGCharts
+import RuuviLocal
 
-final class CardsMeasurementDetailsView: UIViewController {
+final class MeasurementDetailsViewController: UIViewController {
 
     // MARK: - Constants
     private enum Constants {
+        static let graphTopMargin: CGFloat = 24
+        static let graphHeight: CGFloat = 200
         static let headerTopMargin: CGFloat = 24
         static let horizontalMargin: CGFloat = 16
         static let headerHeight: CGFloat = 30
@@ -115,10 +119,36 @@ final class CardsMeasurementDetailsView: UIViewController {
             return label
         }
     }
+    // MARK: - Internal
+    weak var output: MeasurementDetailsViewOutput?
 
     // MARK: - UI Components
     private lazy var scrollView = UIScrollViewFactory.create()
     private lazy var contentView = ContentViewFactory.create()
+    private lazy var graphView: TagChartsViewInternal = {
+        let view = TagChartsViewInternal(source: .mesurementDetails)
+        view.isUserInteractionEnabled = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    private lazy var graphViewOverlay: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white.withAlphaComponent(0.01)
+        view.isUserInteractionEnabled = true
+        view.addGestureRecognizer(
+            UITapGestureRecognizer(target: self, action: #selector(handleGraphTap))
+        )
+        return view
+    }()
+    private lazy var noGraphDataLabel: UILabel = {
+        let label = UILabel()
+        label.text = RuuviLocalization.emptyChartMessage
+        label.textColor = .white
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.font = UIFont.Montserrat(.bold, size: 14)
+        return label
+    }()
     private lazy var headerView = HeaderViewFactory.create()
     private lazy var imgView = ImageViewFactory.create()
     private lazy var lblTitle = TitleLabelFactory.create()
@@ -131,8 +161,8 @@ final class CardsMeasurementDetailsView: UIViewController {
     private var tapGestureRecognizer: UITapGestureRecognizer!
 
     // MARK: - Initialization
-    static func instantiate() -> CardsMeasurementDetailsView {
-        return CardsMeasurementDetailsView()
+    static func instantiate() -> MeasurementDetailsViewController {
+        return MeasurementDetailsViewController()
     }
 
     // MARK: - Lifecycle
@@ -140,6 +170,12 @@ final class CardsMeasurementDetailsView: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupLinkTapGesture()
+        output?.viewDidLoad()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        output?.viewWillAppear()
     }
 
     override func viewDidLayoutSubviews() {
@@ -173,7 +209,7 @@ final class CardsMeasurementDetailsView: UIViewController {
 }
 
 // MARK: - Private Setup Methods
-private extension CardsMeasurementDetailsView {
+private extension MeasurementDetailsViewController {
 
     func setupUI() {
         view.backgroundColor = RuuviColor.dashboardCardBG.color
@@ -184,6 +220,14 @@ private extension CardsMeasurementDetailsView {
     func addSubviews() {
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
+
+        contentView.addSubview(graphView)
+        graphView.addSubview(graphViewOverlay)
+        graphViewOverlay.fillSuperview()
+        graphView.addSubview(noGraphDataLabel)
+        noGraphDataLabel.fillSuperview()
+        noGraphDataLabel.alpha = 0
+
         contentView.addSubview(headerView)
         contentView.addSubview(lblDescription)
 
@@ -312,10 +356,29 @@ private extension CardsMeasurementDetailsView {
                         constant: Constants.unitBottomOffset
                     ),
 
+                // Graph view
+                graphView.topAnchor
+                    .constraint(
+                        equalTo: headerView.bottomAnchor,
+                        constant: Constants.graphTopMargin
+                    ),
+                graphView.leadingAnchor
+                    .constraint(
+                        equalTo: contentView.leadingAnchor
+                    ),
+                graphView.trailingAnchor
+                    .constraint(
+                        equalTo: contentView.trailingAnchor
+                    ),
+                graphView.heightAnchor
+                    .constraint(
+                        equalToConstant: Constants.graphHeight
+                    ),
+
                 // Description
                 lblDescription.topAnchor
                     .constraint(
-                        equalTo: headerView.bottomAnchor,
+                        equalTo: graphView.bottomAnchor,
                         constant: Constants.headerDescriptionSpacing
                     ),
                 lblDescription.leadingAnchor
@@ -353,10 +416,53 @@ private extension CardsMeasurementDetailsView {
             imgView.image = icon.withRenderingMode(.alwaysOriginal)
         }
     }
+
+    @objc func handleGraphTap() {
+        output?.didTapGraph()
+    }
+}
+
+// MARK: - MeasurementDetailsViewInput
+
+extension MeasurementDetailsViewController: MeasurementDetailsViewInput {
+
+    func setChartData(_ data: TagChartViewData, settings: RuuviLocalSettings) {
+        graphView.data = data.chartData
+        graphView.lowerAlertValue = data.lowerAlertValue
+        graphView.upperAlertValue = data.upperAlertValue
+        graphView.setSettings(settings: settings)
+        graphView.localize()
+        graphView.setYAxisLimit(min: data.chartData?.yMin ?? 0, max: data.chartData?.yMax ?? 0)
+        graphView.setXAxisRenderer()
+
+        let hasData = data.chartData?.entryCount ?? 0 > 0
+        setNoDataLabelVisibility(show: !hasData)
+
+        // Force layout update for sheet height
+        DispatchQueue.main.async { [weak self] in
+            self?.updatePreferredContentSize()
+        }
+    }
+
+    func updateChartData(_ entries: [ChartDataEntry], settings: RuuviLocalSettings) {
+        graphView.updateDataSet(
+            with: entries,
+            isFirstEntry: entries.count == 1,
+            firstEntry: nil,
+            showAlertRangeInGraph: false
+        )
+    }
+
+    func setNoDataLabelVisibility(show: Bool) {
+        UIView.animate(withDuration: 0.3) { [weak self] in
+            self?.noGraphDataLabel.alpha = show ? 1 : 0
+            self?.graphView.isHidden = show ? true : false
+        }
+    }
 }
 
 // MARK: - Link Handling
-private extension CardsMeasurementDetailsView {
+private extension MeasurementDetailsViewController {
 
     func setupLinkTapGesture() {
         tapGestureRecognizer = UITapGestureRecognizer(
@@ -414,7 +520,7 @@ private extension CardsMeasurementDetailsView {
 }
 
 // MARK: - Content Size Management
-private extension CardsMeasurementDetailsView {
+private extension MeasurementDetailsViewController {
 
     func updatePreferredContentSize() {
         view.layoutIfNeeded()
@@ -448,12 +554,12 @@ private extension CardsMeasurementDetailsView {
     }
 }
 
-extension CardsMeasurementDetailsView {
+extension MeasurementDetailsViewController {
 
     static func createSheet(
         from indicator: RuuviTagCardSnapshotIndicatorData
-    ) -> CardsMeasurementDetailsView {
-        let viewController = CardsMeasurementDetailsView.instantiate()
+    ) -> MeasurementDetailsViewController {
+        let viewController = MeasurementDetailsViewController.instantiate()
 
         let processedUnit = processIndicatorUnit(indicator)
         let attributedDescription = createAttributedDescription(for: indicator.type)
@@ -472,7 +578,7 @@ extension CardsMeasurementDetailsView {
 }
 
 // MARK: - Private Factory Methods
-private extension CardsMeasurementDetailsView {
+private extension MeasurementDetailsViewController {
 
     static func processIndicatorUnit(_ indicator: RuuviTagCardSnapshotIndicatorData) -> String {
         var unit = indicator.unit

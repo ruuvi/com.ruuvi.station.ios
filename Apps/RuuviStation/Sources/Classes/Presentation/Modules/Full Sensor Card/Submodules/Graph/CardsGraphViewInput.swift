@@ -14,6 +14,7 @@ protocol CardsGraphViewInput: ViewInput {
     func showBluetoothDisabled(userDeclined: Bool)
     func setActiveSnapshot(_ snapshot: RuuviTagCardSnapshot?)
     func createChartViews(from: [MeasurementType])
+    func scroll(to measurementType: MeasurementType)
     func clearChartHistory()
     func setChartViewData(
         from chartViewData: [TagChartViewData],

@@ -22,6 +22,9 @@ final class CardsBaseViewController: UIViewController {
     /// Currently visible tab
     private var activeTab: CardsMenuType
 
+    // MARK: - Details view
+    private var detailsCoordinator: MeasurementDetailsCoordinator?
+
     // MARK: - State
     private var currentSnapshots: [RuuviTagCardSnapshot] = []
     private var currentSnapshotIndex: Int = 0
@@ -566,6 +569,29 @@ extension CardsBaseViewController: TimestampUpdateable {
     }
 }
 
+// MARK: - MeasurementDetailsCoordinatorDelegate
+extension CardsBaseViewController: MeasurementDetailsCoordinatorDelegate {
+    func measurementDetailsCoordinatorDidDismiss(
+        _ coordinator: MeasurementDetailsCoordinator
+    ) {
+        detailsCoordinator?.stop()
+        detailsCoordinator = nil
+    }
+
+    func measurementDetailsCoordinatorDidDismissWithGraphTap(
+        for snapshot: RuuviTagCardSnapshot,
+        measurement: MeasurementType,
+        ruuviTag: RuuviTagSensor,
+        _ coordinator: MeasurementDetailsCoordinator
+    ) {
+        detailsCoordinator?.stop()
+        detailsCoordinator = nil
+        output?.viewDidScrollToGraph(for: measurement)
+        activeTab = .graph
+        menuBarView.setSelectedTab(.graph, animated: true)
+    }
+}
+
 // MARK: - CardsBaseViewInput
 extension CardsBaseViewController: CardsBaseViewInput {
     func setActiveTab(_ tab: CardsMenuType) {
@@ -697,6 +723,23 @@ extension CardsBaseViewController: CardsBaseViewInput {
             self?.output?.viewDidConfirmFirmwareUpdate(for: snapshot)
         }))
         present(alert, animated: true)
+    }
+
+    func showMeasurementDetails(
+        for indicator: RuuviTagCardSnapshotIndicatorData,
+        snapshot: RuuviTagCardSnapshot,
+        sensor: RuuviTagSensor,
+        settings: SensorSettings?
+    ) {
+        detailsCoordinator = MeasurementDetailsCoordinator(
+            baseViewController: self,
+            for: indicator,
+            snapshot: snapshot,
+            ruuviTagSensor: sensor,
+            sensorSetting: settings,
+            delegate: self
+        )
+        detailsCoordinator?.start()
     }
 }
 

@@ -724,6 +724,125 @@ extension CardsGraphViewController: CardsGraphViewInput {
         updateChartsCollectionConstaints(from: from)
     }
 
+    func scroll(to measurementType: MeasurementType) {
+        // Map measurement type to the corresponding chart view
+        let targetView: TagChartsView?
+        switch measurementType {
+        case .temperature:
+            targetView = temperatureChartView
+        case .humidity:
+            targetView = humidityChartView
+        case .pressure:
+            targetView = pressureChartView
+        case .aqi:
+            targetView = aqiChartView
+        case .co2:
+            targetView = co2ChartView
+        case .pm25:
+            targetView = pm25ChartView
+        case .voc:
+            targetView = vocChartView
+        case .nox:
+            targetView = noxChartView
+        case .luminosity:
+            targetView = luminosityChartView
+        case .soundInstant:
+            targetView = soundChartView
+        default:
+            targetView = nil
+        }
+
+        guard let view = targetView,
+              !view.isHidden else { return }
+
+        // Convert the target view's frame to scroll view's coordinate system
+        let targetFrame = view.convert(view.bounds, to: scrollView)
+
+        // Get current visible rect
+        let visibleRect = CGRect(
+            x: scrollView.contentOffset.x,
+            y: scrollView.contentOffset.y,
+            width: scrollView.bounds.width,
+            height: scrollView.bounds.height
+        )
+
+        // Check if the target view is already fully visible
+        let isFullyVisible = visibleRect.contains(targetFrame)
+
+        // Check if the target view is partially visible
+        let isPartiallyVisible = visibleRect.intersects(targetFrame)
+
+        // Only scroll if the view is not fully visible
+        if !isFullyVisible {
+            var newOffset = scrollView.contentOffset
+
+            if targetFrame.minY < visibleRect.minY {
+                // Target is above the visible area - scroll up to show it at the top
+                newOffset.y = targetFrame.minY
+            } else if targetFrame.maxY > visibleRect.maxY {
+                // Target is below the visible area
+                // Calculate offset to show it at the bottom (or as much as possible)
+                let idealOffset = targetFrame.maxY - scrollView.bounds.height
+
+                // Make sure we don't scroll beyond content bounds
+                let maxAllowedOffset = scrollView.contentSize.height - scrollView.bounds.height
+                newOffset.y = min(idealOffset, maxAllowedOffset)
+
+                // If the chart is taller than the viewport, show its top
+                if targetFrame.height > scrollView.bounds.height {
+                    newOffset.y = targetFrame.minY
+                }
+            }
+
+            // Ensure we don't scroll to negative offset
+            newOffset.y = max(0, newOffset.y)
+
+            // Animate the scroll
+            scrollView.setContentOffset(newOffset, animated: true)
+        }
+
+        // Add highlight animation regardless of whether we scrolled
+        addHighlightAnimation(to: view)
+    }
+
+    private func addHighlightAnimation(to chartView: TagChartsView) {
+        // Create a highlight overlay
+        let highlightView = UIView()
+        highlightView.backgroundColor = UIColor.white.withAlphaComponent(0.3)
+        highlightView.alpha = 0
+        highlightView.translatesAutoresizingMaskIntoConstraints = false
+
+        // Add it to the chart view
+        chartView.addSubview(highlightView)
+        NSLayoutConstraint.activate([
+            highlightView.topAnchor.constraint(equalTo: chartView.topAnchor),
+            highlightView.leadingAnchor.constraint(equalTo: chartView.leadingAnchor),
+            highlightView.trailingAnchor.constraint(equalTo: chartView.trailingAnchor),
+            highlightView.bottomAnchor.constraint(equalTo: chartView.bottomAnchor),
+        ])
+
+        // Animate the highlight
+        UIView.animate(withDuration: 0.4, animations: {
+            highlightView.alpha = 1
+        }) { _ in
+            UIView.animate(withDuration: 0.3, delay: 0.1, options: [], animations: {
+                highlightView.alpha = 0
+            }) { _ in
+                highlightView.removeFromSuperview()
+            }
+        }
+
+        // Optional: Add a subtle scale animation to the chart
+        let originalTransform = chartView.transform
+        UIView.animate(withDuration: 0.15, animations: {
+            chartView.transform = CGAffineTransform(scaleX: 1.02, y: 1.02)
+        }) { _ in
+            UIView.animate(withDuration: 0.15, animations: {
+                chartView.transform = originalTransform
+            })
+        }
+    }
+
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     func setChartViewData(
         from chartViewData: [TagChartViewData],

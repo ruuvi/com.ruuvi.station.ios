@@ -6,4 +6,8 @@ protocol CardsMeasurementViewOutput: AnyObject {
         to index: Int,
         sender: CardsMeasurementViewController
     )
+    func viewDidTapMeasurement(
+        for indicator: RuuviTagCardSnapshotIndicatorData,
+        snapshot: RuuviTagCardSnapshot
+    )
 }

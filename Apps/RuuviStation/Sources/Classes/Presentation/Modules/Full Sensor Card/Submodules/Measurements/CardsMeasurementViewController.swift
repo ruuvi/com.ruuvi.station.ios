@@ -295,9 +295,7 @@ extension CardsMeasurementViewController: CardsMeasurementPageViewControllerDele
         _ indicator: RuuviTagCardSnapshotIndicatorData,
         in pageViewController: CardsMeasurementPageViewController
     ) {
-        let bottomSheetVC = CardsMeasurementDetailsView.createSheet(
-            from: indicator
-        )
-        presentDynamicBottomSheet(vc: bottomSheetVC)
+        let snapshot = snapshots[pageViewController.pageIndex]
+        output?.viewDidTapMeasurement(for: indicator, snapshot: snapshot)
     }
 }
