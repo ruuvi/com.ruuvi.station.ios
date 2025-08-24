@@ -5,11 +5,13 @@ class CardsSettingsPresenter: NSObject, CardsSettingsViewOutput, CardsSettingsPr
     func configure(
         with snapshots: [RuuviTagCardSnapshot],
         snapshot: RuuviTagCardSnapshot,
-        sensor: AnyRuuviTagSensor?
+        sensor: AnyRuuviTagSensor?,
+        settings: SensorSettings?
     ) {}
     func configure(
         with snapshot: RuuviTagCardSnapshot,
-        sensor: AnyRuuviTagSensor?
+        sensor: AnyRuuviTagSensor?,
+        settings: SensorSettings?
     ) {}
     func start() {}
     func stop() {}

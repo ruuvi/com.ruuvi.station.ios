@@ -108,23 +108,22 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
     func configure(
         with snapshots: [RuuviTagCardSnapshot],
         snapshot: RuuviTagCardSnapshot,
-        sensor: AnyRuuviTagSensor?
+        sensor: AnyRuuviTagSensor?,
+        settings: SensorSettings?
     ) {
         self.snapshots = snapshots
-        configure(with: snapshot, sensor: sensor)
+        configure(with: snapshot, sensor: sensor, settings: settings)
+        self.interactor?.updateSensorSettings(settings: sensorSettings)
     }
 
     func configure(
         with snapshot: RuuviTagCardSnapshot,
-        sensor: AnyRuuviTagSensor?
+        sensor: AnyRuuviTagSensor?,
+        settings: SensorSettings?
     ) {
         self.snapshot = snapshot
         self.sensor = sensor
-    }
-
-    func configure(sensorSettings: SensorSettings?) {
-        self.sensorSettings = sensorSettings
-        self.interactor?.updateSensorSettings(settings: sensorSettings)
+        self.sensorSettings = settings
     }
 
     func configure(output: CardsGraphPresenterOutput?) {
@@ -132,6 +131,7 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
     }
 
     func start() {
+        view?.resetScrollPosition()
         observeLastOpenedChart()
         startListeningToSettings()
         tryToShowSwipeUpHint()
@@ -144,6 +144,10 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
     func scroll(to index: Int, animated: Bool) {
         view?.setActiveSnapshot(snapshot)
         restartObserving()
+    }
+
+    func scroll(to measurementType: MeasurementType) {
+        view?.scroll(to: measurementType)
     }
 
     func showAbortSyncConfirmationDialog(
@@ -911,7 +915,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
 
         if aqiData.count > 0, let ruuviTag = sensor {
             let isOn = alertService.isOn(
-                type: .carbonDioxide(lower: 0, upper: 0),
+                type: .aqi(lower: 0, upper: 0),
                 for: ruuviTag
             )
             let aqiChartDataSet = TagChartsHelper.newDataSet(

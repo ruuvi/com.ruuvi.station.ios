@@ -9,8 +9,8 @@ enum GraphHistoryAbortSyncSource {
 }
 
 protocol CardsGraphPresenterInput: CardsPresenterInput {
-    func configure(sensorSettings: SensorSettings?)
     func configure(output: CardsGraphPresenterOutput?)
+    func scroll(to measurementType: MeasurementType)
     func showAbortSyncConfirmationDialog(
         for snapshot: RuuviTagCardSnapshot,
         from source: GraphHistoryAbortSyncSource

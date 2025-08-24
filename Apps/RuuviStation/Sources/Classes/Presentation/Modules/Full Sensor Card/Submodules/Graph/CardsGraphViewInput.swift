@@ -11,9 +11,11 @@ protocol CardsGraphViewInput: ViewInput {
     var showChartAll: Bool { get set }
     var showAlertRangeInGraph: Bool { get set }
     var viewIsVisible: Bool { get }
+    func resetScrollPosition()
     func showBluetoothDisabled(userDeclined: Bool)
     func setActiveSnapshot(_ snapshot: RuuviTagCardSnapshot?)
     func createChartViews(from: [MeasurementType])
+    func scroll(to measurementType: MeasurementType)
     func clearChartHistory()
     func setChartViewData(
         from chartViewData: [TagChartViewData],

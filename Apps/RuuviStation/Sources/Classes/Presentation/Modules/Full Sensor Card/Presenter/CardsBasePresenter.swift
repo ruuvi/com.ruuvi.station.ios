@@ -36,16 +36,13 @@ class CardsBasePresenter: NSObject {
     private var ruuviTagSensors: [AnyRuuviTagSensor] = []
     private var sensorSettings: [SensorSettings] = []
     private var activeMenu: CardsMenuType = .measurement
-
     private var graphGattSyncInProgress: Bool = false
-
     private var isBluetoothPermissionGranted: Bool {
         CBCentralManager.authorization == .allowedAlways
     }
 
-    private var sensorOrderChangeToken: NSObjectProtocol?
-
     // MARK: Observations
+    private var sensorOrderChangeToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
 
     init(
@@ -152,16 +149,17 @@ extension CardsBasePresenter: CardsBaseViewOutput {
             .configure(
                 with: snapshots,
                 snapshot: snapshot,
-                sensor: currentSensor()
+                sensor: currentSensor(),
+                settings: currentSensorSettings()
             )
 
         graphPresenter?
             .configure(
                 with: snapshots,
                 snapshot: snapshot,
-                sensor: currentSensor()
+                sensor: currentSensor(),
+                settings: currentSensorSettings()
             )
-        graphPresenter?.configure(sensorSettings: currentSensorSettings())
     }
 
     func viewDidChangeTab(_ tab: CardsMenuType) {
@@ -173,6 +171,13 @@ extension CardsBasePresenter: CardsBaseViewOutput {
         case .alerts, .settings:
             viewDidRequestToShowSettings(for: snapshot, tab: tab)
         }
+    }
+
+    func viewDidScrollToGraph(for measurement: MeasurementType) {
+        graphPresenter?.start()
+        graphPresenter?.scroll(to: measurement)
+        view?.showContentsForTab(.graph)
+        activeMenu = .graph
     }
 
     func viewDidRequestNavigateToSnapshotIndex(_ index: Int) {
@@ -308,6 +313,21 @@ extension CardsBasePresenter: CardsMeasurementPresenterOutput {
             break
         }
     }
+
+    func showMeasurementDetails(
+        for indicator: RuuviTagCardSnapshotIndicatorData,
+        snapshot: RuuviTagCardSnapshot,
+        sensor: RuuviTagSensor,
+        settings: SensorSettings?,
+        presenter: CardsMeasurementPresenter
+    ) {
+        view?.showMeasurementDetails(
+            for: indicator,
+            snapshot: snapshot,
+            sensor: sensor,
+            settings: settings
+        )
+    }
 }
 
 // MARK: CardsGraphPresenterOutput
@@ -415,16 +435,17 @@ extension CardsBasePresenter: RuuviTagServiceCoordinatorObserver {
                     .configure(
                         with: snapshots,
                         snapshot: snapshot,
-                        sensor: currentSensor()
+                        sensor: currentSensor(),
+                        settings: currentSensorSettings()
                     )
 
                 graphPresenter?
                     .configure(
                         with: snapshots,
                         snapshot: snapshot,
-                        sensor: currentSensor()
+                        sensor: currentSensor(),
+                        settings: currentSensorSettings()
                     )
-                graphPresenter?.configure(sensorSettings: currentSensorSettings())
 
                 switch reason {
                 case .reorder, .delete:
@@ -519,22 +540,26 @@ private extension CardsBasePresenter {
         measurementPresenter?
             .configure(
                 with: snapshot,
-                sensor: currentSensor()
+                sensor: currentSensor(),
+                settings: currentSensorSettings()
             )
         graphPresenter?
             .configure(
                 with: snapshot,
-                sensor: currentSensor()
+                sensor: currentSensor(),
+                settings: currentSensorSettings()
             )
         alertsPresenter?
             .configure(
                 with: snapshot,
-                sensor: currentSensor()
+                sensor: currentSensor(),
+                settings: currentSensorSettings()
             )
         settingsPresenter?
             .configure(
                 with: snapshot,
-                sensor: currentSensor()
+                sensor: currentSensor(),
+                settings: currentSensorSettings()
             )
     }
 

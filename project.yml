@@ -91,7 +91,7 @@ packages:
     version: 0.6.9
   DGCharts:
     url: https://github.com/ruuvi/Charts
-    from: 5.1.8
+    from: 5.2.0
   LightRoute:
     url: https://github.com/rinat-enikeev/LightRoute
     from: 2.2.2
