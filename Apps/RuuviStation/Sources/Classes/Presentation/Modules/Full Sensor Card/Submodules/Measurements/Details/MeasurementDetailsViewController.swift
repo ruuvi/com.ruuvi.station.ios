@@ -133,7 +133,7 @@ final class MeasurementDetailsViewController: UIViewController {
     }()
     private lazy var graphViewOverlay: UIView = {
         let view = UIView()
-        view.backgroundColor = .white.withAlphaComponent(0.01)
+        view.backgroundColor = .clear
         view.isUserInteractionEnabled = true
         view.addGestureRecognizer(
             UITapGestureRecognizer(target: self, action: #selector(handleGraphTap))
