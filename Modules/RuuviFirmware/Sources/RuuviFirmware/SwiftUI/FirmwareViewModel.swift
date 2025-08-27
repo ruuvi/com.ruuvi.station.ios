@@ -34,7 +34,6 @@ final class FirmwareViewModel: ObservableObject {
             feedbacks: [
                 whenLoading(),
                 whenServing(),
-                whenReading(),
                 whenDownloading(),
                 whenListening(),
                 whenReadyToUpdate(),
@@ -105,28 +104,6 @@ extension FirmwareViewModel {
                     .catch { _ in Just(Event.onServed(nil)) }
                     .eraseToAnyPublisher()
             }
-        }
-    }
-
-    func whenReading() -> Feedback<State, Event> {
-        Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case let .reading(latestRelease, currentRelease) = state,
-                  let sSelf = self
-            else {
-                return Empty().eraseToAnyPublisher()
-            }
-            return sSelf.interactor.read(release: latestRelease)
-                .receive(on: RunLoop.main)
-                .map { tuple in
-                    Event.onRead(
-                        latestRelease,
-                        currentRelease,
-                        appUrl: tuple.appUrl,
-                        fullUrl: tuple.fullUrl
-                    )
-                }
-                .catch { error in Just(Event.onDidFailReading(latestRelease, currentRelease, error)) }
-                .eraseToAnyPublisher()
         }
     }
 
@@ -242,7 +219,6 @@ extension FirmwareViewModel {
         case checking(GitHubRelease, CurrentRelease?)
         case noNeedToUpgrade(GitHubRelease, CurrentRelease?)
         case isAbleToUpgrade(GitHubRelease, CurrentRelease?)
-        case reading(GitHubRelease, CurrentRelease?)
         case downloading(GitHubRelease, CurrentRelease?)
         case listening(
             GitHubRelease,
@@ -275,12 +251,6 @@ extension FirmwareViewModel {
         case onServed(CurrentRelease?)
         case onLoadedAndServed(GitHubRelease, CurrentRelease?)
         case onStartUpgrade(GitHubRelease, CurrentRelease?)
-        case onRead(
-            GitHubRelease,
-            CurrentRelease?,
-            appUrl: URL,
-            fullUrl: URL
-        )
         case onDidFailReading(GitHubRelease, CurrentRelease?, Error)
         case onDownloading(GitHubRelease, CurrentRelease?, Double)
         case onDownloaded(
@@ -358,21 +328,7 @@ extension FirmwareViewModel {
         case .noNeedToUpgrade:
             state
         case let .isAbleToUpgrade(latestRelease, currentRelease):
-            .reading(latestRelease, currentRelease)
-        case .reading:
-            switch event {
-            case let .onRead(latestRelease, currentRelease, appUrl, fullUrl):
-                .listening(
-                    latestRelease,
-                    currentRelease,
-                    appUrl: appUrl,
-                    fullUrl: fullUrl
-                )
-            case let .onDidFailReading(latestRelease, currentRelease, _):
-                .downloading(latestRelease, currentRelease)
-            default:
-                state
-            }
+            .downloading(latestRelease, currentRelease)
         case .downloading:
             switch event {
             case let .onDownloaded(

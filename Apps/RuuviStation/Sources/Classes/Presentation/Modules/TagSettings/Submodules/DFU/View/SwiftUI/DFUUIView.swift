@@ -252,10 +252,10 @@ struct DFUUIView: View {
             }
             .padding()
             .eraseToAnyView()
-        case .reading:
-            return VStack {
-                Spinner(isAnimating: true, style: .medium).eraseToAnyView()
-            }.eraseToAnyView()
+//        case .reading:
+//            return VStack {
+//                Spinner(isAnimating: true, style: .medium).eraseToAnyView()
+//            }.eraseToAnyView()
         case .downloading:
             return VStack(alignment: .center, spacing: 16) {
                 Text(texts.downloadingTitle)

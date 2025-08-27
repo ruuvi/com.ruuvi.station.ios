@@ -7,7 +7,6 @@ public enum FirmwareRepositoryError: Error {
 }
 
 public protocol FirmwareRepository {
-    func read(name: String) -> Future<URL, Error>
     func save(name: String, fileUrl: URL) throws -> URL
 }
 
@@ -16,23 +15,6 @@ public final class FirmwareRepositoryImpl: FirmwareRepository {
     private var isFwDirCreated = false
 
     public init() {}
-
-    public func read(name: String) -> Future<URL, Error> {
-        Future { [weak self] promise in
-            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-                do {
-                    if let dstUrl = try self?.getFirmwareDirectory().appendingPathComponent(name),
-                       FileManager.default.fileExists(atPath: dstUrl.path) {
-                        promise(.success(dstUrl))
-                    } else {
-                        promise(.failure(FirmwareRepositoryError.fileNotFound))
-                    }
-                } catch {
-                    promise(.failure(error))
-                }
-            }
-        }
-    }
 
     public func save(name: String, fileUrl: URL) throws -> URL {
         let dstUrl = try getFirmwareDirectory().appendingPathComponent(name)

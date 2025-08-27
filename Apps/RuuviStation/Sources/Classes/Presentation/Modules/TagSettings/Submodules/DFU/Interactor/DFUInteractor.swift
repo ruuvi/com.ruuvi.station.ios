@@ -83,43 +83,6 @@ extension DFUInteractor: DFUInteractorInput {
         }
     }
 
-    func read(release: LatestRelease) -> AnyPublisher<(appUrl: URL, fullUrl: URL), Error> {
-        switch deviceType {
-        case .ruuviTag:
-            guard let fullName = release.defaultFullZipName,
-                  let appName = release.defaultAppZipName else {
-                return Fail<(appUrl: URL, fullUrl: URL), Error>(
-                    error: DFUError.failedToGetFirmwareName
-                )
-                .eraseToAnyPublisher()
-            }
-            let app = firmwareRepository.read(
-                name: appName
-            )
-            let full = firmwareRepository.read(
-                name: fullName
-            )
-            return app.combineLatest(full).map {( appUrl: $0, fullUrl: $1 )}
-                .eraseToAnyPublisher()
-
-        case .ruuviAir:
-            guard let asset = release.assets.first else {
-                return Fail<( appUrl: URL, fullUrl: URL), Error>(
-                    error: DFUError.failedToGetFirmwareName
-                )
-                .eraseToAnyPublisher()
-            }
-            return firmwareRepository
-                .read(
-                    name: asset.name
-                )
-                .map {
-                    url in (appUrl: url, fullUrl: url)
-                }
-                .eraseToAnyPublisher()
-        }
-    }
-
     func download(release: LatestRelease) -> AnyPublisher<FirmwareDownloadResponse, Error> {
         switch deviceType {
         case .ruuviTag:

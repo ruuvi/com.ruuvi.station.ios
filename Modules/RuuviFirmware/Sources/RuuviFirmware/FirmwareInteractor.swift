@@ -112,28 +112,6 @@ final class FirmwareInteractor {
         }
     }
 
-    func read(release: GitHubRelease) -> AnyPublisher<(appUrl: URL, fullUrl: URL), Error> {
-        guard let fullName = release.defaultFullZipName
-        else {
-            return Fail<(appUrl: URL, fullUrl: URL), Error>(
-                error: FirmwareError.failedToGetFirmwareName
-            ).eraseToAnyPublisher()
-        }
-        guard let appName = release.defaultAppZipName
-        else {
-            return Fail<(appUrl: URL, fullUrl: URL), Error>(
-                error: FirmwareError.failedToGetFirmwareName
-            ).eraseToAnyPublisher()
-        }
-        let app = firmwareRepository.read(name: appName)
-        let full = firmwareRepository.read(name: fullName)
-        return app
-            .combineLatest(full)
-            .map { app, full in
-                (appUrl: app, fullUrl: full)
-            }.eraseToAnyPublisher()
-    }
-
     func download(release: GitHubRelease) -> AnyPublisher<FirmwareDownloadResponse, Error> {
         guard let fullName = release.defaultFullZipName,
               let fullUrl = release.defaultFullZipUrl
