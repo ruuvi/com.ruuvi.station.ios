@@ -75,7 +75,6 @@ final class DFUViewModel: ObservableObject {
             feedbacks: [
                 whenLoading(),
                 whenServing(),
-                whenReading(),
                 whenDownloading(),
                 whenListening(),
                 whenReadyToUpdate(),
@@ -187,7 +186,6 @@ extension DFUViewModel {
         case checking(LatestRelease, CurrentRelease?)
         case noNeedToUpgrade(LatestRelease, CurrentRelease?)
         case isAbleToUpgrade(LatestRelease, CurrentRelease?)
-        case reading(LatestRelease, CurrentRelease?)
         case downloading(LatestRelease, CurrentRelease?)
         case listening(
             LatestRelease,
@@ -222,12 +220,6 @@ extension DFUViewModel {
         case onServed(CurrentRelease?)
         case onLoadedAndServed(LatestRelease, CurrentRelease?)
         case onStartUpgrade(LatestRelease, CurrentRelease?)
-        case onRead(
-            LatestRelease,
-            CurrentRelease?,
-            appUrl: URL,
-            fullUrl: URL
-        )
         case onDidFailReading(LatestRelease, CurrentRelease?, Error)
         case onDownloading(LatestRelease, CurrentRelease?, Double)
         case onDownloaded(
@@ -306,21 +298,7 @@ extension DFUViewModel {
         case .noNeedToUpgrade:
             state
         case let .isAbleToUpgrade(latestRelease, currentRelease):
-            .reading(latestRelease, currentRelease)
-        case .reading:
-            switch event {
-            case let .onRead(latestRelease, currentRelease, appUrl, fullUrl):
-                .listening(
-                    latestRelease,
-                    currentRelease,
-                    appUrl: appUrl,
-                    fullUrl: fullUrl
-                )
-            case let .onDidFailReading(latestRelease, currentRelease, _):
-                .downloading(latestRelease, currentRelease)
-            default:
-                state
-            }
+            .downloading(latestRelease, currentRelease)
         case .downloading:
             switch event {
             case let .onDownloaded(
@@ -467,28 +445,6 @@ extension DFUViewModel {
         }
     }
 
-    func whenReading() -> Feedback<State, Event> {
-        Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case let .reading(latestRelease, currentRelease) = state,
-                  let sSelf = self
-            else {
-                return Empty().eraseToAnyPublisher()
-            }
-            return sSelf.interactor.read(release: latestRelease)
-                .receive(on: RunLoop.main)
-                .map { tuple in
-                    Event.onRead(
-                        latestRelease,
-                        currentRelease,
-                        appUrl: tuple.appUrl,
-                        fullUrl: tuple.fullUrl
-                    )
-                }
-                .catch { error in Just(Event.onDidFailReading(latestRelease, currentRelease, error)) }
-                .eraseToAnyPublisher()
-        }
-    }
-
     func whenServing() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
             guard case .serving = state, let sSelf = self
@@ -545,6 +501,20 @@ extension DFUViewModel {
             else {
                 return Empty().eraseToAnyPublisher()
             }
+
+            let firmwareType = RuuviFirmwareVersion.firmwareVersion(
+                from: sSelf.ruuviTag.version
+            )
+
+            // It does not make sense to wait for E1/V6 since they can take several
+            // seconds to boot and we should not hold connection until then.
+            let skipCheckingCurrentRelease = firmwareType == .e1 || firmwareType == .v6
+            if skipCheckingCurrentRelease {
+                return Just(
+                    Event.onServedAfterUpdate(latestRelease, nil)
+                ).eraseToAnyPublisher()
+            }
+
             return sSelf.interactor.serveCurrentRelease(for: sSelf.ruuviTag)
                 .receive(on: RunLoop.main)
                 .map { currentRelease in
@@ -563,6 +533,20 @@ extension DFUViewModel {
             else {
                 return Empty().eraseToAnyPublisher()
             }
+
+            let firmwareType = RuuviFirmwareVersion.firmwareVersion(
+                from: sSelf.ruuviTag.version
+            )
+
+            // It does not make sense to wait for E1/V6 since they can take several
+            // seconds to boot and we should not hold connection until then.
+            let skipCheckingCurrentRelease = firmwareType == .e1 || firmwareType == .v6
+            if skipCheckingCurrentRelease {
+                return Just(
+                    Event.onServedAfterUpdate(latestRelease, nil)
+                ).eraseToAnyPublisher()
+            }
+
             return sSelf.interactor.serveCurrentRelease(for: sSelf.ruuviTag)
                 .receive(on: RunLoop.main)
                 .map { currentRelease in

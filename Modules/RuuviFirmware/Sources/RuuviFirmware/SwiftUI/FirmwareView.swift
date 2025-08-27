@@ -209,10 +209,6 @@ struct FirmwareView: View {
             )
             .padding()
             .eraseToAnyView()
-        case .reading:
-            VStack {
-                Spinner(isAnimating: true, style: .medium).eraseToAnyView()
-            }.eraseToAnyView()
         case .downloading:
             VStack(alignment: .center, spacing: 16) {
                 Text(texts.downloadingTitle)
