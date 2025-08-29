@@ -5,6 +5,11 @@ import RuuviOntology
 import RuuviService
 import UIKit
 
+enum TagChartsSource {
+    case cards
+    case mesurementDetails
+}
+
 protocol TagChartsViewInternalDelegate: NSObjectProtocol {
     func chartDidTranslate(_ chartView: TagChartsViewInternal)
     func chartValueDidSelect(
@@ -24,8 +29,16 @@ class TagChartsViewInternal: LineChartView {
     // MARK: - Private
     private lazy var markerView = TagChartsMarkerView()
     private var settings: RuuviLocalSettings!
+    private var source: TagChartsSource = .cards
 
     // MARK: - LifeCycle
+    init(source: TagChartsSource) {
+        self.source = source
+        super.init(frame: .zero)
+        delegate = self
+        configure()
+        localize()
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -52,7 +65,8 @@ class TagChartsViewInternal: LineChartView {
 
         xAxis.labelPosition = .bottom
         xAxis.labelFont = .Muli(.regular, size: UIDevice.isTablet() ? 12 : 10)
-        xAxis.labelTextColor = UIColor.white
+        xAxis.labelTextColor =
+            (source == .mesurementDetails) ? RuuviColor.dashboardIndicator.color : UIColor.white
         xAxis.drawAxisLineEnabled = true
         xAxis.drawGridLinesEnabled = true
         xAxis.gridColor = xAxis.gridColor.withAlphaComponent(0.4)
@@ -66,7 +80,8 @@ class TagChartsViewInternal: LineChartView {
         leftAxis.setLabelCount(6, force: false)
         leftAxis.drawGridLinesEnabled = true
         leftAxis.gridColor = leftAxis.gridColor.withAlphaComponent(0.4)
-        leftAxis.labelTextColor = UIColor.white
+        leftAxis.labelTextColor =
+            (source == .mesurementDetails) ? RuuviColor.dashboardIndicator.color : UIColor.white
         leftAxis.minWidth = UIDevice.isTablet() ? 70.0 : 44.0
         leftAxis.maxWidth = UIDevice.isTablet() ? 70.0 : 44.0
         leftAxis.xOffset = 6

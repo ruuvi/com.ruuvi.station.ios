@@ -82,7 +82,8 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
 
     func configure(
         withTag ruuviTag: AnyRuuviTagSensor,
-        andSettings settings: SensorSettings?
+        andSettings settings: SensorSettings?,
+        syncFromCloud: Bool
     ) {
         ruuviTagSensor = ruuviTag
         sensorSettings = settings
@@ -90,7 +91,10 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
         lastMeasurementRecord = nil
         restartScheduler()
         fetchLast()
-        syncFullHistory(for: ruuviTag)
+
+        if syncFromCloud {
+            syncFullHistory(for: ruuviTag)
+        }
 
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             self?.fetchPoints { [weak self] in

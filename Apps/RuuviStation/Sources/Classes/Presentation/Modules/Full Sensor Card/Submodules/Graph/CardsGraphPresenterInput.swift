@@ -9,11 +9,12 @@ enum GraphHistoryAbortSyncSource {
 }
 
 protocol CardsGraphPresenterInput: CardsPresenterInput {
-    func configure(sensorSettings: SensorSettings?)
+    func start(shouldSyncFromCloud: Bool)
     func configure(output: CardsGraphPresenterOutput?)
+    func scroll(to measurementType: MeasurementType)
     func showAbortSyncConfirmationDialog(
         for snapshot: RuuviTagCardSnapshot,
         from source: GraphHistoryAbortSyncSource
     )
-    func reloadChartsData()
+    func reloadChartsData(shouldSyncFromCloud: Bool)
 }

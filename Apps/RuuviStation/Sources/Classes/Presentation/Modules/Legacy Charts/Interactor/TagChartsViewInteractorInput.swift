@@ -8,7 +8,8 @@ protocol TagChartsViewInteractorInput: AnyObject {
     var lastMeasurement: RuuviMeasurement? { get }
     func configure(
         withTag ruuviTag: AnyRuuviTagSensor,
-        andSettings settings: SensorSettings?
+        andSettings settings: SensorSettings?,
+        syncFromCloud: Bool
     )
     func updateSensorSettings(settings: SensorSettings?)
     func restartObservingTags()

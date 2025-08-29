@@ -17,4 +17,10 @@ protocol CardsBaseViewInput: AnyObject {
     func showKeepConnectionDialogSettings(for snapshot: RuuviTagCardSnapshot)
     func showFirmwareUpdateDialog(for snapshot: RuuviTagCardSnapshot)
     func showFirmwareDismissConfirmationUpdateDialog(for snapshot: RuuviTagCardSnapshot)
+    func showMeasurementDetails(
+        for indicator: RuuviTagCardSnapshotIndicatorData,
+        snapshot: RuuviTagCardSnapshot,
+        sensor: RuuviTagSensor,
+        settings: SensorSettings?
+    )
 }

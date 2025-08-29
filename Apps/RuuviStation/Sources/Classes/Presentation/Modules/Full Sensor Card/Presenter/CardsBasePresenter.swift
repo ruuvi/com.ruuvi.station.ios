@@ -36,16 +36,13 @@ class CardsBasePresenter: NSObject {
     private var ruuviTagSensors: [AnyRuuviTagSensor] = []
     private var sensorSettings: [SensorSettings] = []
     private var activeMenu: CardsMenuType = .measurement
-
     private var graphGattSyncInProgress: Bool = false
-
     private var isBluetoothPermissionGranted: Bool {
         CBCentralManager.authorization == .allowedAlways
     }
 
-    private var sensorOrderChangeToken: NSObjectProtocol?
-
     // MARK: Observations
+    private var sensorOrderChangeToken: NSObjectProtocol?
     private var stateToken: ObservationToken?
 
     init(
@@ -139,7 +136,9 @@ extension CardsBasePresenter: CardsBaseViewOutput {
         if activeMenu == .graph {
             // If graph is active, we need to reconfigure the graph presenter
             // to ensure it has the latest data.
-            graphPresenter?.reloadChartsData()
+            graphPresenter?.reloadChartsData(
+                shouldSyncFromCloud: true
+            )
         }
     }
 
@@ -152,16 +151,17 @@ extension CardsBasePresenter: CardsBaseViewOutput {
             .configure(
                 with: snapshots,
                 snapshot: snapshot,
-                sensor: currentSensor()
+                sensor: currentSensor(),
+                settings: currentSensorSettings()
             )
 
         graphPresenter?
             .configure(
                 with: snapshots,
                 snapshot: snapshot,
-                sensor: currentSensor()
+                sensor: currentSensor(),
+                settings: currentSensorSettings()
             )
-        graphPresenter?.configure(sensorSettings: currentSensorSettings())
     }
 
     func viewDidChangeTab(_ tab: CardsMenuType) {
@@ -173,6 +173,13 @@ extension CardsBasePresenter: CardsBaseViewOutput {
         case .alerts, .settings:
             viewDidRequestToShowSettings(for: snapshot, tab: tab)
         }
+    }
+
+    func viewDidScrollToGraph(for measurement: MeasurementType) {
+        graphPresenter?.start(shouldSyncFromCloud: false)
+        graphPresenter?.scroll(to: measurement)
+        view?.showContentsForTab(.graph)
+        activeMenu = .graph
     }
 
     func viewDidRequestNavigateToSnapshotIndex(_ index: Int) {
@@ -236,7 +243,7 @@ extension CardsBasePresenter: CardsBaseViewOutput {
         if let luid = snapshot.identifierData.luid {
             connectionPersistence.setKeepConnection(true, for: luid)
             settings.setKeepConnectionDialogWasShown(true, for: luid)
-            graphPresenter?.start()
+            graphPresenter?.start(shouldSyncFromCloud: true)
             view?.showContentsForTab(.graph)
             activeMenu = .graph
         } else {
@@ -247,7 +254,7 @@ extension CardsBasePresenter: CardsBaseViewOutput {
     func viewDidDismissKeepConnectionDialogChart(for snapshot: RuuviTagCardSnapshot) {
         if let luid = snapshot.identifierData.luid {
             settings.setKeepConnectionDialogWasShown(true, for: luid)
-            graphPresenter?.start()
+            graphPresenter?.start(shouldSyncFromCloud: true)
             view?.showContentsForTab(.graph)
             activeMenu = .graph
         } else {
@@ -307,6 +314,21 @@ extension CardsBasePresenter: CardsMeasurementPresenterOutput {
         default:
             break
         }
+    }
+
+    func showMeasurementDetails(
+        for indicator: RuuviTagCardSnapshotIndicatorData,
+        snapshot: RuuviTagCardSnapshot,
+        sensor: RuuviTagSensor,
+        settings: SensorSettings?,
+        presenter: CardsMeasurementPresenter
+    ) {
+        view?.showMeasurementDetails(
+            for: indicator,
+            snapshot: snapshot,
+            sensor: sensor,
+            settings: settings
+        )
     }
 }
 
@@ -415,16 +437,17 @@ extension CardsBasePresenter: RuuviTagServiceCoordinatorObserver {
                     .configure(
                         with: snapshots,
                         snapshot: snapshot,
-                        sensor: currentSensor()
+                        sensor: currentSensor(),
+                        settings: currentSensorSettings()
                     )
 
                 graphPresenter?
                     .configure(
                         with: snapshots,
                         snapshot: snapshot,
-                        sensor: currentSensor()
+                        sensor: currentSensor(),
+                        settings: currentSensorSettings()
                     )
-                graphPresenter?.configure(sensorSettings: currentSensorSettings())
 
                 switch reason {
                 case .reorder, .delete:
@@ -432,7 +455,7 @@ extension CardsBasePresenter: RuuviTagServiceCoordinatorObserver {
                     measurementPresenter?.start()
                     measurementPresenter?
                         .scroll(to: currentSnapshotIndex(), animated: false)
-                    graphPresenter?.start()
+                    graphPresenter?.start(shouldSyncFromCloud: true)
                 default:
                     break
                 }
@@ -519,22 +542,26 @@ private extension CardsBasePresenter {
         measurementPresenter?
             .configure(
                 with: snapshot,
-                sensor: currentSensor()
+                sensor: currentSensor(),
+                settings: currentSensorSettings()
             )
         graphPresenter?
             .configure(
                 with: snapshot,
-                sensor: currentSensor()
+                sensor: currentSensor(),
+                settings: currentSensorSettings()
             )
         alertsPresenter?
             .configure(
                 with: snapshot,
-                sensor: currentSensor()
+                sensor: currentSensor(),
+                settings: currentSensorSettings()
             )
         settingsPresenter?
             .configure(
                 with: snapshot,
-                sensor: currentSensor()
+                sensor: currentSensor(),
+                settings: currentSensorSettings()
             )
     }
 
@@ -567,14 +594,14 @@ private extension CardsBasePresenter {
                 || isNotConnectable
                 || isNotOwner
                 || cloudModeBypass {
-                graphPresenter?.start()
+                graphPresenter?.start(shouldSyncFromCloud: true)
                 view?.showContentsForTab(tab)
                 activeMenu = tab
             } else {
                 view?.showKeepConnectionDialogChart(for: snapshot)
             }
         } else if snapshot.identifierData.mac != nil {
-            graphPresenter?.start()
+            graphPresenter?.start(shouldSyncFromCloud: true)
             view?.showContentsForTab(tab)
             activeMenu = tab
         } else {

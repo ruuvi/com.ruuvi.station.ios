@@ -8,6 +8,7 @@ class CardsMeasurementPresenter: NSObject {
     private var snapshots: [RuuviTagCardSnapshot] = []
     private var snapshot: RuuviTagCardSnapshot?
     private var sensor: AnyRuuviTagSensor?
+    private var settings: SensorSettings?
 }
 
 // MARK: CardsMeasurementPresenterInput
@@ -15,10 +16,11 @@ extension CardsMeasurementPresenter: CardsMeasurementPresenterInput {
     func configure(
         with snapshots: [RuuviTagCardSnapshot],
         snapshot: RuuviTagCardSnapshot,
-        sensor: AnyRuuviTagSensor?
+        sensor: AnyRuuviTagSensor?,
+        settings: SensorSettings?
     ) {
         self.snapshots = snapshots
-        configure(with: snapshot, sensor: sensor)
+        configure(with: snapshot, sensor: sensor, settings: settings)
     }
 
     func scroll(to index: Int, animated: Bool) {
@@ -27,10 +29,12 @@ extension CardsMeasurementPresenter: CardsMeasurementPresenterInput {
 
     func configure(
         with snapshot: RuuviTagCardSnapshot,
-        sensor: AnyRuuviTagSensor?
+        sensor: AnyRuuviTagSensor?,
+        settings: SensorSettings?
     ) {
         self.snapshot = snapshot
         self.sensor = sensor
+        self.settings = settings
     }
 
     func configure(
@@ -65,5 +69,20 @@ extension CardsMeasurementPresenter: CardsMeasurementViewOutput {
         sender: CardsMeasurementViewController
     ) {
         output?.measurementPresenter(self, didNavigateToIndex: index)
+    }
+
+    func viewDidTapMeasurement(
+        for indicator: RuuviTagCardSnapshotIndicatorData,
+        snapshot: RuuviTagCardSnapshot
+    ) {
+        if let sensor = sensor {
+            output?.showMeasurementDetails(
+                for: indicator,
+                snapshot: snapshot,
+                sensor: sensor,
+                settings: settings,
+                presenter: self
+            )
+        }
     }
 }

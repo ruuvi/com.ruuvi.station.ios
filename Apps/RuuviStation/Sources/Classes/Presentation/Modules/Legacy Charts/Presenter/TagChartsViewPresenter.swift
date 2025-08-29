@@ -176,7 +176,12 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
         startObservingBluetoothState()
         startListeningToAlertStatus()
         tryToShowSwipeUpHint()
-        interactor.configure(withTag: ruuviTag, andSettings: sensorSettings)
+        interactor
+            .configure(
+                withTag: ruuviTag,
+                andSettings: sensorSettings,
+                syncFromCloud: true
+            )
         interactor.restartObservingTags()
         stopGattSync()
     }
@@ -370,7 +375,12 @@ extension TagChartsViewPresenter {
         startListeningToAlertStatus()
         startObservingNetworkSyncNotification(for: ruuviTag)
         tryToShowSwipeUpHint()
-        interactor.configure(withTag: ruuviTag, andSettings: sensorSettings)
+        interactor
+            .configure(
+                withTag: ruuviTag,
+                andSettings: sensorSettings,
+                syncFromCloud: true
+            )
         interactor.restartObservingTags()
     }
 
@@ -386,7 +396,12 @@ extension TagChartsViewPresenter {
     }
 
     @objc private func reloadChartsData() {
-        interactor.configure(withTag: ruuviTag, andSettings: sensorSettings)
+        interactor
+            .configure(
+                withTag: ruuviTag,
+                andSettings: sensorSettings,
+                syncFromCloud: true
+            )
         interactor.restartObservingTags()
     }
 

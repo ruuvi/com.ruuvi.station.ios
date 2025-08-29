@@ -149,6 +149,7 @@ class CardsGraphViewController: UIViewController {
     }()
 
     private var chartViews: [TagChartsView] = []
+    private var pendingScrollToMeasurement: MeasurementType?
 
     lazy var temperatureChartView = TagChartsView()
     lazy var humidityChartView = TagChartsView()
@@ -216,6 +217,7 @@ class CardsGraphViewController: UIViewController {
     private let historyHoursOptions: [Int] = [1, 2, 3, 6, 12]
     private let minimumHistoryLimit: Int = 1 // Day
     private let maximumHistoryLimit: Int = 10 // Days
+    private let highlightAnimationDelay: TimeInterval = 0.3
 
     private var chartViewData: [TagChartViewData] = []
     private var settings: RuuviLocalSettings!
@@ -724,6 +726,35 @@ extension CardsGraphViewController: CardsGraphViewInput {
         updateChartsCollectionConstaints(from: from)
     }
 
+    func resetScrollPosition() {
+        scrollView.setContentOffset(.zero, animated: false)
+    }
+
+    func scroll(to measurementType: MeasurementType) {
+        guard !chartModules.isEmpty else {
+            pendingScrollToMeasurement = measurementType
+            return
+        }
+
+        pendingScrollToMeasurement = nil
+
+        guard let targetView = getChartView(for: measurementType),
+              !targetView.isHidden else {
+            return
+        }
+
+        ensureLayoutComplete()
+
+        let targetFrame = targetView.convert(targetView.bounds, to: scrollView)
+        let visibleRect = scrollView.visibleRect
+
+        if visibleRect.contains(targetFrame) {
+            highlightTarget(targetView)
+        } else {
+            scrollToTarget(targetFrame, measurementType: measurementType, targetView: targetView)
+        }
+    }
+
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     func setChartViewData(
         from chartViewData: [TagChartViewData],
@@ -824,6 +855,14 @@ extension CardsGraphViewController: CardsGraphViewInput {
                 )
             default:
                 break
+            }
+        }
+
+        DispatchQueue.main.async { [weak self] in
+            self?.view.layoutIfNeeded()
+            if let m = self?.pendingScrollToMeasurement {
+                self?.pendingScrollToMeasurement = nil
+                self?.scroll(to: m)
             }
         }
     }
@@ -1352,6 +1391,15 @@ extension CardsGraphViewController {
                 break
             }
         }
+
+        DispatchQueue.main.async { [weak self] in
+            self?.view.layoutIfNeeded()
+            self?.scrollView.layoutIfNeeded()
+            if let m = self?.pendingScrollToMeasurement {
+                self?.pendingScrollToMeasurement = nil
+                self?.scroll(to: m)
+            }
+        }
     }
 
     private func getItemHeight(
@@ -1693,6 +1741,133 @@ extension CardsGraphViewController {
         // Compute the average using the trapezoidal rule.
         return totalArea / timeSpan
     }
+
+    private func ensureLayoutComplete() {
+        view.layoutIfNeeded()
+        scrollView.layoutIfNeeded()
+    }
+
+    private func scrollToTarget(
+        _ targetFrame: CGRect,
+        measurementType: MeasurementType,
+        targetView: TagChartsView
+    ) {
+        let newOffset = calculateNewOffset(for: targetFrame)
+        let clampedOffset = clampOffset(newOffset)
+        scrollView.setContentOffset(clampedOffset, animated: false)
+        scheduleHighlightAnimation(for: targetView)
+    }
+
+    private func calculateNewOffset(for targetFrame: CGRect) -> CGPoint {
+        var newOffset = scrollView.contentOffset
+
+        if scrollView.isPagingEnabled {
+            newOffset.y = calculatePageOffset(for: targetFrame)
+        } else {
+            newOffset.y = calculateRegularOffset(for: targetFrame)
+        }
+
+        return newOffset
+    }
+
+    private func calculatePageOffset(for targetFrame: CGRect) -> CGFloat {
+        let pageHeight = scrollView.bounds.height
+        let maxOffset = max(0, scrollView.contentSize.height - pageHeight)
+        let targetPageIndex = floor(targetFrame.minY / pageHeight)
+        return min(targetPageIndex * pageHeight, maxOffset)
+    }
+
+    private func calculateRegularOffset(for targetFrame: CGRect) -> CGFloat {
+        let visibleRect = scrollView.visibleRect
+        let currentOffset = scrollView.contentOffset.y
+
+        if targetFrame.minY < visibleRect.minY {
+            // Target is above - scroll up to show top
+            return targetFrame.minY
+        } else if targetFrame.maxY > visibleRect.maxY {
+            // Target is below - scroll down
+            let idealOffset = targetFrame.maxY - scrollView.bounds.height
+            let maxOffset = scrollView.contentSize.height - scrollView.bounds.height
+            let calculatedOffset = min(idealOffset, maxOffset)
+
+            // If target is taller than visible area, prioritize showing the top
+            return targetFrame.height > scrollView.bounds.height ? targetFrame.minY : calculatedOffset
+        }
+
+        return currentOffset
+    }
+
+    private func clampOffset(_ offset: CGPoint) -> CGPoint {
+        let maxY = scrollView.contentSize.height - scrollView.bounds.height
+        return CGPoint(
+            x: offset.x,
+            y: max(0, min(offset.y, maxY))
+        )
+    }
+
+    private func scheduleHighlightAnimation(for targetView: TagChartsView) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + highlightAnimationDelay) { [weak self] in
+            self?.highlightTarget(targetView)
+        }
+    }
+
+    private func highlightTarget(_ targetView: TagChartsView) {
+        addHighlightAnimation(to: targetView)
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity
+    private func getChartView(for measurementType: MeasurementType) -> TagChartsView? {
+        switch measurementType {
+        case .temperature: return temperatureChartView
+        case .humidity: return humidityChartView
+        case .pressure: return pressureChartView
+        case .aqi: return aqiChartView
+        case .co2: return co2ChartView
+        case .pm25: return pm25ChartView
+        case .voc: return vocChartView
+        case .nox: return noxChartView
+        case .luminosity: return luminosityChartView
+        case .soundInstant: return soundChartView
+        default: return nil
+        }
+    }
+
+    private func addHighlightAnimation(to chartView: TagChartsView) {
+        // Create a highlight overlay
+        let highlightView = UIView()
+        highlightView.backgroundColor = UIColor.white.withAlphaComponent(0.3)
+        highlightView.alpha = 0
+        highlightView.translatesAutoresizingMaskIntoConstraints = false
+
+        chartView.addSubview(highlightView)
+        NSLayoutConstraint.activate([
+            highlightView.topAnchor.constraint(equalTo: chartView.topAnchor),
+            highlightView.leadingAnchor.constraint(equalTo: chartView.leadingAnchor),
+            highlightView.trailingAnchor.constraint(equalTo: chartView.trailingAnchor),
+            highlightView.bottomAnchor.constraint(equalTo: chartView.bottomAnchor),
+        ])
+
+        // Animate the highlight
+        UIView.animate(withDuration: 0.4, animations: {
+            highlightView.alpha = 1
+        }) { _ in
+            UIView.animate(withDuration: 0.3, delay: 0.1, options: [], animations: {
+                highlightView.alpha = 0
+            }) { _ in
+                highlightView.removeFromSuperview()
+            }
+        }
+
+        // Add a subtle scale animation to the chart
+        let originalTransform = chartView.transform
+        UIView.animate(withDuration: 0.15, animations: {
+            chartView.transform = CGAffineTransform(scaleX: 1.02, y: 1.02)
+        }) { _ in
+            UIView.animate(withDuration: 0.15, animations: {
+                chartView.transform = originalTransform
+            })
+        }
+    }
 }
 
 // MARK: - UIScrollViewDelegate
@@ -1738,6 +1913,17 @@ private extension Int {
         default:
             RuuviLocalization.dayX(Float(self))
         }
+    }
+}
+
+private extension UIScrollView {
+    var visibleRect: CGRect {
+        CGRect(
+            x: contentOffset.x,
+            y: contentOffset.y,
+            width: bounds.width,
+            height: bounds.height
+        )
     }
 }
 

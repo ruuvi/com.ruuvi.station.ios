@@ -20,7 +20,7 @@ class TagChartsView: UIView {
 
     // MARK: Private
     private var chartView: TagChartsViewInternal = {
-        let view = TagChartsViewInternal()
+        let view = TagChartsViewInternal(source: .cards)
         return view
     }()
 

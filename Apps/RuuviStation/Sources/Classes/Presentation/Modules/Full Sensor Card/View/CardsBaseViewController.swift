@@ -9,8 +9,59 @@ import RuuviOntology
 /// Base view controller that manages multiple tab view controllers
 final class CardsBaseViewController: UIViewController {
 
+    // MARK: - Constants
+    private enum Constants {
+        enum Layout {
+            static let spaceUntilSecondaryToolbarExtraMargin: CGFloat = 10
+            static let backButtonLeftPadding: CGFloat = -16
+            static let backButtonSize = CGSize(width: 48, height: 48)
+            static let ruuviLogoSize = CGSize(width: 90, height: 22)
+            static let menuBarSize = CGSize(width: 120, height: 0)
+            static let menuBarRightPadding: CGFloat = -6
+            static let secondaryToolbarTopPadding: CGFloat = 2
+            static let arrowButtonTopPadding: CGFloat = 6
+            static let arrowButtonSidePadding: CGFloat = 4
+            static let tagNameLabelPadding = UIEdgeInsets(top: 4, left: 4, bottom: 6, right: 4)
+            static let tabContainerVerticalPadding: CGFloat = 8
+            static let sourceUpdateStackSpacing: CGFloat = 6
+            static let dataSourceIconMaxWidth: CGFloat = 22
+            static let footerStackSpacing: CGFloat = 4
+            static let footerStackHorizontalPadding: CGFloat = 20
+            static let footerStackHeight: CGFloat = 24
+        }
+
+        enum Animation {
+            static let tabTransitionDuration: Double = 0.2
+            static let tabTransitionDelay: Double = 0
+            static let tabTransitionDamping: CGFloat = 0.6
+            static let tabTransitionVelocity: CGFloat = 0.4
+            static let chartBackgroundTransitionDuration: Double = 0.3
+        }
+
+        enum Typography {
+            static let tagNameLabelFontSize: CGFloat = 20
+            static let batteryLabelFontSize: CGFloat = 10
+            static let batteryIconSize: CGFloat = 16
+            static let updatedAtLabelFontSize: CGFloat = 10
+            static let tagNameLabelLines: Int = 2
+            static let updatedAtLabelLines: Int = 0
+        }
+
+        enum Alpha {
+            static let dataSourceIconAlpha: CGFloat = 0.7
+            static let whiteWithAlpha: CGFloat = 0.8
+            static let chartBackgroundVisible: CGFloat = 1
+            static let chartBackgroundHidden: CGFloat = 0
+        }
+    }
+
     // MARK: - Public Properties
     weak var output: CardsBaseViewOutput?
+    var spaceUntilSecondaryToolbar: CGFloat {
+        return view.safeAreaInsets.top +
+            (navigationController?.navigationBar.frame.height ?? 0) +
+            secondaryToolbarView.frame.height + Constants.Layout.spaceUntilSecondaryToolbarExtraMargin
+    }
 
     // MARK: Depenencies
     private let flags: RuuviLocalFlags
@@ -21,6 +72,9 @@ final class CardsBaseViewController: UIViewController {
 
     /// Currently visible tab
     private var activeTab: CardsMenuType
+
+    // MARK: - Details view
+    private var detailsCoordinator: MeasurementDetailsCoordinator?
 
     // MARK: - State
     private var currentSnapshots: [RuuviTagCardSnapshot] = []
@@ -110,8 +164,12 @@ final class CardsBaseViewController: UIViewController {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .center
-        label.numberOfLines = 2
-        label.font = UIFont.Muli(.extraBold, size: 20)
+        label.numberOfLines = Constants.Typography.tagNameLabelLines
+        label.font = UIFont
+            .Muli(
+                .extraBold,
+                size: Constants.Typography.tagNameLabelFontSize
+            )
         return label
     }()
 
@@ -133,19 +191,28 @@ final class CardsBaseViewController: UIViewController {
 
     private lazy var batteryLevelView: BatteryLevelView = {
         let view = BatteryLevelView(
-            fontSize: 10,
-            iconSize: 16
+            fontSize: Constants.Typography.batteryLabelFontSize,
+            iconSize: Constants.Typography.batteryIconSize
         )
-        view.updateTextColor(with: .white.withAlphaComponent(0.8))
+        view
+            .updateTextColor(
+                with: .white.withAlphaComponent(
+                    Constants.Alpha.whiteWithAlpha
+                )
+            )
         return view
     }()
 
     private lazy var updatedAtLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .white.withAlphaComponent(0.8)
+        label.textColor = .white.withAlphaComponent(Constants.Alpha.whiteWithAlpha)
         label.textAlignment = .left
-        label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: 10)
+        label.numberOfLines = Constants.Typography.updatedAtLabelLines
+        label.font = UIFont
+            .Muli(
+                .regular,
+                size: Constants.Typography.updatedAtLabelFontSize
+            )
         return label
     }()
 
@@ -153,8 +220,8 @@ final class CardsBaseViewController: UIViewController {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
         iv.backgroundColor = .clear
-        iv.alpha = 0.7
-        iv.tintColor = .white.withAlphaComponent(0.8)
+        iv.alpha = Constants.Alpha.dataSourceIconAlpha
+        iv.tintColor = .white.withAlphaComponent(Constants.Alpha.whiteWithAlpha)
         return iv
     }()
 
@@ -221,7 +288,7 @@ private extension CardsBaseViewController {
 
         view.addSubview(chartViewBackground)
         chartViewBackground.fillSuperview()
-        chartViewBackground.alpha = 0
+        chartViewBackground.alpha = Constants.Alpha.chartBackgroundHidden
     }
 
     func setUpHeaderView() {
@@ -233,8 +300,8 @@ private extension CardsBaseViewController {
             leading: leftBarButtonView.leadingAnchor,
             bottom: leftBarButtonView.bottomAnchor,
             trailing: nil,
-            padding: .init(top: 0, left: -16, bottom: 0, right: 0),
-            size: .init(width: 48, height: 48)
+            padding: .init(top: 0, left: Constants.Layout.backButtonLeftPadding, bottom: 0, right: 0),
+            size: Constants.Layout.backButtonSize
         )
 
         leftBarButtonView.addSubview(ruuviLogoView)
@@ -244,7 +311,7 @@ private extension CardsBaseViewController {
             bottom: nil,
             trailing: leftBarButtonView.trailingAnchor,
             padding: .init(top: 0, left: 0, bottom: 0, right: 0),
-            size: .init(width: 90, height: 22)
+            size: Constants.Layout.ruuviLogoSize
         )
         ruuviLogoView.centerYInSuperview()
 
@@ -256,8 +323,8 @@ private extension CardsBaseViewController {
                 leading: rightBarButtonView.leadingAnchor,
                 bottom: rightBarButtonView.bottomAnchor,
                 trailing: rightBarButtonView.trailingAnchor,
-                padding: .init(top: 0, left: 0, bottom: 0, right: -6),
-                size: .init(width: 120, height: 0)
+                padding: .init(top: 0, left: 0, bottom: 0, right: Constants.Layout.menuBarRightPadding),
+                size: Constants.Layout.menuBarSize
             )
         menuBarView.onTabChanged = { [weak self] tab in
             self?.handleTabChange(tab)
@@ -280,7 +347,12 @@ private extension CardsBaseViewController {
             leading: view.safeLeftAnchor,
             bottom: nil,
             trailing: view.safeRightAnchor,
-            padding: .init(top: 2, left: 0, bottom: 0, right: 0)
+            padding: .init(
+                top: Constants.Layout.secondaryToolbarTopPadding,
+                left: 0,
+                bottom: 0,
+                right: 0
+            )
         )
 
         secondaryToolbarView.addSubview(cardLeftArrowButton)
@@ -289,7 +361,12 @@ private extension CardsBaseViewController {
             leading: secondaryToolbarView.leadingAnchor,
             bottom: nil,
             trailing: nil,
-            padding: .init(top: 6, left: 4, bottom: 0, right: 0)
+            padding: .init(
+                top: Constants.Layout.arrowButtonTopPadding,
+                left: Constants.Layout.arrowButtonSidePadding,
+                bottom: 0,
+                right: 0
+            )
         )
 
         secondaryToolbarView.addSubview(cardRightArrowButton)
@@ -298,7 +375,12 @@ private extension CardsBaseViewController {
             leading: nil,
             bottom: nil,
             trailing: secondaryToolbarView.trailingAnchor,
-            padding: .init(top: 6, left: 0, bottom: 0, right: 4)
+            padding: .init(
+                top: Constants.Layout.arrowButtonTopPadding,
+                left: 0,
+                bottom: 0,
+                right: Constants.Layout.arrowButtonSidePadding
+            )
         )
 
         secondaryToolbarView.addSubview(ruuviTagNameLabel)
@@ -307,7 +389,7 @@ private extension CardsBaseViewController {
             leading: cardLeftArrowButton.trailingAnchor,
             bottom: secondaryToolbarView.bottomAnchor,
             trailing: cardRightArrowButton.leadingAnchor,
-            padding: .init(top: 4, left: 4, bottom: 6, right: 4)
+            padding: Constants.Layout.tagNameLabelPadding
         )
     }
 
@@ -319,7 +401,12 @@ private extension CardsBaseViewController {
             leading: view.safeLeftAnchor,
             bottom: nil,
             trailing: view.safeRightAnchor,
-            padding: .init(top: 8, left: 0, bottom: 8, right: 0)
+            padding: .init(
+                top: Constants.Layout.tabContainerVerticalPadding,
+                left: 0,
+                bottom: Constants.Layout.tabContainerVerticalPadding,
+                right: 0
+            )
         )
     }
 
@@ -339,11 +426,13 @@ private extension CardsBaseViewController {
             ]
         )
         sourceAndUpdateStack.axis = .horizontal
-        sourceAndUpdateStack.spacing = 6
+        sourceAndUpdateStack.spacing = Constants.Layout.sourceUpdateStackSpacing
         sourceAndUpdateStack.distribution = .fill
 
         dataSourceIconViewWidthConstraint = dataSourceIconView.widthAnchor
-            .constraint(lessThanOrEqualToConstant: 22)
+            .constraint(
+                lessThanOrEqualToConstant: Constants.Layout.dataSourceIconMaxWidth
+            )
         dataSourceIconViewWidthConstraint.isActive = true
 
         let footerStack = UIStackView(
@@ -353,14 +442,22 @@ private extension CardsBaseViewController {
                 batteryLevelView,
             ]
         )
-        footerStack.spacing = 4
+        footerStack.spacing = Constants.Layout.footerStackSpacing
         footerStack.axis = .horizontal
         footerStack.distribution = .fill
 
         footerView.addSubview(footerStack)
-        footerStack.fillSuperview(padding: .init(top: 0, left: 20, bottom: 0, right: 20))
+        footerStack
+            .fillSuperview(
+                padding: .init(
+                    top: 0,
+                    left: Constants.Layout.footerStackHorizontalPadding,
+                    bottom: 0,
+                    right: Constants.Layout.footerStackHorizontalPadding
+                )
+            )
 
-        footerStack.constrainHeight(constant: 24)
+        footerStack.constrainHeight(constant: Constants.Layout.footerStackHeight)
         batteryLevelView.isHidden = true
     }
 
@@ -382,13 +479,13 @@ private extension CardsBaseViewController {
     }
 
     @objc func cardLeftArrowButtonDidTap() {
-        guard currentSnapshotIndex > 0 else { return }
+        guard canNavigateLeft() else { return }
         let newIndex = currentSnapshotIndex - 1
         output?.viewDidRequestNavigateToSnapshotIndex(newIndex)
     }
 
     @objc func cardRightArrowButtonDidTap() {
-        guard currentSnapshotIndex < currentSnapshots.count - 1 else { return }
+        guard canNavigateRight() else { return }
         let newIndex = currentSnapshotIndex + 1
         output?.viewDidRequestNavigateToSnapshotIndex(newIndex)
     }
@@ -417,10 +514,10 @@ private extension CardsBaseViewController {
         guard let selectedVC = tabs[tab] else { return }
 
         UIView.animate(
-            withDuration: 0.2,
-            delay: 0,
-            usingSpringWithDamping: 0.6,
-            initialSpringVelocity: 0.4,
+            withDuration: Constants.Animation.tabTransitionDuration,
+            delay: Constants.Animation.tabTransitionDelay,
+            usingSpringWithDamping: Constants.Animation.tabTransitionDamping,
+            initialSpringVelocity: Constants.Animation.tabTransitionVelocity,
             options: .curveEaseInOut,
             animations: {
             self.tabs.values.forEach { $0.view.alpha = 0 }
@@ -443,6 +540,15 @@ private extension CardsBaseViewController {
             activeTab = tab
             menuBarView.setSelectedTab(tab, animated: true)
         }
+    }
+
+    // MARK: - Navigation Helpers
+    func canNavigateLeft() -> Bool {
+        return currentSnapshotIndex > 0
+    }
+
+    func canNavigateRight() -> Bool {
+        return currentSnapshotIndex < currentSnapshots.count - 1
     }
 
     func updateCurrentSnapshotUI() {
@@ -468,12 +574,15 @@ private extension CardsBaseViewController {
 
         ruuviTagNameLabel.text = currentSnapshot.displayData.name
 
-        let showLeftArrow = currentSnapshotIndex > 0
-        let showRightArrow = currentSnapshotIndex < currentSnapshots.count - 1
+        updateNavigationButtonsVisibility()
+        updateFooter()
+    }
+
+    func updateNavigationButtonsVisibility() {
+        let showLeftArrow = canNavigateLeft()
+        let showRightArrow = canNavigateRight()
         cardLeftArrowButton.isHidden = !showLeftArrow
         cardRightArrowButton.isHidden = !showRightArrow
-
-        updateFooter()
     }
 
     // MARK: - Footer Update Methods
@@ -566,6 +675,29 @@ extension CardsBaseViewController: TimestampUpdateable {
     }
 }
 
+// MARK: - MeasurementDetailsCoordinatorDelegate
+extension CardsBaseViewController: MeasurementDetailsCoordinatorDelegate {
+    func measurementDetailsCoordinatorDidDismiss(
+        _ coordinator: MeasurementDetailsCoordinator
+    ) {
+        detailsCoordinator?.stop()
+        detailsCoordinator = nil
+    }
+
+    func measurementDetailsCoordinatorDidDismissWithGraphTap(
+        for snapshot: RuuviTagCardSnapshot,
+        measurement: MeasurementType,
+        ruuviTag: RuuviTagSensor,
+        _ coordinator: MeasurementDetailsCoordinator
+    ) {
+        detailsCoordinator?.stop()
+        detailsCoordinator = nil
+        output?.viewDidScrollToGraph(for: measurement)
+        activeTab = .graph
+        menuBarView.setSelectedTab(.graph, animated: true, notify: false)
+    }
+}
+
 // MARK: - CardsBaseViewInput
 extension CardsBaseViewController: CardsBaseViewInput {
     func setActiveTab(_ tab: CardsMenuType) {
@@ -576,8 +708,13 @@ extension CardsBaseViewController: CardsBaseViewInput {
         if flags.showRedesignedCardsUIWithoutNewMenu {
             switch tab {
             case .measurement, .graph:
-                UIView.animate(withDuration: 0.3, animations: { [weak self] in
-                    self?.chartViewBackground.alpha = tab == .graph ? 1 : 0
+                UIView
+                    .animate(
+                    withDuration: Constants.Animation.chartBackgroundTransitionDuration,
+                    animations: { [weak self] in
+                    self?.chartViewBackground.alpha = tab == .graph ?
+                        Constants.Alpha.chartBackgroundVisible :
+                            Constants.Alpha.chartBackgroundHidden
                 })
                 showTabViewController(for: tab)
                 activeTab = tab
@@ -697,6 +834,23 @@ extension CardsBaseViewController: CardsBaseViewInput {
             self?.output?.viewDidConfirmFirmwareUpdate(for: snapshot)
         }))
         present(alert, animated: true)
+    }
+
+    func showMeasurementDetails(
+        for indicator: RuuviTagCardSnapshotIndicatorData,
+        snapshot: RuuviTagCardSnapshot,
+        sensor: RuuviTagSensor,
+        settings: SensorSettings?
+    ) {
+        detailsCoordinator = MeasurementDetailsCoordinator(
+            baseViewController: self,
+            for: indicator,
+            snapshot: snapshot,
+            ruuviTagSensor: sensor,
+            sensorSetting: settings,
+            delegate: self
+        )
+        detailsCoordinator?.start()
     }
 }
 

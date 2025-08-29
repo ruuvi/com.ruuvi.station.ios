@@ -41,7 +41,11 @@ final class CardsMenuBarView: UIView {
     }
 
     // MARK: - Public Interface
-    func setSelectedTab(_ tab: CardsMenuType, animated: Bool = true) {
+    func setSelectedTab(
+        _ tab: CardsMenuType,
+        animated: Bool = true,
+        notify: Bool = true
+    ) {
         guard tab != selectedMenu else { return }
         selectedMenu = tab
 
@@ -51,7 +55,9 @@ final class CardsMenuBarView: UIView {
             updateLegacySelection()
         }
 
-        onTabChanged?(tab)
+        if notify {
+            onTabChanged?(tab)
+        }
     }
 
     func getCurrentTab() -> CardsMenuType {
