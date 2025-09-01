@@ -711,86 +711,6 @@ private extension RuuviTagAlertService {
         )
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
-    func createAlertTypeWithBounds(
-        _ alertType: AlertType,
-        config: RuuviTagCardSnapshotAlertConfig
-    ) -> AlertType {
-        switch alertType {
-        case .temperature:
-            return .temperature(
-                lower: config.lowerBound ?? -40,
-                upper: config.upperBound ?? 85
-            )
-        case .relativeHumidity:
-            return .relativeHumidity(
-                lower: (config.lowerBound ?? 0) / 100.0,
-                upper: (config.upperBound ?? 100) / 100.0
-            )
-        case .pressure:
-            return .pressure(
-                lower: config.lowerBound ?? 500,
-                upper: config.upperBound ?? 1155
-            )
-        case .carbonDioxide:
-            return .carbonDioxide(
-                lower: config.lowerBound ?? 350,
-                upper: config.upperBound ?? 2500
-            )
-        case .pMatter1:
-            return .pMatter1(
-                lower: config.lowerBound ?? 0,
-                upper: config.upperBound ?? 250
-            )
-        case .pMatter25:
-            return .pMatter25(
-                lower: config.lowerBound ?? 0,
-                upper: config.upperBound ?? 250
-            )
-        case .pMatter4:
-            return .pMatter4(
-                lower: config.lowerBound ?? 0,
-                upper: config.upperBound ?? 250
-            )
-        case .pMatter10:
-            return .pMatter10(
-                lower: config.lowerBound ?? 0,
-                upper: config.upperBound ?? 250
-            )
-        case .voc:
-            return .voc(
-                lower: config.lowerBound ?? 0,
-                upper: config.upperBound ?? 500
-            )
-        case .nox:
-            return .nox(
-                lower: config.lowerBound ?? 0,
-                upper: config.upperBound ?? 500
-            )
-        case .soundInstant:
-            return .soundInstant(
-                lower: config.lowerBound ?? 0,
-                upper: config.upperBound ?? 127
-            )
-        case .luminosity:
-            return .luminosity(
-                lower: config.lowerBound ?? 0,
-                upper: config.upperBound ?? 10000
-            )
-        case .signal:
-            return .signal(
-                lower: config.lowerBound ?? -105,
-                upper: config.upperBound ?? 0
-            )
-        case .movement:
-            return .movement(last: 0) // Movement doesn't use bounds
-        case .cloudConnection:
-            return .cloudConnection(unseenDuration: config.unseenDuration ?? 900)
-        default:
-            return alertType
-        }
-    }
-
     // MARK: - Service Call Helpers
     // swiftlint:disable:next cyclomatic_complexity
     func setLowerBoundInService(
@@ -876,7 +796,7 @@ private extension RuuviTagAlertService {
         case .pressure: return alertService.lowerPressure(for: physicalSensor)
         case .co2: return alertService.lowerCarbonDioxide(for: physicalSensor)
         case .pm25: return alertService.lowerPM25(for: physicalSensor)
-        case .pm10: return alertService.lowerPM10(for: physicalSensor)
+        case .pm100: return alertService.lowerPM10(for: physicalSensor)
         case .voc: return alertService.lowerVOC(for: physicalSensor)
         case .nox: return alertService.lowerNOX(for: physicalSensor)
         case .soundInstant: return alertService.lowerSoundInstant(for: physicalSensor)
@@ -893,7 +813,7 @@ private extension RuuviTagAlertService {
         case .pressure: return alertService.upperPressure(for: physicalSensor)
         case .co2: return alertService.upperCarbonDioxide(for: physicalSensor)
         case .pm25: return alertService.upperPM25(for: physicalSensor)
-        case .pm10: return alertService.upperPM10(for: physicalSensor)
+        case .pm100: return alertService.upperPM10(for: physicalSensor)
         case .voc: return alertService.upperVOC(for: physicalSensor)
         case .nox: return alertService.upperNOX(for: physicalSensor)
         case .soundInstant: return alertService.upperSoundInstant(for: physicalSensor)
@@ -910,7 +830,7 @@ private extension RuuviTagAlertService {
         case .pressure: return alertService.pressureDescription(for: physicalSensor)
         case .co2: return alertService.carbonDioxideDescription(for: physicalSensor)
         case .pm25: return alertService.pm25Description(for: physicalSensor)
-        case .pm10: return alertService.pm10Description(for: physicalSensor)
+        case .pm100: return alertService.pm10Description(for: physicalSensor)
         case .voc: return alertService.vocDescription(for: physicalSensor)
         case .nox: return alertService.noxDescription(for: physicalSensor)
         case .soundInstant: return alertService.soundInstantDescription(for: physicalSensor)
@@ -919,36 +839,141 @@ private extension RuuviTagAlertService {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func getDefaultLowerBoundValue(for alertType: AlertType) -> Double? {
         switch alertType {
-        case .temperature: return -40
-        case .relativeHumidity: return 0
-        case .pressure: return 500
-        case .carbonDioxide: return 350
-        case .pMatter1, .pMatter25, .pMatter4, .pMatter10: return 0
-        case .voc, .nox: return 0
-        case .soundInstant: return 0
-        case .luminosity: return 0
-        case .signal: return -105
+        case .temperature: return RuuviAlertConstants.Temperature.lowerBound
+        case .relativeHumidity: return RuuviAlertConstants.RelativeHumidity.lowerBound
+        case .pressure: return RuuviAlertConstants.Pressure.lowerBound
+        case .carbonDioxide: return RuuviAlertConstants.CarbonDioxide.lowerBound
+        case .pMatter1,
+             .pMatter25,
+             .pMatter4,
+             .pMatter10: return RuuviAlertConstants.ParticulateMatter.lowerBound
+        case .voc: return RuuviAlertConstants.VOC.lowerBound
+        case .nox: return RuuviAlertConstants.NOX.lowerBound
+        case .soundInstant: return RuuviAlertConstants.Sound.lowerBound
+        case .luminosity: return RuuviAlertConstants.Luminosity.lowerBound
+        case .signal: return RuuviAlertConstants.Signal.lowerBound
         default: return nil
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     func getDefaultUpperBoundValue(for alertType: AlertType) -> Double? {
         switch alertType {
-        case .temperature: return 85
-        case .relativeHumidity: return 100
-        case .pressure: return 1155
-        case .carbonDioxide: return 2500
-        case .pMatter1, .pMatter25, .pMatter4, .pMatter10: return 250
-        case .voc, .nox: return 500
-        case .soundInstant: return 127
-        case .luminosity: return 10000
-        case .signal: return 0
+        case .temperature: return RuuviAlertConstants.Temperature.upperBound
+        case .relativeHumidity: return RuuviAlertConstants.RelativeHumidity.upperBound
+        case .pressure: return RuuviAlertConstants.Pressure.upperBound
+        case .carbonDioxide: return RuuviAlertConstants.CarbonDioxide.upperBound
+        case .pMatter1,
+             .pMatter25,
+             .pMatter4,
+             .pMatter10: return RuuviAlertConstants.ParticulateMatter.upperBound
+        case .voc: return RuuviAlertConstants.VOC.upperBound
+        case .nox: return RuuviAlertConstants.NOX.upperBound
+        case .soundInstant: return RuuviAlertConstants.Sound.upperBound
+        case .luminosity: return RuuviAlertConstants.Luminosity.upperBound
+        case .signal: return RuuviAlertConstants.Signal.upperBound
         default: return nil
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    func createAlertTypeWithBounds(
+        _ alertType: AlertType,
+        config: RuuviTagCardSnapshotAlertConfig
+    ) -> AlertType {
+        switch alertType {
+        case .temperature:
+            return .temperature(
+                lower: config.lowerBound ?? RuuviAlertConstants.Temperature.lowerBound,
+                upper: config.upperBound ?? RuuviAlertConstants.Temperature.upperBound
+            )
+
+        case .relativeHumidity:
+            return .relativeHumidity(
+                lower: (config.lowerBound ?? RuuviAlertConstants.RelativeHumidity.lowerBound) / 100.0,
+                upper: (config.upperBound ?? RuuviAlertConstants.RelativeHumidity.upperBound) / 100.0
+            )
+
+        case .pressure:
+            return .pressure(
+                lower: config.lowerBound ?? RuuviAlertConstants.Pressure.lowerBound,
+                upper: config.upperBound ?? RuuviAlertConstants.Pressure.upperBound
+            )
+
+        case .carbonDioxide:
+            return .carbonDioxide(
+                lower: config.lowerBound ?? RuuviAlertConstants.CarbonDioxide.lowerBound,
+                upper: config.upperBound ?? RuuviAlertConstants.CarbonDioxide.upperBound
+            )
+
+        case .pMatter1:
+            return .pMatter1(
+                lower: config.lowerBound ?? RuuviAlertConstants.ParticulateMatter.lowerBound,
+                upper: config.upperBound ?? RuuviAlertConstants.ParticulateMatter.upperBound
+            )
+        case .pMatter25:
+            return .pMatter25(
+                lower: config.lowerBound ?? RuuviAlertConstants.ParticulateMatter.lowerBound,
+                upper: config.upperBound ?? RuuviAlertConstants.ParticulateMatter.upperBound
+            )
+        case .pMatter4:
+            return .pMatter4(
+                lower: config.lowerBound ?? RuuviAlertConstants.ParticulateMatter.lowerBound,
+                upper: config.upperBound ?? RuuviAlertConstants.ParticulateMatter.upperBound
+            )
+        case .pMatter10:
+            return .pMatter10(
+                lower: config.lowerBound ?? RuuviAlertConstants.ParticulateMatter.lowerBound,
+                upper: config.upperBound ?? RuuviAlertConstants.ParticulateMatter.upperBound
+            )
+
+        case .voc:
+            return .voc(
+                lower: config.lowerBound ?? RuuviAlertConstants.VOC.lowerBound,
+                upper: config.upperBound ?? RuuviAlertConstants.VOC.upperBound
+            )
+
+        case .nox:
+            return .nox(
+                lower: config.lowerBound ?? RuuviAlertConstants.NOX.lowerBound,
+                upper: config.upperBound ?? RuuviAlertConstants.NOX.upperBound
+            )
+
+        case .soundInstant:
+            return .soundInstant(
+                lower: config.lowerBound ?? RuuviAlertConstants.Sound.lowerBound,
+                upper: config.upperBound ?? RuuviAlertConstants.Sound.upperBound
+            )
+
+        case .luminosity:
+            return .luminosity(
+                lower: config.lowerBound ?? RuuviAlertConstants.Luminosity.lowerBound,
+                upper: config.upperBound ?? RuuviAlertConstants.Luminosity.upperBound
+            )
+
+        case .signal:
+            return .signal(
+                lower: config.lowerBound ?? RuuviAlertConstants.Signal.lowerBound,
+                upper: config.upperBound ?? RuuviAlertConstants.Signal.upperBound
+            )
+
+        case .movement:
+            return .movement(last: 0) // no bounds
+
+        case .cloudConnection:
+            return .cloudConnection(
+                unseenDuration: config.unseenDuration ?? Double(
+                    RuuviAlertConstants.CloudConnection.defaultUnseenDuration
+                )
+            )
+
+        default:
+            return alertType
+        }
+    }
     // MARK: - Debouncing Helper
     func getDebouncerForKey(_ key: String) -> Debouncer {
         if let existingDebouncer = debouncers[key] {

@@ -7,7 +7,7 @@ class ASSelectionTableViewCell: UITableViewCell {
         label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.font = UIFont.Muli(.regular, size: 16)
+        label.font = UIFont.ruuviCallout()
         return label
     }()
 
@@ -49,9 +49,7 @@ extension ASSelectionTableViewCell {
         titleLabel.text = title
 
         let isSelected = title == selection
-        titleLabel.font = isSelected ?
-            UIFont.Muli(.bold, size: 16) :
-            UIFont.Muli(.regular, size: 16)
+        titleLabel.font = isSelected ? UIFont.ruuviCallout() : UIFont.ruuviBody()
         titleLabel.textColor = isSelected ?
         RuuviColor.menuTextColor.color :
             RuuviColor.textColor.color

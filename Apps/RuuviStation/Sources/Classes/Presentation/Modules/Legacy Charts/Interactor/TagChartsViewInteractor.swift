@@ -282,7 +282,7 @@ extension TagChartsViewInteractor {
                 chartsCases.removeAll { $0 == .temperature }
             }
             if record.humidity == nil {
-                chartsCases.removeAll { $0 == .humidity }
+                chartsCases.removeAll { $0 == .humidity(sSelf.settings.humidityUnit) }
             }
             if record.pressure == nil {
                 chartsCases.removeAll { $0 == .pressure }

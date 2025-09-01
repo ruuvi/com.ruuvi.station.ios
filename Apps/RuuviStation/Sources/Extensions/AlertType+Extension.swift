@@ -7,7 +7,7 @@ extension AlertType {
         case .temperature:
             return .temperature
         case .relativeHumidity:
-            return .humidity
+            return .humidity(.percent)
         case .pressure:
             return .pressure
         case .movement:
@@ -19,7 +19,7 @@ extension AlertType {
         case .pMatter25:
             return .pm25
         case .pMatter10:
-            return .pm10
+            return .pm100
         case .nox:
             return .nox
         case .voc:

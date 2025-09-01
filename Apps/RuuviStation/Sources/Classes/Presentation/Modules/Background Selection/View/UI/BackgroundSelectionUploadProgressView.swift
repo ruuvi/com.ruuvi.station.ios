@@ -14,7 +14,7 @@ class BackgroundSelectionUploadProgressView: UIView {
         label.textColor = .white
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.bold, size: 14)
+        label.font = UIFont.ruuviSubheadline()
         return label
     }()
 

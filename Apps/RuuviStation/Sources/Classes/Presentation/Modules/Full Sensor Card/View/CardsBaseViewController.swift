@@ -166,7 +166,7 @@ final class CardsBaseViewController: UIViewController {
         label.textAlignment = .center
         label.numberOfLines = Constants.Typography.tagNameLabelLines
         label.font = UIFont
-            .Muli(
+            .mulish(
                 .extraBold,
                 size: Constants.Typography.tagNameLabelFontSize
             )
@@ -209,7 +209,7 @@ final class CardsBaseViewController: UIViewController {
         label.textAlignment = .left
         label.numberOfLines = Constants.Typography.updatedAtLabelLines
         label.font = UIFont
-            .Muli(
+            .mulish(
                 .regular,
                 size: Constants.Typography.updatedAtLabelFontSize
             )

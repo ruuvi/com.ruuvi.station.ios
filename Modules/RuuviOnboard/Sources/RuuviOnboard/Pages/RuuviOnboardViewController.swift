@@ -74,7 +74,7 @@ class RuuviOnboardViewController: UIViewController {
         let button = UIButton()
         button.setTitleColor(.white, for: .normal)
         button.setTitle(RuuviLocalization.onboardingSkip, for: .normal)
-        button.titleLabel?.font = UIFont.Muli(.bold, size: 14)
+        button.titleLabel?.font = UIFont.mulish(.bold, size: 14)
         button.addTarget(
             self,
             action: #selector(handleSkipButtonTap),

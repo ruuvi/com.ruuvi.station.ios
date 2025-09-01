@@ -9,7 +9,7 @@ class BatteryLevelView: UIView {
             .withAlphaComponent(0.5)
         label.textAlignment = .right
         label.numberOfLines = 1
-        label.font = UIFont.Muli(.regular, size: 10)
+        label.font = UIFont.ruuviCaption1()
         label.text = RuuviLocalization.lowBattery
         return label
     }()
@@ -28,7 +28,7 @@ class BatteryLevelView: UIView {
     convenience init(fontSize: CGFloat = 10, iconSize: CGFloat = 20) {
         self.init()
         self.iconSize = iconSize
-        batteryLevelLabel.font = UIFont.Muli(.regular, size: fontSize)
+        batteryLevelLabel.font = UIFont.mulish(.regular, size: fontSize)
         setUpUI()
     }
 

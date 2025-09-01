@@ -1,21 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="LbA-Te-w1h">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="LbA-Te-w1h">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="Muli-Bold.ttf">
-            <string>Muli-Bold</string>
-        </array>
-        <array key="Muli-Regular.ttf">
-            <string>Muli-Regular</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--Share Ruuvi sensor-->
         <scene sceneID="xGI-fv-TzY">
@@ -34,19 +26,19 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ara-rC-ms9">
-                                            <rect key="frame" x="20" y="46" width="374" height="1"/>
+                                            <rect key="frame" x="20" y="44" width="374" height="1"/>
                                             <color key="backgroundColor" systemColor="separatorColor"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="1" id="Yt9-8a-YxW"/>
                                             </constraints>
                                         </view>
                                         <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Type email" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZeU-ve-Fbq">
-                                            <rect key="frame" x="20" y="11" width="374" height="35"/>
+                                            <rect key="frame" x="20" y="13" width="374" height="31"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="34" id="62B-EZ-38I"/>
                                             </constraints>
                                             <color key="textColor" name="RuuviTextColor"/>
-                                            <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="16"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                             <textInputTraits key="textInputTraits" keyboardType="emailAddress" textContentType="email"/>
                                         </textField>
                                     </subviews>
@@ -68,20 +60,20 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShareSendButtonTableViewCell" id="bJm-nn-jm5" customClass="ShareSendButtonTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="107" width="414" height="66.5"/>
+                                <rect key="frame" x="0.0" y="107" width="414" height="70.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="bJm-nn-jm5" id="0Ss-IZ-OAV">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="66.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="70.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="evc-gX-tbY">
-                                            <rect key="frame" x="107" y="11" width="200" height="44.5"/>
+                                            <rect key="frame" x="107" y="13" width="200" height="44.5"/>
                                             <color key="backgroundColor" name="RuuviTintColor"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="200" id="F4C-0w-w3r"/>
                                                 <constraint firstAttribute="height" constant="44" id="Tbj-Pb-d81"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" name="Muli-Bold" family="Muli" pointSize="16"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                             <inset key="contentEdgeInsets" minX="32" minY="12" maxX="32" maxY="12"/>
                                             <state key="normal" title="SEND"/>
                                             <userDefinedRuntimeAttributes>
@@ -105,7 +97,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShareEmailTableViewCell" rowHeight="65" id="wxH-bv-pTT" customClass="ShareEmailTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="173.5" width="414" height="65"/>
+                                <rect key="frame" x="0.0" y="177.5" width="414" height="65"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="wxH-bv-pTT" id="3ef-wz-tkh">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="65"/>
@@ -120,7 +112,7 @@
                                         </view>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="email@email.com" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KrW-d2-ghU">
                                             <rect key="frame" x="20" y="8" width="342" height="40"/>
-                                            <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="16"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                             <color key="textColor" name="RuuviTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -158,23 +150,23 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ShareDescriptionTableViewCell" rowHeight="108" id="6X1-1G-8p6" customClass="ShareDescriptionTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="238.5" width="414" height="108"/>
+                                <rect key="frame" x="0.0" y="242.5" width="414" height="108"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="6X1-1G-8p6" id="TDj-aD-hqN">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="108"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sharing disabled" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mVF-LL-Sab">
-                                            <rect key="frame" x="20" y="11" width="374" height="38.5"/>
+                                            <rect key="frame" x="20" y="13" width="374" height="36.5"/>
                                             <color key="tintColor" name="RuuviTintColor"/>
-                                            <fontDescription key="fontDescription" name="Muli-Bold" family="Muli" pointSize="14"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <color key="textColor" name="RuuviTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Share your Ruuvi sensor. Add your friend email address. Max 3" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MLf-W5-ib2">
-                                            <rect key="frame" x="20" y="61.5" width="374" height="35.5"/>
+                                            <rect key="frame" x="20" y="61.5" width="374" height="33.5"/>
                                             <color key="tintColor" name="RuuviTintColor"/>
-                                            <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="14"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                             <color key="textColor" name="RuuviTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -221,7 +213,7 @@
             <objects>
                 <navigationController id="LbA-Te-w1h" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="fr2-ra-azP">
-                        <rect key="frame" x="0.0" y="48" width="414" height="44"/>
+                        <rect key="frame" x="0.0" y="96" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
@@ -245,7 +237,7 @@
             <color red="0.20800000429153442" green="0.67799997329711914" blue="0.62400001287460327" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <systemColor name="separatorColor">
-            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

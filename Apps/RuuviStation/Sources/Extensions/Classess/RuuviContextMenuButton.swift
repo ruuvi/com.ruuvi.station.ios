@@ -1,4 +1,5 @@
 import UIKit
+import RuuviLocalization
 
 class RuuviContextMenuButton: UIView {
     lazy var button: UIButton = {
@@ -10,7 +11,7 @@ class RuuviContextMenuButton: UIView {
 
     lazy var buttonTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.Muli(.bold, size: 14)
+        label.font = UIFont.ruuviButtonSmall()
         return label
     }()
 

@@ -23,7 +23,7 @@ class RuuviSwitchView: UIView {
         label.textAlignment = .right
         label.numberOfLines = 1
         label.textColor = RuuviColor.textColor.color
-        label.font = UIFont.Muli(.regular, size: 14)
+        label.font = UIFont.ruuviFootnote()
         return label
     }()
 

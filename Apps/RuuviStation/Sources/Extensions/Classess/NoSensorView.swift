@@ -33,7 +33,7 @@ class NoSensorView: UIView {
         label.textColor = RuuviColor.textColor.color
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 16 : 20)
+        label.font = UIFont.mulish(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 16 : 20)
         return label
     }()
 
@@ -55,10 +55,7 @@ class NoSensorView: UIView {
             for: .normal
         )
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.Muli(
-            .bold,
-            size: UIDevice.isiPhoneSE() ? 14 : 16
-        )
+        button.titleLabel?.font = UIFont.ruuviButtonMedium()
         button.addTarget(
             self,
             action: #selector(handleSignInTap),
@@ -77,10 +74,7 @@ class NoSensorView: UIView {
             for: .normal
         )
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.Muli(
-            .bold,
-            size: UIDevice.isiPhoneSE() ? 14 : 16
-        )
+        button.titleLabel?.font = UIFont.ruuviButtonMedium()
         button.addTarget(
             self,
             action: #selector(handleAddSensorTap),
@@ -96,10 +90,7 @@ class NoSensorView: UIView {
             RuuviLocalization.DiscoverTable.GetMoreSensors.Button.title,
             for: .normal
         )
-        button.titleLabel?.font = UIFont.Muli(
-            .bold,
-            size: 14
-        )
+        button.titleLabel?.font = UIFont.ruuviButtonSmall()
         button.addTarget(
             self,
             action: #selector(handleBuySensorTap),

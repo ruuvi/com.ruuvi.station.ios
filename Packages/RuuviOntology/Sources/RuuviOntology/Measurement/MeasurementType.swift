@@ -1,9 +1,9 @@
 import Foundation
 
-public enum MeasurementType: String {
+public enum MeasurementType: Hashable {
     case rssi
     case temperature
-    case humidity
+    case humidity(HumidityUnit)
     case pressure
     // v3 & v5
     case acceleration
@@ -15,7 +15,7 @@ public enum MeasurementType: String {
     case aqi
     case co2
     case pm25
-    case pm10
+    case pm100
     case nox
     case voc
     case luminosity

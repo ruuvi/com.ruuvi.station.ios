@@ -40,7 +40,7 @@ class CardsMeasurementIndicatorView: UIView {
     private lazy var valueLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
-        label.font = UIFont.Muli(.bold, size: 16)
+        label.font = UIFont.ruuviCallout()
         label.textColor = .white
         label.numberOfLines = 1
         label.setContentHuggingPriority(.required, for: .horizontal)
@@ -50,7 +50,7 @@ class CardsMeasurementIndicatorView: UIView {
 
     private lazy var unitLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.Muli(.bold, size: 12)
+        label.font = UIFont.ruuviHeadlineTiny()
         label.textAlignment = .left
         label.numberOfLines = 1
         label.textColor = UIColor.white.withAlphaComponent(0.8)
@@ -61,7 +61,7 @@ class CardsMeasurementIndicatorView: UIView {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
-        label.font = UIFont.Muli(.regular, size: 12)
+        label.font = UIFont.ruuviCaption1()
         label.textColor = UIColor.white.withAlphaComponent(0.8)
         return label
     }()
@@ -177,22 +177,9 @@ class CardsMeasurementIndicatorView: UIView {
 
         if dataChanged {
             valueLabel.text = indicator.value
-            titleLabel.text = indicator.type.displayName
+            titleLabel.text = indicator.type.shortName
             iconImageView.image = indicator.type.icon
-
-            // Some units gets special treatment because they are formatted on
-            // Snapshot Builder with name of the measurements for showing on Dashboard.
-            // However, this screen shows the title already and
-            // does not need the title as part of unit.
-            if indicator.type == .pm25 {
-                unitLabel.text = RuuviLocalization.unitPm25
-            } else if indicator.type == .pm10 {
-                unitLabel.text = RuuviLocalization.unitPm10
-            } else if indicator.type == .soundInstant {
-                unitLabel.text = RuuviLocalization.unitSound
-            } else {
-                unitLabel.text = indicator.unit
-            }
+            unitLabel.text = MeasurementType.hideUnit(for: indicator.type) ? "" : indicator.unit
         }
 
     }

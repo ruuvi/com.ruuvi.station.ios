@@ -4,8 +4,6 @@ import UIKit
 class AboutViewController: UIViewController {
     var output: AboutViewOutput!
 
-    @IBOutlet weak var dismissButton: UIButton!
-    @IBOutlet var headerTitleLabel: UILabel!
     @IBOutlet var aboutTextView: UITextView!
     @IBOutlet var versionLabel: UILabel!
     @IBOutlet var addedTagsLabel: UILabel!
@@ -98,11 +96,15 @@ extension AboutViewController: UITextViewDelegate {
 
 extension AboutViewController {
     private func configureViews() {
-        dismissButton.setImage(
-            RuuviAsset.dismissModalIcon.image,
-            for: .normal
-        )
-        headerTitleLabel.text = RuuviLocalization.About.AboutHelp.header
+
+        self.title = RuuviLocalization.About.AboutHelp.header
+        navigationItem.leftBarButtonItem?.image = RuuviAsset.dismissModalIcon.image
+
+        versionLabel.font = UIFont.ruuviSubheadline()
+        addedTagsLabel.font = UIFont.ruuviSubheadline()
+        storedMeasurementsLabel.font = UIFont.ruuviSubheadline()
+        databaseSizeLable.font = UIFont.ruuviSubheadline()
+
         configureTextView()
         bindViewModel()
     }
@@ -140,7 +142,7 @@ extension AboutViewController {
         let range = NSString(string: attrString.string).range(of: attrString.string)
         attrString.addAttribute(
             NSAttributedString.Key.font,
-            value: UIFont.Muli(.regular, size: 16),
+            value: UIFont.ruuviBody(),
             range: range
         )
 
@@ -152,13 +154,13 @@ extension AboutViewController {
             RuuviLocalization.About.More.header,
             RuuviLocalization.About.Privacy.header,
         ]
-        let boldFont = UIFont.Muli(.bold, size: 16)
+        let boldFont = UIFont.ruuviCallout()
         for bold in makeBold {
             let range = NSString(string: attrString.string).range(of: bold)
             attrString.addAttribute(NSAttributedString.Key.font, value: boldFont, range: range)
         }
         // reduce the linespacing below the titles
-        let smallFont = UIFont.Muli(.regular, size: 8)
+        let smallFont = UIFont.mulish(.regular, size: 8)
         for range in attrString.string.ranges(of: "\n") {
             attrString.addAttribute(
                 NSAttributedString.Key.font,

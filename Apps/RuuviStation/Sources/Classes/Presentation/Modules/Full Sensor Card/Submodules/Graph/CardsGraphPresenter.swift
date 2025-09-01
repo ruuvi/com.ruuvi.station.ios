@@ -628,7 +628,10 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
             }
 
             // Humidty
-            if let humidityEntry = chartEntry(for: measurement, type: .humidity) {
+            if let humidityEntry = chartEntry(
+                for: measurement,
+                type: .anyHumidity
+            ) {
                 humidityData.append(humidityEntry)
             }
 
@@ -653,7 +656,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
             }
 
             // PM10
-            if let pm10Entry = chartEntry(for: measurement, type: .pm10) {
+            if let pm10Entry = chartEntry(for: measurement, type: .pm100) {
                 pm10Data.append(pm10Entry)
             }
 
@@ -717,7 +720,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
             ),
             humidity: chartEntry(
                 for: measurement,
-                type: .humidity
+                type: .anyHumidity
             ),
             pressure: chartEntry(
                 for: measurement,
@@ -733,7 +736,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
             ),
             pm10: chartEntry(
                 for: measurement,
-                type: .pm10
+                type: .pm100
             ),
             pm25: chartEntry(
                 for: measurement,
@@ -783,7 +786,10 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
             }
 
             // Humidty
-            if let humidityEntry = chartEntry(for: measurement, type: .humidity) {
+            if let humidityEntry = chartEntry(
+                for: measurement,
+                type: .anyHumidity
+            ) {
                 humidityData.append(humidityEntry)
             }
 
@@ -808,7 +814,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
             }
 
             // PM10
-            if let pm10Entry = chartEntry(for: measurement, type: .pm10) {
+            if let pm10Entry = chartEntry(for: measurement, type: .pm100) {
                 pm10Data.append(pm10Entry)
             }
 
@@ -888,7 +894,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 upperAlertValue: (isOn && isRelative) ? alertService.upperRelativeHumidity(for: ruuviTag).map {
                     $0 * 100
                 } : nil,
-                chartType: .humidity,
+                chartType: .anyHumidity,
                 chartData: LineChartData(dataSet: humidityChartDataSet),
                 lowerAlertValue: (isOn && isRelative) ? alertService.lowerRelativeHumidity(
                     for: ruuviTag
@@ -1016,7 +1022,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                     .map {
                     $0
                 } : nil,
-                chartType: .pm10,
+                chartType: .pm100,
                 chartData: LineChartData(dataSet: pm10ChartDataSet),
                 lowerAlertValue: isOn ? alertService.lowerPM10(
                     for: ruuviTag
@@ -1243,7 +1249,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
             value = measurementService.double(for: data.co2)
         case .pm25:
             value = measurementService.double(for: data.pm25)
-        case .pm10:
+        case .pm100:
             value = measurementService.double(for: data.pm10)
         case .voc:
             value = measurementService.double(for: data.voc)

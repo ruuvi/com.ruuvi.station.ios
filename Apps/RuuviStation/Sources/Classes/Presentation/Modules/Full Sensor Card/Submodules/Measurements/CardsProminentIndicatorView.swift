@@ -77,7 +77,7 @@ final class CardsProminentIndicatorView: UIView {
     private lazy var measurementValueLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont.Oswald(.bold, size: 60)
+        label.font = UIFont.oswald(.bold, size: 60)
         label.textColor = .white
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -87,7 +87,7 @@ final class CardsProminentIndicatorView: UIView {
     private lazy var measurementUnitLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
-        label.font = UIFont.Oswald(.regular, size: 30)
+        label.font = UIFont.oswald(.regular, size: 30)
         label.numberOfLines = 1
         label.textColor = UIColor.white.withAlphaComponent(Constants.alphaLight)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -112,7 +112,7 @@ final class CardsProminentIndicatorView: UIView {
 
     private lazy var indicatorTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.Muli(.bold, size: 14)
+        label.font = UIFont.mulish(.bold, size: 14)
         label.numberOfLines = 1
         label.textColor = UIColor.white.withAlphaComponent(Constants.alphaMedium)
         label.textAlignment = .center
@@ -362,7 +362,7 @@ private extension CardsProminentIndicatorView {
 
     func updateCommonElements(with indicatorData: RuuviTagCardSnapshotIndicatorData) {
         indicatorIcon.image = indicatorData.type.icon
-        indicatorTitleLabel.text = indicatorData.type.displayName
+        indicatorTitleLabel.text = indicatorData.type.shortName
     }
 
     func handleAQIMode(with indicatorData: RuuviTagCardSnapshotIndicatorData) {
@@ -491,7 +491,7 @@ final class AirQualityCircularView: UIView {
 
     private lazy var currentValueLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.Oswald(.bold, size: Constants.currentValueFontSize)
+        label.font = UIFont.oswald(.bold, size: Constants.currentValueFontSize)
         label.textColor = .white
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -500,7 +500,7 @@ final class AirQualityCircularView: UIView {
 
     private lazy var maxValueLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.Muli(.regular, size: Constants.maxValueFontSize)
+        label.font = UIFont.mulish(.regular, size: Constants.maxValueFontSize)
         label.textColor = UIColor.white.withAlphaComponent(Constants.alphaLight)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -509,7 +509,7 @@ final class AirQualityCircularView: UIView {
 
     private lazy var statusLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.Muli(.bold, size: Constants.statusLabelFontSize)
+        label.font = UIFont.mulish(.bold, size: Constants.statusLabelFontSize)
         label.textColor = .white
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false

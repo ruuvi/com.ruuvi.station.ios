@@ -27,7 +27,7 @@ class SignInView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = RuuviLocalization.signInOrCreateFreeAccount
-        label.font = UIFont.Montserrat(
+        label.font = UIFont.mulish(
             .extraBold,
             size: UIDevice.isiPhoneSE() ? 24 : 30
         )
@@ -40,7 +40,7 @@ class SignInView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = RuuviLocalization.toUseAllAppFeatures
-        label.font = UIFont.Muli(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 14 : 18)
+        label.font = UIFont.mulish(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 14 : 18)
         return label
     }()
 
@@ -51,7 +51,7 @@ class SignInView: UIView {
         textField.layer.cornerRadius = 25
         textField.textColor = .white
         textField.textAlignment = .left
-        textField.font = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 14 : 16)
+        textField.font = UIFont.mulish(.bold, size: UIDevice.isiPhoneSE() ? 14 : 16)
         textField.placeholder = RuuviLocalization.typeYourEmail
         textField.addPadding(padding: .equalSpacing(16))
         textField.setPlaceHolderColor(color: UIColor.darkGray.withAlphaComponent(0.7))
@@ -72,7 +72,7 @@ class SignInView: UIView {
             for: .normal
         )
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 14 : 16)
+        button.titleLabel?.font = UIFont.mulish(.bold, size: UIDevice.isiPhoneSE() ? 14 : 16)
         button.addTarget(
             self,
             action: #selector(handleRequestTap),
@@ -87,7 +87,7 @@ class SignInView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = RuuviLocalization.noPasswordNeeded
-        label.font = UIFont.Muli(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 14 : 16)
+        label.font = UIFont.mulish(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 14 : 16)
         return label
     }()
 }

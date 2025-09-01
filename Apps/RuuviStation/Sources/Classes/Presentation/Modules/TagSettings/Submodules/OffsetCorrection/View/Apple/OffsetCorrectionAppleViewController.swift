@@ -146,15 +146,24 @@ class OffsetCorrectionAppleViewController: UIViewController {
 
     private func styleViews() {
         view.backgroundColor = RuuviColor.primary.color
-        correctedValueTitle.textColor = RuuviColor.textColor.color
         originalValueTitle.textColor = RuuviColor.textColor.color
         originalValueLabel.textColor = RuuviColor.textColor.color
         originalValueUpdateTimeLabel.textColor = RuuviColor.textColor.color
+        correctedValueTitle.textColor = RuuviColor.textColor.color
         correctedValueLabel.textColor = RuuviColor.textColor.color
         offsetValueLabel.textColor = RuuviColor.textColor.color
         descriptionTextView.tintColor = RuuviColor.tintColor.color
         calibrateButton.backgroundColor = RuuviColor.tintColor.color
         clearButton.backgroundColor = RuuviColor.tintColor.color
+
+        originalValueTitle.font = UIFont.ruuviHeadline()
+        originalValueLabel.font = UIFont.ruuviTitle3()
+        originalValueUpdateTimeLabel.font = UIFont.ruuviFootnote()
+        correctedValueTitle.font = UIFont.ruuviHeadline()
+        correctedValueLabel.font = UIFont.ruuviTitle3()
+        offsetValueLabel.font = UIFont.ruuviFootnote()
+        calibrateButton.titleLabel?.font = UIFont.ruuviButtonMedium()
+        clearButton.titleLabel?.font = UIFont.ruuviButtonMedium()
     }
 }
 
@@ -172,7 +181,7 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
         let text = RuuviLocalization.OffsetCorrection.CalibrationDescription.text
 
         let attrString = NSMutableAttributedString(string: text)
-        let muliRegular = UIFont.Muli(.regular, size: 16)
+        let muliRegular = UIFont.ruuviBody()
         let range = NSString(string: attrString.string).range(of: attrString.string)
         attrString.addAttribute(NSAttributedString.Key.font, value: muliRegular, range: range)
         // make text color gray

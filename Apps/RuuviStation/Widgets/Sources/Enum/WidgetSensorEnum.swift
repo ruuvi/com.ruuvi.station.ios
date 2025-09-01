@@ -22,7 +22,7 @@ extension WidgetSensorEnum {
         case .pressure:
             settings.pressureUnit.symbol
         case .movement_counter:
-            RuuviLocalization.Cards.Movements.title
+            RuuviLocalization.movements
         case .battery_voltage:
             "v"
         case .acceleration_x,

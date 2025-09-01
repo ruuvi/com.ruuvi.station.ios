@@ -7,8 +7,6 @@ class UnitSettingsTableViewController: UITableViewController {
     var output: UnitSettingsViewOutput!
     var settings: RuuviLocalSettings!
 
-    @IBOutlet var descriptionTextView: UITextView!
-
     var viewModel: UnitSettingsViewModel? {
         didSet {
             updateUI()
@@ -95,6 +93,9 @@ extension UnitSettingsTableViewController {
         else {
             return .init()
         }
+
+        cell.titleLbl.font = .ruuviHeadline()
+        cell.valueLbl.font = .ruuviBody()
 
         if indexPath.row == 0 {
             cell.titleLbl.text = RuuviLocalization.Settings.Measurement.Unit.title

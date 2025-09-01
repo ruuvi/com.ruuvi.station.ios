@@ -39,6 +39,10 @@ extension HeartbeatTableViewController: HeartbeatViewInput {
         bgScanningIntervalTitleLabel.textColor = RuuviColor.menuTextColor.color
         bgScanningIntervalValueLabel.textColor = RuuviColor.textColor.color
         bgScanningIntervalStepper.backgroundColor = RuuviColor.tintColor.color
+
+        bgScanningTitleLabel.font = UIFont.ruuviHeadline()
+        bgScanningIntervalTitleLabel.font = UIFont.ruuviHeadline()
+        bgScanningIntervalValueLabel.font = UIFont.ruuviSubheadline()
     }
 }
 
@@ -74,7 +78,7 @@ extension HeartbeatTableViewController {
             let footerView = UIView()
             let footerLabel = UILabel()
             footerLabel.textColor = RuuviColor.textColor.color.withAlphaComponent(0.6)
-            footerLabel.font = UIFont.Muli(.regular, size: 13)
+            footerLabel.font = UIFont.ruuviFootnote()
             footerLabel.numberOfLines = 0
             footerLabel.text = RuuviLocalization.Settings.BackgroundScanning.Footer.message
             footerView.addSubview(footerLabel)

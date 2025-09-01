@@ -104,7 +104,7 @@ extension RuuviCloudTableViewController {
         let footerView = UIView()
         let footerLabel = UILabel()
         footerLabel.textColor = RuuviColor.textColor.color.withAlphaComponent(0.6)
-        footerLabel.font = UIFont.Muli(.regular, size: 13)
+        footerLabel.font = UIFont.ruuviFootnote()
         footerLabel.numberOfLines = 0
         footerLabel.text = RuuviLocalization.Settings.Label.CloudMode.description
         footerView.addSubview(footerLabel)

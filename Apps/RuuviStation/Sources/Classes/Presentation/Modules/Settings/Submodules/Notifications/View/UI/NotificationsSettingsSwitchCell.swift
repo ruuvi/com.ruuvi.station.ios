@@ -13,7 +13,8 @@ class NotificationsSettingsSwitchCell: UITableViewCell {
         label.textColor = RuuviColor.menuTextColor.color
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.bold, size: 16)
+        label.adjustsFontForContentSizeCategory = true
+        label.font = UIFont.ruuviHeadline()
         return label
     }()
 
@@ -22,7 +23,8 @@ class NotificationsSettingsSwitchCell: UITableViewCell {
         label.textColor = RuuviColor.textColor.color.withAlphaComponent(0.6)
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: 13)
+        label.adjustsFontForContentSizeCategory = true
+        label.font = UIFont.ruuviFootnote()
         return label
     }()
 

@@ -23,7 +23,7 @@ class NoDataView: UIView {
           .withAlphaComponent(0.8)
       label.textAlignment = .center
       label.numberOfLines = 0
-      label.font = UIFont.Muli(.regular, size: 10)
+      label.font = UIFont.ruuviCaptionSmall()
       label.text = RuuviLocalization.Cards.UpdatedLabel.NoData.message
       return label
     }()

@@ -60,6 +60,7 @@ extension ChartSettingsTableViewController {
                 .dequeueReusableCell(with: ChartSettingsSwitchTableViewCell.self, for: indexPath)
             cell.titleLabel.text = title
             cell.titleLabel.textColor = RuuviColor.menuTextColor.color
+            cell.titleLabel.font = UIFont.ruuviHeadline()
             cell.isOnSwitch.toggleState(with: value)
             cell.isOnSwitch.hideStatusLabel(hide: hideStatusLabel)
             cell.delegate = self
@@ -75,6 +76,7 @@ extension ChartSettingsTableViewController {
             cell.titleLabel.text = title + " "
                 + "(" + "\(value)" + " "
                 + unit.unitString + ")"
+            cell.titleLabel.font = UIFont.ruuviHeadline()
             cell.titleLabel.textColor = RuuviColor.menuTextColor.color
             cell.prefix = title
             cell.stepper.value = Double(value)
@@ -85,6 +87,7 @@ extension ChartSettingsTableViewController {
             let cell = tableView.dequeueReusableCell(with: ChartSettingsDisclosureTableViewCell.self, for: indexPath)
             cell.textLabel?.text = title
             cell.textLabel?.textColor = RuuviColor.menuTextColor.color
+            cell.textLabel?.font = UIFont.ruuviHeadline()
             return cell
         }
     }
@@ -97,7 +100,7 @@ extension ChartSettingsTableViewController {
         let footerView = UIView()
         let footerLabel = UILabel()
         footerLabel.textColor = RuuviColor.textColor.color.withAlphaComponent(0.6)
-        footerLabel.font = UIFont.Muli(.regular, size: 13)
+        footerLabel.font = UIFont.ruuviFootnote()
         footerLabel.numberOfLines = 0
         footerLabel.text = viewModel.sections[section].note
         footerView.addSubview(footerLabel)

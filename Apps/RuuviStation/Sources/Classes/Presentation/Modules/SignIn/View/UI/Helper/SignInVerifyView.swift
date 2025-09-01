@@ -27,7 +27,7 @@ class SignInVerifyView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = RuuviLocalization.enterCode
-        label.font = UIFont.Montserrat(.extraBold, size: UIDevice.isiPhoneSE() ? 24 : 30)
+        label.font = UIFont.mulish(.extraBold, size: UIDevice.isiPhoneSE() ? 24 : 30)
         return label
     }()
 
@@ -37,7 +37,7 @@ class SignInVerifyView: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = RuuviLocalization.SignIn.checkMailbox("")
-        label.font = UIFont.Muli(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 14 : 18)
+        label.font = UIFont.mulish(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 14 : 18)
         return label
     }()
 

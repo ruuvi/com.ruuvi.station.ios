@@ -12,7 +12,7 @@ class TagSettingsSimpleSectionHeader: UIView {
         label.textColor = RuuviColor.dashboardIndicator.color
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.bold, size: 18)
+        label.font = UIFont.ruuviButtonLarge()
         return label
     }()
 

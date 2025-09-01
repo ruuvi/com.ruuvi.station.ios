@@ -1,10 +1,11 @@
 import UIKit
+import RuuviLocalization
 
 extension UILabel {
     convenience init(
         text: String,
         textColor: UIColor = .label,
-        font: UIFont = .Muli(.regular, size: 16),
+        font: UIFont = .mulish(.regular, size: 16),
         numberOfLines: Int = 0,
         alignment: NSTextAlignment = .left
     ) {

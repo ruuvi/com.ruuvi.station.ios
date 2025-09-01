@@ -1,22 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="KfP-FV-34v">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="KfP-FV-34v">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="Muli-Bold.ttf">
-            <string>Muli-Bold</string>
-        </array>
-        <array key="Muli-Regular.ttf">
-            <string>Muli-Regular</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--Offset Correction Apple View Controller-->
         <scene sceneID="9eu-CR-bnL">
@@ -27,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gvZ-Yz-kax">
-                                <rect key="frame" x="16" y="58" width="382" height="564"/>
+                                <rect key="frame" x="16" y="106" width="382" height="482"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="tintColor" name="RuuviTintColor"/>
                                 <attributedString key="attributedText">
@@ -43,12 +35,12 @@
                                 <dataDetectorType key="dataDetectorTypes" link="YES"/>
                             </textView>
                             <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="FcC-2E-zgW">
-                                <rect key="frame" x="58" y="797" width="298" height="45"/>
+                                <rect key="frame" x="64" y="764" width="286" height="44"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I2d-ql-qUs">
-                                        <rect key="frame" x="0.0" y="0.0" width="139" height="45"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="133" height="44"/>
                                         <color key="backgroundColor" name="RuuviTintColor"/>
-                                        <fontDescription key="fontDescription" name="Muli-Bold" family="Muli" pointSize="16"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
                                         <state key="normal" title="CALIBRATE"/>
                                         <userDefinedRuntimeAttributes>
@@ -61,9 +53,9 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="30C-Ra-WkM">
-                                        <rect key="frame" x="159" y="0.0" width="139" height="45"/>
+                                        <rect key="frame" x="153" y="0.0" width="133" height="44"/>
                                         <color key="backgroundColor" name="RuuviTintColor"/>
-                                        <fontDescription key="fontDescription" name="Muli-Bold" family="Muli" pointSize="16"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
                                         <state key="normal" title="CLEAR"/>
                                         <userDefinedRuntimeAttributes>
@@ -81,26 +73,26 @@
                                 </constraints>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="jzm-U7-UUX">
-                                <rect key="frame" x="20" y="642" width="374" height="140"/>
+                                <rect key="frame" x="20" y="608" width="374" height="140"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ELD-Lr-MOF">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="69.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Original measured value" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0gG-zY-0LU">
-                                                <rect key="frame" x="0.0" y="0.0" width="374" height="23"/>
-                                                <fontDescription key="fontDescription" name="Muli-Bold" family="Muli" pointSize="18"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="374" height="21.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                 <color key="textColor" name="RuuviTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="24.79ºC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uUo-hF-EOG">
-                                                <rect key="frame" x="0.0" y="33" width="74.5" height="31.5"/>
-                                                <fontDescription key="fontDescription" name="Muli-Bold" family="Muli" pointSize="20"/>
+                                                <rect key="frame" x="0.0" y="31.5" width="71.5" height="33"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                 <color key="textColor" name="RuuviTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(0 s ago)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2De-5r-q5T">
-                                                <rect key="frame" x="82.5" y="43.5" width="60.5" height="19"/>
-                                                <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="15"/>
+                                                <rect key="frame" x="79.5" y="43.5" width="61.5" height="18"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <color key="textColor" name="RuuviTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -112,7 +104,7 @@
                                             <constraint firstItem="0gG-zY-0LU" firstAttribute="top" secondItem="ELD-Lr-MOF" secondAttribute="top" id="d5t-jL-SUD"/>
                                             <constraint firstAttribute="trailing" secondItem="0gG-zY-0LU" secondAttribute="trailing" id="k39-NM-a3G"/>
                                             <constraint firstItem="2De-5r-q5T" firstAttribute="leading" secondItem="uUo-hF-EOG" secondAttribute="trailing" constant="8" symbolic="YES" id="lD4-gH-qB3"/>
-                                            <constraint firstItem="2De-5r-q5T" firstAttribute="bottom" secondItem="uUo-hF-EOG" secondAttribute="bottom" constant="-2" id="me3-Lv-1O1"/>
+                                            <constraint firstItem="2De-5r-q5T" firstAttribute="bottom" secondItem="uUo-hF-EOG" secondAttribute="bottom" constant="-3" id="me3-Lv-1O1"/>
                                             <constraint firstItem="uUo-hF-EOG" firstAttribute="top" secondItem="0gG-zY-0LU" secondAttribute="bottom" constant="10" id="sBn-FD-e4z"/>
                                             <constraint firstItem="0gG-zY-0LU" firstAttribute="leading" secondItem="ELD-Lr-MOF" secondAttribute="leading" id="y4U-Wz-Oih"/>
                                         </constraints>
@@ -121,20 +113,20 @@
                                         <rect key="frame" x="0.0" y="70.5" width="374" height="69.5"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Corrected value" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rq3-OO-vf6">
-                                                <rect key="frame" x="0.0" y="5" width="374" height="23"/>
-                                                <fontDescription key="fontDescription" name="Muli-Bold" family="Muli" pointSize="18"/>
+                                                <rect key="frame" x="0.0" y="5" width="374" height="21.5"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                 <color key="textColor" name="RuuviTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="24.79ºC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vpt-LL-XXT">
-                                                <rect key="frame" x="0.0" y="38" width="74.5" height="31.5"/>
-                                                <fontDescription key="fontDescription" name="Muli-Bold" family="Muli" pointSize="20"/>
+                                                <rect key="frame" x="0.0" y="36.5" width="71.5" height="33"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                 <color key="textColor" name="RuuviTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(Offset 24.79ºC)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XeT-G6-sH9">
-                                                <rect key="frame" x="82.5" y="48.5" width="111" height="19"/>
-                                                <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="15"/>
+                                                <rect key="frame" x="79.5" y="48.5" width="113" height="18"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                 <color key="textColor" name="RuuviTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -142,7 +134,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="Rq3-OO-vf6" secondAttribute="trailing" id="Aef-Vy-SRm"/>
-                                            <constraint firstItem="XeT-G6-sH9" firstAttribute="bottom" secondItem="Vpt-LL-XXT" secondAttribute="bottom" constant="-2" id="GF5-ax-plD"/>
+                                            <constraint firstItem="XeT-G6-sH9" firstAttribute="bottom" secondItem="Vpt-LL-XXT" secondAttribute="bottom" constant="-3" id="GF5-ax-plD"/>
                                             <constraint firstItem="XeT-G6-sH9" firstAttribute="leading" secondItem="Vpt-LL-XXT" secondAttribute="trailing" constant="8" symbolic="YES" id="OnQ-0K-bMq"/>
                                             <constraint firstItem="Rq3-OO-vf6" firstAttribute="top" secondItem="H3r-Yk-l6h" secondAttribute="top" constant="5" id="V13-gb-XNp"/>
                                             <constraint firstItem="Vpt-LL-XXT" firstAttribute="leading" secondItem="H3r-Yk-l6h" secondAttribute="leading" id="cxQ-0W-Fj1"/>
@@ -203,7 +195,7 @@
             <color red="0.20800000429153442" green="0.67799997329711914" blue="0.62400001287460327" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
         </namedColor>
         <systemColor name="labelColor">
-            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
     </resources>
 </document>

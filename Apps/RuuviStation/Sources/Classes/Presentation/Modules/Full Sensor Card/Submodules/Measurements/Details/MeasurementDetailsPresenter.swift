@@ -434,7 +434,7 @@ private extension MeasurementDetailsPresenter {
         case .pm25:
             return measurementService.double(for: measurement.pm25)
 
-        case .pm10:
+        case .pm100:
             return measurementService.double(for: measurement.pm10)
 
         case .voc:
@@ -474,7 +474,7 @@ private extension MeasurementDetailsPresenter {
             return alertService.isOn(type: .carbonDioxide(lower: 0, upper: 0), for: sensor)
         case .pm25:
             return alertService.isOn(type: .pMatter25(lower: 0, upper: 0), for: sensor)
-        case .pm10:
+        case .pm100:
             return alertService.isOn(type: .pMatter10(lower: 0, upper: 0), for: sensor)
         case .voc:
             return alertService.isOn(type: .voc(lower: 0, upper: 0), for: sensor)
@@ -509,7 +509,7 @@ private extension MeasurementDetailsPresenter {
             return alertService.upperAQI(for: sensor)
         case .pm25:
             return alertService.upperPM25(for: sensor)
-        case .pm10:
+        case .pm100:
             return alertService.upperPM10(for: sensor)
         case .voc:
             return alertService.upperVOC(for: sensor)
@@ -544,7 +544,7 @@ private extension MeasurementDetailsPresenter {
             return alertService.lowerAQI(for: sensor)
         case .pm25:
             return alertService.lowerPM25(for: sensor)
-        case .pm10:
+        case .pm100:
             return alertService.lowerPM10(for: sensor)
         case .voc:
             return alertService.lowerVOC(for: sensor)
@@ -583,7 +583,7 @@ private extension MeasurementDetailsPresenter {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            guard self?.measurementType == .humidity else { return }
+            guard case .humidity = self?.measurementType else { return }
             self?.updateChart()
         }
 

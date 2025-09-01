@@ -18,7 +18,7 @@ class BackgroundSelectionViewHeader: UICollectionReusableView {
         label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: 16)
+        label.font = UIFont.ruuviBody()
         label.text = RuuviLocalization.changeBackgroundMessage
         return label
     }()
@@ -40,7 +40,7 @@ class BackgroundSelectionViewHeader: UICollectionReusableView {
         label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.bold, size: 16)
+        label.font = UIFont.ruuviButtonMedium()
         label.text = RuuviLocalization.selectDefaultImage
         return label
     }()

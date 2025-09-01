@@ -22,7 +22,7 @@ class SensorForceClaimViewController: UIViewController {
         label.textAlignment = .left
         label.numberOfLines = 0
         label.text = RuuviLocalization.forceClaimSensorDescription1
-        label.font = UIFont.Muli(.regular, size: 16)
+        label.font = UIFont.ruuviBody()
         return label
     }()
 
@@ -33,7 +33,7 @@ class SensorForceClaimViewController: UIViewController {
         )
         button.setTitle(RuuviLocalization.forceClaim, for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
+        button.titleLabel?.font = UIFont.ruuviButtonMedium()
         button.addTarget(
             self,
             action: #selector(handleClaimSensorTap),
@@ -53,7 +53,7 @@ class SensorForceClaimViewController: UIViewController {
         tv.text = RuuviLocalization.forceClaimSensorDescription2
         tv.textColor = RuuviColor.textColor.color
         tv.backgroundColor = .clear
-        tv.font = UIFont.Muli(.regular, size: 16)
+        tv.font = UIFont.ruuviBody()
         tv.isScrollEnabled = true
         return tv
     }()
@@ -68,7 +68,7 @@ class SensorForceClaimViewController: UIViewController {
             for: .normal
         )
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
+        button.titleLabel?.font = UIFont.ruuviButtonMedium()
         button.addTarget(
             self,
             action: #selector(handleUseNFCButtonTap),
@@ -87,7 +87,7 @@ class SensorForceClaimViewController: UIViewController {
             for: .normal
         )
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
+        button.titleLabel?.font = UIFont.ruuviButtonMedium()
         button.addTarget(
             self,
             action: #selector(handleUseBluetoothButtonTap),

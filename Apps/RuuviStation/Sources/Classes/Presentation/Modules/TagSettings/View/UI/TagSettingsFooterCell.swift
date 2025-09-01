@@ -7,7 +7,7 @@ class TagSettingsFooterCell: UITableViewCell {
         label.textAlignment = .left
         label.numberOfLines = 0
         label.textColor = RuuviColor.textColor.color.withAlphaComponent(0.6)
-        label.font = UIFont.Muli(.regular, size: 12)
+        label.font = UIFont.ruuviFootnote()
         return label
     }()
 

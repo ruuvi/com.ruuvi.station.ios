@@ -20,7 +20,7 @@ class TagSettingsExpandableSectionHeader: UIView {
         label.textColor = RuuviColor.dashboardIndicator.color
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.bold, size: 16)
+        label.font = UIFont.ruuviHeadline()
         return label
     }()
 
@@ -36,7 +36,7 @@ class TagSettingsExpandableSectionHeader: UIView {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.textColor = RuuviColor.textColor.color.withAlphaComponent(0.7)
-        label.font = UIFont.Muli(.regular, size: 14)
+        label.font = UIFont.ruuviSubheadline()
         return label
     }()
 
@@ -56,7 +56,7 @@ class TagSettingsExpandableSectionHeader: UIView {
         label.textColor = RuuviColor.textColor.color
         label.textAlignment = .right
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: 12)
+        label.font = UIFont.ruuviFootnote()
         return label
     }()
 
@@ -205,7 +205,7 @@ extension TagSettingsExpandableSectionHeader {
         if let font {
             titleLabel.font = font
         } else {
-            titleLabel.font = UIFont.Muli(.bold, size: 16)
+            titleLabel.font = UIFont.mulish(.bold, size: 16)
         }
     }
 

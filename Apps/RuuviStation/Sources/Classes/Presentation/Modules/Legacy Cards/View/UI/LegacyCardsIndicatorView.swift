@@ -1,4 +1,5 @@
 import UIKit
+import RuuviLocalization
 
 class LegacyCardsIndicatorView: UIView {
     private lazy var indicatorIconView: UIImageView = {
@@ -13,7 +14,7 @@ class LegacyCardsIndicatorView: UIView {
         label.textColor = .white
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.bold, size: 18)
+        label.font = UIFont.mulish(.bold, size: 18)
         return label
     }()
 
@@ -22,7 +23,7 @@ class LegacyCardsIndicatorView: UIView {
         label.textColor = .white.withAlphaComponent(0.8)
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: 14)
+        label.font = UIFont.mulish(.regular, size: 14)
         label.sizeToFit()
         return label
     }()

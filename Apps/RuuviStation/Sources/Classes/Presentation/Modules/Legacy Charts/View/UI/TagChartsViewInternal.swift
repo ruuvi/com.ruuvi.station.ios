@@ -64,7 +64,7 @@ class TagChartsViewInternal: LineChartView {
         legend.enabled = false
 
         xAxis.labelPosition = .bottom
-        xAxis.labelFont = .Muli(.regular, size: UIDevice.isTablet() ? 12 : 10)
+        xAxis.labelFont = UIFont.ruuviCaption2()
         xAxis.labelTextColor =
             (source == .mesurementDetails) ? RuuviColor.dashboardIndicator.color : UIColor.white
         xAxis.drawAxisLineEnabled = true
@@ -76,7 +76,7 @@ class TagChartsViewInternal: LineChartView {
 
         leftAxis.labelPosition = .outsideChart
         leftAxis.labelAlignment = .right
-        leftAxis.labelFont = .Muli(.regular, size: UIDevice.isTablet() ? 12 : 10)
+        leftAxis.labelFont = UIFont.ruuviCaption2()
         leftAxis.setLabelCount(6, force: false)
         leftAxis.drawGridLinesEnabled = true
         leftAxis.gridColor = leftAxis.gridColor.withAlphaComponent(0.4)

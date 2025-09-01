@@ -47,6 +47,9 @@ final class OwnerViewController: UIViewController {
         view.backgroundColor = RuuviColor.primary.color
         claimOwnershipDescriptionLabel.textColor = RuuviColor.textColor.color
         claimOwnershipButton.backgroundColor = RuuviColor.tintColor.color
+
+        claimOwnershipDescriptionLabel.font = UIFont.ruuviHeadline()
+        claimOwnershipButton.titleLabel?.font = UIFont.ruuviButtonMedium()
     }
 }
 

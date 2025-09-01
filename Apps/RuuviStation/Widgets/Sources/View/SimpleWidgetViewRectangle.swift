@@ -1,4 +1,5 @@
 import SwiftUI
+import RuuviLocalization
 
 struct SimpleWidgetViewRectangle: View {
     private let viewModel = WidgetViewModel()
@@ -7,11 +8,7 @@ struct SimpleWidgetViewRectangle: View {
         VStack {
             VStack {
                 Text(entry.tag.displayString.capitalized)
-                    .font(.custom(
-                        Constants.muliBold.rawValue,
-                        size: 16,
-                        relativeTo: .subheadline
-                    ))
+                    .font(.mulish(.bold, size: 16, relativeTo: .subheadline))
                     .foregroundColor(Color.sensorNameColor1)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading, 4)
@@ -25,18 +22,10 @@ struct SimpleWidgetViewRectangle: View {
                     ))
                     .environment(\.locale, viewModel.locale())
                     .foregroundColor(.bodyTextColor)
-                    .font(.custom(
-                        Constants.oswaldBold.rawValue,
-                        size: 36,
-                        relativeTo: .title
-                    ))
+                    .font(.oswald(.bold, size: 36, relativeTo: .title))
                     Text(viewModel.getUnit(for: WidgetSensorEnum(rawValue: entry.config.sensor.rawValue)))
                         .foregroundColor(Color.unitTextColor)
-                        .font(.custom(
-                            Constants.oswaldExtraLight.rawValue,
-                            size: 20,
-                            relativeTo: .title3
-                        ))
+                        .font(.oswald(.extraLight, size: 20, relativeTo: .title3))
                         .baselineOffset(8)
                     Spacer()
                 }
