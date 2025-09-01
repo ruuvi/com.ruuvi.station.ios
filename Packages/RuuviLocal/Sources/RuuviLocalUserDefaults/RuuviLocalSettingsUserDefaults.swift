@@ -507,10 +507,6 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
                 .image
             case 1:
                 .simple
-            case 2:
-                .imageExtended
-            case 3:
-                .simpleExtended
             default:
                 .image
             }
@@ -521,10 +517,6 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
                 dashboardTypeId = 0
             case .simple:
                 dashboardTypeId = 1
-            case .imageExtended:
-                dashboardTypeId = 2
-            case .simpleExtended:
-                dashboardTypeId = 3
             }
             NotificationCenter
                 .default

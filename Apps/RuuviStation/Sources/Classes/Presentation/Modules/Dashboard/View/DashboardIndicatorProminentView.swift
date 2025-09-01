@@ -25,7 +25,7 @@ class DashboardIndicatorProminentView: UIView {
 
     private lazy var indicatorSubscriptLabel: UILabel = {
         let label = UILabel()
-        label.textColor = RuuviColor.dashboardIndicator.color.withAlphaComponent(0.6)
+        label.textColor = RuuviColor.dashboardIndicator.color.withAlphaComponent(0.7)
         label.textAlignment = .left
         label.numberOfLines = 1
         label.font = UIFont.Muli(.regular, size: 11)

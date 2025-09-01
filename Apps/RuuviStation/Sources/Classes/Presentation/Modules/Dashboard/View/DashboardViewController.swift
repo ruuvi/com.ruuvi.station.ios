@@ -365,8 +365,7 @@ private extension DashboardViewController {
         cell
             .configure(
                 with: snapshot,
-                dashboardType: dashboardType,
-                showRedesignedDashboardUI: flags.showRedesignedDashboardUI
+                dashboardType: dashboardType
             )
         cell.delegate = self
         cell.setMenu(cardContextMenuOption(for: indexPath))
@@ -519,37 +518,10 @@ private extension DashboardViewController {
         simpleViewTypeAction.state = dashboardType == .simple ? .on : .off
         imageViewTypeAction.state = dashboardType == .image ? .on : .off
 
-        var children: [UIAction] = []
-        if flags.showRedesignedDashboardUI {
-            let imageExtendedViewTypeAction = UIAction(
-                title: RuuviLocalization.imageExtCards
-            ) { [weak self] _ in
-                self?.handleDashboardTypeChange(.imageExtended)
-            }
-
-            let simpleExtendedViewTypeAction = UIAction(
-                title: RuuviLocalization.simpleExtCards
-            ) { [weak self] _ in
-                self?.handleDashboardTypeChange(.simpleExtended)
-            }
-
-            simpleExtendedViewTypeAction.state = dashboardType == .simpleExtended ? .on : .off
-            imageExtendedViewTypeAction.state = dashboardType == .imageExtended ? .on : .off
-
-            children = [
-                imageViewTypeAction,
-                imageExtendedViewTypeAction,
-                simpleViewTypeAction,
-                simpleExtendedViewTypeAction,
-            ]
-        } else {
-            children = [imageViewTypeAction, simpleViewTypeAction]
-        }
-
         return UIMenu(
             title: RuuviLocalization.cardType,
             options: .displayInline,
-            children: children
+            children: [imageViewTypeAction, simpleViewTypeAction]
         )
     }
 
@@ -805,8 +777,7 @@ extension DashboardViewController: MasonryReorderableLayoutDelegate {
             for: cardSnapshot,
             width: itemWidth,
             displayType: dashboardType,
-            numberOfColumns: numberOfColumns,
-            showRedesignedUI: flags.showRedesignedDashboardUI,
+            numberOfColumns: numberOfColumns
         )
     }
 
