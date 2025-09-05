@@ -176,8 +176,31 @@ extension AboutViewController {
             range: NSRange(location: 0, length: attrString.length)
         )
 
+        linkifyDomains(in: attrString, tint: RuuviColor.tintColor.color)
+
         aboutTextView.attributedText = attrString
         aboutTextView.textColor = RuuviColor.textColor.color
+    }
+
+    private func linkifyDomains(in attr: NSMutableAttributedString, tint: UIColor) {
+        let full = attr.string as NSString
+
+        let pattern = #"\b(?:https?://)?(?:www\.)?[A-Za-z0-9.-]+\.[A-Za-z]{2,}(?:/[^\s]*)?\b"#
+        let regex = try! NSRegularExpression(pattern: pattern, options: [.caseInsensitive])
+
+        // Go from end to start so ranges stay valid while mutating
+        for match in regex.matches(in: attr.string, range: NSRange(location: 0, length: full.length)).reversed() {
+            let raw = full.substring(with: match.range)
+            // Prefix scheme if missing
+            let urlString = raw.lowercased().hasPrefix("http") ? raw : "https://\(raw)"
+            guard let url = URL(string: urlString) else { continue }
+
+            attr.addAttributes([
+                .link: url,
+                .foregroundColor: tint,
+                .font: UIFont.ruuviCallout(),
+            ], range: match.range)
+        }
     }
 
     private func setUpChangelogTapGesture() {

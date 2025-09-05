@@ -363,7 +363,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
             )
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = .ruuviCaption1()
+        label.font = UIFont.ruuviCaption2()
         return label
     }()
 

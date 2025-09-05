@@ -34,7 +34,7 @@ class TagChartsView: UIView {
     private lazy var chartMinMaxAvgLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = UIFont.mulish(.regular, size: UIDevice.isTablet() ? 12 : 10)
+        label.font = UIFont.ruuviCaption1()
         return label
     }()
 

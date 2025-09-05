@@ -212,12 +212,19 @@ class CardsGraphViewController: UIViewController {
         return button
     }()
 
+    // MARK: - Fade overlays
+    private lazy var topFadeView = EdgeFadeView(edge: .top)
+    private lazy var bottomFadeView = EdgeFadeView(edge: .bottom)
+
     // UI END
 
     private let historyHoursOptions: [Int] = [1, 2, 3, 6, 12]
     private let minimumHistoryLimit: Int = 1 // Day
     private let maximumHistoryLimit: Int = 10 // Days
     private let highlightAnimationDelay: TimeInterval = 0.3
+    private let fadeTopHeight: CGFloat = 50
+    private let fadeBottomHeight: CGFloat = 50
+    private let fadeThreshold: CGFloat = 20
 
     private var chartViewData: [TagChartViewData] = []
     private var settings: RuuviLocalSettings!
@@ -248,6 +255,13 @@ class CardsGraphViewController: UIViewController {
             from: chartModules,
             withAnimation: false
         )
+        updateEdgeFades()
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        topFadeView.baseColor = RuuviColor.graphBGColor.color
+        bottomFadeView.baseColor = RuuviColor.graphBGColor.color
     }
 
     override func viewWillTransition(
@@ -270,6 +284,7 @@ class CardsGraphViewController: UIViewController {
 
     fileprivate func setUpUI() {
         setUpContentView()
+        configureViews()
     }
 
     // swiftlint:disable:next function_body_length
@@ -501,6 +516,64 @@ class CardsGraphViewController: UIViewController {
         )
         noDataLabel.centerYInSuperview()
         noDataLabel.alpha = 0
+
+        view.addSubview(topFadeView)
+        view.addSubview(bottomFadeView)
+
+        // Top fade pinned to the top edge of the scrollable viewport
+        topFadeView.translatesAutoresizingMaskIntoConstraints = false
+        bottomFadeView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            topFadeView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            topFadeView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            topFadeView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            topFadeView.heightAnchor.constraint(equalToConstant: fadeTopHeight),
+
+            bottomFadeView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomFadeView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomFadeView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            bottomFadeView.heightAnchor
+                .constraint(equalToConstant: fadeBottomHeight),
+        ])
+    }
+
+    private func configureViews() {
+        scrollView.delegate = self
+
+        topFadeView.baseColor = RuuviColor.graphBGColor.color
+        bottomFadeView.baseColor = RuuviColor.graphBGColor.color
+        topFadeView.progress = 0
+        bottomFadeView.progress = 0
+    }
+
+    private func updateEdgeFades() {
+        // No gradients if nothing to scroll
+        let contentH = scrollView.contentSize.height
+        let visibleH = scrollView.bounds.height -
+            scrollView.adjustedContentInset.top - scrollView.adjustedContentInset.bottom
+        let maxOffsetY = max(0, contentH - visibleH)
+
+        guard maxOffsetY > 0 else {
+            topFadeView.progress = 0
+            bottomFadeView.progress = 0
+            return
+        }
+
+        // Progress near top/bottom within a threshold
+        let offsetY = max(
+            0,
+            min(
+                maxOffsetY,
+                scrollView.contentOffset.y + scrollView.adjustedContentInset.top
+            )
+        )
+
+        let topProgress    = min(1, offsetY / fadeThreshold)
+        let bottomProgress = min(1, (maxOffsetY - offsetY) / fadeThreshold)
+
+        topFadeView.progress = topProgress
+        bottomFadeView.progress = bottomProgress
     }
 
     @objc fileprivate func syncButtonDidTap() {
@@ -735,6 +808,7 @@ extension CardsGraphViewController: CardsGraphViewInput {
             pendingScrollToMeasurement = measurementType
             return
         }
+        updateEdgeFades()
 
         pendingScrollToMeasurement = nil
 
@@ -1431,6 +1505,7 @@ extension CardsGraphViewController {
             scrollView.isScrollEnabled = true
             scrollView.showsVerticalScrollIndicator = true
         }
+        updateEdgeFades()
     }
 
     private func updateChartViewConstaints(
@@ -1872,6 +1947,14 @@ extension CardsGraphViewController: UIScrollViewDelegate {
 
     func scrollViewDidEndDecelerating(_: UIScrollView) {
         output?.viewDidEndScrolling()
+    }
+
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        updateEdgeFades()
+    }
+
+    func scrollViewDidChangeAdjustedContentInset(_ scrollView: UIScrollView) {
+        updateEdgeFades()
     }
 }
 

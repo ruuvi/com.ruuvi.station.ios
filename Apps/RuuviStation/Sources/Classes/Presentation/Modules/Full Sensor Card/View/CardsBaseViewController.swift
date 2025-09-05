@@ -190,10 +190,7 @@ final class CardsBaseViewController: UIViewController {
     }()
 
     private lazy var batteryLevelView: BatteryLevelView = {
-        let view = BatteryLevelView(
-            fontSize: Constants.Typography.batteryLabelFontSize,
-            iconSize: Constants.Typography.batteryIconSize
-        )
+        let view = BatteryLevelView()
         view
             .updateTextColor(
                 with: .white.withAlphaComponent(
@@ -208,11 +205,7 @@ final class CardsBaseViewController: UIViewController {
         label.textColor = .white.withAlphaComponent(Constants.Alpha.whiteWithAlpha)
         label.textAlignment = .left
         label.numberOfLines = Constants.Typography.updatedAtLabelLines
-        label.font = UIFont
-            .mulish(
-                .regular,
-                size: Constants.Typography.updatedAtLabelFontSize
-            )
+        label.font = UIFont.ruuviCaption2()
         return label
     }()
 

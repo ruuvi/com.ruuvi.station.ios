@@ -192,12 +192,12 @@ class TagSettingsViewController: UIViewController {
         TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
 
     private lazy var temperatureAlertSection: TagSettingsSection? = {
-        let sectionTitle =  RuuviLocalization.temperatureWithUnit(
-            viewModel?.temperatureUnit.value?.symbol ?? RuuviLocalization.na
+        let title = AlertType.temperature(lower: 0, upper: 0).title(
+            with: viewModel?.temperatureUnit.value?.symbol ?? RuuviLocalization.na
         )
         let section = TagSettingsSection(
             identifier: .alertTemperature,
-            title: sectionTitle,
+            title: title,
             cells: [
                 temperatureAlertItem()
             ],
@@ -218,10 +218,10 @@ class TagSettingsViewController: UIViewController {
 
     private lazy var humidityAlertSection: TagSettingsSection? = {
         let symbol = HumidityUnit.percent.symbol
-        let sectionTitle = RuuviLocalization.humidityWithUnit(symbol)
+        let title = AlertType.relativeHumidity(lower: 0, upper: 0).title()
         let section = TagSettingsSection(
             identifier: .alertHumidity,
-            title: sectionTitle,
+            title: title,
             cells: [
                 humidityAlertItem()
             ],
@@ -241,12 +241,12 @@ class TagSettingsViewController: UIViewController {
         TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
 
     private lazy var pressureAlertSection: TagSettingsSection? = {
-        let sectionTitle = RuuviLocalization.pressureWithUnit(
-            viewModel?.pressureUnit.value?.symbol ?? RuuviLocalization.na
+        let title = AlertType.relativeHumidity(lower: 0, upper: 0).title(
+            with: viewModel?.pressureUnit.value?.symbol ?? RuuviLocalization.na
         )
         let section = TagSettingsSection(
             identifier: .alertPressure,
-            title: sectionTitle,
+            title: title,
             cells: [
                 pressureAlertItem()
             ],
@@ -2826,9 +2826,10 @@ extension TagSettingsViewController {
     // MARK: - RSSI ALERTS
 
     private func configureRSSIAlertSection() -> TagSettingsSection {
+        let title = AlertType.signal(lower: 0, upper: 0).title()
         let section = TagSettingsSection(
             identifier: .alertRSSI,
-            title: RuuviLocalization.signalStrengthDbm,
+            title: title,
             cells: [
                 rssiAlertItem()
             ],
@@ -2883,10 +2884,10 @@ extension TagSettingsViewController {
     // MARK: - AQI ALERTS
 
     private func configureAQIAlertSection() -> TagSettingsSection {
-        let sectionTitle = RuuviLocalization.aqi
+        let title = AlertType.aqi(lower: 0, upper: 0).title()
         let section = TagSettingsSection(
             identifier: .alertAQI,
-            title: sectionTitle,
+            title: title,
             cells: [
                 aqiAlertItem()
             ],
@@ -2942,8 +2943,8 @@ extension TagSettingsViewController {
     // MARK: - CO2 ALERTS
 
     private func configureCO2AlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.co2WithUnit(
-            RuuviLocalization.unitCo2
+        let title = AlertType.carbonDioxide(lower: 0, upper: 0).title(
+            with: RuuviLocalization.unitCo2
         )
         let section = TagSettingsSection(
             identifier: .alertCarbonDioxide,
@@ -3003,8 +3004,8 @@ extension TagSettingsViewController {
     // MARK: - PM1 ALERTS
 
     private func configurePM1AlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.pm10WithUnit(
-            RuuviLocalization.unitPm10
+        let title = AlertType.pMatter1(lower: 0, upper: 0).title(
+            with: RuuviLocalization.unitPm10
         )
         let section = TagSettingsSection(
             identifier: .alertPMatter1,
@@ -3064,8 +3065,8 @@ extension TagSettingsViewController {
     // MARK: - PM2.5 ALERTS
 
     private func configurePM25AlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.pm25WithUnit(
-            RuuviLocalization.unitPm25
+        let title = AlertType.pMatter25(lower: 0, upper: 0).title(
+            with: RuuviLocalization.unitPm25
         )
         let section = TagSettingsSection(
             identifier: .alertPMatter25,
@@ -3125,8 +3126,8 @@ extension TagSettingsViewController {
     // MARK: - PM4 ALERTS
 
     private func configurePM4AlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.pm40WithUnit(
-            RuuviLocalization.unitPm40
+        let title = AlertType.pMatter4(lower: 0, upper: 0).title(
+            with: RuuviLocalization.unitPm40
         )
         let section = TagSettingsSection(
             identifier: .alertPMatter4,
@@ -3186,8 +3187,8 @@ extension TagSettingsViewController {
     // MARK: - PM10 ALERTS
 
     private func configurePM10AlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.pm100WithUnit(
-            RuuviLocalization.unitPm100
+        let title = AlertType.pMatter10(lower: 0, upper: 0).title(
+            with: RuuviLocalization.unitPm100
         )
         let section = TagSettingsSection(
             identifier: .alertPMatter10,
@@ -3247,8 +3248,8 @@ extension TagSettingsViewController {
     // MARK: - VOC ALERTS
 
     private func configureVOCAlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.vocWithUnit(
-            RuuviLocalization.unitVoc
+        let title = AlertType.voc(lower: 0, upper: 0).title(
+            with: RuuviLocalization.unitVoc
         )
         let section = TagSettingsSection(
             identifier: .alertVOC,
@@ -3308,8 +3309,8 @@ extension TagSettingsViewController {
     // MARK: - NOx ALERTS
 
     private func configureNOXAlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.noxWithUnit(
-            RuuviLocalization.unitNox
+        let title = AlertType.nox(lower: 0, upper: 0).title(
+            with: RuuviLocalization.unitNox
         )
         let section = TagSettingsSection(
             identifier: .alertNOx,
@@ -3369,8 +3370,8 @@ extension TagSettingsViewController {
     // MARK: - SOUND ALERTS
 
     private func configureSoundAlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.soundInstantWithUnit(
-            RuuviLocalization.unitSound
+        let title = AlertType.soundInstant(lower: 0, upper: 0).title(
+            with: RuuviLocalization.unitSound
         )
         let section = TagSettingsSection(
             identifier: .alertSoundInstant,
@@ -3430,8 +3431,8 @@ extension TagSettingsViewController {
     // MARK: - LUMINOSITY ALERTS
 
     private func configureLuminosityAlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.luminosityWithUnit(
-            RuuviLocalization.unitLuminosity
+        let title = AlertType.luminosity(lower: 0, upper: 0).title(
+            with: RuuviLocalization.unitLuminosity
         )
         let section = TagSettingsSection(
             identifier: .alertLuminosity,
@@ -3493,7 +3494,7 @@ extension TagSettingsViewController {
     private func configureMovementAlertSection() -> TagSettingsSection {
         let section = TagSettingsSection(
             identifier: .alertMovement,
-            title: RuuviLocalization.TagSettings.MovementAlert.title,
+            title: RuuviLocalization.alertMovement,
             cells: [
                 movementAlertItem()
             ],
@@ -3531,7 +3532,7 @@ extension TagSettingsViewController {
     private func configureConnectionAlertSection() -> TagSettingsSection {
         let section = TagSettingsSection(
             identifier: .alertConnection,
-            title: RuuviLocalization.TagSettings.ConnectionAlert.title,
+            title: AlertType.connection.title(),
             cells: [
                 connectionAlertItem()
             ],
@@ -3568,7 +3569,7 @@ extension TagSettingsViewController {
     private func configureCloudConnectionAlertSection() -> TagSettingsSection {
         let section = TagSettingsSection(
             identifier: .alertCloudConnection,
-            title: RuuviLocalization.alertCloudConnectionTitle,
+            title: AlertType.cloudConnection(unseenDuration: 0).title(),
             cells: [
                 cloudConnectionAlertItem()
             ],
@@ -6144,7 +6145,7 @@ extension TagSettingsViewController {
                 self?
                     .humidityOffsetCorrectionCell?
                     .configure(
-                        title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
+                        title: RuuviLocalization.relativeHumidity,
                         value: self?.measurementService
                             .humidityOffsetCorrectionString(for: humOffset)
                     )
@@ -6512,7 +6513,7 @@ extension TagSettingsViewController {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
                 self?.moreInfoRSSICell?.configure(
-                    title: RuuviLocalization.TagSettings.RssiTitleLabel.text,
+                    title: RuuviLocalization.signalStrengthWithUnit,
                     value: rssi
                 )
                 return self?.moreInfoRSSICell ?? UITableViewCell()

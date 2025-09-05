@@ -421,9 +421,11 @@ struct FirmwareView: View {
                 attributedString: NSAttributedString.fromFormattedDescription(
                     RuuviLocalization.prepareYourSensorInstructions,
                     titleFont: UIFont.ruuviHeadline(),
-                    paragraphFont: UIFont.ruuviBody(),
+                    paragraphFont: UIFont.ruuviSubheadline(),
                     titleColor: RuuviColor.menuTextColor.color,
-                    paragraphColor: RuuviColor.textColor.color
+                    paragraphColor: RuuviColor.textColor.color,
+                    linkColor: RuuviColor.tintColor.color,
+                    linkFont: .ruuviCallout()
                 )
             )
             .fixedSize(horizontal: false, vertical: true)

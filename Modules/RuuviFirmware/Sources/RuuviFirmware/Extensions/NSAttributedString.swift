@@ -1,13 +1,17 @@
 import UIKit
+import RuuviLocalization
 
 extension NSAttributedString {
 
+    // swiftlint:disable:next function_parameter_count
     static func fromFormattedDescription(
         _ escapedHTML: String,
         titleFont: UIFont,
         paragraphFont: UIFont,
         titleColor: UIColor,
-        paragraphColor: UIColor
+        paragraphColor: UIColor,
+        linkColor: UIColor,
+        linkFont: UIFont
     ) -> NSAttributedString {
         let unescapedText = unescapeHTML(escapedHTML)
 
@@ -16,7 +20,9 @@ extension NSAttributedString {
             titleFont: titleFont,
             paragraphFont: paragraphFont,
             titleColor: titleColor,
-            paragraphColor: paragraphColor
+            paragraphColor: paragraphColor,
+            linkColor: linkColor,
+            linkFont: linkFont
         )
     }
 }
@@ -31,12 +37,15 @@ private extension NSAttributedString {
             .replacingOccurrences(of: "&gt;", with: ">")
     }
 
+    // swiftlint:disable:next function_parameter_count
     static func processFormattedText(
         _ text: String,
         titleFont: UIFont,
         paragraphFont: UIFont,
         titleColor: UIColor,
-        paragraphColor: UIColor
+        paragraphColor: UIColor,
+        linkColor: UIColor,
+        linkFont: UIFont
     ) -> NSAttributedString {
         let result = NSMutableAttributedString()
         var remainingText = text
@@ -78,8 +87,8 @@ private extension NSAttributedString {
                     match: match,
                     text: remainingText,
                     to: result,
-                    font: paragraphFont,
-                    color: paragraphColor
+                    font: linkFont,
+                    color: linkColor
                 )
             }
 
@@ -175,7 +184,7 @@ private extension NSAttributedString {
         text: String,
         to result: NSMutableAttributedString,
         font: UIFont,
-        color: UIColor
+        color: UIColor,
     ) {
         guard let urlRange = Range(match.range(at: 1), in: text),
               let textRange = Range(match.range(at: 2), in: text) else { return }
@@ -186,7 +195,6 @@ private extension NSAttributedString {
         var linkAttributes: [NSAttributedString.Key: Any] = [
             .font: font,
             .foregroundColor: color,
-            .underlineStyle: NSUnderlineStyle.single.rawValue,
         ]
 
         linkAttributes[.init("CustomLinkURL")] = url

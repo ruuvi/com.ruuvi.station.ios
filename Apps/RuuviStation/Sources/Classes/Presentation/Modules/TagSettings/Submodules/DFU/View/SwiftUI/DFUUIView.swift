@@ -478,7 +478,9 @@ struct DFUUIView: View {
                     titleFont: UIFont.ruuviHeadline(),
                     paragraphFont: UIFont.ruuviBody(),
                     titleColor: RuuviColor.menuTextColor.color,
-                    paragraphColor: RuuviColor.textColor.color
+                    paragraphColor: RuuviColor.textColor.color,
+                    linkColor: RuuviColor.tintColor.color,
+                    linkFont: .ruuviCallout()
                 )
             )
             .fixedSize(horizontal: false, vertical: true)
