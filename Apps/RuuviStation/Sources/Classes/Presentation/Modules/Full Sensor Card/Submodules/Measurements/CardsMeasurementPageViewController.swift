@@ -24,7 +24,6 @@ class CardsMeasurementPageViewController: UIViewController {
         static let measurementGridSpacing: CGFloat = 6
         static let minimumSpacing: CGFloat = 40
         static let cardHeight: CGFloat = 48
-        static let fadeTransitionHeight: CGFloat = 20
         static let contentBottomPadding: CGFloat = 20
         static let standardHorizontalPadding: CGFloat = 20
         static let iPadPortraitColumns: Int = 3
@@ -33,9 +32,6 @@ class CardsMeasurementPageViewController: UIViewController {
         static let iPadLandscapeHorizontalPadding: CGFloat = 80
         static let minimumItemWidth: CGFloat = 100
         static let constraintPriority: Float = 999
-        static let fadeAlphaComponent: CGFloat = 0.3
-        static let topFadeMultiplier: CGFloat = 0.6
-        static let bottomFadeOffset: CGFloat = 0.04
     }
 
     // MARK: - Column Configuration
@@ -94,7 +90,6 @@ class CardsMeasurementPageViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     private var lastGridIndicatorTypes: Set<MeasurementType> = []
     private var currentMeasurementCards: [MeasurementType: CardsMeasurementIndicatorView] = [:]
-    private var isContentScrollable = false
 
     // MARK: - Layout Constraints
     private var spacerHeightConstraint: NSLayoutConstraint!
@@ -107,7 +102,6 @@ class CardsMeasurementPageViewController: UIViewController {
         let scrollView = UIScrollView()
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsVerticalScrollIndicator = false
-        scrollView.delegate = self
         return scrollView
     }()
 
@@ -198,6 +192,8 @@ private extension CardsMeasurementPageViewController {
 
         scrollView.delaysContentTouches = false
         scrollView.canCancelContentTouches = true
+
+        scrollView.enableEdgeFading()
     }
 
     // swiftlint:disable:next function_body_length
@@ -561,93 +557,12 @@ private extension CardsMeasurementPageViewController {
             spacerMinHeightConstraint.isActive = false
             spacerHeightConstraint.constant = optimalSpacing
             spacerHeightConstraint.isActive = true
-
-            isContentScrollable = false
         } else {
             spacerHeightConstraint.isActive = false
             spacerMinHeightConstraint.isActive = true
-
-            isContentScrollable = true
         }
 
         view.layoutIfNeeded()
-
-        DispatchQueue.main.async {
-            self.updateContentFadeMask()
-        }
-    }
-
-    // MARK: - Height Fade Methods
-    // swiftlint:disable:next function_body_length
-    private func updateContentFadeMask() {
-        guard isContentScrollable else {
-            scrollView.layer.mask = nil
-            return
-        }
-
-        let contentOffset = max(0, scrollView.contentOffset.y)
-        let contentHeight = scrollView.contentSize.height
-        let scrollViewHeight = scrollView.bounds.height
-        let maxScrollOffset = contentHeight - scrollViewHeight
-
-        let hasContentAbove = contentOffset > 0
-        let remainingContentBelow = maxScrollOffset - contentOffset
-        let hasContentBelow = remainingContentBelow > 0
-
-        guard hasContentAbove || hasContentBelow else {
-            scrollView.layer.mask = nil
-            return
-        }
-
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = scrollView.bounds
-
-        var colors: [CGColor] = []
-        var locations: [NSNumber] = []
-
-        let fadeHeight: CGFloat = Constants.fadeTransitionHeight
-
-        if hasContentAbove {
-            let fadeProgress = min(contentOffset / fadeHeight, 1.0)
-            let topFadeEnd = fadeHeight / scrollViewHeight
-
-            colors.append(UIColor.clear.cgColor)
-            colors.append(UIColor.black.withAlphaComponent(Constants.fadeAlphaComponent * fadeProgress).cgColor)
-            colors.append(UIColor.black.cgColor)
-
-            locations.append(0.0)
-            locations.append(NSNumber(value: topFadeEnd * Constants.topFadeMultiplier))
-            locations.append(NSNumber(value: topFadeEnd))
-        } else {
-            colors.append(UIColor.black.cgColor)
-            locations.append(0.0)
-        }
-
-        if hasContentBelow {
-            let fadeProgress = min(remainingContentBelow / fadeHeight, 1.0)
-            let bottomFadeStart = 1.0 - (fadeHeight / scrollViewHeight)
-
-            if colors.count == 1 || locations.last!.doubleValue < bottomFadeStart {
-                colors.append(UIColor.black.cgColor)
-                locations.append(NSNumber(value: bottomFadeStart))
-            }
-
-            colors.append(UIColor.black.withAlphaComponent(Constants.fadeAlphaComponent * fadeProgress).cgColor)
-            colors.append(UIColor.clear.cgColor)
-
-            locations.append(NSNumber(value: bottomFadeStart + Constants.bottomFadeOffset))
-            locations.append(1.0)
-        } else {
-            colors.append(UIColor.black.cgColor)
-            locations.append(1.0)
-        }
-
-        gradientLayer.colors = colors
-        gradientLayer.locations = locations
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
-        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-
-        scrollView.layer.mask = gradientLayer
     }
 }
 
@@ -807,15 +722,6 @@ private extension CardsMeasurementPageViewController {
         }
 
         return card
-    }
-}
-
-// MARK: - UIScrollViewDelegate
-extension CardsMeasurementPageViewController: UIScrollViewDelegate {
-
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard isContentScrollable else { return }
-        updateContentFadeMask()
     }
 }
 

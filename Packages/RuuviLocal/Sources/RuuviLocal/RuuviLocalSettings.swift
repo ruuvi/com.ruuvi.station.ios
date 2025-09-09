@@ -95,6 +95,9 @@ public protocol RuuviLocalSettings {
     var dashboardEnabled: Bool { get set }
     var dashboardType: DashboardType { get set }
     var dashboardTapActionType: DashboardTapActionType { get set }
+    // For migration of users below version 3.0.0 who might have other
+    // dashboard tap action than cards. Default is cards.
+    var showFullSensorCardOnDashboardTap: Bool { get set }
     var dashboardSensorOrder: [String] { get set }
     var theme: RuuviTheme { get set }
     var hideNFCForSensorContest: Bool { get set }

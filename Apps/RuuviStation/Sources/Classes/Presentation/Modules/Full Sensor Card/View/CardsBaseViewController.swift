@@ -126,6 +126,7 @@ final class CardsBaseViewController: UIViewController {
         let view = CardsMenuBarView(
             menuMode: flags.showRedesignedCardsUIWithNewMenu ? .modern : .legacy
         )
+        view.setSelectedTab(activeTab, notify: false)
         view.backgroundColor = .clear
         return view
     }()

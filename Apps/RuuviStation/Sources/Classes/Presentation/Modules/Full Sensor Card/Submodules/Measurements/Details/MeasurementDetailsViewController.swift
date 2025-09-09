@@ -23,12 +23,9 @@ final class MeasurementDetailsViewController: UIViewController {
             static let valueUnitSpacing: CGFloat = 4
             static let headerDescriptionSpacing: CGFloat = 12
             static let unitBottomOffset: CGFloat = -1
-            static let iPadBottomMargin: CGFloat = -20
+            static let bottomMargin: CGFloat = -20
             static let graphBottomPadding: CGFloat = 16
             static let dataDurationLabelRightPadding: CGFloat = 8
-            static let fadeTopHeight: CGFloat = 40
-            static let fadeBottomHeight: CGFloat = 30
-            static let fadeThreshold: CGFloat = 20
         }
 
         enum Animation {
@@ -203,10 +200,6 @@ final class MeasurementDetailsViewController: UIViewController {
         return label
     }()
 
-    // MARK: - Fade overlays
-    private lazy var topFadeView = EdgeFadeView(edge: .top)
-    private lazy var bottomFadeView = EdgeFadeView(edge: .bottom)
-
     // MARK: - Properties
     private var maximumSheetHeight: CGFloat
     private var shouldHideGraph = false
@@ -242,13 +235,6 @@ final class MeasurementDetailsViewController: UIViewController {
         updatePreferredContentSize()
     }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        let base = (view.backgroundColor ?? .systemBackground).resolvedColor(with: traitCollection)
-        topFadeView.baseColor = base
-        bottomFadeView.baseColor = base
-    }
-
     // MARK: - Public Configuration
     func configure(
         indicatorType: MeasurementType,
@@ -279,7 +265,6 @@ private extension MeasurementDetailsViewController {
         view.backgroundColor = RuuviColor.dashboardCardBG.color
         addSubviews()
         setupConstraints()
-        configureViews()
     }
 
     func addSubviews() {
@@ -296,9 +281,6 @@ private extension MeasurementDetailsViewController {
         headerView.addSubview(lblTitle)
         headerView.addSubview(valueLabel)
         headerView.addSubview(unitLabel)
-
-        view.addSubview(topFadeView)
-        view.addSubview(bottomFadeView)
     }
 
     // swiftlint:disable:next function_body_length
@@ -459,37 +441,10 @@ private extension MeasurementDetailsViewController {
                 lblDescription.bottomAnchor
                     .constraint(
                         equalTo: contentView.bottomAnchor,
-                        constant: UIDevice.current.userInterfaceIdiom == .pad ? Constants.Layout.iPadBottomMargin : 0
+                        constant: Constants.Layout.bottomMargin
                     ),
             ]
         )
-
-        // Top fade pinned to the top edge of the scrollable viewport
-        topFadeView.translatesAutoresizingMaskIntoConstraints = false
-        bottomFadeView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            topFadeView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            topFadeView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            topFadeView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            topFadeView.heightAnchor.constraint(equalToConstant: Constants.Layout.fadeTopHeight),
-
-            bottomFadeView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            bottomFadeView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bottomFadeView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            bottomFadeView.heightAnchor
-                .constraint(equalToConstant: Constants.Layout.fadeBottomHeight),
-        ])
-    }
-
-    func configureViews() {
-        scrollView.delegate = self
-
-        let base = (view.backgroundColor ?? .systemBackground).resolvedColor(with: traitCollection)
-        topFadeView.baseColor = base
-        bottomFadeView.baseColor = base
-        topFadeView.progress = 0
-        bottomFadeView.progress = 0
     }
 
     func configureContent(
@@ -524,36 +479,6 @@ private extension MeasurementDetailsViewController {
 
     @objc func handleGraphTap() {
         output?.didTapGraph()
-    }
-
-    private func updateEdgeFades() {
-        // No gradients if nothing to scroll
-        let contentH = scrollView.contentSize.height
-        let visibleH = scrollView.bounds.height -
-            scrollView.adjustedContentInset.top - scrollView.adjustedContentInset.bottom
-        let maxOffsetY = max(0, contentH - visibleH)
-
-        guard maxOffsetY > 0 else {
-            topFadeView.progress = 0
-            bottomFadeView.progress = 0
-            return
-        }
-
-        // Progress near top/bottom within a threshold
-        let threshold = Constants.Layout.fadeThreshold
-        let offsetY = max(
-            0,
-            min(
-                maxOffsetY,
-                scrollView.contentOffset.y + scrollView.adjustedContentInset.top
-            )
-        )
-
-        let topProgress    = min(1, offsetY / threshold)
-        let bottomProgress = min(1, (maxOffsetY - offsetY) / threshold)
-
-        topFadeView.progress = topProgress
-        bottomFadeView.progress = bottomProgress
     }
 }
 
@@ -597,16 +522,6 @@ extension MeasurementDetailsViewController: MeasurementDetailsViewInput {
                 Constants.Alpha.visibleAlpha : Constants.Alpha.hiddenAlpha
             self?.graphView.isHidden = show
         }
-    }
-}
-
-extension MeasurementDetailsViewController: UIScrollViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        updateEdgeFades()
-    }
-
-    func scrollViewDidChangeAdjustedContentInset(_ scrollView: UIScrollView) {
-        updateEdgeFades()
     }
 }
 
@@ -694,7 +609,14 @@ private extension MeasurementDetailsViewController {
         }
 
         scrollView.isScrollEnabled = true
-        updateEdgeFades()
+
+        if scrollView.bounds.width > 0 && scrollView.bounds.height > 0 {
+            if scrollView.edgeFader == nil {
+                scrollView.enableEdgeFading()
+            } else {
+                scrollView.updateEdgeFading()
+            }
+        }
     }
 
     func updateSheetPresentationIfNeeded() {

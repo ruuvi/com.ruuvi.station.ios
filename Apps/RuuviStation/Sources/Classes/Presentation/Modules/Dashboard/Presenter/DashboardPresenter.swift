@@ -186,6 +186,12 @@ extension DashboardPresenter: DashboardViewOutput {
     }
 
     func viewDidTriggerDashboardCard(for snapshot: RuuviTagCardSnapshot) {
+        if settingsService.showFullSensorCardOnDashboardTap() {
+            viewDidTriggerOpenCardImageView(for: snapshot)
+            settingsService.updateShowFullSensorCardOnDashboardTap(false)
+            return
+        }
+
         switch settingsService.getDashboardTapActionType() {
         case .card:
             viewDidTriggerOpenCardImageView(for: snapshot)

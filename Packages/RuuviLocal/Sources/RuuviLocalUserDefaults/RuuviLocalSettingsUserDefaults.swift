@@ -567,6 +567,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
+    @UserDefault("SettingsUserDefaults.showFullSensorCardOnDashboardTap", defaultValue: true)
+    var showFullSensorCardOnDashboardTap: Bool
+
     private let dashboardSensorOrderIdKey =
         "SettingsUserDefaults.dashboardSortedSensors"
     var dashboardSensorOrder: [String] {

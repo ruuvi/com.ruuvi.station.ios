@@ -125,13 +125,67 @@ extension DashboardIndicatorView {
     }
 
     func changeColor(highlight: Bool) {
-        let color = highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicatorBig.color
-        indicatorValueLabel.textColor = color
+        let highlightColor = highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicatorBig.color
+        let normalColor = RuuviColor.dashboardIndicatorBig.color
+
+        // Check if text contains "/" (like AQI format)
+        if let text = indicatorValueLabel.text, text.contains("/") {
+            let components = text.components(separatedBy: "/")
+            guard components.count >= 2 else {
+                // Fallback: create attributed string with single color
+                let attributedString = NSAttributedString(
+                    string: text,
+                    attributes: [
+                        .foregroundColor: highlightColor,
+                        .font: indicatorValueLabel.font ?? UIFont.mulish(.extraBold, size: 14)
+                    ]
+                )
+                indicatorValueLabel.attributedText = attributedString
+                return
+            }
+
+            let firstPart = components[0]
+            let secondPart = "/" + components[1]
+
+            let attributedString = NSMutableAttributedString()
+
+            // First part with highlight/normal color
+            let firstPartAttributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: highlightColor,
+                .font: indicatorValueLabel.font ?? UIFont.mulish(.extraBold, size: 14)
+            ]
+            attributedString.append(NSAttributedString(string: firstPart, attributes: firstPartAttributes))
+
+            // Second part always with normal color
+            let secondPartAttributes: [NSAttributedString.Key: Any] = [
+                .foregroundColor: normalColor,
+                .font: indicatorValueLabel.font ?? UIFont.mulish(.extraBold, size: 14)
+            ]
+            attributedString.append(NSAttributedString(string: secondPart, attributes: secondPartAttributes))
+
+            indicatorValueLabel.attributedText = attributedString
+        } else {
+            // For all other measurement types, create attributed string with single color
+            if let text = indicatorValueLabel.text {
+                let attributedString = NSAttributedString(
+                    string: text,
+                    attributes: [
+                        .foregroundColor: highlightColor,
+                        .font: indicatorValueLabel.font ?? UIFont.mulish(.extraBold, size: 14)
+                    ]
+                )
+                indicatorValueLabel.attributedText = attributedString
+            } else {
+                // If no text, just set the color for future text
+                indicatorValueLabel.textColor = highlightColor
+            }
+        }
     }
 
     func clearValues() {
         indicatorTitleLabel.text = nil
         indicatorValueLabel.text = nil
+        indicatorValueLabel.attributedText = nil
         indicatorUnitLabel.text = nil
         indicatorUnitLabel.isHidden = false
         indicatorValueLabel.textColor = RuuviColor.dashboardIndicatorBig.color
