@@ -83,6 +83,18 @@ public extension WidgetViewModel {
             return measurementService.acceleration(for: record.acceleration?.y.value)
         case .acceleration_z:
             return measurementService.acceleration(for: record.acceleration?.z.value)
+        case .air_quality:
+            ""
+        case .co2:
+            RuuviLocalization.unitCo2
+        case .nox:
+            RuuviLocalization.unitNox
+        case .voc:
+            RuuviLocalization.unitVoc
+        case .pm10, .pm25, .pm40, .pm100:
+            RuuviLocalization.unitPm10
+        case .luminance:
+            RuuviLocalization.unitLuminosity
         }
     }
 

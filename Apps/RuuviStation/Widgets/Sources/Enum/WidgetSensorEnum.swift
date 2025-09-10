@@ -1,5 +1,6 @@
 import Foundation
 import RuuviLocalization
+import RuuviOntology
 
 public enum WidgetSensorEnum: Int {
     case temperature = 1
@@ -10,6 +11,15 @@ public enum WidgetSensorEnum: Int {
     case acceleration_x
     case acceleration_y
     case acceleration_z
+    case air_quality
+    case co2
+    case nox
+    case voc
+    case pm10
+    case pm25
+    case pm40
+    case pm100
+    case luminance
 }
 
 extension WidgetSensorEnum {
@@ -29,6 +39,18 @@ extension WidgetSensorEnum {
              .acceleration_y,
              .acceleration_z:
             "g"
+        case .air_quality:
+            ""
+        case .co2:
+            RuuviLocalization.unitCo2
+        case .nox:
+            RuuviLocalization.unitNox
+        case .voc:
+            RuuviLocalization.unitVoc
+        case .pm10, .pm25, .pm40, .pm100:
+            RuuviLocalization.unitPm10
+        case .luminance:
+            RuuviLocalization.unitLuminosity
         }
     }
 }
