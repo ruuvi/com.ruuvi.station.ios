@@ -232,18 +232,18 @@ extension RuuviServiceExportImpl {
                         toString(record.pm25)
                     }
                 ),
-//                ColumnDefinition(
-//                    header: RuuviLocalization.pm40 + " (\(RuuviLocalization.unitPm40))",
-//                    cellExtractor: { record in
-//                        toString(record.pm4)
-//                    }
-//                ),
-//                ColumnDefinition(
-//                    header: RuuviLocalization.pm100 + " (\(RuuviLocalization.unitPm100))",
-//                    cellExtractor: { record in
-//                        toString(record.pm10)
-//                    }
-//                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.pm40 + " (\(RuuviLocalization.unitPm40))",
+                    cellExtractor: { record in
+                        toString(record.pm4)
+                    }
+                ),
+                ColumnDefinition(
+                    header: RuuviLocalization.pm100 + " (\(RuuviLocalization.unitPm100))",
+                    cellExtractor: { record in
+                        toString(record.pm10)
+                    }
+                ),
                 ColumnDefinition(
                     header: RuuviLocalization.voc + " (\(RuuviLocalization.unitVoc))",
                     cellExtractor: { record in
