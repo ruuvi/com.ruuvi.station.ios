@@ -25,7 +25,7 @@ public struct ProgressBar: View {
                         height: geometry.size.height
                     )
                     .foregroundColor(RuuviColor.tintColor.swiftUIColor)
-                    .animation(.linear)
+                    .animation(.linear, value: value)
             }.cornerRadius(6)
         }
     }

@@ -93,15 +93,7 @@ extension View {
 
 struct RuuviWidgets_Previews: PreviewProvider {
     static var previews: some View {
-        if #available(iOSApplicationExtension 16.0, *) {
-            RuuviWidgetEntryView(entry: .placeholder())
-                .previewContext(WidgetPreviewContext(family: .accessoryCircular))
-        } else if #available(iOSApplicationExtension 17.0, *) {
-            RuuviWidgetEntryView(entry: .placeholder())
-                .previewContext(WidgetPreviewContext(family: .systemSmall))
-        } else {
-            RuuviWidgetEntryView(entry: .placeholder())
-                .previewContext(WidgetPreviewContext(family: .systemSmall))
-        }
+        RuuviWidgetEntryView(entry: .placeholder())
+            .previewContext(WidgetPreviewContext(family: .systemSmall))
     }
 }

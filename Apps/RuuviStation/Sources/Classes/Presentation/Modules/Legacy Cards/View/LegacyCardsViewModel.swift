@@ -5,6 +5,7 @@ import RuuviOntology
 import UIKit
 import MobileCoreServices
 import Combine
+import UniformTypeIdentifiers
 
 enum CardType {
     case ruuvi
@@ -213,7 +214,7 @@ extension LegacyCardsViewModel: Reorderable {
 // MARK: - NSItemProviderWriting for Drag & Drop
 extension LegacyCardsViewModel: NSItemProviderWriting {
     public static var writableTypeIdentifiersForItemProvider: [String] {
-        return [kUTTypePlainText as String]
+        return [UTType.plainText.identifier]
     }
 
     public func loadData(
