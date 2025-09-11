@@ -40,24 +40,19 @@ class TagChartsCollectionViewCell: UICollectionViewCell {
         self.measurementService = measurementService
         self.measurementType = measurementType
 
-        var title: String = ""
         var unit: String = ""
         switch measurementType {
         case .temperature:
-            title = RuuviLocalization.TagSettings.OffsetCorrection.temperature
             unit = settings.temperatureUnit.symbol
         case .humidity:
-            title = RuuviLocalization.TagSettings.OffsetCorrection.humidity
             unit = settings.humidityUnit.symbol
         case .pressure:
-            title = RuuviLocalization.TagSettings.OffsetCorrection.pressure
             unit = settings.pressureUnit.symbol
         default:
             break
         }
 
         chartView.setChartLabel(
-            with: title,
             type: data.chartType,
             measurementService: measurementService,
             unit: unit

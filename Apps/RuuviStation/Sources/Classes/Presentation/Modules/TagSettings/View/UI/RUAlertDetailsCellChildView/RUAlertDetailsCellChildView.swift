@@ -15,7 +15,7 @@ class RUAlertDetailsCellChildView: UIView {
         label.textAlignment = .left
         label.numberOfLines = 0
         label.textColor = RuuviColor.textColor.color
-        label.font = UIFont.Muli(.regular, size: 14)
+        label.font = UIFont.ruuviSubheadline()
         return label
     }()
 

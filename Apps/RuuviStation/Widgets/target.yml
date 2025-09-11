@@ -8,7 +8,7 @@ targets:
       properties:
         NSExtension: 
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
-        UIAppFonts: [Oswald-Bold.ttf,Oswald-ExtraLight.ttf,Muli-Regular.ttf,Muli-Bold.ttf,Montserrat-Bold.ttf,Montserrat-Regular.ttf]
+        UIAppFonts: [Oswald-Bold.ttf,Oswald-Regular.ttf,Oswald-Light.ttf,Oswald-ExtraLight.ttf,Mulish-Regular.ttf,Mulish-Bold.ttf,Mulish-SemiBoldItalic.ttf,Mulish-ExtraBold.ttf,Montserrat-Bold.ttf,Montserrat-Regular.ttf,Montserrat-ExtraBold.ttf]
         CFBundleDisplayName: Ruuvi Station
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
         CFBundleShortVersionString: $(MARKETING_VERSION)

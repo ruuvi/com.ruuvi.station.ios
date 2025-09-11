@@ -13,7 +13,7 @@ class RuuviCloudTableViewCell: UITableViewCell {
         label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.bold, size: 16)
+        label.font = UIFont.ruuviCallout()
         return label
     }()
 

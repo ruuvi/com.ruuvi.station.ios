@@ -106,6 +106,24 @@ extension SettingsTableViewController: SettingsViewInput {
         alertNotificationsTitleLabel.textColor = RuuviColor.menuTextColor.color
         experimentalFunctionsLabel.textColor = RuuviColor.menuTextColor.color
         languageValueLabel.textColor = RuuviColor.menuTextColor.color
+
+        [
+            languageTitleLabel,
+            languageValueLabel,
+            alertNotificationsTitleLabel,
+            appearanceTitleLabel,
+            heartbeatTitleLabel,
+            temperatureTitleLabel,
+            humidityTitleLabel,
+            pressureTitleLabel,
+            ruuviCloudTitleLabel,
+            chartTitleLabel,
+            experimentalFunctionsLabel,
+            defaultsTitleLabel,
+            devicesTitleLabel,
+        ] .forEach {
+            $0?.font = UIFont.ruuviHeadline()
+        }
     }
 
     func viewDidShowLanguageChangeDialog() {
@@ -114,7 +132,7 @@ extension SettingsTableViewController: SettingsViewInput {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let cancelTitle = RuuviLocalization.cancel
         alert.addAction(UIAlertAction(title: cancelTitle, style: .cancel, handler: nil))
-        let settingsTitle = RuuviLocalization.WebTagSettings.AlertsAreDisabled.Dialog.Settings.title
+        let settingsTitle = RuuviLocalization.PermissionPresenter.settings
         alert.addAction(UIAlertAction(title: settingsTitle, style: .default, handler: { [weak self] _ in
             self?.output.viewDidSelectChangeLanguage()
         }))
@@ -234,6 +252,6 @@ extension SettingsTableViewController {
     private func updateNavBarTitleFont() {
         tableView.tableHeaderView = UIView()
         navigationController?.navigationBar.titleTextAttributes =
-            [NSAttributedString.Key.font: UIFont.Muli(.bold, size: 18)]
+            [NSAttributedString.Key.font: UIFont.ruuviButtonLarge()]
     }
 }

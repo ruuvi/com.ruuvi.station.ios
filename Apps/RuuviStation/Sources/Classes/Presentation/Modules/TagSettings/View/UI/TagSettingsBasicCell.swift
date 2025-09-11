@@ -16,7 +16,7 @@ class TagSettingsBasicCell: UITableViewCell {
         label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.font = UIFont.Muli(.bold, size: 14)
+        label.font = UIFont.ruuviHeadline()
         return label
     }()
 
@@ -25,7 +25,7 @@ class TagSettingsBasicCell: UITableViewCell {
         label.textColor = RuuviColor.textColor.color
         label.textAlignment = .right
         label.numberOfLines = 1
-        label.font = UIFont.Muli(.regular, size: 14)
+        label.font = UIFont.ruuviBody()
         return label
     }()
 
@@ -80,7 +80,7 @@ class TagSettingsBasicCell: UITableViewCell {
             bottom: nil,
             trailing: safeRightAnchor,
             padding: .init(top: 0, left: 8, bottom: 0, right: 12),
-            size: .init(width: 18, height: 18)
+            size: .init(width: 20, height: 20)
         )
         iconView.centerYInSuperview()
         iconHiddenWidthConstraints = [

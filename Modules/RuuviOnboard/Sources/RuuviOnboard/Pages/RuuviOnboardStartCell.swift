@@ -16,7 +16,7 @@ class RuuviOnboardStartCell: UICollectionViewCell {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.Montserrat(.extraBold, size: 36)
+        label.font = UIFont.mulish(.extraBold, size: 36)
         return label
     }()
 
@@ -25,7 +25,7 @@ class RuuviOnboardStartCell: UICollectionViewCell {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.semiBoldItalic, size: 20)
+        label.font = UIFont.mulish(.semiBoldItalic, size: 20)
         return label
     }()
 
@@ -34,7 +34,7 @@ class RuuviOnboardStartCell: UICollectionViewCell {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.semiBoldItalic, size: 20)
+        label.font = UIFont.mulish(.semiBoldItalic, size: 20)
         return label
     }()
 

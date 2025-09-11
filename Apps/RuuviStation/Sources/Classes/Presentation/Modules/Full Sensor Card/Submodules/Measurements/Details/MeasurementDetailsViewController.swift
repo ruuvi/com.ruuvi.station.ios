@@ -23,18 +23,9 @@ final class MeasurementDetailsViewController: UIViewController {
             static let valueUnitSpacing: CGFloat = 4
             static let headerDescriptionSpacing: CGFloat = 12
             static let unitBottomOffset: CGFloat = -1
-            static let iPadBottomMargin: CGFloat = -20
+            static let bottomMargin: CGFloat = -20
             static let graphBottomPadding: CGFloat = 16
             static let dataDurationLabelRightPadding: CGFloat = 8
-        }
-
-        enum Typography {
-            static let headerFontSize: CGFloat = 16
-            static let unitFontSize: CGFloat = 12
-            static let noDataFontSize: CGFloat = 14
-            static let durationFontSize: CGFloat = 10
-            static let descriptionTitleFontSize: CGFloat = 16
-            static let descriptionParagraphFontSize: CGFloat = 14
         }
 
         enum Animation {
@@ -131,7 +122,7 @@ final class MeasurementDetailsViewController: UIViewController {
         label.textColor = RuuviColor.dashboardIndicator.color
         label.textAlignment = .center
         label.numberOfLines = 1
-        label.font = UIFont.Montserrat(.bold, size: Constants.Typography.noDataFontSize)
+        label.font = UIFont.ruuviCallout()
         return label
     }()
 
@@ -142,7 +133,7 @@ final class MeasurementDetailsViewController: UIViewController {
             .withAlphaComponent(Constants.Alpha.durationLabelAlpha)
         label.textAlignment = .right
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: Constants.Typography.durationFontSize)
+        label.font = UIFont.ruuviCaption2()
         return label
     }()
 
@@ -163,9 +154,9 @@ final class MeasurementDetailsViewController: UIViewController {
     private lazy var lblTitle: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor.dashboardIndicatorBig.color
-        label.font = UIFont.Montserrat(.bold, size: Constants.Typography.headerFontSize)
+        label.font = UIFont.ruuviCallout()
         label.textAlignment = .left
-        label.numberOfLines = 1
+        label.numberOfLines = 2
         label.setContentHuggingPriority(.required, for: .vertical)
         label.setContentCompressionResistancePriority(.required, for: .vertical)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -175,7 +166,7 @@ final class MeasurementDetailsViewController: UIViewController {
     private lazy var valueLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor.dashboardIndicatorBig.color
-        label.font = UIFont.Montserrat(.bold, size: Constants.Typography.headerFontSize)
+        label.font = UIFont.ruuviCallout()
         label.textAlignment = .right
         label.numberOfLines = 1
         label.setContentHuggingPriority(.required, for: .vertical)
@@ -187,7 +178,7 @@ final class MeasurementDetailsViewController: UIViewController {
     private lazy var unitLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor.dashboardIndicatorBig.color
-        label.font = UIFont.Muli(.bold, size: Constants.Typography.unitFontSize)
+        label.font = UIFont.ruuviHeadlineTiny()
         label.textAlignment = .right
         label.numberOfLines = 1
         label.setContentHuggingPriority(.required, for: .vertical)
@@ -450,7 +441,7 @@ private extension MeasurementDetailsViewController {
                 lblDescription.bottomAnchor
                     .constraint(
                         equalTo: contentView.bottomAnchor,
-                        constant: UIDevice.current.userInterfaceIdiom == .pad ? Constants.Layout.iPadBottomMargin : 0
+                        constant: Constants.Layout.bottomMargin
                     ),
             ]
         )
@@ -462,7 +453,7 @@ private extension MeasurementDetailsViewController {
         unit: String?,
         description: NSAttributedString?
     ) {
-        lblTitle.text = indicatorType.displayName
+        lblTitle.text = indicatorType.fullName
         valueLabel.text = value
         unitLabel.text = unit
         lblDescription.attributedText = description
@@ -618,6 +609,14 @@ private extension MeasurementDetailsViewController {
         }
 
         scrollView.isScrollEnabled = true
+
+        if scrollView.bounds.width > 0 && scrollView.bounds.height > 0 {
+            if scrollView.edgeFader == nil {
+                scrollView.enableEdgeFading()
+            } else {
+                scrollView.updateEdgeFading()
+            }
+        }
     }
 
     func updateSheetPresentationIfNeeded() {
@@ -683,25 +682,20 @@ private extension MeasurementDetailsViewController {
     ) -> String {
         var unit = indicator.unit
 
-        // Some units gets special treatment because they are formatted on
-        // Snapshot Builder with name of the measurements for showing on Dashboard.
-        // However, this screen shows the title already and
-        // does not need the title as part of unit.
-        if indicator.type == .aqi {
+        // Some units gets special treatment because some don't need units
+        // and some requires formatting.
+        switch indicator.type {
+        case .aqi:
             let components = indicator.value.components(separatedBy: "/")
-            unit = components.last ?? indicator.unit
-        }
-
-        if indicator.type == .pm25 {
-            unit = RuuviLocalization.unitPm25
-        }
-
-        if indicator.type == .pm10 {
-            unit = RuuviLocalization.unitPm10
-        }
-
-        if indicator.type == .soundInstant {
-            unit = RuuviLocalization.unitSound
+            if let indicatorUnit = components.last {
+                unit = "/\(indicatorUnit)"
+            } else {
+                unit = indicator.unit
+            }
+        case .voc, .nox, .movementCounter:
+            unit = ""
+        default:
+            break
         }
 
         return unit
@@ -710,21 +704,15 @@ private extension MeasurementDetailsViewController {
     static func createAttributedDescription(for type: MeasurementType) -> NSAttributedString {
         return NSAttributedString.fromFormattedDescription(
             type.descriptionText,
-            titleFont: UIFont
-                .Montserrat(
-                    .bold,
-                    size: Constants.Typography.descriptionTitleFontSize
-                ),
-            paragraphFont: UIFont
-                .Muli(
-                    .regular,
-                    size: Constants.Typography.descriptionParagraphFontSize
-                ),
+            titleFont: UIFont.ruuviBody(),
+            paragraphFont: UIFont.ruuviSubheadline(),
             titleColor: RuuviColor.dashboardIndicator.color,
             paragraphColor: RuuviColor.dashboardIndicator.color
                 .withAlphaComponent(
                     Constants.Alpha.descriptionParagraphAlpha
-                )
+                ),
+            linkColor: RuuviColor.tintColor.color,
+            linkFont: .ruuviCallout()
         )
     }
 

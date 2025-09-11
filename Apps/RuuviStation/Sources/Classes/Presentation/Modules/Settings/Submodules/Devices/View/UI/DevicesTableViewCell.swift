@@ -18,7 +18,7 @@ class DevicesTableViewCell: UITableViewCell {
         label.textColor = RuuviColor.dashboardIndicatorBig.color
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = UIFont.Montserrat(.bold, size: 14)
+        label.font = UIFont.ruuviHeadline()
         return label
     }()
 
@@ -27,7 +27,7 @@ class DevicesTableViewCell: UITableViewCell {
         label.textColor = RuuviColor.dashboardIndicator.color
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = UIFont.Montserrat(.regular, size: 12)
+        label.font = UIFont.ruuviCaption1()
         return label
     }()
 
@@ -36,7 +36,7 @@ class DevicesTableViewCell: UITableViewCell {
         label.textColor = RuuviColor.dashboardIndicator.color
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = UIFont.Montserrat(.regular, size: 12)
+        label.font = UIFont.ruuviCaption1()
         return label
     }()
 }

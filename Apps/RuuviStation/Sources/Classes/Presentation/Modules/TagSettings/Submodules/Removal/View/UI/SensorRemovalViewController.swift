@@ -21,7 +21,8 @@ class SensorRemovalViewController: UIViewController {
         label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: 16)
+        label.adjustsFontForContentSizeCategory = true
+        label.font = UIFont.ruuviBody()
         return label
     }()
 
@@ -38,7 +39,8 @@ class SensorRemovalViewController: UIViewController {
         )
         button.setTitle(RuuviLocalization.remove, for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
+        button.titleLabel?.font = UIFont.ruuviButtonMedium()
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.addTarget(
             self,
             action: #selector(handleRemoveButtonTap),

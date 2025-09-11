@@ -24,8 +24,8 @@ final class CardsProminentIndicatorView: UIView {
     private enum Constants {
         static let aqiCircularViewSize: CGFloat = 176
         static let titleContainerHeight: CGFloat = 48
-        static let spacingToTitle: CGFloat = 8
-        static let measurementContainerHeight: CGFloat = 80
+        static let spacingToTitle: CGFloat = 30
+        static let measurementContainerHeight: CGFloat = 120
         static let borderWidth: CGFloat = 1
         static let titleContainerCornerRadius: CGFloat = 24
         static let titleContainerAlpha: CGFloat = 0.15
@@ -33,7 +33,7 @@ final class CardsProminentIndicatorView: UIView {
         static let iconTitleSpacing: CGFloat = 8
         static let containerPadding: CGFloat = 24
         static let containerVerticalPadding: CGFloat = 12
-        static let measurementUnitTopOffset: CGFloat = 12
+        static let measurementUnitTopOffset: CGFloat = 16
         static let measurementUnitLeadingOffset: CGFloat = 4
         static let alphaLight: CGFloat = 0.8
         static let alphaMedium: CGFloat = 0.9
@@ -77,7 +77,7 @@ final class CardsProminentIndicatorView: UIView {
     private lazy var measurementValueLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = UIFont.Oswald(.bold, size: 60)
+        label.font = UIFont.oswald(.bold, size: 60)
         label.textColor = .white
         label.numberOfLines = 1
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -87,7 +87,7 @@ final class CardsProminentIndicatorView: UIView {
     private lazy var measurementUnitLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left
-        label.font = UIFont.Oswald(.regular, size: 30)
+        label.font = UIFont.oswald(.regular, size: 18)
         label.numberOfLines = 1
         label.textColor = UIColor.white.withAlphaComponent(Constants.alphaLight)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -112,7 +112,7 @@ final class CardsProminentIndicatorView: UIView {
 
     private lazy var indicatorTitleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.Muli(.bold, size: 14)
+        label.font = UIFont.mulish(.bold, size: 14)
         label.numberOfLines = 1
         label.textColor = UIColor.white.withAlphaComponent(Constants.alphaMedium)
         label.textAlignment = .center
@@ -278,6 +278,11 @@ private extension CardsProminentIndicatorView {
     }
 
     func setupMeasurementConstraints() {
+        // Align measurementValueLabel with the same vertical center as
+        // currentValueLabel in AQI mode The currentValueLabel is centered in the circular view.
+        // Adjust the line height of the circle to match the visual center.
+        let aqiValueLabelCenterY = (Constants.aqiCircularViewSize / 2) - 3
+
         aqiIndicatorHiddenConstraints = [
             measurementIndicatorContainer.topAnchor.constraint(equalTo: topAnchor),
             measurementIndicatorContainer.bottomAnchor.constraint(
@@ -290,7 +295,11 @@ private extension CardsProminentIndicatorView {
                 equalToConstant: Constants.measurementContainerHeight
             ),
 
-            measurementValueLabel.centerYAnchor.constraint(equalTo: measurementIndicatorContainer.centerYAnchor),
+            // Position measurement value at the same Y position as AQI current value
+            measurementValueLabel.centerYAnchor.constraint(
+                equalTo: measurementIndicatorContainer.topAnchor,
+                constant: aqiValueLabelCenterY
+            ),
             measurementValueLabel.centerXAnchor.constraint(equalTo: measurementIndicatorContainer.centerXAnchor),
 
             measurementUnitLabel.topAnchor.constraint(
@@ -362,7 +371,7 @@ private extension CardsProminentIndicatorView {
 
     func updateCommonElements(with indicatorData: RuuviTagCardSnapshotIndicatorData) {
         indicatorIcon.image = indicatorData.type.icon
-        indicatorTitleLabel.text = indicatorData.type.displayName
+        indicatorTitleLabel.text = indicatorData.type.shortName
     }
 
     func handleAQIMode(with indicatorData: RuuviTagCardSnapshotIndicatorData) {
@@ -473,12 +482,12 @@ final class AirQualityCircularView: UIView {
     // MARK: - Constants
     private enum Constants {
         static let circularViewSize: CGFloat = 150
-        static let labelVerticalSpacing: CGFloat = 2
-        static let statusLabelBottomMargin: CGFloat = 8
-        static let maxValueFontSize: CGFloat = 16
-        static let currentValueFontSize: CGFloat = 52
+        static let labelVerticalSpacing: CGFloat = 0
+        static let statusLabelBottomMargin: CGFloat = 0
+        static let currentValueFontSize: CGFloat = 60
+        static let maxValueFontSize: CGFloat = 18
         static let statusLabelFontSize: CGFloat = 20
-        static let alphaLight: CGFloat = 0.7
+        static let alphaLight: CGFloat = 1.0
     }
 
     // MARK: - UI Components
@@ -491,7 +500,7 @@ final class AirQualityCircularView: UIView {
 
     private lazy var currentValueLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.Oswald(.bold, size: Constants.currentValueFontSize)
+        label.font = UIFont.oswald(.bold, size: Constants.currentValueFontSize)
         label.textColor = .white
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -500,7 +509,7 @@ final class AirQualityCircularView: UIView {
 
     private lazy var maxValueLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.Muli(.regular, size: Constants.maxValueFontSize)
+        label.font = UIFont.oswald(.regular, size: Constants.maxValueFontSize)
         label.textColor = UIColor.white.withAlphaComponent(Constants.alphaLight)
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -509,7 +518,7 @@ final class AirQualityCircularView: UIView {
 
     private lazy var statusLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.Muli(.bold, size: Constants.statusLabelFontSize)
+        label.font = UIFont.mulish(.extraBold, size: Constants.statusLabelFontSize)
         label.textColor = .white
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -573,43 +582,63 @@ private extension AirQualityCircularView {
     }
 
     func setupCircularProgressConstraints() {
-        circularProgressView.centerXInSuperview()
-        circularProgressView.anchor(
-            top: topAnchor,
-            leading: nil,
-            bottom: nil,
-            trailing: nil,
-            size: CGSize(
-                width: Constants.circularViewSize,
-                height: Constants.circularViewSize
-            )
-        )
+        // Center the circular progress view both horizontally and vertically
+        NSLayoutConstraint.activate([
+            circularProgressView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            circularProgressView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            circularProgressView.widthAnchor.constraint(
+                equalToConstant: Constants.circularViewSize
+            ),
+            circularProgressView.heightAnchor.constraint(
+                equalToConstant: Constants.circularViewSize
+            ),
+        ])
     }
 
     func setupCurrentValueConstraints() {
-        currentValueLabel.matchOriginTo(view: circularProgressView)
+        // Center the current value label in the circular progress view
+        NSLayoutConstraint.activate(
+            [
+                currentValueLabel.centerXAnchor.constraint(
+                    equalTo: circularProgressView.centerXAnchor
+                ),
+                currentValueLabel.centerYAnchor
+                    .constraint(
+                        equalTo: circularProgressView.centerYAnchor,
+                        constant: -2.6 // Offset to visually center the text
+                    ),
+            ]
+        )
     }
 
     func setupMaxValueConstraints() {
-        maxValueLabel.centerXInSuperview()
-        maxValueLabel.anchor(
-            top: currentValueLabel.bottomAnchor,
-            leading: nil,
-            bottom: nil,
-            trailing: nil,
-            padding: UIEdgeInsets(top: Constants.labelVerticalSpacing, left: 0, bottom: 0, right: 0)
-        )
+        // Position the max value label at the bottom center of the arc gap
+        // The arc starts at 135° and spans 270°, leaving a gap from 45° to 135°
+        // The center of the gap is at 90° (bottom of circle)
+
+        // Calculate the radius to position the label
+        let radius = Constants.circularViewSize / 2 - 26 // Same radius offset as in CircularProgressView
+
+        // Position at the bottom of the circle (90 degrees)
+        // For a circle centered at the view, 90 degrees is straight down
+        NSLayoutConstraint.activate([
+            maxValueLabel.centerXAnchor.constraint(equalTo: circularProgressView.centerXAnchor),
+            // Position the label at the bottom of the circle, on the arc path
+            maxValueLabel.centerYAnchor.constraint(
+                equalTo: circularProgressView.centerYAnchor,
+                constant: radius
+            ),
+        ])
     }
 
     func setupStatusLabelConstraints() {
-        statusLabel.centerXInSuperview()
-        statusLabel.anchor(
-            top: circularProgressView.bottomAnchor,
-            leading: nil,
-            bottom: bottomAnchor,
-            trailing: nil,
-            padding: .init(top: 0, left: 0, bottom: Constants.statusLabelBottomMargin, right: 0)
-        )
+        NSLayoutConstraint.activate([
+            statusLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            statusLabel.topAnchor.constraint(
+                equalTo: circularProgressView.bottomAnchor,
+                constant: Constants.statusLabelBottomMargin
+            ),
+        ])
     }
 }
 

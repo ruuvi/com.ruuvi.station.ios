@@ -6,8 +6,9 @@ class NotificationsSettingsTextCell: UITableViewCell {
         let label = UILabel()
         label.textColor = RuuviColor.menuTextColor.color
         label.textAlignment = .left
-        label.numberOfLines = 1
-        label.font = UIFont.Muli(.bold, size: 16)
+        label.numberOfLines = 0
+        label.adjustsFontForContentSizeCategory = true
+        label.font = UIFont.ruuviHeadline()
         return label
     }()
 
@@ -16,7 +17,8 @@ class NotificationsSettingsTextCell: UITableViewCell {
         label.textColor = RuuviColor.textColor.color.withAlphaComponent(0.6)
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: 13)
+        label.adjustsFontForContentSizeCategory = true
+        label.font = UIFont.ruuviFootnote()
         return label
     }()
 
@@ -25,7 +27,8 @@ class NotificationsSettingsTextCell: UITableViewCell {
         label.textColor = RuuviColor.menuTextColor.color
         label.textAlignment = .right
         label.numberOfLines = 1
-        label.font = UIFont.Muli(.regular, size: 16)
+        label.adjustsFontForContentSizeCategory = true
+        label.font = UIFont.ruuviBody()
         return label
     }()
 

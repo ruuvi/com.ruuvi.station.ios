@@ -166,7 +166,6 @@ private extension CardsCoordinator {
             activeTab: activeMenu,
             flags: r.resolve(RuuviLocalFlags.self)!
         )
-        viewController.view.backgroundColor = .systemGray
         let presenter = CardsBasePresenter(
             measurementPresenter: cardsMeasurementViewPresenter,
             graphPresenter: cardsGraphViewPresenter,
@@ -266,7 +265,7 @@ private extension CardsCoordinator {
 private extension CardsCoordinator {
     func createAlertsViewController() -> CardsAlertsViewController {
         let viewController = CardsAlertsViewController()
-        viewController.view.backgroundColor = .cyan
+        viewController.view.backgroundColor = .gray
         let presenter = CardsAlertsPresenter()
         presenter.view = viewController
         viewController.output = presenter
@@ -279,7 +278,7 @@ private extension CardsCoordinator {
 private extension CardsCoordinator {
     func createSettingsViewController() -> CardsSettingsViewController {
         let viewController = CardsSettingsViewController()
-        viewController.view.backgroundColor = .systemOrange
+        viewController.view.backgroundColor = .gray
         let presenter = CardsSettingsPresenter()
         presenter.view = viewController
         viewController.output = presenter

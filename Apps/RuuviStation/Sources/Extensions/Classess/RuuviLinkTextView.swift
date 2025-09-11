@@ -68,14 +68,15 @@ class RuuviLinkTextView: UITextView {
         isUserInteractionEnabled = true
         backgroundColor = .clear
         isSelectable = false
+        adjustsFontForContentSizeCategory = true
 
         let regularAttributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.Muli(.regular, size: fontSize),
+            .font: RuuviFonts.mulish(.regular, size: fontSize, for: .body),
             .foregroundColor: textRegularColor ?? .secondaryLabel,
         ]
 
         let tappableAttributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.Muli(.bold, size: fontSize),
+            .font: RuuviFonts.mulish(.bold, size: fontSize, for: .body),
             .foregroundColor: textLinkColor ?? .secondaryLabel,
         ]
 

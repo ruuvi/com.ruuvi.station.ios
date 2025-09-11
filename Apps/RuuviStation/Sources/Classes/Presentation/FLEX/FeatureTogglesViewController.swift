@@ -93,7 +93,7 @@ extension FeatureTogglesViewController {
         cell.backgroundColor = .clear
         let feature = features[indexPath.row]
         cell.textLabel?.text = Self.title(for: feature)
-        cell.textLabel?.font = UIFont.Muli(.bold, size: 16)
+        cell.textLabel?.font = UIFont.ruuviCallout()
         cell.textLabel?.textColor = RuuviColor.menuTextColor.color
         if featureToggleService.isEnabled(feature) {
             cell.accessoryType = .checkmark
@@ -131,7 +131,7 @@ extension FeatureTogglesViewController {
         let label = UILabel()
         label.text = "Use local feature toggles"
         label.textAlignment = .right
-        label.font = UIFont.Muli(.bold, size: 16)
+        label.font = UIFont.ruuviCallout()
         label.textColor = RuuviColor.menuTextColor.color
         return label
     }

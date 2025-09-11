@@ -53,6 +53,7 @@ class DiscoverTableViewController: UIViewController {
 extension DiscoverTableViewController: DiscoverViewInput {
     func style() {
         actionButton.tintColor = RuuviColor.tintColor.color
+        actionButton.titleLabel?.font = UIFont.ruuviButtonMedium()
         navigationItem.leftBarButtonItem?.image = RuuviAsset.dismissModalIcon.image
         view.backgroundColor = RuuviColor.primary.color
     }
@@ -284,6 +285,7 @@ extension DiscoverTableViewController: UITableViewDataSource {
             ? RuuviLocalization.DiscoverTable.NoDevicesSection.NotFound.text
             : RuuviLocalization.DiscoverTable.NoDevicesSection.BluetoothDisabled.text
             cell.descriptionLabel.textColor = RuuviColor.menuTextColor.color
+            cell.descriptionLabel.font = UIFont.ruuviHeadline()
             return cell
         }
     }
@@ -315,6 +317,9 @@ extension DiscoverTableViewController {
     private func configure(cell: DiscoverDeviceTableViewCell, with device: DiscoverRuuviTagViewModel) {
         cell.identifierLabel.text = displayName(for: device)
         cell.identifierLabel.textColor = RuuviColor.menuTextColor.color
+        cell.identifierLabel.font = UIFont.ruuviHeadline()
+
+        cell.rssiLabel.font = UIFont.ruuviSubheadline()
 
         // RSSI
         if let rssi = device.rssi {
@@ -340,10 +345,9 @@ extension DiscoverTableViewController {
 
 extension DiscoverTableViewController {
     private func configureViews() {
-        if let muliBold = UIFont(name: "Muli-Bold", size: 18) {
-            navigationController?.navigationBar.titleTextAttributes =
-                [.font: muliBold]
-        }
+        navigationController?.navigationBar.titleTextAttributes = [
+            .font: UIFont.ruuviButtonLarge()
+        ]
         actionButton.setTitle(RuuviLocalization.DiscoverTable.GetMoreSensors.Button.title.capitalized, for: .normal)
         configureTableView()
     }

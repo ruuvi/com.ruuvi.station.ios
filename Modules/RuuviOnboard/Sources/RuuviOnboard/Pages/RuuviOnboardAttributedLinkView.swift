@@ -48,12 +48,12 @@ class RuuviOnboardAttributedLinkView: UITextView {
         isSelectable = false
 
         let regularAttributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.Muli(.semiBoldItalic, size: 15),
+            .font: UIFont.mulish(.semiBoldItalic, size: 15),
             .foregroundColor: textRegularColor,
         ]
 
         let tappableAttributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.Muli(.semiBoldItalic, size: 15),
+            .font: UIFont.mulish(.semiBoldItalic, size: 15),
             .foregroundColor: textLinkColor,
             .underlineStyle: NSUnderlineStyle.single.rawValue,
             .underlineColor: textLinkColor,

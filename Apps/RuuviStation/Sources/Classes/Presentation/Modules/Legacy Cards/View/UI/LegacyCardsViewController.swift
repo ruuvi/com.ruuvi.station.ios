@@ -233,7 +233,7 @@ class LegacyCardsViewController: UIViewController {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.extraBold, size: 20)
+        label.font = UIFont.mulish(.extraBold, size: 20)
         return label
     }()
 

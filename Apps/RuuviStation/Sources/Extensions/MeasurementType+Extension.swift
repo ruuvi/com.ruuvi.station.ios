@@ -6,7 +6,7 @@ extension MeasurementType {
     static var chartsCases: [MeasurementType] {
         [
             .temperature,
-            .humidity,
+            .anyHumidity,
             .pressure,
             .aqi,
             .co2,
@@ -21,13 +21,13 @@ extension MeasurementType {
     static var all: [MeasurementType] {
         [
             .temperature,
-            .humidity,
+            .anyHumidity,
             .pressure,
             .movementCounter,
             .aqi,
             .co2,
             .pm25,
-            .pm10,
+            .pm100,
             .nox,
             .voc,
             .luminosity,
@@ -38,13 +38,20 @@ extension MeasurementType {
 
 extension MeasurementType {
 
-    /// Returns the display name for the measurement type
-    var displayName: String {
+    /// Returns the Full name for the measurement type
+    var fullName: String {
         switch self {
         case .temperature:
             return RuuviLocalization.temperature
-        case .humidity:
-            return RuuviLocalization.humidity
+        case .humidity(let kind):
+            switch kind {
+            case .percent:
+                return RuuviLocalization.relativeHumidity
+            case .gm3:
+                return RuuviLocalization.absoluteHumidity
+            case .dew:
+                return RuuviLocalization.dewpoint
+            }
         case .pressure:
             return RuuviLocalization.pressure
         case .movementCounter:
@@ -52,11 +59,50 @@ extension MeasurementType {
         case .aqi:
             return RuuviLocalization.airQuality
         case .co2:
+            return RuuviLocalization.carbonDioxide
+        case .pm25:
+            return RuuviLocalization.particulateMatter25
+        case .pm100:
+            return RuuviLocalization.particulateMatter100
+        case .nox:
+            return RuuviLocalization.nitrogenOxides
+        case .voc:
+            return RuuviLocalization.volatileOrganicCompounds
+        case .soundInstant:
+            return RuuviLocalization.soundInstant
+        case .luminosity:
+            return RuuviLocalization.illuminance
+        default:
+            return ""
+        }
+    }
+
+    /// Returns the Short name for the measurement type
+    var shortName: String {
+        switch self {
+        case .temperature:
+            return RuuviLocalization.temperature
+        case .humidity(let kind):
+            switch kind {
+            case .percent:
+                return RuuviLocalization.relHumidity
+            case .gm3:
+                return RuuviLocalization.absHumidity
+            case .dew:
+                return RuuviLocalization.dewpoint
+            }
+        case .pressure:
+            return RuuviLocalization.pressure
+        case .movementCounter:
+            return RuuviLocalization.movements
+        case .aqi:
+            return RuuviLocalization.airQuality
+        case .co2:
             return RuuviLocalization.co2
         case .pm25:
             return RuuviLocalization.pm25
-        case .pm10:
-            return RuuviLocalization.pm10
+        case .pm100:
+            return RuuviLocalization.pm100
         case .nox:
             return RuuviLocalization.nox
         case .voc:
@@ -64,9 +110,9 @@ extension MeasurementType {
         case .soundInstant:
             return RuuviLocalization.soundInstant
         case .luminosity:
-            return RuuviLocalization.luminosity
+            return RuuviLocalization.light
         default:
-            return rawValue.capitalized
+            return ""
         }
     }
 
@@ -87,7 +133,7 @@ extension MeasurementType {
             return RuuviAsset.Measurements.iconCo2.image
         case .pm25:
             return RuuviAsset.Measurements.iconPm25.image
-        case .pm10:
+        case .pm100:
             return RuuviAsset.Measurements.iconPm10.image
         case .nox:
             return RuuviAsset.Measurements.iconNox.image
@@ -116,7 +162,7 @@ extension MeasurementType {
             return RuuviLocalization.descriptionTextAirQuality
         case .co2:
             return RuuviLocalization.descriptionTextCo2
-        case .pm25, .pm10:
+        case .pm25, .pm100:
             return RuuviLocalization.descriptionTextPm
         case .nox:
             return RuuviLocalization.descriptionTextNox
@@ -150,7 +196,7 @@ extension MeasurementType {
             return .carbonDioxide(lower: 0, upper: 0)
         case .pm25:
             return .pMatter25(lower: 0, upper: 0)
-        case .pm10:
+        case .pm100:
             return .pMatter10(lower: 0, upper: 0)
         case .nox:
             return .nox(lower: 0, upper: 0)
@@ -164,4 +210,44 @@ extension MeasurementType {
             return .temperature(lower: 0, upper: 0)
         }
     }
+}
+
+extension MeasurementType {
+    static func hideUnit(for type: MeasurementType) -> Bool {
+        switch type {
+        case .aqi, .voc, .nox, .movementCounter:
+            return true
+        default:
+            return false
+        }
+    }
+}
+
+extension MeasurementType {
+    static var anyHumidity: MeasurementType { .humidity(.percent) }
+}
+
+extension MeasurementType {
+  /// Same enum case ignoring associated values.
+  func isSameCase(as other: MeasurementType) -> Bool {
+    switch (self, other) {
+    case (.aqi, .aqi), (.co2, .co2), (.pm25, .pm25), (.pm100, .pm100),
+         (.voc, .voc), (.nox, .nox),
+         (.temperature, .temperature),
+         (.humidity, .humidity),
+         (.pressure, .pressure),
+         (.luminosity, .luminosity),
+         (.movementCounter, .movementCounter),
+         (.soundInstant, .soundInstant):
+      return true
+    default:
+      return false
+    }
+  }
+}
+
+extension Array where Element == MeasurementType {
+  func firstIndexMatchingCase(of probe: MeasurementType) -> Int? {
+    firstIndex { $0.isSameCase(as: probe) }
+  }
 }

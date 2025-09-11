@@ -25,9 +25,4 @@ public enum Constants: String {
 
     case ruuviLogo = "ruuvi_logo"
     case ruuviLogoEye = "eye_circle"
-
-    case muliRegular = "Muli-Regular"
-    case muliBold = "Muli-Bold"
-    case oswaldBold = "Oswald-Bold"
-    case oswaldExtraLight = "Oswald-ExtraLight"
 }

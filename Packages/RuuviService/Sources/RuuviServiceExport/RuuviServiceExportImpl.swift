@@ -221,7 +221,7 @@ extension RuuviServiceExportImpl {
                     }
                 ),
                 ColumnDefinition(
-                    header: RuuviLocalization.pm1 + " (\(RuuviLocalization.unitPm10))",
+                    header: RuuviLocalization.pm10 + " (\(RuuviLocalization.unitPm10))",
                     cellExtractor: { record in
                         toString(record.pm1)
                     }
@@ -233,13 +233,13 @@ extension RuuviServiceExportImpl {
                     }
                 ),
                 ColumnDefinition(
-                    header: RuuviLocalization.pm4 + " (\(RuuviLocalization.unitPm40))",
+                    header: RuuviLocalization.pm40 + " (\(RuuviLocalization.unitPm40))",
                     cellExtractor: { record in
                         toString(record.pm4)
                     }
                 ),
                 ColumnDefinition(
-                    header: RuuviLocalization.pm10 + " (\(RuuviLocalization.unitPm100))",
+                    header: RuuviLocalization.pm100 + " (\(RuuviLocalization.unitPm100))",
                     cellExtractor: { record in
                         toString(record.pm10)
                     }
@@ -313,7 +313,7 @@ extension RuuviServiceExportImpl {
                 ),
                 ColumnDefinition(
                     header: RuuviLocalization.ExportService.movementCounter +
-                        " (\(RuuviLocalization.Cards.Movements.title))",
+                        " (\(RuuviLocalization.movements))",
                     cellExtractor: { [weak self] record in
                         if let movementCounter = record.movementCounter {
                             return "\(movementCounter)"

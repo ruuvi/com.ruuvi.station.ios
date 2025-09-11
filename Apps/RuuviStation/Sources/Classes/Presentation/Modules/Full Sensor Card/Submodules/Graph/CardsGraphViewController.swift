@@ -106,7 +106,7 @@ class CardsGraphViewController: UIViewController {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.Montserrat(.bold, size: 14)
+        label.font = UIFont.mulish(.bold, size: 14)
         return label
     }()
 
@@ -179,7 +179,7 @@ class CardsGraphViewController: UIViewController {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .left
-        label.font = UIFont.Muli(.regular, size: 16)
+        label.font = UIFont.ruuviBody()
         return label
     }()
 
@@ -270,6 +270,7 @@ class CardsGraphViewController: UIViewController {
 
     fileprivate func setUpUI() {
         setUpContentView()
+        configureViews()
     }
 
     // swiftlint:disable:next function_body_length
@@ -501,6 +502,10 @@ class CardsGraphViewController: UIViewController {
         )
         noDataLabel.centerYInSuperview()
         noDataLabel.alpha = 0
+    }
+
+    private func configureViews() {
+        scrollView.enableEdgeFading()
     }
 
     @objc fileprivate func syncButtonDidTap() {
@@ -776,7 +781,6 @@ extension CardsGraphViewController: CardsGraphViewInput {
             case .temperature:
                 populateChartView(
                     from: data,
-                    title: RuuviLocalization.TagSettings.OffsetCorrection.temperature,
                     unit: settings.temperatureUnit.symbol,
                     settings: settings,
                     view: temperatureChartView
@@ -784,7 +788,6 @@ extension CardsGraphViewController: CardsGraphViewInput {
             case .humidity:
                 populateChartView(
                     from: data,
-                    title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
                     unit: settings.humidityUnit.symbol,
                     settings: settings,
                     view: humidityChartView
@@ -792,7 +795,6 @@ extension CardsGraphViewController: CardsGraphViewInput {
             case .pressure:
                 populateChartView(
                     from: data,
-                    title: RuuviLocalization.TagSettings.OffsetCorrection.pressure,
                     unit: settings.pressureUnit.symbol,
                     settings: settings,
                     view: pressureChartView
@@ -800,7 +802,6 @@ extension CardsGraphViewController: CardsGraphViewInput {
             case .aqi:
                 populateChartView(
                     from: data,
-                    title: RuuviLocalization.aqi,
                     unit: "",
                     settings: settings,
                     view: aqiChartView
@@ -808,7 +809,6 @@ extension CardsGraphViewController: CardsGraphViewInput {
             case .co2:
                 populateChartView(
                     from: data,
-                    title: RuuviLocalization.co2,
                     unit: RuuviLocalization.unitCo2,
                     settings: settings,
                     view: co2ChartView
@@ -816,7 +816,6 @@ extension CardsGraphViewController: CardsGraphViewInput {
             case .pm25:
                 populateChartView(
                     from: data,
-                    title: RuuviLocalization.pm25,
                     unit: RuuviLocalization.unitPm25,
                     settings: settings,
                     view: pm25ChartView
@@ -824,7 +823,6 @@ extension CardsGraphViewController: CardsGraphViewInput {
             case .voc:
                 populateChartView(
                     from: data,
-                    title: RuuviLocalization.voc,
                     unit: RuuviLocalization.unitVoc,
                     settings: settings,
                     view: vocChartView
@@ -832,7 +830,6 @@ extension CardsGraphViewController: CardsGraphViewInput {
             case .nox:
                 populateChartView(
                     from: data,
-                    title: RuuviLocalization.nox,
                     unit: RuuviLocalization.unitNox,
                     settings: settings,
                     view: noxChartView
@@ -840,7 +837,6 @@ extension CardsGraphViewController: CardsGraphViewInput {
             case .luminosity:
                 populateChartView(
                     from: data,
-                    title: RuuviLocalization.luminosity,
                     unit: RuuviLocalization.unitLuminosity,
                     settings: settings,
                     view: luminosityChartView
@@ -848,7 +844,6 @@ extension CardsGraphViewController: CardsGraphViewInput {
             case .soundInstant:
                 populateChartView(
                     from: data,
-                    title: RuuviLocalization.soundInstant,
                     unit: RuuviLocalization.unitSound,
                     settings: settings,
                     view: soundChartView
@@ -990,7 +985,7 @@ extension CardsGraphViewController: CardsGraphViewInput {
         )
         humidityChartView.updateLatest(
             with: humidity,
-            type: .humidity,
+            type: .anyHumidity,
             measurementService: measurementService
         )
         pressureChartView.updateLatest(
@@ -1224,7 +1219,7 @@ extension CardsGraphViewController {
         }
         updateScrollviewBehaviour()
 
-        if !from.contains(.humidity) {
+        if !from.contains(.anyHumidity) {
             humidityChartView.isHidden = true
             if humidityChartViewHeight.constant != 0 {
                 humidityChartViewHeight.constant = 0
@@ -1468,13 +1463,11 @@ extension CardsGraphViewController {
 
     private func populateChartView(
         from data: TagChartViewData,
-        title: String,
         unit: String,
         settings: RuuviLocalSettings,
         view: TagChartsView
     ) {
         view.setChartLabel(
-            with: title,
             type: data.chartType,
             measurementService: measurementService,
             unit: unit
@@ -1648,7 +1641,7 @@ extension CardsGraphViewController {
             if view == temperatureChartView {
                 type = .temperature
             } else if view == humidityChartView {
-                type = .humidity
+                type = .anyHumidity
             } else if view == pressureChartView {
                 type = .pressure
             } else if view == aqiChartView {

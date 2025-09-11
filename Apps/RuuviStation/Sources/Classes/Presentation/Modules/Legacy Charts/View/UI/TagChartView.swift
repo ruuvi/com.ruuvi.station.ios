@@ -27,20 +27,19 @@ class TagChartsView: UIView {
     private lazy var chartNameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = UIFont.Muli(.bold, size: UIDevice.isTablet() ? 18 : 14)
+        label.font = UIFont.mulish(.bold, size: UIDevice.isTablet() ? 18 : 14)
         return label
     }()
 
     private lazy var chartMinMaxAvgLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = UIFont.Muli(.regular, size: UIDevice.isTablet() ? 12 : 10)
+        label.font = UIFont.ruuviCaption1()
         return label
     }()
 
     // MARK: - Private properties
     private var settings: RuuviLocalSettings!
-    private var chartName: String = ""
     private var chartMinMaxAvgHiddenConstraints: [NSLayoutConstraint] = []
 
     // Properties for chart stat
@@ -192,13 +191,12 @@ extension TagChartsView {
     }
 
     func setChartLabel(
-        with name: String,
         type: MeasurementType,
         measurementService: RuuviServiceMeasurement,
         unit: String
     ) {
-        chartName = name
-        chartNameLabel.text = name + (unit.isEmpty ? "" : " (\(unit))")
+        let hideUnit = MeasurementType.hideUnit(for: type)
+        chartNameLabel.text = type.shortName + (hideUnit ? "" : " (\(unit))")
         chartView.setMarker(
             with: type,
             measurementService: measurementService,
@@ -321,7 +319,7 @@ extension TagChartsView {
             return measurementService.co2String(for: value)
         case .pm25:
             return measurementService.pm25String(for: value)
-        case .pm10:
+        case .pm100:
             return measurementService.pm10String(for: value)
         case .voc:
             return measurementService.vocString(for: value)

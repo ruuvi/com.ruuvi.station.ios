@@ -5,9 +5,7 @@ import UIKit
 class MyRuuviAccountViewController: UIViewController {
     var output: MyRuuviAccountViewOutput!
 
-    @IBOutlet weak var dismissButton: UIButton!
     @IBOutlet weak var supportLinkTextView: RuuviLinkTextView!
-    @IBOutlet var headerTitleLabel: UILabel!
     @IBOutlet var loggedInLabel: UILabel!
     @IBOutlet var usernameLabel: UILabel!
     @IBOutlet var signoutButton: UIButton!
@@ -34,6 +32,11 @@ class MyRuuviAccountViewController: UIViewController {
         usernameLabel.textColor = RuuviColor.textColor.color
         deleteAccountButton.backgroundColor = RuuviColor.orangeColor.color
         signoutButton.backgroundColor = RuuviColor.tintColor.color
+
+        loggedInLabel.font = .ruuviHeadline()
+        usernameLabel.font = .ruuviBody()
+        deleteAccountButton.titleLabel?.font = .ruuviButtonMedium()
+        signoutButton.titleLabel?.font = .ruuviButtonMedium()
     }
 
     private func setUpSupportLinkView() {
@@ -94,11 +97,8 @@ extension MyRuuviAccountViewController {
     }
 
     private func configureViews() {
-        dismissButton.setImage(
-            RuuviAsset.dismissModalIcon.image,
-            for: .normal
-        )
-        headerTitleLabel.text = RuuviLocalization.Menu.Label.MyRuuviAccount.text
+        self.title = RuuviLocalization.Menu.Label.MyRuuviAccount.text
+        navigationItem.leftBarButtonItem?.image = RuuviAsset.dismissModalIcon.image
         deleteAccountButton.setTitle(RuuviLocalization.MyRuuvi.Settings.DeleteAccount.title, for: .normal)
         deleteAccountButton.setTitle(RuuviLocalization.MyRuuvi.Settings.DeleteAccount.title, for: .normal)
         signoutButton.setTitle(RuuviLocalization.Menu.SignOut.text, for: .normal)

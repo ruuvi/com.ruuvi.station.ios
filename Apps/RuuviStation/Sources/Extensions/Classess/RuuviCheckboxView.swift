@@ -37,7 +37,7 @@ struct RuuviCheckboxView: View {
             Text(
                 title
             )
-            .font(Font(UIFont.Muli(.regular, size: 14)))
+            .font(.ruuviSubheadline())
             .foregroundColor(RuuviColor.textColor.swiftUIColor)
             .frame(
                 maxWidth: .infinity,

@@ -26,13 +26,8 @@ struct FirmwareView: View {
 
     private let texts = Texts()
     private static let fontSize: CGFloat = 16
-    private let muliBold16 = Font(
-        UIFont(name: "Muli-Bold", size: fontSize.adjustedFontSize()) ??
-            UIFont.systemFont(ofSize: fontSize.adjustedFontSize(), weight: .bold))
-    private let muliRegular16 = Font(
-        UIFont(name: "Muli-Regular", size: fontSize.adjustedFontSize()) ??
-            UIFont.systemFont(ofSize: fontSize.adjustedFontSize(), weight: .regular))
-
+    private let titleFont = Font.ruuviHeadline()
+    private let bodyFont = Font.ruuviBody()
     private var content: some View {
         switch viewModel.state {
         case .idle:
@@ -40,7 +35,7 @@ struct FirmwareView: View {
         case .loading:
             VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
-                    .font(muliBold16)
+                    .font(titleFont)
                     .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
@@ -53,18 +48,18 @@ struct FirmwareView: View {
             .eraseToAnyView()
         case let .error(error):
             Text(error.localizedDescription)
-                .font(muliRegular16)
+                .font(bodyFont)
                 .eraseToAnyView()
         case let .loaded(latestRelease):
             VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
-                    .font(muliBold16)
+                    .font(titleFont)
                     .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                 Text(latestRelease.version)
-                    .font(muliRegular16)
+                    .font(bodyFont)
                     .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 Text(texts.currentTitle).bold()
-                    .font(muliBold16)
+                    .font(titleFont)
                     .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
@@ -79,13 +74,13 @@ struct FirmwareView: View {
         case let .serving(latestRelease):
             VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
-                    .font(muliBold16)
+                    .font(titleFont)
                     .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                 Text(latestRelease.version)
-                    .font(muliRegular16)
+                    .font(bodyFont)
                     .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 Text(texts.currentTitle).bold()
-                    .font(muliBold16)
+                    .font(titleFont)
                     .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                 Spinner(isAnimating: true, style: .medium).eraseToAnyView()
             }
@@ -99,21 +94,21 @@ struct FirmwareView: View {
         case let .checking(latestRelease, currentRelease):
             VStack(alignment: .leading, spacing: 16) {
                 Text(texts.latestTitle).bold()
-                    .font(muliBold16)
+                    .font(titleFont)
                     .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                 Text(latestRelease.version)
-                    .font(muliRegular16)
+                    .font(bodyFont)
                     .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 Text(texts.currentTitle).bold()
-                    .font(muliBold16)
+                    .font(titleFont)
                     .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                 if let currentVersion = currentRelease?.version {
                     Text(currentVersion)
-                        .font(muliRegular16)
+                        .font(bodyFont)
                         .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 } else {
                     Text(texts.notReportingDescription)
-                        .font(muliRegular16)
+                        .font(bodyFont)
                         .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 }
             }
@@ -128,7 +123,7 @@ struct FirmwareView: View {
         case .noNeedToUpgrade:
             VStack {
                 Text(texts.alreadyOnLatest)
-                    .font(muliRegular16)
+                    .font(bodyFont)
                     .foregroundColor(RuuviColor.textColor.swiftUIColor)
                     .frame(
                         maxWidth: .infinity,
@@ -142,7 +137,7 @@ struct FirmwareView: View {
                     },
                     label: {
                         Text(texts.finish)
-                            .font(muliBold16)
+                            .font(titleFont)
                             .frame(maxWidth: .infinity)
                     }
                 )
@@ -161,21 +156,21 @@ struct FirmwareView: View {
             VStack {
                 VStack(alignment: .leading, spacing: 16) {
                     Text(texts.latestTitle).bold()
-                        .font(muliBold16)
+                        .font(titleFont)
                         .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                     Text(latestRelease.version)
-                        .font(muliRegular16)
+                        .font(bodyFont)
                         .foregroundColor(RuuviColor.textColor.swiftUIColor)
                     Text(texts.currentTitle).bold()
-                        .font(muliBold16)
+                        .font(titleFont)
                         .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                     if let currentVersion = currentRelease?.version {
                         Text(currentVersion)
-                            .font(muliRegular16)
+                            .font(bodyFont)
                             .foregroundColor(RuuviColor.textColor.swiftUIColor)
                     } else {
                         Text(texts.notReportingDescription)
-                            .font(muliRegular16)
+                            .font(bodyFont)
                             .foregroundColor(RuuviColor.textColor.swiftUIColor)
                     }
                     Button(
@@ -187,7 +182,7 @@ struct FirmwareView: View {
                         label: {
                             HStack {
                                 Text(texts.startUpdateProcess)
-                                    .font(muliBold16)
+                                    .font(titleFont)
                             }.frame(maxWidth: .infinity)
                         }
                     )
@@ -212,13 +207,13 @@ struct FirmwareView: View {
         case .downloading:
             VStack(alignment: .center, spacing: 16) {
                 Text(texts.downloadingTitle)
-                    .font(muliRegular16)
+                    .font(bodyFont)
                     .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 ProgressBar(value: $viewModel.downloadProgress)
                     .frame(height: 16)
                     .padding()
                 Text("\(Int(viewModel.downloadProgress * 100))%")
-                    .font(muliRegular16)
+                    .font(bodyFont)
                     .foregroundColor(RuuviColor.textColor.swiftUIColor)
             }
             .frame(
@@ -239,7 +234,7 @@ struct FirmwareView: View {
                             label: {
                                 HStack {
                                     Text(texts.searchingTitle)
-                                        .font(muliBold16)
+                                        .font(titleFont)
                                         .foregroundColor(.secondary)
                                     Spinner(isAnimating: true, style: .medium).eraseToAnyView()
                                 }.frame(maxWidth: .infinity)
@@ -285,7 +280,7 @@ struct FirmwareView: View {
                             },
                             label: {
                                 Text(texts.startTitle)
-                                    .font(muliBold16)
+                                    .font(titleFont)
                                     .frame(maxWidth: .infinity)
                             }
                         )
@@ -314,15 +309,15 @@ struct FirmwareView: View {
         case .flashing:
             VStack(alignment: .center, spacing: 24) {
                 Text(texts.updatingTitle)
-                    .font(muliRegular16)
+                    .font(bodyFont)
                     .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 ProgressBar(value: $viewModel.flashProgress)
                     .frame(height: 16)
                 Text("\(Int(viewModel.flashProgress * 100))%")
-                    .font(muliRegular16)
+                    .font(bodyFont)
                     .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 Text(texts.doNotCloseTitle)
-                    .font(muliBold16)
+                    .font(titleFont)
                     .bold()
                     .multilineTextAlignment(.center)
                     .foregroundColor(RuuviColor.textColor.swiftUIColor)
@@ -337,7 +332,7 @@ struct FirmwareView: View {
         case .successfulyFlashed:
             VStack {
                 Text(texts.successfulTitle)
-                    .font(muliRegular16)
+                    .font(bodyFont)
                     .foregroundColor(RuuviColor.textColor.swiftUIColor)
                     .frame(
                         maxWidth: .infinity,
@@ -351,7 +346,7 @@ struct FirmwareView: View {
                     },
                     label: {
                         Text(texts.finish)
-                            .font(muliBold16)
+                            .font(titleFont)
                             .frame(maxWidth: .infinity)
                     }
                 )
@@ -421,23 +416,16 @@ struct FirmwareView: View {
     }
 
     struct DFUInstructionsView: View {
-        private var titleFont: UIFont {
-            UIFont(name: "Muli-Bold", size: 16) ??
-                UIFont.systemFont(ofSize: 16, weight: .bold)
-        }
-        private var paragraphFont: UIFont {
-            UIFont(name: "Muli-Regular", size: 16) ??
-                UIFont.systemFont(ofSize: 16, weight: .regular)
-        }
-
         var body: some View {
             AttributedText(
                 attributedString: NSAttributedString.fromFormattedDescription(
                     RuuviLocalization.prepareYourSensorInstructions,
-                    titleFont: titleFont,
-                    paragraphFont: paragraphFont,
+                    titleFont: UIFont.ruuviHeadline(),
+                    paragraphFont: UIFont.ruuviSubheadline(),
                     titleColor: RuuviColor.menuTextColor.color,
-                    paragraphColor: RuuviColor.textColor.color
+                    paragraphColor: RuuviColor.textColor.color,
+                    linkColor: RuuviColor.tintColor.color,
+                    linkFont: .ruuviCallout()
                 )
             )
             .fixedSize(horizontal: false, vertical: true)

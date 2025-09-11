@@ -104,7 +104,7 @@ class TagChartsViewController: UIViewController {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.Montserrat(.bold, size: 14)
+        label.font = UIFont.mulish(.bold, size: 14)
         return label
     }()
 
@@ -190,7 +190,7 @@ class TagChartsViewController: UIViewController {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .left
-        label.font = UIFont.Muli(.regular, size: 16)
+        label.font = UIFont.mulish(.regular, size: 16)
         return label
     }()
 
@@ -228,7 +228,7 @@ class TagChartsViewController: UIViewController {
         label.textColor = .white.withAlphaComponent(0.8)
         label.textAlignment = .right
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: 10)
+        label.font = UIFont.mulish(.regular, size: 10)
         return label
     }()
 
@@ -900,7 +900,6 @@ extension TagChartsViewController: TagChartsViewInput {
                 case .temperature:
                     populateChartView(
                         from: data,
-                        title: RuuviLocalization.TagSettings.OffsetCorrection.temperature,
                         unit: settings.temperatureUnit.symbol,
                         settings: settings,
                         view: temperatureChartView
@@ -908,7 +907,6 @@ extension TagChartsViewController: TagChartsViewInput {
                 case .humidity:
                     populateChartView(
                         from: data,
-                        title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
                         unit: settings.humidityUnit.symbol,
                         settings: settings,
                         view: humidityChartView
@@ -916,7 +914,6 @@ extension TagChartsViewController: TagChartsViewInput {
                 case .pressure:
                     populateChartView(
                         from: data,
-                        title: RuuviLocalization.TagSettings.OffsetCorrection.pressure,
                         unit: settings.pressureUnit.symbol,
                         settings: settings,
                         view: pressureChartView
@@ -924,7 +921,6 @@ extension TagChartsViewController: TagChartsViewInput {
                 case .aqi:
                     populateChartView(
                         from: data,
-                        title: RuuviLocalization.aqi,
                         unit: "%",
                         settings: settings,
                         view: aqiChartView
@@ -932,7 +928,6 @@ extension TagChartsViewController: TagChartsViewInput {
                 case .co2:
                     populateChartView(
                         from: data,
-                        title: RuuviLocalization.co2,
                         unit: RuuviLocalization.unitCo2,
                         settings: settings,
                         view: co2ChartView
@@ -940,7 +935,6 @@ extension TagChartsViewController: TagChartsViewInput {
                 case .pm25:
                     populateChartView(
                         from: data,
-                        title: RuuviLocalization.pm25,
                         unit: RuuviLocalization.unitPm25,
                         settings: settings,
                         view: pm25ChartView
@@ -948,7 +942,6 @@ extension TagChartsViewController: TagChartsViewInput {
                 case .voc:
                     populateChartView(
                         from: data,
-                        title: RuuviLocalization.voc,
                         unit: RuuviLocalization.unitVoc,
                         settings: settings,
                         view: vocChartView
@@ -956,7 +949,6 @@ extension TagChartsViewController: TagChartsViewInput {
                 case .nox:
                     populateChartView(
                         from: data,
-                        title: RuuviLocalization.nox,
                         unit: RuuviLocalization.unitNox,
                         settings: settings,
                         view: noxChartView
@@ -964,7 +956,6 @@ extension TagChartsViewController: TagChartsViewInput {
                 case .luminosity:
                     populateChartView(
                         from: data,
-                        title: RuuviLocalization.luminosity,
                         unit: RuuviLocalization.unitLuminosity,
                         settings: settings,
                         view: luminosityChartView
@@ -972,7 +963,6 @@ extension TagChartsViewController: TagChartsViewInput {
                 case .soundInstant:
                     populateChartView(
                         from: data,
-                        title: RuuviLocalization.soundInstant,
                         unit: RuuviLocalization.unitSound,
                         settings: settings,
                         view: soundChartView
@@ -1114,7 +1104,7 @@ extension TagChartsViewController: TagChartsViewInput {
             )
             humidityChartView.updateLatest(
                 with: humidity,
-                type: .humidity,
+                type: .anyHumidity,
                 measurementService: measurementService
             )
             pressureChartView.updateLatest(
@@ -1361,7 +1351,7 @@ extension TagChartsViewController {
         }
         updateScrollviewBehaviour()
 
-        if !from.contains(.humidity) {
+        if !from.contains(.anyHumidity) {
             humidityChartView.isHidden = true
             if humidityChartViewHeight.constant != 0 {
                 humidityChartViewHeight.constant = 0
@@ -1596,13 +1586,11 @@ extension TagChartsViewController {
 
     private func populateChartView(
         from data: TagChartViewData,
-        title: String,
         unit: String,
         settings: RuuviLocalSettings,
         view: TagChartsView
     ) {
         view.setChartLabel(
-            with: title,
             type: data.chartType,
             measurementService: measurementService,
             unit: unit
@@ -1789,7 +1777,7 @@ extension TagChartsViewController {
             if view == temperatureChartView {
                 type = .temperature
             } else if view == humidityChartView {
-                type = .humidity
+                type = .anyHumidity
             } else if view == pressureChartView {
                 type = .pressure
             } else if view == aqiChartView {

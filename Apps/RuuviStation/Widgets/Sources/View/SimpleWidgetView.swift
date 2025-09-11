@@ -24,12 +24,7 @@ struct SimpleWidgetView: View {
                     HStack {
                         Text(entry.tag.displayString)
                             .foregroundColor(Color.sensorNameColor1)
-                            .font(.custom(
-                                Constants.muliBold.rawValue,
-                                size: canShowBackground ? 16 : 22,
-                                relativeTo: .headline
-                            )
-                            )
+                            .font(.mulish(.bold, size: canShowBackground ? 16 : 22, relativeTo: .headline))
                             .frame(maxWidth: .infinity, alignment: .bottomLeading)
                             .fixedSize(horizontal: false, vertical: true)
                             .minimumScaleFactor(0.5)
@@ -43,20 +38,18 @@ struct SimpleWidgetView: View {
                         ))
                         .environment(\.locale, viewModel.locale())
                         .foregroundColor(.bodyTextColor)
-                        .font(.custom(
-                            Constants.oswaldBold.rawValue,
-                            size: canShowBackground ? 30 : 66,
-                            relativeTo: .largeTitle
-                        ))
+                        .font(.oswald(.bold, size: canShowBackground ? 30 : 66, relativeTo: .largeTitle))
                         .frame(alignment: .bottomLeading)
                         .minimumScaleFactor(0.5)
                         Text(viewModel.getUnit(for: WidgetSensorEnum(rawValue: entry.config.sensor.rawValue)))
                             .foregroundColor(Color.unitTextColor)
-                            .font(.custom(
-                                Constants.oswaldExtraLight.rawValue,
-                                size: canShowBackground ? 14 : 24,
-                                relativeTo: .title3
-                            ))
+                            .font(
+                                .oswald(
+                                    .extraLight,
+                                    size: canShowBackground ? 14 : 24,
+                                    relativeTo: .title3
+                                )
+                            )
                             .baselineOffset(10)
                             .frame(alignment: .topLeading)
                             .minimumScaleFactor(0.5)
@@ -85,11 +78,13 @@ struct SimpleWidgetView: View {
     private func measurementTimeView(for entry: WidgetEntry) -> some View {
         Text(viewModel.measurementTime(from: entry))
             .foregroundColor(Color.sensorNameColor1)
-            .font(.custom(
-                Constants.muliRegular.rawValue,
-                size: canShowBackground ? 10 : 14,
-                relativeTo: .body
-            ))
+            .font(
+                .mulish(
+                    .regular,
+                    size: canShowBackground ? 10 : 14,
+                    relativeTo: .body
+                )
+            )
             .minimumScaleFactor(0.5)
     }
 }

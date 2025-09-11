@@ -105,7 +105,7 @@ extension RuuviCodeView {
         textField.backgroundColor = textBackgroundColor
         textField.textAlignment = .center
         textField.adjustsFontSizeToFitWidth = false
-        textField.font = UIFont(name: "Montserrat-Bold", size: 30)
+        textField.font = UIFont(name: "Mulish-Bold", size: 30)
         textField.textColor = .white
         textField.layer.cornerRadius = 5
         textField.layer.borderWidth = 2

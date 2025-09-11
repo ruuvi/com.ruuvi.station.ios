@@ -10,7 +10,7 @@ class TagSettingsPlainCell: UITableViewCell {
         label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.font = UIFont.Muli(.regular, size: 14)
+        label.font = UIFont.ruuviSubheadline()
         return label
     }()
 
@@ -19,7 +19,7 @@ class TagSettingsPlainCell: UITableViewCell {
         label.textColor = RuuviColor.textColor.color
         label.textAlignment = .right
         label.numberOfLines = 1
-        label.font = UIFont.Muli(.regular, size: 14)
+        label.font = UIFont.ruuviSubheadline()
         return label
     }()
 
@@ -27,7 +27,7 @@ class TagSettingsPlainCell: UITableViewCell {
         let label = UILabel()
         label.textAlignment = .right
         label.numberOfLines = 1
-        label.font = UIFont.Muli(.regular, size: 14)
+        label.font = UIFont.ruuviSubheadline()
         return label
     }()
 

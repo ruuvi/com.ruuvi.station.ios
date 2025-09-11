@@ -41,6 +41,7 @@ extension SelectionTableViewController: SelectionViewInput {
     func styleViews() {
         tableView.tableHeaderView = UIView()
         view.backgroundColor = RuuviColor.primary.color
+        descriptionTextView.font = UIFont.ruuviFootnote()
         descriptionTextView.textColor = RuuviColor.textColor.color.withAlphaComponent(0.6)
     }
 }
@@ -142,11 +143,11 @@ extension SelectionTableViewController {
         if title == viewModel?.selection {
             cell.accessoryType = .checkmark
             cell.nameLabel.textColor = RuuviColor.menuTextColor.color
-            cell.nameLabel.font = UIFont.Muli(.bold, size: 16)
+            cell.nameLabel.font = UIFont.ruuviCallout()
         } else {
             cell.accessoryType = .none
             cell.nameLabel.textColor = RuuviColor.textColor.color
-            cell.nameLabel.font = UIFont.Muli(.regular, size: 16)
+            cell.nameLabel.font = UIFont.ruuviBody()
         }
     }
 }

@@ -10,7 +10,7 @@ class LegacyCardsLargeImageCell: UICollectionViewCell {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 1
-        label.font = UIFont.Oswald(.bold, size: 76)
+        label.font = UIFont.oswald(.bold, size: 76)
         return label
     }()
 
@@ -19,7 +19,7 @@ class LegacyCardsLargeImageCell: UICollectionViewCell {
         label.textColor = .white
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.font = UIFont.Oswald(.regular, size: 40)
+        label.font = UIFont.oswald(.regular, size: 40)
         return label
     }()
 
@@ -27,14 +27,14 @@ class LegacyCardsLargeImageCell: UICollectionViewCell {
     private lazy var pressureView = LegacyCardsIndicatorView(icon: RuuviAsset.iconMeasurePressure.image)
     private lazy var movementView = LegacyCardsIndicatorView(icon: RuuviAsset.iconMeasureMovement.image)
 
-    private lazy var batteryLevelView = BatteryLevelView(fontSize: 10, iconSize: 16)
+    private lazy var batteryLevelView = BatteryLevelView()
 
     private lazy var updatedAtLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white.withAlphaComponent(0.8)
         label.textAlignment = .right
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: 10)
+        label.font = UIFont.mulish(.regular, size: 10)
         return label
     }()
 
@@ -295,7 +295,7 @@ extension LegacyCardsLargeImageCell {
                 hideMovementView(hide: false)
                 movementView.setValue(
                     with: "\(movement)",
-                    unit: RuuviLocalization.Cards.Movements.title
+                    unit: RuuviLocalization.movements
                 )
             } else {
                 hideMovementView(hide: true)

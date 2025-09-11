@@ -41,6 +41,18 @@ extension MenuTableEmbededViewController {
         getMoreSensorsLabel.textColor = RuuviColor.menuTextColor.color
         feedbackLabel.textColor = RuuviColor.menuTextColor.color
         accountAuthLabel.textColor = RuuviColor.menuTextColor.color
+
+        [
+            addANewSensorLabel,
+            appSettingsLabel,
+            aboutHelpLabel,
+            whatToMeasureLabel,
+            getMoreSensorsLabel,
+            feedbackLabel,
+            accountAuthLabel,
+        ].forEach {
+            $0?.font = UIFont.ruuviButtonMedium()
+        }
     }
 }
 

@@ -17,7 +17,7 @@ class DashboardSignInBannerView: UIView {
         label.textColor = RuuviColor.textColor.color
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 16 : 20)
+        label.font = UIFont.mulish(.bold, size: UIDevice.isiPhoneSE() ? 16 : 20)
         return label
     }()
 
@@ -31,7 +31,7 @@ class DashboardSignInBannerView: UIView {
             for: .normal
         )
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.Muli(
+        button.titleLabel?.font = UIFont.mulish(
             .bold,
             size: UIDevice.isiPhoneSE() ? 14 : 16
         )

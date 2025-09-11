@@ -56,12 +56,12 @@ extension AboutPresenter {
         let range = NSString(string: attrString.string).range(of: attrString.string)
         attrString.addAttribute(
             NSAttributedString.Key.font,
-            value: UIFont.Muli(.regular, size: 14),
+            value: UIFont.ruuviFootnote(),
             range: range
         )
 
         // Change changelog color
-        let changelogFont = UIFont.Muli(.regular, size: 13)
+        let changelogFont = UIFont.ruuviFootnote()
         let changelogRange = NSString(string: attrString.string).range(of: changelogString)
         attrString.addAttribute(
             NSAttributedString.Key.font,

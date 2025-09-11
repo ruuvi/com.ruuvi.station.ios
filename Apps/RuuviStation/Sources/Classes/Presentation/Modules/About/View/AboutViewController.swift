@@ -4,8 +4,6 @@ import UIKit
 class AboutViewController: UIViewController {
     var output: AboutViewOutput!
 
-    @IBOutlet weak var dismissButton: UIButton!
-    @IBOutlet var headerTitleLabel: UILabel!
     @IBOutlet var aboutTextView: UITextView!
     @IBOutlet var versionLabel: UILabel!
     @IBOutlet var addedTagsLabel: UILabel!
@@ -98,11 +96,15 @@ extension AboutViewController: UITextViewDelegate {
 
 extension AboutViewController {
     private func configureViews() {
-        dismissButton.setImage(
-            RuuviAsset.dismissModalIcon.image,
-            for: .normal
-        )
-        headerTitleLabel.text = RuuviLocalization.About.AboutHelp.header
+
+        self.title = RuuviLocalization.About.AboutHelp.header
+        navigationItem.leftBarButtonItem?.image = RuuviAsset.dismissModalIcon.image
+
+        versionLabel.font = UIFont.ruuviFootnote()
+        addedTagsLabel.font = UIFont.ruuviFootnote()
+        storedMeasurementsLabel.font = UIFont.ruuviFootnote()
+        databaseSizeLable.font = UIFont.ruuviFootnote()
+
         configureTextView()
         bindViewModel()
     }
@@ -140,7 +142,7 @@ extension AboutViewController {
         let range = NSString(string: attrString.string).range(of: attrString.string)
         attrString.addAttribute(
             NSAttributedString.Key.font,
-            value: UIFont.Muli(.regular, size: 16),
+            value: UIFont.ruuviSubheadline(),
             range: range
         )
 
@@ -152,13 +154,13 @@ extension AboutViewController {
             RuuviLocalization.About.More.header,
             RuuviLocalization.About.Privacy.header,
         ]
-        let boldFont = UIFont.Muli(.bold, size: 16)
+        let boldFont = UIFont.ruuviCallout()
         for bold in makeBold {
             let range = NSString(string: attrString.string).range(of: bold)
             attrString.addAttribute(NSAttributedString.Key.font, value: boldFont, range: range)
         }
         // reduce the linespacing below the titles
-        let smallFont = UIFont.Muli(.regular, size: 8)
+        let smallFont = UIFont.mulish(.regular, size: 8)
         for range in attrString.string.ranges(of: "\n") {
             attrString.addAttribute(
                 NSAttributedString.Key.font,
@@ -174,8 +176,31 @@ extension AboutViewController {
             range: NSRange(location: 0, length: attrString.length)
         )
 
+        linkifyDomains(in: attrString, tint: RuuviColor.tintColor.color)
+
         aboutTextView.attributedText = attrString
         aboutTextView.textColor = RuuviColor.textColor.color
+    }
+
+    private func linkifyDomains(in attr: NSMutableAttributedString, tint: UIColor) {
+        let full = attr.string as NSString
+
+        let pattern = #"\b(?:https?://)?(?:www\.)?[A-Za-z0-9.-]+\.[A-Za-z]{2,}(?:/[^\s]*)?\b"#
+        let regex = try! NSRegularExpression(pattern: pattern, options: [.caseInsensitive])
+
+        // Go from end to start so ranges stay valid while mutating
+        for match in regex.matches(in: attr.string, range: NSRange(location: 0, length: full.length)).reversed() {
+            let raw = full.substring(with: match.range)
+            // Prefix scheme if missing
+            let urlString = raw.lowercased().hasPrefix("http") ? raw : "https://\(raw)"
+            guard let url = URL(string: urlString) else { continue }
+
+            attr.addAttributes([
+                .link: url,
+                .foregroundColor: tint,
+                .font: UIFont.ruuviCallout(),
+            ], range: match.range)
+        }
     }
 
     private func setUpChangelogTapGesture() {

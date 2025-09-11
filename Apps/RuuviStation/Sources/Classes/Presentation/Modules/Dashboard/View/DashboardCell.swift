@@ -35,14 +35,16 @@ struct DashboardCellLayoutConstants {
     // Grid section
     static let headerToGridSpacing: CGFloat = 10
 
-    static let gridRowHeight: CGFloat = 20
-    static let gridRowSpacing: CGFloat = -2
+    static let gridRowHeightPhone: CGFloat = 20
+    static let gridRowHeightTablet: CGFloat = 24
+    static let gridRowSpacing: CGFloat = 0
 
-    static let gridRowHeightWithIndicatorTitle: CGFloat = 28
-    static let gridRowSpacingWithIndicatorTitle: CGFloat = 8
+    static let gridRowHeightPhoneWithIndicatorTitle: CGFloat = 30
+    static let gridRowHeightTabletWithIndicatorTitle: CGFloat = 36
+    static let gridRowSpacingWithIndicatorTitle: CGFloat = 6
 
     // Footer section
-    static let gridToFooterSpacing: CGFloat = 4
+    static let gridToFooterSpacing: CGFloat = 8
     static let footerHeight: CGFloat = 24
     static let footerTrailingPadding: CGFloat = 14
     static let sourceIconToTextSpacing: CGFloat = 6
@@ -52,21 +54,15 @@ struct DashboardCellLayoutConstants {
     // Image cell specific properties
     static let imageWidthRatio: CGFloat = 0.25
     static let nameToImageSpacing: CGFloat = 14
-    static let groupSpacing: CGFloat = 10
-    static let prominentViewHeight: CGFloat = 30
+    static let groupSpacing: CGFloat = 16
+    static let prominentViewHeightPhone: CGFloat = 32
+    static let prominentViewHeightTablet: CGFloat = 36
     static let progressViewHeight: CGFloat = 16
     static let progressViewTopSpacing: CGFloat = 4
-    static let progressViewToGridSpacing: CGFloat = 7
+    static let progressViewToGridSpacing: CGFloat = 10
 
     // Font configuration
-    static let nameFont = UIFont.Montserrat(
-        .bold,
-        size: 14
-    )
-    static let timestampFont = UIFont.Muli(
-        .regular,
-        size: 10
-    )
+    static let nameFont = UIFont.mulish(.extraBold, size: 16)
     static let maxNameLines: Int = 2
 
     // Derived calculations
@@ -76,6 +72,19 @@ struct DashboardCellLayoutConstants {
 
     static var totalVerticalSpacing: CGFloat {
         return topPadding + headerToGridSpacing + gridToFooterSpacing + bottomPadding
+    }
+
+    static var prominentViewHeight: CGFloat {
+        return UIDevice.isTablet() ? prominentViewHeightTablet : prominentViewHeightPhone
+    }
+
+    static var gridRowHeight: CGFloat {
+        return UIDevice.isTablet() ? gridRowHeightTablet : gridRowHeightPhone
+    }
+
+    static var gridRowHeightWithIndicatorTitle: CGFloat {
+        return UIDevice.isTablet() ?
+            gridRowHeightTabletWithIndicatorTitle : gridRowHeightPhoneWithIndicatorTitle
     }
 
     static func gridRowHeight(showIndicatorTitle: Bool) -> CGFloat {
@@ -350,11 +359,11 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         label.textColor = RuuviColor
             .dashboardIndicator.color
             .withAlphaComponent(
-                0.8
+                0.5
             )
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = DashboardCellLayoutConstants.timestampFont
+        label.font = UIFont.ruuviCaption2()
         return label
     }()
 
@@ -764,7 +773,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                     .setValue(
                         with: mainValue,
                         superscriptValue: superscriptValue,
-                        subscriptValue: airQualityIndicator.unit
+                        subscriptValue: airQualityIndicator.type.shortName
                     )
 
                 // Show progress view
@@ -794,7 +803,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                         with: tempValue,
                         superscriptValue: temperatureIndicator.unit,
                         subscriptValue: temperatureIndicator.showSubscript ?
-                        RuuviLocalization.TagSettings.OffsetCorrection.temperature : " "
+                            temperatureIndicator.type.shortName : " "
                     )
             }
             // Hide progress view
@@ -890,7 +899,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                     .append(
                         pm25View
                     )
-            case .pm10:
+            case .pm100:
                 indicators
                     .append(
                         pm10View
@@ -935,7 +944,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                     with: data.value,
                     unit: data.unit,
                     for: data.type,
-                    showTitle: dashboardType == .image,
+                    dashboardType: dashboardType,
                 )
         }
     }
@@ -999,7 +1008,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         case .movementCounter: return movementView
         case .co2: return co2View
         case .pm25: return pm25View
-        case .pm10: return pm10View
+        case .pm100: return pm10View
         case .nox: return noxView
         case .voc: return vocView
         case .luminosity: return luminosityView
@@ -1572,16 +1581,11 @@ extension DashboardCell {
             containerWidth: width,
             dashboardType: dashboardType
         )
+
         let hasAQI = snapshot.displayData.indicatorGrid?.indicators.contains {
             $0.type == .aqi
         } ?? false
-        let prominentHeight = DashboardCellLayoutConstants.prominentViewHeight
-        let progressHeight = hasAQI ? (
-            DashboardCellLayoutConstants.progressViewTopSpacing +
-            DashboardCellLayoutConstants.progressViewHeight -
-            (DashboardCellLayoutConstants.groupSpacing -
-             DashboardCellLayoutConstants.progressViewToGridSpacing)
-        ) : 0
+
         let indicatorCount = snapshot.displayData.indicatorGrid?.indicators.count ?? 0
         let gridHeight = DashboardCellLayoutConstants.gridHeight(
             indicatorCount: indicatorCount,
@@ -1589,21 +1593,45 @@ extension DashboardCell {
             hasAQI: hasAQI
         )
 
-        // Calculate total height with consistent 10px spacing between all groups
-        let totalHeight = DashboardCellLayoutConstants.topPadding +
-        nameHeight +
-        DashboardCellLayoutConstants.groupSpacing +
-        prominentHeight +
-        progressHeight +
-        DashboardCellLayoutConstants.groupSpacing +
-        gridHeight +
-        DashboardCellLayoutConstants.gridToFooterSpacing +
-        DashboardCellLayoutConstants.footerHeight +
-        DashboardCellLayoutConstants.bottomPadding
+        // Build height step by step matching actual layout
+        var totalHeight: CGFloat = 0
 
-        return ceil(
-            totalHeight
-        )
+        // Top padding
+        totalHeight += DashboardCellLayoutConstants.topPadding
+
+        // Name label
+        totalHeight += nameHeight
+
+        // Spacing after name
+        totalHeight += DashboardCellLayoutConstants.groupSpacing
+
+        // Prominent view
+        totalHeight += DashboardCellLayoutConstants.prominentViewHeight
+
+        // Content after prominent view (conditional)
+        if hasAQI {
+            // Progress view section
+            totalHeight += DashboardCellLayoutConstants.progressViewTopSpacing
+            totalHeight += DashboardCellLayoutConstants.progressViewHeight
+            totalHeight += DashboardCellLayoutConstants.progressViewToGridSpacing
+        } else {
+            // Direct spacing to grid
+            totalHeight += DashboardCellLayoutConstants.groupSpacing
+        }
+
+        // Grid
+        totalHeight += gridHeight
+
+        // Spacing to footer
+        totalHeight += DashboardCellLayoutConstants.gridToFooterSpacing
+
+        // Footer
+        totalHeight += DashboardCellLayoutConstants.footerHeight
+
+        // Bottom padding
+        totalHeight += DashboardCellLayoutConstants.bottomPadding
+
+        return ceil(totalHeight)
     }
 
     private static func calculateNameLabelHeight(

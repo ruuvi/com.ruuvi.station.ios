@@ -15,7 +15,7 @@ class RuuviOnboardCoreFeaturesCell: UICollectionViewCell {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.Montserrat(.extraBold, size: 36)
+        label.font = UIFont.mulish(.extraBold, size: 36)
         return label
     }()
 
@@ -24,7 +24,7 @@ class RuuviOnboardCoreFeaturesCell: UICollectionViewCell {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.semiBoldItalic, size: 20)
+        label.font = UIFont.mulish(.semiBoldItalic, size: 20)
         return label
     }()
 
@@ -82,11 +82,11 @@ extension RuuviOnboardCoreFeaturesCell {
     func configure(with viewModel: OnboardViewModel) {
         switch viewModel.pageType {
         case .sensors:
-            subtitleLabel.font = UIFont.Montserrat(.extraBold, size: 36)
-            titleLabel.font = UIFont.Muli(.semiBoldItalic, size: 20)
+            subtitleLabel.font = UIFont.mulish(.extraBold, size: 36)
+            titleLabel.font = UIFont.mulish(.semiBoldItalic, size: 20)
         default:
-            subtitleLabel.font = UIFont.Muli(.semiBoldItalic, size: 20)
-            titleLabel.font = UIFont.Montserrat(.extraBold, size: 36)
+            subtitleLabel.font = UIFont.mulish(.semiBoldItalic, size: 20)
+            titleLabel.font = UIFont.mulish(.extraBold, size: 36)
         }
 
         titleLabel.text = viewModel.title

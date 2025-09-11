@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WCe-hN-x4S">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="WCe-hN-x4S">
     <device id="retina6_1" orientation="portrait" appearance="dark"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="Muli-Bold.ttf">
-            <string>Muli-Bold</string>
-        </array>
-        <array key="Muli-Regular.ttf">
-            <string>Muli-Regular</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--Unit Settings Table View Controller-->
         <scene sceneID="zfO-4s-MR6">
@@ -32,14 +24,14 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EgL-RE-Qh2">
-                                            <rect key="frame" x="20" y="15.5" width="33.5" height="20.5"/>
-                                            <fontDescription key="fontDescription" name="Muli-Bold" family="Muli" pointSize="16"/>
+                                            <rect key="frame" x="20" y="16" width="31.5" height="19.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                             <color key="textColor" name="RuuviMenuTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Value" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ubl-wq-gsw">
-                                            <rect key="frame" x="333.5" y="15.5" width="42" height="20.5"/>
-                                            <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="16"/>
+                                            <rect key="frame" x="335.5" y="16.5" width="40" height="19"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                             <color key="textColor" name="RuuviMenuTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>

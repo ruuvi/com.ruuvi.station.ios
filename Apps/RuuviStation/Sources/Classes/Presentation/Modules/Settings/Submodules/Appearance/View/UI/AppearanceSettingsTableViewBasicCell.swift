@@ -7,7 +7,7 @@ class AppearanceSettingsTableViewBasicCell: UITableViewCell {
         label.textColor = RuuviColor.menuTextColor.color
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.bold, size: 16)
+        label.font = UIFont.ruuviHeadline()
         return label
     }()
 
@@ -16,7 +16,7 @@ class AppearanceSettingsTableViewBasicCell: UITableViewCell {
         label.textColor = RuuviColor.menuTextColor.color
         label.textAlignment = .right
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: 16)
+        label.font = UIFont.ruuviBody()
         return label
     }()
 

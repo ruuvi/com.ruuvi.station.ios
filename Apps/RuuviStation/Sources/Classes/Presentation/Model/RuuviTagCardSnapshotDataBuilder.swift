@@ -15,17 +15,17 @@ struct MeasurementConfiguration {
 
     static let measurementPriority: [MeasurementType] = [
         .aqi, .co2, .pm25, .voc, .nox,
-        .temperature, .humidity, .pressure,
+        .temperature, .anyHumidity, .pressure,
         .luminosity, .movementCounter, .soundInstant,
     ]
 
     static let advancedFirmwareMeasurements: [MeasurementType] = [
-        .aqi, .temperature, .humidity, .pressure, .co2,
+        .aqi, .temperature, .anyHumidity, .pressure, .co2,
         .pm25, .nox, .voc, .luminosity, .soundInstant,
     ]
 
     static let basicFirmwareMeasurements: [MeasurementType] = [
-        .temperature, .humidity, .pressure, .movementCounter
+        .temperature, .anyHumidity, .pressure, .movementCounter
     ]
 }
 
@@ -117,15 +117,10 @@ struct HumidityMeasurementExtractor: MeasurementExtractor {
         let unitSymbol = humidityUnit == .dew
                   ? measurementService.units.temperatureUnit.symbol
                   : humidityUnit.symbol
-        // For certain measurements we show type of measurements so that people
-        // can understand what that value is. When dew point is the unit it can
-        // confuse people with C symbol. Hence we add the type of measurement.
-        let formattedUnit =
-                humidityUnit == .dew ? "\(RuuviLocalization.dewpoint), \(unitSymbol)" : unitSymbol
 
         return MeasurementResult(
             value: value,
-            unit: flags.showRedesignedDashboardUI ? unitSymbol : formattedUnit,
+            unit: unitSymbol,
             isProminent: false,
             showSubscript: false,
             tintColor: nil
@@ -165,7 +160,7 @@ struct MovementMeasurementExtractor: MeasurementExtractor {
 
         return MeasurementResult(
             value: "\(movement)",
-            unit: RuuviLocalization.Cards.Movements.title,
+            unit: RuuviLocalization.movements,
             isProminent: false,
             showSubscript: false,
             tintColor: nil
@@ -333,13 +328,13 @@ struct SoundMeasurementExtractor: MeasurementExtractor {
 struct MeasurementExtractorFactory {
     private static let extractors: [MeasurementType: MeasurementExtractor] = [
         .temperature: TemperatureMeasurementExtractor(),
-        .humidity: HumidityMeasurementExtractor(),
+        .anyHumidity: HumidityMeasurementExtractor(),
         .pressure: PressureMeasurementExtractor(),
         .movementCounter: MovementMeasurementExtractor(),
         .aqi: AQIMeasurementExtractor(),
         .co2: CO2MeasurementExtractor(),
         .pm25: PM25MeasurementExtractor(),
-        .pm10: PM10MeasurementExtractor(),
+        .pm100: PM10MeasurementExtractor(),
         .nox: NOXMeasurementExtractor(),
         .voc: VOCMeasurementExtractor(),
         .luminosity: LuminosityMeasurementExtractor(),
@@ -382,13 +377,14 @@ struct IndicatorDataManager {
     }
 
     static func sortIndicatorsByPriority(
-        _ indicators: [RuuviTagCardSnapshotIndicatorData]
+      _ indicators: [RuuviTagCardSnapshotIndicatorData]
     ) -> [RuuviTagCardSnapshotIndicatorData] {
-        return indicators.sorted { first, second in
-            let firstIndex = MeasurementConfiguration.measurementPriority.firstIndex(of: first.type) ?? Int.max
-            let secondIndex = MeasurementConfiguration.measurementPriority.firstIndex(of: second.type) ?? Int.max
-            return firstIndex < secondIndex
-        }
+      indicators.sorted { first, second in
+        let p = MeasurementConfiguration.measurementPriority
+        let i0 = p.firstIndexMatchingCase(of: first.type) ?? .max
+        let i1 = p.firstIndexMatchingCase(of: second.type) ?? .max
+        return i0 < i1
+      }
     }
 
     static func createGridConfiguration(
@@ -413,8 +409,9 @@ struct IndicatorDataManager {
         }
 
         if let secondary = secondary {
-            for indicator in secondary.indicators where !allIndicators.contains(where: { $0.type == indicator.type }) {
-                allIndicators.append(indicator)
+            for indicator in secondary.indicators where
+                !allIndicators.contains(where: { $0.type.isSameCase(as: indicator.type) }) {
+              allIndicators.append(indicator)
             }
         }
 
@@ -586,7 +583,16 @@ struct RuuviTagCardSnapshotDataBuilder {
                 return nil
             }
 
-            return result.toIndicatorData(type: type)
+            let resolvedType: MeasurementType
+            switch type {
+            case .humidity:
+              let unit = measurementService?.units.humidityUnit ?? .percent
+              resolvedType = .humidity(unit)
+            default:
+              resolvedType = type
+            }
+
+            return result.toIndicatorData(type: resolvedType)
         }
     }
 }

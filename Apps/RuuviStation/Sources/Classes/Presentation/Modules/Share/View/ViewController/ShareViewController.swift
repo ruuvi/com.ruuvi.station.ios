@@ -95,7 +95,7 @@ class ShareViewController: UITableViewController {
         let headerView = UIView(color: .clear)
         let titleLabel = UILabel()
         titleLabel.textColor = RuuviColor.menuTextColor.color
-        titleLabel.font = UIFont.Muli(.bold, size: 16)
+        titleLabel.font = UIFont.ruuviCallout()
         titleLabel.numberOfLines = 0
         switch section {
         case .sharedEmails:
@@ -213,6 +213,7 @@ extension ShareViewController {
         } else {
             cell.sharingDisabledLabel.text = RuuviLocalization.networkSharingDisabled
         }
+        cell.sharingDisabledLabel.font = UIFont.ruuviCallout()
         cell.sharingDisabledLabel.textColor = RuuviColor.textColor.color
         cell.sharingDisabledLabel.tintColor = RuuviColor.tintColor.color
 
@@ -220,6 +221,7 @@ extension ShareViewController {
         cell.descriptionLabel.text = description.trimmingCharacters(in: .whitespacesAndNewlines)
         cell.descriptionLabel.textColor = RuuviColor.textColor.color
         cell.descriptionLabel.tintColor = RuuviColor.tintColor.color
+        cell.descriptionLabel.font = UIFont.ruuviFootnote()
         return cell
     }
 
@@ -229,6 +231,7 @@ extension ShareViewController {
         cell.emailTextField.placeholder = RuuviLocalization.ShareViewController.EmailTextField.placeholder
         cell.emailTextField.delegate = self
         cell.emailTextField.textColor = RuuviColor.textColor.color
+        cell.emailTextField.font = UIFont.ruuviBody()
         return cell
     }
 
@@ -237,6 +240,7 @@ extension ShareViewController {
         cell.sendButton.addTarget(self, action: #selector(didTapSendButton(_:)), for: .touchUpInside)
         cell.sendButton.setTitle(RuuviLocalization.TagSettings.Share.title, for: .normal)
         cell.sendButton.tintColor = RuuviColor.tintColor.color
+        cell.sendButton.titleLabel?.font = UIFont.ruuviButtonMedium()
         cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.width, bottom: 0, right: 0)
         return cell
     }
@@ -245,6 +249,7 @@ extension ShareViewController {
         let cell = tableView.dequeueReusableCell(with: ShareEmailTableViewCell.self, for: indexPath)
         cell.emailLabel.text = viewModel.sharedEmails.value?[indexPath.row]
         cell.emailLabel.textColor = RuuviColor.textColor.color
+        cell.emailLabel.font = UIFont.ruuviBody()
         cell.unshareButton.tintColor = RuuviColor.textColor.color
         cell.unshareButton.setImage(RuuviAsset.smallCrossClearIcon.image, for: .normal)
         cell.delegate = self

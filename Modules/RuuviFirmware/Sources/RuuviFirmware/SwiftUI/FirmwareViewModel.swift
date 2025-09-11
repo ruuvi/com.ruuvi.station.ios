@@ -1,4 +1,3 @@
-// swiftlint:disable file_length
 import Combine
 import Foundation
 
@@ -386,5 +385,3 @@ extension FirmwareViewModel {
         return !currentRelease.version.contains(latestRelease.version)
     }
 }
-
-// swiftlint:enable file_length

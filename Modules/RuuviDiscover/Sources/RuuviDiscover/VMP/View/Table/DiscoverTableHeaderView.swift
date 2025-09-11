@@ -72,9 +72,7 @@ class DiscoverTableHeaderView: UIView {
 
         descriptionLabel.text = descriptionString
         descriptionLabel.textColor = UIColor(named: "ruuvi_text_color")
-        if let font = UIFont(name: "Muli-Regular", size: 14) {
-            descriptionLabel.font = font
-        }
+        descriptionLabel.font = UIFont.ruuviSubheadline()
         return descriptionLabel
     }
 
@@ -85,9 +83,7 @@ class DiscoverTableHeaderView: UIView {
         button.setTitle(RuuviLocalization.addWithNfc, for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.setInsets(forContentPadding: .zero, imageTitlePadding: 8)
-        if let font = UIFont(name: "Muli-Regular", size: 16) {
-            button.titleLabel?.font = font
-        }
+        button.titleLabel?.font = UIFont.ruuviButtonMedium()
         button.tintColor = RuuviColor.tintColor.color
         button.addTarget(
             self,

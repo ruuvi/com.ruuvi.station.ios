@@ -31,7 +31,7 @@ let package = Package(
             name: "RuuviDFU",
             dependencies: [
                 "NordicDFU",
-                "iOSMcuManagerLibrary"
+                "iOSMcuManagerLibrary",
             ]
         ),
         .target(

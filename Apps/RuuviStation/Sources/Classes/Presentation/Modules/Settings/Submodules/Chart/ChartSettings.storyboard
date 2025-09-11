@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OjO-bV-5dQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="OjO-bV-5dQ">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="Muli-Bold.ttf">
-            <string>Muli-Bold</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--Chart Settings Table View Controller-->
         <scene sceneID="I82-4C-N0X">
@@ -23,20 +18,20 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ChartSettingsSwitchTableViewCell" id="uoB-8T-dsW" customClass="ChartSettingsSwitchTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="50" width="414" height="47"/>
+                                <rect key="frame" x="0.0" y="50" width="414" height="46"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="uoB-8T-dsW" id="xGs-dl-eqH">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="47"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="46"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wdo-1Y-WaD">
-                                            <rect key="frame" x="20" y="13" width="220" height="21"/>
-                                            <fontDescription key="fontDescription" name="Muli-Bold" family="Muli" pointSize="16"/>
+                                            <rect key="frame" x="20" y="13" width="220" height="20"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                             <color key="textColor" name="RuuviMenuTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vNp-FC-oo4" customClass="RuuviSwitchView" customModule="station" customModuleProvider="target">
-                                            <rect key="frame" x="248" y="-1.5" width="150" height="50"/>
+                                            <rect key="frame" x="248" y="-2" width="150" height="50"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="50" id="ABj-fo-mrx"/>
@@ -61,20 +56,20 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ChartSettingsStepperTableViewCell" id="gg0-u5-vzZ" customClass="ChartSettingsStepperTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="97" width="414" height="47"/>
+                                <rect key="frame" x="0.0" y="96" width="414" height="46"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gg0-u5-vzZ" id="Rwl-wW-QVX">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="47"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="46"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Every 5 min" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XgF-1S-sH0">
-                                            <rect key="frame" x="20" y="13" width="276" height="21"/>
-                                            <fontDescription key="fontDescription" name="Muli-Bold" family="Muli" pointSize="16"/>
+                                            <rect key="frame" x="20" y="13" width="276" height="20"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                             <color key="textColor" name="RuuviMenuTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="10" translatesAutoresizingMaskIntoConstraints="NO" id="n1j-om-szT">
-                                            <rect key="frame" x="304" y="7.5" width="94" height="32"/>
+                                            <rect key="frame" x="304" y="7" width="94" height="32"/>
                                             <color key="backgroundColor" name="RuuviTintColor"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="94" id="DCG-y5-LhS"/>
@@ -101,7 +96,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ChartSettingsDisclosureTableViewCell" textLabel="usP-w3-XIW" style="IBUITableViewCellStyleDefault" id="X75-YS-g9S" customClass="ChartSettingsDisclosureTableViewCell" customModule="station" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="144" width="414" height="43.5"/>
+                                <rect key="frame" x="0.0" y="142" width="414" height="43.5"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="X75-YS-g9S" id="8S6-nD-IfR">
                                     <rect key="frame" x="0.0" y="0.0" width="383.5" height="43.5"/>
@@ -110,7 +105,7 @@
                                         <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="usP-w3-XIW">
                                             <rect key="frame" x="20" y="0.0" width="355.5" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" name="Muli-Bold" family="Muli" pointSize="16"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                             <color key="textColor" name="RuuviMenuTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>

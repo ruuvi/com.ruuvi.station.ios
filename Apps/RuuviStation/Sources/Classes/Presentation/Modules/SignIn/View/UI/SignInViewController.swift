@@ -52,7 +52,7 @@ class SignInViewController: UIViewController {
             RuuviLocalization.useWithoutAccount,
             for: .normal
         )
-        button.titleLabel?.font = UIFont.Muli(.semiBoldItalic, size: 14)
+        button.titleLabel?.font = UIFont.mulish(.semiBoldItalic, size: 14)
         button.titleLabel?.numberOfLines = 0
         button.titleLabel?.textAlignment = .center
         button.addTarget(

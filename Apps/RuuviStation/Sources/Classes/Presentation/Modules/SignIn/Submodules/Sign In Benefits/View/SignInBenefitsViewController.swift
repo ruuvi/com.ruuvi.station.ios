@@ -39,7 +39,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = RuuviLocalization.whyShouldSignIn
-        label.font = UIFont.Montserrat(.extraBold, size: UIDevice.isiPhoneSE() ? 24 : 30)
+        label.font = UIFont.mulish(.extraBold, size: UIDevice.isiPhoneSE() ? 24 : 30)
         return label
     }()
 
@@ -49,7 +49,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = RuuviLocalization.sensorsOwnershipAndSettingsStoredInCloud
-        label.font = UIFont.Muli(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 16 : 20)
+        label.font = UIFont.mulish(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 16 : 20)
         return label
     }()
 
@@ -59,7 +59,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
         label.textAlignment = .left
         label.numberOfLines = 0
         label.text = prepareFeatures()
-        label.font = UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 16 : 18)
+        label.font = UIFont.ruuviBody()
         return label
     }()
 
@@ -68,7 +68,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 16 : 18)
+        label.font = UIFont.ruuviBody()
         label.attributedText = prepareNote()
         return label
     }()
@@ -83,7 +83,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
             for: .normal
         )
         button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.Muli(.bold, size: 16)
+        button.titleLabel?.font = UIFont.ruuviButtonMedium()
         button.addTarget(
             self,
             action: #selector(handleContinueTap),
@@ -98,7 +98,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 16 : 18)
+        label.font = UIFont.ruuviBody()
         return label
     }()
 }
@@ -269,13 +269,13 @@ extension SignInBenefitsViewController {
         let range = NSString(string: attrString.string).range(of: attrString.string)
         attrString.addAttribute(
             NSAttributedString.Key.font,
-            value: UIFont.Muli(.regular, size: UIDevice.isiPhoneSE() ? 16 : 18),
+            value: UIFont.ruuviBody(),
             range: range
         )
 
         // Make note bold and orange color
         let makeBoldOrange = RuuviLocalization.note
-        let boldFont = UIFont.Muli(.bold, size: UIDevice.isiPhoneSE() ? 16 : 18)
+        let boldFont = UIFont.ruuviBody()
         let boldRange = NSString(string: attrString.string).range(of: makeBoldOrange)
         attrString.addAttribute(
             NSAttributedString.Key.font,

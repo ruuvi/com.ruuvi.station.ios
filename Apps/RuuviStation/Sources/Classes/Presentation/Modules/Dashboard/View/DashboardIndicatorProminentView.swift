@@ -8,7 +8,7 @@ class DashboardIndicatorProminentView: UIView {
         label.textColor = RuuviColor.dashboardIndicatorBig.color
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.font = UIFont.OswaldTight(.bold, size: 40)
+        label.font = UIFont.oswald(.bold, size: 34)
         label.backgroundColor = .clear
         return label
     }()
@@ -18,7 +18,7 @@ class DashboardIndicatorProminentView: UIView {
         label.textColor = RuuviColor.dashboardIndicatorBig.color
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.font = UIFont.OswaldTight(.regular, size: 14)
+        label.font = UIFont.oswald(.regular, size: 14)
         label.backgroundColor = .clear
         return label
     }()
@@ -28,7 +28,7 @@ class DashboardIndicatorProminentView: UIView {
         label.textColor = RuuviColor.dashboardIndicator.color.withAlphaComponent(0.7)
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.font = UIFont.Muli(.regular, size: 11)
+        label.font = UIFont.ruuviCaption2()
         label.backgroundColor = .clear
         return label
     }()
@@ -73,7 +73,7 @@ class DashboardIndicatorProminentView: UIView {
             leading: scriptsContainer.leadingAnchor,
             bottom: nil,
             trailing: scriptsContainer.trailingAnchor,
-            padding: .init(top: -0.5, left: 0, bottom: 0, right: 0)
+            padding: .init(top: -1.2, left: 0, bottom: 0, right: 0)
         )
 
         // Position subscript below superscript
@@ -83,7 +83,7 @@ class DashboardIndicatorProminentView: UIView {
             leading: scriptsContainer.leadingAnchor,
             bottom: scriptsContainer.bottomAnchor,
             trailing: scriptsContainer.trailingAnchor,
-            padding: .init(top: 0, left: 0, bottom: 0, right: 0)
+            padding: .init(top: 1.0, left: 0, bottom: -0.5, right: 0)
         )
 
         let valueStackView = UIStackView(arrangedSubviews: [
@@ -109,13 +109,8 @@ extension DashboardIndicatorProminentView {
     }
 
     func changeColor(highlight: Bool) {
-        let mainColor = highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicatorBig.color
-        let subscriptColor = highlight ? RuuviColor.orangeColor.color :
-                            RuuviColor.dashboardIndicator.color.withAlphaComponent(0.6)
-
-        indicatorValueLabel.textColor = mainColor
-        indicatorSuperscriptLabel.textColor = mainColor
-        indicatorSubscriptLabel.textColor = subscriptColor
+        let textColor = highlight ? RuuviColor.orangeColor.color : RuuviColor.dashboardIndicatorBig.color
+        indicatorValueLabel.textColor = textColor
     }
 
     func clearValues() {
@@ -123,7 +118,5 @@ extension DashboardIndicatorProminentView {
         indicatorSuperscriptLabel.text = nil
         indicatorSubscriptLabel.text = nil
         indicatorValueLabel.textColor = RuuviColor.dashboardIndicatorBig.color
-        indicatorSuperscriptLabel.textColor = RuuviColor.dashboardIndicatorBig.color
-        indicatorSubscriptLabel.textColor = RuuviColor.dashboardIndicator.color.withAlphaComponent(0.6)
     }
 }

@@ -147,9 +147,7 @@ class TagSettingsViewController: UIViewController {
     private let pairingString = RuuviLocalization.TagSettings.PairAndBackgroundScan.Pairing.title
     private let unpairedString = RuuviLocalization.TagSettings.PairAndBackgroundScan.Unpaired.title
 
-    private let temperatureAlertFormat = RuuviLocalization.TagSettings.TemperatureAlertTitleLabel.text
-    private let airHumidityAlertFormat = RuuviLocalization.TagSettings.AirHumidityAlert.title
-    private let pressureAlertFormat = RuuviLocalization.TagSettings.PressureAlert.title
+    private let pressureAlertFormat = RuuviLocalization.pressureWithUnit
 
     // Cell
     static let ReuseIdentifier = "SettingsCell"
@@ -194,12 +192,12 @@ class TagSettingsViewController: UIViewController {
         TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
 
     private lazy var temperatureAlertSection: TagSettingsSection? = {
-        let sectionTitle = temperatureAlertFormat(
-            viewModel?.temperatureUnit.value?.symbol ?? RuuviLocalization.na
+        let title = AlertType.temperature(lower: 0, upper: 0).title(
+            with: viewModel?.temperatureUnit.value?.symbol ?? RuuviLocalization.na
         )
         let section = TagSettingsSection(
             identifier: .alertTemperature,
-            title: sectionTitle,
+            title: title,
             cells: [
                 temperatureAlertItem()
             ],
@@ -220,10 +218,10 @@ class TagSettingsViewController: UIViewController {
 
     private lazy var humidityAlertSection: TagSettingsSection? = {
         let symbol = HumidityUnit.percent.symbol
-        let sectionTitle = airHumidityAlertFormat(symbol)
+        let title = AlertType.relativeHumidity(lower: 0, upper: 0).title()
         let section = TagSettingsSection(
             identifier: .alertHumidity,
-            title: sectionTitle,
+            title: title,
             cells: [
                 humidityAlertItem()
             ],
@@ -243,12 +241,12 @@ class TagSettingsViewController: UIViewController {
         TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
 
     private lazy var pressureAlertSection: TagSettingsSection? = {
-        let sectionTitle = pressureAlertFormat(
-            viewModel?.pressureUnit.value?.symbol ?? RuuviLocalization.na
+        let title = AlertType.relativeHumidity(lower: 0, upper: 0).title(
+            with: viewModel?.pressureUnit.value?.symbol ?? RuuviLocalization.na
         )
         let section = TagSettingsSection(
             identifier: .alertPressure,
-            title: sectionTitle,
+            title: title,
             cells: [
                 pressureAlertItem()
             ],
@@ -1137,7 +1135,7 @@ extension TagSettingsViewController {
         // Temperature
         tableView.bind(viewModel.temperatureUnit) { [weak self] _, value in
             guard let sSelf = self else { return }
-            sSelf.temperatureAlertSection?.title = sSelf.temperatureAlertFormat(
+            sSelf.temperatureAlertSection?.title =  RuuviLocalization.temperatureWithUnit(
                 value?.symbol ?? RuuviLocalization.na
             )
         }
@@ -1206,10 +1204,9 @@ extension TagSettingsViewController {
         }
 
         if let temperatureAlertSectionHeaderView {
-            temperatureAlertSectionHeaderView.bind(viewModel.temperatureUnit) { [weak self]
+            temperatureAlertSectionHeaderView.bind(viewModel.temperatureUnit) {
                 header, unit in
-                    guard let sSelf = self else { return }
-                    let sectionTitle = sSelf.temperatureAlertFormat(
+                let sectionTitle =  RuuviLocalization.temperatureWithUnit(
                         unit?.symbol ?? RuuviLocalization.na
                     )
                     header.setTitle(with: sectionTitle)
@@ -1340,7 +1337,7 @@ extension TagSettingsViewController {
         // Pressure
         tableView.bind(viewModel.pressureUnit) { [weak self] _, value in
             guard let sSelf = self else { return }
-            sSelf.pressureAlertSection?.title = sSelf.pressureAlertFormat(
+            sSelf.pressureAlertSection?.title = RuuviLocalization.pressureWithUnit(
                 value?.symbol ?? RuuviLocalization.na
             )
         }
@@ -1409,9 +1406,8 @@ extension TagSettingsViewController {
 
         if let pressureAlertSectionHeaderView {
             pressureAlertSectionHeaderView.bind(viewModel.pressureUnit) {
-                [weak self] header, unit in
-                guard let sSelf = self else { return }
-                let sectionTitle = sSelf.pressureAlertFormat(
+                header, unit in
+                let sectionTitle = RuuviLocalization.pressureWithUnit(
                     unit?.symbol ?? RuuviLocalization.na
                 )
                 header.setTitle(with: sectionTitle)
@@ -2829,9 +2825,10 @@ extension TagSettingsViewController {
     // MARK: - RSSI ALERTS
 
     private func configureRSSIAlertSection() -> TagSettingsSection {
+        let title = AlertType.signal(lower: 0, upper: 0).title()
         let section = TagSettingsSection(
             identifier: .alertRSSI,
-            title: RuuviLocalization.signalStrengthDbm,
+            title: title,
             cells: [
                 rssiAlertItem()
             ],
@@ -2886,10 +2883,10 @@ extension TagSettingsViewController {
     // MARK: - AQI ALERTS
 
     private func configureAQIAlertSection() -> TagSettingsSection {
-        let sectionTitle = RuuviLocalization.aqi
+        let title = AlertType.aqi(lower: 0, upper: 0).title()
         let section = TagSettingsSection(
             identifier: .alertAQI,
-            title: sectionTitle,
+            title: title,
             cells: [
                 aqiAlertItem()
             ],
@@ -2945,8 +2942,8 @@ extension TagSettingsViewController {
     // MARK: - CO2 ALERTS
 
     private func configureCO2AlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.TagSettings.Co2AlertTitleLabel.text(
-            RuuviLocalization.unitCo2
+        let title = AlertType.carbonDioxide(lower: 0, upper: 0).title(
+            with: RuuviLocalization.unitCo2
         )
         let section = TagSettingsSection(
             identifier: .alertCarbonDioxide,
@@ -3006,8 +3003,8 @@ extension TagSettingsViewController {
     // MARK: - PM1 ALERTS
 
     private func configurePM1AlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.TagSettings.Pm10AlertTitleLabel.text(
-            RuuviLocalization.unitPm10
+        let title = AlertType.pMatter1(lower: 0, upper: 0).title(
+            with: RuuviLocalization.unitPm10
         )
         let section = TagSettingsSection(
             identifier: .alertPMatter1,
@@ -3067,8 +3064,8 @@ extension TagSettingsViewController {
     // MARK: - PM2.5 ALERTS
 
     private func configurePM25AlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.TagSettings.Pm25AlertTitleLabel.text(
-            RuuviLocalization.unitPm25
+        let title = AlertType.pMatter25(lower: 0, upper: 0).title(
+            with: RuuviLocalization.unitPm25
         )
         let section = TagSettingsSection(
             identifier: .alertPMatter25,
@@ -3128,8 +3125,8 @@ extension TagSettingsViewController {
     // MARK: - PM4 ALERTS
 
     private func configurePM4AlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.TagSettings.Pm40AlertTitleLabel.text(
-            RuuviLocalization.unitPm40
+        let title = AlertType.pMatter4(lower: 0, upper: 0).title(
+            with: RuuviLocalization.unitPm40
         )
         let section = TagSettingsSection(
             identifier: .alertPMatter4,
@@ -3189,8 +3186,8 @@ extension TagSettingsViewController {
     // MARK: - PM10 ALERTS
 
     private func configurePM10AlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.TagSettings.Pm100AlertTitleLabel.text(
-            RuuviLocalization.unitPm100
+        let title = AlertType.pMatter10(lower: 0, upper: 0).title(
+            with: RuuviLocalization.unitPm100
         )
         let section = TagSettingsSection(
             identifier: .alertPMatter10,
@@ -3250,8 +3247,8 @@ extension TagSettingsViewController {
     // MARK: - VOC ALERTS
 
     private func configureVOCAlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.TagSettings.VocAlertTitleLabel.text(
-            RuuviLocalization.unitVoc
+        let title = AlertType.voc(lower: 0, upper: 0).title(
+            with: RuuviLocalization.unitVoc
         )
         let section = TagSettingsSection(
             identifier: .alertVOC,
@@ -3311,8 +3308,8 @@ extension TagSettingsViewController {
     // MARK: - NOx ALERTS
 
     private func configureNOXAlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.TagSettings.NoxAlertTitleLabel.text(
-            RuuviLocalization.unitNox
+        let title = AlertType.nox(lower: 0, upper: 0).title(
+            with: RuuviLocalization.unitNox
         )
         let section = TagSettingsSection(
             identifier: .alertNOx,
@@ -3372,8 +3369,8 @@ extension TagSettingsViewController {
     // MARK: - SOUND ALERTS
 
     private func configureSoundAlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.TagSettings.SoundInstantAlertTitleLabel.text(
-            RuuviLocalization.unitSound
+        let title = AlertType.soundInstant(lower: 0, upper: 0).title(
+            with: RuuviLocalization.unitSound
         )
         let section = TagSettingsSection(
             identifier: .alertSoundInstant,
@@ -3433,8 +3430,8 @@ extension TagSettingsViewController {
     // MARK: - LUMINOSITY ALERTS
 
     private func configureLuminosityAlertSection() -> TagSettingsSection {
-        let title = RuuviLocalization.TagSettings.LuminosityAlertTitleLabel.text(
-            RuuviLocalization.unitLuminosity
+        let title = AlertType.luminosity(lower: 0, upper: 0).title(
+            with: RuuviLocalization.unitLuminosity
         )
         let section = TagSettingsSection(
             identifier: .alertLuminosity,
@@ -3496,7 +3493,7 @@ extension TagSettingsViewController {
     private func configureMovementAlertSection() -> TagSettingsSection {
         let section = TagSettingsSection(
             identifier: .alertMovement,
-            title: RuuviLocalization.TagSettings.MovementAlert.title,
+            title: RuuviLocalization.alertMovement,
             cells: [
                 movementAlertItem()
             ],
@@ -3534,7 +3531,7 @@ extension TagSettingsViewController {
     private func configureConnectionAlertSection() -> TagSettingsSection {
         let section = TagSettingsSection(
             identifier: .alertConnection,
-            title: RuuviLocalization.TagSettings.ConnectionAlert.title,
+            title: AlertType.connection.title(),
             cells: [
                 connectionAlertItem()
             ],
@@ -3571,7 +3568,7 @@ extension TagSettingsViewController {
     private func configureCloudConnectionAlertSection() -> TagSettingsSection {
         let section = TagSettingsSection(
             identifier: .alertCloudConnection,
-            title: RuuviLocalization.alertCloudConnectionTitle,
+            title: AlertType.cloudConnection(unseenDuration: 0).title(),
             cells: [
                 cloudConnectionAlertItem()
             ],
@@ -3583,7 +3580,7 @@ extension TagSettingsViewController {
 
     private func cloudConnectionAlertItem() -> TagSettingsItem {
         let duration = viewModel?.cloudConnectionAlertUnseenDuration.value?.intValue ??
-                TagSettingsAlertConstants.CloudConnection.defaultUnseenDuration
+                RuuviAlertConstants.CloudConnection.defaultUnseenDuration
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
                 self?.cloudConnectionAlertCell?.hideAlertRangeSlider()
@@ -4138,7 +4135,7 @@ extension TagSettingsViewController {
 
     private func humidityLowerBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.RelativeHumidity.lowerBound
+            return RuuviAlertConstants.RelativeHumidity.lowerBound
         }
         let range = HumidityUnit.percent.alertRange
         if let lower = viewModel?.relativeHumidityLowerBound.value {
@@ -4150,7 +4147,7 @@ extension TagSettingsViewController {
 
     private func humidityUpperBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.RelativeHumidity.upperBound
+            return RuuviAlertConstants.RelativeHumidity.upperBound
         }
         let range = HumidityUnit.percent.alertRange
         if let upper = viewModel?.relativeHumidityUpperBound.value {
@@ -4217,7 +4214,7 @@ extension TagSettingsViewController {
 
     private func pressureLowerBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.Pressure.lowerBound
+            return RuuviAlertConstants.Pressure.lowerBound
         }
         guard let pu = viewModel?.pressureUnit.value
         else {
@@ -4237,7 +4234,7 @@ extension TagSettingsViewController {
 
     private func pressureUpperBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.Pressure.upperBound
+            return RuuviAlertConstants.Pressure.upperBound
         }
         guard let pu = viewModel?.pressureUnit.value
         else {
@@ -4303,7 +4300,7 @@ extension TagSettingsViewController {
 
     private func rssiLowerBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.Signal.lowerBound
+            return RuuviAlertConstants.Signal.lowerBound
         }
         let (minRange, _) = rssiMinMaxForSliders()
         if let lower = viewModel?.signalLowerBound.value {
@@ -4315,7 +4312,7 @@ extension TagSettingsViewController {
 
     private func rssiUpperBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.Signal.upperBound
+            return RuuviAlertConstants.Signal.upperBound
         }
         let (_, maxRange) = rssiMinMaxForSliders()
         if let upper = viewModel?.signalUpperBound.value {
@@ -4330,15 +4327,15 @@ extension TagSettingsViewController {
         maximum: CGFloat
     ) {
         (
-            minimum: TagSettingsAlertConstants.Signal.lowerBound,
-            maximum: TagSettingsAlertConstants.Signal.upperBound
+            minimum: RuuviAlertConstants.Signal.lowerBound,
+            maximum: RuuviAlertConstants.Signal.upperBound
         )
     }
 
     private func attributedString(from message: String?) -> NSMutableAttributedString? {
         if let message {
             let attributedString = NSMutableAttributedString(string: message)
-            let boldFont = UIFont.Muli(.bold, size: 14)
+            let boldFont = UIFont.mulish(.bold, size: 14)
             let numberRegex = try? NSRegularExpression(pattern: "\\d+([.,]\\d+)?")
             let range = NSRange(location: 0, length: message.utf16.count)
             if let matches = numberRegex?.matches(in: message, options: [], range: range) {
@@ -4392,7 +4389,7 @@ extension TagSettingsViewController {
 
     private func aqiLowerBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.AQI.lowerBound
+            return RuuviAlertConstants.AQI.lowerBound
         }
         let (minRange, _) = aqiAlertRange()
         if let lower = viewModel?.aqiLowerBound.value {
@@ -4404,7 +4401,7 @@ extension TagSettingsViewController {
 
     private func aqiUpperBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.AQI.upperBound
+            return RuuviAlertConstants.AQI.upperBound
         }
         let (_, maxRange) = aqiAlertRange()
         if let upper = viewModel?.aqiUpperBound.value {
@@ -4419,8 +4416,8 @@ extension TagSettingsViewController {
         maximum: CGFloat
     ) {
         (
-            minimum: TagSettingsAlertConstants.AQI.lowerBound,
-            maximum: TagSettingsAlertConstants.AQI.upperBound
+            minimum: RuuviAlertConstants.AQI.lowerBound,
+            maximum: RuuviAlertConstants.AQI.upperBound
         )
     }
 
@@ -4464,7 +4461,7 @@ extension TagSettingsViewController {
 
     private func co2LowerBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.CarbonDioxide.lowerBound
+            return RuuviAlertConstants.CarbonDioxide.lowerBound
         }
         let (minRange, _) = co2AlertRange()
         if let lower = viewModel?.carbonDioxideLowerBound.value {
@@ -4476,7 +4473,7 @@ extension TagSettingsViewController {
 
     private func co2UpperBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.CarbonDioxide.upperBound
+            return RuuviAlertConstants.CarbonDioxide.upperBound
         }
         let (_, maxRange) = co2AlertRange()
         if let upper = viewModel?.carbonDioxideUpperBound.value {
@@ -4491,8 +4488,8 @@ extension TagSettingsViewController {
         maximum: CGFloat
     ) {
         (
-            minimum: TagSettingsAlertConstants.CarbonDioxide.lowerBound,
-            maximum: TagSettingsAlertConstants.CarbonDioxide.upperBound
+            minimum: RuuviAlertConstants.CarbonDioxide.lowerBound,
+            maximum: RuuviAlertConstants.CarbonDioxide.upperBound
         )
     }
 
@@ -4536,7 +4533,7 @@ extension TagSettingsViewController {
 
     private func pm1LowerBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.ParticulateMatter.lowerBound
+            return RuuviAlertConstants.ParticulateMatter.lowerBound
         }
         let (minRange, _) = pmAlertRange()
         if let lower = viewModel?.pMatter1LowerBound.value {
@@ -4548,7 +4545,7 @@ extension TagSettingsViewController {
 
     private func pm1UpperBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.ParticulateMatter.upperBound
+            return RuuviAlertConstants.ParticulateMatter.upperBound
         }
         let (_, maxRange) = pmAlertRange()
         if let upper = viewModel?.pMatter1UpperBound.value {
@@ -4563,8 +4560,8 @@ extension TagSettingsViewController {
         maximum: CGFloat
     ) {
         (
-            minimum: TagSettingsAlertConstants.ParticulateMatter.lowerBound,
-            maximum: TagSettingsAlertConstants.ParticulateMatter.upperBound
+            minimum: RuuviAlertConstants.ParticulateMatter.lowerBound,
+            maximum: RuuviAlertConstants.ParticulateMatter.upperBound
         )
     }
 
@@ -4608,7 +4605,7 @@ extension TagSettingsViewController {
 
     private func pm25LowerBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.ParticulateMatter.lowerBound
+            return RuuviAlertConstants.ParticulateMatter.lowerBound
         }
         let (minRange, _) = pmAlertRange()
         if let lower = viewModel?.pMatter25LowerBound.value {
@@ -4620,7 +4617,7 @@ extension TagSettingsViewController {
 
     private func pm25UpperBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.ParticulateMatter.upperBound
+            return RuuviAlertConstants.ParticulateMatter.upperBound
         }
         let (_, maxRange) = pmAlertRange()
         if let upper = viewModel?.pMatter25UpperBound.value {
@@ -4670,7 +4667,7 @@ extension TagSettingsViewController {
 
     private func pm4LowerBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.ParticulateMatter.lowerBound
+            return RuuviAlertConstants.ParticulateMatter.lowerBound
         }
         let (minRange, _) = pmAlertRange()
         if let lower = viewModel?.pMatter4LowerBound.value {
@@ -4682,7 +4679,7 @@ extension TagSettingsViewController {
 
     private func pm4UpperBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.ParticulateMatter.upperBound
+            return RuuviAlertConstants.ParticulateMatter.upperBound
         }
         let (_, maxRange) = pmAlertRange()
         if let upper = viewModel?.pMatter4UpperBound.value {
@@ -4732,7 +4729,7 @@ extension TagSettingsViewController {
 
     private func pm10LowerBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.ParticulateMatter.lowerBound
+            return RuuviAlertConstants.ParticulateMatter.lowerBound
         }
         let (minRange, _) = pmAlertRange()
         if let lower = viewModel?.pMatter10LowerBound.value {
@@ -4744,7 +4741,7 @@ extension TagSettingsViewController {
 
     private func pm10UpperBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.ParticulateMatter.upperBound
+            return RuuviAlertConstants.ParticulateMatter.upperBound
         }
         let (_, maxRange) = pmAlertRange()
         if let upper = viewModel?.pMatter10UpperBound.value {
@@ -4794,7 +4791,7 @@ extension TagSettingsViewController {
 
     private func vocLowerBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.VOC.lowerBound
+            return RuuviAlertConstants.VOC.lowerBound
         }
         let (minRange, _) = vocAlertRange()
         if let lower = viewModel?.vocLowerBound.value {
@@ -4806,7 +4803,7 @@ extension TagSettingsViewController {
 
     private func vocUpperBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.VOC.upperBound
+            return RuuviAlertConstants.VOC.upperBound
         }
         let (_, maxRange) = vocAlertRange()
         if let upper = viewModel?.vocUpperBound.value {
@@ -4821,8 +4818,8 @@ extension TagSettingsViewController {
         maximum: CGFloat
     ) {
         (
-            minimum: TagSettingsAlertConstants.VOC.lowerBound,
-            maximum: TagSettingsAlertConstants.VOC.upperBound
+            minimum: RuuviAlertConstants.VOC.lowerBound,
+            maximum: RuuviAlertConstants.VOC.upperBound
         )
     }
 
@@ -4866,7 +4863,7 @@ extension TagSettingsViewController {
 
     private func noxLowerBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.NOX.lowerBound
+            return RuuviAlertConstants.NOX.lowerBound
         }
         let (minRange, _) = noxAlertRange()
         if let lower = viewModel?.noxLowerBound.value {
@@ -4878,7 +4875,7 @@ extension TagSettingsViewController {
 
     private func noxUpperBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.NOX.upperBound
+            return RuuviAlertConstants.NOX.upperBound
         }
         let (_, maxRange) = noxAlertRange()
         if let upper = viewModel?.noxUpperBound.value {
@@ -4893,8 +4890,8 @@ extension TagSettingsViewController {
         maximum: CGFloat
     ) {
         (
-            minimum: TagSettingsAlertConstants.NOX.lowerBound,
-            maximum: TagSettingsAlertConstants.NOX.upperBound
+            minimum: RuuviAlertConstants.NOX.lowerBound,
+            maximum: RuuviAlertConstants.NOX.upperBound
         )
     }
 
@@ -4938,7 +4935,7 @@ extension TagSettingsViewController {
 
     private func soundLowerBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.Sound.lowerBound
+            return RuuviAlertConstants.Sound.lowerBound
         }
         let (minRange, _) = soundAlertRange()
         if let lower = viewModel?.soundInstantLowerBound.value {
@@ -4950,7 +4947,7 @@ extension TagSettingsViewController {
 
     private func soundUpperBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.Sound.upperBound
+            return RuuviAlertConstants.Sound.upperBound
         }
         let (_, maxRange) = soundAlertRange()
         if let upper = viewModel?.soundInstantUpperBound.value {
@@ -4965,8 +4962,8 @@ extension TagSettingsViewController {
         maximum: CGFloat
     ) {
         (
-            minimum: TagSettingsAlertConstants.Sound.lowerBound,
-            maximum: TagSettingsAlertConstants.Sound.upperBound
+            minimum: RuuviAlertConstants.Sound.lowerBound,
+            maximum: RuuviAlertConstants.Sound.upperBound
         )
     }
 
@@ -5010,7 +5007,7 @@ extension TagSettingsViewController {
 
     private func luminosityLowerBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.Luminosity.lowerBound
+            return RuuviAlertConstants.Luminosity.lowerBound
         }
         let (minRange, _) = luminosityAlertRange()
         if let lower = viewModel?.luminosityLowerBound.value {
@@ -5022,7 +5019,7 @@ extension TagSettingsViewController {
 
     private func luminosityUpperBound() -> CGFloat {
         guard isViewLoaded else {
-            return TagSettingsAlertConstants.Luminosity.upperBound
+            return RuuviAlertConstants.Luminosity.upperBound
         }
         let (_, maxRange) = luminosityAlertRange()
         if let upper = viewModel?.luminosityUpperBound.value {
@@ -5037,8 +5034,8 @@ extension TagSettingsViewController {
         maximum: CGFloat
     ) {
         (
-            minimum: TagSettingsAlertConstants.Luminosity.lowerBound,
-            maximum: TagSettingsAlertConstants.Luminosity.upperBound
+            minimum: RuuviAlertConstants.Luminosity.lowerBound,
+            maximum: RuuviAlertConstants.Luminosity.upperBound
         )
     }
 
@@ -5662,7 +5659,7 @@ extension TagSettingsViewController {
     }
 
     private func showCo2AlertSetDialog(sender: TagSettingsAlertConfigCell) {
-        let title = RuuviLocalization.TagSettings.Co2AlertTitleLabel.text(
+        let title = RuuviLocalization.co2WithUnit(
             RuuviLocalization.unitCo2
         )
 
@@ -5679,7 +5676,7 @@ extension TagSettingsViewController {
     }
 
     private func showPM1AlertSetDialog(sender: TagSettingsAlertConfigCell) {
-        let title = RuuviLocalization.TagSettings.Pm10AlertTitleLabel.text(
+        let title = RuuviLocalization.pm10WithUnit(
             RuuviLocalization.unitPm10
         )
 
@@ -5696,7 +5693,7 @@ extension TagSettingsViewController {
     }
 
     private func showPM25AlertSetDialog(sender: TagSettingsAlertConfigCell) {
-        let title = RuuviLocalization.TagSettings.Pm25AlertTitleLabel.text(
+        let title = RuuviLocalization.pm25WithUnit(
             RuuviLocalization.unitPm25
         )
 
@@ -5713,7 +5710,7 @@ extension TagSettingsViewController {
     }
 
     private func showPM4AlertSetDialog(sender: TagSettingsAlertConfigCell) {
-        let title = RuuviLocalization.TagSettings.Pm40AlertTitleLabel.text(
+        let title = RuuviLocalization.pm40WithUnit(
             RuuviLocalization.unitPm40
         )
 
@@ -5730,7 +5727,7 @@ extension TagSettingsViewController {
     }
 
     private func showPM10AlertSetDialog(sender: TagSettingsAlertConfigCell) {
-        let title = RuuviLocalization.TagSettings.Pm100AlertTitleLabel.text(
+        let title = RuuviLocalization.pm100WithUnit(
             RuuviLocalization.unitPm100
         )
 
@@ -5747,7 +5744,7 @@ extension TagSettingsViewController {
     }
 
     private func showVOCAlertSetDialog(sender: TagSettingsAlertConfigCell) {
-        let title = RuuviLocalization.TagSettings.VocAlertTitleLabel.text(
+        let title = RuuviLocalization.vocWithUnit(
             RuuviLocalization.unitVoc
         )
 
@@ -5764,7 +5761,7 @@ extension TagSettingsViewController {
     }
 
     private func showNOXAlertSetDialog(sender: TagSettingsAlertConfigCell) {
-        let title = RuuviLocalization.TagSettings.NoxAlertTitleLabel.text(
+        let title = RuuviLocalization.noxWithUnit(
             RuuviLocalization.unitNox
         )
 
@@ -5781,7 +5778,7 @@ extension TagSettingsViewController {
     }
 
     private func showSoundAlertSetDialog(sender: TagSettingsAlertConfigCell) {
-        let title = RuuviLocalization.TagSettings.SoundAlertTitleLabel.text(
+        let title = RuuviLocalization.soundInstantWithUnit(
             RuuviLocalization.unitSound
         )
 
@@ -5798,7 +5795,7 @@ extension TagSettingsViewController {
     }
 
     private func showLuminosityAlertSetDialog(sender: TagSettingsAlertConfigCell) {
-        let title = RuuviLocalization.TagSettings.LuminosityAlertTitleLabel.text(
+        let title = RuuviLocalization.luminosityWithUnit(
             RuuviLocalization.unitLuminosity
         )
 
@@ -5818,8 +5815,8 @@ extension TagSettingsViewController {
         let title = RuuviLocalization.alertCloudConnectionDialogTitle
         let message = RuuviLocalization.alertCloudConnectionDialogDescription
 
-        let minimumDuration = TagSettingsAlertConstants.CloudConnection.minUnseenDuration
-        let defaultDuration = TagSettingsAlertConstants.CloudConnection.defaultUnseenDuration
+        let minimumDuration = RuuviAlertConstants.CloudConnection.minUnseenDuration
+        let defaultDuration = RuuviAlertConstants.CloudConnection.defaultUnseenDuration
         let currentDuration = viewModel?.cloudConnectionAlertUnseenDuration.value?.intValue ?? defaultDuration
 
         showSensorCustomAlertRangeDialog(
@@ -5907,8 +5904,8 @@ extension TagSettingsViewController {
 
     private func rssiAlertRange() -> (minimum: Double, maximum: Double) {
         (
-            minimum: TagSettingsAlertConstants.Signal.lowerBound,
-            maximum: TagSettingsAlertConstants.Signal.upperBound
+            minimum: RuuviAlertConstants.Signal.lowerBound,
+            maximum: RuuviAlertConstants.Signal.upperBound
         )
     }
 
@@ -6110,7 +6107,7 @@ extension TagSettingsViewController {
             collapsed: true,
             headerType: .expandable,
             backgroundColor: RuuviColor.tagSettingsSectionHeaderColor.color,
-            font: UIFont.Muli(.bold, size: 18)
+            font: UIFont.ruuviButtonLarge()
         )
         return section
     }
@@ -6147,7 +6144,7 @@ extension TagSettingsViewController {
                 self?
                     .humidityOffsetCorrectionCell?
                     .configure(
-                        title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
+                        title: RuuviLocalization.relativeHumidity,
                         value: self?.measurementService
                             .humidityOffsetCorrectionString(for: humOffset)
                     )
@@ -6175,7 +6172,7 @@ extension TagSettingsViewController {
                 self?
                     .pressureOffsetCorrectionCell?
                     .configure(
-                        title: RuuviLocalization.TagSettings.OffsetCorrection.pressure,
+                        title: RuuviLocalization.pressure,
                         value: self?.measurementService.pressureOffsetCorrectionString(for: pressureOffset)
                     )
                 self?.pressureOffsetCorrectionCell?.setAccessory(type: .chevron)
@@ -6265,9 +6262,9 @@ extension TagSettingsViewController {
             }
 
             moreInfoBatteryVoltageCell.bind(viewModel.batteryNeedsReplacement) { [weak self]
-                cell, needsReplacement in
+                cell, _ in
                 guard let sSelf = self else { return }
-                let (status, color) = sSelf.formattedBatteryStatus(from: needsReplacement)
+                let (status, color) = sSelf.formattedBatteryStatus(from: viewModel)
                 cell.configure(note: status, noteColor: color)
             }
         }
@@ -6373,7 +6370,7 @@ extension TagSettingsViewController {
             collapsed: true,
             headerType: .expandable,
             backgroundColor: RuuviColor.tagSettingsSectionHeaderColor.color,
-            font: UIFont.Muli(.bold, size: 18)
+            font: UIFont.ruuviButtonLarge()
         )
         return section
     }
@@ -6425,7 +6422,7 @@ extension TagSettingsViewController {
     }
 
     private func moreInfoBatteryVoltageItem() -> TagSettingsItem {
-        let (status, color) = formattedBatteryStatus(from: viewModel?.batteryNeedsReplacement.value)
+        let (status, color) = formattedBatteryStatus(from: viewModel)
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
                 self?.moreInfoBatteryVoltageCell?.configure(
@@ -6515,7 +6512,7 @@ extension TagSettingsViewController {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
                 self?.moreInfoRSSICell?.configure(
-                    title: RuuviLocalization.TagSettings.RssiTitleLabel.text,
+                    title: RuuviLocalization.signalStrengthWithUnit,
                     value: rssi
                 )
                 return self?.moreInfoRSSICell ?? UITableViewCell()
@@ -6573,8 +6570,21 @@ extension TagSettingsViewController {
         }
     }
 
-    private func formattedBatteryStatus(from batteryLow: Bool?) -> (status: String?, color: UIColor?) {
-        if let batteryLow {
+    private func formattedBatteryStatus(
+        from viewModel: TagSettingsViewModel?
+    ) -> (
+        status: String?,
+        color: UIColor?
+    ) {
+        if let firmwareVirsion = viewModel?.version.value {
+            let firmwareType = RuuviFirmwareVersion.firmwareVersion(from: firmwareVirsion)
+            if firmwareType == .e1 || firmwareType == .v6 {
+                // These firmware types does not support battery status
+                return (status: nil, color: nil)
+            }
+        }
+
+        if let batteryLow = viewModel?.batteryNeedsReplacement.value {
             // swiftlint:disable:next line_length
             let batteryStatus = batteryLow ? "(\(RuuviLocalization.TagSettings.BatteryStatusLabel.Replace.message))" : "(\(RuuviLocalization.TagSettings.BatteryStatusLabel.Ok.message))"
             let indicatorColor = batteryLow ? RuuviColor.orangeColor.color : RuuviColor.tintColor.color
@@ -6640,7 +6650,7 @@ extension TagSettingsViewController {
             collapsed: true,
             headerType: .expandable,
             backgroundColor: RuuviColor.tagSettingsSectionHeaderColor.color,
-            font: UIFont.Muli(.bold, size: 18)
+            font: UIFont.ruuviButtonLarge()
         )
         return section
     }
@@ -6694,7 +6704,7 @@ extension TagSettingsViewController {
             collapsed: true,
             headerType: .expandable,
             backgroundColor: RuuviColor.tagSettingsSectionHeaderColor.color,
-            font: UIFont.Muli(.bold, size: 18)
+            font: UIFont.ruuviButtonLarge()
         )
         return section
     }
@@ -7826,7 +7836,7 @@ extension TagSettingsViewController {
             }
 
             let currentDuration = viewModel?.cloudConnectionAlertUnseenDuration.value?.intValue ??
-                    TagSettingsAlertConstants.CloudConnection.defaultUnseenDuration
+                    RuuviAlertConstants.CloudConnection.defaultUnseenDuration
             if durationInput == (currentDuration / 60) {
                 return
             }

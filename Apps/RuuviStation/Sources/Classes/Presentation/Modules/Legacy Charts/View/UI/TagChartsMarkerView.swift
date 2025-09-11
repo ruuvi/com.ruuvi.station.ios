@@ -24,7 +24,7 @@ class TagChartsMarkerView: MarkerImage {
 
     init(
         color: UIColor? = RuuviColor.graphMarkerColor.color,
-        font: UIFont = UIFont.Muli(.regular, size: 8),
+        font: UIFont = UIFont.ruuviCaption2(),
         textColor: UIColor = .white
     ) {
         if let color {

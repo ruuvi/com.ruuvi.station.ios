@@ -1,22 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Jxi-gj-SMg">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="h42-Pj-LfB">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="Muli-Bold.ttf">
-            <string>Muli-Bold</string>
-        </array>
-        <array key="Muli-Regular.ttf">
-            <string>Muli-Regular</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--About View Controller-->
         <scene sceneID="izz-TU-3SU">
@@ -27,10 +19,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zKU-NK-qkw">
-                                <rect key="frame" x="0.0" y="92" width="414" height="1032"/>
+                                <rect key="frame" x="0.0" y="140" width="414" height="984"/>
                                 <subviews>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pyx-d9-7cb">
-                                        <rect key="frame" x="16" y="12" width="382" height="646.5"/>
+                                        <rect key="frame" x="16" y="0.0" width="382" height="646.5"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <color key="tintColor" name="RuuviTintColor"/>
                                         <attributedString key="attributedText">
@@ -91,26 +83,26 @@
                                         <dataDetectorType key="dataDetectorTypes" link="YES"/>
                                     </textView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version " lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YZT-Oy-FFh">
-                                        <rect key="frame" x="20" y="666.5" width="374" height="19"/>
-                                        <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="15"/>
+                                        <rect key="frame" x="20" y="654.5" width="374" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" name="RuuviDashboardIndicator"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Added tags" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DQc-Dj-qjx">
-                                        <rect key="frame" x="20" y="687.5" width="374" height="19"/>
-                                        <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="15"/>
+                                        <rect key="frame" x="20" y="674.5" width="374" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" name="RuuviDashboardIndicator"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Stored measurements" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nhq-tg-RXR">
-                                        <rect key="frame" x="20" y="708.5" width="374" height="19"/>
-                                        <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="15"/>
+                                        <rect key="frame" x="20" y="694.5" width="374" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" name="RuuviDashboardIndicator"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Database size" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8cl-Gj-SSM">
-                                        <rect key="frame" x="20" y="729.5" width="374" height="19"/>
-                                        <fontDescription key="fontDescription" name="Muli-Regular" family="Muli" pointSize="15"/>
+                                        <rect key="frame" x="20" y="714.5" width="374" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" name="RuuviDashboardIndicator"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -118,7 +110,7 @@
                                 <constraints>
                                     <constraint firstItem="YZT-Oy-FFh" firstAttribute="top" secondItem="pyx-d9-7cb" secondAttribute="bottom" constant="8" id="6RU-zH-7zv"/>
                                     <constraint firstItem="YZT-Oy-FFh" firstAttribute="leading" secondItem="zKU-NK-qkw" secondAttribute="leading" constant="20" id="7ia-Cl-8qc"/>
-                                    <constraint firstItem="pyx-d9-7cb" firstAttribute="top" secondItem="zKU-NK-qkw" secondAttribute="top" constant="12" id="7w3-un-PIq"/>
+                                    <constraint firstItem="pyx-d9-7cb" firstAttribute="top" secondItem="zKU-NK-qkw" secondAttribute="top" id="7w3-un-PIq"/>
                                     <constraint firstItem="pyx-d9-7cb" firstAttribute="centerX" secondItem="zKU-NK-qkw" secondAttribute="centerX" id="Bkn-XT-2gJ"/>
                                     <constraint firstItem="Nhq-tg-RXR" firstAttribute="leading" secondItem="zKU-NK-qkw" secondAttribute="leading" constant="20" id="LY1-d5-a7p"/>
                                     <constraint firstAttribute="trailing" secondItem="Nhq-tg-RXR" secondAttribute="trailing" constant="20" id="MtL-b3-Hid"/>
@@ -135,48 +127,31 @@
                                     <constraint firstAttribute="trailing" secondItem="DQc-Dj-qjx" secondAttribute="trailing" constant="20" id="xwl-fW-iSD"/>
                                 </constraints>
                             </scrollView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FWL-lH-VPV">
-                                <rect key="frame" x="8" y="56" width="36" height="36"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="36" id="7b8-q0-X6K"/>
-                                    <constraint firstAttribute="width" constant="36" id="Jzn-C6-dGd"/>
-                                </constraints>
-                                <color key="tintColor" systemColor="labelColor"/>
-                                <state key="normal" image="dismiss-modal-icon">
-                                    <color key="titleColor" systemColor="labelColor"/>
-                                </state>
-                                <connections>
-                                    <action selector="backButtonTouchUpInside:" destination="Jxi-gj-SMg" eventType="touchUpInside" id="SfR-Nw-BF4"/>
-                                </connections>
-                            </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="About / Help" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ol5-6m-wqF">
-                                <rect key="frame" x="56" y="62.5" width="346" height="23"/>
-                                <fontDescription key="fontDescription" name="Muli-Bold" family="Muli" pointSize="18"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="NtZ-tC-tio"/>
                         <color key="backgroundColor" name="RuuviPrimary"/>
                         <constraints>
-                            <constraint firstItem="FWL-lH-VPV" firstAttribute="leading" secondItem="NtZ-tC-tio" secondAttribute="leading" constant="8" id="6e7-xp-4kM"/>
-                            <constraint firstItem="ol5-6m-wqF" firstAttribute="centerY" secondItem="FWL-lH-VPV" secondAttribute="centerY" id="Ofr-ur-BhU"/>
-                            <constraint firstItem="FWL-lH-VPV" firstAttribute="top" secondItem="NtZ-tC-tio" secondAttribute="top" constant="8" id="c6G-Dz-7o4"/>
                             <constraint firstItem="zKU-NK-qkw" firstAttribute="trailing" secondItem="NtZ-tC-tio" secondAttribute="trailing" id="fHC-1P-LFc"/>
+                            <constraint firstItem="zKU-NK-qkw" firstAttribute="top" secondItem="NtZ-tC-tio" secondAttribute="top" id="fvt-I1-9Xh"/>
                             <constraint firstAttribute="bottom" secondItem="zKU-NK-qkw" secondAttribute="bottom" id="lUB-VF-LuK"/>
                             <constraint firstItem="zKU-NK-qkw" firstAttribute="leading" secondItem="NtZ-tC-tio" secondAttribute="leading" id="qbs-7R-8hG"/>
-                            <constraint firstItem="ol5-6m-wqF" firstAttribute="leading" secondItem="FWL-lH-VPV" secondAttribute="trailing" constant="12" id="s4T-le-cEw"/>
-                            <constraint firstItem="NtZ-tC-tio" firstAttribute="trailing" secondItem="ol5-6m-wqF" secondAttribute="trailing" constant="12" id="wLR-TL-QcN"/>
-                            <constraint firstItem="zKU-NK-qkw" firstAttribute="top" secondItem="FWL-lH-VPV" secondAttribute="bottom" id="xGj-Xg-M98"/>
                         </constraints>
                     </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="Uzj-zs-RdM">
+                        <barButtonItem key="leftBarButtonItem" image="dismiss-modal-icon" id="Y7h-vm-OP6">
+                            <color key="tintColor" systemColor="labelColor"/>
+                            <connections>
+                                <action selector="backButtonTouchUpInside:" destination="Jxi-gj-SMg" id="6aV-KC-n6e"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <size key="freeformSize" width="414" height="1124"/>
                     <connections>
                         <outlet property="aboutTextView" destination="pyx-d9-7cb" id="KnS-FS-hFt"/>
                         <outlet property="addedTagsLabel" destination="DQc-Dj-qjx" id="Cb5-s2-ra4"/>
                         <outlet property="databaseSizeLable" destination="8cl-Gj-SSM" id="52A-4u-X9Z"/>
-                        <outlet property="dismissButton" destination="FWL-lH-VPV" id="OLl-1B-1tA"/>
-                        <outlet property="headerTitleLabel" destination="ol5-6m-wqF" id="V9G-Zh-5ws"/>
                         <outlet property="storedMeasurementsLabel" destination="Nhq-tg-RXR" id="lfF-HF-veI"/>
                         <outlet property="versionLabel" destination="YZT-Oy-FFh" id="Uqa-1k-Seb"/>
                     </connections>
@@ -187,6 +162,24 @@
                         <outlet property="viewController" destination="Jxi-gj-SMg" id="UJk-Af-C4J"/>
                     </connections>
                 </customObject>
+            </objects>
+            <point key="canvasLocation" x="2446" y="1681"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Snq-xE-Fvc">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="h42-Pj-LfB" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="bAl-yD-w9R">
+                        <rect key="frame" x="0.0" y="96" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Jxi-gj-SMg" kind="relationship" relationship="rootViewController" id="smG-yF-iyy"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0zI-XM-GXS" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1605.7971014492755" y="1681.4732142857142"/>
         </scene>
