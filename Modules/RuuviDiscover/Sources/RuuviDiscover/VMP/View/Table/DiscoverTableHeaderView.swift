@@ -178,18 +178,15 @@ extension UIButton {
         forContentPadding contentPadding: UIEdgeInsets,
         imageTitlePadding: CGFloat
     ) {
-        contentEdgeInsets = UIEdgeInsets(
+        var config = self.configuration ?? .plain()
+        config.contentInsets = NSDirectionalEdgeInsets(
             top: contentPadding.top,
-            left: contentPadding.left,
+            leading: contentPadding.left,
             bottom: contentPadding.bottom,
-            right: contentPadding.right + imageTitlePadding
+            trailing: contentPadding.right + imageTitlePadding
         )
-        titleEdgeInsets = UIEdgeInsets(
-            top: 0,
-            left: imageTitlePadding,
-            bottom: 0,
-            right: -imageTitlePadding
-        )
+        config.imagePadding = imageTitlePadding
+        self.configuration = config
     }
 }
 

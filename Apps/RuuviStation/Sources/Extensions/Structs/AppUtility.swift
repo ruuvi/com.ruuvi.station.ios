@@ -6,14 +6,4 @@ enum AppUtility {
             delegate.orientationLock = orientation
         }
     }
-
-    /// OPTIONAL Added method to adjust lock and rotate to the desired orientation
-    static func lockOrientation(
-        _ orientation: UIInterfaceOrientationMask,
-        andRotateTo rotateOrientation: UIInterfaceOrientation
-    ) {
-        lockOrientation(orientation)
-        UIDevice.current.setValue(rotateOrientation.rawValue, forKey: "orientation")
-        UINavigationController.attemptRotationToDeviceOrientation()
-    }
 }

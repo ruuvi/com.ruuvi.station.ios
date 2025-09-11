@@ -247,46 +247,18 @@ struct AnchoredConstraints {
 
 extension UIView {
     var safeTopAnchor: NSLayoutYAxisAnchor {
-        if #available(iOS 11.0, *) {
-            return self.safeAreaLayoutGuide.topAnchor
-        }
-        return topAnchor
+        return self.safeAreaLayoutGuide.topAnchor
     }
 
     var safeLeftAnchor: NSLayoutXAxisAnchor {
-        if #available(iOS 11.0, *) {
-            return self.safeAreaLayoutGuide.leadingAnchor
-        }
-        return leftAnchor
+        return self.safeAreaLayoutGuide.leadingAnchor
     }
 
     var safeRightAnchor: NSLayoutXAxisAnchor {
-        if #available(iOS 11.0, *) {
-            return self.safeAreaLayoutGuide.trailingAnchor
-        }
-        return rightAnchor
+        return self.safeAreaLayoutGuide.trailingAnchor
     }
 
     var safeBottomAnchor: NSLayoutYAxisAnchor {
-        if #available(iOS 11.0, *) {
-            return self.safeAreaLayoutGuide.bottomAnchor
-        }
-        return bottomAnchor
-    }
-
-    var topSafeAreaHeight: CGFloat {
-        if let window = UIApplication.shared.windows.first {
-            let safeFrame = window.safeAreaLayoutGuide.layoutFrame
-            return safeFrame.minY
-        }
-        return 0
-    }
-
-    var bottomSafeAreaHeight: CGFloat {
-        if let window = UIApplication.shared.windows.first {
-            let safeFrame = window.safeAreaLayoutGuide.layoutFrame
-            return window.frame.maxY - safeFrame.maxY
-        }
-        return 0
+        return self.safeAreaLayoutGuide.bottomAnchor
     }
 }

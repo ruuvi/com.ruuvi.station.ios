@@ -86,7 +86,9 @@ extension {{enumName}} {
         let format = {{ param.lookupFunction }}(key, table, value)
         {% else %}
         let format: String
-        if let locale, let languageCode = locale.languageCode, let bundle = BundleToken.bundle.path(
+        if let locale,
+        let languageCode = locale.language.languageCode?.identifier,
+        let bundle = BundleToken.bundle.path(
             forResource: languageCode,
             ofType: "lproj"
         ), let languageBundle = Bundle(path: bundle) {

@@ -22,29 +22,28 @@ class DashboardSignInBannerView: UIView {
     }()
 
     private lazy var signInButton: UIButton = {
-        let button = UIButton(
-            color: RuuviColor.tintColor.color,
-            cornerRadius: 22
+        let button = UIButton(configuration: .plain())
+        var config = UIButton.Configuration.filled()
+        config.contentInsets = NSDirectionalEdgeInsets(
+            top: 0,
+            leading: 32,
+            bottom: 0,
+            trailing: 32
         )
-        button.setTitle(
-            RuuviLocalization.SignIn.Title.text,
-            for: .normal
-        )
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.mulish(
+        var titleAttributes = AttributeContainer()
+        titleAttributes.foregroundColor = UIColor.white
+        titleAttributes.font = UIFont.mulish(
             .bold,
             size: UIDevice.isiPhoneSE() ? 14 : 16
         )
+        config.attributedTitle = AttributedString(RuuviLocalization.SignIn.Title.text, attributes: titleAttributes)
+        config.baseBackgroundColor = RuuviColor.tintColor.color
+        config.cornerStyle = .capsule
+        button.configuration = config
         button.addTarget(
             self,
             action: #selector(handleSignInTap),
             for: .touchUpInside
-        )
-        button.contentEdgeInsets = UIEdgeInsets(
-            top: 0,
-            left: 32,
-            bottom: 0,
-            right: 32
         )
         return button
     }()
