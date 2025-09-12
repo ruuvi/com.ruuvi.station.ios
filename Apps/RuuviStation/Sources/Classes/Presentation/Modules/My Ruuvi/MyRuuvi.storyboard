@@ -113,6 +113,9 @@
                     <navigationItem key="navigationItem" id="Cw0-g5-Yks">
                         <barButtonItem key="leftBarButtonItem" image="dismiss-modal-icon" id="POf-uW-6Kh">
                             <color key="tintColor" systemColor="labelColor"/>
+                            <connections>
+                                <action selector="backButtonTouchUpInside:" destination="fDc-IE-4Od" id="J65-ma-bQ4"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
