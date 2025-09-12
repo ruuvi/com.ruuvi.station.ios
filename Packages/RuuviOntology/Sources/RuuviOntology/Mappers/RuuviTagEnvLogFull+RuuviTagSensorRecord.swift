@@ -44,7 +44,7 @@ extension RuuviTagEnvLogFull {
             acceleration: acceleration,
             voltage: unitVoltage,
             movementCounter: nil,
-            measurementSequenceNumber: nil,
+            measurementSequenceNumber: measurementSequenceNumber,
             txPower: nil,
             pm1: pm1,
             pm25: pm25,
