@@ -645,24 +645,24 @@ public extension RuuviServiceMeasurementImpl {
     /*
         Score Range  | State       | Color       | Description
         -------------|-------------|-------------|---------------------------
-        90.5-100     | Excellent   | Turquoise   | Optimal air quality
-        80.5-90      | Good        | Green       | Good air quality
-        50.5-80      | Moderate    | Yellow      | Moderate air quality
-        10.5-50      | Poor        | Orange      | Poor air quality
-        0-10         | Unhealthy   | Red         | Unhealthy air quality
+        89.5-100     | Excellent   | Turquoise   | Excellent air quality
+        79.5<89.5    | Good        | Green       | Good air quality
+        49.5<79.5    | Fair        | Yellow      | Fair air quality
+        9.5<49.5     | Poor        | Orange      | Poor air quality
+        0<9.5        | Very Poor   | Red         | Unhealthy air quality
      */
     private func airQualityState(for score: Double) -> AirQualityState {
         switch score {
-        case 90.5...:
+        case 89.5...:
             return .excellent(score)
-        case 80.5...90:
+        case 79.5..<89.5:
             return .good(score)
-        case 50.5...80:
-            return .moderate(score)
-        case 10.5...50:
+        case 49.5..<79.5:
+            return .fair(score)
+        case 9.5..<49.5:
             return .poor(score)
-        default: // score <= 10
-            return .unhealthy(score)
+        default: // score < 9.5
+            return .veryPoor(score)
         }
     }
 }
