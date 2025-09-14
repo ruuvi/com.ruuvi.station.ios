@@ -231,6 +231,7 @@ struct TagSettingsViewModel {
     let isOwner: Observable<Bool?> = .init(false)
     let ownersPlan: Observable<String?> = .init()
     let isOwnersPlanProPlus: Observable<Bool?> = .init(false)
+    let showBatteryStatus: Observable<Bool?> = .init(false)
 
     let temperatureOffsetCorrection: Observable<Double?> = .init()
     let humidityOffsetCorrection: Observable<Double?> = .init()

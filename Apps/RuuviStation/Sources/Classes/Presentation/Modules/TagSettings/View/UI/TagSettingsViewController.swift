@@ -6337,10 +6337,13 @@ extension TagSettingsViewController {
             moreInfoMacAddressItem(),
             moreInfoDataFormatItem(),
             moreInfoDataSourceItem(),
-            moreInfoBatteryVoltageItem(),
         ]
 
         // Variable items
+        if let showBatteryStatus = viewModel?.showBatteryStatus.value, showBatteryStatus {
+            moreInfoCells.append(moreInfoBatteryVoltageItem())
+        }
+
         if viewModel?.accelerationX.value != nil {
             moreInfoCells.append(moreInfoAccXItem())
         }

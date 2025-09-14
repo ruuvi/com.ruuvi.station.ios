@@ -128,6 +128,11 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         tagViewModel.humidityUnit.value = settings.humidityUnit
         tagViewModel.pressureUnit.value = settings.pressureUnit
 
+        let firmwareType = RuuviFirmwareVersion.firmwareVersion(
+            from: ruuviTag.version
+        )
+        tagViewModel.showBatteryStatus.value = !(firmwareType == .e1 || firmwareType == .v6)
+
         if let latestMeasurement = measurementWithOffset {
             tagViewModel.updateRecord(latestMeasurement)
         }
