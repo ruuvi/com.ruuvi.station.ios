@@ -226,12 +226,28 @@ extension UIView {
         heightAnchor.constraint(greaterThanOrEqualToConstant: constant).isActive = true
     }
 
-    func match(view: UIView) {
+    func match(view: UIView, padding: UIEdgeInsets = .zero) {
         translatesAutoresizingMaskIntoConstraints = false
-        topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        topAnchor
+            .constraint(
+                equalTo: view.topAnchor,
+                constant: padding.top
+            ).isActive = true
+        bottomAnchor
+            .constraint(
+                equalTo: view.bottomAnchor,
+                constant: -padding.bottom
+            ).isActive = true
+        leadingAnchor
+            .constraint(
+                equalTo: view.leadingAnchor,
+                constant: padding.left
+            ).isActive = true
+        trailingAnchor
+            .constraint(
+                equalTo: view.trailingAnchor,
+                constant: -padding.right
+            ).isActive = true
     }
 
     func matchOriginTo(view: UIView) {

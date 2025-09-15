@@ -151,9 +151,9 @@ extension MeasurementType {
     var descriptionText: String {
         switch self {
         case .temperature:
-            return RuuviLocalization.descriptionTextTemperature
+            return RuuviLocalization.descriptionTextTemperatureCelsius
         case .humidity:
-            return RuuviLocalization.descriptionTextHumidity
+            return RuuviLocalization.descriptionTextHumidityRelative
         case .pressure:
             return RuuviLocalization.descriptionTextPressure
         case .movementCounter:

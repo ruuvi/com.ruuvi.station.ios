@@ -80,7 +80,11 @@ final class MeasurementDetailsViewController: UIViewController {
         graphViewOverlay.fillSuperview()
 
         view.addSubview(noGraphDataLabel)
-        noGraphDataLabel.match(view: graphView)
+        noGraphDataLabel
+            .match(
+                view: graphView,
+                padding: .init(top: 8, left: 16, bottom: 8, right: 16)
+            )
 
         view.addSubview(dataDurationLabel)
         dataDurationLabel
@@ -118,10 +122,10 @@ final class MeasurementDetailsViewController: UIViewController {
 
     private lazy var noGraphDataLabel: UILabel = {
         let label = UILabel()
-        label.text = RuuviLocalization.emptyChartMessage
+        label.text = RuuviLocalization.popupNoHistoryData
         label.textColor = RuuviColor.dashboardIndicator.color
         label.textAlignment = .center
-        label.numberOfLines = 1
+        label.numberOfLines = 0
         label.font = UIFont.ruuviCallout()
         return label
     }()
@@ -493,10 +497,15 @@ extension MeasurementDetailsViewController: MeasurementDetailsViewInput {
         graphView.setSettings(settings: settings)
         graphView.localize()
         graphView.setYAxisLimit(min: data.chartData?.yMin ?? 0, max: data.chartData?.yMax ?? 0)
-        graphView.setXAxisRenderer()
+        graphView.setXAxisRenderer(showAll: true)
 
         let hasData = data.chartData?.entryCount ?? 0 > 0
         setNoDataLabelVisibility(show: !hasData)
+
+        let isWithin36Hours = TagChartsHelper.isFirstDataPointWithin36Hours(
+            from: data.chartData
+        )
+        dataDurationLabel.isHidden = !isWithin36Hours
 
         // Force layout update for sheet height
         DispatchQueue.main.async { [weak self] in
@@ -505,6 +514,11 @@ extension MeasurementDetailsViewController: MeasurementDetailsViewInput {
     }
 
     func updateChartData(_ entries: [ChartDataEntry], settings: RuuviLocalSettings) {
+        let isWithin36Hours = TagChartsHelper.isFirstDataPointWithin36Hours(
+            from: entries
+        )
+        dataDurationLabel.isHidden = !isWithin36Hours
+
         graphView.updateDataSet(
             with: entries,
             isFirstEntry: entries.count == 1,
@@ -520,6 +534,8 @@ extension MeasurementDetailsViewController: MeasurementDetailsViewInput {
             ) { [weak self] in
             self?.noGraphDataLabel.alpha = show ?
                 Constants.Alpha.visibleAlpha : Constants.Alpha.hiddenAlpha
+            self?.dataDurationLabel.alpha = show ?
+                Constants.Alpha.hiddenAlpha : Constants.Alpha.visibleAlpha
             self?.graphView.isHidden = show
         }
     }

@@ -63,7 +63,7 @@ class TagChartsCollectionViewCell: UICollectionViewCell {
         chartView.setSettings(settings: settings)
         chartView.localize()
         chartView.setYAxisLimit(min: data.chartData?.yMin ?? 0, max: data.chartData?.yMax ?? 0)
-        chartView.setXAxisRenderer()
+        chartView.setXAxisRenderer(showAll: settings.chartShowAll)
         chartView.setChartStatVisible(show: true)
 
         // Calculation of min/max depends on the chart
