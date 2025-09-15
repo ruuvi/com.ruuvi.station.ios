@@ -1478,7 +1478,7 @@ extension CardsGraphViewController {
         view.setSettings(settings: settings)
         view.localize()
         view.setYAxisLimit(min: data.chartData?.yMin ?? 0, max: data.chartData?.yMax ?? 0)
-        view.setXAxisRenderer()
+        view.setXAxisRenderer(showAll: settings.chartShowAll)
         view.setChartStatVisible(show: showChartStat)
 
         // Calculation of min/max depends on the chart

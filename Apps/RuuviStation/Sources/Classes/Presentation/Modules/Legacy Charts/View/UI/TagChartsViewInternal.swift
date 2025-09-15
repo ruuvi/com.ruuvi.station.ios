@@ -179,7 +179,7 @@ extension TagChartsViewInternal {
         leftAxis.drawBottomYLabelEntryEnabled = !entriesNotZero
     }
 
-    func setXAxisRenderer() {
+    func setXAxisRenderer(showAll: Bool) {
         let axisRenderer = CustomXAxisRenderer(
             from: 0,
             viewPortHandler: viewPortHandler,
@@ -188,7 +188,7 @@ extension TagChartsViewInternal {
         )
         xAxisRenderer = axisRenderer
 
-        if !settings.chartShowAll {
+        if !showAll {
             let from = Calendar.autoupdatingCurrent.date(
                 byAdding: .hour,
                 value: -settings.chartDurationHours,

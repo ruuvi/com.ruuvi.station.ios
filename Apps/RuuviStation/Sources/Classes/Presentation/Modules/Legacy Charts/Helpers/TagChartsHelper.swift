@@ -91,6 +91,29 @@ enum TagChartsHelper {
             style: .popup
         )
     }
+
+    static func isFirstDataPointWithin36Hours(
+        from entries: [ChartDataEntry]?
+    ) -> Bool {
+        guard let entries = entries,
+              let earliest = entries.min(by: { $0.x < $1.x }) else {
+            return false
+        }
+
+        let now = Date().timeIntervalSince1970
+        let hours = max(0, (now - earliest.x) / 3600.0)
+        return hours >= 36
+    }
+
+    static func isFirstDataPointWithin36Hours(
+        from chartData: ChartData?
+    ) -> Bool {
+        guard let chartData = chartData else { return false }
+        let allEntries: [ChartDataEntry] = chartData.dataSets.flatMap { dataSet in
+            (0..<dataSet.entryCount).compactMap { dataSet.entryForIndex($0) }
+        }
+        return isFirstDataPointWithin36Hours(from: allEntries)
+    }
 }
 
 // MARK: - Private Helper Methods

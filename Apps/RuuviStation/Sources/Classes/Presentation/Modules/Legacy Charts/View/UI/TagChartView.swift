@@ -146,8 +146,8 @@ extension TagChartsView {
         chartView.setYAxisLimit(min: min, max: max)
     }
 
-    func setXAxisRenderer() {
-        chartView.setXAxisRenderer()
+    func setXAxisRenderer(showAll: Bool) {
+        chartView.setXAxisRenderer(showAll: showAll)
     }
 
     func resetCustomAxisMinMax() {
