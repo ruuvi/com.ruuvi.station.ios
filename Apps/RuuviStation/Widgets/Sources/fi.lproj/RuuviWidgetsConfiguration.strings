@@ -25,10 +25,19 @@
 
 "W4gPB4" = "Ei mitään"; // None
 "GheCHn" = "Lämpötila"; // Temperature
-"Nm8fuJ" = "Kosteus"; // Humidity
+"Nm8fuJ" = "Suht. ilmankosteus"; // Humidity
 "HaVaak" = "Ilmanpaine"; // Pressure
 "sQZ4od" = "Liikelaskuri"; // Movement Counter
 "TObKG9" = "Paristojännite"; // Battery Voltage
 "jNcJSb" = "Kiihtyvyys X"; // Acceleration X
 "UGEvUA" = "Kiihtyvyys Y"; // Acceleration Y
 "Xp2Wjd" = "Kiihtyvyys Z"; // Acceleration Z
+"uN6yUt" = "Ilmanlaatu"; // AQI
+"6vD6X9" = "CO₂"; // co2
+"Fn0iyv" = "VOC-indeksi"; // voc
+"NtmKov" = "NOx-indeksi"; // nox
+"MbtgZl" = "PM₁₀"; // pm10
+"RlAt9U" = "PM₂.₅"; // pm25
+"rCyZey" = "PM₄"; // pm40
+"zJmbYW" = "PM₁₀₀"; // pm100
+"UpXorQ" = "Valoisuus"; // luminance

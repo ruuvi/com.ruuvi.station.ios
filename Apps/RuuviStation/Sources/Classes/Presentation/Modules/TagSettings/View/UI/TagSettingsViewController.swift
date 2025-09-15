@@ -6429,7 +6429,7 @@ extension TagSettingsViewController {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
                 self?.moreInfoBatteryVoltageCell?.configure(
-                    title: RuuviLocalization.TagSettings.BatteryVoltageTitleLabel.text,
+                    title: RuuviLocalization.batteryVoltage,
                     value: self?.formattedBatteryVoltage(from: self?.viewModel?.voltage.value),
                     note: status,
                     noteColor: color

@@ -25,10 +25,19 @@
 
 "W4gPB4" = "None";
 "GheCHn" = "Temperature";
-"Nm8fuJ" = "Humidity";
+"Nm8fuJ" = "Rel. humidity";
 "HaVaak" = "Pressure";
 "sQZ4od" = "Movement Counter";
 "TObKG9" = "Battery Voltage";
 "jNcJSb" = "Acceleration X";
 "UGEvUA" = "Acceleration Y";
 "Xp2Wjd" = "Acceleration Z";
+"uN6yUt" = "Air Quality";
+"6vD6X9" = "CO₂";
+"Fn0iyv" = "VOC index";
+"NtmKov" = "NOₓ index";
+"MbtgZl" = "PM₁₀";
+"RlAt9U" = "PM₂.₅";
+"rCyZey" = "PM₄";
+"zJmbYW" = "PM₁₀₀";
+"UpXorQ" = "Light";

@@ -26,12 +26,16 @@ struct SimpleWidgetViewCircular: View {
             .minimumScaleFactor(0.6)
             .padding(.top, -4)
 
-            Text(viewModel.getUnit(for: WidgetSensorEnum(
-                rawValue: entry.config.sensor.rawValue)))
-                .foregroundColor(Color.unitTextColor)
-                .font(.mulish(.bold, size: 10, relativeTo: .body))
-                .minimumScaleFactor(0.5)
-                .padding(.top, -2)
+            Text(
+                viewModel
+                    .getUnit(
+                        for: viewModel.getSensor(from: entry.config)
+                    )
+            )
+            .foregroundColor(Color.unitTextColor)
+            .font(.mulish(.bold, size: 10, relativeTo: .body))
+            .minimumScaleFactor(0.5)
+            .padding(.top, -2)
 
         }.padding(EdgeInsets(top: 4, leading: 10, bottom: 4, trailing: 10))
             .widgetURL(URL(string: "\(entry.tag.identifier.unwrapped)"))

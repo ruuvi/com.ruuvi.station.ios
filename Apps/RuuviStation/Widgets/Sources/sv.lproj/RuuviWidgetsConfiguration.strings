@@ -40,10 +40,19 @@
 
 "W4gPB4" = "ingen"; // None
 "GheCHn" = "Temperatur"; // Temperature
-"Nm8fuJ" = "Luftfuktighet"; // Humidity
+"Nm8fuJ" = "Rel. luftfuktighet"; // Humidity
 "HaVaak" = "Lufttryck"; // Pressure
 "sQZ4od" = "Rörelseräknare"; // Movement Counter
 "TObKG9" = "Batterispänning"; // Battery Voltage
 "jNcJSb" = "Acceleration X"; // Acceleration X
 "UGEvUA" = "Acceleration Y"; // Acceleration Y
 "Xp2Wjd" = "Acceleration Z"; // Acceleration Z
+"uN6yUt" = "Luftkvalitet"; // AQI
+"6vD6X9" = "CO₂"; // co2
+"Fn0iyv" = "VOC-index"; // voc
+"NtmKov" = "NOx-index"; // nox
+"MbtgZl" = "PM₁₀"; // pm10
+"RlAt9U" = "PM₂.₅"; // pm25
+"rCyZey" = "PM₄"; // pm40
+"zJmbYW" = "PM₁₀₀"; // pm100
+"UpXorQ" = "Ljusstyrka"; // luminance

@@ -47,17 +47,28 @@ public extension WidgetViewModel {
         appGroupDefaults?.bool(forKey: Constants.isAuthorizedUDKey.rawValue) ?? false
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func getValue(
         from record: RuuviTagSensorRecord?,
         settings: SensorSettings?,
         config: RuuviTagSelectionIntent
     ) -> String {
         let measurementService = MeasurementService(settings: getAppSettings())
-        guard let sensor = WidgetSensorEnum(rawValue: config.sensor.rawValue),
-              let record
+
+        var sensor: WidgetSensorEnum?
+        if let identifier = config.sensorSelection?.identifier {
+            sensor = WidgetSensorEnum(rawValue: identifier.bound)
+        } else {
+            sensor = WidgetSensorEnum(
+                rawValue: config.sensor.rawValue
+            )
+        }
+        guard let sensor = sensor,
+                let record
         else {
             return "69.50" // Default value to show on the preview
         }
+
         switch sensor {
         case .temperature:
             let temperature = record.temperature?.plus(sensorSettings: settings)
@@ -83,6 +94,33 @@ public extension WidgetViewModel {
             return measurementService.acceleration(for: record.acceleration?.y.value)
         case .acceleration_z:
             return measurementService.acceleration(for: record.acceleration?.z.value)
+        case .air_quality:
+            return measurementService.aqi(for: record.co2, and: record.pm25)
+        case .co2:
+            return measurementService.string(for: record.co2)
+        case .nox:
+            return measurementService.string(for: record.nox)
+        case .voc:
+            return measurementService.string(for: record.voc)
+        case .pm10:
+            return measurementService.string(for: record.pm1)
+        case .pm25:
+            return measurementService.string(for: record.pm25)
+        case .pm40:
+            return measurementService.string(for: record.pm4)
+        case .pm100:
+            return measurementService.string(for: record.pm10)
+        case .luminance:
+            return measurementService.string(for: record.luminance)
+        }
+    }
+
+    func getSensor(from config: RuuviTagSelectionIntent) -> WidgetSensorEnum? {
+        if let identifier = config.sensorSelection?.identifier,
+           let sensor = WidgetSensorEnum(rawValue: identifier.bound) {
+            return sensor
+        } else {
+            return WidgetSensorEnum(rawValue: config.sensor.rawValue)
         }
     }
 
@@ -126,6 +164,24 @@ public extension WidgetViewModel {
         }
     }
 
+    func getAppSettings() -> MeasurementServiceSettings {
+        let temperatureUnit = temperatureUnit(from: appGroupDefaults)
+        let temperatureAccuracy = temperatureAccuracy(from: appGroupDefaults)
+        let humidityUnit = humidityUnit(from: appGroupDefaults)
+        let humidityAccuracy = humidityAccuracy(from: appGroupDefaults)
+        let pressureUnit = pressureUnit(from: appGroupDefaults)
+        let pressureAccuracy = pressureAccuracy(from: appGroupDefaults)
+        return MeasurementServiceSettings(
+            temperatureUnit: temperatureUnit,
+            temperatureAccuracy: temperatureAccuracy,
+            humidityUnit: humidityUnit,
+            humidityAccuracy: humidityAccuracy,
+            pressureUnit: pressureUnit,
+            pressureAccuracy: pressureAccuracy,
+            language: getLanguage()
+        )
+    }
+
     /// Returns value for inline widget
     internal func getInlineWidgetValue(from entry: WidgetEntry) -> String {
         let value = getValue(
@@ -133,14 +189,39 @@ public extension WidgetViewModel {
             settings: entry.settings,
             config: entry.config
         )
-        let unit = getUnit(for: WidgetSensorEnum(rawValue: entry.config.sensor.rawValue))
+
+        var sensor: WidgetSensorEnum?
+        if let identifier = entry.config.sensorSelection?.identifier {
+            sensor = WidgetSensorEnum(rawValue: identifier.bound)
+        } else {
+            sensor = WidgetSensorEnum(
+                rawValue: entry.config.sensor.rawValue
+            )
+        }
+        guard let sensor = sensor
+        else {
+            return value
+        }
+
+        let unit = getUnit(
+            for: sensor
+        )
         return value + " " + unit
     }
 
-    /// Returns SF Symbol based on sensor since we
-    /// can not use Image in inline widget
+    // Returns SF Symbol based on sensor since we
+    // can not use Image in inline widget
+    // swiftlint:disable:next cyclomatic_complexity
     internal func symbol(from entry: WidgetEntry) -> Image {
-        guard let sensor = WidgetSensorEnum(rawValue: entry.config.sensor.rawValue)
+        var sensor: WidgetSensorEnum?
+        if let identifier = entry.config.sensorSelection?.identifier {
+            sensor = WidgetSensorEnum(rawValue: identifier.bound)
+        } else {
+            sensor = WidgetSensorEnum(
+                rawValue: entry.config.sensor.rawValue
+            )
+        }
+        guard let sensor = sensor
         else {
             return Image(systemName: "thermometer.medium.slash")
         }
@@ -154,11 +235,29 @@ public extension WidgetViewModel {
         case .movement_counter:
             return Image(systemName: "repeat.circle")
         case .acceleration_x,
-             .acceleration_y,
-             .acceleration_z:
+                .acceleration_y,
+                .acceleration_z:
             return Image(systemName: "move.3d")
         case .battery_voltage:
             return Image(systemName: "bolt.circle.fill")
+        case .air_quality:
+            return Image(systemName: "aqi.medium")
+        case .co2:
+            return Image(systemName: "cloud")
+        case .nox:
+            return Image(systemName: "smoke")
+        case .voc:
+            return Image(systemName: "wind")
+        case .pm10:
+            return Image(systemName: "circle.dotted")
+        case .pm25:
+            return Image(systemName: "circle.hexagongrid")
+        case .pm40:
+            return Image(systemName: "circle.grid.2x2")
+        case .pm100:
+            return Image(systemName: "circle.grid.3x3")
+        case .luminance:
+            return Image(systemName: "sun.max")
         }
     }
 
@@ -183,24 +282,6 @@ public extension WidgetViewModel {
 extension WidgetViewModel {
     private func hasCloudSensors() -> Bool {
         appGroupDefaults?.bool(forKey: Constants.hasCloudSensorsKey.rawValue) ?? false
-    }
-
-    private func getAppSettings() -> MeasurementServiceSettings {
-        let temperatureUnit = temperatureUnit(from: appGroupDefaults)
-        let temperatureAccuracy = temperatureAccuracy(from: appGroupDefaults)
-        let humidityUnit = humidityUnit(from: appGroupDefaults)
-        let humidityAccuracy = humidityAccuracy(from: appGroupDefaults)
-        let pressureUnit = pressureUnit(from: appGroupDefaults)
-        let pressureAccuracy = pressureAccuracy(from: appGroupDefaults)
-        return MeasurementServiceSettings(
-            temperatureUnit: temperatureUnit,
-            temperatureAccuracy: temperatureAccuracy,
-            humidityUnit: humidityUnit,
-            humidityAccuracy: humidityAccuracy,
-            pressureUnit: pressureUnit,
-            pressureAccuracy: pressureAccuracy,
-            language: getLanguage()
-        )
     }
 
     private func getLanguage() -> Language {

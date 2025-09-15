@@ -171,84 +171,22 @@ extension MeasurementService {
         return movements.value
     }
 
-    public func carbonDiOxide(for co2: Double?) -> String {
-        guard let co2
-        else {
-            return emptyValueString
-        }
-        let value = co2.round(to: commonFormatter.maximumFractionDigits)
-        return formattedValue(from: value, formatter: commonFormatter)
+    public func aqi(
+        for co2: Double?,
+        and pm25: Double?,
+    ) -> String {
+        let currentScore = calculateAQI(co2: co2, pm25: pm25)
+            .rounded(.toNearestOrAwayFromZero)
+        let intScrore = Int(exactly: currentScore) ?? 0
+        return "\(intScrore)"
     }
 
-    public func pMatter10(for pm10: Double?) -> String {
-        guard let pm10
+    public func string(for double: Double?) -> String {
+        guard let double
         else {
             return emptyValueString
         }
-        let value = pm10.round(to: commonFormatter.maximumFractionDigits)
-        return formattedValue(from: value, formatter: commonFormatter)
-    }
-
-    public func pMatter25(for pm25: Double?) -> String {
-        guard let pm25
-        else {
-            return emptyValueString
-        }
-        let value = pm25.round(to: commonFormatter.maximumFractionDigits)
-        return formattedValue(from: value, formatter: commonFormatter)
-    }
-
-    public func pMatter40(for pm40: Double?) -> String {
-        guard let pm40
-        else {
-            return emptyValueString
-        }
-        let value = pm40.round(to: commonFormatter.maximumFractionDigits)
-        return formattedValue(from: value, formatter: commonFormatter)
-    }
-
-    public func pMatter100(for pm100: Double?) -> String {
-        guard let pm100
-        else {
-            return emptyValueString
-        }
-        let value = pm100.round(to: commonFormatter.maximumFractionDigits)
-        return formattedValue(from: value, formatter: commonFormatter)
-    }
-
-    public func voc(for voc: Double?) -> String {
-        guard let voc
-        else {
-            return emptyValueString
-        }
-        let value = voc.round(to: commonFormatter.maximumFractionDigits)
-        return formattedValue(from: value, formatter: commonFormatter)
-    }
-
-    public func nox(for nox: Double?) -> String {
-        guard let nox
-        else {
-            return emptyValueString
-        }
-        let value = nox.round(to: commonFormatter.maximumFractionDigits)
-        return formattedValue(from: value, formatter: commonFormatter)
-    }
-
-    public func soundAverage(for soundAvg: Double?) -> String {
-        guard let soundAvg
-        else {
-            return emptyValueString
-        }
-        let value = soundAvg.round(to: commonFormatter.maximumFractionDigits)
-        return formattedValue(from: value, formatter: commonFormatter)
-    }
-
-    public func luminosity(for luminosity: Double?) -> String {
-        guard let luminosity
-        else {
-            return emptyValueString
-        }
-        let value = luminosity.round(to: commonFormatter.maximumFractionDigits)
+        let value = double.round(to: commonFormatter.maximumFractionDigits)
         return formattedValue(from: value, formatter: commonFormatter)
     }
 }
@@ -266,5 +204,41 @@ extension MeasurementService {
             return emptyValueString
         }
         return formattedValue
+    }
+
+    // Important: This function should be in sync with `calculateAQI` function in RuuviServiceMeasurementImpl.
+    // TODO: Find a way to share this logic without code duplication.
+    private func calculateAQI(co2: Double?, pm25: Double?) -> Double {
+        enum AQIConstants {
+            static let maxValue = 100.0
+
+            enum PM25 {
+                static let range = 0.0...60.0
+                static var scale: Double { AQIConstants.maxValue / (range.upperBound - range.lowerBound) }
+            }
+
+            enum CO2 {
+                static let range = 420.0...2300.0
+                static var scale: Double { AQIConstants.maxValue / (range.upperBound - range.lowerBound) }
+            }
+        }
+
+        func clamped(_ value: Double, to range: ClosedRange<Double>) -> Double {
+            min(max(value, range.lowerBound), range.upperBound)
+        }
+
+        guard let pm25, let co2, !pm25.isNaN, !co2.isNaN else {
+            return .nan
+        }
+
+        let clampedPM25 = clamped(pm25, to: AQIConstants.PM25.range)
+        let clampedCO2 = clamped(co2, to: AQIConstants.CO2.range)
+
+        let dx = (clampedPM25 - AQIConstants.PM25.range.lowerBound) * AQIConstants.PM25.scale
+        let dy = (clampedCO2 - AQIConstants.CO2.range.lowerBound) * AQIConstants.CO2.scale
+
+        let distance = hypot(dx, dy)
+
+        return clamped((AQIConstants.maxValue - distance), to: 0...AQIConstants.maxValue)
     }
 }

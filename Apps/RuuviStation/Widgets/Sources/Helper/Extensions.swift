@@ -114,6 +114,10 @@ extension String {
 }
 
 extension String {
+    var bound: Int {
+        Int(self) ?? 1 // Since first widget sensor case raw value is 1
+    }
+
     var length: Int {
         count
     }

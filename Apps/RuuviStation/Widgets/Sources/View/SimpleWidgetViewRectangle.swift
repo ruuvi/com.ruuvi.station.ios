@@ -23,10 +23,15 @@ struct SimpleWidgetViewRectangle: View {
                     .environment(\.locale, viewModel.locale())
                     .foregroundColor(.bodyTextColor)
                     .font(.oswald(.bold, size: 36, relativeTo: .title))
-                    Text(viewModel.getUnit(for: WidgetSensorEnum(rawValue: entry.config.sensor.rawValue)))
-                        .foregroundColor(Color.unitTextColor)
-                        .font(.oswald(.extraLight, size: 20, relativeTo: .title3))
-                        .baselineOffset(8)
+                    Text(
+                        viewModel
+                            .getUnit(
+                                for: viewModel.getSensor(from: entry.config)
+                            )
+                    )
+                    .foregroundColor(Color.unitTextColor)
+                    .font(.oswald(.extraLight, size: 20, relativeTo: .title3))
+                    .baselineOffset(8)
                     Spacer()
                 }
                 .padding(EdgeInsets(

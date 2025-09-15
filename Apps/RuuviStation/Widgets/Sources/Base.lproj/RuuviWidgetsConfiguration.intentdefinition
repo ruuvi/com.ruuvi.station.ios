@@ -105,6 +105,139 @@
 					<key>INEnumValueName</key>
 					<string>acceleration_z</string>
 				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>aqi</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>uN6yUt</string>
+					<key>INEnumValueIndex</key>
+					<integer>9</integer>
+					<key>INEnumValueName</key>
+					<string>aqi</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>co 2</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>6vD6X9</string>
+					<key>INEnumValueIndex</key>
+					<integer>10</integer>
+					<key>INEnumValueName</key>
+					<string>co2</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>voc</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>Fn0iyv</string>
+					<key>INEnumValueIndex</key>
+					<integer>11</integer>
+					<key>INEnumValueName</key>
+					<string>voc</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>nox</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>NtmKov</string>
+					<key>INEnumValueIndex</key>
+					<integer>12</integer>
+					<key>INEnumValueName</key>
+					<string>nox</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>pm 10</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>MbtgZl</string>
+					<key>INEnumValueIndex</key>
+					<integer>13</integer>
+					<key>INEnumValueName</key>
+					<string>pm10</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>pm 25</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>RlAt9U</string>
+					<key>INEnumValueIndex</key>
+					<integer>14</integer>
+					<key>INEnumValueName</key>
+					<string>pm25</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>pm 40</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>rCyZey</string>
+					<key>INEnumValueIndex</key>
+					<integer>15</integer>
+					<key>INEnumValueName</key>
+					<string>pm40</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>pm 100</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>zJmbYW</string>
+					<key>INEnumValueIndex</key>
+					<integer>16</integer>
+					<key>INEnumValueName</key>
+					<string>pm100</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>luminance</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>UpXorQ</string>
+					<key>INEnumValueIndex</key>
+					<integer>17</integer>
+					<key>INEnumValueName</key>
+					<string>luminance</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>INEnumDisplayName</key>
+			<string>Ruuvi Device Type</string>
+			<key>INEnumDisplayNameID</key>
+			<string>LGUPWl</string>
+			<key>INEnumGeneratesHeader</key>
+			<true/>
+			<key>INEnumName</key>
+			<string>RuuviDeviceType</string>
+			<key>INEnumType</key>
+			<string>Regular</string>
+			<key>INEnumValues</key>
+			<array>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>None</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>CIFeNM</string>
+					<key>INEnumValueName</key>
+					<string>unknown</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>ruuvi tag</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>qdsn8q</string>
+					<key>INEnumValueIndex</key>
+					<integer>1</integer>
+					<key>INEnumValueName</key>
+					<string>RuuviTag</string>
+				</dict>
+				<dict>
+					<key>INEnumValueDisplayName</key>
+					<string>ruuvi air</string>
+					<key>INEnumValueDisplayNameID</key>
+					<string>4tJkee</string>
+					<key>INEnumValueIndex</key>
+					<integer>2</integer>
+					<key>INEnumValueName</key>
+					<string>RuuviAir</string>
+				</dict>
 			</array>
 		</dict>
 	</array>
@@ -113,11 +246,11 @@
 	<key>INIntentDefinitionNamespace</key>
 	<string>88xZPY</string>
 	<key>INIntentDefinitionSystemVersion</key>
-	<string>21E258</string>
+	<string>24G90</string>
 	<key>INIntentDefinitionToolsBuildVersion</key>
-	<string>13E500a</string>
+	<string>16F6</string>
 	<key>INIntentDefinitionToolsVersion</key>
-	<string>13.3.1</string>
+	<string>16.4</string>
 	<key>INIntents</key>
 	<array>
 		<dict>
@@ -130,7 +263,7 @@
 			<key>INIntentIneligibleForSuggestions</key>
 			<true/>
 			<key>INIntentLastParameterTag</key>
-			<integer>23</integer>
+			<integer>30</integer>
 			<key>INIntentName</key>
 			<string>RuuviTagSelection</string>
 			<key>INIntentParameters</key>
@@ -168,7 +301,7 @@
 					<key>INIntentParameterSupportsDynamicEnumeration</key>
 					<true/>
 					<key>INIntentParameterTag</key>
-					<integer>23</integer>
+					<integer>27</integer>
 					<key>INIntentParameterType</key>
 					<string>Object</string>
 				</dict>
@@ -178,20 +311,15 @@
 					<key>INIntentParameterDisplayName</key>
 					<string>Selected sensor type</string>
 					<key>INIntentParameterDisplayNameID</key>
-					<string>MbquV0</string>
+					<string>tt6gOL</string>
 					<key>INIntentParameterDisplayPriority</key>
 					<integer>2</integer>
-					<key>INIntentParameterEnumType</key>
-					<string>WidgetSensor</string>
-					<key>INIntentParameterEnumTypeNamespace</key>
-					<string>88xZPY</string>
-					<key>INIntentParameterMetadata</key>
-					<dict>
-						<key>INIntentParameterMetadataDefaultValue</key>
-						<string>temperature</string>
-					</dict>
 					<key>INIntentParameterName</key>
-					<string>sensor</string>
+					<string>sensorSelection</string>
+					<key>INIntentParameterObjectType</key>
+					<string>RuuviWidgetTagSensor</string>
+					<key>INIntentParameterObjectTypeNamespace</key>
+					<string>88xZPY</string>
 					<key>INIntentParameterPromptDialogs</key>
 					<array>
 						<dict>
@@ -210,9 +338,9 @@
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>There are ${count} options matching ‘${sensor}’.</string>
+							<string>There are ${count} options matching ‘${sensorSelection}’.</string>
 							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>JrqE3E</string>
+							<string>h3Z713</string>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>DisambiguationIntroduction</string>
 						</dict>
@@ -220,9 +348,9 @@
 							<key>INIntentParameterPromptDialogCustom</key>
 							<true/>
 							<key>INIntentParameterPromptDialogFormatString</key>
-							<string>Just to confirm, you wanted ‘${sensor}’?</string>
+							<string>Just to confirm, you wanted ‘${sensorSelection}’?</string>
 							<key>INIntentParameterPromptDialogFormatStringID</key>
-							<string>7nvJwW</string>
+							<string>OYnrfW</string>
 							<key>INIntentParameterPromptDialogType</key>
 							<string>Confirmation</string>
 						</dict>
@@ -234,8 +362,38 @@
 						<key>INIntentParameterRelationshipPredicateName</key>
 						<string>HasAnyValue</string>
 					</dict>
+					<key>INIntentParameterSupportsDynamicEnumeration</key>
+					<true/>
 					<key>INIntentParameterTag</key>
-					<integer>20</integer>
+					<integer>30</integer>
+					<key>INIntentParameterType</key>
+					<string>Object</string>
+				</dict>
+				<dict>
+					<key>INIntentParameterDisplayName</key>
+					<string>Selected sensor type</string>
+					<key>INIntentParameterDisplayNameID</key>
+					<string>MbquV0</string>
+					<key>INIntentParameterDisplayPriority</key>
+					<integer>3</integer>
+					<key>INIntentParameterEnumType</key>
+					<string>WidgetSensor</string>
+					<key>INIntentParameterEnumTypeNamespace</key>
+					<string>88xZPY</string>
+					<key>INIntentParameterMetadata</key>
+					<dict>
+						<key>INIntentParameterMetadataDefaultValue</key>
+						<string>temperature</string>
+					</dict>
+					<key>INIntentParameterName</key>
+					<string>sensor</string>
+					<key>INIntentParameterRelationship</key>
+					<dict>
+						<key>INIntentParameterRelationshipPredicateName</key>
+						<string>HasAnyValue</string>
+					</dict>
+					<key>INIntentParameterTag</key>
+					<integer>29</integer>
 					<key>INIntentParameterType</key>
 					<string>Integer</string>
 				</dict>
@@ -256,7 +414,7 @@
 					</dict>
 				</array>
 				<key>INIntentResponseLastParameterTag</key>
-				<integer>3</integer>
+				<integer>4</integer>
 			</dict>
 			<key>INIntentTitle</key>
 			<string>RuuviTag Selection</string>
@@ -278,9 +436,94 @@
 			<key>INTypeDisplayNameID</key>
 			<string>REfdOV</string>
 			<key>INTypeLastPropertyTag</key>
-			<integer>105</integer>
+			<integer>108</integer>
 			<key>INTypeName</key>
 			<string>RuuviWidgetTag</string>
+			<key>INTypeProperties</key>
+			<array>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>1</integer>
+					<key>INTypePropertyName</key>
+					<string>identifier</string>
+					<key>INTypePropertyTag</key>
+					<integer>1</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>2</integer>
+					<key>INTypePropertyName</key>
+					<string>displayString</string>
+					<key>INTypePropertyTag</key>
+					<integer>2</integer>
+					<key>INTypePropertyType</key>
+					<string>String</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>3</integer>
+					<key>INTypePropertyEnumType</key>
+					<string>RuuviDeviceType</string>
+					<key>INTypePropertyEnumTypeNamespace</key>
+					<string>88xZPY</string>
+					<key>INTypePropertyName</key>
+					<string>pronunciationHint</string>
+					<key>INTypePropertyTag</key>
+					<integer>107</integer>
+					<key>INTypePropertyType</key>
+					<string>Integer</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDefault</key>
+					<true/>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>4</integer>
+					<key>INTypePropertyName</key>
+					<string>alternativeSpeakableMatches</string>
+					<key>INTypePropertySupportsMultipleValues</key>
+					<true/>
+					<key>INTypePropertyTag</key>
+					<integer>4</integer>
+					<key>INTypePropertyType</key>
+					<string>SpeakableString</string>
+				</dict>
+				<dict>
+					<key>INTypePropertyDisplayName</key>
+					<string>deviceType</string>
+					<key>INTypePropertyDisplayNameID</key>
+					<string>XFRxC5</string>
+					<key>INTypePropertyDisplayPriority</key>
+					<integer>5</integer>
+					<key>INTypePropertyEnumType</key>
+					<string>RuuviDeviceType</string>
+					<key>INTypePropertyEnumTypeNamespace</key>
+					<string>88xZPY</string>
+					<key>INTypePropertyName</key>
+					<string>deviceType</string>
+					<key>INTypePropertyTag</key>
+					<integer>108</integer>
+					<key>INTypePropertyType</key>
+					<string>Integer</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>INTypeDisplayName</key>
+			<string>Ruuvi Widget Tag Sensor</string>
+			<key>INTypeDisplayNameID</key>
+			<string>jLfBOA</string>
+			<key>INTypeLastPropertyTag</key>
+			<integer>100</integer>
+			<key>INTypeName</key>
+			<string>RuuviWidgetTagSensor</string>
 			<key>INTypeProperties</key>
 			<array>
 				<dict>

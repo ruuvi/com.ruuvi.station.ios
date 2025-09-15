@@ -15,14 +15,12 @@ struct RuuviWidgetEntryView: View {
                 } else {
                     if family == .systemSmall {
                         SimpleWidgetView(entry: entry)
-                    } else if #available(iOSApplicationExtension 16.0, *) {
-                        if family == .accessoryInline {
-                            SimpleWidgetViewInline(entry: entry)
-                        } else if family == .accessoryRectangular {
-                            SimpleWidgetViewRectangle(entry: entry)
-                        } else if family == .accessoryCircular {
-                            SimpleWidgetViewCircular(entry: entry)
-                        } else {}
+                    } else                  if family == .accessoryInline {
+                        SimpleWidgetViewInline(entry: entry)
+                    } else if family == .accessoryRectangular {
+                        SimpleWidgetViewRectangle(entry: entry)
+                    } else if family == .accessoryCircular {
+                        SimpleWidgetViewCircular(entry: entry)
                     } else {}
                 }
             } else {

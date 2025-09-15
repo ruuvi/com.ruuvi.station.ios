@@ -40,10 +40,19 @@
 
 "W4gPB4" = "non connecté"; // None
 "GheCHn" = "Température"; // Temperature
-"Nm8fuJ" = "Humidité"; // Humidity
+"Nm8fuJ" = "Hum. relative"; // Humidity
 "HaVaak" = "Pression"; // Pressure
 "sQZ4od" = "Compteur de mouvements"; // Movement Counter
 "TObKG9" = "Tension de la pile"; // Battery Voltage
 "jNcJSb" = "Accélération en X"; // Acceleration X
 "UGEvUA" = "Accélération en Y"; // Acceleration Y
 "Xp2Wjd" = "Accélération en Z"; // Acceleration Z
+"uN6yUt" = "Qualité de l'air"; // AQI
+"6vD6X9" = "CO₂"; // co2
+"Fn0iyv" = "Indice COV"; // voc
+"NtmKov" = "Indice NOx"; // nox
+"MbtgZl" = "PM₁₀"; // pm10
+"RlAt9U" = "PM₂.₅"; // pm25
+"rCyZey" = "PM₄"; // pm40
+"zJmbYW" = "PM₁₀₀"; // pm100
+"UpXorQ" = "Luminosité"; // luminance

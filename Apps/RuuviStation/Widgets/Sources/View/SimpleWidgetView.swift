@@ -41,18 +41,23 @@ struct SimpleWidgetView: View {
                         .font(.oswald(.bold, size: canShowBackground ? 30 : 66, relativeTo: .largeTitle))
                         .frame(alignment: .bottomLeading)
                         .minimumScaleFactor(0.5)
-                        Text(viewModel.getUnit(for: WidgetSensorEnum(rawValue: entry.config.sensor.rawValue)))
-                            .foregroundColor(Color.unitTextColor)
-                            .font(
-                                .oswald(
-                                    .extraLight,
-                                    size: canShowBackground ? 14 : 24,
-                                    relativeTo: .title3
+                        Text(
+                            viewModel
+                                .getUnit(
+                                    for: viewModel.getSensor(from: entry.config)
                                 )
+                        )
+                        .foregroundColor(Color.unitTextColor)
+                        .font(
+                            .oswald(
+                                .extraLight,
+                                size: canShowBackground ? 14 : 24,
+                                relativeTo: .title3
                             )
-                            .baselineOffset(10)
-                            .frame(alignment: .topLeading)
-                            .minimumScaleFactor(0.5)
+                        )
+                        .baselineOffset(10)
+                        .frame(alignment: .topLeading)
+                        .minimumScaleFactor(0.5)
                         Spacer()
                         if #available(iOS 17.0, *) {
                             if !entry.isPreview {
