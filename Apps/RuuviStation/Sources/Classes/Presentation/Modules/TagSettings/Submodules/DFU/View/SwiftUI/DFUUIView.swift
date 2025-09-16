@@ -32,6 +32,7 @@ struct DFUUIView: View {
     private let bodyFont = Font.ruuviBody()
     private let texts = Texts()
     @State private var isBatteryLow = false
+    @State private var superviewSize: CGSize = .zero
 
     var body: some View {
         NavigationView {
@@ -55,9 +56,16 @@ struct DFUUIView: View {
                                 )
                             )
                         }
-                }.padding(
+                }
+                .padding(
                     .top, 48
                 )
+                GeometryReader { proxy in
+                    HStack {} // just an empty container to get superview size.
+                        .onAppear {
+                            superviewSize = proxy.size
+                        }
+                }
             }
             .background(RuuviColor.primary.swiftUIColor)
             .edgesIgnoringSafeArea(.all)
@@ -278,7 +286,10 @@ struct DFUUIView: View {
                         if !viewModel.isRuuviAir() {
                             RuuviBoardView()
                         }
-                        DFUInstructionsView(isAir: viewModel.isRuuviAir())
+                        DFUInstructionsView(
+                            isAir: viewModel.isRuuviAir(),
+                            maxWidth: superviewSize.width - 32
+                        )
                         Button(
                             action: {},
                             label: {
@@ -317,7 +328,10 @@ struct DFUUIView: View {
                         if !viewModel.isRuuviAir() {
                             RuuviBoardView()
                         }
-                        DFUInstructionsView(isAir: viewModel.isRuuviAir())
+                        DFUInstructionsView(
+                            isAir: viewModel.isRuuviAir(),
+                            maxWidth: superviewSize.width - 32
+                        )
                         Button(
                             action: {
                                 viewModel.send(
@@ -443,8 +457,7 @@ struct DFUUIView: View {
 
     private struct AttributedText: UIViewRepresentable {
         let attributedString: NSAttributedString
-        // This should match the padding of the super view.
-        let paddingX2: CGFloat = 40
+        let maxWidth: CGFloat
 
         func makeUIView(context: Context) -> UILabel {
             let label = UILabel()
@@ -457,19 +470,21 @@ struct DFUUIView: View {
             label.setContentHuggingPriority(.required, for: .vertical)
             label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
             label.setContentHuggingPriority(.defaultLow, for: .horizontal)
-
-            label.preferredMaxLayoutWidth = UIScreen.main.bounds.width - paddingX2
+            label.preferredMaxLayoutWidth = maxWidth
 
             return label
         }
 
         func updateUIView(_ uiView: UILabel, context: Context) {
-            uiView.preferredMaxLayoutWidth = UIScreen.main.bounds.width - paddingX2
+            uiView.preferredMaxLayoutWidth = maxWidth
+            uiView.invalidateIntrinsicContentSize()
+            uiView.setNeedsLayout()
         }
     }
 
     struct DFUInstructionsView: View {
         let isAir: Bool
+        let maxWidth: CGFloat
         var body: some View {
             AttributedText(
                 attributedString: NSAttributedString.fromFormattedDescription(
@@ -481,7 +496,8 @@ struct DFUUIView: View {
                     paragraphColor: RuuviColor.textColor.color,
                     linkColor: RuuviColor.tintColor.color,
                     linkFont: .ruuviCallout()
-                )
+                ),
+                maxWidth: maxWidth
             )
             .fixedSize(horizontal: false, vertical: true)
         }

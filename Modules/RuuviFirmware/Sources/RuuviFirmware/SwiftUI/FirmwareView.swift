@@ -28,6 +28,8 @@ struct FirmwareView: View {
     private static let fontSize: CGFloat = 16
     private let titleFont = Font.ruuviHeadline()
     private let bodyFont = Font.ruuviBody()
+    @State private var superviewSize: CGSize = .zero
+
     private var content: some View {
         switch viewModel.state {
         case .idle:
@@ -228,7 +230,7 @@ struct FirmwareView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 20) {
                         RuuviBoardView()
-                        DFUInstructionsView()
+                        DFUInstructionsView(maxWidth: superviewSize.width - 32)
                         Button(
                             action: {},
                             label: {
@@ -265,7 +267,7 @@ struct FirmwareView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 20) {
                         RuuviBoardView()
-                        DFUInstructionsView()
+                        DFUInstructionsView(maxWidth: superviewSize.width - 32)
                         Button(
                             action: {
                                 viewModel.send(
@@ -367,6 +369,12 @@ struct FirmwareView: View {
     var body: some View {
         VStack {
             content
+            GeometryReader { proxy in
+                HStack {} // just an empty container to get superview size.
+                    .onAppear {
+                        superviewSize = proxy.size
+                    }
+            }
         }
         .alert(isPresented: $viewModel.isBatteryLow) {
             Alert(
@@ -390,8 +398,7 @@ struct FirmwareView: View {
 
     private struct AttributedText: UIViewRepresentable {
         let attributedString: NSAttributedString
-        // This should match the padding of the super view.
-        let paddingX2: CGFloat = 40
+        let maxWidth: CGFloat
 
         func makeUIView(context: Context) -> UILabel {
             let label = UILabel()
@@ -404,29 +411,32 @@ struct FirmwareView: View {
             label.setContentHuggingPriority(.required, for: .vertical)
             label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
             label.setContentHuggingPriority(.defaultLow, for: .horizontal)
-
-            label.preferredMaxLayoutWidth = UIScreen.main.bounds.width - paddingX2
+            label.preferredMaxLayoutWidth = maxWidth
 
             return label
         }
 
         func updateUIView(_ uiView: UILabel, context: Context) {
-            uiView.preferredMaxLayoutWidth = UIScreen.main.bounds.width - paddingX2
+            uiView.preferredMaxLayoutWidth = maxWidth
+            uiView.invalidateIntrinsicContentSize()
+            uiView.setNeedsLayout()
         }
     }
 
     struct DFUInstructionsView: View {
+        let maxWidth: CGFloat
         var body: some View {
             AttributedText(
                 attributedString: NSAttributedString.fromFormattedDescription(
                     RuuviLocalization.prepareYourSensorInstructions,
                     titleFont: UIFont.ruuviHeadline(),
-                    paragraphFont: UIFont.ruuviSubheadline(),
+                    paragraphFont: UIFont.ruuviBody(),
                     titleColor: RuuviColor.menuTextColor.color,
                     paragraphColor: RuuviColor.textColor.color,
                     linkColor: RuuviColor.tintColor.color,
                     linkFont: .ruuviCallout()
-                )
+                ),
+                maxWidth: maxWidth
             )
             .fixedSize(horizontal: false, vertical: true)
         }
