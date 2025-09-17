@@ -37,7 +37,7 @@ final class MeasurementService: NSObject {
         let formatter = NumberFormatter()
         formatter.locale = Locale.autoupdatingCurrent
         formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = 2
+        formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 2
         return formatter
     }
@@ -186,8 +186,7 @@ extension MeasurementService {
         else {
             return emptyValueString
         }
-        let value = double.round(to: commonFormatter.maximumFractionDigits)
-        return formattedValue(from: value, formatter: commonFormatter)
+        return formattedValue(from: double, formatter: commonFormatter)
     }
 }
 

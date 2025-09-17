@@ -22,7 +22,7 @@ struct SimpleWidgetViewRectangle: View {
                     ))
                     .environment(\.locale, viewModel.locale())
                     .foregroundColor(.bodyTextColor)
-                    .font(.oswald(.bold, size: 36, relativeTo: .title))
+                    .font(.oswald(.bold, size: 30, relativeTo: .title))
                     Text(
                         viewModel
                             .getUnit(
@@ -30,7 +30,7 @@ struct SimpleWidgetViewRectangle: View {
                             )
                     )
                     .foregroundColor(Color.unitTextColor)
-                    .font(.oswald(.extraLight, size: 20, relativeTo: .title3))
+                    .font(.oswald(.extraLight, size: 18, relativeTo: .title3))
                     .baselineOffset(8)
                     Spacer()
                 }
