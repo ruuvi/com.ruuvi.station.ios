@@ -280,6 +280,24 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     }
 
     private func persist(_ record: RuuviTag, _ uuid: String) {
+        let tagExists = ruuviTags.contains { tagSensor in
+            if let tagMacId = tagSensor.macId?.value,
+               let recordMac = record.mac,
+               tagMacId == recordMac {
+                return true
+            }
+            if let tagLuid = tagSensor.luid?.any,
+               let recordLuid = record.luid?.any,
+               tagLuid == recordLuid {
+                return true
+            }
+            return false
+        }
+
+        guard tagExists else {
+            return
+        }
+
         // Do not store advertisement for history only if it is v6 firmware and legacy advertisement.
         if record.version == 0x06 {
             createLatestRecord(with: record)

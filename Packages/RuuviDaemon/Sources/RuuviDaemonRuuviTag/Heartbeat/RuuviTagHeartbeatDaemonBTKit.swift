@@ -332,6 +332,24 @@ extension RuuviTagHeartbeatDaemonBTKit {
     ) {
         guard !uuid.isEmpty else { return }
 
+        let tagExists = ruuviTags.contains { tagSensor in
+            if let tagMacId = tagSensor.macId?.value,
+               let ruuviTagMac = ruuviTag.mac,
+               tagMacId == ruuviTagMac {
+                return true
+            }
+            if let tagLuid = tagSensor.luid?.any,
+               let ruuviTagLuid = ruuviTag.luid?.any,
+               tagLuid == ruuviTagLuid {
+                return true
+            }
+            return false
+        }
+
+        guard tagExists else {
+            return
+        }
+
         // Check for duplicate sequence number
         let measurementSequenceNumber = ruuviTag.measurementSequenceNumber
 

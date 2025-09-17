@@ -205,7 +205,7 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
             guard let sSelf = self,
                   let tag = device.ruuvi?.tag,
                   mac.any == tag.macId?.any,
-                  ruuviTag.luid == nil,
+                  ruuviTag.luid == nil || ruuviTag.serviceUUID == nil,
                   !sSelf.processingUUIDs.contains(tag.uuid)
             else {
                 return
@@ -213,10 +213,10 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
             sSelf.processingUUIDs.insert(tag.uuid)
             let ruuviSensor = RuuviTagSensorStruct(
                 version: tag.version,
-                firmwareVersion: nil,
+                firmwareVersion: ruuviTag.firmwareVersion,
                 luid: device.uuid.luid,
                 macId: mac,
-                serviceUUID: nil,
+                serviceUUID: device.serviceUUID,
                 isConnectable: device.isConnectable,
                 name: ruuviTag.name,
                 isClaimed: ruuviTag.isClaimed,
