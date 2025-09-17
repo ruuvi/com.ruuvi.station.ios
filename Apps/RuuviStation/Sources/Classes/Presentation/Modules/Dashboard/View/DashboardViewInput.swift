@@ -3,6 +3,7 @@ import Foundation
 import RuuviOntology
 
 protocol NewDashboardViewInput: ViewInput {
+    var isAuthorized: Bool { get set }
     var dashboardType: DashboardType! { get set }
     var dashboardTapActionType: DashboardTapActionType! { get set }
     var dashboardSortingType: DashboardSortingType! { get set }

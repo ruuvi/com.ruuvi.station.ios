@@ -18,6 +18,12 @@ final class DashboardViewController: UIViewController {
     var flags: RuuviLocalFlags!
 
     // MARK: - Data Properties
+    var isAuthorized: Bool = false {
+        didSet {
+            noSensorView.updateView(userSignedIn: isAuthorized)
+        }
+    }
+
     var dashboardType: DashboardType! {
         didSet {
             viewButton.updateMenu(with: viewToggleMenuOptions())
@@ -978,7 +984,7 @@ extension DashboardViewController: NewDashboardViewInput {
     }
 
     func showNoSensorsAddedMessage(show: Bool) {
-        noSensorView.updateView()
+        noSensorView.updateView(userSignedIn: isAuthorized)
         noSensorView.isHidden = !show
         collectionView.isHidden = show
     }

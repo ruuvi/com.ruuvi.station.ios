@@ -120,6 +120,7 @@ extension DashboardPresenter: DashboardViewOutput {
 
     func viewWillAppear() {
         updateViewSettings()
+        view?.isAuthorized = cloudSyncService.isAuthorized()
         settingsService.syncAppSettingsToAppGroupContainer(isAuthorized: cloudSyncService.isAuthorized())
     }
 
@@ -894,6 +895,7 @@ extension DashboardPresenter: SignInBenefitsModuleOutput {
         sensorDataService.stopObservingSensors()
         sensorDataService.startObservingSensors()
         cloudSyncService.startObserving()
+        view?.isAuthorized = cloudSyncService.isAuthorized()
 
         module.dismiss {
             AppUtility.lockOrientation(.all)
