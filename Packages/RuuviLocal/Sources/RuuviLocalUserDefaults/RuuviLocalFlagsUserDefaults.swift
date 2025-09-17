@@ -6,18 +6,10 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     // TODO: Move legacy feature flags here
     // MARK: End Legacy flags
 
-#if DEBUG || ALPHA
     @UserDefault("RuuviFeatureFlags.showRedesignedDashboardUI", defaultValue: true)
-#else
-    @UserDefault("RuuviFeatureFlags.showRedesignedDashboardUI", defaultValue: false)
-#endif
     var showRedesignedDashboardUI: Bool
 
-#if DEBUG || ALPHA
     @UserDefault("RuuviFeatureFlags.showRedesignedCardsUIWithoutNewMenu", defaultValue: true)
-#else
-    @UserDefault("RuuviFeatureFlags.showRedesignedCardsUIWithoutNewMenu", defaultValue: false)
-#endif
     var showRedesignedCardsUIWithoutNewMenu: Bool
 
     @UserDefault("RuuviFeatureFlags.showRedesignedCardsUIWithNewMenu", defaultValue: false)
