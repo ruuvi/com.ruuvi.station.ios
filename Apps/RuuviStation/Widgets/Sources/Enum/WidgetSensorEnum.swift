@@ -30,7 +30,7 @@ public extension WidgetSensorEnum {
 
     static let ruuviAir: [WidgetSensorEnum] = [
         .temperature, .humidity, .pressure, .air_quality,
-        .co2, .nox, .voc, .pm25, .pm100, .luminance,
+        .co2, .nox, .voc, .pm25, .luminance,
     ]
 }
 
