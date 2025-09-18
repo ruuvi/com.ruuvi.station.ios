@@ -2841,28 +2841,30 @@ extension TagSettingsPresenter {
     }
 
     func checkAndUpdateFirmwareVersion() {
-        guard let luid = ruuviTag.luid
-        else {
-            return
-        }
-
-        background.services.gatt.firmwareRevision(
-            for: self,
-            uuid: luid.value,
-            options: [
-                .connectionTimeout(15),
-                .serviceTimeout(15),
-            ]
-        ) { [weak self] _, result in
-            guard let sSelf = self else { return }
-            switch result {
-            case let .success(version):
-                let tagWithVersion = sSelf.ruuviTag.with(firmwareVersion: version)
-                self?.ruuviPool.update(tagWithVersion)
-            default:
-                break
-            }
-        }
+//        guard let luid = ruuviTag.luid,
+//              ruuviTag.firmwareVersion == nil ||
+//              !ruuviTag.firmwareVersion.hasText() // TODO: Fix this check
+//        else {
+//            return
+//        }
+//
+//        background.services.gatt.firmwareRevision(
+//            for: self,
+//            uuid: luid.value,
+//            options: [
+//                .connectionTimeout(15),
+//                .serviceTimeout(15),
+//            ]
+//        ) { [weak self] _, result in
+//            guard let sSelf = self else { return }
+//            switch result {
+//            case let .success(version):
+//                let tagWithVersion = sSelf.ruuviTag.with(firmwareVersion: version)
+//                self?.ruuviPool.update(tagWithVersion)
+//            default:
+//                break
+//            }
+//        }
     }
 
     private func removeTagAndCleanup() {

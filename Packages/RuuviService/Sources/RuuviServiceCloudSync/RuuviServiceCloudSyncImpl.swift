@@ -622,10 +622,14 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         ruuviStorage.readAll()
             .observe(on: .global(qos: .utility))
             .on(success: {
-                localSensors in
+                [weak self] localSensors in
+                guard let self = self else { return }
                 let updateSensors: [Future<Bool, RuuviPoolError>] = localSensors
                     .compactMap { localSensor in
-                        if let cloudSensor = cloudSensors.first(where: { $0.id == localSensor.id }) {
+                        if let cloudSensor = cloudSensors.first(where: {
+                            $0.id == localSensor.id ||
+                            self.macsMatchLoose($0.id, localSensor.macId?.mac)
+                        }) {
                             updatedSensors.insert(localSensor)
                             // Update the local sensor data with cloud data
                             // if there's a match of sensor in local storage and cloud
@@ -664,7 +668,10 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     }
                 let createSensors: [Future<Bool, RuuviPoolError>] = cloudSensors
                     .filter { cloudSensor in
-                        !localSensors.contains(where: { $0.id == cloudSensor.id })
+                        !localSensors.contains(where: {
+                            $0.id == cloudSensor.id ||
+                            !self.macsMatchLoose(cloudSensor.id, $0.macId?.mac)
+                        })
                     }.map { newCloudSensor in
                         let newLocalSensor = newCloudSensor.ruuviTagSensor
                         updatedSensors.insert(newLocalSensor.any)
@@ -863,6 +870,24 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 }
             })
         return promise.future
+    }
+
+    /// Exact match OR last-3-bytes match (when one side is 3 bytes)
+    private func macsMatchLoose(_ a: String?, _ b: String?) -> Bool {
+        guard let ca = normalizedMACComponents(a),
+              let cb = normalizedMACComponents(b) else { return false }
+
+        if ca == cb { return true }
+        if ca.count == 6, cb.count == 3 { return Array(ca.suffix(3)) == cb }
+        if ca.count == 3, cb.count == 6 { return ca == Array(cb.suffix(3)) }
+        return false
+    }
+
+    private func normalizedMACComponents(_ mac: String?) -> [String]? {
+        guard let mac = mac else { return nil }
+        let comps = mac.split(separator: ":").map { $0.uppercased() }
+        guard comps.count == 3 || comps.count == 6 else { return nil }
+        return comps
     }
 
     private func postNotification() {

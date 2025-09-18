@@ -281,12 +281,12 @@ extension RuuviTagHeartbeatDaemonBTKit {
     private func processRuuviTag(_ ruuviTag: RuuviTag, source: RuuviTagSensorRecordSource) {
         var sensorSettings: SensorSettings?
         if let ruuviTagSensor = ruuviTags.first(where: {
-            ($0.macId?.value != nil && $0.macId?.value == ruuviTag.mac) ||
+            macsMatchLoose($0.macId?.value, ruuviTag.mac) ||
             ($0.luid?.any != nil && $0.luid?.any == ruuviTag.luid?.any)
         }),
            let settings = sensorSettingsList.first(where: {
             ($0.luid?.any != nil && $0.luid?.any == ruuviTagSensor.luid?.any) ||
-            ($0.macId?.any != nil && $0.macId?.any == ruuviTagSensor.macId?.any)
+            ($0.macId?.any != nil && macsMatchLoose($0.macId?.value, ruuviTagSensor.macId?.value))
         }) {
             sensorSettings = settings
         }
@@ -587,6 +587,40 @@ extension RuuviTagHeartbeatDaemonBTKit {
                 self?.savedDate.removeValue(forKey: luid)
             }
         }
+    }
+
+    private func normalizedMACComponents(_ mac: String?) -> [String]? {
+        guard let mac = mac else { return nil }
+        let comps = mac.split(separator: ":").map { $0.uppercased() }
+        guard comps.count == 3 || comps.count == 6 else { return nil }
+        return comps
+    }
+
+    /// Exact match OR last-3-bytes match (when one side is 3 bytes)
+    private func macsMatchLoose(_ a: String?, _ b: String?) -> Bool {
+        guard let ca = normalizedMACComponents(a),
+              let cb = normalizedMACComponents(b) else { return false }
+
+        if ca == cb { return true }
+        if ca.count == 6, cb.count == 3 { return Array(ca.suffix(3)) == cb }
+        if ca.count == 3, cb.count == 6 { return ca == Array(cb.suffix(3)) }
+        return false
+    }
+
+    /// Prefer a full (6-byte) MAC if either side has it; otherwise return whichever is non-nil.
+    private func preferFullMAC(_ a: String?, _ b: String?) -> String? {
+        let ca = normalizedMACComponents(a)
+        let cb = normalizedMACComponents(b)
+        if let ca, ca.count == 6 { return ca.joined(separator: ":") }
+        if let cb, cb.count == 6 { return cb.joined(separator: ":") }
+        if let ca { return ca.joined(separator: ":") }
+        if let cb { return cb.joined(separator: ":") }
+        return nil
+    }
+
+    /// Is this a 6-byte MAC?
+    private func isFullMAC(_ mac: String?) -> Bool {
+        normalizedMACComponents(mac)?.count == 6
     }
 }
 // swiftlint:enable file_length
