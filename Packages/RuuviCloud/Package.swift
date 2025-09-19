@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "RuuviCloud",
-    platforms: [.macOS(.v10_15), .iOS(.v14)],
+    platforms: [.macOS(.v10_15), .iOS(.v16)],
     products: [
         .library(
             name: "RuuviCloud",
@@ -21,7 +21,6 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
         .package(url: "https://github.com/ruuvi/BTKit", branch: "master"),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviUser"),
@@ -31,7 +30,6 @@ let package = Package(
         .target(
             name: "RuuviCloud",
             dependencies: [
-                "Future",
                 "RuuviOntology",
                 "RuuviPool",
                 "RuuviUser",
@@ -42,7 +40,6 @@ let package = Package(
             dependencies: [
                 "RuuviCloud",
                 "RuuviOntology",
-                "Future",
                 "BTKit",
             ]
         ),
@@ -53,7 +50,6 @@ let package = Package(
                 "RuuviCloudApi",
                 "RuuviOntology",
                 "RuuviUser",
-                "Future",
             ]
         ),
         .testTarget(

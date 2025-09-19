@@ -1,5 +1,4 @@
 import Foundation
-import Future
 import RuuviOntology
 
 public protocol RuuviServiceOffsetCalibration {
@@ -9,7 +8,7 @@ public protocol RuuviServiceOffsetCalibration {
         of type: OffsetCorrectionType,
         for sensor: RuuviTagSensor,
         lastOriginalRecord record: RuuviTagSensorRecord?
-    ) -> Future<SensorSettings, RuuviServiceError>
+    ) async throws -> SensorSettings
 }
 
 public extension RuuviServiceOffsetCalibration {
@@ -18,8 +17,8 @@ public extension RuuviServiceOffsetCalibration {
         offset: Double?,
         of type: OffsetCorrectionType,
         for sensor: RuuviTagSensor
-    ) -> Future<SensorSettings, RuuviServiceError> {
-        set(
+    ) async throws -> SensorSettings {
+        try await set(
             offset: offset,
             of: type,
             for: sensor,

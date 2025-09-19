@@ -1,26 +1,25 @@
 import Foundation
-import Future
 import RuuviOntology
 
 public protocol RuuviServiceCloudSync {
     @discardableResult
-    func syncAll() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError>
+    func syncAll() async throws -> Set<AnyRuuviTagSensor>
 
     @discardableResult
-    func sync(sensor: RuuviTagSensor) -> Future<[AnyRuuviTagSensorRecord], RuuviServiceError>
+    func sync(sensor: RuuviTagSensor) async throws -> [AnyRuuviTagSensorRecord]
 
     @discardableResult
-    func syncAllHistory() -> Future<Bool, RuuviServiceError>
+    func syncAllHistory() async throws -> Bool
 
     @discardableResult
-    func refreshLatestRecord() -> Future<Bool, RuuviServiceError>
+    func refreshLatestRecord() async throws -> Bool
 
     @discardableResult
-    func syncAllRecords() -> Future<Bool, RuuviServiceError>
+    func syncAllRecords() async throws -> Bool
 
     @discardableResult
-    func syncSettings() -> Future<RuuviCloudSettings, RuuviServiceError>
+    func syncSettings() async throws -> RuuviCloudSettings
 
     @discardableResult
-    func executePendingRequests() -> Future<Bool, RuuviServiceError>
+    func executePendingRequests() async throws -> Bool
 }

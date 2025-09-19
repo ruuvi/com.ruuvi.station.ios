@@ -1,5 +1,4 @@
 import Foundation
-import Future
 import RuuviOntology
 import UIKit
 
@@ -8,7 +7,7 @@ public protocol RuuviServiceSensorProperties {
     func set(
         name: String,
         for sensor: RuuviTagSensor
-    ) -> Future<AnyRuuviTagSensor, RuuviServiceError>
+    ) async throws -> AnyRuuviTagSensor
 
     @discardableResult
     func set(
@@ -17,14 +16,14 @@ public protocol RuuviServiceSensorProperties {
         progress: ((MACIdentifier, Double) -> Void)?,
         maxSize: CGSize,
         compressionQuality: CGFloat
-    ) -> Future<URL, RuuviServiceError>
+    ) async throws -> URL
 
     @discardableResult
-    func setNextDefaultBackground(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError>
+    func setNextDefaultBackground(for sensor: RuuviTagSensor) async throws -> UIImage
 
-    func getImage(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError>
+    func getImage(for sensor: RuuviTagSensor) async throws -> UIImage
 
-    func removeImage(for sensor: RuuviTagSensor)
+    func removeImage(for sensor: RuuviTagSensor) async
 }
 
 public extension RuuviServiceSensorProperties {
@@ -33,8 +32,8 @@ public extension RuuviServiceSensorProperties {
         for sensor: RuuviTagSensor,
         maxSize: CGSize,
         compressionQuality: CGFloat
-    ) -> Future<URL, RuuviServiceError> {
-        set(
+    ) async throws -> URL {
+        try await set(
             image: image,
             for: sensor,
             progress: nil,

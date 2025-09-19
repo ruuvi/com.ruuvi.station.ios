@@ -66,4 +66,34 @@ public final class RuuviCorePermissionImpl: RuuviCorePermission {
             }
         }
     }
+
+    // MARK: - Async versions
+
+    public func requestPhotoLibraryPermission() async -> Bool {
+        await withCheckedContinuation { continuation in
+            PHPhotoLibrary.requestAuthorization { status in
+                continuation.resume(returning: status == .authorized)
+            }
+        }
+    }
+
+    public func requestCameraPermission() async -> Bool {
+        #if targetEnvironment(macCatalyst)
+            return false
+        #else
+            return await withCheckedContinuation { continuation in
+                AVCaptureDevice.requestAccess(for: .video) { granted in
+                    continuation.resume(returning: granted)
+                }
+            }
+        #endif
+    }
+
+    public func requestLocationPermission() async -> Bool {
+        await withCheckedContinuation { continuation in
+            locationManager.requestLocationPermission { granted in
+                continuation.resume(returning: granted)
+            }
+        }
+    }
 }

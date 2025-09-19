@@ -1,6 +1,5 @@
 import CoreLocation
 import Foundation
-import Future
 
 public final class RuuviCoreLocationImpl: NSObject, RuuviCoreLocation {
     public var isLocationPermissionGranted: Bool {
@@ -24,7 +23,7 @@ public final class RuuviCoreLocationImpl: NSObject, RuuviCoreLocation {
 
     private let locationManager = CLLocationManager()
     private var requestLocationPermissionCallback: ((Bool) -> Void)?
-    private var getCurrentLocationPromise: Promise<CLLocation, RuuviCoreError>?
+    private var getCurrentLocationContinuation: CheckedContinuation<CLLocation, Error>?
 
     override public init() {
         super.init()
@@ -44,18 +43,21 @@ public final class RuuviCoreLocationImpl: NSObject, RuuviCoreLocation {
         }
     }
 
-    public func getCurrentLocation() -> Future<CLLocation, RuuviCoreError> {
-        let promise = Promise<CLLocation, RuuviCoreError>()
+    public func getCurrentLocation() async throws -> CLLocation {
         if isLocationPermissionDenied {
-            promise.fail(error: .locationPermissionDenied)
-            return promise.future
+            throw RuuviCoreError.locationPermissionDenied
         } else if isLocationPermissionNotDetermined {
-            promise.fail(error: .locationPermissionNotDetermined)
-            return promise.future
-        } else {
-            getCurrentLocationPromise = promise
+            throw RuuviCoreError.locationPermissionNotDetermined
+        }
+
+        return try await withCheckedThrowingContinuation { continuation in
+            if let pendingContinuation = getCurrentLocationContinuation {
+                getCurrentLocationContinuation = nil
+                pendingContinuation.resume(throwing: RuuviCoreError.failedToGetCurrentLocation)
+            }
+
+            getCurrentLocationContinuation = continuation
             locationManager.startUpdatingLocation()
-            return promise.future
         }
     }
 }
@@ -67,14 +69,27 @@ extension RuuviCoreLocationImpl: CLLocationManagerDelegate {
 
     public func locationManager(_: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         locationManager.stopUpdatingLocation()
+        guard let continuation = getCurrentLocationContinuation else {
+            return
+        }
+
+        getCurrentLocationContinuation = nil
+
         if let location = locations.last {
-            getCurrentLocationPromise?.succeed(value: location)
+            continuation.resume(returning: location)
         } else {
-            getCurrentLocationPromise?.fail(error: .failedToGetCurrentLocation)
+            continuation.resume(throwing: RuuviCoreError.failedToGetCurrentLocation)
         }
     }
 
     public func locationManager(_: CLLocationManager, didFailWithError error: Error) {
+        locationManager.stopUpdatingLocation()
+
+        if let continuation = getCurrentLocationContinuation {
+            getCurrentLocationContinuation = nil
+            continuation.resume(throwing: RuuviCoreError.failedToGetCurrentLocation)
+        }
+
         print(error.localizedDescription)
     }
 }

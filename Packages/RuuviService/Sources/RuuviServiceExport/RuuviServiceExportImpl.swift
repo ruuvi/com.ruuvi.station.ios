@@ -2,7 +2,6 @@
 
 import Foundation
 import RuuviLocalization
-import Future
 import Humidity
 import RuuviLocal
 import RuuviOntology
@@ -59,66 +58,38 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
         for uuid: String,
         version: Int,
         settings: SensorSettings?
-    ) -> Future<
-        URL,
-        RuuviServiceError
-    > {
-        let promise = Promise<URL, RuuviServiceError>()
+    ) async throws -> URL {
         let networkPruningOffset = -TimeInterval(ruuviLocalSettings.networkPruningIntervalHours * 60 * 60)
         let networkPuningDate = Date(timeIntervalSinceNow: networkPruningOffset)
-        let ruuviTag = ruuviStorage.readOne(uuid)
-        ruuviTag.on(success: { [weak self] ruuviTag in
-            let recordsOperation = self?.ruuviStorage.readAll(uuid, after: networkPuningDate)
-            recordsOperation?.on(success: { [weak self] records in
-                let offsetedLogs = records.compactMap { $0.with(sensorSettings: settings) }
-                self?.csvLog(for: ruuviTag, version: version, with: offsetedLogs)
-                    .on(success: { url in
-                    promise.succeed(value: url)
-                }, failure: { error in
-                    promise.fail(error: error)
-                })
-            }, failure: { error in
-                promise.fail(error: .ruuviStorage(error))
-            })
-        }, failure: { error in
-            promise.fail(error: .ruuviStorage(error))
-        })
-
-        return promise.future
+        do {
+            let ruuviTag = try await ruuviStorage.readOne(uuid)
+            let records = try await ruuviStorage.readAll(uuid, after: networkPuningDate)
+            let offsetedLogs = records.compactMap { $0.with(sensorSettings: settings) }
+            return try await csvLog(for: ruuviTag, version: version, with: offsetedLogs)
+        } catch let error as RuuviStorageError {
+            throw RuuviServiceError.ruuviStorage(error)
+        } catch {
+            throw error
+        }
     }
 
     public func xlsxLog(
         for uuid: String,
         version: Int,
         settings: SensorSettings?
-    ) -> Future<URL, RuuviServiceError> {
-        let promise = Promise<URL, RuuviServiceError>()
-
+    ) async throws -> URL {
         let networkPruningOffset = -TimeInterval(ruuviLocalSettings.networkPruningIntervalHours * 60 * 60)
         let networkPuningDate = Date(timeIntervalSinceNow: networkPruningOffset)
-        let ruuviTag = ruuviStorage.readOne(uuid)
-
-        ruuviTag.on(success: { [weak self] ruuviTag in
-            guard let self = self else { return }
-            let recordsOperation = self.ruuviStorage.readAll(uuid, after: networkPuningDate)
-
-            recordsOperation.on(success: { [weak self] records in
-                guard let self = self else { return }
-                let offsetedLogs = records.compactMap { $0.with(sensorSettings: settings) }
-                self.exportToXlsx(for: ruuviTag, version: version, with: offsetedLogs)
-                    .on(success: { url in
-                    promise.succeed(value: url)
-                }, failure: { error in
-                    promise.fail(error: error)
-                })
-            }, failure: { error in
-                promise.fail(error: .ruuviStorage(error))
-            })
-        }, failure: { error in
-            promise.fail(error: .ruuviStorage(error))
-        })
-
-        return promise.future
+        do {
+            let ruuviTag = try await ruuviStorage.readOne(uuid)
+            let records = try await ruuviStorage.readAll(uuid, after: networkPuningDate)
+            let offsetedLogs = records.compactMap { $0.with(sensorSettings: settings) }
+            return try await exportToXlsx(for: ruuviTag, version: version, with: offsetedLogs)
+        } catch let error as RuuviStorageError {
+            throw RuuviServiceError.ruuviStorage(error)
+        } catch {
+            throw error
+        }
     }
 }
 
@@ -376,45 +347,36 @@ extension RuuviServiceExportImpl {
         for ruuviTag: RuuviTagSensor,
         version: Int,
         with records: [RuuviTagSensorRecord]
-    ) -> Future<URL, RuuviServiceError> {
-        let promise = Promise<URL, RuuviServiceError>()
-        let date = Self.fileNameDateFormatter.string(from: Date())
-        let fileName = ruuviTag.name + "_" + date + ".csv"
-        let escapedFileName = fileName.replacingOccurrences(of: "/", with: "_")
-        let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(escapedFileName)
-
-        queue.async {
-            autoreleasepool {
-                let firmware = RuuviFirmwareVersion.firmwareVersion(from: version)
-                let columns = self.buildColumnDefinitions(
-                    firmware: firmware,
-                    units: self.measurementService.units,
-                    settings: self.ruuviLocalSettings
-                )
-
-                let headerLine = columns.map { $0.header }.joined(separator: ",")
-                var csvText = headerLine + "\n"
-
-                for record in records {
-                    let rowValues = columns.map { $0.cellExtractor(record) }
-                    csvText.append(rowValues.joined(separator: ","))
-                    csvText.append("\n")
-                }
-
-                do {
-                    try csvText.write(to: path, atomically: true, encoding: .utf8)
-                    DispatchQueue.main.async {
-                        promise.succeed(value: path)
+    ) async throws -> URL {
+        try await withCheckedThrowingContinuation { continuation in
+            let date = Self.fileNameDateFormatter.string(from: Date())
+            let fileName = ruuviTag.name + "_" + date + ".csv"
+            let escapedFileName = fileName.replacingOccurrences(of: "/", with: "_")
+            let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(escapedFileName)
+            queue.async {
+                autoreleasepool {
+                    let firmware = RuuviFirmwareVersion.firmwareVersion(from: version)
+                    let columns = self.buildColumnDefinitions(
+                        firmware: firmware,
+                        units: self.measurementService.units,
+                        settings: self.ruuviLocalSettings
+                    )
+                    let headerLine = columns.map { $0.header }.joined(separator: ",")
+                    var csvText = headerLine + "\n"
+                    for record in records {
+                        let rowValues = columns.map { $0.cellExtractor(record) }
+                        csvText.append(rowValues.joined(separator: ","))
+                        csvText.append("\n")
                     }
-                } catch {
-                    DispatchQueue.main.async {
-                        promise.fail(error: .writeToDisk(error))
+                    do {
+                        try csvText.write(to: path, atomically: true, encoding: .utf8)
+                        continuation.resume(returning: path)
+                    } catch {
+                        continuation.resume(throwing: RuuviServiceError.writeToDisk(error))
                     }
                 }
             }
         }
-
-        return promise.future
     }
 
     // XLSX export method
@@ -422,48 +384,34 @@ extension RuuviServiceExportImpl {
         for ruuviTag: RuuviTagSensor,
         version: Int,
         with records: [RuuviTagSensorRecord]
-    ) -> Future<URL, RuuviServiceError> {
-        let promise = Promise<URL, RuuviServiceError>()
-        let date = Self.fileNameDateFormatter.string(from: Date())
-        let fileName = ruuviTag.name + "_" + date + ".xlsx"
-        let escapedFileName = fileName.replacingOccurrences(of: "/", with: "_")
-        let pathURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(escapedFileName)
-
-        queue.async {
-            autoreleasepool {
-
-                let firmwareType = RuuviFirmwareVersion.firmwareVersion(
-                    from: version
-                )
-
-                let columns = self.buildColumnDefinitions(
-                    firmware: firmwareType,
-                    units: self.measurementService.units,
-                    settings: self.ruuviLocalSettings
-                )
-
-                let wb = Workbook(name: pathURL.path)
-                defer { wb.close() }
-                let ws = wb.addWorksheet()
-
-                for (colIndex, colDef) in columns.enumerated() {
-                    ws.write(.string(colDef.header), [0, colIndex])
-                }
-
-                for (rowIndex, record) in records.enumerated() {
-                    for (colIndex, column) in columns.enumerated() {
-                        let value = column.cellExtractor(record)
-                        ws.write(.string(value), [rowIndex + 1, colIndex])
+    ) async throws -> URL {
+        try await withCheckedThrowingContinuation { continuation in
+            let date = Self.fileNameDateFormatter.string(from: Date())
+            let fileName = ruuviTag.name + "_" + date + ".xlsx"
+            let escapedFileName = fileName.replacingOccurrences(of: "/", with: "_")
+            let pathURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(escapedFileName)
+            queue.async {
+                autoreleasepool {
+                    let firmwareType = RuuviFirmwareVersion.firmwareVersion(from: version)
+                    let columns = self.buildColumnDefinitions(
+                        firmware: firmwareType,
+                        units: self.measurementService.units,
+                        settings: self.ruuviLocalSettings
+                    )
+                    let wb = Workbook(name: pathURL.path)
+                    defer { wb.close() }
+                    let ws = wb.addWorksheet()
+                    for (colIndex, colDef) in columns.enumerated() { ws.write(.string(colDef.header), [0, colIndex]) }
+                    for (rowIndex, record) in records.enumerated() {
+                        for (colIndex, column) in columns.enumerated() {
+                            let value = column.cellExtractor(record)
+                            ws.write(.string(value), [rowIndex + 1, colIndex])
+                        }
                     }
-                }
-
-                DispatchQueue.main.async {
-                    promise.succeed(value: pathURL)
+                    continuation.resume(returning: pathURL)
                 }
             }
         }
-
-        return promise.future
     }
 }
 // swiftlint:enable file_length

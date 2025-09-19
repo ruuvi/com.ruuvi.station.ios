@@ -1,5 +1,4 @@
 import Foundation
-import Future
 
 public extension Notification.Name {
     static let RuuviAuthServiceDidLogout =
@@ -7,5 +6,5 @@ public extension Notification.Name {
 }
 
 public protocol RuuviServiceAuth {
-    func logout() -> Future<Bool, RuuviServiceError>
+    func logout() async throws -> Bool
 }

@@ -1,100 +1,54 @@
 import Foundation
-import Future
 import RuuviOntology
 
 public protocol RuuviPersistence {
-    func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError>
-    func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError>
-    func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError>
-    func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RuuviPersistenceError>
-    func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RuuviPersistenceError>
-    func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPersistenceError>
-    func createLast(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPersistenceError>
-    func updateLast(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPersistenceError>
-    func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RuuviPersistenceError>
-    func readAll() -> Future<[AnyRuuviTagSensor], RuuviPersistenceError>
-    func readAll(_ ruuviTagId: String) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError>
-    func readAll(
-        _ ruuviTagId: String,
-        with interval: TimeInterval
-    ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError>
-    func readAll(_ ruuviTagId: String, after date: Date) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError>
-    func readLast(_ ruuviTagId: String, from: TimeInterval) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError>
-    func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviPersistenceError>
-    func readLatest(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviPersistenceError>
-    func deleteLatest(_ ruuviTagId: String) -> Future<Bool, RuuviPersistenceError>
-    func readOne(_ ruuviTagId: String) -> Future<AnyRuuviTagSensor, RuuviPersistenceError>
-    func getStoredTagsCount() -> Future<Int, RuuviPersistenceError>
-    func getStoredMeasurementsCount() -> Future<Int, RuuviPersistenceError>
+    // MARK: - CRUD Tags
+    func create(_ ruuviTag: RuuviTagSensor) async throws -> Bool
+    func update(_ ruuviTag: RuuviTagSensor) async throws -> Bool
+    func delete(_ ruuviTag: RuuviTagSensor) async throws -> Bool
+    func deleteAllRecords(_ ruuviTagId: String) async throws -> Bool
+    func deleteAllRecords(_ ruuviTagId: String, before date: Date) async throws -> Bool
 
-    func read(
-        _ ruuviTagId: String,
-        after date: Date,
-        with interval: TimeInterval
-    ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError>
+    // MARK: - Records
+    func create(_ record: RuuviTagSensorRecord) async throws -> Bool
+    func createLast(_ record: RuuviTagSensorRecord) async throws -> Bool
+    func updateLast(_ record: RuuviTagSensorRecord) async throws -> Bool
+    func create(_ records: [RuuviTagSensorRecord]) async throws -> Bool
 
-    func readDownsampled(
-        _ ruuviTagId: String,
-        after date: Date,
-        with intervalMinutes: Int,
-        pick points: Double
-    ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError>
+    // MARK: - Reads
+    func readAll() async throws -> [AnyRuuviTagSensor]
+    func readAll(_ ruuviTagId: String) async throws -> [RuuviTagSensorRecord]
+    func readAll(_ ruuviTagId: String, with interval: TimeInterval) async throws -> [RuuviTagSensorRecord]
+    func readAll(_ ruuviTagId: String, after date: Date) async throws -> [RuuviTagSensorRecord]
+    func readLast(_ ruuviTagId: String, from: TimeInterval) async throws -> [RuuviTagSensorRecord]
+    func readLast(_ ruuviTag: RuuviTagSensor) async throws -> RuuviTagSensorRecord?
+    func readLatest(_ ruuviTag: RuuviTagSensor) async throws -> RuuviTagSensorRecord?
+    func deleteLatest(_ ruuviTagId: String) async throws -> Bool
+    func readOne(_ ruuviTagId: String) async throws -> AnyRuuviTagSensor
+    func getStoredTagsCount() async throws -> Int
+    func getStoredMeasurementsCount() async throws -> Int
 
-    func readSensorSettings(
-        _ ruuviTag: RuuviTagSensor
-    ) -> Future<SensorSettings?, RuuviPersistenceError>
+    func read(_ ruuviTagId: String, after date: Date, with interval: TimeInterval) async throws -> [RuuviTagSensorRecord]
+    func readDownsampled(_ ruuviTagId: String, after date: Date, with intervalMinutes: Int, pick points: Double) async throws -> [RuuviTagSensorRecord]
 
-    func updateOffsetCorrection(
-        type: OffsetCorrectionType,
-        with value: Double?,
-        of ruuviTag: RuuviTagSensor,
-        lastOriginalRecord record: RuuviTagSensorRecord?
-    ) -> Future<SensorSettings, RuuviPersistenceError>
+    // MARK: - Settings & Offsets
+    func readSensorSettings(_ ruuviTag: RuuviTagSensor) async throws -> SensorSettings?
+    func updateOffsetCorrection(type: OffsetCorrectionType, with value: Double?, of ruuviTag: RuuviTagSensor, lastOriginalRecord record: RuuviTagSensorRecord?) async throws -> SensorSettings
+    func deleteOffsetCorrection(ruuviTag: RuuviTagSensor) async throws -> Bool
+    func save(sensorSettings: SensorSettings) async throws -> SensorSettings
 
-    func deleteOffsetCorrection(
-        ruuviTag: RuuviTagSensor
-    ) -> Future<Bool, RuuviPersistenceError>
-
-    func save(
-        sensorSettings: SensorSettings
-    ) -> Future<SensorSettings, RuuviPersistenceError>
-
-    func cleanupDBSpace() -> Future<Bool, RuuviPersistenceError>
+    // MARK: - Maintenance
+    func cleanupDBSpace() async throws -> Bool
 
     // MARK: - Queued cloud requests
-
-    @discardableResult
-    func readQueuedRequests() -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError>
-
-    @discardableResult
-    func readQueuedRequests(
-        for key: String
-    ) -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError>
-
-    @discardableResult
-    func readQueuedRequests(
-        for type: RuuviCloudQueuedRequestType
-    ) -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError>
-
-    @discardableResult
-    func createQueuedRequest(
-        _ request: RuuviCloudQueuedRequest
-    ) -> Future<Bool, RuuviPersistenceError>
-
-    @discardableResult
-    func deleteQueuedRequest(
-        _ request: RuuviCloudQueuedRequest
-    ) -> Future<Bool, RuuviPersistenceError>
-
-    @discardableResult
-    func deleteQueuedRequests() -> Future<Bool, RuuviPersistenceError>
+    @discardableResult func readQueuedRequests() async throws -> [RuuviCloudQueuedRequest]
+    @discardableResult func readQueuedRequests(for key: String) async throws -> [RuuviCloudQueuedRequest]
+    @discardableResult func readQueuedRequests(for type: RuuviCloudQueuedRequestType) async throws -> [RuuviCloudQueuedRequest]
+    @discardableResult func createQueuedRequest(_ request: RuuviCloudQueuedRequest) async throws -> Bool
+    @discardableResult func deleteQueuedRequest(_ request: RuuviCloudQueuedRequest) async throws -> Bool
+    @discardableResult func deleteQueuedRequests() async throws -> Bool
 
     // MARK: - Subscription
-    func save(
-        subscription: CloudSensorSubscription
-    ) -> Future<CloudSensorSubscription, RuuviPersistenceError>
-
-    func readSensorSubscriptionSettings(
-        _ ruuviTag: RuuviTagSensor
-    ) -> Future<CloudSensorSubscription?, RuuviPersistenceError>
+    func save(subscription: CloudSensorSubscription) async throws -> CloudSensorSubscription
+    func readSensorSubscriptionSettings(_ ruuviTag: RuuviTagSensor) async throws -> CloudSensorSubscription?
 }
