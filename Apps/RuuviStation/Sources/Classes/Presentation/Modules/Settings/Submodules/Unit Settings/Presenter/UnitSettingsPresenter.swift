@@ -74,42 +74,42 @@ extension UnitSettingsPresenter: UnitSettingsViewOutput {
 extension UnitSettingsPresenter: SelectionModuleOutput {
     // swiftlint:disable:next cyclomatic_complexity
     func selection(module: SelectionModuleInput, didSelectItem item: SelectionItemProtocol, type: UnitSettingsType) {
-        switch type {
-        case .unit:
-            switch item {
-            case let temperatureUnit as TemperatureUnit:
-                ruuviAppSettingsService.set(temperatureUnit: temperatureUnit)
-                view.temperatureUnit = temperatureUnit
-            case let humidityUnit as HumidityUnit:
-                ruuviAppSettingsService.set(humidityUnit: humidityUnit)
-                view.humidityUnit = humidityUnit
-            case let pressureUnit as UnitPressure:
-                ruuviAppSettingsService.set(pressureUnit: pressureUnit)
-                view.pressureUnit = pressureUnit
-            default:
-                break
-            }
-        case .accuracy:
-            guard let viewModel,
-                  let item = item as? MeasurementAccuracyType
-            else {
-                return
-            }
-            switch viewModel.measurementType {
-            case .temperature:
-                ruuviAppSettingsService.set(temperatureAccuracy: item)
-                view.temperatureAccuracy = item
-            case .humidity:
-                ruuviAppSettingsService.set(humidityAccuracy: item)
-                view.humidityAccuracy = item
-            case .pressure:
-                ruuviAppSettingsService.set(pressureAccuracy: item)
-                view.pressureAccuracy = item
-            default:
-                return
-            }
-        }
-        module.dismiss()
+//        switch type {
+//        case .unit:
+//            switch item {
+//            case let temperatureUnit as TemperatureUnit:
+//                ruuviAppSettingsService.set(temperatureUnit: temperatureUnit)
+//                view.temperatureUnit = temperatureUnit
+//            case let humidityUnit as HumidityUnit:
+//                ruuviAppSettingsService.set(humidityUnit: humidityUnit)
+//                view.humidityUnit = humidityUnit
+//            case let pressureUnit as UnitPressure:
+//                ruuviAppSettingsService.set(pressureUnit: pressureUnit)
+//                view.pressureUnit = pressureUnit
+//            default:
+//                break
+//            }
+//        case .accuracy:
+//            guard let viewModel,
+//                  let item = item as? MeasurementAccuracyType
+//            else {
+//                return
+//            }
+//            switch viewModel.measurementType {
+//            case .temperature:
+//                ruuviAppSettingsService.set(temperatureAccuracy: item)
+//                view.temperatureAccuracy = item
+//            case .humidity:
+//                ruuviAppSettingsService.set(humidityAccuracy: item)
+//                view.humidityAccuracy = item
+//            case .pressure:
+//                ruuviAppSettingsService.set(pressureAccuracy: item)
+//                view.pressureAccuracy = item
+//            default:
+//                return
+//            }
+//        }
+//        module.dismiss()
     }
 }
 

@@ -176,73 +176,58 @@ extension DFUInteractor: DFUInteractorInput {
         }
     }
 
-    func serveCurrentRelease(for ruuviTag: RuuviTagSensor) -> Future<CurrentRelease, Error> {
-        Future { [weak self] promise in
-            guard let sSelf = self else { return }
-            guard let uuid = ruuviTag.luid?.value
-            else {
-                promise(.failure(DFUError.failedToGetLuid))
+    func serveCurrentRelease(for ruuviTag: RuuviTagSensor) async throws -> CurrentRelease {
+        try await withCheckedThrowingContinuation { continuation in
+            guard let uuid = ruuviTag.luid?.value else {
+                continuation.resume(throwing: DFUError.failedToGetLuid)
                 return
             }
-
-            sSelf.invalidateTimer()
-            sSelf.timer = Timer.scheduledTimer(
-                withTimeInterval: sSelf.timeoutDuration, repeats: false
-            ) { _ in
-                sSelf.invalidateTimer()
-                promise(.failure(BTError.logic(.connectionTimedOut)))
+            invalidateTimer()
+            timer = Timer.scheduledTimer(withTimeInterval: timeoutDuration, repeats: false) { [weak self] _ in
+                self?.invalidateTimer()
+                continuation.resume(throwing: BTError.logic(.connectionTimedOut))
             }
-
-            sSelf.background.services.gatt.firmwareRevision(
-                for: sSelf,
+            background.services.gatt.firmwareRevision(
+                for: self,
                 uuid: uuid,
                 options: [
-                    .connectionTimeout(sSelf.timeoutDuration),
-                    .serviceTimeout(sSelf.timeoutDuration),
+                    .connectionTimeout(timeoutDuration),
+                    .serviceTimeout(timeoutDuration),
                 ]
-            ) { _, result in
+            ) { [weak self] _, result in
+                guard let self else { return }
+                self.invalidateTimer()
                 switch result {
                 case let .success(version):
-                    let currentRelease = CurrentRelease(version: version)
-                    promise(.success(currentRelease))
+                    continuation.resume(returning: CurrentRelease(version: version))
                 case let .failure(error):
-                    promise(.failure(error))
+                    continuation.resume(throwing: error)
                 }
             }
         }
     }
 
-    func listen(ruuviTag: RuuviTagSensor) -> Future<DFUDevice, Never> {
-        let firmwareType = RuuviFirmwareVersion.firmwareVersion(
-            from: ruuviTag.version
-        )
-        let skipScanServices = firmwareType == .e1 || firmwareType == .v6
-
-        return Future { [weak self] promise in
-            guard let sSelf = self else { return }
-            sSelf.ruuviDFU.scan(
-                sSelf,
-                includeScanServices: !skipScanServices
-            ) { _,
-                device in
+    func listen(ruuviTag: RuuviTagSensor) async -> DFUDevice {
+        await withCheckedContinuation { continuation in
+            let fwType = RuuviFirmwareVersion.firmwareVersion(from: ruuviTag.version)
+            let skipScanServices = fwType == .e1 || fwType == .v6
+            ruuviDFU.scan(self, includeScanServices: !skipScanServices) { _, device in
                 if skipScanServices {
                     if device.uuid == ruuviTag.luid?.value {
-                        promise(.success(device))
+                        continuation.resume(returning: device)
                     }
                 } else {
-                    // For older devices we return the device found in Bootloader mode.
-                    promise(.success(device))
+                    continuation.resume(returning: device)
                 }
             }
         }
     }
 
-    func observeLost(uuid: String) -> Future<String, Never> {
-        Future { [weak self] promise in
-            guard let sSelf = self else { return }
-            sSelf.ruuviDFU.lost(sSelf, closure: { _, device in
+    func observeLost(uuid: String) -> AsyncStream<String> {
+        AsyncStream { continuation in
+            ruuviDFU.lost(self, closure: { _, device in
                 if device.uuid == uuid {
-                    promise(.success(uuid))
+                    continuation.yield(uuid)
                 }
             })
         }

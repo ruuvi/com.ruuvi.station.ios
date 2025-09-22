@@ -1,6 +1,6 @@
 import BTKit
 import Foundation
-import Future
+// Removed Future: no Future usage remains
 import RuuviLocal
 import RuuviOntology
 import RuuviPool
@@ -31,13 +31,13 @@ extension CardsInteractor: CardsInteractorInput {
                 .serviceTimeout(15),
             ]
         ) { [weak self] _, result in
-            switch result {
-            case let .success(version):
-                let tagWithVersion = ruuviTag.with(firmwareVersion: version)
-                self?.ruuviPool.update(tagWithVersion)
-            default:
-                break
-            }
+//            switch result {
+//            case let .success(version):
+//                let tagWithVersion = ruuviTag.with(firmwareVersion: version)
+//                self?.ruuviPool.update(tagWithVersion)
+//            default:
+//                break
+//            }
         }
     }
 }

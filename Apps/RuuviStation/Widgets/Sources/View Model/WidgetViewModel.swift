@@ -27,16 +27,22 @@ public extension WidgetViewModel {
             return
         }
         foceRefreshWidget(false)
-        ruuviCloud.loadSensorsDense(
-            for: nil,
-            measurements: true,
-            sharedToOthers: nil,
-            sharedToMe: true,
-            alerts: nil
-        ).on(success: { sensors in
-            let sensorsWithRecord = sensors.filter { $0.record != nil }
-            completion(sensorsWithRecord)
-        })
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let sensors = try await ruuviCloud.loadSensorsDense(
+                    for: nil,
+                    measurements: true,
+                    sharedToOthers: nil,
+                    sharedToMe: true,
+                    alerts: nil
+                )
+                let sensorsWithRecord = sensors.filter { $0.record != nil }
+                completion(sensorsWithRecord)
+            } catch {
+                completion([])
+            }
+        }
     }
 }
 

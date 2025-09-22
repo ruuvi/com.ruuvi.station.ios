@@ -176,62 +176,49 @@ private extension MeasurementDetailsPresenter {
     }
 
     func loadAllData(from date: Date, completion: (() -> Void)? = nil) {
-        let op = ruuviStorage.read(
-            ruuviTag.id,
-            after: date,
-            with: TimeInterval(2)
-        )
-
-        op.on(success: { [weak self] results in
-            self?.handleDataLoaded(results.map(\.measurement))
-        }, failure: { [weak self] _ in
-            self?.handleDataLoadError()
-        }, completion: {
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let results = try await self.readMeasurements(after: date, sampling: 2)
+                self.handleDataLoaded(results.map(\.measurement))
+            } catch {
+                self.handleDataLoadError()
+            }
             completion?()
-        })
+        }
     }
 
     func loadWithDownsamplingCheck(from date: Date, completion: (() -> Void)? = nil) {
-
-        let checkOp = ruuviStorage.read(
-            ruuviTag.id,
-            after: date,
-            with: TimeInterval(2)
-        )
-
-        checkOp.on(success: { [weak self] results in
-            guard let self = self else {
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                let results = try await self.readMeasurements(after: date, sampling: 2)
+                if results.count < self.minimumDownsampleThreshold {
+                    self.handleDataLoaded(results.map(\.measurement))
+                    completion?()
+                } else {
+                    self.loadDownsampledData(from: date, completion: completion)
+                }
+            } catch {
+                self.handleDataLoadError()
                 completion?()
-                return
             }
-
-            if results.count < self.minimumDownsampleThreshold {
-                self.handleDataLoaded(results.map(\.measurement))
-                completion?()
-            } else {
-                self.loadDownsampledData(from: date, completion: completion)
-            }
-        }, failure: { [weak self] _ in
-            self?.handleDataLoadError()
-            completion?()
-        })
+        }
     }
 
     func loadDownsampledData(from date: Date, completion: (() -> Void)? = nil) {
-        let op = ruuviStorage.readDownsampled(
-            ruuviTag.id,
-            after: date,
-            with: highDensityIntervalMinutes,
-            pick: maximumPointsCount
-        )
-
-        op.on(success: { [weak self] results in
-            self?.handleDataLoaded(results.map(\.measurement))
-        }, failure: { [weak self] _ in
-            self?.handleDataLoadError()
-        }, completion: {
-            completion?()
-        })
+//        Task { [weak self] in
+//            guard let self = self else { return }
+//            do {
+//                let results = try await self.readDownsampledMeasurements(after: date,
+//                                                                         intervalMinutes: highDensityIntervalMinutes,
+//                                                                         pick: maximumPointsCount)
+//                self.handleDataLoaded(results.map(\.measurement))
+//            } catch {
+//                self.handleDataLoadError()
+//            }
+//            completion?()
+//        }
     }
 
     func handleDataLoaded(_ measurements: [RuuviMeasurement]) {
@@ -260,27 +247,18 @@ private extension MeasurementDetailsPresenter {
         guard let ruuviTag = ruuviTag,
               let lastDate = lastMeasurementDate,
               isDataLoaded else { return }
-
-        let op = ruuviStorage.readLast(
-            ruuviTag.id,
-            from: lastDate.timeIntervalSince1970
-        )
-
-        op.on(success: { [weak self] results in
+        Task { [weak self] in
             guard let self = self else { return }
-
-            // Filter out duplicates and only add truly new measurements
-            let newMeasurements = results
-                .map(\.measurement)
-                .filter { measurement in
-                    measurement.date > lastDate
-                }
-                .sorted { $0.date < $1.date }
-
-            guard !newMeasurements.isEmpty else { return }
-
-            self.appendNewMeasurements(newMeasurements)
-        })
+            do {
+                let results = try await self.readLastMeasurements(from: lastDate.timeIntervalSince1970)
+                let newMeasurements = results
+                    .map(\.measurement)
+                    .filter { $0.date > lastDate }
+                    .sorted { $0.date < $1.date }
+                guard !newMeasurements.isEmpty else { return }
+                self.appendNewMeasurements(newMeasurements)
+            } catch { /* ignore */ }
+        }
     }
 
     func appendNewMeasurements(_ newMeasurements: [RuuviMeasurement]) {
@@ -612,12 +590,43 @@ private extension MeasurementDetailsPresenter {
     func syncCloudDataIfNeeded() {
         guard ruuviTag.isCloud,
               isViewActive else { return }
-        let op = cloudSyncService.sync(sensor: ruuviTag)
-        op.on(success: { [weak self] _ in
-            guard self?.isViewActive == true else { return }
-            // Reload data after sync completes
-            self?.loadHistoricalData()
-        })
+        Task { [weak self] in
+            guard let self = self else { return }
+            do {
+                _ = try await self.syncCloud(sensor: self.ruuviTag)
+                guard self.isViewActive else { return }
+                self.loadHistoricalData()
+            } catch {
+                // Ignore sync error: keep existing data
+            }
+        }
+    }
+}
+
+// MARK: - Async Bridging
+private extension MeasurementDetailsPresenter {
+    func readMeasurements(after date: Date, sampling: TimeInterval) async throws -> [RuuviTagSensorRecord] {
+        try await ruuviStorage.read(ruuviTag.id, after: date, with: sampling)
+    }
+
+    func readDownsampledMeasurements(after date: Date, intervalMinutes: Int, pick: Int) async throws -> [RuuviTagSensorRecord] {
+        try await ruuviStorage
+            .readDownsampled(
+                ruuviTag.id,
+                after: date,
+                with: intervalMinutes,
+                pick: Double(pick)
+            )
+    }
+
+    func readLastMeasurements(from timestamp: TimeInterval) async throws -> [RuuviTagSensorRecord] {
+        try await ruuviStorage.readLast(ruuviTag.id, from: timestamp)
+    }
+
+    @discardableResult
+    func syncCloud(sensor: RuuviTagSensor) async throws -> Bool {
+        _ = try await cloudSyncService.sync(sensor: sensor)
+        return true
     }
 }
 

@@ -1,6 +1,5 @@
 // swiftlint:disable file_length
 import Foundation
-import Future
 import RuuviCloud
 import RuuviLocal
 import RuuviOntology
@@ -8,13 +7,44 @@ import RuuviOntology
 // MARK: - RuuviTag
 
 public extension RuuviServiceAlertImpl {
+    // Fire & forget wrapper for async cloud alert update so that the Alert service API can remain synchronous.
+    // Network errors are ignored here; consider enhancing with logging or delegate callbacks if needed.
+    private func submitAlertUpdate(
+        type: RuuviCloudAlertType,
+        settingType: RuuviCloudAlertSettingType,
+        isEnabled: Bool,
+        min: Double?,
+        max: Double?,
+        counter: Int?,
+        delay: Int?,
+        description: String?,
+        macId: MACIdentifier
+    ) {
+        Task {
+            do {
+                try await cloud.setAlert(
+                    type: type,
+                    settingType: settingType,
+                    isEnabled: isEnabled,
+                    min: min,
+                    max: max,
+                    counter: counter,
+                    delay: delay,
+                    description: description,
+                    for: macId
+                )
+            } catch {
+                // Silently ignore; optionally log: print("setAlert failed: \(error)")
+            }
+        }
+    }
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func register(type: AlertType, ruuviTag: RuuviTagSensor) {
         register(type: type, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             switch type {
             case let .temperature(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .temperature,
                     settingType: .state,
                     isEnabled: true,
@@ -23,10 +53,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: temperatureDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .relativeHumidity(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .humidity,
                     settingType: .state,
                     isEnabled: true,
@@ -35,24 +65,24 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: relativeHumidityDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case .humidity:
                 break // absolute is not on cloud yet (11.06.2021)
             case let .pressure(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .pressure,
                     settingType: .state,
                     isEnabled: true,
-                    min: lower * 100, // in Pa on cloud, in hPa locally
-                    max: upper * 100, // in Pa on cloud, in hPa locally
+                    min: lower * 100,
+                    max: upper * 100,
                     counter: nil,
                     delay: nil,
                     description: pressureDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .signal(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .signal,
                     settingType: .state,
                     isEnabled: true,
@@ -61,10 +91,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: signalDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .aqi(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .aqi,
                     settingType: .state,
                     isEnabled: true,
@@ -73,10 +103,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: aqiDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .carbonDioxide(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .co2,
                     settingType: .state,
                     isEnabled: true,
@@ -85,10 +115,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: carbonDioxideDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .pMatter1(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .pm10,
                     settingType: .state,
                     isEnabled: true,
@@ -97,10 +127,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: pm1Description(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .pMatter25(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .pm25,
                     settingType: .state,
                     isEnabled: true,
@@ -109,10 +139,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: pm25Description(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .pMatter4(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .pm40,
                     settingType: .state,
                     isEnabled: true,
@@ -121,10 +151,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: pm4Description(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .pMatter10(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .pm100,
                     settingType: .state,
                     isEnabled: true,
@@ -133,10 +163,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: pm10Description(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .voc(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .voc,
                     settingType: .state,
                     isEnabled: true,
@@ -145,10 +175,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: vocDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .nox(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .nox,
                     settingType: .state,
                     isEnabled: true,
@@ -157,10 +187,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: noxDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .soundInstant(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .soundInstant,
                     settingType: .state,
                     isEnabled: true,
@@ -169,10 +199,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: soundInstantDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .soundAverage(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .soundAverage,
                     settingType: .state,
                     isEnabled: true,
@@ -181,10 +211,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: soundAverageDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .soundPeak(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .soundPeak,
                     settingType: .state,
                     isEnabled: true,
@@ -193,10 +223,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: soundPeakDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .luminosity(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .luminosity,
                     settingType: .state,
                     isEnabled: true,
@@ -205,12 +235,12 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: luminosityDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case .connection:
                 break
             case let .cloudConnection(unseenDuration):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .offline,
                     settingType: .state,
                     isEnabled: true,
@@ -219,10 +249,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: 0,
                     description: cloudConnectionDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .movement(last):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .movement,
                     settingType: .state,
                     isEnabled: true,
@@ -231,7 +261,7 @@ public extension RuuviServiceAlertImpl {
                     counter: last,
                     delay: nil,
                     description: movementDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             }
         }
@@ -243,7 +273,7 @@ public extension RuuviServiceAlertImpl {
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             switch type {
             case let .temperature(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .temperature,
                     settingType: .state,
                     isEnabled: false,
@@ -252,10 +282,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: temperatureDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .relativeHumidity(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .humidity,
                     settingType: .state,
                     isEnabled: false,
@@ -264,12 +294,12 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: relativeHumidityDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case .humidity:
                 break // absolute is not on cloud yet (11.06.2021)
             case let .pressure(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .pressure,
                     settingType: .state,
                     isEnabled: false,
@@ -278,10 +308,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: pressureDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .signal(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .signal,
                     settingType: .state,
                     isEnabled: false,
@@ -290,10 +320,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: signalDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .aqi(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .aqi,
                     settingType: .state,
                     isEnabled: false,
@@ -302,10 +332,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: aqiDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .carbonDioxide(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .co2,
                     settingType: .state,
                     isEnabled: false,
@@ -314,10 +344,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: carbonDioxideDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .pMatter1(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .pm10,
                     settingType: .state,
                     isEnabled: false,
@@ -326,10 +356,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: pm1Description(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .pMatter25(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .pm25,
                     settingType: .state,
                     isEnabled: false,
@@ -338,10 +368,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: pm25Description(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .pMatter4(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .pm40,
                     settingType: .state,
                     isEnabled: false,
@@ -350,10 +380,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: pm4Description(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .pMatter10(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .pm100,
                     settingType: .state,
                     isEnabled: false,
@@ -362,10 +392,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: pm10Description(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .voc(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .voc,
                     settingType: .state,
                     isEnabled: false,
@@ -374,10 +404,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: vocDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .nox(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .nox,
                     settingType: .state,
                     isEnabled: false,
@@ -386,10 +416,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: noxDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .soundInstant(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .soundInstant,
                     settingType: .state,
                     isEnabled: false,
@@ -398,10 +428,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: soundInstantDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .soundAverage(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .soundAverage,
                     settingType: .state,
                     isEnabled: false,
@@ -410,10 +440,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: soundAverageDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .soundPeak(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .soundPeak,
                     settingType: .state,
                     isEnabled: false,
@@ -422,10 +452,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: soundPeakDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .luminosity(lower, upper):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .luminosity,
                     settingType: .state,
                     isEnabled: false,
@@ -434,12 +464,12 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: nil,
                     description: luminosityDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case .connection:
                 break
             case let .cloudConnection(unseenDuration):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .offline,
                     settingType: .state,
                     isEnabled: false,
@@ -448,10 +478,10 @@ public extension RuuviServiceAlertImpl {
                     counter: nil,
                     delay: 0,
                     description: cloudConnectionDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             case let .movement(last):
-                cloud.setAlert(
+                submitAlertUpdate(
                     type: .movement,
                     settingType: .state,
                     isEnabled: false,
@@ -460,7 +490,7 @@ public extension RuuviServiceAlertImpl {
                     counter: last,
                     delay: nil,
                     description: movementDescription(for: ruuviTag),
-                    for: macId
+                    macId: macId
                 )
             }
         }
@@ -470,7 +500,7 @@ public extension RuuviServiceAlertImpl {
     func setLower(celsius: Double?, ruuviTag: RuuviTagSensor) {
         setLower(celsius: celsius, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .temperature,
                 settingType: .lowerBound,
                 isEnabled: isOn(type: .temperature(lower: 0, upper: 0), for: ruuviTag),
@@ -479,7 +509,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: temperatureDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -487,7 +517,7 @@ public extension RuuviServiceAlertImpl {
     func setUpper(celsius: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(celsius: celsius, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .temperature,
                 settingType: .upperBound,
                 isEnabled: isOn(type: .temperature(lower: 0, upper: 0), for: ruuviTag),
@@ -496,7 +526,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: temperatureDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -504,7 +534,7 @@ public extension RuuviServiceAlertImpl {
     func setTemperature(description: String?, ruuviTag: RuuviTagSensor) {
         setTemperature(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .temperature,
                 settingType: .description,
                 isEnabled: isOn(type: .temperature(lower: 0, upper: 0), for: ruuviTag),
@@ -513,7 +543,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: description,
-                for: macId
+                macId: macId
             )
         }
     }
@@ -522,7 +552,7 @@ public extension RuuviServiceAlertImpl {
     func setLower(relativeHumidity: Double?, ruuviTag: RuuviTagSensor) {
         setLower(relativeHumidity: relativeHumidity, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .humidity,
                 settingType: .lowerBound,
                 isEnabled: isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag),
@@ -531,7 +561,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: relativeHumidityDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -539,7 +569,7 @@ public extension RuuviServiceAlertImpl {
     func setUpper(relativeHumidity: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(relativeHumidity: relativeHumidity, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .humidity,
                 settingType: .upperBound,
                 isEnabled: isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag),
@@ -548,7 +578,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: relativeHumidityDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -556,7 +586,7 @@ public extension RuuviServiceAlertImpl {
     func setRelativeHumidity(description: String?, ruuviTag: RuuviTagSensor) {
         setRelativeHumidity(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .humidity,
                 settingType: .description,
                 isEnabled: isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag),
@@ -565,7 +595,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: description,
-                for: macId
+                macId: macId
             )
         }
     }
@@ -574,7 +604,7 @@ public extension RuuviServiceAlertImpl {
     func setLower(pressure: Double?, ruuviTag: RuuviTagSensor) {
         setLower(pressure: pressure, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .pressure,
                 settingType: .lowerBound,
                 isEnabled: isOn(type: .pressure(lower: 0, upper: 0), for: ruuviTag),
@@ -583,7 +613,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: pressureDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -591,7 +621,7 @@ public extension RuuviServiceAlertImpl {
     func setUpper(pressure: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(pressure: pressure, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .pressure,
                 settingType: .upperBound,
                 isEnabled: isOn(type: .pressure(lower: 0, upper: 0), for: ruuviTag),
@@ -600,7 +630,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: pressureDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -608,7 +638,7 @@ public extension RuuviServiceAlertImpl {
     func setPressure(description: String?, ruuviTag: RuuviTagSensor) {
         setPressure(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .pressure,
                 settingType: .description,
                 isEnabled: isOn(type: .pressure(lower: 0, upper: 0), for: ruuviTag),
@@ -617,7 +647,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: description,
-                for: macId
+                macId: macId
             )
         }
     }
@@ -626,7 +656,7 @@ public extension RuuviServiceAlertImpl {
     func setLower(signal: Double?, ruuviTag: RuuviTagSensor) {
         setLower(signal: signal, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .signal,
                 settingType: .lowerBound,
                 isEnabled: isOn(
@@ -638,7 +668,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: signalDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -646,7 +676,7 @@ public extension RuuviServiceAlertImpl {
     func setUpper(signal: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(signal: signal, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .signal,
                 settingType: .upperBound,
                 isEnabled: isOn(
@@ -658,7 +688,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: signalDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -666,7 +696,7 @@ public extension RuuviServiceAlertImpl {
     func setSignal(description: String?, ruuviTag: RuuviTagSensor) {
         setSignal(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .signal,
                 settingType: .description,
                 isEnabled: isOn(
@@ -678,7 +708,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: description,
-                for: macId
+                macId: macId
             )
         }
     }
@@ -687,7 +717,7 @@ public extension RuuviServiceAlertImpl {
     func setLower(aqi: Double?, ruuviTag: RuuviTagSensor) {
         setLower(aqi: aqi, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .aqi,
                 settingType: .lowerBound,
                 isEnabled: isOn(
@@ -699,7 +729,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: aqiDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -707,7 +737,7 @@ public extension RuuviServiceAlertImpl {
     func setUpper(aqi: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(aqi: aqi, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .aqi,
                 settingType: .upperBound,
                 isEnabled: isOn(
@@ -719,7 +749,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: aqiDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -727,7 +757,7 @@ public extension RuuviServiceAlertImpl {
     func setAQI(description: String?, ruuviTag: RuuviTagSensor) {
         setAQI(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .aqi,
                 settingType: .description,
                 isEnabled: isOn(
@@ -739,7 +769,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: description,
-                for: macId
+                macId: macId
             )
         }
     }
@@ -748,7 +778,7 @@ public extension RuuviServiceAlertImpl {
     func setLower(carbonDioxide: Double?, ruuviTag: RuuviTagSensor) {
         setLower(carbonDioxide: carbonDioxide, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .co2,
                 settingType: .lowerBound,
                 isEnabled: isOn(
@@ -760,7 +790,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: carbonDioxideDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -768,7 +798,7 @@ public extension RuuviServiceAlertImpl {
     func setUpper(carbonDioxide: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(carbonDioxide: carbonDioxide, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .co2,
                 settingType: .upperBound,
                 isEnabled: isOn(
@@ -780,7 +810,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: carbonDioxideDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -788,7 +818,7 @@ public extension RuuviServiceAlertImpl {
     func setCarbonDioxide(description: String?, ruuviTag: RuuviTagSensor) {
         setCarbonDioxide(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .co2,
                 settingType: .description,
                 isEnabled: isOn(
@@ -800,7 +830,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: description,
-                for: macId
+                macId: macId
             )
         }
     }
@@ -809,7 +839,7 @@ public extension RuuviServiceAlertImpl {
     func setLower(pm1: Double?, ruuviTag: RuuviTagSensor) {
         setLower(pm1: pm1, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .pm10,
                 settingType: .lowerBound,
                 isEnabled: isOn(
@@ -821,7 +851,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: pm1Description(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -829,7 +859,7 @@ public extension RuuviServiceAlertImpl {
     func setUpper(pm1: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(pm1: pm1, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .pm10,
                 settingType: .upperBound,
                 isEnabled: isOn(
@@ -841,7 +871,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: pm1Description(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -849,7 +879,7 @@ public extension RuuviServiceAlertImpl {
     func setPM1(description: String?, ruuviTag: RuuviTagSensor) {
         setPM1(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .pm10,
                 settingType: .description,
                 isEnabled: isOn(
@@ -861,7 +891,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: description,
-                for: macId
+                macId: macId
             )
         }
     }
@@ -870,7 +900,7 @@ public extension RuuviServiceAlertImpl {
     func setLower(pm25: Double?, ruuviTag: RuuviTagSensor) {
         setLower(pm25: pm25, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .pm25,
                 settingType: .lowerBound,
                 isEnabled: isOn(
@@ -882,7 +912,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: pm25Description(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -890,7 +920,7 @@ public extension RuuviServiceAlertImpl {
     func setUpper(pm25: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(pm25: pm25, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .pm25,
                 settingType: .upperBound,
                 isEnabled: isOn(
@@ -902,7 +932,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: pm25Description(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -910,7 +940,7 @@ public extension RuuviServiceAlertImpl {
     func setPM25(description: String?, ruuviTag: RuuviTagSensor) {
         setPM25(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .pm25,
                 settingType: .description,
                 isEnabled: isOn(
@@ -922,7 +952,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: description,
-                for: macId
+                macId: macId
             )
         }
     }
@@ -931,7 +961,7 @@ public extension RuuviServiceAlertImpl {
     func setLower(pm4: Double?, ruuviTag: RuuviTagSensor) {
         setLower(pm4: pm4, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .pm40,
                 settingType: .lowerBound,
                 isEnabled: isOn(
@@ -943,7 +973,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: pm4Description(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -951,7 +981,7 @@ public extension RuuviServiceAlertImpl {
     func setUpper(pm4: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(pm4: pm4, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .pm40,
                 settingType: .upperBound,
                 isEnabled: isOn(
@@ -963,7 +993,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: pm4Description(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -971,7 +1001,7 @@ public extension RuuviServiceAlertImpl {
     func setPM4(description: String?, ruuviTag: RuuviTagSensor) {
         setPM4(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .pm40,
                 settingType: .description,
                 isEnabled: isOn(
@@ -983,7 +1013,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: description,
-                for: macId
+                macId: macId
             )
         }
     }
@@ -992,7 +1022,7 @@ public extension RuuviServiceAlertImpl {
     func setLower(pm10: Double?, ruuviTag: RuuviTagSensor) {
         setLower(pm10: pm10, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .pm100,
                 settingType: .lowerBound,
                 isEnabled: isOn(
@@ -1004,7 +1034,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: pm10Description(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1012,7 +1042,7 @@ public extension RuuviServiceAlertImpl {
     func setUpper(pm10: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(pm10: pm10, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .pm100,
                 settingType: .upperBound,
                 isEnabled: isOn(
@@ -1024,7 +1054,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: pm10Description(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1032,7 +1062,7 @@ public extension RuuviServiceAlertImpl {
     func setPM10(description: String?, ruuviTag: RuuviTagSensor) {
         setPM10(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .pm100,
                 settingType: .description,
                 isEnabled: isOn(
@@ -1044,7 +1074,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: description,
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1053,7 +1083,7 @@ public extension RuuviServiceAlertImpl {
     func setLower(voc: Double?, ruuviTag: RuuviTagSensor) {
         setLower(voc: voc, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .voc,
                 settingType: .lowerBound,
                 isEnabled: isOn(
@@ -1065,7 +1095,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: vocDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1073,7 +1103,7 @@ public extension RuuviServiceAlertImpl {
     func setUpper(voc: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(voc: voc, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .voc,
                 settingType: .upperBound,
                 isEnabled: isOn(
@@ -1085,7 +1115,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: vocDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1093,7 +1123,7 @@ public extension RuuviServiceAlertImpl {
     func setVOC(description: String?, ruuviTag: RuuviTagSensor) {
         setVOC(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .voc,
                 settingType: .description,
                 isEnabled: isOn(
@@ -1105,7 +1135,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: description,
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1114,7 +1144,7 @@ public extension RuuviServiceAlertImpl {
     func setLower(nox: Double?, ruuviTag: RuuviTagSensor) {
         setLower(nox: nox, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .nox,
                 settingType: .lowerBound,
                 isEnabled: isOn(
@@ -1126,7 +1156,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: noxDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1134,7 +1164,7 @@ public extension RuuviServiceAlertImpl {
     func setUpper(nox: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(nox: nox, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .nox,
                 settingType: .upperBound,
                 isEnabled: isOn(
@@ -1146,7 +1176,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: noxDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1154,7 +1184,7 @@ public extension RuuviServiceAlertImpl {
     func setNOX(description: String?, ruuviTag: RuuviTagSensor) {
         setNOX(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .nox,
                 settingType: .description,
                 isEnabled: isOn(
@@ -1166,7 +1196,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: description,
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1175,7 +1205,7 @@ public extension RuuviServiceAlertImpl {
     func setLower(soundInstant: Double?, ruuviTag: RuuviTagSensor) {
         setLower(soundInstant: soundInstant, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .soundInstant,
                 settingType: .lowerBound,
                 isEnabled: isOn(
@@ -1187,7 +1217,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: soundInstantDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1195,7 +1225,7 @@ public extension RuuviServiceAlertImpl {
     func setUpper(soundInstant: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(soundInstant: soundInstant, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .soundInstant,
                 settingType: .upperBound,
                 isEnabled: isOn(
@@ -1207,7 +1237,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: soundInstantDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1215,7 +1245,7 @@ public extension RuuviServiceAlertImpl {
     func setSoundInstant(description: String?, ruuviTag: RuuviTagSensor) {
         setSoundInstant(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .soundInstant,
                 settingType: .description,
                 isEnabled: isOn(
@@ -1227,7 +1257,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: description,
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1236,7 +1266,7 @@ public extension RuuviServiceAlertImpl {
     func setLower(soundAverage: Double?, ruuviTag: RuuviTagSensor) {
         setLower(soundAverage: soundAverage, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .soundAverage,
                 settingType: .lowerBound,
                 isEnabled: isOn(
@@ -1248,7 +1278,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: soundAverageDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1256,7 +1286,7 @@ public extension RuuviServiceAlertImpl {
     func setUpper(soundAverage: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(soundAverage: soundAverage, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .soundAverage,
                 settingType: .upperBound,
                 isEnabled: isOn(
@@ -1268,7 +1298,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: soundAverageDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1276,7 +1306,7 @@ public extension RuuviServiceAlertImpl {
     func setSoundAverage(description: String?, ruuviTag: RuuviTagSensor) {
         setSoundAverage(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .soundAverage,
                 settingType: .description,
                 isEnabled: isOn(
@@ -1288,7 +1318,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: description,
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1297,7 +1327,7 @@ public extension RuuviServiceAlertImpl {
     func setLower(soundPeak: Double?, ruuviTag: RuuviTagSensor) {
         setLower(soundPeak: soundPeak, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .soundPeak,
                 settingType: .lowerBound,
                 isEnabled: isOn(
@@ -1309,7 +1339,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: soundPeakDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1317,7 +1347,7 @@ public extension RuuviServiceAlertImpl {
     func setUpper(soundPeak: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(soundPeak: soundPeak, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .soundPeak,
                 settingType: .upperBound,
                 isEnabled: isOn(
@@ -1329,7 +1359,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: soundPeakDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1337,7 +1367,7 @@ public extension RuuviServiceAlertImpl {
     func setSoundPeak(description: String?, ruuviTag: RuuviTagSensor) {
         setSoundPeak(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .soundPeak,
                 settingType: .description,
                 isEnabled: isOn(
@@ -1349,7 +1379,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: description,
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1358,7 +1388,7 @@ public extension RuuviServiceAlertImpl {
     func setLower(luminosity: Double?, ruuviTag: RuuviTagSensor) {
         setLower(luminosity: luminosity, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .luminosity,
                 settingType: .lowerBound,
                 isEnabled: isOn(
@@ -1370,7 +1400,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: luminosityDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1378,7 +1408,7 @@ public extension RuuviServiceAlertImpl {
     func setUpper(luminosity: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(luminosity: luminosity, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .luminosity,
                 settingType: .upperBound,
                 isEnabled: isOn(
@@ -1390,7 +1420,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: luminosityDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1398,7 +1428,7 @@ public extension RuuviServiceAlertImpl {
     func setLuminosity(description: String?, ruuviTag: RuuviTagSensor) {
         setLuminosity(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .luminosity,
                 settingType: .description,
                 isEnabled: isOn(
@@ -1410,7 +1440,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: description,
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1419,7 +1449,7 @@ public extension RuuviServiceAlertImpl {
     func setMovement(description: String?, ruuviTag: RuuviTagSensor) {
         setMovement(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .movement,
                 settingType: .description,
                 isEnabled: isOn(type: .movement(last: 0), for: ruuviTag),
@@ -1428,7 +1458,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: nil,
                 description: description,
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1437,7 +1467,7 @@ public extension RuuviServiceAlertImpl {
     func setCloudConnection(unseenDuration: Double?, ruuviTag: RuuviTagSensor) {
         setCloudConnection(unseenDuration: unseenDuration, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .offline,
                 settingType: .delay,
                 isEnabled: isOn(type: .cloudConnection(unseenDuration: 0), for: ruuviTag),
@@ -1446,7 +1476,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: 0,
                 description: cloudConnectionDescription(for: ruuviTag),
-                for: macId
+                macId: macId
             )
         }
     }
@@ -1454,7 +1484,7 @@ public extension RuuviServiceAlertImpl {
     func setCloudConnection(description: String?, ruuviTag: RuuviTagSensor) {
         setCloudConnection(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
+            submitAlertUpdate(
                 type: .offline,
                 settingType: .description,
                 isEnabled: isOn(type: .cloudConnection(unseenDuration: 0), for: ruuviTag),
@@ -1463,7 +1493,7 @@ public extension RuuviServiceAlertImpl {
                 counter: nil,
                 delay: 0,
                 description: description,
-                for: macId
+                macId: macId
             )
         }
     }

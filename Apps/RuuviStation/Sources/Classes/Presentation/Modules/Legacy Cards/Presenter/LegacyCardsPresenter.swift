@@ -495,12 +495,16 @@ extension LegacyCardsPresenter {
                             ?? sSelf.ruuviTags
                             .first(where: { $0.macId != nil && $0.macId?.any == macId?.any })
                         if let ruuviTag {
-                            sSelf.ruuviSensorPropertiesService.getImage(for: ruuviTag)
-                                .on(success: { image in
-                                    viewModel.background = image
-                                }, failure: { [weak self] error in
-                                    self?.errorPresenter.present(error: error)
-                                })
+                            Task { [weak sSelf] in
+                                guard let sSelf else { return }
+                                do {
+                                    if let image = try await sSelf.getSensorImage(for: ruuviTag) {
+                                        viewModel.background = image
+                                    }
+                                } catch {
+                                    sSelf.errorPresenter.present(error: error)
+                                }
+                            }
                         }
                     }
                 }
@@ -658,12 +662,16 @@ extension LegacyCardsPresenter {
     private func syncViewModels() {
         let ruuviViewModels = ruuviTags.compactMap { ruuviTag -> LegacyCardsViewModel in
             let viewModel = LegacyCardsViewModel(ruuviTag)
-            ruuviSensorPropertiesService.getImage(for: ruuviTag)
-                .on(success: { image in
-                    viewModel.background = image
-                }, failure: { [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                })
+            Task { [weak self] in
+                guard let self else { return }
+                do {
+                    if let image = try await self.getSensorImage(for: ruuviTag) {
+                        viewModel.background = image
+                    }
+                } catch {
+                    self.errorPresenter.present(error: error)
+                }
+            }
             if let luid = ruuviTag.luid {
                 viewModel.isConnected = background.isConnected(uuid: luid.value)
             } else if let macId = ruuviTag.macId {
@@ -687,12 +695,13 @@ extension LegacyCardsPresenter {
                 viewModel.update(previousRecord)
             }
             syncAlerts(ruuviTag: ruuviTag, viewModel: viewModel)
-            let op = ruuviStorage.readLatest(ruuviTag)
-            op.on { [weak self] record in
+            Task { [weak self] in
+                guard let self else { return }
+                let record = await self.readLatestRecord(for: ruuviTag)
                 if let record {
                     viewModel.update(record)
-                    self?.notifyUpdate(for: viewModel)
-                    self?.processAlert(record: record, viewModel: viewModel)
+                    self.notifyUpdate(for: viewModel)
+                    self.processAlert(record: record, viewModel: viewModel)
                 }
             }
 
@@ -810,6 +819,17 @@ extension LegacyCardsPresenter {
             name: UIApplication.willEnterForegroundNotification,
             object: nil
         )
+    }
+}
+
+// MARK: - Async Bridging
+extension LegacyCardsPresenter {
+    fileprivate func getSensorImage(for sensor: RuuviTagSensor) async throws -> UIImage? {
+        try await ruuviSensorPropertiesService.getImage(for: sensor)
+    }
+
+    fileprivate func readLatestRecord(for sensor: RuuviTagSensor) async -> RuuviTagSensorRecord? {
+        try? await ruuviStorage.readLatest(sensor)
     }
 }
 

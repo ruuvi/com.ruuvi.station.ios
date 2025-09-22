@@ -15,6 +15,7 @@ public enum RuuviServiceError: Error {
     case btkit(BTError)
     case networking(Error)
     case writeToDisk(Error)
+    case unknown(Error)
     case macIdIsNil
     case pictureUrlIsNil
     case failedToParseNetworkResponse

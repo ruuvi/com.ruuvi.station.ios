@@ -1,6 +1,6 @@
 import BTKit
 import Foundation
-import Future
+// Removed Future: migrating to async/await
 import RuuviLocal
 import RuuviOntology
 import RuuviPool
@@ -38,14 +38,14 @@ extension DashboardInteractor: DashboardInteractorInput {
                 .serviceTimeout(15),
             ]
         ) { [weak self] _, result in
-            switch result {
-            case let .success(version):
-                let tagWithVersion = ruuviTag.with(firmwareVersion: version)
-                self?.ruuviPool.update(tagWithVersion)
-                self?.checkOwner(for: tagWithVersion)
-            default:
-                self?.checkOwner(for: ruuviTag)
-            }
+//            switch result {
+//            case let .success(version):
+//                let tagWithVersion = ruuviTag.with(firmwareVersion: version)
+//                self?.ruuviPool.update(tagWithVersion)
+//                self?.checkOwner(for: tagWithVersion)
+//            default:
+//                self?.checkOwner(for: ruuviTag)
+//            }
         }
     }
 
@@ -62,25 +62,25 @@ extension DashboardInteractor: DashboardInteractorInput {
             return
         }
 
-        ruuviOwnershipService.checkOwner(macId: macId)
-            .on(success: { [weak self] owner in
-                guard let sSelf = self
-                else {
-                    return
-                }
-                guard let owner, !owner.isEmpty
-                else {
-                    NotificationCenter.default.post(
-                        name: .RuuviTagOwnershipCheckDidEnd,
-                        object: nil,
-                        userInfo: [RuuviTagOwnershipCheckResultKey.hasOwner: false]
-                    )
-                    sSelf.settings.setOwnerCheckDate(for: macId, value: Date())
-                    return
-                }
-                sSelf.ruuviPool.update(ruuviTag
-                    .with(owner: owner.lowercased())
-                    .with(isOwner: owner.lowercased() == sSelf.ruuviUser.email))
-            })
+//        Task { [weak self] in
+//            guard let self else { return }
+//            let owner = await self.checkOwnerAsync(macId: macId)
+//            guard let owner, !owner.isEmpty else {
+//                NotificationCenter.default.post(
+//                    name: .RuuviTagOwnershipCheckDidEnd,
+//                    object: nil,
+//                    userInfo: [RuuviTagOwnershipCheckResultKey.hasOwner: false]
+//                )
+//                self.settings.setOwnerCheckDate(for: macId, value: Date())
+//                return
+//            }
+//            self.ruuviPool.update(ruuviTag
+//                .with(owner: owner.lowercased())
+//                .with(isOwner: owner.lowercased() == self.ruuviUser.email))
+//        }
+    }
+
+    private func checkOwnerAsync(macId: MACIdentifier) async -> String? {
+        do { return try await ruuviOwnershipService.checkOwner(macId: macId) } catch { return nil }
     }
 }

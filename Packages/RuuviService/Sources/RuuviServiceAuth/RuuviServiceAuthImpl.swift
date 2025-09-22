@@ -1,5 +1,4 @@
 import Foundation
-import Future
 import RuuviLocal
 import RuuviOntology
 import RuuviPool
@@ -36,67 +35,57 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
         self.settings = settings
     }
 
-    public func logout() -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
+    public func logout() async throws -> Bool {
         ruuviUser.logout()
+        do {
+            let localSensors = try await storage.readAll()
+            let sensorsToDelete = localSensors.filter { $0.isClaimed || $0.isCloud }
+            if sensorsToDelete.isEmpty {
+                clearGlobalSettings()
+                postNotification()
+                return true
+            }
 
-        storage.readAll()
-            .on(success: { [weak self] localSensors in
-                guard let sSelf = self else {
-                    return
-                }
-
-                let sensorsToDelete = localSensors.filter { $0.isClaimed || $0.isCloud }
-                guard !sensorsToDelete.isEmpty else {
-                    // Clear global settings even if no sensors to delete
-                    sSelf.clearGlobalSettings()
-                    promise.succeed(value: true)
-                    sSelf.postNotification()
-                    return
-                }
-
-                // Collect all individual operations from all sensors
-                var allOperations: [Future<Bool, RuuviPoolError>] = []
-
+            // Perform cleanup + deletions concurrently
+            try await withThrowingTaskGroup(of: Void.self) { group in
                 for sensor in sensorsToDelete {
-                    let deleteSensorOperation = sSelf.pool.delete(sensor)
-                    let deleteRecordsOperation = sSelf.pool.deleteAllRecords(sensor.id)
-                    let deleteLatestRecordOperation = sSelf.pool.deleteLast(sensor.id)
-
-                    allOperations.append(deleteSensorOperation)
-                    allOperations.append(deleteRecordsOperation)
-                    allOperations.append(deleteLatestRecordOperation)
-
-                    // Perform comprehensive synchronous cleanup
-                    sSelf.cleanupSensorData(for: sensor)
+                    // Local synchronous cleanup before async deletes
+                    await cleanupSensorData(for: sensor)
+                    group.addTask { [pool] in
+                        try await pool.delete(sensor)
+                    }
+                    group.addTask { [pool] in
+                        try await pool.deleteAllRecords(sensor.id)
+                    }
+                    group.addTask { [pool] in
+                        try await pool.deleteLast(sensor.id)
+                    }
                 }
+                // Global queued requests deletion
+                group.addTask { [pool] in
+                    try await pool.deleteQueuedRequests()
+                }
+                // Drain
+                try await group.waitForAll()
+            }
 
-                // Add the global deleteQueuedRequests operation
-                allOperations.append(sSelf.pool.deleteQueuedRequests())
-
-                // Wait for all operations to complete
-                Future.zip(allOperations)
-                    .on(success: { _ in
-                        // Clear any remaining global settings
-                        sSelf.clearGlobalSettings()
-                        promise.succeed(value: true)
-                        sSelf.postNotification()
-                    }, failure: { error in
-                        promise.fail(error: .ruuviPool(error))
-                    })
-
-            }, failure: { error in
-                promise.fail(error: .ruuviStorage(error))
-            })
-
-        return promise.future
+            clearGlobalSettings()
+            postNotification()
+            return true
+        } catch let error as RuuviStorageError {
+            throw RuuviServiceError.ruuviStorage(error)
+        } catch let error as RuuviPoolError {
+            throw RuuviServiceError.ruuviPool(error)
+        } catch {
+            throw error
+        }
     }
 }
 
 private extension RuuviServiceAuthImpl {
-    func cleanupSensorData(for sensor: RuuviTagSensor) {
+    func cleanupSensorData(for sensor: RuuviTagSensor) async {
         // Remove custom image
-        propertiesService.removeImage(for: sensor)
+        await propertiesService.removeImage(for: sensor)
 
         // Clean up sync state data
         if let macId = sensor.macId {

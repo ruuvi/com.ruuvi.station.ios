@@ -1,5 +1,4 @@
 import Foundation
-import Future
 import RuuviCloud
 import RuuviOntology
 import RuuviPool
@@ -22,52 +21,51 @@ public final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalib
         of type: OffsetCorrectionType,
         for sensor: RuuviTagSensor,
         lastOriginalRecord record: RuuviTagSensorRecord?
-    ) -> Future<SensorSettings, RuuviServiceError> {
-        let promise = Promise<SensorSettings, RuuviServiceError>()
+    ) async throws -> SensorSettings {
         if sensor.isCloud {
-            updateOnCloud(offset: offset, of: type, for: sensor).on()
+            Task { [cloud] in
+                _ = try? await updateOnCloud(offset: offset, of: type, for: sensor)
+            }
         }
-        pool.updateOffsetCorrection(
-            type: type,
-            with: offset,
-            of: sensor,
-            lastOriginalRecord: record
-        ).on(success: { settings in
-            promise.succeed(value: settings)
-        }, failure: { error in
-            promise.fail(error: .ruuviPool(error))
-        })
-        return promise.future
+        do {
+            return try await pool.updateOffsetCorrection(
+                type: type,
+                with: offset,
+                of: sensor,
+                lastOriginalRecord: record
+            )
+        } catch let error as RuuviPoolError {
+            throw RuuviServiceError.ruuviPool(error)
+        } catch { throw error }
     }
 
     private func updateOnCloud(
         offset: Double?,
         of type: OffsetCorrectionType,
         for sensor: RuuviTagSensor
-    ) -> Future<AnyRuuviTagSensor, RuuviCloudError> {
-        let cloudUpdate: Future<AnyRuuviTagSensor, RuuviCloudError> = switch type {
+    ) async throws -> AnyRuuviTagSensor {
+        switch type {
         case .temperature:
-            cloud.update(
+            return try await cloud.update(
                 temperatureOffset: offset ?? 0,
                 humidityOffset: nil,
                 pressureOffset: nil,
                 for: sensor
             )
         case .humidity:
-            cloud.update(
+            return try await cloud.update(
                 temperatureOffset: nil,
-                humidityOffset: (offset ?? 0) * 100, // fraction locally, % on cloud
+                humidityOffset: (offset ?? 0) * 100,
                 pressureOffset: nil,
                 for: sensor
             )
         case .pressure:
-            cloud.update(
+            return try await cloud.update(
                 temperatureOffset: nil,
                 humidityOffset: nil,
-                pressureOffset: (offset ?? 0) * 100, // hPA locally, Pa on cloud
+                pressureOffset: (offset ?? 0) * 100,
                 for: sensor
             )
         }
-        return cloudUpdate
     }
 }

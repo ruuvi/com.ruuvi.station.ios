@@ -127,24 +127,26 @@ extension BackgroundSelectionPresenter {
                     let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
                     if (ruuviTag.luid?.value != nil && ruuviTag.luid?.value == luid?.value)
                         || (ruuviTag.macId?.value != nil && ruuviTag.macId?.value == macId?.value) {
-                        sSelf.ruuviSensorPropertiesService.getImage(for: ruuviTag)
-                            .on(success: { [weak sSelf] image in
-                                guard let sSelf else { return }
-                                sSelf.viewModel.background.value = image
-                                var isLocalSensor: Bool = true
-                                if let isCloudSensor = sSelf.ruuviTag?.isCloudSensor {
-                                    isLocalSensor = !isCloudSensor
-                                }
-
-                                if isLocalSensor, !sSelf.didUploadBackground {
-                                    sSelf.didUploadBackground = true
-                                    if let weakView = sSelf.weakView as? BackgroundSelectionViewController {
-                                        weakView.viewShouldDismiss()
+                        Task { [weak sSelf] in
+                            guard let sSelf else { return }
+                            do {
+                                if let image = try await sSelf.getSensorImage(for: ruuviTag) {
+                                    sSelf.viewModel.background.value = image
+                                    var isLocalSensor: Bool = true
+                                    if let isCloudSensor = sSelf.ruuviTag?.isCloudSensor {
+                                        isLocalSensor = !isCloudSensor
+                                    }
+                                    if isLocalSensor, !sSelf.didUploadBackground {
+                                        sSelf.didUploadBackground = true
+                                        if let weakView = sSelf.weakView as? BackgroundSelectionViewController {
+                                            weakView.viewShouldDismiss()
+                                        }
                                     }
                                 }
-                            }, failure: { [weak sSelf] error in
-                                sSelf?.errorPresenter.present(error: error)
-                            })
+                            } catch {
+                                sSelf.errorPresenter.present(error: error)
+                            }
+                        }
                     }
                 }
             }
@@ -174,17 +176,33 @@ extension BackgroundSelectionPresenter: PhotoPickerPresenterDelegate {
 
     private func performPhotoUpload(with photo: UIImage, ruuviTag: RuuviTagSensor) {
         viewModel.isUploadingBackground.value = true
-        ruuviSensorPropertiesService.set(
-            image: photo,
-            for: ruuviTag,
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await self.setSensorImage(photo, for: ruuviTag)
+                self.viewModel.isUploadingBackground.value = false
+                self.viewModel.background.value = photo
+            } catch {
+                self.viewModel.isUploadingBackground.value = false
+                self.errorPresenter.present(error: error)
+            }
+        }
+    }
+}
+
+// MARK: - Async bridging
+private extension BackgroundSelectionPresenter {
+    func getSensorImage(for sensor: RuuviTagSensor) async throws -> UIImage? {
+        try await ruuviSensorPropertiesService.getImage(for: sensor)
+    }
+
+    func setSensorImage(_ image: UIImage, for sensor: RuuviTagSensor) async throws -> Bool {
+        _ = try await ruuviSensorPropertiesService.set(
+            image: image,
+            for: sensor,
             maxSize: maxSize,
             compressionQuality: CGFloat(settings.imageCompressionQuality)/100
-        ).on(success: { [weak self] _ in
-            self?.viewModel.isUploadingBackground.value = false
-            self?.viewModel.background.value = photo
-        }, failure: { [weak self] error in
-            self?.viewModel.isUploadingBackground.value = false
-            self?.errorPresenter.present(error: error)
-        })
+        )
+        return true
     }
 }

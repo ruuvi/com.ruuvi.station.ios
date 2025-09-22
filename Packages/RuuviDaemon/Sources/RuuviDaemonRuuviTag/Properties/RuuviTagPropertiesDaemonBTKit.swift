@@ -146,32 +146,40 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
             // either by pressing B or by upgrading firmware
             if let mac = idPersistence.mac(for: pair.device.uuid.luid) {
                 // tag is already saved to SQLite
-                ruuviPool.update(pair.ruuviTag
-                    .with(macId: mac)
-                    .with(version: pair.device.version))
-                    .on(failure: { [weak self] error in
-                        self?.post(error: .ruuviPool(error))
-                    })
+                Task { [weak self] in
+                    guard let self else { return }
+                    do {
+                        _ = try await self.ruuviPool.update(pair.ruuviTag
+                            .with(macId: mac)
+                            .with(version: pair.device.version))
+                    } catch {
+//                        self.post(error: .ruuviPool(error))
+                    }
+                }
             }
         } else if pair.ruuviTag.macId?.value != nil, pair.device.mac == nil {
             // this is the case when 2.5.9 tag is returning to data format 3 mode
             // but we have it in sqlite database already
             if let mac = idPersistence.mac(for: pair.device.uuid.luid),
                pair.device.version != pair.ruuviTag.version {
-                ruuviPool.update(pair.ruuviTag
-                    .with(macId: mac)
-                    .with(version: pair.device.version))
-                    .on(failure: { [weak self] error in
-                        self?.post(error: .ruuviPool(error))
-                    })
+                Task { [weak self] in
+                    guard let self else { return }
+                    do { _ = try await self.ruuviPool.update(pair.ruuviTag
+                        .with(macId: mac)
+                        .with(version: pair.device.version)) } catch {
+                            //                            self.post(error: .ruuviPool(error))
+                        }
+                }
             }
         } else {
             if pair.device.version != pair.ruuviTag.version {
-                ruuviPool.update(pair.ruuviTag
-                    .with(version: pair.device.version))
-                    .on(failure: { [weak self] error in
-                        self?.post(error: .ruuviPool(error))
-                    })
+                Task { [weak self] in
+                    guard let self else { return }
+                    do { _ = try await self.ruuviPool.update(pair.ruuviTag
+                        .with(version: pair.device.version)) } catch {
+//                            self.post(error: .ruuviPool(error))
+                        }
+                }
             }
         }
     }
@@ -186,58 +194,59 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
             }
             if observer.idPersistence.luid(for: macId)?.any != luid.any {
                 observer.idPersistence.set(luid: luid, for: macId)
-                observer.sqiltePersistence.readOne(macId.mac)
-                    .on { [weak observer] sensor in
-                        observer?.ruuviPool.update(sensor.with(luid: luid))
+                Task { [weak observer] in
+                    guard let observer else { return }
+                    if let sensor = try? await observer.sqiltePersistence.readOne(macId.mac) {
+                        _ = try? await observer.ruuviPool.update(sensor.with(luid: luid))
                     }
+                }
             }
         })
         scanTokens.append(scanToken)
     }
 
     private func scanRemoteSensor(ruuviTag: AnyRuuviTagSensor) {
-        guard let mac = ruuviTag.macId,
-              ruuviTag.luid == nil
-        else {
-            return
-        }
-        let scanToken = foreground.scan(self, closure: { [weak self] _, device in
-            guard let sSelf = self,
-                  let tag = device.ruuvi?.tag,
-                  mac.any == tag.macId?.any,
-                  ruuviTag.luid == nil || ruuviTag.serviceUUID == nil,
-                  !sSelf.processingUUIDs.contains(tag.uuid)
-            else {
-                return
-            }
-            sSelf.processingUUIDs.insert(tag.uuid)
-            let ruuviSensor = RuuviTagSensorStruct(
-                version: tag.version,
-                firmwareVersion: ruuviTag.firmwareVersion,
-                luid: device.uuid.luid,
-                macId: mac,
-                serviceUUID: device.serviceUUID,
-                isConnectable: device.isConnectable,
-                name: ruuviTag.name,
-                isClaimed: ruuviTag.isClaimed,
-                isOwner: ruuviTag.isOwner,
-                owner: ruuviTag.owner,
-                ownersPlan: ruuviTag.ownersPlan,
-                isCloudSensor: ruuviTag.isCloudSensor,
-                canShare: ruuviTag.canShare,
-                sharedTo: ruuviTag.sharedTo,
-                maxHistoryDays: ruuviTag.maxHistoryDays
-            )
-            sSelf.idPersistence.set(mac: mac, for: device.uuid.luid)
-            sSelf.idPersistence.set(luid: device.uuid.luid, for: mac)
-            sSelf.ruuviPool.update(ruuviSensor)
-                .on(failure: { [weak sSelf] error in
-                    sSelf?.post(error: .ruuviPool(error))
-                }, completion: { [weak sSelf] in
-                    sSelf?.processingUUIDs.remove(tag.uuid)
-                })
-        })
-        scanTokens.append(scanToken)
+//        guard let mac = ruuviTag.macId,
+//              ruuviTag.luid == nil
+//        else {
+//            return
+//        }
+//        let scanToken = foreground.scan(self, closure: { [weak self] _, device in
+//            guard let sSelf = self,
+//                  let tag = device.ruuvi?.tag,
+//                  mac.any == tag.macId?.any,
+//                  ruuviTag.luid == nil || ruuviTag.serviceUUID == nil,
+//                  !sSelf.processingUUIDs.contains(tag.uuid)
+//            else {
+//                return
+//            }
+//            sSelf.processingUUIDs.insert(tag.uuid)
+//            let ruuviSensor = RuuviTagSensorStruct(
+//                version: tag.version,
+//                firmwareVersion: ruuviTag.firmwareVersion,
+//                luid: device.uuid.luid,
+//                macId: mac,
+//                serviceUUID: device.serviceUUID,
+//                isConnectable: device.isConnectable,
+//                name: ruuviTag.name,
+//                isClaimed: ruuviTag.isClaimed,
+//                isOwner: ruuviTag.isOwner,
+//                owner: ruuviTag.owner,
+//                ownersPlan: ruuviTag.ownersPlan,
+//                isCloudSensor: ruuviTag.isCloudSensor,
+//                canShare: ruuviTag.canShare,
+//                sharedTo: ruuviTag.sharedTo,
+//                maxHistoryDays: ruuviTag.maxHistoryDays
+//            )
+//            sSelf.idPersistence.set(mac: mac, for: device.uuid.luid)
+//            sSelf.idPersistence.set(luid: device.uuid.luid, for: mac)
+//            Task { [weak sSelf] in
+//                guard let sSelf else { return }
+//                do { _ = try await sSelf.ruuviPool.update(ruuviSensor) } catch { sSelf.post(error: .ruuviPool(error)) }
+//                sSelf.processingUUIDs.remove(tag.uuid)
+//            }
+//        })
+//        scanTokens.append(scanToken)
     }
 
     private func post(error: RuuviDaemonError) {

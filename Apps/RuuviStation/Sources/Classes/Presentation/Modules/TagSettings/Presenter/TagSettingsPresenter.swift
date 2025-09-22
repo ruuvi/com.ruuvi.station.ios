@@ -1,6 +1,5 @@
 import BTKit
 import Foundation
-import Future
 import RuuviLocal
 // swiftlint:disable file_length cyclomatic_complexity
 import RuuviLocalization
@@ -270,10 +269,14 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
     }
 
     func viewDidChangeTag(name: String) {
-        ruuviSensorPropertiesService.set(name: name, for: ruuviTag)
-            .on(failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await ruuviSensorPropertiesService.set(name: name, for: ruuviTag)
+            } catch {
+                errorPresenter.present(error: error)
+            }
+        }
     }
 
     func viewDidTapOnMacAddress() {
@@ -530,19 +533,34 @@ extension TagSettingsPresenter: SensorRemovalModuleOutput {
         module.dismiss(completion: { [weak self] in
             guard let sSelf = self else { return }
             sSelf.removeTagAndCleanup()
-            sSelf.ruuviStorage.readAll().on(success: { [weak self] sensors in
-                if sensors.count == 0 {
-                    self?.router.dismissToRoot(completion: {
+            Task { [weak sSelf] in
+                guard let sSelf else { return }
+                do {
+                    let sensors = try await sSelf.ruuviStorage.readAll()
+                    if sensors.count == 0 {
+                        await MainActor.run {
+                            sSelf.router.dismissToRoot(completion: {
+                                sSelf.output?.tagSettingsDidDeleteTag(
+                                    module: sSelf, ruuviTag: ruuviTag
+                                )
+                            })
+                        }
+                    } else {
+                        await MainActor.run {
+                            sSelf.output?.tagSettingsDidDeleteTag(
+                                module: sSelf, ruuviTag: ruuviTag
+                            )
+                        }
+                    }
+                } catch {
+                    // In case of error reading all sensors, still notify deletion
+                    await MainActor.run {
                         sSelf.output?.tagSettingsDidDeleteTag(
                             module: sSelf, ruuviTag: ruuviTag
                         )
-                    })
-                } else {
-                    sSelf.output?.tagSettingsDidDeleteTag(
-                        module: sSelf, ruuviTag: ruuviTag
-                    )
+                    }
                 }
-            })
+            }
         })
     }
 
@@ -650,12 +668,17 @@ extension TagSettingsPresenter {
     private func syncTag() {
         viewModel.serviceUUID.value = ruuviTag.serviceUUID
 
-        ruuviSensorPropertiesService.getImage(for: ruuviTag)
-            .on(success: { [weak self] image in
-                self?.viewModel.background.value = image
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let image = try await ruuviSensorPropertiesService.getImage(for: ruuviTag)
+                await MainActor.run { [weak self] in
+                    self?.viewModel.background.value = image
+                }
+            } catch {
+                errorPresenter.present(error: error)
+            }
+        }
         viewModel.isAuthorized.value = ruuviUser.isAuthorized
 
         viewModel.canShareTag.value =
@@ -747,13 +770,19 @@ extension TagSettingsPresenter {
     }
 
     private func syncMaxShareCount() {
-        ruuviPool.readSensorSubscriptionSettings(
-            ruuviTag
-        ).on(success: { [weak self] subscription in
-            if let maxShares = subscription?.maxSharesPerSensor {
-                self?.view.maxShareCount = maxShares
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let subscription = try await ruuviPool.readSensorSubscriptionSettings(ruuviTag)
+                if let maxShares = subscription?.maxSharesPerSensor {
+                    await MainActor.run { [weak self] in
+                        self?.view.maxShareCount = maxShares
+                    }
+                }
+            } catch {
+                // Non-critical failure; ignore or log if logging service exists
             }
-        })
+        }
     }
 
     /// Sets the view model properties related to provided alert type.
@@ -1154,12 +1183,17 @@ extension TagSettingsPresenter {
                     let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
                     if (sSelf.ruuviTag.luid?.value != nil && sSelf.ruuviTag.luid?.value == luid?.value)
                         || (sSelf.ruuviTag.macId?.value != nil && sSelf.ruuviTag.macId?.value == macId?.value) {
-                        sSelf.ruuviSensorPropertiesService.getImage(for: sSelf.ruuviTag)
-                            .on(success: { [weak sSelf] image in
-                                sSelf?.viewModel.background.value = image
-                            }, failure: { [weak sSelf] error in
-                                sSelf?.errorPresenter.present(error: error)
-                            })
+                        Task { [weak sSelf] in
+                            guard let sSelf else { return }
+                            do {
+                                let image = try await sSelf.ruuviSensorPropertiesService.getImage(for: sSelf.ruuviTag)
+                                await MainActor.run { [weak sSelf] in
+                                    sSelf?.viewModel.background.value = image
+                                }
+                            } catch {
+                                sSelf.errorPresenter.present(error: error)
+                            }
+                        }
                     }
                 }
             }
@@ -1430,8 +1464,9 @@ extension TagSettingsPresenter {
     }
 
     private func checkLastSensorSettings() {
-        ruuviStorage.readSensorSettings(ruuviTag).on { settings in
-            self.sensorSettings = settings
+        Task { [weak self] in
+            guard let self else { return }
+            self.sensorSettings = try? await self.ruuviStorage.readSensorSettings(self.ruuviTag)
         }
     }
 
@@ -2855,13 +2890,13 @@ extension TagSettingsPresenter {
             ]
         ) { [weak self] _, result in
             guard let sSelf = self else { return }
-            switch result {
-            case let .success(version):
-                let tagWithVersion = sSelf.ruuviTag.with(firmwareVersion: version)
-                self?.ruuviPool.update(tagWithVersion)
-            default:
-                break
-            }
+//            switch result {
+//            case let .success(version):
+//                let tagWithVersion = sSelf.ruuviTag.with(firmwareVersion: version)
+//                self?.ruuviPool.update(tagWithVersion)
+//            default:
+//                break
+//            }
         }
     }
 

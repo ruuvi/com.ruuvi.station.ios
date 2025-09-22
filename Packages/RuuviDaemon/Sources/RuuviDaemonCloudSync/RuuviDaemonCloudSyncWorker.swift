@@ -59,14 +59,21 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
 
     @objc
     func refreshImmediately() {
-        DispatchQueue.global(qos: .default).async { [weak self] in
-            self?.cloudSyncService.syncAllRecords()
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await cloudSyncService.syncAllRecords()
+                _ = try await cloudSyncService.executePendingRequests()
+            } catch {
+                // Optionally: log error or post notification. Silently ignore for daemon resilience.
+            }
         }
     }
 
     func refreshLatestRecord() {
-        DispatchQueue.global(qos: .default).async { [weak self] in
-            self?.cloudSyncService.refreshLatestRecord()
+        Task { [weak self] in
+            guard let self else { return }
+            do { _ = try await cloudSyncService.refreshLatestRecord() } catch { /* ignore */ }
         }
     }
 

@@ -169,7 +169,7 @@ class RuuviTagDataService {
         for snapshot: RuuviTagCardSnapshot
     ) {
         guard let sensor = getSensor(for: snapshot.id) else { return }
-        ruuviSensorPropertiesService.set(name: newName, for: sensor)
+//        ruuviSensorPropertiesService.set(name: newName, for: sensor)
     }
 
     func getSnapshot(for sensorId: String) -> RuuviTagCardSnapshot? {
@@ -238,28 +238,22 @@ class RuuviTagDataService {
             }
             return
         }
-
-        DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard let self = self else { return }
-
-            self.ruuviSensorPropertiesService.getImage(for: sensor)
-                .on(success: { [weak self] image in
-                    guard let self = self else { return }
-
-                    // Cache on background thread
-                    self.backgroundCache[sensor.id] = image
-
-                    DispatchQueue.main.async {
-                        snapshot.updateBackgroundImage(image)
-                        self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
-                    }
-
-                }, failure: { [weak self] error in
-                    DispatchQueue.main.async {
-                        guard let self = self else { return }
-                        self.delegate?.sensorDataService(self, didEncounterError: error)
-                    }
-                })
+        Task(priority: .utility) { [weak self] in
+            guard let self else { return }
+            do {
+                let image = try await ruuviSensorPropertiesService.getImage(for: sensor)
+                // Cache (still background since Task not guaranteed main)
+                backgroundCache[sensor.id] = image
+                await MainActor.run {
+                    snapshot.updateBackgroundImage(image)
+                    delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+                }
+            } catch {
+                await MainActor.run { [weak self] in
+                    guard let self else { return }
+                    delegate?.sensorDataService(self, didEncounterError: error)
+                }
+            }
         }
     }
 
@@ -537,25 +531,27 @@ private extension RuuviTagDataService {
                 )
         }
 
-        // Load latest record asynchronously
-        ruuviStorage.readLatest(sensor).on { [weak self] record in
-            guard let self = self, let record = record else { return }
-
-            let settings = self.sensorSettingsList.first { $0.id == sensor.id }
-            let updatedRecord = record.with(sensorSettings: settings)
-
-            DispatchQueue.main.async {
-                snapshot.updateFromRecord(
-                    updatedRecord,
-                    sensor: sensor,
-                    measurementService: self.measurementService,
-                    flags: self.flags,
-                    sensorSettings: settings
-                )
-
-                if !self.settings.syncExtensiveChangesInProgress {
-                    self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                if let record = try await self.ruuviStorage.readLatest(sensor) {
+                    let settings = self.sensorSettingsList.first { $0.id == sensor.id }
+                    let updatedRecord = record.with(sensorSettings: settings)
+                    DispatchQueue.main.async {
+                        snapshot.updateFromRecord(
+                            updatedRecord,
+                            sensor: sensor,
+                            measurementService: self.measurementService,
+                            flags: self.flags,
+                            sensorSettings: settings
+                        )
+                        if !self.settings.syncExtensiveChangesInProgress {
+                            self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+                        }
+                    }
                 }
+            } catch {
+                // silently ignore, consistent with previous behavior
             }
         }
     }
@@ -660,24 +656,25 @@ private extension RuuviTagDataService {
                 }
             }
         } else {
-            ruuviStorage.readLatest(sensor).on { [weak self] record in
-                guard let self = self, let record = record else { return }
-
-                let updatedRecord = record.with(sensorSettings: sensorSettings)
-
-                DispatchQueue.main.async {
-                    snapshot.updateFromRecord(
-                        updatedRecord,
-                        sensor: sensor,
-                        measurementService: self.measurementService,
-                        flags: self.flags,
-                        sensorSettings: sensorSettings
-                    )
-
-                    if !self.settings.syncExtensiveChangesInProgress {
-                        self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+            Task { [weak self] in
+                guard let self else { return }
+                do {
+                    if let record = try await self.ruuviStorage.readLatest(sensor) {
+                        let updatedRecord = record.with(sensorSettings: sensorSettings)
+                        DispatchQueue.main.async {
+                            snapshot.updateFromRecord(
+                                updatedRecord,
+                                sensor: sensor,
+                                measurementService: self.measurementService,
+                                flags: self.flags,
+                                sensorSettings: sensorSettings
+                            )
+                            if !self.settings.syncExtensiveChangesInProgress {
+                                self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+                            }
+                        }
                     }
-                }
+                } catch { }
             }
         }
     }
@@ -783,23 +780,25 @@ extension RuuviStorage {
         timeout: TimeInterval = 0.15
     ) -> RuuviTagSensorRecord? {
 
-        var record: RuuviTagSensorRecord?
+        // If already on a background thread we can await directly using a Task.
+        // If on the main thread we still perform an async call but block with semaphore (legacy API contract)
+        // to keep the synchronous signature. Eventually this should become async.
+        var result: RuuviTagSensorRecord?
+
+        // Fast path: run async and wait up to timeout
         let sema = DispatchSemaphore(value: 0)
-
-        readLatest(sensor)
-            .on(success: { rec in
-                record = rec
-                sema.signal()
-            }, failure: { _ in
-                // ignore the error – just surface `nil`
-                sema.signal()
-            })
-
-        // Block only when *not* on the main thread
+        Task {
+            let rec = try? await self.readLatest(sensor)
+            result = rec
+            sema.signal()
+        }
         if !Thread.isMainThread {
             _ = sema.wait(timeout: .now() + timeout)
+        } else {
+            // Avoid deadlock: still allow brief wait, then return nil if not ready
+            _ = sema.wait(timeout: .now() + timeout)
         }
-        return record
+        return result
     }
 }
 

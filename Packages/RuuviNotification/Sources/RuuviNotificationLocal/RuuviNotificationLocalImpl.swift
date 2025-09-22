@@ -106,22 +106,24 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
             content.categoryIdentifier = sSelf.blast.id
             sSelf.setAlertBadge(for: content)
 
-            sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)).on(success: { [weak self] ruuviTag in
-                guard let sSelf = self else { return }
-                content.subtitle = ruuviTag.name
-                content.body = sSelf.ruuviAlertService.connectionDescription(for: uuid) ?? ""
-                let trigger = UNTimeIntervalNotificationTrigger(
-                    timeInterval: 0.1,
-                    repeats: false
-                )
-                let request = UNNotificationRequest(
-                    identifier: UUID().uuidString,
-                    content: content,
-                    trigger: trigger
-                )
-                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-                sSelf.setTriggered(for: Self.alertType(from: .connection), uuid: uuid)
-            })
+            Task { [weak sSelf] in
+                guard let sSelf else { return }
+                if let ruuviTag = try? await sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)) {
+                    content.subtitle = ruuviTag.name
+                    content.body = sSelf.ruuviAlertService.connectionDescription(for: uuid) ?? ""
+                    let trigger = UNTimeIntervalNotificationTrigger(
+                        timeInterval: 0.1,
+                        repeats: false
+                    )
+                    let request = UNNotificationRequest(
+                        identifier: UUID().uuidString,
+                        content: content,
+                        trigger: trigger
+                    )
+                    UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                    sSelf.setTriggered(for: Self.alertType(from: .connection), uuid: uuid)
+                }
+            }
         }
     }
 
@@ -149,22 +151,24 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
             content.title = title
             sSelf.setAlertBadge(for: content)
 
-            sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)).on(success: { [weak self] ruuviTag in
-                guard let sSelf = self else { return }
-                content.subtitle = ruuviTag.name
-                content.body = sSelf.ruuviAlertService.connectionDescription(for: uuid) ?? ""
-                let trigger = UNTimeIntervalNotificationTrigger(
-                    timeInterval: 0.1,
-                    repeats: false
-                )
-                let request = UNNotificationRequest(
-                    identifier: UUID().uuidString,
-                    content: content,
-                    trigger: trigger
-                )
-                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-                sSelf.setTriggered(for: Self.alertType(from: .connection), uuid: uuid)
-            })
+            Task { [weak sSelf] in
+                guard let sSelf else { return }
+                if let ruuviTag = try? await sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)) {
+                    content.subtitle = ruuviTag.name
+                    content.body = sSelf.ruuviAlertService.connectionDescription(for: uuid) ?? ""
+                    let trigger = UNTimeIntervalNotificationTrigger(
+                        timeInterval: 0.1,
+                        repeats: false
+                    )
+                    let request = UNNotificationRequest(
+                        identifier: UUID().uuidString,
+                        content: content,
+                        trigger: trigger
+                    )
+                    UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                    sSelf.setTriggered(for: Self.alertType(from: .connection), uuid: uuid)
+                }
+            }
         }
     }
 
@@ -192,22 +196,24 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
 
             content.title = title
 
-            sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)).on(success: { [weak self] ruuviTag in
-                guard let sSelf = self else { return }
-                content.subtitle = ruuviTag.name
-                content.body = sSelf.ruuviAlertService.movementDescription(for: uuid) ?? ""
-                let trigger = UNTimeIntervalNotificationTrigger(
-                    timeInterval: 0.1,
-                    repeats: false
-                )
-                let request = UNNotificationRequest(
-                    identifier: UUID().uuidString,
-                    content: content,
-                    trigger: trigger
-                )
-                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-                sSelf.setTriggered(for: Self.alertType(from: .movement), uuid: uuid)
-            })
+            Task { [weak sSelf] in
+                guard let sSelf else { return }
+                if let ruuviTag = try? await sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)) {
+                    content.subtitle = ruuviTag.name
+                    content.body = sSelf.ruuviAlertService.movementDescription(for: uuid) ?? ""
+                    let trigger = UNTimeIntervalNotificationTrigger(
+                        timeInterval: 0.1,
+                        repeats: false
+                    )
+                    let request = UNNotificationRequest(
+                        identifier: UUID().uuidString,
+                        content: content,
+                        trigger: trigger
+                    )
+                    UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                    sSelf.setTriggered(for: Self.alertType(from: .movement), uuid: uuid)
+                }
+            }
         }
     }
 }
@@ -286,20 +292,23 @@ public extension RuuviNotificationLocalImpl {
             }
             content.body = body
 
-            sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)).on(success: { [weak self] ruuviTag in
-                content.subtitle = ruuviTag.name
-                let trigger = UNTimeIntervalNotificationTrigger(
-                    timeInterval: 0.1,
-                    repeats: false
-                )
-                let request = UNNotificationRequest(
-                    identifier: uuid + type.rawValue,
-                    content: content,
-                    trigger: trigger
-                )
-                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-                self?.setTriggered(for: type, uuid: uuid)
-            })
+            Task { [weak sSelf] in
+                guard let sSelf else { return }
+                if let ruuviTag = try? await sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)) {
+                    content.subtitle = ruuviTag.name
+                    let trigger = UNTimeIntervalNotificationTrigger(
+                        timeInterval: 0.1,
+                        repeats: false
+                    )
+                    let request = UNNotificationRequest(
+                        identifier: uuid + type.rawValue,
+                        content: content,
+                        trigger: trigger
+                    )
+                    UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                    sSelf.setTriggered(for: type, uuid: uuid)
+                }
+            }
         }
     }
 }
@@ -528,13 +537,14 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         else {
             assertionFailure(); return
         }
-        ruuviStorage.readOne(uuid).on(success: { [weak self] ruuviTag in
-            self?.ruuviAlertService.mute(
+        Task { [weak self] in
+            guard let self, let ruuviTag = try? await ruuviStorage.readOne(uuid) else { return }
+            ruuviAlertService.mute(
                 type: type,
                 for: ruuviTag,
                 till: date
             )
-        })
+        }
     }
 
     private func mute(type: BlastNotificationType, uuid: String) {
@@ -542,13 +552,14 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         else {
             assertionFailure(); return
         }
-        ruuviStorage.readOne(uuid).on(success: { [weak self] ruuviTag in
-            self?.ruuviAlertService.mute(
+        Task { [weak self] in
+            guard let self, let ruuviTag = try? await ruuviStorage.readOne(uuid) else { return }
+            ruuviAlertService.mute(
                 type: Self.alertType(from: type),
                 for: ruuviTag,
                 till: date
             )
-        })
+        }
     }
 
     private func muteOffset() -> Date? {
@@ -564,8 +575,8 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         uuid: String,
         completion: @escaping (Bool) -> Void
     ) {
-        ruuviStorage.readOne(uuid).on(success: { [weak self] ruuviTag in
-            guard let self = self else { return }
+        Task { [weak self] in
+            guard let self, let ruuviTag = try? await ruuviStorage.readOne(uuid) else { return }
             if let triggeredAt = self.ruuviAlertService.triggeredAt(for: ruuviTag, of: type),
                let date = self.dateFormatter.date(from: triggeredAt) {
                 let intervalPassed = Date() > self.muteOffset(from: date)
@@ -583,7 +594,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                     completion: completion
                 )
             }
-        })
+        }
     }
 
     private func evaluateMutedState(
@@ -602,15 +613,15 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         for type: AlertType,
         uuid: String
     ) {
-        ruuviStorage.readOne(uuid).on(success: { [weak self] ruuviTag in
-            guard let sSelf = self else { return }
-            sSelf.ruuviAlertService.trigger(
+        Task { [weak self] in
+            guard let self, let ruuviTag = try? await ruuviStorage.readOne(uuid) else { return }
+            ruuviAlertService.trigger(
                 type: type,
                 trigerred: true,
-                trigerredAt: sSelf.dateFormatter.string(from: Date()),
+                trigerredAt: dateFormatter.string(from: Date()),
                 for: ruuviTag
             )
-        })
+        }
     }
 
     /// Limit alert notification settings prevents new alerts within one hour
@@ -646,7 +657,11 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         for uuid: String,
         completion: @escaping (AnyRuuviTagSensor) -> Void
     ) {
-        ruuviStorage.readOne(uuid).on(success: completion)
+        Task {
+            if let tag = try? await ruuviStorage.readOne(uuid) {
+                completion(tag)
+            }
+        }
     }
 }
 

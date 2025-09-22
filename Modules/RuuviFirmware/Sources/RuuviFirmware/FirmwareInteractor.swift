@@ -90,9 +90,8 @@ final class FirmwareInteractor {
             .eraseToAnyPublisher()
     }
 
-    func serveCurrentRelease(uuid: String) -> Future<CurrentRelease, Error> {
-        Future { [weak self] promise in
-            guard let self else { return }
+    func serveCurrentRelease(uuid: String) async throws -> CurrentRelease {
+        try await withCheckedThrowingContinuation { continuation in
             background.services.gatt.firmwareRevision(
                 for: self,
                 uuid: uuid,
@@ -103,10 +102,9 @@ final class FirmwareInteractor {
             ) { _, result in
                 switch result {
                 case let .success(version):
-                    let currentRelease = CurrentRelease(version: version)
-                    promise(.success(currentRelease))
+                    continuation.resume(returning: CurrentRelease(version: version))
                 case let .failure(error):
-                    promise(.failure(error))
+                    continuation.resume(throwing: error)
                 }
             }
         }
@@ -166,21 +164,19 @@ final class FirmwareInteractor {
             .eraseToAnyPublisher()
     }
 
-    func listen() -> Future<String, Never> {
-        Future { [weak self] promise in
-            guard let self else { return }
+    func listen() async -> String {
+        await withCheckedContinuation { continuation in
             ruuviDFU.scan(self, includeScanServices: false) { _, device in
-                promise(.success(device.uuid))
+                continuation.resume(returning: device.uuid)
             }
         }
     }
 
-    func observeLost(uuid: String) -> Future<String, Never> {
-        Future { [weak self] promise in
-            guard let self else { return }
+    func observeLost(uuid: String) -> AsyncStream<String> {
+        AsyncStream { continuation in
             ruuviDFU.lost(self, closure: { _, device in
                 if device.uuid == uuid {
-                    promise(.success(uuid))
+                    continuation.yield(uuid)
                 }
             })
         }
@@ -213,5 +209,50 @@ final class FirmwareInteractor {
             ).eraseToAnyPublisher()
         }
         return ruuviDFU.flashFirmware(uuid: uuid, with: firmware).eraseToAnyPublisher()
+    }
+}
+
+// MARK: - Bridging helpers (temporary) for existing Combine consumers
+extension FirmwareInteractor {
+    func serveCurrentReleasePublisher(uuid: String) -> AnyPublisher<CurrentRelease, Error> {
+        Deferred { [weak self] in
+            Future { promise in
+                guard let self else { return }
+                Task {
+                    do {
+                        let current = try await self.serveCurrentRelease(uuid: uuid)
+                        promise(.success(current))
+                    } catch {
+                        promise(.failure(error))
+                    }
+                }
+            }
+        }.eraseToAnyPublisher()
+    }
+
+    func listenPublisher() -> AnyPublisher<String, Never> {
+        Deferred { [weak self] in
+            Future { promise in
+                guard let self else { return }
+                Task {
+                    let uuid = await self.listen()
+                    promise(.success(uuid))
+                }
+            }
+        }.eraseToAnyPublisher()
+    }
+
+    func observeLostPublisher(uuid: String) -> AnyPublisher<String, Never> {
+        let subject = PassthroughSubject<String, Never>()
+        Task { [weak self] in
+            guard let self else { return }
+            for await value in self.observeLost(uuid: uuid) {
+                subject.send(value)
+                // Keep streaming; remove break if multiple events desired
+                break
+            }
+            subject.send(completion: .finished)
+        }
+        return subject.eraseToAnyPublisher()
     }
 }

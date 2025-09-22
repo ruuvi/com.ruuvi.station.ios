@@ -20,10 +20,14 @@ class RuuviTagDataPruningOperation: AsyncOperation {
             value: -offset,
             to: Date()
         ) ?? Date()
-        ruuviPool.deleteAllRecords(id, before: date).on(failure: { error in
-            print(error.localizedDescription)
-        }, completion: {
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await ruuviPool.deleteAllRecords(id, before: date)
+            } catch {
+                print("[DataPruningOperation] deleteAllRecords failed: \(error)")
+            }
             self.state = .finished
-        })
+        }
     }
 }

@@ -2,7 +2,7 @@ import BTKit
 import DGCharts
 import CoreBluetooth
 import Foundation
-import Future
+// Removed Future dependency after async/await migration of interactor
 import RuuviLocal
 // swiftlint:disable file_length
 import RuuviLocalization
@@ -216,26 +216,27 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
             return
         }
         isSyncing = true
-        let op = interactor.syncRecords { [weak self] progress in
-            DispatchQueue.main.async { [weak self] in
-                guard let syncing = self?.isSyncing, syncing
-                else {
-                    self?.view?.setSync(progress: nil, for: viewModel)
-                    return
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                try await interactor.syncRecords { [weak self] progress in
+                    DispatchQueue.main.async { [weak self] in
+                        guard let syncing = self?.isSyncing, syncing else {
+                            self?.view?.setSync(progress: nil, for: viewModel)
+                            return
+                        }
+                        self?.view?.setSync(progress: progress, for: viewModel)
+                    }
                 }
-                self?.view?.setSync(progress: progress, for: viewModel)
+                self.view?.setSync(progress: nil, for: viewModel)
+                self.interactor.restartObservingData()
+            } catch {
+                self.view?.setSync(progress: nil, for: viewModel)
+                self.view?.showFailedToSyncIn()
             }
+            self.view?.setSync(progress: nil, for: viewModel)
+            self.isSyncing = false
         }
-        op.on(success: { [weak self] _ in
-            self?.view?.setSync(progress: nil, for: viewModel)
-            self?.interactor.restartObservingData()
-        }, failure: { [weak self] _ in
-            self?.view?.setSync(progress: nil, for: viewModel)
-            self?.view?.showFailedToSyncIn()
-        }, completion: { [weak self] in
-            self?.view?.setSync(progress: nil, for: viewModel)
-            self?.isSyncing = false
-        })
     }
 
     func viewDidTriggerStopSync(for _: TagChartsViewModel) {
@@ -248,12 +249,17 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
 
     func viewDidConfirmToClear(for _: TagChartsViewModel) {
         activityPresenter.show(with: .loading(message: nil))
-        interactor.deleteAllRecords(for: ruuviTag)
-            .on(failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            }, completion: { [weak self] in
-                self?.activityPresenter.dismiss(immediately: true)
-            })
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                try await interactor.deleteAllRecords(for: ruuviTag)
+            } catch let ruError as RUError {
+                errorPresenter.present(error: ruError)
+            } catch {
+                errorPresenter.present(error: RUError.unexpected(.callbackErrorAndResultAreNil))
+            }
+            activityPresenter.dismiss(immediately: true)
+        }
     }
 
     func viewDidConfirmAbortSync(dismiss: Bool) {
@@ -269,34 +275,30 @@ extension TagChartsViewPresenter: TagChartsViewOutput {
 
     func viewDidTapOnExportCSV() {
         activityPresenter.show(with: .loading(message: nil))
-        exportService.csvLog(
-            for: ruuviTag.id,
-            version: ruuviTag.version,
-            settings: sensorSettings
-        )
-        .on(success: { [weak self] url in
-            self?.view?.showExportSheet(with: url)
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        }, completion: { [weak self] in
-            self?.activityPresenter.dismiss(immediately: true)
-        })
+        Task { [weak self] in
+            guard let self else { return }
+            defer { self.activityPresenter.dismiss(immediately: true) }
+            do {
+                let url = try await self.csvLog(for: self.ruuviTag.id, version: self.ruuviTag.version, settings: self.sensorSettings)
+                self.view?.showExportSheet(with: url)
+            } catch {
+                self.errorPresenter.present(error: error)
+            }
+        }
     }
 
     func viewDidTapOnExportXLSX() {
         activityPresenter.show(with: .loading(message: nil))
-        exportService.xlsxLog(
-            for: ruuviTag.id,
-            version: ruuviTag.version,
-            settings: sensorSettings
-        )
-        .on(success: { [weak self] url in
-            self?.view?.showExportSheet(with: url)
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        }, completion: { [weak self] in
-            self?.activityPresenter.dismiss(immediately: true)
-        })
+        Task { [weak self] in
+            guard let self else { return }
+            defer { self.activityPresenter.dismiss(immediately: true) }
+            do {
+                let url = try await self.xlsxLog(for: self.ruuviTag.id, version: self.ruuviTag.version, settings: self.sensorSettings)
+                self.view?.showExportSheet(with: url)
+            } catch {
+                self.errorPresenter.present(error: error)
+            }
+        }
     }
 
     func viewDidSelectChartHistoryLength(hours: Int) {
@@ -476,18 +478,23 @@ extension TagChartsViewPresenter {
 
     private func syncViewModel() {
         let viewModel = TagChartsViewModel(ruuviTag)
-        ruuviSensorPropertiesService.getImage(for: ruuviTag)
-            .on(success: { image in
-                viewModel.background.value = image
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                if let image = try await self.getSensorImage(for: self.ruuviTag) {
+                    viewModel.background.value = image
+                }
+            } catch {
+                self.errorPresenter.present(error: error)
+            }
+        }
         if let luid = ruuviTag.luid {
             viewModel.name.value = ruuviTag.name
             viewModel.isConnected.value = background.isConnected(uuid: luid.value)
-            // get lastest sensorSettings
-            ruuviStorage.readSensorSettings(ruuviTag).on { settings in
-                self.sensorSettings = settings
+            // get latest sensorSettings
+            Task { [weak self] in
+                guard let self else { return }
+                self.sensorSettings = try? await self.ruuviStorage.readSensorSettings(ruuviTag)
             }
         } else if ruuviTag.macId != nil {
             viewModel.isConnected.value = false
@@ -499,11 +506,14 @@ extension TagChartsViewPresenter {
     }
 
     private func stopGattSync() {
-        interactor.stopSyncRecords()
-            .on(success: { [weak self] _ in
-                guard self?.view != nil else { return }
-                self?.view?.setSyncProgressViewHidden()
-            })
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await self.stopSyncRecords()
+                guard self.view != nil else { return }
+                self.view?.setSyncProgressViewHidden()
+            } catch { /* ignore */ }
+        }
     }
 
     private func startObservingRuuviTag() {
@@ -637,17 +647,38 @@ extension TagChartsViewPresenter {
                     let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
                     let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
                     if sSelf.viewModel.uuid.value == luid?.value || sSelf.viewModel.mac.value == macId?.value {
-                        sSelf.ruuviSensorPropertiesService.getImage(for: sSelf.ruuviTag)
-                            .on(success: { [weak sSelf] image in
-                                sSelf?.viewModel.background.value = image
-                            }, failure: { [weak sSelf] error in
-                                sSelf?.errorPresenter.present(error: error)
-                            })
+                        Task { [weak sSelf] in
+                            guard let sSelf else { return }
+                            do {
+                                if let image = try await sSelf.getSensorImage(for: sSelf.ruuviTag) {
+                                    sSelf.viewModel.background.value = image
+                                }
+                            } catch {
+                                sSelf.errorPresenter.present(error: error)
+                            }
+                        }
                     }
                 }
             }
     }
 
+
+// MARK: - Async bridging (converted to direct async calls)
+    private func csvLog(for id: String, version: Int, settings: SensorSettings?) async throws -> URL {
+        try await exportService.csvLog(for: id, version: version, settings: settings)
+    }
+
+    private func xlsxLog(for id: String, version: Int, settings: SensorSettings?) async throws -> URL {
+        try await exportService.xlsxLog(for: id, version: version, settings: settings)
+    }
+
+    private func getSensorImage(for sensor: RuuviTagSensor) async throws -> UIImage? {
+        try await ruuviSensorPropertiesService.getImage(for: sensor)
+    }
+
+    private func stopSyncRecords() async throws -> Bool {
+        try await interactor.stopSyncRecords()
+    }
     private func startObservingBluetoothState() {
         stateToken = foreground.state(self, closure: { [weak self] observer, state in
             guard let sSelf = self else { return }

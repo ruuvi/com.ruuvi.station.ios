@@ -46,12 +46,19 @@ extension SettingsPresenter: SettingsViewOutput {
             )
 
         view.experimentalFunctionsEnabled = settings.experimentalFeaturesEnabled
-        ruuviStorage.readAll().on(success: { [weak self] tags in
-            guard let sSelf = self else { return }
-            let cloudTagsCount = tags.filter { $0.isOwner || $0.isCloud }.count
-            let cloudModeVisible = sSelf.ruuviUser.isAuthorized && cloudTagsCount > 0
-            sSelf.view.cloudModeVisible = cloudModeVisible
-        })
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let tags = try await ruuviStorage.readAll()
+                let cloudTagsCount = tags.filter { $0.isOwner || $0.isCloud }.count
+                let cloudModeVisible = ruuviUser.isAuthorized && cloudTagsCount > 0
+                await MainActor.run { [weak self] in
+                    self?.view.cloudModeVisible = cloudModeVisible
+                }
+            } catch {
+                // Non-critical; ignore or log
+            }
+        }
     }
 
     func viewDidTapTemperatureUnit() {

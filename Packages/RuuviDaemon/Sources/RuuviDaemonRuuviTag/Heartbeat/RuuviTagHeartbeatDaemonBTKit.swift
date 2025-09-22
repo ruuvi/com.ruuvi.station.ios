@@ -67,6 +67,7 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
         self.settings = settings
         self.titles = titles
         super.init()
+        startObservingRuuviTagsIfNeeded()
         connectionAddedToken = NotificationCenter
             .default
             .addObserver(
@@ -172,29 +173,19 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
     }
 
     public func start() {
-        start { [weak self] in
-            self?.invalidateTokens()
-            self?.ruuviTagsToken = self?.ruuviReactor.observe { [weak self] change in
-                guard let sSelf = self else { return }
-                switch change {
-                case let .initial(ruuviTags):
-                    sSelf.ruuviTags = ruuviTags
-                    sSelf.handleRuuviTagsChange()
-                case let .update(ruuviTag):
-                    if let index = sSelf.ruuviTags.firstIndex(of: ruuviTag) {
-                        sSelf.ruuviTags[index] = ruuviTag
-                    }
-                    sSelf.handleRuuviTagsChange()
-                case let .insert(ruuviTag):
-                    sSelf.ruuviTags.append(ruuviTag)
-                    sSelf.handleRuuviTagsChange()
-                case let .delete(ruuviTag):
-                    sSelf.ruuviTags.removeAll(where: { $0.id == ruuviTag.id })
-                    sSelf.handleRuuviTagsChange()
-                case let .error(error):
-                    sSelf.post(error: .ruuviReactor(error))
-                }
-            }
+        restart()
+    }
+
+    public func restart() {
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let sensors = try await ruuviStorage.readAll()
+                self.ruuviTags = sensors
+                self.handleRuuviTagsChange()
+                self.restartObserving()
+                self.startObservingRuuviTagsIfNeeded()
+            } catch { /* ignore */ }
         }
     }
 
@@ -206,14 +197,6 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
             waitUntilDone: false,
             modes: [RunLoop.Mode.default.rawValue]
         )
-    }
-
-    public func restart() {
-        ruuviStorage.readAll().on(success: { [weak self] sensors in
-            self?.ruuviTags = sensors
-            self?.handleRuuviTagsChange()
-            self?.restartObserving()
-        })
     }
 
     @objc private func stopDaemon() {
@@ -383,25 +366,25 @@ extension RuuviTagHeartbeatDaemonBTKit {
     ) {
         // Do not store advertisement for history only if it is v6 firmware and legacy advertisement.
         guard !uuid.isEmpty else { return }
-        if ruuviTag.version == 0x06 {
-            createLastRecord(observer: observer, ruuviTag: ruuviTag, uuid: uuid, source: source)
-        } else {
-            observer.ruuviPool.create(ruuviTag.with(source: source)).on(
-                success: { [weak self] _ in
-                    self?.createLastRecord(observer: observer, ruuviTag: ruuviTag, uuid: uuid, source: source)
-                })
+        Task { [weak observer] in
+            guard let observer else { return }
+            if ruuviTag.version != 0x06 {
+                _ = try? await observer.ruuviPool.create(ruuviTag.with(source: source))
+            }
+            await observer.createLastRecord(observer: observer, ruuviTag: ruuviTag, uuid: uuid, source: source)
         }
     }
 
     /// Creates the last record for a RuuviTag.
+    @discardableResult
     private func createLastRecord(
         observer: RuuviTagHeartbeatDaemonBTKit,
         ruuviTag: RuuviTag,
         uuid: String,
         source: RuuviTagSensorRecordSource
-    ) {
+    ) async -> Bool {
         let record = ruuviTag.with(source: source)
-        observer.ruuviPool.createLast(record)
+        return (try? await observer.ruuviPool.createLast(record)) ?? false
     }
 }
 
@@ -420,14 +403,39 @@ extension RuuviTagHeartbeatDaemonBTKit {
         }
         sensorSettingsList.removeAll()
         ruuviTags.forEach { ruuviTag in
-            ruuviStorage.readSensorSettings(ruuviTag).on { [weak self] sensorSettings in
-                if let sensorSettings {
-                    self?.sensorSettingsList.append(sensorSettings)
+            Task { [weak self] in
+                guard let self else { return }
+                if let sensorSettings = try? await ruuviStorage.readSensorSettings(ruuviTag) {
+                    self.sensorSettingsList.append(sensorSettings)
                 }
             }
         }
         restartSensorSettingsObservers()
         restartObserving()
+    }
+
+    /// Starts observing changes to the list of Ruuvi tags via RuuviReactor.
+    private func startObservingRuuviTagsIfNeeded() {
+        guard ruuviTagsToken == nil else { return }
+        ruuviTagsToken = ruuviReactor.observe { [weak self] change in
+            guard let self else { return }
+            switch change {
+            case let .initial(tags):
+                self.ruuviTags = tags
+                self.handleRuuviTagsChange()
+            case let .update(tag):
+                if let i = self.ruuviTags.firstIndex(of: tag) { self.ruuviTags[i] = tag }
+                self.handleRuuviTagsChange()
+            case let .insert(tag):
+                self.ruuviTags.append(tag)
+                self.handleRuuviTagsChange()
+            case let .delete(tag):
+                self.ruuviTags.removeAll { $0.id == tag.id }
+                self.handleRuuviTagsChange()
+            case let .error(error):
+                self.post(error: .ruuviReactor(error))
+            }
+        }
     }
 
     @objc private func connect(uuid: String) {

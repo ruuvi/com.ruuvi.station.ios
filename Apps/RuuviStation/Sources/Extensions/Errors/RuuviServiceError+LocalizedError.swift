@@ -35,6 +35,8 @@ extension RuuviServiceError: LocalizedError {
             RuuviLocalization.RuuviServiceError.failedToGetJpegRepresentation
         case .isAlreadySyncingLogsWithThisTag:
             RuuviLocalization.ExpectedError.isAlreadySyncingLogsWithThisTag
+        default:
+            nil
         }
     }
 }

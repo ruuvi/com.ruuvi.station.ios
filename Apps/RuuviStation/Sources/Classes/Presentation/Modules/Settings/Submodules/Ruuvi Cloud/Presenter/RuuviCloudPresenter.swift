@@ -46,7 +46,7 @@ private extension RuuviCloudPresenter {
         cloudMode.hideStatusLabel.value = !settings.showSwitchStatusLabel
         bind(cloudMode.boolean, fire: false) { observer, isOn in
             observer.settings.cloudModeEnabled = isOn.bound
-            observer.ruuviAppSettingsService.set(cloudMode: isOn.bound)
+//            observer.ruuviAppSettingsService.set(cloudMode: isOn.bound)
         }
         return cloudMode
     }

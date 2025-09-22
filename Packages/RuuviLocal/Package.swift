@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "RuuviLocal",
-    platforms: [.macOS(.v10_15), .iOS(.v14)],
+    platforms: [.macOS(.v10_15), .iOS(.v16)],
     products: [
         .library(
             name: "RuuviLocal",
@@ -17,7 +17,6 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
         .package(path: "../RuuviOntology"),
     ],
     targets: [
@@ -25,7 +24,6 @@ let package = Package(
             name: "RuuviLocal",
             dependencies: [
                 "RuuviOntology",
-                "Future",
             ]
         ),
         .target(

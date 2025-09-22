@@ -1,6 +1,5 @@
 import BTKit
 import Foundation
-import Future
 import RuuviOntology
 import RuuviPool
 
@@ -22,7 +21,6 @@ public final class GATTServiceQueue: GATTService {
         return queue
     }()
 
-    @discardableResult
     // swiftlint:disable function_parameter_count
     public func syncLogs(
         uuid: String,
@@ -33,11 +31,11 @@ public final class GATTServiceQueue: GATTService {
         progress: ((BTServiceProgress) -> Void)?,
         connectionTimeout: TimeInterval?,
         serviceTimeout: TimeInterval?
-    ) -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
+    ) async throws -> Bool {
         if isSyncingLogs(with: uuid) {
-            promise.fail(error: .isAlreadySyncingLogsWithThisTag)
-        } else {
+            throw RuuviServiceError.isAlreadySyncingLogsWithThisTag
+        }
+        return try await withCheckedThrowingContinuation { continuation in
             let operation = RuuviTagReadLogsOperation(
                 uuid: uuid,
                 mac: mac,
@@ -52,34 +50,29 @@ public final class GATTServiceQueue: GATTService {
             )
             operation.completionBlock = { [unowned operation] in
                 if let error = operation.error {
-                    promise.fail(error: error)
+                    continuation.resume(throwing: error)
                 } else {
-                    promise.succeed(value: true)
+                    continuation.resume(returning: true)
                 }
             }
             queue.addOperation(operation)
         }
-        return promise.future
     }
-
     // swiftlint:enable function_parameter_count
 
     public func isSyncingLogs(with uuid: String) -> Bool {
         queue.operations.contains(where: { ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid })
     }
 
-    @discardableResult
-    public func stopGattSync(for uuid: String) -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
-        if isSyncingLogs(with: uuid) {
-            if let operation = queue.operations.filter({ ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid }).first {
-                if let queueOperation = operation as? RuuviTagReadLogsOperation {
-                    queueOperation.stopSync()
-                }
-                operation.cancel()
-                promise.succeed(value: operation.isCancelled)
-            }
+    public func stopGattSync(for uuid: String) async throws -> Bool {
+        guard isSyncingLogs(with: uuid) else { return false }
+        guard let operation = queue.operations.first(where: { ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid }) else {
+            return false
         }
-        return promise.future
+        if let queueOperation = operation as? RuuviTagReadLogsOperation {
+            queueOperation.stopSync()
+        }
+        operation.cancel()
+        return operation.isCancelled
     }
 }

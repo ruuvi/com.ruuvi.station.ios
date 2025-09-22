@@ -70,15 +70,17 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
                         .with(source: .log)
                         .any
                     }
-                    let opLogs = observer.ruuviPool.create(records)
-                    opLogs.on(success: { _ in
-                        observer.post(logs: logs, with: observer.uuid)
+                    Task { [weak observer] in
+                        guard let observer else { return }
+                        do {
+                            _ = try await observer.ruuviPool.create(records)
+                            observer.post(logs: logs, with: observer.uuid)
+                        } catch {
+                            observer.post(error: error, with: observer.uuid)
+//                            observer.error = .ruuviPool(error)
+                        }
                         observer.state = .finished
-                    }, failure: { error in
-                        observer.post(error: error, with: observer.uuid)
-                        observer.error = .ruuviPool(error)
-                        observer.state = .finished
-                    })
+                    }
                 }
             case let .failure(error):
                 observer.post(error: error, with: observer.uuid)

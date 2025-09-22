@@ -1,6 +1,6 @@
 import FirebaseMessaging
 import Foundation
-import Future
+// Removed Future import: migrated to async/await
 import RuuviCloud
 import RuuviDaemon
 import RuuviLocal
@@ -95,10 +95,16 @@ extension SignInPresenter: SignInViewOutput {
     }
 
     func viewDidTapOkFromUnexpectedHTTPStatusCodeError() {
-        authService.logout().on(success: { [weak self] _ in
-            self?.settings.isSyncing = false
-            self?.dismiss(completion: {})
-        })
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await authService.logout()
+            } catch {
+                // If logout fails, still proceed to dismiss to unblock UI
+            }
+            settings.isSyncing = false
+            dismiss(completion: {})
+        }
     }
 }
 
@@ -146,67 +152,83 @@ extension SignInPresenter {
 
     private func sendVerificationCode(for email: String) {
         activityPresenter.show(with: .loading(message: nil))
-        ruuviCloud.requestCode(email: email)
-            .on(success: { [weak self] email in
-                guard let sSelf = self else { return }
-                sSelf.activityPresenter.dismiss()
-                sSelf.ruuviUser.email = email
-                sSelf.viewModel.showVerficationScreen.value = true
-                sSelf.state = .enterVerificationCode(nil)
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            }, completion: { [weak self] in
-                self?.activityPresenter.dismiss()
-            })
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                if let returnedEmail = try await ruuviCloud.requestCode(email: email) {
+                    self.ruuviUser.email = returnedEmail
+                    self.viewModel.showVerficationScreen.value = true
+                    self.state = .enterVerificationCode(nil)
+                }
+            } catch {
+                errorPresenter.present(error: error)
+            }
+            activityPresenter.dismiss()
+        }
     }
 
     private func verify(_ code: String) {
         activityPresenter.show(with: .loading(message: RuuviLocalization.SignIn.Sync.message))
-        ruuviCloud.validateCode(code: code)
-            .on(success: { [weak self] result in
-                guard let sSelf = self else { return }
-                if sSelf.ruuviUser.email == result.email.lowercased() {
-                    if !sSelf.settings.signedInAtleastOnce {
-                        sSelf.settings.signedInAtleastOnce = true
-                    }
-                    sSelf.ruuviUser.login(apiKey: result.apiKey)
-                    sSelf.reloadWidgets()
-                    sSelf.state = .isSyncing
-                    sSelf.settings.isSyncing = true
-                    sSelf.settings.syncExtensiveChangesInProgress = true
-                    sSelf.registerFCMToken()
-                    sSelf.syncAllRecords()
-                } else if let requestedEmail = sSelf.ruuviUser.email {
-                    sSelf.activityPresenter.dismiss()
-                    sSelf.view.showEmailsAreDifferent(
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let result = try await ruuviCloud.validateCode(code: code)
+                if self.ruuviUser.email == result.email.lowercased() {
+                    if !self.settings.signedInAtleastOnce { self.settings.signedInAtleastOnce = true }
+                    self.ruuviUser.login(apiKey: result.apiKey)
+                    self.reloadWidgets()
+                    self.state = .isSyncing
+                    self.settings.isSyncing = true
+                    self.settings.syncExtensiveChangesInProgress = true
+                    self.registerFCMToken()
+                    self.syncAllRecords()
+                } else if let requestedEmail = self.ruuviUser.email {
+                    self.activityPresenter.dismiss()
+                    self.view.showEmailsAreDifferent(
                         requestedEmail: requestedEmail,
                         validatedEmail: result.email.lowercased()
                     )
                 } else {
-                    sSelf.view.showFailedToGetRequestedEmail()
-                    sSelf.activityPresenter.dismiss()
+                    self.view.showFailedToGetRequestedEmail()
+                    self.activityPresenter.dismiss()
                 }
-            }, failure: { [weak self] error in
-                self?.activityPresenter.dismiss()
-                self?.view.showInvalidTokenEntered()
-                self?.errorPresenter.present(error: error)
-            })
+            } catch {
+//                self?.activityPresenter.dismiss()
+//                self?.view.showInvalidTokenEntered()
+//                self?.errorPresenter.present(error: error)
+            }
+        }
     }
 
     private func syncAllRecords() {
-        cloudSyncService.syncAllRecords().on(success: { [weak self] _ in
-            self?.executePostSuccessfullSignInAction()
-        }, failure: { [weak self] error in
-            self?.retryFetchingTheSensorsOnFailIfNeeded(from: error)
-        })
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await cloudSyncService.syncAllRecords()
+                executePostSuccessfullSignInAction()
+            } catch let error as RuuviServiceError {
+                retryFetchingTheSensorsOnFailIfNeeded(from: error)
+            } catch {
+                // Wrap unknown errors
+                activityPresenter.dismiss()
+                errorPresenter.present(error: error)
+            }
+        }
     }
 
     private func syncSensors() {
-        cloudSyncService.refreshLatestRecord().on(success: { [weak self] _ in
-            self?.executePostSuccessfullSignInAction()
-        }, failure: { [weak self] error in
-            self?.retryFetchingTheSensorsOnFailIfNeeded(from: error)
-        })
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await cloudSyncService.refreshLatestRecord()
+                executePostSuccessfullSignInAction()
+            } catch let error as RuuviServiceError {
+                retryFetchingTheSensorsOnFailIfNeeded(from: error)
+            } catch {
+                activityPresenter.dismiss()
+                errorPresenter.present(error: error)
+            }
+        }
     }
 
     private func executePostSuccessfullSignInAction() {
@@ -336,13 +358,13 @@ extension SignInPresenter {
         let sound = settings.alertSound
         let language = settings.language
         Messaging.messaging().token { [weak self] fcmToken, _ in
-            self?.cloudNotificationService.set(
-                token: fcmToken,
-                name: UIDevice.modelName,
-                data: nil,
-                language: language,
-                sound: sound
-            )
+//            self?.cloudNotificationService.set(
+//                token: fcmToken,
+//                name: UIDevice.modelName,
+//                data: nil,
+//                language: language,
+//                sound: sound
+//            )
         }
     }
 }

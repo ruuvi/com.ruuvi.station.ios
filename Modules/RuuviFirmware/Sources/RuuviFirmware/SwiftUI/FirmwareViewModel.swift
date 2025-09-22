@@ -97,7 +97,7 @@ extension FirmwareViewModel {
                     .map(Event.onServed)
                     .eraseToAnyPublisher()
             } else {
-                return interactor.serveCurrentRelease(uuid: uuid)
+                return interactor.serveCurrentReleasePublisher(uuid: uuid)
                     .receive(on: RunLoop.main)
                     .map(Event.onServed)
                     .catch { _ in Just(Event.onServed(nil)) }
@@ -135,7 +135,7 @@ extension FirmwareViewModel {
             else {
                 return Empty().eraseToAnyPublisher()
             }
-            return sSelf.interactor.listen()
+            return sSelf.interactor.listenPublisher()
                 .receive(on: RunLoop.main)
                 .map { uuid in
                     Event.onHeardRuuviBootDevice(
@@ -157,7 +157,7 @@ extension FirmwareViewModel {
             else {
                 return Empty().eraseToAnyPublisher()
             }
-            return sSelf.interactor.observeLost(uuid: uuid)
+            return sSelf.interactor.observeLostPublisher(uuid: uuid)
                 .receive(on: RunLoop.main)
                 .map { uuid in
                     Event.onLostRuuviBootDevice(

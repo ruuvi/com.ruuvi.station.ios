@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "RuuviContext",
-    platforms: [.macOS(.v10_15), .iOS(.v14)],
+    platforms: [.macOS(.v10_15), .iOS(.v16)],
     products: [
         .library(
             name: "RuuviContext",

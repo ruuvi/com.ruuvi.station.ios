@@ -87,17 +87,29 @@ extension AboutPresenter {
     }
 
     private func obtainTagsCount() {
-        ruuviStorage.getStoredTagsCount().on(success: { [weak self] count in
-            let tagsCount = RuuviLocalization.About.TagsCount.text(count)
-            self?.viewModel.addedTags.value = tagsCount
-        })
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let count = try await ruuviStorage.getStoredTagsCount()
+                let tagsCount = RuuviLocalization.About.TagsCount.text(count)
+                await MainActor.run { [weak self] in
+                    self?.viewModel.addedTags.value = tagsCount
+                }
+            } catch { /* non-critical */ }
+        }
     }
 
     private func obtainMeasurementsCount() {
-        ruuviStorage.getStoredMeasurementsCount().on(success: { [weak self] count in
-            let measurementsCount = RuuviLocalization.About.MeasurementsCount.text(count)
-            self?.viewModel.storedMeasurements.value = measurementsCount
-        })
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let count = try await ruuviStorage.getStoredMeasurementsCount()
+                let measurementsCount = RuuviLocalization.About.MeasurementsCount.text(count)
+                await MainActor.run { [weak self] in
+                    self?.viewModel.storedMeasurements.value = measurementsCount
+                }
+            } catch { /* non-critical */ }
+        }
     }
 
     private func obtainDatabaseSize() {

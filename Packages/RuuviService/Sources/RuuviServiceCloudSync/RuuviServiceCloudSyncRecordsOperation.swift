@@ -38,40 +38,46 @@ final class RuuviServiceCloudSyncRecordsOperation: AsyncOperation {
             state = .finished
             return
         }
-        let op = ruuviCloud.loadRecords(macId: macId, since: since, until: until)
-        op.on(success: { [weak self] loadedRecords in
-            guard let sSelf = self else { return }
-            guard !loadedRecords.isEmpty
-            else {
-                sSelf.state = .finished
-                return
-            }
-            let recordsWithLuid: [AnyRuuviTagSensorRecord] = loadedRecords.map { record in
-                if record.luid == nil,
-                   let macId = record.macId,
-                   let luid = sSelf.ruuviLocalIDs.luid(for: macId) {
-                    record.with(luid: luid).any
-                } else {
-                    record
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let loadedRecords = try await self.loadCloudRecords(macId: macId, since: since, until: until)
+                guard !loadedRecords.isEmpty else {
+                    self.state = .finished
+                    return
                 }
+                let recordsWithLuid: [AnyRuuviTagSensorRecord] = loadedRecords.map { record in
+                    if record.luid == nil,
+                       let macId = record.macId,
+                       let luid = self.ruuviLocalIDs.luid(for: macId) {
+                        record.with(luid: luid).any
+                    } else {
+                        record
+                    }
+                }
+                do {
+                    _ = try await self.persistRecords(recordsWithLuid, for: self.sensor)
+                    self.records = recordsWithLuid
+                } catch {
+//                    self.error = .ruuviRepository(error)
+                }
+                self.state = .finished
+            } catch {
+//                self.error = .ruuviCloud(error)
+                self.state = .finished
             }
-            let persist = sSelf.ruuviRepository.create(
-                records: recordsWithLuid,
-                for: sSelf.sensor
-            )
-            persist.on(success: { [weak sSelf] _ in
-                guard let ssSelf = sSelf else { return }
-                ssSelf.records = recordsWithLuid
-                ssSelf.state = .finished
-            }, failure: { [weak sSelf] error in
-                guard let ssSelf = sSelf else { return }
-                ssSelf.error = .ruuviRepository(error)
-                ssSelf.state = .finished
-            })
-        }, failure: { [weak self] error in
-            guard let sSelf = self else { return }
-            sSelf.error = .ruuviCloud(error)
-            sSelf.state = .finished
-        })
+        }
+    }
+}
+
+// MARK: - Async direct calls
+private extension RuuviServiceCloudSyncRecordsOperation {
+    func loadCloudRecords(macId: MACIdentifier, since: Date, until: Date?) async throws -> [AnyRuuviTagSensorRecord] {
+        try await ruuviCloud.loadRecords(macId: macId, since: since, until: until)
+    }
+
+    func persistRecords(_ records: [AnyRuuviTagSensorRecord], for sensor: RuuviTagSensor) async throws -> Bool {
+        _ = try await ruuviRepository.create(records: records.compactMap { $0 }, for: sensor)
+        return true
     }
 }

@@ -51,25 +51,29 @@ final class MigrationManagerToRH: RuuviMigration {
     }
 
     private func fetchRuuviSensors(completion: @escaping ([(RuuviTagSensor, Temperature?)]) -> Void) {
-        queue.async {
-            let group = DispatchGroup()
-            group.enter()
-            var result = [(RuuviTagSensor, Temperature?)]()
-            self.ruuviStorage.readAll().on(success: { sensors in
-                sensors.forEach { sensor in
-                    group.enter()
-                    self.fetchRecord(for: sensor) {
-                        result.append($0)
-                        group.leave()
+        queue.async { [weak self] in
+            guard let self else { return }
+            Task { @MainActor in
+                var aggregated: [(RuuviTagSensor, Temperature?)] = []
+                do {
+                    let sensors = try await self.ruuviStorage.readAll()
+                    // Parallel fetch of latest records
+                    try await withThrowingTaskGroup(of: (RuuviTagSensor, Temperature?).self) { group in
+                        for sensor in sensors {
+                            group.addTask {
+                                let record = try? await self.ruuviStorage.readLatest(sensor)
+                                return (sensor, record?.temperature)
+                            }
+                        }
+                        for try await tuple in group {
+                            aggregated.append(tuple)
+                        }
                     }
+                } catch {
+                    // Ignore failures; will return what we have (empty if fatal at start)
                 }
-                group.leave()
-            }, failure: { _ in
-                group.leave()
-            })
-            group.notify(queue: .main, execute: {
-                completion(result)
-            })
+                completion(aggregated)
+            }
         }
     }
 
@@ -77,11 +81,10 @@ final class MigrationManagerToRH: RuuviMigration {
         for sensor: RuuviTagSensor,
         complete: @escaping (((RuuviTagSensor, Temperature?)) -> Void)
     ) {
-        ruuviStorage.readLatest(sensor)
-            .on(success: { record in
-                complete((sensor, record?.temperature))
-            }, failure: { _ in
-                complete((sensor, nil))
-            })
+        Task { [weak self] in
+            guard let self else { return }
+            let record = try? await ruuviStorage.readLatest(sensor)
+            complete((sensor, record?.temperature))
+        }
     }
 }

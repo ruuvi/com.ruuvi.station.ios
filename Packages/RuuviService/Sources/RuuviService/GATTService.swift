@@ -1,6 +1,5 @@
 import BTKit
 import Foundation
-import Future
 import RuuviOntology
 
 public extension Notification.Name {
@@ -33,8 +32,7 @@ public enum RuuviTagReadLogsOperationDidFinishKey: String {
 public protocol GATTService {
     func isSyncingLogs(with uuid: String) -> Bool
 
-    @discardableResult
-    // swiftlint:disable:next function_parameter_count
+    // swiftlint:disable function_parameter_count
     func syncLogs(
         uuid: String,
         mac: String?,
@@ -44,22 +42,21 @@ public protocol GATTService {
         progress: ((BTServiceProgress) -> Void)?,
         connectionTimeout: TimeInterval?,
         serviceTimeout: TimeInterval?
-    ) -> Future<Bool, RuuviServiceError>
+    ) async throws -> Bool
+    // swiftlint:enable function_parameter_count
 
-    @discardableResult
-    func stopGattSync(for uuid: String) -> Future<Bool, RuuviServiceError>
+    func stopGattSync(for uuid: String) async throws -> Bool
 }
 
 public extension GATTService {
-    @discardableResult
     func syncLogs(
         uuid: String,
         mac: String?,
         firmware: Int,
         from: Date,
         settings: SensorSettings?
-    ) -> Future<Bool, RuuviServiceError> {
-        syncLogs(
+    ) async throws -> Bool {
+        try await syncLogs(
             uuid: uuid,
             mac: mac,
             firmware: firmware,
@@ -69,10 +66,5 @@ public extension GATTService {
             connectionTimeout: nil,
             serviceTimeout: nil
         )
-    }
-
-    @discardableResult
-    func stopGattSync(for uuid: String) -> Future<Bool, RuuviServiceError> {
-        stopGattSync(for: uuid)
     }
 }

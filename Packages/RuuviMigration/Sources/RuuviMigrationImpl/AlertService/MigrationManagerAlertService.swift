@@ -145,18 +145,19 @@ extension MigrationManagerAlertService {
             let group = DispatchGroup()
             group.enter()
             var result = [(RuuviTagSensor, Temperature?)]()
-            self.ruuviStorage.readAll().on(success: { sensors in
-                sensors.forEach { sensor in
-                    group.enter()
-                    self.fetchRecord(for: sensor) {
-                        result.append($0)
-                        group.leave()
+            Task {
+                do {
+                    let sensors = await self.readAllSensors()
+                    sensors.forEach { sensor in
+                        group.enter()
+                        self.fetchRecord(for: sensor) {
+                            result.append($0)
+                            group.leave()
+                        }
                     }
+                    group.leave()
                 }
-                group.leave()
-            }, failure: { _ in
-                group.leave()
-            })
+            }
             group.notify(queue: .main, execute: {
                 completion(result)
             })
@@ -167,11 +168,20 @@ extension MigrationManagerAlertService {
         for sensor: RuuviTagSensor,
         complete: @escaping (((RuuviTagSensor, Temperature?)) -> Void)
     ) {
-        ruuviStorage.readLatest(sensor)
-            .on(success: { record in
-                complete((sensor, record?.temperature))
-            }, failure: { _ in
-                complete((sensor, nil))
-            })
+        Task {
+            let record = await readLatestRecord(sensor)
+            complete((sensor, record?.temperature))
+        }
+    }
+}
+
+// MARK: - Async bridging
+private extension MigrationManagerAlertService {
+    func readAllSensors() async -> [RuuviTagSensor] {
+        (try? await ruuviStorage.readAll()) ?? []
+    }
+
+    func readLatestRecord(_ sensor: RuuviTagSensor) async -> RuuviTagSensorRecord? {
+        try? await ruuviStorage.readLatest(sensor)
     }
 }

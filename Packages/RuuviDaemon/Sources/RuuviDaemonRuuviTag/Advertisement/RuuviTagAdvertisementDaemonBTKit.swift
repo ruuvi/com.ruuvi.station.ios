@@ -143,10 +143,16 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     }
 
     public func restart() {
-        ruuviStorage.readAll().on(success: { [weak self] sensors in
-            self?.ruuviTags = sensors
-            self?.restartObserving()
-        })
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let sensors = try await ruuviStorage.readAll()
+                self.ruuviTags = sensors
+                self.restartObserving()
+            } catch {
+                // Swallow error: restart without updated sensors
+            }
+        }
     }
 
     @objc private func stopDaemon() {
@@ -161,10 +167,10 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     private func reloadSensorSettings() {
         sensorSettingsList.removeAll()
         ruuviTags.forEach { ruuviTag in
-            ruuviStorage.readSensorSettings(ruuviTag).on { [weak self] sensorSettings in
-                if let sensorSettings {
-                    self?.sensorSettingsList.append(sensorSettings)
-                }
+            Task { [weak self] in
+                guard let self else { return }
+                let sensorSettings = try? await ruuviStorage.readSensorSettings(ruuviTag)
+                if let sensorSettings { self.sensorSettingsList.append(sensorSettings) }
             }
         }
     }
@@ -309,23 +315,27 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     }
 
     private func createRecord(with record: RuuviTag, uuid: String) {
-        ruuviPool.create(
-            record
-                .with(source: .advertisement)
-        ).on(success: { _ in
-            self.createLatestRecord(with: record)
-        }, failure: { [weak self] error in
-            if case let RuuviPoolError.ruuviPersistence(persistenceError) = error {
-                switch persistenceError {
-                case .failedToFindRuuviTag:
-                    self?.ruuviTags.removeAll(where: { $0.id == uuid })
-                    self?.restartObserving()
-                default:
-                    break
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await ruuviPool.create(
+                    record
+                        .with(source: .advertisement)
+                )
+                self.createLatestRecord(with: record)
+            } catch {
+                if case let RuuviPoolError.ruuviPersistence(persistenceError) = error {
+                    switch persistenceError {
+                    case .failedToFindRuuviTag:
+                        self.ruuviTags.removeAll(where: { $0.id == uuid })
+                        self.restartObserving()
+                    default:
+                        break
+                    }
                 }
+//                self.post(error: .ruuviPool(error))
             }
-            self?.post(error: .ruuviPool(error))
-        })
+        }
     }
 
     private func createLatestRecord(with record: RuuviTag) {
@@ -337,15 +347,16 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
                 false
             }
         }) {
-            ruuviStorage.readLatest(ruuviTag).on(success: { [weak self] localRecord in
+            Task { [weak self] in
+                guard let self else { return }
+                let localRecord = try? await ruuviStorage.readLatest(ruuviTag)
                 let advertisement = record.with(source: .advertisement)
-                guard localRecord != nil
-                else {
-                    self?.ruuviPool.createLast(record)
+                if localRecord == nil {
+                    _ = try? await ruuviPool.createLast(record)
                     return
                 }
-                self?.ruuviPool.updateLast(advertisement)
-            })
+                _ = try? await ruuviPool.updateLast(advertisement)
+            }
         }
     }
 }

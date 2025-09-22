@@ -126,14 +126,13 @@ final class DFUViewModel: ObservableObject {
             }
             guard let updatedVersion = updatedVersion else { return }
             isLoading = true
-            ruuviPool.update(ruuviTag
-                .with(isConnectable: true)
-                .with(firmwareVersion: updatedVersion))
-                .on(success: { [weak self] _ in
-                    self?.isLoading = false
-                }, failure: { [weak self] _ in
-                    self?.isLoading = false
-                })
+//            Task { [weak self] in
+//                guard let self else { return }
+//                defer { isLoading = false }
+//                _ = try? await ruuviPool.update(ruuviTag
+//                    .with(isConnectable: true)
+//                    .with(firmwareVersion: updatedVersion)).asyncValue()
+//            }
         } else {
             assertionFailure()
         }
@@ -146,27 +145,30 @@ final class DFUViewModel: ObservableObject {
         else {
             return
         }
-        ruuviPool.update(ruuviTag
-            .with(isConnectable: true)
-            .with(firmwareVersion: currentRelease.version))
+//        ruuviPool.update(ruuviTag
+//            .with(isConnectable: true)
+//            .with(firmwareVersion: currentRelease.version))
     }
 
     // Migration ends
 
     func checkBatteryState(completion: @escaping (Bool) -> Void) {
         let batteryStatusProvider = RuuviTagBatteryStatusProvider()
-        ruuviStorage
-            .readLatest(ruuviTag)
-            .on(success: { record in
-                let batteryNeedsReplacement = batteryStatusProvider
-                    .batteryNeedsReplacement(
-                        temperature: record?.temperature,
-                        voltage: record?.voltage
-                    )
-                completion(batteryNeedsReplacement)
-            }, failure: { _ in
-                completion(false)
-            })
+//        ruuviStorage
+//            .readLatest(ruuviTag)
+//        Task {
+//            do {
+//                let record = try await ruuviStorage.readLatest(ruuviTag)
+//                let batteryNeedsReplacement = batteryStatusProvider
+//                    .batteryNeedsReplacement(
+//                        temperature: record?.temperature,
+//                        voltage: record?.voltage
+//                    )
+//                completion(batteryNeedsReplacement)
+//            } catch {
+//                completion(false)
+//            }
+//        }
     }
 
     func isRuuviAir() -> Bool {
@@ -408,18 +410,25 @@ extension DFUViewModel {
             else {
                 return Empty().eraseToAnyPublisher()
             }
-            return sSelf.interactor.observeLost(uuid: dfuDevice.uuid)
-                .receive(on: RunLoop.main)
-                .map { _ in
-                    Event.onLostRuuviBootDevice(
-                        latestRelease,
-                        currentRelease,
-                        dfuDevice: dfuDevice,
-                        appUrl: appUrl,
-                        fullUrl: fullUrl
+            // Bridge AsyncStream<String> -> Combine publisher (emit once then finish)
+            let subject = PassthroughSubject<Event, Never>()
+            Task { [weak sSelf] in
+                guard let sSelf else { return }
+                for await _ in sSelf.interactor.observeLost(uuid: dfuDevice.uuid) {
+                    subject.send(
+                        Event.onLostRuuviBootDevice(
+                            latestRelease,
+                            currentRelease,
+                            dfuDevice: dfuDevice,
+                            appUrl: appUrl,
+                            fullUrl: fullUrl
+                        )
                     )
+                    subject.send(completion: .finished)
+                    break // maintain previous single-event semantics
                 }
-                .eraseToAnyPublisher()
+            }
+            return subject.eraseToAnyPublisher()
         }
     }
 
@@ -430,10 +439,10 @@ extension DFUViewModel {
             else {
                 return Empty().eraseToAnyPublisher()
             }
-            return sSelf.interactor.listen(ruuviTag: sSelf.ruuviTag)
+            return sSelf.listenPublisher(ruuviTag: sSelf.ruuviTag)
                 .receive(on: RunLoop.main)
                 .map { dfuDevice in
-                    return Event.onHeardRuuviBootDevice(
+                    Event.onHeardRuuviBootDevice(
                         latestRelease,
                         currentRelease,
                         dfuDevice: dfuDevice,
@@ -451,7 +460,7 @@ extension DFUViewModel {
             else {
                 return Empty().eraseToAnyPublisher()
             }
-            return sSelf.interactor.serveCurrentRelease(for: sSelf.ruuviTag)
+            return sSelf.serveCurrentReleasePublisher(for: sSelf.ruuviTag)
                 .receive(on: RunLoop.main)
                 .map(Event.onServed)
                 .catch { _ in Just(Event.onServed(nil)) }
@@ -515,7 +524,7 @@ extension DFUViewModel {
                 ).eraseToAnyPublisher()
             }
 
-            return sSelf.interactor.serveCurrentRelease(for: sSelf.ruuviTag)
+            return sSelf.serveCurrentReleasePublisher(for: sSelf.ruuviTag)
                 .receive(on: RunLoop.main)
                 .map { currentRelease in
                     Event.onServingAfterUpdate(latestRelease, currentRelease)
@@ -547,7 +556,7 @@ extension DFUViewModel {
                 ).eraseToAnyPublisher()
             }
 
-            return sSelf.interactor.serveCurrentRelease(for: sSelf.ruuviTag)
+            return sSelf.serveCurrentReleasePublisher(for: sSelf.ruuviTag)
                 .receive(on: RunLoop.main)
                 .map { currentRelease in
                     Event.onServedAfterUpdate(latestRelease, currentRelease)
@@ -563,5 +572,41 @@ extension DFUViewModel {
         Feedback(run: { _ in
             input
         })
+    }
+}
+
+// MARK: - Async bridging helpers
+extension DFUViewModel {
+    private func serveCurrentReleasePublisher(for tag: RuuviTagSensor) -> AnyPublisher<CurrentRelease, Error> {
+        Deferred { [weak self] in
+            Future { promise in
+                guard let self else {
+                    promise(.failure(DFUError.failedToGetLuid))
+                    return
+                }
+                Task {
+                    do {
+                        let current = try await self.interactor.serveCurrentRelease(for: tag)
+                        promise(.success(current))
+                    } catch {
+                        promise(.failure(error))
+                    }
+                }
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+
+    private func listenPublisher(ruuviTag: RuuviTagSensor) -> AnyPublisher<DFUDevice, Never> {
+        Deferred { [weak self] in
+            Future { promise in
+                guard let self else { return }
+                Task {
+                    let device = await self.interactor.listen(ruuviTag: ruuviTag)
+                    promise(.success(device))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
 }

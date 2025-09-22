@@ -1,5 +1,5 @@
 import Foundation
-import Future
+// Future removed: using async/await APIs
 import RuuviCloud
 import RuuviCore
 import RuuviLocal
@@ -38,16 +38,18 @@ extension MyRuuviAccountPresenter: MyRuuviAccountViewOutput {
     func viewDidTapDeleteButton() {
         guard let email = ruuviUser.email?.lowercased() else { return }
         activityPresenter.show(with: .loading(message: nil))
-        ruuviCloud.deleteAccount(email: email).on(success: {
-            [weak self] _ in
-            self?.activityPresenter.update(with: .success(message: nil))
-            self?.view.viewDidShowAccountDeletionConfirmation()
-        }, failure: { [weak self] error in
-            self?.activityPresenter.update(with: .failed(message: nil))
-            self?.errorPresenter.present(error: error)
-        }, completion: { [weak self] in
-            self?.activityPresenter.dismiss(immediately: false)
-        })
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await ruuviCloud.deleteAccount(email: email)
+                activityPresenter.update(with: .success(message: nil))
+                view.viewDidShowAccountDeletionConfirmation()
+            } catch {
+                activityPresenter.update(with: .failed(message: nil))
+                errorPresenter.present(error: error)
+            }
+            activityPresenter.dismiss(immediately: false)
+        }
     }
 
     func viewDidTapSignoutButton() {
@@ -87,26 +89,29 @@ extension MyRuuviAccountPresenter {
         ) { [weak self] _ in
             guard let sSelf = self else { return }
             sSelf.activityPresenter.show(with: .loading(message: nil))
-            if let token = sSelf.pnManager.fcmToken, !token.isEmpty {
-                sSelf.cloudNotificationService.unregister(
-                    token: token,
-                    tokenId: nil
-                ).on(success: { _ in
-                    sSelf.pnManager.fcmToken = nil
-                    sSelf.pnManager.fcmTokenLastRefreshed = nil
-                    sSelf.activityPresenter.update(with: .success(message: nil))
-                })
+            Task { [weak sSelf] in
+                guard let sSelf else { return }
+                do {
+                    if let token = sSelf.pnManager.fcmToken, !token.isEmpty {
+                        _ = try await sSelf.cloudNotificationService.unregister(token: token, tokenId: nil)
+                        sSelf.pnManager.fcmToken = nil
+                        sSelf.pnManager.fcmTokenLastRefreshed = nil
+                    }
+                } catch {
+                    // Non-fatal: proceed with logout even if unregister fails
+                }
+                do {
+                    _ = try await sSelf.authService.logout()
+                } catch {
+                    // Ignore logout error but continue UI state changes
+                }
+                sSelf.settings.cloudModeEnabled = false
+                sSelf.viewDidTriggerClose()
+                sSelf.syncViewModel()
+                sSelf.reloadWidgets()
+                sSelf.activityPresenter.update(with: .success(message: nil))
+                sSelf.activityPresenter.dismiss()
             }
-
-            sSelf.authService.logout()
-                .on(success: { _ in
-                    sSelf.settings.cloudModeEnabled = false
-                    sSelf.viewDidTriggerClose()
-                    sSelf.syncViewModel()
-                    sSelf.reloadWidgets()
-                }, completion: { [weak self] in
-                    self?.activityPresenter.dismiss()
-                })
         }
         let cancleAction = UIAlertAction(
             title: cancelActionTitle,

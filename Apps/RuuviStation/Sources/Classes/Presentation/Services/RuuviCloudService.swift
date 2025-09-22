@@ -121,10 +121,10 @@ class RuuviCloudService {
         DispatchQueue.global(qos: .utility).async { [weak self] in
             guard let self = self else { return }
 
-            if self.settings.historySyncOnDashboard &&
-               (!self.settings.historySyncLegacy || !self.settings.historySyncForEachSensor) {
-                self.cloudSyncService.syncAllHistory()
-            }
+//            if self.settings.historySyncOnDashboard &&
+//               (!self.settings.historySyncLegacy || !self.settings.historySyncForEachSensor) {
+//                self.cloudSyncService.syncAllHistory()
+//            }
         }
     }
 
@@ -145,36 +145,43 @@ class RuuviCloudService {
 
         // Unregister push notifications
         if let token = pnManager.fcmToken, !token.isEmpty {
-            cloudNotificationService.unregister(token: token, tokenId: nil)
-                .on(success: { [weak self] _ in
-                    self?.pnManager.fcmToken = nil
-                    self?.pnManager.fcmTokenLastRefreshed = nil
-                })
+            Task { [weak self] in
+                guard let self else { return }
+                do {
+                    _ = try await cloudNotificationService.unregister(token: token, tokenId: nil)
+                    pnManager.fcmToken = nil
+                    pnManager.fcmTokenLastRefreshed = nil
+                } catch {
+                    // Intentionally ignore unregister error – proceed with logout
+                }
+            }
         }
 
-        // Perform logout
-        authService.logout()
-            .on(success: { [weak self] _ in
-                guard let self = self else { return }
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await authService.logout()
 
                 // Stop observing cloud mode state to avoid simultaneous access
-                self.cloudModeToken?.invalidate()
-                self.cloudModeToken = nil
+                cloudModeToken?.invalidate()
+                cloudModeToken = nil
 
                 // Disable cloud mode
-                self.settings.cloudModeEnabled = false
+                settings.cloudModeEnabled = false
 
                 // Notify delegate
-                self.delegate?.ruuviCloudService(self, cloudModeDidChange: false)
+                delegate?.ruuviCloudService(self, cloudModeDidChange: false)
 
                 // Restart cloud mode observation
-                self.observeCloudModeChanges()
+                observeCloudModeChanges()
 
-            }, completion: { [weak self] in
-                // Logout completed
-                guard let self = self else { return }
-                self.delegate?.ruuviCloudService(self, authorizationFailed: true)
-            })
+                // Completion / authorization failed callback (mirroring previous completion closure intent)
+                delegate?.ruuviCloudService(self, authorizationFailed: true)
+            } catch {
+                // On failure still inform delegate about authorization failure
+                delegate?.ruuviCloudService(self, authorizationFailed: true)
+            }
+        }
     }
 }
 

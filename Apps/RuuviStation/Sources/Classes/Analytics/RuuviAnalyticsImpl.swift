@@ -148,32 +148,36 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
             return
         }
         set(.loggedIn(ruuviUser.isAuthorized))
-        ruuviStorage.readAll().on(success: { tags in
-            // Version 2/3/4 tags isOwner property was set 'false' in iOS app until version v1.1.0
-            // So we log them first before filtering
-            let df2_tags_count = tags.filter { $0.version == 2 }.count
-            let df3_tags_count = tags.filter { $0.version == 3 }.count
-            let df4_tags_count = tags.filter { $0.version == 4 }.count
-            let df5_tags_count = tags.filter { $0.version == 5 }.count
-            self.set(.df2_tags(df2_tags_count))
-            self.set(.df3_tags(df3_tags_count))
-            self.set(.df4_tags(df4_tags_count))
-            self.set(.df5_tags(df5_tags_count))
-            self.set(.addedTags(tags.count))
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                async let allTags = ruuviStorage.readAll()
+                async let claimedCount = ruuviStorage.getClaimedTagsCount()
+                async let offlineCount = ruuviStorage.getOfflineTagsCount()
 
-            // Alerts
-            let (temperature, humidity, pressure, movement) = self.calculateAlerts(from: tags)
-            self.set(.alertTemperature(temperature))
-            self.set(.alertHumidity(humidity))
-            self.set(.alertPressure(pressure))
-            self.set(.alertMovement(movement))
-        })
-        ruuviStorage.getClaimedTagsCount().on(success: { count in
-            self.set(.claimedTags(count))
-        })
-        ruuviStorage.getOfflineTagsCount().on(success: { count in
-            self.set(.offlineTags(count))
-        })
+                let (tags, claimed, offline) = try await (allTags, claimedCount, offlineCount)
+
+                let df2_tags_count = tags.filter { $0.version == 2 }.count
+                let df3_tags_count = tags.filter { $0.version == 3 }.count
+                let df4_tags_count = tags.filter { $0.version == 4 }.count
+                let df5_tags_count = tags.filter { $0.version == 5 }.count
+                self.set(.df2_tags(df2_tags_count))
+                self.set(.df3_tags(df3_tags_count))
+                self.set(.df4_tags(df4_tags_count))
+                self.set(.df5_tags(df5_tags_count))
+                self.set(.addedTags(tags.count))
+
+                let (temperature, humidity, pressure, movement) = self.calculateAlerts(from: tags)
+                self.set(.alertTemperature(temperature))
+                self.set(.alertHumidity(humidity))
+                self.set(.alertPressure(pressure))
+                self.set(.alertMovement(movement))
+                self.set(.claimedTags(claimed))
+                self.set(.offlineTags(offline))
+            } catch {
+                // Non-critical analytics fetch failure; intentionally ignored or could log.
+            }
+        }
         set(.backgroundScanEnabled(settings.saveHeartbeats))
         set(.backgroundScanInterval(settings.saveHeartbeatsIntervalMinutes * 60))
         set(.dashboardEnabled(false))
