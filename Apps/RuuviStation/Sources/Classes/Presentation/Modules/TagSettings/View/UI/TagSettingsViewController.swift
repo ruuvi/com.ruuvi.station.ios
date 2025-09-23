@@ -2674,7 +2674,8 @@ extension TagSettingsViewController {
             sections.append(configureRSSIAlertSection())
         }
 
-        if viewModel?.isConnectable != nil {
+        if let showKeepConnection = viewModel?.showKeepConnection.value,
+           showKeepConnection && viewModel?.isConnectable != nil {
             sections.append(configureConnectionAlertSection())
         }
 
