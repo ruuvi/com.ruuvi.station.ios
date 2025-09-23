@@ -588,12 +588,17 @@ private extension CardsBasePresenter {
             let isNotConnectable  = !snapshot.connectionData.isConnectable
             let isNotOwner        = !snapshot.metadata.isOwner
             let cloudModeBypass   = settings.cloudModeEnabled && snapshot.metadata.isCloud
+            let firmwareType      = RuuviFirmwareVersion.firmwareVersion(
+                from: snapshot.displayData.version.bound
+            )
+            let isAir             = firmwareType == .e1 || firmwareType == .v6
 
             if skipDialogShown
                 || isConnected
                 || isNotConnectable
                 || isNotOwner
-                || cloudModeBypass {
+                || cloudModeBypass
+                || isAir {
                 graphPresenter?.start(shouldSyncFromCloud: true)
                 view?.showContentsForTab(tab)
                 activeMenu = tab
@@ -639,12 +644,17 @@ private extension CardsBasePresenter {
             let isNotConnectable  = !snapshot.connectionData.isConnectable
             let isNotOwner        = !snapshot.metadata.isOwner
             let cloudModeBypass   = settings.cloudModeEnabled && snapshot.metadata.isCloud
+            let firmwareType      = RuuviFirmwareVersion.firmwareVersion(
+                from: snapshot.displayData.version.bound
+            )
+            let isAir             = firmwareType == .e1 || firmwareType == .v6
 
             if skipDialogShown
                 || isConnected
                 || isNotConnectable
                 || isNotOwner
-                || cloudModeBypass {
+                || cloudModeBypass
+                || isAir {
                 showTagSettings(for: snapshot)
             } else {
                 view?.showKeepConnectionDialogSettings(for: snapshot)

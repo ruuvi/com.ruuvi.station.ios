@@ -154,8 +154,14 @@ extension DashboardPresenter: DashboardViewOutput {
         let (isConnected, _ ) = connectionService.getConnectionStatus(
             for: snapshot
         )
+        let firmwareType      = RuuviFirmwareVersion.firmwareVersion(
+            from: snapshot.displayData.version.bound
+        )
+        let isAir             = firmwareType == .e1 || firmwareType == .v6
+
         if snapshot.identifierData.luid != nil {
             if settingsService.keepConnectionDialogWasShown(for: snapshot)
+                || isAir
                 || isConnected
                 || !snapshot.connectionData.isConnectable
                 || !snapshot.metadata.isOwner
@@ -332,8 +338,14 @@ private extension DashboardPresenter {
         let (isConnected, _ ) = connectionService.getConnectionStatus(
             for: snapshot
         )
+        let firmwareType      = RuuviFirmwareVersion.firmwareVersion(
+            from: snapshot.displayData.version.bound
+        )
+        let isAir             = firmwareType == .e1 || firmwareType == .v6
+
         if snapshot.identifierData.luid != nil {
             if settingsService.keepConnectionDialogWasShown(for: snapshot)
+                || isAir
                 || isConnected
                 || !snapshot.connectionData.isConnectable
                 || !snapshot.metadata.isOwner

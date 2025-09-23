@@ -35,6 +35,7 @@ struct TagSettingsViewModel {
     let isConnected: Observable<Bool?> = .init()
     let isNetworkConnected: Observable<Bool?> = .init()
     let keepConnection: Observable<Bool?> = .init()
+    let showKeepConnection: Observable<Bool?> = .init(true)
     let isPushNotificationsEnabled: Observable<Bool?> = .init()
 
     let temperatureUnit: Observable<TemperatureUnit?> = .init()

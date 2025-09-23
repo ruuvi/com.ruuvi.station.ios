@@ -131,7 +131,9 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         let firmwareType = RuuviFirmwareVersion.firmwareVersion(
             from: ruuviTag.version
         )
-        tagViewModel.showBatteryStatus.value = !(firmwareType == .e1 || firmwareType == .v6)
+        let isAir = firmwareType == .e1 || firmwareType == .v6
+        tagViewModel.showKeepConnection.value = !isAir
+        tagViewModel.showBatteryStatus.value = !isAir
 
         if let latestMeasurement = measurementWithOffset {
             tagViewModel.updateRecord(latestMeasurement)

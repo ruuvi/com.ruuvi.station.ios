@@ -559,10 +559,15 @@ extension TagSettingsViewController {
         // Fixed item on top - general and bluetooth.
         tableViewSections += [
             configureGeneralSection(),
-            configureBluetoothSection(),
         ]
 
         // Variable items
+        // General
+        if let showKeepConnection = viewModel?.showKeepConnection.value,
+           showKeepConnection {
+            tableViewSections.append(configureBluetoothSection())
+        }
+
         // Alerts
         tableViewSections += configureAlertSections()
 
