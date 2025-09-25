@@ -903,10 +903,9 @@ extension DashboardPresenter: MenuModuleOutput {
 extension DashboardPresenter: SignInBenefitsModuleOutput {
 
     func signIn(module: SignInBenefitsModuleInput, didSuccessfulyLogin: Any?) {
+        startAllServices()
         cloudSyncService.triggerFullHistorySync()
-        sensorDataService.stopObservingSensors()
-        sensorDataService.startObservingSensors()
-        cloudSyncService.startObserving()
+        RuuviTagServiceCoordinatorManager.shared.forceLoadBackgrounds()
         view?.isAuthorized = cloudSyncService.isAuthorized()
 
         module.dismiss {

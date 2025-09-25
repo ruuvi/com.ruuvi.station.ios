@@ -40,7 +40,6 @@ enum RuuviTagServiceCoordinatorEvent {
     case snapshotUpdated(RuuviTagCardSnapshot, invalidateLayout: Bool)
     case newSensorAdded(RuuviTagSensor, newOrder: [String])
     case dataServiceError(Error)
-    case backgroundUpdated(sensorId: String, luid: LocalIdentifier?, macId: MACIdentifier?)
 
     // Cloud Service Events
     case userLoginStateChanged(Bool)
@@ -137,6 +136,10 @@ class RuuviTagServiceCoordinator {
             guard let self = self else { return }
             self.observers.removeAll { $0.observer === observer }
         }
+    }
+
+    func forceLoadBackgrounds() {
+        dataService.loadBackgroundsForCurrentSnapshots()
     }
 
     private func sendCurrentStateToObserver(_ observer: RuuviTagServiceCoordinatorObserver) {
@@ -542,15 +545,6 @@ extension RuuviTagServiceCoordinator: RuuviTagDataServiceDelegate {
     ) {
         notifyEvent(.dataServiceError(error))
     }
-
-    func sensorDataService(
-        _ service: RuuviTagDataService,
-        didUpdateBackgroundForSensor sensorId: String,
-        luid: LocalIdentifier?,
-        macId: MACIdentifier?
-    ) {
-        notifyEvent(.backgroundUpdated(sensorId: sensorId, luid: luid, macId: macId))
-    }
 }
 
 extension RuuviTagServiceCoordinator: RuuviCloudServiceDelegate {
@@ -812,6 +806,10 @@ class RuuviTagServiceCoordinatorManager {
         withCoordinator { $0.reorderSnapshots(with: orderedIds) }
     }
 
+    func forceLoadBackgrounds() {
+        withCoordinator { $0.forceLoadBackgrounds() }
+    }
+
     // MARK: - Alert Management
     func syncAllAlerts(for snapshot: RuuviTagCardSnapshot, physicalSensor: PhysicalSensor) {
         withCoordinator { $0.syncAllAlerts(for: snapshot, physicalSensor: physicalSensor) }
@@ -926,7 +924,7 @@ struct RuuviTagServiceCoordinatorEventFilter {
         // Check category filters
         switch eventType {
         case .snapshotsUpdated,
-             .snapshotUpdated, .newSensorAdded, .dataServiceError, .backgroundUpdated:
+             .snapshotUpdated, .newSensorAdded, .dataServiceError:
             return includeDataEvents
         case .userLoginStateChanged, .userLogoutStateChanged, .cloudSyncStatusChanged,
                 .cloudSyncCompleted, .historySyncInProgress, .authorizationFailed, .cloudModeChanged:
@@ -945,7 +943,6 @@ enum RuuviTagCoordinatorEventType: String, CaseIterable {
     case snapshotUpdated
     case newSensorAdded
     case dataServiceError
-    case backgroundUpdated
 
     // Cloud Service Events
     case userLoginStateChanged
@@ -977,8 +974,6 @@ extension RuuviTagServiceCoordinatorEvent {
             return .newSensorAdded
         case .dataServiceError:
             return .dataServiceError
-        case .backgroundUpdated:
-            return .backgroundUpdated
         case .userLoginStateChanged:
             return .userLoginStateChanged
         case .userLogoutStateChanged:

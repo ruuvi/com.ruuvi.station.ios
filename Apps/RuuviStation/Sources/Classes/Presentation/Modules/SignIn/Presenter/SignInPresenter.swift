@@ -211,9 +211,9 @@ extension SignInPresenter {
 
     private func executePostSuccessfullSignInAction() {
         cloudSyncDaemon.start()
-        output?.signIn(module: self, didSuccessfulyLogin: nil)
         settings.isSyncing = false
         settings.syncExtensiveChangesInProgress = false
+        output?.signIn(module: self, didSuccessfulyLogin: nil)
         activityPresenter.dismiss()
     }
 

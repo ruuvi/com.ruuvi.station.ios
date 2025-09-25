@@ -29,12 +29,6 @@ protocol RuuviTagDataServiceDelegate: AnyObject {
         _ service: RuuviTagDataService,
         didEncounterError error: Error
     )
-    func sensorDataService(
-        _ service: RuuviTagDataService,
-        didUpdateBackgroundForSensor sensorId: String,
-        luid: LocalIdentifier?,
-        macId: MACIdentifier?
-    )
 }
 
 extension RuuviTagDataServiceDelegate {
@@ -49,12 +43,6 @@ extension RuuviTagDataServiceDelegate {
             invalidateLayout: invalidateLayout
         )
     }
-    func sensorDataService(
-        _ service: RuuviTagDataService,
-        didUpdateBackgroundForSensor sensorId: String,
-        luid: LocalIdentifier?,
-        macId: MACIdentifier?
-    ) {}
 }
 
 class RuuviTagDataService {
@@ -74,9 +62,10 @@ class RuuviTagDataService {
     private var snapshots: [RuuviTagCardSnapshot] = []
     private var sensorSettingsList: [SensorSettings] = []
 
-    // MARK: - Background Service Properties
-    private var backgroundCache: [String: UIImage] = [:]
-    private var sensorRegistry: [String: AnyRuuviTagSensor] = [:]
+    // MARK: - Background Loading
+    private var backgroundLoadingQueue = DispatchQueue(label: "com.ruuvi.background.loading", attributes: .concurrent)
+    private let pendingBackgroundLoadsLock = NSLock()
+    private var pendingBackgroundLoads = Set<String>()
 
     // MARK: - Observation Tokens
     private var ruuviTagToken: RuuviReactorToken?
@@ -103,13 +92,12 @@ class RuuviTagDataService {
 
     deinit {
         stopObservingSensors()
-        stopObservingBackgroundChanges()
     }
 
     // MARK: - Public Interface
     func startObservingSensors() {
         observeRuuviTags()
-        startObservingBackgroundChanges()
+        observeBackgroundChanges()
         observeUnitChanges()
     }
 
@@ -122,7 +110,8 @@ class RuuviTagDataService {
         ruuviTagObserveLastRecordTokens.removeAll()
         sensorSettingsTokens.removeAll()
 
-        stopObservingBackgroundChanges()
+        backgroundToken?.invalidate()
+        backgroundToken = nil
     }
 
     func updateSnapshot(for sensorId: String, with record: RuuviTagSensorRecord) {
@@ -134,7 +123,7 @@ class RuuviTagDataService {
             (settings.macId?.any != nil && settings.macId?.any == sensor.macId?.any)
         }
 
-        let snapshot = snapshots[snapshotIndex] // Capture the snapshot object
+        let snapshot = snapshots[snapshotIndex]
 
         DispatchQueue.main.async {
             snapshot.updateFromRecord(
@@ -198,89 +187,62 @@ class RuuviTagDataService {
         })
     }
 
-    // MARK: - Background Service Methods
-    func startObservingBackgroundChanges() {
-        observeBackgroundChanges()
-    }
-
-    func stopObservingBackgroundChanges() {
-        backgroundToken?.invalidate()
-        backgroundToken = nil
-    }
-
-    func registerSensors(_ sensors: [AnyRuuviTagSensor]) {
-        for sensor in sensors {
-            sensorRegistry[sensor.id] = sensor
-        }
-    }
-
-    func unregisterSensor(id: String) {
-        sensorRegistry.removeValue(forKey: id)
-    }
-
-    func loadBackgrounds(for snapshots: [RuuviTagCardSnapshot], sensors: [AnyRuuviTagSensor]) {
-        // Register sensors for background change tracking
-        registerSensors(sensors)
-
+    // MARK: - Background Loading
+    func loadBackgroundsForCurrentSnapshots() {
+        // This method can be called externally to force load backgrounds
+        // Useful after extensive changes are complete
         for snapshot in snapshots {
-            guard let sensor = sensors.first(where: { $0.id == snapshot.id }) else { continue }
-            loadBackground(for: snapshot, sensor: sensor)
+            if let sensor = ruuviTags.first(where: { $0.id == snapshot.id }) {
+                loadBackground(for: snapshot, sensor: sensor)
+            }
         }
     }
 
-    func loadBackground(for snapshot: RuuviTagCardSnapshot, sensor: AnyRuuviTagSensor) {
-        // Check cache first
-        if let cachedImage = backgroundCache[sensor.id] {
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                snapshot.updateBackgroundImage(cachedImage)
-                self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
-            }
-            return
-        }
+    private func loadBackground(for snapshot: RuuviTagCardSnapshot, sensor: AnyRuuviTagSensor) {
 
-        DispatchQueue.global(qos: .utility).async { [weak self] in
+        pendingBackgroundLoadsLock.lock()
+        let isAlreadyLoading = pendingBackgroundLoads.contains(sensor.id)
+        if !isAlreadyLoading {
+            pendingBackgroundLoads.insert(sensor.id)
+        }
+        pendingBackgroundLoadsLock.unlock()
+
+        guard !isAlreadyLoading else { return }
+
+        backgroundLoadingQueue.async { [weak self] in
             guard let self = self else { return }
 
             self.ruuviSensorPropertiesService.getImage(for: sensor)
                 .on(success: { [weak self] image in
                     guard let self = self else { return }
 
-                    // Cache on background thread
-                    self.backgroundCache[sensor.id] = image
-
                     DispatchQueue.main.async {
                         snapshot.updateBackgroundImage(image)
-                        self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+
+                        // Always update the snapshot's background, but only notify delegate
+                        // if extensive changes are not in progress
+                        if !self.settings.syncExtensiveChangesInProgress {
+                            self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+                        }
                     }
+
+                    self.pendingBackgroundLoadsLock.lock()
+                    self.pendingBackgroundLoads.remove(sensor.id)
+                    self.pendingBackgroundLoadsLock.unlock()
 
                 }, failure: { [weak self] error in
+                    guard let self = self else { return }
+
+                    self.pendingBackgroundLoadsLock.lock()
+                    self.pendingBackgroundLoads.remove(sensor.id)
+                    self.pendingBackgroundLoadsLock.unlock()
+
                     DispatchQueue.main.async {
-                        guard let self = self else { return }
-                        self.delegate?.sensorDataService(self, didEncounterError: error)
+                        if !self.settings.syncExtensiveChangesInProgress {
+                            self.delegate?.sensorDataService(self, didEncounterError: error)
+                        }
                     }
                 })
-        }
-    }
-
-    func clearCache() {
-        backgroundCache.removeAll()
-    }
-
-    func removeFromCache(sensorId: String) {
-        backgroundCache.removeValue(forKey: sensorId)
-    }
-
-    func handleMemoryWarning() {
-        // Clear cache on memory warning
-        clearCache()
-    }
-
-    func cleanupUnusedBackgrounds(activeSensorIds: Set<String>) {
-        // Remove cached backgrounds for sensors that are no longer active
-        let keysToRemove = backgroundCache.keys.filter { !activeSensorIds.contains($0) }
-        for key in keysToRemove {
-            backgroundCache.removeValue(forKey: key)
         }
     }
 }
@@ -294,7 +256,6 @@ extension RuuviTagDataService: RuuviServiceMeasurementDelegate {
 // MARK: - Private Implementation
 private extension RuuviTagDataService {
 
-    // MARK: - Background Methods
     func observeBackgroundChanges() {
         backgroundToken?.invalidate()
         backgroundToken = NotificationCenter.default.addObserver(
@@ -308,32 +269,21 @@ private extension RuuviTagDataService {
                 let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
                 let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
 
-                // Find the affected sensor ID
-                var affectedSensorId: String?
+                // Find the affected sensor
+                var affectedSensor: AnyRuuviTagSensor?
+                var affectedSnapshot: RuuviTagCardSnapshot?
 
                 if let luid = luid {
-                    // Find sensor by LUID
-                    affectedSensorId = self.findSensorId(by: luid.any, type: .luid)
+                    affectedSensor = self.ruuviTags.first { $0.luid?.any == luid.any }
                 } else if let macId = macId {
-                    // Find sensor by MAC
-                    affectedSensorId = self.findSensorId(by: macId.any, type: .mac)
+                    affectedSensor = self.ruuviTags.first { $0.macId?.any == macId.any }
                 }
 
-                if let sensorId = affectedSensorId {
-                    // Clear cache for this sensor
-                    self.removeFromCache(sensorId: sensorId)
+                if let sensor = affectedSensor {
+                    affectedSnapshot = self.snapshots.first { $0.id == sensor.id }
 
-                    // Notify delegate directly instead of posting notification
-                    self.delegate?.sensorDataService(
-                        self,
-                        didUpdateBackgroundForSensor: sensorId,
-                        luid: luid,
-                        macId: macId
-                    )
-
-                    // If we have the sensor and snapshot, reload the background
-                    if let sensor = self.sensorRegistry[sensorId],
-                       let snapshot = self.snapshots.first(where: { $0.id == sensorId }) {
+                    // Reload the background for this sensor
+                    if let snapshot = affectedSnapshot {
                         self.loadBackground(for: snapshot, sensor: sensor)
                     }
                 }
@@ -341,35 +291,6 @@ private extension RuuviTagDataService {
         }
     }
 
-    func findSensorId(by identifier: Any, type: IdentifierType) -> String? {
-        switch type {
-        case .luid:
-            if let luid = identifier as? LocalIdentifier {
-                return sensorRegistry.first { _, sensor in
-                    sensor.luid?.any == luid.any
-                }?.key
-            } else if let luidString = identifier as? String {
-                return sensorRegistry.first { _, sensor in
-                    sensor.luid?.value == luidString
-                }?.key
-            }
-
-        case .mac:
-            if let mac = identifier as? MACIdentifier {
-                return sensorRegistry.first { _, sensor in
-                    sensor.macId?.any == mac.any
-                }?.key
-            } else if let macString = identifier as? String {
-                return sensorRegistry.first { _, sensor in
-                    sensor.macId?.value == macString
-                }?.key
-            }
-        }
-
-        return nil
-    }
-
-    // Original methods...
     func observeRuuviTags() {
         ruuviTagToken?.invalidate()
         ruuviTagToken = ruuviReactor.observe { [weak self] change in
@@ -478,10 +399,14 @@ private extension RuuviTagDataService {
                     with: self.settings.dashboardSensorOrder
                 )
                 self.snapshots = orderedSnapshots
-                self.loadBackgrounds(
-                    for: self.snapshots,
-                    sensors: self.ruuviTags
-                )
+
+                // Load backgrounds for all snapshots - match by ID, not index
+                for snapshot in self.snapshots {
+                    if let sensor = self.ruuviTags.first(where: { $0.id == snapshot.id }) {
+                        self.loadBackground(for: snapshot, sensor: sensor)
+                    }
+                }
+
                 if !self.settings.syncExtensiveChangesInProgress {
                     self.delegate?.sensorDataService(
                         self,
@@ -518,6 +443,9 @@ private extension RuuviTagDataService {
             snapshots.insert(snapshot, at: 0)
         }
 
+        // Load background for the new sensor
+        loadBackground(for: snapshot, sensor: sensor)
+
         if !(settings.syncExtensiveChangesInProgress || settings.isSyncing) {
             let reorderdIds = snapshots.compactMap { $0.identifierData.mac?.value }
             self.delegate?.sensorDataService(
@@ -527,7 +455,6 @@ private extension RuuviTagDataService {
             )
         }
 
-        self.loadBackground(for: snapshot, sensor: sensor)
         if !self.settings.syncExtensiveChangesInProgress {
             delegate?
                 .sensorDataService(
@@ -801,11 +728,6 @@ extension RuuviStorage {
         }
         return record
     }
-}
-
-// Helper enum for identifier type
-private enum IdentifierType {
-    case luid, mac
 }
 
 // swiftlint:enable file_length
