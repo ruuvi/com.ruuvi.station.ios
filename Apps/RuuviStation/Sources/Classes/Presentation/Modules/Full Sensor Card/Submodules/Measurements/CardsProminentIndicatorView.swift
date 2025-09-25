@@ -812,11 +812,6 @@ private extension CircularProgressView {
         let center = CGPoint(x: bounds.midX, y: bounds.midY)
         let radius = min(bounds.width, bounds.height) / 2 - Constants.radiusOffset
 
-        guard currentProgress > 0 else {
-            clearTipElements()
-            return
-        }
-
         let tipCenter = calculateTipCenter(center: center, radius: radius)
         updateTipCircle(at: tipCenter)
         createGlowEffect(at: tipCenter)

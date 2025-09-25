@@ -187,19 +187,12 @@ class DashboardLinearProgressView: UIView {
             return
         }
 
-        // Only show tip if there's progress
-        guard currentProgress > 0 else {
-            tipCircleLayer.path = nil
-            // Clear sublayers efficiently
-            tipGlowLayer.sublayers?.forEach { $0.removeFromSuperlayer() }
-            return
-        }
-
-        // Calculate tip position at the end of the progress bar
-        let progressWidth = progressBarRect.width * CGFloat(currentProgress)
+        // If progress is zero, position tip at 0.5% position to keep it visible
+        // and within frame.
+        let adjustedProgress = currentProgress == 0 ? 0.05 : currentProgress
+        let progressWidth = progressBarRect.width * CGFloat(adjustedProgress)
         let tipRadius = min(progressBarRect.height / 2, 10) // Cap the tip radius
 
-        // Position tip so its trailing edge aligns with progress bar's end
         let tipX = progressBarRect.minX + progressWidth - tipRadius
         let tipY = progressBarRect.midY
         let tipCenter = CGPoint(x: tipX, y: tipY)
