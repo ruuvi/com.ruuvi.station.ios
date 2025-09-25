@@ -140,6 +140,14 @@ class RuuviTagDataService {
         }
     }
 
+    func reorderSnapshots() {
+        let orderedSnapshots = reorderSnapshots(
+            snapshots,
+            with: settings.dashboardSensorOrder
+        )
+        self.snapshots = orderedSnapshots
+    }
+
     func reorderSnapshots(with orderedIds: [String]) {
         let reorderedSnapshots = reorderSnapshots(snapshots, with: orderedIds)
         snapshots = reorderedSnapshots
@@ -199,7 +207,7 @@ class RuuviTagDataService {
     }
 
     private func loadBackground(for snapshot: RuuviTagCardSnapshot, sensor: AnyRuuviTagSensor) {
-
+        // Prevent duplicate loading with thread-safe access
         pendingBackgroundLoadsLock.lock()
         let isAlreadyLoading = pendingBackgroundLoads.contains(sensor.id)
         if !isAlreadyLoading {
@@ -442,6 +450,24 @@ private extension RuuviTagDataService {
         } else {
             snapshots.insert(snapshot, at: 0)
         }
+
+        // Keep ruuviTags array in sync with snapshots order
+        var reorderedTags: [AnyRuuviTagSensor] = []
+        for snap in snapshots {
+            if let tag = ruuviTags.first(where: { $0.id == snap.id }) {
+                reorderedTags.append(tag)
+            }
+        }
+        // Add the new sensor if it wasn't already in ruuviTags
+        if !reorderedTags.contains(where: { $0.id == sensor.id }) {
+            // Find the position in snapshots
+            if let snapshotIndex = snapshots.firstIndex(where: { $0.id == sensor.id }) {
+                reorderedTags.insert(sensor, at: snapshotIndex)
+            } else {
+                reorderedTags.append(sensor)
+            }
+        }
+        ruuviTags = reorderedTags
 
         // Load background for the new sensor
         loadBackground(for: snapshot, sensor: sensor)

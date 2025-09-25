@@ -905,6 +905,7 @@ extension DashboardPresenter: SignInBenefitsModuleOutput {
     func signIn(module: SignInBenefitsModuleInput, didSuccessfulyLogin: Any?) {
         startAllServices()
         cloudSyncService.triggerFullHistorySync()
+        RuuviTagServiceCoordinatorManager.shared.forceReorderSnapshots()
         RuuviTagServiceCoordinatorManager.shared.forceLoadBackgrounds()
         view?.isAuthorized = cloudSyncService.isAuthorized()
 

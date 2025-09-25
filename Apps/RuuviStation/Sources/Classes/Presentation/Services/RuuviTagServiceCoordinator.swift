@@ -138,6 +138,10 @@ class RuuviTagServiceCoordinator {
         }
     }
 
+    func forceReorderSnapshots() {
+        dataService.reorderSnapshots()
+    }
+
     func forceLoadBackgrounds() {
         dataService.loadBackgroundsForCurrentSnapshots()
     }
@@ -800,6 +804,10 @@ class RuuviTagServiceCoordinatorManager {
 
     func forceCloudLogout() {
         withCoordinator { $0.forceCloudLogout() }
+    }
+
+    func forceReorderSnapshots() {
+        withCoordinator { $0.forceReorderSnapshots() }
     }
 
     func reorderSnapshots(with orderedIds: [String]) {
