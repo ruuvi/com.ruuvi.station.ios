@@ -33,6 +33,8 @@ private extension NSAttributedString {
     static func unescapeHTML(_ escapedHTML: String) -> String {
         return escapedHTML
             .replacingOccurrences(of: "\\n", with: "\n")
+            .replacingOccurrences(of: "[", with: "<")
+            .replacingOccurrences(of: "]", with: ">")
             .replacingOccurrences(of: "&lt;", with: "<")
             .replacingOccurrences(of: "&gt;", with: ">")
     }
