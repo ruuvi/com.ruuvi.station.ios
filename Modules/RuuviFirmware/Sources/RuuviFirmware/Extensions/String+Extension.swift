@@ -1,20 +1,6 @@
 import Foundation
 
 extension String {
-    static let nbsp = "\u{00a0}"
-}
-
-extension String? {
-    func hasText() -> Bool {
-        if let self, !self.isEmpty {
-            true
-        } else {
-            false
-        }
-    }
-}
-
-extension String {
     var semVar: [Int]? {
         // Look for the first x.y.z sequence
         let regex = try! NSRegularExpression(pattern: "(\\d+)\\.(\\d+)\\.(\\d+)")

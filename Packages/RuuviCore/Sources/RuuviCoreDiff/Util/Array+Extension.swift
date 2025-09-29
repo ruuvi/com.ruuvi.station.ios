@@ -53,3 +53,22 @@ extension Collection {
         indices.contains(index) ? self[index] : nil
     }
 }
+
+public extension Array where Element == Int {
+
+    /// Compares two version arrays lexicographically.
+    /// Returns .orderedAscending if lhs < rhs, .orderedDescending if lhs > rhs, .orderedSame if equal.
+    static func compareVersions(_ lhs: [Int], _ rhs: [Int]) -> ComparisonResult {
+        let maxCount = Swift.max(lhs.count, rhs.count)
+        for i in 0..<maxCount {
+            let l = i < lhs.count ? lhs[i] : 0
+            let r = i < rhs.count ? rhs[i] : 0
+            if l < r {
+                return .orderedAscending
+            } else if l > r {
+                return .orderedDescending
+            }
+        }
+        return .orderedSame
+    }
+}

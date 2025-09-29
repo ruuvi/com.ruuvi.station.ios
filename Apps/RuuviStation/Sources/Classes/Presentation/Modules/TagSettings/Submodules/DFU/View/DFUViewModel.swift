@@ -2,6 +2,7 @@
 import BTKit
 import Combine
 import Foundation
+import RuuviCore
 import RuuviDaemon
 import RuuviFirmware
 import RuuviLocal
@@ -362,7 +363,15 @@ extension DFUViewModel {
         currentRelease: CurrentRelease?
     ) -> Bool {
         guard let currentRelease else { return true }
-        return !currentRelease.version.contains(latestRelease.version)
+        let latestVersion = latestRelease.version.semVar
+        let currentVersion = currentRelease.version.semVar
+
+        // If parsing fails, assume update is recommended
+        guard let latest = latestVersion, let current = currentVersion else {
+            return true
+        }
+
+        return Array.compareVersions(latest, current) == .orderedDescending
     }
 
     func whenFlashing() -> Feedback<State, Event> {
