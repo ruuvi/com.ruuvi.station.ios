@@ -28,8 +28,8 @@ struct DFUUIView: View {
         let finish = RuuviLocalization.DfuFlash.Finish.text
     }
 
-    private let titleFont = Font.ruuviHeadline()
-    private let bodyFont = Font.ruuviBody()
+    private let titleFont = Font(RuuviFonts.mulish(.bold, size: 16))
+    private let bodyFont = Font(RuuviFonts.mulish(.regular, size: 16))
     private let texts = Texts()
     @State private var isBatteryLow = false
     @State private var superviewSize: CGSize = .zero

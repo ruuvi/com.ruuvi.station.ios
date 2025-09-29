@@ -117,6 +117,10 @@ extension SelectionTableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         output.viewDidSelect(itemAtIndex: indexPath.row)
     }
+
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 44
+    }
 }
 
 // MARK: - Update UI

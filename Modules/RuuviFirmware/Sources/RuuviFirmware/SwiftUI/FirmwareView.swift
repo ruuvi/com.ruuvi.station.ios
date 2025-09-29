@@ -25,9 +25,8 @@ struct FirmwareView: View {
     }
 
     private let texts = Texts()
-    private static let fontSize: CGFloat = 16
-    private let titleFont = Font.ruuviHeadline()
-    private let bodyFont = Font.ruuviBody()
+    private let titleFont = Font(RuuviFonts.mulish(.bold, size: 16))
+    private let bodyFont = Font(RuuviFonts.mulish(.regular, size: 16))
     @State private var superviewSize: CGSize = .zero
 
     private var content: some View {

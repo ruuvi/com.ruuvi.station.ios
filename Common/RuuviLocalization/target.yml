@@ -5,6 +5,7 @@ targets:
       base:
         MERGEABLE_LIBRARY: false
         APPLICATION_EXTENSION_API_ONLY: true
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: DISABLE_DYNAMIC_FONTS
     templates:
     - CommonFramework
     sources:

@@ -179,7 +179,7 @@ extension SettingsTableViewController {
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if cell == experimentalFunctionsCell {
             return experimentalFunctionsEnabled
-                ? super.tableView(tableView, heightForRowAt: indexPath)
+                ? 44
                 : 0
         }
         // Add the logic for the cloud mode cell here
@@ -188,7 +188,7 @@ extension SettingsTableViewController {
             !cloudModeVisible && cell == ruuviCloudCell {
             return 0
         } else {
-            return super.tableView(tableView, heightForRowAt: indexPath)
+            return 44
         }
     }
 
