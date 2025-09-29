@@ -21,7 +21,6 @@ class SensorRemovalViewController: UIViewController {
         label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.adjustsFontForContentSizeCategory = true
         label.font = UIFont.ruuviBody()
         return label
     }()

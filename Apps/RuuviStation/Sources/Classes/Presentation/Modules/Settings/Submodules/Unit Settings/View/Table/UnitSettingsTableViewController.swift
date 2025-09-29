@@ -156,6 +156,10 @@ extension UnitSettingsTableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         output.viewDidSelect(type: indexPath.row == 0 ? .unit : .accuracy)
     }
+
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 44
+    }
 }
 
 // MARK: - Update UI

@@ -68,7 +68,6 @@ class RuuviLinkTextView: UITextView {
         isUserInteractionEnabled = true
         backgroundColor = .clear
         isSelectable = false
-        adjustsFontForContentSizeCategory = true
 
         let regularAttributes: [NSAttributedString.Key: Any] = [
             .font: RuuviFonts.mulish(.regular, size: fontSize, for: .body),

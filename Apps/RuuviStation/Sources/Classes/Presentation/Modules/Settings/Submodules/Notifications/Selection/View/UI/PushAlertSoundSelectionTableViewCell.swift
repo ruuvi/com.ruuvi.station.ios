@@ -7,7 +7,6 @@ class PushAlertSelectionTableViewCell: UITableViewCell {
         label.textColor = RuuviColor.textColor.color
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.adjustsFontForContentSizeCategory = true
         label.font = UIFont.ruuviBody()
         return label
     }()

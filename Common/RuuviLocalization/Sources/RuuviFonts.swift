@@ -126,9 +126,13 @@ public struct FontAsset {
             return Font.preferredFont(forTextStyle: textStyle)
         }
 
+        #if DISABLE_DYNAMIC_FONTS
+        return customFont
+        #else
         // Use UIFontMetrics to scale the font
         let fontMetrics = UIFontMetrics(forTextStyle: textStyle)
         return fontMetrics.scaledFont(for: customFont)
+        #endif
     }
     #endif
 
@@ -140,7 +144,11 @@ public struct FontAsset {
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     public func swiftUIFont(size: CGFloat, relativeTo textStyle: SwiftUI.Font.TextStyle) -> SwiftUI.Font {
+        #if DISABLE_DYNAMIC_FONTS
+        return .custom(name, size: size)
+        #else
         return .custom(name, size: size, relativeTo: textStyle)
+        #endif
     }
     #endif
 }
@@ -331,7 +339,7 @@ public enum RuuviFonts {
             }
         }
 
-        #if os(iOS) || os(tvOS) || os(watchOS)
+#if os(iOS) || os(tvOS) || os(watchOS)
         public var textStyle: UIFont.TextStyle {
             switch self {
             case .largeTitle: return .largeTitle
@@ -350,11 +358,16 @@ public enum RuuviFonts {
 
         @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
         public func scaledFont() -> UIFont {
-            return fontAsset.scaledFont(for: textStyle)
+            let baseSize = self.baseSize
+            #if DISABLE_DYNAMIC_FONTS
+            return fontAsset.font(size: baseSize)
+            #else
+            return fontAsset.scaledFont(for: textStyle, size: baseSize)
+            #endif
         }
-        #endif
+#endif
 
-        #if canImport(SwiftUI)
+#if canImport(SwiftUI)
         @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
         public var swiftUITextStyle: SwiftUI.Font.TextStyle {
             switch self {
@@ -375,9 +388,13 @@ public enum RuuviFonts {
         @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
         public func swiftUIFont() -> SwiftUI.Font {
             let baseSize = self.baseSize
+            #if DISABLE_DYNAMIC_FONTS
+            return fontAsset.swiftUIFont(size: baseSize)
+            #else
             return fontAsset.swiftUIFont(size: baseSize, relativeTo: swiftUITextStyle)
+            #endif
         }
-        #endif
+#endif
 
         // Base sizes that match Apple's defaults
         private var baseSize: CGFloat {
@@ -418,19 +435,31 @@ public enum RuuviFonts {
     /// Get Mulish font with Dynamic Type scaling
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
     public static func mulish(_ weight: MulishWeight, size: CGFloat, for textStyle: UIFont.TextStyle) -> UIFont {
+        #if DISABLE_DYNAMIC_FONTS
+        return weight.fontAsset.font(size: size)
+        #else
         return weight.fontAsset.scaledFont(for: textStyle, size: size)
+        #endif
     }
 
     /// Get Montserrat font with Dynamic Type scaling
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
     public static func montserrat(_ weight: MontserratWeight, size: CGFloat, for textStyle: UIFont.TextStyle) -> UIFont {
+        #if DISABLE_DYNAMIC_FONTS
+        return weight.fontAsset.font(size: size)
+        #else
         return weight.fontAsset.scaledFont(for: textStyle, size: size)
+        #endif
     }
 
     /// Get Oswald font with Dynamic Type scaling
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
     public static func oswald(_ weight: OswaldWeight, size: CGFloat, for textStyle: UIFont.TextStyle) -> UIFont {
+        #if DISABLE_DYNAMIC_FONTS
+        return weight.fontAsset.font(size: size)
+        #else
         return weight.fontAsset.scaledFont(for: textStyle, size: size)
+        #endif
     }
     #endif
 
@@ -457,19 +486,31 @@ public enum RuuviFonts {
     /// Get Mulish SwiftUI font with Dynamic Type
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     public static func mulishSwiftUI(_ weight: MulishWeight, size: CGFloat, relativeTo textStyle: SwiftUI.Font.TextStyle) -> SwiftUI.Font {
+        #if DISABLE_DYNAMIC_FONTS
+        return weight.fontAsset.swiftUIFont(size: size)
+        #else
         return weight.fontAsset.swiftUIFont(size: size, relativeTo: textStyle)
+        #endif
     }
 
     /// Get Montserrat SwiftUI font with Dynamic Type
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     public static func montserratSwiftUI(_ weight: MontserratWeight, size: CGFloat, relativeTo textStyle: SwiftUI.Font.TextStyle) -> SwiftUI.Font {
+        #if DISABLE_DYNAMIC_FONTS
+        return weight.fontAsset.swiftUIFont(size: size)
+        #else
         return weight.fontAsset.swiftUIFont(size: size, relativeTo: textStyle)
+        #endif
     }
 
     /// Get Oswald SwiftUI font with Dynamic Type
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     public static func oswaldSwiftUI(_ weight: OswaldWeight, size: CGFloat, relativeTo textStyle: SwiftUI.Font.TextStyle) -> SwiftUI.Font {
+        #if DISABLE_DYNAMIC_FONTS
+        return weight.fontAsset.swiftUIFont(size: size)
+        #else
         return weight.fontAsset.swiftUIFont(size: size, relativeTo: textStyle)
+        #endif
     }
     #endif
 }
@@ -536,57 +577,101 @@ public extension UIFont {
     // MARK: - Dynamic Type Support
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
     static func ruuviLargeTitle() -> UIFont {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.extraBold.font(size: 34)
+        #else
         return RuuviFonts.DynamicType.largeTitle().scaledFont()
+        #endif
     }
 
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
     static func ruuviTitle1() -> UIFont {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.extraBold.font(size: 28)
+        #else
         return RuuviFonts.DynamicType.title1().scaledFont()
+        #endif
     }
 
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
     static func ruuviTitle2() -> UIFont {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.bold.font(size: 22)
+        #else
         return RuuviFonts.DynamicType.title2().scaledFont()
+        #endif
     }
 
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
     static func ruuviTitle3() -> UIFont {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.bold.font(size: 20)
+        #else
         return RuuviFonts.DynamicType.title3().scaledFont()
+        #endif
     }
 
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
     static func ruuviHeadline() -> UIFont {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.bold.font(size: 17)
+        #else
         return RuuviFonts.DynamicType.headline().scaledFont()
+        #endif
     }
 
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
     static func ruuviSubheadline() -> UIFont {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.regular.font(size: 15)
+        #else
         return RuuviFonts.DynamicType.subheadline().scaledFont()
+        #endif
     }
 
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
     static func ruuviBody() -> UIFont {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.regular.font(size: 17)
+        #else
         return RuuviFonts.DynamicType.body().scaledFont()
+        #endif
     }
 
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
     static func ruuviCallout() -> UIFont {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.bold.font(size: 16)
+        #else
         return RuuviFonts.DynamicType.callout().scaledFont()
+        #endif
     }
 
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
     static func ruuviFootnote() -> UIFont {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.regular.font(size: 13)
+        #else
         return RuuviFonts.DynamicType.footnote().scaledFont()
+        #endif
     }
 
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
     static func ruuviCaption1() -> UIFont {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.regular.font(size: 12)
+        #else
         return RuuviFonts.DynamicType.caption1().scaledFont()
+        #endif
     }
 
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
     static func ruuviCaption2() -> UIFont {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.regular.font(size: 11)
+        #else
         return RuuviFonts.DynamicType.caption2().scaledFont()
+        #endif
     }
 
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
@@ -666,60 +751,104 @@ public extension SwiftUI.Font {
     // MARK: - Dynamic Type Support
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     static func ruuviLargeTitle() -> SwiftUI.Font {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.extraBold.swiftUIFont(size: 34)
+        #else
         return RuuviFonts.DynamicType.largeTitle().swiftUIFont()
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     static func ruuviTitle1() -> SwiftUI.Font {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.extraBold.swiftUIFont(size: 28)
+        #else
         return RuuviFonts.DynamicType.title1().swiftUIFont()
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     static func ruuviTitle2() -> SwiftUI.Font {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.bold.swiftUIFont(size: 22)
+        #else
         return RuuviFonts.DynamicType.title2().swiftUIFont()
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     static func ruuviTitle3() -> SwiftUI.Font {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.bold.swiftUIFont(size: 20)
+        #else
         return RuuviFonts.DynamicType.title3().swiftUIFont()
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     static func ruuviHeadline() -> SwiftUI.Font {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.bold.swiftUIFont(size: 17)
+        #else
         return RuuviFonts.DynamicType.headline().swiftUIFont()
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     static func ruuviSubheadline() -> SwiftUI.Font {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.regular.swiftUIFont(size: 15)
+        #else
         return RuuviFonts.DynamicType.subheadline().swiftUIFont()
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     static func ruuviBody() -> SwiftUI.Font {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.regular.swiftUIFont(size: 17)
+        #else
         return RuuviFonts.DynamicType.body().swiftUIFont()
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     static func ruuviCallout() -> SwiftUI.Font {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.bold.swiftUIFont(size: 16)
+        #else
         return RuuviFonts.DynamicType.callout().swiftUIFont()
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     static func ruuviFootnote() -> SwiftUI.Font {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.regular.swiftUIFont(size: 13)
+        #else
         return RuuviFonts.DynamicType.footnote().swiftUIFont()
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     static func ruuviCaption1() -> SwiftUI.Font {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.regular.swiftUIFont(size: 12)
+        #else
         return RuuviFonts.DynamicType.caption1().swiftUIFont()
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     static func ruuviCaption2() -> SwiftUI.Font {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.regular.swiftUIFont(size: 11)
+        #else
         return RuuviFonts.DynamicType.caption2().swiftUIFont()
+        #endif
     }
 
-#if canImport(SwiftUI)
+    #if canImport(SwiftUI)
     /// Get Mulish SwiftUI font
     @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
     static func mulish(_ weight: RuuviFonts.MulishWeight, size: CGFloat) -> SwiftUI.Font {
@@ -741,21 +870,33 @@ public extension SwiftUI.Font {
     /// Get Mulish SwiftUI font with Dynamic Type
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     static func mulish(_ weight: RuuviFonts.MulishWeight, size: CGFloat, relativeTo textStyle: SwiftUI.Font.TextStyle) -> SwiftUI.Font {
+        #if DISABLE_DYNAMIC_FONTS
+        return weight.fontAsset.swiftUIFont(size: size)
+        #else
         return weight.fontAsset.swiftUIFont(size: size, relativeTo: textStyle)
+        #endif
     }
 
     /// Get Montserrat SwiftUI font with Dynamic Type
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     static func montserrat(_ weight: RuuviFonts.MontserratWeight, size: CGFloat, relativeTo textStyle: SwiftUI.Font.TextStyle) -> SwiftUI.Font {
+        #if DISABLE_DYNAMIC_FONTS
+        return weight.fontAsset.swiftUIFont(size: size)
+        #else
         return weight.fontAsset.swiftUIFont(size: size, relativeTo: textStyle)
+        #endif
     }
 
     /// Get Oswald SwiftUI font with Dynamic Type
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     static func oswald(_ weight: RuuviFonts.OswaldWeight, size: CGFloat, relativeTo textStyle: SwiftUI.Font.TextStyle) -> SwiftUI.Font {
+        #if DISABLE_DYNAMIC_FONTS
+        return weight.fontAsset.swiftUIFont(size: size)
+        #else
         return weight.fontAsset.swiftUIFont(size: size, relativeTo: textStyle)
+        #endif
     }
-#endif
+    #endif
 }
 
 @available(iOS 13.0, tvOS 13.0, watchOS 6.0, macOS 10.15, *)
@@ -812,57 +953,101 @@ public extension SwiftUI.Text {
     // MARK: - Dynamic Type Support
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     func ruuviLargeTitle() -> SwiftUI.Text {
+        #if DISABLE_DYNAMIC_FONTS
+        return self.font(RuuviFonts.Mulish.extraBold.swiftUIFont(size: 34))
+        #else
         return self.font(.ruuviLargeTitle())
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     func ruuviTitle1() -> SwiftUI.Text {
+        #if DISABLE_DYNAMIC_FONTS
+        return self.font(RuuviFonts.Mulish.extraBold.swiftUIFont(size: 28))
+        #else
         return self.font(.ruuviTitle1())
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     func ruuviTitle2() -> SwiftUI.Text {
+        #if DISABLE_DYNAMIC_FONTS
+        return self.font(RuuviFonts.Mulish.bold.swiftUIFont(size: 22))
+        #else
         return self.font(.ruuviTitle2())
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     func ruuviTitle3() -> SwiftUI.Text {
+        #if DISABLE_DYNAMIC_FONTS
+        return self.font(RuuviFonts.Mulish.bold.swiftUIFont(size: 20))
+        #else
         return self.font(.ruuviTitle3())
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     func ruuviHeadline() -> SwiftUI.Text {
+        #if DISABLE_DYNAMIC_FONTS
+        return self.font(RuuviFonts.Mulish.bold.swiftUIFont(size: 17))
+        #else
         return self.font(.ruuviHeadline())
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     func ruuviSubheadline() -> SwiftUI.Text {
+        #if DISABLE_DYNAMIC_FONTS
+        return self.font(RuuviFonts.Mulish.regular.swiftUIFont(size: 15))
+        #else
         return self.font(.ruuviSubheadline())
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     func ruuviBody() -> SwiftUI.Text {
+        #if DISABLE_DYNAMIC_FONTS
+        return self.font(RuuviFonts.Mulish.regular.swiftUIFont(size: 17))
+        #else
         return self.font(.ruuviBody())
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     func ruuviCallout() -> SwiftUI.Text {
+        #if DISABLE_DYNAMIC_FONTS
+        return self.font(RuuviFonts.Mulish.bold.swiftUIFont(size: 16))
+        #else
         return self.font(.ruuviCallout())
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     func ruuviFootnote() -> SwiftUI.Text {
+        #if DISABLE_DYNAMIC_FONTS
+        return self.font(RuuviFonts.Mulish.regular.swiftUIFont(size: 13))
+        #else
         return self.font(.ruuviFootnote())
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     func ruuviCaption1() -> SwiftUI.Text {
+        #if DISABLE_DYNAMIC_FONTS
+        return self.font(RuuviFonts.Mulish.regular.swiftUIFont(size: 12))
+        #else
         return self.font(.ruuviCaption1())
+        #endif
     }
 
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, macOS 11.0, *)
     func ruuviCaption2() -> SwiftUI.Text {
+        #if DISABLE_DYNAMIC_FONTS
+        return self.font(RuuviFonts.Mulish.regular.swiftUIFont(size: 11))
+        #else
         return self.font(.ruuviCaption2())
+        #endif
     }
 }
 #endif
