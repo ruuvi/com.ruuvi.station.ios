@@ -3,12 +3,12 @@ import CoreNFC
 import RuuviLocalization
 import UIKit
 
-protocol DiscoverTableHeaderViewDelegate: NSObjectProtocol {
-    func didTapAddWithNFCButton(sender: DiscoverTableHeaderView)
+protocol DiscoverHeaderViewDelegate: NSObjectProtocol {
+    func didTapAddWithNFCButton(sender: DiscoverHeaderView)
 }
 
-class DiscoverTableHeaderView: UIView {
-    weak var delegate: DiscoverTableHeaderViewDelegate?
+class DiscoverHeaderView: UIView {
+    weak var delegate: DiscoverHeaderViewDelegate?
 
     // ----- Private
     private var isNFCAvailable: Bool {
@@ -144,7 +144,7 @@ class DiscoverTableHeaderView: UIView {
     }
 }
 
-extension DiscoverTableHeaderView {
+extension DiscoverHeaderView {
     func handleNFCButtonViewVisibility(show: Bool) {
         nfcButton.isHidden = !show
         if show {
@@ -170,33 +170,5 @@ extension DiscoverTableHeaderView {
             (show && isBluetoothPermissionGranted && isNFCAvailable) ?
             (addSensorString + "\n\n" + addSensorViaNFCString) : addSensorString
         descriptionLabel.text = descriptionString
-    }
-}
-
-extension UIButton {
-    func setInsets(
-        forContentPadding contentPadding: UIEdgeInsets,
-        imageTitlePadding: CGFloat
-    ) {
-        var config = self.configuration ?? .plain()
-        config.contentInsets = NSDirectionalEdgeInsets(
-            top: contentPadding.top,
-            leading: contentPadding.left,
-            bottom: contentPadding.bottom,
-            trailing: contentPadding.right + imageTitlePadding
-        )
-        config.imagePadding = imageTitlePadding
-        self.configuration = config
-    }
-}
-
-extension UIView {
-    func constraints(to view: UIView, padding: UIEdgeInsets = .zero) -> [NSLayoutConstraint] {
-        [
-            topAnchor.constraint(equalTo: view.topAnchor, constant: padding.top),
-            leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding.left),
-            bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -padding.bottom),
-            trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding.right),
-        ]
     }
 }
