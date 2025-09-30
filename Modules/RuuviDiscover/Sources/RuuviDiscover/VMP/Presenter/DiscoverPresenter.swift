@@ -22,9 +22,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
         if let view {
             return view
         } else {
-            let storyboard = UIStoryboard.named("Discover", for: Self.self)
-            // swiftlint:disable:next force_cast
-            let view = storyboard.instantiateInitialViewController() as! DiscoverTableViewController
+            let view = DiscoverTableViewController()
             view.output = self
             self.view = view
             return view
