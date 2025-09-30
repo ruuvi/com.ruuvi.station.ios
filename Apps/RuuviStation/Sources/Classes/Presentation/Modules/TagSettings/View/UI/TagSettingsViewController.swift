@@ -586,13 +586,38 @@ extension TagSettingsViewController {
     }
 
     private func updateUI() {
-        tableView.performBatchUpdates({
-            tableView.reloadData()
-        }, completion: { [weak self] completed in
-            if completed {
-                self?.frozenContentOffsetForRowAnimation = self?.tableView.contentOffset
+        // Keep existing behavior for callers that rely on updateUI.
+        // Use a non-animated full reload wrapped safely.
+        reloadAllSectionsWithoutAnimation()
+    }
+
+    /// Reloads the table view without animations and preserves the
+    /// current content offset to avoid visual glitches and invalid
+    /// UITableView update exceptions caused by nested batch updates.
+    private func reloadAllSectionsWithoutAnimation() {
+        // Ensure we run on main thread
+        if !Thread.isMainThread {
+            DispatchQueue.main.async { [weak self] in
+                self?.reloadAllSectionsWithoutAnimation()
             }
-        })
+            return
+        }
+
+        let originalContentOffset = tableView.contentOffset
+
+        // Disable animations while we mutate the data source and reload
+        // to avoid UITableView performing internal batch updates that
+        // conflict with other code paths.
+        UIView.setAnimationsEnabled(false)
+        tableView.reloadData()
+        UIView.setAnimationsEnabled(true)
+
+        // Restore content offset to avoid jump.
+        tableView.layoutIfNeeded()
+        if tableView.contentOffset != originalContentOffset {
+            frozenContentOffsetForRowAnimation = originalContentOffset
+            tableView.setContentOffset(originalContentOffset, animated: false)
+        }
     }
 
     private func reloadSection(index: Int) {
@@ -1135,6 +1160,24 @@ extension TagSettingsViewController {
         guard let viewModel
         else {
             return
+        }
+
+        // Track whether we currently have a latest measurement to detect
+        // transitions between nil and non-nil. When presence changes we
+        // need to reconfigure alert sections because available alert types
+        // depend on which sensor values are present.
+        var hasLatestMeasurement = viewModel.latestMeasurement.value != nil
+        viewModel.latestMeasurement.bind { [weak self] _, measurement in
+            guard let self else { return }
+            let nowHas = measurement != nil
+            if nowHas != hasLatestMeasurement {
+                hasLatestMeasurement = nowHas
+                // Rebuild alert sections on main thread using safe reload
+                DispatchQueue.main.async {
+                    self.configureSections()
+                    self.reloadAllSectionsWithoutAnimation()
+                }
+            }
         }
 
         // Temperature
@@ -2615,7 +2658,7 @@ extension TagSettingsViewController {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func configureAlertSections() -> [TagSettingsSection] {
         var sections: [TagSettingsSection] = []
 
