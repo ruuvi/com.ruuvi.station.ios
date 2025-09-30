@@ -238,18 +238,12 @@ class RuuviTagDataService {
                     self.pendingBackgroundLoads.remove(sensor.id)
                     self.pendingBackgroundLoadsLock.unlock()
 
-                }, failure: { [weak self] error in
+                }, failure: { [weak self] _ in
                     guard let self = self else { return }
 
                     self.pendingBackgroundLoadsLock.lock()
                     self.pendingBackgroundLoads.remove(sensor.id)
                     self.pendingBackgroundLoadsLock.unlock()
-
-                    DispatchQueue.main.async {
-                        if !self.settings.syncExtensiveChangesInProgress {
-                            self.delegate?.sensorDataService(self, didEncounterError: error)
-                        }
-                    }
                 })
         }
     }
@@ -360,6 +354,7 @@ private extension RuuviTagDataService {
         measurementService.add(self)
     }
 
+    // swiftlint:disable:next function_body_length
     func buildInitialSnapshots() {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
@@ -399,6 +394,13 @@ private extension RuuviTagDataService {
                             sensorSettings: settings
                         )
                     }
+
+                    // Preserve existing in-memory background image (if any) to avoid UI flash
+                    if let existing = self.snapshots.first(where: { $0.id == snapshot.id }),
+                       existing.displayData.background != nil, snapshot.displayData.background == nil {
+                        snapshot.updateBackgroundImage(existing.displayData.background)
+                    }
+
                     newSnapshots.append(snapshot)
                 }
 
@@ -440,6 +442,7 @@ private extension RuuviTagDataService {
         )
     }
 
+    // swiftlint:disable:next function_body_length
     func addSensorSnapshot(sensor: AnyRuuviTagSensor) {
         let snapshot = createSnapshot(from: sensor)
 
