@@ -47,6 +47,7 @@ class TagSettingsSwitchCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // swiftlint:disable:next function_body_length
     fileprivate func setUpUI() {
         contentView.isUserInteractionEnabled = true
 
@@ -65,17 +66,25 @@ class TagSettingsSwitchCell: UITableViewCell {
                 right: 0
             )
         )
+        titleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
         addSubview(pairingAnimationView)
         pairingAnimationView.anchor(
             top: nil,
-            leading: titleLabel.trailingAnchor,
+            leading: nil,
             bottom: nil,
             trailing: nil,
             padding: .init(top: 0, left: 6, bottom: 0, right: 0),
             size: .init(width: 16, height: 16)
         )
         pairingAnimationView.centerYInSuperview()
+
+        titleLabel.trailingAnchor
+            .constraint(
+                lessThanOrEqualTo: pairingAnimationView.leadingAnchor,
+                constant: -6
+            ).isActive = true
 
         addSubview(statusSwitch)
         statusSwitch.anchor(
@@ -92,6 +101,9 @@ class TagSettingsSwitchCell: UITableViewCell {
         )
         statusSwitch.widthLessThanOrEqualTo(constant: 350)
         statusSwitch.centerYInSuperview()
+
+        statusSwitch.setContentHuggingPriority(.required, for: .horizontal)
+        statusSwitch.setContentCompressionResistancePriority(.required, for: .horizontal)
 
         addSubview(seprator)
         seprator.anchor(
