@@ -97,7 +97,7 @@ extension BackgroundSelectionPresenter {
                     let luid = userInfo[BPDidUpdateBackgroundUploadProgressKey.luid] as? LocalIdentifier
                     let macId = userInfo[BPDidUpdateBackgroundUploadProgressKey.macId] as? MACIdentifier
                     if (ruuviTag.luid?.value != nil && ruuviTag.luid?.value == luid?.value)
-                        || (ruuviTag.macId?.value != nil && ruuviTag.macId?.value == macId?.value) {
+                        || (ruuviTag.macId?.any != nil && ruuviTag.macId?.any == macId?.any) {
                         if let percentage = userInfo[BPDidUpdateBackgroundUploadProgressKey.progress] as? Double {
                             sSelf.viewModel.uploadingBackgroundPercentage.value = percentage
                             sSelf.viewModel.isUploadingBackground.value = percentage < 1.0
@@ -125,8 +125,8 @@ extension BackgroundSelectionPresenter {
                 if let userInfo = notification.userInfo, let ruuviTag = sSelf.ruuviTag {
                     let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
                     let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
-                    if (ruuviTag.luid?.value != nil && ruuviTag.luid?.value == luid?.value)
-                        || (ruuviTag.macId?.value != nil && ruuviTag.macId?.value == macId?.value) {
+                    if (ruuviTag.luid?.any != nil && ruuviTag.luid?.any == luid?.any)
+                        || (ruuviTag.macId?.any != nil && ruuviTag.macId?.any == macId?.any) {
                         sSelf.ruuviSensorPropertiesService.getImage(for: ruuviTag)
                             .on(success: { [weak sSelf] image in
                                 guard let sSelf else { return }

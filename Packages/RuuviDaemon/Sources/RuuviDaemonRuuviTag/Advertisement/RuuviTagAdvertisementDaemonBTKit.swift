@@ -338,11 +338,14 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
             }
         }) {
             ruuviStorage.readLatest(ruuviTag).on(success: { [weak self] localRecord in
-                let advertisement = record.with(source: .advertisement)
                 guard localRecord != nil
                 else {
                     self?.ruuviPool.createLast(record)
                     return
+                }
+                var advertisement: RuuviTagSensorRecord = record.with(source: .advertisement)
+                if let macId = ruuviTag.macId {
+                    advertisement = advertisement.with(macId: macId)
                 }
                 self?.ruuviPool.updateLast(advertisement)
             })

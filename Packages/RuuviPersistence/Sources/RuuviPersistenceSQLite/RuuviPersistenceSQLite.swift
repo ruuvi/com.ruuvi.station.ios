@@ -188,7 +188,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     SELECT
                         *
                     FROM  ruuvi_tag_sensor_records rtsr
-                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId)' AND rtsr.date > ?
+                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId.lastThreeBytes)' AND rtsr.date > ?
                     ORDER BY date
                     """
                     sqliteEntities = try Record.fetchAll(
@@ -219,7 +219,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     SELECT
                         *
                     FROM  ruuvi_tag_sensor_records rtsr
-                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId)' AND rtsr.date > ?
+                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId.lastThreeBytes)' AND rtsr.date > ?
                     GROUP BY STRFTIME('%s', STRFTIME('%Y-%m-%d %H:%M:%S', rtsr.date) ) / \(Int(interval))
                     ORDER BY date
                     """
@@ -261,12 +261,12 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     SELECT
                         *
                     FROM  ruuvi_tag_sensor_records rtsr
-                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId)' AND rtsr.date > ?
+                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId.lastThreeBytes)' AND rtsr.date > ?
                     AND rtsr.date < ?
                     GROUP BY STRFTIME('%s', STRFTIME('%Y-%m-%d %H:%M:%S', rtsr.date) ) / \(Int(pruningInterval))
                     UNION ALL
                     SELECT * FROM  ruuvi_tag_sensor_records rtsr
-                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId)' AND rtsr.date > ?
+                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId.lastThreeBytes)' AND rtsr.date > ?
                     ORDER BY date
                     """
                     sqliteEntities = try Record.fetchAll(
@@ -296,7 +296,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     SELECT
                         *
                     FROM  ruuvi_tag_sensor_records rtsr
-                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId)'
+                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId.lastThreeBytes)'
                     GROUP BY STRFTIME('%s', STRFTIME('%Y-%m-%d %H:%M:%S', rtsr.date) ) / \(Int(interval))
                     ORDER BY date
                     """
@@ -338,10 +338,19 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             do {
                 var sqliteRecord: Record?
                 try self?.database.dbPool.read { db in
-                    let request = Record.order(Record.dateColumn.desc)
-                        .filter(
-                            (ruuviTag.luid?.value != nil && Record.luidColumn == ruuviTag.luid?.value)
-                                || (ruuviTag.macId?.value != nil && Record.macColumn == ruuviTag.macId?.value))
+                    let request = Record.order(
+                        Record.dateColumn.desc
+                    ).filter(
+                            (
+                                ruuviTag.luid?.value != nil && Record.luidColumn == ruuviTag.luid?.value
+                            )
+                            || (
+                                ruuviTag.macId?.value != nil && Record.macColumn
+                                    .like(
+                                    "%\(ruuviTag.macId!.value.lastThreeBytes)"
+                                )
+                            )
+                        )
                     sqliteRecord = try request.fetchOne(db)
                 }
                 promise.succeed(value: sqliteRecord)
@@ -360,8 +369,15 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 try self?.database.dbPool.read { db in
                     let request = RecordLatest.order(RecordLatest.dateColumn.desc)
                         .filter(
-                            (ruuviTag.luid?.value != nil && RecordLatest.luidColumn == ruuviTag.luid?.value)
-                                || (ruuviTag.macId?.value != nil && RecordLatest.macColumn == ruuviTag.macId?.value))
+                            (
+                                ruuviTag.luid?.value != nil && RecordLatest.luidColumn == ruuviTag.luid?.value
+                            )
+                            || (
+                                ruuviTag.macId?.value != nil && RecordLatest.macColumn.like(
+                                    "%\(ruuviTag.macId!.value.lastThreeBytes)"
+                                )
+                            )
+                        )
                     sqliteRecord = try request.fetchOne(db)
                 }
                 promise.succeed(value: sqliteRecord)
@@ -458,7 +474,9 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         let promise = Promise<Bool, RuuviPersistenceError>()
         do {
             var deletedCount = 0
-            let request = Record.filter(Record.luidColumn == ruuviTagId || Record.macColumn == ruuviTagId)
+            let request = Record.filter(
+                Record.luidColumn == ruuviTagId || Record.macColumn.like("%\(ruuviTagId.lastThreeBytes)")
+            )
             try database.dbPool.write { db in
                 deletedCount = try request.deleteAll(db)
             }
@@ -474,9 +492,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         do {
             var deletedCount = 0
             let request = Record.filter(
-                Record.luidColumn == ruuviTagId
-                    || Record.macColumn == ruuviTagId)
-                .filter(Record.dateColumn < date)
+                Record.luidColumn == ruuviTagId || Record.macColumn.like("%\(ruuviTagId.lastThreeBytes)")
+            ).filter(Record.dateColumn < date)
             try database.dbPool.write { db in
                 deletedCount = try request.deleteAll(db)
             }
@@ -525,8 +542,14 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             var sqliteSensorSettings: Settings?
             try database.dbPool.read { db in
                 let request = Settings.filter(
-                    (ruuviTag.luid?.value != nil && Settings.luidColumn == ruuviTag.luid?.value)
-                        || (ruuviTag.macId?.value != nil && Settings.macIdColumn == ruuviTag.macId?.value)
+                    (
+                        ruuviTag.luid?.value != nil && Settings.luidColumn == ruuviTag.luid?.value
+                    )
+                    || (
+                        ruuviTag.macId?.value != nil && Settings.macIdColumn.like(
+                            "%\(ruuviTag.macId!.value.lastThreeBytes)"
+                        )
+                    )
                 )
                 sqliteSensorSettings = try request.fetchOne(db)
             }
@@ -552,6 +575,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         return promise.future
     }
 
+    // swiftlint:disable:next function_body_length
     public func updateOffsetCorrection(
         type: OffsetCorrectionType,
         with value: Double?,
@@ -571,8 +595,14 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             )
             try database.dbPool.read { db in
                 let request = Settings.filter(
-                    (ruuviTag.luid?.value != nil && Settings.luidColumn == ruuviTag.luid?.value)
-                        || (ruuviTag.macId?.value != nil && Settings.macIdColumn == ruuviTag.macId?.value)
+                    (
+                        ruuviTag.luid?.value != nil && Settings.luidColumn == ruuviTag.luid?.value
+                    )
+                    || (
+                        ruuviTag.macId?.value != nil && Settings.macIdColumn.like(
+                            "%\(ruuviTag.macId!.value.lastThreeBytes)"
+                        )
+                    )
                 )
                 if let existingSettings = try request.fetchOne(db) {
                     sqliteSensorSettings = existingSettings
@@ -615,8 +645,14 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             var success = false
             try database.dbPool.write { db in
                 let request = Settings.filter(
-                    (ruuviTag.luid?.value != nil && Settings.luidColumn == ruuviTag.luid?.value)
-                        || (ruuviTag.macId?.value != nil && Settings.macIdColumn == ruuviTag.macId?.value)
+                    (
+                        ruuviTag.luid?.value != nil && Settings.luidColumn == ruuviTag.luid?.value
+                    )
+                    || (
+                        ruuviTag.macId?.value != nil && Settings.macIdColumn.like(
+                            "%\(ruuviTag.macId!.value.lastThreeBytes)"
+                        )
+                    )
                 )
                 let sensorSettings: Settings? = try request.fetchOne(db)
                 if let notNullSensorSettings = sensorSettings {
@@ -853,6 +889,22 @@ extension RuuviPersistenceSQLite {
             }
         }
         return promise.future
+    }
+}
+
+// Add this extension at the top of the file, after imports
+private extension String {
+    /// Returns the last 3 bytes of a MAC address (e.g., "DD:EE:FF" from "AA:BB:CC:DD:EE:FF")
+    var lastThreeBytes: String {
+        let components = self.components(separatedBy: ":")
+        guard components.count >= 3 else { return self }
+        return components.suffix(3).joined(separator: ":")
+    }
+}
+
+private extension Optional where Wrapped == String {
+    var lastThreeBytes: String? {
+        self?.lastThreeBytes
     }
 }
 

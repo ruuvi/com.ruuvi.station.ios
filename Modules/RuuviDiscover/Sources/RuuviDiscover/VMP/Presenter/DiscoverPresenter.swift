@@ -190,7 +190,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
         // If tag is already added show the name from RuuviStation alongside
         // other info.
         if let addedTag = persistedSensors.first(where: { ruuviTag in
-            ruuviTag.macId?.mac == nfcSensor?.macId
+            ruuviTag.macId?.any == nfcSensor?.macId.mac.any
         }) {
             view?.showSensorDetailsDialog(
                 for: nfcSensor,
@@ -306,7 +306,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
 
     func viewDidGoToSensor(with sensor: NFCSensor?) {
         if let ruuviTag = persistedSensors.first(where: { ruuviTag in
-            ruuviTag.macId?.mac == sensor?.macId
+            ruuviTag.macId?.any == sensor?.macId.mac.any
         }) {
             output?.ruuvi(discover: self, didSelectFromNFC: ruuviTag)
         }
@@ -427,7 +427,7 @@ extension DiscoverPresenter {
             if let ruuviTag = device.ruuvi?.tag {
                 // when mode is changed, the device should be replaced
                 if let sameUUID = observer.ruuviTags.first(
-                    where: { $0.uuid == ruuviTag.uuid || $0.mac == ruuviTag.macId?.value
+                    where: { $0.uuid == ruuviTag.uuid || $0.mac?.mac.any == ruuviTag.macId?.any
                 }), sameUUID != ruuviTag {
                     observer.ruuviTags.remove(sameUUID)
                 }

@@ -281,14 +281,15 @@ extension RuuviTagHeartbeatDaemonBTKit {
     private func processRuuviTag(_ ruuviTag: RuuviTag, source: RuuviTagSensorRecordSource) {
         var sensorSettings: SensorSettings?
         if let ruuviTagSensor = ruuviTags.first(where: {
-            ($0.macId?.value != nil && $0.macId?.value == ruuviTag.mac) ||
-            ($0.luid?.any != nil && $0.luid?.any == ruuviTag.luid?.any)
-        }),
-           let settings = sensorSettingsList.first(where: {
-            ($0.luid?.any != nil && $0.luid?.any == ruuviTagSensor.luid?.any) ||
-            ($0.macId?.any != nil && $0.macId?.any == ruuviTagSensor.macId?.any)
+            ($0.macId?.any == ruuviTag.macId?.any && ruuviTag.macId?.any != nil) ||
+            ($0.luid?.any == ruuviTag.luid?.any && ruuviTag.luid?.any != nil)
         }) {
-            sensorSettings = settings
+            if let settings = sensorSettingsList.first(where: {
+                ($0.macId?.any == ruuviTagSensor.macId?.any && ruuviTagSensor.macId?.any != nil) ||
+                ($0.luid?.any == ruuviTagSensor.luid?.any && ruuviTagSensor.luid?.any != nil)
+            }) {
+                sensorSettings = settings
+            }
         }
         alertHandler.process(
             record: ruuviTag.with(sensorSettings: sensorSettings).with(source: source),
