@@ -191,7 +191,7 @@ class RuuviTagDataService {
 
     func getSensorSettings(for sensorId: String) -> SensorSettings? {
         return sensorSettingsList.first(where: { settings in
-            settings.luid?.value == sensorId || settings.macId?.value == sensorId
+            settings.luid?.value == sensorId || settings.macId?.any == sensorId.mac.any
         })
     }
 

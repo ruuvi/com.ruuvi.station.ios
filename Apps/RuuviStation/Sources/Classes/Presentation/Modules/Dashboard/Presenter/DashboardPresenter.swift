@@ -773,6 +773,7 @@ extension DashboardPresenter: RuuviCloudServiceDelegate {
         userDidLogOut loggedOut: Bool
     ) {
         sensorDataService.startObservingSensors()
+        view?.isAuthorized = cloudSyncService.isAuthorized()
     }
 
     func ruuviCloudService(

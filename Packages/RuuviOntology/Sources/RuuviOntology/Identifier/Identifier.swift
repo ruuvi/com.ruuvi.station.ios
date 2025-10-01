@@ -34,12 +34,29 @@ public struct AnyMACIdentifier: MACIdentifier, Equatable, Hashable {
         object.value
     }
 
+    /// Normalizes a MAC address string and extracts its last 3 bytes
+    /// (6 hex characters). If the string is shorter than 6 characters,
+    /// the entire cleaned string is returned.
+    private func last3Bytes(of mac: String) -> String {
+        let hexCharacterSet = CharacterSet(charactersIn: "0123456789abcdefABCDEF")
+        // Remove non-hex characters, convert to lowercase
+        let cleaned = mac.unicodeScalars
+            .filter { hexCharacterSet.contains($0) }
+            .map { Character($0).lowercased() }
+            .joined()
+
+        // Return last 6 hex characters (3 bytes), or shorter if not available
+        return cleaned.count > 6
+            ? String(cleaned.suffix(6))
+            : cleaned
+    }
+
     public static func == (lhs: AnyMACIdentifier, rhs: AnyMACIdentifier) -> Bool {
-        lhs.value == rhs.value
+        lhs.last3Bytes(of: lhs.value) == rhs.last3Bytes(of: rhs.value)
     }
 
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(value)
+        hasher.combine(last3Bytes(of: value))
     }
 }
 
@@ -74,6 +91,22 @@ public extension String {
 
     var mac: MACIdentifier {
         MACIdentifierStruct(value: self).any
+    }
+
+    private func cleanedHexString() -> String {
+        let hexCharacterSet = CharacterSet(charactersIn: "0123456789abcdefABCDEF")
+        return self.unicodeScalars
+            .filter { hexCharacterSet.contains($0) }
+            .map { Character($0).lowercased() }
+            .joined()
+    }
+
+    func isLast3BytesEqual(to other: String) -> Bool {
+        let last3Self = cleanedHexString()
+        let last3Other = other.cleanedHexString()
+        let suffixSelf = last3Self.count >= 6 ? String(last3Self.suffix(6)) : last3Self
+        let suffixOther = last3Other.count >= 6 ? String(last3Other.suffix(6)) : last3Other
+        return suffixSelf == suffixOther
     }
 }
 

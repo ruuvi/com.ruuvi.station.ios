@@ -625,7 +625,9 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 localSensors in
                 let updateSensors: [Future<Bool, RuuviPoolError>] = localSensors
                     .compactMap { localSensor in
-                        if let cloudSensor = cloudSensors.first(where: { $0.id == localSensor.id }) {
+                        if let cloudSensor = cloudSensors.first(where: {
+                            $0.id.isLast3BytesEqual(to: localSensor.id)
+                        }) {
                             updatedSensors.insert(localSensor)
                             // Update the local sensor data with cloud data
                             // if there's a match of sensor in local storage and cloud
@@ -664,7 +666,9 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     }
                 let createSensors: [Future<Bool, RuuviPoolError>] = cloudSensors
                     .filter { cloudSensor in
-                        !localSensors.contains(where: { $0.id == cloudSensor.id })
+                        !localSensors.contains(where: {
+                            $0.id.isLast3BytesEqual(to: cloudSensor.id)
+                        })
                     }.map { newCloudSensor in
                         let newLocalSensor = newCloudSensor.ruuviTagSensor
                         updatedSensors.insert(newLocalSensor.any)
@@ -743,12 +747,13 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 success: { [weak self] record in
                     guard let sSelf = self else { return }
                     // If the latest table already have a data point for the mac update that record
-                    if let record,
-                       record.macId?.value == cloudRecord.macId?.value {
+                    if let record, record.macId != nil,
+                       record.macId?.any == cloudRecord.macId?.any {
                         // Store cloud point only if the cloud data is newer than the local data
                         let isMeasurementNew = cloudRecord.date > record.date
                         if sSelf.ruuviLocalSettings.cloudModeEnabled || isMeasurementNew {
-                            sSelf.ruuviPool.updateLast(cloudRecord)
+                            let recordWithId = cloudRecord.with(macId: record.macId!.any)
+                            sSelf.ruuviPool.updateLast(recordWithId)
                                 .observe(on: .global(qos: .utility))
                                 .on(
                                     success: { _ in
@@ -822,14 +827,24 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             .on(success: { [weak self] record in
                 guard let sSelf = self else { return }
                 let isMeasurementNew = record.map { cloudRecord.date > $0.date } ?? true
-
-                if sSelf.ruuviLocalSettings.cloudModeEnabled || isMeasurementNew {
-                    sSelf.createAndCompletePromise(with: cloudRecord, promise: promise)
+                if let localRecordMac = record?.macId?.any,
+                    localRecordMac == cloudRecord.macId?.any {
+                    let recordWithId = cloudRecord.with(macId: localRecordMac)
+                    if sSelf.ruuviLocalSettings.cloudModeEnabled || isMeasurementNew {
+                        sSelf.createAndCompletePromise(with: recordWithId, promise: promise)
+                    } else {
+                        promise.succeed(value: false)
+                    }
                 } else {
                     promise.succeed(value: false)
                 }
             }, failure: { [weak self] _ in
-                self?.createAndCompletePromise(with: cloudRecord, promise: promise)
+                if let macId = ruuviTag.macId {
+                    let recordWithId = cloudRecord.with(macId: macId.any)
+                    self?.createAndCompletePromise(with: recordWithId, promise: promise)
+                } else {
+                    self?.createAndCompletePromise(with: cloudRecord, promise: promise)
+                }
             })
         return promise.future
     }

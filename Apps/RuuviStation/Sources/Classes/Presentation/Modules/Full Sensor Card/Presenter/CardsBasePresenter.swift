@@ -671,8 +671,8 @@ private extension CardsBasePresenter {
             $0.id == snapshot.id
         }) {
             let settings = sensorSettings.first(where: {
-                $0.luid?.value == sensor.luid?.value ||
-                $0.macId?.value == sensor.macId?.value
+                $0.luid?.any == sensor.luid?.any ||
+                $0.macId?.any == sensor.macId?.any
             })
             router?.openTagSettings(
                 ruuviTag: sensor,
@@ -705,15 +705,15 @@ private extension CardsBasePresenter {
     func currentSnapshotIndex() -> Int {
         return snapshots.firstIndex(where: {
             $0.id == snapshot.id &&
-            $0.identifierData.luid?.value == snapshot.identifierData.luid?.value &&
-            $0.identifierData.mac?.value == snapshot.identifierData.mac?.value
+            $0.identifierData.luid?.any == snapshot.identifierData.luid?.any &&
+            $0.identifierData.mac?.any == snapshot.identifierData.mac?.any
         }) ?? 0
     }
 
     func currentSensorSettings() -> SensorSettings? {
         return sensorSettings.first(where: {
-            $0.luid?.value == snapshot.identifierData.luid?.value ||
-            $0.macId?.value == snapshot.identifierData.mac?.value
+            $0.luid?.any == snapshot.identifierData.luid?.any ||
+            $0.macId?.any == snapshot.identifierData.mac?.any
         })
     }
 }

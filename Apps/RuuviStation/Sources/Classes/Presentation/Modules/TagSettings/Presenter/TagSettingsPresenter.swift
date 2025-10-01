@@ -1154,8 +1154,8 @@ extension TagSettingsPresenter {
                 if let userInfo = notification.userInfo {
                     let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
                     let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
-                    if (sSelf.ruuviTag.luid?.value != nil && sSelf.ruuviTag.luid?.value == luid?.value)
-                        || (sSelf.ruuviTag.macId?.value != nil && sSelf.ruuviTag.macId?.value == macId?.value) {
+                    if (sSelf.ruuviTag.luid?.any != nil && sSelf.ruuviTag.luid?.any == luid?.any)
+                        || (sSelf.ruuviTag.macId?.any != nil && sSelf.ruuviTag.macId?.any == macId?.any) {
                         sSelf.ruuviSensorPropertiesService.getImage(for: sSelf.ruuviTag)
                             .on(success: { [weak sSelf] image in
                                 sSelf?.viewModel.background.value = image
@@ -1717,7 +1717,7 @@ extension TagSettingsPresenter: RuuviNotifierObserver {
         isTriggered: Bool,
         for uuid: String
     ) {
-        if ruuviTag.luid?.value == uuid || ruuviTag.macId?.value == uuid {
+        if ruuviTag.luid?.value == uuid || ruuviTag.macId?.any == uuid.mac.any {
             let isFireable = ruuviTag.isCloud ||
                 viewModel.isConnected.value ?? false ||
                 viewModel.serviceUUID.value != nil
