@@ -180,21 +180,22 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         after date: Date
     ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
         let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
+        let lastThree = ruuviTagId.lastThreeBytes
         readQueue.async { [weak self] in
             var sqliteEntities = [RuuviTagSensorRecord]()
             do {
                 try self?.database.dbPool.read { db in
                     let request = """
-                    SELECT
-                        *
-                    FROM  ruuvi_tag_sensor_records rtsr
-                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId.lastThreeBytes)' AND rtsr.date > ?
+                    SELECT *
+                    FROM ruuvi_tag_sensor_records rtsr
+                    WHERE rtsr.luid = ? OR rtsr.mac LIKE ?
+                    AND rtsr.date > ?
                     ORDER BY date
                     """
                     sqliteEntities = try Record.fetchAll(
                         db,
                         sql: request,
-                        arguments: [date]
+                        arguments: [ruuviTagId, "%\(lastThree)", date]
                     )
                 }
                 promise.succeed(value: sqliteEntities.map(\.any))
@@ -211,22 +212,22 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         with interval: TimeInterval
     ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
         let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
+        let lastThree = ruuviTagId.lastThreeBytes
         readQueue.async { [weak self] in
             var sqliteEntities = [RuuviTagSensorRecord]()
             do {
                 try self?.database.dbPool.read { db in
                     let request = """
-                    SELECT
-                        *
-                    FROM  ruuvi_tag_sensor_records rtsr
-                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId.lastThreeBytes)' AND rtsr.date > ?
-                    GROUP BY STRFTIME('%s', STRFTIME('%Y-%m-%d %H:%M:%S', rtsr.date) ) / \(Int(interval))
+                    SELECT *
+                    FROM ruuvi_tag_sensor_records rtsr
+                    WHERE (rtsr.luid = ? OR rtsr.mac LIKE ?) AND rtsr.date > ?
+                    GROUP BY STRFTIME('%s', STRFTIME('%Y-%m-%d %H:%M:%S', rtsr.date)) / ?
                     ORDER BY date
                     """
                     sqliteEntities = try Record.fetchAll(
                         db,
                         sql: request,
-                        arguments: [date]
+                        arguments: [ruuviTagId, "%\(lastThree)", date, Int(interval)]
                     )
                 }
                 promise.succeed(value: sqliteEntities.map(\.any))
@@ -252,27 +253,30 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             (highDensityDate.timeIntervalSince1970 - date.timeIntervalSince1970) / points
 
         let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
+        let lastThree = ruuviTagId.lastThreeBytes
 
         readQueue.async { [weak self] in
             var sqliteEntities = [RuuviTagSensorRecord]()
             do {
                 try self?.database.dbPool.read { db in
                     let request = """
-                    SELECT
-                        *
-                    FROM  ruuvi_tag_sensor_records rtsr
-                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId.lastThreeBytes)' AND rtsr.date > ?
-                    AND rtsr.date < ?
-                    GROUP BY STRFTIME('%s', STRFTIME('%Y-%m-%d %H:%M:%S', rtsr.date) ) / \(Int(pruningInterval))
+                    SELECT *
+                    FROM ruuvi_tag_sensor_records rtsr
+                    WHERE (rtsr.luid = ? OR rtsr.mac LIKE ?) AND rtsr.date > ? AND rtsr.date < ?
+                    GROUP BY STRFTIME('%s', STRFTIME('%Y-%m-%d %H:%M:%S', rtsr.date)) / ?
                     UNION ALL
-                    SELECT * FROM  ruuvi_tag_sensor_records rtsr
-                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId.lastThreeBytes)' AND rtsr.date > ?
+                    SELECT *
+                    FROM ruuvi_tag_sensor_records rtsr
+                    WHERE (rtsr.luid = ? OR rtsr.mac LIKE ?) AND rtsr.date > ?
                     ORDER BY date
                     """
                     sqliteEntities = try Record.fetchAll(
                         db,
                         sql: request,
-                        arguments: [date, highDensityDate, highDensityDate]
+                        arguments: [
+                            ruuviTagId, "%\(lastThree)", date, highDensityDate, Int(pruningInterval),
+                            ruuviTagId, "%\(lastThree)", highDensityDate,
+                        ]
                     )
                 }
                 promise.succeed(value: sqliteEntities.map(\.any))
@@ -288,19 +292,23 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         with interval: TimeInterval
     ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
         let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
+        let lastThree = ruuviTagId.lastThreeBytes
         readQueue.async { [weak self] in
             var sqliteEntities = [RuuviTagSensorRecord]()
             do {
                 try self?.database.dbPool.read { db in
                     let request = """
-                    SELECT
-                        *
-                    FROM  ruuvi_tag_sensor_records rtsr
-                    WHERE rtsr.luid = '\(ruuviTagId)' OR rtsr.mac = '\(ruuviTagId.lastThreeBytes)'
-                    GROUP BY STRFTIME('%s', STRFTIME('%Y-%m-%d %H:%M:%S', rtsr.date) ) / \(Int(interval))
+                    SELECT *
+                    FROM ruuvi_tag_sensor_records rtsr
+                    WHERE rtsr.luid = ? OR rtsr.mac LIKE ?
+                    GROUP BY STRFTIME('%s', STRFTIME('%Y-%m-%d %H:%M:%S', rtsr.date)) / ?
                     ORDER BY date
                     """
-                    sqliteEntities = try Record.fetchAll(db, sql: request)
+                    sqliteEntities = try Record.fetchAll(
+                        db,
+                        sql: request,
+                        arguments: [ruuviTagId, "%\(lastThree)", Int(interval)]
+                    )
                 }
                 promise.succeed(value: sqliteEntities.map(\.any))
             } catch {
