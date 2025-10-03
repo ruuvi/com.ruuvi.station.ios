@@ -27,7 +27,6 @@ class TagChartsViewController: UIViewController {
 
     var viewModel: TagChartsViewModel = .init(type: .ruuvi)
     var showAlertRangeInGraph: Bool = true
-    var useNewGraphRendering: Bool = false
 
     var historyLengthInDay: Int = 1 {
         didSet {
@@ -143,21 +142,6 @@ class TagChartsViewController: UIViewController {
         sv.isScrollEnabled = false
         sv.indicatorStyle = .white
         return sv
-    }()
-
-    lazy var collectionView: UICollectionView = {
-        let cv = UICollectionView(
-            frame: .zero,
-            collectionViewLayout: TagChartsCollectionViewFlowLayout()
-        )
-        cv.backgroundColor = .clear
-        cv.delegate = self
-        cv.dataSource = self
-        cv.register(
-            TagChartsCollectionViewCell.self,
-            forCellWithReuseIdentifier: cellId
-        )
-        return cv
     }()
 
     private var chartViews: [TagChartsView] = []
@@ -291,16 +275,11 @@ class TagChartsViewController: UIViewController {
         coordinator.animate(alongsideTransition: { _ in
         }, completion: { [weak self] _ in
             guard let sSelf = self else { return }
-            if sSelf.useNewGraphRendering {
-                sSelf.collectionView.collectionViewLayout.invalidateLayout()
-                sSelf.collectionView.reloadData()
-            } else {
-                sSelf.updateScrollviewBehaviour()
-                sSelf.updateChartsCollectionConstaints(
-                    from: sSelf.chartModules,
-                    withAnimation: true
-                )
-            }
+            sSelf.updateScrollviewBehaviour()
+            sSelf.updateChartsCollectionConstaints(
+                from: sSelf.chartModules,
+                withAnimation: true
+            )
             self?.output.viewDidTransition()
         })
         super.viewWillTransition(to: size, with: coordinator)
@@ -408,145 +387,134 @@ class TagChartsViewController: UIViewController {
         syncButton.centerYInSuperview()
         syncButton.alpha = 1
 
-        if useNewGraphRendering {
-            view.addSubview(collectionView)
-            collectionView.anchor(
-                top: chartToolbarView.bottomAnchor,
-                leading: view.safeLeftAnchor,
-                bottom: view.safeBottomAnchor,
-                trailing: view.safeRightAnchor,
-                padding: .init(top: 6, left: 0, bottom: 28, right: 0)
-            )
-        } else {
-            view.addSubview(scrollView)
-            scrollView.anchor(
-                top: chartToolbarView.bottomAnchor,
-                leading: view.safeLeftAnchor,
-                bottom: view.safeBottomAnchor,
-                trailing: view.safeRightAnchor,
-                padding: .init(top: 6, left: 0, bottom: 36, right: 0)
-            )
+        view.addSubview(scrollView)
+        scrollView.anchor(
+            top: chartToolbarView.bottomAnchor,
+            leading: view.safeLeftAnchor,
+            bottom: view.safeBottomAnchor,
+            trailing: view.safeRightAnchor,
+            padding: .init(top: 6, left: 0, bottom: 36, right: 0)
+        )
 
-            scrollView.addSubview(temperatureChartView)
-            temperatureChartView.anchor(
-                top: scrollView.topAnchor,
-                leading: scrollView.leadingAnchor,
-                bottom: nil,
-                trailing: scrollView.trailingAnchor
-            )
-            temperatureChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-            temperatureChartViewHeight = temperatureChartView.heightAnchor.constraint(equalToConstant: 0)
-            temperatureChartViewHeight.isActive = true
-            temperatureChartView.chartDelegate = self
+        scrollView.addSubview(temperatureChartView)
+        temperatureChartView.anchor(
+            top: scrollView.topAnchor,
+            leading: scrollView.leadingAnchor,
+            bottom: nil,
+            trailing: scrollView.trailingAnchor
+        )
+        temperatureChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        temperatureChartViewHeight = temperatureChartView.heightAnchor.constraint(equalToConstant: 0)
+        temperatureChartViewHeight.isActive = true
+        temperatureChartView.chartDelegate = self
 
-            scrollView.addSubview(humidityChartView)
-            humidityChartView.anchor(
-                top: temperatureChartView.bottomAnchor,
-                leading: scrollView.leadingAnchor,
-                bottom: nil,
-                trailing: scrollView.trailingAnchor
-            )
-            humidityChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-            humidityChartViewHeight = humidityChartView.heightAnchor.constraint(equalToConstant: 0)
-            humidityChartViewHeight.isActive = true
-            humidityChartView.chartDelegate = self
+        scrollView.addSubview(humidityChartView)
+        humidityChartView.anchor(
+            top: temperatureChartView.bottomAnchor,
+            leading: scrollView.leadingAnchor,
+            bottom: nil,
+            trailing: scrollView.trailingAnchor
+        )
+        humidityChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        humidityChartViewHeight = humidityChartView.heightAnchor.constraint(equalToConstant: 0)
+        humidityChartViewHeight.isActive = true
+        humidityChartView.chartDelegate = self
 
-            scrollView.addSubview(pressureChartView)
-            pressureChartView.anchor(
-                top: humidityChartView.bottomAnchor,
-                leading: scrollView.leadingAnchor,
-                bottom: nil,
-                trailing: scrollView.trailingAnchor
-            )
-            pressureChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-            pressureChartViewHeight = pressureChartView.heightAnchor.constraint(equalToConstant: 0)
-            pressureChartViewHeight.isActive = true
-            pressureChartView.chartDelegate = self
+        scrollView.addSubview(pressureChartView)
+        pressureChartView.anchor(
+            top: humidityChartView.bottomAnchor,
+            leading: scrollView.leadingAnchor,
+            bottom: nil,
+            trailing: scrollView.trailingAnchor
+        )
+        pressureChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        pressureChartViewHeight = pressureChartView.heightAnchor.constraint(equalToConstant: 0)
+        pressureChartViewHeight.isActive = true
+        pressureChartView.chartDelegate = self
 
-            scrollView.addSubview(aqiChartView)
-            aqiChartView.anchor(
-                top: pressureChartView.bottomAnchor,
-                leading: scrollView.leadingAnchor,
-                bottom: nil,
-                trailing: scrollView.trailingAnchor
-            )
-            aqiChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-            aqiChartViewHeight = aqiChartView.heightAnchor.constraint(equalToConstant: 0)
-            aqiChartViewHeight.isActive = true
-            aqiChartView.chartDelegate = self
+        scrollView.addSubview(aqiChartView)
+        aqiChartView.anchor(
+            top: pressureChartView.bottomAnchor,
+            leading: scrollView.leadingAnchor,
+            bottom: nil,
+            trailing: scrollView.trailingAnchor
+        )
+        aqiChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        aqiChartViewHeight = aqiChartView.heightAnchor.constraint(equalToConstant: 0)
+        aqiChartViewHeight.isActive = true
+        aqiChartView.chartDelegate = self
 
-            scrollView.addSubview(co2ChartView)
-            co2ChartView.anchor(
-                top: aqiChartView.bottomAnchor,
-                leading: scrollView.leadingAnchor,
-                bottom: nil,
-                trailing: scrollView.trailingAnchor
-            )
-            co2ChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-            co2ChartViewHeight = co2ChartView.heightAnchor.constraint(equalToConstant: 0)
-            co2ChartViewHeight.isActive = true
-            co2ChartView.chartDelegate = self
+        scrollView.addSubview(co2ChartView)
+        co2ChartView.anchor(
+            top: aqiChartView.bottomAnchor,
+            leading: scrollView.leadingAnchor,
+            bottom: nil,
+            trailing: scrollView.trailingAnchor
+        )
+        co2ChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        co2ChartViewHeight = co2ChartView.heightAnchor.constraint(equalToConstant: 0)
+        co2ChartViewHeight.isActive = true
+        co2ChartView.chartDelegate = self
 
-            scrollView.addSubview(pm25ChartView)
-            pm25ChartView.anchor(
-                top: co2ChartView.bottomAnchor,
-                leading: scrollView.leadingAnchor,
-                bottom: nil,
-                trailing: scrollView.trailingAnchor
-            )
-            pm25ChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-            pm25ChartViewHeight = pm25ChartView.heightAnchor.constraint(equalToConstant: 0)
-            pm25ChartViewHeight.isActive = true
-            pm25ChartView.chartDelegate = self
+        scrollView.addSubview(pm25ChartView)
+        pm25ChartView.anchor(
+            top: co2ChartView.bottomAnchor,
+            leading: scrollView.leadingAnchor,
+            bottom: nil,
+            trailing: scrollView.trailingAnchor
+        )
+        pm25ChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        pm25ChartViewHeight = pm25ChartView.heightAnchor.constraint(equalToConstant: 0)
+        pm25ChartViewHeight.isActive = true
+        pm25ChartView.chartDelegate = self
 
-            scrollView.addSubview(vocChartView)
-            vocChartView.anchor(
-                top: pm25ChartView.bottomAnchor,
-                leading: scrollView.leadingAnchor,
-                bottom: nil,
-                trailing: scrollView.trailingAnchor
-            )
-            vocChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-            vocChartViewHeight = vocChartView.heightAnchor.constraint(equalToConstant: 0)
-            vocChartViewHeight.isActive = true
-            vocChartView.chartDelegate = self
+        scrollView.addSubview(vocChartView)
+        vocChartView.anchor(
+            top: pm25ChartView.bottomAnchor,
+            leading: scrollView.leadingAnchor,
+            bottom: nil,
+            trailing: scrollView.trailingAnchor
+        )
+        vocChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        vocChartViewHeight = vocChartView.heightAnchor.constraint(equalToConstant: 0)
+        vocChartViewHeight.isActive = true
+        vocChartView.chartDelegate = self
 
-            scrollView.addSubview(noxChartView)
-            noxChartView.anchor(
-                top: vocChartView.bottomAnchor,
-                leading: scrollView.leadingAnchor,
-                bottom: nil,
-                trailing: scrollView.trailingAnchor
-            )
-            noxChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-            noxChartViewHeight = noxChartView.heightAnchor.constraint(equalToConstant: 0)
-            noxChartViewHeight.isActive = true
-            noxChartView.chartDelegate = self
+        scrollView.addSubview(noxChartView)
+        noxChartView.anchor(
+            top: vocChartView.bottomAnchor,
+            leading: scrollView.leadingAnchor,
+            bottom: nil,
+            trailing: scrollView.trailingAnchor
+        )
+        noxChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        noxChartViewHeight = noxChartView.heightAnchor.constraint(equalToConstant: 0)
+        noxChartViewHeight.isActive = true
+        noxChartView.chartDelegate = self
 
-            scrollView.addSubview(luminosityChartView)
-            luminosityChartView.anchor(
-                top: noxChartView.bottomAnchor,
-                leading: scrollView.leadingAnchor,
-                bottom: nil,
-                trailing: scrollView.trailingAnchor
-            )
-            luminosityChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-            luminosityChartViewHeight = luminosityChartView.heightAnchor.constraint(equalToConstant: 0)
-            luminosityChartViewHeight.isActive = true
-            luminosityChartView.chartDelegate = self
+        scrollView.addSubview(luminosityChartView)
+        luminosityChartView.anchor(
+            top: noxChartView.bottomAnchor,
+            leading: scrollView.leadingAnchor,
+            bottom: nil,
+            trailing: scrollView.trailingAnchor
+        )
+        luminosityChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        luminosityChartViewHeight = luminosityChartView.heightAnchor.constraint(equalToConstant: 0)
+        luminosityChartViewHeight.isActive = true
+        luminosityChartView.chartDelegate = self
 
-            scrollView.addSubview(soundChartView)
-            soundChartView.anchor(
-                top: luminosityChartView.bottomAnchor,
-                leading: scrollView.leadingAnchor,
-                bottom: scrollView.bottomAnchor,
-                trailing: scrollView.trailingAnchor
-            )
-            soundChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-            soundChartViewHeight = soundChartView.heightAnchor.constraint(equalToConstant: 0)
-            soundChartViewHeight.isActive = true
-            soundChartView.chartDelegate = self
-        }
+        scrollView.addSubview(soundChartView)
+        soundChartView.anchor(
+            top: luminosityChartView.bottomAnchor,
+            leading: scrollView.leadingAnchor,
+            bottom: scrollView.bottomAnchor,
+            trailing: scrollView.trailingAnchor
+        )
+        soundChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        soundChartViewHeight = soundChartView.heightAnchor.constraint(equalToConstant: 0)
+        soundChartViewHeight.isActive = true
+        soundChartView.chartDelegate = self
 
         view.addSubview(noDataLabel)
         noDataLabel.anchor(
@@ -561,35 +529,19 @@ class TagChartsViewController: UIViewController {
         let footerView = UIView(color: .clear)
         view.addSubview(footerView)
 
-        if useNewGraphRendering {
-            footerView.anchor(
-                top: collectionView.bottomAnchor,
-                leading: view.safeLeftAnchor,
-                bottom: view.safeBottomAnchor,
-                trailing: view.safeRightAnchor,
-                padding: .init(
-                    top: 4,
-                    left: 16,
-                    bottom: 8,
-                    right: 16
-                ),
-                size: .init(width: 0, height: 24)
-            )
-        } else {
-            footerView.anchor(
-                top: nil,
-                leading: view.safeLeftAnchor,
-                bottom: view.safeBottomAnchor,
-                trailing: view.safeRightAnchor,
-                padding: .init(
-                    top: 4,
-                    left: 16,
-                    bottom: 4,
-                    right: 16
-                ),
-                size: .init(width: 0, height: 24)
-            )
-        }
+        footerView.anchor(
+            top: nil,
+            leading: view.safeLeftAnchor,
+            bottom: view.safeBottomAnchor,
+            trailing: view.safeRightAnchor,
+            padding: .init(
+                top: 4,
+                left: 16,
+                bottom: 4,
+                right: 16
+            ),
+            size: .init(width: 0, height: 24)
+        )
 
         footerView.addSubview(updatedAtLabel)
         updatedAtLabel.anchor(
@@ -825,37 +777,6 @@ extension TagChartsViewController: TagChartsViewDelegate {
     }
 }
 
-extension TagChartsViewController: UICollectionViewDelegate {
-
-}
-
-extension TagChartsViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return chartViewData.count
-    }
-
-    func collectionView(
-        _ collectionView: UICollectionView,
-        cellForItemAt indexPath: IndexPath
-    ) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: cellId,
-            for: indexPath
-        ) as? TagChartsCollectionViewCell else {
-            fatalError()
-        }
-        let data = chartViewData[indexPath.item]
-        cell.populateChartView(
-            from: data,
-            settings: settings,
-            measurementService: measurementService,
-            measurementType: chartModules[indexPath.item],
-            showAlertRangeInGraph: showAlertRangeInGraph
-        )
-        return cell
-    }
-}
-
 // MARK: - TagChartsViewInput
 
 extension TagChartsViewController: TagChartsViewInput {
@@ -869,9 +790,7 @@ extension TagChartsViewController: TagChartsViewInput {
 
     func createChartViews(from: [MeasurementType]) {
         chartModules = from
-        if !useNewGraphRendering {
-            updateChartsCollectionConstaints(from: from)
-        }
+        updateChartsCollectionConstaints(from: from)
     }
 
     // swiftlint:disable:next function_body_length cyclomatic_complexity
@@ -879,97 +798,91 @@ extension TagChartsViewController: TagChartsViewInput {
         from chartViewData: [TagChartViewData],
         settings: RuuviLocalSettings
     ) {
-        if useNewGraphRendering {
-            self.chartViewData = chartViewData
-            self.settings = settings
-            collectionView.reloadData()
-        } else {
-            if chartViewData.count == 0 {
-                clearChartData()
-                showNoDataLabel()
-                hideChartViews()
-                return
-            }
-
+        if chartViewData.count == 0 {
             clearChartData()
-            hideNoDataLabel()
-            showChartViews()
+            showNoDataLabel()
+            hideChartViews()
+            return
+        }
 
-            for data in chartViewData {
-                switch data.chartType {
-                case .temperature:
-                    populateChartView(
-                        from: data,
-                        unit: settings.temperatureUnit.symbol,
-                        settings: settings,
-                        view: temperatureChartView
-                    )
-                case .humidity:
-                    populateChartView(
-                        from: data,
-                        unit: settings.humidityUnit.symbol,
-                        settings: settings,
-                        view: humidityChartView
-                    )
-                case .pressure:
-                    populateChartView(
-                        from: data,
-                        unit: settings.pressureUnit.symbol,
-                        settings: settings,
-                        view: pressureChartView
-                    )
-                case .aqi:
-                    populateChartView(
-                        from: data,
-                        unit: "%",
-                        settings: settings,
-                        view: aqiChartView
-                    )
-                case .co2:
-                    populateChartView(
-                        from: data,
-                        unit: RuuviLocalization.unitCo2,
-                        settings: settings,
-                        view: co2ChartView
-                    )
-                case .pm25:
-                    populateChartView(
-                        from: data,
-                        unit: RuuviLocalization.unitPm25,
-                        settings: settings,
-                        view: pm25ChartView
-                    )
-                case .voc:
-                    populateChartView(
-                        from: data,
-                        unit: RuuviLocalization.unitVoc,
-                        settings: settings,
-                        view: vocChartView
-                    )
-                case .nox:
-                    populateChartView(
-                        from: data,
-                        unit: RuuviLocalization.unitNox,
-                        settings: settings,
-                        view: noxChartView
-                    )
-                case .luminosity:
-                    populateChartView(
-                        from: data,
-                        unit: RuuviLocalization.unitLuminosity,
-                        settings: settings,
-                        view: luminosityChartView
-                    )
-                case .soundInstant:
-                    populateChartView(
-                        from: data,
-                        unit: RuuviLocalization.unitSound,
-                        settings: settings,
-                        view: soundChartView
-                    )
-                default:
-                    break
-                }
+        clearChartData()
+        hideNoDataLabel()
+        showChartViews()
+
+        for data in chartViewData {
+            switch data.chartType {
+            case .temperature:
+                populateChartView(
+                    from: data,
+                    unit: settings.temperatureUnit.symbol,
+                    settings: settings,
+                    view: temperatureChartView
+                )
+            case .humidity:
+                populateChartView(
+                    from: data,
+                    unit: settings.humidityUnit.symbol,
+                    settings: settings,
+                    view: humidityChartView
+                )
+            case .pressure:
+                populateChartView(
+                    from: data,
+                    unit: settings.pressureUnit.symbol,
+                    settings: settings,
+                    view: pressureChartView
+                )
+            case .aqi:
+                populateChartView(
+                    from: data,
+                    unit: "%",
+                    settings: settings,
+                    view: aqiChartView
+                )
+            case .co2:
+                populateChartView(
+                    from: data,
+                    unit: RuuviLocalization.unitCo2,
+                    settings: settings,
+                    view: co2ChartView
+                )
+            case .pm25:
+                populateChartView(
+                    from: data,
+                    unit: RuuviLocalization.unitPm25,
+                    settings: settings,
+                    view: pm25ChartView
+                )
+            case .voc:
+                populateChartView(
+                    from: data,
+                    unit: RuuviLocalization.unitVoc,
+                    settings: settings,
+                    view: vocChartView
+                )
+            case .nox:
+                populateChartView(
+                    from: data,
+                    unit: RuuviLocalization.unitNox,
+                    settings: settings,
+                    view: noxChartView
+                )
+            case .luminosity:
+                populateChartView(
+                    from: data,
+                    unit: RuuviLocalization.unitLuminosity,
+                    settings: settings,
+                    view: luminosityChartView
+                )
+            case .soundInstant:
+                populateChartView(
+                    from: data,
+                    unit: RuuviLocalization.unitSound,
+                    settings: settings,
+                    view: soundChartView
+                )
+            default:
+                break
             }
         }
     }
@@ -991,95 +904,91 @@ extension TagChartsViewController: TagChartsViewInput {
         firstEntry: RuuviMeasurement?,
         settings: RuuviLocalSettings
     ) {
-        if useNewGraphRendering {
-            // Do something
-        } else {
-            hideNoDataLabel()
-            showChartViews()
+        hideNoDataLabel()
+        showChartViews()
 
-            temperatureChartView.setSettings(settings: settings)
-            temperatureChartView.updateDataSet(
-                with: temperatureEntries,
-                isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
+        temperatureChartView.setSettings(settings: settings)
+        temperatureChartView.updateDataSet(
+            with: temperatureEntries,
+            isFirstEntry: isFirstEntry,
+            firstEntry: firstEntry,
+            showAlertRangeInGraph: settings.showAlertsRangeInGraph
+        )
 
-            humidityChartView.setSettings(settings: settings)
-            humidityChartView.updateDataSet(
-                with: humidityEntries,
-                isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
+        humidityChartView.setSettings(settings: settings)
+        humidityChartView.updateDataSet(
+            with: humidityEntries,
+            isFirstEntry: isFirstEntry,
+            firstEntry: firstEntry,
+            showAlertRangeInGraph: settings.showAlertsRangeInGraph
+        )
 
-            pressureChartView.setSettings(settings: settings)
-            pressureChartView.updateDataSet(
-                with: pressureEntries,
-                isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
+        pressureChartView.setSettings(settings: settings)
+        pressureChartView.updateDataSet(
+            with: pressureEntries,
+            isFirstEntry: isFirstEntry,
+            firstEntry: firstEntry,
+            showAlertRangeInGraph: settings.showAlertsRangeInGraph
+        )
 
-            aqiChartView.setSettings(settings: settings)
-            aqiChartView.updateDataSet(
-                with: aqiEntries,
-                isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
+        aqiChartView.setSettings(settings: settings)
+        aqiChartView.updateDataSet(
+            with: aqiEntries,
+            isFirstEntry: isFirstEntry,
+            firstEntry: firstEntry,
+            showAlertRangeInGraph: settings.showAlertsRangeInGraph
+        )
 
-            co2ChartView.setSettings(settings: settings)
-            co2ChartView.updateDataSet(
-                with: co2Entries,
-                isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
+        co2ChartView.setSettings(settings: settings)
+        co2ChartView.updateDataSet(
+            with: co2Entries,
+            isFirstEntry: isFirstEntry,
+            firstEntry: firstEntry,
+            showAlertRangeInGraph: settings.showAlertsRangeInGraph
+        )
 
-            pm25ChartView.setSettings(settings: settings)
-            pm25ChartView.updateDataSet(
-                with: pm25Entries,
-                isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
+        pm25ChartView.setSettings(settings: settings)
+        pm25ChartView.updateDataSet(
+            with: pm25Entries,
+            isFirstEntry: isFirstEntry,
+            firstEntry: firstEntry,
+            showAlertRangeInGraph: settings.showAlertsRangeInGraph
+        )
 
-            vocChartView.setSettings(settings: settings)
-            vocChartView.updateDataSet(
-                with: vocEntries,
-                isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
+        vocChartView.setSettings(settings: settings)
+        vocChartView.updateDataSet(
+            with: vocEntries,
+            isFirstEntry: isFirstEntry,
+            firstEntry: firstEntry,
+            showAlertRangeInGraph: settings.showAlertsRangeInGraph
+        )
 
-            noxChartView.setSettings(settings: settings)
-            noxChartView.updateDataSet(
-                with: noxEntries,
-                isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
+        noxChartView.setSettings(settings: settings)
+        noxChartView.updateDataSet(
+            with: noxEntries,
+            isFirstEntry: isFirstEntry,
+            firstEntry: firstEntry,
+            showAlertRangeInGraph: settings.showAlertsRangeInGraph
+        )
 
-            luminosityChartView.setSettings(settings: settings)
-            luminosityChartView.updateDataSet(
-                with: luminosityEntries,
-                isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
+        luminosityChartView.setSettings(settings: settings)
+        luminosityChartView.updateDataSet(
+            with: luminosityEntries,
+            isFirstEntry: isFirstEntry,
+            firstEntry: firstEntry,
+            showAlertRangeInGraph: settings.showAlertsRangeInGraph
+        )
 
-            soundChartView.setSettings(settings: settings)
-            soundChartView.updateDataSet(
-                with: soundEntries,
-                isFirstEntry: isFirstEntry,
-                firstEntry: firstEntry,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
-        }
+        soundChartView.setSettings(settings: settings)
+        soundChartView.updateDataSet(
+            with: soundEntries,
+            isFirstEntry: isFirstEntry,
+            firstEntry: firstEntry,
+            showAlertRangeInGraph: settings.showAlertsRangeInGraph
+        )
     }
 
-    // swiftlint:disable:next function_parameter_count function_body_length
+    // swiftlint:disable:next function_parameter_count
     func updateLatestMeasurement(
         temperature: ChartDataEntry?,
         humidity: ChartDataEntry?,
@@ -1094,60 +1003,56 @@ extension TagChartsViewController: TagChartsViewInput {
         sound: ChartDataEntry?,
         settings: RuuviLocalSettings
     ) {
-        if useNewGraphRendering {
-            // Do something
-        } else {
-            temperatureChartView.updateLatest(
-                with: temperature,
-                type: .temperature,
-                measurementService: measurementService
-            )
-            humidityChartView.updateLatest(
-                with: humidity,
-                type: .anyHumidity,
-                measurementService: measurementService
-            )
-            pressureChartView.updateLatest(
-                with: pressure,
-                type: .pressure,
-                measurementService: measurementService
-            )
-            aqiChartView.updateLatest(
-                with: aqi,
-                type: .aqi,
-                measurementService: measurementService
-            )
-            co2ChartView.updateLatest(
-                with: co2,
-                type: .co2,
-                measurementService: measurementService
-            )
-            pm25ChartView.updateLatest(
-                with: pm25,
-                type: .pm25,
-                measurementService: measurementService
-            )
-            vocChartView.updateLatest(
-                with: voc,
-                type: .voc,
-                measurementService: measurementService
-            )
-            noxChartView.updateLatest(
-                with: nox,
-                type: .nox,
-                measurementService: measurementService
-            )
-            luminosityChartView.updateLatest(
-                with: luminosity,
-                type: .luminosity,
-                measurementService: measurementService
-            )
-            soundChartView.updateLatest(
-                with: sound,
-                type: .soundInstant,
-                measurementService: measurementService
-            )
-        }
+        temperatureChartView.updateLatest(
+            with: temperature,
+            type: .temperature,
+            measurementService: measurementService
+        )
+        humidityChartView.updateLatest(
+            with: humidity,
+            type: .anyHumidity,
+            measurementService: measurementService
+        )
+        pressureChartView.updateLatest(
+            with: pressure,
+            type: .pressure,
+            measurementService: measurementService
+        )
+        aqiChartView.updateLatest(
+            with: aqi,
+            type: .aqi,
+            measurementService: measurementService
+        )
+        co2ChartView.updateLatest(
+            with: co2,
+            type: .co2,
+            measurementService: measurementService
+        )
+        pm25ChartView.updateLatest(
+            with: pm25,
+            type: .pm25,
+            measurementService: measurementService
+        )
+        vocChartView.updateLatest(
+            with: voc,
+            type: .voc,
+            measurementService: measurementService
+        )
+        noxChartView.updateLatest(
+            with: nox,
+            type: .nox,
+            measurementService: measurementService
+        )
+        luminosityChartView.updateLatest(
+            with: luminosity,
+            type: .luminosity,
+            measurementService: measurementService
+        )
+        soundChartView.updateLatest(
+            with: sound,
+            type: .soundInstant,
+            measurementService: measurementService
+        )
     }
 
     func updateLatestRecordStatus(with record: RuuviTagSensorRecord) {

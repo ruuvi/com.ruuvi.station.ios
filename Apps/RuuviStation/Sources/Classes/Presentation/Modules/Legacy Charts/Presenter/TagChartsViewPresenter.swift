@@ -103,7 +103,6 @@ class TagChartsViewPresenter: NSObject, TagChartsViewModuleInput {
             view?.compactChartView = settings.compactChartView
             view?.showChartAll = settings.chartShowAll
             view?.showAlertRangeInGraph = settings.showAlertsRangeInGraph
-            view?.useNewGraphRendering = settings.useNewGraphRendering
         }
     }
 
