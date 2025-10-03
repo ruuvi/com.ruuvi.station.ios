@@ -25,6 +25,7 @@ class TagChartsViewInternal: LineChartView {
 
     var lowerAlertValue: Double?
     var upperAlertValue: Double?
+    var graphType: MeasurementType = .temperature
 
     // MARK: - Private
     private lazy var markerView = TagChartsMarkerView()
@@ -32,8 +33,9 @@ class TagChartsViewInternal: LineChartView {
     private var source: TagChartsSource = .cards
 
     // MARK: - LifeCycle
-    init(source: TagChartsSource) {
+    init(source: TagChartsSource, graphType: MeasurementType) {
         self.source = source
+        self.graphType = graphType
         super.init(frame: .zero)
         delegate = self
         configure()
@@ -159,13 +161,23 @@ extension TagChartsViewInternal {
     }
 
     func setYAxisLimit(min: Double, max: Double) {
-        leftAxis.axisMinimum = min - 1
-        leftAxis.axisMaximum = max + 1
-        leftYAxisRenderer = CustomYAxisRenderer(
-            viewPortHandler: viewPortHandler,
-            axis: leftAxis,
-            transformer: getTransformer(forAxis: .left)
-        )
+        if source == .mesurementDetails && graphType == .aqi {
+            leftAxis.axisMinimum = 0
+            leftAxis.axisMaximum = 100
+            leftYAxisRenderer = AQIYAxisRenderer(
+                viewPortHandler: viewPortHandler,
+                axis: leftAxis,
+                transformer: getTransformer(forAxis: .left)
+            )
+        } else {
+            leftAxis.axisMinimum = min - 1
+            leftAxis.axisMaximum = max + 1
+            leftYAxisRenderer = CustomYAxisRenderer(
+                viewPortHandler: viewPortHandler,
+                axis: leftAxis,
+                transformer: getTransformer(forAxis: .left)
+            )
+        }
 
         // Ensure entries are calculated
         leftAxis.calculate(min: leftAxis.axisMinimum, max: leftAxis.axisMaximum)

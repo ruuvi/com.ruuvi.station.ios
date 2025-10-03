@@ -413,7 +413,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     ) -> ( // swiftlint:disable:this large_tuple
         currentScore: Int,
         maxScore: Int,
-        state: AirQualityState
+        state: MeasurementQualityState
     ) {
         let currentScore = calculateAQI(co2: co2, pm25: pm25)
             .rounded(.toNearestOrAwayFromZero)
@@ -432,6 +432,56 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         and pm25: Double?,
     ) -> Double {
         return calculateAQI(co2: co2, pm25: pm25).round(to: 1)
+    }
+
+    public func co2(for value: Double?) -> (
+        value: Double,
+        state: MeasurementQualityState
+    ) {
+        guard let value = value else {
+            return (0, .excellent(0))
+        }
+
+        switch value {
+        case 0..<420:
+            return (value, .excellent(value))
+        case 420..<600:
+            return (value, .excellent(value))
+        case 600..<800:
+            return (value, .good(value))
+        case 800..<1350:
+            return (value, .fair(value))
+        case 1350..<2100:
+            return (value, .poor(value))
+        case 2100...:
+            return (value, .veryPoor(value))
+        default:
+            return (value, .excellent(value))
+        }
+    }
+
+    public func pm25(for value: Double?) -> (
+        value: Double,
+        state: MeasurementQualityState
+    ) {
+        guard let value = value else {
+            return (0, .excellent(0))
+        }
+
+        switch value {
+        case 0..<5:
+            return (value, .excellent(value))
+        case 5..<12:
+            return (value, .good(value))
+        case 12..<30:
+            return (value, .fair(value))
+        case 30..<55:
+            return (value, .poor(value))
+        case 55...:
+            return (value, .veryPoor(value))
+        default:
+            return (value, .excellent(value))
+        }
     }
 
     public func co2String(for carbonDiOxide: Double?) -> String {
@@ -651,7 +701,7 @@ public extension RuuviServiceMeasurementImpl {
         9.5<49.5     | Poor        | Orange      | Poor air quality
         0<9.5        | Very Poor   | Red         | Unhealthy air quality
      */
-    private func airQualityState(for score: Double) -> AirQualityState {
+    private func airQualityState(for score: Double) -> MeasurementQualityState {
         switch score {
         case 89.5...:
             return .excellent(score)

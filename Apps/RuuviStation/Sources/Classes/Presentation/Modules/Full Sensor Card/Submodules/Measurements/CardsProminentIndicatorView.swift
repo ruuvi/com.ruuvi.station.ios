@@ -379,7 +379,7 @@ private extension CardsProminentIndicatorView {
         updateViewHeight(for: .aqi)
 
         if let aqiValue = indicatorData.value.aqiIntValue,
-           let aqiState = indicatorData.aqiState {
+           let aqiState = indicatorData.qualityState {
             aqiIndicatorView.setValue(aqiValue, maxValue: 100, state: aqiState)
         }
     }
@@ -542,7 +542,7 @@ final class AirQualityCircularView: UIView {
     func setValue(
         _ currentValue: Int,
         maxValue: Int = 100,
-        state: AirQualityState,
+        state: MeasurementQualityState,
         animated: Bool = false
     ) {
         currentValueLabel.text = "\(currentValue)"
@@ -711,7 +711,7 @@ final class CircularProgressView: UIView {
     func setValue(
         _ value: Int,
         maxValue: Int = 100,
-        state: AirQualityState,
+        state: MeasurementQualityState,
         animated: Bool = false
     ) {
         let progress = Float(

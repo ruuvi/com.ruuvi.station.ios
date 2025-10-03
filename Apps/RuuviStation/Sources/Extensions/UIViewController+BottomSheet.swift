@@ -26,12 +26,8 @@ extension UIViewController {
         delegate: UIAdaptivePresentationControllerDelegate? = nil
     ) {
         vc.modalPresentationStyle = .pageSheet
-
-        if #available(iOS 15.0, *) {
-            configureSheetPresentation(for: vc, configuration: configuration)
-        }
-
         vc.presentationController?.delegate = delegate
+        configureSheetPresentation(for: vc, configuration: configuration)
         present(vc, animated: true)
     }
 
@@ -42,13 +38,11 @@ extension UIViewController {
         let navigationController = UINavigationController(rootViewController: vc)
         navigationController.modalPresentationStyle = .pageSheet
 
-        if #available(iOS 15.0, *) {
-            configureSheetPresentationWithNavigation(
-                for: navigationController,
-                rootVC: vc,
-                configuration: configuration
-            )
-        }
+        configureSheetPresentationWithNavigation(
+            for: navigationController,
+            rootVC: vc,
+            configuration: configuration
+        )
 
         present(navigationController, animated: true)
     }
@@ -57,51 +51,32 @@ extension UIViewController {
 // MARK: - Private Sheet Configuration
 private extension UIViewController {
 
-    @available(iOS 15.0, *)
     func configureSheetPresentation(
         for viewController: UIViewController,
         configuration: SheetConfiguration
     ) {
         guard let sheet = viewController.sheetPresentationController else { return }
-
-        if #available(iOS 16.0, *) {
-            configureModernSheetPresentation(
-                sheet: sheet,
-                viewController: viewController,
-                configuration: configuration
-            )
-        } else {
-            configureLegacySheetPresentation(
-                sheet: sheet,
-                configuration: configuration
-            )
-        }
+        configureModernSheetPresentation(
+            sheet: sheet,
+            viewController: viewController,
+            configuration: configuration
+        )
     }
 
-    @available(iOS 15.0, *)
     func configureSheetPresentationWithNavigation(
         for navigationController: UINavigationController,
         rootVC: UIViewController,
         configuration: SheetConfiguration
     ) {
         guard let sheet = navigationController.sheetPresentationController else { return }
-
-        if #available(iOS 16.0, *) {
-            configureModernSheetPresentationWithNavigation(
-                sheet: sheet,
-                navigationController: navigationController,
-                rootVC: rootVC,
-                configuration: configuration
-            )
-        } else {
-            configureLegacySheetPresentation(
-                sheet: sheet,
-                configuration: configuration
-            )
-        }
+        configureModernSheetPresentationWithNavigation(
+            sheet: sheet,
+            navigationController: navigationController,
+            rootVC: rootVC,
+            configuration: configuration
+        )
     }
 
-    @available(iOS 16.0, *)
     func configureModernSheetPresentation(
         sheet: UISheetPresentationController,
         viewController: UIViewController,
@@ -123,7 +98,6 @@ private extension UIViewController {
         sheet.prefersEdgeAttachedInCompactHeight = configuration.prefersEdgeAttachedInCompactHeight
     }
 
-    @available(iOS 16.0, *)
     func configureModernSheetPresentationWithNavigation(
         sheet: UISheetPresentationController,
         navigationController: UINavigationController,
@@ -145,14 +119,5 @@ private extension UIViewController {
         sheet.preferredCornerRadius = configuration.preferredCornerRadius
         sheet.prefersScrollingExpandsWhenScrolledToEdge = configuration.prefersScrollingExpandsWhenScrolledToEdge
         sheet.prefersEdgeAttachedInCompactHeight = configuration.prefersEdgeAttachedInCompactHeight
-    }
-
-    @available(iOS 15.0, *)
-    func configureLegacySheetPresentation(
-        sheet: UISheetPresentationController,
-        configuration: SheetConfiguration
-    ) {
-        sheet.detents = [.medium()]
-        sheet.prefersGrabberVisible = configuration.prefersGrabberVisible
     }
 }

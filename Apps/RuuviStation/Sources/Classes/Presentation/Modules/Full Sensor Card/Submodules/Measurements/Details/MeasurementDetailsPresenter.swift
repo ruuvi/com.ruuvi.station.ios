@@ -8,6 +8,7 @@ import RuuviStorage
 import RuuviReactor
 import BTKit
 import DGCharts
+import Combine
 
 class MeasurementDetailsPresenter: NSObject {
     weak var view: MeasurementDetailsViewInput?
@@ -61,6 +62,7 @@ class MeasurementDetailsPresenter: NSObject {
 
     // Observation tokens
     private var unitChangeTokens: [NSObjectProtocol] = []
+    private var cancellables = Set<AnyCancellable>()
 
     // Configuration constants
     private let highDensityIntervalMinutes: Int = 15
@@ -146,6 +148,11 @@ extension MeasurementDetailsPresenter: MeasurementDetailsViewOutput {
             ruuviTag: ruuviTag,
             module: self
         )
+    }
+
+    func didTapMeasurement(_ measurement: RuuviTagCardSnapshotIndicatorData) {
+        measurementType = measurement.type
+        loadInitialData()
     }
 }
 
@@ -566,6 +573,21 @@ private extension MeasurementDetailsPresenter {
 
     func setupObservers() {
         setupUnitChangeObservers()
+
+        cancellables
+            .removeAll()
+
+        // Subscribe to data changes
+        snapshot.$displayData
+            .receive(
+                on: DispatchQueue.main
+            )
+            .sink { [weak self] displayData in
+                self?.view?.updateMeasurements(with: displayData)
+            }
+            .store(
+                in: &cancellables
+            )
     }
 
     func setupUnitChangeObservers() {
@@ -600,6 +622,7 @@ private extension MeasurementDetailsPresenter {
     }
 
     func removeAllObservers() {
+        cancellables.removeAll()
         unitChangeTokens.forEach { NotificationCenter.default.removeObserver($0) }
         unitChangeTokens.removeAll()
     }

@@ -3,25 +3,47 @@ import RuuviOntology
 import RuuviLocalization
 import RuuviLocal
 
+enum CardsMeasurementIndicatorViewSource {
+    case cards
+    case measurementDetails
+}
+
 class CardsMeasurementIndicatorView: UIView {
 
     // MARK: - Layout Constants
     private struct Constants {
         static let cardHeight: CGFloat = 48
-        static let cornerRadius: CGFloat = cardHeight / 2
+        static let cardHeight2: CGFloat = 52
         static let iconSize: CGFloat = 24
         static let stackSpacing: CGFloat = 8
         static let valueUnitSpacing: CGFloat = 4
-        static let horizontalPadding: CGFloat = 8
+        static let leadingPadding: CGFloat = 8
+        static let trailingPadding: CGFloat = 12
         static let stackTopPadding: CGFloat = 6
         static let stackBottomPadding: CGFloat = 6
         static let valueFontSize: CGFloat = 24
         static let unitFontSize: CGFloat = 14
         static let titleFontSize: CGFloat = 14
         static let borderWidth: CGFloat = 1
+
+        static func cardHeight(for source: CardsMeasurementIndicatorViewSource) -> CGFloat {
+            switch source {
+            case .cards:
+                return cardHeight
+            case .measurementDetails:
+                return cardHeight2
+            }
+        }
+
+        static func cornerRadius(for source: CardsMeasurementIndicatorViewSource) -> CGFloat {
+            return cardHeight(for: source) / 2
+        }
     }
 
     var onTap: (() -> Void)?
+
+    // MARK: - View Source
+    private var viewSource: CardsMeasurementIndicatorViewSource
 
     // MARK: - Alert Properties
     private let alertBorderLayer = CAShapeLayer()
@@ -41,7 +63,7 @@ class CardsMeasurementIndicatorView: UIView {
         let label = UILabel()
         label.textAlignment = .left
         label.font = UIFont.ruuviCallout()
-        label.textColor = .white
+        label.textColor = viewSource == .cards ? .white : RuuviColor.dashboardIndicatorBig.color
         label.numberOfLines = 1
         label.setContentHuggingPriority(.required, for: .horizontal)
         label.setContentCompressionResistancePriority(.required, for: .horizontal)
@@ -53,7 +75,8 @@ class CardsMeasurementIndicatorView: UIView {
         label.font = UIFont.ruuviHeadlineTiny()
         label.textAlignment = .left
         label.numberOfLines = 1
-        label.textColor = UIColor.white.withAlphaComponent(0.8)
+        label.textColor = (viewSource == .cards ? .white :
+            RuuviColor.dashboardIndicatorBig.color).withAlphaComponent(0.8)
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return label
     }()
@@ -62,17 +85,26 @@ class CardsMeasurementIndicatorView: UIView {
         let label = UILabel()
         label.textAlignment = .left
         label.font = UIFont.ruuviCaption1()
-        label.textColor = UIColor.white.withAlphaComponent(0.8)
+        label.textColor = (viewSource == .cards ? .white :
+            RuuviColor.dashboardIndicatorBig.color).withAlphaComponent(0.8)
         return label
     }()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    private lazy var statusView: MeasurementStatusView = {
+        let view = MeasurementStatusView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    init(source: CardsMeasurementIndicatorViewSource) {
+        self.viewSource = source
+        super.init(frame: .zero)
         setupUI()
         setupAlertBorder()
     }
 
     required init?(coder: NSCoder) {
+        self.viewSource = .cards
         super.init(coder: coder)
         setupUI()
         setupAlertBorder()
@@ -88,8 +120,9 @@ class CardsMeasurementIndicatorView: UIView {
     }
 
     private func setupUI() {
-        backgroundColor = UIColor.white.withAlphaComponent(0.1)
-        layer.cornerRadius = Constants.cornerRadius
+        backgroundColor = (viewSource == .cards ? .white :
+            RuuviColor.dashboardIndicatorBig.color).withAlphaComponent(0.1)
+        layer.cornerRadius = Constants.cornerRadius(for: viewSource)
 
         let valueStackView = UIStackView(
             arrangedSubviews: [valueLabel, unitLabel]
@@ -108,7 +141,7 @@ class CardsMeasurementIndicatorView: UIView {
 
         let contentStack = UIStackView(
             arrangedSubviews: [
-                iconImageView, labelStackView
+                iconImageView, labelStackView, statusView
             ]
         )
         iconImageView.size(
@@ -128,15 +161,15 @@ class CardsMeasurementIndicatorView: UIView {
             trailing: trailingAnchor,
             padding: UIEdgeInsets(
                 top: Constants.stackTopPadding,
-                left: Constants.horizontalPadding,
+                left: Constants.leadingPadding,
                 bottom: Constants.stackBottomPadding,
-                right: Constants.horizontalPadding
+                right: Constants.trailingPadding
             )
         )
         contentStack.centerYInSuperview()
 
         // Set the card height
-        self.constrainHeight(constant: Constants.cardHeight)
+        self.constrainHeight(constant: Constants.cardHeight(for: viewSource))
 
         let tapGesture = UITapGestureRecognizer(
             target: self,
@@ -158,7 +191,7 @@ class CardsMeasurementIndicatorView: UIView {
         guard alertBorderLayer.superlayer != nil else { return }
         let borderPath = UIBezierPath(
             roundedRect: bounds,
-            cornerRadius: Constants.cornerRadius
+            cornerRadius: Constants.cornerRadius(for: viewSource)
         )
         alertBorderLayer.path = borderPath.cgPath
     }
@@ -180,6 +213,11 @@ class CardsMeasurementIndicatorView: UIView {
             titleLabel.text = indicator.type.shortName
             iconImageView.image = indicator.type.icon
             unitLabel.text = MeasurementType.hideUnit(for: indicator.type) ? "" : indicator.unit
+
+            // Status view is only shown in measurement details view
+            if let state = indicator.qualityState, viewSource == .measurementDetails {
+                statusView.configure(from: state)
+            }
         }
 
     }
