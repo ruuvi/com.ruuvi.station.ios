@@ -11,7 +11,6 @@ protocol TagChartsViewInput: ViewInput {
     var compactChartView: Bool { get set }
     var showChartAll: Bool { get set }
     var showAlertRangeInGraph: Bool { get set }
-    var useNewGraphRendering: Bool { get set }
     var viewIsVisible: Bool { get }
     func createChartViews(from: [MeasurementType])
     func clearChartHistory()
