@@ -90,7 +90,7 @@ public protocol RuuviServiceMeasurement {
     ) -> ( // swiftlint:disable:this large_tuple
         currentScore: Int,
         maxScore: Int,
-        state: AirQualityState
+        state: MeasurementQualityState
     )
 
     /// Returns value for one decimal place alongside max score and state.
@@ -99,6 +99,15 @@ public protocol RuuviServiceMeasurement {
         for co2: Double?,
         and pm25: Double?,
     ) -> Double
+
+    func co2(for value: Double?) -> (
+        value: Double,
+        state: MeasurementQualityState
+    )
+    func pm25(for value: Double?) -> (
+        value: Double,
+        state: MeasurementQualityState
+    )
 
     func co2String(for carbonDiOxide: Double?) -> String
     func pm10String(for pm10: Double?) -> String

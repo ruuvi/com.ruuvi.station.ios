@@ -2,17 +2,17 @@ import UIKit
 import RuuviLocalization
 import RuuviOntology
 
-extension AirQualityState {
+extension MeasurementQualityState {
     var color: UIColor {
         switch self {
         case .excellent:
-            return RuuviColor.ruuviAQIExcellent.color
+            return RuuviColor.ruuviMeasurementExcellent.color
         case .good:
-            return RuuviColor.ruuviAQIGood.color
+            return RuuviColor.ruuviMeasurementGood.color
         case .fair:
-            return RuuviColor.ruuviAQIFair.color
+            return RuuviColor.ruuviMeasurementFair.color
         case .poor, .veryPoor:
-            return RuuviColor.ruuviAQIPoor.color
+            return RuuviColor.ruuviMeasurementPoor.color
         }
     }
 
@@ -36,6 +36,21 @@ extension AirQualityState {
             return RuuviLocalization.poor
         case .veryPoor:
             return RuuviLocalization.verypoor
+        }
+    }
+}
+
+extension MeasurementQualityState {
+    func isSameQualityLevel(as other: MeasurementQualityState) -> Bool {
+        switch (self, other) {
+        case (.excellent, .excellent),
+             (.good, .good),
+             (.fair, .fair),
+             (.poor, .poor),
+             (.veryPoor, .veryPoor):
+            return true
+        default:
+            return false
         }
     }
 }

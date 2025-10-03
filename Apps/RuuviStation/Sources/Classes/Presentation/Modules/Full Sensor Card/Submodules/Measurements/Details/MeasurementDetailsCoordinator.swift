@@ -114,6 +114,7 @@ private extension MeasurementDetailsCoordinator {
 
         let viewController = MeasurementDetailsViewController.createSheet(
             from: indicator,
+            for: snapshot,
             maximumSheetHeight: maximumSheetHeight
         )
 

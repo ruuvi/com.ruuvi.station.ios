@@ -710,7 +710,7 @@ private extension CardsMeasurementPageViewController {
     func createMeasurementCard(
         for measurement: RuuviTagCardSnapshotIndicatorData
     ) -> CardsMeasurementIndicatorView {
-        let card = CardsMeasurementIndicatorView()
+        let card = CardsMeasurementIndicatorView(source: .cards)
 
         // Configure the card with initial data
         card.configure(with: measurement)

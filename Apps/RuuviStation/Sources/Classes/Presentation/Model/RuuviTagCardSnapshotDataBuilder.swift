@@ -37,14 +37,14 @@ struct MeasurementResult {
         isProminent: Bool,
         showSubscript: Bool,
         tintColor: UIColor? = nil,
-        aqiState: AirQualityState? = nil
+        qualityState: MeasurementQualityState? = nil
     ) {
         self.value = value
         self.unit = unit
         self.isProminent = isProminent
         self.showSubscript = showSubscript
         self.tintColor = tintColor
-        self.aqiState = aqiState
+        self.qualityState = qualityState
     }
 
     let value: String
@@ -52,7 +52,7 @@ struct MeasurementResult {
     let isProminent: Bool
     let showSubscript: Bool
     let tintColor: UIColor?
-    let aqiState: AirQualityState?
+    let qualityState: MeasurementQualityState?
 
     func toIndicatorData(
         type: MeasurementType
@@ -64,7 +64,7 @@ struct MeasurementResult {
             isProminent: isProminent,
             showSubscript: showSubscript,
             tintColor: tintColor,
-            aqiState: aqiState
+            qualityState: qualityState
         )
     }
 }
@@ -185,7 +185,7 @@ struct AQIMeasurementExtractor: MeasurementExtractor {
             isProminent: true,
             showSubscript: true,
             tintColor: state.color,
-            aqiState: state
+            qualityState: state
         )
     }
 }
@@ -198,14 +198,18 @@ struct CO2MeasurementExtractor: MeasurementExtractor {
         flags: RuuviLocalFlags
     ) -> MeasurementResult? {
         guard let co2 = record.co2,
-              let co2Value = measurementService?.co2String(for: co2) else { return nil }
+              let (_, state) = measurementService?.co2(for: co2),
+              let co2Value = measurementService?.co2String(for: co2) else {
+            return nil
+        }
 
         return MeasurementResult(
             value: co2Value,
             unit: RuuviLocalization.unitCo2,
             isProminent: false,
             showSubscript: false,
-            tintColor: nil
+            tintColor: state.color,
+            qualityState: state
         )
     }
 }
@@ -217,14 +221,18 @@ struct PM25MeasurementExtractor: MeasurementExtractor {
         flags: RuuviLocalFlags
     ) -> MeasurementResult? {
         guard let pm25 = record.pm25,
-              let pm25Value = measurementService?.pm25String(for: pm25) else { return nil }
+              let (_, state) = measurementService?.pm25(for: pm25),
+              let pm25Value = measurementService?.pm25String(for: pm25) else {
+            return nil
+        }
 
         return MeasurementResult(
             value: pm25Value,
             unit: RuuviLocalization.unitPm25,
             isProminent: false,
             showSubscript: false,
-            tintColor: nil
+            tintColor: state.color,
+            qualityState: state
         )
     }
 }
@@ -489,7 +497,7 @@ struct AlertConfigurationManager {
         isProminent: Bool,
         showSubscript: Bool,
         tintColor: UIColor?,
-        aqiState: AirQualityState? = nil,
+        aqiState: MeasurementQualityState? = nil,
         alertService: RuuviServiceAlert?,
         physicalSensor: PhysicalSensor?
     ) -> RuuviTagCardSnapshotIndicatorData {
@@ -500,7 +508,7 @@ struct AlertConfigurationManager {
             isProminent: isProminent,
             showSubscript: showSubscript,
             tintColor: tintColor,
-            aqiState: aqiState
+            qualityState: aqiState
         )
     }
 }

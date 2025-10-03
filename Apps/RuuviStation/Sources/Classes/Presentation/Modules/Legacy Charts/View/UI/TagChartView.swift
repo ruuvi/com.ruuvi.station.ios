@@ -19,8 +19,11 @@ class TagChartsView: UIView {
     weak var chartDelegate: TagChartsViewDelegate?
 
     // MARK: Private
-    private var chartView: TagChartsViewInternal = {
-        let view = TagChartsViewInternal(source: .cards)
+    private lazy var chartView: TagChartsViewInternal = {
+        let view = TagChartsViewInternal(
+            source: .cards,
+            graphType: graphType
+        )
         return view
     }()
 
@@ -40,6 +43,7 @@ class TagChartsView: UIView {
 
     // MARK: - Private properties
     private var settings: RuuviLocalSettings!
+    private var graphType: MeasurementType = .temperature
     private var chartMinMaxAvgHiddenConstraints: [NSLayoutConstraint] = []
 
     // Properties for chart stat
@@ -48,8 +52,9 @@ class TagChartsView: UIView {
     private var avgValue: Double?
     private var latestValue: ChartDataEntry?
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    init(graphType: MeasurementType) {
+        self.graphType = graphType
+        super.init(frame: .zero)
         addSubviews()
     }
 

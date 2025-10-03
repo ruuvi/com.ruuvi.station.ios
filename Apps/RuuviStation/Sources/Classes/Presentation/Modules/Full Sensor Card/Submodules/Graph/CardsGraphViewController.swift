@@ -151,16 +151,16 @@ class CardsGraphViewController: UIViewController {
     private var chartViews: [TagChartsView] = []
     private var pendingScrollToMeasurement: MeasurementType?
 
-    lazy var temperatureChartView = TagChartsView()
-    lazy var humidityChartView = TagChartsView()
-    lazy var pressureChartView = TagChartsView()
-    lazy var aqiChartView = TagChartsView()
-    lazy var co2ChartView = TagChartsView()
-    lazy var pm25ChartView = TagChartsView()
-    lazy var vocChartView = TagChartsView()
-    lazy var noxChartView = TagChartsView()
-    lazy var luminosityChartView = TagChartsView()
-    lazy var soundChartView = TagChartsView()
+    lazy var temperatureChartView = TagChartsView(graphType: .temperature)
+    lazy var humidityChartView = TagChartsView(graphType: .anyHumidity)
+    lazy var pressureChartView = TagChartsView(graphType: .pressure)
+    lazy var aqiChartView = TagChartsView(graphType: .aqi)
+    lazy var co2ChartView = TagChartsView(graphType: .co2)
+    lazy var pm25ChartView = TagChartsView(graphType: .pm25)
+    lazy var vocChartView = TagChartsView(graphType: .voc)
+    lazy var noxChartView = TagChartsView(graphType: .nox)
+    lazy var luminosityChartView = TagChartsView(graphType: .luminosity)
+    lazy var soundChartView = TagChartsView(graphType: .soundInstant)
 
     private var temperatureChartViewHeight: NSLayoutConstraint!
     private var humidityChartViewHeight: NSLayoutConstraint!

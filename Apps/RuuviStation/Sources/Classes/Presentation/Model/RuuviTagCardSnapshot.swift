@@ -243,7 +243,7 @@ struct RuuviTagCardSnapshotIndicatorData: Equatable, Hashable {
     let isProminent: Bool
     let showSubscript: Bool
     let tintColor: UIColor?
-    let aqiState: AirQualityState?
+    let qualityState: MeasurementQualityState?
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(type)

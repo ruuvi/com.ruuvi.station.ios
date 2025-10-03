@@ -1,4 +1,4 @@
-public enum AirQualityState: Equatable {
+public enum MeasurementQualityState: Equatable {
     case excellent(Double)
     case good(Double)
     case fair(Double)
