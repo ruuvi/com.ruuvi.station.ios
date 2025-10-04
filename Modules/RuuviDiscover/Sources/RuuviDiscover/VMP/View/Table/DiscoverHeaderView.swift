@@ -146,9 +146,8 @@ class DiscoverHeaderView: UIView {
 
 extension DiscoverHeaderView {
     func handleNFCButtonViewVisibility(show: Bool) {
-        let showNFCButton = show && isNFCAvailable
-        nfcButton.isHidden = !showNFCButton
-        if showNFCButton {
+        nfcButton.isHidden = !show
+        if show {
             NSLayoutConstraint.deactivate([
                 descriptionLabelBottomConstraint
             ])
@@ -168,7 +167,7 @@ extension DiscoverHeaderView {
         let addSensorString: String = RuuviLocalization.addSensorDescription
         let addSensorViaNFCString = RuuviLocalization.addSensorViaNfc
         let descriptionString =
-            (showNFCButton && isBluetoothPermissionGranted) ?
+            (show && isBluetoothPermissionGranted && isNFCAvailable) ?
             (addSensorString + "\n\n" + addSensorViaNFCString) : addSensorString
         descriptionLabel.text = descriptionString
     }
