@@ -20,7 +20,7 @@ struct FirmwareView: View {
         let searchingTitle = RuuviLocalization.DFUUIView.searchingTitle
         let startTitle = RuuviLocalization.DFUUIView.startTitle
         let doNotCloseTitle = RuuviLocalization.DFUUIView.doNotCloseTitle
-        let successfulTitle = RuuviLocalization.DFUUIView.successfulTitle
+        let successfulTitle = RuuviLocalization.updateSuccessfulTag
         let finish = RuuviLocalization.DfuFlash.Finish.text
     }
 
