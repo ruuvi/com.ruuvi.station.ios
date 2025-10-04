@@ -22,7 +22,8 @@ struct DFUUIView: View {
         let searchingTitle = RuuviLocalization.DFUUIView.searchingTitle
         let startTitle = RuuviLocalization.DFUUIView.startTitle
         let doNotCloseTitle = RuuviLocalization.DFUUIView.doNotCloseTitle
-        let successfulTitle = RuuviLocalization.DFUUIView.successfulTitle
+        let successfulTitleTag = RuuviLocalization.updateSuccessfulTag
+        let successfulTitleAir = RuuviLocalization.updateSuccessfulAir
         let errorTitle = RuuviLocalization.ErrorPresenterAlert.error
         let dbMigrationErrorTitle = RuuviLocalization.DFUUIView.DBMigration.Error.message
         let finish = RuuviLocalization.DfuFlash.Finish.text
@@ -421,7 +422,8 @@ struct DFUUIView: View {
                     currentRelease: currentRelease
                 )
             return VStack {
-                Text(texts.successfulTitle)
+                Text(viewModel.isRuuviAir() ?
+                     texts.successfulTitleAir : texts.successfulTitleTag)
                     .font(bodyFont)
                     .foregroundColor(RuuviColor.textColor.swiftUIColor)
                     .frame(
