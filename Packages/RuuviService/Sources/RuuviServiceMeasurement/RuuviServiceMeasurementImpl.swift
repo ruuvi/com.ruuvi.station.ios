@@ -484,6 +484,15 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         }
     }
 
+    public func aqiString(for aqi: Double?) -> String {
+        guard let aqi else {
+            return emptyValueString
+        }
+        let currentScore = aqi.rounded(.toNearestOrAwayFromZero)
+        return commonNumberFormatter
+            .string(from: NSNumber(value: currentScore)) ?? emptyValueString
+    }
+
     public func co2String(for carbonDiOxide: Double?) -> String {
         guard let carbonDiOxide
         else {

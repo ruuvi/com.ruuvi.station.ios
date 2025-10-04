@@ -319,7 +319,7 @@ extension TagChartsView {
                 pressure: value
             )
         case .aqi:
-            return measurementService.string(from: value)
+            return measurementService.aqiString(for: value)
         case .co2:
             return measurementService.co2String(for: value)
         case .pm25:

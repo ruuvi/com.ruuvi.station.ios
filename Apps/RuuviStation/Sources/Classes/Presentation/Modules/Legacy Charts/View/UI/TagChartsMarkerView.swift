@@ -109,7 +109,12 @@ class TagChartsMarkerView: MarkerImage {
     }
 
     override func refreshContent(entry: ChartDataEntry, highlight _: Highlight) {
-        let value = GlobalHelpers().formattedString(from: entry.y.round(to: 2))
+        let roundTo = type == .aqi ? 1 : 2
+        let value = GlobalHelpers().formattedString(
+            from: entry.y,
+            minPlace: 0,
+            toPlace: roundTo
+        )
         labelText = value + " " + unit
             + "\n" +
             AppDateFormatter.shared.graphMarkerDateString(from: entry.x)

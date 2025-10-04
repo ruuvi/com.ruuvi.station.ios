@@ -1243,8 +1243,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
             let pressure = data.pressure?.plus(sensorSettings: sensorSettings)
             value = measurementService.double(for: pressure)
         case .aqi:
-            let (aqi, _, _) = measurementService.aqi(for: data.co2, pm25: data.pm25)
-            value = Double(aqi)
+            value = measurementService.aqi(for: data.co2, and: data.pm25)
         case .co2:
             value = measurementService.double(for: data.co2)
         case .pm25:

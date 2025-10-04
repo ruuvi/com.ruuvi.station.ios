@@ -109,6 +109,9 @@ public protocol RuuviServiceMeasurement {
         state: MeasurementQualityState
     )
 
+    /// Returns rounded (toNearestOrAwayFromZero) string value.
+    func aqiString(for aqi: Double?) -> String
+
     func co2String(for carbonDiOxide: Double?) -> String
     func pm10String(for pm10: Double?) -> String
     func pm25String(for pm25: Double?) -> String
