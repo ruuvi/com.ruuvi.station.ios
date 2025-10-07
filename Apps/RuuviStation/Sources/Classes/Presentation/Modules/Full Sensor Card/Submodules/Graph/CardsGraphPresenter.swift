@@ -720,7 +720,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
             ),
             humidity: chartEntry(
                 for: measurement,
-                type: .anyHumidity
+                type: .humidity(settings.humidityUnit)
             ),
             pressure: chartEntry(
                 for: measurement,
@@ -788,7 +788,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
             // Humidty
             if let humidityEntry = chartEntry(
                 for: measurement,
-                type: .anyHumidity
+                type: .humidity(settings.humidityUnit)
             ) {
                 humidityData.append(humidityEntry)
             }
@@ -894,7 +894,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 upperAlertValue: (isOn && isRelative) ? alertService.upperRelativeHumidity(for: ruuviTag).map {
                     $0 * 100
                 } : nil,
-                chartType: .anyHumidity,
+                chartType: .humidity(settings.humidityUnit),
                 chartData: LineChartData(dataSet: humidityChartDataSet),
                 lowerAlertValue: (isOn && isRelative) ? alertService.lowerRelativeHumidity(
                     for: ruuviTag
