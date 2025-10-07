@@ -73,7 +73,7 @@ class DashboardIndicatorProminentView: UIView {
             leading: scriptsContainer.leadingAnchor,
             bottom: nil,
             trailing: scriptsContainer.trailingAnchor,
-            padding: .init(top: -1.2, left: 0, bottom: 0, right: 0)
+            padding: .init(top: -0.5, left: 0, bottom: 0, right: 0)
         )
 
         // Position subscript below superscript
@@ -83,7 +83,7 @@ class DashboardIndicatorProminentView: UIView {
             leading: scriptsContainer.leadingAnchor,
             bottom: scriptsContainer.bottomAnchor,
             trailing: scriptsContainer.trailingAnchor,
-            padding: .init(top: 1.0, left: 0, bottom: -0.5, right: 0)
+            padding: .init(top: 0.5, left: 0, bottom: 0, right: 0)
         )
 
         let valueStackView = UIStackView(arrangedSubviews: [
