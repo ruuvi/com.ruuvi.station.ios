@@ -1,12 +1,13 @@
 trailing_comma:
   mandatory_comma: true
 opening_brace:
-  allow_multiline_func: true
+  ignore_multiline_function_signatures: true
 nesting:
   type_level: 3
 excluded:
   - Carthage
   - Pods
+  - Packages
 disabled_rules:
   - closure_parameter_position
   - identifier_name
