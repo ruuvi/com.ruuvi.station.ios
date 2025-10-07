@@ -55,8 +55,8 @@ struct DashboardCellLayoutConstants {
     static let imageWidthRatio: CGFloat = 0.25
     static let nameToImageSpacing: CGFloat = 14
     static let groupSpacing: CGFloat = 16
-    static let prominentViewHeightPhone: CGFloat = 32
-    static let prominentViewHeightTablet: CGFloat = 36
+    static let prominentViewHeightPhone: CGFloat = 36
+    static let prominentViewHeightTablet: CGFloat = 40
     static let progressViewHeight: CGFloat = 16
     static let progressViewTopSpacing: CGFloat = 4
     static let progressViewToGridSpacing: CGFloat = 10
