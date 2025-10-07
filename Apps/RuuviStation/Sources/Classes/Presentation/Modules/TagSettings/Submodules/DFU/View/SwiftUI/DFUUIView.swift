@@ -322,7 +322,7 @@ struct DFUUIView: View {
             )
             .padding(EdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20))
             .eraseToAnyView()
-        case let .readyToUpdate(latestRelease, currentRelease, dfuDevice, appUrl, fullUrl):
+        case let .readyToUpdate(latestRelease, currentRelease, dfuDevice, appUrl, fullUrl, additionalFiles):
             return VStack {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 20) {
@@ -341,7 +341,8 @@ struct DFUUIView: View {
                                         currentRelease,
                                         dfuDevice: dfuDevice,
                                         appUrl: appUrl,
-                                        fullUrl: fullUrl
+                                        fullUrl: fullUrl,
+                                        additionalFiles: additionalFiles
                                     )
                                 )
                             },

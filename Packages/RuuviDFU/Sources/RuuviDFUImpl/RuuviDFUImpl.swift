@@ -45,8 +45,15 @@ public struct RuuviDFUImpl: RuuviDFU {
     public func flashFirmware(
         dfuDevice: DFUDevice,
         with firmwareURL: URL
-    ) -> AnyPublisher<FlashResponse, any Error> {
-        flasher.flashFirmware(dfuDevice: dfuDevice, with: firmwareURL)
+    ) -> AnyPublisher<FlashResponse, Error> {
+        flashFirmware(dfuDevice: dfuDevice, with: [firmwareURL])
+    }
+
+    public func flashFirmware(
+        dfuDevice: DFUDevice,
+        with firmwareURLs: [URL]
+    ) -> AnyPublisher<FlashResponse, Error> {
+        flasher.flashFirmware(dfuDevice: dfuDevice, with: firmwareURLs)
     }
 
     public func stopFlashFirmware(device: DFUDevice) -> Bool {

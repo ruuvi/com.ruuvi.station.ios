@@ -34,8 +34,27 @@ public protocol RuuviDFU {
         dfuDevice: DFUDevice,
         with firmwareURL: URL
     ) -> AnyPublisher<FlashResponse, Error>
+    func flashFirmware(
+        dfuDevice: DFUDevice,
+        with firmwareURLs: [URL]
+    ) -> AnyPublisher<FlashResponse, Error>
 
     func stopFlashFirmware(device: DFUDevice) -> Bool
+}
+
+public extension RuuviDFU {
+    func flashFirmware(
+        dfuDevice: DFUDevice,
+        with firmwareURLs: [URL]
+    ) -> AnyPublisher<FlashResponse, Error> {
+        guard let first = firmwareURLs.first else {
+            return Fail<FlashResponse, Error>(
+                error: RuuviDfuError(description: "No firmware files provided")
+            )
+            .eraseToAnyPublisher()
+        }
+        return flashFirmware(dfuDevice: dfuDevice, with: first)
+    }
 }
 
 public protocol DfuFlasherOutputProtocol: AnyObject {
