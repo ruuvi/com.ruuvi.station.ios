@@ -1,12 +1,13 @@
 import RuuviOntology
+import RuuviLocalization
 
 extension RuuviDeviceType {
     var displayName: String {
         switch self {
         case .ruuviTag:
-            return "RuuviTag"
+            return RuuviLocalization.ruuviTag
         case .ruuviAir:
-            return "Ruuvi Air"
+            return RuuviLocalization.ruuviAir
         }
     }
 

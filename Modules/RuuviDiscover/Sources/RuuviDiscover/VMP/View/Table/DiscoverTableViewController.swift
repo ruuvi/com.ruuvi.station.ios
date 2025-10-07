@@ -566,14 +566,12 @@ extension DiscoverTableViewController {
     private func displayName(
         for device: DiscoverRuuviTagViewModel
     ) -> String {
-        if let mac = device.mac {
-            RuuviLocalization.DiscoverTable.RuuviDevice.prefix
-                + " " + mac.replacingOccurrences(of: ":", with: "")
-                    .suffix(4)
-        } else {
-            RuuviLocalization.DiscoverTable.RuuviDevice.prefix
-                + " " + (device.luid?.value.prefix(4) ?? "")
-        }
+        Helpers
+            .ruuviDeviceDefaultName(
+                from: device.mac,
+                luid: device.luid?.value,
+                dataFormat: device.dataFormat
+            )
     }
 
     private func takeUserToBTSettings(userDeclined: Bool) {
