@@ -985,7 +985,7 @@ extension CardsGraphViewController: CardsGraphViewInput {
         )
         humidityChartView.updateLatest(
             with: humidity,
-            type: .anyHumidity,
+            type: .humidity(settings.humidityUnit),
             measurementService: measurementService
         )
         pressureChartView.updateLatest(
