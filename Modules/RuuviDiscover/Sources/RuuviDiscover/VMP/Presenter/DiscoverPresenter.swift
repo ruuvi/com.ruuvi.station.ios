@@ -466,7 +466,8 @@ extension DiscoverPresenter {
                 rssi: ruuviTag.rssi,
                 mac: ruuviTag.mac,
                 name: nil,
-                logo: RuuviAsset.ruuviLogo.image
+                logo: RuuviAsset.ruuviLogo.image,
+                dataFormat: ruuviTag.version
             )
         }
         view?.ruuviTags = visibleTags(ruuviTags: ruuviTags)
@@ -525,8 +526,23 @@ extension DiscoverPresenter {
         else {
             return nil
         }
-        return RuuviLocalization.DiscoverTable.RuuviDevice.prefix
-            + " " + tag.macId.replacingOccurrences(of: ":", with: "").suffix(4)
+        let normalizedFirmwareVersion = tag.firmwareVersion
+            .lowercased()
+            .replacingOccurrences(of: " ", with: "")
+        let normalizedReference = RuuviLocalization.ruuviAir
+            .lowercased()
+            .replacingOccurrences(of: " ", with: "")
+
+        if normalizedFirmwareVersion.contains(normalizedReference) {
+            return Helpers.ruuviAirDefaultName(from: tag.macId)
+        }
+
+        return Helpers
+            .ruuviDeviceDefaultName(
+                from: tag.macId,
+                luid: nil,
+                dataFormat: nil
+            )
     }
 
     private func message(for tag: NFCSensor?, displayName: String?) -> String? {

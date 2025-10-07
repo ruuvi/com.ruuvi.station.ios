@@ -8,4 +8,5 @@ struct DiscoverRuuviTagViewModel {
     var mac: String?
     var name: String?
     var logo: UIImage?
+    var dataFormat: Int?
 }

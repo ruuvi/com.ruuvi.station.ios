@@ -7598,9 +7598,10 @@ extension TagSettingsViewController {
         name: String?,
         sortingType: DashboardSortingType
     ) {
-        let defaultName = GlobalHelpers.ruuviTagDefaultName(
+        let defaultName = GlobalHelpers.ruuviDeviceDefaultName(
             from: viewModel?.mac.value,
-            luid: viewModel?.uuid.value
+            luid: viewModel?.uuid.value,
+            dataFormat: viewModel?.version.value
         )
         let alert = UIAlertController(
             title: RuuviLocalization.TagSettings.TagNameTitleLabel.text,

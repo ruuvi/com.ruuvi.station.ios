@@ -1,5 +1,6 @@
 import RuuviLocalization
 import UIKit
+import RuuviOntology
 
 struct GlobalHelpers {
     static func isDeviceTablet() -> Bool {
@@ -19,14 +20,26 @@ struct GlobalHelpers {
         }
     }
 
-    static func ruuviTagDefaultName(from macId: String?, luid: String?) -> String {
+    static func ruuviDeviceDefaultName(
+        from macId: String?,
+        luid: String?,
+        dataFormat: Int?
+    ) -> String {
+        var deviceName = RuuviLocalization.ruuviTag
+        if let dataFormat {
+            let firmwareVersion = RuuviFirmwareVersion.firmwareVersion(
+                from: dataFormat
+            )
+            if firmwareVersion == .e1 || firmwareVersion == .v6 {
+                deviceName = RuuviLocalization.ruuviAir
+            }
+        }
+
         // identifier
         if let mac = macId {
-            RuuviLocalization.DiscoverTable.RuuviDevice.prefix
-                + " " + mac.replacingOccurrences(of: ":", with: "").suffix(4)
+            return deviceName + " " + mac.replacingOccurrences(of: ":", with: "").suffix(4)
         } else {
-            RuuviLocalization.DiscoverTable.RuuviDevice.prefix
-                + " " + (luid?.prefix(4) ?? "")
+            return deviceName + " " + (luid?.prefix(4) ?? "")
         }
     }
 

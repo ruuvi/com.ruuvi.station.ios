@@ -1056,9 +1056,10 @@ extension DashboardViewController: NewDashboardViewInput {
         for snapshot: RuuviTagCardSnapshot,
         sortingType: DashboardSortingType
     ) {
-        let defaultName = GlobalHelpers.ruuviTagDefaultName(
+        let defaultName = GlobalHelpers.ruuviDeviceDefaultName(
             from: snapshot.identifierData.mac?.mac,
-            luid: snapshot.identifierData.luid?.value
+            luid: snapshot.identifierData.luid?.value,
+            dataFormat: snapshot.displayData.version
         )
 
         let alert = UIAlertController(
