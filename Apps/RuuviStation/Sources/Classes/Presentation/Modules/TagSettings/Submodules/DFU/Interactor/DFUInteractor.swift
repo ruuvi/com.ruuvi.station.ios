@@ -9,7 +9,7 @@ import RuuviLocal
 final class DFUInteractor {
     var ruuviDFU: RuuviDFU!
     var background: BTBackground!
-    private let deviceType: RuuviDFUDeviceType
+    private let deviceType: RuuviDeviceType
     private let firmwareType: RuuviDFUFirmwareType
 
     private let firmwareRepository: FirmwareRepository = FirmwareRepositoryImpl()
@@ -18,7 +18,7 @@ final class DFUInteractor {
     private var timeoutDuration: Double = 15
 
     init(
-        deviceType: RuuviDFUDeviceType = .ruuviTag,
+        deviceType: RuuviDeviceType = .ruuviTag,
         firmwareType: RuuviDFUFirmwareType
     ) {
         self.deviceType = deviceType
@@ -255,7 +255,7 @@ extension DFUInteractor {
         timer = nil
     }
 
-    private func firmwareDownloadURL(for deviceType: RuuviDFUDeviceType) -> String {
+    private func firmwareDownloadURL(for deviceType: RuuviDeviceType) -> String {
         switch deviceType {
         case .ruuviTag:
             return "https://api.github.com/repos/ruuvi/ruuvi.firmware.c/releases/latest"

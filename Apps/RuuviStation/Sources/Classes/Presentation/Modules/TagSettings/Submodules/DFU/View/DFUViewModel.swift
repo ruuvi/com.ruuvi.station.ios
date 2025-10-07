@@ -121,8 +121,8 @@ final class DFUViewModel: ObservableObject {
                 )
                 let prefix = (
                     firmwareType == .e1 || firmwareType == .v6
-                ) ? RuuviDFUDeviceType.ruuviAir.fwVersionPrefix :
-                    RuuviDFUDeviceType.ruuviTag.fwVersionPrefix
+                ) ? RuuviDeviceType.ruuviAir.fwVersionPrefix :
+                    RuuviDeviceType.ruuviTag.fwVersionPrefix
                 updatedVersion = prefix + " " + latestRelease.version
             }
             guard let updatedVersion = updatedVersion else { return }

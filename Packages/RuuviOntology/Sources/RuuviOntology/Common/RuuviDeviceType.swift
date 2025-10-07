@@ -1,4 +1,4 @@
-public enum RuuviDFUDeviceType {
+public enum RuuviDeviceType {
     case ruuviTag
     case ruuviAir
 }

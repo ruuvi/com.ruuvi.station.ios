@@ -19,7 +19,7 @@ final class DFUModuleFactoryImpl: DFUModuleFactory {
         let firmwareVersion = RuuviFirmwareVersion.firmwareVersion(
             from: ruuviTag.version
         )
-        let dfuDeviceType: RuuviDFUDeviceType =
+        let dfuDeviceType: RuuviDeviceType =
             firmwareVersion == .e1 || firmwareVersion == .v6 ? .ruuviAir : .ruuviTag
         let flags = r.resolve(RuuviLocalFlags.self)
         var firmwareType: RuuviDFUFirmwareType = .latest

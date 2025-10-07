@@ -1,6 +1,15 @@
-import RuuviDFU
+import RuuviOntology
 
-extension RuuviDFUDeviceType {
+extension RuuviDeviceType {
+    var displayName: String {
+        switch self {
+        case .ruuviTag:
+            return "RuuviTag"
+        case .ruuviAir:
+            return "Ruuvi Air"
+        }
+    }
+
     var fwVersionPrefix: String {
         switch self {
         case .ruuviTag:
