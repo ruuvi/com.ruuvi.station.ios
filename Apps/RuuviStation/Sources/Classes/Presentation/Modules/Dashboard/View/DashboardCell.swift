@@ -165,6 +165,8 @@ struct DashboardCellLayoutConstants {
 class DashboardCell: UICollectionViewCell, TimestampUpdateable {
 
     // MARK: - Configuration
+    private static let alertAnimationKey = "DashboardCell.alertBlink"
+    private static let alertAnimationFadeDuration: CFTimeInterval = 0.5
     private var dashboardType: DashboardType = .simple
 
     // MARK: - UI Components
@@ -1192,37 +1194,49 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
     }
 
     private func startAlertAnimation() {
-        DispatchQueue.main
-            .asyncAfter(
-                deadline: .now() + 0.1
-            ) {
-                UIView
-                    .animate(
-                        withDuration: 0.5,
-                        delay: 0,
-                        options: [
-                            .repeat,
-                            .autoreverse,
-                            .beginFromCurrentState,
-                        ],
-                        animations: { [weak self] in
-                            self?.alertIcon.alpha = 0.0
-                        }
-                    )
-            }
+        alertIcon.alpha = 1.0
+        alertIcon.layer
+            .removeAnimation(
+                forKey: DashboardCell.alertAnimationKey
+            )
+
+        let cycleDuration = DashboardCell.alertAnimationFadeDuration * 2
+        let currentLayerTime = alertIcon.layer
+            .convertTime(
+                CACurrentMediaTime(),
+                from: nil
+            )
+        let cycleProgress = currentLayerTime
+            .truncatingRemainder(
+                dividingBy: cycleDuration
+            )
+
+        let animation = CABasicAnimation(
+            keyPath: "opacity"
+        )
+        animation.fromValue = 1.0
+        animation.toValue = 0.0
+        animation.duration = DashboardCell.alertAnimationFadeDuration
+        animation.autoreverses = true
+        animation.repeatCount = .infinity
+        animation.isRemovedOnCompletion = false
+        animation.beginTime = currentLayerTime - cycleProgress
+
+        alertIcon.layer
+            .add(
+                animation,
+                forKey: DashboardCell.alertAnimationKey
+            )
     }
 
     private func removeAlertAnimations(
         alpha: Double = 1
     ) {
-        DispatchQueue.main
-            .asyncAfter(
-                deadline: .now() + 0.1
-            ) { [weak self] in
-                self?.alertIcon.layer
-                    .removeAllAnimations()
-                self?.alertIcon.alpha = alpha
-            }
+        alertIcon.layer
+            .removeAnimation(
+                forKey: DashboardCell.alertAnimationKey
+            )
+        alertIcon.alpha = alpha
     }
 
     @objc private func alertButtonTapped() {
