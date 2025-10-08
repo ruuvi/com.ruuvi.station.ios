@@ -7,7 +7,8 @@ nesting:
 excluded:
   - Carthage
   - Pods
-  - Packages
+  - .build
+  - "**/.build"
 disabled_rules:
   - closure_parameter_position
   - identifier_name
