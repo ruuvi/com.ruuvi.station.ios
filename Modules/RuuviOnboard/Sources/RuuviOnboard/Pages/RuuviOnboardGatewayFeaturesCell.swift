@@ -16,7 +16,7 @@ class RuuviOnboardGatewayFeaturesCell: UICollectionViewCell {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.mulish(.extraBold, size: 36)
+        label.font = UIFont.montserrat(.extraBold, size: 36)
         return label
     }()
 
@@ -149,11 +149,11 @@ extension RuuviOnboardGatewayFeaturesCell {
     func configure(with viewModel: OnboardViewModel) {
         switch viewModel.pageType {
         case .share:
-            subtitleLabel.font = UIFont.mulish(.extraBold, size: 36)
+            subtitleLabel.font = UIFont.montserrat(.extraBold, size: 36)
             titleLabel.font = UIFont.mulish(.semiBoldItalic, size: 20)
         default:
             subtitleLabel.font = UIFont.mulish(.semiBoldItalic, size: 20)
-            titleLabel.font = UIFont.mulish(.extraBold, size: 36)
+            titleLabel.font = UIFont.montserrat(.extraBold, size: 36)
         }
 
         titleLabel.text = viewModel.title

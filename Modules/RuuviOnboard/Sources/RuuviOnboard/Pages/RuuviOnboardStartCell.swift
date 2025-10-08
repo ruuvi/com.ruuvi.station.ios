@@ -16,7 +16,7 @@ class RuuviOnboardStartCell: UICollectionViewCell {
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.font = UIFont.mulish(.extraBold, size: 36)
+        label.font = UIFont.montserrat(.extraBold, size: 36)
         return label
     }()
 
