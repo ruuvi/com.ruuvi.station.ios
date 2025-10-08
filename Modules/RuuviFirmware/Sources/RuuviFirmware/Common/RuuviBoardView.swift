@@ -23,7 +23,7 @@ public struct RuuviBoardView: View {
         }
         .padding()
         .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
-            guard let scene = UIApplication().firstKeyScene else { return }
+            guard let scene = UIApplication.shared.firstKeyScene else { return }
             isPortrait = scene.interfaceOrientation.isPortrait
         }
     }
