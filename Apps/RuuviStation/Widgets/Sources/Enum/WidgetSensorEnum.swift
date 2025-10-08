@@ -94,7 +94,7 @@ public extension WidgetSensorEnum {
              .acceleration_z:
             "g"
         case .air_quality:
-            ""
+            "/100"
         case .co2:
             RuuviLocalization.unitCo2
         case .nox:
