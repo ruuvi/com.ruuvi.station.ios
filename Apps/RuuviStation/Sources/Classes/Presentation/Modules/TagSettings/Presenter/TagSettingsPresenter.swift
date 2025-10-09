@@ -83,6 +83,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
     }
 
     private var firmwareUpdateDialogShown: Bool = false
+    private var firmwareVersionCheckInProgress = false
 
     private var timer: Timer?
 
@@ -1266,6 +1267,9 @@ extension TagSettingsPresenter {
         device: RuuviTag,
         source: RuuviTagSensorRecordSource
     ) {
+        if firmwareVersionCheckInProgress {
+            return
+        }
         // Some important notes:
         // FW v2.5.9 DF3 and DF5 tags always returns connectable 'false' and source is always advertisement.
         // FW v3+ tags returns connectable 'true' in advertisement source when not connected.
@@ -1384,6 +1388,9 @@ extension TagSettingsPresenter {
                     if let userInfo = notification.userInfo,
                        let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String,
                        uuid == self?.ruuviTag.luid?.value {
+                        guard self?.firmwareVersionCheckInProgress != true else {
+                            return
+                        }
                         self?.viewModel.isConnected.value = true
                     }
                 }
@@ -1399,6 +1406,9 @@ extension TagSettingsPresenter {
                     if let userInfo = notification.userInfo,
                        let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String,
                        uuid == self?.ruuviTag.luid?.value {
+                        guard self?.firmwareVersionCheckInProgress != true else {
+                            return
+                        }
                         self?.viewModel.isConnected.value = false
                     }
                 }
@@ -2848,6 +2858,8 @@ extension TagSettingsPresenter {
             return
         }
 
+        firmwareVersionCheckInProgress = true
+
         background.services.gatt.firmwareRevision(
             for: self,
             uuid: luid.value,
@@ -2856,13 +2868,19 @@ extension TagSettingsPresenter {
                 .serviceTimeout(15),
             ]
         ) { [weak self] _, result in
-            guard let sSelf = self else { return }
+            guard let self else { return }
             switch result {
             case let .success(version):
-                let tagWithVersion = sSelf.ruuviTag.with(firmwareVersion: version)
-                self?.ruuviPool.update(tagWithVersion)
+                let tagWithVersion = self.ruuviTag.with(firmwareVersion: version)
+                self.ruuviPool.update(tagWithVersion)
             default:
                 break
+            }
+            DispatchQueue.main.async {
+                self.firmwareVersionCheckInProgress = false
+                if let luid = self.ruuviTag.luid {
+                    self.viewModel.isConnected.value = self.background.isConnected(uuid: luid.value)
+                }
             }
         }
     }
