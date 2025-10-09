@@ -221,6 +221,7 @@ extension CardsBasePresenter: CardsBaseViewOutput {
         case .measurement:
             measurementPresenter?.scroll(to: currentSnapshotIndex(), animated: true)
         case .graph:
+            measurementPresenter?.scroll(to: currentSnapshotIndex(), animated: false)
             graphPresenter?.scroll(to: currentSnapshotIndex(), animated: true)
         case .alerts, .settings:
             break // TODO: Implement
