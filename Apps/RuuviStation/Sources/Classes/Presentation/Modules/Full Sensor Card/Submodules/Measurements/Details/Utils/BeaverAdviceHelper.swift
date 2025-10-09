@@ -169,7 +169,7 @@ public struct BeaverAdviceHelper {
             co2: co2Quality,
             pm: pm25Quality
         ) {
-            return randomAdvice + "\n\n" + additionalAdvice
+            return randomAdvice + "\n" + additionalAdvice
         }
 
         return randomAdvice
