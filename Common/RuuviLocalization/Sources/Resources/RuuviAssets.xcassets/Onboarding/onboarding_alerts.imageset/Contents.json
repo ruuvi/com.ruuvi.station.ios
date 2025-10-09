@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "onboarding_alerts.png",
+      "filename" : "iphone-settings.png",
       "idiom" : "universal"
     },
     {
-      "filename" : "ipad-alerts.png",
+      "filename" : "ipad-settings.png",
       "idiom" : "universal",
       "width-class" : "regular"
     }

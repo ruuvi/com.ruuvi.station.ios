@@ -1,11 +1,11 @@
 {
   "images" : [
     {
-      "filename" : "onboarding_history.png",
+      "filename" : "iphone-history-view.png",
       "idiom" : "universal"
     },
     {
-      "filename" : "ipad-graphs.png",
+      "filename" : "ipad-history-view.png",
       "idiom" : "universal",
       "width-class" : "regular"
     }
