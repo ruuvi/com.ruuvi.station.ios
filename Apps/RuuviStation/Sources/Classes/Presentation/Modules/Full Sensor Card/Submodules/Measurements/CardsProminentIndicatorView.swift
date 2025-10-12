@@ -545,7 +545,13 @@ final class AirQualityCircularView: UIView {
         state: MeasurementQualityState,
         animated: Bool = false
     ) {
-        currentValueLabel.text = "\(currentValue)"
+        switch state {
+        case .undefined:
+            currentValueLabel.text = RuuviLocalization.na
+        default:
+            currentValueLabel.text = "\(currentValue)"
+        }
+
         maxValueLabel.text = "/\(maxValue)"
         statusLabel.text = state.title
 

@@ -4,4 +4,5 @@ public enum MeasurementQualityState: Equatable {
     case fair(Double)
     case poor(Double)
     case veryPoor(Double)
+    case undefined(Double)
 }

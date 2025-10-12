@@ -61,6 +61,7 @@ public struct BeaverAdviceHelper {
         case .fair: return aqiFair
         case .poor: return aqiPoor
         case .veryPoor: return aqiVeryPoor
+        case .undefined: return []
         }
     }
 
@@ -152,6 +153,8 @@ public struct BeaverAdviceHelper {
             default:
                 return nil
             }
+        case .undefined:
+            return nil
         }
     }
 
@@ -162,6 +165,11 @@ public struct BeaverAdviceHelper {
         co2Quality: MeasurementQualityState?,
         pm25Quality: MeasurementQualityState?
     ) -> String {
+        guard let co2Quality = co2Quality,
+              let pm25Quality = pm25Quality else {
+            return RuuviLocalization.na
+        }
+
         let aqiAdvices = aqiSet(for: aqiQuality)
         let randomAdvice = aqiAdvices.randomElement() ?? aqiAdvices[0]
 

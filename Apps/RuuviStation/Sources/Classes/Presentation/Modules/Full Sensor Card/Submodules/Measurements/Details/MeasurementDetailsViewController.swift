@@ -645,10 +645,17 @@ private extension MeasurementDetailsViewController {
     }
 
     func applyAQIContentVisibility() {
-        if currentMeasurementType == .aqi {
-            setupAQIContent()
-        } else {
+        let aqiQuality = tagSnapshot.displayData.indicatorGrid?.indicators
+            .first(where: { $0.type == .aqi })?.qualityState
+        switch aqiQuality {
+        case .undefined:
             hideAQIContent()
+        default:
+            if currentMeasurementType == .aqi {
+                setupAQIContent()
+            } else {
+                hideAQIContent()
+            }
         }
     }
 
@@ -717,7 +724,9 @@ private extension MeasurementDetailsViewController {
         let pm25Quality = measurements?
             .first(where: { $0.type == .pm25 })?.qualityState
 
-        guard let aqiQuality = aqiQuality else { return }
+        guard let aqiQuality = aqiQuality,
+              let co2Quality = co2Quality,
+              let pm25Quality = pm25Quality else { return }
 
         lastAQIQualityState = aqiQuality
         let advice = BeaverAdviceHelper.getBeaverAdvice(
@@ -1050,6 +1059,12 @@ private extension MeasurementDetailsViewController {
         if indicator.type == .aqi {
             let components = indicator.value.components(separatedBy: "/")
             value = components.first ?? indicator.value
+            switch indicator.qualityState {
+            case .undefined:
+                value = RuuviLocalization.na
+            default:
+                break
+            }
         }
 
         return value

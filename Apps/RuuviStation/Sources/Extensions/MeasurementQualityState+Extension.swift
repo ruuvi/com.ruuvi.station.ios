@@ -13,13 +13,15 @@ extension MeasurementQualityState {
             return RuuviColor.ruuviMeasurementFair.color
         case .poor, .veryPoor:
             return RuuviColor.ruuviMeasurementPoor.color
+        case .undefined:
+            return .gray
         }
     }
 
     var score: Double {
         switch self {
         case .excellent(let value), .good(let value), .fair(let value),
-             .poor(let value), .veryPoor(let value):
+                .poor(let value), .veryPoor(let value), .undefined(let value):
             return value
         }
     }
@@ -36,6 +38,8 @@ extension MeasurementQualityState {
             return RuuviLocalization.poor
         case .veryPoor:
             return RuuviLocalization.verypoor
+        case .undefined:
+            return RuuviLocalization.undefined
         }
     }
 }
@@ -47,7 +51,8 @@ extension MeasurementQualityState {
              (.good, .good),
              (.fair, .fair),
              (.poor, .poor),
-             (.veryPoor, .veryPoor):
+             (.veryPoor, .veryPoor),
+             (.undefined, .undefined):
             return true
         default:
             return false

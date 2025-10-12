@@ -415,6 +415,10 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         maxScore: Int,
         state: MeasurementQualityState
     ) {
+        guard let co2 = co2, let pm25 = pm25 else {
+            return (0, 100, .undefined(0))
+        }
+
         let currentScore = calculateAQI(co2: co2, pm25: pm25)
             .rounded(.toNearestOrAwayFromZero)
         let maxScore = 100

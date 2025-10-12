@@ -768,7 +768,13 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                 let components = airQualityIndicator.value.components(
                     separatedBy: "/"
                 )
-                let mainValue = components.first ?? airQualityIndicator.value
+                var mainValue = components.first ?? airQualityIndicator.value
+                switch airQualityIndicator.qualityState {
+                case .undefined:
+                    mainValue = RuuviLocalization.na
+                default:
+                    break
+                }
                 let superscriptValue = components.count > 1 ? "/\(components[1])" : ""
 
                 prominentView
