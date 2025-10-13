@@ -9,9 +9,11 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
 
     private let imagePersistence: ImagePersistence
     private let bgMinIndex = 1 // must be > 0, 0 means custom background
-    private let bgMaxIndex = 16
-    // The images of index 16 will be used for default background.
-    private let bgIndexDefault = 16
+    private let bgMaxIndex = 17
+    // The images of index 16 will be used for default background for RuuviTag.
+    private let bgIndexDefaultRuuviTag = 16
+    // The images of index 17 will be used for default background for RuuviAur.
+    private let bgIndexDefaultRuuviAir = 17
 
     private let usedBackgroundsUDKey = "BackgroundPersistenceUserDefaults.background.usedBackgroundsUDKey"
     private let bgUDKeyPrefix = "BackgroundPersistenceUserDefaults.background."
@@ -63,7 +65,10 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
         }
     }
 
-    func getOrGenerateBackground(for identifier: Identifier) -> UIImage? {
+    func getOrGenerateBackground(
+        for identifier: Identifier,
+        ruuviDeviceType: RuuviDeviceType
+    ) -> UIImage? {
         let id = backgroundId(for: identifier)
         if id >= bgMinIndex, id <= bgMaxIndex {
             return UIImage(named: "bg\(id)")
@@ -71,6 +76,8 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
             if let custom = getCustomBackground(for: identifier) {
                 return custom
             } else {
+                let bgIndexDefault: Int =
+                    ruuviDeviceType == .ruuviTag ? bgIndexDefaultRuuviTag : bgIndexDefaultRuuviAir
                 setBackground(bgIndexDefault, for: identifier)
                 return UIImage(named: "bg\(bgIndexDefault)")
             }
@@ -224,6 +231,21 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     }
 
     func setPictureRemovedFromCache(for ruuviTag: RuuviTagSensor) {
+        // Remove local cache
+        if let macId = ruuviTag.macId {
+            UserDefaults.standard.set(
+                nil,
+                forKey: bgUDKeyPrefix + macId.value
+            )
+        }
+        if let luid = ruuviTag.luid {
+            UserDefaults.standard.set(
+                nil,
+                forKey: bgUDKeyPrefix + luid.value
+            )
+        }
+
+        // Remove cloud cache
         UserDefaults.standard.set(
             nil,
             forKey: cloudSensorPictureUrlPrefix + ruuviTag.id

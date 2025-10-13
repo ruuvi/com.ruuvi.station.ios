@@ -152,14 +152,16 @@ extension BackgroundSelectionPresenter {
 
     private func prepareDefaultImages() {
         var defaultImages: [DefaultBackgroundModel] = []
-        for i in (1 ... 16).reversed() {
+        for i in (1 ... 17).reversed() {
             let image = UIImage(named: "bg\(i)")
-            let model = DefaultBackgroundModel(
-                id: i,
-                image: image,
-                thumbnail: image?.resize()
-            )
-            defaultImages.append(model)
+            if let image {
+                let model = DefaultBackgroundModel(
+                    id: i,
+                    image: image,
+                    thumbnail: image.resize()
+                )
+                defaultImages.append(model)
+            }
         }
         viewModel.defaultImages.value = defaultImages
     }

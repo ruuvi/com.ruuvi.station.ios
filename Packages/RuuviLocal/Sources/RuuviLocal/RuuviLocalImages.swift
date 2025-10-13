@@ -21,7 +21,10 @@ public enum BPDidUpdateBackgroundUploadProgressKey: String {
 }
 
 public protocol RuuviLocalImages {
-    func getOrGenerateBackground(for identifier: Identifier) -> UIImage?
+    func getOrGenerateBackground(
+        for identifier: Identifier,
+        ruuviDeviceType: RuuviDeviceType
+    ) -> UIImage?
     func getBackground(for identifier: Identifier) -> UIImage?
     func setBackground(_ id: Int, for identifier: Identifier)
     func setNextDefaultBackground(for identifier: Identifier) -> UIImage?

@@ -176,7 +176,14 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
     }
 
     public func getImage(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError> {
-        getImage(luid: sensor.luid, macId: sensor.macId)
+        let dataFormat = RuuviDataFormat.dataFormat(from: sensor.version)
+        let ruuviDeviceType: RuuviDeviceType =
+            dataFormat == .e1 || dataFormat == .v6 ? .ruuviAir : .ruuviTag
+        return getImage(
+            luid: sensor.luid,
+            macId: sensor.macId,
+            ruuviDeviceType: ruuviDeviceType
+        )
     }
 
     public func removeImage(for sensor: RuuviTagSensor) {
@@ -209,20 +216,33 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         return promise.future
     }
 
-    private func getImage(luid: LocalIdentifier?, macId: MACIdentifier?) -> Future<UIImage, RuuviServiceError> {
+    private func getImage(
+        luid: LocalIdentifier?,
+        macId: MACIdentifier?,
+        ruuviDeviceType: RuuviDeviceType
+    ) -> Future<UIImage, RuuviServiceError> {
         let promise = Promise<UIImage, RuuviServiceError>()
         if let macId {
             if let image = localImages.getBackground(for: macId) {
                 promise.succeed(value: image)
-            } else if let luid, let image = localImages.getOrGenerateBackground(for: luid) {
+            } else if let luid, let image = localImages.getOrGenerateBackground(
+                for: luid,
+                ruuviDeviceType: ruuviDeviceType
+            ) {
                 promise.succeed(value: image)
-            } else if let image = localImages.getOrGenerateBackground(for: macId) {
+            } else if let image = localImages.getOrGenerateBackground(
+                for: macId,
+                ruuviDeviceType: ruuviDeviceType
+            ) {
                 promise.succeed(value: image)
             } else {
                 promise.fail(error: .failedToFindOrGenerateBackgroundImage)
             }
         } else if let luid {
-            if let image = localImages.getOrGenerateBackground(for: luid) {
+            if let image = localImages.getOrGenerateBackground(
+                for: luid,
+                ruuviDeviceType: ruuviDeviceType
+            ) {
                 promise.succeed(value: image)
             } else {
                 promise.fail(error: .failedToFindOrGenerateBackgroundImage)
