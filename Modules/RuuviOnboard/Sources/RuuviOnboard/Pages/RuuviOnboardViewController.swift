@@ -56,7 +56,7 @@ class RuuviOnboardViewController: UIViewController {
     }
 
     private lazy var bgLayer: UIImageView = {
-        let iv = UIImageView(image: RuuviAsset.Onboarding.onboardingBgLayer.image)
+        let iv = UIImageView(image: RuuviAsset.commonBgLayer.image)
         iv.backgroundColor = .clear
         return iv
     }()

@@ -31,7 +31,7 @@ class SignInViewController: UIViewController {
     }()
 
     private lazy var bgLayer: UIImageView = {
-        let iv = UIImageView(image: RuuviAsset.signInBgLayer.image)
+        let iv = UIImageView(image: RuuviAsset.commonBgLayer.image)
         iv.backgroundColor = .clear
         return iv
     }()
