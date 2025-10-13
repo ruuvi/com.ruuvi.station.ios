@@ -129,7 +129,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         tagViewModel.humidityUnit.value = settings.humidityUnit
         tagViewModel.pressureUnit.value = settings.pressureUnit
 
-        let firmwareType = RuuviFirmwareVersion.firmwareVersion(
+        let firmwareType = RuuviDataFormat.dataFormat(
             from: ruuviTag.version
         )
         let isAir = firmwareType == .e1 || firmwareType == .v6

@@ -90,7 +90,7 @@ struct TemperatureMeasurementExtractor: MeasurementExtractor {
 
         let value = measurementService.stringWithoutSign(for: temperature)
         let unit = measurementService.units.temperatureUnit.symbol
-        let firmware = RuuviFirmwareVersion.firmwareVersion(from: record.version)
+        let firmware = RuuviDataFormat.dataFormat(from: record.version)
         let isProminent = firmware == .e1 || firmware == .v6
 
         return MeasurementResult(
@@ -356,7 +356,7 @@ struct MeasurementExtractorFactory {
 
 // MARK: - Firmware Version Manager
 struct FirmwareVersionManager {
-    static func getMeasurementTypes(for firmwareVersion: RuuviFirmwareVersion) -> [MeasurementType] {
+    static func getMeasurementTypes(for firmwareVersion: RuuviDataFormat) -> [MeasurementType] {
         switch firmwareVersion {
         case .e1, .v6:
             return MeasurementConfiguration.advancedFirmwareMeasurements
@@ -366,12 +366,12 @@ struct FirmwareVersionManager {
     }
 
     static func getMeasurementTypes(for version: Int?) -> [MeasurementType] {
-        let firmwareVersion = RuuviFirmwareVersion.firmwareVersion(from: version.bound)
+        let firmwareVersion = RuuviDataFormat.dataFormat(from: version.bound)
         return getMeasurementTypes(for: firmwareVersion)
     }
 
     static func isAdvancedFirmware(_ version: Int?) -> Bool {
-        let firmwareVersion = RuuviFirmwareVersion.firmwareVersion(from: version.bound)
+        let firmwareVersion = RuuviDataFormat.dataFormat(from: version.bound)
         return firmwareVersion == .e1 || firmwareVersion == .v6
     }
 }
@@ -578,7 +578,7 @@ struct RuuviTagCardSnapshotDataBuilder {
         flags: RuuviLocalFlags,
         snapshot: RuuviTagCardSnapshot
     ) -> [RuuviTagCardSnapshotIndicatorData] {
-        let firmwareVersion = RuuviFirmwareVersion.firmwareVersion(from: sensor.version)
+        let firmwareVersion = RuuviDataFormat.dataFormat(from: sensor.version)
         let measurementTypes = FirmwareVersionManager.getMeasurementTypes(for: firmwareVersion)
 
         return measurementTypes.compactMap { type in

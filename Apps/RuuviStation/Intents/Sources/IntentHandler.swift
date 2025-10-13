@@ -53,7 +53,7 @@ extension IntentHandler {
         guard let record else {
             return .unknown
         }
-        let firmwareType = RuuviFirmwareVersion.firmwareVersion(
+        let firmwareType = RuuviDataFormat.dataFormat(
             from: record.version
         )
         return (firmwareType == .e1 || firmwareType == .v6) ? .ruuviAir : .ruuviTag

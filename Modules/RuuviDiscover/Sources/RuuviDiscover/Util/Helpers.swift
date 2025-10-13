@@ -11,7 +11,7 @@ struct Helpers {
     ) -> String {
         var deviceName = RuuviLocalization.ruuviTag
         if let dataFormat {
-            let firmwareVersion = RuuviFirmwareVersion.firmwareVersion(
+            let firmwareVersion = RuuviDataFormat.dataFormat(
                 from: dataFormat
             )
             if firmwareVersion == .e1 || firmwareVersion == .v6 {

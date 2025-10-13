@@ -6629,7 +6629,7 @@ extension TagSettingsViewController {
         color: UIColor?
     ) {
         if let firmwareVirsion = viewModel?.version.value {
-            let firmwareType = RuuviFirmwareVersion.firmwareVersion(from: firmwareVirsion)
+            let firmwareType = RuuviDataFormat.dataFormat(from: firmwareVirsion)
             if firmwareType == .e1 || firmwareType == .v6 {
                 // These firmware types does not support battery status
                 return (status: nil, color: nil)

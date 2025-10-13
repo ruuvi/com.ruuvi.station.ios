@@ -154,7 +154,7 @@ extension DashboardPresenter: DashboardViewOutput {
         let (isConnected, _ ) = connectionService.getConnectionStatus(
             for: snapshot
         )
-        let firmwareType      = RuuviFirmwareVersion.firmwareVersion(
+        let firmwareType      = RuuviDataFormat.dataFormat(
             from: snapshot.displayData.version.bound
         )
         let isAir             = firmwareType == .e1 || firmwareType == .v6
@@ -338,7 +338,7 @@ private extension DashboardPresenter {
         let (isConnected, _ ) = connectionService.getConnectionStatus(
             for: snapshot
         )
-        let firmwareType      = RuuviFirmwareVersion.firmwareVersion(
+        let firmwareType      = RuuviDataFormat.dataFormat(
             from: snapshot.displayData.version.bound
         )
         let isAir             = firmwareType == .e1 || firmwareType == .v6

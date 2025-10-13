@@ -116,7 +116,7 @@ final class DFUViewModel: ObservableObject {
             if let currentVersion = currentRelease?.version {
                 updatedVersion = currentVersion
             } else {
-                let firmwareType = RuuviFirmwareVersion.firmwareVersion(
+                let firmwareType = RuuviDataFormat.dataFormat(
                     from: ruuviTag.version
                 )
                 let prefix = (
@@ -171,7 +171,7 @@ final class DFUViewModel: ObservableObject {
     }
 
     func isRuuviAir() -> Bool {
-        let firmwareVersion = RuuviFirmwareVersion.firmwareVersion(
+        let firmwareVersion = RuuviDataFormat.dataFormat(
             from: ruuviTag.version
         )
         return firmwareVersion == .e1 || firmwareVersion == .v6
@@ -511,7 +511,7 @@ extension DFUViewModel {
                 return Empty().eraseToAnyPublisher()
             }
 
-            let firmwareType = RuuviFirmwareVersion.firmwareVersion(
+            let firmwareType = RuuviDataFormat.dataFormat(
                 from: sSelf.ruuviTag.version
             )
 
@@ -543,7 +543,7 @@ extension DFUViewModel {
                 return Empty().eraseToAnyPublisher()
             }
 
-            let firmwareType = RuuviFirmwareVersion.firmwareVersion(
+            let firmwareType = RuuviDataFormat.dataFormat(
                 from: sSelf.ruuviTag.version
             )
 

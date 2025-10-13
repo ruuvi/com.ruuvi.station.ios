@@ -43,7 +43,7 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
 
     override func main() {
         post(started: from, with: uuid)
-        let firmwareVersion = RuuviFirmwareVersion.firmwareVersion(from: firmware)
+        let firmwareVersion = RuuviDataFormat.dataFormat(from: firmware)
         background.services.ruuvi.nus.log(
             for: self,
             uuid: uuid,

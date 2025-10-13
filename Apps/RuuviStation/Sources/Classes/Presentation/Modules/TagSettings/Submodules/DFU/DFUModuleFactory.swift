@@ -16,7 +16,7 @@ protocol DFUModuleFactory {
 final class DFUModuleFactoryImpl: DFUModuleFactory {
     func create(for ruuviTag: RuuviTagSensor) -> DFUModuleInput {
         let r = AppAssembly.shared.assembler.resolver
-        let firmwareVersion = RuuviFirmwareVersion.firmwareVersion(
+        let firmwareVersion = RuuviDataFormat.dataFormat(
             from: ruuviTag.version
         )
         let dfuDeviceType: RuuviDeviceType =

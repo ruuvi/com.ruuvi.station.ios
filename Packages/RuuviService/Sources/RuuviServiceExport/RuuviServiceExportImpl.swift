@@ -130,7 +130,7 @@ extension RuuviServiceExportImpl {
     // that extracts the cell value.
     // swiftlint:disable:next function_body_length
     private func buildColumnDefinitions(
-        firmware: RuuviFirmwareVersion,
+        firmware: RuuviDataFormat,
         units: RuuviServiceMeasurementSettingsUnit,
         settings: RuuviLocalSettings
     ) -> [ColumnDefinition] {
@@ -385,7 +385,7 @@ extension RuuviServiceExportImpl {
 
         queue.async {
             autoreleasepool {
-                let firmware = RuuviFirmwareVersion.firmwareVersion(from: version)
+                let firmware = RuuviDataFormat.dataFormat(from: version)
                 let columns = self.buildColumnDefinitions(
                     firmware: firmware,
                     units: self.measurementService.units,
@@ -432,7 +432,7 @@ extension RuuviServiceExportImpl {
         queue.async {
             autoreleasepool {
 
-                let firmwareType = RuuviFirmwareVersion.firmwareVersion(
+                let firmwareType = RuuviDataFormat.dataFormat(
                     from: version
                 )
 

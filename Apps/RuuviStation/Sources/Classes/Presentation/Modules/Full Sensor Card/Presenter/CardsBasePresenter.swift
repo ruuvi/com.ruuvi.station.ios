@@ -589,7 +589,7 @@ private extension CardsBasePresenter {
             let isNotConnectable  = !snapshot.connectionData.isConnectable
             let isNotOwner        = !snapshot.metadata.isOwner
             let cloudModeBypass   = settings.cloudModeEnabled && snapshot.metadata.isCloud
-            let firmwareType      = RuuviFirmwareVersion.firmwareVersion(
+            let firmwareType      = RuuviDataFormat.dataFormat(
                 from: snapshot.displayData.version.bound
             )
             let isAir             = firmwareType == .e1 || firmwareType == .v6
@@ -645,7 +645,7 @@ private extension CardsBasePresenter {
             let isNotConnectable  = !snapshot.connectionData.isConnectable
             let isNotOwner        = !snapshot.metadata.isOwner
             let cloudModeBypass   = settings.cloudModeEnabled && snapshot.metadata.isCloud
-            let firmwareType      = RuuviFirmwareVersion.firmwareVersion(
+            let firmwareType      = RuuviDataFormat.dataFormat(
                 from: snapshot.displayData.version.bound
             )
             let isAir             = firmwareType == .e1 || firmwareType == .v6

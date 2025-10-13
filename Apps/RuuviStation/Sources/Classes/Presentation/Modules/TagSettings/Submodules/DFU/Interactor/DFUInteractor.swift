@@ -213,7 +213,7 @@ extension DFUInteractor: DFUInteractorInput {
     }
 
     func listen(ruuviTag: RuuviTagSensor) -> Future<DFUDevice, Never> {
-        let firmwareType = RuuviFirmwareVersion.firmwareVersion(
+        let firmwareType = RuuviDataFormat.dataFormat(
             from: ruuviTag.version
         )
         let skipScanServices = firmwareType == .e1 || firmwareType == .v6

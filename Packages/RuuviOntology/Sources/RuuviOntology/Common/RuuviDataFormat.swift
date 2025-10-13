@@ -1,12 +1,12 @@
-public enum RuuviFirmwareVersion: String {
+public enum RuuviDataFormat: String {
     case v5
     case vC5
     case e1
     case v6
 }
 
-extension RuuviFirmwareVersion {
-    public static func firmwareVersion(from version: Int) -> RuuviFirmwareVersion {
+extension RuuviDataFormat {
+    public static func dataFormat(from version: Int) -> RuuviDataFormat {
         switch version {
         case 5:
             return .v5
