@@ -430,6 +430,7 @@ struct FirmwareView: View {
                     RuuviLocalization.prepareYourSensorInstructions,
                     titleFont: UIFont.ruuviHeadline(),
                     paragraphFont: UIFont.ruuviBody(),
+                    boldFont: UIFont.ruuviHeadline(),
                     titleColor: RuuviColor.menuTextColor.color,
                     paragraphColor: RuuviColor.textColor.color,
                     linkColor: RuuviColor.tintColor.color,

@@ -630,6 +630,15 @@ public extension UIFont {
     }
 
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
+    static func ruuviSubheadlineBold() -> UIFont {
+        #if DISABLE_DYNAMIC_FONTS
+        return RuuviFonts.Mulish.bold.font(size: 15)
+        #else
+        return RuuviFonts.DynamicType.subheadline().scaledFont()
+        #endif
+    }
+
+    @available(iOS 11.0, tvOS 11.0, watchOS 4.0, *)
     static func ruuviBody() -> UIFont {
         #if DISABLE_DYNAMIC_FONTS
         return RuuviFonts.Mulish.regular.font(size: 17)
