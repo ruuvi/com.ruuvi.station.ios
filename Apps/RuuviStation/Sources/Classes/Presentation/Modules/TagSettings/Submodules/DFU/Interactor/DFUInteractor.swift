@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import BTKit
 import Combine
 import Foundation
@@ -9,6 +10,7 @@ import RuuviLocal
 final class DFUInteractor {
     var ruuviDFU: RuuviDFU!
     var background: BTBackground!
+    var foreground: BTForeground!
     private let deviceType: RuuviDeviceType
     private let firmwareType: RuuviDFUFirmwareType
 
@@ -16,6 +18,10 @@ final class DFUInteractor {
 
     private var timer: Timer?
     private var timeoutDuration: Double = 15
+    private var downloadCancellables = Set<AnyCancellable>()
+    private var ruuviTags = Set<AnyRuuviTagSensor>()
+    private var airScanToken: ObservationToken?
+    private var airScanTimeoutTimer: Timer?
 
     init(
         deviceType: RuuviDeviceType = .ruuviTag,
@@ -27,12 +33,15 @@ final class DFUInteractor {
 }
 
 extension DFUInteractor: DFUInteractorInput {
+
+    // swiftlint:disable:next function_parameter_count
     func flash(
         dfuDevice: DFUDevice,
         latestRelease: LatestRelease,
         currentRelease: CurrentRelease?,
         appUrl: URL,
-        fullUrl: URL
+        fullUrl: URL,
+        additionalFiles: [URL]
     ) -> AnyPublisher<FlashResponse, Error> {
         switch deviceType {
         case .ruuviTag:
@@ -79,11 +88,19 @@ extension DFUInteractor: DFUInteractorInput {
                 .eraseToAnyPublisher()
 
         case .ruuviAir:
-            return ruuviDFU.flashFirmware(dfuDevice: dfuDevice, with: appUrl)
+            var firmwareUrls: [URL] = [appUrl]
+            for url in additionalFiles where url != appUrl {
+                firmwareUrls.append(url)
+            }
+            return ruuviDFU.flashFirmware(dfuDevice: dfuDevice, with: firmwareUrls)
         }
     }
 
-    func download(release: LatestRelease) -> AnyPublisher<FirmwareDownloadResponse, Error> {
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
+    func download(
+        release: LatestRelease,
+        currentRelease: CurrentRelease?
+    ) -> AnyPublisher<FirmwareDownloadResponse, Error> {
         switch deviceType {
         case .ruuviTag:
             guard let fullName = release.defaultFullZipName,
@@ -95,28 +112,140 @@ extension DFUInteractor: DFUInteractorInput {
             let progress = Progress(totalUnitCount: 2)
             let full = download(url: fullUrl, name: fullName, progress: progress)
             let app = download(url: appUrl, name: appName, progress: progress)
-            return app.combineLatest(full).map { app, full in
+            return app.combineLatest(full).map {
+                app,
+                full in
                 switch (app, full) {
-                case let (.progress(appProgress), .progress): .progress(appProgress)
-                case let (.progress(appProgress), .response): .progress(appProgress)
-                case let (.response, .progress(fullProgress)): .progress(fullProgress)
-                case let (.response(appUrl), .response(fullUrl)): .response(appUrl: appUrl, fullUrl: fullUrl)
+                case let (
+                    .progress(
+                        appProgress
+                    ),
+                    .progress
+                ): .progress(
+                    appProgress
+                )
+                case let (
+                    .progress(
+                        appProgress
+                    ),
+                    .response
+                ): .progress(
+                    appProgress
+                )
+                case let (
+                    .response,
+                    .progress(
+                        fullProgress
+                    )
+                ): .progress(
+                    fullProgress
+                )
+                case let (
+                    .response(
+                        appUrl
+                    ),
+                    .response(
+                        fullUrl
+                    )
+                ): .response(
+                    appUrl: appUrl,
+                    fullUrl: fullUrl,
+                    additionalFiles: []
+                )
                 }
             }.eraseToAnyPublisher()
 
         case .ruuviAir:
-            guard let asset = release.assets.first,
-                  let url = URL(string: asset.downloadUrlString) else {
+            guard let primaryAsset = release.assets.first else {
                 return Fail<FirmwareDownloadResponse, Error>(error: URLError(.badURL)).eraseToAnyPublisher()
             }
-            let progress = Progress(totalUnitCount: 1)
-            return download(url: url, name: asset.name, progress: progress)
-                .map { response in
-                    switch response {
-                    case let .progress(progress): return .progress(progress)
-                    case let .response(fileUrl): return .response(appUrl: fileUrl, fullUrl: fileUrl)
+
+            let needsAdditionalFiles = currentRelease?.isDevBuild ?? false
+            let assetsToDownload: [LatestReleaseAsset]
+            if needsAdditionalFiles {
+                let additionalAssets = release.assets.dropFirst()
+                assetsToDownload = [primaryAsset] + additionalAssets
+            } else {
+                assetsToDownload = [primaryAsset]
+            }
+
+            let assetEntries: [(asset: LatestReleaseAsset, url: URL)] = assetsToDownload.compactMap { asset in
+                guard let url = URL(string: asset.downloadUrlString) else {
+                    return nil
+                }
+                return (asset, url)
+            }
+
+            guard assetEntries.count == assetsToDownload.count, !assetEntries.isEmpty else {
+                return Fail<FirmwareDownloadResponse, Error>(error: URLError(.badURL)).eraseToAnyPublisher()
+            }
+
+            let progress = Progress(totalUnitCount: Int64(assetEntries.count))
+            let subject = PassthroughSubject<FirmwareDownloadResponse, Error>()
+
+            var downloadedFiles = [URL?](repeating: nil, count: assetEntries.count)
+            var hasCompleted = false
+
+            downloadCancellables.forEach { $0.cancel() }
+            downloadCancellables.removeAll()
+
+            for (index, entry) in assetEntries.enumerated() {
+                let cancellable = download(
+                    url: entry.url,
+                    name: entry.asset.name,
+                    progress: progress
+                )
+                .sink(
+                    receiveCompletion: { [weak self] completion in
+                        guard let self else { return }
+                        switch completion {
+                        case let .failure(error):
+                            if !hasCompleted {
+                                hasCompleted = true
+                                subject.send(completion: .failure(error))
+                                self.downloadCancellables.forEach { $0.cancel() }
+                                self.downloadCancellables.removeAll()
+                            }
+                        case .finished:
+                            break
+                        }
+                    },
+                    receiveValue: { [weak self] response in
+                        guard let self else { return }
+                        switch response {
+                        case let .progress(progressValue):
+                            subject.send(.progress(progressValue))
+                        case let .response(fileUrl):
+                            downloadedFiles[index] = fileUrl
+                            if downloadedFiles.allSatisfy({ $0 != nil }), !hasCompleted {
+                                hasCompleted = true
+                                let urls = downloadedFiles.compactMap { $0 }
+                                guard let primaryFileUrl = urls.first else {
+                                    subject.send(completion: .failure(URLError(.cannotCreateFile)))
+                                    self.downloadCancellables.forEach { $0.cancel() }
+                                    self.downloadCancellables.removeAll()
+                                    return
+                                }
+                                let additional = Array(urls.dropFirst())
+                                subject.send(
+                                    .response(
+                                        appUrl: primaryFileUrl,
+                                        fullUrl: primaryFileUrl,
+                                        additionalFiles: additional
+                                    )
+                                )
+                                subject.send(completion: .finished)
+                                self.downloadCancellables.forEach { $0.cancel() }
+                                self.downloadCancellables.removeAll()
+                            }
+                        }
                     }
-                }.eraseToAnyPublisher()
+                )
+
+                downloadCancellables.insert(cancellable)
+            }
+
+            return subject.eraseToAnyPublisher()
         }
     }
 
@@ -237,6 +366,65 @@ extension DFUInteractor: DFUInteractorInput {
         }
     }
 
+    func waitForAirDevice(
+        ruuviTag: RuuviTagSensor,
+        timeout: TimeInterval
+    ) -> AnyPublisher<Void, Error> {
+        guard deviceType == .ruuviAir else {
+            return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
+        }
+
+        return Future { [weak self] promise in
+            guard let self else { return }
+
+            var hasCompleted = false
+
+            func complete(_ result: Result<Void, Error>) {
+                guard !hasCompleted else { return }
+                hasCompleted = true
+                self.stopAirScan()
+                switch result {
+                case .success:
+                    promise(.success(()))
+                case let .failure(error):
+                    promise(.failure(error))
+                }
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
+                guard let self else { return }
+
+                guard let foreground else {
+                    complete(.success(()))
+                    return
+                }
+
+                self.stopAirScan()
+                self.ruuviTags.removeAll()
+
+                self.airScanToken = foreground.scan(self) { observer, device in
+                    guard let advertisement = device.ruuvi?.tag else {
+                        return
+                    }
+                    observer.handleAirAdvertisement(
+                        advertisement: advertisement,
+                        target: ruuviTag
+                    ) {
+                        complete(.success(()))
+                    }
+                }
+
+                self.airScanTimeoutTimer = Timer.scheduledTimer(
+                    withTimeInterval: timeout,
+                    repeats: false
+                ) { _ in
+                    complete(.failure(DFUError.airDeviceTimeout))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
+    }
+
     func observeLost(uuid: String) -> Future<String, Never> {
         Future { [weak self] promise in
             guard let sSelf = self else { return }
@@ -250,6 +438,47 @@ extension DFUInteractor: DFUInteractorInput {
 }
 
 extension DFUInteractor {
+    private func handleAirAdvertisement(
+        advertisement: RuuviTagSensorRecord,
+        target: RuuviTagSensor,
+        onMatch: @escaping () -> Void
+    ) {
+        ruuviTags.update(with: target.any)
+
+        if isSameDevice(advertisement, target) {
+            onMatch()
+        }
+    }
+
+    private func stopAirScan() {
+        let invalidate: (DFUInteractor) -> Void = { interactor in
+            interactor.airScanToken?.invalidate()
+            interactor.airScanToken = nil
+            interactor.airScanTimeoutTimer?.invalidate()
+            interactor.airScanTimeoutTimer = nil
+            interactor.ruuviTags.removeAll()
+        }
+
+        if Thread.isMainThread {
+            invalidate(self)
+        } else {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                invalidate(self)
+            }
+        }
+    }
+
+    private func isSameDevice(_ lhs: RuuviTagSensorRecord, _ rhs: RuuviTagSensor) -> Bool {
+        if let lhsMac = lhs.macId?.any, let rhsMac = rhs.macId?.any, lhsMac == rhsMac {
+            return true
+        }
+        if let lhsLuid = lhs.luid?.any, let rhsLuid = rhs.luid?.any, lhsLuid == rhsLuid {
+            return true
+        }
+        return false
+    }
+
     private func invalidateTimer() {
         timer?.invalidate()
         timer = nil

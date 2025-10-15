@@ -192,21 +192,24 @@ extension DFUViewModel {
             LatestRelease,
             CurrentRelease?,
             appUrl: URL,
-            fullUrl: URL
+            fullUrl: URL,
+            additionalFiles: [URL]
         )
         case readyToUpdate(
             LatestRelease,
             CurrentRelease?,
             dfuDevice: DFUDevice,
             appUrl: URL,
-            fullUrl: URL
+            fullUrl: URL,
+            additionalFiles: [URL]
         )
         case flashing(
             LatestRelease,
             CurrentRelease?,
             dfuDevice: DFUDevice,
             appUrl: URL,
-            fullUrl: URL
+            fullUrl: URL,
+            additionalFiles: [URL]
         )
         case successfulyFlashed(LatestRelease)
         case servingAfterUpdate(LatestRelease)
@@ -227,7 +230,8 @@ extension DFUViewModel {
             LatestRelease,
             CurrentRelease?,
             appUrl: URL,
-            fullUrl: URL
+            fullUrl: URL,
+            additionalFiles: [URL]
         )
         case onDidFailDownloading(Error)
         case onHeardRuuviBootDevice(
@@ -235,21 +239,24 @@ extension DFUViewModel {
             CurrentRelease?,
             dfuDevice: DFUDevice,
             appUrl: URL,
-            fullUrl: URL
+            fullUrl: URL,
+            additionalFiles: [URL]
         )
         case onLostRuuviBootDevice(
             LatestRelease,
             CurrentRelease?,
             dfuDevice: DFUDevice,
             appUrl: URL,
-            fullUrl: URL
+            fullUrl: URL,
+            additionalFiles: [URL]
         )
         case onUserDidConfirmToFlash(
             LatestRelease,
             CurrentRelease?,
             dfuDevice: DFUDevice,
             appUrl: URL,
-            fullUrl: URL
+            fullUrl: URL,
+            additionalFiles: [URL]
         )
         case onSuccessfullyFlashedFirmware(LatestRelease)
         case onServingAfterUpdate(LatestRelease, CurrentRelease?)
@@ -306,30 +313,73 @@ extension DFUViewModel {
                 latestRelease,
                 currentRelease,
                 appUrl,
-                fullUrl
+                fullUrl,
+                additionalFiles
             ):
                 .listening(
                     latestRelease,
                     currentRelease,
                     appUrl: appUrl,
-                    fullUrl: fullUrl
+                    fullUrl: fullUrl,
+                    additionalFiles: additionalFiles
                 )
             default:
                 state
             }
         case .listening:
             switch event {
-            case let .onHeardRuuviBootDevice(latestRelease, currentRelease, dfuDevice, appUrl, fullUrl):
-                .readyToUpdate(latestRelease, currentRelease, dfuDevice: dfuDevice, appUrl: appUrl, fullUrl: fullUrl)
+            case let .onHeardRuuviBootDevice(
+                latestRelease,
+                currentRelease,
+                dfuDevice,
+                appUrl,
+                fullUrl,
+                additionalFiles
+            ):
+                .readyToUpdate(
+                    latestRelease,
+                    currentRelease,
+                    dfuDevice: dfuDevice,
+                    appUrl: appUrl,
+                    fullUrl: fullUrl,
+                    additionalFiles: additionalFiles
+                )
             default:
                 state
             }
         case .readyToUpdate:
             switch event {
-            case let .onLostRuuviBootDevice(latestRelease, currentRelease, _, appUrl, fullUrl):
-                .listening(latestRelease, currentRelease, appUrl: appUrl, fullUrl: fullUrl)
-            case let .onUserDidConfirmToFlash(latestRelease, currentRelease, dfuDevice, appUrl, fullUrl):
-                .flashing(latestRelease, currentRelease, dfuDevice: dfuDevice, appUrl: appUrl, fullUrl: fullUrl)
+            case let .onLostRuuviBootDevice(
+                latestRelease,
+                currentRelease,
+                _,
+                appUrl,
+                fullUrl,
+                additionalFiles
+            ):
+                .listening(
+                    latestRelease,
+                    currentRelease,
+                    appUrl: appUrl,
+                    fullUrl: fullUrl,
+                    additionalFiles: additionalFiles
+                )
+            case let .onUserDidConfirmToFlash(
+                latestRelease,
+                currentRelease,
+                dfuDevice,
+                appUrl,
+                fullUrl,
+                additionalFiles
+            ):
+                .flashing(
+                    latestRelease,
+                    currentRelease,
+                    dfuDevice: dfuDevice,
+                    appUrl: appUrl,
+                    fullUrl: fullUrl,
+                    additionalFiles: additionalFiles
+                )
             default:
                 state
             }
@@ -343,11 +393,20 @@ extension DFUViewModel {
                 state
             }
         case let .successfulyFlashed(latestRelease):
-            .servingAfterUpdate(latestRelease)
+            switch event {
+            case let .onServedAfterUpdate(eventLatestRelease, currentRelease):
+                .firmwareAfterUpdate(eventLatestRelease, currentRelease)
+            case let .onDidFailFlashingFirmware(error):
+                .error(error)
+            default:
+                .servingAfterUpdate(latestRelease)
+            }
         case .servingAfterUpdate:
             switch event {
             case let .onServedAfterUpdate(latestRelease, currentRelease):
                 .firmwareAfterUpdate(latestRelease, currentRelease)
+            case let .onDidFailFlashingFirmware(error):
+                .error(error)
             default:
                 state
             }
@@ -371,7 +430,44 @@ extension DFUViewModel {
             return true
         }
 
-        return Array.compareVersions(latest, current) == .orderedDescending
+        let comparison = Array.compareVersions(latest, current)
+        if comparison == .orderedDescending {
+            return true
+        }
+
+        if comparison == .orderedSame,
+           currentRelease.isDevBuild,
+           !Self.isDevVersion(latestRelease.version) {
+            return true
+        }
+
+        return false
+    }
+
+    private static func isDevVersion(_ version: String) -> Bool {
+        let normalizedVersion = version.lowercased()
+        return normalizedVersion.contains("-dev") || normalizedVersion.contains("+dev")
+    }
+
+    private func areVersionsEqual(expected: String, actual: String) -> Bool {
+        let expectedSem = expected.semVar
+        let actualSem = actual.semVar
+
+        if let expectedSem, let actualSem {
+            return Array.compareVersions(expectedSem, actualSem) == .orderedSame
+        }
+
+        return expected.trimmingCharacters(in: .whitespacesAndNewlines)
+            == actual.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private struct FirmwareValidationError: LocalizedError {
+        let expected: String
+        let actual: String
+
+        var errorDescription: String? {
+            "Flashed firmware version (\(actual)) does not match expected version \(expected)."
+        }
     }
 
     func whenFlashing() -> Feedback<State, Event> {
@@ -381,9 +477,10 @@ extension DFUViewModel {
                 currentRelease,
                 dfuDevice,
                 appUrl,
-                fullUrl
-            ) = state, let sSelf = self
-            else {
+                fullUrl,
+                additionalFiles
+            ) = state,
+                  let sSelf = self else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.flash(
@@ -391,7 +488,8 @@ extension DFUViewModel {
                 latestRelease: latestRelease,
                 currentRelease: currentRelease,
                 appUrl: appUrl,
-                fullUrl: fullUrl
+                fullUrl: fullUrl,
+                additionalFiles: additionalFiles
             )
             .receive(on: RunLoop.main)
             .compactMap { [weak sSelf] response in
@@ -412,9 +510,15 @@ extension DFUViewModel {
 
     func whenReadyToUpdate() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case let .readyToUpdate(latestRelease, currentRelease, dfuDevice, appUrl, fullUrl) = state,
-                  let sSelf = self
-            else {
+            guard case let .readyToUpdate(
+                latestRelease,
+                currentRelease,
+                dfuDevice,
+                appUrl,
+                fullUrl,
+                additionalFiles
+            ) = state,
+                  let sSelf = self else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.observeLost(uuid: dfuDevice.uuid)
@@ -425,7 +529,8 @@ extension DFUViewModel {
                         currentRelease,
                         dfuDevice: dfuDevice,
                         appUrl: appUrl,
-                        fullUrl: fullUrl
+                        fullUrl: fullUrl,
+                        additionalFiles: additionalFiles
                     )
                 }
                 .eraseToAnyPublisher()
@@ -434,9 +539,14 @@ extension DFUViewModel {
 
     func whenListening() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case let .listening(latestRelease, currentRelease, appUrl, fullUrl) = state,
-                  let sSelf = self
-            else {
+            guard case let .listening(
+                latestRelease,
+                currentRelease,
+                appUrl,
+                fullUrl,
+                additionalFiles
+            ) = state,
+                  let sSelf = self else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.listen(ruuviTag: sSelf.ruuviTag)
@@ -447,7 +557,8 @@ extension DFUViewModel {
                         currentRelease,
                         dfuDevice: dfuDevice,
                         appUrl: appUrl,
-                        fullUrl: fullUrl
+                        fullUrl: fullUrl,
+                        additionalFiles: additionalFiles
                     )
                 }
                 .eraseToAnyPublisher()
@@ -488,12 +599,18 @@ extension DFUViewModel {
             else {
                 return Empty().eraseToAnyPublisher()
             }
-            return sSelf.interactor.download(release: latestRelease)
+            return sSelf.interactor.download(release: latestRelease, currentRelease: currentRelease)
                 .receive(on: RunLoop.main)
                 .compactMap { [weak sSelf] response in
                     switch response {
-                    case let .response(appUrl, fullUrl):
-                        return Event.onDownloaded(latestRelease, currentRelease, appUrl: appUrl, fullUrl: fullUrl)
+                    case let .response(appUrl, fullUrl, additionalFiles):
+                        return Event.onDownloaded(
+                            latestRelease,
+                            currentRelease,
+                            appUrl: appUrl,
+                            fullUrl: fullUrl,
+                            additionalFiles: additionalFiles
+                        )
                     case let .progress(progress):
                         sSelf?.downloadProgress = progress.fractionCompleted
                         return nil
@@ -515,13 +632,14 @@ extension DFUViewModel {
                 from: sSelf.ruuviTag.version
             )
 
-            // It does not make sense to wait for E1/V6 since they can take several
-            // seconds to boot and we should not hold connection until then.
-            let skipCheckingCurrentRelease = firmwareType == .e1 || firmwareType == .v6
-            if skipCheckingCurrentRelease {
+            if firmwareType == .e1 || firmwareType == .v6 {
                 return Just(
-                    Event.onServedAfterUpdate(latestRelease, nil)
-                ).eraseToAnyPublisher()
+                    Event.onServingAfterUpdate(
+                        latestRelease,
+                        nil
+                    )
+                )
+                .eraseToAnyPublisher()
             }
 
             return sSelf.interactor.serveCurrentRelease(for: sSelf.ruuviTag)
@@ -536,6 +654,7 @@ extension DFUViewModel {
         }
     }
 
+    // swiftlint:disable:next function_body_length
     func whenServingAfterUpdate() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
             guard case let .servingAfterUpdate(latestRelease) = state, let sSelf = self
@@ -547,13 +666,61 @@ extension DFUViewModel {
                 from: sSelf.ruuviTag.version
             )
 
-            // It does not make sense to wait for E1/V6 since they can take several
-            // seconds to boot and we should not hold connection until then.
-            let skipCheckingCurrentRelease = firmwareType == .e1 || firmwareType == .v6
-            if skipCheckingCurrentRelease {
-                return Just(
-                    Event.onServedAfterUpdate(latestRelease, nil)
-                ).eraseToAnyPublisher()
+            let isAirFirmware = firmwareType == .e1 || firmwareType == .v6
+            if isAirFirmware {
+                return sSelf.interactor
+                    .waitForAirDevice(
+                        ruuviTag: sSelf.ruuviTag,
+                        timeout: 5 * 60
+                    )
+                    .receive(on: RunLoop.main)
+                    .flatMap { _ -> AnyPublisher<Event, Never> in
+                        sSelf.interactor
+                            .serveCurrentRelease(for: sSelf.ruuviTag)
+                            .retry(3)
+                            .receive(on: RunLoop.main)
+                            .map { currentRelease in
+                                if sSelf.areVersionsEqual(
+                                    expected: latestRelease.version,
+                                    actual: currentRelease.version
+                                ) {
+                                    return Event.onServedAfterUpdate(
+                                        latestRelease,
+                                        currentRelease
+                                    )
+                                } else {
+                                    return Event.onDidFailFlashingFirmware(
+                                        FirmwareValidationError(
+                                            expected: latestRelease.version,
+                                            actual: currentRelease.version
+                                        )
+                                    )
+                                }
+                            }
+                            .catch { error in
+                                Just(
+                                    Event.onDidFailFlashingFirmware(error)
+                                )
+                            }
+                            .eraseToAnyPublisher()
+                    }
+                    .catch { error -> AnyPublisher<Event, Never> in
+                        if let dfuError = error as? DFUError,
+                           dfuError == .airDeviceTimeout {
+                            return Just(
+                                Event.onServedAfterUpdate(
+                                    latestRelease,
+                                    nil
+                                )
+                            )
+                            .eraseToAnyPublisher()
+                        }
+                        return Just(
+                            Event.onDidFailFlashingFirmware(error)
+                        )
+                        .eraseToAnyPublisher()
+                    }
+                    .eraseToAnyPublisher()
             }
 
             return sSelf.interactor.serveCurrentRelease(for: sSelf.ruuviTag)

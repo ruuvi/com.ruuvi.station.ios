@@ -118,6 +118,9 @@ struct RuuviAirFirmwareDataModel: Codable, Hashable {
     let createdAt: String
     let versionCode: Int
     let fileName: String
+    let fwloader: String?
+    let mcubootS1: String?
+    let mcuboot: String?
 
     enum CodingKeys: String, CodingKey {
         case version
@@ -125,6 +128,9 @@ struct RuuviAirFirmwareDataModel: Codable, Hashable {
         case createdAt = "created_at"
         case versionCode
         case fileName
+        case fwloader
+        case mcubootS1 = "mcuboot_s1"
+        case mcuboot
     }
 }
 
@@ -156,12 +162,30 @@ extension RuuviAirFirmwareData {
 
         return LatestRelease(
             version: firmware.version,
-            assets: [
-                LatestReleaseAsset(
-                    name: firmware.fileName,
-                    downloadUrlString: firmware.url + "/\(firmware.fileName)",
-                ),
-            ]
+            assets: Self.makeAssets(from: firmware)
         )
+    }
+
+    private static func makeAssets(from firmware: RuuviAirFirmwareDataModel) -> [LatestReleaseAsset] {
+        let filenames = [
+            firmware.fileName,
+            firmware.fwloader,
+            firmware.mcubootS1,
+            firmware.mcuboot,
+        ]
+
+        let uniqueFileNames = filenames.reduce(into: [String]()) { result, name in
+            guard let name = name, !name.isEmpty, !result.contains(name) else {
+                return
+            }
+            result.append(name)
+        }
+
+        return uniqueFileNames.map { name in
+            LatestReleaseAsset(
+                name: name,
+                downloadUrlString: firmware.url + "/\(name)"
+            )
+        }
     }
 }

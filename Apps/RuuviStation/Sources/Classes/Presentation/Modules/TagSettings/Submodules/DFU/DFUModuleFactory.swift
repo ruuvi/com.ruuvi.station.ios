@@ -39,6 +39,7 @@ final class DFUModuleFactoryImpl: DFUModuleFactory {
         interactor.ruuviDFU = r.resolve(RuuviDFU.self)
         interactor.background = r.resolve(BTBackground.self)
         let foreground = r.resolve(BTForeground.self)!
+        interactor.foreground = foreground
         let idPersistence = r.resolve(RuuviLocalIDs.self)!
         let sqiltePersistence = r.resolve(RuuviPersistence.self, name: "sqlite")!
         let ruuviPool = r.resolve(RuuviPool.self)!
