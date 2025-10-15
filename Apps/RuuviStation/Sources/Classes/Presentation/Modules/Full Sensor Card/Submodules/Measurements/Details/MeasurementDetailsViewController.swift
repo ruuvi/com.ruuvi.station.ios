@@ -1099,6 +1099,7 @@ private extension MeasurementDetailsViewController {
             type.descriptionText,
             titleFont: UIFont.ruuviBody(),
             paragraphFont: UIFont.ruuviSubheadline(),
+            boldFont: UIFont.ruuviSubheadlineBold(),
             titleColor: RuuviColor.dashboardIndicator.color,
             paragraphColor: RuuviColor.dashboardIndicator.color
                 .withAlphaComponent(Alpha.descriptionParagraph),

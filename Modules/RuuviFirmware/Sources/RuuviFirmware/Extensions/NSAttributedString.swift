@@ -8,6 +8,7 @@ extension NSAttributedString {
         _ escapedHTML: String,
         titleFont: UIFont,
         paragraphFont: UIFont,
+        boldFont: UIFont,
         titleColor: UIColor,
         paragraphColor: UIColor,
         linkColor: UIColor,
@@ -19,12 +20,20 @@ extension NSAttributedString {
             unescapedText,
             titleFont: titleFont,
             paragraphFont: paragraphFont,
+            boldFont: boldFont,
             titleColor: titleColor,
             paragraphColor: paragraphColor,
             linkColor: linkColor,
             linkFont: linkFont
         )
     }
+}
+
+// MARK: - Private Types
+private enum MatchType {
+    case title
+    case bold
+    case link
 }
 
 // MARK: - Private Processing Methods
@@ -39,11 +48,12 @@ private extension NSAttributedString {
             .replacingOccurrences(of: "&gt;", with: ">")
     }
 
-    // swiftlint:disable:next function_parameter_count
+    // swiftlint:disable:next function_parameter_count function_body_length
     static func processFormattedText(
         _ text: String,
         titleFont: UIFont,
         paragraphFont: UIFont,
+        boldFont: UIFont,
         titleColor: UIColor,
         paragraphColor: UIColor,
         linkColor: UIColor,
@@ -53,19 +63,21 @@ private extension NSAttributedString {
         var remainingText = text
 
         let titleRegex = createTitleRegex()
+        let boldRegex = createBoldRegex()
         let linkRegex = createLinkRegex()
 
         while !remainingText.isEmpty {
             guard let nextMatch = findNextMatch(
                 in: remainingText,
                 titleRegex: titleRegex,
+                boldRegex: boldRegex,
                 linkRegex: linkRegex
             ) else {
                 appendRemainingText(remainingText, to: result, font: paragraphFont, color: paragraphColor)
                 break
             }
 
-            let (match, isTitle) = nextMatch
+            let (match, matchType) = nextMatch
             let nsString = remainingText as NSString
 
             appendTextBeforeMatch(
@@ -76,7 +88,8 @@ private extension NSAttributedString {
                 color: paragraphColor
             )
 
-            if isTitle {
+            switch matchType {
+            case .title:
                 appendTitleText(
                     match: match,
                     text: remainingText,
@@ -84,7 +97,15 @@ private extension NSAttributedString {
                     font: titleFont,
                     color: titleColor
                 )
-            } else {
+            case .bold:
+                appendBoldText(
+                    match: match,
+                    text: remainingText,
+                    to: result,
+                    font: boldFont,
+                    color: paragraphColor
+                )
+            case .link:
                 appendLinkText(
                     match: match,
                     text: remainingText,
@@ -104,28 +125,46 @@ private extension NSAttributedString {
         return try? NSRegularExpression(pattern: "<title>(.*?)</title>", options: [])
     }
 
+    static func createBoldRegex() -> NSRegularExpression? {
+        return try? NSRegularExpression(pattern: "<b>(.*?)</b>", options: [])
+    }
+
     static func createLinkRegex() -> NSRegularExpression? {
-        return try? NSRegularExpression(pattern: "<link url=\"(.*?)\">(.*?)</link>", options: [])
+        return try? NSRegularExpression(pattern: "<link url=\\\"?(.*?)\\\"?>(.*?)</link>", options: [])
     }
 
     static func findNextMatch(
         in text: String,
         titleRegex: NSRegularExpression?,
+        boldRegex: NSRegularExpression?,
         linkRegex: NSRegularExpression?
-    ) -> (NSTextCheckingResult, Bool)? {
+    ) -> (NSTextCheckingResult, MatchType)? {
         let range = NSRange(location: 0, length: text.utf16.count)
+
         let titleMatch = titleRegex?.firstMatch(in: text, range: range)
+        let boldMatch = boldRegex?.firstMatch(in: text, range: range)
         let linkMatch = linkRegex?.firstMatch(in: text, range: range)
 
-        if let title = titleMatch, let link = linkMatch {
-            return title.range.location < link.range.location ? (title, true) : (link, false)
-        } else if let title = titleMatch {
-            return (title, true)
-        } else if let link = linkMatch {
-            return (link, false)
+        // Find the earliest match
+        var earliestMatch: (NSTextCheckingResult, MatchType)?
+
+        if let title = titleMatch {
+            earliestMatch = (title, .title)
         }
 
-        return nil
+        if let bold = boldMatch {
+            if earliestMatch == nil || bold.range.location < earliestMatch!.0.range.location {
+                earliestMatch = (bold, .bold)
+            }
+        }
+
+        if let link = linkMatch {
+            if earliestMatch == nil || link.range.location < earliestMatch!.0.range.location {
+                earliestMatch = (link, .link)
+            }
+        }
+
+        return earliestMatch
     }
 
     static func appendRemainingText(
@@ -134,8 +173,7 @@ private extension NSAttributedString {
         font: UIFont,
         color: UIColor
     ) {
-        let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmedText.isEmpty else { return }
+        guard !text.isEmpty else { return }
 
         let attributedString = NSAttributedString(
             string: text,
@@ -154,8 +192,7 @@ private extension NSAttributedString {
         let beforeTagRange = NSRange(location: 0, length: match.range.location)
         let beforeTagText = nsString.substring(with: beforeTagRange)
 
-        let trimmedText = beforeTagText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmedText.isEmpty else { return }
+        guard !beforeTagText.isEmpty else { return }
 
         let attributedString = NSAttributedString(
             string: beforeTagText,
@@ -181,12 +218,29 @@ private extension NSAttributedString {
         result.append(attributedString)
     }
 
+    static func appendBoldText(
+        match: NSTextCheckingResult,
+        text: String,
+        to result: NSMutableAttributedString,
+        font: UIFont,
+        color: UIColor
+    ) {
+        guard let boldRange = Range(match.range(at: 1), in: text) else { return }
+
+        let boldText = String(text[boldRange])
+        let attributedString = NSAttributedString(
+            string: boldText,
+            attributes: [.font: font, .foregroundColor: color]
+        )
+        result.append(attributedString)
+    }
+
     static func appendLinkText(
         match: NSTextCheckingResult,
         text: String,
         to result: NSMutableAttributedString,
         font: UIFont,
-        color: UIColor,
+        color: UIColor
     ) {
         guard let urlRange = Range(match.range(at: 1), in: text),
               let textRange = Range(match.range(at: 2), in: text) else { return }
