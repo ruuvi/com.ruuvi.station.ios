@@ -373,45 +373,9 @@ class CardsGraphViewController: UIViewController {
             padding: .init(top: 6, left: 0, bottom: 0, right: 0)
         )
 
-        scrollView.addSubview(temperatureChartView)
-        temperatureChartView.anchor(
-            top: scrollView.topAnchor,
-            leading: scrollView.leadingAnchor,
-            bottom: nil,
-            trailing: scrollView.trailingAnchor
-        )
-        temperatureChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        temperatureChartViewHeight = temperatureChartView.heightAnchor.constraint(equalToConstant: 0)
-        temperatureChartViewHeight.isActive = true
-        temperatureChartView.chartDelegate = self
-
-        scrollView.addSubview(humidityChartView)
-        humidityChartView.anchor(
-            top: temperatureChartView.bottomAnchor,
-            leading: scrollView.leadingAnchor,
-            bottom: nil,
-            trailing: scrollView.trailingAnchor
-        )
-        humidityChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        humidityChartViewHeight = humidityChartView.heightAnchor.constraint(equalToConstant: 0)
-        humidityChartViewHeight.isActive = true
-        humidityChartView.chartDelegate = self
-
-        scrollView.addSubview(pressureChartView)
-        pressureChartView.anchor(
-            top: humidityChartView.bottomAnchor,
-            leading: scrollView.leadingAnchor,
-            bottom: nil,
-            trailing: scrollView.trailingAnchor
-        )
-        pressureChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        pressureChartViewHeight = pressureChartView.heightAnchor.constraint(equalToConstant: 0)
-        pressureChartViewHeight.isActive = true
-        pressureChartView.chartDelegate = self
-
         scrollView.addSubview(aqiChartView)
         aqiChartView.anchor(
-            top: pressureChartView.bottomAnchor,
+            top: scrollView.topAnchor,
             leading: scrollView.leadingAnchor,
             bottom: nil,
             trailing: scrollView.trailingAnchor
@@ -469,9 +433,45 @@ class CardsGraphViewController: UIViewController {
         noxChartViewHeight.isActive = true
         noxChartView.chartDelegate = self
 
+        scrollView.addSubview(temperatureChartView)
+        temperatureChartView.anchor(
+            top: noxChartView.bottomAnchor,
+            leading: scrollView.leadingAnchor,
+            bottom: nil,
+            trailing: scrollView.trailingAnchor
+        )
+        temperatureChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        temperatureChartViewHeight = temperatureChartView.heightAnchor.constraint(equalToConstant: 0)
+        temperatureChartViewHeight.isActive = true
+        temperatureChartView.chartDelegate = self
+
+        scrollView.addSubview(humidityChartView)
+        humidityChartView.anchor(
+            top: temperatureChartView.bottomAnchor,
+            leading: scrollView.leadingAnchor,
+            bottom: nil,
+            trailing: scrollView.trailingAnchor
+        )
+        humidityChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        humidityChartViewHeight = humidityChartView.heightAnchor.constraint(equalToConstant: 0)
+        humidityChartViewHeight.isActive = true
+        humidityChartView.chartDelegate = self
+
+        scrollView.addSubview(pressureChartView)
+        pressureChartView.anchor(
+            top: humidityChartView.bottomAnchor,
+            leading: scrollView.leadingAnchor,
+            bottom: nil,
+            trailing: scrollView.trailingAnchor
+        )
+        pressureChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        pressureChartViewHeight = pressureChartView.heightAnchor.constraint(equalToConstant: 0)
+        pressureChartViewHeight.isActive = true
+        pressureChartView.chartDelegate = self
+
         scrollView.addSubview(luminosityChartView)
         luminosityChartView.anchor(
-            top: noxChartView.bottomAnchor,
+            top: pressureChartView.bottomAnchor,
             leading: scrollView.leadingAnchor,
             bottom: nil,
             trailing: scrollView.trailingAnchor
