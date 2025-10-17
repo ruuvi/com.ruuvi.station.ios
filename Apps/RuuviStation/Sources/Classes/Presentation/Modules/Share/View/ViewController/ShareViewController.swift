@@ -7,16 +7,30 @@ extension ShareViewController {
         case sharedEmails
         case description
 
-        init(value: Int) {
-            switch value {
-            case 0:
-                self = .addFriend
-            case 1:
-                self = .sharedEmails
-            case 2:
-                self = .description
-            default:
-                fatalError()
+        init(
+            value: Int,
+            sharedEmailsExist: Bool
+        ) {
+            if sharedEmailsExist {
+                switch value {
+                case 0:
+                    self = .addFriend
+                case 1:
+                    self = .sharedEmails
+                case 2:
+                    self = .description
+                default:
+                    fatalError()
+                }
+            } else {
+                switch value {
+                case 0:
+                    self = .addFriend
+                case 1:
+                    self = .description
+                default:
+                    fatalError()
+                }
             }
         }
 
@@ -77,7 +91,10 @@ class ShareViewController: UITableViewController {
     }
 
     override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch Section(value: section) {
+        switch Section(
+            value: section,
+            sharedEmailsExist: viewModel.sharedToCount > 0
+        ) {
         case .description:
             1
         case .addFriend:
@@ -91,7 +108,10 @@ class ShareViewController: UITableViewController {
         _: UITableView,
         viewForHeaderInSection section: Int
     ) -> UIView? {
-        let section = Section(value: section)
+        let section = Section(
+            value: section,
+            sharedEmailsExist: viewModel.sharedToCount > 0
+        )
         let headerView = UIView(color: .clear)
         let titleLabel = UILabel()
         titleLabel.textColor = RuuviColor.menuTextColor.color
@@ -119,7 +139,10 @@ class ShareViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: UITableViewCell = switch Section(value: indexPath.section) {
+        let cell: UITableViewCell = switch Section(
+            value: indexPath.section,
+            sharedEmailsExist: viewModel.sharedToCount > 0
+        ) {
         case .description:
             getDescriptionCell(tableView, indexPath: indexPath)
         case .addFriend:
