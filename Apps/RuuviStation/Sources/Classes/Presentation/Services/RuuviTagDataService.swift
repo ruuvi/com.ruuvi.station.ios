@@ -63,9 +63,7 @@ class RuuviTagDataService {
     private var sensorSettingsList: [SensorSettings] = []
 
     // MARK: - Background Loading
-    private var backgroundLoadingQueue = DispatchQueue(label: "com.ruuvi.background.loading", attributes: .concurrent)
-    private let pendingBackgroundLoadsLock = NSLock()
-    private var pendingBackgroundLoads = Set<String>()
+    private var backgroundLoadingQueue = DispatchQueue(label: "com.ruuvi.background.loading", qos: .utility)
 
     // MARK: - Observation Tokens
     private var ruuviTagToken: RuuviReactorToken?
@@ -206,17 +204,7 @@ class RuuviTagDataService {
         }
     }
 
-    private func loadBackground(for snapshot: RuuviTagCardSnapshot, sensor: AnyRuuviTagSensor) {
-        // Prevent duplicate loading with thread-safe access
-        pendingBackgroundLoadsLock.lock()
-        let isAlreadyLoading = pendingBackgroundLoads.contains(sensor.id)
-        if !isAlreadyLoading {
-            pendingBackgroundLoads.insert(sensor.id)
-        }
-        pendingBackgroundLoadsLock.unlock()
-
-        guard !isAlreadyLoading else { return }
-
+    func loadBackground(for snapshot: RuuviTagCardSnapshot, sensor: AnyRuuviTagSensor) {
         backgroundLoadingQueue.async { [weak self] in
             guard let self = self else { return }
 
@@ -226,24 +214,10 @@ class RuuviTagDataService {
 
                     DispatchQueue.main.async {
                         snapshot.updateBackgroundImage(image)
-
-                        // Always update the snapshot's background, but only notify delegate
-                        // if extensive changes are not in progress
                         if !self.settings.syncExtensiveChangesInProgress {
                             self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
                         }
                     }
-
-                    self.pendingBackgroundLoadsLock.lock()
-                    self.pendingBackgroundLoads.remove(sensor.id)
-                    self.pendingBackgroundLoadsLock.unlock()
-
-                }, failure: { [weak self] _ in
-                    guard let self = self else { return }
-
-                    self.pendingBackgroundLoadsLock.lock()
-                    self.pendingBackgroundLoads.remove(sensor.id)
-                    self.pendingBackgroundLoadsLock.unlock()
                 })
         }
     }
@@ -395,10 +369,11 @@ private extension RuuviTagDataService {
                         )
                     }
 
-                    // Preserve existing in-memory background image (if any) to avoid UI flash
-                    if let existing = self.snapshots.first(where: { $0.id == snapshot.id }),
-                       existing.displayData.background != nil, snapshot.displayData.background == nil {
-                        snapshot.updateBackgroundImage(existing.displayData.background)
+                    // Preserve existing in-memory background image to avoid UI flash
+                    for snapshot in newSnapshots {
+                        if let existing = self.snapshots.first(where: { $0.id == snapshot.id }) {
+                            snapshot.displayData.background = existing.displayData.background
+                        }
                     }
 
                     newSnapshots.append(snapshot)
@@ -410,8 +385,8 @@ private extension RuuviTagDataService {
                 )
                 self.snapshots = orderedSnapshots
 
-                // Load backgrounds for all snapshots - match by ID, not index
-                for snapshot in self.snapshots {
+                // Load backgrounds only for snapshots that don't have one
+                for snapshot in self.snapshots where snapshot.displayData.background == nil {
                     if let sensor = self.ruuviTags.first(where: { $0.id == snapshot.id }) {
                         self.loadBackground(for: snapshot, sensor: sensor)
                     }
@@ -445,6 +420,11 @@ private extension RuuviTagDataService {
     // swiftlint:disable:next function_body_length
     func addSensorSnapshot(sensor: AnyRuuviTagSensor) {
         let snapshot = createSnapshot(from: sensor)
+
+        // Preserve existing background if available
+        if let existing = snapshots.first(where: { $0.id == sensor.id }) {
+            snapshot.displayData.background = existing.displayData.background
+        }
 
         // For manual sorting, newly added sensor goes to the top
         if settings.dashboardSensorOrder.isEmpty {
