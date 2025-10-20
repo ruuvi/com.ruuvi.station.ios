@@ -97,7 +97,7 @@ struct TemperatureMeasurementExtractor: MeasurementExtractor {
             value: value,
             unit: unit,
             isProminent: isProminent,
-            showSubscript: flags.showRedesignedDashboardUI,
+            showSubscript: true,
             tintColor: nil
         )
     }

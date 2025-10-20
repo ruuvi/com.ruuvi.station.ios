@@ -173,8 +173,8 @@ final class MeasurementDetailsViewController: UIViewController {
         return view
     }()
 
-    private lazy var graphView: TagChartsViewInternal = {
-        let view = TagChartsViewInternal(
+    private lazy var graphView: CardsGraphInternalView = {
+        let view = CardsGraphInternalView(
             source: .mesurementDetails,
             graphType: currentMeasurementType
         )
@@ -782,7 +782,7 @@ extension MeasurementDetailsViewController: MeasurementDetailsViewInput {
     }
 
     func setChartData(
-        _ data: TagChartViewData,
+        _ data: RuuviGraphViewDataModel,
         settings: RuuviLocalSettings
     ) {
         graphView.graphType = data.chartType
@@ -800,7 +800,7 @@ extension MeasurementDetailsViewController: MeasurementDetailsViewInput {
         let hasData = data.chartData?.entryCount ?? 0 > 0
         setNoDataLabelVisibility(show: !hasData)
 
-        let isWithin36Hours = TagChartsHelper.isFirstDataPointWithin36Hours(
+        let isWithin36Hours = RuuviGraphDataSetFactory.isFirstDataPointWithin36Hours(
             from: data.chartData
         )
         durationLabel.isHidden = !isWithin36Hours
@@ -814,7 +814,7 @@ extension MeasurementDetailsViewController: MeasurementDetailsViewInput {
         _ entries: [ChartDataEntry],
         settings: RuuviLocalSettings
     ) {
-        let isWithin36Hours = TagChartsHelper.isFirstDataPointWithin36Hours(
+        let isWithin36Hours = RuuviGraphDataSetFactory.isFirstDataPointWithin36Hours(
             from: entries
         )
         durationLabel.isHidden = !isWithin36Hours

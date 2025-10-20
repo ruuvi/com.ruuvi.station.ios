@@ -148,7 +148,7 @@ class CardsGraphViewController: UIViewController {
         return sv
     }()
 
-    private var chartViews: [TagChartsView] = []
+    private var chartViews: [CardsGraphView] = []
     private var pendingScrollToMeasurement: MeasurementType?
 
     private var isLandscapeLayout: Bool {
@@ -168,16 +168,16 @@ class CardsGraphViewController: UIViewController {
         return configuration
     }()
 
-    lazy var temperatureChartView = TagChartsView(graphType: .temperature)
-    lazy var humidityChartView = TagChartsView(graphType: .anyHumidity)
-    lazy var pressureChartView = TagChartsView(graphType: .pressure)
-    lazy var aqiChartView = TagChartsView(graphType: .aqi)
-    lazy var co2ChartView = TagChartsView(graphType: .co2)
-    lazy var pm25ChartView = TagChartsView(graphType: .pm25)
-    lazy var vocChartView = TagChartsView(graphType: .voc)
-    lazy var noxChartView = TagChartsView(graphType: .nox)
-    lazy var luminosityChartView = TagChartsView(graphType: .luminosity)
-    lazy var soundChartView = TagChartsView(graphType: .soundInstant)
+    lazy var temperatureChartView = CardsGraphView(graphType: .temperature)
+    lazy var humidityChartView = CardsGraphView(graphType: .anyHumidity)
+    lazy var pressureChartView = CardsGraphView(graphType: .pressure)
+    lazy var aqiChartView = CardsGraphView(graphType: .aqi)
+    lazy var co2ChartView = CardsGraphView(graphType: .co2)
+    lazy var pm25ChartView = CardsGraphView(graphType: .pm25)
+    lazy var vocChartView = CardsGraphView(graphType: .voc)
+    lazy var noxChartView = CardsGraphView(graphType: .nox)
+    lazy var luminosityChartView = CardsGraphView(graphType: .luminosity)
+    lazy var soundChartView = CardsGraphView(graphType: .soundInstant)
 
     private var temperatureChartViewHeight: NSLayoutConstraint!
     private var humidityChartViewHeight: NSLayoutConstraint!
@@ -236,7 +236,7 @@ class CardsGraphViewController: UIViewController {
     private let maximumHistoryLimit: Int = 10 // Days
     private let highlightAnimationDelay: TimeInterval = 0.3
 
-    private var chartViewData: [TagChartViewData] = []
+    private var chartViewData: [RuuviGraphViewDataModel] = []
     private var settings: RuuviLocalSettings!
 
     // MARK: - LIFECYCLE
@@ -671,8 +671,8 @@ class CardsGraphViewController: UIViewController {
     }
 }
 
-extension CardsGraphViewController: TagChartsViewDelegate {
-    func chartDidTranslate(_ chartView: TagChartsView) {
+extension CardsGraphViewController: CardsGraphViewDelegate {
+    func chartDidTranslate(_ chartView: CardsGraphView) {
         guard chartViews.count > 1
         else {
             calculateMinMaxForChart(for: chartView)
@@ -702,7 +702,7 @@ extension CardsGraphViewController: TagChartsViewDelegate {
     }
 
     func chartValueDidSelect(
-        _ chartView: TagChartsView,
+        _ chartView: CardsGraphView,
         entry _: ChartDataEntry,
         highlight: Highlight
     ) {
@@ -716,7 +716,7 @@ extension CardsGraphViewController: TagChartsViewDelegate {
         }
     }
 
-    func chartValueDidDeselect(_: TagChartsView) {
+    func chartValueDidDeselect(_: CardsGraphView) {
         guard chartViews.count > 1
         else {
             return
@@ -779,7 +779,7 @@ extension CardsGraphViewController: CardsGraphViewInput {
 
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     func setChartViewData(
-        from chartViewData: [TagChartViewData],
+        from chartViewData: [RuuviGraphViewDataModel],
         settings: RuuviLocalSettings
     ) {
         if chartViewData.count == 0 {
@@ -1480,10 +1480,10 @@ extension CardsGraphViewController {
     }
 
     private func populateChartView(
-        from data: TagChartViewData,
+        from data: RuuviGraphViewDataModel,
         unit: String,
         settings: RuuviLocalSettings,
-        view: TagChartsView
+        view: CardsGraphView
     ) {
         view.setChartLabel(
             type: data.chartType,
@@ -1612,7 +1612,7 @@ extension CardsGraphViewController {
         }
     }
 
-    private func calculateAlertFillIfNeeded(for view: TagChartsView) {
+    private func calculateAlertFillIfNeeded(for view: CardsGraphView) {
         guard let data = view.underlyingView.data,
               let dataSet = data.dataSets.first as? LineChartDataSet,
               let upperAlertValue = view.underlyingView.upperAlertValue,
@@ -1635,7 +1635,7 @@ extension CardsGraphViewController {
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func calculateMinMaxForChart(for view: TagChartsView) {
+    private func calculateMinMaxForChart(for view: CardsGraphView) {
         if let data = view.underlyingView.data,
            let dataSet = data.dataSets.first as? LineChartDataSet {
             let lowestVisibleX = view.underlyingView.lowestVisibleX
@@ -1761,7 +1761,7 @@ extension CardsGraphViewController {
     private func scrollToTarget(
         _ targetFrame: CGRect,
         measurementType: MeasurementType,
-        targetView: TagChartsView
+        targetView: CardsGraphView
     ) {
         let newOffset = calculateNewOffset(for: targetFrame)
         let clampedOffset = clampOffset(newOffset)
@@ -1816,18 +1816,18 @@ extension CardsGraphViewController {
         )
     }
 
-    private func scheduleHighlightAnimation(for targetView: TagChartsView) {
+    private func scheduleHighlightAnimation(for targetView: CardsGraphView) {
         DispatchQueue.main.asyncAfter(deadline: .now() + highlightAnimationDelay) { [weak self] in
             self?.highlightTarget(targetView)
         }
     }
 
-    private func highlightTarget(_ targetView: TagChartsView) {
+    private func highlightTarget(_ targetView: CardsGraphView) {
         addHighlightAnimation(to: targetView)
     }
 
     // swiftlint:disable:next cyclomatic_complexity
-    private func getChartView(for measurementType: MeasurementType) -> TagChartsView? {
+    private func getChartView(for measurementType: MeasurementType) -> CardsGraphView? {
         switch measurementType {
         case .temperature: return temperatureChartView
         case .humidity: return humidityChartView
@@ -1843,7 +1843,7 @@ extension CardsGraphViewController {
         }
     }
 
-    private func addHighlightAnimation(to chartView: TagChartsView) {
+    private func addHighlightAnimation(to chartView: CardsGraphView) {
         // Create a highlight overlay
         let highlightView = UIView()
         highlightView.backgroundColor = UIColor.white.withAlphaComponent(0.3)

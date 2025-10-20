@@ -4,7 +4,7 @@ import RuuviService
 import UIKit
 import RuuviOntology
 
-class TagChartsMarkerView: MarkerImage {
+class CardsGraphMarkerView: MarkerImage {
     private(set) var color: UIColor
     private(set) var font: UIFont
     private(set) var textColor: UIColor
@@ -121,7 +121,7 @@ class TagChartsMarkerView: MarkerImage {
     }
 }
 
-extension TagChartsMarkerView {
+extension CardsGraphMarkerView {
     func initialise(
         with unit: String,
         type: MeasurementType,

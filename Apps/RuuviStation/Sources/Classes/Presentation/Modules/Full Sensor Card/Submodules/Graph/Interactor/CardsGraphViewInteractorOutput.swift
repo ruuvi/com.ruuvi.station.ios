@@ -1,7 +1,7 @@
 import Foundation
 import RuuviOntology
 
-protocol TagChartsViewInteractorOutput: AnyObject {
+protocol CardsGraphViewInteractorOutput: AnyObject {
     func insertMeasurements(_ newValues: [RuuviMeasurement])
     func updateLatestRecord(_ record: RuuviTagSensorRecord)
     func interactorDidError(_ error: RUError)

@@ -13,7 +13,7 @@ import UIKit
 
 class CardsGraphPresenter: NSObject {
     weak var view: CardsGraphViewInput?
-    weak var interactor: TagChartsViewInteractorInput?
+    weak var interactor: CardsGraphViewInteractorInput?
     weak var output: CardsGraphPresenterOutput?
 
     // MARK: Properties
@@ -66,8 +66,8 @@ class CardsGraphPresenter: NSObject {
     private var isBluetoothPermissionGranted: Bool {
         CBCentralManager.authorization == .allowedAlways
     }
-    private var datasource: [TagChartViewData] = []
-    private var newpoints: [TagChartViewData] = []
+    private var datasource: [RuuviGraphViewDataModel] = []
+    private var newpoints: [RuuviGraphViewDataModel] = []
     private var chartModules: [MeasurementType] = []
     private var ruuviTagData: [RuuviMeasurement] = []
 
@@ -576,7 +576,7 @@ extension CardsGraphPresenter {
     }
 }
 
-extension CardsGraphPresenter: TagChartsViewInteractorOutput {
+extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
     func updateLatestRecord(_ record: RuuviTagSensorRecord) {
         // No op.
     }
@@ -848,7 +848,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
         // Create datasets only if collection has at least one chart entry
         if temparatureData.count > 0, let ruuviTag = sensor {
             let isOn = alertService.isOn(type: .temperature(lower: 0, upper: 0), for: ruuviTag)
-            let temperatureDataSet = TagChartsHelper.newDataSet(
+            let temperatureDataSet = RuuviGraphDataSetFactory.newDataSet(
                 upperAlertValue: isOn ? alertService.upperCelsius(for: ruuviTag)
                     .flatMap {
                         Temperature($0, unit: .celsius)
@@ -860,7 +860,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                     }.map { measurementService.double(for: $0) } : nil,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
-            let temperatureChartData = TagChartViewData(
+            let temperatureChartData = RuuviGraphViewDataModel(
                 upperAlertValue: isOn ? alertService.upperCelsius(for: ruuviTag)
                     .flatMap {
                         Temperature($0, unit: .celsius)
@@ -878,7 +878,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
         if humidityData.count > 0, let ruuviTag = sensor {
             let isOn = alertService.isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag)
             let isRelative = measurementService.units.humidityUnit == .percent
-            let humidityChartDataSet = TagChartsHelper.newDataSet(
+            let humidityChartDataSet = RuuviGraphDataSetFactory.newDataSet(
                 upperAlertValue: (isOn && isRelative) ? alertService.upperRelativeHumidity(
                     for: ruuviTag
                 ).map {
@@ -890,7 +890,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 ).map { $0 * 100 } : nil,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
-            let humidityChartData = TagChartViewData(
+            let humidityChartData = RuuviGraphViewDataModel(
                 upperAlertValue: (isOn && isRelative) ? alertService.upperRelativeHumidity(for: ruuviTag).map {
                     $0 * 100
                 } : nil,
@@ -905,7 +905,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
 
         if pressureData.count > 0, let ruuviTag = sensor {
             let isOn = alertService.isOn(type: .pressure(lower: 0, upper: 0), for: ruuviTag)
-            let pressureChartDataSet = TagChartsHelper.newDataSet(
+            let pressureChartDataSet = RuuviGraphDataSetFactory.newDataSet(
                 upperAlertValue: isOn ? alertService.upperPressure(for: ruuviTag)
                     .flatMap {
                         Pressure($0, unit: .hectopascals)
@@ -917,7 +917,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                     }.map { measurementService.double(for: $0) } : nil,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
-            let pressureChartData = TagChartViewData(
+            let pressureChartData = RuuviGraphViewDataModel(
                 upperAlertValue: isOn ? alertService.upperPressure(for: ruuviTag)
                     .flatMap {
                         Pressure($0, unit: .hectopascals)
@@ -937,7 +937,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 type: .aqi(lower: 0, upper: 0),
                 for: ruuviTag
             )
-            let aqiChartDataSet = TagChartsHelper.newDataSet(
+            let aqiChartDataSet = RuuviGraphDataSetFactory.newDataSet(
                 upperAlertValue: isOn ? alertService.upperAQI(
                     for: ruuviTag
                 ).map {
@@ -950,7 +950,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 ).map { $0 } : nil,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
-            let aqiChartData = TagChartViewData(
+            let aqiChartData = RuuviGraphViewDataModel(
                 upperAlertValue: isOn ? alertService
                     .upperAQI(for: ruuviTag)
                     .map {
@@ -970,7 +970,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 type: .carbonDioxide(lower: 0, upper: 0),
                 for: ruuviTag
             )
-            let co2ChartDataSet = TagChartsHelper.newDataSet(
+            let co2ChartDataSet = RuuviGraphDataSetFactory.newDataSet(
                 upperAlertValue: isOn ? alertService.upperCarbonDioxide(
                     for: ruuviTag
                 ).map {
@@ -983,7 +983,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 ).map { $0 } : nil,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
-            let co2ChartData = TagChartViewData(
+            let co2ChartData = RuuviGraphViewDataModel(
                 upperAlertValue: isOn ? alertService
                     .upperCarbonDioxide(for: ruuviTag)
                     .map {
@@ -1003,7 +1003,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 type: .pMatter10(lower: 0, upper: 0),
                 for: ruuviTag
             )
-            let pm10ChartDataSet = TagChartsHelper.newDataSet(
+            let pm10ChartDataSet = RuuviGraphDataSetFactory.newDataSet(
                 upperAlertValue: isOn ? alertService.upperPM10(
                     for: ruuviTag
                 ).map {
@@ -1016,7 +1016,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 ).map { $0 } : nil,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
-            let pm10ChartData = TagChartViewData(
+            let pm10ChartData = RuuviGraphViewDataModel(
                 upperAlertValue: isOn ? alertService
                     .upperPM10(for: ruuviTag)
                     .map {
@@ -1036,7 +1036,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 type: .pMatter25(lower: 0, upper: 0),
                 for: ruuviTag
             )
-            let pm25ChartDataSet = TagChartsHelper.newDataSet(
+            let pm25ChartDataSet = RuuviGraphDataSetFactory.newDataSet(
                 upperAlertValue: isOn ? alertService.upperPM25(
                     for: ruuviTag
                 ).map {
@@ -1049,7 +1049,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 ).map { $0 } : nil,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
-            let pm25ChartData = TagChartViewData(
+            let pm25ChartData = RuuviGraphViewDataModel(
                 upperAlertValue: isOn ? alertService
                     .upperPM25(for: ruuviTag)
                     .map {
@@ -1069,7 +1069,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 type: .voc(lower: 0, upper: 0),
                 for: ruuviTag
             )
-            let vocChartDataSet = TagChartsHelper.newDataSet(
+            let vocChartDataSet = RuuviGraphDataSetFactory.newDataSet(
                 upperAlertValue: isOn ? alertService.upperVOC(
                     for: ruuviTag
                 ).map {
@@ -1082,7 +1082,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 ).map { $0 } : nil,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
-            let vocChartData = TagChartViewData(
+            let vocChartData = RuuviGraphViewDataModel(
                 upperAlertValue: isOn ? alertService
                     .upperVOC(for: ruuviTag)
                     .map {
@@ -1102,7 +1102,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 type: .nox(lower: 0, upper: 0),
                 for: ruuviTag
             )
-            let noxChartDataSet = TagChartsHelper.newDataSet(
+            let noxChartDataSet = RuuviGraphDataSetFactory.newDataSet(
                 upperAlertValue: isOn ? alertService.upperNOX(
                     for: ruuviTag
                 ).map {
@@ -1115,7 +1115,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 ).map { $0 } : nil,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
-            let noxChartData = TagChartViewData(
+            let noxChartData = RuuviGraphViewDataModel(
                 upperAlertValue: isOn ? alertService
                     .upperNOX(for: ruuviTag)
                     .map {
@@ -1135,7 +1135,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 type: .luminosity(lower: 0, upper: 0),
                 for: ruuviTag
             )
-            let luminosityChartDataSet = TagChartsHelper.newDataSet(
+            let luminosityChartDataSet = RuuviGraphDataSetFactory.newDataSet(
                 upperAlertValue: isOn ? alertService.upperLuminosity(
                     for: ruuviTag
                 ).map {
@@ -1148,7 +1148,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 ).map { $0 } : nil,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
-            let luminosityChartData = TagChartViewData(
+            let luminosityChartData = RuuviGraphViewDataModel(
                 upperAlertValue: isOn ? alertService
                     .upperLuminosity(for: ruuviTag)
                     .map {
@@ -1168,7 +1168,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 type: .soundInstant(lower: 0, upper: 0),
                 for: ruuviTag
             )
-            let soundChartDataSet = TagChartsHelper.newDataSet(
+            let soundChartDataSet = RuuviGraphDataSetFactory.newDataSet(
                 upperAlertValue: isOn ? alertService.upperSoundInstant(
                     for: ruuviTag
                 ).map {
@@ -1181,7 +1181,7 @@ extension CardsGraphPresenter: TagChartsViewInteractorOutput {
                 ).map { $0 } : nil,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
-            let soundChartData = TagChartViewData(
+            let soundChartData = RuuviGraphViewDataModel(
                 upperAlertValue: isOn ? alertService
                     .upperSoundInstant(for: ruuviTag)
                     .map {

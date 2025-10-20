@@ -3,7 +3,7 @@ import Foundation
 import Future
 import RuuviOntology
 
-protocol TagChartsViewInteractorInput: AnyObject {
+protocol CardsGraphViewInteractorInput: AnyObject {
     var ruuviTagData: [RuuviMeasurement] { get }
     var lastMeasurement: RuuviMeasurement? { get }
     func configure(

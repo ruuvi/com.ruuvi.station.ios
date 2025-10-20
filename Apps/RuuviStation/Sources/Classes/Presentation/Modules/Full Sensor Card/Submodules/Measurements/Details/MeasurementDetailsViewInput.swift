@@ -5,7 +5,7 @@ import RuuviOntology
 
 protocol MeasurementDetailsViewInput: ViewInput {
     func updateMeasurements(with indicatorData: RuuviTagCardSnapshotDisplayData?)
-    func setChartData(_ data: TagChartViewData, settings: RuuviLocalSettings)
+    func setChartData(_ data: RuuviGraphViewDataModel, settings: RuuviLocalSettings)
     func updateChartData(_ entries: [ChartDataEntry], settings: RuuviLocalSettings)
     func setNoDataLabelVisibility(show: Bool)
 }

@@ -124,7 +124,7 @@ final class CardsBaseViewController: UIViewController {
 
     private lazy var menuBarView: CardsMenuBarView = {
         let view = CardsMenuBarView(
-            menuMode: flags.showRedesignedCardsUIWithNewMenu ? .modern : .legacy
+            menuMode: flags.showNewCardsMenu ? .modern : .legacy
         )
         view.setSelectedTab(activeTab, notify: false)
         view.backgroundColor = .clear
@@ -527,12 +527,12 @@ private extension CardsBaseViewController {
     }
 
     func handleTabChange(_ tab: CardsMenuType) {
-        if flags.showRedesignedCardsUIWithoutNewMenu {
-            output?.viewDidChangeTab(tab)
-        } else if flags.showRedesignedCardsUIWithNewMenu {
+        if flags.showNewCardsMenu {
             showTabViewController(for: tab)
             activeTab = tab
             menuBarView.setSelectedTab(tab, animated: true)
+        } else {
+            output?.viewDidChangeTab(tab)
         }
     }
 
@@ -699,7 +699,11 @@ extension CardsBaseViewController: CardsBaseViewInput {
     }
 
     func showContentsForTab(_ tab: CardsMenuType) {
-        if flags.showRedesignedCardsUIWithoutNewMenu {
+        if flags.showNewCardsMenu {
+            showTabViewController(for: tab)
+            activeTab = tab
+            menuBarView.setSelectedTab(tab, animated: true)
+        } else {
             switch tab {
             case .measurement, .graph:
                 UIView
@@ -715,10 +719,6 @@ extension CardsBaseViewController: CardsBaseViewInput {
             default:
                 break
             }
-        } else if flags.showRedesignedCardsUIWithNewMenu {
-            showTabViewController(for: tab)
-            activeTab = tab
-            menuBarView.setSelectedTab(tab, animated: true)
         }
     }
 

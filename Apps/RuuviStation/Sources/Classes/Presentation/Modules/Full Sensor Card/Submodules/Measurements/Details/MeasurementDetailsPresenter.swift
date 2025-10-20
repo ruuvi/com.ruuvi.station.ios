@@ -383,9 +383,9 @@ private extension MeasurementDetailsPresenter {
         }
     }
 
-    func createChartData(entries: [ChartDataEntry]) -> TagChartViewData {
+    func createChartData(entries: [ChartDataEntry]) -> RuuviGraphViewDataModel {
         guard let sensor = ruuviTag else {
-            return TagChartViewData(
+            return RuuviGraphViewDataModel(
                 upperAlertValue: nil,
                 chartType: measurementType,
                 chartData: LineChartData(dataSets: []),
@@ -397,14 +397,14 @@ private extension MeasurementDetailsPresenter {
         let upperAlert = isAlertOn ? getUpperAlert(for: measurementType, sensor: sensor.any) : nil
         let lowerAlert = isAlertOn ? getLowerAlert(for: measurementType, sensor: sensor.any) : nil
 
-        let dataSet = TagChartsHelper.simpleGraphDataSet(
+        let dataSet = RuuviGraphDataSetFactory.simpleGraphDataSet(
             upperAlertValue: upperAlert,
             entries: entries,
             lowerAlertValue: lowerAlert,
             showAlertRangeInGraph: false
         )
 
-        return TagChartViewData(
+        return RuuviGraphViewDataModel(
             upperAlertValue: upperAlert,
             chartType: measurementType,
             chartData: LineChartData(dataSet: dataSet),

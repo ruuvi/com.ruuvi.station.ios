@@ -73,9 +73,7 @@ extension DefaultsPresenter {
             buildDoLegacyHistorySync(),
             buildDoHistorySyncAfterSignIn(),
             buildIncludeDataSourceInHistoryExport(),
-            buildShowRedesignedDashboardUI(),
             buildShowRedesignedCardsUIWithMenu(),
-            buildShowRedesignedCardsUIWithoutMenu(),
             buildDownloadBetaFirmware(),
             buildDownloadAlphaFirmware(),
         ]
@@ -496,45 +494,15 @@ extension DefaultsPresenter {
         return viewModel
     }
 
-    private func buildShowRedesignedDashboardUI() -> DefaultsViewModel {
-        let viewModel = DefaultsViewModel()
-        viewModel.title = "Show redesigned Dashboard UI"
-        viewModel.boolean.value = flags.showRedesignedDashboardUI
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
-        viewModel.type.value = .switcher
-
-        bind(viewModel.boolean, fire: false) { observer, bool in
-            observer.flags.showRedesignedDashboardUI = GlobalHelpers
-                .getBool(from: bool)
-        }
-
-        return viewModel
-    }
-
     private func buildShowRedesignedCardsUIWithMenu() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
         viewModel.title = "Show new Cards UI with New Menu"
-        viewModel.boolean.value = flags.showRedesignedCardsUIWithNewMenu
+        viewModel.boolean.value = flags.showNewCardsMenu
         viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
         bind(viewModel.boolean, fire: false) { observer, bool in
-            observer.flags.showRedesignedCardsUIWithNewMenu = GlobalHelpers
-                .getBool(from: bool)
-        }
-
-        return viewModel
-    }
-
-    private func buildShowRedesignedCardsUIWithoutMenu() -> DefaultsViewModel {
-        let viewModel = DefaultsViewModel()
-        viewModel.title = "Show new Cards UI without New Menu"
-        viewModel.boolean.value = flags.showRedesignedCardsUIWithoutNewMenu
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
-        viewModel.type.value = .switcher
-
-        bind(viewModel.boolean, fire: false) { observer, bool in
-            observer.flags.showRedesignedCardsUIWithoutNewMenu = GlobalHelpers
+            observer.flags.showNewCardsMenu = GlobalHelpers
                 .getBool(from: bool)
         }
 

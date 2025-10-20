@@ -9,8 +9,8 @@ import RuuviReactor
 import RuuviService
 import RuuviStorage
 
-class TagChartsViewInteractor {
-    weak var presenter: TagChartsViewInteractorOutput!
+class CardsGraphViewInteractor {
+    weak var presenter: CardsGraphViewInteractorOutput!
     var gattService: GATTService!
     var ruuviPool: RuuviPool!
     var ruuviStorage: RuuviStorage!
@@ -49,7 +49,7 @@ class TagChartsViewInteractor {
 
 // MARK: - TagChartsInteractorInput
 
-extension TagChartsViewInteractor: TagChartsViewInteractorInput {
+extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
     func restartObservingTags() {
         ruuviTagSensorObservationToken?.invalidate()
         ruuviTagSensorObservationToken = ruuviReactor.observe { [weak self] change in
@@ -236,7 +236,7 @@ extension TagChartsViewInteractor: TagChartsViewInteractorInput {
 
 // MARK: - Private
 
-extension TagChartsViewInteractor {
+extension CardsGraphViewInteractor {
     private func restartScheduler() {
         let timerInterval = settings.appIsOnForeground ? 2 : settings.chartIntervalSeconds
         timer?.invalidate()

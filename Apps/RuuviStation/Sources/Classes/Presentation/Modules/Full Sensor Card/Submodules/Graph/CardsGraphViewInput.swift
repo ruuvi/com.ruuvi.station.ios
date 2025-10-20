@@ -18,7 +18,7 @@ protocol CardsGraphViewInput: ViewInput {
     func scroll(to measurementType: MeasurementType)
     func clearChartHistory()
     func setChartViewData(
-        from chartViewData: [TagChartViewData],
+        from chartViewData: [RuuviGraphViewDataModel],
         settings: RuuviLocalSettings
     )
 

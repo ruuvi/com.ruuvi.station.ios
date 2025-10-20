@@ -30,7 +30,7 @@ class CardsCoordinator: RuuviCoordinator {
     private var cardsSettingsViewPresenter: CardsSettingsPresenter!
 
     private var cardsRouter: CardsRouter!
-    private var graphInteractor: TagChartsViewInteractor!
+    private var graphInteractor: CardsGraphViewInteractor!
 
     private var snapshot: RuuviTagCardSnapshot!
     private var snapshots: [RuuviTagCardSnapshot] = []
@@ -218,7 +218,7 @@ private extension CardsCoordinator {
     func createGraphViewController() -> CardsGraphViewController {
         let r = AppAssembly.shared.assembler.resolver
 
-        let interactor = TagChartsViewInteractor()
+        let interactor = CardsGraphViewInteractor()
         graphInteractor = interactor
         let presenter = CardsGraphPresenter(
             errorPresenter: r.resolve(ErrorPresenter.self)!,
