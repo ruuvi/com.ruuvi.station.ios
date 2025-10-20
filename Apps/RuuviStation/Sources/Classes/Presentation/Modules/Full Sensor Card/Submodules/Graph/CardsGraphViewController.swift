@@ -151,6 +151,23 @@ class CardsGraphViewController: UIViewController {
     private var chartViews: [TagChartsView] = []
     private var pendingScrollToMeasurement: MeasurementType?
 
+    private var isLandscapeLayout: Bool {
+        if let interfaceOrientation = view.window?.windowScene?.interfaceOrientation {
+            return interfaceOrientation.isLandscape
+        }
+        if view.bounds.width > 0, view.bounds.height > 0 {
+            return view.bounds.width > view.bounds.height
+        }
+        return UIScreen.main.bounds.width > UIScreen.main.bounds.height
+    }
+
+    private lazy var graphScrollEdgeFadeConfiguration: ScrollViewEdgeFader.Configuration = {
+        var configuration = ScrollViewEdgeFader.Configuration()
+        configuration.fadeTransitionHeight = 30
+        configuration.landscapeFadeTransitionHeight = 10
+        return configuration
+    }()
+
     lazy var temperatureChartView = TagChartsView(graphType: .temperature)
     lazy var humidityChartView = TagChartsView(graphType: .anyHumidity)
     lazy var pressureChartView = TagChartsView(graphType: .pressure)
@@ -505,7 +522,7 @@ class CardsGraphViewController: UIViewController {
     }
 
     private func configureViews() {
-        scrollView.enableEdgeFading()
+        scrollView.enableEdgeFading(configuration: graphScrollEdgeFadeConfiguration)
     }
 
     @objc fileprivate func syncButtonDidTap() {
@@ -1401,7 +1418,7 @@ extension CardsGraphViewController {
         from totalHeight: CGFloat,
         count: CGFloat
     ) -> CGFloat {
-        if UIWindow.isLandscape {
+        if isLandscapeLayout {
             totalHeight
         } else {
             if !compactChartView {
@@ -1418,8 +1435,8 @@ extension CardsGraphViewController {
 
     private func updateScrollviewBehaviour() {
         if compactChartView {
-            if UIWindow.isLandscape || chartModules.count > 3 {
-                scrollView.isPagingEnabled = UIWindow.isLandscape
+            if isLandscapeLayout || chartModules.count > 3 {
+                scrollView.isPagingEnabled = isLandscapeLayout
                 scrollView.isScrollEnabled = true
                 scrollView.showsVerticalScrollIndicator = true
             } else {
@@ -1428,7 +1445,7 @@ extension CardsGraphViewController {
                 scrollView.showsVerticalScrollIndicator = false
             }
         } else {
-            if UIWindow.isLandscape {
+            if isLandscapeLayout {
                 scrollView.isPagingEnabled = true
             } else {
                 scrollView.isPagingEnabled = false
@@ -1436,6 +1453,7 @@ extension CardsGraphViewController {
             scrollView.isScrollEnabled = true
             scrollView.showsVerticalScrollIndicator = true
         }
+        scrollView.edgeFader?.updateFadeMask()
     }
 
     private func updateChartViewConstaints(
