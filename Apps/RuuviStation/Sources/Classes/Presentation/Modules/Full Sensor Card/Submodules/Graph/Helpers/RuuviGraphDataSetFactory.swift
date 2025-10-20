@@ -4,7 +4,7 @@ import Foundation
 import RuuviLocalization
 import UIKit
 
-enum TagChartsHelper {
+enum RuuviGraphDataSetFactory {
 
     // MARK: - Constants
     private enum Constants {
@@ -117,7 +117,7 @@ enum TagChartsHelper {
 }
 
 // MARK: - Private Helper Methods
-private extension TagChartsHelper {
+private extension RuuviGraphDataSetFactory {
 
     static func createBaseDataSet(
         entries: [ChartDataEntry],

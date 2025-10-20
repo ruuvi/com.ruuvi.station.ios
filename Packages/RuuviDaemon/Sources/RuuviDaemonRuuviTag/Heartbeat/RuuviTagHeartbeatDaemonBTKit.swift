@@ -257,7 +257,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
     private func disconnectedHandler(
         for uuid: String
     ) -> ((RuuviTagHeartbeatDaemonBTKit, BTDisconnectResult) -> Void)? {
-        { observer, result in // swiftlint:disable:this opening_brace
+        { observer, result in
             switch result {
             case .stillConnected:
                 break // do nothing

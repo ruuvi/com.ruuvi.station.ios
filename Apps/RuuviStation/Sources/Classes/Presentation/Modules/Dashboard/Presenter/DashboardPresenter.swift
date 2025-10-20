@@ -443,7 +443,7 @@ private extension DashboardPresenter {
             let allSnapshots = coordinatorSnapshots()
             let allSensors = coordinatorSensors()
 
-            if flags.showRedesignedCardsUIWithNewMenu {
+            if flags.showNewCardsMenu {
                 router.openFullSensorCard(
                     for: snapshot,
                     snapshots: allSnapshots,
@@ -452,7 +452,7 @@ private extension DashboardPresenter {
                     activeMenu: .settings,
                     openSettings: false
                 )
-            } else if flags.showRedesignedCardsUIWithoutNewMenu {
+            } else {
                 router.openFullSensorCard(
                     for: snapshot,
                     snapshots: allSnapshots,
@@ -461,20 +461,6 @@ private extension DashboardPresenter {
                     activeMenu: .measurement,
                     openSettings: true
                 )
-            } else {
-                let viewModel = createViewModelFromSnapshot(snapshot)
-                let allViewModels = allSnapshots.compactMap { createViewModelFromSnapshot($0) }
-                router
-                    .openTagSettings(
-                        with: allViewModels,
-                        ruuviTagSensors: allSensors,
-                        sensorSettings: sensorSettings,
-                        scrollTo: viewModel,
-                        ruuviTag: sensor,
-                        latestMeasurement: snapshot.latestRawRecord,
-                        sensorSetting: relevantSetting,
-                        output: self
-                    )
             }
         } else {
             router.openTagSettings(
@@ -495,44 +481,14 @@ private extension DashboardPresenter {
         let allSensors = coordinatorSensors()
         let sensorSettings = coordinatorSensorSettings()
 
-        // Create CardsViewModel for backward compatibility with router
-        let viewModel = createViewModelFromSnapshot(snapshot)
-        let allViewModels = allSnapshots.compactMap { createViewModelFromSnapshot($0) }
-
-        if flags.showRedesignedCardsUIWithNewMenu ||
-            flags.showRedesignedCardsUIWithoutNewMenu {
-            router.openFullSensorCard(
-                for: snapshot,
-                snapshots: allSnapshots,
-                ruuviTagSensors: allSensors,
-                sensorSettings: sensorSettings,
-                activeMenu: showCharts ? .graph : .measurement,
-                openSettings: false
-            )
-        } else {
-            router.openCardImageView(
-                with: allViewModels,
-                ruuviTagSensors: allSensors,
-                sensorSettings: sensorSettings,
-                scrollTo: viewModel,
-                showCharts: showCharts,
-                output: self
-            )
-        }
-    }
-
-    func createViewModelFromSnapshot(_ snapshot: RuuviTagCardSnapshot) -> LegacyCardsViewModel {
-        // Create a temporary CardsViewModel for backward compatibility
-        // This should be removed once router is updated to use snapshots
-        guard let sensor = serviceCoordinatorManager.getSensor(for: snapshot.id) else {
-            fatalError("Sensor not found for snapshot")
-        }
-        let viewModel = LegacyCardsViewModel(sensor)
-        viewModel.background = snapshot.displayData.background
-        if let record = snapshot.latestRawRecord {
-            viewModel.update(record)
-        }
-        return viewModel
+        router.openFullSensorCard(
+            for: snapshot,
+            snapshots: allSnapshots,
+            ruuviTagSensors: allSensors,
+            sensorSettings: sensorSettings,
+            activeMenu: showCharts ? .graph : .measurement,
+            openSettings: false
+        )
     }
 }
 
@@ -839,17 +795,6 @@ extension DashboardPresenter: DashboardRouterDelegate {
 
     func shouldDismissDiscover() -> Bool {
         return !serviceCoordinatorManager.getAllSnapshots().isEmpty
-    }
-}
-
-extension DashboardPresenter: LegacyCardsModuleOutput {
-
-    func cardsViewDidDismiss(module: LegacyCardsModuleInput) {
-        module.dismiss(completion: nil)
-    }
-
-    func cardsViewDidRefresh(module: LegacyCardsModuleInput) {
-        // No op.
     }
 }
 

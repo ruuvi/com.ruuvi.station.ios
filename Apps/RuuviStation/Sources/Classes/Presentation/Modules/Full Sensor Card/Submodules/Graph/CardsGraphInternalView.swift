@@ -5,35 +5,35 @@ import RuuviOntology
 import RuuviService
 import UIKit
 
-enum TagChartsSource {
+enum CardsGraphSource {
     case cards
     case mesurementDetails
 }
 
-protocol TagChartsViewInternalDelegate: NSObjectProtocol {
-    func chartDidTranslate(_ chartView: TagChartsViewInternal)
+protocol CardsGraphInternalViewDelegate: NSObjectProtocol {
+    func chartDidTranslate(_ chartView: CardsGraphInternalView)
     func chartValueDidSelect(
-        _ chartView: TagChartsViewInternal,
+        _ chartView: CardsGraphInternalView,
         entry: ChartDataEntry,
         highlight: Highlight
     )
-    func chartValueDidDeselect(_ chartView: TagChartsViewInternal)
+    func chartValueDidDeselect(_ chartView: CardsGraphInternalView)
 }
 
-class TagChartsViewInternal: LineChartView {
-    weak var chartDelegate: TagChartsViewInternalDelegate?
+class CardsGraphInternalView: LineChartView {
+    weak var chartDelegate: CardsGraphInternalViewDelegate?
 
     var lowerAlertValue: Double?
     var upperAlertValue: Double?
     var graphType: MeasurementType = .temperature
 
     // MARK: - Private
-    private lazy var markerView = TagChartsMarkerView()
+    private lazy var markerView = CardsGraphMarkerView()
     private var settings: RuuviLocalSettings!
-    private var source: TagChartsSource = .cards
+    private var source: CardsGraphSource = .cards
 
     // MARK: - LifeCycle
-    init(source: TagChartsSource, graphType: MeasurementType) {
+    init(source: CardsGraphSource, graphType: MeasurementType) {
         self.source = source
         self.graphType = graphType
         super.init(frame: .zero)
@@ -112,7 +112,7 @@ class TagChartsViewInternal: LineChartView {
     }
 }
 
-extension TagChartsViewInternal: ChartViewDelegate {
+extension CardsGraphInternalView: ChartViewDelegate {
     func chartTranslated(
         _: ChartViewBase,
         dX _: CGFloat,
@@ -146,7 +146,7 @@ extension TagChartsViewInternal: ChartViewDelegate {
     }
 }
 
-extension TagChartsViewInternal {
+extension CardsGraphInternalView {
     func localize() {
         xAxis.valueFormatter = XAxisValueFormatter()
         leftAxis.valueFormatter = YAxisValueFormatter()
@@ -230,7 +230,7 @@ extension TagChartsViewInternal {
     ) {
         if isFirstEntry {
             let emptyDataSet = LineChartData(
-                dataSet: TagChartsHelper.newDataSet(
+                dataSet: RuuviGraphDataSetFactory.newDataSet(
                     upperAlertValue: upperAlertValue,
                     lowerAlertValue: lowerAlertValue,
                     showAlertRangeInGraph: showAlertRangeInGraph
@@ -269,7 +269,7 @@ extension TagChartsViewInternal {
         measurementService: RuuviServiceMeasurement,
         unit: String
     ) {
-        if let marker = marker as? TagChartsMarkerView {
+        if let marker = marker as? CardsGraphMarkerView {
             marker.initialise(
                 with: unit,
                 type: type,

@@ -5,22 +5,22 @@ import RuuviOntology
 import RuuviService
 import UIKit
 
-protocol TagChartsViewDelegate: NSObjectProtocol {
-    func chartDidTranslate(_ chartView: TagChartsView)
+protocol CardsGraphViewDelegate: NSObjectProtocol {
+    func chartDidTranslate(_ chartView: CardsGraphView)
     func chartValueDidSelect(
-        _ chartView: TagChartsView,
+        _ chartView: CardsGraphView,
         entry: ChartDataEntry,
         highlight: Highlight
     )
-    func chartValueDidDeselect(_ chartView: TagChartsView)
+    func chartValueDidDeselect(_ chartView: CardsGraphView)
 }
 
-class TagChartsView: UIView {
-    weak var chartDelegate: TagChartsViewDelegate?
+class CardsGraphView: UIView {
+    weak var chartDelegate: CardsGraphViewDelegate?
 
     // MARK: Private
-    private lazy var chartView: TagChartsViewInternal = {
-        let view = TagChartsViewInternal(
+    private lazy var chartView: CardsGraphInternalView = {
+        let view = CardsGraphInternalView(
             source: .cards,
             graphType: graphType
         )
@@ -64,7 +64,7 @@ class TagChartsView: UIView {
 }
 
 // MARK: - Layout
-extension TagChartsView {
+extension CardsGraphView {
 
     private func addSubviews() {
         addSubview(chartNameLabel)
@@ -115,14 +115,14 @@ extension TagChartsView {
 
 }
 
-extension TagChartsView: TagChartsViewInternalDelegate {
+extension CardsGraphView: CardsGraphInternalViewDelegate {
 
-    func chartDidTranslate(_ chartView: TagChartsViewInternal) {
+    func chartDidTranslate(_ chartView: CardsGraphInternalView) {
         chartDelegate?.chartDidTranslate(self)
     }
 
     func chartValueDidSelect(
-        _ chartView: TagChartsViewInternal,
+        _ chartView: CardsGraphInternalView,
         entry: ChartDataEntry,
         highlight: Highlight
     ) {
@@ -133,12 +133,12 @@ extension TagChartsView: TagChartsViewInternalDelegate {
         )
     }
 
-    func chartValueDidDeselect(_ chartView: TagChartsViewInternal) {
+    func chartValueDidDeselect(_ chartView: CardsGraphInternalView) {
         chartDelegate?.chartValueDidDeselect(self)
     }
 }
 
-extension TagChartsView {
+extension CardsGraphView {
     func localize() {
         chartView.localize()
     }
@@ -246,12 +246,12 @@ extension TagChartsView {
     }
 
     /// Returns the underlying LineChartView.
-    var underlyingView: TagChartsViewInternal {
+    var underlyingView: CardsGraphInternalView {
         return chartView
     }
 }
 
-extension TagChartsView {
+extension CardsGraphView {
 
     private func createMeasurementStrings(
         type: MeasurementType,

@@ -5,13 +5,11 @@ import RuuviLocalization
 import RuuviOntology
 import UIKit
 
-// swiftlint:disable:next type_body_length
 class DashboardRouter: NSObject, DashboardRouterInput {
     weak var transitionHandler: UIViewController!
     weak var delegate: DashboardRouterDelegate!
     private weak var dfuModule: DFUModuleInput?
     private weak var backgroundSelectionModule: BackgroundSelectionModuleInput?
-    weak var cards: LegacyCardsModuleInput?
     var settings: RuuviLocalSettings!
     var cardsCoordinator: CardsCoordinator!
 
@@ -206,99 +204,6 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         if let presenter = module.output as? SensorRemovalModuleInput {
             presenter.configure(ruuviTag: ruuviTag, output: output)
         }
-    }
-
-    // MARK: Legacy
-    // swiftlint:disable:next function_parameter_count
-    func openCardImageView(
-        with viewModels: [LegacyCardsViewModel],
-        ruuviTagSensors: [AnyRuuviTagSensor],
-        sensorSettings: [SensorSettings],
-        scrollTo: LegacyCardsViewModel?,
-        showCharts: Bool,
-        output: LegacyCardsModuleOutput
-    ) {
-        let factory: LegacyCardsViewModuleFactory = CardsViewModuleFactoryImpl()
-        let module = factory.create()
-        if let output = module.output as? LegacyCardsModuleInput {
-            cards = output
-        }
-
-        if let cards {
-            cards.configure(output: output)
-            cards.configure(
-                viewModels: viewModels,
-                ruuviTagSensors: ruuviTagSensors,
-                sensorSettings: sensorSettings
-            )
-            cards.configure(
-                scrollTo: scrollTo,
-                openChart: showCharts
-            )
-        }
-
-        // Remove any cards view controller from stack if exists already
-        if let navigationController = transitionHandler.navigationController,
-           navigationController
-            .containsViewController(ofKind: LegacyCardsViewController.self) {
-            transitionHandler
-                .navigationController?
-                .removeAnyViewControllers(ofKind: LegacyCardsViewController.self)
-        }
-
-        transitionHandler
-            .navigationController?
-            .pushViewController(
-                module,
-                animated: true
-            )
-    }
-
-    // swiftlint:disable:next function_parameter_count
-    func openTagSettings(
-        with viewModels: [LegacyCardsViewModel],
-        ruuviTagSensors: [AnyRuuviTagSensor],
-        sensorSettings: [SensorSettings],
-        scrollTo: LegacyCardsViewModel?,
-        ruuviTag: RuuviTagSensor,
-        latestMeasurement: RuuviTagSensorRecord?,
-        sensorSetting: SensorSettings?,
-        output: LegacyCardsModuleOutput
-    ) {
-        let cardsFactory: LegacyCardsViewModuleFactory = CardsViewModuleFactoryImpl()
-        let cardsModule = cardsFactory.create()
-
-        let settingsFactory: TagSettingsModuleFactory = TagSettingsModuleFactoryImpl()
-        let settingsModule = settingsFactory.create()
-
-        if let cardsPresenter = cardsModule.output as? LegacyCardsModuleInput,
-           let cardsPresenterOutput = cardsPresenter as? TagSettingsModuleOutput,
-           let settingsPresenter = settingsModule.output as? TagSettingsModuleInput {
-            cardsPresenter.configure(output: output)
-            cardsPresenter.configure(
-                viewModels: viewModels,
-                ruuviTagSensors: ruuviTagSensors,
-                sensorSettings: sensorSettings
-            )
-            cardsPresenter.configure(
-                scrollTo: scrollTo,
-                openChart: false
-            )
-            if let cardsOutput = cardsModule as? LegacyCardsViewOutput {
-                cardsOutput.viewDidLoad()
-            }
-
-            settingsPresenter.configure(output: cardsPresenterOutput)
-            settingsPresenter.configure(
-                ruuviTag: ruuviTag,
-                latestMeasurement: latestMeasurement,
-                sensorSettings: sensorSetting
-            )
-        }
-
-        transitionHandler.navigationController?.setViewControllers([
-            transitionHandler, cardsModule, settingsModule
-        ], animated: true)
     }
 }
 

@@ -19,6 +19,13 @@ protocol DashboardRouterInput {
         activeMenu: CardsMenuType,
         openSettings: Bool // Legacy flow support, we can remove this with new menu.
     )
+    // Opens legacy settings. Can be removed when full settings is implemented in new menu.
+    func openTagSettings(
+        ruuviTag: RuuviTagSensor,
+        latestMeasurement: RuuviTagSensorRecord?,
+        sensorSettings: SensorSettings?,
+        output: TagSettingsModuleOutput
+    )
     func openUpdateFirmware(ruuviTag: RuuviTagSensor)
     func openBackgroundSelectionView(ruuviTag: RuuviTagSensor)
     func openMyRuuviAccount()
@@ -27,34 +34,4 @@ protocol DashboardRouterInput {
       for sensor: RuuviTagSensor,
       output: SensorRemovalModuleOutput
     )
-
-    // MARK: Legacy
-    // swiftlint:disable:next function_parameter_count
-    func openCardImageView(
-        with viewModels: [LegacyCardsViewModel],
-        ruuviTagSensors: [AnyRuuviTagSensor],
-        sensorSettings: [SensorSettings],
-        scrollTo: LegacyCardsViewModel?,
-        showCharts: Bool,
-        output: LegacyCardsModuleOutput
-    )
-    func openTagSettings(
-        ruuviTag: RuuviTagSensor,
-        latestMeasurement: RuuviTagSensorRecord?,
-        sensorSettings: SensorSettings?,
-        output: TagSettingsModuleOutput
-    )
-    // swiftlint:disable function_parameter_count
-    /// Used for only when a new sensor is added.
-    func openTagSettings(
-        with viewModels: [LegacyCardsViewModel],
-        ruuviTagSensors: [AnyRuuviTagSensor],
-        sensorSettings: [SensorSettings],
-        scrollTo: LegacyCardsViewModel?,
-        ruuviTag: RuuviTagSensor,
-        latestMeasurement: RuuviTagSensorRecord?,
-        sensorSetting: SensorSettings?,
-        output: LegacyCardsModuleOutput
-    )
-    // swiftlint:enable function_parameter_count
 }
