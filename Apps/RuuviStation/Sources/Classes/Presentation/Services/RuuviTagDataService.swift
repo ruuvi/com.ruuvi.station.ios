@@ -697,11 +697,8 @@ private extension RuuviTagDataService {
             }
         }
 
-        let cloudSnapshots = snapshots.filter { $0.metadata.isCloud }
-        let nonCloudSnapshots = snapshots.filter { !$0.metadata.isCloud }
-
-        // Manual sorting based on MAC IDs for cloud sensors only
-        let sortedCloud = cloudSnapshots.sorted { first, second in
+        // Manual sorting based on MAC IDs
+        return snapshots.sorted { first, second in
             guard let firstMacId = first.identifierData.mac?.value,
                   let secondMacId = second.identifierData.mac?.value else { return false }
 
@@ -709,8 +706,6 @@ private extension RuuviTagDataService {
             let secondIndex = orderedIds.firstIndex(of: secondMacId) ?? Int.max
             return firstIndex < secondIndex
         }
-
-        return nonCloudSnapshots + sortedCloud
     }
 
     func notifyRestartAdvertisementDaemon() {
