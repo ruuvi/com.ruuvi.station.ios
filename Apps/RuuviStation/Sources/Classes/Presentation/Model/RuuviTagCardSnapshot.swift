@@ -621,42 +621,4 @@ extension RuuviTagCardSnapshot {
     }
 }
 
-// MARK: - Helper Methods for Change Detection
-extension RuuviTagCardSnapshot {
-
-    // MARK: - Calculate Alert Availability
-    private func calculateIsAlertAvailable() -> Bool {
-        return connectionData.isConnected ||
-               identifierData.serviceUUID != nil ||
-               metadata.isCloud
-    }
-
-    /// Check if this snapshot has significant changes compared to another
-    func hasSignificantChanges(from other: RuuviTagCardSnapshot) -> Bool {
-        return self.displayData != other.displayData ||
-               self.alertData != other.alertData ||
-               self.connectionData != other.connectionData ||
-               self.lastUpdated != other.lastUpdated
-    }
-
-    /// Get a summary of what changed
-    func changesSummary(from other: RuuviTagCardSnapshot) -> String {
-        var changes: [String] = []
-
-        if self.displayData != other.displayData {
-            changes.append("displayData")
-        }
-        if self.alertData != other.alertData {
-            changes.append("alertData")
-        }
-        if self.connectionData != other.connectionData {
-            changes.append("connectionData")
-        }
-        if self.lastUpdated != other.lastUpdated {
-            changes.append("lastUpdated")
-        }
-
-        return changes.isEmpty ? "no changes" : changes.joined(separator: ", ")
-    }
-}
 // swiftlint:enable file_length

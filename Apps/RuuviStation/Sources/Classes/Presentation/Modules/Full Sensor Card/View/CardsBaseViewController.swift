@@ -727,7 +727,7 @@ extension CardsBaseViewController: CardsBaseViewInput {
     }
 
     func updateSnapshot(_ snapshot: RuuviTagCardSnapshot) {
-        if let snapshotIndex = currentSnapshots.firstIndex(of: snapshot) {
+        if let snapshotIndex = currentSnapshots.firstIndex(where: { $0.id == snapshot.id }) {
             currentSnapshots[snapshotIndex] = snapshot
             updateCurrentSnapshotUI()
         }

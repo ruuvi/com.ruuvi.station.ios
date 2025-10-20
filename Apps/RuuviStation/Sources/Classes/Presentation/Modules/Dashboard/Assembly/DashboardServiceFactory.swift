@@ -79,35 +79,6 @@ class DashboardServiceFactory {
         self.pnManager = pnManager
     }
 
-    // MARK: - Service Creation
-    func createSensorDataService() -> RuuviTagDataService {
-        return RuuviTagDataService(
-            ruuviReactor: ruuviReactor,
-            ruuviStorage: ruuviStorage,
-            measurementService: measurementService,
-            ruuviSensorPropertiesService: ruuviSensorPropertiesService,
-            settings: settings,
-            flags: flags
-        )
-    }
-
-    func createAlertService() -> RuuviTagAlertService {
-        return RuuviTagAlertService(
-            alertService: alertService,
-            alertHandler: alertHandler,
-            settings: settings
-        )
-    }
-
-    func createConnectionService() -> RuuviTagConnectionService {
-        return RuuviTagConnectionService(
-            foreground: foreground,
-            background: background,
-            connectionPersistence: connectionPersistence,
-            localSyncState: localSyncState
-        )
-    }
-
     func createSettingsService() -> DashboardSettingsService {
         return DashboardSettingsService(
             settings: settings,
@@ -115,32 +86,13 @@ class DashboardServiceFactory {
         )
     }
 
-    func createCloudSyncService() -> RuuviCloudService {
-        return RuuviCloudService(
-            cloudSyncDaemon: cloudSyncDaemon,
-            cloudSyncService: cloudSyncService,
-            cloudNotificationService: cloudNotificationService,
-            authService: authService,
-            ruuviUser: ruuviUser,
-            settings: settings,
-            pnManager: pnManager
-        )
-    }
-
     // MARK: - Complete Presenter Creation
     func createDashboardPresenter() -> DashboardPresenter {
-        let sensorDataService = createSensorDataService()
-        let alertService = createAlertService()
-        let connectionService = createConnectionService()
         let settingsService = createSettingsService()
-        let cloudSyncService = createCloudSyncService()
 
         return DashboardPresenter(
-            sensorDataService: sensorDataService,
-            alertService: alertService,
-            connectionService: connectionService,
             settingsService: settingsService,
-            cloudSyncService: cloudSyncService
+            serviceCoordinatorManager: RuuviTagServiceCoordinatorManager.shared
         )
     }
 }
@@ -211,35 +163,5 @@ extension DashboardServiceFactory {
         presenter.flags = flags
 
         return presenter
-    }
-}
-
-// MARK: - Service Configuration
-extension DashboardServiceFactory {
-
-    // swiftlint:disable:next orphaned_doc_comment
-    /// Creates services with shared caching for better performance
-    // swiftlint:disable:next large_tuple
-    func createServicesWithSharedCaching() -> (
-        sensorData: RuuviTagDataService,
-        alerts: RuuviTagAlertService,
-        connections: RuuviTagConnectionService,
-        settings: DashboardSettingsService,
-        cloudSync: RuuviCloudService
-    ) {
-
-        let sensorDataService = createSensorDataService()
-        let alertService = createAlertService()
-        let connectionService = createConnectionService()
-        let settingsService = createSettingsService()
-        let cloudSyncService = createCloudSyncService()
-
-        return (
-            sensorData: sensorDataService,
-            alerts: alertService,
-            connections: connectionService,
-            settings: settingsService,
-            cloudSync: cloudSyncService
-        )
     }
 }

@@ -150,38 +150,3 @@ extension DashboardModuleFactoryImpl {
         return view
     }
 }
-
-// MARK: - Service Access for Other Modules
-extension DashboardModuleFactoryImpl {
-
-    /// Creates individual services for use in other modules
-    func createSensorDataService() -> RuuviTagDataService {
-        let r = AppAssembly.shared.assembler.resolver
-        let factory = DashboardServiceFactory.create(from: r)
-        return factory.createSensorDataService()
-    }
-
-    func createAlertService() -> RuuviTagAlertService {
-        let r = AppAssembly.shared.assembler.resolver
-        let factory = DashboardServiceFactory.create(from: r)
-        return factory.createAlertService()
-    }
-
-    func createConnectionService() -> RuuviTagConnectionService {
-        let r = AppAssembly.shared.assembler.resolver
-        let factory = DashboardServiceFactory.create(from: r)
-        return factory.createConnectionService()
-    }
-
-    func createSettingsService() -> DashboardSettingsService {
-        let r = AppAssembly.shared.assembler.resolver
-        let factory = DashboardServiceFactory.create(from: r)
-        return factory.createSettingsService()
-    }
-
-    func createCloudSyncService() -> RuuviCloudService {
-        let r = AppAssembly.shared.assembler.resolver
-        let factory = DashboardServiceFactory.create(from: r)
-        return factory.createCloudSyncService()
-    }
-}

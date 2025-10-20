@@ -936,22 +936,11 @@ extension DashboardViewController: NewDashboardViewInput {
         updateData(with: snapshots, animated: withAnimation)
     }
 
-    func updateSnapshot(from record: RuuviTagSensorRecord, for ruuviTag: RuuviTagSensor) {
-        if let snapshot = snapshots.first(where: { $0.id == ruuviTag.id }) {
-            snapshot.updateFromRecord(
-                record, sensor: ruuviTag.any,
-                measurementService: measurementService,
-                flags: flags
-            )
-        }
-        updateSnapshot(redrawLayout: false, animated: false)
-    }
-
     func updateSnapshot(
         from snapshot: RuuviTagCardSnapshot,
         invalidateLayout: Bool
     ) {
-        if let snapshotIndex = snapshots.firstIndex(of: snapshot) {
+        if let snapshotIndex = snapshots.firstIndex(where: { $0.id == snapshot.id }) {
             snapshots[snapshotIndex] = snapshot
         }
         updateSnapshot(redrawLayout: invalidateLayout, animated: true)

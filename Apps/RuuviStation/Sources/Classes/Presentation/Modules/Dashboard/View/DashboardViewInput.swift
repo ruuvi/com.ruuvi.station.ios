@@ -14,10 +14,6 @@ protocol NewDashboardViewInput: ViewInput {
         withAnimation: Bool
     )
     func updateSnapshot(
-        from record: RuuviTagSensorRecord,
-        for ruuviTag: RuuviTagSensor
-    )
-    func updateSnapshot(
         from snapshot: RuuviTagCardSnapshot,
         invalidateLayout: Bool
     )
