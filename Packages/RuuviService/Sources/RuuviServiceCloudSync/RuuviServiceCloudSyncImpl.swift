@@ -523,12 +523,6 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         .on(success: { [weak self] denseSensors in
             guard let sSelf = self else { return }
 
-            guard denseSensors.count > 0
-            else {
-                promise.succeed(value: [])
-                return
-            }
-
             let alerts = denseSensors.compactMap { sensor in
                 sensor.alerts
             }
