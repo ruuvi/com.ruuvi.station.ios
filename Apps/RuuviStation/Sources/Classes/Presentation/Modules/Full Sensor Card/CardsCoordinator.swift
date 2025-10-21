@@ -70,10 +70,10 @@ class CardsCoordinator: RuuviCoordinator {
         cardsBaseViewController = createBaseViewController()
 
         if showSettings {
-            let settingsFactory: TagSettingsModuleFactory = TagSettingsModuleFactoryImpl()
+            let settingsFactory: LegacyTagSettingsModuleFactory = LegacyTagSettingsModuleFactoryImpl()
             let settingsModule = settingsFactory.create()
 
-            if let settingsPresenter = settingsModule.output as? TagSettingsModuleInput,
+            if let settingsPresenter = settingsModule.output as? LegacyTagSettingsModuleInput,
                let ruuviTag = ruuviTagSensors.first(where: {
                    $0.luid?.any == snapshot.identifierData.luid?.any ||
                    $0.macId?.any == snapshot.identifierData.mac?.any

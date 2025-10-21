@@ -3,7 +3,7 @@ import UIKit
 
 protocol TagSettingsSimpleSectionHeaderDelegate: NSObjectProtocol {}
 
-class TagSettingsSimpleSectionHeader: UIView {
+class LegacyTagSettingsSimpleSectionHeader: UIView {
     weak var delegate: TagSettingsSimpleSectionHeaderDelegate?
     private var section: Int = 0
 

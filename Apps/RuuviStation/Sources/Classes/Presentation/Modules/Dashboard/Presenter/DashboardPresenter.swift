@@ -815,15 +815,15 @@ extension DashboardPresenter: DashboardRouterDelegate {
     }
 }
 
-extension DashboardPresenter: TagSettingsModuleOutput {
+extension DashboardPresenter: LegacyTagSettingsModuleOutput {
 
-    func tagSettingsDidDeleteTag(module: TagSettingsModuleInput, ruuviTag: RuuviTagSensor) {
+    func tagSettingsDidDeleteTag(module: LegacyTagSettingsModuleInput, ruuviTag: RuuviTagSensor) {
         module.dismiss { [weak self] in
             self?.restartServiceCoordinatorSensors()
         }
     }
 
-    func tagSettingsDidDismiss(module: TagSettingsModuleInput) {
+    func tagSettingsDidDismiss(module: LegacyTagSettingsModuleInput) {
         module.dismiss(completion: nil)
     }
 }

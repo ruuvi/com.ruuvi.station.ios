@@ -4,12 +4,12 @@ import RuuviService
 // swiftlint:disable file_length
 import UIKit
 
-enum TagSettingsSectionHeaderType {
+enum LegacyTagSettingsSectionHeaderType {
     case simple
     case expandable
 }
 
-enum TagSettingsSectionIdentifier {
+enum LegacyTagSettingsSectionIdentifier {
     case general
     case btPair
     case alertHeader
@@ -36,7 +36,7 @@ enum TagSettingsSectionIdentifier {
     case remove
 }
 
-enum TagSettingsItemCellIdentifier: Int {
+enum LegacyTagSettingsItemCellIdentifier: Int {
     case generalChangeBackground = 0
     case generalName = 1
     case generalOwner = 2
@@ -47,13 +47,13 @@ enum TagSettingsItemCellIdentifier: Int {
     case offsetPressure = 7
 }
 
-class TagSettingsSection {
+class LegacyTagSettingsSection {
     init(
-        identifier: TagSettingsSectionIdentifier,
+        identifier: LegacyTagSettingsSectionIdentifier,
         title: String,
-        cells: [TagSettingsItem],
+        cells: [LegacyTagSettingsItem],
         collapsed: Bool,
-        headerType: TagSettingsSectionHeaderType,
+        headerType: LegacyTagSettingsSectionHeaderType,
         backgroundColor: UIColor? = nil,
         font: UIFont? = nil
     ) {
@@ -66,26 +66,26 @@ class TagSettingsSection {
         self.font = font
     }
 
-    var identifier: TagSettingsSectionIdentifier
+    var identifier: LegacyTagSettingsSectionIdentifier
     var title: String
-    var cells: [TagSettingsItem]
+    var cells: [LegacyTagSettingsItem]
     var collapsed: Bool
-    var headerType: TagSettingsSectionHeaderType
+    var headerType: LegacyTagSettingsSectionHeaderType
     var backgroundColor: UIColor?
     var font: UIFont?
 }
 
-struct TagSettingsItem {
-    var identifier: TagSettingsItemCellIdentifier?
+struct LegacyTagSettingsItem {
+    var identifier: LegacyTagSettingsItemCellIdentifier?
     var createdCell: () -> UITableViewCell
-    var action: ((TagSettingsItem) -> Swift.Void)?
+    var action: ((LegacyTagSettingsItem) -> Swift.Void)?
 }
 
 // swiftlint:disable:next type_body_length
-class TagSettingsViewController: UIViewController {
-    var output: TagSettingsViewOutput!
+class LegacyTagSettingsViewController: UIViewController {
+    var output: LegacyTagSettingsViewOutput!
     var measurementService: RuuviServiceMeasurement!
-    var viewModel: TagSettingsViewModel? {
+    var viewModel: LegacyTagSettingsViewModel? {
         didSet {
             configureSections()
             updateUI()
@@ -120,7 +120,7 @@ class TagSettingsViewController: UIViewController {
         return tv
     }()
 
-    private lazy var headerContentView = TagSettingsBackgroundSelectionView()
+    private lazy var headerContentView = LegacyTagSettingsBackgroundSelectionView()
 
     private lazy var numberFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
@@ -151,37 +151,37 @@ class TagSettingsViewController: UIViewController {
 
     // Cell
     static let ReuseIdentifier = "SettingsCell"
-    private var tableViewSections = [TagSettingsSection]()
+    private var tableViewSections = [LegacyTagSettingsSection]()
 
     // Weak reference to the cells
     // General section
-    private lazy var changeBackgroundCell: TagSettingsBasicCell? = TagSettingsBasicCell(
+    private lazy var changeBackgroundCell: LegacyTagSettingsBasicCell? = LegacyTagSettingsBasicCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
-    private lazy var tagNameCell: TagSettingsBasicCell? = TagSettingsBasicCell(
+    private lazy var tagNameCell: LegacyTagSettingsBasicCell? = LegacyTagSettingsBasicCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
-    private lazy var tagOwnerCell: TagSettingsBasicCell? = TagSettingsBasicCell(
+    private lazy var tagOwnerCell: LegacyTagSettingsBasicCell? = LegacyTagSettingsBasicCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
-    private lazy var tagOwnersPlanCell: TagSettingsBasicCell? = TagSettingsBasicCell(
+    private lazy var tagOwnersPlanCell: LegacyTagSettingsBasicCell? = LegacyTagSettingsBasicCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
-    private lazy var tagShareCell: TagSettingsBasicCell? = TagSettingsBasicCell(
+    private lazy var tagShareCell: LegacyTagSettingsBasicCell? = LegacyTagSettingsBasicCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // Bluetooth section
-    private lazy var btPairCell: TagSettingsSwitchCell? = TagSettingsSwitchCell(
+    private lazy var btPairCell: LegacyTagSettingsSwitchCell? = LegacyTagSettingsSwitchCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
@@ -189,13 +189,13 @@ class TagSettingsViewController: UIViewController {
     // Alerts
     // Temperature
     private lazy var temperatureAlertSectionHeaderView:
-        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+        LegacyTagSettingsExpandableSectionHeader? = LegacyTagSettingsExpandableSectionHeader()
 
-    private lazy var temperatureAlertSection: TagSettingsSection? = {
+    private lazy var temperatureAlertSection: LegacyTagSettingsSection? = {
         let title = AlertType.temperature(lower: 0, upper: 0).title(
             with: viewModel?.temperatureUnit.value?.symbol ?? RuuviLocalization.na
         )
-        let section = TagSettingsSection(
+        let section = LegacyTagSettingsSection(
             identifier: .alertTemperature,
             title: title,
             cells: [
@@ -207,19 +207,19 @@ class TagSettingsViewController: UIViewController {
         return section
     }()
 
-    private lazy var temperatureAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var temperatureAlertCell: LegacyTagSettingsAlertConfigCell? = LegacyTagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // Humidity
     private lazy var humidityAlertSectionHeaderView:
-        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+        LegacyTagSettingsExpandableSectionHeader? = LegacyTagSettingsExpandableSectionHeader()
 
-    private lazy var humidityAlertSection: TagSettingsSection? = {
+    private lazy var humidityAlertSection: LegacyTagSettingsSection? = {
         let symbol = HumidityUnit.percent.symbol
         let title = AlertType.relativeHumidity(lower: 0, upper: 0).title()
-        let section = TagSettingsSection(
+        let section = LegacyTagSettingsSection(
             identifier: .alertHumidity,
             title: title,
             cells: [
@@ -231,20 +231,20 @@ class TagSettingsViewController: UIViewController {
         return section
     }()
 
-    private lazy var humidityAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var humidityAlertCell: LegacyTagSettingsAlertConfigCell? = LegacyTagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // Pressure
     private lazy var pressureAlertSectionHeaderView:
-        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+        LegacyTagSettingsExpandableSectionHeader? = LegacyTagSettingsExpandableSectionHeader()
 
-    private lazy var pressureAlertSection: TagSettingsSection? = {
+    private lazy var pressureAlertSection: LegacyTagSettingsSection? = {
         let title = AlertType.relativeHumidity(lower: 0, upper: 0).title(
             with: viewModel?.pressureUnit.value?.symbol ?? RuuviLocalization.na
         )
-        let section = TagSettingsSection(
+        let section = LegacyTagSettingsSection(
             identifier: .alertPressure,
             title: title,
             cells: [
@@ -256,209 +256,209 @@ class TagSettingsViewController: UIViewController {
         return section
     }()
 
-    private lazy var pressureAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var pressureAlertCell: LegacyTagSettingsAlertConfigCell? = LegacyTagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // RSSI
     private lazy var rssiAlertSectionHeaderView:
-        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+        LegacyTagSettingsExpandableSectionHeader? = LegacyTagSettingsExpandableSectionHeader()
 
-    private lazy var rssiAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var rssiAlertCell: LegacyTagSettingsAlertConfigCell? = LegacyTagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // AQI
     private lazy var aqiAlertSectionHeaderView:
-        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+        LegacyTagSettingsExpandableSectionHeader? = LegacyTagSettingsExpandableSectionHeader()
 
-    private lazy var aqiAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var aqiAlertCell: LegacyTagSettingsAlertConfigCell? = LegacyTagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // Carbon Dioxide
     private lazy var co2AlertSectionHeaderView:
-        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+        LegacyTagSettingsExpandableSectionHeader? = LegacyTagSettingsExpandableSectionHeader()
 
-    private lazy var co2AlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var co2AlertCell: LegacyTagSettingsAlertConfigCell? = LegacyTagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // PM1
     private lazy var pm1AlertSectionHeaderView:
-        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+        LegacyTagSettingsExpandableSectionHeader? = LegacyTagSettingsExpandableSectionHeader()
 
-    private lazy var pm1AlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var pm1AlertCell: LegacyTagSettingsAlertConfigCell? = LegacyTagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // PM2.5
     private lazy var pm25AlertSectionHeaderView:
-        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+        LegacyTagSettingsExpandableSectionHeader? = LegacyTagSettingsExpandableSectionHeader()
 
-    private lazy var pm25AlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var pm25AlertCell: LegacyTagSettingsAlertConfigCell? = LegacyTagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // PM4
     private lazy var pm4AlertSectionHeaderView:
-        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+        LegacyTagSettingsExpandableSectionHeader? = LegacyTagSettingsExpandableSectionHeader()
 
-    private lazy var pm4AlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var pm4AlertCell: LegacyTagSettingsAlertConfigCell? = LegacyTagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // PM10
     private lazy var pm10AlertSectionHeaderView:
-        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+        LegacyTagSettingsExpandableSectionHeader? = LegacyTagSettingsExpandableSectionHeader()
 
-    private lazy var pm10AlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var pm10AlertCell: LegacyTagSettingsAlertConfigCell? = LegacyTagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // VOC
     private lazy var vocAlertSectionHeaderView:
-        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+        LegacyTagSettingsExpandableSectionHeader? = LegacyTagSettingsExpandableSectionHeader()
 
-    private lazy var vocAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var vocAlertCell: LegacyTagSettingsAlertConfigCell? = LegacyTagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // NOX
     private lazy var noxAlertSectionHeaderView:
-        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+        LegacyTagSettingsExpandableSectionHeader? = LegacyTagSettingsExpandableSectionHeader()
 
-    private lazy var noxAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var noxAlertCell: LegacyTagSettingsAlertConfigCell? = LegacyTagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // Sound Instant
     private lazy var soundInstantAlertSectionHeaderView:
-        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+        LegacyTagSettingsExpandableSectionHeader? = LegacyTagSettingsExpandableSectionHeader()
 
-    private lazy var soundInstantAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var soundInstantAlertCell: LegacyTagSettingsAlertConfigCell? = LegacyTagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // Luminosity
     private lazy var luminosityAlertSectionHeaderView:
-        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+        LegacyTagSettingsExpandableSectionHeader? = LegacyTagSettingsExpandableSectionHeader()
 
-    private lazy var luminosityAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var luminosityAlertCell: LegacyTagSettingsAlertConfigCell? = LegacyTagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // Movement
     private lazy var movementAlertSectionHeaderView:
-        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+        LegacyTagSettingsExpandableSectionHeader? = LegacyTagSettingsExpandableSectionHeader()
 
-    private lazy var movementAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var movementAlertCell: LegacyTagSettingsAlertConfigCell? = LegacyTagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // Connection
     private lazy var connectionAlertSectionHeaderView:
-        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+        LegacyTagSettingsExpandableSectionHeader? = LegacyTagSettingsExpandableSectionHeader()
 
-    private lazy var connectionAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var connectionAlertCell: LegacyTagSettingsAlertConfigCell? = LegacyTagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // Cloud Connection
     private lazy var cloudConnectionAlertSectionHeaderView:
-        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+        LegacyTagSettingsExpandableSectionHeader? = LegacyTagSettingsExpandableSectionHeader()
 
-    private lazy var cloudConnectionAlertCell: TagSettingsAlertConfigCell? = TagSettingsAlertConfigCell(
+    private lazy var cloudConnectionAlertCell: LegacyTagSettingsAlertConfigCell? = LegacyTagSettingsAlertConfigCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // Offset correction
-    private lazy var tempOffsetCorrectionCell: TagSettingsBasicCell? = TagSettingsBasicCell(
+    private lazy var tempOffsetCorrectionCell: LegacyTagSettingsBasicCell? = LegacyTagSettingsBasicCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
-    private lazy var humidityOffsetCorrectionCell: TagSettingsBasicCell? = TagSettingsBasicCell(
+    private lazy var humidityOffsetCorrectionCell: LegacyTagSettingsBasicCell? = LegacyTagSettingsBasicCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
-    private lazy var pressureOffsetCorrectionCell: TagSettingsBasicCell? = TagSettingsBasicCell(
+    private lazy var pressureOffsetCorrectionCell: LegacyTagSettingsBasicCell? = LegacyTagSettingsBasicCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // More Info section
     private lazy var moreInfoSectionHeaderView:
-        TagSettingsExpandableSectionHeader? = TagSettingsExpandableSectionHeader()
+        LegacyTagSettingsExpandableSectionHeader? = LegacyTagSettingsExpandableSectionHeader()
 
-    private lazy var moreInfoMacAddressCell: TagSettingsPlainCell? = TagSettingsPlainCell(
+    private lazy var moreInfoMacAddressCell: LegacyTagSettingsPlainCell? = LegacyTagSettingsPlainCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
-    private lazy var moreInfoDataFormatCell: TagSettingsPlainCell? = TagSettingsPlainCell(
+    private lazy var moreInfoDataFormatCell: LegacyTagSettingsPlainCell? = LegacyTagSettingsPlainCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
-    private lazy var moreInfoDataSourceCell: TagSettingsPlainCell? = TagSettingsPlainCell(
+    private lazy var moreInfoDataSourceCell: LegacyTagSettingsPlainCell? = LegacyTagSettingsPlainCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
-    private lazy var moreInfoBatteryVoltageCell: TagSettingsPlainCell? = TagSettingsPlainCell(
+    private lazy var moreInfoBatteryVoltageCell: LegacyTagSettingsPlainCell? = LegacyTagSettingsPlainCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
-    private lazy var moreInfoAccXCell: TagSettingsPlainCell? = TagSettingsPlainCell(
+    private lazy var moreInfoAccXCell: LegacyTagSettingsPlainCell? = LegacyTagSettingsPlainCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
-    private lazy var moreInfoAccYCell: TagSettingsPlainCell? = TagSettingsPlainCell(
+    private lazy var moreInfoAccYCell: LegacyTagSettingsPlainCell? = LegacyTagSettingsPlainCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
-    private lazy var moreInfoAccZCell: TagSettingsPlainCell? = TagSettingsPlainCell(
+    private lazy var moreInfoAccZCell: LegacyTagSettingsPlainCell? = LegacyTagSettingsPlainCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
-    private lazy var moreInfoTxPowerCell: TagSettingsPlainCell? = TagSettingsPlainCell(
+    private lazy var moreInfoTxPowerCell: LegacyTagSettingsPlainCell? = LegacyTagSettingsPlainCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
-    private lazy var moreInfoRSSICell: TagSettingsPlainCell? = TagSettingsPlainCell(
+    private lazy var moreInfoRSSICell: LegacyTagSettingsPlainCell? = LegacyTagSettingsPlainCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
-    private lazy var moreInfoMSNCell: TagSettingsPlainCell? = TagSettingsPlainCell(
+    private lazy var moreInfoMSNCell: LegacyTagSettingsPlainCell? = LegacyTagSettingsPlainCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
 
     // Firmware section
-    private lazy var firmwareVersionCell: TagSettingsBasicCell? = TagSettingsBasicCell(
+    private lazy var firmwareVersionCell: LegacyTagSettingsBasicCell? = LegacyTagSettingsBasicCell(
         style: .value1,
         reuseIdentifier: Self.ReuseIdentifier
     )
@@ -538,7 +538,7 @@ class TagSettingsViewController: UIViewController {
 
 // MARK: - BINDINGS
 
-extension TagSettingsViewController {
+extension LegacyTagSettingsViewController {
     private func bindViewModel() {
         bindBackgroundView()
         bindGeneralSection()
@@ -552,7 +552,7 @@ extension TagSettingsViewController {
 
 // MARK: - CONFIGURATION
 
-extension TagSettingsViewController {
+extension LegacyTagSettingsViewController {
     private func configureSections() {
         tableViewSections = []
 
@@ -634,7 +634,7 @@ extension TagSettingsViewController {
         }
     }
 
-    private func reloadSection(identifier: TagSettingsSectionIdentifier) {
+    private func reloadSection(identifier: LegacyTagSettingsSectionIdentifier) {
         switch identifier {
         case .offsetCorrection:
             if showOffsetCorrection() {
@@ -695,8 +695,8 @@ extension TagSettingsViewController {
     }
 
     private func updateSection(
-        with identifier: TagSettingsSectionIdentifier,
-        newSection: TagSettingsSection
+        with identifier: LegacyTagSettingsSectionIdentifier,
+        newSection: LegacyTagSettingsSection
     ) {
         if let index = tableViewSections.firstIndex(
             where: { $0.identifier == identifier }
@@ -716,7 +716,7 @@ extension TagSettingsViewController {
     }
 
     private func removeSection(
-        with indentifier: TagSettingsSectionIdentifier
+        with indentifier: LegacyTagSettingsSectionIdentifier
     ) {
         if let index = tableViewSections.firstIndex(where: {
             $0.identifier == indentifier
@@ -731,7 +731,7 @@ extension TagSettingsViewController {
         }
     }
 
-    private func reloadCellsFor(section: TagSettingsSectionIdentifier) {
+    private func reloadCellsFor(section: LegacyTagSettingsSectionIdentifier) {
         switch section {
         case .general:
             if let currentSection = tableViewSections.first(where: {
@@ -785,7 +785,7 @@ extension TagSettingsViewController {
         }
     }
 
-    private func indexOfSection(section: TagSettingsSectionIdentifier) -> Int {
+    private func indexOfSection(section: LegacyTagSettingsSectionIdentifier) -> Int {
         tableViewSections.firstIndex(where: {
             $0.identifier == section
         }) ?? tableViewSections.count
@@ -794,7 +794,7 @@ extension TagSettingsViewController {
 
 // MARK: ScrollViewDelegate
 
-extension TagSettingsViewController: UIScrollViewDelegate {
+extension LegacyTagSettingsViewController: UIScrollViewDelegate {
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         frozenContentOffsetForRowAnimation = nil
     }
@@ -809,7 +809,7 @@ extension TagSettingsViewController: UIScrollViewDelegate {
 
 // MARK: - HEADER VIEW
 
-extension TagSettingsViewController {
+extension LegacyTagSettingsViewController {
     private func bindBackgroundView() {
         guard let viewModel
         else {
@@ -824,7 +824,7 @@ extension TagSettingsViewController {
 
 // MARK: - GENERAL SECTION
 
-extension TagSettingsViewController {
+extension LegacyTagSettingsViewController {
     private func bindGeneralSection() {
         guard let viewModel
         else {
@@ -869,8 +869,8 @@ extension TagSettingsViewController {
         }
     }
 
-    private func itemsForGeneralSection(showPlan: Bool = false) -> [TagSettingsItem] {
-        var availableItems: [TagSettingsItem] = [
+    private func itemsForGeneralSection(showPlan: Bool = false) -> [LegacyTagSettingsItem] {
+        var availableItems: [LegacyTagSettingsItem] = [
             changeBackgroundItem(),
             tagNameSettingItem(),
         ]
@@ -888,9 +888,9 @@ extension TagSettingsViewController {
         return availableItems
     }
 
-    private func configureGeneralSection() -> TagSettingsSection {
+    private func configureGeneralSection() -> LegacyTagSettingsSection {
         let availableItems = itemsForGeneralSection()
-        let section = TagSettingsSection(
+        let section = LegacyTagSettingsSection(
             identifier: .general,
             title: "",
             cells: availableItems,
@@ -900,8 +900,8 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func changeBackgroundItem() -> TagSettingsItem {
-        let settingItem = TagSettingsItem(
+    private func changeBackgroundItem() -> LegacyTagSettingsItem {
+        let settingItem = LegacyTagSettingsItem(
             identifier: .generalChangeBackground,
             createdCell: { [weak self] in
                 self?.changeBackgroundCell?.configure(
@@ -918,8 +918,8 @@ extension TagSettingsViewController {
         return settingItem
     }
 
-    private func tagNameSettingItem() -> TagSettingsItem {
-        let settingItem = TagSettingsItem(
+    private func tagNameSettingItem() -> LegacyTagSettingsItem {
+        let settingItem = LegacyTagSettingsItem(
             identifier: .generalName,
             createdCell: { [weak self] in
                 self?.tagNameCell?.configure(
@@ -940,8 +940,8 @@ extension TagSettingsViewController {
         return settingItem
     }
 
-    private func tagOwnerSettingItem() -> TagSettingsItem {
-        let settingItem = TagSettingsItem(
+    private func tagOwnerSettingItem() -> LegacyTagSettingsItem {
+        let settingItem = LegacyTagSettingsItem(
             identifier: .generalOwner,
             createdCell: { [weak self] in
                 self?.tagOwnerCell?.configure(
@@ -959,8 +959,8 @@ extension TagSettingsViewController {
         return settingItem
     }
 
-    private func tagOwnersPlanSettingItem() -> TagSettingsItem {
-        let settingItem = TagSettingsItem(
+    private func tagOwnersPlanSettingItem() -> LegacyTagSettingsItem {
+        let settingItem = LegacyTagSettingsItem(
             identifier: .generalOwnersPlan,
             createdCell: { [weak self] in
                 self?.tagOwnersPlanCell?.configure(
@@ -976,8 +976,8 @@ extension TagSettingsViewController {
         return settingItem
     }
 
-    private func tagShareSettingItem() -> TagSettingsItem {
-        let settingItem = TagSettingsItem(
+    private func tagShareSettingItem() -> LegacyTagSettingsItem {
+        let settingItem = LegacyTagSettingsItem(
             identifier: .generalShare,
             createdCell: { [weak self] in
                 self?.tagShareCell?.configure(
@@ -1020,7 +1020,7 @@ extension TagSettingsViewController {
 
 // MARK: - BLUETOOTH SECTION
 
-extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
+extension LegacyTagSettingsViewController: LegacyTagSettingsSwitchCellDelegate {
     // swiftlint:disable:next function_body_length
     private func bindBluetoothSection() {
         guard let viewModel
@@ -1091,8 +1091,8 @@ extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
         }
     }
 
-    private func configureBluetoothSection() -> TagSettingsSection {
-        let section = TagSettingsSection(
+    private func configureBluetoothSection() -> LegacyTagSettingsSection {
+        let section = LegacyTagSettingsSection(
             identifier: .btPair,
             title: RuuviLocalization.TagSettings.SectionHeader.BTConnection.title.capitalized,
             cells: [
@@ -1105,10 +1105,10 @@ extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
         return section
     }
 
-    private func tagPairSettingItem() -> TagSettingsItem {
+    private func tagPairSettingItem() -> LegacyTagSettingsItem {
         let isConnected = viewModel?.isConnected.value ?? false
         let keep = viewModel?.keepConnection.value ?? false
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: { [weak self] in
                 if isConnected {
                     // Connected state
@@ -1131,10 +1131,10 @@ extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
         return settingItem
     }
 
-    private func tagPairFooterItem() -> TagSettingsItem {
-        let settingItem = TagSettingsItem(
+    private func tagPairFooterItem() -> LegacyTagSettingsItem {
+        let settingItem = LegacyTagSettingsItem(
             createdCell: {
-                let cell = TagSettingsFooterCell(style: .value1, reuseIdentifier: Self.ReuseIdentifier)
+                let cell = LegacyTagSettingsFooterCell(style: .value1, reuseIdentifier: Self.ReuseIdentifier)
                 cell.configure(value: RuuviLocalization.TagSettings.PairAndBackgroundScan.description)
                 return cell
             },
@@ -1145,7 +1145,7 @@ extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
 
     // MARK: - TAG_SETTINGS_SWITCH_CELL_DELEGATE
 
-    func didToggleSwitch(isOn: Bool, sender: TagSettingsSwitchCell) {
+    func didToggleSwitch(isOn: Bool, sender: LegacyTagSettingsSwitchCell) {
         if let btPairCell, sender == btPairCell {
             output.viewDidTriggerKeepConnection(isOn: isOn)
         }
@@ -1154,7 +1154,7 @@ extension TagSettingsViewController: TagSettingsSwitchCellDelegate {
 
 // MARK: - ALERTS SECTION
 
-extension TagSettingsViewController {
+extension LegacyTagSettingsViewController {
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func bindAlertsSection() {
         guard let viewModel
@@ -2659,8 +2659,8 @@ extension TagSettingsViewController {
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func configureAlertSections() -> [TagSettingsSection] {
-        var sections: [TagSettingsSection] = []
+    private func configureAlertSections() -> [LegacyTagSettingsSection] {
+        var sections: [LegacyTagSettingsSection] = []
 
         // Fixed items
         sections += [
@@ -2731,8 +2731,8 @@ extension TagSettingsViewController {
         return sections
     }
 
-    private func configureAlertHeaderSection() -> TagSettingsSection {
-        let section = TagSettingsSection(
+    private func configureAlertHeaderSection() -> LegacyTagSettingsSection {
+        let section = LegacyTagSettingsSection(
             identifier: .alertHeader,
             title: RuuviLocalization.TagSettings.Label.Alerts.text.capitalized,
             cells: [],
@@ -2744,15 +2744,15 @@ extension TagSettingsViewController {
 
     // MARK: - TEMPERATURE ALERTS
 
-    private func configureTemperatureAlertSection() -> TagSettingsSection {
+    private func configureTemperatureAlertSection() -> LegacyTagSettingsSection {
         temperatureAlertSection!
     }
 
-    private func temperatureAlertItem() -> TagSettingsItem {
+    private func temperatureAlertItem() -> LegacyTagSettingsItem {
         let (minRange, maxRange) = temperatureMinMaxForSliders()
         let disableTemperature = !hasMeasurement()
         let latestMeasurement = latestValue(for: .temperature(lower: 0, upper: 0))
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: {
                 [weak self] in
                 self?.temperatureAlertCell?.setStatus(
@@ -2786,15 +2786,15 @@ extension TagSettingsViewController {
 
     // MARK: - HUMIDITY ALERTS
 
-    private func configureHumidityAlertSection() -> TagSettingsSection {
+    private func configureHumidityAlertSection() -> LegacyTagSettingsSection {
         humidityAlertSection!
     }
 
-    private func humidityAlertItem() -> TagSettingsItem {
+    private func humidityAlertItem() -> LegacyTagSettingsItem {
         let (minRange, maxRange) = humidityMinMaxForSliders()
         let disableHumidity = !showHumidityOffsetCorrection() || !hasMeasurement()
         let latestMeasurement = latestValue(for: .relativeHumidity(lower: 0, upper: 0))
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: {
                 [weak self] in
                 self?.humidityAlertCell?.setStatus(
@@ -2830,15 +2830,15 @@ extension TagSettingsViewController {
 
     // MARK: - PRESSURE ALERTS
 
-    private func configurePressureAlertSection() -> TagSettingsSection {
+    private func configurePressureAlertSection() -> LegacyTagSettingsSection {
         pressureAlertSection!
     }
 
-    private func pressureAlertItem() -> TagSettingsItem {
+    private func pressureAlertItem() -> LegacyTagSettingsItem {
         let (minRange, maxRange) = pressureMinMaxForSliders()
         let disablePressure = !showPressureOffsetCorrection() || !hasMeasurement()
         let latestMeasurement = latestValue(for: .pressure(lower: 0, upper: 0))
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: {
                 [weak self] in
                 self?.pressureAlertCell?.showAlertRangeSetter()
@@ -2873,9 +2873,9 @@ extension TagSettingsViewController {
 
     // MARK: - RSSI ALERTS
 
-    private func configureRSSIAlertSection() -> TagSettingsSection {
+    private func configureRSSIAlertSection() -> LegacyTagSettingsSection {
         let title = AlertType.signal(lower: 0, upper: 0).title()
-        let section = TagSettingsSection(
+        let section = LegacyTagSettingsSection(
             identifier: .alertRSSI,
             title: title,
             cells: [
@@ -2887,12 +2887,12 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func rssiAlertItem() -> TagSettingsItem {
+    private func rssiAlertItem() -> LegacyTagSettingsItem {
         let (minRange, maxRange) = rssiMinMaxForSliders()
         let disableRssi = !hasMeasurement() ||
             !GlobalHelpers.getBool(from: viewModel?.isClaimedTag.value)
         let latestMeasurement = latestValue(for: .signal(lower: 0, upper: 0))
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: {
                 [weak self] in
                 self?.rssiAlertCell?.showNoticeView()
@@ -2931,9 +2931,9 @@ extension TagSettingsViewController {
 
     // MARK: - AQI ALERTS
 
-    private func configureAQIAlertSection() -> TagSettingsSection {
+    private func configureAQIAlertSection() -> LegacyTagSettingsSection {
         let title = AlertType.aqi(lower: 0, upper: 0).title()
-        let section = TagSettingsSection(
+        let section = LegacyTagSettingsSection(
             identifier: .alertAQI,
             title: title,
             cells: [
@@ -2945,13 +2945,13 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func aqiAlertItem() -> TagSettingsItem {
+    private func aqiAlertItem() -> LegacyTagSettingsItem {
         let (minRange, maxRange) = aqiAlertRange()
         let disableAQI = !hasMeasurement()
         let latestMeasurement = latestValue(
             for: .aqi(lower: 0, upper: 0)
         )
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: {
                 [weak self] in
                 self?.aqiAlertCell?.hideNoticeView()
@@ -2990,11 +2990,11 @@ extension TagSettingsViewController {
 
     // MARK: - CO2 ALERTS
 
-    private func configureCO2AlertSection() -> TagSettingsSection {
+    private func configureCO2AlertSection() -> LegacyTagSettingsSection {
         let title = AlertType.carbonDioxide(lower: 0, upper: 0).title(
             with: RuuviLocalization.unitCo2
         )
-        let section = TagSettingsSection(
+        let section = LegacyTagSettingsSection(
             identifier: .alertCarbonDioxide,
             title: title,
             cells: [
@@ -3006,13 +3006,13 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func co2AlertItem() -> TagSettingsItem {
+    private func co2AlertItem() -> LegacyTagSettingsItem {
         let (minRange, maxRange) = co2AlertRange()
         let disableCo2 = !hasMeasurement()
         let latestMeasurement = latestValue(
             for: .carbonDioxide(lower: 0, upper: 0)
         )
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: {
                 [weak self] in
                 self?.co2AlertCell?.hideNoticeView()
@@ -3051,11 +3051,11 @@ extension TagSettingsViewController {
 
     // MARK: - PM1 ALERTS
 
-    private func configurePM1AlertSection() -> TagSettingsSection {
+    private func configurePM1AlertSection() -> LegacyTagSettingsSection {
         let title = AlertType.pMatter1(lower: 0, upper: 0).title(
             with: RuuviLocalization.unitPm10
         )
-        let section = TagSettingsSection(
+        let section = LegacyTagSettingsSection(
             identifier: .alertPMatter1,
             title: title,
             cells: [
@@ -3067,13 +3067,13 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func pm1AlertItem() -> TagSettingsItem {
+    private func pm1AlertItem() -> LegacyTagSettingsItem {
         let (minRange, maxRange) = pmAlertRange()
         let disablePM1 = !hasMeasurement()
         let latestMeasurement = latestValue(
             for: .pMatter1(lower: 0, upper: 0)
         )
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: {
                 [weak self] in
                 self?.pm1AlertCell?.hideNoticeView()
@@ -3112,11 +3112,11 @@ extension TagSettingsViewController {
 
     // MARK: - PM2.5 ALERTS
 
-    private func configurePM25AlertSection() -> TagSettingsSection {
+    private func configurePM25AlertSection() -> LegacyTagSettingsSection {
         let title = AlertType.pMatter25(lower: 0, upper: 0).title(
             with: RuuviLocalization.unitPm25
         )
-        let section = TagSettingsSection(
+        let section = LegacyTagSettingsSection(
             identifier: .alertPMatter25,
             title: title,
             cells: [
@@ -3128,13 +3128,13 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func pm25AlertItem() -> TagSettingsItem {
+    private func pm25AlertItem() -> LegacyTagSettingsItem {
         let (minRange, maxRange) = pmAlertRange()
         let disablePM = !hasMeasurement()
         let latestMeasurement = latestValue(
             for: .pMatter25(lower: 0, upper: 0)
         )
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: {
                 [weak self] in
                 self?.pm25AlertCell?.hideNoticeView()
@@ -3173,11 +3173,11 @@ extension TagSettingsViewController {
 
     // MARK: - PM4 ALERTS
 
-    private func configurePM4AlertSection() -> TagSettingsSection {
+    private func configurePM4AlertSection() -> LegacyTagSettingsSection {
         let title = AlertType.pMatter4(lower: 0, upper: 0).title(
             with: RuuviLocalization.unitPm40
         )
-        let section = TagSettingsSection(
+        let section = LegacyTagSettingsSection(
             identifier: .alertPMatter4,
             title: title,
             cells: [
@@ -3189,13 +3189,13 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func pm4AlertItem() -> TagSettingsItem {
+    private func pm4AlertItem() -> LegacyTagSettingsItem {
         let (minRange, maxRange) = pmAlertRange()
         let disablePM = !hasMeasurement()
         let latestMeasurement = latestValue(
             for: .pMatter4(lower: 0, upper: 0)
         )
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: {
                 [weak self] in
                 self?.pm4AlertCell?.hideNoticeView()
@@ -3234,11 +3234,11 @@ extension TagSettingsViewController {
 
     // MARK: - PM10 ALERTS
 
-    private func configurePM10AlertSection() -> TagSettingsSection {
+    private func configurePM10AlertSection() -> LegacyTagSettingsSection {
         let title = AlertType.pMatter10(lower: 0, upper: 0).title(
             with: RuuviLocalization.unitPm100
         )
-        let section = TagSettingsSection(
+        let section = LegacyTagSettingsSection(
             identifier: .alertPMatter10,
             title: title,
             cells: [
@@ -3250,13 +3250,13 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func pm10AlertItem() -> TagSettingsItem {
+    private func pm10AlertItem() -> LegacyTagSettingsItem {
         let (minRange, maxRange) = pmAlertRange()
         let disablePM = !hasMeasurement()
         let latestMeasurement = latestValue(
             for: .pMatter10(lower: 0, upper: 0)
         )
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: {
                 [weak self] in
                 self?.pm10AlertCell?.hideNoticeView()
@@ -3295,11 +3295,11 @@ extension TagSettingsViewController {
 
     // MARK: - VOC ALERTS
 
-    private func configureVOCAlertSection() -> TagSettingsSection {
+    private func configureVOCAlertSection() -> LegacyTagSettingsSection {
         let title = AlertType.voc(lower: 0, upper: 0).title(
             with: RuuviLocalization.unitVoc
         )
-        let section = TagSettingsSection(
+        let section = LegacyTagSettingsSection(
             identifier: .alertVOC,
             title: title,
             cells: [
@@ -3311,13 +3311,13 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func vocAlertItem() -> TagSettingsItem {
+    private func vocAlertItem() -> LegacyTagSettingsItem {
         let (minRange, maxRange) = vocAlertRange()
         let disableVOC = !hasMeasurement()
         let latestMeasurement = latestValue(
             for: .voc(lower: 0, upper: 0)
         )
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: {
                 [weak self] in
                 self?.vocAlertCell?.hideNoticeView()
@@ -3356,11 +3356,11 @@ extension TagSettingsViewController {
 
     // MARK: - NOx ALERTS
 
-    private func configureNOXAlertSection() -> TagSettingsSection {
+    private func configureNOXAlertSection() -> LegacyTagSettingsSection {
         let title = AlertType.nox(lower: 0, upper: 0).title(
             with: RuuviLocalization.unitNox
         )
-        let section = TagSettingsSection(
+        let section = LegacyTagSettingsSection(
             identifier: .alertNOx,
             title: title,
             cells: [
@@ -3372,13 +3372,13 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func noxAlertItem() -> TagSettingsItem {
+    private func noxAlertItem() -> LegacyTagSettingsItem {
         let (minRange, maxRange) = noxAlertRange()
         let disableNOX = !hasMeasurement()
         let latestMeasurement = latestValue(
             for: .nox(lower: 0, upper: 0)
         )
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: {
                 [weak self] in
                 self?.noxAlertCell?.hideNoticeView()
@@ -3417,11 +3417,11 @@ extension TagSettingsViewController {
 
     // MARK: - SOUND ALERTS
 
-    private func configureSoundAlertSection() -> TagSettingsSection {
+    private func configureSoundAlertSection() -> LegacyTagSettingsSection {
         let title = AlertType.soundInstant(lower: 0, upper: 0).title(
             with: RuuviLocalization.unitSound
         )
-        let section = TagSettingsSection(
+        let section = LegacyTagSettingsSection(
             identifier: .alertSoundInstant,
             title: title,
             cells: [
@@ -3433,13 +3433,13 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func soundAlertItem() -> TagSettingsItem {
+    private func soundAlertItem() -> LegacyTagSettingsItem {
         let (minRange, maxRange) = soundAlertRange()
         let disableSound = !hasMeasurement()
         let latestMeasurement = latestValue(
             for: .soundInstant(lower: 0, upper: 0)
         )
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: {
                 [weak self] in
                 self?.soundInstantAlertCell?.hideNoticeView()
@@ -3478,11 +3478,11 @@ extension TagSettingsViewController {
 
     // MARK: - LUMINOSITY ALERTS
 
-    private func configureLuminosityAlertSection() -> TagSettingsSection {
+    private func configureLuminosityAlertSection() -> LegacyTagSettingsSection {
         let title = AlertType.luminosity(lower: 0, upper: 0).title(
             with: RuuviLocalization.unitLuminosity
         )
-        let section = TagSettingsSection(
+        let section = LegacyTagSettingsSection(
             identifier: .alertLuminosity,
             title: title,
             cells: [
@@ -3494,13 +3494,13 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func luminosityAlertItem() -> TagSettingsItem {
+    private func luminosityAlertItem() -> LegacyTagSettingsItem {
         let (minRange, maxRange) = co2AlertRange()
         let disableLuminosity = !hasMeasurement()
         let latestMeasurement = latestValue(
             for: .luminosity(lower: 0, upper: 0)
         )
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: {
                 [weak self] in
                 self?.luminosityAlertCell?.hideNoticeView()
@@ -3539,8 +3539,8 @@ extension TagSettingsViewController {
 
     // MARK: - MOVEMENT ALERTS
 
-    private func configureMovementAlertSection() -> TagSettingsSection {
-        let section = TagSettingsSection(
+    private func configureMovementAlertSection() -> LegacyTagSettingsSection {
+        let section = LegacyTagSettingsSection(
             identifier: .alertMovement,
             title: RuuviLocalization.alertMovement,
             cells: [
@@ -3552,10 +3552,10 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func movementAlertItem() -> TagSettingsItem {
+    private func movementAlertItem() -> LegacyTagSettingsItem {
         let disableMovement = viewModel?.movementCounter.value == nil ||
             !hasMeasurement()
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: { [weak self] in
                 self?.movementAlertCell?
                     .setNoticeText(with: RuuviLocalization.TagSettings.Alerts.Movement.description)
@@ -3577,8 +3577,8 @@ extension TagSettingsViewController {
 
     // MARK: - CONNECTION ALERTS
 
-    private func configureConnectionAlertSection() -> TagSettingsSection {
-        let section = TagSettingsSection(
+    private func configureConnectionAlertSection() -> LegacyTagSettingsSection {
+        let section = LegacyTagSettingsSection(
             identifier: .alertConnection,
             title: AlertType.connection.title(),
             cells: [
@@ -3590,9 +3590,9 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func connectionAlertItem() -> TagSettingsItem {
+    private func connectionAlertItem() -> LegacyTagSettingsItem {
         let disableConnection = !hasMeasurement()
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: { [weak self] in
                 self?.connectionAlertCell?
                     .setAlertAddtionalText(with: RuuviLocalization.TagSettings.Alerts.Connection.description)
@@ -3614,8 +3614,8 @@ extension TagSettingsViewController {
 
     // MARK: - CLOUD CONNECTION ALERTS
 
-    private func configureCloudConnectionAlertSection() -> TagSettingsSection {
-        let section = TagSettingsSection(
+    private func configureCloudConnectionAlertSection() -> LegacyTagSettingsSection {
+        let section = LegacyTagSettingsSection(
             identifier: .alertCloudConnection,
             title: AlertType.cloudConnection(unseenDuration: 0).title(),
             cells: [
@@ -3627,10 +3627,10 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func cloudConnectionAlertItem() -> TagSettingsItem {
+    private func cloudConnectionAlertItem() -> LegacyTagSettingsItem {
         let duration = viewModel?.cloudConnectionAlertUnseenDuration.value?.intValue ??
                 RuuviAlertConstants.CloudConnection.defaultUnseenDuration
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: { [weak self] in
                 self?.cloudConnectionAlertCell?.hideAlertRangeSlider()
                 self?.cloudConnectionAlertCell?.showAlertLimitDescription()
@@ -4005,7 +4005,7 @@ extension TagSettingsViewController {
         )
     }
 
-    private func updateTemperatureAlertSlider(for cell: TagSettingsAlertConfigCell) {
+    private func updateTemperatureAlertSlider(for cell: LegacyTagSettingsAlertConfigCell) {
         let (minRange, maxRange) = temperatureMinMaxForSliders()
         cell.setAlertLimitDescription(description: temperatureAlertRangeDescription())
         cell.setAlertRange(
@@ -5105,10 +5105,10 @@ extension TagSettingsViewController {
     }
 }
 
-extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
+extension LegacyTagSettingsViewController: LegacyTagSettingsAlertConfigCellDelegate {
 
     // swiftlint:disable:next cyclomatic_complexity
-    func didSelectSetCustomDescription(sender: TagSettingsAlertConfigCell) {
+    func didSelectSetCustomDescription(sender: LegacyTagSettingsAlertConfigCell) {
         var description: String?
         switch sender {
         case temperatureAlertCell:
@@ -5156,7 +5156,7 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
     }
 
     // swiftlint:disable:next cyclomatic_complexity
-    func didSelectAlertLimitDescription(sender: TagSettingsAlertConfigCell) {
+    func didSelectAlertLimitDescription(sender: LegacyTagSettingsAlertConfigCell) {
         switch sender {
         case temperatureAlertCell:
             showTemperatureAlertSetPopup(sender: sender)
@@ -5194,7 +5194,7 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    func didChangeAlertState(sender: TagSettingsAlertConfigCell, didToggle isOn: Bool) {
+    func didChangeAlertState(sender: LegacyTagSettingsAlertConfigCell, didToggle isOn: Bool) {
         switch sender {
         case temperatureAlertCell:
             output.viewDidChangeAlertState(
@@ -5305,7 +5305,7 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func didSetAlertRange(
-        sender: TagSettingsAlertConfigCell,
+        sender: LegacyTagSettingsAlertConfigCell,
         minValue: CGFloat,
         maxValue: CGFloat
     ) {
@@ -5527,7 +5527,7 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func didChangeAlertRange(
-        sender: TagSettingsAlertConfigCell,
+        sender: LegacyTagSettingsAlertConfigCell,
         didSlideTo minValue: CGFloat,
         maxValue: CGFloat
     ) {
@@ -5624,8 +5624,8 @@ extension TagSettingsViewController: TagSettingsAlertConfigCellDelegate {
 
 // MARK: - SET CUSTOM ALERT RANGE POPUP
 
-extension TagSettingsViewController {
-    private func showTemperatureAlertSetPopup(sender: TagSettingsAlertConfigCell) {
+extension LegacyTagSettingsViewController {
+    private func showTemperatureAlertSetPopup(sender: LegacyTagSettingsAlertConfigCell) {
         let temperatureUnit = viewModel?.temperatureUnit.value ?? .celsius
         let titleFormat = RuuviLocalization.TagSettings.Alert.SetTemperature.title
         let title = titleFormat + " (\(temperatureUnit.symbol))"
@@ -5642,7 +5642,7 @@ extension TagSettingsViewController {
         )
     }
 
-    private func showHumidityAlertSetDialog(sender: TagSettingsAlertConfigCell) {
+    private func showHumidityAlertSetDialog(sender: LegacyTagSettingsAlertConfigCell) {
         let symbol = HumidityUnit.percent.symbol
         let titleFormat = RuuviLocalization.TagSettings.Alert.SetHumidity.title
         let title = titleFormat + " (\(symbol))"
@@ -5659,7 +5659,7 @@ extension TagSettingsViewController {
         )
     }
 
-    private func showPressureAlertSetDialog(sender: TagSettingsAlertConfigCell) {
+    private func showPressureAlertSetDialog(sender: LegacyTagSettingsAlertConfigCell) {
         let pressureUnit = viewModel?.pressureUnit.value ?? .hectopascals
         let titleFormat = RuuviLocalization.TagSettings.Alert.SetPressure.title
         let title = titleFormat + " (\(pressureUnit.symbol))"
@@ -5676,7 +5676,7 @@ extension TagSettingsViewController {
         )
     }
 
-    private func showRSSIAlertSetDialog(sender: TagSettingsAlertConfigCell) {
+    private func showRSSIAlertSetDialog(sender: LegacyTagSettingsAlertConfigCell) {
         let symbol = RuuviLocalization.dBm
         let titleFormat = RuuviLocalization.TagSettings.Alert.SetRSSI.title
         let title = titleFormat + " (\(symbol))"
@@ -5693,7 +5693,7 @@ extension TagSettingsViewController {
         )
     }
 
-    private func showAQIAlertSetDialog(sender: TagSettingsAlertConfigCell) {
+    private func showAQIAlertSetDialog(sender: LegacyTagSettingsAlertConfigCell) {
         let title = RuuviLocalization.aqi
         let (minimumRange, maximumRange) = aqiAlertRange()
         let (minimumValue, maximumValue) = aqiValue()
@@ -5707,7 +5707,7 @@ extension TagSettingsViewController {
         )
     }
 
-    private func showCo2AlertSetDialog(sender: TagSettingsAlertConfigCell) {
+    private func showCo2AlertSetDialog(sender: LegacyTagSettingsAlertConfigCell) {
         let title = RuuviLocalization.co2WithUnit(
             RuuviLocalization.unitCo2
         )
@@ -5724,7 +5724,7 @@ extension TagSettingsViewController {
         )
     }
 
-    private func showPM1AlertSetDialog(sender: TagSettingsAlertConfigCell) {
+    private func showPM1AlertSetDialog(sender: LegacyTagSettingsAlertConfigCell) {
         let title = RuuviLocalization.pm10WithUnit(
             RuuviLocalization.unitPm10
         )
@@ -5741,7 +5741,7 @@ extension TagSettingsViewController {
         )
     }
 
-    private func showPM25AlertSetDialog(sender: TagSettingsAlertConfigCell) {
+    private func showPM25AlertSetDialog(sender: LegacyTagSettingsAlertConfigCell) {
         let title = RuuviLocalization.pm25WithUnit(
             RuuviLocalization.unitPm25
         )
@@ -5758,7 +5758,7 @@ extension TagSettingsViewController {
         )
     }
 
-    private func showPM4AlertSetDialog(sender: TagSettingsAlertConfigCell) {
+    private func showPM4AlertSetDialog(sender: LegacyTagSettingsAlertConfigCell) {
         let title = RuuviLocalization.pm40WithUnit(
             RuuviLocalization.unitPm40
         )
@@ -5775,7 +5775,7 @@ extension TagSettingsViewController {
         )
     }
 
-    private func showPM10AlertSetDialog(sender: TagSettingsAlertConfigCell) {
+    private func showPM10AlertSetDialog(sender: LegacyTagSettingsAlertConfigCell) {
         let title = RuuviLocalization.pm100WithUnit(
             RuuviLocalization.unitPm100
         )
@@ -5792,7 +5792,7 @@ extension TagSettingsViewController {
         )
     }
 
-    private func showVOCAlertSetDialog(sender: TagSettingsAlertConfigCell) {
+    private func showVOCAlertSetDialog(sender: LegacyTagSettingsAlertConfigCell) {
         let title = RuuviLocalization.vocWithUnit(
             RuuviLocalization.unitVoc
         )
@@ -5809,7 +5809,7 @@ extension TagSettingsViewController {
         )
     }
 
-    private func showNOXAlertSetDialog(sender: TagSettingsAlertConfigCell) {
+    private func showNOXAlertSetDialog(sender: LegacyTagSettingsAlertConfigCell) {
         let title = RuuviLocalization.noxWithUnit(
             RuuviLocalization.unitNox
         )
@@ -5826,7 +5826,7 @@ extension TagSettingsViewController {
         )
     }
 
-    private func showSoundAlertSetDialog(sender: TagSettingsAlertConfigCell) {
+    private func showSoundAlertSetDialog(sender: LegacyTagSettingsAlertConfigCell) {
         let title = RuuviLocalization.soundInstantWithUnit(
             RuuviLocalization.unitSound
         )
@@ -5843,7 +5843,7 @@ extension TagSettingsViewController {
         )
     }
 
-    private func showLuminosityAlertSetDialog(sender: TagSettingsAlertConfigCell) {
+    private func showLuminosityAlertSetDialog(sender: LegacyTagSettingsAlertConfigCell) {
         let title = RuuviLocalization.luminosityWithUnit(
             RuuviLocalization.unitLuminosity
         )
@@ -5860,7 +5860,7 @@ extension TagSettingsViewController {
         )
     }
 
-    private func showCloudConnectionAlertSetDialog(sender: TagSettingsAlertConfigCell) {
+    private func showCloudConnectionAlertSetDialog(sender: LegacyTagSettingsAlertConfigCell) {
         let title = RuuviLocalization.alertCloudConnectionDialogTitle
         let message = RuuviLocalization.alertCloudConnectionDialogDescription
 
@@ -6070,7 +6070,7 @@ extension TagSettingsViewController {
 
 // MARK: - OFFSET CORRECTION SECTION
 
-extension TagSettingsViewController {
+extension LegacyTagSettingsViewController {
     // swiftlint:disable:next function_body_length
     private func bindOffsetCorrectionSection() {
         guard let viewModel
@@ -6142,14 +6142,14 @@ extension TagSettingsViewController {
         }
     }
 
-    private func configureOffsetCorrectionSection() -> TagSettingsSection {
-        let offsetCorrectionItems: [TagSettingsItem] = [
+    private func configureOffsetCorrectionSection() -> LegacyTagSettingsSection {
+        let offsetCorrectionItems: [LegacyTagSettingsItem] = [
             offsetCorrectionTemperatureItem(),
             offsetCorrectionHumidityItem(),
             offsetCorrectionPressureItem(),
         ]
 
-        let section = TagSettingsSection(
+        let section = LegacyTagSettingsSection(
             identifier: .offsetCorrection,
             title: RuuviLocalization.TagSettings.SectionHeader.OffsetCorrection.title.capitalized,
             cells: offsetCorrectionItems,
@@ -6161,10 +6161,10 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func offsetCorrectionTemperatureItem() -> TagSettingsItem {
+    private func offsetCorrectionTemperatureItem() -> LegacyTagSettingsItem {
         let tempOffset = viewModel?.temperatureOffsetCorrection.value ?? 0
         let hasMeasurement = hasMeasurement()
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             identifier: .offsetTemperature,
             createdCell: { [weak self] in
                 self?.tempOffsetCorrectionCell?.configure(
@@ -6184,10 +6184,10 @@ extension TagSettingsViewController {
         return settingItem
     }
 
-    private func offsetCorrectionHumidityItem() -> TagSettingsItem {
+    private func offsetCorrectionHumidityItem() -> LegacyTagSettingsItem {
         let humOffset = viewModel?.humidityOffsetCorrection.value ?? 0
         let disableHumidity = !hasMeasurement() || !showHumidityOffsetCorrection()
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             identifier: .offsetHumidity,
             createdCell: { [weak self] in
                 self?
@@ -6212,10 +6212,10 @@ extension TagSettingsViewController {
         return settingItem
     }
 
-    private func offsetCorrectionPressureItem() -> TagSettingsItem {
+    private func offsetCorrectionPressureItem() -> LegacyTagSettingsItem {
         let pressureOffset = viewModel?.pressureOffsetCorrection.value ?? 0
         let disablePressure = !hasMeasurement() || !showPressureOffsetCorrection()
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             identifier: .offsetPressure,
             createdCell: { [weak self] in
                 self?
@@ -6272,7 +6272,7 @@ extension TagSettingsViewController {
 
 // MARK: - MORE INFO SECTION
 
-extension TagSettingsViewController {
+extension LegacyTagSettingsViewController {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func bindMoreInfoSection() {
         guard let viewModel
@@ -6379,10 +6379,10 @@ extension TagSettingsViewController {
         }
     }
 
-    private func configureMoreInfoSection() -> TagSettingsSection {
+    private func configureMoreInfoSection() -> LegacyTagSettingsSection {
 
         // Common
-        var moreInfoCells: [TagSettingsItem] = [
+        var moreInfoCells: [LegacyTagSettingsItem] = [
             moreInfoMacAddressItem(),
             moreInfoDataFormatItem(),
             moreInfoDataSourceItem(),
@@ -6415,7 +6415,7 @@ extension TagSettingsViewController {
             moreInfoMeasurementSequenceItem(),
         ]
 
-        let section = TagSettingsSection(
+        let section = LegacyTagSettingsSection(
             identifier: .moreInfo,
             title: RuuviLocalization.TagSettings.Label.MoreInfo.text.capitalized,
             cells: moreInfoCells,
@@ -6427,8 +6427,8 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func moreInfoMacAddressItem() -> TagSettingsItem {
-        let settingItem = TagSettingsItem(
+    private func moreInfoMacAddressItem() -> LegacyTagSettingsItem {
+        let settingItem = LegacyTagSettingsItem(
             createdCell: { [weak self] in
                 self?.moreInfoMacAddressCell?.configure(
                     title: RuuviLocalization.TagSettings.MacAddressTitleLabel.text,
@@ -6443,8 +6443,8 @@ extension TagSettingsViewController {
         return settingItem
     }
 
-    private func moreInfoDataFormatItem() -> TagSettingsItem {
-        let settingItem = TagSettingsItem(
+    private func moreInfoDataFormatItem() -> LegacyTagSettingsItem {
+        let settingItem = LegacyTagSettingsItem(
             createdCell: { [weak self] in
                 self?.moreInfoDataFormatCell?.configure(
                     title: RuuviLocalization.TagSettings.DataFormatTitleLabel.text,
@@ -6458,8 +6458,8 @@ extension TagSettingsViewController {
         return settingItem
     }
 
-    private func moreInfoDataSourceItem() -> TagSettingsItem {
-        let settingItem = TagSettingsItem(
+    private func moreInfoDataSourceItem() -> LegacyTagSettingsItem {
+        let settingItem = LegacyTagSettingsItem(
             createdCell: { [weak self] in
                 self?.moreInfoDataSourceCell?.configure(
                     title: RuuviLocalization.TagSettings.DataSourceTitleLabel.text,
@@ -6473,9 +6473,9 @@ extension TagSettingsViewController {
         return settingItem
     }
 
-    private func moreInfoBatteryVoltageItem() -> TagSettingsItem {
+    private func moreInfoBatteryVoltageItem() -> LegacyTagSettingsItem {
         let (status, color) = formattedBatteryStatus(from: viewModel)
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: { [weak self] in
                 self?.moreInfoBatteryVoltageCell?.configure(
                     title: RuuviLocalization.batteryVoltage,
@@ -6491,8 +6491,8 @@ extension TagSettingsViewController {
         return settingItem
     }
 
-    private func moreInfoAccXItem() -> TagSettingsItem {
-        let settingItem = TagSettingsItem(
+    private func moreInfoAccXItem() -> LegacyTagSettingsItem {
+        let settingItem = LegacyTagSettingsItem(
             createdCell: { [weak self] in
                 self?.moreInfoAccXCell?.configure(
                     title: RuuviLocalization.TagSettings.AccelerationXTitleLabel.text,
@@ -6506,8 +6506,8 @@ extension TagSettingsViewController {
         return settingItem
     }
 
-    private func moreInfoAccYItem() -> TagSettingsItem {
-        let settingItem = TagSettingsItem(
+    private func moreInfoAccYItem() -> LegacyTagSettingsItem {
+        let settingItem = LegacyTagSettingsItem(
             createdCell: { [weak self] in
                 self?.moreInfoAccYCell?.configure(
                     title: RuuviLocalization.TagSettings.AccelerationYTitleLabel.text,
@@ -6521,8 +6521,8 @@ extension TagSettingsViewController {
         return settingItem
     }
 
-    private func moreInfoAccZItem() -> TagSettingsItem {
-        let settingItem = TagSettingsItem(
+    private func moreInfoAccZItem() -> LegacyTagSettingsItem {
+        let settingItem = LegacyTagSettingsItem(
             createdCell: { [weak self] in
                 self?.moreInfoAccZCell?.configure(
                     title: RuuviLocalization.TagSettings.AccelerationZTitleLabel.text,
@@ -6536,8 +6536,8 @@ extension TagSettingsViewController {
         return settingItem
     }
 
-    private func moreInfoTxPowerItem() -> TagSettingsItem {
-        let settingItem = TagSettingsItem(
+    private func moreInfoTxPowerItem() -> LegacyTagSettingsItem {
+        let settingItem = LegacyTagSettingsItem(
             createdCell: { [weak self] in
                 self?.moreInfoTxPowerCell?.configure(
                     title: RuuviLocalization.TagSettings.TxPowerTitleLabel.text,
@@ -6553,7 +6553,7 @@ extension TagSettingsViewController {
         return settingItem
     }
 
-    private func moreInfoRSSIItem() -> TagSettingsItem {
+    private func moreInfoRSSIItem() -> LegacyTagSettingsItem {
         var rssi: String = ""
         if let signal = viewModel?.rssi.value?.stringValue {
           let symbol = RuuviLocalization.dBm
@@ -6561,7 +6561,7 @@ extension TagSettingsViewController {
         } else {
           rssi = latestValue(for: .signal(lower: 0, upper: 0))
         }
-        let settingItem = TagSettingsItem(
+        let settingItem = LegacyTagSettingsItem(
             createdCell: { [weak self] in
                 self?.moreInfoRSSICell?.configure(
                     title: RuuviLocalization.signalStrengthWithUnit,
@@ -6574,8 +6574,8 @@ extension TagSettingsViewController {
         return settingItem
     }
 
-    private func moreInfoMeasurementSequenceItem() -> TagSettingsItem {
-        let settingItem = TagSettingsItem(
+    private func moreInfoMeasurementSequenceItem() -> LegacyTagSettingsItem {
+        let settingItem = LegacyTagSettingsItem(
             createdCell: { [weak self] in
                 self?.moreInfoMSNCell?.configure(
                     title: RuuviLocalization.TagSettings.MsnTitleLabel.text,
@@ -6623,7 +6623,7 @@ extension TagSettingsViewController {
     }
 
     private func formattedBatteryStatus(
-        from viewModel: TagSettingsViewModel?
+        from viewModel: LegacyTagSettingsViewModel?
     ) -> (
         status: String?,
         color: UIColor?
@@ -6677,7 +6677,7 @@ extension TagSettingsViewController {
 
 // MARK: - FIRMWARE SECTION
 
-extension TagSettingsViewController {
+extension LegacyTagSettingsViewController {
     private func bindFirmwareSection() {
         guard let viewModel
         else {
@@ -6686,14 +6686,13 @@ extension TagSettingsViewController {
 
         if let firmwareVersionCell {
             firmwareVersionCell.bind(viewModel.firmwareVersion) { cell, value in
-                let displayValue = value?.ruuviFirmwareDisplayValue ?? value
-                cell.configure(value: displayValue ?? RuuviLocalization.na)
+                cell.configure(value: value ?? RuuviLocalization.na)
             }
         }
     }
 
-    private func configureFirmwareSection() -> TagSettingsSection {
-        let section = TagSettingsSection(
+    private func configureFirmwareSection() -> LegacyTagSettingsSection {
+        let section = LegacyTagSettingsSection(
             identifier: .firmware,
             title: RuuviLocalization.TagSettings.SectionHeader.Firmware.title.capitalized,
             cells: [
@@ -6708,14 +6707,12 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func tagFirmwareVersionItem() -> TagSettingsItem {
-        let settingItem = TagSettingsItem(
+    private func tagFirmwareVersionItem() -> LegacyTagSettingsItem {
+        let settingItem = LegacyTagSettingsItem(
             createdCell: { [weak self] in
-                let rawFirmware = self?.viewModel?.firmwareVersion.value ?? nil
-                let displayFirmware = rawFirmware?.ruuviFirmwareDisplayValue ?? rawFirmware ?? RuuviLocalization.na
                 self?.firmwareVersionCell?.configure(
                     title: RuuviLocalization.TagSettings.Firmware.currentVersion,
-                    value: displayFirmware
+                    value: self?.viewModel?.firmwareVersion.value ?? RuuviLocalization.na
                 )
                 self?.firmwareVersionCell?.setAccessory(type: .none)
                 self?.firmwareVersionCell?.selectionStyle = .none
@@ -6726,9 +6723,9 @@ extension TagSettingsViewController {
         return settingItem
     }
 
-    private func tagFirmwareUpdateItem() -> TagSettingsItem {
-        let cell = TagSettingsBasicCell(style: .value1, reuseIdentifier: Self.ReuseIdentifier)
-        let settingItem = TagSettingsItem(
+    private func tagFirmwareUpdateItem() -> LegacyTagSettingsItem {
+        let cell = LegacyTagSettingsBasicCell(style: .value1, reuseIdentifier: Self.ReuseIdentifier)
+        let settingItem = LegacyTagSettingsItem(
             createdCell: {
                 cell.configure(
                     title: RuuviLocalization.TagSettings.Firmware.updateFirmware,
@@ -6748,9 +6745,9 @@ extension TagSettingsViewController {
 
 // MARK: - REMOVE SECTION
 
-extension TagSettingsViewController {
-    private func configureRemoveSection() -> TagSettingsSection {
-        let section = TagSettingsSection(
+extension LegacyTagSettingsViewController {
+    private func configureRemoveSection() -> LegacyTagSettingsSection {
+        let section = LegacyTagSettingsSection(
             identifier: .remove,
             title: RuuviLocalization.remove.capitalized,
             cells: [
@@ -6764,9 +6761,9 @@ extension TagSettingsViewController {
         return section
     }
 
-    private func tagRemoveItem() -> TagSettingsItem {
-        let cell = TagSettingsBasicCell(style: .value1, reuseIdentifier: Self.ReuseIdentifier)
-        let settingItem = TagSettingsItem(
+    private func tagRemoveItem() -> LegacyTagSettingsItem {
+        let cell = LegacyTagSettingsBasicCell(style: .value1, reuseIdentifier: Self.ReuseIdentifier)
+        let settingItem = LegacyTagSettingsItem(
             createdCell: {
                 cell.configure(title: RuuviLocalization.TagSettings.RemoveThisSensor.title, value: nil)
                 cell.setAccessory(type: .chevron)
@@ -6783,7 +6780,7 @@ extension TagSettingsViewController {
 
 // MARK: - TableView delegate and datasource
 
-extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource {
+extension LegacyTagSettingsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(
         _: UITableView,
         numberOfRowsInSection section: Int
@@ -6836,7 +6833,7 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
             case .general:
                 return nil
             default:
-                let view = TagSettingsSimpleSectionHeader()
+                let view = LegacyTagSettingsSimpleSectionHeader()
                 view.setTitle(
                     with: sectionItem.title,
                     section: section
@@ -7055,9 +7052,9 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
                         show: false)
                 }
                 return moreInfoSectionHeaderView ??
-                    TagSettingsExpandableSectionHeader() // Should never be here
+                    LegacyTagSettingsExpandableSectionHeader() // Should never be here
             default:
-                let view = TagSettingsExpandableSectionHeader()
+                let view = LegacyTagSettingsExpandableSectionHeader()
                 view.delegate = self
                 view.setTitle(
                     with: sectionItem.title,
@@ -7076,13 +7073,13 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
 
     // swiftlint:disable:next function_parameter_count
     private func alertSectionHeaderView(
-        from header: TagSettingsExpandableSectionHeader?,
-        sectionItem: TagSettingsSection,
+        from header: LegacyTagSettingsExpandableSectionHeader?,
+        sectionItem: LegacyTagSettingsSection,
         mutedTill: Date?,
         isAlertOn: Bool,
         alertState: AlertState?,
         section: Int
-    ) -> TagSettingsExpandableSectionHeader {
+    ) -> LegacyTagSettingsExpandableSectionHeader {
         if let header {
             header.delegate = self
             header.setTitle(
@@ -7102,7 +7099,7 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
             return header
         } else {
             // Should never be here
-            return TagSettingsExpandableSectionHeader()
+            return LegacyTagSettingsExpandableSectionHeader()
         }
     }
 }
@@ -7112,9 +7109,9 @@ extension TagSettingsViewController: UITableViewDelegate, UITableViewDataSource 
 // MARK: - Section Header Delegate
 
 //
-extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate {
+extension LegacyTagSettingsViewController: LegacyTagSettingsExpandableSectionHeaderDelegate {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    func toggleSection(_ header: TagSettingsExpandableSectionHeader, section: Int) {
+    func toggleSection(_ header: LegacyTagSettingsExpandableSectionHeader, section: Int) {
         let currentSection = tableViewSections[section]
         let collapsed = !currentSection.collapsed
         tableViewSections[section].collapsed = collapsed
@@ -7524,12 +7521,12 @@ extension TagSettingsViewController: TagSettingsExpandableSectionHeaderDelegate 
         }
     }
 
-    func didTapSectionMoreInfo(headerView _: TagSettingsExpandableSectionHeader) {
+    func didTapSectionMoreInfo(headerView _: LegacyTagSettingsExpandableSectionHeader) {
         output.viewDidTapOnNoValuesView()
     }
 }
 
-private extension TagSettingsViewController {
+private extension LegacyTagSettingsViewController {
 
     func setUpUI() {
         title = RuuviLocalization.TagSettings.NavigationItem.title
@@ -7582,13 +7579,13 @@ private extension TagSettingsViewController {
     }
 }
 
-private extension TagSettingsViewController {
+private extension LegacyTagSettingsViewController {
     @objc func backButtonDidTap() {
         output.viewDidAskToDismiss()
     }
 }
 
-extension TagSettingsViewController: TagSettingsBackgroundSelectionViewDelegate {
+extension LegacyTagSettingsViewController: LegacyTagSettingsBackgroundSelectionViewDelegate {
     func didTapChangeBackground() {
         output.viewDidTriggerChangeBackground()
     }
@@ -7596,7 +7593,7 @@ extension TagSettingsViewController: TagSettingsBackgroundSelectionViewDelegate 
 
 // MARK: - Sensor name rename dialog
 
-extension TagSettingsViewController {
+extension LegacyTagSettingsViewController {
     private func showSensorNameRenameDialog(
         name: String?,
         sortingType: DashboardSortingType
@@ -7636,10 +7633,10 @@ extension TagSettingsViewController {
 
 // MARK: - Sensor alert custom description dialog
 
-extension TagSettingsViewController {
+extension LegacyTagSettingsViewController {
     private func showSensorCustomAlertDescriptionDialog(
         description: String?,
-        sender: TagSettingsAlertConfigCell
+        sender: LegacyTagSettingsAlertConfigCell
     ) {
         let alert = UIAlertController(
             title: RuuviLocalization.TagSettings.Alert.CustomDescription.title,
@@ -7665,7 +7662,7 @@ extension TagSettingsViewController {
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func notify(sender: TagSettingsAlertConfigCell, inputText: String?) {
+    private func notify(sender: LegacyTagSettingsAlertConfigCell, inputText: String?) {
         switch sender {
         case temperatureAlertCell:
             output.viewDidChangeAlertDescription(
@@ -7760,7 +7757,7 @@ extension TagSettingsViewController {
 
 // MARK: - Sensor alert range settings
 
-extension TagSettingsViewController {
+extension LegacyTagSettingsViewController {
     // swiftlint:disable:next function_parameter_count function_body_length
     private func showSensorCustomAlertRangeDialog(
         title: String?,
@@ -7768,7 +7765,7 @@ extension TagSettingsViewController {
         maximumBound: Double,
         currentLowerBound: Double?,
         currentUpperBound: Double?,
-        sender: TagSettingsAlertConfigCell
+        sender: LegacyTagSettingsAlertConfigCell
     ) {
         let alert = UIAlertController(
             title: title,
@@ -7860,7 +7857,7 @@ extension TagSettingsViewController {
 
 // MARK: - Cloud connection alert delay settings
 
-extension TagSettingsViewController {
+extension LegacyTagSettingsViewController {
     // swiftlint:disable:next function_parameter_count
     private func showSensorCustomAlertRangeDialog(
         title: String?,
@@ -7868,7 +7865,7 @@ extension TagSettingsViewController {
         minimum: Int,
         default _: Int,
         current: Int?,
-        sender _: TagSettingsAlertConfigCell
+        sender _: LegacyTagSettingsAlertConfigCell
     ) {
         let alert = UIAlertController(
             title: title,
@@ -7906,7 +7903,7 @@ extension TagSettingsViewController {
     }
 }
 
-extension TagSettingsViewController: TagSettingsViewInput {
+extension LegacyTagSettingsViewController: LegacyTagSettingsViewInput {
     func localize() {
         // No op.
     }
@@ -8009,7 +8006,7 @@ extension TagSettingsViewController: TagSettingsViewInput {
 
 // MARK: - UITextFieldDelegate
 
-extension TagSettingsViewController: UITextFieldDelegate {
+extension LegacyTagSettingsViewController: UITextFieldDelegate {
     // swiftlint:disable:next cyclomatic_complexity
     func textField(
         _ textField: UITextField,

@@ -4,7 +4,7 @@ import UIKit
 /// Leading title label and trailing aligned value label
 /// with an optional label in middle for any additional value.
 /// This cell is used for more info section.
-class TagSettingsPlainCell: UITableViewCell {
+class LegacyTagSettingsPlainCell: UITableViewCell {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor.textColor.color

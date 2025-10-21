@@ -99,9 +99,9 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         ruuviTag: RuuviTagSensor,
         latestMeasurement: RuuviTagSensorRecord?,
         sensorSettings: SensorSettings?,
-        output: TagSettingsModuleOutput
+        output: LegacyTagSettingsModuleOutput
     ) {
-        let factory: TagSettingsModuleFactory = TagSettingsModuleFactoryImpl()
+        let factory: LegacyTagSettingsModuleFactory = LegacyTagSettingsModuleFactoryImpl()
         let module = factory.create()
         transitionHandler
             .navigationController?
@@ -109,7 +109,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
                 module,
                 animated: true
             )
-        if let presenter = module.output as? TagSettingsModuleInput {
+        if let presenter = module.output as? LegacyTagSettingsModuleInput {
             presenter.configure(output: output)
             presenter.configure(
                 ruuviTag: ruuviTag,

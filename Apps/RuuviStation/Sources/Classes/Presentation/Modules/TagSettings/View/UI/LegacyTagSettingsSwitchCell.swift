@@ -1,12 +1,12 @@
 import RuuviLocalization
 import UIKit
 
-protocol TagSettingsSwitchCellDelegate: NSObjectProtocol {
-    func didToggleSwitch(isOn: Bool, sender: TagSettingsSwitchCell)
+protocol LegacyTagSettingsSwitchCellDelegate: NSObjectProtocol {
+    func didToggleSwitch(isOn: Bool, sender: LegacyTagSettingsSwitchCell)
 }
 
-class TagSettingsSwitchCell: UITableViewCell {
-    weak var delegate: TagSettingsSwitchCellDelegate?
+class LegacyTagSettingsSwitchCell: UITableViewCell {
+    weak var delegate: LegacyTagSettingsSwitchCellDelegate?
 
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -117,7 +117,7 @@ class TagSettingsSwitchCell: UITableViewCell {
 }
 
 // MARK: - RuuviSwitchViewDelegate
-extension TagSettingsSwitchCell: RuuviSwitchViewDelegate {
+extension LegacyTagSettingsSwitchCell: RuuviSwitchViewDelegate {
     func didChangeSwitchState(sender: RuuviSwitchView, didToggle isOn: Bool) {
         delegate?.didToggleSwitch(isOn: isOn, sender: self)
     }
@@ -125,7 +125,7 @@ extension TagSettingsSwitchCell: RuuviSwitchViewDelegate {
 
 // MARK: - SETTERS
 
-extension TagSettingsSwitchCell {
+extension LegacyTagSettingsSwitchCell {
     func configure(title: String?) {
         titleLabel.text = title
     }

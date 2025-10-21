@@ -1,8 +1,8 @@
 import Foundation
 import RuuviOntology
 
-protocol TagSettingsViewInput: ViewInput {
-    var viewModel: TagSettingsViewModel? { get set }
+protocol LegacyTagSettingsViewInput: ViewInput {
+    var viewModel: LegacyTagSettingsViewModel? { get set }
     var dashboardSortingType: DashboardSortingType? { get set }
     var maxShareCount: Int { get set }
 

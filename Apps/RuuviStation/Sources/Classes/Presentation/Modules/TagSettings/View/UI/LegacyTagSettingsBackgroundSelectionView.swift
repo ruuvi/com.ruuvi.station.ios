@@ -2,12 +2,12 @@ import RuuviLocalization
 import UIKit
 
 // swiftlint:disable:next type_name
-protocol TagSettingsBackgroundSelectionViewDelegate: NSObjectProtocol {
+protocol LegacyTagSettingsBackgroundSelectionViewDelegate: NSObjectProtocol {
     func didTapChangeBackground()
 }
 
-class TagSettingsBackgroundSelectionView: UIView {
-    weak var delegate: TagSettingsBackgroundSelectionViewDelegate?
+class LegacyTagSettingsBackgroundSelectionView: UIView {
+    weak var delegate: LegacyTagSettingsBackgroundSelectionViewDelegate?
 
     private lazy var backgroundView = CardsBackgroundView()
 
@@ -32,7 +32,7 @@ class TagSettingsBackgroundSelectionView: UIView {
     }
 }
 
-extension TagSettingsBackgroundSelectionView {
+extension LegacyTagSettingsBackgroundSelectionView {
     func setBackgroundImage(with image: UIImage?) {
         backgroundView.setBackgroundImage(
             with: image,

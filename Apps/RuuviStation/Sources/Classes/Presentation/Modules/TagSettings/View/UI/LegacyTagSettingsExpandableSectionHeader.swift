@@ -3,16 +3,16 @@ import RuuviOntology
 import UIKit
 
 // swiftlint:disable:next type_name
-protocol TagSettingsExpandableSectionHeaderDelegate: NSObjectProtocol {
+protocol LegacyTagSettingsExpandableSectionHeaderDelegate: NSObjectProtocol {
     func toggleSection(
-        _ header: TagSettingsExpandableSectionHeader,
+        _ header: LegacyTagSettingsExpandableSectionHeader,
         section: Int
     )
-    func didTapSectionMoreInfo(headerView: TagSettingsExpandableSectionHeader)
+    func didTapSectionMoreInfo(headerView: LegacyTagSettingsExpandableSectionHeader)
 }
 
-class TagSettingsExpandableSectionHeader: UIView {
-    weak var delegate: TagSettingsExpandableSectionHeaderDelegate?
+class LegacyTagSettingsExpandableSectionHeader: UIView {
+    weak var delegate: LegacyTagSettingsExpandableSectionHeaderDelegate?
     private var section: Int = 0
 
     private lazy var titleLabel: UILabel = {
@@ -169,7 +169,7 @@ class TagSettingsExpandableSectionHeader: UIView {
     }
 
     @objc private func tapHeader(_ gestureRecognizer: UITapGestureRecognizer) {
-        guard let cell = gestureRecognizer.view as? TagSettingsExpandableSectionHeader
+        guard let cell = gestureRecognizer.view as? LegacyTagSettingsExpandableSectionHeader
         else {
             return
         }
@@ -182,7 +182,7 @@ class TagSettingsExpandableSectionHeader: UIView {
     }
 }
 
-extension TagSettingsExpandableSectionHeader {
+extension LegacyTagSettingsExpandableSectionHeader {
     func setTitle(with string: String?) {
         titleLabel.text = string
     }

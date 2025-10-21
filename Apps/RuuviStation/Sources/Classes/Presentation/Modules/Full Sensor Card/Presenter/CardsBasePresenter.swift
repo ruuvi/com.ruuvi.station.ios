@@ -377,9 +377,9 @@ extension CardsBasePresenter: CardsGraphPresenterOutput {
 }
 
 // MARK: TagSettingsModuleOutput
-extension CardsBasePresenter: TagSettingsModuleOutput {
+extension CardsBasePresenter: LegacyTagSettingsModuleOutput {
     func tagSettingsDidDeleteTag(
-        module: TagSettingsModuleInput,
+        module: LegacyTagSettingsModuleInput,
         ruuviTag: RuuviTagSensor
     ) {
         module.dismiss(completion: {
@@ -388,7 +388,7 @@ extension CardsBasePresenter: TagSettingsModuleOutput {
         })
     }
 
-    func tagSettingsDidDismiss(module: any TagSettingsModuleInput) {
+    func tagSettingsDidDismiss(module: any LegacyTagSettingsModuleInput) {
         module.dismiss(completion: nil)
     }
 }

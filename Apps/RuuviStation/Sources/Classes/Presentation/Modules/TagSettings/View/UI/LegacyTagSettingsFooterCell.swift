@@ -1,7 +1,7 @@
 import UIKit
 import RuuviLocalization
 
-class TagSettingsFooterCell: UITableViewCell {
+class LegacyTagSettingsFooterCell: UITableViewCell {
     private lazy var noteLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .left

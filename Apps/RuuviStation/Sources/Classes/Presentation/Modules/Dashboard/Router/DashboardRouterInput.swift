@@ -24,7 +24,7 @@ protocol DashboardRouterInput {
         ruuviTag: RuuviTagSensor,
         latestMeasurement: RuuviTagSensorRecord?,
         sensorSettings: SensorSettings?,
-        output: TagSettingsModuleOutput
+        output: LegacyTagSettingsModuleOutput
     )
     func openUpdateFirmware(ruuviTag: RuuviTagSensor)
     func openBackgroundSelectionView(ruuviTag: RuuviTagSensor)

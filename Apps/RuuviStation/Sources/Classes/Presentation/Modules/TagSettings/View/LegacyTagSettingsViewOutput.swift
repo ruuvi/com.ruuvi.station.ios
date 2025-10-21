@@ -1,7 +1,7 @@
 import RuuviOntology
 import UIKit
 
-protocol TagSettingsViewOutput {
+protocol LegacyTagSettingsViewOutput {
     func viewDidLoad()
     func viewWillAppear()
     func viewDidAskToDismiss()

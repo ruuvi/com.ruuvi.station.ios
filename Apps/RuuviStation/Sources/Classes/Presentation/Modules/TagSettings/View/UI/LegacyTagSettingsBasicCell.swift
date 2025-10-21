@@ -10,7 +10,7 @@ enum TagSettingsBasicAccessory {
 
 /// Leading title label and trailing aligned value label
 /// with an optional disclosure icon.
-class TagSettingsBasicCell: UITableViewCell {
+class LegacyTagSettingsBasicCell: UITableViewCell {
     lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor.textColor.color

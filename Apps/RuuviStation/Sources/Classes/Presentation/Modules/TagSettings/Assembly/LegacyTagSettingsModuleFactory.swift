@@ -13,19 +13,19 @@ import RuuviStorage
 import RuuviUser
 import UIKit
 
-protocol TagSettingsModuleFactory {
-    func create() -> TagSettingsViewController
+protocol LegacyTagSettingsModuleFactory {
+    func create() -> LegacyTagSettingsViewController
 }
 
-final class TagSettingsModuleFactoryImpl: TagSettingsModuleFactory {
-    func create() -> TagSettingsViewController {
+final class LegacyTagSettingsModuleFactoryImpl: LegacyTagSettingsModuleFactory {
+    func create() -> LegacyTagSettingsViewController {
         let r = AppAssembly.shared.assembler.resolver
 
-        let view = TagSettingsViewController()
+        let view = LegacyTagSettingsViewController()
         let router = TagSettingsRouter()
         router.transitionHandler = view
 
-        let presenter = TagSettingsPresenter()
+        let presenter = LegacyTagSettingsPresenter()
         presenter.view = view
         presenter.router = router
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)

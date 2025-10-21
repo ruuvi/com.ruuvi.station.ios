@@ -7,7 +7,7 @@ protocol CardsRouterInput {
         ruuviTag: RuuviTagSensor,
         latestMeasurement: RuuviTagSensorRecord?,
         sensorSettings: SensorSettings?,
-        output: TagSettingsModuleOutput
+        output: LegacyTagSettingsModuleOutput
     )
     func dismiss()
 }

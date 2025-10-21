@@ -3,31 +3,31 @@ import RangeSeekSlider
 import RuuviLocalization
 import UIKit
 
-protocol TagSettingsAlertConfigCellDelegate: AnyObject {
-    func didSelectSetCustomDescription(sender: TagSettingsAlertConfigCell)
-    func didSelectAlertLimitDescription(sender: TagSettingsAlertConfigCell)
+protocol LegacyTagSettingsAlertConfigCellDelegate: AnyObject {
+    func didSelectSetCustomDescription(sender: LegacyTagSettingsAlertConfigCell)
+    func didSelectAlertLimitDescription(sender: LegacyTagSettingsAlertConfigCell)
     func didChangeAlertState(
-        sender: TagSettingsAlertConfigCell,
+        sender: LegacyTagSettingsAlertConfigCell,
         didToggle isOn: Bool
     )
     // When slider is changing we would like to update the labels.
     // But, we will not make endpoint calls.
     func didChangeAlertRange(
-        sender: TagSettingsAlertConfigCell,
+        sender: LegacyTagSettingsAlertConfigCell,
         didSlideTo minValue: CGFloat,
         maxValue: CGFloat
     )
     // We will make endpoind calls for this method only.
     func didSetAlertRange(
-        sender: TagSettingsAlertConfigCell,
+        sender: LegacyTagSettingsAlertConfigCell,
         minValue: CGFloat,
         maxValue: CGFloat
     )
 }
 
-class TagSettingsAlertConfigCell: UITableViewCell {
+class LegacyTagSettingsAlertConfigCell: UITableViewCell {
     // Public
-    weak var delegate: TagSettingsAlertConfigCellDelegate?
+    weak var delegate: LegacyTagSettingsAlertConfigCellDelegate?
 
     // Private
     private lazy var noticeView: UIView = {
@@ -131,7 +131,7 @@ class TagSettingsAlertConfigCell: UITableViewCell {
     }
 }
 
-extension TagSettingsAlertConfigCell {
+extension LegacyTagSettingsAlertConfigCell {
     // swiftlint:disable:next function_body_length
     private func setUpUI() {
         contentView.isUserInteractionEnabled = true
@@ -287,7 +287,7 @@ extension TagSettingsAlertConfigCell {
 }
 
 // MARK: - RuuviSwitchViewDelegate
-extension TagSettingsAlertConfigCell: RuuviSwitchViewDelegate {
+extension LegacyTagSettingsAlertConfigCell: RuuviSwitchViewDelegate {
     func didChangeSwitchState(sender: RuuviSwitchView, didToggle isOn: Bool) {
         delegate?.didChangeAlertState(sender: self, didToggle: isOn)
     }
@@ -295,7 +295,7 @@ extension TagSettingsAlertConfigCell: RuuviSwitchViewDelegate {
 
 // MARK: - Pubic Setters
 
-extension TagSettingsAlertConfigCell {
+extension LegacyTagSettingsAlertConfigCell {
     func setStatus(
         with value: Bool?,
         hideStatusLabel: Bool
@@ -417,7 +417,7 @@ extension TagSettingsAlertConfigCell {
 
     func disableEditing(
         disable: Bool,
-        identifier: TagSettingsSectionIdentifier
+        identifier: LegacyTagSettingsSectionIdentifier
     ) {
         statusSwitch.disableEditing(disable: disable)
         setCustomDescriptionView.disable(disable)
@@ -440,7 +440,7 @@ extension TagSettingsAlertConfigCell {
 
 // MARK: - RUAlertDetailsCellChildViewDelegate
 
-extension TagSettingsAlertConfigCell: RUAlertDetailsCellChildViewDelegate {
+extension LegacyTagSettingsAlertConfigCell: RUAlertDetailsCellChildViewDelegate {
     func didTapView(sender: RUAlertDetailsCellChildView) {
         if sender == setCustomDescriptionView {
             delegate?.didSelectSetCustomDescription(sender: self)
@@ -452,7 +452,7 @@ extension TagSettingsAlertConfigCell: RUAlertDetailsCellChildViewDelegate {
 
 // MARK: - RangeSeekSliderDelegate
 
-extension TagSettingsAlertConfigCell: RangeSeekSliderDelegate {
+extension LegacyTagSettingsAlertConfigCell: RangeSeekSliderDelegate {
     func rangeSeekSlider(_: RangeSeekSlider, didChange minValue: CGFloat, maxValue: CGFloat) {
         let minimumValue =
         isValueChanged(

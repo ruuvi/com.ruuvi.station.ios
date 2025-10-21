@@ -2,7 +2,7 @@ import RuuviOntology
 import UIKit
 
 // swiftlint:disable type_body_length
-struct TagSettingsViewModel {
+struct LegacyTagSettingsViewModel {
     let background: Observable<UIImage?> = .init()
     let name: Observable<String?> = .init()
     let uuid: Observable<String?> = .init()

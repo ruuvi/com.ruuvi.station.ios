@@ -17,9 +17,9 @@ import RuuviPresenters
 import RuuviUser
 import RuuviCloud
 
-class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
-    weak var view: TagSettingsViewInput!
-    weak var output: TagSettingsModuleOutput?
+class LegacyTagSettingsPresenter: NSObject, LegacyTagSettingsModuleInput {
+    weak var view: LegacyTagSettingsViewInput!
+    weak var output: LegacyTagSettingsModuleOutput?
     var router: TagSettingsRouterInput!
     var errorPresenter: ErrorPresenter!
     var foreground: BTForeground!
@@ -56,7 +56,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         }
     }
 
-    private var viewModel: TagSettingsViewModel!
+    private var viewModel: LegacyTagSettingsViewModel!
 
     private var ruuviTagToken: RuuviReactorToken?
     private var ruuviTagSensorRecordToken: RuuviReactorToken?
@@ -116,7 +116,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         sensorSettings: SensorSettings?
     ) {
         // Create the ViewModel
-        let tagViewModel = TagSettingsViewModel()
+        let tagViewModel = LegacyTagSettingsViewModel()
 
         let measurementWithOffset = latestMeasurement?.with(sensorSettings: sensorSettings)
 
@@ -177,7 +177,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
         processAlerts()
     }
 
-    func configure(output: TagSettingsModuleOutput) {
+    func configure(output: LegacyTagSettingsModuleOutput) {
         self.output = output
     }
 
@@ -188,7 +188,7 @@ class TagSettingsPresenter: NSObject, TagSettingsModuleInput {
 
 // MARK: - TagSettingsViewOutput
 
-extension TagSettingsPresenter: TagSettingsViewOutput {
+extension LegacyTagSettingsPresenter: LegacyTagSettingsViewOutput {
     func viewDidLoad() {
         startSubscribeToBackgroundUploadProgressChanges()
         startObservingAppState()
@@ -525,7 +525,7 @@ extension TagSettingsPresenter: TagSettingsViewOutput {
 
 // MARK: - SensorRemovalModuleOutput
 
-extension TagSettingsPresenter: SensorRemovalModuleOutput {
+extension LegacyTagSettingsPresenter: SensorRemovalModuleOutput {
     func sensorRemovalDidRemoveTag(
         module: SensorRemovalModuleInput,
         ruuviTag: RuuviTagSensor
@@ -559,7 +559,7 @@ extension TagSettingsPresenter: SensorRemovalModuleOutput {
 
 // MARK: - Private
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func startMutedTillTimer() {
         mutedTillTimer = Timer
             .scheduledTimer(
@@ -1715,7 +1715,7 @@ extension TagSettingsPresenter {
 
 // MARK: - RuuviNotifierObserver
 
-extension TagSettingsPresenter: RuuviNotifierObserver {
+extension LegacyTagSettingsPresenter: RuuviNotifierObserver {
     func ruuvi(notifier _: RuuviNotifier, isTriggered _: Bool, for _: String) {
         // No op here.
     }
@@ -1862,7 +1862,7 @@ extension TagSettingsPresenter: RuuviNotifierObserver {
 
 // MARK: - TEMPERATURE
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func setTemperatureAlertState(isOn: Bool) {
         viewModel.isTemperatureAlertOn.value = isOn
         let temperatureLower = viewModel.temperatureLowerBound.value
@@ -1959,7 +1959,7 @@ extension TagSettingsPresenter {
 
 // MARK: - RELATIVE HUMIDITY
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func setRHAlertState(isOn: Bool) {
         viewModel.isRelativeHumidityAlertOn.value = isOn
         let rhLower = viewModel.relativeHumidityLowerBound.value
@@ -2023,7 +2023,7 @@ extension TagSettingsPresenter {
 
 // MARK: - PRESSURE
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func setPressureAlertState(isOn: Bool) {
         viewModel.isPressureAlertOn.value = isOn
         let pressureLower = viewModel.pressureLowerBound.value
@@ -2091,7 +2091,7 @@ extension TagSettingsPresenter {
 
 // MARK: - SIGNAL
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func setSignalAlertState(isOn: Bool) {
         viewModel.isSignalAlertOn.value = isOn
         let signalLower = viewModel.signalLowerBound.value
@@ -2154,7 +2154,7 @@ extension TagSettingsPresenter {
 
 // MARK: - AQI
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func setAQIAlertState(isOn: Bool) {
         viewModel.isAQIAlertOn.value = isOn
         let aqiLower = viewModel.aqiLowerBound.value
@@ -2217,7 +2217,7 @@ extension TagSettingsPresenter {
 
 // MARK: - Carbon Dioxide
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func setCarbonDioxideAlertState(isOn: Bool) {
         viewModel.isCarbonDioxideAlertOn.value = isOn
         let carbonDiOxideLower = viewModel.carbonDioxideLowerBound.value
@@ -2280,7 +2280,7 @@ extension TagSettingsPresenter {
 
 // MARK: - PMatter1
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func setPMatter1AlertState(isOn: Bool) {
         viewModel.isPMatter1AlertOn.value = isOn
         if let pMatter1Lower = viewModel.pMatter1LowerBound.value,
@@ -2332,7 +2332,7 @@ extension TagSettingsPresenter {
 
 // MARK: - PMatter25
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func setPMatter25AlertState(isOn: Bool) {
         viewModel.isPMatter25AlertOn.value = isOn
         if let pMatter25Lower = viewModel.pMatter25LowerBound.value,
@@ -2384,7 +2384,7 @@ extension TagSettingsPresenter {
 
 // MARK: - PMatter4
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func setPMatter4AlertState(isOn: Bool) {
         viewModel.isPMatter4AlertOn.value = isOn
         if let pMatter4Lower = viewModel.pMatter4LowerBound.value,
@@ -2442,7 +2442,7 @@ extension TagSettingsPresenter {
 
 // MARK: - PMatter10
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func setPMatter10AlertState(isOn: Bool) {
         viewModel.isPMatter10AlertOn.value = isOn
         if let pMatter10Lower = viewModel.pMatter10LowerBound.value,
@@ -2500,7 +2500,7 @@ extension TagSettingsPresenter {
 
 // MARK: - VOC
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func setVOCAlertState(isOn: Bool) {
         viewModel.isVOCAlertOn.value = isOn
         if let vocLowerBound = viewModel.vocLowerBound.value,
@@ -2558,7 +2558,7 @@ extension TagSettingsPresenter {
 
 // MARK: - NOX
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func setNOXAlertState(isOn: Bool) {
         viewModel.isNOXAlertOn.value = isOn
         if let noxLowerBound = viewModel.noxLowerBound.value,
@@ -2616,7 +2616,7 @@ extension TagSettingsPresenter {
 
 // MARK: - SOUND Instant
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func setSoundInstantAlertState(isOn: Bool) {
         viewModel.isSoundInstantAlertOn.value = isOn
         if let soundLowerBound = viewModel.soundInstantLowerBound.value,
@@ -2674,7 +2674,7 @@ extension TagSettingsPresenter {
 
 // MARK: - LUMINOSITY
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func setLuminosityAlertState(isOn: Bool) {
         viewModel.isLuminosityAlertOn.value = isOn
         if let luminosityLowerBound = viewModel.luminosityLowerBound.value,
@@ -2732,7 +2732,7 @@ extension TagSettingsPresenter {
 
 // MARK: - MOVEMENT
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func setMovementAlertState(isOn: Bool) {
         viewModel.isMovementAlertOn.value = isOn
         let last = viewModel.movementCounter.value ?? 0
@@ -2761,7 +2761,7 @@ extension TagSettingsPresenter {
 
 // MARK: - CONNECTION
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func setConnectionAlertState(isOn: Bool) {
         viewModel.isConnectionAlertOn.value = isOn
 
@@ -2789,7 +2789,7 @@ extension TagSettingsPresenter {
 
 // MARK: - CLOUD CONNECTION
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func setCloudConnectionAlertState(isOn: Bool) {
         viewModel.isCloudConnectionAlertOn.value = isOn
         let unseenDuration = viewModel.cloudConnectionAlertUnseenDuration.value ?? 900
@@ -2829,7 +2829,7 @@ extension TagSettingsPresenter {
     }
 }
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func notifyRestartAdvertisementDaemon() {
         // Notify daemon to restart
         NotificationCenter
@@ -2935,7 +2935,7 @@ extension TagSettingsPresenter {
     }
 }
 
-extension TagSettingsPresenter {
+extension LegacyTagSettingsPresenter {
     private func emptySensorSettings() -> SensorSettings {
         SensorSettingsStruct(
             luid: ruuviTag.luid,
@@ -2947,7 +2947,7 @@ extension TagSettingsPresenter {
     }
 }
 
-extension TagSettingsPresenter: UIDocumentPickerDelegate {
+extension LegacyTagSettingsPresenter: UIDocumentPickerDelegate {
     func documentPicker(_: UIDocumentPickerViewController, didPickDocumentsAt _: [URL]) {
         if let url = exportFileUrl {
             try? FileManager.default.removeItem(at: url)
