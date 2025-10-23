@@ -3,6 +3,8 @@ import RuuviLocalization
 import RuuviOntology
 
 public struct BeaverAdviceHelper {
+    private static let outdateThreshold: TimeInterval = 15 * 60 // 15 mins
+
     // MARK: - AQI Advice String Arrays
 
     private static let aqiExcellent = [
@@ -163,8 +165,14 @@ public struct BeaverAdviceHelper {
     static func getBeaverAdvice(
         aqiQuality: MeasurementQualityState,
         co2Quality: MeasurementQualityState?,
-        pm25Quality: MeasurementQualityState?
+        pm25Quality: MeasurementQualityState?,
+        lastUpdated: Date?,
     ) -> String {
+        if let lastUpdated,
+           Date().timeIntervalSince(lastUpdated) > outdateThreshold {
+            return RuuviLocalization.aqiAdviceOutdated
+        }
+
         guard let co2Quality = co2Quality,
               let pm25Quality = pm25Quality else {
             return RuuviLocalization.na

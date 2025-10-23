@@ -732,7 +732,8 @@ private extension MeasurementDetailsViewController {
         let advice = BeaverAdviceHelper.getBeaverAdvice(
             aqiQuality: aqiQuality,
             co2Quality: co2Quality,
-            pm25Quality: pm25Quality
+            pm25Quality: pm25Quality,
+            lastUpdated: tagSnapshot.lastUpdated
         )
         beaverAdviceView.configure(with: advice)
     }
@@ -896,7 +897,8 @@ private extension MeasurementDetailsViewController {
         let advice = BeaverAdviceHelper.getBeaverAdvice(
             aqiQuality: aqiQuality,
             co2Quality: co2Quality,
-            pm25Quality: pm25Quality
+            pm25Quality: pm25Quality,
+            lastUpdated: tagSnapshot.lastUpdated
         )
         beaverAdviceView.configure(with: advice)
         lastAQIQualityState = aqiQuality
