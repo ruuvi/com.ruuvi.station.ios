@@ -56,6 +56,7 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
         interactor.ruuviOwnershipService = r.resolve(RuuviServiceOwnership.self)
         interactor.settings = r.resolve(RuuviLocalSettings.self)
         interactor.ruuviUser = r.resolve(RuuviUser.self)
+        interactor.ruuviStorage = r.resolve(RuuviStorage.self)
         presenter.interactor = interactor
 
         // MARK: - MENU
@@ -139,6 +140,7 @@ extension DashboardModuleFactoryImpl {
         interactor.ruuviOwnershipService = r.resolve(RuuviServiceOwnership.self)
         interactor.settings = r.resolve(RuuviLocalSettings.self)
         interactor.ruuviUser = r.resolve(RuuviUser.self)
+        interactor.ruuviStorage = r.resolve(RuuviStorage.self)
         presenter.interactor = interactor
 
         setupMenuModule(for: view, presenter: presenter, resolver: r, router: router)
