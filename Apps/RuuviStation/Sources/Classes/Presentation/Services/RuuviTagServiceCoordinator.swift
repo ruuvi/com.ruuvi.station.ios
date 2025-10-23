@@ -348,6 +348,10 @@ class RuuviTagServiceCoordinator {
     func shouldShowBluetoothAlert(for snapshots: [RuuviTagCardSnapshot]) -> Bool {
         return connectionService.shouldShowBluetoothAlert(for: snapshots)
     }
+
+    func refreshBluetoothState() {
+        connectionService.refreshBluetoothState()
+    }
 }
 
 // MARK: - Private Implementation
@@ -846,6 +850,10 @@ class RuuviTagServiceCoordinatorManager {
 
     func shouldShowBluetoothAlert(for snapshots: [RuuviTagCardSnapshot]) -> Bool {
         return withCoordinator { $0.shouldShowBluetoothAlert(for: snapshots) } ?? false
+    }
+
+    func refreshBluetoothState() {
+        withCoordinator { $0.refreshBluetoothState() }
     }
 }
 

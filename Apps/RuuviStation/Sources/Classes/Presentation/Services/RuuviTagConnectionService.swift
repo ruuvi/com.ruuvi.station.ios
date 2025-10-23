@@ -38,7 +38,18 @@ class RuuviTagConnectionService {
 
     // MARK: - State
     private var isBluetoothPermissionGranted: Bool {
-        CBCentralManager.authorization == .allowedAlways
+        let centralAuthorization = CBManager.authorization
+        if centralAuthorization == .denied || centralAuthorization == .restricted {
+            return false
+        }
+
+        let peripheralStatus = CBPeripheralManager.authorizationStatus()
+        switch peripheralStatus {
+        case .denied, .restricted:
+            return false
+        default:
+            return true
+        }
     }
 
     // MARK: - Initialization
@@ -72,6 +83,10 @@ class RuuviTagConnectionService {
         stateToken = nil
         didConnectToken = nil
         didDisconnectToken = nil
+    }
+
+    func refreshBluetoothState() {
+        notifyBluetoothStateChange(foreground.bluetoothState)
     }
 
     func updateConnectionData(for snapshots: [RuuviTagCardSnapshot]) {
@@ -157,6 +172,11 @@ class RuuviTagConnectionService {
     }
 
     func hasBluetoothSensors(in snapshots: [RuuviTagCardSnapshot]) -> Bool {
+        print("Snapshot metadata:", snapshots.count)
+        for snapshot in snapshots {
+            print(snapshot.displayData.name)
+            dump(snapshot.metadata)
+        }
         return snapshots.contains { !$0.metadata.isCloud }
     }
 }
@@ -167,17 +187,10 @@ private extension RuuviTagConnectionService {
     func observeBluetoothState() {
         stateToken?.invalidate()
         stateToken = foreground.state(self) { observer, state in
-            let isEnabled = state == .poweredOn
-            let userDeclined = !observer.isBluetoothPermissionGranted
-
-            if !isEnabled || userDeclined {
-                observer.delegate?.connectionService(
-                    observer,
-                    bluetoothStateChanged: isEnabled,
-                    userDeclined: userDeclined
-                )
-            }
+            print("RuuviTagConnectionService: Bluetooth state changed to \(state)")
+            observer.notifyBluetoothStateChange(state)
         }
+        notifyBluetoothStateChange(foreground.bluetoothState)
     }
 
     func observeConnectionEvents() {
@@ -212,6 +225,17 @@ private extension RuuviTagConnectionService {
         }
     }
 
+    func notifyBluetoothStateChange(_ state: BTScannerState) {
+        let resolvedState = resolvedBluetoothState(for: state)
+        if resolvedState.userDeclined || !resolvedState.isEnabled {
+            delegate?.connectionService(
+                self,
+                bluetoothStateChanged: resolvedState.isEnabled,
+                userDeclined: resolvedState.userDeclined
+            )
+        }
+    }
+
     func handleConnectionChange(uuid: String, isConnected: Bool) {
         // Notify delegate about connection change for specific sensor
         // The delegate should update the appropriate snapshot
@@ -223,6 +247,23 @@ private extension RuuviTagConnectionService {
                 "isConnected": isConnected,
             ]
         )
+    }
+
+    func resolvedBluetoothState(for state: BTScannerState) -> (isEnabled: Bool, userDeclined: Bool) {
+        let permissionDenied = !isBluetoothPermissionGranted || state == .unauthorized
+
+        if permissionDenied {
+            let isEnabled = state == .poweredOn
+            return (isEnabled, true)
+        }
+
+        switch state {
+        case .poweredOff,
+             .unsupported:
+            return (false, false)
+        default:
+            return (true, false)
+        }
     }
 }
 
@@ -252,9 +293,7 @@ extension RuuviTagConnectionService {
 extension RuuviTagConnectionService {
 
     func getCurrentBluetoothState() -> (isEnabled: Bool, userDeclined: Bool) {
-        let isEnabled = foreground.bluetoothState == .poweredOn
-        let userDeclined = !isBluetoothPermissionGranted
-        return (isEnabled, userDeclined)
+        resolvedBluetoothState(for: foreground.bluetoothState)
     }
 
     func requestBluetoothPermissionIfNeeded() -> Bool {
@@ -262,9 +301,8 @@ extension RuuviTagConnectionService {
     }
 
     func shouldShowBluetoothAlert(for snapshots: [RuuviTagCardSnapshot]) -> Bool {
-        let hasBluetoothSensors = self.hasBluetoothSensors(in: snapshots)
+        let hasBluetoothSensors = hasBluetoothSensors(in: snapshots)
         let (isEnabled, userDeclined) = getCurrentBluetoothState()
-
         return hasBluetoothSensors && (!isEnabled || userDeclined)
     }
 }

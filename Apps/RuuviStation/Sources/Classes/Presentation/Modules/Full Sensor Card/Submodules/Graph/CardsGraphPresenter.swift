@@ -7,7 +7,6 @@ import RuuviPresenters
 import RuuviService
 import BTKit
 import RuuviReactor
-import CoreBluetooth
 import DGCharts
 import UIKit
 
@@ -63,13 +62,11 @@ class CardsGraphPresenter: NSObject {
     }
     private var lastSyncSnapshotDate = Date()
     private var lastChartSyncDate = Date()
-    private var isBluetoothPermissionGranted: Bool {
-        CBCentralManager.authorization == .allowedAlways
-    }
     private var datasource: [RuuviGraphViewDataModel] = []
     private var newpoints: [RuuviGraphViewDataModel] = []
     private var chartModules: [MeasurementType] = []
     private var ruuviTagData: [RuuviMeasurement] = []
+    private let serviceCoordinatorManager: RuuviTagServiceCoordinatorManager
 
     // MARK: - Scroll State Management
     private var isUserScrolling: Bool = false
@@ -87,7 +84,8 @@ class CardsGraphPresenter: NSObject {
         exportService: RuuviServiceExport,
         alertService: RuuviServiceAlert,
         background: BTBackground,
-        flags: RuuviLocalFlags
+        flags: RuuviLocalFlags,
+        serviceCoordinatorManager: RuuviTagServiceCoordinatorManager = .shared
     ) {
         self.errorPresenter = errorPresenter
         self.settings = settings
@@ -100,6 +98,7 @@ class CardsGraphPresenter: NSObject {
         self.alertService = alertService
         self.background = background
         self.flags = flags
+        self.serviceCoordinatorManager = serviceCoordinatorManager
         super.init()
     }
 }
@@ -233,9 +232,9 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
     func viewDidStartSync(for snapshot: RuuviTagCardSnapshot?) {
         guard let snapshot = snapshot else { return }
         // Check bluetooth
-        guard foreground.bluetoothState == .poweredOn || !isBluetoothPermissionGranted
-        else {
-            view?.showBluetoothDisabled(userDeclined: !isBluetoothPermissionGranted)
+        let resolvedState = serviceCoordinatorManager.getCurrentBluetoothState()
+        guard resolvedState.isEnabled && !resolvedState.userDeclined else {
+            view?.showBluetoothDisabled(userDeclined: resolvedState.userDeclined)
             return
         }
         isSyncing = true

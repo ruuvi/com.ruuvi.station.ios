@@ -16,7 +16,18 @@ class DiscoverHeaderView: UIView {
     }
 
     private var isBluetoothPermissionGranted: Bool {
-        CBCentralManager.authorization == .allowedAlways
+        let centralAuthorization = CBManager.authorization
+        if centralAuthorization == .denied || centralAuthorization == .restricted {
+            return false
+        }
+
+        let peripheralStatus = CBPeripheralManager.authorizationStatus()
+        switch peripheralStatus {
+        case .denied, .restricted:
+            return false
+        default:
+            return true
+        }
     }
 
     // UI

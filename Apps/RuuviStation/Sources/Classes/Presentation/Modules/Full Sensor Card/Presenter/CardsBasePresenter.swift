@@ -38,7 +38,18 @@ class CardsBasePresenter: NSObject {
     private var activeMenu: CardsMenuType = .measurement
     private var graphGattSyncInProgress: Bool = false
     private var isBluetoothPermissionGranted: Bool {
-        CBCentralManager.authorization == .allowedAlways
+        let centralAuthorization = CBManager.authorization
+        if centralAuthorization == .denied || centralAuthorization == .restricted {
+            return false
+        }
+
+        let peripheralStatus = CBPeripheralManager.authorizationStatus()
+        switch peripheralStatus {
+        case .denied, .restricted:
+            return false
+        default:
+            return true
+        }
     }
 
     // MARK: Observations
@@ -567,16 +578,32 @@ private extension CardsBasePresenter {
     }
 
     func startObservingBluetoothState() {
-        stateToken = foreground.state(self, closure: { [weak self] observer, state in
-            guard let sSelf = self else { return }
-            if state != .poweredOn || !sSelf.isBluetoothPermissionGranted {
-                observer.view?.showBluetoothDisabled(userDeclined: !sSelf.isBluetoothPermissionGranted)
-            }
+        stateToken = foreground.state(self, closure: { [weak self] _, state in
+            self?.handleBluetoothStateChange(state)
         })
+        handleBluetoothStateChange(foreground.bluetoothState)
     }
 
     func stopObservingBluetoothState() {
         stateToken?.invalidate()
+    }
+
+    func handleBluetoothStateChange(_ state: BTScannerState) {
+        let permissionDenied = !isBluetoothPermissionGranted
+        if permissionDenied {
+            view?.showBluetoothDisabled(userDeclined: true)
+            return
+        }
+
+        switch state {
+        case .poweredOff,
+             .unsupported:
+            view?.showBluetoothDisabled(userDeclined: false)
+        case .unauthorized:
+            view?.showBluetoothDisabled(userDeclined: true)
+        default:
+            break
+        }
     }
 
     func viewDidRequestToShowGraph(

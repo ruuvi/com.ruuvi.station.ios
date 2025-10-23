@@ -88,7 +88,18 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     private var lostToken: ObservationToken?
     private var persistedReactorToken: RuuviReactorToken?
     private var isBluetoothPermissionGranted: Bool {
-        CBCentralManager.authorization == .allowedAlways
+        let centralAuthorization = CBManager.authorization
+        if centralAuthorization == .denied || centralAuthorization == .restricted {
+            return false
+        }
+
+        let peripheralStatus = CBPeripheralManager.authorizationStatus()
+        switch peripheralStatus {
+        case .denied, .restricted:
+            return false
+        default:
+            return true
+        }
     }
 
     deinit {
@@ -104,7 +115,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
 
 extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidLoad() {
-        view?.isBluetoothEnabled = foreground.bluetoothState == .poweredOn
+        view?.isBluetoothEnabled = resolvedBluetoothState(for: foreground.bluetoothState).isEnabled
         view?.isCloseEnabled = true
         startObservingPersistedRuuviSensors()
     }
@@ -142,7 +153,8 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewDidTriggerDisabledBTRow() {
-        view?.showBluetoothDisabled(userDeclined: !isBluetoothPermissionGranted)
+        let resolvedState = resolvedBluetoothState(for: foreground.bluetoothState)
+        view?.showBluetoothDisabled(userDeclined: resolvedState.userDeclined)
     }
 
     func viewDidTriggerBuySensors() {
@@ -409,17 +421,35 @@ extension DiscoverPresenter {
 
     private func startObservingBluetoothState() {
         stateToken = foreground.state(self, closure: { observer, state in
-            observer.view?.isBluetoothEnabled = state == .poweredOn
-            if state == .poweredOff || !self.isBluetoothPermissionGranted {
+            let resolvedState = observer.resolvedBluetoothState(for: state)
+            observer.view?.isBluetoothEnabled = resolvedState.isEnabled
+            if !resolvedState.isEnabled || resolvedState.userDeclined {
                 observer.ruuviTags.removeAll()
                 observer.view?.ruuviTags = []
-                observer.view?.showBluetoothDisabled(userDeclined: !self.isBluetoothPermissionGranted)
+                observer.view?.showBluetoothDisabled(userDeclined: resolvedState.userDeclined)
             }
         })
     }
 
     private func stopObservingBluetoothState() {
         stateToken?.invalidate()
+    }
+
+    private func resolvedBluetoothState(for state: BTScannerState) -> (isEnabled: Bool, userDeclined: Bool) {
+        let permissionDenied = !isBluetoothPermissionGranted || state == .unauthorized
+
+        if permissionDenied {
+            let isEnabled = state == .poweredOn
+            return (isEnabled, true)
+        }
+
+        switch state {
+        case .poweredOff,
+             .unsupported:
+            return (false, false)
+        default:
+            return (true, false)
+        }
     }
 
     private func startScanning() {

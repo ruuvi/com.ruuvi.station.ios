@@ -71,6 +71,7 @@ class DashboardPresenter {
         startObservingUniversalLinks()
         startObservingDaemonErrors()
         startObservingConnectionChanges()
+        startObservingAppLifecycle()
     }
 
     private func stopAllObservations() {
@@ -353,7 +354,7 @@ private extension DashboardPresenter {
     }
 
     func handleAlertsChanged(_ coordinator: RuuviTagServiceCoordinator) {
-        let snapshots = coordinator.getAllSnapshots()
+        let snapshots = coordinatorSnapshots()
         coordinator.triggerAlertsIfNeeded(for: snapshots)
     }
 
@@ -361,7 +362,7 @@ private extension DashboardPresenter {
         _ isEnabled: Bool,
         coordinator: RuuviTagServiceCoordinator
     ) {
-        let snapshots = coordinator.getAllSnapshots()
+        let snapshots = coordinatorSnapshots()
         coordinator.services.connection.removeConnectionsForCloudSensors(snapshots: snapshots)
         restartServiceCoordinatorSensors()
         settingsService
@@ -558,6 +559,25 @@ private extension DashboardPresenter {
         }
     }
 
+    func startObservingAppLifecycle() {
+        backgroundChangeToken = NotificationCenter.default.addObserver(
+            forName: UIApplication.willEnterForegroundNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.handleBluetoothStateChangeIfNeeded()
+        }
+    }
+
+    func handleBluetoothStateChangeIfNeeded() {
+        serviceCoordinatorManager.refreshBluetoothState()
+        let snapshots = coordinatorSnapshots()
+        if serviceCoordinatorManager.shouldShowBluetoothAlert(for: snapshots) {
+            let (_, userDeclined) = serviceCoordinatorManager.getCurrentBluetoothState()
+            view?.showBluetoothDisabled(userDeclined: userDeclined)
+        }
+    }
+
     func processUniversalLink(_ userInfo: [AnyHashable: Any]) {
         guard let path = userInfo["path"] as? UniversalLinkType,
               path == .dashboard,
@@ -578,6 +598,7 @@ extension DashboardPresenter: RuuviTagServiceCoordinatorObserver {
         switch event {
         case .snapshotsUpdated(let snapshots, let reason, let withAnimation):
             handleSnapshotsUpdated(snapshots, reason: reason, withAnimation: withAnimation)
+            handleBluetoothStateChangeIfNeeded()
 
         case .snapshotUpdated(let snapshot, let invalidateLayout):
             view?.updateSnapshot(from: snapshot, invalidateLayout: invalidateLayout)
@@ -624,12 +645,8 @@ extension DashboardPresenter: RuuviTagServiceCoordinatorObserver {
         case .connectionSnapshotUpdated(let snapshot):
             view?.updateSnapshot(from: snapshot)
 
-        case .bluetoothStateChanged(let isEnabled, let userDeclined):
-            let snapshots = coordinator.getAllSnapshots()
-            if coordinator.shouldShowBluetoothAlert(for: snapshots) &&
-                (!isEnabled || userDeclined) {
-                view?.showBluetoothDisabled(userDeclined: userDeclined)
-            }
+        case .bluetoothStateChanged:
+            handleBluetoothStateChangeIfNeeded()
 
         case .connectionServiceError(let error):
             errorPresenter.present(error: error)
