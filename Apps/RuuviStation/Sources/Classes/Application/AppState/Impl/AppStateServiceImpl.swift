@@ -2,6 +2,7 @@ import RuuviAnalytics
 import RuuviDaemon
 import RuuviLocal
 import RuuviOntology
+import RuuviService
 import RuuviUser
 import UIKit
 #if canImport(WidgetKit)
@@ -19,9 +20,22 @@ class AppStateServiceImpl: AppStateService {
     var userPropertiesService: RuuviAnalytics!
     var universalLinkCoordinator: UniversalLinkCoordinator!
 
+    private var authWillLogoutToken: NSObjectProtocol?
+    private var authLogoutCompletionToken: NSObjectProtocol?
+    private var daemonsPausedForLogout = false
+
     private let appGroupDefaults = UserDefaults(
         suiteName: AppGroupConstants.appGroupSuiteIdentifier
     )
+
+    deinit {
+        if let token = authWillLogoutToken {
+            NotificationCenter.default.removeObserver(token)
+        }
+        if let token = authLogoutCompletionToken {
+            NotificationCenter.default.removeObserver(token)
+        }
+    }
 
     func application(
         _: UIApplication,
@@ -46,6 +60,7 @@ class AppStateServiceImpl: AppStateService {
             self.userPropertiesService.update()
         }
         settings.appOpenedCount += 1
+        observeAuthLifecycleNotifications()
     }
 
     func applicationWillResignActive(_: UIApplication) {
@@ -115,6 +130,63 @@ private extension AppStateServiceImpl {
             guard case let .success(infos) = widgetInfos else { return }
             let simpleWidgets = infos.filter { $0.kind == AppAssemblyConstants.simpleWidgetKindId }
             self?.settings.useSimpleWidget = simpleWidgets.count > 0
+        }
+    }
+
+    func observeAuthLifecycleNotifications() {
+        if authWillLogoutToken == nil {
+            authWillLogoutToken = NotificationCenter.default.addObserver(
+                forName: .RuuviAuthServiceWillLogout,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                self?.pauseDaemonsForLogout()
+            }
+        }
+        if authLogoutCompletionToken == nil {
+            authLogoutCompletionToken = NotificationCenter.default.addObserver(
+                forName: .RuuviAuthServiceLogoutDidFinish,
+                object: nil,
+                queue: .main
+            ) { [weak self] notification in
+                guard let self = self else { return }
+                let success = (notification.userInfo?[
+                    RuuviAuthServiceLogoutDidFinishKey.success.rawValue
+                ] as? Bool) ?? false
+                self.resumeDaemonsAfterLogout(success: success)
+            }
+        }
+    }
+
+    func pauseDaemonsForLogout() {
+        guard !daemonsPausedForLogout else { return }
+        daemonsPausedForLogout = true
+        if settings.isAdvertisementDaemonOn {
+            advertisementDaemon.stop()
+        }
+        heartbeatDaemon.stop()
+        propertiesDaemon.stop()
+        cloudSyncDaemon.stop()
+    }
+
+    func resumeDaemonsAfterLogout(success: Bool) {
+        guard daemonsPausedForLogout else { return }
+        daemonsPausedForLogout = false
+
+        if settings.isAdvertisementDaemonOn && settings.appIsOnForeground {
+            advertisementDaemon.start()
+        }
+
+        heartbeatDaemon.start()
+
+        if settings.appIsOnForeground {
+            propertiesDaemon.start()
+        }
+
+        if !success && settings.appIsOnForeground {
+            if ruuviUser.isAuthorized && !cloudSyncDaemon.isRunning() {
+                cloudSyncDaemon.start()
+            }
         }
     }
 }

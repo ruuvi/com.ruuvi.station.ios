@@ -449,6 +449,14 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 try entity.update(db)
             }
             promise.succeed(value: true)
+        } catch let persistenceError as RuuviPersistenceError {
+            promise.fail(error: persistenceError)
+        } catch let recordError as RecordError {
+            if case .recordNotFound = recordError {
+                promise.fail(error: .failedToFindRuuviTag)
+            } else {
+                promise.fail(error: .grdb(recordError))
+            }
         } catch {
             promise.fail(error: .grdb(error))
         }

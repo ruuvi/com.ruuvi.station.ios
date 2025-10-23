@@ -38,6 +38,9 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
 
     public func logout() -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
+        NotificationCenter
+            .default
+            .post(name: .RuuviAuthServiceWillLogout, object: self, userInfo: nil)
         ruuviUser.logout()
 
         storage.readAll()
@@ -51,6 +54,7 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
                     // Clear global settings even if no sensors to delete
                     sSelf.clearGlobalSettings()
                     promise.succeed(value: true)
+                    sSelf.postLogoutCompletion(success: true)
                     sSelf.postNotification()
                     return
                 }
@@ -80,12 +84,15 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
                         // Clear any remaining global settings
                         sSelf.clearGlobalSettings()
                         promise.succeed(value: true)
+                        sSelf.postLogoutCompletion(success: true)
                         sSelf.postNotification()
                     }, failure: { error in
+                        sSelf.postLogoutCompletion(success: false)
                         promise.fail(error: .ruuviPool(error))
                     })
 
-            }, failure: { error in
+            }, failure: { [weak self]error in
+                self?.postLogoutCompletion(success: false)
                 promise.fail(error: .ruuviStorage(error))
             })
 
@@ -146,5 +153,15 @@ private extension RuuviServiceAuthImpl {
         NotificationCenter
             .default
             .post(name: .RuuviAuthServiceDidLogout, object: self, userInfo: nil)
+    }
+
+    func postLogoutCompletion(success: Bool) {
+        NotificationCenter
+            .default
+            .post(
+                name: .RuuviAuthServiceLogoutDidFinish,
+                object: self,
+                userInfo: [RuuviAuthServiceLogoutDidFinishKey.success: success]
+            )
     }
 }

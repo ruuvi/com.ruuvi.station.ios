@@ -150,7 +150,7 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                     .with(macId: mac)
                     .with(version: pair.device.version))
                     .on(failure: { [weak self] error in
-                        self?.post(error: .ruuviPool(error))
+                        self?.handlePoolFailure(error, ruuviTag: pair.ruuviTag)
                     })
             }
         } else if pair.ruuviTag.macId?.value != nil, pair.device.mac == nil {
@@ -162,7 +162,7 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                     .with(macId: mac)
                     .with(version: pair.device.version))
                     .on(failure: { [weak self] error in
-                        self?.post(error: .ruuviPool(error))
+                        self?.handlePoolFailure(error, ruuviTag: pair.ruuviTag)
                     })
             }
         } else {
@@ -170,7 +170,7 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                 ruuviPool.update(pair.ruuviTag
                     .with(version: pair.device.version))
                     .on(failure: { [weak self] error in
-                        self?.post(error: .ruuviPool(error))
+                        self?.handlePoolFailure(error, ruuviTag: pair.ruuviTag)
                     })
             }
         }
@@ -232,7 +232,9 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
             sSelf.idPersistence.set(luid: device.uuid.luid, for: mac)
             sSelf.ruuviPool.update(ruuviSensor)
                 .on(failure: { [weak sSelf] error in
-                    sSelf?.post(error: .ruuviPool(error))
+                    guard let self = sSelf else { return }
+                    self.processingUUIDs.remove(tag.uuid)
+                    self.handlePoolFailure(error, ruuviTag: ruuviSensor)
                 }, completion: { [weak sSelf] in
                     sSelf?.processingUUIDs.remove(tag.uuid)
                 })
@@ -250,5 +252,25 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                     userInfo: [RuuviTagPropertiesDaemonDidFailKey.error: error]
                 )
         }
+    }
+
+    private func handlePoolFailure(
+        _ error: RuuviPoolError,
+        ruuviTag: RuuviTagSensor
+    ) {
+        if case let .ruuviPersistence(persistenceError) = error,
+           case .failedToFindRuuviTag = persistenceError {
+            removeCachedSensor(matching: ruuviTag)
+            restartObserving()
+            return
+        }
+        post(error: .ruuviPool(error))
+    }
+
+    private func removeCachedSensor(matching ruuviTag: RuuviTagSensor) {
+        ruuviTags.removeAll(where: {
+            ($0.macId != nil && $0.macId?.any == ruuviTag.macId?.any)
+                || ($0.luid != nil && $0.luid?.any == ruuviTag.luid?.any)
+        })
     }
 }
