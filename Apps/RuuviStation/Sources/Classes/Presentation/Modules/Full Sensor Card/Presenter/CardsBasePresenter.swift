@@ -417,9 +417,9 @@ extension CardsBasePresenter: RuuviTagServiceCoordinatorObserver {
                 case .initial, .reorder, .insert, .update, .mixed:
                     // For all other cases, keep current snapshot if it still exists
                     if snapshots.first(where: {
-                           $0.id == self.snapshot.id &&
-                           $0.identifierData.luid?.value == self.snapshot.identifierData.luid?.value &&
-                           $0.identifierData.mac?.value == self.snapshot.identifierData.mac?.value }) != nil {
+                        $0.id == self.snapshot.id &&
+                        $0.identifierData.luid?.any == self.snapshot.identifierData.luid?.any &&
+                        $0.identifierData.mac?.any == self.snapshot.identifierData.mac?.any }) != nil {
                         self.snapshots = snapshots
                     } else {
                         self.snapshots = snapshots
