@@ -211,7 +211,10 @@ extension RuuviServiceExportImpl {
                             for: record.co2,
                             and: record.pm25
                         )
-                        return "\(aqi)"
+                        if aqi.isFinite {
+                            return "\(aqi)"
+                        }
+                        return sSelf.emptyValueString
                     }
                 ),
                 ColumnDefinition(
