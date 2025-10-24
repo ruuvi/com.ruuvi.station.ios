@@ -717,7 +717,7 @@ extension TagSettingsPresenter {
         }
         viewModel.uuid.value = ruuviTag.luid?.value ?? ruuviTag.macId?.value
         viewModel.version.value = ruuviTag.version
-        viewModel.firmwareVersion.value = ruuviTag.firmwareVersion
+        viewModel.firmwareVersion.value = ruuviTag.displayFirmwareVersion ?? ruuviTag.firmwareVersion
     }
 
     /// Sets the view model properties related to the settings

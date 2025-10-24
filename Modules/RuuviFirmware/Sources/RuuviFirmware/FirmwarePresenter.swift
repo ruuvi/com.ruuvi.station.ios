@@ -1,6 +1,7 @@
 import BTKit
 import RuuviDaemon
 import RuuviDFU
+import RuuviOntology
 import SwiftUI
 import UIKit
 
@@ -41,7 +42,7 @@ final class FirmwarePresenter: RuuviFirmware {
         firmwareRepository: FirmwareRepository
     ) {
         self.uuid = uuid
-        self.currentFirmware = currentFirmware
+        self.currentFirmware = currentFirmware.ruuviFirmwareDisplayValue ?? currentFirmware
         interactor = FirmwareInteractor(
             background: background,
             foreground: foreground,

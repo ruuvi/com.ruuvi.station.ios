@@ -3,6 +3,7 @@ import Combine
 import Foundation
 import RuuviDaemon
 import RuuviDFU
+import RuuviOntology
 
 struct CurrentRelease {
     var version: String
@@ -103,7 +104,8 @@ final class FirmwareInteractor {
             ) { _, result in
                 switch result {
                 case let .success(version):
-                    let currentRelease = CurrentRelease(version: version)
+                    let sanitizedVersion = version.ruuviFirmwareDisplayValue
+                    let currentRelease = CurrentRelease(version: sanitizedVersion)
                     promise(.success(currentRelease))
                 case let .failure(error):
                     promise(.failure(error))

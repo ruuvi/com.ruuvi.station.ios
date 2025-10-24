@@ -46,6 +46,10 @@ public extension RuuviTagSensor {
         AnyRuuviTagSensor(object: self)
     }
 
+    var displayFirmwareVersion: String? {
+        firmwareVersion?.ruuviFirmwareDisplayValue
+    }
+
     var `struct`: RuuviTagSensorStruct {
         RuuviTagSensorStruct(
             version: version,

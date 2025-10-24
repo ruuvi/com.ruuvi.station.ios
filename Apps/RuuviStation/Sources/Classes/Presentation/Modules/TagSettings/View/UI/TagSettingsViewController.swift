@@ -6686,7 +6686,8 @@ extension TagSettingsViewController {
 
         if let firmwareVersionCell {
             firmwareVersionCell.bind(viewModel.firmwareVersion) { cell, value in
-                cell.configure(value: value ?? RuuviLocalization.na)
+                let displayValue = value?.ruuviFirmwareDisplayValue ?? value
+                cell.configure(value: displayValue ?? RuuviLocalization.na)
             }
         }
     }
@@ -6710,9 +6711,11 @@ extension TagSettingsViewController {
     private func tagFirmwareVersionItem() -> TagSettingsItem {
         let settingItem = TagSettingsItem(
             createdCell: { [weak self] in
+                let rawFirmware = self?.viewModel?.firmwareVersion.value ?? nil
+                let displayFirmware = rawFirmware?.ruuviFirmwareDisplayValue ?? rawFirmware ?? RuuviLocalization.na
                 self?.firmwareVersionCell?.configure(
                     title: RuuviLocalization.TagSettings.Firmware.currentVersion,
-                    value: self?.viewModel?.firmwareVersion.value ?? RuuviLocalization.na
+                    value: displayFirmware
                 )
                 self?.firmwareVersionCell?.setAccessory(type: .none)
                 self?.firmwareVersionCell?.selectionStyle = .none

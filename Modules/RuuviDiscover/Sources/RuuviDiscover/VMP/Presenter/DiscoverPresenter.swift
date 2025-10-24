@@ -311,7 +311,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
             addRuuviTagOwnership(
                 for: ruuviTag,
                 displayName: displayName,
-                firmwareVersion: tag?.firmwareVersion
+                firmwareVersion: tag?.firmwareVersion.ruuviFirmwareDisplayValue ?? tag?.firmwareVersion
             )
         }
     }
@@ -328,7 +328,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
         guard let sensor else { return }
         let firmwareModule = firmwareBuilder.build(
             uuid: sensor.id,
-            currentFirmware: sensor.firmwareVersion,
+            currentFirmware: sensor.firmwareVersion.ruuviFirmwareDisplayValue ?? sensor.firmwareVersion,
             dependencies: RuuviFirmwareDependencies(
                 background: background,
                 foreground: foreground,
@@ -585,7 +585,8 @@ extension DiscoverPresenter {
         let nameString = "\(RuuviLocalization.name)\n\(displayName)"
         let macIdString = "\(RuuviLocalization.macAddress)\n\(tag.macId)"
         let uniqueIdString = "\(RuuviLocalization.uniqueId)\n\(tag.id)"
-        let fwString = "\(RuuviLocalization.firmwareVersion)\n\(tag.firmwareVersion)"
+        let firmwareVersion = tag.firmwareVersion.ruuviFirmwareDisplayValue ?? tag.firmwareVersion
+        let fwString = "\(RuuviLocalization.firmwareVersion)\n\(firmwareVersion)"
 
         return "\n\(nameString)\n\n\(macIdString)\n\n\(uniqueIdString)\n\n\(fwString)\n"
     }
@@ -595,9 +596,11 @@ extension DiscoverPresenter {
         displayName: String,
         firmwareVersion: String?
     ) {
+        let sanitizedFirmware = firmwareVersion?.ruuviFirmwareDisplayValue ?? firmwareVersion ?? ""
+
         ruuviOwnershipService.add(
             sensor: ruuviTag.with(name: displayName)
-                .with(firmwareVersion: firmwareVersion ?? ""),
+                .with(firmwareVersion: sanitizedFirmware),
             record: ruuviTag.with(source: .advertisement)
         )
         .on(success: { [weak self] anyRuuviTagSensor in

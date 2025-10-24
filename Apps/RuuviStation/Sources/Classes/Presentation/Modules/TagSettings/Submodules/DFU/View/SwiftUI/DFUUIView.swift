@@ -1,5 +1,6 @@
 import RuuviFirmware
 import RuuviLocalization
+import RuuviOntology
 import SwiftUI
 
 // swiftlint:disable file_length
@@ -120,7 +121,7 @@ struct DFUUIView: View {
                 Text(texts.latestTitle).bold()
                     .font(titleFont)
                     .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
-                Text(latestRelease.version)
+                Text(latestRelease.version.ruuviFirmwareDisplayValue)
                     .font(bodyFont)
                     .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 Text(texts.currentTitle).bold()
@@ -141,7 +142,7 @@ struct DFUUIView: View {
                 Text(texts.latestTitle).bold()
                     .font(titleFont)
                     .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
-                Text(latestRelease.version)
+                Text(latestRelease.version.ruuviFirmwareDisplayValue)
                     .font(bodyFont)
                     .foregroundColor(RuuviColor.textColor.swiftUIColor)
                 Text(texts.currentTitle).bold()
@@ -161,20 +162,14 @@ struct DFUUIView: View {
                 Text(texts.latestTitle).bold()
                     .font(titleFont)
                     .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
-                Text(latestRelease.version)
+                Text(latestRelease.version.ruuviFirmwareDisplayValue)
                     .font(bodyFont)
                     .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                Text(texts.currentTitle).bold()
-                    .font(titleFont)
-                    .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
-                if let currentVersion = currentRelease?.version {
-                    Text(currentVersion)
+                if currentRelease == nil {
+                    Text(texts.searchingTitle)
                         .font(bodyFont)
                         .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                } else {
-                    Text(texts.notReportingDescription)
-                        .font(bodyFont)
-                        .foregroundColor(RuuviColor.textColor.swiftUIColor)
+                    Spinner(isAnimating: true, style: .medium).eraseToAnyView()
                 }
             }
             .frame(
@@ -185,32 +180,40 @@ struct DFUUIView: View {
             .padding()
             .onAppear { viewModel.send(event: .onLoadedAndServed(latestRelease, currentRelease)) }
             .eraseToAnyView()
-        case let .noNeedToUpgrade(_, currentRelease):
-            return Text(texts.alreadyOnLatest)
-                .font(bodyFont)
-                .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                .frame(
-                    maxWidth: .infinity,
-                    maxHeight: .infinity,
-                    alignment: .topLeading
-                )
-                .padding()
-                .onAppear { viewModel.storeCurrentFirmwareVersion(from: currentRelease) }
-                .eraseToAnyView()
+        case let .noNeedToUpgrade(latestRelease, currentRelease):
+            return VStack(alignment: .leading, spacing: 16) {
+                Text(texts.latestTitle).bold()
+                    .font(titleFont)
+                    .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
+                Text(latestRelease.version.ruuviFirmwareDisplayValue)
+                    .font(bodyFont)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
+                Text(texts.alreadyOnLatest)
+                    .font(bodyFont)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
+            }
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity,
+                alignment: .topLeading
+            )
+            .padding()
+            .onAppear { viewModel.storeCurrentFirmwareVersion(from: currentRelease) }
+            .eraseToAnyView()
         case let .isAbleToUpgrade(latestRelease, currentRelease):
             return VStack {
                 VStack(alignment: .leading, spacing: 16) {
                     Text(texts.latestTitle).bold()
                         .font(titleFont)
                         .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
-                    Text(latestRelease.version)
+                    Text(latestRelease.version.ruuviFirmwareDisplayValue)
                         .font(bodyFont)
                         .foregroundColor(RuuviColor.textColor.swiftUIColor)
                     Text(texts.currentTitle).bold()
                         .font(titleFont)
                         .foregroundColor(RuuviColor.menuTextColor.swiftUIColor)
                     if let currentVersion = currentRelease?.version {
-                        Text(currentVersion)
+                        Text(currentVersion.ruuviFirmwareDisplayValue)
                             .font(bodyFont)
                             .foregroundColor(RuuviColor.textColor.swiftUIColor)
                     } else {

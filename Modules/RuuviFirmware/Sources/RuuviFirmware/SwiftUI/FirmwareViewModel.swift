@@ -1,6 +1,7 @@
 import Combine
 import Foundation
 import RuuviCore
+import RuuviOntology
 
 protocol FirmwareViewModelOutput: AnyObject {
     func firmwareUpgradeDidFinishSuccessfully()
@@ -25,7 +26,7 @@ final class FirmwareViewModel: ObservableObject {
         interactor: FirmwareInteractor
     ) {
         self.uuid = uuid
-        self.currentFirmware = currentFirmware
+        self.currentFirmware = currentFirmware.ruuviFirmwareDisplayValue ?? currentFirmware
         self.interactor = interactor
         Publishers.system(
             initial: state,
