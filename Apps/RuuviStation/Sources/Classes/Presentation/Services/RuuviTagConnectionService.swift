@@ -172,11 +172,6 @@ class RuuviTagConnectionService {
     }
 
     func hasBluetoothSensors(in snapshots: [RuuviTagCardSnapshot]) -> Bool {
-        print("Snapshot metadata:", snapshots.count)
-        for snapshot in snapshots {
-            print(snapshot.displayData.name)
-            dump(snapshot.metadata)
-        }
         return snapshots.contains { !$0.metadata.isCloud }
     }
 }
@@ -187,7 +182,6 @@ private extension RuuviTagConnectionService {
     func observeBluetoothState() {
         stateToken?.invalidate()
         stateToken = foreground.state(self) { observer, state in
-            print("RuuviTagConnectionService: Bluetooth state changed to \(state)")
             observer.notifyBluetoothStateChange(state)
         }
         notifyBluetoothStateChange(foreground.bluetoothState)

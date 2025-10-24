@@ -410,7 +410,7 @@ extension CardsBasePresenter: RuuviTagServiceCoordinatorObserver {
                 // In that case update the active snapshot with first item
                 // from the collection.
 #if DEBUG || ALPHA
-                print("Snapshots updated with reason: \(reason)")
+                debugPrint("Snapshots updated with reason: \(reason)")
 #endif
                 switch reason {
                 case .delete(let deleted):

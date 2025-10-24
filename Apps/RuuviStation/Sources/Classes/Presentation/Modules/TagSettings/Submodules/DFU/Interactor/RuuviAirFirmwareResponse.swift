@@ -54,7 +54,7 @@ struct RuuviAirFirmwareData: Codable {
                 tempVersionedFirmwares[key.stringValue] = firmware
             } catch {
                 // Log error but continue processing other keys
-                print("Warning: Failed to decode firmware for key '\(key.stringValue)': \(error)")
+                debugPrint("Warning: Failed to decode firmware for key '\(key.stringValue)': \(error)")
             }
         }
 
