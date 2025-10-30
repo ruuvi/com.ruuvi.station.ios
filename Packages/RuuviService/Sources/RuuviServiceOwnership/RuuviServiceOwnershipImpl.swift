@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 import Future
 import RuuviCloud
 import RuuviLocal
@@ -311,45 +312,50 @@ extension RuuviServiceOwnershipImpl {
         promise: Promise<AnyRuuviTagSensor, RuuviServiceError>,
         macId: MACIdentifier
     ) {
-        if let customImage = localImages.getCustomBackground(for: macId) {
-            // Send the original custom image to cloud. The resize and compression
-            // is already handled at the time of setting it to local.
-            if let jpegData = customImage.jpegData(compressionQuality: 1.0) {
-                let remote = cloud.upload(
-                    imageData: jpegData,
-                    mimeType: .jpg,
-                    progress: nil,
-                    for: macId
-                )
-                remote.on(success: { _ in
-                    promise.succeed(value: sensor.any)
-                }, failure: { error in
-                    promise.fail(error: .ruuviCloud(error))
-                })
-            } else {
-                promise.fail(error: .failedToGetJpegRepresentation)
-            }
-        } else {
-            promise.succeed(value: sensor.any)
+        storage.readSensorSettings(sensor).on { [weak self] settings in
+            guard let self else { return }
+            self.cloud.update(
+                temperatureOffset: settings?.temperatureOffset ?? 0,
+                humidityOffset: (settings?.humidityOffset ?? 0) * 100, // fraction local, % on cloud
+                pressureOffset: (settings?.pressureOffset ?? 0) * 100, // hPa local, Pa on cloud
+                for: sensor
+            ).on()
         }
-
-        storage
-            .readSensorSettings(sensor)
-            .on { [weak self] settings in
-                guard let sSelf = self else { return }
-                sSelf.cloud.update(
-                    temperatureOffset: settings?.temperatureOffset ?? 0,
-                    humidityOffset: (settings?.humidityOffset ?? 0) * 100, // fraction local, % on cloud
-                    pressureOffset: (settings?.pressureOffset ?? 0) * 100, // hPA local, Pa on cloud
-                    for: sensor
-                ).on()
-            }
 
         AlertType.allCases.forEach { type in
             if let alert = alertService.alert(for: sensor, of: type) {
                 alertService.register(type: alert, ruuviTag: sensor)
             }
         }
+
+        func uploadBackground(_ image: UIImage) {
+            guard let jpegData = image.jpegData(compressionQuality: 1.0) else {
+                promise.fail(error: .failedToGetJpegRepresentation)
+                return
+            }
+            let remote = self.cloud.upload(
+                imageData: jpegData,
+                mimeType: .jpg,
+                progress: nil,
+                for: macId
+            )
+            remote.on(success: { _ in
+                promise.succeed(value: sensor.any)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        }
+
+        if let localBackground = localImages.getCustomBackground(for: macId) {
+            uploadBackground(localBackground)
+            return
+        }
+
+        propertiesService.getImage(for: sensor).on(success: { image in
+            uploadBackground(image)
+        }, failure: { _ in
+            promise.succeed(value: sensor.any)
+        })
     }
 
     private func cleanupSensorData(for sensor: RuuviTagSensor) {
