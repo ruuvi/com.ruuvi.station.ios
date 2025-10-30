@@ -8,4 +8,9 @@ public protocol RuuviLocalIDs {
     func extendedLuid(for mac: MACIdentifier) -> LocalIdentifier?
     func set(luid: LocalIdentifier, for mac: MACIdentifier)
     func set(extendedLuid: LocalIdentifier, for mac: MACIdentifier)
+
+    func fullMac(for mac: MACIdentifier) -> MACIdentifier?
+    func originalMac(for fullMac: MACIdentifier) -> MACIdentifier?
+    func set(fullMac: MACIdentifier, for mac: MACIdentifier)
+    func removeFullMac(for mac: MACIdentifier)
 }

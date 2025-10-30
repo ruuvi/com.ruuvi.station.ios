@@ -27,4 +27,37 @@ class RuuviLocalIDsUserDefaults: RuuviLocalIDs {
         let key = mac.value + ".ext"
         UserDefaults.standard.set(extendedLuid.value, forKey: key)
     }
+
+    func fullMac(for mac: MACIdentifier) -> MACIdentifier? {
+        let key = mac.value + ".full"
+        if let value = UserDefaults.standard.string(forKey: key) {
+            return value.mac
+        }
+        return nil
+    }
+
+    func originalMac(for fullMac: MACIdentifier) -> MACIdentifier? {
+        let key = fullMac.value + ".orig"
+        if let value = UserDefaults.standard.string(forKey: key) {
+            return value.mac
+        }
+        return nil
+    }
+
+    func set(fullMac: MACIdentifier, for mac: MACIdentifier) {
+        let key = mac.value + ".full"
+        UserDefaults.standard.set(fullMac.value, forKey: key)
+
+        let reverseKey = fullMac.value + ".orig"
+        UserDefaults.standard.set(mac.value, forKey: reverseKey)
+    }
+
+    func removeFullMac(for mac: MACIdentifier) {
+        let key = mac.value + ".full"
+        if let full = UserDefaults.standard.string(forKey: key) {
+            let reverseKey = full + ".orig"
+            UserDefaults.standard.removeObject(forKey: reverseKey)
+        }
+        UserDefaults.standard.removeObject(forKey: key)
+    }
 }
