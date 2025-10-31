@@ -93,7 +93,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
             return false
         }
 
-        let peripheralStatus = CBPeripheralManager.authorizationStatus()
+        let peripheralStatus = CBManager.authorization
         switch peripheralStatus {
         case .denied, .restricted:
             return false
