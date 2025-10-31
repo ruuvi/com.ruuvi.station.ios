@@ -40,8 +40,9 @@ extension DashboardInteractor: DashboardInteractorInput {
             }
 
             self.ruuviOwnershipService.checkOwner(macId: macId)
-                .on(success: { [weak self] owner in
+                .on(success: { [weak self] result in
                     guard let self else { return }
+                    let owner = result.0
                     guard let owner, !owner.isEmpty else {
                         NotificationCenter.default.post(
                             name: .RuuviTagOwnershipCheckDidEnd,

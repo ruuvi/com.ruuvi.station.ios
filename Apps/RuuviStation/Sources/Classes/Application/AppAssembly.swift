@@ -191,6 +191,7 @@ private final class NetworkingAssembly: Assembly {
         container.register(RuuviCloud.self) { r in
             let user = r.resolve(RuuviUser.self)!
             let pool = r.resolve(RuuviPool.self)!
+            let localIDs = r.resolve(RuuviLocalIDs.self)!
             let baseUrlString: String = useDevServer ?
                 AppAssemblyConstants.ruuviCloudUrlDev : AppAssemblyConstants.ruuviCloudUrl
             let baseUrl = URL(string: baseUrlString)!
@@ -199,7 +200,7 @@ private final class NetworkingAssembly: Assembly {
                 user: user,
                 pool: pool
             )
-            return cloud
+            return RuuviCloudCanonicalProxy(cloud: cloud, localIDs: localIDs)
         }
 
         container.register(RuuviCloudFactory.self) { _ in

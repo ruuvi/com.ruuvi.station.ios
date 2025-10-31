@@ -1,3 +1,5 @@
+// swiftlint:disable file_length
+
 import Foundation
 import UIKit
 import Future
@@ -16,6 +18,7 @@ public enum RuuviTagOwnershipCheckResultKey: String {
     case hasOwner = "hasTagOwner"
 }
 
+// swiftlint:disable:next type_body_length
 public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     private let cloud: RuuviCloud
     private let pool: RuuviPool
@@ -104,16 +107,23 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
             promise.fail(error: .ruuviCloud(.notAuthorized))
             return promise.future
         }
-        cloud.claim(name: sensor.name, macId: macId)
-            .on(success: { [weak self] _ in
-                self?.handleSensorClaimed(
-                    sensor: sensor,
-                    owner: owner,
-                    macId: macId,
-                    promise: promise
-                )
+        ensureFullMac(for: sensor)
+            .on(success: { [weak self] canonicalMac in
+                guard let self else { return }
+                self.cloud.claim(name: sensor.name, macId: canonicalMac)
+                    .on(success: { [weak self] _ in
+                        guard let self else { return }
+                        self.handleSensorClaimed(
+                            sensor: sensor,
+                            owner: owner,
+                            macId: macId,
+                            promise: promise
+                        )
+                    }, failure: { error in
+                        promise.fail(error: .ruuviCloud(error))
+                    })
             }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
+                promise.fail(error: error)
             })
         return promise.future
     }
@@ -136,16 +146,23 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
             return promise.future
         }
 
-        cloud.contest(macId: macId, secret: secret)
-            .on(success: { [weak self] _ in
-                self?.handleSensorClaimed(
-                    sensor: sensor,
-                    owner: owner,
-                    macId: macId,
-                    promise: promise
-                )
+        ensureFullMac(for: sensor)
+            .on(success: { [weak self] canonicalMac in
+                guard let self else { return }
+                self.cloud.contest(macId: canonicalMac, secret: secret)
+                    .on(success: { [weak self] _ in
+                        guard let self else { return }
+                        self.handleSensorClaimed(
+                            sensor: sensor,
+                            owner: owner,
+                            macId: macId,
+                            promise: promise
+                        )
+                    }, failure: { error in
+                        promise.fail(error: .ruuviCloud(error))
+                    })
             }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
+                promise.fail(error: error)
             })
         return promise.future
     }
@@ -156,33 +173,34 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         removeCloudHistory: Bool
     ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
-        guard let macId = sensor.macId
-        else {
-            promise.fail(error: .macIdIsNil)
-            return promise.future
-        }
-        cloud.unclaim(
-            macId: macId,
-            removeCloudHistory: removeCloudHistory
-        )
-        .on(success: { [weak self] _ in
-            guard let sSelf = self else { return }
-            let unclaimedSensor = sensor
-                .with(isClaimed: false)
-                .with(canShare: false)
-                .with(sharedTo: [])
-                .with(isCloudSensor: false)
-                .withoutOwner()
-            sSelf.pool
-                .update(unclaimedSensor)
-                .on(success: { _ in
-                    promise.succeed(value: unclaimedSensor.any)
+        ensureFullMac(for: sensor)
+            .on(success: { [weak self] canonicalMac in
+                guard let self else { return }
+                self.cloud.unclaim(
+                    macId: canonicalMac,
+                    removeCloudHistory: removeCloudHistory
+                )
+                .on(success: { [weak self] _ in
+                    guard let self else { return }
+                    let unclaimedSensor = sensor
+                        .with(isClaimed: false)
+                        .with(canShare: false)
+                        .with(sharedTo: [])
+                        .with(isCloudSensor: false)
+                        .withoutOwner()
+                    self.pool
+                        .update(unclaimedSensor)
+                        .on(success: { _ in
+                            promise.succeed(value: unclaimedSensor.any)
+                        }, failure: { error in
+                            promise.fail(error: .ruuviPool(error))
+                        })
                 }, failure: { error in
-                    promise.fail(error: .ruuviPool(error))
+                    promise.fail(error: .ruuviCloud(error))
                 })
-        }, failure: { error in
-            promise.fail(error: .ruuviCloud(error))
-        })
+            }, failure: { error in
+                promise.fail(error: error)
+            })
         return promise.future
     }
 
@@ -259,11 +277,17 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     }
 
     @discardableResult
-    public func checkOwner(macId: MACIdentifier) -> Future<String?, RuuviServiceError> {
-        let promise = Promise<String?, RuuviServiceError>()
+    public func checkOwner(macId: MACIdentifier) -> Future<(String?, String?), RuuviServiceError> {
+        let promise = Promise<(String?, String?), RuuviServiceError>()
         cloud.checkOwner(macId: macId)
-            .on(success: { owner in
-                promise.succeed(value: owner)
+            .on(success: { [weak self] result in
+                if let self,
+                   let sensorString = result.1 {
+                    let fullMac = sensorString.lowercased().mac
+                    let original = self.localIDs.originalMac(for: fullMac) ?? macId
+                    self.localIDs.set(fullMac: fullMac, for: original)
+                }
+                promise.succeed(value: result)
             }, failure: { error in
                 promise.fail(error: .ruuviCloud(error))
             })
@@ -404,3 +428,48 @@ extension RuuviServiceOwnershipImpl {
             })
     }
 }
+
+private extension RuuviServiceOwnershipImpl {
+    func ensureFullMac(for sensor: RuuviTagSensor) -> Future<MACIdentifier, RuuviServiceError> {
+        let promise = Promise<MACIdentifier, RuuviServiceError>()
+        guard let macId = sensor.macId else {
+            promise.fail(error: .macIdIsNil)
+            return promise.future
+        }
+
+        let storedFull = localIDs.fullMac(for: macId)
+        let dataFormat = RuuviDataFormat.dataFormat(from: sensor.version)
+        if dataFormat == .v6,
+           macId.value.needsFullMacLookup,
+           storedFull == nil {
+            checkOwner(macId: macId)
+                .on(success: { [weak self] result in
+                    guard let self else { return }
+                    if let sensorString = result.1 {
+                        let fullMac = sensorString.lowercased().mac
+                        let original = self.localIDs.originalMac(for: fullMac) ?? macId
+                        self.localIDs.set(fullMac: fullMac, for: original)
+                        promise.succeed(value: fullMac)
+                    } else {
+                        promise.succeed(value: macId)
+                    }
+                }, failure: { error in
+                    promise.fail(error: error)
+                })
+        } else {
+            promise.succeed(value: storedFull ?? macId)
+        }
+
+        return promise.future
+    }
+}
+
+private extension String {
+    var needsFullMacLookup: Bool {
+        let hexDigits = unicodeScalars.filter {
+            CharacterSet(charactersIn: "0123456789abcdefABCDEF").contains($0)
+        }.count
+        return hexDigits < 12
+    }
+}
+// swiftlint:enable file_length
