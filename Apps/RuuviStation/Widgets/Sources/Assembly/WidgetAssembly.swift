@@ -1,5 +1,6 @@
 import Foundation
 import RuuviCloud
+import RuuviLocal
 import RuuviUser
 import Swinject
 
@@ -26,6 +27,7 @@ private final class NetworkingAssembly: Assembly {
 
         container.register(RuuviCloud.self) { r in
             let user = r.resolve(RuuviUser.self)!
+            let localIDs = r.resolve(RuuviLocalIDs.self)!
             let baseUrlString: String = useDevServer ?
                 Constants.ruuviCloudBaseURLDev.rawValue : Constants.ruuviCloudBaseURL.rawValue
             let baseUrl = URL(string: baseUrlString)!
@@ -34,7 +36,7 @@ private final class NetworkingAssembly: Assembly {
                 user: user,
                 pool: nil
             )
-            return cloud
+            return RuuviCloudCanonicalProxy(cloud: cloud, localIDs: localIDs)
         }
 
         container.register(RuuviCloudFactory.self) { _ in
@@ -44,6 +46,15 @@ private final class NetworkingAssembly: Assembly {
         container.register(RuuviUserFactory.self) { _ in
             RuuviUserFactoryCoordinator()
         }
+
+        container.register(RuuviLocalFactory.self) { _ in
+            RuuviLocalFactoryUserDefaults()
+        }
+
+        container.register(RuuviLocalIDs.self) { r in
+            let factory = r.resolve(RuuviLocalFactory.self)!
+            return factory.createLocalIDs()
+        }.inObjectScope(.container)
 
         container.register(RuuviUser.self) { r in
             let factory = r.resolve(RuuviUserFactory.self)!

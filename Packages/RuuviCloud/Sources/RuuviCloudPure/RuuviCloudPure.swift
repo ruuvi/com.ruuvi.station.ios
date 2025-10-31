@@ -764,8 +764,8 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func checkOwner(macId: MACIdentifier) -> Future<String?, RuuviCloudError> {
-        let promise = Promise<String?, RuuviCloudError>()
+    public func checkOwner(macId: MACIdentifier) -> Future<(String?, String?), RuuviCloudError> {
+        let promise = Promise<(String?, String?), RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
             promise.fail(error: .notAuthorized)
@@ -774,7 +774,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiGetSensorsRequest(sensor: macId.mac)
         api.owner(request, authorization: apiKey)
             .on(success: { response in
-                promise.succeed(value: response.email)
+                promise.succeed(value: (response.email, response.sensor))
             }, failure: { error in
                 promise.fail(error: .api(error))
             })

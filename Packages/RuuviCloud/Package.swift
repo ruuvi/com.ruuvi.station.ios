@@ -26,6 +26,7 @@ let package = Package(
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviUser"),
         .package(path: "../RuuviPool"),
+        .package(path: "../RuuviLocal"),
     ],
     targets: [
         .target(
@@ -34,6 +35,7 @@ let package = Package(
                 "Future",
                 "RuuviOntology",
                 "RuuviPool",
+                "RuuviLocal",
                 "RuuviUser",
             ]
         ),
