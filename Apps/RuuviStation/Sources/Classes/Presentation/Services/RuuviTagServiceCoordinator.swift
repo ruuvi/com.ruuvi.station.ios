@@ -561,14 +561,33 @@ extension RuuviTagServiceCoordinator: RuuviCloudServiceDelegate {
         _ service: RuuviCloudService,
         userDidLogin loggedIn: Bool
     ) {
-        notifyEvent(.userLoginStateChanged(loggedIn))
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+
+            self.dataService.getAllSnapshots().forEach { snapshot in
+                snapshot.ownership.isAuthorized = loggedIn
+                snapshot.capabilities.isCloudConnectionAlertsAvailable =
+                    loggedIn && snapshot.metadata.isCloud && snapshot.ownership.isOwnersPlanProPlus
+            }
+
+            self.notifyEvent(.userLoginStateChanged(loggedIn))
+        }
     }
 
     func ruuviCloudService(
         _ service: RuuviCloudService,
         userDidLogOut loggedOut: Bool
     ) {
-        notifyEvent(.userLogoutStateChanged(loggedOut))
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+
+            self.dataService.getAllSnapshots().forEach { snapshot in
+                snapshot.ownership.isAuthorized = false
+                snapshot.capabilities.isCloudConnectionAlertsAvailable = false
+            }
+
+            self.notifyEvent(.userLogoutStateChanged(loggedOut))
+        }
     }
 
     func ruuviCloudService(

@@ -404,7 +404,7 @@ private extension RuuviTagDataService {
     }
 
     func createSnapshot(from sensor: AnyRuuviTagSensor) -> RuuviTagCardSnapshot {
-        return RuuviTagCardSnapshot.create(
+        let snapshot = RuuviTagCardSnapshot.create(
             id: sensor.id,
             name: sensor.name,
             luid: sensor.luid,
@@ -415,6 +415,9 @@ private extension RuuviTagDataService {
             isConnectable: sensor.isConnectable,
             version: sensor.version
         )
+
+        populateSnapshot(snapshot, with: sensor)
+        return snapshot
     }
 
     // swiftlint:disable:next function_body_length
@@ -505,18 +508,7 @@ private extension RuuviTagDataService {
         DispatchQueue.main.async {
             // Update basic sensor information
             let invalidateLayout = snapshot.displayData.name != sensor.name
-            snapshot.displayData.name = sensor.name
-            snapshot.displayData.version = sensor.version
-            snapshot.metadata.isCloud = sensor.isCloud
-            snapshot.metadata.isOwner = sensor.isOwner
-            snapshot.connectionData.isConnectable = sensor.isConnectable
-
-            // Update metadata with new sensor information
-            snapshot.updateMetadata(
-                isCloud: sensor.isCloud,
-                isOwner: sensor.isOwner,
-                isConnectable: sensor.isConnectable
-            )
+            self.populateSnapshot(snapshot, with: sensor)
 
             if !self.settings.syncExtensiveChangesInProgress {
                 self.delegate?
@@ -706,6 +698,57 @@ private extension RuuviTagDataService {
                 object: nil,
                 userInfo: nil
             )
+    }
+
+    // MARK: - Snapshot helpers
+    private func populateSnapshot(
+        _ snapshot: RuuviTagCardSnapshot,
+        with sensor: AnyRuuviTagSensor
+    ) {
+        snapshot.displayData.name = sensor.name
+        snapshot.displayData.version = sensor.version
+        snapshot.connectionData.isConnectable = sensor.isConnectable
+        let firmware = sensor.displayFirmwareVersion ?? sensor.firmwareVersion
+        snapshot.displayData.firmwareVersion = firmware
+
+        let canShare = (sensor.isOwner && sensor.isClaimed) || sensor.canShare
+        snapshot.updateMetadata(
+            isCloud: sensor.isCloud,
+            isOwner: sensor.isOwner,
+            isConnectable: sensor.isConnectable,
+            canShareTag: canShare
+        )
+
+        snapshot.ownership.ownerName = sensor.owner
+        snapshot.ownership.ownersPlan = sensor.ownersPlan
+        snapshot.ownership.sharedTo = sensor.sharedTo
+
+        let canBeClaimed = !sensor.isClaimed &&
+            sensor.macId != nil &&
+            (sensor.owner == nil || sensor.isOwner)
+        snapshot.ownership.canClaimTag = canBeClaimed
+        snapshot.ownership.isClaimedTag = !canBeClaimed
+        snapshot.ownership.isOwnersPlanProPlus = isProPlan(sensor.ownersPlan)
+
+        let showConnectionControls = shouldShowConnectionControls(for: sensor)
+        snapshot.capabilities.showKeepConnection = showConnectionControls
+        snapshot.capabilities.showBatteryStatus = showConnectionControls
+        snapshot.capabilities.hideSwitchStatusLabel = !settings.showSwitchStatusLabel
+        snapshot.capabilities.isCloudAlertsAvailable = sensor.isCloud
+        snapshot.capabilities.isCloudConnectionAlertsAvailable =
+            sensor.isCloud && snapshot.ownership.isOwnersPlanProPlus
+        snapshot.capabilities.isAlertsEnabled =
+            sensor.isCloud || snapshot.connectionData.isConnected || sensor.serviceUUID != nil
+    }
+
+    private func shouldShowConnectionControls(for sensor: AnyRuuviTagSensor) -> Bool {
+        let firmware = RuuviDataFormat.dataFormat(from: sensor.version)
+        return !(firmware == .e1 || firmware == .v6)
+    }
+
+    private func isProPlan(_ plan: String?) -> Bool {
+        guard let plan = plan?.lowercased() else { return false }
+        return plan != "basic" && plan != "free"
     }
 }
 

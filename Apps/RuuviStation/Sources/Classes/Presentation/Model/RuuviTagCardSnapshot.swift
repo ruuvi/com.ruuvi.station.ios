@@ -21,6 +21,10 @@ public final class RuuviTagCardSnapshot: ObservableObject, Hashable, Equatable {
     @Published var metadata: RuuviTagCardSnapshotMetadata
     @Published var alertData: RuuviTagCardSnapshotAlertData
     @Published var connectionData: RuuviTagCardSnapshotConnectionData
+    @Published var ownership: RuuviTagCardSnapshotOwnership
+    @Published var calibration: RuuviTagCardSnapshotCalibrationData
+    @Published var capabilities: RuuviTagCardSnapshotCapabilities
+    @Published var diagnostics: RuuviTagCardSnapshotDiagnosticsData
     @Published var lastUpdated: Date?
 
     public var anyIndicatorAlertPublisher: AnyPublisher<[RuuviTagCardSnapshotAlertConfig], Never> {
@@ -44,6 +48,10 @@ public final class RuuviTagCardSnapshot: ObservableObject, Hashable, Equatable {
         metadata: RuuviTagCardSnapshotMetadata = RuuviTagCardSnapshotMetadata(),
         alertData: RuuviTagCardSnapshotAlertData = RuuviTagCardSnapshotAlertData(),
         connectionData: RuuviTagCardSnapshotConnectionData = RuuviTagCardSnapshotConnectionData(),
+        ownership: RuuviTagCardSnapshotOwnership = RuuviTagCardSnapshotOwnership(),
+        calibration: RuuviTagCardSnapshotCalibrationData = RuuviTagCardSnapshotCalibrationData(),
+        capabilities: RuuviTagCardSnapshotCapabilities = RuuviTagCardSnapshotCapabilities(),
+        diagnostics: RuuviTagCardSnapshotDiagnosticsData = RuuviTagCardSnapshotDiagnosticsData(),
         lastUpdated: Date?
     ) {
         self.id = id
@@ -53,6 +61,10 @@ public final class RuuviTagCardSnapshot: ObservableObject, Hashable, Equatable {
         self.connectionData = connectionData
         self.lastUpdated = lastUpdated
         self.metadata = metadata
+        self.ownership = ownership
+        self.calibration = calibration
+        self.capabilities = capabilities
+        self.diagnostics = diagnostics
     }
 
     // MARK: - Hashable
@@ -68,6 +80,10 @@ public final class RuuviTagCardSnapshot: ObservableObject, Hashable, Equatable {
         lhs.metadata == rhs.metadata &&
         lhs.alertData == rhs.alertData &&
         lhs.connectionData == rhs.connectionData &&
+        lhs.ownership == rhs.ownership &&
+        lhs.calibration == rhs.calibration &&
+        lhs.capabilities == rhs.capabilities &&
+        lhs.diagnostics == rhs.diagnostics &&
         lhs.lastUpdated == rhs.lastUpdated
     }
 }
@@ -93,6 +109,7 @@ struct RuuviTagCardSnapshotDisplayData: Equatable {
     var version: Int?
     var background: UIImage?
     var source: RuuviTagSensorRecordSource?
+    var firmwareVersion: String?
     var batteryNeedsReplacement: Bool = false
     var indicatorGrid: RuuviTagCardSnapshotIndicatorGridConfiguration?
     var hasNoData: Bool = false
@@ -109,7 +126,8 @@ struct RuuviTagCardSnapshotDisplayData: Equatable {
         lhs.batteryNeedsReplacement == rhs.batteryNeedsReplacement &&
         lhs.indicatorGrid == rhs.indicatorGrid &&
         lhs.hasNoData == rhs.hasNoData &&
-        lhs.networkSyncStatus == rhs.networkSyncStatus
+        lhs.networkSyncStatus == rhs.networkSyncStatus &&
+        lhs.firmwareVersion == rhs.firmwareVersion
     }
 }
 
@@ -145,6 +163,47 @@ struct RuuviTagCardSnapshotMetadata: Equatable {
             lhs.isOwner == rhs.isOwner &&
             lhs.canShareTag == rhs.canShareTag
     }
+}
+
+struct RuuviTagCardSnapshotOwnership: Equatable {
+    var ownerName: String?
+    var ownersPlan: String?
+    var sharedTo: [String] = []
+    var maxShareCount: Int?
+    var isAuthorized: Bool = false
+    var isClaimedTag: Bool = false
+    var canClaimTag: Bool = false
+    var isOwnersPlanProPlus: Bool = false
+}
+
+struct RuuviTagCardSnapshotCapabilities: Equatable {
+    var showKeepConnection: Bool = false
+    var showBatteryStatus: Bool = false
+    var hideSwitchStatusLabel: Bool = false
+    var isAlertsEnabled: Bool = false
+    var isPushNotificationsEnabled: Bool = false
+    var isPushNotificationsAvailable: Bool = false
+    var isCloudAlertsAvailable: Bool = false
+    var isCloudConnectionAlertsAvailable: Bool = false
+}
+
+struct RuuviTagCardSnapshotCalibrationData: Equatable {
+    var temperatureOffset: Double?
+    var humidityOffset: Double?
+    var pressureOffset: Double?
+    var isHumidityOffsetVisible: Bool = false
+    var isPressureOffsetVisible: Bool = false
+}
+
+struct RuuviTagCardSnapshotDiagnosticsData: Equatable {
+    var voltage: Double?
+    var accelerationX: Double?
+    var accelerationY: Double?
+    var accelerationZ: Double?
+    var txPower: Int?
+    var measurementSequenceNumber: Int?
+    var movementCounter: Int?
+    var latestRSSI: Int?
 }
 
 // MARK: - Alert Data Structures
@@ -329,7 +388,8 @@ extension RuuviTagCardSnapshot {
         serviceUUID: String? = nil,
         isCloud: Bool? = nil,
         isOwner: Bool? = nil,
-        isConnectable: Bool? = nil
+        isConnectable: Bool? = nil,
+        canShareTag: Bool? = nil
     ) {
         // Calculate isAlertAvailable based on connection status, serviceUUID, and cloud status
         let currentIsConnected = isConnected ?? self.connectionData.isConnected
@@ -367,6 +427,11 @@ extension RuuviTagCardSnapshot {
         if self.metadata.canShareTag != newCanShareTag {
             self.metadata.canShareTag = newCanShareTag
         }
+
+        if let canShareTag = canShareTag,
+           self.metadata.canShareTag != canShareTag {
+            self.metadata.canShareTag = canShareTag
+        }
     }
 
     // MARK: - Update Connection Data
@@ -388,6 +453,11 @@ extension RuuviTagCardSnapshot {
 
         // Update metadata when connection data changes
         updateMetadata(isConnected: isConnected, isConnectable: isConnectable)
+
+        capabilities.isAlertsEnabled =
+            metadata.isCloud ||
+            self.connectionData.isConnected ||
+            identifierData.serviceUUID != nil
     }
 
     // MARK: - Update Background Image
@@ -552,6 +622,27 @@ extension RuuviTagCardSnapshot {
             self.displayData.version = sensor.version
         }
 
+        let resolvedFirmware =
+            sensor.displayFirmwareVersion ?? sensor.firmwareVersion
+        if self.displayData.firmwareVersion != resolvedFirmware {
+            self.displayData.firmwareVersion = resolvedFirmware
+        }
+
+        diagnostics.voltage = finalRecord.voltage?.value
+        diagnostics.accelerationX = finalRecord.acceleration?.x.value
+        diagnostics.accelerationY = finalRecord.acceleration?.y.value
+        diagnostics.accelerationZ = finalRecord.acceleration?.z.value
+        diagnostics.txPower = finalRecord.txPower
+        diagnostics.measurementSequenceNumber = finalRecord.measurementSequenceNumber
+        diagnostics.movementCounter = finalRecord.movementCounter
+        diagnostics.latestRSSI = finalRecord.rssi
+
+        calibration.temperatureOffset = sensorSettings?.temperatureOffset
+        calibration.humidityOffset = sensorSettings?.humidityOffset
+        calibration.pressureOffset = sensorSettings?.pressureOffset
+        calibration.isHumidityOffsetVisible = finalRecord.humidity != nil
+        calibration.isPressureOffsetVisible = finalRecord.pressure != nil
+
         // Update timestamp only if it actually changed
         if self.lastUpdated != finalRecord.date {
             self.lastUpdated = finalRecord.date
@@ -608,6 +699,10 @@ extension RuuviTagCardSnapshot {
         )
 
         let alertData = RuuviTagCardSnapshotAlertData()
+        let ownership = RuuviTagCardSnapshotOwnership()
+        let calibration = RuuviTagCardSnapshotCalibrationData()
+        let capabilities = RuuviTagCardSnapshotCapabilities()
+        let diagnostics = RuuviTagCardSnapshotDiagnosticsData()
 
         return RuuviTagCardSnapshot(
             id: id,
@@ -616,6 +711,10 @@ extension RuuviTagCardSnapshot {
             metadata: metadata,
             alertData: alertData,
             connectionData: connectionData,
+            ownership: ownership,
+            calibration: calibration,
+            capabilities: capabilities,
+            diagnostics: diagnostics,
             lastUpdated: nil
         )
     }
