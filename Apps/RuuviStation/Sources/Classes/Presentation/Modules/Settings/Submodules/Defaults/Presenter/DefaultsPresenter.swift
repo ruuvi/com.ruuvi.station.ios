@@ -74,6 +74,7 @@ extension DefaultsPresenter {
             buildDoHistorySyncAfterSignIn(),
             buildIncludeDataSourceInHistoryExport(),
             buildShowRedesignedCardsUIWithMenu(),
+            buildShowImprovedSensorSettingsUI(),
             buildDownloadBetaFirmware(),
             buildDownloadAlphaFirmware(),
         ]
@@ -503,6 +504,21 @@ extension DefaultsPresenter {
 
         bind(viewModel.boolean, fire: false) { observer, bool in
             observer.flags.showNewCardsMenu = GlobalHelpers
+                .getBool(from: bool)
+        }
+
+        return viewModel
+    }
+
+    private func buildShowImprovedSensorSettingsUI() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Show improved Sensor Settings UI"
+        viewModel.boolean.value = flags.showImprovedSensorSettingsUI
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, bool in
+            observer.flags.showImprovedSensorSettingsUI = GlobalHelpers
                 .getBool(from: bool)
         }
 
