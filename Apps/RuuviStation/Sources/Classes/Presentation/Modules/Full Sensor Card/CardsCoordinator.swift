@@ -191,6 +191,7 @@ private extension CardsCoordinator {
         viewController.output = presenter
 
         cardsRouter = CardsRouter()
+        cardsRouter.flags = r.resolve(RuuviLocalFlags.self)
         cardsRouter.transitionHandler = viewController
         presenter.router = cardsRouter
 

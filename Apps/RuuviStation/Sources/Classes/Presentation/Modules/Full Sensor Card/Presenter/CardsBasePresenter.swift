@@ -703,6 +703,7 @@ private extension CardsBasePresenter {
                 $0.macId?.any == sensor.macId?.any
             })
             router?.openTagSettings(
+                snapshot: snapshot,
                 ruuviTag: sensor,
                 latestMeasurement: snapshot.latestRawRecord,
                 sensorSettings: settings,

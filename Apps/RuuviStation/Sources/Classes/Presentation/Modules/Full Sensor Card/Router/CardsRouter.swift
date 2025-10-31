@@ -5,6 +5,7 @@ import RuuviOntology
 import UIKit
 
 class CardsRouter: NSObject, CardsRouterInput {
+    var flags: RuuviLocalFlags!
     weak var transitionHandler: UIViewController?
     private weak var dfuModule: DFUModuleInput?
 
@@ -15,26 +16,39 @@ class CardsRouter: NSObject, CardsRouterInput {
     }
 
     func openTagSettings(
+        snapshot: RuuviTagCardSnapshot,
         ruuviTag: RuuviTagSensor,
         latestMeasurement: RuuviTagSensorRecord?,
         sensorSettings: SensorSettings?,
         output: LegacyTagSettingsModuleOutput
     ) {
-        let factory: LegacyTagSettingsModuleFactory = LegacyTagSettingsModuleFactoryImpl()
-        let module = factory.create()
-        transitionHandler?
-            .navigationController?
-            .pushViewController(
-                module,
-                animated: true
+        if flags.showImprovedSensorSettingsUI {
+            let controller = TagSettingsHostingController(
+                snapshot: snapshot, intent: TagSettingsIntent()
             )
-        if let presenter = module.output as? LegacyTagSettingsModuleInput {
-            presenter.configure(output: output)
-            presenter.configure(
-                ruuviTag: ruuviTag,
-                latestMeasurement: latestMeasurement,
-                sensorSettings: sensorSettings
-            )
+            transitionHandler?
+                .navigationController?
+                .pushViewController(
+                    controller,
+                    animated: true
+                )
+        } else {
+            let factory: LegacyTagSettingsModuleFactory = LegacyTagSettingsModuleFactoryImpl()
+            let module = factory.create()
+            transitionHandler?
+                .navigationController?
+                .pushViewController(
+                    module,
+                    animated: true
+                )
+            if let presenter = module.output as? LegacyTagSettingsModuleInput {
+                presenter.configure(output: output)
+                presenter.configure(
+                    ruuviTag: ruuviTag,
+                    latestMeasurement: latestMeasurement,
+                    sensorSettings: sensorSettings
+                )
+            }
         }
     }
 
