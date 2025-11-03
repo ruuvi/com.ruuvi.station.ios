@@ -132,7 +132,8 @@ extension RuuviServiceExportImpl {
     private func buildColumnDefinitions(
         firmware: RuuviDataFormat,
         units: RuuviServiceMeasurementSettingsUnit,
-        settings: RuuviLocalSettings
+        settings: RuuviLocalSettings,
+        records: [RuuviTagSensorRecord]
     ) -> [ColumnDefinition] {
 
         // Local numeric-to-string helper
@@ -202,7 +203,12 @@ extension RuuviServiceExportImpl {
         // MARK: E1/V6 columns
         // swiftlint:disable:next function_body_length
         func buildE1V6Columns() -> [ColumnDefinition] {
-            return [
+            let hasSoundInstant = records.contains(where: { $0.dbaInstant != nil })
+            let hasSoundAvg = records.contains(where: { $0.dbaAvg != nil })
+            let hasSoundPeak = records.contains(where: { $0.dbaPeak != nil })
+            let hasLuminance = records.contains(where: { $0.luminance != nil })
+
+            var columns: [ColumnDefinition] = [
                 ColumnDefinition(
                     header: RuuviLocalization.aqi,
                     cellExtractor: { [weak self] record in
@@ -259,31 +265,53 @@ extension RuuviServiceExportImpl {
                         toString(record.nox)
                     }
                 ),
-                ColumnDefinition(
-                    header: RuuviLocalization.soundInstant + " (\(RuuviLocalization.unitSound))",
-                    cellExtractor: { record in
-                        toString(record.dbaInstant)
-                    }
-                ),
-                ColumnDefinition(
-                    header: RuuviLocalization.soundAvg + " (\(RuuviLocalization.unitSound))",
-                    cellExtractor: { record in
-                        toString(record.dbaAvg)
-                    }
-                ),
-                ColumnDefinition(
-                    header: RuuviLocalization.soundPeak + " (\(RuuviLocalization.unitSound))",
-                    cellExtractor: { record in
-                        toString(record.dbaPeak)
-                    }
-                ),
-                ColumnDefinition(
-                    header: RuuviLocalization.luminosity + " (\(RuuviLocalization.unitLuminosity))",
-                    cellExtractor: { record in
-                        toString(record.luminance)
-                    }
-                ),
             ]
+
+            if hasSoundInstant {
+                columns.append(
+                    ColumnDefinition(
+                        header: RuuviLocalization.soundInstant + " (\(RuuviLocalization.unitSound))",
+                        cellExtractor: { record in
+                            toString(record.dbaInstant)
+                        }
+                    )
+                )
+            }
+
+            if hasSoundAvg {
+                columns.append(
+                    ColumnDefinition(
+                        header: RuuviLocalization.soundAvg + " (\(RuuviLocalization.unitSound))",
+                        cellExtractor: { record in
+                            toString(record.dbaAvg)
+                        }
+                    )
+                )
+            }
+
+            if hasSoundPeak {
+                columns.append(
+                    ColumnDefinition(
+                        header: RuuviLocalization.soundPeak + " (\(RuuviLocalization.unitSound))",
+                        cellExtractor: { record in
+                            toString(record.dbaPeak)
+                        }
+                    )
+                )
+            }
+
+            if hasLuminance {
+                columns.append(
+                    ColumnDefinition(
+                        header: RuuviLocalization.luminosity + " (\(RuuviLocalization.unitLuminosity))",
+                        cellExtractor: { record in
+                            toString(record.luminance)
+                        }
+                    )
+                )
+            }
+
+            return columns
         }
 
         // MARK: v5 columns
@@ -392,7 +420,8 @@ extension RuuviServiceExportImpl {
                 let columns = self.buildColumnDefinitions(
                     firmware: firmware,
                     units: self.measurementService.units,
-                    settings: self.ruuviLocalSettings
+                    settings: self.ruuviLocalSettings,
+                    records: records
                 )
 
                 let headerLine = columns.map { $0.header }.joined(separator: ",")
@@ -442,7 +471,8 @@ extension RuuviServiceExportImpl {
                 let columns = self.buildColumnDefinitions(
                     firmware: firmwareType,
                     units: self.measurementService.units,
-                    settings: self.ruuviLocalSettings
+                    settings: self.ruuviLocalSettings,
+                    records: records
                 )
 
                 let wb = Workbook(name: pathURL.path)
