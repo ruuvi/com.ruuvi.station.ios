@@ -457,6 +457,21 @@ class LegacyTagSettingsViewController: UIViewController {
         reuseIdentifier: Self.ReuseIdentifier
     )
 
+    private lazy var moreInfoPm1Cell: LegacyTagSettingsPlainCell? = LegacyTagSettingsPlainCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
+
+    private lazy var moreInfoPm4Cell: LegacyTagSettingsPlainCell? = LegacyTagSettingsPlainCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
+
+    private lazy var moreInfoPm10Cell: LegacyTagSettingsPlainCell? = LegacyTagSettingsPlainCell(
+        style: .value1,
+        reuseIdentifier: Self.ReuseIdentifier
+    )
+
     // Firmware section
     private lazy var firmwareVersionCell: LegacyTagSettingsBasicCell? = LegacyTagSettingsBasicCell(
         style: .value1,
@@ -520,6 +535,9 @@ class LegacyTagSettingsViewController: UIViewController {
         moreInfoTxPowerCell = nil
         moreInfoRSSICell = nil
         moreInfoMSNCell = nil
+        moreInfoPm1Cell = nil
+        moreInfoPm4Cell = nil
+        moreInfoPm10Cell = nil
         firmwareVersionCell = nil
     }
 
@@ -6268,6 +6286,15 @@ extension LegacyTagSettingsViewController {
     private func hasMeasurement() -> Bool {
         GlobalHelpers.getBool(from: viewModel?.latestMeasurement.value != nil)
     }
+
+    private func isAirDevice() -> Bool {
+        guard let firmwareVersion = viewModel?.version.value
+        else {
+            return false
+        }
+        let dataFormat = RuuviDataFormat.dataFormat(from: firmwareVersion)
+        return dataFormat == .e1 || dataFormat == .v6
+    }
 }
 
 // MARK: - MORE INFO SECTION
@@ -6281,6 +6308,7 @@ extension LegacyTagSettingsViewController {
         }
 
         let emptyString = RuuviLocalization.na
+        let showAirDeviceMetrics = isAirDevice()
 
         // Mac address
         if let moreInfoMacAddressCell {
@@ -6368,6 +6396,26 @@ extension LegacyTagSettingsViewController {
             }
         }
 
+        if showAirDeviceMetrics {
+            if let moreInfoPm1Cell {
+                moreInfoPm1Cell.bind(viewModel.pm1) { [weak self] cell, value in
+                    cell.configure(value: self?.formattedPM1Value(from: value))
+                }
+            }
+
+            if let moreInfoPm4Cell {
+                moreInfoPm4Cell.bind(viewModel.pm4) { [weak self] cell, value in
+                    cell.configure(value: self?.formattedPM4Value(from: value))
+                }
+            }
+
+            if let moreInfoPm10Cell {
+                moreInfoPm10Cell.bind(viewModel.pm10) { [weak self] cell, value in
+                    cell.configure(value: self?.formattedPM10Value(from: value))
+                }
+            }
+        }
+
         // Header
         if let moreInfoSectionHeaderView {
             moreInfoSectionHeaderView.bind(viewModel.version) { header, value
@@ -6381,8 +6429,17 @@ extension LegacyTagSettingsViewController {
 
     private func configureMoreInfoSection() -> LegacyTagSettingsSection {
 
+        var moreInfoCells: [LegacyTagSettingsItem] = []
+        if isAirDevice() {
+            moreInfoCells += [
+                moreInfoPM1Item(),
+                moreInfoPM4Item(),
+                moreInfoPM10Item(),
+            ]
+        }
+
         // Common
-        var moreInfoCells: [LegacyTagSettingsItem] = [
+        moreInfoCells += [
             moreInfoMacAddressItem(),
             moreInfoDataFormatItem(),
             moreInfoDataSourceItem(),
@@ -6590,6 +6647,51 @@ extension LegacyTagSettingsViewController {
         return settingItem
     }
 
+    private func moreInfoPM1Item() -> LegacyTagSettingsItem {
+        let settingItem = LegacyTagSettingsItem(
+            createdCell: { [weak self] in
+                self?.moreInfoPm1Cell?.configure(
+                    title: RuuviLocalization.pm10,
+                    value: self?.formattedPM1Value(from: self?.viewModel?.pm1.value)
+                )
+                self?.moreInfoPm1Cell?.selectionStyle = .none
+                return self?.moreInfoPm1Cell ?? UITableViewCell()
+            },
+            action: nil
+        )
+        return settingItem
+    }
+
+    private func moreInfoPM4Item() -> LegacyTagSettingsItem {
+        let settingItem = LegacyTagSettingsItem(
+            createdCell: { [weak self] in
+                self?.moreInfoPm4Cell?.configure(
+                    title: RuuviLocalization.pm40,
+                    value: self?.formattedPM4Value(from: self?.viewModel?.pm4.value)
+                )
+                self?.moreInfoPm4Cell?.selectionStyle = .none
+                return self?.moreInfoPm4Cell ?? UITableViewCell()
+            },
+            action: nil
+        )
+        return settingItem
+    }
+
+    private func moreInfoPM10Item() -> LegacyTagSettingsItem {
+        let settingItem = LegacyTagSettingsItem(
+            createdCell: { [weak self] in
+                self?.moreInfoPm10Cell?.configure(
+                    title: RuuviLocalization.pm100,
+                    value: self?.formattedPM10Value(from: self?.viewModel?.pm10.value)
+                )
+                self?.moreInfoPm10Cell?.selectionStyle = .none
+                return self?.moreInfoPm10Cell ?? UITableViewCell()
+            },
+            action: nil
+        )
+        return settingItem
+    }
+
     // More Info Helpers
     private func formattedDataSource(from source: RuuviTagSensorRecordSource?) -> String {
         let emptyString = RuuviLocalization.na
@@ -6660,6 +6762,58 @@ extension LegacyTagSettingsViewController {
         } else {
             RuuviLocalization.na
         }
+    }
+
+    private func formattedPM1Value(from value: Double?) -> String {
+        guard let measurementService
+        else {
+            return RuuviLocalization.na
+        }
+        return formattedPMValue(
+            from: value,
+            formatter: { measurementService.pm10String(for: $0) },
+            unit: RuuviLocalization.unitPm10
+        )
+    }
+
+    private func formattedPM4Value(from value: Double?) -> String {
+        guard let measurementService
+        else {
+            return RuuviLocalization.na
+        }
+        return formattedPMValue(
+            from: value,
+            formatter: { measurementService.pm40String(for: $0) },
+            unit: RuuviLocalization.unitPm40
+        )
+    }
+
+    private func formattedPM10Value(from value: Double?) -> String {
+        guard let measurementService
+        else {
+            return RuuviLocalization.na
+        }
+        return formattedPMValue(
+            from: value,
+            formatter: { measurementService.pm100String(for: $0) },
+            unit: RuuviLocalization.unitPm100
+        )
+    }
+
+    private func formattedPMValue(
+        from value: Double?,
+        formatter: (Double) -> String,
+        unit: String
+    ) -> String {
+        guard let value
+        else {
+            return RuuviLocalization.na
+        }
+        let formattedValue = formatter(value)
+        if formattedValue.isEmpty {
+            return RuuviLocalization.na
+        }
+        return "\(formattedValue) \(unit)"
     }
 
     private func formattedVersion(value: Int?) -> String {
