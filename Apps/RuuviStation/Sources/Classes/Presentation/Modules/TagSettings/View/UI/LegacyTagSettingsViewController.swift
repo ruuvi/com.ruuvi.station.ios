@@ -6169,7 +6169,7 @@ extension LegacyTagSettingsViewController {
 
         let section = LegacyTagSettingsSection(
             identifier: .offsetCorrection,
-            title: RuuviLocalization.TagSettings.SectionHeader.OffsetCorrection.title.capitalized,
+            title: RuuviLocalization.offsetCorrection,
             cells: offsetCorrectionItems,
             collapsed: true,
             headerType: .expandable,
@@ -6474,7 +6474,7 @@ extension LegacyTagSettingsViewController {
 
         let section = LegacyTagSettingsSection(
             identifier: .moreInfo,
-            title: RuuviLocalization.TagSettings.Label.MoreInfo.text.capitalized,
+            title: RuuviLocalization.moreInfo,
             cells: moreInfoCells,
             collapsed: true,
             headerType: .expandable,
@@ -6848,7 +6848,7 @@ extension LegacyTagSettingsViewController {
     private func configureFirmwareSection() -> LegacyTagSettingsSection {
         let section = LegacyTagSettingsSection(
             identifier: .firmware,
-            title: RuuviLocalization.TagSettings.SectionHeader.Firmware.title.capitalized,
+            title: RuuviLocalization.firmware,
             cells: [
                 tagFirmwareVersionItem(),
                 tagFirmwareUpdateItem(),
