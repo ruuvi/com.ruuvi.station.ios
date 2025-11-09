@@ -43,7 +43,9 @@ class CardsGraphView: UIView {
 
     // MARK: - Private properties
     private var settings: RuuviLocalSettings!
-    private var graphType: MeasurementType = .temperature
+    private let variant: MeasurementDisplayVariant
+    private let graphType: MeasurementType
+    var measurementType: MeasurementType { graphType }
     private var chartMinMaxAvgHiddenConstraints: [NSLayoutConstraint] = []
 
     // Properties for chart stat
@@ -52,8 +54,9 @@ class CardsGraphView: UIView {
     private var avgValue: Double?
     private var latestValue: ChartDataEntry?
 
-    init(graphType: MeasurementType) {
-        self.graphType = graphType
+    init(variant: MeasurementDisplayVariant) {
+        self.variant = variant
+        self.graphType = variant.type
         super.init(frame: .zero)
         addSubviews()
     }
@@ -201,7 +204,7 @@ extension CardsGraphView {
         unit: String
     ) {
         let hideUnit = MeasurementType.hideUnit(for: type)
-        chartNameLabel.text = type.shortName + (hideUnit ? "" : " (\(unit))")
+        chartNameLabel.text = type.shortName(for: variant) + (hideUnit ? "" : " (\(unit))")
         chartView.setMarker(
             with: type,
             measurementService: measurementService,
@@ -305,19 +308,25 @@ extension CardsGraphView {
         value: Double?,
         measurementService: RuuviServiceMeasurement
     ) -> String {
+        guard let value else { return "" }
+
         switch type {
         case .temperature:
-            return measurementService.stringWithoutSign(
-                temperature: value
-            )
+            let decimals = settings?.temperatureAccuracy.value ?? 2
+            return formattedNumber(value, decimals: decimals)
         case .humidity:
-            return measurementService.stringWithoutSign(
-                humidity: value
-            )
+            let resolvedUnit = variant.humidityUnit ?? .percent
+            switch resolvedUnit {
+            case .dew:
+                let decimals = settings?.temperatureAccuracy.value ?? 2
+                return formattedNumber(value, decimals: decimals)
+            default:
+                let decimals = settings?.humidityAccuracy.value ?? 2
+                return formattedNumber(value, decimals: decimals)
+            }
         case .pressure:
-            return measurementService.stringWithoutSign(
-                pressure: value
-            )
+            let decimals = settings?.pressureAccuracy.value ?? 2
+            return formattedNumber(value, decimals: decimals)
         case .aqi:
             return measurementService.aqiString(for: value)
         case .co2:
@@ -335,7 +344,16 @@ extension CardsGraphView {
         case .soundInstant:
             return measurementService.soundString(for: value)
         default:
-            return ""
+            let decimals = 2
+            return formattedNumber(value, decimals: decimals)
         }
+    }
+
+    private func formattedNumber(_ value: Double, decimals: Int) -> String {
+        GlobalHelpers().formattedString(
+            from: value,
+            minPlace: 0,
+            toPlace: decimals
+        )
     }
 }

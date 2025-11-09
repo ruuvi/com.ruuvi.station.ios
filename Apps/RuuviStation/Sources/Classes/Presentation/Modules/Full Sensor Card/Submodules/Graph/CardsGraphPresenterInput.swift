@@ -11,7 +11,10 @@ enum GraphHistoryAbortSyncSource {
 protocol CardsGraphPresenterInput: CardsPresenterInput {
     func start(shouldSyncFromCloud: Bool)
     func configure(output: CardsGraphPresenterOutput?)
-    func scroll(to measurementType: MeasurementType)
+    func scroll(
+        to measurementType: MeasurementType,
+        variant: MeasurementDisplayVariant?
+    )
     func showAbortSyncConfirmationDialog(
         for snapshot: RuuviTagCardSnapshot,
         from source: GraphHistoryAbortSyncSource

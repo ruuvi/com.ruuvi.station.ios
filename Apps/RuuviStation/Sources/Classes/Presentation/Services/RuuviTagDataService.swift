@@ -8,6 +8,564 @@ import RuuviStorage
 import RuuviService
 import RuuviLocal
 import RuuviDaemon
+import RuuviPool
+import RuuviLocalization
+// MARK: - Measurement Display Templates
+/// Describes a specific measurement variant (base type + optional unit override).
+struct MeasurementDisplayVariant: Hashable {
+    let type: MeasurementType
+    let temperatureUnit: TemperatureUnit?
+    let humidityUnit: HumidityUnit?
+    let pressureUnit: UnitPressure?
+
+    init(
+        type: MeasurementType,
+        temperatureUnit: TemperatureUnit? = nil,
+        humidityUnit: HumidityUnit? = nil,
+        pressureUnit: UnitPressure? = nil
+    ) {
+        self.type = type
+        self.temperatureUnit = temperatureUnit
+        self.humidityUnit = humidityUnit
+        self.pressureUnit = pressureUnit
+    }
+
+    func baseTypeEquals(_ other: MeasurementType) -> Bool {
+        type.isSameCase(as: other)
+    }
+}
+
+/// Describes how a measurement variant should appear by default.
+struct MeasurementDisplayEntry {
+    let variant: MeasurementDisplayVariant
+    var type: MeasurementType { variant.type }
+    var isVisible: Bool
+    var contexts: MeasurementDisplayContext
+
+    init(
+        _ type: MeasurementType,
+        temperatureUnit: TemperatureUnit? = nil,
+        humidityUnit: HumidityUnit? = nil,
+        pressureUnit: UnitPressure? = nil,
+        visible: Bool = true,
+        contexts: MeasurementDisplayContext = .all
+    ) {
+        self.variant = MeasurementDisplayVariant(
+            type: type,
+            temperatureUnit: temperatureUnit,
+            humidityUnit: humidityUnit,
+            pressureUnit: pressureUnit
+        )
+        self.isVisible = visible
+        self.contexts = contexts
+    }
+
+    func supports(_ context: MeasurementDisplayContext) -> Bool {
+        contexts.contains(context)
+    }
+}
+
+struct MeasurementDisplayProfile {
+    let entries: [MeasurementDisplayEntry]
+
+    var orderedVisibleTypes: [MeasurementType] {
+        orderedVisibleTypes(for: .indicator)
+    }
+
+    var orderedVisibleVariants: [MeasurementDisplayVariant] {
+        orderedVisibleVariants(for: .indicator)
+    }
+
+    func entries(for context: MeasurementDisplayContext) -> [MeasurementDisplayEntry] {
+        entries.filter { $0.isVisible && $0.supports(context) }
+    }
+
+    func orderedVisibleTypes(for context: MeasurementDisplayContext) -> [MeasurementType] {
+        orderedVisibleVariants(for: context).map { $0.type }
+    }
+
+    func orderedVisibleVariants(for context: MeasurementDisplayContext) -> [MeasurementDisplayVariant] {
+        entries(for: context).map(\.variant)
+    }
+
+    func entriesSupporting(_ context: MeasurementDisplayContext) -> [MeasurementDisplayEntry] {
+        entries.filter { $0.supports(context) }
+    }
+}
+
+struct MeasurementDisplayContext: OptionSet {
+    let rawValue: Int
+
+    static let none = MeasurementDisplayContext([])
+    static let indicator = MeasurementDisplayContext(rawValue: 1 << 0)
+    static let graph = MeasurementDisplayContext(rawValue: 1 << 1)
+    static let alert = MeasurementDisplayContext(rawValue: 1 << 2)
+
+    static let all: MeasurementDisplayContext = [.indicator, .graph, .alert]
+}
+
+extension RuuviTagDataService {
+    private static var measurementDisplayOverrides: [String: MeasurementDisplayProfile] = [:]
+    private static var measurementDisplayPreferenceOverrides: [String: MeasurementDisplayPreference] = [:]
+    private static let measurementDisplayOverrideQueue = DispatchQueue(
+        label: "com.ruuvi.measurement.display.override.queue",
+        attributes: .concurrent
+    )
+
+    static func measurementDisplayProfile(for sensor: RuuviTagSensor) -> MeasurementDisplayProfile {
+#if DEBUG
+        MeasurementDisplayPreferenceSamples.applySamplePreferenceIfNeeded(to: sensor)
+#endif
+        let baseProfile = measurementDisplayOverride(for: sensor.id) ??
+            defaultMeasurementDisplayProfile(for: sensor)
+        return applyMeasurementPreference(for: sensor.id, to: baseProfile)
+    }
+
+    static func measurementDisplayProfile(for snapshot: RuuviTagCardSnapshot) -> MeasurementDisplayProfile {
+        let baseProfile = measurementDisplayOverride(for: snapshot.id) ??
+            defaultMeasurementDisplayProfile(for: snapshot)
+        return applyMeasurementPreference(for: snapshot.id, to: baseProfile)
+    }
+
+    static func alertMeasurementVariants(for sensor: RuuviTagSensor) -> [MeasurementDisplayVariant] {
+        measurementDisplayProfile(for: sensor).orderedVisibleVariants(for: .alert)
+    }
+
+    static func alertMeasurementVariants(for snapshot: RuuviTagCardSnapshot) -> [MeasurementDisplayVariant] {
+        measurementDisplayProfile(for: snapshot).orderedVisibleVariants(for: .alert)
+    }
+
+    static func defaultMeasurementDisplayProfile() -> MeasurementDisplayProfile {
+        measurementDisplayTemplateAir
+    }
+
+    static func setMeasurementDisplayOverride(
+        _ profile: MeasurementDisplayProfile?,
+        for sensorId: String
+    ) {
+        measurementDisplayOverrideQueue.async(flags: .barrier) {
+            if let profile {
+                measurementDisplayOverrides[sensorId] = profile
+            } else {
+                measurementDisplayOverrides.removeValue(forKey: sensorId)
+            }
+        }
+    }
+
+    static func clearMeasurementDisplayOverride(for sensorId: String) {
+        setMeasurementDisplayOverride(nil, for: sensorId)
+    }
+
+    static func clearAllMeasurementDisplayOverrides() {
+        measurementDisplayOverrideQueue.async(flags: .barrier) {
+            measurementDisplayOverrides.removeAll()
+            measurementDisplayPreferenceOverrides.removeAll()
+        }
+    }
+
+    private static func measurementDisplayOverride(for sensorId: String) -> MeasurementDisplayProfile? {
+        var override: MeasurementDisplayProfile?
+        measurementDisplayOverrideQueue.sync {
+            override = measurementDisplayOverrides[sensorId]
+        }
+        return override
+    }
+
+    static func setMeasurementDisplayPreference(
+        _ preference: MeasurementDisplayPreference?,
+        for sensorId: String
+    ) {
+        // Example:
+        // RuuviTagDataService.setMeasurementDisplayPreference(
+        //     .init(
+        //         defaultDisplayOrder: false,
+        //         displayOrderCodes: [
+        //             "TEMPERATURE_C",
+        //             "HUMIDITY_0",
+        //             "ACCELERATION_GX",
+        //             "ACCELERATION_GY",
+        //             "ACCELERATION_GZ",
+        //             "SIGNAL_DBM",
+        //         ]
+        //     ),
+        //     for: sensor.id
+        // )
+        measurementDisplayOverrideQueue.async(flags: .barrier) {
+            if let preference {
+                measurementDisplayPreferenceOverrides[sensorId] = preference
+            } else {
+                measurementDisplayPreferenceOverrides.removeValue(forKey: sensorId)
+            }
+        }
+    }
+
+    static func clearMeasurementDisplayPreference(for sensorId: String) {
+        setMeasurementDisplayPreference(nil, for: sensorId)
+    }
+
+    private static func measurementDisplayPreference(
+        for sensorId: String
+    ) -> MeasurementDisplayPreference? {
+        var preference: MeasurementDisplayPreference?
+        measurementDisplayOverrideQueue.sync {
+            preference = measurementDisplayPreferenceOverrides[sensorId]
+        }
+        return preference
+    }
+
+    static func defaultMeasurementDisplayProfile(for sensor: RuuviTagSensor) -> MeasurementDisplayProfile {
+        let format = RuuviDataFormat.dataFormat(from: sensor.version)
+        return defaultMeasurementDisplayProfile(for: format)
+    }
+
+    static func defaultMeasurementDisplayProfile(for snapshot: RuuviTagCardSnapshot) -> MeasurementDisplayProfile {
+        let format = RuuviDataFormat.dataFormat(from: snapshot.displayData.version.bound)
+        return defaultMeasurementDisplayProfile(for: format)
+    }
+
+    private static func defaultMeasurementDisplayProfile(for format: RuuviDataFormat) -> MeasurementDisplayProfile {
+        switch format {
+        case .e1, .v6:
+            return measurementDisplayTemplateAir
+        default:
+            return measurementDisplayTemplateTag
+        }
+    }
+
+    private static let measurementDisplayTemplateAir = MeasurementDisplayProfile(
+        entries: makeEntries(for: airMeasurementOrder)
+    )
+
+    private static let measurementDisplayTemplateTag = MeasurementDisplayProfile(
+        entries: makeEntries(for: tagMeasurementOrder)
+    )
+
+    private static let baseMeasurementPriority: [MeasurementType] = [
+        .aqi,
+        .co2,
+        .pm10,
+        .pm25,
+        .pm40,
+        .pm100,
+        .voc,
+        .nox,
+        .temperature,
+        .humidity,
+        .pressure,
+        .luminosity,
+        .movementCounter,
+        .soundInstant,
+        .soundPeak,
+        .soundAverage,
+    ]
+
+    private static let airSupportedMeasurements: [MeasurementType] =
+        baseMeasurementPriority + [.rssi]
+
+    private static let tagSupportedMeasurements: [MeasurementType] = [
+        .temperature,
+        .humidity,
+        .pressure,
+        .movementCounter,
+        .voltage,
+        .accelerationX,
+        .accelerationY,
+        .accelerationZ,
+        .rssi,
+    ]
+
+    private static let airMeasurementOrder: [MeasurementType] = orderedMeasurements(
+        for: airSupportedMeasurements
+    )
+
+    private static let tagMeasurementOrder: [MeasurementType] = orderedMeasurements(
+        for: tagSupportedMeasurements
+    )
+
+    /// Declarative baseline for a measurement's default visibility + contexts.
+    private struct MeasurementDisplayConfiguration {
+        let contexts: MeasurementDisplayContext
+        let isVisible: Bool
+    }
+
+    /// User-defined ordering data synced with preferences/cloud.
+    struct MeasurementDisplayPreference {
+        let defaultDisplayOrder: Bool
+        let displayOrderCodes: [String]
+
+        public init(
+            defaultDisplayOrder: Bool = true,
+            displayOrderCodes: [String]
+        ) {
+            self.defaultDisplayOrder = defaultDisplayOrder
+            self.displayOrderCodes = displayOrderCodes
+        }
+    }
+
+    // Measurements that need explicit defaults differing from the "visible everywhere" baseline.
+    // Example: to make a metric hidden but available later, set contexts to the supported set and `isVisible` to false.
+    // Example: to restrict a metric to Alerts only, set `contexts: [.alert]`.
+    private static let measurementVariantOverrides: [
+        MeasurementDisplayVariant: MeasurementDisplayConfiguration
+    ] = [
+        MeasurementDisplayVariant(type: .pm10): MeasurementDisplayConfiguration(
+            contexts: [.all],
+            isVisible: false
+        ),
+        MeasurementDisplayVariant(type: .pm40): MeasurementDisplayConfiguration(
+            contexts: [.all],
+            isVisible: false
+        ),
+        MeasurementDisplayVariant(type: .pm100): MeasurementDisplayConfiguration(
+            contexts: [.all],
+            isVisible: false
+        ),
+        MeasurementDisplayVariant(type: .movementCounter): MeasurementDisplayConfiguration(
+            contexts: [.indicator, .alert],
+            isVisible: true
+        ),
+        MeasurementDisplayVariant(type: .voltage): MeasurementDisplayConfiguration(
+            contexts: [.indicator, .graph],
+            isVisible: false
+        ),
+        MeasurementDisplayVariant(type: .rssi): MeasurementDisplayConfiguration(
+            contexts: [.indicator, .graph, .alert],
+            isVisible: false
+        ),
+        MeasurementDisplayVariant(type: .accelerationX): MeasurementDisplayConfiguration(
+            contexts: [.indicator, .graph],
+            isVisible: false
+        ),
+        MeasurementDisplayVariant(type: .accelerationY): MeasurementDisplayConfiguration(
+            contexts: [.indicator, .graph],
+            isVisible: false
+        ),
+        MeasurementDisplayVariant(type: .accelerationZ): MeasurementDisplayConfiguration(
+            contexts: [.indicator, .graph],
+            isVisible: false
+        ),
+    ]
+
+    private static let measurementCodeToVariant: [String: MeasurementDisplayVariant] = [
+        "TEMPERATURE_C": MeasurementDisplayVariant(type: .temperature, temperatureUnit: .celsius),
+        "TEMPERATURE_F": MeasurementDisplayVariant(type: .temperature, temperatureUnit: .fahrenheit),
+        "TEMPERATURE_K": MeasurementDisplayVariant(type: .temperature, temperatureUnit: .kelvin),
+        "HUMIDITY_0": MeasurementDisplayVariant(type: .humidity, humidityUnit: .percent),
+        "HUMIDITY_1": MeasurementDisplayVariant(type: .humidity, humidityUnit: .gm3),
+        "HUMIDITY_2": MeasurementDisplayVariant(type: .humidity, humidityUnit: .dew),
+        "PRESSURE_0": MeasurementDisplayVariant(type: .pressure, pressureUnit: .hectopascals),
+        "PRESSURE_1": MeasurementDisplayVariant(type: .pressure, pressureUnit: .hectopascals),
+        "PRESSURE_2": MeasurementDisplayVariant(type: .pressure, pressureUnit: .millimetersOfMercury),
+        "PRESSURE_3": MeasurementDisplayVariant(type: .pressure, pressureUnit: .inchesOfMercury),
+        "MOVEMENT_COUNT": MeasurementDisplayVariant(type: .movementCounter),
+        "BATTERY_VOLT": MeasurementDisplayVariant(type: .voltage),
+        "ACCELERATION_GX": MeasurementDisplayVariant(type: .accelerationX),
+        "ACCELERATION_GY": MeasurementDisplayVariant(type: .accelerationY),
+        "ACCELERATION_GZ": MeasurementDisplayVariant(type: .accelerationZ),
+        "SIGNAL_DBM": MeasurementDisplayVariant(type: .rssi),
+        "AQI_INDEX": MeasurementDisplayVariant(type: .aqi),
+        "LUMINOSITY_LX": MeasurementDisplayVariant(type: .luminosity),
+        "SOUNDAVG_DBA": MeasurementDisplayVariant(type: .soundAverage),
+        "SOUNDPEAK_SPL": MeasurementDisplayVariant(type: .soundPeak),
+        "SOUNDINSTANT_SPL": MeasurementDisplayVariant(type: .soundInstant),
+        "CO2_PPM": MeasurementDisplayVariant(type: .co2),
+        "VOC_INDEX": MeasurementDisplayVariant(type: .voc),
+        "NOX_INDEX": MeasurementDisplayVariant(type: .nox),
+        "PM10_MGM3": MeasurementDisplayVariant(type: .pm10),
+        "PM25_MGM3": MeasurementDisplayVariant(type: .pm25),
+        "PM40_MGM3": MeasurementDisplayVariant(type: .pm40),
+        "PM100_MGM3": MeasurementDisplayVariant(type: .pm100),
+    ]
+
+    private static let measurementVariantToCode: [MeasurementDisplayVariant: String] = {
+        var map: [MeasurementDisplayVariant: String] = [:]
+        for (code, variant) in measurementCodeToVariant {
+            map[variant] = code
+        }
+        return map
+    }()
+
+    static func measurementCode(for variant: MeasurementDisplayVariant) -> String? {
+        measurementVariantToCode[variant]
+    }
+
+    private static func makeEntries(
+        for supportedTypes: [MeasurementType]
+    ) -> [MeasurementDisplayEntry] {
+        supportedTypes.flatMap { type in
+            measurementVariants(for: type).map { variant in
+                let defaults = measurementBaseline(for: type, variant: variant)
+                return MeasurementDisplayEntry(
+                    variant.type,
+                    temperatureUnit: variant.temperatureUnit,
+                    humidityUnit: variant.humidityUnit,
+                    pressureUnit: variant.pressureUnit,
+                    visible: defaults.isVisible,
+                    contexts: defaults.contexts
+                )
+            }
+        }
+    }
+
+    private static func orderedMeasurements(
+        for supportedTypes: [MeasurementType]
+    ) -> [MeasurementType] {
+        var ordered = baseMeasurementPriority.filter { baseType in
+            supportedTypes.contains { $0.isSameCase(as: baseType) }
+        }
+        let remaining = supportedTypes.filter { candidate in
+            !ordered.contains { $0.isSameCase(as: candidate) }
+        }
+        ordered.append(contentsOf: remaining)
+        return ordered
+    }
+
+    private static func measurementBaseline(
+        for type: MeasurementType,
+        variant: MeasurementDisplayVariant
+    ) -> MeasurementDisplayConfiguration {
+        if let entry = measurementVariantOverrides[variant] {
+            return entry
+        }
+        if let (_, configuration) = measurementVariantOverrides.first(where: { $0.key.baseTypeEquals(type) }) {
+            return configuration
+        }
+
+        switch type {
+        case .temperature:
+            guard let unit = variant.temperatureUnit else {
+                return MeasurementDisplayConfiguration(contexts: .all, isVisible: true)
+            }
+            let contexts: MeasurementDisplayContext = [.indicator, .graph, .alert]
+            let isVisible = unit == .celsius
+            return MeasurementDisplayConfiguration(contexts: contexts, isVisible: isVisible)
+        case .humidity:
+            guard let unit = variant.humidityUnit else {
+                return MeasurementDisplayConfiguration(contexts: .all, isVisible: true)
+            }
+            if unit == .percent {
+                return MeasurementDisplayConfiguration(contexts: .all, isVisible: true)
+            } else {
+                return MeasurementDisplayConfiguration(contexts: [.indicator, .graph], isVisible: false)
+            }
+        case .pressure:
+            guard let unit = variant.pressureUnit else {
+                return MeasurementDisplayConfiguration(contexts: .all, isVisible: true)
+            }
+            if unit == .hectopascals {
+                return MeasurementDisplayConfiguration(contexts: .all, isVisible: true)
+            } else {
+                return MeasurementDisplayConfiguration(contexts: [.indicator, .graph], isVisible: false)
+            }
+        default:
+            return MeasurementDisplayConfiguration(contexts: .all, isVisible: true)
+        }
+    }
+
+    private static func measurementVariants(
+        for type: MeasurementType
+    ) -> [MeasurementDisplayVariant] {
+        switch type {
+        case .temperature:
+            return [
+                MeasurementDisplayVariant(type: .temperature, temperatureUnit: .celsius),
+                MeasurementDisplayVariant(type: .temperature, temperatureUnit: .fahrenheit),
+                MeasurementDisplayVariant(type: .temperature, temperatureUnit: .kelvin),
+            ]
+        case .humidity:
+            return [
+                MeasurementDisplayVariant(type: .humidity, humidityUnit: .percent),
+                MeasurementDisplayVariant(type: .humidity, humidityUnit: .gm3),
+                MeasurementDisplayVariant(type: .humidity, humidityUnit: .dew),
+            ]
+        case .pressure:
+            return [
+                MeasurementDisplayVariant(type: .pressure, pressureUnit: .hectopascals),
+                MeasurementDisplayVariant(type: .pressure, pressureUnit: .millimetersOfMercury),
+                MeasurementDisplayVariant(type: .pressure, pressureUnit: .inchesOfMercury),
+            ]
+        default:
+            return [MeasurementDisplayVariant(type: type)]
+        }
+    }
+
+    /// Applies user preference to the template profile (reorder + visibility).
+    private static func applyMeasurementPreference(
+        for sensorId: String,
+        to profile: MeasurementDisplayProfile
+    ) -> MeasurementDisplayProfile {
+        guard let preference = measurementDisplayPreference(for: sensorId) else {
+            return profile
+        }
+        return MeasurementDisplayProfile(entries: reorderEntries(profile.entries, using: preference))
+    }
+
+    private static func reorderEntries(
+        _ entries: [MeasurementDisplayEntry],
+        using preference: MeasurementDisplayPreference
+    ) -> [MeasurementDisplayEntry] {
+        let resolvedVariants = normalizedMeasurementVariants(from: preference.displayOrderCodes)
+        guard !resolvedVariants.isEmpty else {
+            return entries
+        }
+
+        if preference.defaultDisplayOrder {
+            var updatedEntries = entries
+            var additions: [MeasurementDisplayEntry] = []
+            for variant in resolvedVariants {
+                if let idx = updatedEntries.firstIndex(where: { $0.variant == variant }) {
+                    updatedEntries[idx].isVisible = true
+                } else {
+                    let defaults = measurementBaseline(for: variant.type, variant: variant)
+                    additions.append(MeasurementDisplayEntry(
+                        variant.type,
+                        temperatureUnit: variant.temperatureUnit,
+                        humidityUnit: variant.humidityUnit,
+                        pressureUnit: variant.pressureUnit,
+                        visible: true,
+                        contexts: defaults.contexts
+                    ))
+                }
+            }
+            updatedEntries.append(contentsOf: additions)
+            return updatedEntries
+        } else {
+            var workingEntries = entries
+            var orderedEntries: [MeasurementDisplayEntry] = []
+            for variant in resolvedVariants {
+                if let idx = workingEntries.firstIndex(where: { $0.variant == variant }) {
+                    var entry = workingEntries.remove(at: idx)
+                    entry.isVisible = true
+                    orderedEntries.append(entry)
+                } else {
+                    let defaults = measurementBaseline(for: variant.type, variant: variant)
+                    orderedEntries.append(MeasurementDisplayEntry(
+                        variant.type,
+                        temperatureUnit: variant.temperatureUnit,
+                        humidityUnit: variant.humidityUnit,
+                        pressureUnit: variant.pressureUnit,
+                        visible: true,
+                        contexts: defaults.contexts
+                    ))
+                }
+            }
+            return orderedEntries
+        }
+    }
+
+    private static func normalizedMeasurementVariants(
+        from codes: [String]
+    ) -> [MeasurementDisplayVariant] {
+        var seen: [MeasurementDisplayVariant] = []
+        for code in codes {
+            let key = code.uppercased()
+            guard let variant = measurementCodeToVariant[key],
+                  !seen.contains(where: { $0 == variant }) else { continue }
+            seen.append(variant)
+        }
+        return seen
+    }
+}
 
 protocol RuuviTagDataServiceDelegate: AnyObject {
     func sensorDataService(
@@ -54,6 +612,7 @@ class RuuviTagDataService {
     private let ruuviSensorPropertiesService: RuuviServiceSensorProperties
     private let settings: RuuviLocalSettings
     private let flags: RuuviLocalFlags
+    private let ruuviPool: RuuviPool
 
     // MARK: - Properties
     weak var delegate: RuuviTagDataServiceDelegate?
@@ -61,6 +620,21 @@ class RuuviTagDataService {
     private var ruuviTags: [AnyRuuviTagSensor] = []
     private var snapshots: [RuuviTagCardSnapshot] = []
     private var sensorSettingsList: [SensorSettings] = []
+    private func matchingSensorSettings(for sensor: RuuviTagSensor) -> SensorSettings? {
+        sensorSettingsList.first { candidate in
+            if let sensorLuid = sensor.luid?.any,
+               let luid = candidate.luid?.any,
+               sensorLuid == luid {
+                return true
+            }
+            if let sensorMac = sensor.macId?.any,
+               let mac = candidate.macId?.any,
+               sensorMac == mac {
+                return true
+            }
+            return false
+        }
+    }
 
     // MARK: - Background Loading
     private var backgroundLoadingQueue = DispatchQueue(label: "com.ruuvi.background.loading", qos: .utility)
@@ -78,7 +652,8 @@ class RuuviTagDataService {
         measurementService: RuuviServiceMeasurement,
         ruuviSensorPropertiesService: RuuviServiceSensorProperties,
         settings: RuuviLocalSettings,
-        flags: RuuviLocalFlags
+        flags: RuuviLocalFlags,
+        ruuviPool: RuuviPool
     ) {
         self.ruuviReactor = ruuviReactor
         self.ruuviStorage = ruuviStorage
@@ -86,6 +661,7 @@ class RuuviTagDataService {
         self.ruuviSensorPropertiesService = ruuviSensorPropertiesService
         self.settings = settings
         self.flags = flags
+        self.ruuviPool = ruuviPool
     }
 
     deinit {
@@ -123,17 +699,34 @@ class RuuviTagDataService {
 
         let snapshot = snapshots[snapshotIndex]
 
+        let enrichedRecord = sensorSettings != nil ? record.with(sensorSettings: sensorSettings) : record
+
         DispatchQueue.main.async {
-            snapshot.updateFromRecord(
-                record,
+            let didUpdate = snapshot.updateFromRecord(
+                enrichedRecord,
                 sensor: sensor,
                 measurementService: self.measurementService,
                 flags: self.flags,
                 sensorSettings: sensorSettings
             )
 
-            if !self.settings.syncExtensiveChangesInProgress {
-                self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+            let availableVariants = self.availableIndicatorVariants(
+                from: enrichedRecord,
+                sensor: sensor,
+                snapshot: snapshot
+            )
+
+            let visibilityChanged = self.updateMeasurementVisibilityMetadata(
+                for: snapshot,
+                sensor: sensor,
+                sensorSettings: sensorSettings,
+                availableVariants: availableVariants
+            )
+
+            if visibilityChanged {
+                self.publishSnapshotUpdate(snapshot, force: true)
+            } else if didUpdate {
+                self.publishSnapshotUpdate(snapshot)
             }
         }
     }
@@ -213,8 +806,8 @@ class RuuviTagDataService {
                     guard let self = self else { return }
 
                     DispatchQueue.main.async {
-                        snapshot.updateBackgroundImage(image)
-                        if !self.settings.syncExtensiveChangesInProgress {
+                        let didUpdate = snapshot.updateBackgroundImage(image)
+                        if didUpdate && !self.settings.syncExtensiveChangesInProgress {
                             self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
                         }
                     }
@@ -292,6 +885,7 @@ private extension RuuviTagDataService {
             case let .delete(sensor):
                 self.ruuviTags.removeAll { $0.id == sensor.id }
                 self.snapshots.removeAll { $0.id == sensor.id }
+                RuuviTagDataService.clearMeasurementDisplayPreference(for: sensor.id)
                 if !self.settings.syncExtensiveChangesInProgress {
                     self.delegate?
                         .sensorDataService(
@@ -339,25 +933,33 @@ private extension RuuviTagDataService {
                     RuuviTagCardSnapshot,
                     RuuviTagSensorRecord?,
                     SensorSettings?,
-                    AnyRuuviTagSensor
+                    AnyRuuviTagSensor,
+                    Bool
                 )
             ] = []
 
             for tag in self.ruuviTags {
-                let snapshot = self.createSnapshot(from: tag)
+                let existingSnapshot = self.snapshots.first { current in
+                    self.snapshot(current, matches: tag)
+                }
+                let snapshot = existingSnapshot ?? self.createSnapshot(from: tag)
 
                 // Load latest record synchronously for initial build
                 let record = self.ruuviStorage.cachedLatestBlocking(for: tag)
-                let settings = self.sensorSettingsList.first { $0.id == tag.id }
+                let settings = self.matchingSensorSettings(for: tag)
 
-                snapshotsWithRecords.append((snapshot, record, settings, tag))
+                self.updateMeasurementDisplayPreference(for: tag, settings: settings)
+
+                snapshotsWithRecords.append((snapshot, record, settings, tag, existingSnapshot != nil))
             }
 
             DispatchQueue.main.async {
                 var newSnapshots: [RuuviTagCardSnapshot] = []
 
                 // Update snapshots on main thread to avoid @Published property race conditions
-                for (snapshot, record, settings, sensor) in snapshotsWithRecords {
+                for (snapshot, record, settings, sensor, wasReused) in snapshotsWithRecords {
+                    self.populateSnapshot(snapshot, with: sensor)
+
                     if let record = record {
                         let updatedRecord = record.with(sensorSettings: settings)
                         snapshot.updateFromRecord(
@@ -367,13 +969,30 @@ private extension RuuviTagDataService {
                             flags: self.flags,
                             sensorSettings: settings
                         )
+
+                        let availableVariants = self.availableIndicatorVariants(
+                            from: updatedRecord,
+                            sensor: sensor,
+                            snapshot: snapshot
+                        )
+                        _ = self.updateMeasurementVisibilityMetadata(
+                            for: snapshot,
+                            sensor: sensor,
+                            sensorSettings: settings,
+                            availableVariants: availableVariants
+                        )
+                    } else {
+                        _ = self.updateMeasurementVisibilityMetadata(
+                            for: snapshot,
+                            sensor: sensor,
+                            sensorSettings: settings,
+                            availableVariants: snapshot.metadata.measurementVisibility?.availableVariants
+                        )
                     }
 
-                    // Preserve existing in-memory background image to avoid UI flash
-                    for snapshot in newSnapshots {
-                        if let existing = self.snapshots.first(where: { $0.id == snapshot.id }) {
-                            snapshot.displayData.background = existing.displayData.background
-                        }
+                    if !wasReused,
+                       let existing = self.snapshots.first(where: { $0.id == snapshot.id }) {
+                        snapshot.displayData.background = existing.displayData.background
                     }
 
                     newSnapshots.append(snapshot)
@@ -403,8 +1022,25 @@ private extension RuuviTagDataService {
         }
     }
 
+    private func snapshot(
+        _ snapshot: RuuviTagCardSnapshot,
+        matches sensor: AnyRuuviTagSensor
+    ) -> Bool {
+        if let snapshotMac = snapshot.identifierData.mac,
+           let sensorMac = sensor.macId,
+           snapshotMac.any == sensorMac.any {
+            return true
+        }
+        if let snapshotLuid = snapshot.identifierData.luid,
+           let sensorLuid = sensor.luid,
+           snapshotLuid.any == sensorLuid.any {
+            return true
+        }
+        return snapshot.id == sensor.id
+    }
+
     func createSnapshot(from sensor: AnyRuuviTagSensor) -> RuuviTagCardSnapshot {
-        return RuuviTagCardSnapshot.create(
+        let snapshot = RuuviTagCardSnapshot.create(
             id: sensor.id,
             name: sensor.name,
             luid: sensor.luid,
@@ -415,6 +1051,9 @@ private extension RuuviTagDataService {
             isConnectable: sensor.isConnectable,
             version: sensor.version
         )
+
+        populateSnapshot(snapshot, with: sensor)
+        return snapshot
     }
 
     // swiftlint:disable:next function_body_length
@@ -477,11 +1116,11 @@ private extension RuuviTagDataService {
         ruuviStorage.readLatest(sensor).on { [weak self] record in
             guard let self = self, let record = record else { return }
 
-            let settings = self.sensorSettingsList.first { $0.id == sensor.id }
+            let settings = self.matchingSensorSettings(for: sensor)
             let updatedRecord = record.with(sensorSettings: settings)
 
             DispatchQueue.main.async {
-                snapshot.updateFromRecord(
+                let didUpdate = snapshot.updateFromRecord(
                     updatedRecord,
                     sensor: sensor,
                     measurementService: self.measurementService,
@@ -489,8 +1128,23 @@ private extension RuuviTagDataService {
                     sensorSettings: settings
                 )
 
-                if !self.settings.syncExtensiveChangesInProgress {
-                    self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+                let availableVariants = self.availableIndicatorVariants(
+                    from: updatedRecord,
+                    sensor: sensor,
+                    snapshot: snapshot
+                )
+
+                let visibilityChanged = self.updateMeasurementVisibilityMetadata(
+                    for: snapshot,
+                    sensor: sensor,
+                    sensorSettings: settings,
+                    availableVariants: availableVariants
+                )
+
+                if visibilityChanged {
+                    self.publishSnapshotUpdate(snapshot, force: true)
+                } else if didUpdate {
+                    self.publishSnapshotUpdate(snapshot)
                 }
             }
         }
@@ -503,22 +1157,12 @@ private extension RuuviTagDataService {
 
         // Ensure we update @Published properties on the main thread
         DispatchQueue.main.async {
+            let previousName = snapshot.displayData.name
             // Update basic sensor information
-            let invalidateLayout = snapshot.displayData.name != sensor.name
-            snapshot.displayData.name = sensor.name
-            snapshot.displayData.version = sensor.version
-            snapshot.metadata.isCloud = sensor.isCloud
-            snapshot.metadata.isOwner = sensor.isOwner
-            snapshot.connectionData.isConnectable = sensor.isConnectable
+            let didUpdate = self.populateSnapshot(snapshot, with: sensor)
+            let invalidateLayout = previousName != snapshot.displayData.name
 
-            // Update metadata with new sensor information
-            snapshot.updateMetadata(
-                isCloud: sensor.isCloud,
-                isOwner: sensor.isOwner,
-                isConnectable: sensor.isConnectable
-            )
-
-            if !self.settings.syncExtensiveChangesInProgress {
+            if didUpdate && !self.settings.syncExtensiveChangesInProgress {
                 self.delegate?
                     .sensorDataService(
                         self,
@@ -576,23 +1220,42 @@ private extension RuuviTagDataService {
     }
 
     func applySensorSettings(_ sensorSettings: SensorSettings?, to sensor: AnyRuuviTagSensor) {
+        updateMeasurementDisplayPreference(for: sensor, settings: sensorSettings)
+
         guard let snapshot = snapshots.first(where: { $0.id == sensor.id }) else { return }
 
         // If we have a current record, update it with new settings
         if snapshot.lastUpdated != nil,
             let lastRecord = snapshot.latestRawRecord {
 
+            let enrichedRecord = lastRecord.with(sensorSettings: sensorSettings)
+
             DispatchQueue.main.async {
-                snapshot.updateFromRecord(
-                    lastRecord.with(sensorSettings: sensorSettings),
+                let didUpdate = snapshot.updateFromRecord(
+                    enrichedRecord,
                     sensor: sensor,
                     measurementService: self.measurementService,
                     flags: self.flags,
                     sensorSettings: sensorSettings
                 )
 
-                if !self.settings.syncExtensiveChangesInProgress {
-                    self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+                let availableVariants = self.availableIndicatorVariants(
+                    from: enrichedRecord,
+                    sensor: sensor,
+                    snapshot: snapshot
+                )
+
+                let visibilityChanged = self.updateMeasurementVisibilityMetadata(
+                    for: snapshot,
+                    sensor: sensor,
+                    sensorSettings: sensorSettings,
+                    availableVariants: availableVariants
+                )
+
+                if visibilityChanged {
+                    self.publishSnapshotUpdate(snapshot, force: true)
+                } else if didUpdate {
+                    self.publishSnapshotUpdate(snapshot)
                 }
             }
         } else {
@@ -602,7 +1265,7 @@ private extension RuuviTagDataService {
                 let updatedRecord = record.with(sensorSettings: sensorSettings)
 
                 DispatchQueue.main.async {
-                    snapshot.updateFromRecord(
+                    let didUpdate = snapshot.updateFromRecord(
                         updatedRecord,
                         sensor: sensor,
                         measurementService: self.measurementService,
@@ -610,9 +1273,93 @@ private extension RuuviTagDataService {
                         sensorSettings: sensorSettings
                     )
 
-                    if !self.settings.syncExtensiveChangesInProgress {
-                        self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+                    let availableVariants = self.availableIndicatorVariants(
+                        from: updatedRecord,
+                        sensor: sensor,
+                        snapshot: snapshot
+                    )
+
+                    let visibilityChanged = self.updateMeasurementVisibilityMetadata(
+                        for: snapshot,
+                        sensor: sensor,
+                        sensorSettings: sensorSettings,
+                        availableVariants: availableVariants
+                    )
+
+                    if visibilityChanged {
+                        self.publishSnapshotUpdate(snapshot, force: true)
+                    } else if didUpdate {
+                        self.publishSnapshotUpdate(snapshot)
                     }
+                }
+            }
+        }
+    }
+
+    private func updateMeasurementDisplayPreference(
+        for sensor: AnyRuuviTagSensor,
+        settings: SensorSettings?
+    ) {
+        guard flags.showVisibilitySettings else {
+            RuuviTagDataService.clearMeasurementDisplayPreference(for: sensor.id)
+            if let snapshot = snapshots.first(where: { $0.id == sensor.id }) {
+                let didChange = updateMeasurementVisibilityMetadata(
+                    for: snapshot,
+                    sensor: sensor,
+                    sensorSettings: settings,
+                    availableVariants: snapshot.metadata.measurementVisibility?.availableVariants
+                )
+                DispatchQueue.main.async {
+                    if didChange {
+                        self.publishSnapshotUpdate(snapshot, force: true)
+                    } else {
+                        self.publishSnapshotUpdate(snapshot)
+                    }
+                }
+            }
+            return
+        }
+
+        guard let codes = settings?.displayOrder, !codes.isEmpty else {
+            RuuviTagDataService.clearMeasurementDisplayPreference(for: sensor.id)
+            if let snapshot = snapshots.first(where: { $0.id == sensor.id }) {
+                let didChange = updateMeasurementVisibilityMetadata(
+                    for: snapshot,
+                    sensor: sensor,
+                    sensorSettings: settings,
+                    availableVariants: snapshot.metadata.measurementVisibility?.availableVariants
+                )
+                DispatchQueue.main.async {
+                    if didChange {
+                        self.publishSnapshotUpdate(snapshot, force: true)
+                    } else {
+                        self.publishSnapshotUpdate(snapshot)
+                    }
+                }
+            }
+            return
+        }
+
+        let preference = RuuviTagDataService.MeasurementDisplayPreference(
+            defaultDisplayOrder: settings?.defaultDisplayOrder ?? true,
+            displayOrderCodes: codes
+        )
+
+        RuuviTagDataService.setMeasurementDisplayPreference(preference, for: sensor.id)
+
+        if let snapshot = snapshots.first(where: { $0.id == sensor.id }) {
+            let didChange = updateMeasurementVisibilityMetadata(
+                for: snapshot,
+                sensor: sensor,
+                sensorSettings: settings,
+                availableVariants: snapshot.metadata.measurementVisibility?.availableVariants
+            )
+
+            DispatchQueue.main.async {
+                if didChange {
+                    self.publishSnapshotUpdate(snapshot, force: true)
+                } else {
+                    self.publishSnapshotUpdate(snapshot)
                 }
             }
         }
@@ -642,7 +1389,7 @@ private extension RuuviTagDataService {
 
                         DispatchQueue.main
                             .async {
-                                snapshot
+                                let didUpdate = snapshot
                                     .updateFromRecord(
                                         updatedRecord,
                                         sensor: sensor,
@@ -651,14 +1398,25 @@ private extension RuuviTagDataService {
                                         sensorSettings: sensorSettings
                                     )
 
-                                if !self.settings.syncExtensiveChangesInProgress {
-                                    self.delegate?
-                                        .sensorDataService(
-                                            self,
-                                            didUpdateSnapshot: snapshot
-                                        )
+                                let availableVariants = self.availableIndicatorVariants(
+                                    from: updatedRecord,
+                                    sensor: sensor,
+                                    snapshot: snapshot
+                                )
+
+                                let visibilityChanged = self.updateMeasurementVisibilityMetadata(
+                                    for: snapshot,
+                                    sensor: sensor,
+                                    sensorSettings: sensorSettings,
+                                    availableVariants: availableVariants
+                                )
+
+                                if visibilityChanged {
+                                    self.publishSnapshotUpdate(snapshot, force: true)
+                                } else if didUpdate {
+                                    self.publishSnapshotUpdate(snapshot)
+                                }
                             }
-                        }
                     }
                 }
             }
@@ -706,6 +1464,310 @@ private extension RuuviTagDataService {
                 object: nil,
                 userInfo: nil
             )
+    }
+
+    // MARK: - Snapshot helpers
+    @discardableResult
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    private func populateSnapshot(
+        _ snapshot: RuuviTagCardSnapshot,
+        with sensor: AnyRuuviTagSensor
+    ) -> Bool {
+        var didChange = false
+
+        var updatedDisplay = snapshot.displayData
+        if updatedDisplay.name != sensor.name {
+            updatedDisplay.name = sensor.name
+        }
+        if updatedDisplay.version != sensor.version {
+            updatedDisplay.version = sensor.version
+        }
+        let firmware = sensor.displayFirmwareVersion ?? sensor.firmwareVersion
+        if updatedDisplay.firmwareVersion != firmware {
+            updatedDisplay.firmwareVersion = firmware
+        }
+        if updatedDisplay != snapshot.displayData {
+            snapshot.displayData = updatedDisplay
+            didChange = true
+        }
+
+        var updatedConnectionData = snapshot.connectionData
+        if updatedConnectionData.isConnectable != sensor.isConnectable {
+            updatedConnectionData.isConnectable = sensor.isConnectable
+        }
+        if updatedConnectionData != snapshot.connectionData {
+            snapshot.connectionData = updatedConnectionData
+            didChange = true
+        }
+
+        if snapshot.updateMetadata(
+            isCloud: sensor.isCloud,
+            isOwner: sensor.isOwner,
+            isConnectable: sensor.isConnectable,
+            canShareTag: (sensor.isOwner && sensor.isClaimed) || sensor.canShare
+        ) {
+            didChange = true
+        }
+
+        var updatedOwnership = snapshot.ownership
+        let ownerName = sensor.owner?.lowercased() ?? RuuviLocalization.TagSettings.General.Owner.none
+        if updatedOwnership.ownerName != ownerName {
+            updatedOwnership.ownerName = ownerName
+        }
+        if updatedOwnership.ownersPlan != sensor.ownersPlan {
+            updatedOwnership.ownersPlan = sensor.ownersPlan
+        }
+        if updatedOwnership.sharedTo != sensor.sharedTo {
+            updatedOwnership.sharedTo = sensor.sharedTo
+        }
+        let canBeClaimed = !sensor.isClaimed &&
+            sensor.macId != nil &&
+            (sensor.owner == nil || sensor.isOwner)
+        if updatedOwnership.canClaimTag != canBeClaimed {
+            updatedOwnership.canClaimTag = canBeClaimed
+        }
+        let claimed = !canBeClaimed
+        if updatedOwnership.isClaimedTag != claimed {
+            updatedOwnership.isClaimedTag = claimed
+        }
+        let proPlan = isProPlan(sensor.ownersPlan)
+        if updatedOwnership.isOwnersPlanProPlus != proPlan {
+            updatedOwnership.isOwnersPlanProPlus = proPlan
+        }
+        if updatedOwnership != snapshot.ownership {
+            snapshot.ownership = updatedOwnership
+            didChange = true
+        }
+
+        var updatedCapabilities = snapshot.capabilities
+        let showConnectionControls = shouldShowConnectionControls(for: sensor)
+        if updatedCapabilities.showKeepConnection != showConnectionControls {
+            updatedCapabilities.showKeepConnection = showConnectionControls
+        }
+        if updatedCapabilities.showBatteryStatus != showConnectionControls {
+            updatedCapabilities.showBatteryStatus = showConnectionControls
+        }
+        let hideStatusLabel = !settings.showSwitchStatusLabel
+        if updatedCapabilities.hideSwitchStatusLabel != hideStatusLabel {
+            updatedCapabilities.hideSwitchStatusLabel = hideStatusLabel
+        }
+        if updatedCapabilities.isCloudAlertsAvailable != sensor.isCloud {
+            updatedCapabilities.isCloudAlertsAvailable = sensor.isCloud
+        }
+        let cloudConnectionAvailable = sensor.isCloud && updatedOwnership.isOwnersPlanProPlus
+        if updatedCapabilities.isCloudConnectionAlertsAvailable != cloudConnectionAvailable {
+            updatedCapabilities.isCloudConnectionAlertsAvailable = cloudConnectionAvailable
+        }
+        let alertsEnabled =
+            sensor.isCloud || snapshot.connectionData.isConnected || sensor.serviceUUID != nil
+        if updatedCapabilities.isAlertsEnabled != alertsEnabled {
+            updatedCapabilities.isAlertsEnabled = alertsEnabled
+        }
+        if updatedCapabilities != snapshot.capabilities {
+            snapshot.capabilities = updatedCapabilities
+            didChange = true
+        }
+
+        let sensorSettings = sensorSettingsList.first(where: { candidate in
+            if let luid = candidate.luid?.any, let sensorLuid = sensor.luid?.any {
+                return luid == sensorLuid
+            }
+            if let mac = candidate.macId?.any, let sensorMac = sensor.macId?.any {
+                return mac == sensorMac
+            }
+            return false
+        })
+
+        if let sensorSettings {
+            var updatedCalibration = snapshot.calibration
+            let tempOffset = measurementService
+                .temperatureOffsetCorrectionString(for: sensorSettings.temperatureOffset ?? 0)
+            if updatedCalibration.temperatureOffset != tempOffset {
+                updatedCalibration.temperatureOffset = tempOffset
+            }
+            let humidityOffset = measurementService
+                .humidityOffsetCorrectionString(for: sensorSettings.humidityOffset ?? 0)
+            if updatedCalibration.humidityOffset != humidityOffset {
+                updatedCalibration.humidityOffset = humidityOffset
+            }
+            let pressureOffset = measurementService
+                .pressureOffsetCorrectionString(for: sensorSettings.pressureOffset ?? 0)
+            if updatedCalibration.pressureOffset != pressureOffset {
+                updatedCalibration.pressureOffset = pressureOffset
+            }
+
+            if updatedCalibration != snapshot.calibration {
+                snapshot.calibration = updatedCalibration
+                didChange = true
+            }
+        } else {
+            var updatedCalibration = snapshot.calibration
+            let zeroTemp = measurementService.temperatureOffsetCorrectionString(for: 0)
+            if updatedCalibration.temperatureOffset != zeroTemp {
+                updatedCalibration.temperatureOffset = zeroTemp
+            }
+            let zeroHumidity = measurementService.humidityOffsetCorrectionString(for: 0)
+            if updatedCalibration.humidityOffset != zeroHumidity {
+                updatedCalibration.humidityOffset = zeroHumidity
+            }
+            let zeroPressure = measurementService.pressureOffsetCorrectionString(for: 0)
+            if updatedCalibration.pressureOffset != zeroPressure {
+                updatedCalibration.pressureOffset = zeroPressure
+            }
+
+            if updatedCalibration != snapshot.calibration {
+                snapshot.calibration = updatedCalibration
+                didChange = true
+            }
+        }
+
+        if updateMeasurementVisibilityMetadata(
+            for: snapshot,
+            sensor: sensor,
+            sensorSettings: sensorSettings,
+            availableVariants: snapshot.metadata.measurementVisibility?.availableVariants
+        ) {
+            didChange = true
+        }
+
+        return didChange
+    }
+
+    private func shouldShowConnectionControls(for sensor: AnyRuuviTagSensor) -> Bool {
+        let firmware = RuuviDataFormat.dataFormat(from: sensor.version)
+        return !(firmware == .e1 || firmware == .v6)
+    }
+
+    private func isProPlan(_ plan: String?) -> Bool {
+        guard let plan = plan?.lowercased() else { return false }
+        return plan != "basic" && plan != "free"
+    }
+
+    private func publishSnapshotUpdate(
+        _ snapshot: RuuviTagCardSnapshot,
+        invalidateLayout: Bool = false,
+        force: Bool = false
+    ) {
+        guard force || !settings.syncExtensiveChangesInProgress else { return }
+        let notify = {
+            self.delegate?.sensorDataService(
+                self,
+                didUpdateSnapshot: snapshot,
+                invalidateLayout: invalidateLayout
+            )
+        }
+        if Thread.isMainThread {
+            notify()
+        } else {
+            DispatchQueue.main.async {
+                notify()
+            }
+        }
+    }
+
+    @discardableResult
+    private func updateMeasurementVisibilityMetadata(
+        for snapshot: RuuviTagCardSnapshot,
+        sensor: AnyRuuviTagSensor?,
+        sensorSettings: SensorSettings?,
+        availableVariants: [MeasurementDisplayVariant]? = nil
+    ) -> Bool {
+        guard flags.showVisibilitySettings else {
+            return snapshot.updateMeasurementVisibility(nil)
+        }
+
+        let preference: MeasurementDisplayPreference?
+        if let sensor {
+            preference = Self.measurementDisplayPreference(for: sensor.id)
+        } else {
+            preference = Self.measurementDisplayPreference(for: snapshot.id)
+        }
+
+        let usesDefaultOrder: Bool
+        if let preference {
+            usesDefaultOrder = preference.defaultDisplayOrder
+        } else if let explicitDefault = sensorSettings?.defaultDisplayOrder {
+            usesDefaultOrder = explicitDefault
+        } else if let displayOrder = sensorSettings?.displayOrder, !displayOrder.isEmpty {
+            usesDefaultOrder = false
+        } else {
+            usesDefaultOrder = true
+        }
+
+        let displayProfile: MeasurementDisplayProfile
+        if let sensor {
+            displayProfile = RuuviTagDataService.measurementDisplayProfile(for: sensor)
+        } else {
+            displayProfile = RuuviTagDataService.measurementDisplayProfile(for: snapshot)
+        }
+
+        let resolvedAvailable = availableVariants ??
+            snapshot.metadata.measurementVisibility?.availableVariants ?? []
+
+        let visibleOrdered = displayProfile.orderedVisibleVariants(for: .indicator)
+        let visibleIntersection = visibleOrdered.filter { resolvedAvailable.contains($0) }
+        let hiddenVariants = resolvedAvailable.filter { !visibleOrdered.contains($0) }
+
+        let visibility = RuuviTagCardSnapshotMeasurementVisibility(
+            usesDefaultOrder: usesDefaultOrder,
+            availableVariants: resolvedAvailable,
+            visibleVariants: visibleIntersection,
+            hiddenVariants: hiddenVariants
+        )
+
+        return snapshot.updateMeasurementVisibility(visibility)
+    }
+
+    private func syncMaxShareCount(
+        for snapshot: RuuviTagCardSnapshot,
+        sensor: AnyRuuviTagSensor
+    ) {
+        ruuviPool
+            .readSensorSubscriptionSettings(sensor)
+            .on(success: { [weak self, weak snapshot] subscription in
+                guard let self, let snapshot else { return }
+
+                let newValue = subscription?.maxSharesPerSensor
+                DispatchQueue.main.async {
+                    guard snapshot.ownership.maxShareCount != newValue else { return }
+                    snapshot.ownership.maxShareCount = newValue
+
+                    if !self.settings.syncExtensiveChangesInProgress {
+                        self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+                    }
+                }
+            })
+    }
+
+    private func availableIndicatorVariants(
+        from record: RuuviTagSensorRecord,
+        sensor: AnyRuuviTagSensor,
+        snapshot: RuuviTagCardSnapshot
+    ) -> [MeasurementDisplayVariant] {
+        let baseProfile = RuuviTagDataService.defaultMeasurementDisplayProfile(for: sensor)
+        let entries = baseProfile.entriesSupporting(.indicator)
+
+        var seen = Set<MeasurementDisplayVariant>()
+        var variants: [MeasurementDisplayVariant] = []
+
+        for entry in entries {
+            guard let extractor = MeasurementExtractorFactory.extractor(for: entry.variant.type),
+                  let _ = extractor.extract(
+                    from: record,
+                    measurementService: measurementService,
+                    flags: flags,
+                    variant: entry.variant,
+                    snapshot: snapshot
+                  ) else {
+                continue
+            }
+
+            if seen.insert(entry.variant).inserted {
+                variants.append(entry.variant)
+            }
+        }
+
+        return variants
     }
 }
 

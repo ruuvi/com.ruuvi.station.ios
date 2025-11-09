@@ -3,19 +3,20 @@ import DGCharts
 import RuuviOntology
 
 class RuuviGraphViewDataModel: NSObject {
-    var chartType: MeasurementType
+    let variant: MeasurementDisplayVariant
+    var chartType: MeasurementType { variant.type }
     var upperAlertValue: Double?
     var chartData: LineChartData?
     var lowerAlertValue: Double?
 
     init(
         upperAlertValue: Double?,
-        chartType: MeasurementType,
+        variant: MeasurementDisplayVariant,
         chartData: LineChartData?,
         lowerAlertValue: Double?
     ) {
         self.upperAlertValue = upperAlertValue
-        self.chartType = chartType
+        self.variant = variant
         self.chartData = chartData
         self.lowerAlertValue = lowerAlertValue
     }
