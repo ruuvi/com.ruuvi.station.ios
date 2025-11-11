@@ -434,7 +434,9 @@ private extension RuuviTagServiceCoordinator {
                old.displayData.name != new.displayData.name ||
                old.displayData.background != new.displayData.background ||
                old.metadata.isOwner != new.metadata.isOwner ||
-               old.metadata.isCloud != new.metadata.isCloud
+               old.metadata.isCloud != new.metadata.isCloud ||
+               old.metadata.canShareTag != new.metadata.canShareTag ||
+               old.ownership != new.ownership
     }
 
     func updateSnapshotIdMap(_ snapshots: [RuuviTagCardSnapshot]) {
@@ -526,7 +528,6 @@ extension RuuviTagServiceCoordinator: RuuviTagDataServiceDelegate {
         if let index = previousSnapshots.firstIndex(where: { $0.id == snapshot.id }) {
             previousSnapshots[index] = snapshot
         }
-
         notifyEvent(.snapshotUpdated(snapshot, invalidateLayout: invalidateLayout))
     }
 
