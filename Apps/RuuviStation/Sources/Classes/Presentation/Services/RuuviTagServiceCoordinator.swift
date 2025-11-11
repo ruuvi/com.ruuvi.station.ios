@@ -435,8 +435,7 @@ private extension RuuviTagServiceCoordinator {
                old.displayData.background != new.displayData.background ||
                old.metadata.isOwner != new.metadata.isOwner ||
                old.metadata.isCloud != new.metadata.isCloud ||
-               old.metadata.canShareTag != new.metadata.canShareTag ||
-               old.ownership != new.ownership
+               old.metadata.canShareTag != new.metadata.canShareTag
     }
 
     func updateSnapshotIdMap(_ snapshots: [RuuviTagCardSnapshot]) {
