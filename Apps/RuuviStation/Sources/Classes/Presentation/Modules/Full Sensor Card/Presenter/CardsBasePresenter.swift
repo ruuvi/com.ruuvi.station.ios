@@ -396,7 +396,7 @@ extension CardsBasePresenter: TagSettingsModuleOutput {
 // MARK: RuuviTagServiceCoordinatorObserver
 extension CardsBasePresenter: RuuviTagServiceCoordinatorObserver {
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     func coordinatorDidReceiveEvent(
         _ coordinator: RuuviTagServiceCoordinator,
         event: RuuviTagServiceCoordinatorEvent
@@ -429,8 +429,8 @@ extension CardsBasePresenter: RuuviTagServiceCoordinatorObserver {
                     // For all other cases, keep current snapshot if it still exists
                     if snapshots.first(where: {
                         $0.id == self.snapshot.id &&
-                        $0.identifierData.luid?.any == self.snapshot.identifierData.luid?.any &&
-                        $0.identifierData.mac?.any == self.snapshot.identifierData.mac?.any }) != nil {
+                        $0.identifierData == snapshot.identifierData
+                    }) != nil {
                         self.snapshots = snapshots
                     } else {
                         self.snapshots = snapshots
@@ -473,6 +473,14 @@ extension CardsBasePresenter: RuuviTagServiceCoordinatorObserver {
                 }
             } else {
                 viewDidTapBackButton()
+            }
+        case .snapshotUpdated(let snapshot, _):
+            if let snapshotIndex = snapshots.firstIndex(where: {
+                $0.id == snapshot.id ||
+                $0.identifierData == snapshot.identifierData
+            }) {
+                snapshots[snapshotIndex] = snapshot
+                self.ruuviTagSensors = coordinator.getAllSensors()
             }
         default:
             break
@@ -696,11 +704,13 @@ private extension CardsBasePresenter {
 
     func showTagSettings(for snapshot: RuuviTagCardSnapshot) {
         if let sensor = ruuviTagSensors.first(where: {
-            $0.id == snapshot.id
+            $0.id == snapshot.id ||
+            ($0.luid?.any != nil && ($0.luid?.any == snapshot.identifierData.luid?.any)) ||
+            ($0.macId?.any != nil && ($0.macId?.any == snapshot.identifierData.mac?.any))
         }) {
             let settings = sensorSettings.first(where: {
-                $0.luid?.any == sensor.luid?.any ||
-                $0.macId?.any == sensor.macId?.any
+                ($0.luid?.any != nil && ($0.luid?.any == sensor.luid?.any)) ||
+                ($0.macId?.any != nil && ($0.macId?.any == sensor.macId?.any))
             })
             router?.openTagSettings(
                 ruuviTag: sensor,
@@ -726,22 +736,23 @@ private extension CardsBasePresenter {
 
     func currentSensor() -> AnyRuuviTagSensor? {
         return ruuviTagSensors.first(where: {
-            $0.id == snapshot.id
+            $0.id == snapshot.id ||
+            ($0.luid?.any != nil && ($0.luid?.any == snapshot.identifierData.luid?.any)) ||
+            ($0.macId?.any != nil && ($0.macId?.any == snapshot.identifierData.mac?.any))
         })
     }
 
     func currentSnapshotIndex() -> Int {
         return snapshots.firstIndex(where: {
             $0.id == snapshot.id &&
-            $0.identifierData.luid?.any == snapshot.identifierData.luid?.any &&
-            $0.identifierData.mac?.any == snapshot.identifierData.mac?.any
+            $0.identifierData == snapshot.identifierData
         }) ?? 0
     }
 
     func currentSensorSettings() -> SensorSettings? {
         return sensorSettings.first(where: {
-            $0.luid?.any == snapshot.identifierData.luid?.any ||
-            $0.macId?.any == snapshot.identifierData.mac?.any
+            ($0.luid?.any != nil && ($0.luid?.any == snapshot.identifierData.luid?.any)) ||
+            ($0.macId?.any != nil && ($0.macId?.any == snapshot.identifierData.mac?.any))
         })
     }
 }
