@@ -75,16 +75,16 @@ class CardsCoordinator: RuuviCoordinator {
 
             if let settingsPresenter = settingsModule.output as? LegacyTagSettingsModuleInput,
                let ruuviTag = ruuviTagSensors.first(where: {
-                   $0.luid?.any == snapshot.identifierData.luid?.any ||
-                   $0.macId?.any == snapshot.identifierData.mac?.any
+                   ($0.luid?.any != nil && ($0.luid?.any == snapshot.identifierData.luid?.any)) ||
+                   ($0.macId?.any != nil && ($0.macId?.any == snapshot.identifierData.mac?.any))
                }) {
                 settingsPresenter.configure(output: cardsBaseViewPresenter)
                 settingsPresenter.configure(
                     ruuviTag: ruuviTag,
                     latestMeasurement: snapshot.latestRawRecord,
                     sensorSettings: sensorSettings.first(where: {
-                        $0.luid?.any == ruuviTag.luid?.any ||
-                        $0.macId?.any == ruuviTag.macId?.any
+                        ($0.luid?.any != nil && ($0.luid?.any == ruuviTag.luid?.any)) ||
+                        ($0.macId?.any != nil && ($0.macId?.any == ruuviTag.macId?.any))
                     })
                 )
             }

@@ -82,9 +82,24 @@ struct RuuviTagCardSnapshotIdentityData: Equatable {
         lhs: RuuviTagCardSnapshotIdentityData,
         rhs: RuuviTagCardSnapshotIdentityData
     ) -> Bool {
-        return lhs.luid?.any == rhs.luid?.any &&
-        lhs.mac?.any == rhs.mac?.any &&
-        lhs.serviceUUID == rhs.serviceUUID
+        // Check luid
+        let luidMatches: Bool? = {
+            guard let lhsLuid = lhs.luid, let rhsLuid = rhs.luid else {
+                return nil // Both nil or one nil = no match
+            }
+            return lhsLuid.any == rhsLuid.any
+        }()
+
+        // Check mac
+        let macMatches: Bool? = {
+            guard let lhsMac = lhs.mac, let rhsMac = rhs.mac else {
+                return nil // Both nil or one nil = no match
+            }
+            return lhsMac.any == rhsMac.any
+        }()
+
+        // At least one identifier must match and be non-nil
+        return luidMatches == true || macMatches == true
     }
 }
 
