@@ -117,13 +117,15 @@ class RuuviTagConnectionService {
 
             DispatchQueue.main.async {
                 for (snapshot, isConnected, keepConnection, syncStatus) in snapshotUpdates {
-                    snapshot.updateNetworkSyncStatus(syncStatus)
-                    snapshot.updateConnectionData(
+                    let statusChanged = snapshot.updateNetworkSyncStatus(syncStatus)
+                    let connectionChanged = snapshot.updateConnectionData(
                         isConnected: isConnected,
                         isConnectable: snapshot.connectionData.isConnectable,
                         keepConnection: keepConnection
                     )
-                    self.delegate?.connectionService(self, didUpdateSnapshot: snapshot)
+                    if statusChanged || connectionChanged {
+                        self.delegate?.connectionService(self, didUpdateSnapshot: snapshot)
+                    }
                 }
             }
         }
@@ -137,13 +139,15 @@ class RuuviTagConnectionService {
 
         connectionPersistence.setKeepConnection(keep, for: luid)
 
-        snapshot.updateConnectionData(
+        let didChange = snapshot.updateConnectionData(
             isConnected: snapshot.connectionData.isConnected,
             isConnectable: snapshot.connectionData.isConnectable,
             keepConnection: keep
         )
 
-        delegate?.connectionService(self, didUpdateSnapshot: snapshot)
+        if didChange {
+            delegate?.connectionService(self, didUpdateSnapshot: snapshot)
+        }
     }
 
     func getConnectionStatus(
@@ -277,8 +281,9 @@ extension RuuviTagConnectionService {
         let syncStatus = localSyncState.getSyncStatusLatestRecord(for: macId)
 
         DispatchQueue.main.async {
-            snapshot.updateNetworkSyncStatus(syncStatus)
-            self.delegate?.connectionService(self, didUpdateSnapshot: snapshot)
+            if snapshot.updateNetworkSyncStatus(syncStatus) {
+                self.delegate?.connectionService(self, didUpdateSnapshot: snapshot)
+            }
         }
     }
 }

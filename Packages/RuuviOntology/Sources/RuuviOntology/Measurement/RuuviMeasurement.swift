@@ -29,7 +29,9 @@ public struct RuuviMeasurement {
     public var txPower: Int?
     // E1/V6
     public var co2: Double?
+    public var pm1: Double?
     public var pm25: Double?
+    public var pm4: Double?
     public var pm10: Double?
     public var voc: Double?
     public var nox: Double?
@@ -46,7 +48,9 @@ public struct RuuviMeasurement {
         humidity: Humidity?,
         pressure: Pressure?,
         co2: Double?,
+        pm1: Double?,
         pm25: Double?,
+        pm4: Double?,
         pm10: Double?,
         voc: Double?,
         nox: Double?,
@@ -66,7 +70,9 @@ public struct RuuviMeasurement {
         self.humidity = humidity
         self.pressure = pressure
         self.co2 = co2
+        self.pm1 = pm1
         self.pm25 = pm25
+        self.pm4 = pm4
         self.pm10 = pm10
         self.voc = voc
         self.nox = nox

@@ -311,6 +311,19 @@ extension SQLiteGRDBDatabase {
             }
         }
 
+        // v18
+        migrator.registerMigration("Add display order columns to SensorSettingsSQLite") { db in
+            guard try db.columns(in: SensorSettingsSQLite.databaseTableName)
+                .contains(where: { $0.name == SensorSettingsSQLite.displayOrderColumn.name }) == false
+            else {
+                return
+            }
+            try db.alter(table: SensorSettingsSQLite.databaseTableName, body: { t in
+                t.add(column: SensorSettingsSQLite.displayOrderColumn.name, .text)
+                t.add(column: SensorSettingsSQLite.defaultDisplayOrderColumn.name, .boolean)
+            })
+        }
+
         try migrator.migrate(dbPool)
     }
 }
