@@ -510,7 +510,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
         observeTokens.forEach { $0.invalidate() }
         observeTokens.removeAll()
 
-        if settings.appIsOnForeground {
+        if settings.appIsOnForeground || !settings.saveHeartbeats {
             return
         }
 
