@@ -328,7 +328,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
         guard let sensor else { return }
         let firmwareModule = firmwareBuilder.build(
             uuid: sensor.id,
-            currentFirmware: sensor.firmwareVersion.ruuviFirmwareDisplayValue ?? sensor.firmwareVersion,
+            currentFirmware: sensor.firmwareVersion.ruuviFirmwareDisplayValue,
             dependencies: RuuviFirmwareDependencies(
                 background: background,
                 foreground: foreground,

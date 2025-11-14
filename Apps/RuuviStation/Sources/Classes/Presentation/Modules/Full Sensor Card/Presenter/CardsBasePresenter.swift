@@ -198,10 +198,9 @@ extension CardsBasePresenter: CardsBaseViewOutput {
         for measurement: MeasurementType,
         variant: MeasurementDisplayVariant?
     ) {
-        graphPresenter?.start(shouldSyncFromCloud: false)
+        guard let currentSnapshot = snapshot else { return }
+        viewDidRequestToShowGraph(for: currentSnapshot, tab: .graph)
         graphPresenter?.scroll(to: measurement, variant: variant)
-        view?.showContentsForTab(.graph)
-        activeMenu = .graph
     }
 
     func viewDidRequestNavigateToSnapshotIndex(_ index: Int) {

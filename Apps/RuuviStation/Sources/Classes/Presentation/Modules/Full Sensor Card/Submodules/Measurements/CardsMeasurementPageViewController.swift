@@ -88,8 +88,8 @@ class CardsMeasurementPageViewController: UIViewController {
 
     private var snapshot: RuuviTagCardSnapshot?
     private var cancellables = Set<AnyCancellable>()
-    private var lastGridIndicatorTypes: Set<MeasurementType> = []
-    private var currentMeasurementCards: [MeasurementType: CardsMeasurementIndicatorView] = [:]
+    private var lastGridIndicatorVariants: Set<MeasurementDisplayVariant> = []
+    private var currentMeasurementCards: [MeasurementDisplayVariant: CardsMeasurementIndicatorView] = [:]
 
     // MARK: - Layout Constraints
     private var spacerHeightConstraint: NSLayoutConstraint!
@@ -340,31 +340,11 @@ private extension CardsMeasurementPageViewController {
     }
 
     func checkIfGridRebuildNeeded(for displayData: RuuviTagCardSnapshotDisplayData) -> Bool {
-        guard let indicators = displayData.indicatorGrid?.indicators else {
-            let needsRebuild = !lastGridIndicatorTypes.isEmpty
-            if needsRebuild {
-                lastGridIndicatorTypes.removeAll()
-            }
-            return needsRebuild
-        }
-
-        // Get filtered indicators (same logic as getFilteredIndicators)
-        let hasAQI = indicators.contains { $0.type == .aqi }
-        let filteredIndicators = indicators.filter { indicator in
-            if hasAQI && indicator.type == .aqi {
-                return false
-            }
-            if !hasAQI && indicator.type == .temperature {
-                return false
-            }
-            return true
-        }
-
-        let currentTypes = Set(filteredIndicators.map { $0.type })
-        let needsRebuild = currentTypes != lastGridIndicatorTypes
+        let currentVariants = Set(displayData.secondaryIndicators.map { $0.variant })
+        let needsRebuild = currentVariants != lastGridIndicatorVariants
 
         if needsRebuild {
-            lastGridIndicatorTypes = currentTypes
+            lastGridIndicatorVariants = currentVariants
         }
 
         return needsRebuild
@@ -377,7 +357,7 @@ private extension CardsMeasurementPageViewController {
 
         // Update existing cards with new values
         for indicator in indicators {
-            if let existingCard = currentMeasurementCards[indicator.type] {
+            if let existingCard = currentMeasurementCards[indicator.variant] {
                 existingCard.configure(with: indicator)
             }
         }
@@ -399,7 +379,7 @@ private extension CardsMeasurementPageViewController {
     }
 
     func forceRebuildMeasurements() {
-        lastGridIndicatorTypes.removeAll() // Force rebuild detection
+        lastGridIndicatorVariants.removeAll() // Force rebuild detection
         rebuildMeasurementGrid()
     }
 
@@ -432,17 +412,15 @@ private extension CardsMeasurementPageViewController {
     func updateIndicatorAlerts() {
         guard let snapshot = snapshot else { return }
 
-        snapshot.displayData.indicatorGrid?.indicators.forEach { indicatorData in
-            // Only update alert state for existing measurement cards
-            if let card = currentMeasurementCards[indicatorData.type],
-               let alertConfig = snapshot.getAlertConfig(
-                   for: indicatorData.type
-               ) {
-                card
-                    .updateAlertState(
-                        isHighlighted: alertConfig.isHighlighted &&
-                            snapshot.metadata.isAlertAvailable
-                    )
+        if let gridIndicators = getFilteredIndicators() {
+            gridIndicators.forEach { indicatorData in
+                guard
+                    let card = currentMeasurementCards[indicatorData.variant],
+                    let alertConfig = snapshot.getAlertConfig(for: indicatorData.type)
+                else { return }
+                card.updateAlertState(
+                    isHighlighted: alertConfig.isHighlighted && snapshot.metadata.isAlertAvailable
+                )
             }
         }
 
@@ -451,22 +429,12 @@ private extension CardsMeasurementPageViewController {
     }
 
     func updateProminentIndicatorAlert() {
-        guard let indicators = snapshot?.displayData.indicatorGrid?.indicators else {
+        guard let type = snapshot?.displayData.primaryIndicator?.type else {
             prominentIndicatorView.indicatorData = nil
             return
         }
 
-        let prominentIndicator: RuuviTagCardSnapshotIndicatorData?
-
-        if let aqiIndicator = indicators.first(where: { $0.type == .aqi }) {
-            prominentIndicator = aqiIndicator
-        } else if let tempIndicator = indicators.first(where: { $0.type == .temperature }) {
-            prominentIndicator = tempIndicator
-        } else {
-            prominentIndicator = indicators.first
-        }
-
-        if let type = prominentIndicator?.type,
+        if
             let alertConfig = snapshot?.getAlertConfig(for: type),
             let metadata = snapshot?.metadata {
             prominentIndicatorView
@@ -503,13 +471,11 @@ private extension CardsMeasurementPageViewController {
 private extension CardsMeasurementPageViewController {
 
     func calculateAccurateProminentViewHeight() -> CGFloat {
-        guard let indicators = snapshot?.displayData.indicatorGrid?.indicators else {
+        guard let type = snapshot?.displayData.primaryIndicator?.type else {
             return CardsProminentIndicatorView.heightForMeasurementMode()
         }
 
-        let hasAQI = indicators.contains { $0.type == .aqi }
-
-        if hasAQI {
+        if type == .aqi {
             return CardsProminentIndicatorView.heightForAQIMode()
         } else {
             return CardsProminentIndicatorView.heightForMeasurementMode()
@@ -570,40 +536,12 @@ private extension CardsMeasurementPageViewController {
 private extension CardsMeasurementPageViewController {
 
     func updateProminentIndicator() {
-        guard let indicators = snapshot?.displayData.indicatorGrid?.indicators else {
-            prominentIndicatorView.indicatorData = nil
-            return
-        }
-
-        let prominentIndicator: RuuviTagCardSnapshotIndicatorData?
-
-        if let aqiIndicator = indicators.first(where: { $0.type == .aqi }) {
-            prominentIndicator = aqiIndicator
-        } else if let tempIndicator = indicators.first(where: { $0.type == .temperature }) {
-            prominentIndicator = tempIndicator
-        } else {
-            prominentIndicator = indicators.first
-        }
-
-        prominentIndicatorView.indicatorData = prominentIndicator
+        prominentIndicatorView.indicatorData = snapshot?.displayData.primaryIndicator
     }
 
     func getFilteredIndicators() -> [RuuviTagCardSnapshotIndicatorData]? {
-        guard let indicators = snapshot?.displayData.indicatorGrid?.indicators else {
-            return nil
-        }
-
-        let hasAQI = indicators.contains { $0.type == .aqi }
-
-        return indicators.filter { indicator in
-            if hasAQI && indicator.type == .aqi {
-                return false
-            }
-            if !hasAQI && indicator.type == .temperature {
-                return false
-            }
-            return true
-        }
+        let secondary = snapshot?.displayData.secondaryIndicators ?? []
+        return secondary.isEmpty ? nil : secondary
     }
 
     func updateMeasurements() {
@@ -645,7 +583,7 @@ private extension CardsMeasurementPageViewController {
                 let card = createMeasurementCard(for: indicators[index])
 
                 // Track the card for alert updates
-                currentMeasurementCards[indicators[index].type] = card
+                currentMeasurementCards[indicators[index].variant] = card
 
                 // Set both width constraint AND content hugging/compression resistance
                 let widthConstraint = card.widthAnchor.constraint(equalToConstant: columnConfig.itemWidth)
