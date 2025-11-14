@@ -77,7 +77,7 @@ extension SettingsPresenter: SettingsViewOutput {
         let viewModel = UnitSettingsViewModel(
             title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
             items: selectionItems,
-            measurementType: .humidity(.percent)
+            measurementType: .humidity
         )
         router.openUnitSettings(with: viewModel, output: nil)
     }

@@ -114,6 +114,28 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
             presenter.configure(ruuviTag: ruuviTag, output: output)
         }
     }
+
+    func openVisibilitySettings(
+        snapshot: RuuviTagCardSnapshot,
+        ruuviTag: RuuviTagSensor,
+        sensorSettings: SensorSettings?
+    ) {
+//        guard flags.showImprovedSensorSettingsUI else {
+//            return
+//        }
+        let factory: VisibilitySettingsModuleFactory = VisibilitySettingsModuleFactoryImpl()
+        let module = factory.create(
+            snapshot: snapshot,
+            sensor: ruuviTag,
+            sensorSettings: sensorSettings
+        )
+        transitionHandler?
+            .navigationController?
+            .pushViewController(
+                module,
+                animated: true
+            )
+    }
 }
 
 extension TagSettingsRouter: UIAdaptivePresentationControllerDelegate {
