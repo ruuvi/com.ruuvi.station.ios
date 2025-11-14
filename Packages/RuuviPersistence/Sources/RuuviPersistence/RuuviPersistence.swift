@@ -51,6 +51,12 @@ public protocol RuuviPersistence {
         lastOriginalRecord record: RuuviTagSensorRecord?
     ) -> Future<SensorSettings, RuuviPersistenceError>
 
+    func updateDisplaySettings(
+        for ruuviTag: RuuviTagSensor,
+        displayOrder: [String]?,
+        defaultDisplayOrder: Bool?
+    ) -> Future<SensorSettings, RuuviPersistenceError>
+
     func deleteOffsetCorrection(
         ruuviTag: RuuviTagSensor
     ) -> Future<Bool, RuuviPersistenceError>

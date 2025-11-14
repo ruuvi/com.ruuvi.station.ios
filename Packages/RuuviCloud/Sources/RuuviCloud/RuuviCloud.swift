@@ -61,7 +61,8 @@ public protocol RuuviCloud {
         measurements: Bool?,
         sharedToOthers: Bool?,
         sharedToMe: Bool?,
-        alerts: Bool?
+        alerts: Bool?,
+        settings: Bool?
     ) -> Future<[RuuviCloudSensorDense], RuuviCloudError>
 
     @discardableResult
@@ -184,6 +185,14 @@ public protocol RuuviCloud {
 
     @discardableResult
     func set(dashboardSensorOrder: [String]) -> Future<[String], RuuviCloudError>
+
+    @discardableResult
+    func updateSensorSettings(
+        for sensor: RuuviTagSensor,
+        types: [String],
+        values: [String],
+        timestamp: Int?
+    ) -> Future<AnyRuuviTagSensor, RuuviCloudError>
 
     @discardableResult
     func update(
