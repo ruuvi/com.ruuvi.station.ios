@@ -16,7 +16,8 @@ final class CardsBaseViewController: UIViewController {
             static let backButtonLeftPadding: CGFloat = -16
             static let backButtonSize = CGSize(width: 48, height: 48)
             static let ruuviLogoSize = CGSize(width: 90, height: 22)
-            static let menuBarSize = CGSize(width: 120, height: 0)
+            static let menuBarSizeLegacy = CGSize(width: 120, height: 0)
+            static let menuBarSize = CGSize(width: 140, height: 0)
             static let menuBarRightPadding: CGFloat = -6
             static let secondaryToolbarTopPadding: CGFloat = 2
             static let arrowButtonTopPadding: CGFloat = 6
@@ -318,7 +319,8 @@ private extension CardsBaseViewController {
                 bottom: rightBarButtonView.bottomAnchor,
                 trailing: rightBarButtonView.trailingAnchor,
                 padding: .init(top: 0, left: 0, bottom: 0, right: Constants.Layout.menuBarRightPadding),
-                size: Constants.Layout.menuBarSize
+                size: flags.showNewCardsMenu ?
+                    Constants.Layout.menuBarSize : Constants.Layout.menuBarSizeLegacy
             )
         menuBarView.onTabChanged = { [weak self] tab in
             self?.handleTabChange(tab)
@@ -456,12 +458,23 @@ private extension CardsBaseViewController {
     }
 
     private func embedChildViewControllers() {
-        for (tab, vc) in tabs {
-            addChild(vc)
-            tabContainerView.addSubview(vc.view)
-            vc.view.fillSuperviewToSafeArea()
-            vc.didMove(toParent: self)
-            vc.view.isHidden = tab != activeTab
+        if flags.showNewCardsMenu {
+            for (tab, vc) in tabs {
+                addChild(vc)
+                tabContainerView.addSubview(vc.view)
+                vc.view.fillSuperviewToSafeArea()
+                vc.didMove(toParent: self)
+                vc.view.isHidden = tab != activeTab
+            }
+        } else {
+            for (tab, vc) in tabs {
+                if tab == .settings { continue }
+                addChild(vc)
+                tabContainerView.addSubview(vc.view)
+                vc.view.fillSuperviewToSafeArea()
+                vc.didMove(toParent: self)
+                vc.view.isHidden = tab != activeTab
+            }
         }
     }
 }
@@ -681,12 +694,13 @@ extension CardsBaseViewController: MeasurementDetailsCoordinatorDelegate {
     func measurementDetailsCoordinatorDidDismissWithGraphTap(
         for snapshot: RuuviTagCardSnapshot,
         measurement: MeasurementType,
+        variant: MeasurementDisplayVariant?,
         ruuviTag: RuuviTagSensor,
         _ coordinator: MeasurementDetailsCoordinator
     ) {
         detailsCoordinator?.stop()
         detailsCoordinator = nil
-        output?.viewDidScrollToGraph(for: measurement)
+        output?.viewDidScrollToGraph(for: measurement, variant: variant)
         activeTab = .graph
         menuBarView.setSelectedTab(.graph, animated: true, notify: false)
     }

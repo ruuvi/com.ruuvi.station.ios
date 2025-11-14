@@ -55,16 +55,19 @@ extension SharePresenter: ShareViewOutput {
             return
         }
 
+        let normalizedEmail = email.lowercased()
         activityPresenter.show(with: .loading(message: nil))
         ruuviOwnershipService
-            .share(macId: sensor.id.mac, with: email.lowercased())
+            .share(macId: sensor.id.mac, with: normalizedEmail)
             .on(success: { [weak self] result in
-                self?.view.clearInput()
+                guard let self else { return }
+                self.view.clearInput()
+                self.updateShared(email: normalizedEmail, add: true)
+
                 if let invited = result.invited, invited {
-                    self?.view.showSuccessfullyInvited()
+                    self.view.showSuccessfullyInvited()
                 } else {
-                    self?.updateShared(email: email.lowercased(), add: true)
-                    self?.view.showSuccessfullyShared()
+                    self.view.showSuccessfullyShared()
                 }
 
             }, failure: { [weak self] error in
@@ -194,18 +197,22 @@ extension SharePresenter {
     private func updateShared(email: String, add: Bool) {
         var sharedTo = sensor.sharedTo
         if add {
-            sharedTo.append(email)
-        } else {
-            if let index = sharedTo.firstIndex(where: { shared in
-                shared.lowercased() == email.lowercased()
-            }) {
-                sharedTo.remove(at: index)
-            } else {
+            guard !sharedTo.contains(where: { $0.caseInsensitiveCompare(email) == .orderedSame })
+            else {
                 return
             }
+            sharedTo.append(email)
+        } else {
+            guard let index = sharedTo.firstIndex(where: { $0.caseInsensitiveCompare(email) == .orderedSame })
+            else {
+                return
+            }
+            sharedTo.remove(at: index)
         }
-        let sensor = sensor.with(sharedTo: sharedTo)
-        ruuviOwnershipService.updateShareable(for: sensor)
+
+        let updatedSensor = sensor.with(sharedTo: sharedTo)
+        self.sensor = updatedSensor
+        ruuviOwnershipService.updateShareable(for: updatedSensor)
     }
 
     private func syncMaxShareCount(ruuviTag: RuuviTagSensor) {
