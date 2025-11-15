@@ -328,7 +328,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
         guard let sensor else { return }
         let firmwareModule = firmwareBuilder.build(
             uuid: sensor.id,
-            currentFirmware: sensor.firmwareVersion.ruuviFirmwareDisplayValue ?? sensor.firmwareVersion,
+            currentFirmware: sensor.firmwareVersion.ruuviFirmwareDisplayValue,
             dependencies: RuuviFirmwareDependencies(
                 background: background,
                 foreground: foreground,
@@ -585,7 +585,7 @@ extension DiscoverPresenter {
         let nameString = "\(RuuviLocalization.name)\n\(displayName)"
         let macIdString = "\(RuuviLocalization.macAddress)\n\(tag.macId)"
         let uniqueIdString = "\(RuuviLocalization.uniqueId)\n\(tag.id)"
-        let firmwareVersion = tag.firmwareVersion.ruuviFirmwareDisplayValue ?? tag.firmwareVersion
+        let firmwareVersion = tag.firmwareVersion.ruuviFirmwareDisplayValue
         let fwString = "\(RuuviLocalization.firmwareVersion)\n\(firmwareVersion)"
 
         return "\n\(nameString)\n\n\(macIdString)\n\n\(uniqueIdString)\n\n\(fwString)\n"

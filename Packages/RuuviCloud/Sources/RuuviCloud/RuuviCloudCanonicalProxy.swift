@@ -61,12 +61,14 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         cloud.loadSensors()
     }
 
+    // swiftlint:disable:next function_parameter_count
     public func loadSensorsDense(
         for sensor: RuuviTagSensor?,
         measurements: Bool?,
         sharedToOthers: Bool?,
         sharedToMe: Bool?,
-        alerts: Bool?
+        alerts: Bool?,
+        settings: Bool?
     ) -> Future<[RuuviCloudSensorDense], RuuviCloudError> {
         let sensorForCloud = sensor.map { canonicalizedSensor($0) }
         return cloud.loadSensorsDense(
@@ -74,7 +76,8 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
             measurements: measurements,
             sharedToOthers: sharedToOthers,
             sharedToMe: sharedToMe,
-            alerts: alerts
+            alerts: alerts,
+            settings: settings
         )
     }
 
@@ -328,6 +331,31 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         cloud.set(dashboardSensorOrder: dashboardSensorOrder)
     }
 
+    public func updateSensorSettings(
+        for sensor: RuuviTagSensor,
+        types: [String],
+        values: [String],
+        timestamp: Int?
+    ) -> Future<AnyRuuviTagSensor, RuuviCloudError> {
+        let promise = Promise<AnyRuuviTagSensor, RuuviCloudError>()
+        let originalMacId = sensor.macId
+        cloud.updateSensorSettings(
+            for: canonicalizedSensor(
+                sensor
+            ),
+            types: types,
+            values: values,
+            timestamp: timestamp
+        )
+        .on(success: { [weak self] updated in
+            guard let self else { return }
+            let restored = self.restore(sensor: updated, originalMac: originalMacId)
+            promise.succeed(value: restored)
+        }, failure: { error in
+            promise.fail(error: error)
+        })
+        return promise.future
+    }
     public func update(
         temperatureOffset: Double?,
         humidityOffset: Double?,

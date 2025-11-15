@@ -56,12 +56,14 @@ public protocol RuuviCloud {
     func loadSensors() -> Future<[AnyCloudSensor], RuuviCloudError>
 
     @discardableResult
+    // swiftlint:disable:next function_parameter_count
     func loadSensorsDense(
         for sensor: RuuviTagSensor?,
         measurements: Bool?,
         sharedToOthers: Bool?,
         sharedToMe: Bool?,
-        alerts: Bool?
+        alerts: Bool?,
+        settings: Bool?
     ) -> Future<[RuuviCloudSensorDense], RuuviCloudError>
 
     @discardableResult
@@ -184,6 +186,14 @@ public protocol RuuviCloud {
 
     @discardableResult
     func set(dashboardSensorOrder: [String]) -> Future<[String], RuuviCloudError>
+
+    @discardableResult
+    func updateSensorSettings(
+        for sensor: RuuviTagSensor,
+        types: [String],
+        values: [String],
+        timestamp: Int?
+    ) -> Future<AnyRuuviTagSensor, RuuviCloudError>
 
     @discardableResult
     func update(

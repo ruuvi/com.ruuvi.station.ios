@@ -109,6 +109,11 @@ public protocol RuuviCloudApi {
         authorization: String
     ) -> Future<RuuviCloudApiPostSettingResponse, RuuviCloudApiError>
 
+    func postSensorSettings(
+        _ requestModel: RuuviCloudApiPostSensorSettingsRequest,
+        authorization: String
+    ) -> Future<RuuviCloudApiPostSensorSettingsResponse, RuuviCloudApiError>
+
     func postAlert(
         _ requestModel: RuuviCloudApiPostAlertRequest,
         authorization: String

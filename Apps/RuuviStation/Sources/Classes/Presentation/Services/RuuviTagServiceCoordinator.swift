@@ -9,6 +9,7 @@ import RuuviDaemon
 import RuuviUser
 import RuuviCore
 import RuuviNotifier
+import RuuviPool
 import RuuviLocal
 import BTKit
 
@@ -236,6 +237,8 @@ class RuuviTagServiceCoordinator {
         guard !initialSetupCompleted else { return }
         initialSetupCompleted = true
 
+        applyAuthorizationState(to: snapshots)
+
         // Store initial state
         previousSnapshots = snapshots
         updateSnapshotIdMap(snapshots)
@@ -332,12 +335,18 @@ class RuuviTagServiceCoordinator {
         alertService.triggerAlertsIfNeeded(for: snapshots)
     }
 
+    func setAlertMuteRefreshActive(_ active: Bool) {
+        alertService.setMuteRefreshActive(active)
+    }
+
     // MARK: - Connection Management
     func updateConnectionData(for snapshots: [RuuviTagCardSnapshot]) {
         connectionService.updateConnectionData(for: snapshots)
     }
 
-    func getConnectionStatus(for snapshot: RuuviTagCardSnapshot) -> (isConnected: Bool, keepConnection: Bool) {
+    func getConnectionStatus(
+        for snapshot: RuuviTagCardSnapshot
+    ) -> (isConnected: Bool, keepConnection: Bool) {
         return connectionService.getConnectionStatus(for: snapshot)
     }
 
@@ -429,13 +438,14 @@ private extension RuuviTagServiceCoordinator {
 
     func hasSnapshotChanged(old: RuuviTagCardSnapshot, new: RuuviTagCardSnapshot) -> Bool {
         // Compare relevant properties that indicate a value change
-        // You can customize this based on what properties matter
         return old.latestRawRecord?.date != new.latestRawRecord?.date ||
                old.displayData.name != new.displayData.name ||
                old.displayData.background != new.displayData.background ||
                old.metadata.isOwner != new.metadata.isOwner ||
                old.metadata.isCloud != new.metadata.isCloud ||
-               old.metadata.canShareTag != new.metadata.canShareTag
+               old.metadata.canShareTag != new.metadata.canShareTag ||
+               old.ownership != new.ownership ||
+               old.alertData != new.alertData
     }
 
     func updateSnapshotIdMap(_ snapshots: [RuuviTagCardSnapshot]) {
@@ -496,6 +506,8 @@ extension RuuviTagServiceCoordinator: RuuviTagDataServiceDelegate {
         didUpdateSnapshots snapshots: [RuuviTagCardSnapshot],
         withAnimation: Bool
     ) {
+        applyAuthorizationState(to: snapshots)
+
         // Detect what changed
         let reason = detectSnapshotChanges(snapshots)
 
@@ -520,6 +532,8 @@ extension RuuviTagServiceCoordinator: RuuviTagDataServiceDelegate {
         didUpdateSnapshot snapshot: RuuviTagCardSnapshot,
         invalidateLayout: Bool
     ) {
+        applyAuthorizationState(to: snapshot)
+
         // Update the snapshot in our tracking map
         snapshotIdMap[snapshot.id] = snapshot
 
@@ -537,6 +551,7 @@ extension RuuviTagServiceCoordinator: RuuviTagDataServiceDelegate {
     ) {
         // Update other services when new sensor is added
         let snapshots = dataService.getAllSnapshots()
+        applyAuthorizationState(to: snapshots)
         alertService.subscribeToAlerts(for: snapshots)
         connectionService.updateConnectionData(for: snapshots)
 
@@ -561,14 +576,51 @@ extension RuuviTagServiceCoordinator: RuuviCloudServiceDelegate {
         _ service: RuuviCloudService,
         userDidLogin loggedIn: Bool
     ) {
-        notifyEvent(.userLoginStateChanged(loggedIn))
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+
+            self.dataService.getAllSnapshots().forEach { snapshot in
+                snapshot.ownership.isAuthorized = loggedIn
+                snapshot.capabilities.isCloudConnectionAlertsAvailable =
+                    loggedIn && snapshot.metadata.isCloud && snapshot.ownership.isOwnersPlanProPlus
+            }
+
+            self.notifyEvent(.userLoginStateChanged(loggedIn))
+        }
     }
 
     func ruuviCloudService(
         _ service: RuuviCloudService,
         userDidLogOut loggedOut: Bool
     ) {
-        notifyEvent(.userLogoutStateChanged(loggedOut))
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+
+            self.dataService.getAllSnapshots().forEach { snapshot in
+                snapshot.ownership.isAuthorized = false
+                snapshot.capabilities.isCloudConnectionAlertsAvailable = false
+            }
+
+            self.notifyEvent(.userLogoutStateChanged(loggedOut))
+        }
+    }
+
+    private func applyAuthorizationState(
+        to snapshots: [RuuviTagCardSnapshot]
+    ) {
+        let isAuthorized = cloudService.isAuthorized()
+        snapshots.forEach { snapshot in
+            snapshot.ownership.isAuthorized = isAuthorized
+            snapshot.capabilities.isCloudConnectionAlertsAvailable =
+                isAuthorized && snapshot.metadata.isCloud && snapshot.ownership.isOwnersPlanProPlus
+        }
+    }
+
+    private func applyAuthorizationState(to snapshot: RuuviTagCardSnapshot) {
+        let isAuthorized = cloudService.isAuthorized()
+        snapshot.ownership.isAuthorized = isAuthorized
+        snapshot.capabilities.isCloudConnectionAlertsAvailable =
+            isAuthorized && snapshot.metadata.isCloud && snapshot.ownership.isOwnersPlanProPlus
     }
 
     func ruuviCloudService(
@@ -835,6 +887,10 @@ class RuuviTagServiceCoordinatorManager {
         withCoordinator { $0.triggerAlertsIfNeeded(for: snapshots) }
     }
 
+    func setAlertMuteRefreshActive(_ active: Bool) {
+        withCoordinator { $0.setAlertMuteRefreshActive(active) }
+    }
+
     // MARK: - Connection Management
     func updateConnectionData(for snapshots: [RuuviTagCardSnapshot]) {
         withCoordinator { $0.updateConnectionData(for: snapshots) }
@@ -871,13 +927,15 @@ class RuuviTagCoordinatorFactory {
             measurementService: r.resolve(RuuviServiceMeasurement.self)!,
             ruuviSensorPropertiesService: r.resolve(RuuviServiceSensorProperties.self)!,
             settings: r.resolve(RuuviLocalSettings.self)!,
-            flags: r.resolve(RuuviLocalFlags.self)!
+            flags: r.resolve(RuuviLocalFlags.self)!,
+            ruuviPool: r.resolve(RuuviPool.self)!
         )
 
         let alertService = RuuviTagAlertService(
             alertService: r.resolve(RuuviServiceAlert.self)!,
             alertHandler: r.resolve(RuuviNotifier.self)!,
-            settings: r.resolve(RuuviLocalSettings.self)!
+            settings: r.resolve(RuuviLocalSettings.self)!,
+            pushNotificationsManager: r.resolve(RuuviCorePN.self)!
         )
 
         let connectionService = RuuviTagConnectionService(

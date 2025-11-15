@@ -668,6 +668,59 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         return promise.future
     }
 
+    public func updateDisplaySettings(
+        for ruuviTag: RuuviTagSensor,
+        displayOrder: [String]?,
+        defaultDisplayOrder: Bool?
+    ) -> Future<SensorSettings, RuuviPersistenceError> {
+        let promise = Promise<SensorSettings, RuuviPersistenceError>()
+        do {
+            let settings: Settings = try database.dbPool.write { db in
+                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+                var seed = Settings(
+                    luid: normalizedTag.luid,
+                    macId: normalizedTag.macId,
+                    temperatureOffset: nil,
+                    humidityOffset: nil,
+                    pressureOffset: nil
+                )
+                seed.displayOrder = displayOrder
+                seed.defaultDisplayOrder = defaultDisplayOrder
+
+                try db.execute(sql: """
+                INSERT INTO \(Settings.databaseTableName)
+                    (\(Settings.idColumn.name), \(Settings.luidColumn.name), \(Settings.macIdColumn.name),
+                     \(Settings.displayOrderColumn.name), \(Settings.defaultDisplayOrderColumn.name))
+                VALUES (:id, :luid, :macId, :displayOrder, :defaultDisplayOrder)
+                ON CONFLICT(\(Settings.idColumn.name)) DO UPDATE SET
+                    \(Settings.displayOrderColumn.name) = excluded.\(Settings.displayOrderColumn.name),
+                    \(Settings.defaultDisplayOrderColumn.name) = excluded.\(Settings.defaultDisplayOrderColumn.name),
+                    \(Settings.luidColumn.name) = COALESCE(excluded.\(Settings.luidColumn.name),
+                        \(Settings.databaseTableName).\(Settings.luidColumn.name)),
+                    \(Settings.macIdColumn.name) = COALESCE(excluded.\(Settings.macIdColumn.name),
+                        \(Settings.databaseTableName).\(Settings.macIdColumn.name))
+                """, arguments: [
+                    "id": seed.id,
+                    "luid": normalizedTag.luid?.value,
+                    "macId": normalizedTag.macId?.value,
+                    "displayOrder": SensorSettingsSQLite.encodeDisplayOrder(displayOrder),
+                    "defaultDisplayOrder": defaultDisplayOrder,
+                ])
+
+                let request = Settings.filter(Settings.idColumn == seed.id)
+                if let updated = try request.fetchOne(db) {
+                    return updated
+                } else {
+                    return seed
+                }
+            }
+            promise.succeed(value: settings)
+        } catch {
+            promise.fail(error: .grdb(error))
+        }
+        return promise.future
+    }
+
     public func deleteOffsetCorrection(ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         assert(ruuviTag.macId != nil)
