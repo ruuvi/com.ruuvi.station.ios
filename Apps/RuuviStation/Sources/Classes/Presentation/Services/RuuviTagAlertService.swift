@@ -1,10 +1,12 @@
 // swiftlint:disable file_length
 
 import Foundation
+import UIKit
 import RuuviOntology
 import RuuviService
 import RuuviNotifier
 import RuuviLocal
+import RuuviCore
 
 protocol RuuviTagAlertServiceDelegate: AnyObject {
     func alertService(
@@ -24,6 +26,7 @@ class RuuviTagAlertService {
     private let alertService: RuuviServiceAlert
     private let alertHandler: RuuviNotifier
     private let settings: RuuviLocalSettings
+    private let pushNotificationsManager: RuuviCorePN
 
     // MARK: - Properties
     weak var delegate: RuuviTagAlertServiceDelegate?
@@ -51,21 +54,46 @@ class RuuviTagAlertService {
     // MARK: - Debouncing Management
     private var debouncers: [String: Debouncer] = [:]
 
+    // MARK: - Push Notifications State
+    private var pushNotificationsEnabled = false
+    private var pushNotificationStatusLoaded = false
+    private var appStateObserver: NSObjectProtocol?
+    private var muteRefreshTimer: Timer?
+    private let muteRefreshInterval: TimeInterval = 5
+    private var muteRefreshActive = false
+
     // MARK: - Initialization
     init(
         alertService: RuuviServiceAlert,
         alertHandler: RuuviNotifier,
-        settings: RuuviLocalSettings
+        settings: RuuviLocalSettings,
+        pushNotificationsManager: RuuviCorePN
     ) {
         self.alertService = alertService
         self.alertHandler = alertHandler
         self.settings = settings
+        self.pushNotificationsManager = pushNotificationsManager
+
+        refreshPushNotificationStatus()
+        appStateObserver = NotificationCenter
+            .default
+            .addObserver(
+                forName: UIApplication.didBecomeActiveNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                self?.refreshPushNotificationStatus()
+            }
     }
 
     deinit {
         stopObservingAlerts()
         debounceTimer?.invalidate()
         debouncers.values.forEach { $0.cancel() }
+        muteRefreshTimer?.invalidate()
+        if let appStateObserver {
+            NotificationCenter.default.removeObserver(appStateObserver)
+        }
     }
 
     // MARK: - Public Interface
@@ -84,6 +112,8 @@ class RuuviTagAlertService {
         snapshotsQueue.async(flags: .barrier) { [weak self] in
             guard let self = self else { return }
             self.snapshots[snapshot.id] = snapshot
+            self.schedulePushCapabilityUpdate(for: snapshot)
+            self.ensureMutedTillRefreshTimer()
         }
     }
 
@@ -93,6 +123,12 @@ class RuuviTagAlertService {
             self.snapshots.removeAll()
             for snapshot in snapshots {
                 self.snapshots[snapshot.id] = snapshot
+            }
+            self.schedulePushCapabilityUpdate(for: snapshots)
+            if snapshots.isEmpty {
+                self.stopMutedTillRefreshTimer()
+            } else {
+                self.ensureMutedTillRefreshTimer()
             }
         }
     }
@@ -140,7 +176,10 @@ class RuuviTagAlertService {
             guard let self = self else { return }
 
             // Sync all measurement-based alerts
-            for measurementType in MeasurementType.all {
+            let profile = RuuviTagDataService.measurementDisplayProfile(for: snapshot)
+            let measurementTypes = profile.entries(for: .alert).map(\.type)
+
+            for measurementType in measurementTypes {
                 self.syncMeasurementAlert(
                     type: measurementType,
                     snapshot: snapshot,
@@ -296,6 +335,42 @@ class RuuviTagAlertService {
         addToPendingUpdates(snapshotId: snapshot.id)
     }
 
+    func setCloudConnectionUnseenDuration(
+        _ duration: Double,
+        snapshot: RuuviTagCardSnapshot,
+        physicalSensor: RuuviTagSensor
+    ) {
+        let alertType: AlertType = .cloudConnection(unseenDuration: 0)
+        let currentConfig = snapshot.getAlertConfig(for: alertType) ??
+            createDefaultConfig(for: alertType)
+
+        let updatedConfig = RuuviTagCardSnapshotAlertConfig(
+            type: currentConfig.type,
+            alertType: currentConfig.alertType,
+            isActive: currentConfig.isActive,
+            isFiring: currentConfig.isFiring,
+            mutedTill: currentConfig.mutedTill,
+            lowerBound: currentConfig.lowerBound,
+            upperBound: currentConfig.upperBound,
+            description: currentConfig.description,
+            unseenDuration: duration
+        )
+
+        snapshot.updateAlertConfig(for: alertType, config: updatedConfig)
+
+        let debouncer = getDebouncerForKey("cloudConnection_unseen_\(snapshot.id)")
+        debouncer.run { [weak self] in
+            guard let self else { return }
+            self.alertService.setCloudConnection(
+                unseenDuration: duration,
+                ruuviTag: physicalSensor
+            )
+            self.processAlerts(for: snapshot)
+        }
+
+        addToPendingUpdates(snapshotId: snapshot.id)
+    }
+
     // MARK: - Alert Processing
     func processAlert(record: RuuviTagSensorRecord, snapshot: RuuviTagCardSnapshot) {
         DispatchQueue.main.async { [weak self] in
@@ -323,16 +398,19 @@ class RuuviTagAlertService {
     func triggerAlertsIfNeeded(for snapshots: [RuuviTagCardSnapshot]) {
         updateSnapshots(snapshots)
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            for snapshot in snapshots {
-                self.triggerAlertsIfNeeded(for: snapshot)
-            }
+            guard let self else { return }
+            self.reloadMutedTillStates(for: snapshots)
+            snapshots.forEach { self.processAlerts(for: $0) }
         }
     }
 
     func triggerAlertsIfNeeded(for snapshot: RuuviTagCardSnapshot) {
         updateSnapshot(snapshot)
-        processAlerts(for: snapshot)
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.reloadMutedTillStates(for: [snapshot])
+            self.processAlerts(for: snapshot)
+        }
     }
 
     // MARK: - Mute/Unmute Alert
@@ -387,6 +465,19 @@ class RuuviTagAlertService {
         addToPendingUpdates(snapshotId: snapshot.id)
     }
 
+    func setMuteRefreshActive(_ active: Bool) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            if self.muteRefreshActive == active { return }
+            self.muteRefreshActive = active
+            if active {
+                self.ensureMutedTillRefreshTimer()
+            } else {
+                self.stopMutedTillRefreshTimer()
+            }
+        }
+    }
+
     // MARK: - Helper Methods
     func hasActiveAlerts(for snapshot: RuuviTagCardSnapshot) -> Bool {
         return !snapshot.getAllActiveAlerts().isEmpty
@@ -399,7 +490,7 @@ class RuuviTagAlertService {
     func validateAlertState(for snapshot: RuuviTagCardSnapshot, physicalSensor: PhysicalSensor) -> Bool {
         // Check measurement-based alerts
         for (measurementType, config) in snapshot.alertData.alertConfigurations {
-            let alertType = measurementType.toAlertType()
+            guard let alertType = measurementType.toAlertType() else { continue }
             let serviceIsOn = alertService.isOn(type: alertType, for: physicalSensor)
             if serviceIsOn != config.isActive {
                 return false
@@ -479,16 +570,17 @@ private extension RuuviTagAlertService {
         snapshot: RuuviTagCardSnapshot,
         physicalSensor: PhysicalSensor
     ) {
-        let alertType = type.toAlertType()
+        guard let alertType = type.toAlertType() else { return }
         let isOn = alertService.isOn(type: alertType, for: physicalSensor)
         let mutedTill = alertService.mutedTill(type: alertType, for: physicalSensor)
+        let activeAlert = alertService.alert(for: physicalSensor, of: alertType)
 
         var lowerBound: Double?
         var upperBound: Double?
         var description: String?
 
         // Get bounds and description based on alert type
-        switch alertType {
+        switch activeAlert {
         case let .temperature(lower, upper):
             lowerBound = lower
             upperBound = upper
@@ -562,19 +654,26 @@ private extension RuuviTagAlertService {
         }
 
         if let currentConfig = snapshot.getAlertConfig(for: alertType) {
-            // Check if any values actually changed
+            let newLower = lowerBound ?? currentConfig.lowerBound
+            let newUpper = upperBound ?? currentConfig.upperBound
+            let newDescription = description ?? currentConfig.description
+
             let hasChanges = currentConfig.isActive != isOn ||
-                           currentConfig.mutedTill != mutedTill
+                currentConfig.mutedTill != mutedTill ||
+                !areValuesEqual(currentConfig.lowerBound, newLower) ||
+                !areValuesEqual(currentConfig.upperBound, newUpper) ||
+                currentConfig.description != newDescription
+
             if hasChanges {
                 let updatedConfig = RuuviTagCardSnapshotAlertConfig(
-                    type: currentConfig.type,
-                    alertType: currentConfig.alertType,
+                    type: currentConfig.type ?? type,
+                    alertType: currentConfig.alertType ?? alertType,
                     isActive: isOn,
                     isFiring: currentConfig.isFiring,
                     mutedTill: mutedTill,
-                    lowerBound: currentConfig.lowerBound,
-                    upperBound: currentConfig.upperBound,
-                    description: currentConfig.description,
+                    lowerBound: newLower,
+                    upperBound: newUpper,
+                    description: newDescription,
                     unseenDuration: currentConfig.unseenDuration
                 )
                 snapshot.updateAlertConfig(for: alertType, config: updatedConfig)
@@ -621,17 +720,22 @@ private extension RuuviTagAlertService {
         }
 
         if let currentConfig = snapshot.getAlertConfig(for: type) {
-            // Check if any values actually changed
+            let newDescription = description ?? currentConfig.description
+            let newUnseenDuration = unseenDuration ?? currentConfig.unseenDuration
+
             let hasChanges = currentConfig.isActive != isOn ||
-                           currentConfig.mutedTill != mutedTill
+                currentConfig.mutedTill != mutedTill ||
+                currentConfig.description != newDescription ||
+                currentConfig.unseenDuration != newUnseenDuration
+
             if hasChanges {
                 let config = RuuviTagCardSnapshotAlertConfig(
-                    alertType: currentConfig.alertType,
-                    isActive: currentConfig.isActive,
+                    alertType: currentConfig.alertType ?? type,
+                    isActive: isOn,
                     isFiring: currentConfig.isFiring,
                     mutedTill: mutedTill,
-                    description: currentConfig.description,
-                    unseenDuration: currentConfig.unseenDuration
+                    description: newDescription,
+                    unseenDuration: newUnseenDuration
                 )
 
                 snapshot.updateAlertConfig(for: type, config: config)
@@ -689,7 +793,6 @@ private extension RuuviTagAlertService {
                                 physicalSensor: physicalSensor
                             )
                         }
-//                        self.addToPendingUpdates(snapshotId: snapshot.id)
                     }
                 }
             }
@@ -819,6 +922,17 @@ private extension RuuviTagAlertService {
         case .soundInstant: return alertService.upperSoundInstant(for: physicalSensor)
         case .luminosity: return alertService.upperLuminosity(for: physicalSensor)
         default: return nil
+        }
+    }
+
+    func areValuesEqual(_ lhs: Double?, _ rhs: Double?) -> Bool {
+        switch (lhs, rhs) {
+        case (nil, nil):
+            return true
+        case let (l?, r?):
+            return abs(l - r) < 0.0001
+        default:
+            return false
         }
     }
 
@@ -1118,6 +1232,117 @@ extension RuuviTagAlertService: RuuviNotifierObserver {
                 self.processingLock.lock()
                 self.isProcessingAlertChange = false
                 self.processingLock.unlock()
+            }
+        }
+    }
+}
+
+// MARK: - Push Notification Helpers
+private extension RuuviTagAlertService {
+    func refreshPushNotificationStatus() {
+        pushNotificationsManager.getRemoteNotificationsAuthorizationStatus { [weak self] status in
+            guard let self else { return }
+
+            var enabled = false
+            switch status {
+            case .authorized:
+                enabled = true
+            case .denied:
+                enabled = false
+            case .notDetermined:
+                enabled = false
+                DispatchQueue.main.async {
+                    self.pushNotificationsManager.registerForRemoteNotifications()
+                }
+            @unknown default:
+                enabled = false
+            }
+
+            DispatchQueue.main.async {
+                let previousLoaded = self.pushNotificationStatusLoaded
+                let prevEnabled = self.pushNotificationsEnabled
+                self.pushNotificationsEnabled = enabled
+                self.pushNotificationStatusLoaded = true
+                if !previousLoaded || prevEnabled != enabled {
+                    self.updatePushCapabilitiesForAllSnapshots()
+                }
+            }
+        }
+    }
+
+    func schedulePushCapabilityUpdate(for snapshot: RuuviTagCardSnapshot) {
+        guard pushNotificationStatusLoaded else { return }
+        DispatchQueue.main.async { [weak self] in
+            self?.applyPushCapabilities(to: snapshot)
+        }
+    }
+
+    func schedulePushCapabilityUpdate(for snapshots: [RuuviTagCardSnapshot]) {
+        guard pushNotificationStatusLoaded else { return }
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            snapshots.forEach { self.applyPushCapabilities(to: $0) }
+        }
+    }
+
+    func updatePushCapabilitiesForAllSnapshots() {
+        guard pushNotificationStatusLoaded else { return }
+        snapshotsQueue.async { [weak self] in
+            guard let self else { return }
+            let snapshots = Array(self.snapshots.values)
+            guard !snapshots.isEmpty else { return }
+            DispatchQueue.main.async {
+                snapshots.forEach { self.applyPushCapabilities(to: $0) }
+            }
+        }
+    }
+
+    func applyPushCapabilities(to snapshot: RuuviTagCardSnapshot) {
+        guard pushNotificationStatusLoaded else { return }
+        let enabled = pushNotificationsEnabled
+        let canDeliverPush = snapshot.metadata.isCloud || snapshot.connectionData.isConnectable
+        let available = enabled && canDeliverPush
+        if snapshot.capabilities.isPushNotificationsEnabled != enabled ||
+            snapshot.capabilities.isPushNotificationsAvailable != available {
+            snapshot.capabilities.isPushNotificationsEnabled = enabled
+            snapshot.capabilities.isPushNotificationsAvailable = available
+            addToPendingUpdates(snapshotId: snapshot.id)
+        }
+    }
+
+    func ensureMutedTillRefreshTimer() {
+        guard muteRefreshActive else { return }
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            guard self.muteRefreshTimer == nil else { return }
+            self.muteRefreshTimer = Timer.scheduledTimer(
+                withTimeInterval: self.muteRefreshInterval,
+                repeats: true
+            ) { [weak self] _ in
+                self?.refreshMutedTillStatesIfNeeded()
+            }
+        }
+    }
+
+    func stopMutedTillRefreshTimer() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.muteRefreshTimer?.invalidate()
+            self.muteRefreshTimer = nil
+        }
+    }
+
+    func refreshMutedTillStatesIfNeeded() {
+        snapshotsQueue.async { [weak self] in
+            guard let self else { return }
+            guard self.muteRefreshActive else { return }
+            let snapshots = Array(self.snapshots.values)
+            guard !snapshots.isEmpty else {
+                self.stopMutedTillRefreshTimer()
+                return
+            }
+            DispatchQueue.main.async {
+                self.reloadMutedTillStates(for: snapshots)
             }
         }
     }

@@ -8,6 +8,7 @@ public enum RuuviCloudQueuedRequestType: Int, Codable {
     case alert = 4
     case settings = 5
     case uploadImage = 6
+    case sensorSettings = 7
 }
 
 public enum RuuviCloudQueuedRequestStatusType: Int, Codable {

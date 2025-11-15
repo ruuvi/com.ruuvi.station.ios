@@ -5,17 +5,33 @@ public struct RuuviCloudSensorDense {
     public let record: RuuviTagSensorRecord?
     public let alerts: RuuviCloudSensorAlerts
     public let subscription: CloudSensorSubscription?
+    public let settings: RuuviCloudSensorSettings?
 
     public init(
         sensor: CloudSensor,
         record: RuuviTagSensorRecord?,
         alerts: RuuviCloudSensorAlerts,
-        subscription: CloudSensorSubscription?
+        subscription: CloudSensorSubscription?,
+        settings: RuuviCloudSensorSettings? = nil
     ) {
         self.sensor = sensor
         self.record = record
         self.alerts = alerts
         self.subscription = subscription
+        self.settings = settings
+    }
+}
+
+public struct RuuviCloudSensorSettings {
+    public let displayOrderCodes: [String]?
+    public let defaultDisplayOrder: Bool?
+
+    public init(
+        displayOrderCodes: [String]?,
+        defaultDisplayOrder: Bool?
+    ) {
+        self.displayOrderCodes = displayOrderCodes
+        self.defaultDisplayOrder = defaultDisplayOrder
     }
 }
 

@@ -47,7 +47,9 @@ extension RuuviTagCardSnapshot {
         settings: RuuviTagCardSnapshotAlertSettings
     ) {
         let currentConfig = getAlertConfig(for: measurementType)
-        let alertType = currentConfig?.alertType ?? measurementType.toAlertType()
+        guard let alertType = currentConfig?.alertType ?? measurementType.toAlertType() else {
+            return
+        }
 
         let updatedConfig = RuuviTagCardSnapshotAlertConfig(
             type: measurementType,
