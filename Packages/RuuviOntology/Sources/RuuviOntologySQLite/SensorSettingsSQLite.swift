@@ -7,19 +7,25 @@ public struct SensorSettingsSQLite: SensorSettings, Equatable {
     public var temperatureOffset: Double?
     public var humidityOffset: Double?
     public var pressureOffset: Double?
+    public var displayOrder: [String]?
+    public var defaultDisplayOrder: Bool?
 
     public init(
         luid: LocalIdentifier?,
         macId: MACIdentifier?,
         temperatureOffset: Double?,
         humidityOffset: Double?,
-        pressureOffset: Double?
+        pressureOffset: Double?,
+        displayOrder: [String]? = nil,
+        defaultDisplayOrder: Bool? = nil
     ) {
         self.luid = luid
         self.macId = macId
         self.temperatureOffset = temperatureOffset
         self.humidityOffset = humidityOffset
         self.pressureOffset = pressureOffset
+        self.displayOrder = displayOrder
+        self.defaultDisplayOrder = defaultDisplayOrder
     }
 
     public static func == (lhs: SensorSettingsSQLite, rhs: SensorSettingsSQLite) -> Bool {
@@ -28,6 +34,8 @@ public struct SensorSettingsSQLite: SensorSettings, Equatable {
         && lhs.temperatureOffset == rhs.temperatureOffset
         && lhs.humidityOffset == rhs.humidityOffset
         && lhs.pressureOffset == rhs.pressureOffset
+        && lhs.displayOrder == rhs.displayOrder
+        && lhs.defaultDisplayOrder == rhs.defaultDisplayOrder
     }
 }
 
@@ -38,6 +46,8 @@ public extension SensorSettingsSQLite {
     static let temperatureOffsetColumn = Column("temperatureOffset")
     static let humidityOffsetColumn = Column("humidityOffset")
     static let pressureOffsetColumn = Column("pressureOffset")
+    static let displayOrderColumn = Column("displayOrder")
+    static let defaultDisplayOrderColumn = Column("defaultDisplayOrder")
 }
 
 extension SensorSettingsSQLite: FetchableRecord {
@@ -51,6 +61,12 @@ extension SensorSettingsSQLite: FetchableRecord {
         temperatureOffset = row[SensorSettingsSQLite.temperatureOffsetColumn]
         humidityOffset = row[SensorSettingsSQLite.humidityOffsetColumn]
         pressureOffset = row[SensorSettingsSQLite.pressureOffsetColumn]
+        if let rawDisplayOrder: String = row[SensorSettingsSQLite.displayOrderColumn] {
+            displayOrder = SensorSettingsSQLite.decodeDisplayOrder(rawDisplayOrder)
+        } else {
+            displayOrder = nil
+        }
+        defaultDisplayOrder = row[SensorSettingsSQLite.defaultDisplayOrderColumn]
     }
 }
 
@@ -66,6 +82,9 @@ extension SensorSettingsSQLite: PersistableRecord {
         container[SensorSettingsSQLite.temperatureOffsetColumn] = temperatureOffset
         container[SensorSettingsSQLite.humidityOffsetColumn] = humidityOffset
         container[SensorSettingsSQLite.pressureOffsetColumn] = pressureOffset
+        container[SensorSettingsSQLite.displayOrderColumn] = SensorSettingsSQLite
+            .encodeDisplayOrder(displayOrder)
+        container[SensorSettingsSQLite.defaultDisplayOrderColumn] = defaultDisplayOrder
     }
 }
 
@@ -78,6 +97,8 @@ public extension SensorSettingsSQLite {
             table.column(SensorSettingsSQLite.temperatureOffsetColumn.name, .double)
             table.column(SensorSettingsSQLite.humidityOffsetColumn.name, .double)
             table.column(SensorSettingsSQLite.pressureOffsetColumn.name, .double)
+            table.column(SensorSettingsSQLite.displayOrderColumn.name, .text)
+            table.column(SensorSettingsSQLite.defaultDisplayOrderColumn.name, .boolean)
         })
     }
 }
@@ -89,7 +110,9 @@ public extension SensorSettingsSQLite {
             macId: macId,
             temperatureOffset: temperatureOffset,
             humidityOffset: humidityOffset,
-            pressureOffset: pressureOffset
+            pressureOffset: pressureOffset,
+            displayOrder: displayOrder,
+            defaultDisplayOrder: defaultDisplayOrder
         )
     }
 }
@@ -101,7 +124,39 @@ public extension SensorSettings {
             macId: macId,
             temperatureOffset: temperatureOffset,
             humidityOffset: humidityOffset,
-            pressureOffset: pressureOffset
+            pressureOffset: pressureOffset,
+            displayOrder: displayOrder,
+            defaultDisplayOrder: defaultDisplayOrder
         )
+    }
+}
+
+public extension SensorSettingsSQLite {
+    static func decodeDisplayOrder(_ raw: String) -> [String]? {
+        guard !raw.isEmpty, let data = raw.data(using: .utf8) else {
+            return nil
+        }
+        if let decoded = try? JSONDecoder().decode([String].self, from: data) {
+            return decoded
+        }
+        if let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []),
+           let decoded = jsonObject as? [String] {
+            return decoded
+        }
+        return nil
+    }
+
+    static func encodeDisplayOrder(_ codes: [String]?) -> String? {
+        guard let codes = codes, !codes.isEmpty else {
+            return nil
+        }
+        if let data = try? JSONEncoder().encode(codes) {
+            return String(data: data, encoding: .utf8)
+        }
+        if let data = try? JSONSerialization.data(withJSONObject: codes, options: []),
+           let string = String(data: data, encoding: .utf8) {
+            return string
+        }
+        return nil
     }
 }

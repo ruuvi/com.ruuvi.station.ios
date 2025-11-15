@@ -659,6 +659,52 @@ public final class RuuviCloudPure: RuuviCloud {
         return promise.future
     }
 
+    @discardableResult
+    public func updateSensorSettings(
+        for sensor: RuuviTagSensor,
+        types: [String],
+        values: [String],
+        timestamp: Int?
+    ) -> Future<AnyRuuviTagSensor, RuuviCloudError> {
+        let promise = Promise<AnyRuuviTagSensor, RuuviCloudError>()
+        guard let apiKey = user.apiKey
+        else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+
+        guard types.count == values.count else {
+            promise.fail(error: .api(.badParameters))
+            return promise.future
+        }
+
+        let request = RuuviCloudApiPostSensorSettingsRequest(
+            sensor: sensor.id,
+            type: types,
+            value: values,
+            timestamp: timestamp ?? Int(Date().timeIntervalSince1970)
+        )
+
+        api.postSensorSettings(request, authorization: apiKey)
+            .on(success: { response in
+                let isSuccess = response.result?.lowercased() == "success"
+                if isSuccess {
+                    promise.succeed(value: sensor.any)
+                } else {
+                    promise.fail(error: .api(.badParameters))
+                }
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .sensorSettings,
+                    uniqueKey: sensor.id + "-sensor-settings"
+                )
+                promise.fail(error: .api(error))
+            })
+
+        return promise.future
+    }
+
     public func update(
         temperatureOffset: Double?,
         humidityOffset: Double?,
@@ -781,12 +827,14 @@ public final class RuuviCloudPure: RuuviCloud {
         return promise.future
     }
 
+    // swiftlint:disable:next function_parameter_count function_body_length
     public func loadSensorsDense(
         for sensor: RuuviTagSensor?,
         measurements: Bool?,
         sharedToOthers: Bool?,
         sharedToMe: Bool?,
-        alerts: Bool?
+        alerts: Bool?,
+        settings: Bool?
     ) -> Future<[RuuviCloudSensorDense], RuuviCloudError> {
         let promise = Promise<[RuuviCloudSensorDense], RuuviCloudError>()
         guard let apiKey = user.apiKey
@@ -799,7 +847,8 @@ public final class RuuviCloudPure: RuuviCloud {
             measurements: measurements,
             sharedToMe: sharedToMe,
             sharedToOthers: sharedToOthers,
-            alerts: alerts
+            alerts: alerts,
+            settings: settings
         )
         api.sensorsDense(request, authorization: apiKey)
             .on(success: { [weak self] response in
@@ -827,7 +876,13 @@ public final class RuuviCloudPure: RuuviCloud {
                             record: sensor.lastMeasurement
                         ),
                         alerts: sensor.alerts,
-                        subscription: sensor.subscription
+                        subscription: sensor.subscription,
+                        settings: sensor.settings.map {
+                            RuuviCloudSensorSettings(
+                                displayOrderCodes: $0.displayOrderCodes,
+                                defaultDisplayOrder: $0.defaultDisplayOrder
+                            )
+                        }
                     )
                 }
                 promise.succeed(value: arrayOfAny ?? [])
@@ -1259,6 +1314,22 @@ public final class RuuviCloudPure: RuuviCloud {
                 )
 
                 api.postSetting(request, authorization: apiKey)
+                    .on(success: { _ in
+                        promise.succeed(value: true)
+                    }, failure: { error in
+                        promise.fail(error: .api(error))
+                    })
+            } catch {
+                promise.fail(error: .api(.parsing(error)))
+            }
+        case .sensorSettings:
+            do {
+                let request = try decoder.decode(
+                    RuuviCloudApiPostSensorSettingsRequest.self,
+                    from: requestBody
+                )
+
+                api.postSensorSettings(request, authorization: apiKey)
                     .on(success: { _ in
                         promise.succeed(value: true)
                     }, failure: { error in

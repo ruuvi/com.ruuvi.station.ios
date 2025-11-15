@@ -140,7 +140,11 @@ let package = Package(
         .target(
             name: "RuuviServiceSensorProperties",
             dependencies: [
-                "RuuviService"
+                "RuuviService",
+                .product(
+                    name: "RuuviCloudApi",
+                    package: "RuuviCloud"
+                ),
             ]
         ),
         .target(

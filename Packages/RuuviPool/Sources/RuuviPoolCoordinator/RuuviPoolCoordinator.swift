@@ -229,6 +229,25 @@ final class RuuviPoolCoordinator: RuuviPool {
         return promise.future
     }
 
+    func updateDisplaySettings(
+        for ruuviTag: RuuviTagSensor,
+        displayOrder: [String]?,
+        defaultDisplayOrder: Bool?
+    ) -> Future<SensorSettings, RuuviPoolError> {
+        let promise = Promise<SensorSettings, RuuviPoolError>()
+        sqlite.updateDisplaySettings(
+            for: ruuviTag,
+            displayOrder: displayOrder,
+            defaultDisplayOrder: defaultDisplayOrder
+        )
+        .on(success: { settings in
+            promise.succeed(value: settings)
+        }, failure: { error in
+            promise.fail(error: .ruuviPersistence(error))
+        })
+        return promise.future
+    }
+
     // MARK: - Queued cloud requests
 
     func createQueuedRequest(

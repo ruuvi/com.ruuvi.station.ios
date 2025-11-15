@@ -8,7 +8,7 @@ extension AlertType {
         case .temperature:
             return .temperature
         case .relativeHumidity:
-            return .humidity(.percent)
+            return .humidity
         case .pressure:
             return .pressure
         case .movement:
@@ -27,6 +27,10 @@ extension AlertType {
             return .voc
         case .soundInstant:
             return .soundInstant
+        case .soundPeak:
+            return .soundPeak
+        case .soundAverage:
+            return .soundAverage
         case .luminosity:
             return .luminosity
         default:
@@ -50,8 +54,12 @@ extension AlertType {
             return RuuviLocalization.airQuality
         case .carbonDioxide:
             return RuuviLocalization.co2WithUnit(unit)
+        case .pMatter1:
+            return RuuviLocalization.pm10WithUnit(unit)
         case .pMatter25:
             return RuuviLocalization.pm25WithUnit(unit)
+        case .pMatter4:
+            return RuuviLocalization.pm40WithUnit(unit)
         case .pMatter10:
             return RuuviLocalization.pm100WithUnit(unit)
         case .nox:

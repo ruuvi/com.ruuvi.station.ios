@@ -169,7 +169,7 @@ class CardsGraphViewController: UIViewController {
     }()
 
     lazy var temperatureChartView = CardsGraphView(graphType: .temperature)
-    lazy var humidityChartView = CardsGraphView(graphType: .anyHumidity)
+    lazy var humidityChartView = CardsGraphView(graphType: .humidity)
     lazy var pressureChartView = CardsGraphView(graphType: .pressure)
     lazy var aqiChartView = CardsGraphView(graphType: .aqi)
     lazy var co2ChartView = CardsGraphView(graphType: .co2)
@@ -1002,7 +1002,7 @@ extension CardsGraphViewController: CardsGraphViewInput {
         )
         humidityChartView.updateLatest(
             with: humidity,
-            type: .humidity(settings.humidityUnit),
+            type: .humidity,
             measurementService: measurementService
         )
         pressureChartView.updateLatest(
@@ -1236,7 +1236,7 @@ extension CardsGraphViewController {
         }
         updateScrollviewBehaviour()
 
-        if !from.contains(.anyHumidity) {
+        if !from.contains(.humidity) {
             humidityChartView.isHidden = true
             if humidityChartViewHeight.constant != 0 {
                 humidityChartViewHeight.constant = 0
@@ -1659,7 +1659,7 @@ extension CardsGraphViewController {
             if view == temperatureChartView {
                 type = .temperature
             } else if view == humidityChartView {
-                type = .anyHumidity
+                type = .humidity
             } else if view == pressureChartView {
                 type = .pressure
             } else if view == aqiChartView {

@@ -3,48 +3,20 @@ import RuuviLocalization
 import UIKit
 
 extension MeasurementType {
-    static var chartsCases: [MeasurementType] {
-        [
-            .temperature,
-            .anyHumidity,
-            .pressure,
-            .aqi,
-            .co2,
-            .pm25,
-            .nox,
-            .voc,
-            .luminosity,
-            .soundInstant,
-        ]
-    }
-
-    static var all: [MeasurementType] {
-        [
-            .temperature,
-            .anyHumidity,
-            .pressure,
-            .movementCounter,
-            .aqi,
-            .co2,
-            .pm25,
-            .pm100,
-            .nox,
-            .voc,
-            .luminosity,
-            .soundInstant,
-        ]
-    }
-}
-
-extension MeasurementType {
 
     /// Returns the Full name for the measurement type
     var fullName: String {
+        fullName(for: nil)
+    }
+
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
+    func fullName(for variant: MeasurementDisplayVariant?) -> String {
         switch self {
         case .temperature:
             return RuuviLocalization.temperature
-        case .humidity(let kind):
-            switch kind {
+        case .humidity:
+            let resolvedUnit = variant?.humidityUnit ?? .percent
+            switch resolvedUnit {
             case .percent:
                 return RuuviLocalization.relativeHumidity
             case .gm3:
@@ -56,12 +28,26 @@ extension MeasurementType {
             return RuuviLocalization.pressure
         case .movementCounter:
             return RuuviLocalization.movementCounter
+        case .voltage:
+            return RuuviLocalization.battery
+        case .rssi:
+            return RuuviLocalization.signalStrength
+        case .accelerationX:
+            return RuuviLocalization.TagSettings.AccelerationXTitleLabel.text
+        case .accelerationY:
+            return RuuviLocalization.TagSettings.AccelerationYTitleLabel.text
+        case .accelerationZ:
+            return RuuviLocalization.TagSettings.AccelerationZTitleLabel.text
         case .aqi:
             return RuuviLocalization.airQuality
         case .co2:
             return RuuviLocalization.carbonDioxide
+        case .pm10:
+            return RuuviLocalization.pm10
         case .pm25:
             return RuuviLocalization.particulateMatter25
+        case .pm40:
+            return RuuviLocalization.pm40
         case .pm100:
             return RuuviLocalization.particulateMatter100
         case .nox:
@@ -70,6 +56,10 @@ extension MeasurementType {
             return RuuviLocalization.volatileOrganicCompounds
         case .soundInstant:
             return RuuviLocalization.soundInstant
+        case .soundAverage:
+            return RuuviLocalization.soundAvg
+        case .soundPeak:
+            return RuuviLocalization.soundPeak
         case .luminosity:
             return RuuviLocalization.illuminance
         default:
@@ -79,11 +69,17 @@ extension MeasurementType {
 
     /// Returns the Short name for the measurement type
     var shortName: String {
+        shortName(for: nil)
+    }
+
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
+    func shortName(for variant: MeasurementDisplayVariant?) -> String {
         switch self {
         case .temperature:
             return RuuviLocalization.temperature
-        case .humidity(let kind):
-            switch kind {
+        case .humidity:
+            let resolvedUnit = variant?.humidityUnit ?? .percent
+            switch resolvedUnit {
             case .percent:
                 return RuuviLocalization.relHumidity
             case .gm3:
@@ -95,12 +91,26 @@ extension MeasurementType {
             return RuuviLocalization.pressure
         case .movementCounter:
             return RuuviLocalization.movements
+        case .voltage:
+            return RuuviLocalization.battery
+        case .rssi:
+            return RuuviLocalization.signalStrength
+        case .accelerationX:
+            return RuuviLocalization.accX
+        case .accelerationY:
+            return RuuviLocalization.accY
+        case .accelerationZ:
+            return RuuviLocalization.accZ
         case .aqi:
             return RuuviLocalization.airQuality
         case .co2:
             return RuuviLocalization.co2
+        case .pm10:
+            return RuuviLocalization.pm10
         case .pm25:
             return RuuviLocalization.pm25
+        case .pm40:
+            return RuuviLocalization.pm40
         case .pm100:
             return RuuviLocalization.pm100
         case .nox:
@@ -109,10 +119,73 @@ extension MeasurementType {
             return RuuviLocalization.voc
         case .soundInstant:
             return RuuviLocalization.soundInstant
+        case .soundAverage:
+            return RuuviLocalization.soundAvg
+        case .soundPeak:
+            return RuuviLocalization.soundPeak
         case .luminosity:
             return RuuviLocalization.light
         default:
             return ""
+        }
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    func shortNameWithUnit(for variant: MeasurementDisplayVariant?) -> String {
+        switch self {
+        case .temperature:
+            let unit = variant?.temperatureUnit ?? .celsius
+            return RuuviLocalization.temperatureWithUnit(unit.symbol)
+        case .humidity:
+            let shortName = shortName(for: variant)
+            let temperatureUnit = variant?.temperatureUnit ?? .celsius
+            let unit = variant?.humidityUnit ?? .percent
+            if unit == .dew {
+                return shortName + " (\(temperatureUnit.symbol))"
+            } else {
+                return shortName + " (\(unit.symbol))"
+            }
+        case .pressure:
+            let unit = variant?.pressureUnit ?? .hectopascals
+            return RuuviLocalization.pressureWithUnit(unit.symbol)
+        case .movementCounter:
+            return RuuviLocalization.movements
+        case .voltage:
+            return RuuviLocalization.battery + " (\(RuuviLocalization.v))"
+        case .accelerationX:
+            return RuuviLocalization.accX + " (\(RuuviLocalization.g))"
+        case .accelerationY:
+            return RuuviLocalization.accY + " (\(RuuviLocalization.g))"
+        case .accelerationZ:
+            return RuuviLocalization.accZ + " (\(RuuviLocalization.g))"
+        case .aqi:
+            return RuuviLocalization.airQuality
+        case .co2:
+            return RuuviLocalization.co2WithUnit(RuuviLocalization.unitCo2)
+        case .pm10:
+            return RuuviLocalization.pm10WithUnit(RuuviLocalization.unitPm10)
+        case .pm25:
+            return RuuviLocalization.pm25WithUnit(RuuviLocalization.unitPm25)
+        case .pm40:
+            return RuuviLocalization.pm40WithUnit(RuuviLocalization.unitPm40)
+        case .pm100:
+            return RuuviLocalization.pm100WithUnit(RuuviLocalization.unitPm100)
+        case .voc:
+            return RuuviLocalization.vocWithUnit(RuuviLocalization.unitVoc)
+        case .nox:
+            return RuuviLocalization.noxWithUnit(RuuviLocalization.unitNox)
+        case .soundInstant:
+            return RuuviLocalization.soundInstantWithUnit(RuuviLocalization.unitSound)
+        case .soundAverage:
+            return RuuviLocalization.soundAverageWithUnit(RuuviLocalization.unitSound)
+        case .soundPeak:
+            return RuuviLocalization.soundPeakWithUnit(RuuviLocalization.unitSound)
+        case .luminosity:
+            return RuuviLocalization.luminosityWithUnit(RuuviLocalization.unitLuminosity)
+        case .rssi:
+            return RuuviLocalization.signalStrengthWithUnit()
+        default:
+            return shortName(for: variant)
         }
     }
 
@@ -131,8 +204,12 @@ extension MeasurementType {
             return RuuviAsset.Measurements.iconAqi.image
         case .co2:
             return RuuviAsset.Measurements.iconCo2.image
+        case .pm10:
+            return RuuviAsset.Measurements.iconPm1.image
         case .pm25:
             return RuuviAsset.Measurements.iconPm25.image
+        case .pm40:
+            return RuuviAsset.Measurements.iconPm4.image
         case .pm100:
             return RuuviAsset.Measurements.iconPm10.image
         case .nox:
@@ -141,34 +218,76 @@ extension MeasurementType {
             return RuuviAsset.Measurements.iconVoc.image
         case .soundInstant:
             return RuuviAsset.Measurements.iconSoundInstant.image
+        case .soundAverage:
+            return RuuviAsset.Measurements.iconSoundAverage.image
+        case .soundPeak:
+            return RuuviAsset.Measurements.iconSoundPeak.image
         case .luminosity:
             return RuuviAsset.Measurements.iconLuminosity.image
+        case .voltage:
+            return RuuviAsset.Measurements.iconBatteryLevel.image
+        case .rssi:
+            return RuuviAsset.Measurements.iconSignalStrength.image
+        case .accelerationX:
+            return RuuviAsset.Measurements.iconAccelerationX.image
+        case .accelerationY:
+            return RuuviAsset.Measurements.iconAccelerationY.image
+        case .accelerationZ:
+            return RuuviAsset.Measurements.iconAccelerationZ.image
         default:
             return RuuviAsset.Measurements.iconMeasurements.image
         }
     }
 
     var descriptionText: String {
+        descriptionText(for: nil)
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity
+    func descriptionText(for variant: MeasurementDisplayVariant?) -> String {
         switch self {
         case .temperature:
-            return RuuviLocalization.descriptionTextTemperatureCelsius
+            switch variant?.temperatureUnit ?? .celsius {
+            case .celsius:
+                return RuuviLocalization.descriptionTextTemperatureCelsius
+            case .fahrenheit:
+                return RuuviLocalization.descriptionTextTemperatureFahrenheit
+            case .kelvin:
+                return RuuviLocalization.descriptionTextTemperatureKelvin
+            }
         case .humidity:
-            return RuuviLocalization.descriptionTextHumidityRelative
+            let resolvedUnit = variant?.humidityUnit ?? .percent
+            switch resolvedUnit {
+            case .percent:
+                return RuuviLocalization.descriptionTextHumidityRelative
+            case .gm3:
+                return RuuviLocalization.descriptionTextHumidityAbsolute
+            case .dew:
+                return RuuviLocalization.descriptionTextHumidityDewpoint
+            }
         case .pressure:
             return RuuviLocalization.descriptionTextPressure
         case .movementCounter:
             return RuuviLocalization.descriptionTextMovement
+        case .voltage:
+            return RuuviLocalization.descriptionTextBatteryVoltage
+        case .rssi:
+            return RuuviLocalization.descriptionTextSignalStrength
+        case .accelerationX, .accelerationY, .accelerationZ:
+            return RuuviLocalization.descriptionTextAcceleration
+        case .measurementSequenceNumber:
+            return RuuviLocalization.descriptionTextMeasurementSequenceNumber
         case .aqi:
             return RuuviLocalization.descriptionTextAirQuality
         case .co2:
             return RuuviLocalization.descriptionTextCo2
-        case .pm25, .pm100:
+        case .pm10, .pm25, .pm40, .pm100:
             return RuuviLocalization.descriptionTextPm
         case .nox:
             return RuuviLocalization.descriptionTextNox
         case .voc:
             return RuuviLocalization.descriptionTextVoc
-        case .soundInstant:
+        case .soundInstant, .soundAverage, .soundPeak:
             return RuuviLocalization.descriptionTextSoundLevel
         case .luminosity:
             return RuuviLocalization.descriptionTextLuminosity
@@ -180,7 +299,7 @@ extension MeasurementType {
 
 extension MeasurementType {
     // swiftlint:disable:next cyclomatic_complexity
-    func toAlertType() -> AlertType {
+    func toAlertType() -> AlertType? {
         switch self {
         case .aqi:
             return .aqi(lower: 0, upper: 0)
@@ -194,8 +313,12 @@ extension MeasurementType {
             return .movement(last: 0)
         case .co2:
             return .carbonDioxide(lower: 0, upper: 0)
+        case .pm10:
+            return .pMatter1(lower: 0, upper: 0)
         case .pm25:
             return .pMatter25(lower: 0, upper: 0)
+        case .pm40:
+            return .pMatter4(lower: 0, upper: 0)
         case .pm100:
             return .pMatter10(lower: 0, upper: 0)
         case .nox:
@@ -204,10 +327,16 @@ extension MeasurementType {
             return .voc(lower: 0, upper: 0)
         case .soundInstant:
             return .soundInstant(lower: 0, upper: 0)
+        case .soundPeak:
+            return .soundPeak(lower: 0, upper: 0)
+        case .soundAverage:
+            return .soundAverage(lower: 0, upper: 0)
         case .luminosity:
             return .luminosity(lower: 0, upper: 0)
+        case .rssi:
+            return .signal(lower: 0, upper: 0)
         default:
-            return .temperature(lower: 0, upper: 0)
+            return nil
         }
     }
 }
@@ -215,7 +344,7 @@ extension MeasurementType {
 extension MeasurementType {
     static func hideUnit(for type: MeasurementType) -> Bool {
         switch type {
-        case .aqi, .voc, .nox, .movementCounter:
+        case .aqi, .voc, .nox, .movementCounter, .measurementSequenceNumber:
             return true
         default:
             return false
@@ -224,21 +353,32 @@ extension MeasurementType {
 }
 
 extension MeasurementType {
-    static var anyHumidity: MeasurementType { .humidity(.percent) }
-}
-
-extension MeasurementType {
   /// Same enum case ignoring associated values.
-  func isSameCase(as other: MeasurementType) -> Bool {
+    func isSameCase(as other: MeasurementType) -> Bool {
     switch (self, other) {
-    case (.aqi, .aqi), (.co2, .co2), (.pm25, .pm25), (.pm100, .pm100),
-         (.voc, .voc), (.nox, .nox),
+    case (.aqi, .aqi),
+         (.co2, .co2),
+         (.pm10, .pm10),
+         (.pm25, .pm25),
+         (.pm40, .pm40),
+         (.pm100, .pm100),
+         (.voc, .voc),
+         (.nox, .nox),
          (.temperature, .temperature),
          (.humidity, .humidity),
          (.pressure, .pressure),
          (.luminosity, .luminosity),
          (.movementCounter, .movementCounter),
-         (.soundInstant, .soundInstant):
+         (.soundInstant, .soundInstant),
+         (.soundAverage, .soundAverage),
+         (.soundPeak, .soundPeak),
+         (.voltage, .voltage),
+         (.txPower, .txPower),
+         (.rssi, .rssi),
+         (.accelerationX, .accelerationX),
+         (.accelerationY, .accelerationY),
+         (.accelerationZ, .accelerationZ),
+         (.measurementSequenceNumber, .measurementSequenceNumber):
       return true
     default:
       return false

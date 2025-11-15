@@ -276,12 +276,30 @@ private extension CardsCoordinator {
 
 // MARK: Settings
 private extension CardsCoordinator {
-    func createSettingsViewController() -> CardsSettingsViewController {
-        let viewController = CardsSettingsViewController()
-        viewController.view.backgroundColor = .gray
-        let presenter = CardsSettingsPresenter()
-        presenter.view = viewController
+    func createSettingsViewController(
+        snapshot: RuuviTagCardSnapshot
+    ) -> CardsSettingsViewController {
+        cardsSettingsRouter = CardsSettingsRouter()
+        let r = AppAssembly.shared.assembler.resolver
+        let flags = r.resolve(RuuviLocalFlags.self)!
+        let presenter = CardsSettingsPresenter(
+            ruuviSensorPropertiesService: r.resolve(RuuviServiceSensorProperties.self)!,
+            measurementService: r.resolve(RuuviServiceMeasurement.self)!,
+            settings: r.resolve(RuuviLocalSettings.self)!,
+            errorPresenter: r.resolve(ErrorPresenter.self)!,
+            activityPresenter: r.resolve(ActivityPresenter.self)!,
+            flags: flags
+        )
+        let viewController = CardsSettingsViewController(
+            snapshot: snapshot
+        )
         viewController.output = presenter
+        if flags.showNewCardsMenu {
+            presenter.view = viewController
+            presenter.router = cardsSettingsRouter
+            presenter.output = self
+            cardsSettingsRouter.transitionHandler = viewController
+        }
         cardsSettingsViewPresenter = presenter
         return viewController
     }

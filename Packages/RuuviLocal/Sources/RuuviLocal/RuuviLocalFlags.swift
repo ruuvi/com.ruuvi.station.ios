@@ -16,4 +16,7 @@ public protocol RuuviLocalFlags {
 
     /// When enabled downloads alpha version
     var downloadAlphaFirmware: Bool { get set }
+
+    /// When enabled shows measurement visibility settings
+    var showVisibilitySettings: Bool { get set }
 }

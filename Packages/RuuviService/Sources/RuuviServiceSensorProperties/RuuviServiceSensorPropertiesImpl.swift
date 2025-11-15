@@ -7,6 +7,7 @@ import RuuviOntology
 import RuuviPool
 import UIKit
 
+// swiftlint:disable:next type_body_length
 public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorProperties {
     private let pool: RuuviPool
     private let cloud: RuuviCloud
@@ -200,6 +201,34 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
     }
 
     @discardableResult
+    public func updateDisplaySettings(
+        for sensor: RuuviTagSensor,
+        displayOrder: [String]?,
+        defaultDisplayOrder: Bool
+    ) -> Future<SensorSettings, RuuviServiceError> {
+        let promise = Promise<SensorSettings, RuuviServiceError>()
+
+        pool
+            .updateDisplaySettings(
+                for: sensor,
+                displayOrder: displayOrder,
+                defaultDisplayOrder: defaultDisplayOrder
+            )
+            .on(success: { [weak self] settings in
+                self?.pushDisplaySettingsToCloudIfNeeded(
+                    for: sensor,
+                    displayOrder: displayOrder,
+                    defaultDisplayOrder: defaultDisplayOrder
+                )
+                promise.succeed(value: settings)
+            }, failure: { error in
+                promise.fail(error: .ruuviPool(error))
+            })
+
+        return promise.future
+    }
+
+    @discardableResult
     private func resetCloudImage(for sensor: RuuviTagSensor) -> Future<Void, RuuviServiceError> {
         let promise = Promise<Void, RuuviServiceError>()
         guard let macId = sensor.macId
@@ -251,5 +280,43 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
             promise.fail(error: .bothLuidAndMacAreNil)
         }
         return promise.future
+    }
+
+    private func pushDisplaySettingsToCloudIfNeeded(
+        for sensor: RuuviTagSensor,
+        displayOrder: [String]?,
+        defaultDisplayOrder: Bool
+    ) {
+        guard sensor.isCloud else { return }
+
+        var types: [String] = [RuuviCloudApiSetting.sensorDefaultDisplayOrder.rawValue]
+        var values: [String] = [defaultDisplayOrder ? "true" : "false"]
+
+        if let encodedOrder = encodeDisplayOrderForCloud(displayOrder) {
+            types.append(RuuviCloudApiSetting.sensorDisplayOrder.rawValue)
+            values.append(encodedOrder)
+        }
+
+        cloud.updateSensorSettings(
+            for: sensor,
+            types: types,
+            values: values,
+            timestamp: Int(Date().timeIntervalSince1970)
+        )
+    }
+
+    private func encodeDisplayOrderForCloud(_ codes: [String]?) -> String? {
+        guard let codes, !codes.isEmpty else {
+            return nil
+        }
+        if let data = try? JSONEncoder().encode(codes),
+           let string = String(data: data, encoding: .utf8) {
+            return string
+        }
+        if let data = try? JSONSerialization.data(withJSONObject: codes, options: []),
+           let string = String(data: data, encoding: .utf8) {
+            return string
+        }
+        return nil
     }
 }

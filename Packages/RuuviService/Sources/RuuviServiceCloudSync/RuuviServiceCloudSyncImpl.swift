@@ -337,6 +337,21 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         return temperatureSyncs + humiditySyncs + pressureSyncs
     }
 
+    private func displaySettingsSyncs(
+        denseSensors: [RuuviCloudSensorDense]
+    ) -> [Future<SensorSettings, RuuviPoolError>] {
+        denseSensors.compactMap { denseSensor in
+            guard let sensorSettings = denseSensor.settings else {
+                return nil
+            }
+            return ruuviPool.updateDisplaySettings(
+                for: denseSensor.sensor.ruuviTagSensor,
+                displayOrder: sensorSettings.displayOrderCodes,
+                defaultDisplayOrder: sensorSettings.defaultDisplayOrder
+            )
+        }
+    }
+
     private func subscriptionSyncs(
         cloudSensors: [RuuviCloudSensorDense],
         updatedSensors: Set<AnyRuuviTagSensor>
@@ -517,7 +532,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             measurements: true,
             sharedToOthers: true,
             sharedToMe: true,
-            alerts: true
+            alerts: true,
+            settings: true
         )
         .observe(on: .global(qos: .utility))
         .on(success: { [weak self] denseSensors in
@@ -687,11 +703,15 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                             cloudSensors: cloudSensors,
                             updatedSensors: updatedSensors
                         )
+                        let displaySettingsSyncs = self.displaySettingsSyncs(
+                            denseSensors: denseSensor
+                        )
+                        let combinedSettingsSyncs = syncOffsets + displaySettingsSyncs
 
                         Future.zip(syncSubscriptions)
                             .observe(on: .global(qos: .utility))
                             .on(success: { _ in
-                                Future.zip(syncOffsets)
+                                Future.zip(combinedSettingsSyncs)
                                     .observe(on: .global(qos: .utility))
                                     .on(success: { _ in
                                         promise.succeed(value: updatedSensors)

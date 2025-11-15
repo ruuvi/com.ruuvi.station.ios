@@ -20,6 +20,8 @@ public enum RuuviCloudApiSetting: String, CaseIterable, Codable {
     case emailAlertDisabled = "DISABLE_EMAIL_NOTIFICATIONS"
     case profileLanguageCode = "PROFILE_LANGUAGE_CODE"
     case dashboardSensorOrder = "SENSOR_ORDER"
+    case sensorDisplayOrder = "displayOrder"
+    case sensorDefaultDisplayOrder = "defaultDisplayOrder"
 }
 
 public extension TemperatureUnit {

@@ -32,7 +32,8 @@ public extension WidgetViewModel {
             measurements: true,
             sharedToOthers: nil,
             sharedToMe: true,
-            alerts: nil
+            alerts: nil,
+            settings: nil
         ).on(success: { sensors in
             let sensorsWithRecord = sensors.filter { $0.record != nil }
             completion(sensorsWithRecord)

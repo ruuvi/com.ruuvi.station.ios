@@ -277,12 +277,24 @@ extension CardsGraphViewInteractor {
             }
             sSelf.lastMeasurement = record.measurement
             sSelf.lastMeasurementRecord = record
-            var chartsCases = MeasurementType.chartsCases
+            var chartsCases: [MeasurementType] =
+                    [
+                        .temperature,
+                        .humidity,
+                        .pressure,
+                        .aqi,
+                        .co2,
+                        .pm25,
+                        .nox,
+                        .voc,
+                        .luminosity,
+                        .soundInstant,
+                    ]
             if record.temperature == nil {
                 chartsCases.removeAll { $0 == .temperature }
             }
             if record.humidity == nil {
-                chartsCases.removeAll { $0 == .humidity(sSelf.settings.humidityUnit) }
+                chartsCases.removeAll { $0 == .humidity }
             }
             if record.pressure == nil {
                 chartsCases.removeAll { $0 == .pressure }

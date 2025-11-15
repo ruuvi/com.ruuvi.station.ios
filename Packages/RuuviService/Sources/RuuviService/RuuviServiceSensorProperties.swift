@@ -25,6 +25,13 @@ public protocol RuuviServiceSensorProperties {
     func getImage(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError>
 
     func removeImage(for sensor: RuuviTagSensor)
+
+    @discardableResult
+    func updateDisplaySettings(
+        for sensor: RuuviTagSensor,
+        displayOrder: [String]?,
+        defaultDisplayOrder: Bool
+    ) -> Future<SensorSettings, RuuviServiceError>
 }
 
 public extension RuuviServiceSensorProperties {

@@ -7,6 +7,8 @@ public protocol SensorSettings {
     var temperatureOffset: Double? { get }
     var humidityOffset: Double? { get }
     var pressureOffset: Double? { get }
+    var displayOrder: [String]? { get }
+    var defaultDisplayOrder: Bool? { get }
 }
 
 public extension SensorSettings {
@@ -26,7 +28,9 @@ public extension SensorSettings {
             macId: macId,
             temperatureOffset: temperatureOffset,
             humidityOffset: humidityOffset,
-            pressureOffset: pressureOffset
+            pressureOffset: pressureOffset,
+            displayOrder: displayOrder,
+            defaultDisplayOrder: defaultDisplayOrder
         )
     }
 }
@@ -43,18 +47,24 @@ public struct SensorSettingsStruct: SensorSettings {
     public var temperatureOffset: Double?
     public var humidityOffset: Double?
     public var pressureOffset: Double?
+    public var displayOrder: [String]?
+    public var defaultDisplayOrder: Bool?
 
     public init(
         luid: LocalIdentifier?,
         macId: MACIdentifier?,
         temperatureOffset: Double?,
         humidityOffset: Double?,
-        pressureOffset: Double?
+        pressureOffset: Double?,
+        displayOrder: [String]? = nil,
+        defaultDisplayOrder: Bool? = nil
     ) {
         self.luid = luid
         self.macId = macId
         self.temperatureOffset = temperatureOffset
         self.humidityOffset = humidityOffset
         self.pressureOffset = pressureOffset
+        self.displayOrder = displayOrder
+        self.defaultDisplayOrder = defaultDisplayOrder
     }
 }
