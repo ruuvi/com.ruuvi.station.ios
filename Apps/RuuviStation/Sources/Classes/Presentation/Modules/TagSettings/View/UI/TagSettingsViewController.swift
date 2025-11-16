@@ -6169,7 +6169,7 @@ extension TagSettingsViewController {
 
         let section = TagSettingsSection(
             identifier: .offsetCorrection,
-            title: RuuviLocalization.TagSettings.SectionHeader.OffsetCorrection.title.capitalized,
+            title: RuuviLocalization.offsetCorrection,
             cells: offsetCorrectionItems,
             collapsed: true,
             headerType: .expandable,
@@ -6474,7 +6474,7 @@ extension TagSettingsViewController {
 
         let section = TagSettingsSection(
             identifier: .moreInfo,
-            title: RuuviLocalization.TagSettings.Label.MoreInfo.text.capitalized,
+            title: RuuviLocalization.moreInfo,
             cells: moreInfoCells,
             collapsed: true,
             headerType: .expandable,
@@ -6849,7 +6849,7 @@ extension TagSettingsViewController {
     private func configureFirmwareSection() -> TagSettingsSection {
         let section = TagSettingsSection(
             identifier: .firmware,
-            title: RuuviLocalization.TagSettings.SectionHeader.Firmware.title.capitalized,
+            title: RuuviLocalization.firmware,
             cells: [
                 tagFirmwareVersionItem(),
                 tagFirmwareUpdateItem(),
