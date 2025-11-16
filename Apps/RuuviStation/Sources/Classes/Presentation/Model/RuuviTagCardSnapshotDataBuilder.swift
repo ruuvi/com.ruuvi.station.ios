@@ -424,6 +424,18 @@ struct LuminosityMeasurementExtractor: MeasurementExtractor {
 }
 
 struct SoundMeasurementExtractor: MeasurementExtractor {
+    enum Source {
+        case instant
+        case average
+        case peak
+    }
+
+    private let source: Source
+
+    init(source: Source = .instant) {
+        self.source = source
+    }
+
     func extract(
         from record: RuuviTagSensorRecord,
         measurementService: RuuviServiceMeasurement?,
@@ -431,7 +443,17 @@ struct SoundMeasurementExtractor: MeasurementExtractor {
         variant: MeasurementDisplayVariant,
         snapshot: RuuviTagCardSnapshot
     ) -> MeasurementResult? {
-        guard let sound = record.dbaInstant,
+        let rawValue: Double?
+        switch source {
+        case .instant:
+            rawValue = record.dbaInstant
+        case .average:
+            rawValue = record.dbaAvg
+        case .peak:
+            rawValue = record.dbaPeak
+        }
+
+        guard let sound = rawValue,
               let soundValue = measurementService?.soundString(for: sound) else { return nil }
 
         return MeasurementResult(
@@ -580,7 +602,9 @@ struct MeasurementExtractorFactory {
         .nox: NOXMeasurementExtractor(),
         .voc: VOCMeasurementExtractor(),
         .luminosity: LuminosityMeasurementExtractor(),
-        .soundInstant: SoundMeasurementExtractor(),
+        .soundInstant: SoundMeasurementExtractor(source: .instant),
+        .soundAverage: SoundMeasurementExtractor(source: .average),
+        .soundPeak: SoundMeasurementExtractor(source: .peak),
         .voltage: VoltageMeasurementExtractor(),
         .txPower: TxPowerMeasurementExtractor(),
         .rssi: RSSIMeasurementExtractor(),

@@ -340,14 +340,14 @@ extension RuuviTagDataService {
             contexts: [.all],
             isVisible: false
         ),
-//        MeasurementDisplayVariant(type: .soundAverage): MeasurementDisplayConfiguration(
-//            contexts: [.all],
-//            isVisible: false
-//        ),
-//        MeasurementDisplayVariant(type: .soundPeak): MeasurementDisplayConfiguration(
-//            contexts: [.all],
-//            isVisible: false
-//        ),
+        MeasurementDisplayVariant(type: .soundAverage): MeasurementDisplayConfiguration(
+            contexts: [.all],
+            isVisible: false
+        ),
+        MeasurementDisplayVariant(type: .soundPeak): MeasurementDisplayConfiguration(
+            contexts: [.all],
+            isVisible: false
+        ),
         MeasurementDisplayVariant(type: .movementCounter): MeasurementDisplayConfiguration(
             contexts: [.indicator, .alert],
             isVisible: true
