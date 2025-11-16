@@ -84,15 +84,15 @@ public extension WidgetSensorEnum {
         case .humidity:
             settings.humidityUnit.symbol
         case .pressure:
-            settings.pressureUnit.symbol
+            settings.pressureUnit.ruuviSymbol
         case .movement_counter:
             RuuviLocalization.movements
         case .battery_voltage:
-            "v"
+            RuuviLocalization.v
         case .acceleration_x,
              .acceleration_y,
              .acceleration_z:
-            "g"
+            RuuviLocalization.g
         case .air_quality:
             "/100"
         case .co2:

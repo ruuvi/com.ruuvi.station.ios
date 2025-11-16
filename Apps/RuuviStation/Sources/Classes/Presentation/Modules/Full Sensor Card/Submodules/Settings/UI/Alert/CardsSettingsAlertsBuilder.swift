@@ -14,7 +14,10 @@ enum CardsSettingsAlertsBuilder {
         snapshot: RuuviTagCardSnapshot,
         measurementService: RuuviServiceMeasurement?
     ) -> [CardsSettingsState.AlertSectionModel] {
-        orderedAlertTypes(for: snapshot).compactMap { prototype in
+        orderedAlertTypes(
+            for: snapshot,
+            measurementService: measurementService
+        ).compactMap { prototype in
             makeSection(
                 for: prototype,
                 snapshot: snapshot,
@@ -24,10 +27,14 @@ enum CardsSettingsAlertsBuilder {
     }
 
     private static func orderedAlertTypes(
-        for snapshot: RuuviTagCardSnapshot
+        for snapshot: RuuviTagCardSnapshot,
+        measurementService: RuuviServiceMeasurement?
     ) -> [AlertType] {
         var ordered: [AlertType] = []
-        let measurementVariants = RuuviTagDataService.alertMeasurementVariants(for: snapshot)
+        let measurementVariants = RuuviTagDataService.alertMeasurementVariants(
+            for: snapshot,
+            measurementService: measurementService
+        )
 
         for variant in measurementVariants {
             guard let alertType = variant.type.toAlertType() else {
@@ -421,7 +428,7 @@ private extension CardsSettingsAlertsBuilder {
         let slider = AlertSliderConfiguration(
             range: sliderRange,
             selectedRange: selected,
-            unit: pressureUnit.symbol,
+            unit: pressureUnit.ruuviSymbol,
             format: "%.0f",
             step: 1,
             minDistance: 1
@@ -589,7 +596,7 @@ private extension CardsSettingsAlertsBuilder {
             let unit = units?.temperatureUnit.symbol ?? TemperatureUnit.celsius.symbol
             return AlertType.temperature(lower: 0, upper: 0).title(with: unit)
         case .pressure:
-            let unit = units?.pressureUnit.symbol ?? UnitPressure.hectopascals.symbol
+            let unit = units?.pressureUnit.ruuviSymbol ?? UnitPressure.hectopascals.ruuviSymbol
             return AlertType.pressure(lower: 0, upper: 0).title(with: unit)
         case .carbonDioxide:
             return AlertType.carbonDioxide(lower: 0, upper: 0)

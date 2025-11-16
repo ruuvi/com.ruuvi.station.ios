@@ -34,4 +34,8 @@ extension Double {
     var hPaFrommmHg: Double {
         self * 1.33322
     }
+
+    var hPaFromPa: Double {
+        self / 100.0
+    }
 }

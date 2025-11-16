@@ -1107,7 +1107,7 @@ extension CardsGraphViewController {
             }
         case .pressure:
             let pressureUnit = variant.resolvedPressureUnit(default: settings.pressureUnit)
-            return pressureUnit.symbol
+            return pressureUnit.ruuviSymbol
         case .co2:
             return RuuviLocalization.unitCo2
         case .pm10:

@@ -51,6 +51,8 @@ public extension HumidityUnit {
 public extension UnitPressure {
     var ruuviCloudApiSettingString: String {
         switch self {
+        case .newtonsPerMetersSquared:
+            return "0"
         case .hectopascals:
             return "1"
         case .millimetersOfMercury:
@@ -106,9 +108,7 @@ public extension String {
     var ruuviCloudApiSettingUnitPressure: UnitPressure? {
         switch self {
         case "0":
-            // v2.0 -> iOS doesn't support Pa. Instead when Pa
-            // is received from sync we set hPa on iOS.
-            .hectopascals
+            .newtonsPerMetersSquared
         case "1":
             .hectopascals
         case "2":

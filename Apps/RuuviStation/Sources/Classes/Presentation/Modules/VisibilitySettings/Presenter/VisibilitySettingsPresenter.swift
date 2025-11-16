@@ -452,8 +452,6 @@ private extension VisibilitySettingsPresenter {
             return "-8"
         case .measurementSequenceNumber:
             return "512"
-        default:
-            return RuuviLocalization.na
         }
     }
 
@@ -474,15 +472,15 @@ private extension VisibilitySettingsPresenter {
                 return resolvedTemperatureUnit(for: variant).symbol
             }
         case .pressure:
-            return resolvedPressureUnit(for: variant).symbol
+            return resolvedPressureUnit(for: variant).ruuviSymbol
         case .movementCounter, .measurementSequenceNumber:
             return ""
         case .voltage:
             return RuuviLocalization.v
         case .rssi, .txPower:
-            return "dBm"
+            return RuuviLocalization.dBm
         case .accelerationX, .accelerationY, .accelerationZ:
-            return "g"
+            return RuuviLocalization.g
         case .aqi:
             return ""
         case .co2:
@@ -503,8 +501,6 @@ private extension VisibilitySettingsPresenter {
             return RuuviLocalization.unitLuminosity
         case .soundInstant, .soundAverage, .soundPeak:
             return RuuviLocalization.unitSound
-        default:
-            return ""
         }
     }
 

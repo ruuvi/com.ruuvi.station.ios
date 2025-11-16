@@ -242,7 +242,7 @@ class LegacyTagSettingsViewController: UIViewController {
 
     private lazy var pressureAlertSection: LegacyTagSettingsSection? = {
         let title = AlertType.relativeHumidity(lower: 0, upper: 0).title(
-            with: viewModel?.pressureUnit.value?.symbol ?? RuuviLocalization.na
+            with: viewModel?.pressureUnit.value?.ruuviSymbol ?? RuuviLocalization.na
         )
         let section = LegacyTagSettingsSection(
             identifier: .alertPressure,
@@ -1404,7 +1404,7 @@ extension LegacyTagSettingsViewController {
         tableView.bind(viewModel.pressureUnit) { [weak self] _, value in
             guard let sSelf = self else { return }
             sSelf.pressureAlertSection?.title = RuuviLocalization.pressureWithUnit(
-                value?.symbol ?? RuuviLocalization.na
+                value?.ruuviSymbol ?? RuuviLocalization.na
             )
         }
 
@@ -1474,7 +1474,7 @@ extension LegacyTagSettingsViewController {
             pressureAlertSectionHeaderView.bind(viewModel.pressureUnit) {
                 header, unit in
                 let sectionTitle = RuuviLocalization.pressureWithUnit(
-                    unit?.symbol ?? RuuviLocalization.na
+                    unit?.ruuviSymbol ?? RuuviLocalization.na
                 )
                 header.setTitle(with: sectionTitle)
             }
@@ -5680,7 +5680,7 @@ extension LegacyTagSettingsViewController {
     private func showPressureAlertSetDialog(sender: LegacyTagSettingsAlertConfigCell) {
         let pressureUnit = viewModel?.pressureUnit.value ?? .hectopascals
         let titleFormat = RuuviLocalization.TagSettings.Alert.SetPressure.title
-        let title = titleFormat + " (\(pressureUnit.symbol))"
+        let title = titleFormat + " (\(pressureUnit.ruuviSymbol))"
 
         let (minimumRange, maximumRange) = pressureAlertRange()
         let (minimumValue, maximumValue) = pressureValue()

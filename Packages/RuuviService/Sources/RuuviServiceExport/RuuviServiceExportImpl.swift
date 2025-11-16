@@ -180,7 +180,7 @@ extension RuuviServiceExportImpl {
                     }
                 ),
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.pressure(units.pressureUnit.symbol),
+                    header: RuuviLocalization.ExportService.pressure(units.pressureUnit.ruuviSymbol),
                     cellExtractor: { [weak self] record in
                         let pressureVal = self?.measurementService.double(for: record.pressure)
                         if pressureVal == -0.01 { return toString(nil) }
@@ -499,4 +499,16 @@ extension RuuviServiceExportImpl {
         return promise.future
     }
 }
+
+extension UnitPressure {
+    var ruuviSymbol: String {
+        switch self {
+        case .newtonsPerMetersSquared:
+            return RuuviLocalization.pressurePaUnit
+        default:
+            return symbol
+        }
+    }
+}
+
 // swiftlint:enable file_length

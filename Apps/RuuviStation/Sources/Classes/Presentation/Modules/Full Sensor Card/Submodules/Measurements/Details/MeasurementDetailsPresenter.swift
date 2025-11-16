@@ -473,7 +473,7 @@ private extension MeasurementDetailsPresenter {
                 return nil
             }
             let pressureUnit = variant.resolvedPressureUnit(default: settings.pressureUnit)
-            return pressure.converted(to: pressureUnit).value
+            return pressureUnit.convertedValue(from: pressure)
         }
 
         switch variant.type {
@@ -813,7 +813,10 @@ private extension MeasurementDetailsPresenter {
                 return tempUnit.symbol
             }
         case .pressure:
-            return variant.resolvedPressureUnit(default: settings.pressureUnit).symbol
+            return variant
+                .resolvedPressureUnit(
+                    default: settings.pressureUnit
+                ).ruuviSymbol
         case .aqi:
             return ""
         case .co2:

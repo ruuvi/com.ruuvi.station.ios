@@ -93,6 +93,8 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
             switch settings.pressureUnit {
             case .hectopascals:
                 offset = correctValue - view.viewModel.originalValue.value.bound
+            case .newtonsPerMetersSquared:
+                offset = correctValue.hPaFromPa - view.viewModel.originalValue.value.bound
             case .inchesOfMercury:
                 offset = correctValue.hPaFrominHg - view.viewModel.originalValue.value.bound
             case .millimetersOfMercury:

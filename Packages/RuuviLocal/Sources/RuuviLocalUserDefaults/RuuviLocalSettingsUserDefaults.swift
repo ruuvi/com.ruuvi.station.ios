@@ -194,6 +194,8 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     var pressureUnit: UnitPressure {
         get {
             switch pressureUnitInt {
+            case UnitPressure.newtonsPerMetersSquared.hashValue:
+                .newtonsPerMetersSquared
             case UnitPressure.inchesOfMercury.hashValue:
                 .inchesOfMercury
             case UnitPressure.millimetersOfMercury.hashValue:

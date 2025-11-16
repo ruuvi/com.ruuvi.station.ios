@@ -92,7 +92,7 @@ extension SelectionTableViewController {
                     cell.nameLabel.text = title + " " + humidityUnit.symbol
                 }
             case .pressure:
-                cell.nameLabel.text = title + " " + pressureUnit.symbol
+                cell.nameLabel.text = title + " " + pressureUnit.ruuviSymbol
             default:
                 cell.nameLabel.text = RuuviLocalization.na
             }

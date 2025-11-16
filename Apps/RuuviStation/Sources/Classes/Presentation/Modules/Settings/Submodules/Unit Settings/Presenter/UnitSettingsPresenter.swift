@@ -95,6 +95,11 @@ extension UnitSettingsPresenter: SelectionModuleOutput {
             else {
                 return
             }
+
+            if viewModel.measurementType == .pressure,
+               !view.pressureUnit.supportsResolutionSelection {
+                return
+            }
             switch viewModel.measurementType {
             case .temperature:
                 ruuviAppSettingsService.set(temperatureAccuracy: item)
@@ -172,6 +177,9 @@ extension UnitSettingsPresenter {
             accuracyTitle = RuuviLocalization.Settings.Humidity.Resolution.title
             selection = titleProvider.formattedTitle(type: settings.humidityAccuracy, settings: settings)
         case .pressure:
+            guard view.pressureUnit.supportsResolutionSelection else {
+                return nil
+            }
             accuracyTitle = RuuviLocalization.Settings.Pressure.Resolution.title
             selection = titleProvider.formattedTitle(type: settings.pressureAccuracy, settings: settings)
         default:

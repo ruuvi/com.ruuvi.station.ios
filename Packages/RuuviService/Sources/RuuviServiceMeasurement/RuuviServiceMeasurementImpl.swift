@@ -122,8 +122,9 @@ public final class RuuviServiceMeasurementImpl: NSObject {
         let formatter = NumberFormatter()
         formatter.locale = Locale.current
         formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = settings.pressureAccuracy.value
-        formatter.maximumFractionDigits = settings.pressureAccuracy.value
+        let digits = units.pressureUnit.resolvedAccuracyValue(from: settings.pressureAccuracy)
+        formatter.minimumFractionDigits = digits
+        formatter.maximumFractionDigits = digits
         formatter.roundingMode = NumberFormatter.RoundingMode.halfUp
         return formatter
     }
@@ -205,13 +206,13 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     }
 
     public func double(for pressure: Pressure) -> Double {
-        let pressureValue = pressure
-            .converted(to: units.pressureUnit)
-            .value
+        let pressureValue = units.pressureUnit.convertedValue(from: pressure)
         if units.pressureUnit == .inchesOfMercury {
             return pressureValue
         } else {
-            return pressureValue.round(to: commonNumberFormatter.maximumFractionDigits)
+            let digits = units.pressureUnit.supportsResolutionSelection ?
+                commonNumberFormatter.maximumFractionDigits : 0
+            return pressureValue.round(to: digits)
         }
     }
 
@@ -223,10 +224,21 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         else {
             return emptyValueString
         }
+        let converted = units.pressureUnit.convert(pressure)
+        if units.pressureUnit == .newtonsPerMetersSquared {
+            let formatter = allowSettings ? pressureNumberFormatter : commonNumberFormatter
+            let value = formatter.string(from: NSNumber(value: converted.value))
+            let symbol = units.pressureUnit.ruuviSymbol
+            if let value {
+                return "\(value)\(String.nbsp)\(symbol)"
+            } else {
+                return emptyValueString
+            }
+        }
         if allowSettings {
-            return pressureFormatter.string(from: pressure.converted(to: units.pressureUnit))
+            return pressureFormatter.string(from: converted)
         } else {
-            return commonFormatter.string(from: pressure.converted(to: units.pressureUnit))
+            return commonFormatter.string(from: converted)
         }
     }
 
@@ -235,7 +247,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         else {
             return emptyValueString
         }
-        let pressureValue = pressure.converted(to: units.pressureUnit).value
+        let pressureValue = units.pressureUnit.convertedValue(from: pressure)
         return pressureNumberFormatter.string(for: pressureValue) ?? emptyValueString
     }
 

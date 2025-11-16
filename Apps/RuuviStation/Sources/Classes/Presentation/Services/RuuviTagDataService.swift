@@ -127,12 +127,32 @@ extension RuuviTagDataService {
         return applyMeasurementPreference(for: snapshot.id, to: baseProfile)
     }
 
-    static func alertMeasurementVariants(for sensor: RuuviTagSensor) -> [MeasurementDisplayVariant] {
-        measurementDisplayProfile(for: sensor).orderedVisibleVariants(for: .alert)
+    static func alertMeasurementVariants(
+        for sensor: RuuviTagSensor,
+        measurementService: RuuviServiceMeasurement?
+    ) -> [MeasurementDisplayVariant] {
+        let profile = measurementDisplayProfile(for: sensor)
+        let variants = profile.orderedVisibleVariants(for: .alert)
+        return normalizedAlertVariants(
+            variants,
+            profile: profile,
+            preferredTemperature: measurementService?.units.temperatureUnit,
+            preferredPressure: measurementService?.units.pressureUnit
+        )
     }
 
-    static func alertMeasurementVariants(for snapshot: RuuviTagCardSnapshot) -> [MeasurementDisplayVariant] {
-        measurementDisplayProfile(for: snapshot).orderedVisibleVariants(for: .alert)
+    static func alertMeasurementVariants(
+        for snapshot: RuuviTagCardSnapshot,
+        measurementService: RuuviServiceMeasurement?
+    ) -> [MeasurementDisplayVariant] {
+        let profile = measurementDisplayProfile(for: snapshot)
+        let variants = profile.orderedVisibleVariants(for: .alert)
+        return normalizedAlertVariants(
+            variants,
+            profile: profile,
+            preferredTemperature: measurementService?.units.temperatureUnit,
+            preferredPressure: measurementService?.units.pressureUnit
+        )
     }
 
     static func defaultMeasurementDisplayProfile() -> MeasurementDisplayProfile {
@@ -320,6 +340,14 @@ extension RuuviTagDataService {
             contexts: [.all],
             isVisible: false
         ),
+//        MeasurementDisplayVariant(type: .soundAverage): MeasurementDisplayConfiguration(
+//            contexts: [.all],
+//            isVisible: false
+//        ),
+//        MeasurementDisplayVariant(type: .soundPeak): MeasurementDisplayConfiguration(
+//            contexts: [.all],
+//            isVisible: false
+//        ),
         MeasurementDisplayVariant(type: .movementCounter): MeasurementDisplayConfiguration(
             contexts: [.indicator, .alert],
             isVisible: true
@@ -353,7 +381,7 @@ extension RuuviTagDataService {
         "HUMIDITY_0": MeasurementDisplayVariant(type: .humidity, humidityUnit: .percent),
         "HUMIDITY_1": MeasurementDisplayVariant(type: .humidity, humidityUnit: .gm3),
         "HUMIDITY_2": MeasurementDisplayVariant(type: .humidity, humidityUnit: .dew),
-        "PRESSURE_0": MeasurementDisplayVariant(type: .pressure, pressureUnit: .hectopascals),
+        "PRESSURE_0": MeasurementDisplayVariant(type: .pressure, pressureUnit: .newtonsPerMetersSquared),
         "PRESSURE_1": MeasurementDisplayVariant(type: .pressure, pressureUnit: .hectopascals),
         "PRESSURE_2": MeasurementDisplayVariant(type: .pressure, pressureUnit: .millimetersOfMercury),
         "PRESSURE_3": MeasurementDisplayVariant(type: .pressure, pressureUnit: .inchesOfMercury),
@@ -452,7 +480,7 @@ extension RuuviTagDataService {
             guard let unit = variant.pressureUnit else {
                 return MeasurementDisplayConfiguration(contexts: .all, isVisible: true)
             }
-            if unit == .hectopascals {
+            if unit == .hectopascals || unit == .newtonsPerMetersSquared {
                 return MeasurementDisplayConfiguration(contexts: .all, isVisible: true)
             } else {
                 return MeasurementDisplayConfiguration(contexts: [.indicator, .graph], isVisible: false)
@@ -480,6 +508,7 @@ extension RuuviTagDataService {
             ]
         case .pressure:
             return [
+                MeasurementDisplayVariant(type: .pressure, pressureUnit: .newtonsPerMetersSquared),
                 MeasurementDisplayVariant(type: .pressure, pressureUnit: .hectopascals),
                 MeasurementDisplayVariant(type: .pressure, pressureUnit: .millimetersOfMercury),
                 MeasurementDisplayVariant(type: .pressure, pressureUnit: .inchesOfMercury),
@@ -564,6 +593,69 @@ extension RuuviTagDataService {
             seen.append(variant)
         }
         return seen
+    }
+
+    private static func normalizedAlertVariants(
+        _ variants: [MeasurementDisplayVariant],
+        profile: MeasurementDisplayProfile,
+        preferredTemperature: UnitTemperature?,
+        preferredPressure: UnitPressure?
+    ) -> [MeasurementDisplayVariant] {
+        var normalized = variants
+        let temperatureUnit = resolvedTemperatureUnit(preferredTemperature)
+        let pressureUnit = preferredPressure ?? .hectopascals
+
+        if profile.hasVisibleVariant(of: .temperature) {
+            let preferredVariant = MeasurementDisplayVariant(
+                type: .temperature,
+                temperatureUnit: temperatureUnit
+            )
+            if !normalized.contains(preferredVariant) {
+                normalized.insert(preferredVariant, at: 0)
+            }
+        }
+
+        if profile.hasVisibleVariant(of: .pressure) {
+            let preferredVariant = MeasurementDisplayVariant(
+                type: .pressure,
+                pressureUnit: pressureUnit
+            )
+            if !normalized.contains(preferredVariant) {
+                normalized.append(preferredVariant)
+            }
+        }
+
+        if profile.hasVisibleVariant(of: .humidity) {
+            let humidityPercentVariant = MeasurementDisplayVariant(
+                type: .humidity,
+                humidityUnit: .percent
+            )
+            if !normalized.contains(humidityPercentVariant) {
+                normalized.append(humidityPercentVariant)
+            }
+        }
+
+        return normalized
+    }
+
+    private static func resolvedTemperatureUnit(_ unit: UnitTemperature?) -> TemperatureUnit {
+        guard let unit else { return .celsius }
+        switch unit {
+        case .fahrenheit:
+            return .fahrenheit
+        case .kelvin:
+            return .kelvin
+        default:
+            return .celsius
+        }
+    }
+}
+
+private extension MeasurementDisplayProfile {
+    func hasVisibleVariant(of type: MeasurementType) -> Bool {
+        entries.contains { entry in
+            entry.type.isSameCase(as: type) && entry.isVisible
+        }
     }
 }
 
