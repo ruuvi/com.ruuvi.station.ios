@@ -125,6 +125,10 @@ public final class RuuviServiceMeasurementImpl: NSObject {
         let digits = units.pressureUnit.resolvedAccuracyValue(from: settings.pressureAccuracy)
         formatter.minimumFractionDigits = digits
         formatter.maximumFractionDigits = digits
+        if units.pressureUnit == .newtonsPerMetersSquared {
+            formatter.minimumFractionDigits = 0
+            formatter.maximumFractionDigits = 0
+        }
         formatter.roundingMode = NumberFormatter.RoundingMode.halfUp
         return formatter
     }
@@ -209,6 +213,8 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         let pressureValue = units.pressureUnit.convertedValue(from: pressure)
         if units.pressureUnit == .inchesOfMercury {
             return pressureValue
+        } else if units.pressureUnit == .newtonsPerMetersSquared {
+            return pressureValue.round(to: 0)
         } else {
             let digits = units.pressureUnit.supportsResolutionSelection ?
                 commonNumberFormatter.maximumFractionDigits : 0
