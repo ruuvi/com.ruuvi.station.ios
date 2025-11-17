@@ -94,7 +94,7 @@ extension VisibilitySettingsPresenter: VisibilitySettingsViewOutput {
         }
 
         let variant = visibleVariants[index]
-        if hasActiveAlert(for: variant.type) {
+        if shouldWarnAboutActiveAlertWhenHiding(variant: variant, excludingIndex: index) {
             let measurementName = variant.type.shortNameWithUnit(for: variant)
             let message = RuuviLocalization.visibleMeasurementsActiveAlertConfirmation(measurementName)
             view?.presentConfirmation(
