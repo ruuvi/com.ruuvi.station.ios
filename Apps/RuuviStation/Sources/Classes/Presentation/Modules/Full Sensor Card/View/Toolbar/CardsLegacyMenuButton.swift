@@ -16,7 +16,6 @@ final class CardsLegacyMenuButton: UIButton {
     // MARK: - Constants
     private enum Constants {
         static let iconSize: CGFloat = 34
-        static let buttonWidth: CGFloat = 34
         static let animationDuration: Double = 0.5
         static let animationDelay: Double = 0.1
     }
@@ -49,7 +48,6 @@ final class CardsLegacyMenuButton: UIButton {
 
     private func setupButton() {
         backgroundColor = .clear
-        widthAnchor.constraint(equalToConstant: Constants.buttonWidth).isActive = true
     }
 
     private func setupConstraints() {

@@ -11,7 +11,6 @@ final class CardsMenuButton: UIButton {
     // MARK: - Constants
     private enum Constants {
         static let iconSize: CGFloat = 30
-        static let buttonWidth: CGFloat = 34
     }
 
     // MARK: - Initialization
@@ -42,7 +41,6 @@ final class CardsMenuButton: UIButton {
 
     private func setupButton() {
         backgroundColor = .clear
-        widthAnchor.constraint(equalToConstant: Constants.buttonWidth).isActive = true
     }
 
     private func setupConstraints() {
