@@ -16,5 +16,6 @@ targets:
     - target: RuuviCloud
     - target: RuuviPool
     - target: RuuviLocal
+    - target: RuuviLocalization
     - target: RuuviRepository
     - target: RuuviCore

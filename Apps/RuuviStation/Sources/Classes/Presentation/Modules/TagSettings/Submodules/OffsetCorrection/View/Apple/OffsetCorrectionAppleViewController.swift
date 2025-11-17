@@ -200,7 +200,9 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
         var message = ""
         switch viewModel.type {
         case .humidity:
-            message = RuuviLocalization.OffsetCorrection.Dialog.Calibration.enterHumidity("%")
+            message = RuuviLocalization.OffsetCorrection.Dialog.Calibration.enterHumidity(
+                RuuviLocalization.humidityRelativeUnit
+            )
         case .pressure:
             let format = RuuviLocalization.OffsetCorrection.Dialog.Calibration.enterPressure
             let unit = viewModel.pressureUnit.value ?? .hectopascals

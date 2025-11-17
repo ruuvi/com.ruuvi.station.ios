@@ -13,11 +13,12 @@ final class CardsBaseViewController: UIViewController {
     private enum Constants {
         enum Layout {
             static let spaceUntilSecondaryToolbarExtraMargin: CGFloat = 10
-            static let backButtonLeftPadding: CGFloat = -16
-            static let backButtonSize = CGSize(width: 48, height: 48)
+            static let backButtonSize = CGSize(width: 44, height: 44)
             static let ruuviLogoSize = CGSize(width: 90, height: 22)
-            static let menuBarSize = CGSize(width: 120, height: 0)
-            static let menuBarRightPadding: CGFloat = -6
+            static let menuBarHeight: CGFloat = 44
+            static let headerHorizontalPadding: CGFloat = 12
+            static let headerItemSpacing: CGFloat = 12
+            static let headerLogoSpacing: CGFloat = 8
             static let secondaryToolbarTopPadding: CGFloat = 2
             static let arrowButtonTopPadding: CGFloat = 6
             static let arrowButtonSidePadding: CGFloat = 4
@@ -58,9 +59,11 @@ final class CardsBaseViewController: UIViewController {
     // MARK: - Public Properties
     weak var output: CardsBaseViewOutput?
     var spaceUntilSecondaryToolbar: CGFloat {
+        view.layoutIfNeeded()
         return view.safeAreaInsets.top +
-            (navigationController?.navigationBar.frame.height ?? 0) +
-            secondaryToolbarView.frame.height + Constants.Layout.spaceUntilSecondaryToolbarExtraMargin
+            headerContainerView.frame.height +
+            secondaryToolbarView.frame.height +
+            Constants.Layout.spaceUntilSecondaryToolbarExtraMargin
     }
 
     // MARK: Depenencies
@@ -90,6 +93,12 @@ final class CardsBaseViewController: UIViewController {
     // MARK: - Base UI Components
     private lazy var cardBackgroundView = CardsBackgroundView()
     private lazy var chartViewBackground = UIView(color: RuuviColor.graphBGColor.color)
+    private lazy var headerContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
 
     // Header
     // Ruuvi Logo
@@ -135,7 +144,8 @@ final class CardsBaseViewController: UIViewController {
     private lazy var secondaryToolbarView = UIView(color: .clear)
     private lazy var cardLeftArrowButton: RuuviCustomButton = {
         let button = RuuviCustomButton(
-            icon: UIImage(systemName: "chevron.left")
+            icon: UIImage(systemName: "chevron.left"),
+            leadingPadding: 10
         )
         button.backgroundColor = .clear
         button.addGestureRecognizer(
@@ -149,7 +159,8 @@ final class CardsBaseViewController: UIViewController {
 
     private lazy var cardRightArrowButton: RuuviCustomButton = {
         let button = RuuviCustomButton(
-            icon: UIImage(systemName: "chevron.right")
+            icon: UIImage(systemName: "chevron.right"),
+            trailingPadding: 10
         )
         button.backgroundColor = .clear
         button.addGestureRecognizer(
@@ -171,6 +182,8 @@ final class CardsBaseViewController: UIViewController {
                 .extraBold,
                 size: Constants.Typography.tagNameLabelFontSize
             )
+        label.setContentHuggingPriority(.required, for: .vertical)
+        label.setContentCompressionResistancePriority(.required, for: .vertical)
         return label
     }()
 
@@ -247,7 +260,13 @@ final class CardsBaseViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
         output?.viewWillAppear()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
     override func didMove(toParent parent: UIViewController?) {
@@ -286,58 +305,66 @@ private extension CardsBaseViewController {
     }
 
     func setUpHeaderView() {
-        let leftBarButtonView = UIView(color: .clear)
-
-        leftBarButtonView.addSubview(backButton)
-        backButton.anchor(
-            top: leftBarButtonView.topAnchor,
-            leading: leftBarButtonView.leadingAnchor,
-            bottom: leftBarButtonView.bottomAnchor,
-            trailing: nil,
-            padding: .init(top: 0, left: Constants.Layout.backButtonLeftPadding, bottom: 0, right: 0),
-            size: Constants.Layout.backButtonSize
-        )
-
-        leftBarButtonView.addSubview(ruuviLogoView)
-        ruuviLogoView.anchor(
-            top: nil,
-            leading: backButton.trailingAnchor,
+        view.addSubview(headerContainerView)
+        headerContainerView.anchor(
+            top: view.safeTopAnchor,
+            leading: view.safeLeftAnchor,
             bottom: nil,
-            trailing: leftBarButtonView.trailingAnchor,
-            padding: .init(top: 0, left: 0, bottom: 0, right: 0),
-            size: Constants.Layout.ruuviLogoSize
+            trailing: view.safeRightAnchor,
+            size: .init(width: 0, height: 44)
         )
-        ruuviLogoView.centerYInSuperview()
 
-        let rightBarButtonView = UIView(color: .clear)
-        rightBarButtonView.addSubview(menuBarView)
-        menuBarView
+        let headerLeadingStack = UIStackView(arrangedSubviews: [backButton, ruuviLogoView])
+        headerLeadingStack.axis = .horizontal
+        headerLeadingStack.alignment = .center
+        headerLeadingStack.spacing = 0
+        headerLeadingStack.backgroundColor = .clear
+
+        backButton.widthAnchor.constraint(equalToConstant: Constants.Layout.backButtonSize.width).isActive = true
+        backButton.heightAnchor.constraint(equalToConstant: Constants.Layout.backButtonSize.height).isActive = true
+
+        ruuviLogoView.widthAnchor.constraint(equalToConstant: Constants.Layout.ruuviLogoSize.width).isActive = true
+        ruuviLogoView.heightAnchor.constraint(equalToConstant: Constants.Layout.ruuviLogoSize.height).isActive = true
+
+        headerContainerView.addSubview(headerLeadingStack)
+        headerLeadingStack
             .anchor(
-                top: rightBarButtonView.topAnchor,
-                leading: rightBarButtonView.leadingAnchor,
-                bottom: rightBarButtonView.bottomAnchor,
-                trailing: rightBarButtonView.trailingAnchor,
-                padding: .init(top: 0, left: 0, bottom: 0, right: Constants.Layout.menuBarRightPadding),
-                size: Constants.Layout.menuBarSize
+                top: headerContainerView.topAnchor,
+                leading: headerContainerView.safeLeftAnchor,
+                bottom: headerContainerView.bottomAnchor,
+                trailing: nil
             )
+
+        headerContainerView.addSubview(menuBarView)
+        menuBarView.anchor(
+            top: headerContainerView.topAnchor,
+            leading: nil,
+            bottom: headerContainerView.bottomAnchor,
+            trailing: headerContainerView.safeRightAnchor,
+            padding: .init(top: 0, left: 0, bottom: 0, right: 4)
+        )
+
+        headerLeadingStack.setContentHuggingPriority(.required, for: .horizontal)
+        menuBarView.setContentHuggingPriority(.required, for: .horizontal)
+        menuBarView.setContentCompressionResistancePriority(.required, for: .horizontal)
+        menuBarView.setContentHuggingPriority(.required, for: .vertical)
+        menuBarView.setContentCompressionResistancePriority(.required, for: .vertical)
+        menuBarView.heightAnchor
+            .constraint(equalToConstant: Constants.Layout.menuBarHeight)
+            .isActive = true
+
+        headerContainerView.addSubview(activityIndicator)
+        activityIndicator.centerInSuperview()
+
         menuBarView.onTabChanged = { [weak self] tab in
             self?.handleTabChange(tab)
         }
-        let titleView = UIView(
-            color: .clear
-        )
-        titleView.addSubview(activityIndicator)
-        activityIndicator.fillSuperview()
-
-        navigationItem.titleView = titleView
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonView)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButtonView)
     }
 
     func setUpSecondaryToolbarView() {
         view.addSubview(secondaryToolbarView)
         secondaryToolbarView.anchor(
-            top: view.safeTopAnchor,
+            top: headerContainerView.bottomAnchor,
             leading: view.safeLeftAnchor,
             bottom: nil,
             trailing: view.safeRightAnchor,
@@ -698,10 +725,7 @@ extension CardsBaseViewController: MeasurementDetailsCoordinatorDelegate {
     ) {
         detailsCoordinator?.stop()
         detailsCoordinator = nil
-        output?.viewDidScrollToGraph(
-            for: measurement,
-            variant: variant
-        )
+        output?.viewDidScrollToGraph(for: measurement, variant: variant)
         activeTab = .graph
         menuBarView.setSelectedTab(.graph, animated: true, notify: false)
     }

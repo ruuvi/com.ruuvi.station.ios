@@ -16,6 +16,7 @@ final class CardsMenuBarView: UIView {
     // MARK: - Constants
     private enum Constants {
         static let stackSpacing: CGFloat = 2
+        static let buttonSize: CGFloat = 40
         static let modernTopBottomInset: CGFloat = -2
         static let underlineWidth: CGFloat = 16
         static let underlineHeight: CGFloat = 2
@@ -117,6 +118,7 @@ final class CardsMenuBarView: UIView {
             let button = CardsMenuButton(menuType: menuType)
             button.addTarget(self, action: #selector(modernButtonTapped(_:)), for: .touchUpInside)
             stackView.addArrangedSubview(button)
+            button.size(width: Constants.buttonSize, height: Constants.buttonSize)
             return button
         }
     }
@@ -126,6 +128,7 @@ final class CardsMenuBarView: UIView {
             let button = CardsLegacyMenuButton(menuType: menuType)
             button.addTarget(self, action: #selector(legacyButtonTapped(_:)), for: .touchUpInside)
             stackView.addArrangedSubview(button)
+            button.size(width: Constants.buttonSize, height: Constants.buttonSize)
             return button
         }
     }
@@ -139,7 +142,7 @@ final class CardsMenuBarView: UIView {
     private func setupStackView() {
         stackView.axis = .horizontal
         stackView.spacing = Constants.stackSpacing
-        stackView.distribution = .equalSpacing
+        stackView.distribution = .fill
         stackView.alignment = .center
         stackView.translatesAutoresizingMaskIntoConstraints = false
     }
@@ -169,12 +172,7 @@ final class CardsMenuBarView: UIView {
     }
 
     private func setupLegacyConstraints() {
-        NSLayoutConstraint.activate([
-            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            stackView.topAnchor.constraint(equalTo: topAnchor),
-            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-        ])
+        stackView.fillSuperview()
     }
 
     // MARK: - Button Actions
