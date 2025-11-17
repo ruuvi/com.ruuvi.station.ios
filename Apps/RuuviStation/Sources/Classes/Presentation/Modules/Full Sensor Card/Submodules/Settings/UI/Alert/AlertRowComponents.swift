@@ -55,6 +55,8 @@ struct AlertNoticeRow: View {
         .padding(.trailing, 8)
         .padding(.vertical, 8)
         .background(RuuviColor.primary.swiftUIColor)
+        .contentShape(Rectangle())
+        .onTapGesture {}
     }
 }
 
@@ -72,6 +74,8 @@ struct AlertAdditionalInfoRow: View {
         .padding(.trailing, 16)
         .frame(minHeight: 44, alignment: .leading)
         .background(RuuviColor.primary.swiftUIColor)
+        .contentShape(Rectangle())
+        .onTapGesture {}
     }
 }
 
@@ -89,5 +93,6 @@ struct AlertLatestMeasurementRow: View {
         .padding(.trailing, 16)
         .padding(.bottom, 12)
         .background(RuuviColor.primary.swiftUIColor)
+        .contentShape(Rectangle())
     }
 }

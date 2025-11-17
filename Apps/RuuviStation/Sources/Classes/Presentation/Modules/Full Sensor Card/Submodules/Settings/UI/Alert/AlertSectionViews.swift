@@ -59,6 +59,7 @@ private struct AlertHeaderView: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 12)
         .background(RuuviColor.tagSettingsSectionHeaderColor.swiftUIColor)
+        .contentShape(Rectangle())
     }
 }
 
@@ -434,6 +435,13 @@ private struct AlertStatusRow: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 14)
         .background(RuuviColor.primary.swiftUIColor)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            guard isEnabled else { return }
+            let newValue = !isOn
+            isOn = newValue
+            onToggle(newValue)
+        }
     }
 }
 
