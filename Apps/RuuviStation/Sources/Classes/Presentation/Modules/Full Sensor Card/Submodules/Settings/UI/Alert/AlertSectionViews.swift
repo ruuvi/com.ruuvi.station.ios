@@ -13,12 +13,13 @@ struct AlertSectionsGroupView: View {
             AlertHeaderView()
 
             ForEach(state.alertSections) { section in
+                let sectionID = section.id
                 AlertSectionRow(
                     model: section,
-                    isExpanded: state.isAlertSectionExpanded(section.id),
+                    isExpanded: state.isAlertSectionExpanded(sectionID),
                     onToggleSection: {
                         withAnimation(.easeInOut(duration: 0.2)) {
-                            state.toggleAlertSection(section.id)
+                            state.toggleAlertSection(sectionID)
                         }
                     },
                     onToggleAlert: { isOn in
@@ -43,6 +44,11 @@ struct AlertSectionsGroupView: View {
                         actions.didTapCloudConnectionDelay.send(())
                     }
                 )
+                .id(sectionID)
+
+                Color.clear
+                    .frame(height: 0)
+                    .id("\(sectionID)-alert-bottom")
             }
         }
     }

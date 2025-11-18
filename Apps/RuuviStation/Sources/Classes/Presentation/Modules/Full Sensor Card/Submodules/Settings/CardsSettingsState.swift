@@ -39,6 +39,8 @@ final class CardsSettingsState: ObservableObject {
     // MARK: - State management
     @Published var expandedSections: Set<String> = []
     @Published var expandedAlertSections: Set<String> = []
+    @Published private(set) var lastExpandedSectionID: String?
+    @Published private(set) var lastExpandedAlertID: String?
 
     // MARK: - Snapshot reference
     private(set) var snapshot: RuuviTagCardSnapshot
@@ -319,8 +321,10 @@ final class CardsSettingsState: ObservableObject {
         withAnimation(.easeInOut(duration: 0.25)) {
             if expandedSections.contains(id) {
                 expandedSections.remove(id)
+                lastExpandedSectionID = nil
             } else {
                 expandedSections.insert(id)
+                lastExpandedSectionID = id
             }
         }
     }
@@ -328,13 +332,23 @@ final class CardsSettingsState: ObservableObject {
     func toggleAlertSection(_ id: String) {
         if expandedAlertSections.contains(id) {
             expandedAlertSections.remove(id)
+            lastExpandedAlertID = nil
         } else {
             expandedAlertSections.insert(id)
+            lastExpandedAlertID = id
         }
     }
 
     func isAlertSectionExpanded(_ id: String) -> Bool {
         expandedAlertSections.contains(id)
+    }
+
+    func clearLastExpandedSectionID() {
+        lastExpandedSectionID = nil
+    }
+
+    func clearLastExpandedAlertID() {
+        lastExpandedAlertID = nil
     }
 }
 
