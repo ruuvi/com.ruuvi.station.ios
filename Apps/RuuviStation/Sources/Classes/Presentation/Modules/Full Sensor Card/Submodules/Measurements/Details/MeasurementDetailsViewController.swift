@@ -623,7 +623,10 @@ private extension MeasurementDetailsViewController {
             measurementType == .co2 ||
             measurementType == .pm25
         )
-        shouldHideGraph = (measurementType == .movementCounter)
+        shouldHideGraph = (
+            measurementType == .movementCounter ||
+            measurementType == .measurementSequenceNumber
+        )
 
         if isViewLoaded {
             applyVisibilityStates()

@@ -62,6 +62,8 @@ extension MeasurementType {
             return RuuviLocalization.soundPeak
         case .luminosity:
             return RuuviLocalization.illuminance
+        case .measurementSequenceNumber:
+            return RuuviLocalization.TagSettings.MsnTitleLabel.text
         default:
             return ""
         }
@@ -125,6 +127,8 @@ extension MeasurementType {
             return RuuviLocalization.soundPeak
         case .luminosity:
             return RuuviLocalization.light
+        case .measurementSequenceNumber:
+            return RuuviLocalization.measSeqNumber
         default:
             return ""
         }

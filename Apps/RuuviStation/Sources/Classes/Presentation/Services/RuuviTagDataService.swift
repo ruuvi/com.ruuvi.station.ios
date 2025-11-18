@@ -274,6 +274,7 @@ extension RuuviTagDataService {
         .pressure,
         .luminosity,
         .movementCounter,
+        .measurementSequenceNumber,
         .soundInstant,
         .soundPeak,
         .soundAverage,
@@ -287,6 +288,7 @@ extension RuuviTagDataService {
         .humidity,
         .pressure,
         .movementCounter,
+        .measurementSequenceNumber,
         .voltage,
         .accelerationX,
         .accelerationY,
@@ -340,6 +342,10 @@ extension RuuviTagDataService {
             contexts: [.all],
             isVisible: false
         ),
+        MeasurementDisplayVariant(type: .measurementSequenceNumber): MeasurementDisplayConfiguration(
+            contexts: [.indicator],
+            isVisible: false
+        ),
         MeasurementDisplayVariant(type: .soundAverage): MeasurementDisplayConfiguration(
             contexts: [.all],
             isVisible: false
@@ -391,6 +397,7 @@ extension RuuviTagDataService {
         "ACCELERATION_GY": MeasurementDisplayVariant(type: .accelerationY),
         "ACCELERATION_GZ": MeasurementDisplayVariant(type: .accelerationZ),
         "SIGNAL_DBM": MeasurementDisplayVariant(type: .rssi),
+        "MSN_COUNT": MeasurementDisplayVariant(type: .measurementSequenceNumber),
         "AQI_INDEX": MeasurementDisplayVariant(type: .aqi),
         "LUMINOSITY_LX": MeasurementDisplayVariant(type: .luminosity),
         "SOUNDAVG_DBA": MeasurementDisplayVariant(type: .soundAverage),
