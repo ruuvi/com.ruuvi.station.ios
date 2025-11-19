@@ -681,7 +681,9 @@ private extension VisibilitySettingsPresenter {
                 guard let self else { return }
                 self.isSaving = false
                 self.sensorSettings = settings
-                self.lastKnownCustomOrderCodes = settings.displayOrder
+                if let codes = settings.displayOrder, !codes.isEmpty {
+                    self.lastKnownCustomOrderCodes = codes
+                }
                 self.view?.setSaving(false)
                 self.updateMeasurementPreferenceCache(with: displayOrderCodes)
                 self.applySelectionToSnapshot()
