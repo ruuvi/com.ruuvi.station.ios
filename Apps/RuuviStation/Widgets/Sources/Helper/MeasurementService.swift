@@ -97,9 +97,13 @@ extension MeasurementService {
         let value = settings.pressureUnit
             .convertedValue(from: pressure)
             .round(to: decimals)
-        pressureFormatter.maximumFractionDigits = decimals
-        pressureFormatter.minimumFractionDigits = decimals
-        return formattedValue(from: value, formatter: pressureFormatter)
+        if settings.pressureUnit == .newtonsPerMetersSquared {
+            return "\(Int(round(value)))"
+        } else {
+            pressureFormatter.maximumFractionDigits = decimals
+            pressureFormatter.minimumFractionDigits = decimals
+            return formattedValue(from: value, formatter: pressureFormatter)
+        }
     }
 
     public func voltage(for voltage: Voltage?) -> String {
