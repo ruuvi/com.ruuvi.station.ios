@@ -958,7 +958,7 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
     }
 
     private func filteredVariants(from modules: [MeasurementDisplayVariant]) -> [MeasurementDisplayVariant] {
-        guard let visibility = snapshot?.metadata.measurementVisibility else {
+        guard let visibility = snapshot?.displayData.measurementVisibility else {
             return modules
         }
         return modules.filter { variant in

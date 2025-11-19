@@ -23,7 +23,7 @@ final class VisibilitySettingsPresenter: VisibilitySettingsModuleInput {
     private var visibleVariants: [MeasurementDisplayVariant] = []
     private var hiddenVariants: [MeasurementDisplayVariant] = []
     private var usesDefaultOrder: Bool = true
-    private var cachedCustomVisibleVariants: [MeasurementDisplayVariant]?
+    private var lastKnownCustomOrderCodes: [String]?
     private var isSaving: Bool = false
     private var needsPersistVisibleReorder: Bool = false
 
@@ -45,6 +45,7 @@ final class VisibilitySettingsPresenter: VisibilitySettingsModuleInput {
         self.snapshot = snapshot
         self.sensor = sensor
         self.sensorSettings = sensorSettings
+        self.lastKnownCustomOrderCodes = sensorSettings?.displayOrder
     }
 }
 
@@ -70,16 +71,21 @@ extension VisibilitySettingsPresenter: VisibilitySettingsViewOutput {
             handleUseDefaultToggleOn()
         } else {
             usesDefaultOrder = false
-            if let cachedCustomVisibleVariants {
-                visibleVariants = resolveVisible(
-                    from: cachedCustomVisibleVariants,
-                    available: availableVariants
-                )
-                hiddenVariants = resolveHidden(
-                    from: hiddenVariants,
-                    available: availableVariants,
-                    visible: visibleVariants
-                )
+            if let codes = lastKnownCustomOrderCodes, !codes.isEmpty {
+                let variants = codes.compactMap { code in
+                    RuuviTagDataService.measurementDisplayVariant(forCode: code)
+                }
+                if !variants.isEmpty {
+                    visibleVariants = resolveVisible(
+                        from: variants,
+                        available: availableVariants
+                    )
+                    hiddenVariants = resolveHidden(
+                        from: [],
+                        available: availableVariants,
+                        visible: visibleVariants
+                    )
+                }
             }
             persistCurrentSelection()
             presentCurrentState()
@@ -124,7 +130,6 @@ extension VisibilitySettingsPresenter: VisibilitySettingsViewOutput {
         }
         visibleVariants.append(variant)
         usesDefaultOrder = false
-        cacheCustomOrderIfNeeded()
         persistCurrentSelection()
         presentCurrentState()
     }
@@ -140,7 +145,6 @@ extension VisibilitySettingsPresenter: VisibilitySettingsViewOutput {
         let variant = visibleVariants.remove(at: sourceIndex)
         visibleVariants.insert(variant, at: destinationIndex)
         usesDefaultOrder = false
-        cacheCustomOrderIfNeeded()
         needsPersistVisibleReorder = true
         presentCurrentState()
     }
@@ -148,7 +152,6 @@ extension VisibilitySettingsPresenter: VisibilitySettingsViewOutput {
     func viewDidFinishReorderingVisibleItems() {
         guard needsPersistVisibleReorder else { return }
         needsPersistVisibleReorder = false
-        cacheCustomOrderIfNeeded()
         persistCurrentSelection()
     }
 }
@@ -190,7 +193,7 @@ private extension VisibilitySettingsPresenter {
 
     func rebuildState() {
         guard let snapshot else { return }
-        let currentVisibility = snapshot.metadata.measurementVisibility
+        let currentVisibility = snapshot.displayData.measurementVisibility
 
         if let explicit = currentVisibility?.usesDefaultOrder {
             usesDefaultOrder = explicit
@@ -227,7 +230,11 @@ private extension VisibilitySettingsPresenter {
             visible: visibleVariants
         )
         if !usesDefaultOrder {
-            cachedCustomVisibleVariants = visibleVariants
+            lastKnownCustomOrderCodes = visibleVariants.compactMap {
+                RuuviTagDataService.measurementCode(for: $0)
+            }
+        } else if lastKnownCustomOrderCodes == nil {
+            lastKnownCustomOrderCodes = sensorSettings?.displayOrder
         }
     }
 
@@ -528,14 +535,30 @@ private extension VisibilitySettingsPresenter {
             presentCurrentState()
             return
         }
-        cachedCustomVisibleVariants = visibleVariants
-        let defaultVisible = defaultVisibleVariants(for: sensor)
+        lastKnownCustomOrderCodes = visibleVariants.compactMap {
+            RuuviTagDataService.measurementCode(for: $0)
+        }
+        let defaultVisible: [MeasurementDisplayVariant]
+        if let snapshot {
+            defaultVisible = defaultVisibleVariants(for: snapshot)
+        } else {
+            defaultVisible = defaultVisibleVariants(for: sensor)
+        }
         let typeNamesNeedingConfirmation = measurementTypeNamesWithActiveAlertsWhenSwitchingToDefault(
             targetVisible: defaultVisible
         )
 
         let applyDefault: () -> Void = { [weak self] in
             guard let self else { return }
+            self.visibleVariants = self.resolveVisible(
+                from: defaultVisible,
+                available: self.availableVariants
+            )
+            self.hiddenVariants = self.resolveHidden(
+                from: [],
+                available: self.availableVariants,
+                visible: self.visibleVariants
+            )
             self.usesDefaultOrder = true
             self.persistCurrentSelection()
             self.presentCurrentState()
@@ -598,7 +621,6 @@ private extension VisibilitySettingsPresenter {
             hiddenVariants.insert(variant, at: 0)
         }
         usesDefaultOrder = false
-        cacheCustomOrderIfNeeded()
         persistCurrentSelection()
         presentCurrentState()
     }
@@ -640,6 +662,9 @@ private extension VisibilitySettingsPresenter {
             let codes = visibleVariants.compactMap { variant in
                 RuuviTagDataService.measurementCode(for: variant)
             }
+            if !codes.isEmpty {
+                lastKnownCustomOrderCodes = codes
+            }
             return codes.isEmpty ? nil : codes
         }()
 
@@ -656,6 +681,7 @@ private extension VisibilitySettingsPresenter {
                 guard let self else { return }
                 self.isSaving = false
                 self.sensorSettings = settings
+                self.lastKnownCustomOrderCodes = settings.displayOrder
                 self.view?.setSaving(false)
                 self.updateMeasurementPreferenceCache(with: displayOrderCodes)
                 self.applySelectionToSnapshot()
@@ -691,9 +717,9 @@ private extension VisibilitySettingsPresenter {
 
     func updateMeasurementPreferenceCache(with codes: [String]?) {
         guard let sensor else { return }
-        if usesDefaultOrder || codes?.isEmpty != false {
+        if usesDefaultOrder {
             RuuviTagDataService.clearMeasurementDisplayPreference(for: sensor.id)
-        } else if let codes {
+        } else if let codes, !codes.isEmpty {
             let preference = RuuviTagDataService.MeasurementDisplayPreference(
                 defaultDisplayOrder: false,
                 displayOrderCodes: codes
@@ -702,18 +728,19 @@ private extension VisibilitySettingsPresenter {
                 preference,
                 for: sensor.id
             )
+        } else {
+            RuuviTagDataService.clearMeasurementDisplayPreference(for: sensor.id)
         }
     }
 
-    func cacheCustomOrderIfNeeded() {
-        guard !usesDefaultOrder else { return }
-        cachedCustomVisibleVariants = visibleVariants
-    }
-
     func disableAlertIfNeeded(for variant: MeasurementDisplayVariant) {
-        guard let snapshot, let sensor else { return }
+        guard let snapshot else { return }
         guard let alertType = variant.type.toAlertType() else { return }
         guard snapshot.getAlertConfig(for: variant.type)?.isActive == true else { return }
+        let hasOtherVisibleVariants = visibleVariants.contains {
+            $0.type.isSameCase(as: variant.type)
+        }
+        guard !hasOtherVisibleVariants else { return }
         withAlertService { service, snapshot, sensor in
             service.setAlertState(
                 for: alertType,

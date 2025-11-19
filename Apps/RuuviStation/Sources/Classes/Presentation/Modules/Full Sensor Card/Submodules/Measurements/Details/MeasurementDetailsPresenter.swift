@@ -511,7 +511,7 @@ private extension MeasurementDetailsPresenter {
     func filteredDisplayData(
         from data: RuuviTagCardSnapshotDisplayData
     ) -> RuuviTagCardSnapshotDisplayData {
-        guard let visibility = snapshot?.metadata.measurementVisibility,
+        guard let visibility = snapshot?.displayData.measurementVisibility,
               let grid = data.indicatorGrid else {
             return data
         }
@@ -548,8 +548,6 @@ private extension MeasurementDetailsPresenter {
     }
 }
 
-// swiftlint:enable file_length
-
 private extension MeasurementDetailsPresenter {
     func defaultVariant(for type: MeasurementType) -> MeasurementDisplayVariant {
         switch type {
@@ -567,7 +565,7 @@ private extension MeasurementDetailsPresenter {
         for type: MeasurementType,
         preferred: MeasurementDisplayVariant?
     ) -> MeasurementDisplayVariant {
-        guard let visibility = snapshot?.metadata.measurementVisibility else {
+        guard let visibility = snapshot?.displayData.measurementVisibility else {
             return preferred ?? defaultVariant(for: type)
         }
         if let preferred,
@@ -639,3 +637,5 @@ private extension MeasurementDetailsPresenter {
         }
     }
 }
+
+// swiftlint:enable file_length

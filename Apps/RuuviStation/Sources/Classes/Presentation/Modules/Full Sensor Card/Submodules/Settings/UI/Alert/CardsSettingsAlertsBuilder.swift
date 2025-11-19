@@ -923,6 +923,26 @@ private extension RuuviTagCardSnapshotAlertConfig {
                 lowerBound: RuuviAlertConstants.Sound.lowerBound,
                 upperBound: RuuviAlertConstants.Sound.upperBound
             )
+        case .soundPeak:
+            return RuuviTagCardSnapshotAlertConfig(
+                type: measurementType,
+                alertType: .soundPeak(lower: 0, upper: 0),
+                isActive: false,
+                isFiring: false,
+                mutedTill: nil,
+                lowerBound: RuuviAlertConstants.Sound.lowerBound,
+                upperBound: RuuviAlertConstants.Sound.upperBound
+            )
+        case .soundAverage:
+            return RuuviTagCardSnapshotAlertConfig(
+                type: measurementType,
+                alertType: .soundAverage(lower: 0, upper: 0),
+                isActive: false,
+                isFiring: false,
+                mutedTill: nil,
+                lowerBound: RuuviAlertConstants.Sound.lowerBound,
+                upperBound: RuuviAlertConstants.Sound.upperBound
+            )
         case .luminosity:
             return RuuviTagCardSnapshotAlertConfig(
                 type: measurementType,

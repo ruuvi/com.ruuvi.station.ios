@@ -683,24 +683,13 @@ private extension CardsSettingsPresenter {
             return
         }
 
-        guard let visibility = snapshot.metadata.measurementVisibility else {
+        guard let visibility = snapshot.displayData.measurementVisibility else {
             view?.updateVisibleMeasurementsSummary(
                 value: nil,
                 isVisible: false
             )
             return
         }
-
-        #if DEBUG
-        let availableNames = visibility.availableVariants.map { variant in
-            variant.type.shortName(for: variant)
-        }
-        print(
-            "CardsSettings: available measurements ->",
-            availableNames,
-            availableNames
-                .count)
-        #endif
 
         let availableCount = visibility.availableIndicatorCount
 

@@ -17,8 +17,12 @@ extension AlertType {
             return .aqi
         case .carbonDioxide:
             return .co2
+        case .pMatter1:
+            return .pm10
         case .pMatter25:
             return .pm25
+        case .pMatter4:
+            return .pm40
         case .pMatter10:
             return .pm100
         case .nox:
@@ -33,6 +37,8 @@ extension AlertType {
             return .soundAverage
         case .luminosity:
             return .luminosity
+        case .signal:
+            return .rssi
         default:
             return nil
         }
@@ -68,6 +74,10 @@ extension AlertType {
             return RuuviLocalization.voc
         case .soundInstant:
             return RuuviLocalization.soundInstantWithUnit(unit)
+        case .soundPeak:
+            return RuuviLocalization.soundPeakWithUnit(unit)
+        case .soundAverage:
+            return RuuviLocalization.soundAverageWithUnit(unit)
         case .luminosity:
             return RuuviLocalization.luminosityWithUnit(unit)
         case .signal:
