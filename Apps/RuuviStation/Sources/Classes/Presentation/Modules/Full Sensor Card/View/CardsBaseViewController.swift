@@ -160,7 +160,7 @@ final class CardsBaseViewController: UIViewController {
     private lazy var cardRightArrowButton: RuuviCustomButton = {
         let button = RuuviCustomButton(
             icon: UIImage(systemName: "chevron.right"),
-            trailingPadding: 6
+            trailingPadding: 10
         )
         button.backgroundColor = .clear
         button.addGestureRecognizer(
@@ -340,7 +340,8 @@ private extension CardsBaseViewController {
             top: headerContainerView.topAnchor,
             leading: nil,
             bottom: headerContainerView.bottomAnchor,
-            trailing: headerContainerView.safeRightAnchor
+            trailing: headerContainerView.safeRightAnchor,
+            padding: .init(top: 0, left: 0, bottom: 0, right: 4)
         )
 
         headerLeadingStack.setContentHuggingPriority(.required, for: .horizontal)

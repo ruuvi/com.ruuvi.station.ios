@@ -18,7 +18,7 @@ struct CardsSettingsView: View {
     var body: some View {
         ScrollViewReader { proxy in
             ScrollView(.vertical, showsIndicators: false) {
-                VStack(spacing: 1) {
+                VStack(spacing: 0.5) {
                     BackgroundImageSection(
                         image: state.backgroundImage,
                         onImageTap: {
@@ -73,7 +73,7 @@ struct CardsSettingsView: View {
                         AlertSectionsGroupView()
                     }
 
-                    VStack(spacing: 1) {
+                    VStack(spacing: 0.5) {
                         ForEach(state.settingsSections) { section in
                             let sectionID = section.id
                             let isExpanded = section.isCollapsible ?

@@ -9,7 +9,7 @@ struct AlertSectionsGroupView: View {
     @EnvironmentObject private var actions: CardsSettingsActions
 
     var body: some View {
-        VStack(spacing: 1) {
+        VStack(spacing: 0.5) {
             AlertHeaderView()
 
             ForEach(state.alertSections) { section in
