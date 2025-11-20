@@ -54,6 +54,11 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
         )
         let toNetworkPull60 = MigrationManagerToNetworkPull60(settings: settings)
         let isExcludedFromBackup = MigrationManagerIsExcludedFromBackup(sqliteContext: sqliteContext)
+        let signalVisibility = MigrationManagerSignalVisibility(
+            ruuviStorage: ruuviStorage,
+            ruuviAlertService: ruuviAlertService,
+            ruuviPool: ruuviPool
+        )
         return [
             toAlertService,
             toPrune240,
@@ -63,6 +68,7 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
             toTimeouts,
             fixRHAlerts,
             toNetworkPull60,
+            signalVisibility,
             isExcludedFromBackup,
         ]
     }

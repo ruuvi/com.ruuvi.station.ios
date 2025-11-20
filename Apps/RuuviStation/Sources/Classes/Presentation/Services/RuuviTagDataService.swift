@@ -260,71 +260,9 @@ extension RuuviTagDataService {
         entries: makeEntries(for: tagMeasurementOrder)
     )
 
-    private static let baseMeasurementPriority: [MeasurementType] = [
-        .aqi,
-        .co2,
-        .pm25,
-        .voc,
-        .nox,
-        .temperature,
-        .humidity,
-        .pressure,
-        .luminosity,
-        .movementCounter,
-        .soundInstant,
-        .soundAverage,
-        .soundPeak,
-        .pm10,
-        .pm40,
-        .pm100,
-        .voltage,
-        .accelerationX,
-        .accelerationY,
-        .accelerationZ,
-        .measurementSequenceNumber,
-        .rssi
-    ]
+    private static let airMeasurementOrder: [MeasurementType] = MeasurementDisplayDefaults.airMeasurementOrder
 
-    private static let airSupportedMeasurements: [MeasurementType] = [
-        .aqi,
-        .co2,
-        .pm10,
-        .pm25,
-        .pm40,
-        .pm100,
-        .voc,
-        .nox,
-        .temperature,
-        .humidity,
-        .pressure,
-        .luminosity,
-        .measurementSequenceNumber,
-        .soundInstant,
-        .soundPeak,
-        .soundAverage,
-        .rssi
-    ]
-
-    private static let tagSupportedMeasurements: [MeasurementType] = [
-        .temperature,
-        .humidity,
-        .pressure,
-        .movementCounter,
-        .measurementSequenceNumber,
-        .voltage,
-        .accelerationX,
-        .accelerationY,
-        .accelerationZ,
-        .rssi,
-    ]
-
-    private static let airMeasurementOrder: [MeasurementType] = orderedMeasurements(
-        for: airSupportedMeasurements
-    )
-
-    private static let tagMeasurementOrder: [MeasurementType] = orderedMeasurements(
-        for: tagSupportedMeasurements
-    )
+    private static let tagMeasurementOrder: [MeasurementType] = MeasurementDisplayDefaults.tagMeasurementOrder
 
     /// Declarative baseline for a measurement's default visibility + contexts.
     private struct MeasurementDisplayConfiguration {
@@ -465,19 +403,6 @@ extension RuuviTagDataService {
                 )
             }
         }
-    }
-
-    private static func orderedMeasurements(
-        for supportedTypes: [MeasurementType]
-    ) -> [MeasurementType] {
-        var ordered = baseMeasurementPriority.filter { baseType in
-            supportedTypes.contains { $0.isSameCase(as: baseType) }
-        }
-        let remaining = supportedTypes.filter { candidate in
-            !ordered.contains { $0.isSameCase(as: candidate) }
-        }
-        ordered.append(contentsOf: remaining)
-        return ordered
     }
 
     private static func measurementBaseline(

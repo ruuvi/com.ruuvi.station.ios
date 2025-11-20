@@ -9,11 +9,7 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     @UserDefault("RuuviFeatureFlags.showNewCardsMenu", defaultValue: false)
     var showNewCardsMenu: Bool
 
-#if DEBUG || ALPHA
     @UserDefault("RuuviFeatureFlags.showImprovedSensorSettingsUI", defaultValue: true)
-#else
-    @UserDefault("RuuviFeatureFlags.showImprovedSensorSettingsUI", defaultValue: false)
-#endif
     var showImprovedSensorSettingsUI: Bool
 
     @UserDefault("RuuviFeatureFlags.downloadBetaFirmware", defaultValue: false)
@@ -22,10 +18,6 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     @UserDefault("RuuviFeatureFlags.downloadAlphaFirmware", defaultValue: false)
     var downloadAlphaFirmware: Bool
 
-#if DEBUG || ALPHA
     @UserDefault("RuuviFeatureFlags.showVisibilitySettings", defaultValue: true)
-#else
-    @UserDefault("RuuviFeatureFlags.showVisibilitySettings", defaultValue: false)
-#endif
     var showVisibilitySettings: Bool
 }
