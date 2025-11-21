@@ -9,7 +9,7 @@ public enum RuuviCloudSensorVisibilityCode: String, CaseIterable, Codable {
     case humidityAbsolute = "HUMIDITY_1"
     case humidityDewPoint = "HUMIDITY_2"
 
-    case pressureLegacyPa = "PRESSURE_0"
+    case pressurePa = "PRESSURE_0"
     case pressureHectopascal = "PRESSURE_1"
     case pressureMillimeterMercury = "PRESSURE_2"
     case pressureInchMercury = "PRESSURE_3"
@@ -26,6 +26,7 @@ public enum RuuviCloudSensorVisibilityCode: String, CaseIterable, Codable {
     case soundAverage = "SOUNDAVG_DBA"
     case soundPeak = "SOUNDPEAK_SPL"
     case soundInstant = "SOUNDINSTANT_SPL"
+    case measurementSequenceNumber = "MSN_COUNT"
 
     case co2ppm = "CO2_PPM"
     case vocIndex = "VOC_INDEX"
@@ -51,12 +52,26 @@ public enum RuuviCloudSensorVisibilityCode: String, CaseIterable, Codable {
         case .humidityDewPoint:
             return MeasurementDisplayVariant(type: .humidity, humidityUnit: .dew)
 
-        case .pressureLegacyPa, .pressureHectopascal:
-            return MeasurementDisplayVariant(type: .pressure, pressureUnit: .hectopascals)
+        case .pressurePa:
+            return MeasurementDisplayVariant(
+                type: .pressure,
+                pressureUnit: .newtonsPerMetersSquared
+            )
+        case .pressureHectopascal:
+            return MeasurementDisplayVariant(
+                type: .pressure,
+                pressureUnit: .hectopascals
+            )
         case .pressureMillimeterMercury:
-            return MeasurementDisplayVariant(type: .pressure, pressureUnit: .millimetersOfMercury)
+            return MeasurementDisplayVariant(
+                type: .pressure,
+                pressureUnit: .millimetersOfMercury
+            )
         case .pressureInchMercury:
-            return MeasurementDisplayVariant(type: .pressure, pressureUnit: .inchesOfMercury)
+            return MeasurementDisplayVariant(
+                type: .pressure,
+                pressureUnit: .inchesOfMercury
+            )
 
         case .movementCount:
             return MeasurementDisplayVariant(type: .movementCounter)
@@ -70,6 +85,8 @@ public enum RuuviCloudSensorVisibilityCode: String, CaseIterable, Codable {
             return MeasurementDisplayVariant(type: .accelerationZ)
         case .signalDbm:
             return MeasurementDisplayVariant(type: .rssi)
+        case .measurementSequenceNumber:
+            return MeasurementDisplayVariant(type: .measurementSequenceNumber)
 
         case .aqiIndex:
             return MeasurementDisplayVariant(type: .aqi)
@@ -125,6 +142,8 @@ public enum RuuviCloudSensorVisibilityCode: String, CaseIterable, Codable {
         case .pressure:
             let unit = variant.pressureUnit ?? .hectopascals
             switch unit {
+            case .newtonsPerMetersSquared:
+                self = .pressurePa
             case .millimetersOfMercury:
                 self = .pressureMillimeterMercury
             case .inchesOfMercury:
@@ -144,6 +163,8 @@ public enum RuuviCloudSensorVisibilityCode: String, CaseIterable, Codable {
             self = .accelerationGZ
         case .rssi:
             self = .signalDbm
+        case .measurementSequenceNumber:
+            self = .measurementSequenceNumber
         case .aqi:
             self = .aqiIndex
         case .luminosity:

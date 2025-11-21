@@ -46,6 +46,9 @@ public protocol RuuviLocalSettings {
     /// like cloud sync
     var isSyncing: Bool { get set }
     var syncExtensiveChangesInProgress: Bool { get set }
+    /// Blocks cloud sync while signal visibility migration updates the display order.
+    /// Temporary workaround until proper sync/local data collision handling is in place.
+    var signalVisibilityMigrationInProgress: Bool { get set }
     var temperatureUnit: TemperatureUnit { get set }
     var temperatureAccuracy: MeasurementAccuracyType { get set }
     var humidityUnit: HumidityUnit { get set }

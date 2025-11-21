@@ -331,17 +331,21 @@ extension CardsGraphView {
             return measurementService.aqiString(for: value)
         case .co2:
             return measurementService.co2String(for: value)
+        case .pm10:
+            return measurementService.pm10String(for: value)
         case .pm25:
             return measurementService.pm25String(for: value)
+        case .pm40:
+            return measurementService.pm40String(for: value)
         case .pm100:
-            return measurementService.pm10String(for: value)
+            return measurementService.pm100String(for: value)
         case .voc:
             return measurementService.vocString(for: value)
         case .nox:
             return measurementService.noxString(for: value)
         case .luminosity:
             return measurementService.luminosityString(for: value)
-        case .soundInstant:
+        case .soundInstant, .soundPeak, .soundAverage:
             return measurementService.soundString(for: value)
         default:
             let decimals = 2

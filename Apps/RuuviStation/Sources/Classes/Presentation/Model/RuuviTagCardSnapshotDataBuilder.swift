@@ -71,7 +71,12 @@ private enum MeasurementVariantFormatter {
         measurementService: RuuviServiceMeasurement,
         variant: MeasurementDisplayVariant
     ) -> (value: String, unit: String)? {
-        let base = Humidity(value: humidity.value, unit: .relative(temperature: temperature))
+        let base = Humidity(
+            value: humidity.value,
+            unit: .relative(
+                temperature: temperature
+            )
+        )
         let resolvedUnit = variant.humidityUnit ?? measurementService.units.humidityUnit
         switch resolvedUnit {
         case .percent:
@@ -426,6 +431,18 @@ struct LuminosityMeasurementExtractor: MeasurementExtractor {
 }
 
 struct SoundMeasurementExtractor: MeasurementExtractor {
+    enum Source {
+        case instant
+        case average
+        case peak
+    }
+
+    private let source: Source
+
+    init(source: Source = .instant) {
+        self.source = source
+    }
+
     func extract(
         from record: RuuviTagSensorRecord,
         measurementService: RuuviServiceMeasurement?,
@@ -433,7 +450,17 @@ struct SoundMeasurementExtractor: MeasurementExtractor {
         variant: MeasurementDisplayVariant,
         snapshot: RuuviTagCardSnapshot
     ) -> MeasurementResult? {
-        guard let sound = record.dbaInstant,
+        let rawValue: Double?
+        switch source {
+        case .instant:
+            rawValue = record.dbaInstant
+        case .average:
+            rawValue = record.dbaAvg
+        case .peak:
+            rawValue = record.dbaPeak
+        }
+
+        guard let sound = rawValue,
               let soundValue = measurementService?.soundString(
                 for: sound
               ) else { return nil }
@@ -581,7 +608,9 @@ struct MeasurementExtractorFactory {
         .nox: NOXMeasurementExtractor(),
         .voc: VOCMeasurementExtractor(),
         .luminosity: LuminosityMeasurementExtractor(),
-        .soundInstant: SoundMeasurementExtractor(),
+        .soundInstant: SoundMeasurementExtractor(source: .instant),
+        .soundAverage: SoundMeasurementExtractor(source: .average),
+        .soundPeak: SoundMeasurementExtractor(source: .peak),
         .voltage: VoltageMeasurementExtractor(),
         .txPower: TxPowerMeasurementExtractor(),
         .rssi: RSSIMeasurementExtractor(),

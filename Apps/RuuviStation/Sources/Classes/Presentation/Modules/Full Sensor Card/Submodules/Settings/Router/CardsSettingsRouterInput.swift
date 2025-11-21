@@ -19,6 +19,11 @@ protocol CardsSettingsRouterInput {
         ruuviTag: RuuviTagSensor,
         output: SensorRemovalModuleOutput
     )
+    func openVisibilitySettings(
+        snapshot: RuuviTagCardSnapshot,
+        ruuviTag: RuuviTagSensor,
+        sensorSettings: SensorSettings?
+    )
 }
 
 extension CardsSettingsRouterInput {

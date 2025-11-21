@@ -55,8 +55,8 @@ struct CardsSettingsView: View {
                         showsOwner: state.showOwner,
                         showOwnersPlan: state.showOwnersPlan,
                         showsShare: state.showShare,
-                        visibleMeasurementsValue: nil,
-                        showsVisibleMeasurementsRow: false
+                        visibleMeasurementsValue: state.visibleMeasurementsValue,
+                        showsVisibleMeasurementsRow: state.showVisibleMeasurementsRow
                     )
 
                     if state.showBluetoothSection {

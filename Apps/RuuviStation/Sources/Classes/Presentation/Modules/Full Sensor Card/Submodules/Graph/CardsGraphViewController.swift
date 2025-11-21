@@ -253,6 +253,7 @@ class CardsGraphViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        updateScrollInsetsForFade()
         if needsDeferredLayoutUpdate,
            scrollView.frame.height > 0 {
             needsDeferredLayoutUpdate = false
@@ -276,6 +277,7 @@ class CardsGraphViewController: UIViewController {
                 from: sSelf.chartModules,
                 withAnimation: true
             )
+            sSelf.updateScrollInsetsForFade()
             self?.output?.viewDidTransition()
         })
         super.viewWillTransition(to: size, with: coordinator)
@@ -409,6 +411,7 @@ class CardsGraphViewController: UIViewController {
 
     private func configureViews() {
         scrollView.enableEdgeFading(configuration: graphScrollEdgeFadeConfiguration)
+        updateScrollInsetsForFade()
     }
 
     @objc fileprivate func syncButtonDidTap() {
@@ -1049,7 +1052,34 @@ extension CardsGraphViewController {
             scrollView.isScrollEnabled = true
             scrollView.showsVerticalScrollIndicator = true
         }
+        updateScrollInsetsForFade()
         scrollView.edgeFader?.updateFadeMask()
+    }
+
+    private func updateScrollInsetsForFade() {
+        let insetHeight = scrollView.isScrollEnabled ? currentFadeTransitionHeight() : 0
+        var inset = scrollView.contentInset
+        inset.bottom = insetHeight
+        scrollView.contentInset = inset
+        scrollView.scrollIndicatorInsets = inset
+    }
+
+    private func currentFadeTransitionHeight() -> CGFloat {
+        let baseHeight = graphScrollEdgeFadeConfiguration.fadeTransitionHeight
+        let landscapeHeight = graphScrollEdgeFadeConfiguration.landscapeFadeTransitionHeight ?? baseHeight
+        let portraitHeight = graphScrollEdgeFadeConfiguration.portraitFadeTransitionHeight ?? baseHeight
+
+        if let orientation = view.window?.windowScene?.interfaceOrientation {
+            return orientation.isLandscape ? landscapeHeight : portraitHeight
+        }
+
+        let bounds = view.bounds
+        if bounds.width > 0, bounds.height > 0 {
+            return bounds.width > bounds.height ? landscapeHeight : portraitHeight
+        }
+
+        let screenBounds = UIScreen.main.bounds
+        return screenBounds.width > screenBounds.height ? landscapeHeight : portraitHeight
     }
 
     private func updateChartViewHeight(

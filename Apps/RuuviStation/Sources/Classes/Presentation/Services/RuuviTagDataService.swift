@@ -11,7 +11,6 @@ import RuuviDaemon
 import RuuviPool
 import RuuviLocalization
 import RuuviCloud
-
 protocol RuuviTagDataServiceDelegate: AnyObject {
     func sensorDataService(
         _ service: RuuviTagDataService,
@@ -107,6 +106,7 @@ class RuuviTagDataService {
         self.settings = settings
         self.flags = flags
         self.ruuviPool = ruuviPool
+        Self.setPreferredUnits(measurementService.units)
     }
 
     deinit {
@@ -168,6 +168,13 @@ class RuuviTagDataService {
                 availableVariants: availableVariants
             )
 
+            if visibilityChanged {
+                self.rebuildIndicatorGrid(
+                    for: snapshot,
+                    sensor: sensor,
+                    sensorSettings: sensorSettings
+                )
+            }
             if visibilityChanged {
                 self.publishSnapshotUpdate(snapshot, force: true)
             } else if didUpdate {
@@ -263,6 +270,7 @@ class RuuviTagDataService {
 
 extension RuuviTagDataService: RuuviServiceMeasurementDelegate {
     func measurementServiceDidUpdateUnit() {
+        Self.setPreferredUnits(measurementService.units)
         buildInitialSnapshots()
     }
 }
@@ -431,7 +439,7 @@ private extension RuuviTagDataService {
                             for: snapshot,
                             sensor: sensor,
                             sensorSettings: settings,
-                            availableVariants: snapshot.metadata.measurementVisibility?.availableVariants
+                            availableVariants: snapshot.displayData.measurementVisibility?.availableVariants
                         )
                     }
 
@@ -690,7 +698,7 @@ private extension RuuviTagDataService {
         }
     }
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func updateMeasurementDisplayPreference(
         for sensor: AnyRuuviTagSensor,
         settings: SensorSettings?
@@ -702,8 +710,11 @@ private extension RuuviTagDataService {
                     for: snapshot,
                     sensor: sensor,
                     sensorSettings: settings,
-                    availableVariants: snapshot.metadata.measurementVisibility?.availableVariants
+                    availableVariants: snapshot.displayData.measurementVisibility?.availableVariants
                 )
+                if didChange {
+                    rebuildIndicatorGrid(for: snapshot, sensor: sensor, sensorSettings: settings)
+                }
                 DispatchQueue.main.async {
                     if didChange {
                         self.publishSnapshotUpdate(snapshot, force: true)
@@ -722,8 +733,11 @@ private extension RuuviTagDataService {
                     for: snapshot,
                     sensor: sensor,
                     sensorSettings: settings,
-                    availableVariants: snapshot.metadata.measurementVisibility?.availableVariants
+                    availableVariants: snapshot.displayData.measurementVisibility?.availableVariants
                 )
+                if didChange {
+                    rebuildIndicatorGrid(for: snapshot, sensor: sensor, sensorSettings: settings)
+                }
                 DispatchQueue.main.async {
                     if didChange {
                         self.publishSnapshotUpdate(snapshot, force: true)
@@ -747,8 +761,11 @@ private extension RuuviTagDataService {
                 for: snapshot,
                 sensor: sensor,
                 sensorSettings: settings,
-                availableVariants: snapshot.metadata.measurementVisibility?.availableVariants
+                availableVariants: snapshot.displayData.measurementVisibility?.availableVariants
             )
+            if didChange {
+                rebuildIndicatorGrid(for: snapshot, sensor: sensor, sensorSettings: settings)
+            }
 
             DispatchQueue.main.async {
                 if didChange {
@@ -1020,7 +1037,7 @@ private extension RuuviTagDataService {
             for: snapshot,
             sensor: sensor,
             sensorSettings: sensorSettings,
-            availableVariants: snapshot.metadata.measurementVisibility?.availableVariants
+            availableVariants: snapshot.displayData.measurementVisibility?.availableVariants
         ) {
             didChange = true
         }
@@ -1096,12 +1113,25 @@ private extension RuuviTagDataService {
             displayProfile = RuuviTagDataService.measurementDisplayProfile(for: snapshot)
         }
 
-        let resolvedAvailable = availableVariants ??
-            snapshot.metadata.measurementVisibility?.availableVariants ?? []
+        let profileAvailable = displayProfile.entriesSupporting(.indicator).map(\.variant)
+        let availableSource = availableVariants
+            ?? snapshot.displayData.measurementVisibility?.availableVariants
+            ?? profileAvailable
+        let orderedAvailableBase = profileAvailable.filter { availableSource.contains($0) }
+        let remainingAvailable = availableSource.filter { candidate in
+            !orderedAvailableBase.contains(candidate)
+        }
+        var resolvedAvailable = orderedAvailableBase + remainingAvailable
+        if resolvedAvailable.isEmpty {
+            resolvedAvailable = profileAvailable
+        }
 
         let visibleOrdered = displayProfile.orderedVisibleVariants(for: .indicator)
-        let visibleIntersection = visibleOrdered.filter { resolvedAvailable.contains($0) }
-        let hiddenVariants = resolvedAvailable.filter { !visibleOrdered.contains($0) }
+        var visibleIntersection = visibleOrdered.filter { resolvedAvailable.contains($0) }
+        if visibleIntersection.isEmpty {
+            visibleIntersection = resolvedAvailable.filter { visibleOrdered.contains($0) }
+        }
+        let hiddenVariants = resolvedAvailable.filter { !visibleIntersection.contains($0) }
 
         let visibility = RuuviTagCardSnapshotMeasurementVisibility(
             usesDefaultOrder: usesDefaultOrder,
@@ -1203,6 +1233,28 @@ private extension RuuviTagDataService {
 
         return variants
     }
+
+    private func rebuildIndicatorGrid(
+        for snapshot: RuuviTagCardSnapshot,
+        sensor: AnyRuuviTagSensor?,
+        sensorSettings: SensorSettings?
+    ) {
+        guard let baseSensor = sensor ?? ruuviTags.first(where: {
+            $0.id == snapshot.id
+        }) else { return }
+        guard let latestRecord = snapshot.latestRawRecord else { return }
+        let enrichedRecord = sensorSettings != nil ? latestRecord.with(sensorSettings: sensorSettings) : latestRecord
+
+        let newGrid = RuuviTagCardSnapshotDataBuilder.createIndicatorGrid(
+            from: enrichedRecord,
+            sensor: baseSensor,
+            measurementService: measurementService,
+            flags: flags,
+            snapshot: snapshot
+        )
+        snapshot.displayData.indicatorGrid = newGrid
+        snapshot.displayData.hasNoData = newGrid == nil
+    }
 }
 
 // MARK: - RuuviStorage Extension for Blocking Read
@@ -1244,33 +1296,70 @@ extension RuuviTagDataService {
         label: "com.ruuvi.measurement.display.override.queue",
         attributes: .concurrent
     )
+    private static var preferredUnits = RuuviServiceMeasurementSettingsUnit(
+        temperatureUnit: .celsius,
+        humidityUnit: .percent,
+        pressureUnit: .hectopascals
+    )
 
     static func measurementDisplayProfile(
         for sensor: RuuviTagSensor
     ) -> MeasurementDisplayProfile {
+        let preference = measurementDisplayPreference(for: sensor.id)
         let baseProfile = measurementDisplayOverride(for: sensor.id) ??
             defaultMeasurementDisplayProfile(for: sensor)
-        return applyMeasurementPreference(for: sensor.id, to: baseProfile)
+        let profileWithPreference = applyMeasurementPreference(
+            preference: preference,
+            to: baseProfile
+        )
+        return applyPreferredUnitsIfNeeded(
+            profileWithPreference,
+            preference: preference
+        )
     }
 
     static func measurementDisplayProfile(
         for snapshot: RuuviTagCardSnapshot
     ) -> MeasurementDisplayProfile {
+        let preference = measurementDisplayPreference(for: snapshot.id)
         let baseProfile = measurementDisplayOverride(for: snapshot.id) ??
             defaultMeasurementDisplayProfile(for: snapshot)
-        return applyMeasurementPreference(for: snapshot.id, to: baseProfile)
+        let profileWithPreference = applyMeasurementPreference(
+            preference: preference,
+            to: baseProfile
+        )
+        return applyPreferredUnitsIfNeeded(
+            profileWithPreference,
+            preference: preference
+        )
     }
 
     static func alertMeasurementVariants(
-        for sensor: RuuviTagSensor
+        for sensor: RuuviTagSensor,
+        measurementService: RuuviServiceMeasurement?
     ) -> [MeasurementDisplayVariant] {
-        measurementDisplayProfile(for: sensor).orderedVisibleVariants(for: .alert)
+        let profile = measurementDisplayProfile(for: sensor)
+        let variants = profile.orderedVisibleVariants(for: .alert)
+        return normalizedAlertVariants(
+            variants,
+            profile: profile,
+            preferredTemperature: measurementService?.units.temperatureUnit,
+            preferredPressure: measurementService?.units.pressureUnit
+        )
     }
 
     static func alertMeasurementVariants(
-        for snapshot: RuuviTagCardSnapshot
+        for snapshot: RuuviTagCardSnapshot,
+        measurementService: RuuviServiceMeasurement?
     ) -> [MeasurementDisplayVariant] {
-        measurementDisplayProfile(for: snapshot).orderedVisibleVariants(for: .alert)
+        let profile = measurementDisplayProfile(for: snapshot)
+        let variants = profile.orderedVisibleVariants(for: .alert)
+        return normalizedAlertVariants(
+            variants,
+            profile: profile,
+            preferredTemperature: measurementService?.units.temperatureUnit,
+            preferredPressure: measurementService?.units.pressureUnit
+        )
     }
 
     static func defaultMeasurementDisplayProfile() -> MeasurementDisplayProfile {
@@ -1298,6 +1387,18 @@ extension RuuviTagDataService {
         measurementDisplayOverrideQueue.async(flags: .barrier) {
             measurementDisplayOverrides.removeAll()
             measurementDisplayPreferenceOverrides.removeAll()
+        }
+    }
+
+    static func setPreferredUnits(_ units: RuuviServiceMeasurementSettingsUnit) {
+        measurementDisplayOverrideQueue.async(flags: .barrier) {
+            preferredUnits = units
+        }
+    }
+
+    private static func preferredUnitsSnapshot() -> RuuviServiceMeasurementSettingsUnit {
+        measurementDisplayOverrideQueue.sync {
+            preferredUnits
         }
     }
 
@@ -1386,47 +1487,9 @@ extension RuuviTagDataService {
         entries: makeEntries(for: tagMeasurementOrder)
     )
 
-    private static let baseMeasurementPriority: [MeasurementType] = [
-        .aqi,
-        .co2,
-        .pm10,
-        .pm25,
-        .pm40,
-        .pm100,
-        .voc,
-        .nox,
-        .temperature,
-        .humidity,
-        .pressure,
-        .luminosity,
-        .movementCounter,
-        .soundInstant,
-        .soundPeak,
-        .soundAverage,
-    ]
+    private static let airMeasurementOrder: [MeasurementType] = MeasurementDisplayDefaults.airMeasurementOrder
 
-    private static let airSupportedMeasurements: [MeasurementType] =
-        baseMeasurementPriority + [.rssi]
-
-    private static let tagSupportedMeasurements: [MeasurementType] = [
-        .temperature,
-        .humidity,
-        .pressure,
-        .movementCounter,
-        .voltage,
-        .accelerationX,
-        .accelerationY,
-        .accelerationZ,
-        .rssi,
-    ]
-
-    private static let airMeasurementOrder: [MeasurementType] = orderedMeasurements(
-        for: airSupportedMeasurements
-    )
-
-    private static let tagMeasurementOrder: [MeasurementType] = orderedMeasurements(
-        for: tagSupportedMeasurements
-    )
+    private static let tagMeasurementOrder: [MeasurementType] = MeasurementDisplayDefaults.tagMeasurementOrder
 
     /// Declarative baseline for a measurement's default visibility + contexts.
     private struct MeasurementDisplayConfiguration {
@@ -1466,6 +1529,18 @@ extension RuuviTagDataService {
             contexts: [.all],
             isVisible: false
         ),
+        MeasurementDisplayVariant(type: .measurementSequenceNumber): MeasurementDisplayConfiguration(
+            contexts: [.indicator],
+            isVisible: false
+        ),
+        MeasurementDisplayVariant(type: .soundAverage): MeasurementDisplayConfiguration(
+            contexts: [.all],
+            isVisible: false
+        ),
+        MeasurementDisplayVariant(type: .soundPeak): MeasurementDisplayConfiguration(
+            contexts: [.all],
+            isVisible: false
+        ),
         MeasurementDisplayVariant(type: .movementCounter): MeasurementDisplayConfiguration(
             contexts: [.indicator, .alert],
             isVisible: true
@@ -1498,7 +1573,7 @@ extension RuuviTagDataService {
         variant.cloudVisibilityCode?.rawValue
     }
 
-    private static func measurementVariant(
+    static func measurementVariant(
         for code: String
     ) -> MeasurementDisplayVariant? {
         RuuviCloudSensorVisibilityCode.parse(code)?.variant
@@ -1525,7 +1600,7 @@ extension RuuviTagDataService {
     private static func orderedMeasurements(
         for supportedTypes: [MeasurementType]
     ) -> [MeasurementType] {
-        var ordered = baseMeasurementPriority.filter { baseType in
+        var ordered = MeasurementDisplayDefaults.baseMeasurementPriority.filter { baseType in
             supportedTypes.contains { $0.isSameCase(as: baseType) }
         }
         let remaining = supportedTypes.filter { candidate in
@@ -1535,7 +1610,6 @@ extension RuuviTagDataService {
         return ordered
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     private static func measurementBaseline(
         for type: MeasurementType,
         variant: MeasurementDisplayVariant
@@ -1570,11 +1644,7 @@ extension RuuviTagDataService {
             guard let unit = variant.pressureUnit else {
                 return MeasurementDisplayConfiguration(contexts: .all, isVisible: true)
             }
-            if unit == .hectopascals {
-                return MeasurementDisplayConfiguration(contexts: .all, isVisible: true)
-            } else {
-                return MeasurementDisplayConfiguration(contexts: [.indicator, .graph], isVisible: false)
-            }
+            return MeasurementDisplayConfiguration(contexts: .all, isVisible: unit == .hectopascals)
         default:
             return MeasurementDisplayConfiguration(contexts: .all, isVisible: true)
         }
@@ -1598,6 +1668,7 @@ extension RuuviTagDataService {
             ]
         case .pressure:
             return [
+                MeasurementDisplayVariant(type: .pressure, pressureUnit: .newtonsPerMetersSquared),
                 MeasurementDisplayVariant(type: .pressure, pressureUnit: .hectopascals),
                 MeasurementDisplayVariant(type: .pressure, pressureUnit: .millimetersOfMercury),
                 MeasurementDisplayVariant(type: .pressure, pressureUnit: .inchesOfMercury),
@@ -1612,10 +1683,92 @@ extension RuuviTagDataService {
         for sensorId: String,
         to profile: MeasurementDisplayProfile
     ) -> MeasurementDisplayProfile {
-        guard let preference = measurementDisplayPreference(for: sensorId) else {
+        let preference = measurementDisplayPreference(for: sensorId)
+        return applyMeasurementPreference(preference: preference, to: profile)
+    }
+
+    private static func applyMeasurementPreference(
+        preference: MeasurementDisplayPreference?,
+        to profile: MeasurementDisplayProfile
+    ) -> MeasurementDisplayProfile {
+        guard let preference,
+              !preference.defaultDisplayOrder else {
             return profile
         }
-        return MeasurementDisplayProfile(entries: reorderEntries(profile.entries, using: preference))
+        return MeasurementDisplayProfile(
+            entries: reorderEntries(
+                profile.entries,
+                using: preference
+            )
+        )
+    }
+
+    private static func applyPreferredUnitsIfNeeded(
+        _ profile: MeasurementDisplayProfile,
+        preference: MeasurementDisplayPreference?
+    ) -> MeasurementDisplayProfile {
+        guard preference?.defaultDisplayOrder ?? true else { return profile }
+        return applyPreferredUnits(to: profile)
+    }
+
+    private static func applyPreferredUnits(
+        to profile: MeasurementDisplayProfile
+    ) -> MeasurementDisplayProfile {
+        let preferredUnits = preferredUnitsSnapshot()
+        let preferredTemperatureUnit = temperatureUnit(from: preferredUnits.temperatureUnit)
+        var entries = profile.entries
+        entries = applyPreferredUnitVisibility(
+            for: .temperature,
+            in: entries,
+            matches: { entry in
+                entry.variant.temperatureUnit == preferredTemperatureUnit
+            }
+        )
+        entries = applyPreferredUnitVisibility(
+            for: .humidity,
+            in: entries,
+            matches: { entry in
+                entry.variant.humidityUnit == preferredUnits.humidityUnit
+            }
+        )
+        entries = applyPreferredUnitVisibility(
+            for: .pressure,
+            in: entries,
+            matches: { entry in
+                entry.variant.pressureUnit == preferredUnits.pressureUnit
+            }
+        )
+        return MeasurementDisplayProfile(entries: entries)
+    }
+
+    private static func applyPreferredUnitVisibility(
+        for type: MeasurementType,
+        in entries: [MeasurementDisplayEntry],
+        matches predicate: (MeasurementDisplayEntry) -> Bool
+    ) -> [MeasurementDisplayEntry] {
+        var updatedEntries = entries
+        let indices = entries.indices.filter { entries[$0].variant.type.isSameCase(as: type) }
+        guard !indices.isEmpty else { return entries }
+
+        guard let preferredIndex = indices.first(where: { predicate(entries[$0]) }) else {
+            return entries
+        }
+
+        for index in indices {
+            updatedEntries[index].isVisible = index == preferredIndex
+        }
+        return updatedEntries
+    }
+
+    private static func temperatureUnit(from unit: UnitTemperature) -> TemperatureUnit {
+        switch unit {
+        case .fahrenheit:
+            return .fahrenheit
+        case .kelvin:
+            return .kelvin
+        default:
+            return .celsius
+        }
     }
 
     private static func reorderEntries(
@@ -1681,6 +1834,71 @@ extension RuuviTagDataService {
             seen.append(variant)
         }
         return seen
+    }
+
+    private static func normalizedAlertVariants(
+        _ variants: [MeasurementDisplayVariant],
+        profile: MeasurementDisplayProfile,
+        preferredTemperature: UnitTemperature?,
+        preferredPressure: UnitPressure?
+    ) -> [MeasurementDisplayVariant] {
+        var normalized = variants
+        let temperatureUnit = resolvedTemperatureUnit(preferredTemperature)
+        let pressureUnit = preferredPressure ?? .hectopascals
+
+        if profile.hasVisibleVariant(of: .temperature) {
+            let preferredVariant = MeasurementDisplayVariant(
+                type: .temperature,
+                temperatureUnit: temperatureUnit
+            )
+            if !normalized.contains(preferredVariant) {
+                normalized.insert(preferredVariant, at: 0)
+            }
+        }
+
+        if profile.hasVisibleVariant(of: .pressure) {
+            let preferredVariant = MeasurementDisplayVariant(
+                type: .pressure,
+                pressureUnit: pressureUnit
+            )
+            if !normalized.contains(preferredVariant) {
+                normalized.append(preferredVariant)
+            }
+        }
+
+        if profile.hasVisibleVariant(of: .humidity) {
+            let humidityPercentVariant = MeasurementDisplayVariant(
+                type: .humidity,
+                humidityUnit: .percent
+            )
+            if !normalized.contains(humidityPercentVariant) {
+                normalized.append(humidityPercentVariant)
+            }
+        }
+
+        return normalized
+    }
+
+    private static func resolvedTemperatureUnit(
+        _ unit: UnitTemperature?
+    ) -> TemperatureUnit {
+        guard let unit else { return .celsius }
+        switch unit {
+        case .fahrenheit:
+            return .fahrenheit
+        case .kelvin:
+            return .kelvin
+        default:
+            return .celsius
+        }
+    }
+}
+
+private extension MeasurementDisplayProfile {
+    func hasVisibleVariant(of type: MeasurementType) -> Bool {
+        entries.contains { entry in
+            entry.type.isSameCase(as: type) && entry.isVisible
+        }
     }
 }
 

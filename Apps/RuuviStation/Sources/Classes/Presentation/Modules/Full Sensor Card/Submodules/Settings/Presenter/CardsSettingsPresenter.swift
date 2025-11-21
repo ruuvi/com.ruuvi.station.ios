@@ -95,6 +95,7 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
                 snapshot: snapshot,
                 dashboardSortingType: settings.dashboardSensorOrder.count == 0 ? .alphabetical : .manual
             )
+            refreshVisibleMeasurementsSummary()
             updateAlertSections(for: snapshot)
         }
         refreshFirmwareVersionIfNeeded()
@@ -213,7 +214,11 @@ extension CardsSettingsPresenter: CardsSettingsViewOutput {
               snapshot.metadata.isOwner else {
             return
         }
-        // TODO: Implement
+        router?.openVisibilitySettings(
+            snapshot: snapshot,
+            ruuviTag: sensor,
+            sensorSettings: sensorSettings
+        )
     }
 
     func viewDidTriggerFirmwareUpdateDialog() {
@@ -473,6 +478,7 @@ extension CardsSettingsPresenter {
             snapshot: updatedSnapshot,
             dashboardSortingType: sortingType
         )
+        refreshVisibleMeasurementsSummary()
         updateAlertSections(for: updatedSnapshot)
         startObservingCloudRequestState()
     }
@@ -660,6 +666,56 @@ private extension CardsSettingsPresenter {
     func withSnapshot(_ block: (RuuviTagCardSnapshot) -> Void) {
         guard let snapshot else { return }
         block(snapshot)
+    }
+
+    func refreshVisibleMeasurementsSummary() {
+        guard flags.showVisibilitySettings else {
+            view?.updateVisibleMeasurementsSummary(
+                value: nil,
+                isVisible: false
+            )
+            return
+        }
+
+        guard let snapshot else {
+            view?.updateVisibleMeasurementsSummary(
+                value: nil,
+                isVisible: false
+            )
+            return
+        }
+
+        guard snapshot.metadata.isOwner else {
+            view?.updateVisibleMeasurementsSummary(
+                value: nil,
+                isVisible: false
+            )
+            return
+        }
+
+        guard let visibility = snapshot.displayData.measurementVisibility else {
+            view?.updateVisibleMeasurementsSummary(
+                value: nil,
+                isVisible: false
+            )
+            return
+        }
+
+        let availableCount = visibility.availableIndicatorCount
+
+        if visibility.usesDefaultOrder || availableCount <= 0 {
+            view?.updateVisibleMeasurementsSummary(
+                value: RuuviLocalization.visibleMeasurementsUseDefault,
+                isVisible: true
+            )
+            return
+        }
+
+        let summary = "\(min(visibility.visibleIndicatorCount, availableCount))/\(availableCount)"
+        view?.updateVisibleMeasurementsSummary(
+            value: summary,
+            isVisible: true
+        )
     }
 
     func withAlertService(

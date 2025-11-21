@@ -12,6 +12,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDefaults.syncExtensiveChangesInProgress", defaultValue: false)
     var syncExtensiveChangesInProgress: Bool
 
+    @UserDefault("SettingsUserDefaults.signalVisibilityMigrationInProgress", defaultValue: false)
+    var signalVisibilityMigrationInProgress: Bool
+
     private let keepConnectionDialogWasShownUDPrefix = "SettingsUserDegaults.keepConnectionDialogWasShownUDPrefix."
 
     func keepConnectionDialogWasShown(for luid: LocalIdentifier) -> Bool {

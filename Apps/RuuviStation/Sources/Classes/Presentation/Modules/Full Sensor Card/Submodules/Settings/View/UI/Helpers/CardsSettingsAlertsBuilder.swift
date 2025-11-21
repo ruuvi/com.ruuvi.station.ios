@@ -23,7 +23,10 @@ struct CardsSettingsAlertsBuilder {
         snapshot: RuuviTagCardSnapshot,
         measurementService: RuuviServiceMeasurement?
     ) -> [CardsSettingsAlertSectionModel] {
-        orderedAlertTypes(for: snapshot).compactMap { prototype in
+        orderedAlertTypes(
+            for: snapshot,
+            measurementService: measurementService
+        ).compactMap { prototype in
             makeSection(
                 for: prototype,
                 snapshot: snapshot,
@@ -488,7 +491,7 @@ private extension CardsSettingsAlertsBuilder {
         let slider = CardsSettingsAlertSliderConfiguration(
             range: sliderRange,
             selectedRange: selected,
-            unit: pressureUnit.symbol,
+            unit: pressureUnit.ruuviSymbol,
             format: Constants.configFormat,
             step: 1,
             minDistance: 1

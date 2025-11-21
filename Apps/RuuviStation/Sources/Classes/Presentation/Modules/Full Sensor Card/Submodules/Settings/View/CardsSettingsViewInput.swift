@@ -17,4 +17,8 @@ protocol CardsSettingsViewInput: AnyObject {
     func startKeepConnectionAnimatingDots()
     func freezeKeepConnectionDisplay()
     func unfreezeKeepConnectionDisplay()
+    func updateVisibleMeasurementsSummary(
+        value: String?,
+        isVisible: Bool
+    )
 }

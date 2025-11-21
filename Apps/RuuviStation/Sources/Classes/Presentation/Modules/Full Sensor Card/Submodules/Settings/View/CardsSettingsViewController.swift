@@ -182,6 +182,16 @@ extension CardsSettingsViewController: CardsSettingsViewInput {
     func unfreezeKeepConnectionDisplay() {
         state.unfreezeKeepConnectionDisplay()
     }
+
+    func updateVisibleMeasurementsSummary(
+        value: String?,
+        isVisible: Bool
+    ) {
+        state.updateVisibleMeasurementsSummary(
+            value: value,
+            isVisible: isVisible
+        )
+    }
 }
 
 // MARK: - UITextFieldDelegate
