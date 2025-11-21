@@ -16,6 +16,7 @@ final class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
     var settings: RuuviLocalSettings!
 
     private var ruuviTagObserveLastRecordToken: RuuviReactorToken?
+    private var sensorSettingsObserveToken: RuuviReactorToken?
 
     private var temperatureUnitSettingToken: NSObjectProtocol?
     private var humidityUnitSettingToken: NSObjectProtocol?
@@ -60,6 +61,7 @@ final class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
 extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
     func viewDidLoad() {
         observeRuuviTagUpdate()
+        observeSensorSettings()
         startObservingSettingsChanges()
     }
 
@@ -158,6 +160,42 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
                 self?.view.viewModel.update(
                     ruuviTagRecord: record.with(sensorSettings: self?.sensorSettings)
                 )
+            }
+        }
+    }
+
+    private func observeSensorSettings() {
+        sensorSettingsObserveToken?.invalidate()
+        sensorSettingsObserveToken = ruuviReactor.observe(ruuviTag) { [weak self] change in
+            guard let self = self else { return }
+
+            switch change {
+            case let .update(updatedSettings):
+                // Update the local cache
+                self.sensorSettings = updatedSettings
+                // Update the view model
+                self.view.viewModel.update(sensorSettings: updatedSettings)
+                // Update the displayed values with the new settings
+                if let lastRecord = self.lastSensorRecord {
+                    self.view.viewModel.update(
+                        ruuviTagRecord: lastRecord.with(sensorSettings: updatedSettings)
+                    )
+                }
+
+            case let .initial(initialSettings):
+                if let firstSettings = initialSettings.first {
+                    self.sensorSettings = firstSettings
+                    self.view.viewModel.update(sensorSettings: firstSettings)
+                    if let lastRecord = self.lastSensorRecord {
+                        self.view.viewModel.update(
+                            ruuviTagRecord: lastRecord.with(sensorSettings: firstSettings)
+                        )
+                    }
+                }
+
+            case .insert, .delete, .error:
+                // No action needed for these cases
+                break
             }
         }
     }
