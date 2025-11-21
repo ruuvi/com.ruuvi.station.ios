@@ -456,12 +456,23 @@ private extension CardsBaseViewController {
     }
 
     private func embedChildViewControllers() {
-        for (tab, vc) in tabs {
-            addChild(vc)
-            tabContainerView.addSubview(vc.view)
-            vc.view.fillSuperviewToSafeArea()
-            vc.didMove(toParent: self)
-            vc.view.isHidden = tab != activeTab
+        if flags.showNewCardsMenu {
+            for (tab, vc) in tabs {
+                addChild(vc)
+                tabContainerView.addSubview(vc.view)
+                vc.view.fillSuperviewToSafeArea()
+                vc.didMove(toParent: self)
+                vc.view.isHidden = tab != activeTab
+            }
+        } else {
+            for (tab, vc) in tabs {
+                if tab == .settings { continue }
+                addChild(vc)
+                tabContainerView.addSubview(vc.view)
+                vc.view.fillSuperviewToSafeArea()
+                vc.didMove(toParent: self)
+                vc.view.isHidden = tab != activeTab
+            }
         }
     }
 }

@@ -173,6 +173,14 @@ extension CardsBasePresenter: CardsBaseViewOutput {
                 sensor: currentSensor(),
                 settings: currentSensorSettings()
             )
+
+        settingsPresenter?
+            .configure(
+                with: snapshots,
+                snapshot: snapshot,
+                sensor: currentSensor(),
+                settings: currentSensorSettings()
+            )
     }
 
     func viewDidChangeTab(_ tab: CardsMenuType) {
@@ -376,6 +384,20 @@ extension CardsBasePresenter: CardsGraphPresenterOutput {
     }
 }
 
+// MARK: CardsSettingsModuleOutput
+extension CardsBasePresenter: CardsSettingsPresenterOutput {
+    func cardSettingsDidDeleteDevice(
+        module: any CardsSettingsPresenterInput,
+        ruuviTag: any RuuviOntology.RuuviTagSensor
+    ) {
+        module.stop()
+    }
+
+    func cardSettingsDidDismiss(module: any CardsSettingsPresenterInput) {
+        module.dismiss(completion: nil)
+    }
+}
+
 // MARK: TagSettingsModuleOutput
 extension CardsBasePresenter: LegacyTagSettingsModuleOutput {
     func tagSettingsDidDeleteTag(
@@ -454,6 +476,14 @@ extension CardsBasePresenter: RuuviTagServiceCoordinatorObserver {
                     )
 
                 graphPresenter?
+                    .configure(
+                        with: snapshots,
+                        snapshot: snapshot,
+                        sensor: currentSensor(),
+                        settings: currentSensorSettings()
+                    )
+
+                settingsPresenter?
                     .configure(
                         with: snapshots,
                         snapshot: snapshot,
@@ -713,6 +743,7 @@ private extension CardsBasePresenter {
                 ($0.macId?.any != nil && ($0.macId?.any == sensor.macId?.any))
             })
             router?.openTagSettings(
+                snapshot: snapshot,
                 ruuviTag: sensor,
                 latestMeasurement: snapshot.latestRawRecord,
                 sensorSettings: settings,

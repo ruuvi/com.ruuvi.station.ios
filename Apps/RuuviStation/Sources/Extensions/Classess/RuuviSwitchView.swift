@@ -81,7 +81,19 @@ extension RuuviSwitchView {
     }
 
     func isOn() -> Bool {
-        return statusSwitch.isOn
+        statusSwitch.isOn
+    }
+
+    func setOn(_ value: Bool, animated: Bool) {
+        statusSwitch.setOn(value, animated: animated)
+    }
+
+    func isEditable() -> Bool {
+        statusSwitch.isEnabled
+    }
+
+    func setAccessibilityIdentifier(_ identifier: String) {
+        statusSwitch.accessibilityIdentifier = identifier
     }
 }
 
@@ -97,6 +109,8 @@ extension RuuviSwitchView {
             bottom: bottomAnchor,
             trailing: nil
         )
+        statusLabel.setContentHuggingPriority(.required, for: .horizontal)
+        statusLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
         statusLabelHiddenWidthConstraint = statusLabel.widthAnchor.constraint(equalToConstant: 0)
         statusLabelHiddenWidthConstraint?.isActive = shouldHideStatusLabel
 
@@ -107,10 +121,13 @@ extension RuuviSwitchView {
             bottom: nil,
             trailing: trailingAnchor,
             padding: .init(top: 0, left: 10, bottom: 0, right: 0),
-            size: .init(width: 50, height: 0)
+            size: .zero
         )
         statusSwitch.sizeToFit()
+        statusSwitch.widthAnchor.constraint(equalToConstant: statusSwitch.bounds.width).isActive = true
         statusSwitch.centerYInSuperview()
+        statusSwitch.setContentHuggingPriority(.required, for: .horizontal)
+        statusSwitch.setContentCompressionResistancePriority(.required, for: .horizontal)
     }
 }
 

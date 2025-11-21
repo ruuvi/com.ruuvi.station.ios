@@ -1,1 +1,0 @@
-protocol CardsSettingsPresenterInput: CardsPresenterInput {}

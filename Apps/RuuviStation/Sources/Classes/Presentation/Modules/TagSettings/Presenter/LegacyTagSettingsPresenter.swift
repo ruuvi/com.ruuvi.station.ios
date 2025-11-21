@@ -20,7 +20,7 @@ import RuuviCloud
 class LegacyTagSettingsPresenter: NSObject, LegacyTagSettingsModuleInput {
     weak var view: LegacyTagSettingsViewInput!
     weak var output: LegacyTagSettingsModuleOutput?
-    var router: TagSettingsRouterInput!
+    var router: CardsSettingsRouterInput!
     var errorPresenter: ErrorPresenter!
     var foreground: BTForeground!
     var background: BTBackground!

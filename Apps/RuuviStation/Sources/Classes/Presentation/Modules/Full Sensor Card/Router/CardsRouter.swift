@@ -5,7 +5,9 @@ import RuuviOntology
 import UIKit
 
 class CardsRouter: NSObject, CardsRouterInput {
+    var flags: RuuviLocalFlags!
     weak var transitionHandler: UIViewController?
+    var cardsSettingsCoordinator: CardsSettingsCoordinator!
     private weak var dfuModule: DFUModuleInput?
 
     func dismiss() {
@@ -15,26 +17,38 @@ class CardsRouter: NSObject, CardsRouterInput {
     }
 
     func openTagSettings(
+        snapshot: RuuviTagCardSnapshot,
         ruuviTag: RuuviTagSensor,
         latestMeasurement: RuuviTagSensorRecord?,
         sensorSettings: SensorSettings?,
         output: LegacyTagSettingsModuleOutput
     ) {
-        let factory: LegacyTagSettingsModuleFactory = LegacyTagSettingsModuleFactoryImpl()
-        let module = factory.create()
-        transitionHandler?
-            .navigationController?
-            .pushViewController(
-                module,
-                animated: true
+        if flags.showImprovedSensorSettingsUI, let transitionHandler {
+            cardsSettingsCoordinator = CardsSettingsCoordinator(
+                baseViewController: transitionHandler,
+                for: snapshot,
+                ruuviTagSensor: ruuviTag,
+                sensorSettings: sensorSettings,
+                delegate: self
             )
-        if let presenter = module.output as? LegacyTagSettingsModuleInput {
-            presenter.configure(output: output)
-            presenter.configure(
-                ruuviTag: ruuviTag,
-                latestMeasurement: latestMeasurement,
-                sensorSettings: sensorSettings
-            )
+            cardsSettingsCoordinator.start()
+        } else {
+            let factory: LegacyTagSettingsModuleFactory = LegacyTagSettingsModuleFactoryImpl()
+            let module = factory.create()
+            transitionHandler?
+                .navigationController?
+                .pushViewController(
+                    module,
+                    animated: true
+                )
+            if let presenter = module.output as? LegacyTagSettingsModuleInput {
+                presenter.configure(output: output)
+                presenter.configure(
+                    ruuviTag: ruuviTag,
+                    latestMeasurement: latestMeasurement,
+                    sensorSettings: sensorSettings
+                )
+            }
         }
     }
 
@@ -76,5 +90,14 @@ extension CardsRouter: UIAdaptivePresentationControllerDelegate {
 extension CardsRouter: DFUModuleOutput {
     func dfuModuleSuccessfullyUpgraded(_ dfuModule: DFUModuleInput) {
         dfuModule.viewController.dismiss(animated: true)
+    }
+}
+
+extension CardsRouter: CardsSettingsCoordinatorDelegate {
+    func cardsSettingsCoordinatorDidDismiss(
+        _ coordinator: CardsSettingsCoordinator
+    ) {
+        cardsSettingsCoordinator.stop()
+        cardsSettingsCoordinator = nil
     }
 }
