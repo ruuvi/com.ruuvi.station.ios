@@ -1,4 +1,5 @@
 import Foundation
+import RuuviLocal
 import RuuviOntology
 import RuuviPool
 import RuuviService
@@ -8,65 +9,104 @@ final class MigrationManagerSignalVisibility: RuuviMigration {
     private let ruuviStorage: RuuviStorage
     private let ruuviAlertService: RuuviServiceAlert
     private let ruuviPool: RuuviPool
+    private var ruuviLocalSettings: RuuviLocalSettings
 
     init(
         ruuviStorage: RuuviStorage,
         ruuviAlertService: RuuviServiceAlert,
-        ruuviPool: RuuviPool
+        ruuviPool: RuuviPool,
+        ruuviLocalSettings: RuuviLocalSettings
     ) {
         self.ruuviStorage = ruuviStorage
         self.ruuviAlertService = ruuviAlertService
         self.ruuviPool = ruuviPool
+        self.ruuviLocalSettings = ruuviLocalSettings
     }
 
     @UserDefault("MigrationManagerSignalVisibility.didMigrate", defaultValue: false)
     private var didMigrateSignalVisibility: Bool
 
     func migrateIfNeeded() {
-        guard !didMigrateSignalVisibility else { return }
+        if didMigrateSignalVisibility {
+            ruuviLocalSettings.signalVisibilityMigrationInProgress = false
+            return
+        }
+        guard !ruuviLocalSettings.signalVisibilityMigrationInProgress else { return }
+
+        ruuviLocalSettings.signalVisibilityMigrationInProgress = true
         didMigrateSignalVisibility = true
 
         ruuviStorage.readAll().on(success: { sensors in
-            sensors.forEach { sensor in
-                self.process(sensor: sensor)
+            guard !sensors.isEmpty else {
+                self.ruuviLocalSettings.signalVisibilityMigrationInProgress = false
+                return
             }
+
+            let group = DispatchGroup()
+            sensors.forEach { sensor in
+                group.enter()
+                self.process(sensor: sensor) {
+                    group.leave()
+                }
+            }
+
+            group.notify(queue: .global(qos: .utility)) {
+                self.ruuviLocalSettings.signalVisibilityMigrationInProgress = false
+            }
+        }, failure: { _ in
+            self.ruuviLocalSettings.signalVisibilityMigrationInProgress = false
         })
     }
 }
 
 private extension MigrationManagerSignalVisibility {
-    func process(sensor: AnyRuuviTagSensor) {
-        guard sensor.isOwner else { return }
+    func process(sensor: AnyRuuviTagSensor, completion: @escaping () -> Void) {
+        guard sensor.isOwner else { completion(); return }
         let signalAlertProbe = AlertType.signal(lower: 0, upper: 0)
         guard ruuviAlertService.isOn(type: signalAlertProbe, for: sensor) else {
+            completion()
             return
         }
 
         ruuviStorage.readSensorSettings(sensor).on(success: { settings in
-            self.ensureSignalMeasurementVisible(sensor: sensor, settings: settings)
+            self.ensureSignalMeasurementVisible(
+                sensor: sensor,
+                settings: settings,
+                completion: completion
+            )
         }, failure: { _ in
-            self.ensureSignalMeasurementVisible(sensor: sensor, settings: nil)
+            self.ensureSignalMeasurementVisible(
+                sensor: sensor,
+                settings: nil,
+                completion: completion
+            )
         })
     }
 
     func ensureSignalMeasurementVisible(
         sensor: AnyRuuviTagSensor,
-        settings: SensorSettings?
+        settings: SensorSettings?,
+        completion: @escaping () -> Void
     ) {
         let signalCode = MeasurementDisplayCode.signal
         var displayOrder = settings?.displayOrder ?? []
 
         if displayOrder.contains(signalCode) {
+            completion()
             return
         }
 
         if displayOrder.isEmpty {
             let defaults = Self.defaultVisibleCodes(for: sensor)
-            guard !defaults.isEmpty else { return }
+            guard !defaults.isEmpty else {
+                completion()
+                return
+            }
             displayOrder = defaults
         }
 
         guard !displayOrder.contains(signalCode) else {
+            completion()
             return
         }
         displayOrder.append(signalCode)
@@ -77,7 +117,7 @@ private extension MigrationManagerSignalVisibility {
                 displayOrder: displayOrder,
                 defaultDisplayOrder: false
             )
-            .on()
+            .on(completion: completion)
     }
 }
 

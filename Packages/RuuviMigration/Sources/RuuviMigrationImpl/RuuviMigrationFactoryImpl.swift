@@ -57,7 +57,8 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
         let signalVisibility = MigrationManagerSignalVisibility(
             ruuviStorage: ruuviStorage,
             ruuviAlertService: ruuviAlertService,
-            ruuviPool: ruuviPool
+            ruuviPool: ruuviPool,
+            ruuviLocalSettings: settings
         )
         return [
             toAlertService,
