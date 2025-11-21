@@ -4,7 +4,7 @@ import RuuviUser
 import SwiftUI
 import UIKit
 
-class TagSettingsRouter: NSObject, TagSettingsRouterInput {
+class CardsSettingsRouter: NSObject, CardsSettingsRouterInput {
     weak var transitionHandler: UIViewController!
     private weak var dfuModule: DFUModuleInput?
     private var backgroundSelectionModule: BackgroundSelectionModuleInput?
@@ -116,13 +116,13 @@ class TagSettingsRouter: NSObject, TagSettingsRouterInput {
     }
 }
 
-extension TagSettingsRouter: UIAdaptivePresentationControllerDelegate {
+extension CardsSettingsRouter: UIAdaptivePresentationControllerDelegate {
     func presentationControllerShouldDismiss(_: UIPresentationController) -> Bool {
         dfuModule?.isSafeToDismiss() ?? true
     }
 }
 
-extension TagSettingsRouter: DFUModuleOutput {
+extension CardsSettingsRouter: DFUModuleOutput {
     func dfuModuleSuccessfullyUpgraded(_ dfuModule: DFUModuleInput) {
         dfuModule.viewController.dismiss(animated: true)
     }

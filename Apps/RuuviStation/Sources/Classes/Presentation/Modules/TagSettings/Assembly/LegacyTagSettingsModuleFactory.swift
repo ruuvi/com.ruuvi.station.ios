@@ -22,7 +22,7 @@ final class LegacyTagSettingsModuleFactoryImpl: LegacyTagSettingsModuleFactory {
         let r = AppAssembly.shared.assembler.resolver
 
         let view = LegacyTagSettingsViewController()
-        let router = TagSettingsRouter()
+        let router = CardsSettingsRouter()
         router.transitionHandler = view
 
         let presenter = LegacyTagSettingsPresenter()

@@ -30,6 +30,7 @@ class CardsCoordinator: RuuviCoordinator {
     private var cardsSettingsViewPresenter: CardsSettingsPresenter!
 
     private var cardsRouter: CardsRouter!
+    private var cardsSettingsRouter: CardsSettingsRouter!
     private var graphInteractor: CardsGraphViewInteractor!
 
     private var snapshot: RuuviTagCardSnapshot!
@@ -38,7 +39,6 @@ class CardsCoordinator: RuuviCoordinator {
     private var sensorSettings: [SensorSettings] = []
     private var activeMenu: CardsMenuType = .measurement
     private var showSettings: Bool = false // Legacy
-
     private var tabs: [CardsMenuType: UIViewController] = [:]
 
     private weak var delegate: CardsCoordinatorDelegate?
@@ -63,42 +63,64 @@ class CardsCoordinator: RuuviCoordinator {
         self.delegate = delegate
     }
 
+    // swiftlint:disable:next function_body_length
     override func start() {
         super.start()
 
-        tabs = createTabViewControllers()
+        tabs = createTabViewControllers(snapshot: snapshot)
         cardsBaseViewController = createBaseViewController()
 
-        if showSettings {
-            let settingsFactory: LegacyTagSettingsModuleFactory = LegacyTagSettingsModuleFactoryImpl()
-            let settingsModule = settingsFactory.create()
+        guard let navigationController = baseViewController.navigationController else {
+            return
+        }
 
-            if let settingsPresenter = settingsModule.output as? LegacyTagSettingsModuleInput,
-               let ruuviTag = ruuviTagSensors.first(where: {
-                   ($0.luid?.any != nil && ($0.luid?.any == snapshot.identifierData.luid?.any)) ||
-                   ($0.macId?.any != nil && ($0.macId?.any == snapshot.identifierData.mac?.any))
-               }) {
-                settingsPresenter.configure(output: cardsBaseViewPresenter)
-                settingsPresenter.configure(
-                    ruuviTag: ruuviTag,
-                    latestMeasurement: snapshot.latestRawRecord,
-                    sensorSettings: sensorSettings.first(where: {
-                        ($0.luid?.any != nil && ($0.luid?.any == ruuviTag.luid?.any)) ||
-                        ($0.macId?.any != nil && ($0.macId?.any == ruuviTag.macId?.any))
-                    })
+        let resolver = AppAssembly.shared.assembler.resolver
+        let flags = resolver.resolve(RuuviLocalFlags.self)!
+
+        if showSettings {
+            if flags.showImprovedSensorSettingsUI,
+               let ruuviTag = resolveSensor(for: snapshot) {
+                navigationController.pushViewController(
+                    cardsBaseViewController,
+                    animated: false
+                )
+
+                DispatchQueue.main.async { [weak self] in
+                    guard let self,
+                          let cardsRouter = self.cardsRouter else { return }
+                    cardsRouter.openTagSettings(
+                        snapshot: self.snapshot,
+                        ruuviTag: ruuviTag,
+                        latestMeasurement: self.snapshot.latestRawRecord,
+                        sensorSettings: self.resolveSensorSettings(for: ruuviTag),
+                        output: self.cardsBaseViewPresenter
+                    )
+                }
+            } else {
+                let settingsFactory: LegacyTagSettingsModuleFactory = LegacyTagSettingsModuleFactoryImpl()
+                let settingsModule = settingsFactory.create()
+
+                if let settingsPresenter = settingsModule.output as? LegacyTagSettingsModuleInput,
+                   let ruuviTag = resolveSensor(for: snapshot) {
+                    settingsPresenter.configure(output: cardsBaseViewPresenter)
+                    settingsPresenter.configure(
+                        ruuviTag: ruuviTag,
+                        latestMeasurement: snapshot.latestRawRecord,
+                        sensorSettings: resolveSensorSettings(for: ruuviTag)
+                    )
+                }
+
+                navigationController.setViewControllers(
+                    [
+                        baseViewController,
+                        cardsBaseViewController,
+                        settingsModule,
+                    ],
+                    animated: true
                 )
             }
-
-            baseViewController.navigationController?.setViewControllers(
-                [
-                    baseViewController,
-                    cardsBaseViewController,
-                    settingsModule,
-                ],
-                animated: true
-            )
         } else {
-            baseViewController.navigationController?.pushViewController(
+            navigationController.pushViewController(
                 cardsBaseViewController,
                 animated: true
             )
@@ -130,11 +152,15 @@ class CardsCoordinator: RuuviCoordinator {
 
 // MARK: Helpers
 private extension CardsCoordinator {
-    func createTabViewControllers() -> [CardsMenuType: UIViewController] {
+    func createTabViewControllers(
+        snapshot: RuuviTagCardSnapshot
+    ) -> [CardsMenuType: UIViewController] {
         cardsMeasurementViewController = createMeasurementViewController()
         cardsGraphViewController = createGraphViewController()
         cardsAlertsViewController = createAlertsViewController()
-        cardsSettingsViewController = createSettingsViewController()
+        cardsSettingsViewController = createSettingsViewController(
+            snapshot: snapshot
+        )
 
         return [
             .measurement: cardsMeasurementViewController,
@@ -191,6 +217,7 @@ private extension CardsCoordinator {
         viewController.output = presenter
 
         cardsRouter = CardsRouter()
+        cardsRouter.flags = r.resolve(RuuviLocalFlags.self)
         cardsRouter.transitionHandler = viewController
         presenter.router = cardsRouter
 
@@ -303,10 +330,46 @@ private extension CardsCoordinator {
         cardsSettingsViewPresenter = presenter
         return viewController
     }
+
+    func resolveSensor(for snapshot: RuuviTagCardSnapshot) -> AnyRuuviTagSensor? {
+        ruuviTagSensors.first { sensor in
+            sensor.luid?.any == snapshot.identifierData.luid?.any ||
+                sensor.macId?.any == snapshot.identifierData.mac?.any
+        }
+    }
+
+    func resolveSensorSettings(for sensor: AnyRuuviTagSensor) -> SensorSettings? {
+        sensorSettings.first { settings in
+            settings.luid?.any == sensor.luid?.any ||
+                settings.macId?.any == sensor.macId?.any
+        }
+    }
+
 }
 
 extension CardsCoordinator: CardsBasePresenterOutput {
     func cardsViewDidDismiss(module: CardsBasePresenterInput) {
+        module.dismiss(completion: { [weak self] in
+            guard let self else { return }
+            self.baseViewController.navigationController?.popViewController(animated: true)
+            self.delegate?.cardsCoordinatorDidDismiss(self)
+        })
+    }
+}
+
+extension CardsCoordinator: CardsSettingsPresenterOutput {
+    func cardSettingsDidDeleteDevice(
+        module: any CardsSettingsPresenterInput,
+        ruuviTag: any RuuviOntology.RuuviTagSensor
+    ) {
+        module.dismiss(completion: { [weak self] in
+            guard let self else { return }
+            self.baseViewController.navigationController?.popViewController(animated: true)
+            self.delegate?.cardsCoordinatorDidDismiss(self)
+        })
+    }
+
+    func cardSettingsDidDismiss(module: any CardsSettingsPresenterInput) {
         module.dismiss(completion: { [weak self] in
             guard let self else { return }
             self.baseViewController.navigationController?.popViewController(animated: true)

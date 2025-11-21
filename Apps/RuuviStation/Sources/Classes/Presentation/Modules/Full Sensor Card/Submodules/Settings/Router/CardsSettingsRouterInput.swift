@@ -2,7 +2,7 @@ import Foundation
 import RuuviOntology
 import UIKit
 
-protocol TagSettingsRouterInput {
+protocol CardsSettingsRouterInput {
     func dismiss(completion: (() -> Void)?)
     func dismissToRoot(completion: (() -> Void)?)
     func openBackgroundSelectionView(ruuviTag: RuuviTagSensor)
@@ -21,7 +21,7 @@ protocol TagSettingsRouterInput {
     )
 }
 
-extension TagSettingsRouterInput {
+extension CardsSettingsRouterInput {
     func dismiss() {
         dismiss(completion: nil)
     }
