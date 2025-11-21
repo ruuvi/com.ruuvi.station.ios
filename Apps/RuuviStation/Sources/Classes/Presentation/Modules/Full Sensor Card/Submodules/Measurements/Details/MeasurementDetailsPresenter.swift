@@ -1,7 +1,6 @@
 // swiftlint:disable file_length
 
 import Foundation
-import Humidity
 import RuuviOntology
 import RuuviLocal
 import RuuviService
@@ -23,6 +22,11 @@ class MeasurementDetailsPresenter: NSObject {
     private let cloudSyncService: RuuviServiceCloudSync
     private let ruuviReactor: RuuviReactor
     private let localSyncState: RuuviLocalSyncState
+    private lazy var variantResolver = MeasurementVariantResolver(
+        settings: settings,
+        measurementService: measurementService,
+        alertService: alertService
+    )
 
     // Properties
     private var snapshot: RuuviTagCardSnapshot!
@@ -350,7 +354,11 @@ private extension MeasurementDetailsPresenter {
         // Check if we have valid data for this measurement type
         let variant = resolvedVariant
         let hasValidData = !measurements.isEmpty && measurements.contains { measurement in
-            chartValue(for: measurement, variant: variant) != nil
+            variantResolver.value(
+                for: measurement,
+                variant: variant,
+                sensorSettings: sensorSettings
+            ) != nil
         }
 
         guard hasValidData else {
@@ -361,8 +369,11 @@ private extension MeasurementDetailsPresenter {
         // Build chart entries
         var entries: [ChartDataEntry] = []
         for measurement in measurements {
-            if let value = chartValue(for: measurement, variant: variant),
-               value.isFinite {
+            if let value = variantResolver.value(
+                for: measurement,
+                variant: variant,
+                sensorSettings: sensorSettings
+            ), value.isFinite {
                 let x = measurement.date.timeIntervalSince1970
                 guard x.isFinite else { continue }
 
@@ -399,8 +410,11 @@ private extension MeasurementDetailsPresenter {
 
         let variant = resolvedVariant
         for measurement in measurements {
-            if let value = chartValue(for: measurement, variant: variant),
-               value.isFinite {
+            if let value = variantResolver.value(
+                for: measurement,
+                variant: variant,
+                sensorSettings: sensorSettings
+            ), value.isFinite {
                 let x = measurement.date.timeIntervalSince1970
                 guard x.isFinite else { continue }
 
@@ -425,9 +439,9 @@ private extension MeasurementDetailsPresenter {
             )
         }
 
-        let isAlertOn = isAlertEnabled(for: measurementType, sensor: sensor.any)
-        let upperAlert = isAlertOn ? getUpperAlert(for: measurementType, sensor: sensor.any) : nil
-        let lowerAlert = isAlertOn ? getLowerAlert(for: measurementType, sensor: sensor.any) : nil
+        let bounds = variantResolver.alertBounds(for: variant, sensor: sensor.any)
+        let upperAlert = bounds.upper
+        let lowerAlert = bounds.lower
 
         let dataSet = RuuviGraphDataSetFactory.simpleGraphDataSet(
             upperAlertValue: upperAlert,
@@ -443,237 +457,6 @@ private extension MeasurementDetailsPresenter {
             lowerAlertValue: lowerAlert
         )
     }
-
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
-    func chartValue(
-        for measurement: RuuviMeasurement,
-        variant: MeasurementDisplayVariant
-    ) -> Double? {
-        if variant.type.isSameCase(as: .temperature) {
-            guard let temp = measurement.temperature?.plus(sensorSettings: sensorSettings) else {
-                return nil
-            }
-            let unit = variant.resolvedTemperatureUnit(default: settings.temperatureUnit.unitTemperature)
-            return temp.converted(to: unit).value
-        }
-
-        if variant.type.isSameCase(as: .humidity) {
-            guard
-                let humidity = measurement.humidity?.plus(sensorSettings: sensorSettings),
-                let temperature = measurement.temperature?.plus(sensorSettings: sensorSettings)
-            else {
-                return nil
-            }
-
-            let base = Humidity(value: humidity.value, unit: .relative(temperature: temperature))
-            switch variant.resolvedHumidityUnit(default: settings.humidityUnit) {
-            case .percent:
-                return base.value * 100
-            case .gm3:
-                return base.converted(to: .absolute).value
-            case .dew:
-                guard let dew = try? base.dewPoint(temperature: temperature) else { return nil }
-                let tempUnit = variant.resolvedTemperatureUnit(default: settings.temperatureUnit.unitTemperature)
-                return dew.converted(to: tempUnit).value
-            }
-        }
-
-        if variant.type.isSameCase(as: .pressure) {
-            guard let pressure = measurement.pressure?.plus(sensorSettings: sensorSettings) else {
-                return nil
-            }
-            let pressureUnit = variant.resolvedPressureUnit(default: settings.pressureUnit)
-            return pressure.converted(to: pressureUnit).value
-        }
-
-        switch variant.type {
-        case .aqi:
-            let (aqi, _, _) = measurementService.aqi(for: measurement.co2, pm25: measurement.pm25)
-            return Double(aqi)
-        case .co2:
-            return measurementService.double(for: measurement.co2)
-        case .pm10:
-            return measurementService.double(for: measurement.pm1)
-        case .pm25:
-            return measurementService.double(for: measurement.pm25)
-        case .pm40:
-            return measurementService.double(for: measurement.pm4)
-        case .pm100:
-            return measurementService.double(for: measurement.pm10)
-        case .voc:
-            return measurementService.double(for: measurement.voc)
-        case .nox:
-            return measurementService.double(for: measurement.nox)
-        case .luminosity:
-            return measurementService.double(for: measurement.luminosity)
-        case .soundInstant:
-            return measurementService.double(for: measurement.soundInstant)
-        case .soundPeak:
-            return measurementService.double(for: measurement.soundPeak)
-        case .soundAverage:
-            return measurementService.double(for: measurement.soundAvg)
-        case .voltage:
-            return measurementService.double(for: measurement.voltage)
-        case .rssi:
-            return measurement.rssi.map(Double.init)
-        case .accelerationX:
-            return measurement.acceleration?.x.converted(to: .gravity).value
-        case .accelerationY:
-            return measurement.acceleration?.y.converted(to: .gravity).value
-        case .accelerationZ:
-            return measurement.acceleration?.z.converted(to: .gravity).value
-        default:
-            return nil
-        }
-    }
-}
-
-// MARK: - Alert Helpers
-
-private extension MeasurementDetailsPresenter {
-
-    // swiftlint:disable:next cyclomatic_complexity
-    func isAlertEnabled(for type: MeasurementType, sensor: AnyRuuviTagSensor) -> Bool {
-        switch type {
-        case .temperature:
-            return alertService.isOn(type: .temperature(lower: 0, upper: 0), for: sensor)
-        case .humidity:
-            return alertService.isOn(type: .relativeHumidity(lower: 0, upper: 0), for: sensor)
-        case .pressure:
-            return alertService.isOn(type: .pressure(lower: 0, upper: 0), for: sensor)
-        case .aqi:
-            return alertService.isOn(type: .aqi(lower: 0, upper: 0), for: sensor)
-        case .co2:
-            return alertService.isOn(type: .carbonDioxide(lower: 0, upper: 0), for: sensor)
-        case .pm10:
-            return alertService.isOn(type: .pMatter1(lower: 0, upper: 0), for: sensor)
-        case .pm25:
-            return alertService.isOn(type: .pMatter25(lower: 0, upper: 0), for: sensor)
-        case .pm40:
-            return alertService.isOn(type: .pMatter4(lower: 0, upper: 0), for: sensor)
-        case .pm100:
-            return alertService.isOn(type: .pMatter10(lower: 0, upper: 0), for: sensor)
-        case .voc:
-            return alertService.isOn(type: .voc(lower: 0, upper: 0), for: sensor)
-        case .nox:
-            return alertService.isOn(type: .nox(lower: 0, upper: 0), for: sensor)
-        case .luminosity:
-            return alertService.isOn(type: .luminosity(lower: 0, upper: 0), for: sensor)
-        case .soundInstant:
-            return alertService.isOn(type: .soundInstant(lower: 0, upper: 0), for: sensor)
-        case .rssi:
-            return alertService.isOn(type: .signal(lower: 0, upper: 0), for: sensor)
-        default:
-            return false
-        }
-    }
-
-    // swiftlint:disable:next cyclomatic_complexity
-    func getUpperAlert(for type: MeasurementType, sensor: AnyRuuviTagSensor) -> Double? {
-        let variant = resolvedVariant
-        switch type {
-        case .temperature:
-            return alertService.upperCelsius(for: sensor)
-                .flatMap { Temperature($0, unit: .celsius) }
-                .map {
-                    $0.converted(
-                        to: variant.resolvedTemperatureUnit(default: settings.temperatureUnit.unitTemperature)
-                    ).value
-                }
-        case .humidity:
-            let targetUnit = variant.resolvedHumidityUnit(default: settings.humidityUnit)
-            guard targetUnit == .percent else { return nil }
-            return alertService.upperRelativeHumidity(for: sensor).map { $0 * 100 }
-        case .pressure:
-            return alertService.upperPressure(for: sensor)
-                .flatMap { Pressure($0, unit: .hectopascals) }
-                .map {
-                    $0.converted(
-                        to: variant.resolvedPressureUnit(default: settings.pressureUnit)
-                    ).value
-                }
-        case .co2:
-            return alertService.upperCarbonDioxide(for: sensor)
-        case .aqi:
-            return alertService.upperAQI(for: sensor)
-        case .pm10:
-            return alertService.upperPM1(for: sensor)
-        case .pm25:
-            return alertService.upperPM25(for: sensor)
-        case .pm40:
-            return alertService.upperPM4(for: sensor)
-        case .pm100:
-            return alertService.upperPM10(for: sensor)
-        case .voc:
-            return alertService.upperVOC(for: sensor)
-        case .nox:
-            return alertService.upperNOX(for: sensor)
-        case .luminosity:
-            return alertService.upperLuminosity(for: sensor)
-        case .soundInstant:
-            return alertService.upperSoundInstant(for: sensor)
-        case .rssi:
-            return alertService.upperSignal(for: sensor)
-        default:
-            return nil
-        }
-    }
-
-    // swiftlint:disable:next cyclomatic_complexity
-    func getLowerAlert(for type: MeasurementType, sensor: AnyRuuviTagSensor) -> Double? {
-        let variant = resolvedVariant
-        switch type {
-        case .temperature:
-            return alertService.lowerCelsius(for: sensor)
-                .flatMap { Temperature($0, unit: .celsius) }
-                .map {
-                    $0.converted(
-                        to: variant.resolvedTemperatureUnit(default: settings.temperatureUnit.unitTemperature)
-                    ).value
-                }
-        case .humidity:
-            let targetUnit = variant.resolvedHumidityUnit(default: settings.humidityUnit)
-            guard targetUnit == .percent else { return nil }
-            return alertService.lowerRelativeHumidity(for: sensor).map { $0 * 100 }
-        case .pressure:
-            return alertService.lowerPressure(for: sensor)
-                .flatMap { Pressure($0, unit: .hectopascals) }
-                .map {
-                    $0.converted(
-                        to: variant.resolvedPressureUnit(default: settings.pressureUnit)
-                    ).value
-                }
-        case .co2:
-            return alertService.lowerCarbonDioxide(for: sensor)
-        case .aqi:
-            return alertService.lowerAQI(for: sensor)
-        case .pm10:
-            return alertService.lowerPM1(for: sensor)
-        case .pm25:
-            return alertService.lowerPM25(for: sensor)
-        case .pm40:
-            return alertService.lowerPM4(for: sensor)
-        case .pm100:
-            return alertService.lowerPM10(for: sensor)
-        case .voc:
-            return alertService.lowerVOC(for: sensor)
-        case .nox:
-            return alertService.lowerNOX(for: sensor)
-        case .luminosity:
-            return alertService.lowerLuminosity(for: sensor)
-        case .soundInstant:
-            return alertService.lowerSoundInstant(for: sensor)
-        case .rssi:
-            return alertService.lowerSignal(for: sensor)
-        default:
-            return nil
-        }
-    }
-}
-
-// MARK: - Observers
-
-private extension MeasurementDetailsPresenter {
 
     func setupObservers() {
         setupUnitChangeObservers()
@@ -737,7 +520,7 @@ private extension MeasurementDetailsPresenter {
     func filteredDisplayData(
         from data: RuuviTagCardSnapshotDisplayData
     ) -> RuuviTagCardSnapshotDisplayData {
-        guard let visibility = snapshot?.metadata.measurementVisibility,
+        guard let visibility = snapshot?.displayData.measurementVisibility,
               let grid = data.indicatorGrid else {
             return data
         }
@@ -791,7 +574,7 @@ private extension MeasurementDetailsPresenter {
         for type: MeasurementType,
         preferred: MeasurementDisplayVariant?
     ) -> MeasurementDisplayVariant {
-        guard let visibility = snapshot?.metadata.measurementVisibility else {
+        guard let visibility = snapshot?.displayData.measurementVisibility else {
             return preferred ?? defaultVariant(for: type)
         }
         if let preferred,

@@ -7,6 +7,7 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
     private var localSyncState: RuuviLocalSyncState
     private let cloudSyncService: RuuviServiceCloudSync
     private var pullTimer: Timer?
+    private var refreshAfterMigrationWorkItem: DispatchWorkItem?
     private var running = false
 
     init(
@@ -60,19 +61,44 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
     @objc
     func refreshImmediately() {
         DispatchQueue.global(qos: .default).async { [weak self] in
-            self?.cloudSyncService.syncAllRecords()
+            guard let self else { return }
+
+            guard !self.localSettings.signalVisibilityMigrationInProgress else {
+                // Temporary workaround until we properly handle sync vs local data collisions.
+                self.scheduleRefreshAfterMigration()
+                return
+            }
+
+            self.cloudSyncService.syncAllRecords()
         }
     }
 
     func refreshLatestRecord() {
         DispatchQueue.global(qos: .default).async { [weak self] in
-            self?.cloudSyncService.refreshLatestRecord()
+            guard let self else { return }
+            guard !self.localSettings.signalVisibilityMigrationInProgress else { return }
+            self.cloudSyncService.refreshLatestRecord()
         }
     }
 
     @objc private func stopDaemon() {
         pullTimer?.invalidate()
+        refreshAfterMigrationWorkItem?.cancel()
+        refreshAfterMigrationWorkItem = nil
         stopWork()
         running = false
+    }
+
+    private func scheduleRefreshAfterMigration() {
+        guard refreshAfterMigrationWorkItem == nil else { return }
+
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            self.refreshAfterMigrationWorkItem = nil
+            self.refreshImmediately()
+        }
+
+        refreshAfterMigrationWorkItem = workItem
+        DispatchQueue.global(qos: .default).asyncAfter(deadline: .now() + 5, execute: workItem)
     }
 }

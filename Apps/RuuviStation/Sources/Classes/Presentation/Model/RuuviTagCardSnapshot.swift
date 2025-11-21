@@ -123,6 +123,7 @@ struct RuuviTagCardSnapshotDisplayData: Equatable {
     var firmwareVersion: String?
     var batteryNeedsReplacement: Bool = false
     var indicatorGrid: RuuviTagCardSnapshotIndicatorGridConfiguration?
+    var measurementVisibility: RuuviTagCardSnapshotMeasurementVisibility?
     var hasNoData: Bool = false
     var networkSyncStatus: NetworkSyncStatus = .none
     var voltage: Double?
@@ -151,6 +152,7 @@ struct RuuviTagCardSnapshotDisplayData: Equatable {
         lhs.source == rhs.source &&
         lhs.batteryNeedsReplacement == rhs.batteryNeedsReplacement &&
         lhs.indicatorGrid == rhs.indicatorGrid &&
+        lhs.measurementVisibility == rhs.measurementVisibility &&
         lhs.hasNoData == rhs.hasNoData &&
         lhs.networkSyncStatus == rhs.networkSyncStatus &&
         lhs.firmwareVersion == rhs.firmwareVersion &&
@@ -185,7 +187,6 @@ struct RuuviTagCardSnapshotMetadata: Equatable {
     var isCloud: Bool = false
     var isOwner: Bool = false
     var canShareTag: Bool = false
-    var measurementVisibility: RuuviTagCardSnapshotMeasurementVisibility?
 
     static func == (
         lhs: RuuviTagCardSnapshotMetadata,
@@ -195,8 +196,7 @@ struct RuuviTagCardSnapshotMetadata: Equatable {
             lhs.isAlertAvailable == rhs.isAlertAvailable &&
             lhs.isCloud == rhs.isCloud &&
             lhs.isOwner == rhs.isOwner &&
-            lhs.canShareTag == rhs.canShareTag &&
-            lhs.measurementVisibility == rhs.measurementVisibility
+            lhs.canShareTag == rhs.canShareTag
     }
 }
 
@@ -494,10 +494,10 @@ extension RuuviTagCardSnapshot {
     func updateMeasurementVisibility(
         _ visibility: RuuviTagCardSnapshotMeasurementVisibility?
     ) -> Bool {
-        guard metadata.measurementVisibility != visibility else {
+        guard displayData.measurementVisibility != visibility else {
             return false
         }
-        metadata.measurementVisibility = visibility
+        displayData.measurementVisibility = visibility
         return true
     }
 

@@ -57,7 +57,7 @@ class DashboardCardHeightCache {
         }
         let prominentType = snapshot.displayData.primaryIndicator?.type
 
-        let visibilitySignature = snapshot.metadata.measurementVisibility?
+        let visibilitySignature = snapshot.displayData.measurementVisibility?
             .visibleVariants
             .map { variantSignature(for: $0, type: $0.type) }
             .joined(separator: "|") ?? "default"

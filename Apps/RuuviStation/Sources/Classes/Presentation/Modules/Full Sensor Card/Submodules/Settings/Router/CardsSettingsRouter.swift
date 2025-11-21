@@ -114,6 +114,25 @@ class CardsSettingsRouter: NSObject, CardsSettingsRouterInput {
             presenter.configure(ruuviTag: ruuviTag, output: output)
         }
     }
+
+    func openVisibilitySettings(
+        snapshot: RuuviTagCardSnapshot,
+        ruuviTag: RuuviTagSensor,
+        sensorSettings: SensorSettings?
+    ) {
+        let factory: VisibilitySettingsModuleFactory = VisibilitySettingsModuleFactoryImpl()
+        let module = factory.create(
+            snapshot: snapshot,
+            sensor: ruuviTag,
+            sensorSettings: sensorSettings
+        )
+        transitionHandler?
+            .navigationController?
+            .pushViewController(
+                module,
+                animated: true
+            )
+    }
 }
 
 extension CardsSettingsRouter: UIAdaptivePresentationControllerDelegate {

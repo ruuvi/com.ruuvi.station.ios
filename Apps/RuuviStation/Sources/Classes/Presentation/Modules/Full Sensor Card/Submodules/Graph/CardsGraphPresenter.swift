@@ -1,7 +1,6 @@
 // swiftlint:disable file_length
 
 import RuuviOntology
-import Humidity
 import Foundation
 import RuuviLocal
 import RuuviPresenters
@@ -68,6 +67,25 @@ class CardsGraphPresenter: NSObject {
     private var chartModules: [MeasurementDisplayVariant] = []
     private var ruuviTagData: [RuuviMeasurement] = []
     private let serviceCoordinatorManager: RuuviTagServiceCoordinatorManager
+    private struct CachedChartData {
+        let modules: [MeasurementDisplayVariant]
+        let measurements: [RuuviMeasurement]
+        let entries: [MeasurementDisplayVariant: [ChartDataEntrySnapshot]]
+    }
+    private var chartCache: [String: CachedChartData] = [:]
+    private var chartCacheOrder: [String] = []
+    private let chartCacheLimit = 5
+    private let chartComputationQueue = DispatchQueue(
+        label: "com.ruuvi.cardsgraph.chartbuilder",
+        qos: .userInitiated
+    )
+    private var chartDataGeneration: Int = 0
+    private var currentFingerprint: MeasurementFingerprint?
+    private lazy var variantResolver = MeasurementVariantResolver(
+        settings: settings,
+        measurementService: measurementService,
+        alertService: alertService
+    )
 
     // MARK: - Scroll State Management
     private var isUserScrolling: Bool = false
@@ -123,9 +141,11 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
         sensor: AnyRuuviTagSensor?,
         settings: SensorSettings?
     ) {
+        let previousId = self.snapshot?.id
         self.snapshot = snapshot
         self.sensor = sensor
         self.sensorSettings = settings
+        handleSnapshotChangeIfNeeded(previousSnapshotId: previousId, newSnapshot: snapshot)
     }
 
     func configure(output: CardsGraphPresenterOutput?) {
@@ -372,6 +392,121 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
 // MARK: - Private
 
 extension CardsGraphPresenter {
+    private func handleSnapshotChangeIfNeeded(
+        previousSnapshotId: String?,
+        newSnapshot: RuuviTagCardSnapshot
+    ) {
+        guard previousSnapshotId != newSnapshot.id else { return }
+        pendingMeasurements.removeAll()
+        newpoints.removeAll()
+
+        if !applyCachedChartIfAvailable(for: newSnapshot) {
+            clearChartStateForNewSensor()
+        }
+    }
+
+    private func applyCachedChartIfAvailable(
+        for snapshot: RuuviTagCardSnapshot
+    ) -> Bool {
+        guard
+            let cached = chartCache[snapshot.id],
+            !cached.modules.isEmpty
+        else {
+            return false
+        }
+
+        chartModules = cached.modules
+        ruuviTagData = cached.measurements
+        let restoredEntries = cached.entries.mapValues { $0.map { $0.toEntry() } }
+        let models = buildChartModels(
+            for: chartModules,
+            entries: restoredEntries,
+            sensor: sensor
+        )
+        datasource = models
+        view?.createChartViews(from: chartModules)
+        view?.setChartViewData(from: models, settings: settings)
+        if let lastMeasurement = ruuviTagData.last {
+            updateLatestMeasurement(lastMeasurement)
+        }
+        currentFingerprint = MeasurementFingerprint(measurements: ruuviTagData)
+        return true
+    }
+
+    private func clearChartStateForNewSensor() {
+        chartModules.removeAll()
+        ruuviTagData.removeAll()
+        datasource.removeAll()
+        view?.clearChartHistory()
+        invalidatePendingChartComputation()
+        currentFingerprint = nil
+    }
+
+    private func cacheCurrentChartData(
+        entries: [MeasurementDisplayVariant: [ChartDataEntry]],
+        measurements: [RuuviMeasurement]
+    ) {
+        guard let key = snapshot?.id else { return }
+        let snapshots = entries.mapValues { $0.map { ChartDataEntrySnapshot(entry: $0) } }
+        let cached = CachedChartData(
+            modules: chartModules,
+            measurements: measurements,
+            entries: snapshots
+        )
+        chartCache[key] = cached
+        updateCacheOrder(for: key)
+        currentFingerprint = MeasurementFingerprint(measurements: measurements)
+    }
+
+    private func updateCacheOrder(for key: String) {
+        chartCacheOrder.removeAll { $0 == key }
+        chartCacheOrder.append(key)
+        if chartCacheOrder.count > chartCacheLimit,
+           let removed = chartCacheOrder.first {
+            chartCacheOrder.removeFirst()
+            chartCache.removeValue(forKey: removed)
+        }
+    }
+
+    private func nextChartDataGeneration() -> Int {
+        chartDataGeneration &+= 1
+        return chartDataGeneration
+    }
+
+    private func invalidatePendingChartComputation() {
+        chartDataGeneration &+= 1
+    }
+
+    private struct MeasurementFingerprint: Equatable {
+        let count: Int
+        let firstDate: Date?
+        let lastDate: Date?
+
+        init(measurements: [RuuviMeasurement]) {
+            count = measurements.count
+            firstDate = measurements.first?.date
+            lastDate = measurements.last?.date
+        }
+    }
+
+    private struct ChartDataEntrySnapshot {
+        let x: Double
+        let y: Double
+
+        init(x: Double, y: Double) {
+            self.x = x
+            self.y = y
+        }
+
+        init(entry: ChartDataEntry) {
+            self.init(x: entry.x, y: entry.y)
+        }
+
+        func toEntry() -> ChartDataEntry {
+            ChartDataEntry(x: x, y: y)
+        }
+    }
+
     private func restartObserving() {
         shutDownModule()
         startObservingSensorSettingsChanges()
@@ -612,8 +747,13 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
 
     func interactorDidUpdate(sensor: AnyRuuviTagSensor) {
         self.sensor = sensor
-        ruuviTagData = interactor?.ruuviTagData ?? []
-        createChartData()
+        let newMeasurements = interactor?.ruuviTagData ?? []
+        let newFingerprint = MeasurementFingerprint(measurements: newMeasurements)
+        ruuviTagData = newMeasurements
+        if newFingerprint == currentFingerprint {
+            return
+        }
+        rebuildChartData(updateView: true)
     }
 
     func insertMeasurements(_ newValues: [RuuviMeasurement]) {
@@ -643,6 +783,7 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         if let lastMeasurement = newValues.last {
             updateLatestMeasurement(lastMeasurement)
         }
+        rebuildChartData(updateView: false)
     }
 
     private func updateLatestMeasurement(_ measurement: RuuviMeasurement) {
@@ -664,31 +805,70 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
     }
 
     private func createChartData() {
-        guard view != nil else { return }
-        datasource.removeAll()
+        rebuildChartData(updateView: true)
+    }
 
+    private func rebuildChartData(updateView: Bool) {
+        guard view != nil else { return }
         let variants = chartModules
+        let measurements = ruuviTagData
+        let sensorSnapshot = sensor
+
         if variants.isEmpty {
-            view?.setChartViewData(from: datasource, settings: settings)
+            if updateView {
+                view?.setChartViewData(from: [], settings: settings)
+            }
+            cacheCurrentChartData(entries: [:], measurements: measurements)
             return
         }
 
-        let chartEntries = collectChartEntries(
-            from: ruuviTagData,
-            variants: variants
-        )
+        let generation = nextChartDataGeneration()
+        chartComputationQueue.async { [weak self] in
+            guard let self else { return }
+            let chartEntries = self.collectChartEntries(
+                from: measurements,
+                variants: variants
+            )
+            let models = self.buildChartModels(
+                for: variants,
+                entries: chartEntries,
+                sensor: sensorSnapshot
+            )
 
+            DispatchQueue.main.async { [weak self] in
+                guard let self,
+                      generation == self.chartDataGeneration else { return }
+                self.datasource = models
+                if updateView {
+                    self.view?.setChartViewData(from: models, settings: self.settings)
+                    if let lastMeasurement = measurements.last {
+                        self.updateLatestMeasurement(lastMeasurement)
+                    }
+                }
+                self.cacheCurrentChartData(
+                    entries: chartEntries,
+                    measurements: measurements
+                )
+            }
+        }
+    }
+
+    private func buildChartModels(
+        for variants: [MeasurementDisplayVariant],
+        entries: [MeasurementDisplayVariant: [ChartDataEntry]],
+        sensor: AnyRuuviTagSensor?
+    ) -> [RuuviGraphViewDataModel] {
         var models: [RuuviGraphViewDataModel] = []
 
         for variant in variants {
-            guard let entries = chartEntries[variant], !entries.isEmpty else {
+            guard let variantEntries = entries[variant], !variantEntries.isEmpty else {
                 continue
             }
 
-            let bounds = alertBounds(for: variant, sensor: sensor)
+            let bounds = variantResolver.alertBounds(for: variant, sensor: sensor)
             let dataSet = RuuviGraphDataSetFactory.newDataSet(
                 upperAlertValue: bounds.upper,
-                entries: entries,
+                entries: variantEntries,
                 lowerAlertValue: bounds.lower,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
@@ -701,12 +881,7 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
             models.append(model)
         }
 
-        datasource = models
-        view?.setChartViewData(from: datasource, settings: settings)
-
-        if let lastMeasurement = ruuviTagData.last {
-            updateLatestMeasurement(lastMeasurement)
-        }
+        return models
     }
 
     // Draw dots is disabled for v1.3.0 onwards until further notice.
@@ -728,92 +903,18 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func chartEntry(
-        for data: RuuviMeasurement,
-        variant: MeasurementDisplayVariant
-    ) -> ChartDataEntry? {
-        var value: Double?
-        let type = graphMeasurementType(for: variant)
-
-        switch type {
-        case .temperature:
-            let temp = data.temperature?.plus(sensorSettings: sensorSettings)
-            if let temp {
-                let targetUnit = variant.resolvedTemperatureUnit(
-                    default: settings.temperatureUnit.unitTemperature
-                )
-                value = temp.converted(to: targetUnit).value
-            }
-        case .humidity:
-            let humidity = data.humidity?.plus(sensorSettings: sensorSettings)
-            if let humidity, let temperature = data.temperature {
-                let base = Humidity(
-                    value: humidity.value,
-                    unit: .relative(
-                        temperature: temperature
-                    )
-                )
-                switch variant.resolvedHumidityUnit(default: settings.humidityUnit) {
-                case .percent:
-                    value = base.value * 100
-                case .gm3:
-                    value = base.converted(to: .absolute).value
-                case .dew:
-                    if let dew = try? base.dewPoint(temperature: temperature) {
-                        let targetUnit = variant.resolvedTemperatureUnit(
-                            default: settings.temperatureUnit.unitTemperature
-                        )
-                        value = dew.converted(to: targetUnit).value
-                    }
-                }
-            }
-        case .pressure:
-            let pressure = data.pressure?.plus(sensorSettings: sensorSettings)
-            if let pressure {
-                let targetUnit = variant.resolvedPressureUnit(default: settings.pressureUnit)
-                value = pressure.converted(to: targetUnit).value
-            }
-        case .aqi:
-            value = measurementService.aqi(for: data.co2, and: data.pm25)
-        case .co2:
-            value = measurementService.double(for: data.co2)
-        case .pm10:
-            value = measurementService.double(for: data.pm1)
-        case .pm25:
-            value = measurementService.double(for: data.pm25)
-        case .pm40:
-            value = measurementService.double(for: data.pm4)
-        case .pm100:
-            value = measurementService.double(for: data.pm10)
-        case .voc:
-            value = measurementService.double(for: data.voc)
-        case .nox:
-            value = measurementService.double(for: data.nox)
-        case .luminosity:
-            value = measurementService.double(for: data.luminosity)
-        case .soundInstant:
-            value = measurementService.double(for: data.soundInstant)
-        case .soundPeak:
-            value = measurementService.double(for: data.soundPeak)
-        case .soundAverage:
-            value = measurementService.double(for: data.soundAvg)
-        case .voltage:
-            value = measurementService.double(for: data.voltage)
-        case .rssi:
-            value = data.rssi.map(Double.init)
-        case .accelerationX:
-            value = data.acceleration?.x.converted(to: .gravity).value
-        case .accelerationY:
-            value = data.acceleration?.y.converted(to: .gravity).value
-        case .accelerationZ:
-            value = data.acceleration?.z.converted(to: .gravity).value
-        default:
-            fatalError("Unhandled chart type \(type)")
+    private func chartEntry(for data: RuuviMeasurement, variant: MeasurementDisplayVariant) -> ChartDataEntry? {
+        guard
+            let y = variantResolver.value(
+                for: data,
+                variant: variant,
+                sensorSettings: sensorSettings,
+                configuration: .cardsGraph
+            ),
+            y.isFinite
+        else {
+            return nil
         }
-
-        // Ensure we have a valid, finite value before creating chart entry
-        guard let y = value, y.isFinite else { return nil }
 
         let x = data.date.timeIntervalSince1970
         guard x.isFinite else { return nil }
@@ -842,131 +943,6 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         return result
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func alertBounds(
-        for variant: MeasurementDisplayVariant,
-        sensor: AnyRuuviTagSensor?
-    ) -> (lower: Double?, upper: Double?) {
-        guard
-            let sensor,
-            let alertType = variant.type.toAlertType(),
-            alertService.isOn(type: alertType, for: sensor)
-        else {
-            return (nil, nil)
-        }
-
-        let type = graphMeasurementType(for: variant)
-
-        switch type {
-        case .temperature:
-            let upper = alertService.upperCelsius(for: sensor)
-                .flatMap { Temperature($0, unit: .celsius) }
-                .map {
-                    $0.converted(
-                        to: variant.resolvedTemperatureUnit(default: settings.temperatureUnit.unitTemperature)
-                    ).value
-                }
-            let lower = alertService.lowerCelsius(for: sensor)
-                .flatMap { Temperature($0, unit: .celsius) }
-                .map {
-                    $0.converted(
-                        to: variant.resolvedTemperatureUnit(default: settings.temperatureUnit.unitTemperature)
-                    ).value
-                }
-            return (lower, upper)
-        case .humidity:
-            guard variant.resolvedHumidityUnit(default: settings.humidityUnit) == .percent else {
-                return (nil, nil)
-            }
-            let upper = alertService.upperRelativeHumidity(for: sensor).map { $0 * 100 }
-            let lower = alertService.lowerRelativeHumidity(for: sensor).map { $0 * 100 }
-            return (lower, upper)
-        case .pressure:
-            let upper = alertService.upperPressure(for: sensor)
-                .flatMap { Pressure($0, unit: .hectopascals) }
-                .map {
-                    $0.converted(
-                        to: variant.resolvedPressureUnit(default: settings.pressureUnit)
-                    ).value
-                }
-            let lower = alertService.lowerPressure(for: sensor)
-                .flatMap { Pressure($0, unit: .hectopascals) }
-                .map {
-                    $0.converted(
-                        to: variant.resolvedPressureUnit(default: settings.pressureUnit)
-                    ).value
-                }
-            return (lower, upper)
-        case .aqi:
-            return (
-                alertService.lowerAQI(for: sensor),
-                alertService.upperAQI(for: sensor)
-            )
-        case .co2:
-            return (
-                alertService.lowerCarbonDioxide(for: sensor),
-                alertService.upperCarbonDioxide(for: sensor)
-            )
-        case .pm10:
-            return (
-                alertService.lowerPM1(for: sensor),
-                alertService.upperPM1(for: sensor)
-            )
-        case .pm25:
-            return (
-                alertService.lowerPM25(for: sensor),
-                alertService.upperPM25(for: sensor)
-            )
-        case .pm40:
-            return (
-                alertService.lowerPM4(for: sensor),
-                alertService.upperPM4(for: sensor)
-            )
-        case .pm100:
-            return (
-                alertService.lowerPM10(for: sensor),
-                alertService.upperPM10(for: sensor)
-            )
-        case .voc:
-            return (
-                alertService.lowerVOC(for: sensor),
-                alertService.upperVOC(for: sensor)
-            )
-        case .nox:
-            return (
-                alertService.lowerNOX(for: sensor),
-                alertService.upperNOX(for: sensor)
-            )
-        case .luminosity:
-            return (
-                alertService.lowerLuminosity(for: sensor),
-                alertService.upperLuminosity(for: sensor)
-            )
-        case .soundInstant:
-            return (
-                alertService.lowerSoundInstant(for: sensor),
-                alertService.upperSoundInstant(for: sensor)
-            )
-        case .soundPeak:
-            return (
-                alertService.lowerSoundPeak(for: sensor),
-                alertService.upperSoundPeak(for: sensor)
-            )
-        case .soundAverage:
-            return (
-                alertService.lowerSoundAverage(for: sensor),
-                alertService.upperSoundAverage(for: sensor)
-            )
-        case .rssi:
-            return (
-                alertService.lowerSignal(for: sensor),
-                alertService.upperSignal(for: sensor)
-            )
-        default:
-            return (nil, nil)
-        }
-    }
-
     private func resolveVariant(
         for measurementType: MeasurementType,
         preferredVariant: MeasurementDisplayVariant?
@@ -984,19 +960,8 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         }
     }
 
-    private func graphMeasurementType(
-        for variant: MeasurementDisplayVariant
-    ) -> MeasurementType {
-        if variant.type.isSameCase(as: .humidity) {
-            return .humidity
-        }
-        return variant.type
-    }
-
-    private func filteredVariants(
-        from modules: [MeasurementDisplayVariant]
-    ) -> [MeasurementDisplayVariant] {
-        guard let visibility = snapshot?.metadata.measurementVisibility else {
+    private func filteredVariants(from modules: [MeasurementDisplayVariant]) -> [MeasurementDisplayVariant] {
+        guard let visibility = snapshot?.displayData.measurementVisibility else {
             return modules
         }
         return modules.filter { variant in

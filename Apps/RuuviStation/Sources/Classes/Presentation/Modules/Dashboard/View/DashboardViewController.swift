@@ -461,12 +461,7 @@ private extension DashboardViewController {
             if redrawLayout {
                 newSnapshot.reloadItems(newSnapshot.itemIdentifiers)
             } else {
-                if #available(iOS 15.0, *) {
-                    newSnapshot.reconfigureItems(newSnapshot.itemIdentifiers)
-                } else {
-                    // TODO: Decide about iOS 14.
-                    newSnapshot.reloadItems(newSnapshot.itemIdentifiers)
-                }
+                newSnapshot.reconfigureItems(newSnapshot.itemIdentifiers)
             }
             self.dataSource.apply(newSnapshot, animatingDifferences: animated) { [weak self] in
                 if redrawLayout {

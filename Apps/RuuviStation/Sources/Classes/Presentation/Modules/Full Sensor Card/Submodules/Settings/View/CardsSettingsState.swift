@@ -16,6 +16,8 @@ final class CardsSettingsState: ObservableObject {
     @Published private(set) var ownersPlan: String
     @Published private(set) var showShare: Bool
     @Published private(set) var shareSummary: String
+    @Published private(set) var visibleMeasurementsValue: String?
+    @Published private(set) var showVisibleMeasurementsRow: Bool = false
     @Published private(set) var backgroundImage: Image?
     @Published private(set) var moreInfoRows: [CardsSettingsMoreInfoRowModel]
     @Published private(set) var firmwareVersion: String
@@ -124,6 +126,14 @@ final class CardsSettingsState: ObservableObject {
     var shouldShowNoValuesIndicator: Bool {
         guard let version = snapshot.displayData.version else { return false }
         return version < 5
+    }
+
+    func updateVisibleMeasurementsSummary(
+        value: String?,
+        isVisible: Bool
+    ) {
+        visibleMeasurementsValue = value
+        showVisibleMeasurementsRow = isVisible
     }
 
     // MARK: - Settings Sections
