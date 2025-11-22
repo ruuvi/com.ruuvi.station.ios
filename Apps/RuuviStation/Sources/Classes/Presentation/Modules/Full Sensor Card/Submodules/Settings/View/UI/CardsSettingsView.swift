@@ -60,7 +60,22 @@ struct CardsSettingsView: View {
                     )
 
                     if state.showBluetoothSection {
-                        CardsSettingsBluetoothSectionView()
+                        let bluetoothSection = CardsSettingsSection(
+                            id: CardsSettingsSectionID.bluetooth.rawValue,
+                            title: RuuviLocalization
+                                .TagSettings.SectionHeader.BTConnection.title.capitalized,
+                            isCollapsible: false,
+                            content: { AnyView(CardsSettingsBluetoothSectionView()) }
+                        )
+                        CardsSettingsExpandableSectionRow(
+                            section: bluetoothSection,
+                            isExpanded: true,
+                            isCollapsible: false,
+                            onToggle: {},
+                            content: {
+                                bluetoothSection.content()
+                            }
+                        )
                     }
 
                     if !state.alertSections.isEmpty {
