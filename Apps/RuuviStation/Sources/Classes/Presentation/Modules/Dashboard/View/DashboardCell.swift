@@ -114,26 +114,9 @@ struct DashboardCellLayoutConstants {
 
     static func gridHeight(
         indicatorCount: Int,
-        dashboardType: DashboardType,
-        hasAQI: Bool = false
+        dashboardType: DashboardType
     ) -> CGFloat {
-        let actualIndicatorCount: Int
-
-        if dashboardType == .image {
-            // Filter out indicators shown prominently in image mode
-            actualIndicatorCount = hasAQI ? max(
-                0,
-                indicatorCount - 1
-            ) : max(
-                0,
-                indicatorCount - 1
-            )
-        } else {
-            actualIndicatorCount = max(
-                0,
-                indicatorCount
-            )
-        }
+        let actualIndicatorCount = max(0, indicatorCount)
 
         guard actualIndicatorCount > 0 else {
             return dashboardType == .simple ? gridRowHeight : 0
@@ -329,19 +312,8 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         return stackView
     }()
 
-    // Indicator views for all possible values
-    private lazy var airQIndexView = DashboardIndicatorView()
-    private lazy var temperatureView = DashboardIndicatorView()
-    private lazy var humidityView = DashboardIndicatorView()
-    private lazy var pressureView = DashboardIndicatorView()
-    private lazy var movementView = DashboardIndicatorView()
-    private lazy var co2View = DashboardIndicatorView()
-    private lazy var pm25View = DashboardIndicatorView()
-    private lazy var pm10View = DashboardIndicatorView()
-    private lazy var noxView = DashboardIndicatorView()
-    private lazy var vocView = DashboardIndicatorView()
-    private lazy var luminosityView = DashboardIndicatorView()
-    private lazy var soundView = DashboardIndicatorView()
+    // Indicator view cache keyed by measurement type
+    private var indicatorViewCache: [MeasurementDisplayVariant: DashboardIndicatorView] = [:]
 
     private lazy var dataSourceIconView: UIImageView = {
         let iv = UIImageView()
@@ -385,6 +357,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
 
     // Keep track of current indicators for efficient updates
     private var currentIndicators: [DashboardIndicatorView] = []
+    private var currentProminentIndicator: RuuviTagCardSnapshotIndicatorData?
 
     // MARK: - Lifecycle
     override init(
@@ -419,14 +392,10 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
             }
         currentIndicators
             .removeAll()
+        currentProminentIndicator = nil
 
-        [
-            airQIndexView, temperatureView, humidityView, pressureView,
-            movementView, co2View, pm25View, pm10View, noxView,
-            vocView, luminosityView, soundView,
-        ].forEach {
-            $0
-                .clearValues()
+        indicatorViewCache.values.forEach {
+            $0.clearValues()
         }
 
         // Reset image-specific components
@@ -709,25 +678,29 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                     .clearValues()
                 progressViewContainer.isHidden = true
                 updateGridPosition(
-                    hasAQI: false
+                    usingProgressView: false
                 )
             }
             noDataView.isHidden = false
             return
         }
 
+        let gridIndicators: [RuuviTagCardSnapshotIndicatorData]
+
         // Update prominent view only if in image mode
         if dashboardType == .image {
             updateProminentView(
-                with: configuration
+                with: configuration.primaryIndicator
             )
+            gridIndicators = configuration.secondaryIndicators
         } else {
             // Ensure progress view is hidden in simple mode
             progressViewContainer.isHidden = true
+            gridIndicators = configuration.indicators
         }
 
         let indicators = createIndicatorViews(
-            from: configuration.indicators
+            from: gridIndicators
         )
 
         // Only rebuild if indicators changed
@@ -737,7 +710,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         ) else {
             // Just update values without rebuilding layout
             updateIndicatorValues(
-                configuration.indicators
+                gridIndicators
             )
             return
         }
@@ -747,85 +720,84 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
             with: indicators
         )
         updateIndicatorValues(
-            configuration.indicators
+            gridIndicators
         )
     }
 
     // swiftlint:disable:next function_body_length
     private func updateProminentView(
-        with configuration: RuuviTagCardSnapshotIndicatorGridConfiguration
+        with indicator: RuuviTagCardSnapshotIndicatorData?
     ) {
-        let hasAQI = configuration.indicators.contains {
-            $0.type == .aqi
-        }
-
-        if hasAQI {
-            // E1/V6 version - show Air Quality Index as prominent
-            if let airQualityIndicator = configuration.indicators.first(
-                where: {
-                    $0.type == .aqi
-                }) {
-                let components = airQualityIndicator.value.components(
-                    separatedBy: "/"
-                )
-                var mainValue = components.first ?? airQualityIndicator.value
-                switch airQualityIndicator.qualityState {
-                case .undefined:
-                    mainValue = RuuviLocalization.na
-                default:
-                    break
-                }
-                let superscriptValue = components.count > 1 ? "/\(components[1])" : ""
-
-                prominentView
-                    .setValue(
-                        with: mainValue,
-                        superscriptValue: superscriptValue,
-                        subscriptValue: airQualityIndicator.type.shortName
-                    )
-
-                // Show progress view
-                progressViewContainer.isHidden = false
-                if let progress = Int(
-                    mainValue
-                ) {
-                    progressView.setValue(
-                        progress,
-                        progressTintColor: airQualityIndicator.tintColor
-                    )
-                }
-            }
-        } else {
-            // V5 version - show Temperature as prominent
-            if let temperatureIndicator = configuration.indicators.first(
-                where: {
-                    $0.type == .temperature
-                }) {
-                let tempComponents = temperatureIndicator.value.components(
-                    separatedBy: "\u{00A0}"
-                ) // Non-breaking space
-                let tempValue = tempComponents.first ?? temperatureIndicator.value
-
-                prominentView
-                    .setValue(
-                        with: tempValue,
-                        superscriptValue: temperatureIndicator.unit,
-                        subscriptValue: temperatureIndicator.showSubscript ?
-                            temperatureIndicator.type.shortName : " "
-                    )
-            }
-            // Hide progress view
+        guard let indicator = indicator else {
+            prominentView.clearValues()
             progressViewContainer.isHidden = true
+            updateGridPosition(
+                usingProgressView: false
+            )
+            return
         }
 
-        // Update grid position based on progress view visibility
-        updateGridPosition(
-            hasAQI: hasAQI
-        )
+        if indicator.type == .aqi {
+            // AQI - show Air Quality Index as prominent with progress
+            let components = indicator.value.components(
+                separatedBy: "/"
+            )
+            var mainValue = components.first ?? indicator.value
+            if indicator.qualityState == .undefined(0) {
+                mainValue = RuuviLocalization.na
+            }
+            let superscriptValue = components.count > 1 ? "/\(components[1])" : ""
+
+            prominentView
+                .setValue(
+                    with: mainValue,
+                    superscriptValue: superscriptValue,
+                    subscriptValue: indicator.type.shortName(for: indicator.variant)
+                )
+
+            progressViewContainer.isHidden = false
+            if let progress = Int(mainValue) {
+                progressView
+                    .setValue(
+                        progress,
+                        progressTintColor: indicator.tintColor
+                    )
+            } else {
+                progressView
+                    .setValue(
+                        0,
+                        progressTintColor: indicator.tintColor
+                    )
+            }
+            updateGridPosition(
+                usingProgressView: true
+            )
+        } else {
+            // Generic measurement as prominent indicator
+            let resolvedShortName = indicator.type.shortName(for: indicator.variant)
+            let subscriptValue: String
+            if indicator.isProminent {
+                subscriptValue = resolvedShortName
+            } else {
+                subscriptValue = indicator.showSubscript ?
+                    resolvedShortName : " "
+            }
+
+            prominentView
+                .setValue(
+                    with: indicator.value,
+                    superscriptValue: indicator.unit,
+                    subscriptValue: subscriptValue
+                )
+            progressViewContainer.isHidden = true
+            updateGridPosition(
+                usingProgressView: false
+            )
+        }
     }
 
     private func updateGridPosition(
-        hasAQI: Bool
+        usingProgressView: Bool
     ) {
         guard dashboardType == .image else {
             return
@@ -833,7 +805,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
 
         gridTopConstraint.isActive = false
 
-        if hasAQI && !progressViewContainer.isHidden {
+        if usingProgressView && !progressViewContainer.isHidden {
             // Grid positioned after progress view
             gridTopConstraint = rowsStackView.topAnchor
                 .constraint(
@@ -851,109 +823,23 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         gridTopConstraint.isActive = true
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func createIndicatorViews(
         from indicatorData: [RuuviTagCardSnapshotIndicatorData]
     ) -> [DashboardIndicatorView] {
-        var indicators: [DashboardIndicatorView] = []
-        let hasAdvancedSensors = indicatorData.contains {
-            $0.type == .aqi
-        }
-
-        for data in indicatorData {
-            // Skip indicators that are shown prominently in image mode
-            if dashboardType == .image {
-                if hasAdvancedSensors && data.type == .aqi {
-                    continue
-                }
-                if !hasAdvancedSensors && data.type == .temperature {
-                    continue
-                }
-            }
-
-            switch data.type {
-            case .aqi:
-                indicators
-                    .append(
-                        airQIndexView
-                    )
-            case .temperature:
-                indicators
-                    .append(
-                        temperatureView
-                    )
-            case .humidity:
-                indicators
-                    .append(
-                        humidityView
-                    )
-            case .pressure:
-                indicators
-                    .append(
-                        pressureView
-                    )
-            case .movementCounter:
-                indicators
-                    .append(
-                        movementView
-                    )
-            case .co2:
-                indicators
-                    .append(
-                        co2View
-                    )
-            case .pm25:
-                indicators
-                    .append(
-                        pm25View
-                    )
-            case .pm100:
-                indicators
-                    .append(
-                        pm10View
-                    )
-            case .nox:
-                indicators
-                    .append(
-                        noxView
-                    )
-            case .voc:
-                indicators
-                    .append(
-                        vocView
-                    )
-            case .luminosity:
-                indicators
-                    .append(
-                        luminosityView
-                    )
-            case .soundInstant:
-                indicators
-                    .append(
-                        soundView
-                    )
-            default:
-                break
-            }
-        }
-
-        return indicators
+        indicatorData.map { indicatorView(for: $0.variant) }
     }
 
     private func updateIndicatorValues(
         _ indicatorData: [RuuviTagCardSnapshotIndicatorData]
     ) {
         for data in indicatorData {
-            let indicatorView = getIndicatorView(
-                for: data.type
+            let indicatorView = indicatorView(for: data.variant)
+            indicatorView.setValue(
+                with: data.value,
+                unit: data.unit,
+                for: data.variant,
+                dashboardType: dashboardType
             )
-            indicatorView?
-                .setValue(
-                    with: data.value,
-                    unit: data.unit,
-                    for: data.type,
-                    dashboardType: dashboardType,
-                )
         }
     }
 
@@ -962,67 +848,49 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
             return
         }
 
-        // Update each indicator's alert state
-        snapshot.displayData.indicatorGrid?.indicators
-            .forEach { indicatorData in
-                let isHighlighted = snapshot.getAlertConfig(
-                    for: indicatorData.type
-                )?.isHighlighted ?? false
-                let alertsAvailable = snapshot.metadata.isAlertAvailable
+        let alertsAvailable = snapshot.metadata.isAlertAvailable
+        let primaryType = snapshot.displayData.primaryIndicator?.type
 
-                if dashboardType == .image && indicatorData.type == .temperature {
-                    let hasAdvancedSensors = snapshot.displayData.indicatorGrid?.indicators.contains {
-                        $0.type == .aqi
-                    } ?? false
-
-                    if hasAdvancedSensors {
-                        temperatureView
-                            .changeColor(
-                                highlight: isHighlighted && alertsAvailable
-                            )
-                    } else {
-                        prominentView
-                            .changeColor(
-                                highlight: isHighlighted && alertsAvailable
-                            )
-                    }
-                } else if dashboardType == .image && indicatorData.type == .aqi {
-                    prominentView
-                        .changeColor(
-                            highlight: isHighlighted && alertsAvailable
-                        )
-                } else {
-
-                    let indicatorView = getIndicatorView(
-                        for: indicatorData.type
+        if dashboardType == .image {
+            if let primaryType,
+               let alertConfig = snapshot.getAlertConfig(for: primaryType) {
+                prominentView
+                    .changeColor(
+                        highlight: alertConfig.isHighlighted && alertsAvailable
                     )
-                    indicatorView?
-                        .changeColor(
-                            highlight: isHighlighted && alertsAvailable
-                        )
-                }
+            } else {
+                prominentView
+                    .changeColor(
+                        highlight: false
+                    )
             }
+        }
+
+        let indicators = dashboardType == .image ?
+            snapshot.displayData.secondaryIndicators :
+            snapshot.displayData.indicatorGrid?.indicators ?? []
+
+        indicators.forEach { indicatorData in
+            let isHighlighted = snapshot.getAlertConfig(
+                for: indicatorData.type
+            )?.isHighlighted ?? false
+            let indicatorView = indicatorView(for: indicatorData.variant)
+            indicatorView.changeColor(
+                highlight: isHighlighted && alertsAvailable
+            )
+        }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
-    private func getIndicatorView(
-        for type: MeasurementType
-    ) -> DashboardIndicatorView? {
-        switch type {
-        case .aqi: return airQIndexView
-        case .temperature: return temperatureView
-        case .humidity: return humidityView
-        case .pressure: return pressureView
-        case .movementCounter: return movementView
-        case .co2: return co2View
-        case .pm25: return pm25View
-        case .pm100: return pm10View
-        case .nox: return noxView
-        case .voc: return vocView
-        case .luminosity: return luminosityView
-        case .soundInstant: return soundView
-        default: return nil
+    private func indicatorView(
+        for variant: MeasurementDisplayVariant
+    ) -> DashboardIndicatorView {
+        if let cached = indicatorViewCache[variant] {
+            return cached
         }
+
+        let view = DashboardIndicatorView()
+        indicatorViewCache[variant] = view
+        return view
     }
 
     private func indicatorsEqual(
@@ -1602,15 +1470,12 @@ extension DashboardCell {
             dashboardType: dashboardType
         )
 
-        let hasAQI = snapshot.displayData.indicatorGrid?.indicators.contains {
-            $0.type == .aqi
-        } ?? false
+        let showsProgressView = snapshot.displayData.primaryIndicator?.type == .aqi
 
-        let indicatorCount = snapshot.displayData.indicatorGrid?.indicators.count ?? 0
+        let indicatorCount = snapshot.displayData.secondaryIndicators.count
         let gridHeight = DashboardCellLayoutConstants.gridHeight(
             indicatorCount: indicatorCount,
-            dashboardType: dashboardType,
-            hasAQI: hasAQI
+            dashboardType: dashboardType
         )
 
         // Build height step by step matching actual layout
@@ -1629,7 +1494,7 @@ extension DashboardCell {
         totalHeight += DashboardCellLayoutConstants.prominentViewHeight
 
         // Content after prominent view (conditional)
-        if hasAQI {
+        if showsProgressView {
             // Progress view section
             totalHeight += DashboardCellLayoutConstants.progressViewTopSpacing
             totalHeight += DashboardCellLayoutConstants.progressViewHeight

@@ -692,12 +692,16 @@ extension CardsBaseViewController: MeasurementDetailsCoordinatorDelegate {
     func measurementDetailsCoordinatorDidDismissWithGraphTap(
         for snapshot: RuuviTagCardSnapshot,
         measurement: MeasurementType,
+        variant: MeasurementDisplayVariant?,
         ruuviTag: RuuviTagSensor,
         _ coordinator: MeasurementDetailsCoordinator
     ) {
         detailsCoordinator?.stop()
         detailsCoordinator = nil
-        output?.viewDidScrollToGraph(for: measurement)
+        output?.viewDidScrollToGraph(
+            for: measurement,
+            variant: variant
+        )
         activeTab = .graph
         menuBarView.setSelectedTab(.graph, animated: true, notify: false)
     }

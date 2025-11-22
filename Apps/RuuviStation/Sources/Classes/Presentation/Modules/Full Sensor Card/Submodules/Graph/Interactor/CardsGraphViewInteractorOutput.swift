@@ -5,6 +5,6 @@ protocol CardsGraphViewInteractorOutput: AnyObject {
     func insertMeasurements(_ newValues: [RuuviMeasurement])
     func updateLatestRecord(_ record: RuuviTagSensorRecord)
     func interactorDidError(_ error: RUError)
-    func createChartModules(from: [MeasurementType])
+    func createChartModules(from: [MeasurementDisplayVariant])
     func interactorDidUpdate(sensor: AnyRuuviTagSensor)
 }

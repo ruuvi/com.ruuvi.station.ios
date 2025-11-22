@@ -204,13 +204,14 @@ class CardsMeasurementIndicatorView: UIView {
     func configure(with indicator: RuuviTagCardSnapshotIndicatorData) {
         let dataChanged = currentIndicatorData?.value != indicator.value ||
         currentIndicatorData?.unit != indicator.unit ||
-        currentIndicatorData?.type != indicator.type
+        currentIndicatorData?.type != indicator.type ||
+        currentIndicatorData?.variant != indicator.variant
 
         currentIndicatorData = indicator
 
         if dataChanged {
             valueLabel.text = indicator.value
-            titleLabel.text = indicator.type.shortName
+            titleLabel.text = indicator.type.shortName(for: indicator.variant)
             iconImageView.image = indicator.type.icon
             unitLabel.text = MeasurementType.hideUnit(for: indicator.type) ? "" : indicator.unit
 

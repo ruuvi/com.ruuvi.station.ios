@@ -75,14 +75,13 @@ extension CardsMeasurementPresenter: CardsMeasurementViewOutput {
         for indicator: RuuviTagCardSnapshotIndicatorData,
         snapshot: RuuviTagCardSnapshot
     ) {
-        if let sensor = sensor {
-            output?.showMeasurementDetails(
-                for: indicator,
-                snapshot: snapshot,
-                sensor: sensor,
-                settings: settings,
-                presenter: self
-            )
-        }
+        guard let sensor = sensor else { return }
+        output?.showMeasurementDetails(
+            for: indicator,
+            snapshot: snapshot,
+            sensor: sensor,
+            settings: settings,
+            presenter: self
+        )
     }
 }

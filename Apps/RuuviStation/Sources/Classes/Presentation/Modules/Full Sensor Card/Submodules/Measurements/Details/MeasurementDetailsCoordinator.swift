@@ -19,6 +19,7 @@ protocol MeasurementDetailsCoordinatorDelegate: AnyObject {
     func measurementDetailsCoordinatorDidDismissWithGraphTap(
         for snapshot: RuuviTagCardSnapshot,
         measurement: MeasurementType,
+        variant: MeasurementDisplayVariant?,
         ruuviTag: RuuviTagSensor,
         _ coordinator: MeasurementDetailsCoordinator
     )
@@ -84,6 +85,7 @@ extension MeasurementDetailsCoordinator: MeasurementDetailsPresenterOutput {
     func detailsViewDidDismiss(
         for snapshot: RuuviTagCardSnapshot,
         measurement: MeasurementType,
+        variant: MeasurementDisplayVariant?,
         ruuviTag: RuuviTagSensor,
         module: MeasurementDetailsPresenterInput
     ) {
@@ -92,6 +94,7 @@ extension MeasurementDetailsCoordinator: MeasurementDetailsPresenterOutput {
             self.delegate?.measurementDetailsCoordinatorDidDismissWithGraphTap(
                 for: snapshot,
                 measurement: measurement,
+                variant: variant,
                 ruuviTag: ruuviTag,
                 self
             )
@@ -134,6 +137,7 @@ private extension MeasurementDetailsCoordinator {
         presenter.configure(
             with: snapshot,
             measurementType: indicator.type,
+            variant: indicator.variant,
             ruuviTag: ruuviTagSensor,
             sensorSettings: sensorSetting,
             output: self

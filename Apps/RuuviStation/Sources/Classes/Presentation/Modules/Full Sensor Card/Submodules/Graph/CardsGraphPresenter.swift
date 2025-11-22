@@ -1,6 +1,7 @@
 // swiftlint:disable file_length
 
 import RuuviOntology
+import Humidity
 import Foundation
 import RuuviLocal
 import RuuviPresenters
@@ -64,13 +65,14 @@ class CardsGraphPresenter: NSObject {
     private var lastChartSyncDate = Date()
     private var datasource: [RuuviGraphViewDataModel] = []
     private var newpoints: [RuuviGraphViewDataModel] = []
-    private var chartModules: [MeasurementType] = []
+    private var chartModules: [MeasurementDisplayVariant] = []
     private var ruuviTagData: [RuuviMeasurement] = []
     private let serviceCoordinatorManager: RuuviTagServiceCoordinatorManager
 
     // MARK: - Scroll State Management
     private var isUserScrolling: Bool = false
     private var pendingMeasurements: [RuuviMeasurement] = []
+    private var pendingScrollRequest: (type: MeasurementType, variant: MeasurementDisplayVariant?)?
 
     // MARK: Init
     init(
@@ -154,8 +156,22 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
         restartObserving()
     }
 
-    func scroll(to measurementType: MeasurementType) {
-        view?.scroll(to: measurementType)
+    func scroll(
+        to measurementType: MeasurementType,
+        variant: MeasurementDisplayVariant?
+    ) {
+        guard !chartModules.isEmpty else {
+            pendingScrollRequest = (measurementType, variant)
+            return
+        }
+
+        guard let targetVariant = resolveVariant(
+            for: measurementType,
+            preferredVariant: variant
+        ) else { return }
+
+        view?.scroll(to: targetVariant)
+        pendingScrollRequest = nil
     }
 
     func showAbortSyncConfirmationDialog(
@@ -580,10 +596,14 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         // No op.
     }
 
-    func createChartModules(from: [MeasurementType]) {
+    func createChartModules(from: [MeasurementDisplayVariant]) {
         guard view != nil else { return }
-        chartModules = from
+        let filtered = filteredVariants(from: from)
+        chartModules = filtered.isEmpty ? from : filtered
         view?.createChartViews(from: chartModules)
+        if let pending = pendingScrollRequest {
+            scroll(to: pending.type, variant: pending.variant)
+        }
     }
 
     func interactorDidError(_ error: RUError) {
@@ -596,7 +616,6 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         createChartData()
     }
 
-    // swiftlint:disable:next function_body_length cyclomatic_complexity
     func insertMeasurements(_ newValues: [RuuviMeasurement]) {
         guard view != nil else { return }
 
@@ -608,98 +627,13 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
 
         ruuviTagData = interactor?.ruuviTagData ?? []
 
-        var temparatureData = [ChartDataEntry]()
-        var humidityData = [ChartDataEntry]()
-        var pressureData = [ChartDataEntry]()
-        var aqiData = [ChartDataEntry]()
-        var co2Data = [ChartDataEntry]()
-        var pm25Data = [ChartDataEntry]()
-        var pm10Data = [ChartDataEntry]()
-        var vocData = [ChartDataEntry]()
-        var noxData = [ChartDataEntry]()
-        var luminosityData = [ChartDataEntry]()
-        var soundData = [ChartDataEntry]()
+        let entries = collectChartEntries(
+            from: newValues,
+            variants: chartModules
+        )
 
-        for measurement in newValues {
-            // Temperature
-            if let temperatureEntry = chartEntry(for: measurement, type: .temperature) {
-                temparatureData.append(temperatureEntry)
-            }
-
-            // Humidty
-            if let humidityEntry = chartEntry(
-                for: measurement,
-                type: .humidity
-            ) {
-                humidityData.append(humidityEntry)
-            }
-
-            // Pressure
-            if let pressureEntry = chartEntry(for: measurement, type: .pressure) {
-                pressureData.append(pressureEntry)
-            }
-
-            // AQI
-            if let aqiEntry = chartEntry(for: measurement, type: .aqi) {
-                aqiData.append(aqiEntry)
-            }
-
-            // Carbon Dioxide
-            if let co2Entry = chartEntry(for: measurement, type: .co2) {
-                co2Data.append(co2Entry)
-            }
-
-            // PM2.5
-            if let pm25Entry = chartEntry(for: measurement, type: .pm25) {
-                pm25Data.append(pm25Entry)
-            }
-
-            // PM10
-            if let pm10Entry = chartEntry(for: measurement, type: .pm100) {
-                pm10Data.append(pm10Entry)
-            }
-
-            // VOC
-            if let vocEntry = chartEntry(for: measurement, type: .voc) {
-                vocData.append(vocEntry)
-            }
-
-            // NOx
-            if let noxEntry = chartEntry(for: measurement, type: .nox) {
-                noxData.append(noxEntry)
-            }
-
-            // Luminosity
-            if let luminosityEntry = chartEntry(
-                for: measurement,
-                type: .luminosity
-            ) {
-                luminosityData.append(luminosityEntry)
-            }
-
-            // Sound
-            if let soundEntry = chartEntry(
-                for: measurement,
-                type: .soundInstant
-
-            ) {
-                soundData.append(soundEntry)
-            }
-        }
-
-        // Update new measurements on the chart
         view?.updateChartViewData(
-            temperatureEntries: temparatureData,
-            humidityEntries: humidityData,
-            pressureEntries: pressureData,
-            aqiEntries: aqiData,
-            co2Entries: co2Data,
-            pm10Entries: pm25Data,
-            pm25Entries: pm10Data,
-            vocEntries: vocData,
-            noxEntries: noxData,
-            luminosityEntries: luminosityData,
-            soundEntries: soundData,
+            entries,
             isFirstEntry: ruuviTagData.count == 1,
             firstEntry: ruuviTagData.first,
             settings: settings
@@ -712,493 +646,64 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
     }
 
     private func updateLatestMeasurement(_ measurement: RuuviMeasurement) {
+        let latestEntries = chartModules.reduce(
+            into: [MeasurementDisplayVariant: ChartDataEntry?]()
+        ) {
+            result,
+            variant in
+            result[variant] = chartEntry(
+                for: measurement,
+                variant: variant
+            )
+        }
+
         view?.updateLatestMeasurement(
-            temperature: chartEntry(
-                for: measurement,
-                type: .temperature
-            ),
-            humidity: chartEntry(
-                for: measurement,
-                type: .humidity
-            ),
-            pressure: chartEntry(
-                for: measurement,
-                type: .pressure
-            ),
-            aqi: chartEntry(
-                for: measurement,
-                type: .aqi
-            ),
-            co2: chartEntry(
-                for: measurement,
-                type: .co2
-            ),
-            pm10: chartEntry(
-                for: measurement,
-                type: .pm100
-            ),
-            pm25: chartEntry(
-                for: measurement,
-                type: .pm25
-            ),
-            voc: chartEntry(
-                for: measurement,
-                type: .voc
-            ),
-            nox: chartEntry(
-                for: measurement,
-                type: .nox
-            ),
-            luminosity: chartEntry(
-                for: measurement,
-                type: .luminosity
-            ),
-            sound: chartEntry(
-                for: measurement,
-                type: .soundInstant
-            ),
+            latestEntries,
             settings: settings
         )
     }
 
-    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func createChartData() {
         guard view != nil else { return }
         datasource.removeAll()
 
-        var temparatureData = [ChartDataEntry]()
-        var humidityData = [ChartDataEntry]()
-        var pressureData = [ChartDataEntry]()
-        var aqiData = [ChartDataEntry]()
-        var co2Data = [ChartDataEntry]()
-        var pm25Data = [ChartDataEntry]()
-        var pm10Data = [ChartDataEntry]()
-        var vocData = [ChartDataEntry]()
-        var noxData = [ChartDataEntry]()
-        var luminosityData = [ChartDataEntry]()
-        var soundData = [ChartDataEntry]()
+        let variants = chartModules
+        if variants.isEmpty {
+            view?.setChartViewData(from: datasource, settings: settings)
+            return
+        }
 
-        for measurement in ruuviTagData {
-            // Temperature
-            if let temperatureEntry = chartEntry(for: measurement, type: .temperature) {
-                temparatureData.append(temperatureEntry)
+        let chartEntries = collectChartEntries(
+            from: ruuviTagData,
+            variants: variants
+        )
+
+        var models: [RuuviGraphViewDataModel] = []
+
+        for variant in variants {
+            guard let entries = chartEntries[variant], !entries.isEmpty else {
+                continue
             }
 
-            // Humidty
-            if let humidityEntry = chartEntry(
-                for: measurement,
-                type: .humidity
-            ) {
-                humidityData.append(humidityEntry)
-            }
-
-            // Pressure
-            if let pressureEntry = chartEntry(for: measurement, type: .pressure) {
-                pressureData.append(pressureEntry)
-            }
-
-            // AQI
-            if let aqiEntry = chartEntry(for: measurement, type: .aqi) {
-                aqiData.append(aqiEntry)
-            }
-
-            // Carbon Dioxide
-            if let co2Entry = chartEntry(for: measurement, type: .co2) {
-                co2Data.append(co2Entry)
-            }
-
-            // PM2.5
-            if let pm25Entry = chartEntry(for: measurement, type: .pm25) {
-                pm25Data.append(pm25Entry)
-            }
-
-            // PM10
-            if let pm10Entry = chartEntry(for: measurement, type: .pm100) {
-                pm10Data.append(pm10Entry)
-            }
-
-            // VOC
-            if let vocEntry = chartEntry(for: measurement, type: .voc) {
-                vocData.append(vocEntry)
-            }
-
-            // NOx
-            if let noxEntry = chartEntry(for: measurement, type: .nox) {
-                noxData.append(noxEntry)
-            }
-
-            // Luminosity
-            if let luminosityEntry = chartEntry(
-                for: measurement,
-                type: .luminosity
-            ) {
-                luminosityData.append(luminosityEntry)
-            }
-
-            // Sound
-            if let soundEntry = chartEntry(
-                for: measurement,
-                type: .soundInstant
-            ) {
-                soundData.append(soundEntry)
-            }
-        }
-
-        // Create datasets only if collection has at least one chart entry
-        if temparatureData.count > 0, let ruuviTag = sensor {
-            let isOn = alertService.isOn(type: .temperature(lower: 0, upper: 0), for: ruuviTag)
-            let temperatureDataSet = RuuviGraphDataSetFactory.newDataSet(
-                upperAlertValue: isOn ? alertService.upperCelsius(for: ruuviTag)
-                    .flatMap {
-                        Temperature($0, unit: .celsius)
-                    }.map { measurementService.double(for: $0) } : nil,
-                entries: temparatureData,
-                lowerAlertValue: isOn ? alertService.lowerCelsius(for: ruuviTag)
-                    .flatMap {
-                        Temperature($0, unit: .celsius)
-                    }.map { measurementService.double(for: $0) } : nil,
+            let bounds = alertBounds(for: variant, sensor: sensor)
+            let dataSet = RuuviGraphDataSetFactory.newDataSet(
+                upperAlertValue: bounds.upper,
+                entries: entries,
+                lowerAlertValue: bounds.lower,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
-            let temperatureChartData = RuuviGraphViewDataModel(
-                upperAlertValue: isOn ? alertService.upperCelsius(for: ruuviTag)
-                    .flatMap {
-                        Temperature($0, unit: .celsius)
-                    }.map { measurementService.double(for: $0) } : nil,
-                chartType: .temperature,
-                chartData: LineChartData(dataSet: temperatureDataSet),
-                lowerAlertValue: isOn ? alertService.lowerCelsius(for: ruuviTag)
-                    .flatMap {
-                        Temperature($0, unit: .celsius)
-                    }.map { measurementService.double(for: $0) } : nil
+            let model = RuuviGraphViewDataModel(
+                upperAlertValue: bounds.upper,
+                variant: variant,
+                chartData: LineChartData(dataSet: dataSet),
+                lowerAlertValue: bounds.lower
             )
-            datasource.append(temperatureChartData)
+            models.append(model)
         }
 
-        if humidityData.count > 0, let ruuviTag = sensor {
-            let isOn = alertService.isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag)
-            let isRelative = measurementService.units.humidityUnit == .percent
-            let humidityChartDataSet = RuuviGraphDataSetFactory.newDataSet(
-                upperAlertValue: (isOn && isRelative) ? alertService.upperRelativeHumidity(
-                    for: ruuviTag
-                ).map {
-                    $0 * 100
-                } : nil,
-                entries: humidityData,
-                lowerAlertValue: (isOn && isRelative) ? alertService.lowerRelativeHumidity(
-                    for: ruuviTag
-                ).map { $0 * 100 } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
-            let humidityChartData = RuuviGraphViewDataModel(
-                upperAlertValue: (isOn && isRelative) ? alertService.upperRelativeHumidity(for: ruuviTag).map {
-                    $0 * 100
-                } : nil,
-                chartType: .humidity,
-                chartData: LineChartData(dataSet: humidityChartDataSet),
-                lowerAlertValue: (isOn && isRelative) ? alertService.lowerRelativeHumidity(
-                    for: ruuviTag
-                ).map { $0 * 100 } : nil
-            )
-            datasource.append(humidityChartData)
-        }
-
-        if pressureData.count > 0, let ruuviTag = sensor {
-            let isOn = alertService.isOn(type: .pressure(lower: 0, upper: 0), for: ruuviTag)
-            let pressureChartDataSet = RuuviGraphDataSetFactory.newDataSet(
-                upperAlertValue: isOn ? alertService.upperPressure(for: ruuviTag)
-                    .flatMap {
-                        Pressure($0, unit: .hectopascals)
-                    }.map { measurementService.double(for: $0) } : nil,
-                entries: pressureData,
-                lowerAlertValue: isOn ? alertService.lowerPressure(for: ruuviTag)
-                    .flatMap {
-                        Pressure($0, unit: .hectopascals)
-                    }.map { measurementService.double(for: $0) } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
-            let pressureChartData = RuuviGraphViewDataModel(
-                upperAlertValue: isOn ? alertService.upperPressure(for: ruuviTag)
-                    .flatMap {
-                        Pressure($0, unit: .hectopascals)
-                    }.map { measurementService.double(for: $0) } : nil,
-                chartType: .pressure,
-                chartData: LineChartData(dataSet: pressureChartDataSet),
-                lowerAlertValue: isOn ? alertService.lowerPressure(for: ruuviTag)
-                    .flatMap {
-                        Pressure($0, unit: .hectopascals)
-                    }.map { measurementService.double(for: $0) } : nil
-            )
-            datasource.append(pressureChartData)
-        }
-
-        if aqiData.count > 0, let ruuviTag = sensor {
-            let isOn = alertService.isOn(
-                type: .aqi(lower: 0, upper: 0),
-                for: ruuviTag
-            )
-            let aqiChartDataSet = RuuviGraphDataSetFactory.newDataSet(
-                upperAlertValue: isOn ? alertService.upperAQI(
-                    for: ruuviTag
-                ).map {
-                    $0
-                } : nil,
-                entries: aqiData,
-                lowerAlertValue: isOn ? alertService
-                    .lowerAQI(
-                    for: ruuviTag
-                ).map { $0 } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
-            let aqiChartData = RuuviGraphViewDataModel(
-                upperAlertValue: isOn ? alertService
-                    .upperAQI(for: ruuviTag)
-                    .map {
-                    $0
-                } : nil,
-                chartType: .aqi,
-                chartData: LineChartData(dataSet: aqiChartDataSet),
-                lowerAlertValue: isOn ? alertService.lowerAQI(
-                    for: ruuviTag
-                ).map { $0 } : nil
-            )
-            datasource.append(aqiChartData)
-        }
-
-        if co2Data.count > 0, let ruuviTag = sensor {
-            let isOn = alertService.isOn(
-                type: .carbonDioxide(lower: 0, upper: 0),
-                for: ruuviTag
-            )
-            let co2ChartDataSet = RuuviGraphDataSetFactory.newDataSet(
-                upperAlertValue: isOn ? alertService.upperCarbonDioxide(
-                    for: ruuviTag
-                ).map {
-                    $0
-                } : nil,
-                entries: co2Data,
-                lowerAlertValue: isOn ? alertService
-                    .lowerCarbonDioxide(
-                    for: ruuviTag
-                ).map { $0 } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
-            let co2ChartData = RuuviGraphViewDataModel(
-                upperAlertValue: isOn ? alertService
-                    .upperCarbonDioxide(for: ruuviTag)
-                    .map {
-                    $0
-                } : nil,
-                chartType: .co2,
-                chartData: LineChartData(dataSet: co2ChartDataSet),
-                lowerAlertValue: isOn ? alertService.lowerCarbonDioxide(
-                    for: ruuviTag
-                ).map { $0 } : nil
-            )
-            datasource.append(co2ChartData)
-        }
-
-        if pm10Data.count > 0, let ruuviTag = sensor {
-            let isOn = alertService.isOn(
-                type: .pMatter10(lower: 0, upper: 0),
-                for: ruuviTag
-            )
-            let pm10ChartDataSet = RuuviGraphDataSetFactory.newDataSet(
-                upperAlertValue: isOn ? alertService.upperPM10(
-                    for: ruuviTag
-                ).map {
-                    $0
-                } : nil,
-                entries: pm10Data,
-                lowerAlertValue: isOn ? alertService
-                    .lowerPM10(
-                    for: ruuviTag
-                ).map { $0 } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
-            let pm10ChartData = RuuviGraphViewDataModel(
-                upperAlertValue: isOn ? alertService
-                    .upperPM10(for: ruuviTag)
-                    .map {
-                    $0
-                } : nil,
-                chartType: .pm100,
-                chartData: LineChartData(dataSet: pm10ChartDataSet),
-                lowerAlertValue: isOn ? alertService.lowerPM10(
-                    for: ruuviTag
-                ).map { $0 } : nil
-            )
-            datasource.append(pm10ChartData)
-        }
-
-        if pm25Data.count > 0, let ruuviTag = sensor {
-            let isOn = alertService.isOn(
-                type: .pMatter25(lower: 0, upper: 0),
-                for: ruuviTag
-            )
-            let pm25ChartDataSet = RuuviGraphDataSetFactory.newDataSet(
-                upperAlertValue: isOn ? alertService.upperPM25(
-                    for: ruuviTag
-                ).map {
-                    $0
-                } : nil,
-                entries: pm25Data,
-                lowerAlertValue: isOn ? alertService
-                    .lowerPM25(
-                    for: ruuviTag
-                ).map { $0 } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
-            let pm25ChartData = RuuviGraphViewDataModel(
-                upperAlertValue: isOn ? alertService
-                    .upperPM25(for: ruuviTag)
-                    .map {
-                    $0
-                } : nil,
-                chartType: .pm25,
-                chartData: LineChartData(dataSet: pm25ChartDataSet),
-                lowerAlertValue: isOn ? alertService.lowerPM25(
-                    for: ruuviTag
-                ).map { $0 } : nil
-            )
-            datasource.append(pm25ChartData)
-        }
-
-        if vocData.count > 0, let ruuviTag = sensor {
-            let isOn = alertService.isOn(
-                type: .voc(lower: 0, upper: 0),
-                for: ruuviTag
-            )
-            let vocChartDataSet = RuuviGraphDataSetFactory.newDataSet(
-                upperAlertValue: isOn ? alertService.upperVOC(
-                    for: ruuviTag
-                ).map {
-                    $0
-                } : nil,
-                entries: vocData,
-                lowerAlertValue: isOn ? alertService
-                    .lowerVOC(
-                    for: ruuviTag
-                ).map { $0 } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
-            let vocChartData = RuuviGraphViewDataModel(
-                upperAlertValue: isOn ? alertService
-                    .upperVOC(for: ruuviTag)
-                    .map {
-                    $0
-                } : nil,
-                chartType: .voc,
-                chartData: LineChartData(dataSet: vocChartDataSet),
-                lowerAlertValue: isOn ? alertService.lowerVOC(
-                    for: ruuviTag
-                ).map { $0 } : nil
-            )
-            datasource.append(vocChartData)
-        }
-
-        if noxData.count > 0, let ruuviTag = sensor {
-            let isOn = alertService.isOn(
-                type: .nox(lower: 0, upper: 0),
-                for: ruuviTag
-            )
-            let noxChartDataSet = RuuviGraphDataSetFactory.newDataSet(
-                upperAlertValue: isOn ? alertService.upperNOX(
-                    for: ruuviTag
-                ).map {
-                    $0
-                } : nil,
-                entries: noxData,
-                lowerAlertValue: isOn ? alertService
-                    .lowerNOX(
-                    for: ruuviTag
-                ).map { $0 } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
-            let noxChartData = RuuviGraphViewDataModel(
-                upperAlertValue: isOn ? alertService
-                    .upperNOX(for: ruuviTag)
-                    .map {
-                    $0
-                } : nil,
-                chartType: .nox,
-                chartData: LineChartData(dataSet: noxChartDataSet),
-                lowerAlertValue: isOn ? alertService.lowerNOX(
-                    for: ruuviTag
-                ).map { $0 } : nil
-            )
-            datasource.append(noxChartData)
-        }
-
-        if luminosityData.count > 0, let ruuviTag = sensor {
-            let isOn = alertService.isOn(
-                type: .luminosity(lower: 0, upper: 0),
-                for: ruuviTag
-            )
-            let luminosityChartDataSet = RuuviGraphDataSetFactory.newDataSet(
-                upperAlertValue: isOn ? alertService.upperLuminosity(
-                    for: ruuviTag
-                ).map {
-                    $0
-                } : nil,
-                entries: luminosityData,
-                lowerAlertValue: isOn ? alertService
-                    .lowerLuminosity(
-                    for: ruuviTag
-                ).map { $0 } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
-            let luminosityChartData = RuuviGraphViewDataModel(
-                upperAlertValue: isOn ? alertService
-                    .upperLuminosity(for: ruuviTag)
-                    .map {
-                    $0
-                } : nil,
-                chartType: .luminosity,
-                chartData: LineChartData(dataSet: luminosityChartDataSet),
-                lowerAlertValue: isOn ? alertService.lowerLuminosity(
-                    for: ruuviTag
-                ).map { $0 } : nil
-            )
-            datasource.append(luminosityChartData)
-        }
-
-        if soundData.count > 0, let ruuviTag = sensor {
-            let isOn = alertService.isOn(
-                type: .soundInstant(lower: 0, upper: 0),
-                for: ruuviTag
-            )
-            let soundChartDataSet = RuuviGraphDataSetFactory.newDataSet(
-                upperAlertValue: isOn ? alertService.upperSoundInstant(
-                    for: ruuviTag
-                ).map {
-                    $0
-                } : nil,
-                entries: soundData,
-                lowerAlertValue: isOn ? alertService
-                    .lowerSoundInstant(
-                    for: ruuviTag
-                ).map { $0 } : nil,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
-            )
-            let soundChartData = RuuviGraphViewDataModel(
-                upperAlertValue: isOn ? alertService
-                    .upperSoundInstant(for: ruuviTag)
-                    .map {
-                    $0
-                } : nil,
-                chartType: .soundInstant,
-                chartData: LineChartData(dataSet: soundChartDataSet),
-                lowerAlertValue: isOn ? alertService.lowerSoundInstant(
-                    for: ruuviTag
-                ).map { $0 } : nil
-            )
-            datasource.append(soundChartData)
-        }
-
-        // Set the initial data for the charts.
+        datasource = models
         view?.setChartViewData(from: datasource, settings: settings)
 
-        // Update the latest measurement label.
         if let lastMeasurement = ruuviTagData.last {
             updateLatestMeasurement(lastMeasurement)
         }
@@ -1223,30 +728,62 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
-    private func chartEntry(for data: RuuviMeasurement, type: MeasurementType) -> ChartDataEntry? {
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    private func chartEntry(
+        for data: RuuviMeasurement,
+        variant: MeasurementDisplayVariant
+    ) -> ChartDataEntry? {
         var value: Double?
+        let type = graphMeasurementType(for: variant)
 
         switch type {
         case .temperature:
             let temp = data.temperature?.plus(sensorSettings: sensorSettings)
-            value = measurementService.double(for: temp)
+            if let temp {
+                let targetUnit = variant.resolvedTemperatureUnit(
+                    default: settings.temperatureUnit.unitTemperature
+                )
+                value = temp.converted(to: targetUnit).value
+            }
         case .humidity:
             let humidity = data.humidity?.plus(sensorSettings: sensorSettings)
-            value = measurementService.double(
-                for: humidity,
-                temperature: data.temperature,
-                isDecimal: false
-            )
+            if let humidity, let temperature = data.temperature {
+                let base = Humidity(
+                    value: humidity.value,
+                    unit: .relative(
+                        temperature: temperature
+                    )
+                )
+                switch variant.resolvedHumidityUnit(default: settings.humidityUnit) {
+                case .percent:
+                    value = base.value * 100
+                case .gm3:
+                    value = base.converted(to: .absolute).value
+                case .dew:
+                    if let dew = try? base.dewPoint(temperature: temperature) {
+                        let targetUnit = variant.resolvedTemperatureUnit(
+                            default: settings.temperatureUnit.unitTemperature
+                        )
+                        value = dew.converted(to: targetUnit).value
+                    }
+                }
+            }
         case .pressure:
             let pressure = data.pressure?.plus(sensorSettings: sensorSettings)
-            value = measurementService.double(for: pressure)
+            if let pressure {
+                let targetUnit = variant.resolvedPressureUnit(default: settings.pressureUnit)
+                value = pressure.converted(to: targetUnit).value
+            }
         case .aqi:
             value = measurementService.aqi(for: data.co2, and: data.pm25)
         case .co2:
             value = measurementService.double(for: data.co2)
+        case .pm10:
+            value = measurementService.double(for: data.pm1)
         case .pm25:
             value = measurementService.double(for: data.pm25)
+        case .pm40:
+            value = measurementService.double(for: data.pm4)
         case .pm100:
             value = measurementService.double(for: data.pm10)
         case .voc:
@@ -1257,8 +794,22 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
             value = measurementService.double(for: data.luminosity)
         case .soundInstant:
             value = measurementService.double(for: data.soundInstant)
+        case .soundPeak:
+            value = measurementService.double(for: data.soundPeak)
+        case .soundAverage:
+            value = measurementService.double(for: data.soundAvg)
+        case .voltage:
+            value = measurementService.double(for: data.voltage)
+        case .rssi:
+            value = data.rssi.map(Double.init)
+        case .accelerationX:
+            value = data.acceleration?.x.converted(to: .gravity).value
+        case .accelerationY:
+            value = data.acceleration?.y.converted(to: .gravity).value
+        case .accelerationZ:
+            value = data.acceleration?.z.converted(to: .gravity).value
         default:
-            fatalError("before need implement chart with current type!")
+            fatalError("Unhandled chart type \(type)")
         }
 
         // Ensure we have a valid, finite value before creating chart entry
@@ -1268,6 +819,189 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         guard x.isFinite else { return nil }
 
         return ChartDataEntry(x: x, y: y)
+    }
+
+    private func collectChartEntries(
+        from measurements: [RuuviMeasurement],
+        variants: [MeasurementDisplayVariant]
+    ) -> [MeasurementDisplayVariant: [ChartDataEntry]] {
+        var result: [MeasurementDisplayVariant: [ChartDataEntry]] = [:]
+
+        for measurement in measurements {
+            for variant in variants {
+                guard let entry = chartEntry(
+                    for: measurement,
+                    variant: variant
+                ) else {
+                    continue
+                }
+                result[variant, default: []].append(entry)
+            }
+        }
+
+        return result
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    private func alertBounds(
+        for variant: MeasurementDisplayVariant,
+        sensor: AnyRuuviTagSensor?
+    ) -> (lower: Double?, upper: Double?) {
+        guard
+            let sensor,
+            let alertType = variant.type.toAlertType(),
+            alertService.isOn(type: alertType, for: sensor)
+        else {
+            return (nil, nil)
+        }
+
+        let type = graphMeasurementType(for: variant)
+
+        switch type {
+        case .temperature:
+            let upper = alertService.upperCelsius(for: sensor)
+                .flatMap { Temperature($0, unit: .celsius) }
+                .map {
+                    $0.converted(
+                        to: variant.resolvedTemperatureUnit(default: settings.temperatureUnit.unitTemperature)
+                    ).value
+                }
+            let lower = alertService.lowerCelsius(for: sensor)
+                .flatMap { Temperature($0, unit: .celsius) }
+                .map {
+                    $0.converted(
+                        to: variant.resolvedTemperatureUnit(default: settings.temperatureUnit.unitTemperature)
+                    ).value
+                }
+            return (lower, upper)
+        case .humidity:
+            guard variant.resolvedHumidityUnit(default: settings.humidityUnit) == .percent else {
+                return (nil, nil)
+            }
+            let upper = alertService.upperRelativeHumidity(for: sensor).map { $0 * 100 }
+            let lower = alertService.lowerRelativeHumidity(for: sensor).map { $0 * 100 }
+            return (lower, upper)
+        case .pressure:
+            let upper = alertService.upperPressure(for: sensor)
+                .flatMap { Pressure($0, unit: .hectopascals) }
+                .map {
+                    $0.converted(
+                        to: variant.resolvedPressureUnit(default: settings.pressureUnit)
+                    ).value
+                }
+            let lower = alertService.lowerPressure(for: sensor)
+                .flatMap { Pressure($0, unit: .hectopascals) }
+                .map {
+                    $0.converted(
+                        to: variant.resolvedPressureUnit(default: settings.pressureUnit)
+                    ).value
+                }
+            return (lower, upper)
+        case .aqi:
+            return (
+                alertService.lowerAQI(for: sensor),
+                alertService.upperAQI(for: sensor)
+            )
+        case .co2:
+            return (
+                alertService.lowerCarbonDioxide(for: sensor),
+                alertService.upperCarbonDioxide(for: sensor)
+            )
+        case .pm10:
+            return (
+                alertService.lowerPM1(for: sensor),
+                alertService.upperPM1(for: sensor)
+            )
+        case .pm25:
+            return (
+                alertService.lowerPM25(for: sensor),
+                alertService.upperPM25(for: sensor)
+            )
+        case .pm40:
+            return (
+                alertService.lowerPM4(for: sensor),
+                alertService.upperPM4(for: sensor)
+            )
+        case .pm100:
+            return (
+                alertService.lowerPM10(for: sensor),
+                alertService.upperPM10(for: sensor)
+            )
+        case .voc:
+            return (
+                alertService.lowerVOC(for: sensor),
+                alertService.upperVOC(for: sensor)
+            )
+        case .nox:
+            return (
+                alertService.lowerNOX(for: sensor),
+                alertService.upperNOX(for: sensor)
+            )
+        case .luminosity:
+            return (
+                alertService.lowerLuminosity(for: sensor),
+                alertService.upperLuminosity(for: sensor)
+            )
+        case .soundInstant:
+            return (
+                alertService.lowerSoundInstant(for: sensor),
+                alertService.upperSoundInstant(for: sensor)
+            )
+        case .soundPeak:
+            return (
+                alertService.lowerSoundPeak(for: sensor),
+                alertService.upperSoundPeak(for: sensor)
+            )
+        case .soundAverage:
+            return (
+                alertService.lowerSoundAverage(for: sensor),
+                alertService.upperSoundAverage(for: sensor)
+            )
+        case .rssi:
+            return (
+                alertService.lowerSignal(for: sensor),
+                alertService.upperSignal(for: sensor)
+            )
+        default:
+            return (nil, nil)
+        }
+    }
+
+    private func resolveVariant(
+        for measurementType: MeasurementType,
+        preferredVariant: MeasurementDisplayVariant?
+    ) -> MeasurementDisplayVariant? {
+        if let preferred = preferredVariant,
+           chartModules.contains(preferred) {
+            return preferred
+        }
+
+        switch measurementType {
+        case .humidity:
+            return chartModules.first { $0.type.isSameCase(as: measurementType) }
+        default:
+            return chartModules.first { $0.type.isSameCase(as: measurementType) }
+        }
+    }
+
+    private func graphMeasurementType(
+        for variant: MeasurementDisplayVariant
+    ) -> MeasurementType {
+        if variant.type.isSameCase(as: .humidity) {
+            return .humidity
+        }
+        return variant.type
+    }
+
+    private func filteredVariants(
+        from modules: [MeasurementDisplayVariant]
+    ) -> [MeasurementDisplayVariant] {
+        guard let visibility = snapshot?.metadata.measurementVisibility else {
+            return modules
+        }
+        return modules.filter { variant in
+            visibility.visibleVariants.contains(where: { $0 == variant })
+        }
     }
 }
 // swiftlint:enable file_length

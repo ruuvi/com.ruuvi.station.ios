@@ -42,17 +42,57 @@ class DashboardCardHeightCache {
         displayType: DashboardType,
         numberOfColumns: Int
     ) -> String {
-        let indicatorCount = snapshot.displayData.indicatorGrid?.indicators.count ?? 0
-        let hasAQI = snapshot.displayData.indicatorGrid?.indicators.contains { $0.type == .aqi } ?? false
+        let indicatorCount: Int
+        let indicatorSignature: String
+        if displayType == .image {
+            indicatorCount = snapshot.displayData.secondaryIndicators.count
+            indicatorSignature = snapshot.displayData.secondaryIndicators
+                .map { variantSignature(for: $0.variant, type: $0.type) }
+                .joined(separator: "|")
+        } else {
+            indicatorCount = snapshot.displayData.indicatorGrid?.indicators.count ?? 0
+            indicatorSignature = snapshot.displayData.indicatorGrid?.indicators
+                .map { variantSignature(for: $0.variant, type: $0.type) }
+                .joined(separator: "|") ?? "none"
+        }
+        let prominentType = snapshot.displayData.primaryIndicator?.type
+
+        let visibilitySignature = snapshot.metadata.measurementVisibility?
+            .visibleVariants
+            .map { variantSignature(for: $0, type: $0.type) }
+            .joined(separator: "|") ?? "default"
 
         let components = [
             snapshot.displayData.name,
             "\(width)",
             "\(indicatorCount)",
-            "\(hasAQI)",
+            indicatorSignature,
+            visibilitySignature,
+            prominentType?.shortName ?? "none",
             displayType.rawValue,
             "\(numberOfColumns)",
         ]
         return components.joined(separator: "_")
+    }
+
+    private func variantSignature(
+        for variant: MeasurementDisplayVariant?,
+        type: MeasurementType
+    ) -> String {
+        guard let variant else {
+            return String(describing: type)
+        }
+
+        var components = [String(describing: variant.type)]
+        if let temperatureUnit = variant.temperatureUnit {
+            components.append("temp:\(temperatureUnit)")
+        }
+        if let humidityUnit = variant.humidityUnit {
+            components.append("hum:\(humidityUnit)")
+        }
+        if let pressureUnit = variant.pressureUnit {
+            components.append("pres:\(pressureUnit)")
+        }
+        return components.joined(separator: "-")
     }
 }

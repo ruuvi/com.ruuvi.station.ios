@@ -97,9 +97,10 @@ extension DashboardIndicatorView {
     func setValue(
         with value: String?,
         unit: String? = nil,
-        for type: MeasurementType,
+        for variant: MeasurementDisplayVariant,
         dashboardType: DashboardType
     ) {
+        let type = variant.type
         self.dashboardType = dashboardType
 
         switch dashboardType {
@@ -118,7 +119,7 @@ extension DashboardIndicatorView {
         indicatorValueLabel.text = value
         indicatorUnitLabel.text = unit
 
-        indicatorTitleLabel.text = type.shortName
+        indicatorTitleLabel.text = type.shortName(for: variant)
 
         let isUnitEmpty = unit?.isEmpty ?? true
         indicatorUnitLabel.isHidden = isUnitEmpty || MeasurementType.hideUnit(for: type)

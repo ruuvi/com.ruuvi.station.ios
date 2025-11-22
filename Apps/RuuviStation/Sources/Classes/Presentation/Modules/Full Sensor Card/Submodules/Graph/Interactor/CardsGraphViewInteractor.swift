@@ -261,7 +261,6 @@ extension CardsGraphViewInteractor {
         ruuviTagData.removeFirst(prunedResults.count)
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func fetchLast() {
         guard ruuviTagSensor != nil
         else {
@@ -277,51 +276,8 @@ extension CardsGraphViewInteractor {
             }
             sSelf.lastMeasurement = record.measurement
             sSelf.lastMeasurementRecord = record
-            var chartsCases: [MeasurementType] =
-                    [
-                        .temperature,
-                        .humidity,
-                        .pressure,
-                        .aqi,
-                        .co2,
-                        .pm25,
-                        .nox,
-                        .voc,
-                        .luminosity,
-                        .soundInstant,
-                    ]
-            if record.temperature == nil {
-                chartsCases.removeAll { $0 == .temperature }
-            }
-            if record.humidity == nil {
-                chartsCases.removeAll { $0 == .humidity }
-            }
-            if record.pressure == nil {
-                chartsCases.removeAll { $0 == .pressure }
-            }
-            if record.co2 == nil &&
-                record.pm25 == nil {
-                chartsCases.removeAll { $0 == .aqi }
-            }
-            if record.co2 == nil {
-                chartsCases.removeAll { $0 == .co2 }
-            }
-            if record.pm25 == nil {
-                chartsCases.removeAll { $0 == .pm25 }
-            }
-            if record.voc == nil {
-                chartsCases.removeAll { $0 == .voc }
-            }
-            if record.nox == nil {
-                chartsCases.removeAll { $0 == .nox }
-            }
-            if record.luminance == nil {
-                chartsCases.removeAll { $0 == .luminosity }
-            }
-            if record.dbaInstant == nil {
-                chartsCases.removeAll { $0 == .soundInstant }
-            }
-            sSelf.presenter.createChartModules(from: chartsCases)
+            let chartVariants = sSelf.chartVariants(for: record)
+            sSelf.presenter.createChartModules(from: chartVariants)
             sSelf.presenter.updateLatestRecord(record)
         }, failure: { [weak self] error in
             self?.presenter.interactorDidError(.ruuviStorage(error))
@@ -355,6 +311,28 @@ extension CardsGraphViewInteractor {
             self?.presenter.updateLatestRecord(lastMeasurementRecord)
             self?.presenter.interactorDidError(.ruuviStorage(error))
         })
+    }
+
+    private func chartVariants(
+        for record: RuuviTagSensorRecord
+    ) -> [MeasurementDisplayVariant] {
+        return orderedChartMeasurementVariants()
+            .filter {
+                record.hasMeasurement(
+                    for: $0.type
+                )
+        }
+    }
+
+    private func orderedChartMeasurementVariants() -> [MeasurementDisplayVariant] {
+        let profile: MeasurementDisplayProfile
+        if let sensor = ruuviTagSensor {
+            profile = RuuviTagDataService.measurementDisplayProfile(for: sensor)
+        } else {
+            profile = RuuviTagDataService.defaultMeasurementDisplayProfile()
+        }
+
+        return profile.orderedVisibleVariants(for: .graph)
     }
 
     private func fetchPoints(_ completion: (() -> Void)? = nil) {

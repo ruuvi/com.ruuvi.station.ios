@@ -5,7 +5,10 @@ protocol CardsBaseViewOutput: AnyObject {
     func appWillMoveToForeground()
     func viewWillAppear()
     func viewDidChangeTab(_ tab: CardsMenuType)
-    func viewDidScrollToGraph(for measurement: MeasurementType)
+    func viewDidScrollToGraph(
+        for measurement: MeasurementType,
+        variant: MeasurementDisplayVariant?
+    )
     func viewDidRequestNavigateToSnapshotIndex(_ index: Int)
     func viewDidTapBackButton()
     func viewDidConfirmToKeepConnectionChart(to snapshot: RuuviTagCardSnapshot)

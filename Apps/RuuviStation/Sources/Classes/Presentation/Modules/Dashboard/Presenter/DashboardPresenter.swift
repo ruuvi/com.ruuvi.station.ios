@@ -465,6 +465,7 @@ private extension DashboardPresenter {
             }
         } else {
             router.openTagSettings(
+                snapshot: snapshot,
                 ruuviTag: sensor,
                 latestMeasurement: snapshot.latestRawRecord,
                 sensorSettings: relevantSetting,

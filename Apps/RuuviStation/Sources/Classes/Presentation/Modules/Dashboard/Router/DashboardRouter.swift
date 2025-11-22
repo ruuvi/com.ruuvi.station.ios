@@ -12,6 +12,8 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     private weak var backgroundSelectionModule: BackgroundSelectionModuleInput?
     var settings: RuuviLocalSettings!
     var cardsCoordinator: CardsCoordinator!
+    var flags: RuuviLocalFlags!
+    var cardsSettingsCoordinator: CardsSettingsCoordinator!
 
     // swiftlint:disable weak_delegate
     var menuTableInteractiveTransition: MenuTableTransitioningDelegate!
@@ -96,26 +98,38 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     }
 
     func openTagSettings(
+        snapshot: RuuviTagCardSnapshot,
         ruuviTag: RuuviTagSensor,
         latestMeasurement: RuuviTagSensorRecord?,
         sensorSettings: SensorSettings?,
         output: LegacyTagSettingsModuleOutput
     ) {
-        let factory: LegacyTagSettingsModuleFactory = LegacyTagSettingsModuleFactoryImpl()
-        let module = factory.create()
-        transitionHandler
-            .navigationController?
-            .pushViewController(
-                module,
-                animated: true
+        if flags.showImprovedSensorSettingsUI, let transitionHandler {
+            cardsSettingsCoordinator = CardsSettingsCoordinator(
+                baseViewController: transitionHandler,
+                for: snapshot,
+                ruuviTagSensor: ruuviTag,
+                sensorSettings: sensorSettings,
+                delegate: self
             )
-        if let presenter = module.output as? LegacyTagSettingsModuleInput {
-            presenter.configure(output: output)
-            presenter.configure(
-                ruuviTag: ruuviTag,
-                latestMeasurement: latestMeasurement,
-                sensorSettings: sensorSettings
-            )
+            cardsSettingsCoordinator.start()
+        } else {
+            let factory: LegacyTagSettingsModuleFactory = LegacyTagSettingsModuleFactoryImpl()
+            let module = factory.create()
+            transitionHandler
+                .navigationController?
+                .pushViewController(
+                    module,
+                    animated: true
+                )
+            if let presenter = module.output as? LegacyTagSettingsModuleInput {
+                presenter.configure(output: output)
+                presenter.configure(
+                    ruuviTag: ruuviTag,
+                    latestMeasurement: latestMeasurement,
+                    sensorSettings: sensorSettings
+                )
+            }
         }
     }
 
@@ -223,6 +237,15 @@ extension DashboardRouter: CardsCoordinatorDelegate {
     func cardsCoordinatorDidDismiss(_ coordinator: CardsCoordinator) {
         cardsCoordinator.stop()
         cardsCoordinator = nil
+    }
+}
+
+extension DashboardRouter: CardsSettingsCoordinatorDelegate {
+    func cardsSettingsCoordinatorDidDismiss(
+        _ coordinator: CardsSettingsCoordinator
+    ) {
+        cardsSettingsCoordinator.stop()
+        cardsSettingsCoordinator = nil
     }
 }
 

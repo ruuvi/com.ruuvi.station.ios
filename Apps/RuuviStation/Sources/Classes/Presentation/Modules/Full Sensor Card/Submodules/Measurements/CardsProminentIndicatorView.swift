@@ -371,7 +371,7 @@ private extension CardsProminentIndicatorView {
 
     func updateCommonElements(with indicatorData: RuuviTagCardSnapshotIndicatorData) {
         indicatorIcon.image = indicatorData.type.icon
-        indicatorTitleLabel.text = indicatorData.type.shortName
+        indicatorTitleLabel.text = indicatorData.type.shortName(for: indicatorData.variant)
     }
 
     func handleAQIMode(with indicatorData: RuuviTagCardSnapshotIndicatorData) {
