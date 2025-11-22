@@ -256,6 +256,7 @@ final class MeasurementDetailsViewController: UIViewController {
     // MARK: - State Properties
 
     private var currentMeasurementType: MeasurementType
+    private var currentMeasurementVariant: MeasurementDisplayVariant?
     private var tagSnapshot: RuuviTagCardSnapshot
     private var maximumSheetHeight: CGFloat
 
@@ -285,10 +286,12 @@ final class MeasurementDetailsViewController: UIViewController {
     init(
         maximumSheetHeight: CGFloat,
         measurementType: MeasurementType,
+        variant: MeasurementDisplayVariant?,
         snapshot: RuuviTagCardSnapshot
     ) {
         self.maximumSheetHeight = maximumSheetHeight
         self.currentMeasurementType = measurementType
+        self.currentMeasurementVariant = variant
         self.tagSnapshot = snapshot
         super.init(nibName: nil, bundle: nil)
     }
@@ -316,14 +319,21 @@ final class MeasurementDetailsViewController: UIViewController {
 
     func configure(
         measurementType: MeasurementType,
+        variant: MeasurementDisplayVariant? = nil,
         value: String? = nil,
         unit: String? = nil,
         quality: MeasurementQualityState? = nil,
         description: NSAttributedString? = nil,
         linkHandler: ((String) -> Void)? = nil
     ) {
+        currentMeasurementType = measurementType
+        if let variant {
+            currentMeasurementVariant = variant
+        }
+
         configureContent(
             measurementType: measurementType,
+            variant: variant ?? currentMeasurementVariant,
             value: value,
             unit: unit,
             quality: quality,
@@ -587,14 +597,18 @@ private extension MeasurementDetailsViewController {
 // MARK: - Content Configuration
 
 private extension MeasurementDetailsViewController {
+
+    // swiftlint:disable:next function_parameter_count
     func configureContent(
         measurementType: MeasurementType,
+        variant: MeasurementDisplayVariant?,
         value: String?,
         unit: String?,
         quality: MeasurementQualityState?,
         description: NSAttributedString?
     ) {
-        titleLabel.text = measurementType.fullName
+        let resolvedVariant = variant ?? currentMeasurementVariant
+        titleLabel.text = measurementType.fullName(for: resolvedVariant)
         valueLabel.text = value
         unitLabel.text = unit
         descriptionLabel.attributedText = description
@@ -742,15 +756,18 @@ private extension MeasurementDetailsViewController {
         _ measurement: RuuviTagCardSnapshotIndicatorData
     ) {
         currentMeasurementType = measurement.type
+        currentMeasurementVariant = measurement.variant
 
         let processedValue = Self.processIndicatorValue(measurement)
         let processedUnit = Self.processIndicatorUnit(measurement)
         let attributedDescription = Self.createAttributedDescription(
-            for: measurement.type
+            for: measurement.type,
+            variant: measurement.variant
         )
 
         configure(
             measurementType: measurement.type,
+            variant: measurement.variant,
             value: processedValue,
             unit: processedUnit,
             quality: measurement.qualityState,
@@ -783,9 +800,13 @@ extension MeasurementDetailsViewController: MeasurementDetailsViewInput {
 
     func setChartData(
         _ data: RuuviGraphViewDataModel,
-        settings: RuuviLocalSettings
+        settings: RuuviLocalSettings,
+        displayType: MeasurementType,
+        unit: String,
+        measurementService: RuuviServiceMeasurement
     ) {
-        graphView.graphType = data.chartType
+        currentMeasurementVariant = data.variant
+        graphView.graphType = displayType
         graphView.data = data.chartData
         graphView.lowerAlertValue = data.lowerAlertValue
         graphView.upperAlertValue = data.upperAlertValue
@@ -796,6 +817,11 @@ extension MeasurementDetailsViewController: MeasurementDetailsViewInput {
             max: data.chartData?.yMax ?? 0
         )
         graphView.setXAxisRenderer(showAll: true)
+        graphView.setMarker(
+            with: displayType,
+            measurementService: measurementService,
+            unit: unit
+        )
 
         let hasData = data.chartData?.entryCount ?? 0 > 0
         setNoDataLabelVisibility(show: !hasData)
@@ -835,6 +861,15 @@ extension MeasurementDetailsViewController: MeasurementDetailsViewInput {
             self?.graphView.isHidden = show
         }
     }
+
+    func indicatorMatchesCurrentSelection(
+        _ indicator: RuuviTagCardSnapshotIndicatorData
+    ) -> Bool {
+        if let variant = currentMeasurementVariant {
+            return indicator.variant == variant
+        }
+        return indicator.type == currentMeasurementType
+    }
 }
 
 // MARK: - Update Methods
@@ -844,7 +879,7 @@ private extension MeasurementDetailsViewController {
         from indicatorData: RuuviTagCardSnapshotDisplayData
     ) {
         guard let currentIndicator = indicatorData.indicatorGrid?.indicators
-            .first(where: { $0.type == currentMeasurementType })
+            .first(where: { indicatorMatchesCurrentSelection($0) })
         else { return }
 
         let processedValue = Self.processIndicatorValue(currentIndicator)
@@ -1028,17 +1063,20 @@ extension MeasurementDetailsViewController {
         let viewController = MeasurementDetailsViewController(
             maximumSheetHeight: maximumSheetHeight,
             measurementType: indicator.type,
+            variant: indicator.variant,
             snapshot: snapshot
         )
 
         let processedValue = processIndicatorValue(indicator)
         let processedUnit = processIndicatorUnit(indicator)
         let attributedDescription = createAttributedDescription(
-            for: indicator.type
+            for: indicator.type,
+            variant: indicator.variant
         )
 
         viewController.configure(
             measurementType: indicator.type,
+            variant: indicator.variant,
             value: processedValue,
             unit: processedUnit,
             quality: indicator.qualityState,
@@ -1095,10 +1133,11 @@ private extension MeasurementDetailsViewController {
     }
 
     static func createAttributedDescription(
-        for type: MeasurementType
+        for type: MeasurementType,
+        variant: MeasurementDisplayVariant?
     ) -> NSAttributedString {
         NSAttributedString.fromFormattedDescription(
-            type.descriptionText,
+            type.descriptionText(for: variant),
             titleFont: UIFont.ruuviBody(),
             paragraphFont: UIFont.ruuviSubheadline(),
             boldFont: UIFont.ruuviSubheadlineBold(),

@@ -1,6 +1,9 @@
+// swiftlint:disable file_length
+
 import RuuviOntology
 import RuuviLocalization
 import UIKit
+import RuuviLocal
 
 extension MeasurementType {
 
@@ -186,6 +189,57 @@ extension MeasurementType {
             return RuuviLocalization.signalStrengthWithUnit()
         default:
             return shortName(for: variant)
+        }
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity
+    func unit(
+        for variant: MeasurementDisplayVariant,
+        settings: RuuviLocalSettings
+    ) -> String {
+        switch variant.type {
+        case .temperature:
+            let unit = variant.temperatureUnit ?? settings.temperatureUnit
+            return unit.symbol
+        case .humidity:
+            switch variant.resolvedHumidityUnit(default: settings.humidityUnit) {
+            case .percent:
+                return RuuviLocalization.humidityRelativeUnit
+            case .gm3:
+                return RuuviLocalization.gm³
+            case .dew:
+                let tempUnit = variant.temperatureUnit ?? settings.temperatureUnit
+                return tempUnit.symbol
+            }
+        case .pressure:
+            let pressureUnit = variant.resolvedPressureUnit(default: settings.pressureUnit)
+            return pressureUnit.symbol
+        case .co2:
+            return RuuviLocalization.unitCo2
+        case .pm10:
+            return RuuviLocalization.unitPm10
+        case .pm25:
+            return RuuviLocalization.unitPm25
+        case .pm40:
+            return RuuviLocalization.unitPm40
+        case .pm100:
+            return RuuviLocalization.unitPm100
+        case .voc:
+            return RuuviLocalization.unitVoc
+        case .nox:
+            return RuuviLocalization.unitNox
+        case .luminosity:
+            return RuuviLocalization.unitLuminosity
+        case .soundInstant:
+            return RuuviLocalization.unitSound
+        case .voltage:
+            return RuuviLocalization.v
+        case .rssi:
+            return RuuviLocalization.dBm
+        case .accelerationX, .accelerationY, .accelerationZ:
+            return RuuviLocalization.g
+        default:
+            return ""
         }
     }
 
@@ -391,3 +445,4 @@ extension Array where Element == MeasurementType {
     firstIndex { $0.isSameCase(as: probe) }
   }
 }
+// swiftlint:enable file_length

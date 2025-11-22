@@ -21,6 +21,7 @@ protocol DashboardRouterInput {
     )
     // Opens legacy settings. Can be removed when full settings is implemented in new menu.
     func openTagSettings(
+        snapshot: RuuviTagCardSnapshot,
         ruuviTag: RuuviTagSensor,
         latestMeasurement: RuuviTagSensorRecord?,
         sensorSettings: SensorSettings?,

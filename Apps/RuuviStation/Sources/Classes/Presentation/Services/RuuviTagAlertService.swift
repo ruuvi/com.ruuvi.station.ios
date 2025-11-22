@@ -596,6 +596,11 @@ private extension RuuviTagAlertService {
             upperBound = upper
             description = alertService.pressureDescription(for: physicalSensor)
 
+        case let .aqi(lower, upper):
+            lowerBound = lower
+            upperBound = upper
+            description = alertService.aqiDescription(for: physicalSensor)
+
         case let .carbonDioxide(lower, upper):
             lowerBound = lower
             upperBound = upper
@@ -635,6 +640,16 @@ private extension RuuviTagAlertService {
             lowerBound = lower
             upperBound = upper
             description = alertService.soundInstantDescription(for: physicalSensor)
+
+        case let .soundPeak(lower, upper):
+            lowerBound = lower
+            upperBound = upper
+            description = alertService.soundPeakDescription(for: physicalSensor)
+
+        case let .soundAverage(lower, upper):
+            lowerBound = lower
+            upperBound = upper
+            description = alertService.soundAverageDescription(for: physicalSensor)
 
         case let .luminosity(lower, upper):
             lowerBound = lower
@@ -825,6 +840,7 @@ private extension RuuviTagAlertService {
         case .temperature: alertService.setLower(celsius: value, ruuviTag: physicalSensor)
         case .relativeHumidity: alertService.setLower(relativeHumidity: value / 100.0, ruuviTag: physicalSensor)
         case .pressure: alertService.setLower(pressure: value, ruuviTag: physicalSensor)
+        case .aqi: alertService.setLower(aqi: value, ruuviTag: physicalSensor)
         case .carbonDioxide: alertService.setLower(carbonDioxide: value, ruuviTag: physicalSensor)
         case .pMatter1: alertService.setLower(pm1: value, ruuviTag: physicalSensor)
         case .pMatter25: alertService.setLower(pm25: value, ruuviTag: physicalSensor)
@@ -833,6 +849,8 @@ private extension RuuviTagAlertService {
         case .voc: alertService.setLower(voc: value, ruuviTag: physicalSensor)
         case .nox: alertService.setLower(nox: value, ruuviTag: physicalSensor)
         case .soundInstant: alertService.setLower(soundInstant: value, ruuviTag: physicalSensor)
+        case .soundAverage: alertService.setLower(soundAverage: value, ruuviTag: physicalSensor)
+        case .soundPeak: alertService.setLower(soundPeak: value, ruuviTag: physicalSensor)
         case .luminosity: alertService.setLower(luminosity: value, ruuviTag: physicalSensor)
         case .signal: alertService.setLower(signal: value, ruuviTag: physicalSensor)
         default: break
@@ -849,6 +867,7 @@ private extension RuuviTagAlertService {
         case .temperature: alertService.setUpper(celsius: value, ruuviTag: physicalSensor)
         case .relativeHumidity: alertService.setUpper(relativeHumidity: value / 100.0, ruuviTag: physicalSensor)
         case .pressure: alertService.setUpper(pressure: value, ruuviTag: physicalSensor)
+        case .aqi: alertService.setUpper(aqi: value, ruuviTag: physicalSensor)
         case .carbonDioxide: alertService.setUpper(carbonDioxide: value, ruuviTag: physicalSensor)
         case .pMatter1: alertService.setUpper(pm1: value, ruuviTag: physicalSensor)
         case .pMatter25: alertService.setUpper(pm25: value, ruuviTag: physicalSensor)
@@ -857,6 +876,8 @@ private extension RuuviTagAlertService {
         case .voc: alertService.setUpper(voc: value, ruuviTag: physicalSensor)
         case .nox: alertService.setUpper(nox: value, ruuviTag: physicalSensor)
         case .soundInstant: alertService.setUpper(soundInstant: value, ruuviTag: physicalSensor)
+        case .soundAverage: alertService.setUpper(soundAverage: value, ruuviTag: physicalSensor)
+        case .soundPeak: alertService.setUpper(soundPeak: value, ruuviTag: physicalSensor)
         case .luminosity: alertService.setUpper(luminosity: value, ruuviTag: physicalSensor)
         case .signal: alertService.setUpper(signal: value, ruuviTag: physicalSensor)
         default: break
@@ -873,6 +894,7 @@ private extension RuuviTagAlertService {
         case .temperature: alertService.setTemperature(description: description, ruuviTag: physicalSensor)
         case .relativeHumidity: alertService.setRelativeHumidity(description: description, ruuviTag: physicalSensor)
         case .pressure: alertService.setPressure(description: description, ruuviTag: physicalSensor)
+        case .aqi: alertService.setAQI(description: description, ruuviTag: physicalSensor)
         case .carbonDioxide: alertService.setCarbonDioxide(description: description, ruuviTag: physicalSensor)
         case .pMatter1: alertService.setPM1(description: description, ruuviTag: physicalSensor)
         case .pMatter25: alertService.setPM25(description: description, ruuviTag: physicalSensor)
@@ -880,7 +902,18 @@ private extension RuuviTagAlertService {
         case .pMatter10: alertService.setPM10(description: description, ruuviTag: physicalSensor)
         case .voc: alertService.setVOC(description: description, ruuviTag: physicalSensor)
         case .nox: alertService.setNOX(description: description, ruuviTag: physicalSensor)
-        case .soundInstant: alertService.setSoundInstant(description: description, ruuviTag: physicalSensor)
+        case .soundInstant: alertService.setSoundInstant(
+            description: description,
+            ruuviTag: physicalSensor
+        )
+        case .soundAverage: alertService.setSoundAverage(
+            description: description,
+            ruuviTag: physicalSensor
+        )
+        case .soundPeak: alertService.setSoundPeak(
+            description: description,
+            ruuviTag: physicalSensor
+        )
         case .luminosity: alertService.setLuminosity(description: description, ruuviTag: physicalSensor)
         case .signal: alertService.setSignal(description: description, ruuviTag: physicalSensor)
         case .movement: alertService.setMovement(description: description, ruuviTag: physicalSensor)
@@ -897,12 +930,19 @@ private extension RuuviTagAlertService {
         case .temperature: return alertService.lowerCelsius(for: physicalSensor)
         case .humidity: return alertService.lowerRelativeHumidity(for: physicalSensor).map { $0 * 100.0 }
         case .pressure: return alertService.lowerPressure(for: physicalSensor)
+        case .aqi: return alertService.lowerAQI(for: physicalSensor)
         case .co2: return alertService.lowerCarbonDioxide(for: physicalSensor)
+        case .pm10: return alertService.lowerPM1(for: physicalSensor)
         case .pm25: return alertService.lowerPM25(for: physicalSensor)
+        case .pm40: return alertService.lowerPM4(for: physicalSensor)
         case .pm100: return alertService.lowerPM10(for: physicalSensor)
         case .voc: return alertService.lowerVOC(for: physicalSensor)
         case .nox: return alertService.lowerNOX(for: physicalSensor)
         case .soundInstant: return alertService.lowerSoundInstant(for: physicalSensor)
+        case .soundAverage: return alertService.lowerSoundAverage(
+            for: physicalSensor
+        )
+        case .soundPeak: return alertService.lowerSoundPeak(for: physicalSensor)
         case .luminosity: return alertService.lowerLuminosity(for: physicalSensor)
         default: return nil
         }
@@ -914,12 +954,19 @@ private extension RuuviTagAlertService {
         case .temperature: return alertService.upperCelsius(for: physicalSensor)
         case .humidity: return alertService.upperRelativeHumidity(for: physicalSensor).map { $0 * 100.0 }
         case .pressure: return alertService.upperPressure(for: physicalSensor)
+        case .aqi: return alertService.upperAQI(for: physicalSensor)
         case .co2: return alertService.upperCarbonDioxide(for: physicalSensor)
+        case .pm10: return alertService.upperPM1(for: physicalSensor)
         case .pm25: return alertService.upperPM25(for: physicalSensor)
+        case .pm40: return alertService.upperPM4(for: physicalSensor)
         case .pm100: return alertService.upperPM10(for: physicalSensor)
         case .voc: return alertService.upperVOC(for: physicalSensor)
         case .nox: return alertService.upperNOX(for: physicalSensor)
         case .soundInstant: return alertService.upperSoundInstant(for: physicalSensor)
+        case .soundAverage: return alertService.upperSoundAverage(for: physicalSensor)
+        case .soundPeak: return alertService.upperSoundPeak(
+            for: physicalSensor
+        )
         case .luminosity: return alertService.upperLuminosity(for: physicalSensor)
         default: return nil
         }
@@ -942,12 +989,17 @@ private extension RuuviTagAlertService {
         case .temperature: return alertService.temperatureDescription(for: physicalSensor)
         case .humidity: return alertService.relativeHumidityDescription(for: physicalSensor)
         case .pressure: return alertService.pressureDescription(for: physicalSensor)
+        case .aqi: return alertService.aqiDescription(for: physicalSensor)
         case .co2: return alertService.carbonDioxideDescription(for: physicalSensor)
+        case .pm10: return alertService.pm1Description(for: physicalSensor)
         case .pm25: return alertService.pm25Description(for: physicalSensor)
+        case .pm40: return alertService.pm4Description(for: physicalSensor)
         case .pm100: return alertService.pm10Description(for: physicalSensor)
         case .voc: return alertService.vocDescription(for: physicalSensor)
         case .nox: return alertService.noxDescription(for: physicalSensor)
         case .soundInstant: return alertService.soundInstantDescription(for: physicalSensor)
+        case .soundAverage: return alertService.soundAverageDescription(for: physicalSensor)
+        case .soundPeak: return alertService.soundPeakDescription(for: physicalSensor)
         case .luminosity: return alertService.luminosityDescription(for: physicalSensor)
         default: return nil
         }
@@ -959,6 +1011,7 @@ private extension RuuviTagAlertService {
         case .temperature: return RuuviAlertConstants.Temperature.lowerBound
         case .relativeHumidity: return RuuviAlertConstants.RelativeHumidity.lowerBound
         case .pressure: return RuuviAlertConstants.Pressure.lowerBound
+        case .aqi: return RuuviAlertConstants.AQI.lowerBound
         case .carbonDioxide: return RuuviAlertConstants.CarbonDioxide.lowerBound
         case .pMatter1,
              .pMatter25,
@@ -966,7 +1019,7 @@ private extension RuuviTagAlertService {
              .pMatter10: return RuuviAlertConstants.ParticulateMatter.lowerBound
         case .voc: return RuuviAlertConstants.VOC.lowerBound
         case .nox: return RuuviAlertConstants.NOX.lowerBound
-        case .soundInstant: return RuuviAlertConstants.Sound.lowerBound
+        case .soundInstant, .soundAverage, .soundPeak: return RuuviAlertConstants.Sound.lowerBound
         case .luminosity: return RuuviAlertConstants.Luminosity.lowerBound
         case .signal: return RuuviAlertConstants.Signal.lowerBound
         default: return nil
@@ -979,6 +1032,7 @@ private extension RuuviTagAlertService {
         case .temperature: return RuuviAlertConstants.Temperature.upperBound
         case .relativeHumidity: return RuuviAlertConstants.RelativeHumidity.upperBound
         case .pressure: return RuuviAlertConstants.Pressure.upperBound
+        case .aqi: return RuuviAlertConstants.AQI.upperBound
         case .carbonDioxide: return RuuviAlertConstants.CarbonDioxide.upperBound
         case .pMatter1,
              .pMatter25,
@@ -986,7 +1040,7 @@ private extension RuuviTagAlertService {
              .pMatter10: return RuuviAlertConstants.ParticulateMatter.upperBound
         case .voc: return RuuviAlertConstants.VOC.upperBound
         case .nox: return RuuviAlertConstants.NOX.upperBound
-        case .soundInstant: return RuuviAlertConstants.Sound.upperBound
+        case .soundInstant, .soundAverage, .soundPeak: return RuuviAlertConstants.Sound.upperBound
         case .luminosity: return RuuviAlertConstants.Luminosity.upperBound
         case .signal: return RuuviAlertConstants.Signal.upperBound
         default: return nil
@@ -1015,6 +1069,11 @@ private extension RuuviTagAlertService {
             return .pressure(
                 lower: config.lowerBound ?? RuuviAlertConstants.Pressure.lowerBound,
                 upper: config.upperBound ?? RuuviAlertConstants.Pressure.upperBound
+            )
+        case .aqi:
+            return .aqi(
+                lower: config.lowerBound ?? RuuviAlertConstants.AQI.lowerBound,
+                upper: config.upperBound ?? RuuviAlertConstants.AQI.upperBound
             )
 
         case .carbonDioxide:
@@ -1058,6 +1117,18 @@ private extension RuuviTagAlertService {
 
         case .soundInstant:
             return .soundInstant(
+                lower: config.lowerBound ?? RuuviAlertConstants.Sound.lowerBound,
+                upper: config.upperBound ?? RuuviAlertConstants.Sound.upperBound
+            )
+
+        case .soundAverage:
+            return .soundAverage(
+                lower: config.lowerBound ?? RuuviAlertConstants.Sound.lowerBound,
+                upper: config.upperBound ?? RuuviAlertConstants.Sound.upperBound
+            )
+
+        case .soundPeak:
+            return .soundPeak(
                 lower: config.lowerBound ?? RuuviAlertConstants.Sound.lowerBound,
                 upper: config.upperBound ?? RuuviAlertConstants.Sound.upperBound
             )
@@ -1152,7 +1223,7 @@ private extension RuuviTagAlertService {
 extension RuuviTagAlertService: RuuviNotifierObserver {
 
     func ruuvi(notifier: RuuviNotifier, isTriggered: Bool, for uuid: String) {
-//        addToPendingUpdates(snapshotId: uuid)
+        // No op.
     }
 
     // swiftlint:disable:next function_body_length

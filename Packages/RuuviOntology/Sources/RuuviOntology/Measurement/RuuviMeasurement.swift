@@ -37,6 +37,8 @@ public struct RuuviMeasurement {
     public var nox: Double?
     public var luminosity: Double?
     public var soundInstant: Double? // Instant
+    public var soundAvg: Double? // Instant
+    public var soundPeak: Double? // Instant
 
     public init(
         luid: LocalIdentifier?,
@@ -56,6 +58,8 @@ public struct RuuviMeasurement {
         nox: Double?,
         luminosity: Double?,
         soundInstant: Double?,
+        soundAvg: Double?,
+        soundPeak: Double?,
         acceleration: Acceleration?,
         voltage: Voltage?,
         movementCounter: Int?,
@@ -78,6 +82,8 @@ public struct RuuviMeasurement {
         self.nox = nox
         self.luminosity = luminosity
         self.soundInstant = soundInstant
+        self.soundAvg = soundAvg
+        self.soundPeak = soundPeak
         self.acceleration = acceleration
         self.voltage = voltage
         self.movementCounter = movementCounter

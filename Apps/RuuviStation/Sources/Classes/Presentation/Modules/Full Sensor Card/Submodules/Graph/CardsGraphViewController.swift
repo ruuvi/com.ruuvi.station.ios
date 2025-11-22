@@ -6,6 +6,7 @@ import GestureInstructions
 import RuuviLocal
 import RuuviLocalization
 import RuuviOntology
+import Humidity
 import RuuviService
 import RuuviStorage
 import UIKit
@@ -23,7 +24,7 @@ class CardsGraphViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private var chartModules: [MeasurementType] = [] {
+    private var chartModules: [MeasurementDisplayVariant] = [] {
         didSet {
             moreButton.updateMenu(
                 with:
@@ -149,7 +150,8 @@ class CardsGraphViewController: UIViewController {
     }()
 
     private var chartViews: [CardsGraphView] = []
-    private var pendingScrollToMeasurement: MeasurementType?
+    private var pendingScrollVariant: MeasurementDisplayVariant?
+    private var needsDeferredLayoutUpdate = false
 
     private var isLandscapeLayout: Bool {
         if let interfaceOrientation = view.window?.windowScene?.interfaceOrientation {
@@ -168,27 +170,17 @@ class CardsGraphViewController: UIViewController {
         return configuration
     }()
 
-    lazy var temperatureChartView = CardsGraphView(graphType: .temperature)
-    lazy var humidityChartView = CardsGraphView(graphType: .humidity)
-    lazy var pressureChartView = CardsGraphView(graphType: .pressure)
-    lazy var aqiChartView = CardsGraphView(graphType: .aqi)
-    lazy var co2ChartView = CardsGraphView(graphType: .co2)
-    lazy var pm25ChartView = CardsGraphView(graphType: .pm25)
-    lazy var vocChartView = CardsGraphView(graphType: .voc)
-    lazy var noxChartView = CardsGraphView(graphType: .nox)
-    lazy var luminosityChartView = CardsGraphView(graphType: .luminosity)
-    lazy var soundChartView = CardsGraphView(graphType: .soundInstant)
+    private lazy var chartsStackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 0
+        stack.alignment = .fill
+        stack.distribution = .fill
+        return stack
+    }()
 
-    private var temperatureChartViewHeight: NSLayoutConstraint!
-    private var humidityChartViewHeight: NSLayoutConstraint!
-    private var pressureChartViewHeight: NSLayoutConstraint!
-    private var aqiChartViewHeight: NSLayoutConstraint!
-    private var co2ChartViewHeight: NSLayoutConstraint!
-    private var pm25ChartViewHeight: NSLayoutConstraint!
-    private var vocChartViewHeight: NSLayoutConstraint!
-    private var noxChartViewHeight: NSLayoutConstraint!
-    private var luminosityChartViewHeight: NSLayoutConstraint!
-    private var soundChartViewHeight: NSLayoutConstraint!
+    private var chartViewCache: [MeasurementDisplayVariant: CardsGraphView] = [:]
+    private var chartHeightConstraints: [MeasurementDisplayVariant: NSLayoutConstraint] = [:]
 
     // Sync view
     lazy var syncProgressView = UIView(color: .clear)
@@ -261,10 +253,15 @@ class CardsGraphViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        updateChartsCollectionConstaints(
-            from: chartModules,
-            withAnimation: false
-        )
+        if needsDeferredLayoutUpdate,
+           scrollView.frame.height > 0 {
+            needsDeferredLayoutUpdate = false
+            updateChartsCollectionConstaints(from: chartModules)
+        } else if let variant = pendingScrollVariant,
+                  !chartModules.isEmpty,
+                  scrollView.frame.height > 0 {
+            scroll(to: variant)
+        }
     }
 
     override func viewWillTransition(
@@ -390,125 +387,14 @@ class CardsGraphViewController: UIViewController {
             padding: .init(top: 6, left: 0, bottom: 0, right: 0)
         )
 
-        scrollView.addSubview(aqiChartView)
-        aqiChartView.anchor(
+        scrollView.addSubview(chartsStackView)
+        chartsStackView.anchor(
             top: scrollView.topAnchor,
-            leading: scrollView.leadingAnchor,
-            bottom: nil,
-            trailing: scrollView.trailingAnchor
-        )
-        aqiChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        aqiChartViewHeight = aqiChartView.heightAnchor.constraint(equalToConstant: 0)
-        aqiChartViewHeight.isActive = true
-        aqiChartView.chartDelegate = self
-
-        scrollView.addSubview(co2ChartView)
-        co2ChartView.anchor(
-            top: aqiChartView.bottomAnchor,
-            leading: scrollView.leadingAnchor,
-            bottom: nil,
-            trailing: scrollView.trailingAnchor
-        )
-        co2ChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        co2ChartViewHeight = co2ChartView.heightAnchor.constraint(equalToConstant: 0)
-        co2ChartViewHeight.isActive = true
-        co2ChartView.chartDelegate = self
-
-        scrollView.addSubview(pm25ChartView)
-        pm25ChartView.anchor(
-            top: co2ChartView.bottomAnchor,
-            leading: scrollView.leadingAnchor,
-            bottom: nil,
-            trailing: scrollView.trailingAnchor
-        )
-        pm25ChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        pm25ChartViewHeight = pm25ChartView.heightAnchor.constraint(equalToConstant: 0)
-        pm25ChartViewHeight.isActive = true
-        pm25ChartView.chartDelegate = self
-
-        scrollView.addSubview(vocChartView)
-        vocChartView.anchor(
-            top: pm25ChartView.bottomAnchor,
-            leading: scrollView.leadingAnchor,
-            bottom: nil,
-            trailing: scrollView.trailingAnchor
-        )
-        vocChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        vocChartViewHeight = vocChartView.heightAnchor.constraint(equalToConstant: 0)
-        vocChartViewHeight.isActive = true
-        vocChartView.chartDelegate = self
-
-        scrollView.addSubview(noxChartView)
-        noxChartView.anchor(
-            top: vocChartView.bottomAnchor,
-            leading: scrollView.leadingAnchor,
-            bottom: nil,
-            trailing: scrollView.trailingAnchor
-        )
-        noxChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        noxChartViewHeight = noxChartView.heightAnchor.constraint(equalToConstant: 0)
-        noxChartViewHeight.isActive = true
-        noxChartView.chartDelegate = self
-
-        scrollView.addSubview(temperatureChartView)
-        temperatureChartView.anchor(
-            top: noxChartView.bottomAnchor,
-            leading: scrollView.leadingAnchor,
-            bottom: nil,
-            trailing: scrollView.trailingAnchor
-        )
-        temperatureChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        temperatureChartViewHeight = temperatureChartView.heightAnchor.constraint(equalToConstant: 0)
-        temperatureChartViewHeight.isActive = true
-        temperatureChartView.chartDelegate = self
-
-        scrollView.addSubview(humidityChartView)
-        humidityChartView.anchor(
-            top: temperatureChartView.bottomAnchor,
-            leading: scrollView.leadingAnchor,
-            bottom: nil,
-            trailing: scrollView.trailingAnchor
-        )
-        humidityChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        humidityChartViewHeight = humidityChartView.heightAnchor.constraint(equalToConstant: 0)
-        humidityChartViewHeight.isActive = true
-        humidityChartView.chartDelegate = self
-
-        scrollView.addSubview(pressureChartView)
-        pressureChartView.anchor(
-            top: humidityChartView.bottomAnchor,
-            leading: scrollView.leadingAnchor,
-            bottom: nil,
-            trailing: scrollView.trailingAnchor
-        )
-        pressureChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        pressureChartViewHeight = pressureChartView.heightAnchor.constraint(equalToConstant: 0)
-        pressureChartViewHeight.isActive = true
-        pressureChartView.chartDelegate = self
-
-        scrollView.addSubview(luminosityChartView)
-        luminosityChartView.anchor(
-            top: pressureChartView.bottomAnchor,
-            leading: scrollView.leadingAnchor,
-            bottom: nil,
-            trailing: scrollView.trailingAnchor
-        )
-        luminosityChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        luminosityChartViewHeight = luminosityChartView.heightAnchor.constraint(equalToConstant: 0)
-        luminosityChartViewHeight.isActive = true
-        luminosityChartView.chartDelegate = self
-
-        scrollView.addSubview(soundChartView)
-        soundChartView.anchor(
-            top: luminosityChartView.bottomAnchor,
             leading: scrollView.leadingAnchor,
             bottom: scrollView.bottomAnchor,
             trailing: scrollView.trailingAnchor
         )
-        soundChartView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        soundChartViewHeight = soundChartView.heightAnchor.constraint(equalToConstant: 0)
-        soundChartViewHeight.isActive = true
-        soundChartView.chartDelegate = self
+        chartsStackView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
 
         view.addSubview(noDataLabel)
         noDataLabel.anchor(
@@ -696,7 +582,7 @@ extension CardsGraphViewController: CardsGraphViewDelegate {
         for view in chartViews {
             calculateMinMaxForChart(for: view)
             if showAlertRangeInGraph {
-                calculateAlertFillIfNeeded(for: chartView)
+                calculateAlertFillIfNeeded(for: view)
             }
         }
     }
@@ -743,27 +629,28 @@ extension CardsGraphViewController: CardsGraphViewInput {
         clearChartData()
     }
 
-    func createChartViews(from: [MeasurementType]) {
-        chartModules = from
-        updateChartsCollectionConstaints(from: from)
+    func createChartViews(from variants: [MeasurementDisplayVariant]) {
+        chartModules = variants
+        updateChartsCollectionConstaints(from: variants)
     }
 
     func resetScrollPosition() {
         scrollView.setContentOffset(.zero, animated: false)
     }
 
-    func scroll(to measurementType: MeasurementType) {
+    func scroll(to variant: MeasurementDisplayVariant) {
         guard !chartModules.isEmpty else {
-            pendingScrollToMeasurement = measurementType
+            pendingScrollVariant = variant
             return
         }
 
-        pendingScrollToMeasurement = nil
-
-        guard let targetView = getChartView(for: measurementType),
+        guard let targetView = visibleChartView(for: variant),
               !targetView.isHidden else {
+            pendingScrollVariant = variant
             return
         }
+
+        pendingScrollVariant = nil
 
         ensureLayoutComplete()
 
@@ -773,16 +660,16 @@ extension CardsGraphViewController: CardsGraphViewInput {
         if visibleRect.contains(targetFrame) {
             highlightTarget(targetView)
         } else {
-            scrollToTarget(targetFrame, measurementType: measurementType, targetView: targetView)
+            scrollToTarget(targetFrame, targetView: targetView)
         }
     }
 
-    // swiftlint:disable:next function_body_length cyclomatic_complexity
     func setChartViewData(
         from chartViewData: [RuuviGraphViewDataModel],
         settings: RuuviLocalSettings
     ) {
-        if chartViewData.count == 0 {
+        self.settings = settings
+        if chartViewData.isEmpty {
             clearChartData()
             showNoDataLabel()
             hideChartViews()
@@ -794,257 +681,60 @@ extension CardsGraphViewController: CardsGraphViewInput {
         showChartViews()
 
         for data in chartViewData {
-            switch data.chartType {
-            case .temperature:
-                populateChartView(
-                    from: data,
-                    unit: settings.temperatureUnit.symbol,
-                    settings: settings,
-                    view: temperatureChartView
-                )
-            case .humidity:
-                populateChartView(
-                    from: data,
-                    unit: settings.humidityUnit.symbol,
-                    settings: settings,
-                    view: humidityChartView
-                )
-            case .pressure:
-                populateChartView(
-                    from: data,
-                    unit: settings.pressureUnit.symbol,
-                    settings: settings,
-                    view: pressureChartView
-                )
-            case .aqi:
-                populateChartView(
-                    from: data,
-                    unit: "",
-                    settings: settings,
-                    view: aqiChartView
-                )
-            case .co2:
-                populateChartView(
-                    from: data,
-                    unit: RuuviLocalization.unitCo2,
-                    settings: settings,
-                    view: co2ChartView
-                )
-            case .pm25:
-                populateChartView(
-                    from: data,
-                    unit: RuuviLocalization.unitPm25,
-                    settings: settings,
-                    view: pm25ChartView
-                )
-            case .voc:
-                populateChartView(
-                    from: data,
-                    unit: RuuviLocalization.unitVoc,
-                    settings: settings,
-                    view: vocChartView
-                )
-            case .nox:
-                populateChartView(
-                    from: data,
-                    unit: RuuviLocalization.unitNox,
-                    settings: settings,
-                    view: noxChartView
-                )
-            case .luminosity:
-                populateChartView(
-                    from: data,
-                    unit: RuuviLocalization.unitLuminosity,
-                    settings: settings,
-                    view: luminosityChartView
-                )
-            case .soundInstant:
-                populateChartView(
-                    from: data,
-                    unit: RuuviLocalization.unitSound,
-                    settings: settings,
-                    view: soundChartView
-                )
-            default:
-                break
-            }
+            let view = chartView(for: data.variant)
+            populateChartView(
+                from: data,
+                displayType: data.variant.type,
+                unit: data.variant.type.unit(for: data.variant, settings: settings),
+                settings: settings,
+                view: view
+            )
         }
 
         DispatchQueue.main.async { [weak self] in
             self?.view.layoutIfNeeded()
-            if let m = self?.pendingScrollToMeasurement {
-                self?.pendingScrollToMeasurement = nil
-                self?.scroll(to: m)
+            if let variant = self?.pendingScrollVariant {
+                self?.pendingScrollVariant = nil
+                self?.scroll(to: variant)
             }
         }
     }
 
-    // swiftlint:disable:next function_parameter_count function_body_length
     func updateChartViewData(
-        temperatureEntries: [ChartDataEntry],
-        humidityEntries: [ChartDataEntry],
-        pressureEntries: [ChartDataEntry],
-        aqiEntries: [ChartDataEntry],
-        co2Entries: [ChartDataEntry],
-        pm10Entries: [ChartDataEntry],
-        pm25Entries: [ChartDataEntry],
-        vocEntries: [ChartDataEntry],
-        noxEntries: [ChartDataEntry],
-        luminosityEntries: [ChartDataEntry],
-        soundEntries: [ChartDataEntry],
+        _ entries: [MeasurementDisplayVariant: [ChartDataEntry]],
         isFirstEntry: Bool,
         firstEntry: RuuviMeasurement?,
         settings: RuuviLocalSettings
     ) {
+        self.settings = settings
         hideNoDataLabel()
         showChartViews()
 
-        temperatureChartView.setSettings(settings: settings)
-        temperatureChartView.updateDataSet(
-            with: temperatureEntries,
-            isFirstEntry: isFirstEntry,
-            firstEntry: firstEntry,
-            showAlertRangeInGraph: settings.showAlertsRangeInGraph
-        )
-
-        humidityChartView.setSettings(settings: settings)
-        humidityChartView.updateDataSet(
-            with: humidityEntries,
-            isFirstEntry: isFirstEntry,
-            firstEntry: firstEntry,
-            showAlertRangeInGraph: settings.showAlertsRangeInGraph
-        )
-
-        pressureChartView.setSettings(settings: settings)
-        pressureChartView.updateDataSet(
-            with: pressureEntries,
-            isFirstEntry: isFirstEntry,
-            firstEntry: firstEntry,
-            showAlertRangeInGraph: settings.showAlertsRangeInGraph
-        )
-
-        aqiChartView.setSettings(settings: settings)
-        aqiChartView.updateDataSet(
-            with: aqiEntries,
-            isFirstEntry: isFirstEntry,
-            firstEntry: firstEntry,
-            showAlertRangeInGraph: settings.showAlertsRangeInGraph
-        )
-
-        co2ChartView.setSettings(settings: settings)
-        co2ChartView.updateDataSet(
-            with: co2Entries,
-            isFirstEntry: isFirstEntry,
-            firstEntry: firstEntry,
-            showAlertRangeInGraph: settings.showAlertsRangeInGraph
-        )
-
-        pm25ChartView.setSettings(settings: settings)
-        pm25ChartView.updateDataSet(
-            with: pm25Entries,
-            isFirstEntry: isFirstEntry,
-            firstEntry: firstEntry,
-            showAlertRangeInGraph: settings.showAlertsRangeInGraph
-        )
-
-        vocChartView.setSettings(settings: settings)
-        vocChartView.updateDataSet(
-            with: vocEntries,
-            isFirstEntry: isFirstEntry,
-            firstEntry: firstEntry,
-            showAlertRangeInGraph: settings.showAlertsRangeInGraph
-        )
-
-        noxChartView.setSettings(settings: settings)
-        noxChartView.updateDataSet(
-            with: noxEntries,
-            isFirstEntry: isFirstEntry,
-            firstEntry: firstEntry,
-            showAlertRangeInGraph: settings.showAlertsRangeInGraph
-        )
-
-        luminosityChartView.setSettings(settings: settings)
-        luminosityChartView.updateDataSet(
-            with: luminosityEntries,
-            isFirstEntry: isFirstEntry,
-            firstEntry: firstEntry,
-            showAlertRangeInGraph: settings.showAlertsRangeInGraph
-        )
-
-        soundChartView.setSettings(settings: settings)
-        soundChartView.updateDataSet(
-            with: soundEntries,
-            isFirstEntry: isFirstEntry,
-            firstEntry: firstEntry,
-            showAlertRangeInGraph: settings.showAlertsRangeInGraph
-        )
+        entries.forEach { variant, dataEntries in
+            let view = chartView(for: variant)
+            view.setSettings(settings: settings)
+            view.updateDataSet(
+                with: dataEntries,
+                isFirstEntry: isFirstEntry,
+                firstEntry: firstEntry,
+                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+            )
+        }
     }
 
-    // swiftlint:disable:next function_parameter_count
     func updateLatestMeasurement(
-        temperature: ChartDataEntry?,
-        humidity: ChartDataEntry?,
-        pressure: ChartDataEntry?,
-        aqi: ChartDataEntry?,
-        co2: ChartDataEntry?,
-        pm10: ChartDataEntry?,
-        pm25: ChartDataEntry?,
-        voc: ChartDataEntry?,
-        nox: ChartDataEntry?,
-        luminosity: ChartDataEntry?,
-        sound: ChartDataEntry?,
+        _ entries: [MeasurementDisplayVariant: ChartDataEntry?],
         settings: RuuviLocalSettings
     ) {
-        temperatureChartView.updateLatest(
-            with: temperature,
-            type: .temperature,
-            measurementService: measurementService
-        )
-        humidityChartView.updateLatest(
-            with: humidity,
-            type: .humidity,
-            measurementService: measurementService
-        )
-        pressureChartView.updateLatest(
-            with: pressure,
-            type: .pressure,
-            measurementService: measurementService
-        )
-        aqiChartView.updateLatest(
-            with: aqi,
-            type: .aqi,
-            measurementService: measurementService
-        )
-        co2ChartView.updateLatest(
-            with: co2,
-            type: .co2,
-            measurementService: measurementService
-        )
-        pm25ChartView.updateLatest(
-            with: pm25,
-            type: .pm25,
-            measurementService: measurementService
-        )
-        vocChartView.updateLatest(
-            with: voc,
-            type: .voc,
-            measurementService: measurementService
-        )
-        noxChartView.updateLatest(
-            with: nox,
-            type: .nox,
-            measurementService: measurementService
-        )
-        luminosityChartView.updateLatest(
-            with: luminosity,
-            type: .luminosity,
-            measurementService: measurementService
-        )
-        soundChartView.updateLatest(
-            with: sound,
-            type: .soundInstant,
-            measurementService: measurementService
-        )
+        self.settings = settings
+        entries.forEach { variant, entry in
+            let view = chartView(for: variant)
+            view.updateLatest(
+                with: entry,
+                type: variant.type,
+                measurementService: measurementService
+            )
+        }
     }
 
     func localize() {
@@ -1217,201 +907,107 @@ extension CardsGraphViewController: CardsGraphViewInput {
 }
 
 extension CardsGraphViewController {
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func updateChartsCollectionConstaints(
-        from: [MeasurementType],
+        from variants: [MeasurementDisplayVariant],
         withAnimation: Bool = false
     ) {
-        if from.count == 0 {
+        if variants.isEmpty {
             noDataLabel.alpha = 1
+            chartViews.removeAll()
+            hideChartViews()
             return
         }
 
         noDataLabel.alpha = 0
-        chartViews.removeAll()
-        let scrollViewHeight = scrollView.frame.height
-        guard viewIsVisible, scrollViewHeight > 0, from.count > 0
-        else {
+
+        guard viewIsVisible, scrollView.frame.height > 0 else {
+            needsDeferredLayoutUpdate = true
+            pendingScrollVariant = pendingScrollVariant ?? variants.first
             return
         }
+        needsDeferredLayoutUpdate = false
         updateScrollviewBehaviour()
 
-        if !from.contains(.humidity) {
-            humidityChartView.isHidden = true
-            if humidityChartViewHeight.constant != 0 {
-                humidityChartViewHeight.constant = 0
-            }
-        } else {
-            humidityChartView.isHidden = false
+        chartViews = variants.map { chartView(for: $0) }
+        rebuildChartsStack(with: variants)
+
+        let scrollViewHeight = scrollView.frame.height
+        let itemCount = variants.count
+
+        variants.forEach { variant in
+            let view = chartView(for: variant)
+            view.isHidden = false
+            updateChartViewHeight(
+                for: variant,
+                totalHeight: scrollViewHeight,
+                itemCount: itemCount,
+                animated: withAnimation
+            )
         }
 
-        if !from.contains(.pressure) {
-            pressureChartView.isHidden = true
-            if pressureChartViewHeight.constant != 0 {
-                pressureChartViewHeight.constant = 0
-            }
-        } else {
-            pressureChartView.isHidden = false
-        }
-
-        if !from.contains(.aqi) {
-            aqiChartView.isHidden = true
-            if aqiChartViewHeight.constant != 0 {
-                aqiChartViewHeight.constant = 0
-            }
-        } else {
-            aqiChartView.isHidden = false
-        }
-
-        if !from.contains(.co2) {
-            co2ChartView.isHidden = true
-            if co2ChartViewHeight.constant != 0 {
-                co2ChartViewHeight.constant = 0
-            }
-        } else {
-            co2ChartView.isHidden = false
-        }
-
-        if !from.contains(.pm25) {
-            pm25ChartView.isHidden = true
-            if pm25ChartViewHeight.constant != 0 {
-                pm25ChartViewHeight.constant = 0
-            }
-        } else {
-            pm25ChartView.isHidden = false
-        }
-
-        if !from.contains(.voc) {
-            vocChartView.isHidden = true
-            if vocChartViewHeight.constant != 0 {
-                vocChartViewHeight.constant = 0
-            }
-        } else {
-            vocChartView.isHidden = false
-        }
-
-        if !from.contains(.nox) {
-            noxChartView.isHidden = true
-            if noxChartViewHeight.constant != 0 {
-                noxChartViewHeight.constant = 0
-            }
-        } else {
-            noxChartView.isHidden = false
-        }
-
-        if !from.contains(.luminosity) {
-            luminosityChartView.isHidden = true
-            if luminosityChartViewHeight.constant != 0 {
-                luminosityChartViewHeight.constant = 0
-            }
-        } else {
-            luminosityChartView.isHidden = false
-        }
-
-        if !from.contains(.soundInstant) {
-            soundChartView.isHidden = true
-            if soundChartViewHeight.constant != 0 {
-                soundChartViewHeight.constant = 0
-            }
-        } else {
-            soundChartView.isHidden = false
-        }
-
-        for item in from {
-            switch item {
-            case .temperature:
-                chartViews.append(temperatureChartView)
-                updateChartViewConstaints(
-                    constaint: temperatureChartViewHeight,
-                    totalHeight: scrollViewHeight,
-                    itemCount: from.count,
-                    withAnimation: withAnimation
-                )
-            case .humidity:
-                chartViews.append(humidityChartView)
-                updateChartViewConstaints(
-                    constaint: humidityChartViewHeight,
-                    totalHeight: scrollViewHeight,
-                    itemCount: from.count,
-                    withAnimation: withAnimation
-                )
-            case .pressure:
-                chartViews.append(pressureChartView)
-                updateChartViewConstaints(
-                    constaint: pressureChartViewHeight,
-                    totalHeight: scrollViewHeight,
-                    itemCount: from.count,
-                    withAnimation: withAnimation
-                )
-            case .aqi:
-                chartViews.append(aqiChartView)
-                updateChartViewConstaints(
-                    constaint: aqiChartViewHeight,
-                    totalHeight: scrollViewHeight,
-                    itemCount: from.count,
-                    withAnimation: withAnimation
-                )
-            case .co2:
-                chartViews.append(co2ChartView)
-                updateChartViewConstaints(
-                    constaint: co2ChartViewHeight,
-                    totalHeight: scrollViewHeight,
-                    itemCount: from.count,
-                    withAnimation: withAnimation
-                )
-            case .pm25:
-                chartViews.append(pm25ChartView)
-                updateChartViewConstaints(
-                    constaint: pm25ChartViewHeight,
-                    totalHeight: scrollViewHeight,
-                    itemCount: from.count,
-                    withAnimation: withAnimation
-                )
-            case .voc:
-                chartViews.append(vocChartView)
-                updateChartViewConstaints(
-                    constaint: vocChartViewHeight,
-                    totalHeight: scrollViewHeight,
-                    itemCount: from.count,
-                    withAnimation: withAnimation
-                )
-            case .nox:
-                chartViews.append(noxChartView)
-                updateChartViewConstaints(
-                    constaint: noxChartViewHeight,
-                    totalHeight: scrollViewHeight,
-                    itemCount: from.count,
-                    withAnimation: withAnimation
-                )
-            case .luminosity:
-                chartViews.append(luminosityChartView)
-                updateChartViewConstaints(
-                    constaint: luminosityChartViewHeight,
-                    totalHeight: scrollViewHeight,
-                    itemCount: from.count,
-                    withAnimation: withAnimation
-                )
-            case .soundInstant:
-                chartViews.append(soundChartView)
-                updateChartViewConstaints(
-                    constaint: soundChartViewHeight,
-                    totalHeight: scrollViewHeight,
-                    itemCount: from.count,
-                    withAnimation: withAnimation
-                )
-            default:
-                break
-            }
+        let hiddenVariants = Set(chartViewCache.keys).subtracting(variants)
+        hiddenVariants.forEach { variant in
+            chartViewCache[variant]?.isHidden = true
+            chartHeightConstraints[variant]?.constant = 0
         }
 
         DispatchQueue.main.async { [weak self] in
             self?.view.layoutIfNeeded()
             self?.scrollView.layoutIfNeeded()
-            if let m = self?.pendingScrollToMeasurement {
-                self?.pendingScrollToMeasurement = nil
-                self?.scroll(to: m)
+            if let variant = self?.pendingScrollVariant {
+                self?.pendingScrollVariant = nil
+                self?.scroll(to: variant)
             }
         }
+    }
+
+    private func chartView(for variant: MeasurementDisplayVariant) -> CardsGraphView {
+        if let cached = chartViewCache[variant] {
+            return cached
+        }
+
+        let view = CardsGraphView(variant: variant)
+        view.chartDelegate = self
+        view.translatesAutoresizingMaskIntoConstraints = false
+        chartViewCache[variant] = view
+        ensureHeightConstraint(for: view, variant: variant)
+        return view
+    }
+
+    private func visibleChartView(
+        for variant: MeasurementDisplayVariant
+    ) -> CardsGraphView? {
+        chartViewCache[variant]
+    }
+
+    private func ensureHeightConstraint(
+        for view: CardsGraphView,
+        variant: MeasurementDisplayVariant
+    ) {
+        if chartHeightConstraints[variant] != nil {
+            return
+        }
+        let constraint = view.heightAnchor.constraint(equalToConstant: 0)
+        constraint.isActive = true
+        chartHeightConstraints[variant] = constraint
+    }
+
+    private func rebuildChartsStack(
+        with variants: [MeasurementDisplayVariant]
+    ) {
+        chartsStackView.arrangedSubviews.forEach {
+            chartsStackView.removeArrangedSubview($0)
+            $0.removeFromSuperview()
+        }
+
+        variants.forEach { variant in
+            let view = chartView(for: variant)
+            chartsStackView.addArrangedSubview(view)
+        }
+    }
+
+    private func variant(for view: CardsGraphView) -> MeasurementDisplayVariant? {
+        return chartViewCache.first(where: { $0.value === view })?.key
     }
 
     private func getItemHeight(
@@ -1456,37 +1052,40 @@ extension CardsGraphViewController {
         scrollView.edgeFader?.updateFadeMask()
     }
 
-    private func updateChartViewConstaints(
-        constaint: NSLayoutConstraint,
+    private func updateChartViewHeight(
+        for variant: MeasurementDisplayVariant,
         totalHeight: CGFloat,
         itemCount: Int,
-        withAnimation: Bool
+        animated: Bool
     ) {
-        if withAnimation {
+        guard let constraint = chartHeightConstraints[variant], itemCount > 0 else {
+            return
+        }
+
+        let targetHeight = getItemHeight(
+            from: totalHeight,
+            count: CGFloat(itemCount)
+        )
+
+        if animated {
             UIView.animate(withDuration: 0.2, animations: { [weak self] in
-                guard let sSelf = self else { return }
-                constaint.constant = sSelf.getItemHeight(
-                    from: totalHeight,
-                    count: CGFloat(itemCount)
-                )
-                sSelf.view.layoutIfNeeded()
+                constraint.constant = targetHeight
+                self?.view.layoutIfNeeded()
             })
         } else {
-            constaint.constant = getItemHeight(
-                from: totalHeight,
-                count: CGFloat(itemCount)
-            )
+            constraint.constant = targetHeight
         }
     }
 
     private func populateChartView(
         from data: RuuviGraphViewDataModel,
+        displayType: MeasurementType,
         unit: String,
         settings: RuuviLocalSettings,
         view: CardsGraphView
     ) {
         view.setChartLabel(
-            type: data.chartType,
+            type: displayType,
             measurementService: measurementService,
             unit: unit
         )
@@ -1516,47 +1115,14 @@ extension CardsGraphViewController {
     }
 
     private func clearChartData() {
-        [temperatureChartView,
-         humidityChartView,
-         pressureChartView,
-         aqiChartView,
-         co2ChartView,
-         pm25ChartView,
-         vocChartView,
-         noxChartView,
-         luminosityChartView,
-         soundChartView,
-        ].forEach {
+        chartViewCache.values.forEach {
             $0.clearChartData()
-        }
-
-        [temperatureChartView,
-         humidityChartView,
-         pressureChartView,
-         aqiChartView,
-         co2ChartView,
-         pm25ChartView,
-         vocChartView,
-         noxChartView,
-         luminosityChartView,
-         soundChartView,
-        ].forEach {
             $0.underlyingView.highlightValue(nil)
         }
     }
 
     private func resetXAxisTimeline() {
-        [temperatureChartView,
-         humidityChartView,
-         pressureChartView,
-         aqiChartView,
-         co2ChartView,
-         pm25ChartView,
-         vocChartView,
-         noxChartView,
-         luminosityChartView,
-         soundChartView,
-        ].forEach {
+        chartViewCache.values.forEach {
             $0.resetCustomAxisMinMax()
         }
     }
@@ -1569,33 +1135,13 @@ extension CardsGraphViewController {
     }
 
     private func hideChartViews() {
-        [temperatureChartView,
-         humidityChartView,
-         pressureChartView,
-         aqiChartView,
-         co2ChartView,
-         pm25ChartView,
-         vocChartView,
-         noxChartView,
-         luminosityChartView,
-         soundChartView,
-        ].forEach {
+        chartViewCache.values.forEach {
             $0.isHidden = true
         }
     }
 
     private func showChartViews() {
-        [temperatureChartView,
-         humidityChartView,
-         pressureChartView,
-         aqiChartView,
-         co2ChartView,
-         pm25ChartView,
-         vocChartView,
-         noxChartView,
-         luminosityChartView,
-         soundChartView,
-        ].forEach {
+        chartViews.forEach {
             $0.isHidden = false
         }
     }
@@ -1634,65 +1180,46 @@ extension CardsGraphViewController {
         dataSet.hasAlertRange = true
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func calculateMinMaxForChart(for view: CardsGraphView) {
-        if let data = view.underlyingView.data,
-           let dataSet = data.dataSets.first as? LineChartDataSet {
-            let lowestVisibleX = view.underlyingView.lowestVisibleX
-            let highestVisibleX = view.underlyingView.highestVisibleX
-
-            var minVisibleYValue = Double.greatestFiniteMagnitude
-            var maxVisibleYValue = -Double.greatestFiniteMagnitude
-
-            dataSet.entries.forEach { entry in
-                if entry.x >= lowestVisibleX, entry.x <= highestVisibleX {
-                    minVisibleYValue = min(minVisibleYValue, entry.y)
-                    maxVisibleYValue = max(maxVisibleYValue, entry.y)
-                }
-            }
-
-            let averageYValue = calculateVisibleAverage(
-                chartView: view.underlyingView,
-                dataSet: dataSet
-            )
-            var type: MeasurementType = .temperature
-            if view == temperatureChartView {
-                type = .temperature
-            } else if view == humidityChartView {
-                type = .humidity
-            } else if view == pressureChartView {
-                type = .pressure
-            } else if view == aqiChartView {
-                type = .aqi
-            } else if view == co2ChartView {
-                type = .co2
-            } else if view == pm25ChartView {
-                type = .pm25
-            } else if view == vocChartView {
-                type = .voc
-            } else if view == noxChartView {
-                type = .nox
-            } else if view == luminosityChartView {
-                type = .luminosity
-            } else if view == soundChartView {
-                type = .soundInstant
-            }
-
-            if minVisibleYValue == Double.greatestFiniteMagnitude {
-                minVisibleYValue = 0
-            }
-            if maxVisibleYValue == -Double.greatestFiniteMagnitude {
-                maxVisibleYValue = 0
-            }
-
-            view.setChartStat(
-                min: minVisibleYValue,
-                max: maxVisibleYValue,
-                avg: averageYValue,
-                type: type,
-                measurementService: measurementService
-            )
+        guard let data = view.underlyingView.data,
+              let dataSet = data.dataSets.first as? LineChartDataSet else {
+            return
         }
+
+        let lowestVisibleX = view.underlyingView.lowestVisibleX
+        let highestVisibleX = view.underlyingView.highestVisibleX
+
+        var minVisibleYValue = Double.greatestFiniteMagnitude
+        var maxVisibleYValue = -Double.greatestFiniteMagnitude
+
+        dataSet.entries.forEach { entry in
+            if entry.x >= lowestVisibleX, entry.x <= highestVisibleX {
+                minVisibleYValue = min(minVisibleYValue, entry.y)
+                maxVisibleYValue = max(maxVisibleYValue, entry.y)
+            }
+        }
+
+        if minVisibleYValue == Double.greatestFiniteMagnitude {
+            minVisibleYValue = 0
+        }
+        if maxVisibleYValue == -Double.greatestFiniteMagnitude {
+            maxVisibleYValue = 0
+        }
+
+        let averageYValue = calculateVisibleAverage(
+            chartView: view.underlyingView,
+            dataSet: dataSet
+        )
+
+        let measurementType = variant(for: view).map { $0.type } ?? view.measurementType
+
+        view.setChartStat(
+            min: minVisibleYValue,
+            max: maxVisibleYValue,
+            avg: averageYValue,
+            type: measurementType,
+            measurementService: measurementService
+        )
     }
 
     /**
@@ -1760,7 +1287,6 @@ extension CardsGraphViewController {
 
     private func scrollToTarget(
         _ targetFrame: CGRect,
-        measurementType: MeasurementType,
         targetView: CardsGraphView
     ) {
         let newOffset = calculateNewOffset(for: targetFrame)
@@ -1824,23 +1350,6 @@ extension CardsGraphViewController {
 
     private func highlightTarget(_ targetView: CardsGraphView) {
         addHighlightAnimation(to: targetView)
-    }
-
-    // swiftlint:disable:next cyclomatic_complexity
-    private func getChartView(for measurementType: MeasurementType) -> CardsGraphView? {
-        switch measurementType {
-        case .temperature: return temperatureChartView
-        case .humidity: return humidityChartView
-        case .pressure: return pressureChartView
-        case .aqi: return aqiChartView
-        case .co2: return co2ChartView
-        case .pm25: return pm25ChartView
-        case .voc: return vocChartView
-        case .nox: return noxChartView
-        case .luminosity: return luminosityChartView
-        case .soundInstant: return soundChartView
-        default: return nil
-        }
     }
 
     private func addHighlightAnimation(to chartView: CardsGraphView) {
