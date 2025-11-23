@@ -22,17 +22,15 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.8.0
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Remove existing localisation directory
-        run: rm -rf ${{ github.workspace }}/station.localization
-
-      - name: Clone localisation submodule
-        run: git clone -b master https://github.com/ruuvi/station.localization.git ${{ github.workspace }}/station.localization
 
       - name: Install the Apple certificate and provisioning profiles
         env:
