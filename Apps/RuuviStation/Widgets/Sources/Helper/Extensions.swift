@@ -1,6 +1,7 @@
 import Humidity
 import RuuviOntology
 import SwiftUI
+import RuuviLocalization
 
 // MARK: - COLORS
 
@@ -58,9 +59,9 @@ extension HumidityUnit {
     var symbol: String {
         switch self {
         case .percent:
-            "%"
+            RuuviLocalization.humidityRelativeUnit
         case .gm3:
-            "g/m³"
+            RuuviLocalization.gm³
         default:
             "°"
         }

@@ -96,7 +96,7 @@ let package = Package(
             name: "RuuviServiceAlert",
             dependencies: [
                 "RuuviService",
-                "RuuviLocalization"
+                "RuuviLocalization",
             ]
         ),
         .target(

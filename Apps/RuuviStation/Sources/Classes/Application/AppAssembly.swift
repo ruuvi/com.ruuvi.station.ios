@@ -645,7 +645,7 @@ private final class CoreAssembly: Assembly {
             let service = RuuviServiceMeasurementImpl(
                 settings: settings,
                 emptyValueString: RuuviLocalization.na,
-                percentString: "%"
+                percentString: RuuviLocalization.humidityRelativeUnit
             )
             return service
         })
