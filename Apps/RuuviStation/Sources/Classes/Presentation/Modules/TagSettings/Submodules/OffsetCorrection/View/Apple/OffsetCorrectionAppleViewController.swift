@@ -204,7 +204,7 @@ extension OffsetCorrectionAppleViewController: OffsetCorrectionViewInput {
         case .pressure:
             let format = RuuviLocalization.OffsetCorrection.Dialog.Calibration.enterPressure
             let unit = viewModel.pressureUnit.value ?? .hectopascals
-            message = format(unit.symbol)
+            message = format(unit.ruuviSymbol)
         default:
             let format = RuuviLocalization.OffsetCorrection.Dialog.Calibration.enterTemperature
             let unit = viewModel.temperatureUnit.value ?? .celsius

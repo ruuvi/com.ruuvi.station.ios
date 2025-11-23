@@ -154,7 +154,7 @@ extension MeasurementType {
             }
         case .pressure:
             let unit = variant?.pressureUnit ?? .hectopascals
-            return RuuviLocalization.pressureWithUnit(unit.symbol)
+            return RuuviLocalization.pressureWithUnit(unit.ruuviSymbol)
         case .movementCounter:
             return RuuviLocalization.movements
         case .voltage:

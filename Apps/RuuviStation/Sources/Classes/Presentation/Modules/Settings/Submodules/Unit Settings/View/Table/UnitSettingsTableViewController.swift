@@ -81,7 +81,15 @@ extension UnitSettingsTableViewController {
 
 extension UnitSettingsTableViewController {
     override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        2
+        guard let measurementType = viewModel?.measurementType else {
+            return 2
+        }
+
+        if measurementType == .pressure,
+           !pressureUnit.supportsResolutionSelection {
+            return 1
+        }
+        return 2
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
@@ -138,7 +146,7 @@ extension UnitSettingsTableViewController {
                 cell.valueLbl.text = titleProvider.formattedTitle(
                     type: pressureAccuracy,
                     settings: settings
-                ) + " \(pressureUnit.symbol)"
+                ) + " \(pressureUnit.ruuviSymbol)"
             default:
                 cell.valueLbl.text = RuuviLocalization.na
             }
@@ -154,6 +162,11 @@ extension UnitSettingsTableViewController {
 extension UnitSettingsTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        if indexPath.row == 1,
+           viewModel?.measurementType == .pressure,
+           !pressureUnit.supportsResolutionSelection {
+            return
+        }
         output.viewDidSelect(type: indexPath.row == 0 ? .unit : .accuracy)
     }
 

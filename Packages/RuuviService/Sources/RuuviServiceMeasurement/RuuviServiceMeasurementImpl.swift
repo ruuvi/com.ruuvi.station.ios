@@ -122,8 +122,13 @@ public final class RuuviServiceMeasurementImpl: NSObject {
         let formatter = NumberFormatter()
         formatter.locale = Locale.current
         formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = settings.pressureAccuracy.value
-        formatter.maximumFractionDigits = settings.pressureAccuracy.value
+        let digits = units.pressureUnit.resolvedAccuracyValue(from: settings.pressureAccuracy)
+        formatter.minimumFractionDigits = digits
+        formatter.maximumFractionDigits = digits
+        if units.pressureUnit == .newtonsPerMetersSquared {
+            formatter.minimumFractionDigits = 0
+            formatter.maximumFractionDigits = 0
+        }
         formatter.roundingMode = NumberFormatter.RoundingMode.halfUp
         return formatter
     }
@@ -205,13 +210,15 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     }
 
     public func double(for pressure: Pressure) -> Double {
-        let pressureValue = pressure
-            .converted(to: units.pressureUnit)
-            .value
+        let pressureValue = units.pressureUnit.convertedValue(from: pressure)
         if units.pressureUnit == .inchesOfMercury {
             return pressureValue
+        } else if units.pressureUnit == .newtonsPerMetersSquared {
+            return pressureValue.round(to: 0)
         } else {
-            return pressureValue.round(to: commonNumberFormatter.maximumFractionDigits)
+            let digits = units.pressureUnit.supportsResolutionSelection ?
+                commonNumberFormatter.maximumFractionDigits : 0
+            return pressureValue.round(to: digits)
         }
     }
 
@@ -223,10 +230,17 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         else {
             return emptyValueString
         }
+        let converted = units.pressureUnit.convert(pressure)
+        if units.pressureUnit == .newtonsPerMetersSquared {
+            let roundedValue = Double(Int(round(converted.value)))
+            let value = String(Int(roundedValue))
+            let symbol = units.pressureUnit.ruuviSymbol
+            return "\(value)\(String.nbsp)\(symbol)"
+        }
         if allowSettings {
-            return pressureFormatter.string(from: pressure.converted(to: units.pressureUnit))
+            return pressureFormatter.string(from: converted)
         } else {
-            return commonFormatter.string(from: pressure.converted(to: units.pressureUnit))
+            return commonFormatter.string(from: converted)
         }
     }
 
@@ -235,7 +249,10 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         else {
             return emptyValueString
         }
-        let pressureValue = pressure.converted(to: units.pressureUnit).value
+        let pressureValue = units.pressureUnit.convertedValue(from: pressure)
+        if units.pressureUnit == .newtonsPerMetersSquared {
+            return String(Int(round(pressureValue)))
+        }
         return pressureNumberFormatter.string(for: pressureValue) ?? emptyValueString
     }
 
@@ -243,6 +260,9 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         guard let pressure
         else {
             return emptyValueString
+        }
+        if units.pressureUnit == .newtonsPerMetersSquared {
+            return String(Int(round(pressure)))
         }
         let number = NSNumber(value: pressure)
         return pressureNumberFormatter.string(from: number) ?? emptyValueString

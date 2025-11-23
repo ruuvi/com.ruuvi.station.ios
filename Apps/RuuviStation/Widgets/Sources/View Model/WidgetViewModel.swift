@@ -354,6 +354,8 @@ extension WidgetViewModel {
     private func pressureUnit(from defaults: UserDefaults?) -> UnitPressure {
         let pressureUnitId = defaults?.integer(forKey: Constants.pressureUnitKey.rawValue)
         switch pressureUnitId {
+        case UnitPressure.newtonsPerMetersSquared.hashValue:
+            return .newtonsPerMetersSquared
         case UnitPressure.inchesOfMercury.hashValue:
             return .inchesOfMercury
         case UnitPressure.millimetersOfMercury.hashValue:

@@ -317,6 +317,8 @@ private extension UnitPressure {
     // Pressure unit (0-pascal, 1-hectopascal, 2-mmHg, 3-inHg)
     var analyticsValue: String {
         switch self {
+        case .newtonsPerMetersSquared:
+            "0"
         case .hectopascals:
             "1"
         case .millimetersOfMercury:

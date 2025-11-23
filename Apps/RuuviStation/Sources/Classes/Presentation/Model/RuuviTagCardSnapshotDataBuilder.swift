@@ -105,9 +105,14 @@ private enum MeasurementVariantFormatter {
         variant: MeasurementDisplayVariant
     ) -> (value: String, unit: String) {
         let targetUnit = variant.pressureUnit ?? measurementService.units.pressureUnit
-        let converted = pressure.converted(to: targetUnit)
-        let value = measurementService.stringWithoutSign(pressure: converted.value)
-        return (value, targetUnit.symbol)
+        let convertedValue = targetUnit.convertedValue(from: pressure)
+        let value: String
+        if targetUnit == .newtonsPerMetersSquared {
+            value = String(Int(round(convertedValue)))
+        } else {
+            value = measurementService.stringWithoutSign(pressure: convertedValue)
+        }
+        return (value, targetUnit.ruuviSymbol)
     }
 }
 

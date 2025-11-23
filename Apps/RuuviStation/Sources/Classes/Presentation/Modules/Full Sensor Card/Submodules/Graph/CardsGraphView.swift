@@ -325,7 +325,10 @@ extension CardsGraphView {
                 return formattedNumber(value, decimals: decimals)
             }
         case .pressure:
-            let decimals = settings?.pressureAccuracy.value ?? 2
+            let defaultUnit = settings?.pressureUnit ?? .hectopascals
+            let pressureUnit = variant.resolvedPressureUnit(default: defaultUnit)
+            let accuracy = settings?.pressureAccuracy ?? .two
+            let decimals = pressureUnit.resolvedAccuracyValue(from: accuracy)
             return formattedNumber(value, decimals: decimals)
         case .aqi:
             return measurementService.aqiString(for: value)

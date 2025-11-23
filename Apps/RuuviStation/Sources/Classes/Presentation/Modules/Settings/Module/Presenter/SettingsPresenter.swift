@@ -84,6 +84,7 @@ extension SettingsPresenter: SettingsViewOutput {
 
     func viewDidTapOnPressure() {
         let selectionItems: [UnitPressure] = [
+            .newtonsPerMetersSquared,
             .hectopascals,
             .inchesOfMercury,
             .millimetersOfMercury,
