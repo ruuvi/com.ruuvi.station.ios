@@ -286,6 +286,10 @@ class RuuviTagServiceCoordinator {
         return dataService.getSensor(for: sensorId)
     }
 
+    func getSensorSettings(for sensorId: String) -> SensorSettings? {
+        return dataService.getSensorSettings(for: sensorId)
+    }
+
     func triggerCloudSync() {
         cloudService.triggerImmediateSync()
     }
@@ -824,6 +828,10 @@ class RuuviTagServiceCoordinatorManager {
 
     func getSensor(for sensorId: String) -> AnyRuuviTagSensor? {
         return withCoordinator { $0.getSensor(for: sensorId) } ?? nil
+    }
+
+    func getSensorSettings(for sensorId: String) -> SensorSettings? {
+        return withCoordinator { $0.getSensorSettings(for: sensorId) } ?? nil
     }
 
     func getSensorSettings() -> [SensorSettings] {

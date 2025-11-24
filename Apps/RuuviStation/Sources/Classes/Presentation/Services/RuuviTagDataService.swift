@@ -234,7 +234,8 @@ class RuuviTagDataService {
 
     func getSensorSettings(for sensorId: String) -> SensorSettings? {
         return sensorSettingsList.first(where: { settings in
-            settings.luid?.value == sensorId || settings.macId?.any == sensorId.mac.any
+            (settings.luid != nil && (settings.luid?.value == sensorId)) ||
+            (settings.macId != nil && (settings.macId?.any == sensorId.mac.any))
         })
     }
 
@@ -950,6 +951,8 @@ private extension RuuviTagDataService {
             snapshot.ownership = updatedOwnership
             didChange = true
         }
+        // Ensure we keep max share limit in sync for share UI summaries.
+        syncMaxShareCount(for: snapshot, sensor: sensor)
 
         var updatedCapabilities = snapshot.capabilities
         let showConnectionControls = shouldShowConnectionControls(for: sensor)

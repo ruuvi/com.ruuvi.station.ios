@@ -461,6 +461,9 @@ extension CardsSettingsPresenter {
 
     private func handleSnapshotUpdate(_ updatedSnapshot: RuuviTagCardSnapshot) {
         snapshot = updatedSnapshot
+        sensor = RuuviTagServiceCoordinatorManager.shared.getSensor(for: updatedSnapshot.id)
+        sensorSettings = RuuviTagServiceCoordinatorManager.shared
+            .getSensorSettings(for: updatedSnapshot.id)
 
         if updatedSnapshot.connectionData.isConnected ||
             !updatedSnapshot.connectionData.keepConnection {
