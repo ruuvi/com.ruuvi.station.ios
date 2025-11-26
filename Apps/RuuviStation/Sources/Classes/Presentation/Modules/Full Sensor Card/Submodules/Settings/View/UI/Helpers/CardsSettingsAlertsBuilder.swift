@@ -40,15 +40,24 @@ struct CardsSettingsAlertsBuilder {
         measurementService: RuuviServiceMeasurement?
     ) -> [AlertType] {
         var ordered: [AlertType] = []
-        let measurementVariants = RuuviTagDataService.alertMeasurementVariants(
-            for: snapshot,
-            measurementService: measurementService
-        )
 
-        for variant in measurementVariants {
-            guard let alertType = variant.type.toAlertType() else {
-                continue
+        let profile = RuuviTagDataService.measurementDisplayProfile(for: snapshot)
+        let alertVariants = profile.entries(for: .alert).map(\.variant)
+
+        let visibilityOrder = snapshot.displayData.measurementVisibility?.visibleVariants
+            ?? profile.orderedVisibleVariants(for: .indicator)
+
+        // Honor the visible order for measurement-based alerts (e.g., humidity variants).
+        for variant in visibilityOrder {
+            guard let alertType = variant.type.toAlertType() else { continue }
+            if !ordered.contains(where: { $0.rawValue == alertType.rawValue }) {
+                ordered.append(alertType)
             }
+        }
+
+        // Append any remaining alert-capable variants from the alert profile.
+        for variant in alertVariants {
+            guard let alertType = variant.type.toAlertType() else { continue }
             if !ordered.contains(where: { $0.rawValue == alertType.rawValue }) {
                 ordered.append(alertType)
             }
@@ -56,7 +65,7 @@ struct CardsSettingsAlertsBuilder {
 
         for fallback in auxiliaryAlertTypes {
             if let measurementType = fallback.toMeasurementType() {
-                let supported = measurementVariants.contains {
+                let supported = alertVariants.contains {
                     $0.type.isSameCase(as: measurementType)
                 }
                 if !supported {

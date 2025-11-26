@@ -133,6 +133,66 @@ class RuuviTagAlertService {
         }
     }
 
+    func disableHiddenMeasurementAlerts(
+        for snapshots: [RuuviTagCardSnapshot],
+        sensors: [AnyRuuviTagSensor]
+    ) {
+        let sensorMap = sensors.reduce(into: [String: AnyRuuviTagSensor]()) { partial, sensor in
+            partial[sensor.id] = sensor
+        }
+
+        for snapshot in snapshots {
+            guard let sensor = sensorMap[snapshot.id] else { continue }
+            disableHiddenMeasurementAlerts(for: snapshot, sensor: sensor)
+        }
+    }
+
+    private func disableHiddenMeasurementAlerts(
+        for snapshot: RuuviTagCardSnapshot,
+        sensor: AnyRuuviTagSensor
+    ) {
+        // Run this call only for shared sensors. We do migration for owner in
+        // MigrationManagerSignalVisibility for Signal alert.
+        guard !sensor.isOwner else { return }
+
+        let visibility = snapshot.displayData.measurementVisibility
+        let displayProfile: MeasurementDisplayProfile = {
+            if let visibility, visibility.usesDefaultOrder {
+                return RuuviTagDataService.defaultMeasurementDisplayProfile(for: sensor)
+            }
+            if visibility == nil {
+                return RuuviTagDataService.defaultMeasurementDisplayProfile(for: sensor)
+            }
+            return RuuviTagDataService.measurementDisplayProfile(for: sensor)
+        }()
+
+        let visibleTypes = visibility?.visibleVariants.map(\.type)
+            ?? displayProfile.orderedVisibleVariants(for: .indicator).map(\.type)
+
+        var enabledMeasurementAlerts: [(alert: AlertType, measurement: MeasurementType)] = []
+        for candidate in AlertType.allCases {
+            guard let measurementType = candidate.toMeasurementType() else { continue }
+            if alertService.isOn(type: candidate, for: sensor) {
+                enabledMeasurementAlerts.append((candidate, measurementType))
+            }
+        }
+
+        for enabled in enabledMeasurementAlerts {
+            let type = enabled.measurement
+            guard !visibleTypes.contains(where: { $0.isSameCase(as: type) }) else { continue }
+
+            let activeAlert = alertService.alert(for: sensor, of: enabled.alert) ?? enabled.alert
+            DispatchQueue.main.async { [weak self] in
+                self?.setAlertState(
+                    for: activeAlert,
+                    isOn: false,
+                    snapshot: snapshot,
+                    physicalSensor: sensor
+                )
+            }
+        }
+    }
+
     // MARK: - Alert Subscription Management
     func subscribeToAlerts(for snapshots: [RuuviTagCardSnapshot]) {
         updateSnapshots(snapshots)

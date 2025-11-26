@@ -230,6 +230,7 @@ class CardsGraphViewController: UIViewController {
 
     private var chartViewData: [RuuviGraphViewDataModel] = []
     private var settings: RuuviLocalSettings!
+    private var shouldHighlightOnScroll = false
 
     // MARK: - LIFECYCLE
 
@@ -622,6 +623,8 @@ extension CardsGraphViewController: CardsGraphViewDelegate {
 extension CardsGraphViewController: CardsGraphViewInput {
     func setActiveSnapshot(_ snapshot: RuuviTagCardSnapshot?) {
         self.snapshot = snapshot
+        pendingScrollVariant = nil
+        shouldHighlightOnScroll = false
     }
 
     var viewIsVisible: Bool {
@@ -642,6 +645,7 @@ extension CardsGraphViewController: CardsGraphViewInput {
     }
 
     func scroll(to variant: MeasurementDisplayVariant) {
+        shouldHighlightOnScroll = true
         guard !chartModules.isEmpty else {
             pendingScrollVariant = variant
             return
@@ -661,7 +665,10 @@ extension CardsGraphViewController: CardsGraphViewInput {
         let visibleRect = scrollView.visibleRect
 
         if visibleRect.contains(targetFrame) {
-            highlightTarget(targetView)
+            if shouldHighlightOnScroll {
+                highlightTarget(targetView)
+                shouldHighlightOnScroll = false
+            }
         } else {
             scrollToTarget(targetFrame, targetView: targetView)
         }
@@ -1322,7 +1329,10 @@ extension CardsGraphViewController {
         let newOffset = calculateNewOffset(for: targetFrame)
         let clampedOffset = clampOffset(newOffset)
         scrollView.setContentOffset(clampedOffset, animated: false)
-        scheduleHighlightAnimation(for: targetView)
+        if shouldHighlightOnScroll {
+            scheduleHighlightAnimation(for: targetView)
+            shouldHighlightOnScroll = false
+        }
     }
 
     private func calculateNewOffset(for targetFrame: CGRect) -> CGPoint {

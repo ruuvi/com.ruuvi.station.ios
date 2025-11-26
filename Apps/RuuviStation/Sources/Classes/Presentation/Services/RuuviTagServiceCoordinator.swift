@@ -517,6 +517,7 @@ extension RuuviTagServiceCoordinator: RuuviTagDataServiceDelegate {
 
         // Update other services with new snapshots
         alertService.updateSnapshots(snapshots)
+        disableHiddenMeasurementAlertsIfNeeded(for: snapshots)
         connectionService.updateConnectionData(for: snapshots)
 
         // Perform initial setup if not done yet
@@ -545,6 +546,7 @@ extension RuuviTagServiceCoordinator: RuuviTagDataServiceDelegate {
         if let index = previousSnapshots.firstIndex(where: { $0.id == snapshot.id }) {
             previousSnapshots[index] = snapshot
         }
+        disableHiddenMeasurementAlertsIfNeeded(for: [snapshot])
         notifyEvent(.snapshotUpdated(snapshot, invalidateLayout: invalidateLayout))
     }
 
@@ -625,6 +627,11 @@ extension RuuviTagServiceCoordinator: RuuviCloudServiceDelegate {
         snapshot.ownership.isAuthorized = isAuthorized
         snapshot.capabilities.isCloudConnectionAlertsAvailable =
             isAuthorized && snapshot.metadata.isCloud && snapshot.ownership.isOwnersPlanProPlus
+    }
+
+    private func disableHiddenMeasurementAlertsIfNeeded(for snapshots: [RuuviTagCardSnapshot]) {
+        let sensors = dataService.getAllSensors()
+        alertService.disableHiddenMeasurementAlerts(for: snapshots, sensors: sensors)
     }
 
     func ruuviCloudService(

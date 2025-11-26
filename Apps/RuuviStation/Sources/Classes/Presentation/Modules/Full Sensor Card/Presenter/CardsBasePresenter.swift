@@ -513,6 +513,30 @@ extension CardsBasePresenter: RuuviTagServiceCoordinatorObserver {
             }) {
                 snapshots[snapshotIndex] = snapshot
                 self.ruuviTagSensors = coordinator.getAllSensors()
+                if self.snapshot.id == snapshot.id {
+                    self.snapshot = snapshot
+                }
+                measurementPresenter?
+                    .configure(
+                        with: snapshots,
+                        snapshot: self.snapshot,
+                        sensor: currentSensor(),
+                        settings: currentSensorSettings()
+                    )
+                graphPresenter?
+                    .configure(
+                        with: snapshots,
+                        snapshot: self.snapshot,
+                        sensor: currentSensor(),
+                        settings: currentSensorSettings()
+                    )
+                settingsPresenter?
+                    .configure(
+                        with: snapshots,
+                        snapshot: self.snapshot,
+                        sensor: currentSensor(),
+                        settings: currentSensorSettings()
+                    )
             }
         default:
             break
