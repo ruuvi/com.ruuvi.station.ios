@@ -736,11 +736,17 @@ private extension RuuviTagDataService {
                     sensorSettings: settings,
                     availableVariants: snapshot.displayData.measurementVisibility?.availableVariants
                 )
-                if didChange {
+                let visibility = snapshot.displayData.measurementVisibility
+                let gridMatches = indicatorGridMatchesVisibility(
+                    snapshot: snapshot,
+                    visibility: visibility
+                )
+                let shouldRebuildGrid = didChange || !gridMatches
+                if shouldRebuildGrid {
                     rebuildIndicatorGrid(for: snapshot, sensor: sensor, sensorSettings: settings)
                 }
                 DispatchQueue.main.async {
-                    if didChange {
+                    if shouldRebuildGrid {
                         self.publishSnapshotUpdate(snapshot, force: true)
                     } else {
                         self.publishSnapshotUpdate(snapshot)
@@ -764,12 +770,18 @@ private extension RuuviTagDataService {
                 sensorSettings: settings,
                 availableVariants: snapshot.displayData.measurementVisibility?.availableVariants
             )
-            if didChange {
+            let visibility = snapshot.displayData.measurementVisibility
+            let gridMatches = indicatorGridMatchesVisibility(
+                snapshot: snapshot,
+                visibility: visibility
+            )
+            let shouldRebuildGrid = didChange || !gridMatches
+            if shouldRebuildGrid {
                 rebuildIndicatorGrid(for: snapshot, sensor: sensor, sensorSettings: settings)
             }
 
             DispatchQueue.main.async {
-                if didChange {
+                if shouldRebuildGrid {
                     self.publishSnapshotUpdate(snapshot, force: true)
                 } else {
                     self.publishSnapshotUpdate(snapshot)
@@ -1257,6 +1269,19 @@ private extension RuuviTagDataService {
         )
         snapshot.displayData.indicatorGrid = newGrid
         snapshot.displayData.hasNoData = newGrid == nil
+    }
+
+    private func indicatorGridMatchesVisibility(
+        snapshot: RuuviTagCardSnapshot,
+        visibility: RuuviTagCardSnapshotMeasurementVisibility?
+    ) -> Bool {
+        guard let visibility else { return true }
+        let desired = visibility.visibleVariants
+        let current = snapshot.displayData.indicatorGrid?.indicators.map(\.variant) ?? []
+        if desired.isEmpty {
+            return current.isEmpty
+        }
+        return desired == current
     }
 }
 

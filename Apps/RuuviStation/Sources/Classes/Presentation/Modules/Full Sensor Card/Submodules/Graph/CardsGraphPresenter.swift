@@ -146,6 +146,7 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
         self.sensor = sensor
         self.sensorSettings = settings
         handleSnapshotChangeIfNeeded(previousSnapshotId: previousId, newSnapshot: snapshot)
+        applyVisibilityChangeIfNeeded()
     }
 
     func configure(output: CardsGraphPresenterOutput?) {
@@ -967,6 +968,31 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         return modules.filter { variant in
             visibility.visibleVariants.contains(where: { $0 == variant })
         }
+    }
+
+    private func applyVisibilityChangeIfNeeded() {
+        let orderedVariants = orderedChartMeasurementVariants()
+        let filtered = filteredVariants(from: orderedVariants)
+        guard filtered != chartModules else { return }
+        chartModules = filtered
+        view?.createChartViews(from: chartModules)
+        createChartData()
+        if let pending = pendingScrollRequest {
+            scroll(to: pending.type, variant: pending.variant)
+        }
+    }
+
+    private func orderedChartMeasurementVariants() -> [MeasurementDisplayVariant] {
+        let profile: MeasurementDisplayProfile
+        if let sensor {
+            profile = RuuviTagDataService.measurementDisplayProfile(for: sensor)
+        } else if let snapshot {
+            profile = RuuviTagDataService.measurementDisplayProfile(for: snapshot)
+        } else {
+            profile = RuuviTagDataService.defaultMeasurementDisplayProfile()
+        }
+
+        return profile.orderedVisibleVariants(for: .graph)
     }
 }
 // swiftlint:enable file_length
