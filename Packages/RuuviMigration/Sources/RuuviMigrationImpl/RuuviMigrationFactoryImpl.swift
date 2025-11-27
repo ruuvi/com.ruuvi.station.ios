@@ -8,6 +8,7 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
     private let settings: RuuviLocalSettings
     private let idPersistence: RuuviLocalIDs
     private let ruuviPool: RuuviPool
+    private let ruuviSensorProperties: RuuviServiceSensorProperties
     private let sqliteContext: SQLiteContext
     private let ruuviStorage: RuuviStorage
     private let ruuviAlertService: RuuviServiceAlert
@@ -17,6 +18,7 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
         settings: RuuviLocalSettings,
         idPersistence: RuuviLocalIDs,
         ruuviPool: RuuviPool,
+        ruuviSensorProperties: RuuviServiceSensorProperties,
         sqliteContext: SQLiteContext,
         ruuviStorage: RuuviStorage,
         ruuviAlertService: RuuviServiceAlert,
@@ -25,6 +27,7 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
         self.settings = settings
         self.idPersistence = idPersistence
         self.ruuviPool = ruuviPool
+        self.ruuviSensorProperties = ruuviSensorProperties
         self.sqliteContext = sqliteContext
         self.ruuviStorage = ruuviStorage
         self.ruuviAlertService = ruuviAlertService
@@ -57,7 +60,7 @@ public final class RuuviMigrationFactoryImpl: RuuviMigrationFactory {
         let signalVisibility = MigrationManagerSignalVisibility(
             ruuviStorage: ruuviStorage,
             ruuviAlertService: ruuviAlertService,
-            ruuviPool: ruuviPool,
+            ruuviSensorProperties: ruuviSensorProperties,
             ruuviLocalSettings: settings
         )
         return [

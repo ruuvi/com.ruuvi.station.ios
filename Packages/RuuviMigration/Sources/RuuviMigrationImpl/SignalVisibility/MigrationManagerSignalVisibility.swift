@@ -8,18 +8,18 @@ import RuuviStorage
 final class MigrationManagerSignalVisibility: RuuviMigration {
     private let ruuviStorage: RuuviStorage
     private let ruuviAlertService: RuuviServiceAlert
-    private let ruuviPool: RuuviPool
+    private let ruuviSensorProperties: RuuviServiceSensorProperties
     private var ruuviLocalSettings: RuuviLocalSettings
 
     init(
         ruuviStorage: RuuviStorage,
         ruuviAlertService: RuuviServiceAlert,
-        ruuviPool: RuuviPool,
+        ruuviSensorProperties: RuuviServiceSensorProperties,
         ruuviLocalSettings: RuuviLocalSettings
     ) {
         self.ruuviStorage = ruuviStorage
         self.ruuviAlertService = ruuviAlertService
-        self.ruuviPool = ruuviPool
+        self.ruuviSensorProperties = ruuviSensorProperties
         self.ruuviLocalSettings = ruuviLocalSettings
     }
 
@@ -34,7 +34,6 @@ final class MigrationManagerSignalVisibility: RuuviMigration {
         guard !ruuviLocalSettings.signalVisibilityMigrationInProgress else { return }
 
         ruuviLocalSettings.signalVisibilityMigrationInProgress = true
-        didMigrateSignalVisibility = true
 
         ruuviStorage.readAll().on(success: { sensors in
             guard !sensors.isEmpty else {
@@ -51,6 +50,7 @@ final class MigrationManagerSignalVisibility: RuuviMigration {
             }
 
             group.notify(queue: .global(qos: .utility)) {
+                self.didMigrateSignalVisibility = true
                 self.ruuviLocalSettings.signalVisibilityMigrationInProgress = false
             }
         }, failure: { _ in
@@ -111,13 +111,17 @@ private extension MigrationManagerSignalVisibility {
         }
         displayOrder.append(signalCode)
 
-        ruuviPool
+        ruuviSensorProperties
             .updateDisplaySettings(
                 for: sensor,
                 displayOrder: displayOrder,
                 defaultDisplayOrder: false
             )
-            .on(completion: completion)
+            .on(success: { _ in
+                completion()
+            }, failure: { _ in
+                completion()
+            })
     }
 }
 

@@ -219,8 +219,11 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
                     for: sensor,
                     displayOrder: displayOrder,
                     defaultDisplayOrder: defaultDisplayOrder
-                )
-                promise.succeed(value: settings)
+                ).on(success: { _ in
+                    promise.succeed(value: settings)
+                }, failure: { error in
+                    promise.fail(error: error)
+                })
             }, failure: { error in
                 promise.fail(error: .ruuviPool(error))
             })
@@ -286,8 +289,10 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         for sensor: RuuviTagSensor,
         displayOrder: [String]?,
         defaultDisplayOrder: Bool
-    ) {
-        guard sensor.isCloud else { return }
+    ) -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+
+        guard sensor.isCloud else { return promise.future }
 
         var types: [String] = [RuuviCloudApiSetting.sensorDefaultDisplayOrder.rawValue]
         var values: [String] = [defaultDisplayOrder ? "true" : "false"]
@@ -302,7 +307,13 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
             types: types,
             values: values,
             timestamp: Int(Date().timeIntervalSince1970)
-        )
+        ).on(success: { _ in
+            promise.succeed(value: true)
+        }, failure: { error in
+            promise.fail(error: .ruuviCloud(error))
+        })
+
+        return promise.future
     }
 
     private func encodeDisplayOrderForCloud(_ codes: [String]?) -> String? {
