@@ -20,6 +20,7 @@ struct VisibilitySettingsView: View {
     let onToggleUseDefault: (Bool) -> Void
     let onHideVisible: (Int) -> Void
     let onShowHidden: (Int) -> Void
+    let onStartVisibleMove: () -> Void
     let onMoveVisible: (Int, Int) -> Void
     let onFinishVisibleMove: () -> Void
 
@@ -131,6 +132,7 @@ struct VisibilitySettingsView: View {
                         }
                     )
                     .onDrag {
+                        onStartVisibleMove()
                         draggedItem = item
                         return NSItemProvider(object: item.title as NSString)
                     }

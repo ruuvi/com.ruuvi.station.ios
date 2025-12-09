@@ -687,12 +687,7 @@ public final class RuuviCloudPure: RuuviCloud {
 
         api.postSensorSettings(request, authorization: apiKey)
             .on(success: { response in
-                let isSuccess = response.result?.lowercased() == "success"
-                if isSuccess {
-                    promise.succeed(value: sensor.any)
-                } else {
-                    promise.fail(error: .api(.badParameters))
-                }
+                promise.succeed(value: sensor.any)
             }, failure: { [weak self] error in
                 self?.createQueuedRequest(
                     from: request,

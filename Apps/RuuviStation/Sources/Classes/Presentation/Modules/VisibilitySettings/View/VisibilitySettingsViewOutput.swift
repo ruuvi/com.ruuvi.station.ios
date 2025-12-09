@@ -6,6 +6,7 @@ protocol VisibilitySettingsViewOutput: AnyObject {
     func viewDidToggleUseDefault(isOn: Bool)
     func viewDidRequestHideItem(at index: Int)
     func viewDidRequestShowItem(at index: Int)
+    func viewDidStartReorderingVisibleItems()
     func viewDidMoveVisibleItem(
         from sourceIndex: Int,
         to destinationIndex: Int

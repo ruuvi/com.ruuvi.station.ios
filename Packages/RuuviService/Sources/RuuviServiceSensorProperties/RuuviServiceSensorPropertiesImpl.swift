@@ -215,15 +215,19 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
                 defaultDisplayOrder: defaultDisplayOrder
             )
             .on(success: { [weak self] settings in
-                self?.pushDisplaySettingsToCloudIfNeeded(
-                    for: sensor,
-                    displayOrder: displayOrder,
-                    defaultDisplayOrder: defaultDisplayOrder
-                ).on(success: { _ in
+                if sensor.isCloud {
+                    self?.pushDisplaySettingsToCloudIfNeeded(
+                        for: sensor,
+                        displayOrder: displayOrder,
+                        defaultDisplayOrder: defaultDisplayOrder
+                    ).on(success: { _ in
+                        promise.succeed(value: settings)
+                    }, failure: { error in
+                        promise.fail(error: error)
+                    })
+                } else {
                     promise.succeed(value: settings)
-                }, failure: { error in
-                    promise.fail(error: error)
-                })
+                }
             }, failure: { error in
                 promise.fail(error: .ruuviPool(error))
             })
