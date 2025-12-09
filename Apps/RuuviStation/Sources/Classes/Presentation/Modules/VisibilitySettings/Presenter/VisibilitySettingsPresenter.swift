@@ -7,13 +7,6 @@ import RuuviOntology
 import RuuviLocal
 import RuuviService
 
-private struct PendingVisibilityState {
-    let usesDefaultOrder: Bool
-    let availableVariants: [MeasurementDisplayVariant]
-    let visibleVariants: [MeasurementDisplayVariant]
-    let hiddenVariants: [MeasurementDisplayVariant]
-}
-
 final class VisibilitySettingsPresenter: VisibilitySettingsModuleInput {
     weak var view: VisibilitySettingsViewInput?
     var router: VisibilitySettingsRouterInput?
@@ -36,8 +29,6 @@ final class VisibilitySettingsPresenter: VisibilitySettingsModuleInput {
     private var isSaving: Bool = false
     private var hasPendingPersistRequest = false
     private var needsPersistVisibleReorder: Bool = false
-    private var isUserReorderingVisibleItems: Bool = false
-    private var pendingVisibilityState: PendingVisibilityState?
 
     init(
         flags: RuuviLocalFlags,
@@ -160,8 +151,7 @@ extension VisibilitySettingsPresenter: VisibilitySettingsViewOutput {
     }
 
     func viewDidStartReorderingVisibleItems() {
-        isUserReorderingVisibleItems = true
-        pendingVisibilityState = nil
+        // TODO: Implement
     }
 
     func viewDidMoveVisibleItem(from sourceIndex: Int, to destinationIndex: Int) {
@@ -172,7 +162,6 @@ extension VisibilitySettingsPresenter: VisibilitySettingsViewOutput {
             return
         }
 
-        isUserReorderingVisibleItems = true
         let variant = visibleVariants.remove(at: sourceIndex)
         visibleVariants.insert(variant, at: destinationIndex)
         usesDefaultOrder = false
@@ -181,17 +170,7 @@ extension VisibilitySettingsPresenter: VisibilitySettingsViewOutput {
     }
 
     func viewDidFinishReorderingVisibleItems() {
-        isUserReorderingVisibleItems = false
-
-        if let pendingState = pendingVisibilityState {
-            applyPendingStateAfterReorder(pendingState)
-            pendingVisibilityState = nil
-        }
-
-        guard needsPersistVisibleReorder else {
-            presentCurrentState()
-            return
-        }
+        guard needsPersistVisibleReorder else { return }
         needsPersistVisibleReorder = false
         persistCurrentSelection()
     }
@@ -216,8 +195,6 @@ private extension VisibilitySettingsPresenter {
         isSaving = false
         hasPendingPersistRequest = false
         needsPersistVisibleReorder = false
-        isUserReorderingVisibleItems = false
-        pendingVisibilityState = nil
         snapshot = nil
         sensor = nil
         sensorSettings = nil
@@ -230,29 +207,26 @@ private extension VisibilitySettingsPresenter {
         snapshot.$displayData
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.handleSnapshotUpdate()
+                self?.rebuildState()
+                self?.presentPreviewUpdate()
             }
             .store(in: &snapshotCancellables)
 
         snapshot.$alertData
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.handleSnapshotUpdate()
+                self?.rebuildState()
+                self?.presentPreviewUpdate()
             }
             .store(in: &snapshotCancellables)
 
         snapshot.$metadata
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.handleSnapshotUpdate()
+                self?.rebuildState()
+                self?.presentPreviewUpdate()
             }
             .store(in: &snapshotCancellables)
-    }
-
-    func handleSnapshotUpdate() {
-        rebuildState()
-        guard !isUserReorderingVisibleItems else { return }
-        presentPreviewUpdate()
     }
 
     func presentPreviewUpdate() {
@@ -261,91 +235,42 @@ private extension VisibilitySettingsPresenter {
 
     func rebuildState() {
         guard let snapshot else { return }
-        let state = makeVisibilityState(for: snapshot)
-
-        if isUserReorderingVisibleItems {
-            pendingVisibilityState = state
-            return
-        }
-
-        applyVisibilityState(state, keepCurrentUsesDefault: false)
-    }
-
-    func makeVisibilityState(
-        for snapshot: RuuviTagCardSnapshot
-    ) -> PendingVisibilityState {
         let currentVisibility = snapshot.displayData.measurementVisibility
 
-        let resolvedUsesDefault: Bool
         if let explicit = currentVisibility?.usesDefaultOrder {
-            resolvedUsesDefault = explicit
+            usesDefaultOrder = explicit
         } else if let sensorDefault = sensorSettings?.defaultDisplayOrder {
-            resolvedUsesDefault = sensorDefault
+            usesDefaultOrder = sensorDefault
         } else if let codes = sensorSettings?.displayOrder, !codes.isEmpty {
-            resolvedUsesDefault = false
+            usesDefaultOrder = false
         } else {
-            resolvedUsesDefault = true
+            usesDefaultOrder = true
         }
 
         let available = currentVisibility?.availableVariants
             ?? defaultAvailableVariants(for: snapshot)
+        availableVariants = available
 
         let baseVisible: [MeasurementDisplayVariant]
-        if resolvedUsesDefault {
+        if usesDefaultOrder {
             baseVisible = defaultVisibleVariants(for: snapshot)
         } else {
             baseVisible = currentVisibility?.visibleVariants ?? defaultVisibleVariants(for: snapshot)
         }
 
-        var resolvedVisible = resolveVisible(from: baseVisible, available: available)
-        applyForcedVisibilityIfNeeded(
-            visible: &resolvedVisible,
-            available: available,
-            snapshot: snapshot
-        )
-        if resolvedVisible.isEmpty {
-            resolvedVisible = available
-            applyForcedVisibilityIfNeeded(
-                visible: &resolvedVisible,
-                available: available,
-                snapshot: snapshot
-            )
-        }
-
-        let baseHidden = currentVisibility?.hiddenVariants ?? []
-        let resolvedHidden = resolveHidden(
-            from: baseHidden,
-            available: available,
-            visible: resolvedVisible
-        )
-
-        return PendingVisibilityState(
-            usesDefaultOrder: resolvedUsesDefault,
-            availableVariants: available,
-            visibleVariants: resolvedVisible,
-            hiddenVariants: resolvedHidden
-        )
-    }
-
-    func applyVisibilityState(
-        _ state: PendingVisibilityState,
-        keepCurrentUsesDefault: Bool
-    ) {
-        availableVariants = state.availableVariants
-        usesDefaultOrder = keepCurrentUsesDefault ? usesDefaultOrder : state.usesDefaultOrder
-        visibleVariants = state.visibleVariants
+        visibleVariants = resolveVisible(from: baseVisible, available: available)
         applyForcedVisibilityIfNeeded()
         if visibleVariants.isEmpty {
-            visibleVariants = state.availableVariants
+            visibleVariants = available
             applyForcedVisibilityIfNeeded()
         }
 
+        let baseHidden = currentVisibility?.hiddenVariants ?? []
         hiddenVariants = resolveHidden(
-            from: state.hiddenVariants,
-            available: state.availableVariants,
+            from: baseHidden,
+            available: available,
             visible: visibleVariants
         )
-
         if !usesDefaultOrder {
             lastKnownCustomOrderCodes = visibleVariants.compactMap {
                 RuuviTagDataService.measurementCode(for: $0)
@@ -353,45 +278,6 @@ private extension VisibilitySettingsPresenter {
         } else if lastKnownCustomOrderCodes == nil {
             lastKnownCustomOrderCodes = sensorSettings?.displayOrder
         }
-    }
-
-    func mergeVisibleVariants(
-        userOrder: [MeasurementDisplayVariant],
-        latestOrder: [MeasurementDisplayVariant]
-    ) -> [MeasurementDisplayVariant] {
-        var merged = userOrder
-        for variant in latestOrder where !merged.contains(variant) {
-            merged.append(variant)
-        }
-        return merged
-    }
-
-    func applyPendingStateAfterReorder(_ pending: PendingVisibilityState) {
-        let mergedVisible = mergeVisibleVariants(
-            userOrder: visibleVariants,
-            latestOrder: pending.visibleVariants
-        )
-        let filteredVisible = resolveVisible(
-            from: mergedVisible,
-            available: pending.availableVariants
-        )
-
-        availableVariants = pending.availableVariants
-        visibleVariants = filteredVisible
-        applyForcedVisibilityIfNeeded()
-        hiddenVariants = resolveHidden(
-            from: pending.hiddenVariants,
-            available: pending.availableVariants,
-            visible: visibleVariants
-        )
-
-        if !usesDefaultOrder {
-            lastKnownCustomOrderCodes = visibleVariants.compactMap {
-                RuuviTagDataService.measurementCode(for: $0)
-            }
-        }
-
-        presentCurrentState()
     }
 
     func defaultAvailableVariants(for snapshot: RuuviTagCardSnapshot) -> [MeasurementDisplayVariant] {
@@ -749,56 +635,36 @@ private extension VisibilitySettingsPresenter {
 
     func applyForcedVisibilityIfNeeded() {
         guard let snapshot else { return }
-        applyForcedVisibilityIfNeeded(
-            visible: &visibleVariants,
-            available: availableVariants,
-            snapshot: snapshot
-        )
-    }
-
-    func applyForcedVisibilityIfNeeded(
-        visible: inout [MeasurementDisplayVariant],
-        available: [MeasurementDisplayVariant],
-        snapshot: RuuviTagCardSnapshot
-    ) {
         let forcedTypes = forcedVisibleMeasurementTypes(for: snapshot)
         guard !forcedTypes.isEmpty else { return }
 
         for type in forcedTypes {
-            guard let variant = available.first(where: { $0.type.isSameCase(as: type) }) else {
+            guard let variant = availableVariants.first(where: { $0.type.isSameCase(as: type) }) else {
                 continue
             }
-            ensureVariantVisible(
-                variant,
-                in: &visible,
-                available: available
-            )
+            ensureVariantVisible(variant)
         }
     }
 
-    func ensureVariantVisible(
-        _ variant: MeasurementDisplayVariant,
-        in visible: inout [MeasurementDisplayVariant],
-        available: [MeasurementDisplayVariant]
-    ) {
-        guard !visible.contains(variant) else { return }
-        guard let targetIndex = available.firstIndex(of: variant) else {
-            visible.append(variant)
+    func ensureVariantVisible(_ variant: MeasurementDisplayVariant) {
+        guard !visibleVariants.contains(variant) else { return }
+        guard let targetIndex = availableVariants.firstIndex(of: variant) else {
+            visibleVariants.append(variant)
             return
         }
 
         var inserted = false
-        for (index, entry) in visible.enumerated() {
-            guard let entryIndex = available.firstIndex(of: entry) else { continue }
+        for (index, entry) in visibleVariants.enumerated() {
+            guard let entryIndex = availableVariants.firstIndex(of: entry) else { continue }
             if entryIndex > targetIndex {
-                visible.insert(variant, at: index)
+                visibleVariants.insert(variant, at: index)
                 inserted = true
                 break
             }
         }
 
         if !inserted {
-            visible.append(variant)
+            visibleVariants.append(variant)
         }
     }
 
