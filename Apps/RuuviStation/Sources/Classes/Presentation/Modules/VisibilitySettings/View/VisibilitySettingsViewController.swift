@@ -6,7 +6,6 @@ final class VisibilitySettingsViewController: UIViewController, VisibilitySettin
 
     private let state = VisibilitySettingsViewState()
     private var hostingController: UIHostingController<VisibilitySettingsView>!
-    private var activityIndicatorItem: UIBarButtonItem?
 
     private lazy var backButton: UIButton = {
         let button = UIButton()
@@ -60,6 +59,9 @@ final class VisibilitySettingsViewController: UIViewController, VisibilitySettin
             onShowHidden: { [weak self] index in
                 self?.output?.viewDidRequestShowItem(at: index)
             },
+            onStartVisibleMove: { [weak self] in
+                self?.output?.viewDidStartReorderingVisibleItems()
+            },
             onMoveVisible: { [weak self] source, destination in
                 self?.output?
                     .viewDidMoveVisibleItem(from: source, to: destination)
@@ -95,15 +97,6 @@ final class VisibilitySettingsViewController: UIViewController, VisibilitySettin
 
     func setSaving(_ isSaving: Bool) {
         state.isSaving = isSaving
-        if isSaving {
-            let indicator = UIActivityIndicatorView(style: .medium)
-            indicator.startAnimating()
-            activityIndicatorItem = UIBarButtonItem(customView: indicator)
-            navigationItem.rightBarButtonItem = activityIndicatorItem
-        } else {
-            navigationItem.rightBarButtonItem = nil
-            activityIndicatorItem = nil
-        }
     }
 
     func showMessage(_ message: String) {

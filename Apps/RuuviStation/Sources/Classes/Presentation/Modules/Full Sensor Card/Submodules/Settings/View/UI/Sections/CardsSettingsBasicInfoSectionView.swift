@@ -35,7 +35,9 @@ struct CardsSettingsBasicInfoSectionView: View {
                 onTap: onEditName
             )
 
-            SettingsDivider()
+            if showsOwner || showsShare || showsVisibleMeasurementsRow {
+                SettingsDivider()
+            }
 
             if showsOwner {
                 SettingsNavigationRow(
@@ -47,8 +49,6 @@ struct CardsSettingsBasicInfoSectionView: View {
                 if showsShare || showOwnersPlan || showsVisibleMeasurementsRow {
                     SettingsDivider()
                 }
-            } else if showsShare || showsVisibleMeasurementsRow {
-                SettingsDivider()
             }
 
             if showOwnersPlan {
