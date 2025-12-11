@@ -34,6 +34,7 @@ private enum MatchType {
     case title
     case bold
     case link
+    case list(level: Int)
 }
 
 // MARK: - Private Processing Methods
@@ -57,7 +58,8 @@ private extension NSAttributedString {
         titleColor: UIColor,
         paragraphColor: UIColor,
         linkColor: UIColor,
-        linkFont: UIFont
+        linkFont: UIFont,
+        allowLists: Bool = true
     ) -> NSAttributedString {
         let result = NSMutableAttributedString()
         var remainingText = text
@@ -65,15 +67,22 @@ private extension NSAttributedString {
         let titleRegex = createTitleRegex()
         let boldRegex = createBoldRegex()
         let linkRegex = createLinkRegex()
+        let listRegex = allowLists ? createListRegex() : nil
 
         while !remainingText.isEmpty {
             guard let nextMatch = findNextMatch(
                 in: remainingText,
                 titleRegex: titleRegex,
                 boldRegex: boldRegex,
-                linkRegex: linkRegex
+                linkRegex: linkRegex,
+                listRegex: listRegex
             ) else {
-                appendRemainingText(remainingText, to: result, font: paragraphFont, color: paragraphColor)
+                appendRemainingText(
+                    remainingText,
+                    to: result,
+                    font: paragraphFont,
+                    color: paragraphColor
+                )
                 break
             }
 
@@ -113,6 +122,20 @@ private extension NSAttributedString {
                     font: linkFont,
                     color: linkColor
                 )
+            case .list(let level):
+                appendListItem(
+                    match: match,
+                    text: remainingText,
+                    to: result,
+                    level: level,
+                    titleFont: titleFont,
+                    paragraphFont: paragraphFont,
+                    boldFont: boldFont,
+                    titleColor: titleColor,
+                    paragraphColor: paragraphColor,
+                    linkColor: linkColor,
+                    linkFont: linkFont
+                )
             }
 
             remainingText = nsString.substring(from: match.range.location + match.range.length)
@@ -133,17 +156,33 @@ private extension NSAttributedString {
         return try? NSRegularExpression(pattern: "<link url=\\\"?(.*?)\\\"?>(.*?)</link>", options: [])
     }
 
+    static func createListRegex() -> NSRegularExpression? {
+        return try? NSRegularExpression(
+            pattern: "<li([0-9]*)>(.*?)</li\\1>", options: [.dotMatchesLineSeparators]
+        )
+    }
+
+    static func listLevel(from match: NSTextCheckingResult, in text: String) -> Int {
+        guard let levelRange = Range(match.range(at: 1), in: text),
+              let level = Int(text[levelRange]) else {
+            return 1
+        }
+        return max(level, 1)
+    }
+
     static func findNextMatch(
         in text: String,
         titleRegex: NSRegularExpression?,
         boldRegex: NSRegularExpression?,
-        linkRegex: NSRegularExpression?
+        linkRegex: NSRegularExpression?,
+        listRegex: NSRegularExpression?
     ) -> (NSTextCheckingResult, MatchType)? {
         let range = NSRange(location: 0, length: text.utf16.count)
 
         let titleMatch = titleRegex?.firstMatch(in: text, range: range)
         let boldMatch = boldRegex?.firstMatch(in: text, range: range)
         let linkMatch = linkRegex?.firstMatch(in: text, range: range)
+        let listMatch = listRegex?.firstMatch(in: text, range: range)
 
         // Find the earliest match
         var earliestMatch: (NSTextCheckingResult, MatchType)?
@@ -161,6 +200,13 @@ private extension NSAttributedString {
         if let link = linkMatch {
             if earliestMatch == nil || link.range.location < earliestMatch!.0.range.location {
                 earliestMatch = (link, .link)
+            }
+        }
+
+        if let list = listMatch {
+            let level = listLevel(from: list, in: text)
+            if earliestMatch == nil || list.range.location < earliestMatch!.0.range.location {
+                earliestMatch = (list, .list(level: level))
             }
         }
 
@@ -257,5 +303,86 @@ private extension NSAttributedString {
 
         let attributedString = NSAttributedString(string: linkText, attributes: linkAttributes)
         result.append(attributedString)
+    }
+
+    // swiftlint:disable:next function_parameter_count
+    static func appendListItem(
+        match: NSTextCheckingResult,
+        text: String,
+        to result: NSMutableAttributedString,
+        level: Int,
+        titleFont: UIFont,
+        paragraphFont: UIFont,
+        boldFont: UIFont,
+        titleColor: UIColor,
+        paragraphColor: UIColor,
+        linkColor: UIColor,
+        linkFont: UIFont
+    ) {
+        guard let listRange = Range(match.range(at: 2), in: text) else { return }
+
+        let listContent = String(text[listRange])
+        let formattedContent = processFormattedText(
+            listContent,
+            titleFont: titleFont,
+            paragraphFont: paragraphFont,
+            boldFont: boldFont,
+            titleColor: titleColor,
+            paragraphColor: paragraphColor,
+            linkColor: linkColor,
+            linkFont: linkFont,
+            allowLists: false
+        )
+
+        let bulletSymbol = bulletSymbol(for: level)
+        let bulletPrefix = "\(bulletSymbol) "
+        let tabWidth = "    ".size(withAttributes: [.font: paragraphFont]).width
+        let indentWidth = tabWidth * CGFloat(max(level - 1, 0))
+        let bulletPrefixWidth = bulletPrefix.size(withAttributes: [.font: paragraphFont]).width
+
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.firstLineHeadIndent = indentWidth
+        paragraphStyle.headIndent = indentWidth + bulletPrefixWidth
+
+        let listAttributes: [NSAttributedString.Key: Any] = [
+            .font: paragraphFont,
+            .foregroundColor: paragraphColor,
+            .paragraphStyle: paragraphStyle,
+        ]
+
+        let listItem = NSMutableAttributedString(
+            string: bulletPrefix, attributes: listAttributes
+        )
+        listItem.append(formattedContent)
+        listItem
+            .addAttribute(
+                .paragraphStyle,
+                value: paragraphStyle,
+                range: NSRange(
+                    location: 0,
+                    length: listItem.length
+                )
+            )
+
+        let nsText = text as NSString
+        let closingIndex = match.range.location + match.range.length
+        let nextCharacterIsNewline = closingIndex < nsText.length
+            ? nsText.substring(with: NSRange(location: closingIndex, length: 1)) == "\n"
+            : false
+
+        if !nextCharacterIsNewline {
+            listItem.append(NSAttributedString(string: "\n", attributes: listAttributes))
+        }
+
+        result.append(listItem)
+    }
+
+    static func bulletSymbol(for level: Int) -> String {
+        switch level {
+        case 1:
+            return "•"
+        default:
+            return "◦"
+        }
     }
 }
