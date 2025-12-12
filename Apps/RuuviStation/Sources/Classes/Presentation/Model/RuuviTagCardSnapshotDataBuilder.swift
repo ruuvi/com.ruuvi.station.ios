@@ -488,8 +488,8 @@ struct VoltageMeasurementExtractor: MeasurementExtractor {
         variant: MeasurementDisplayVariant,
         snapshot: RuuviTagCardSnapshot
     ) -> MeasurementResult? {
-        guard let voltage = record.voltage,
-              let value = measurementService?.string(for: voltage)else {
+        guard let voltage = measurementService?.double(for: record.voltage),
+              let value = measurementService?.string(for: voltage) else {
             return nil
         }
 
