@@ -662,7 +662,7 @@ extension DFUViewModel {
                 return sSelf.interactor
                     .waitForAirDevice(
                         ruuviTag: sSelf.ruuviTag,
-                        timeout: 5 * 60
+                        timeout: 2 * 60
                     )
                     .receive(on: RunLoop.main)
                     .flatMap { _ -> AnyPublisher<Event, Never> in
