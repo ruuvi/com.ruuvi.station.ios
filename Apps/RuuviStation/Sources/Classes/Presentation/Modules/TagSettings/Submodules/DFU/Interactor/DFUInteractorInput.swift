@@ -31,12 +31,13 @@ protocol DFUInteractorInput {
     ) -> AnyPublisher<FlashResponse, Error>
 }
 
-enum DFUError: Error {
+enum DFUError: Error, Equatable {
     case failedToConstructUrl
     case failedToGetLuid
     case failedToGetFirmwareName
     case failedToConstructFirmwareFromFile
     case airDeviceTimeout
+    case airVersionMismatch(expected: String, actual: String)
 }
 
 struct CurrentRelease {

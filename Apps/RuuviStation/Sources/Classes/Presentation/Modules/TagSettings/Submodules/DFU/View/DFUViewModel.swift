@@ -461,15 +461,6 @@ extension DFUViewModel {
             == actual.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    private struct FirmwareValidationError: LocalizedError {
-        let expected: String
-        let actual: String
-
-        var errorDescription: String? {
-            "Flashed firmware version (\(actual)) does not match expected version \(expected)."
-        }
-    }
-
     func whenFlashing() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
             guard case let .flashing(
@@ -690,7 +681,7 @@ extension DFUViewModel {
                                     )
                                 } else {
                                     return Event.onDidFailFlashingFirmware(
-                                        FirmwareValidationError(
+                                        DFUError.airVersionMismatch(
                                             expected: latestRelease.version,
                                             actual: currentRelease.version
                                         )
@@ -708,10 +699,7 @@ extension DFUViewModel {
                         if let dfuError = error as? DFUError,
                            dfuError == .airDeviceTimeout {
                             return Just(
-                                Event.onServedAfterUpdate(
-                                    latestRelease,
-                                    nil
-                                )
+                                Event.onDidFailFlashingFirmware(dfuError)
                             )
                             .eraseToAnyPublisher()
                         }
