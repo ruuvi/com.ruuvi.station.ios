@@ -686,7 +686,7 @@ public final class RuuviCloudPure: RuuviCloud {
         )
 
         api.postSensorSettings(request, authorization: apiKey)
-            .on(success: { response in
+            .on(success: { _ in
                 promise.succeed(value: sensor.any)
             }, failure: { [weak self] error in
                 self?.createQueuedRequest(
