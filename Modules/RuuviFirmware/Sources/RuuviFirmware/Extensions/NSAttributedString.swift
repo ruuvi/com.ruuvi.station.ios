@@ -1,3 +1,5 @@
+// swiftlint:disable file_length
+
 import UIKit
 import RuuviLocalization
 
@@ -35,6 +37,16 @@ private enum MatchType {
     case bold
     case link
     case list(level: Int)
+
+    var isList: Bool {
+        if case .list = self { return true }
+        return false
+    }
+
+    var isTitle: Bool {
+        if case .title = self { return true }
+        return false
+    }
 }
 
 // MARK: - Private Processing Methods
@@ -49,7 +61,7 @@ private extension NSAttributedString {
             .replacingOccurrences(of: "&gt;", with: ">")
     }
 
-    // swiftlint:disable:next function_parameter_count function_body_length
+    // swiftlint:disable:next function_parameter_count function_body_length cyclomatic_complexity
     static func processFormattedText(
         _ text: String,
         titleFont: UIFont,
@@ -68,6 +80,8 @@ private extension NSAttributedString {
         let boldRegex = createBoldRegex()
         let linkRegex = createLinkRegex()
         let listRegex = allowLists ? createListRegex() : nil
+
+        var previousMatchType: MatchType?
 
         while !remainingText.isEmpty {
             guard let nextMatch = findNextMatch(
@@ -89,13 +103,80 @@ private extension NSAttributedString {
             let (match, matchType) = nextMatch
             let nsString = remainingText as NSString
 
-            appendTextBeforeMatch(
-                nsString: nsString,
-                match: match,
-                to: result,
-                font: paragraphFont,
-                color: paragraphColor
+            // Get the text before the match
+            let beforeTagRange = NSRange(location: 0, length: match.range.location)
+            let beforeTagText = nsString.substring(with: beforeTagRange)
+
+            // Check if this is the first list item in a section
+            let isFirstListInSection = matchType.isList &&
+                (previousMatchType == nil || previousMatchType?.isTitle == true ||
+                 previousMatchType?.isList == false)
+
+            // Handle newlines before first list item in section
+            if isFirstListInSection && allowLists {
+                let (textToAppend, trailingNewlines) = textAndTrailingNewlineCount(beforeTagText)
+
+                // Append text without trailing newlines
+                appendRemainingText(
+                    textToAppend,
+                    to: result,
+                    font: paragraphFont,
+                    color: paragraphColor
+                )
+
+                // Ensure exactly 2 newlines before first list item
+                let newlinesToAdd = max(0, 2 - trailingNewlines)
+                if newlinesToAdd > 0 || trailingNewlines > 0 {
+                    let newlineString = String(repeating: "\n", count: max(trailingNewlines, 2))
+                    result.append(NSAttributedString(
+                        string: newlineString,
+                        attributes: [.font: paragraphFont, .foregroundColor: paragraphColor]
+                    ))
+                }
+            } else {
+                appendTextBeforeMatch(
+                    nsString: nsString,
+                    match: match,
+                    to: result,
+                    font: paragraphFont,
+                    color: paragraphColor
+                )
+            }
+
+            // Look ahead to determine if this is the last list item in a section
+            let textAfterMatch = nsString.substring(from: match.range.location + match.range.length)
+            let nextMatchAfterCurrent = findNextMatch(
+                in: textAfterMatch,
+                titleRegex: titleRegex,
+                boldRegex: boldRegex,
+                linkRegex: linkRegex,
+                listRegex: listRegex
             )
+
+            let isLastListInSection: Bool = {
+                guard matchType.isList else { return false }
+
+                if let (nextMatchResult, nextMatchType) = nextMatchAfterCurrent {
+                    // Check if next match is a title or non-list
+                    // Also check if there's text between current and next that doesn't have another list
+                    let textBetween = (textAfterMatch as NSString)
+                        .substring(to: nextMatchResult.range.location)
+                    let hasOnlyWhitespace = textBetween.trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    ).isEmpty
+
+                    if hasOnlyWhitespace && !nextMatchType.isList {
+                        return true
+                    }
+                    if nextMatchType.isTitle {
+                        return true
+                    }
+                    return false
+                } else {
+                    // No more matches - this is the last list item
+                    return true
+                }
+            }()
 
             switch matchType {
             case .title:
@@ -128,6 +209,7 @@ private extension NSAttributedString {
                     text: remainingText,
                     to: result,
                     level: level,
+                    isLastInSection: isLastListInSection,
                     titleFont: titleFont,
                     paragraphFont: paragraphFont,
                     boldFont: boldFont,
@@ -138,10 +220,44 @@ private extension NSAttributedString {
                 )
             }
 
+            previousMatchType = matchType
             remainingText = nsString.substring(from: match.range.location + match.range.length)
+
+            // Skip existing newlines after list items (we handle newlines ourselves for lists)
+            if matchType.isList {
+                remainingText = skipLeadingNewlines(remainingText)
+            }
         }
 
         return result
+    }
+
+    /// Removes leading newlines from text
+    static func skipLeadingNewlines(_ text: String) -> String {
+        var startIndex = text.startIndex
+        while startIndex < text.endIndex && text[startIndex] == "\n" {
+            startIndex = text.index(after: startIndex)
+        }
+        return String(text[startIndex...])
+    }
+
+    /// Returns the text with trailing newlines removed, and the count of trailing newlines
+    static func textAndTrailingNewlineCount(_ text: String) -> (String, Int) {
+        var count = 0
+        var endIndex = text.endIndex
+
+        while endIndex > text.startIndex {
+            let prevIndex = text.index(before: endIndex)
+            if text[prevIndex] == "\n" {
+                count += 1
+                endIndex = prevIndex
+            } else {
+                break
+            }
+        }
+
+        let trimmedText = String(text[..<endIndex])
+        return (trimmedText, count)
     }
 
     static func createTitleRegex() -> NSRegularExpression? {
@@ -311,6 +427,7 @@ private extension NSAttributedString {
         text: String,
         to result: NSMutableAttributedString,
         level: Int,
+        isLastInSection: Bool,
         titleFont: UIFont,
         paragraphFont: UIFont,
         boldFont: UIFont,
@@ -364,13 +481,13 @@ private extension NSAttributedString {
                 )
             )
 
-        let nsText = text as NSString
-        let closingIndex = match.range.location + match.range.length
-        let nextCharacterIsNewline = closingIndex < nsText.length
-            ? nsText.substring(with: NSRange(location: closingIndex, length: 1)) == "\n"
-            : false
-
-        if !nextCharacterIsNewline {
+        if isLastInSection {
+            // For the last list item in a section, always add 2 newlines
+            // (existing newlines in source will be consumed/skipped in the main loop)
+            listItem.append(NSAttributedString(string: "\n\n", attributes: listAttributes))
+        } else {
+            // For middle list items, always add exactly 1 newline
+            // (existing newlines in source will be consumed/skipped in the main loop)
             listItem.append(NSAttributedString(string: "\n", attributes: listAttributes))
         }
 
@@ -386,3 +503,5 @@ private extension NSAttributedString {
         }
     }
 }
+
+// swiftlint:enable file_length
