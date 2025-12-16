@@ -1148,10 +1148,10 @@ private extension MeasurementDetailsViewController {
     ) -> NSAttributedString {
         NSAttributedString.fromFormattedDescription(
             type.descriptionText(for: variant),
-            titleFont: UIFont.ruuviBody(),
+            titleFont: UIFont.ruuviHeadline(),
             paragraphFont: UIFont.ruuviSubheadline(),
             boldFont: UIFont.ruuviSubheadlineBold(),
-            titleColor: RuuviColor.dashboardIndicator.color,
+            titleColor: RuuviColor.dashboardIndicatorBig.color,
             paragraphColor: RuuviColor.dashboardIndicator.color
                 .withAlphaComponent(Alpha.descriptionParagraph),
             linkColor: RuuviColor.tintColor.color,
