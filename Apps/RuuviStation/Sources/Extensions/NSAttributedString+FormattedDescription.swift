@@ -108,13 +108,32 @@ private extension NSAttributedString {
             let beforeTagText = nsString.substring(with: beforeTagRange)
 
             // Check if this is the first list item in a section
-            let isFirstListInSection = matchType.isList &&
-                (previousMatchType == nil || previousMatchType?.isTitle == true ||
-                 previousMatchType?.isList == false)
+            // A new list section starts after: beginning, title, non-list element,
+            // OR when there's non-whitespace text between this and previous list item
+            let isFirstListInSection: Bool = {
+                guard matchType.isList else { return false }
+
+                if previousMatchType == nil || previousMatchType?.isTitle == true ||
+                    previousMatchType?.isList == false {
+                    return true
+                }
+
+                // Previous was a list - check if there's non-whitespace text between
+                if previousMatchType?.isList == true {
+                    let textWithoutNewlines = beforeTagText.trimmingCharacters(
+                        in: .whitespacesAndNewlines
+                    )
+                    if !textWithoutNewlines.isEmpty {
+                        return true
+                    }
+                }
+
+                return false
+            }()
 
             // Handle newlines before first list item in section
             if isFirstListInSection && allowLists {
-                let (textToAppend, trailingNewlines) = textAndTrailingNewlineCount(beforeTagText)
+                let (textToAppend, _) = textAndTrailingNewlineCount(beforeTagText)
 
                 // Append text without trailing newlines
                 appendRemainingText(
@@ -124,12 +143,11 @@ private extension NSAttributedString {
                     color: paragraphColor
                 )
 
-                // Ensure exactly 2 newlines before first list item
-                let newlinesToAdd = max(0, 2 - trailingNewlines)
-                if newlinesToAdd > 0 || trailingNewlines > 0 {
-                    let newlineString = String(repeating: "\n", count: max(trailingNewlines, 2))
+                // Add 2 newlines before first list item only if there's content before it
+                let hasContentBefore = !textToAppend.isEmpty || result.length > 0
+                if hasContentBefore {
                     result.append(NSAttributedString(
-                        string: newlineString,
+                        string: "\n\n",
                         attributes: [.font: paragraphFont, .foregroundColor: paragraphColor]
                     ))
                 }
@@ -157,20 +175,21 @@ private extension NSAttributedString {
                 guard matchType.isList else { return false }
 
                 if let (nextMatchResult, nextMatchType) = nextMatchAfterCurrent {
-                    // Check if next match is a title or non-list
-                    // Also check if there's text between current and next that doesn't have another list
+                    // If the next match is not a list, this is the last list item in the section
+                    if !nextMatchType.isList {
+                        return true
+                    }
+
+                    // Next match IS a list - check if there's non-whitespace text between
                     let textBetween = (textAfterMatch as NSString)
                         .substring(to: nextMatchResult.range.location)
-                    let hasOnlyWhitespace = textBetween.trimmingCharacters(
+                    let textWithoutWhitespace = textBetween.trimmingCharacters(
                         in: .whitespacesAndNewlines
-                    ).isEmpty
+                    )
+                    if !textWithoutWhitespace.isEmpty {
+                        return true
+                    }
 
-                    if hasOnlyWhitespace && !nextMatchType.isList {
-                        return true
-                    }
-                    if nextMatchType.isTitle {
-                        return true
-                    }
                     return false
                 } else {
                     // No more matches - this is the last list item
