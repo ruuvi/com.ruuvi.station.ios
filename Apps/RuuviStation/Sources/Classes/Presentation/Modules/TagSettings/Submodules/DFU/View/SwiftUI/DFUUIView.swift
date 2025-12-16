@@ -20,11 +20,14 @@ struct DFUUIView: View {
         let startUpdateProcess = RuuviLocalization.DFUUIView.startUpdateProcess
         let downloadingTitle = RuuviLocalization.DFUUIView.downloadingTitle
         let updatingTitle = RuuviLocalization.DFUUIView.updatingTitle
+        let updateAirRebootWaiting = RuuviLocalization.updateAirRebootWaiting
         let searchingTitle = RuuviLocalization.DFUUIView.searchingTitle
         let startTitle = RuuviLocalization.DFUUIView.startTitle
         let doNotCloseTitle = RuuviLocalization.DFUUIView.doNotCloseTitle
         let successfulTitleTag = RuuviLocalization.updateSuccessfulTag
         let successfulTitleAir = RuuviLocalization.updateSuccessfulAir
+        let errorAirTimeout = RuuviLocalization.updateAirCheckTimeout
+        let errorAirVersionMismatch = RuuviLocalization.updateAirVersionMismatch
         let errorTitle = RuuviLocalization.ErrorPresenterAlert.error
         let dbMigrationErrorTitle = RuuviLocalization.DFUUIView.DBMigration.Error.message
         let finish = RuuviLocalization.DfuFlash.Finish.text
@@ -113,8 +116,9 @@ struct DFUUIView: View {
         case let .error(error):
             return ZStack {
                 Color.clear
-                Text(error.localizedDescription)
+                Text(errorText(for: error))
                     .font(bodyFont)
+                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
             }.eraseToAnyView()
         case let .loaded(latestRelease):
             return VStack(alignment: .leading, spacing: 16) {
@@ -398,27 +402,9 @@ struct DFUUIView: View {
             .padding()
             .eraseToAnyView()
         case .successfulyFlashed:
-            return Text(texts.updatingTitle)
-                .font(bodyFont)
-                .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                .frame(
-                    maxWidth: .infinity,
-                    maxHeight: .infinity,
-                    alignment: .topLeading
-                )
-                .padding()
-                .eraseToAnyView()
+            return waitForFlashingView()
         case .servingAfterUpdate:
-            return Text(texts.updatingTitle)
-                .font(bodyFont)
-                .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                .frame(
-                    maxWidth: .infinity,
-                    maxHeight: .infinity,
-                    alignment: .topLeading
-                )
-                .padding()
-                .eraseToAnyView()
+            return waitForFlashingView()
         case let .firmwareAfterUpdate(latestRelease, currentRelease):
             viewModel
                 .storeUpdatedFirmware(
@@ -458,6 +444,36 @@ struct DFUUIView: View {
             }
             .padding()
             .eraseToAnyView()
+        }
+    }
+
+    private func waitForFlashingView() -> AnyView {
+        Text(viewModel.isRuuviAir() ?
+             texts.updateAirRebootWaiting : texts.updatingTitle)
+            .font(bodyFont)
+            .foregroundColor(RuuviColor.textColor.swiftUIColor)
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity,
+                alignment: .topLeading
+            )
+            .padding()
+            .eraseToAnyView()
+    }
+
+    private func errorText(for error: Error) -> String {
+        guard viewModel.isRuuviAir(),
+              let dfuError = error as? DFUError else {
+            return error.localizedDescription
+        }
+
+        switch dfuError {
+        case .airDeviceTimeout:
+            return texts.errorAirTimeout
+        case .airVersionMismatch:
+            return texts.errorAirVersionMismatch
+        default:
+            return error.localizedDescription
         }
     }
 
