@@ -8,7 +8,8 @@ public protocol RuuviServiceOffsetCalibration {
         offset: Double?,
         of type: OffsetCorrectionType,
         for sensor: RuuviTagSensor,
-        lastOriginalRecord record: RuuviTagSensorRecord?
+        lastOriginalRecord record: RuuviTagSensorRecord?,
+        lastUpdatedTimestamp: Int64?
     ) -> Future<SensorSettings, RuuviServiceError>
 }
 
@@ -23,7 +24,8 @@ public extension RuuviServiceOffsetCalibration {
             offset: offset,
             of: type,
             for: sensor,
-            lastOriginalRecord: nil
+            lastOriginalRecord: nil,
+            lastUpdatedTimestamp: nil
         )
     }
 }

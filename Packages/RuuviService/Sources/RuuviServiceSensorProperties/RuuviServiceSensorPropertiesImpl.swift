@@ -207,19 +207,25 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         defaultDisplayOrder: Bool
     ) -> Future<SensorSettings, RuuviServiceError> {
         let promise = Promise<SensorSettings, RuuviServiceError>()
+        let now = Int64(Date().timeIntervalSince1970)
+        let displayOrderTimestamp = displayOrder != nil ? now : nil
+        let defaultDisplayOrderTimestamp = now
 
         pool
             .updateDisplaySettings(
                 for: sensor,
                 displayOrder: displayOrder,
-                defaultDisplayOrder: defaultDisplayOrder
+                defaultDisplayOrder: defaultDisplayOrder,
+                displayOrderTimestamp: displayOrderTimestamp,
+                defaultDisplayOrderTimestamp: defaultDisplayOrderTimestamp
             )
             .on(success: { [weak self] settings in
                 if sensor.isCloud {
                     self?.pushDisplaySettingsToCloudIfNeeded(
                         for: sensor,
                         displayOrder: displayOrder,
-                        defaultDisplayOrder: defaultDisplayOrder
+                        defaultDisplayOrder: defaultDisplayOrder,
+                        timestamp: now
                     ).on(success: { _ in
                         promise.succeed(value: settings)
                     }, failure: { error in
@@ -292,7 +298,8 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
     private func pushDisplaySettingsToCloudIfNeeded(
         for sensor: RuuviTagSensor,
         displayOrder: [String]?,
-        defaultDisplayOrder: Bool
+        defaultDisplayOrder: Bool,
+        timestamp: Int64? = nil
     ) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
 
@@ -310,7 +317,7 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
             for: sensor,
             types: types,
             values: values,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: Int(timestamp ?? Int64(Date().timeIntervalSince1970))
         ).on(success: { _ in
             promise.succeed(value: true)
         }, failure: { error in

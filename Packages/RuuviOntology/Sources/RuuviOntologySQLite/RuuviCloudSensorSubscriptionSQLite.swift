@@ -18,6 +18,7 @@ public struct RuuviCloudSensorSubscriptionSQLite: CloudSensorSubscription, Equat
     public var pushAlertAllowed: Bool?
     public var telegramAlertAllowed: Bool?
     public var endAt: String?
+    public var lastUpdated: Int64?
 
     public static func == (
         lhs: RuuviCloudSensorSubscriptionSQLite,
@@ -37,7 +38,8 @@ public struct RuuviCloudSensorSubscriptionSQLite: CloudSensorSubscription, Equat
             lhs.pdfExportAllowed == rhs.pdfExportAllowed &&
             lhs.pushAlertAllowed == rhs.pushAlertAllowed &&
             lhs.telegramAlertAllowed == rhs.telegramAlertAllowed &&
-            lhs.endAt == rhs.endAt
+            lhs.endAt == rhs.endAt &&
+            lhs.lastUpdated == rhs.lastUpdated
     }
 }
 
@@ -58,6 +60,7 @@ public extension RuuviCloudSensorSubscriptionSQLite {
     static let pushAlertAllowedColumn = Column("pushAlertAllowed")
     static let telegramAlertAllowedColumn = Column("telegramAlertAllowed")
     static let endAtColumn = Column("endAt")
+    static let lastUpdatedColumn = Column("lastUpdated")
 }
 
 extension RuuviCloudSensorSubscriptionSQLite: FetchableRecord {
@@ -77,6 +80,7 @@ extension RuuviCloudSensorSubscriptionSQLite: FetchableRecord {
         pushAlertAllowed = row[RuuviCloudSensorSubscriptionSQLite.pushAlertAllowedColumn]
         telegramAlertAllowed = row[RuuviCloudSensorSubscriptionSQLite.telegramAlertAllowedColumn]
         endAt = row[RuuviCloudSensorSubscriptionSQLite.endAtColumn]
+        lastUpdated = row[RuuviCloudSensorSubscriptionSQLite.lastUpdatedColumn]
     }
 }
 
@@ -102,6 +106,7 @@ extension RuuviCloudSensorSubscriptionSQLite: PersistableRecord {
         container[RuuviCloudSensorSubscriptionSQLite.pushAlertAllowedColumn] = pushAlertAllowed
         container[RuuviCloudSensorSubscriptionSQLite.telegramAlertAllowedColumn] = telegramAlertAllowed
         container[RuuviCloudSensorSubscriptionSQLite.endAtColumn] = endAt
+        container[RuuviCloudSensorSubscriptionSQLite.lastUpdatedColumn] = lastUpdated
     }
 }
 
@@ -135,22 +140,23 @@ public extension RuuviCloudSensorSubscriptionSQLite {
 
 public extension CloudSensorSubscription {
     var sqlite: RuuviCloudSensorSubscriptionSQLite {
-        RuuviCloudSensorSubscriptionSQLite(
-            macId: macId,
-            subscriptionName: subscriptionName,
-            isActive: isActive,
-            maxClaims: maxClaims,
-            maxHistoryDays: maxHistoryDays,
-            maxResolutionMinutes: maxResolutionMinutes,
-            maxShares: maxShares,
-            maxSharesPerSensor: maxSharesPerSensor,
-            delayedAlertAllowed: delayedAlertAllowed,
-            emailAlertAllowed: emailAlertAllowed,
-            offlineAlertAllowed: offlineAlertAllowed,
-            pdfExportAllowed: pdfExportAllowed,
-            pushAlertAllowed: pushAlertAllowed,
-            telegramAlertAllowed: telegramAlertAllowed,
-            endAt: endAt
-        )
+        var result = RuuviCloudSensorSubscriptionSQLite()
+        result.macId = macId
+        result.subscriptionName = subscriptionName
+        result.isActive = isActive
+        result.maxClaims = maxClaims
+        result.maxHistoryDays = maxHistoryDays
+        result.maxResolutionMinutes = maxResolutionMinutes
+        result.maxShares = maxShares
+        result.maxSharesPerSensor = maxSharesPerSensor
+        result.delayedAlertAllowed = delayedAlertAllowed
+        result.emailAlertAllowed = emailAlertAllowed
+        result.offlineAlertAllowed = offlineAlertAllowed
+        result.pdfExportAllowed = pdfExportAllowed
+        result.pushAlertAllowed = pushAlertAllowed
+        result.telegramAlertAllowed = telegramAlertAllowed
+        result.endAt = endAt
+        result.lastUpdated = lastUpdated
+        return result
     }
 }

@@ -21,9 +21,11 @@ public final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalib
         offset: Double?,
         of type: OffsetCorrectionType,
         for sensor: RuuviTagSensor,
-        lastOriginalRecord record: RuuviTagSensorRecord?
+        lastOriginalRecord record: RuuviTagSensorRecord?,
+        lastUpdatedTimestamp: Int64?
     ) -> Future<SensorSettings, RuuviServiceError> {
         let promise = Promise<SensorSettings, RuuviServiceError>()
+        let timestamp = lastUpdatedTimestamp ?? Int64(Date().timeIntervalSince1970)
         if sensor.isCloud {
             updateOnCloud(offset: offset, of: type, for: sensor).on()
         }
@@ -31,7 +33,8 @@ public final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalib
             type: type,
             with: offset,
             of: sensor,
-            lastOriginalRecord: record
+            lastOriginalRecord: record,
+            lastUpdatedTimestamp: timestamp
         ).on(success: { settings in
             promise.succeed(value: settings)
         }, failure: { error in

@@ -164,4 +164,8 @@ protocol AlertPersistence {
     func setMovement(counter: Int?, for uuid: String)
     func movementDescription(for uuid: String) -> String?
     func setMovement(description: String?, for uuid: String)
+
+    // lastUpdated timestamp for sync collision handling
+    func lastUpdated(for uuid: String, of type: AlertType) -> Int64?
+    func setLastUpdated(_ timestamp: Int64?, for uuid: String, of type: AlertType)
 }

@@ -33,6 +33,10 @@ public protocol Claimable {
     var ownersPlan: String? { get }
 }
 
+public protocol Updatable {
+    var lastUpdated: Int64? { get }
+}
+
 public protocol Sensor: StringIdentifieable {}
 
 public protocol HasRemotePicture {
@@ -51,6 +55,7 @@ public protocol CloudSensor: Sensor,
                              HasRemotePicture,
                              Calibratable,
                              Shareable,
+                             Updatable,
                              HistoryFetchable,
                              BackgroundScanable {}
 

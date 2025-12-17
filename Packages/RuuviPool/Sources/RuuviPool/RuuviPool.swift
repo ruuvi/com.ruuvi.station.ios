@@ -35,12 +35,15 @@ public protocol RuuviPool {
         type: OffsetCorrectionType,
         with value: Double?,
         of ruuviTag: RuuviTagSensor,
-        lastOriginalRecord record: RuuviTagSensorRecord?
+        lastOriginalRecord record: RuuviTagSensorRecord?,
+        lastUpdatedTimestamp: Int64?
     ) -> Future<SensorSettings, RuuviPoolError>
     func updateDisplaySettings(
         for ruuviTag: RuuviTagSensor,
         displayOrder: [String]?,
-        defaultDisplayOrder: Bool?
+        defaultDisplayOrder: Bool?,
+        displayOrderTimestamp: Int64?,
+        defaultDisplayOrderTimestamp: Int64?
     ) -> Future<SensorSettings, RuuviPoolError>
 
     // MARK: - Queued cloud requests
@@ -72,7 +75,22 @@ public extension RuuviPool {
             type: type,
             with: value,
             of: ruuviTag,
-            lastOriginalRecord: nil
+            lastOriginalRecord: nil,
+            lastUpdatedTimestamp: nil
+        )
+    }
+
+    func updateDisplaySettings(
+        for ruuviTag: RuuviTagSensor,
+        displayOrder: [String]?,
+        defaultDisplayOrder: Bool?
+    ) -> Future<SensorSettings, RuuviPoolError> {
+        updateDisplaySettings(
+            for: ruuviTag,
+            displayOrder: displayOrder,
+            defaultDisplayOrder: defaultDisplayOrder,
+            displayOrderTimestamp: nil,
+            defaultDisplayOrderTimestamp: nil
         )
     }
 }

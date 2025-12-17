@@ -11,6 +11,7 @@ public struct RuuviCloudQueuedRequestSQLite: RuuviCloudQueuedRequest {
     public var attempts: Int?
     public var requestBodyData: Data?
     public var additionalData: Data?
+    public var localLastUpdated: Int64?
 
     public init(
         id: Int64?,
@@ -21,7 +22,8 @@ public struct RuuviCloudQueuedRequestSQLite: RuuviCloudQueuedRequest {
         successDate: Date?,
         attempts: Int?,
         requestBodyData: Data?,
-        additionalData: Data?
+        additionalData: Data?,
+        localLastUpdated: Int64? = nil
     ) {
         self.id = id
         self.type = type
@@ -32,6 +34,7 @@ public struct RuuviCloudQueuedRequestSQLite: RuuviCloudQueuedRequest {
         self.attempts = attempts
         self.requestBodyData = requestBodyData
         self.additionalData = additionalData
+        self.localLastUpdated = localLastUpdated
     }
 }
 
@@ -45,6 +48,7 @@ public extension RuuviCloudQueuedRequestSQLite {
     static let attemptsColumn = Column("attempts")
     static let requestBodyDataColumn = Column("requestBodyData")
     static let additionalDataColumn = Column("additionalData")
+    static let localLastUpdatedColumn = Column("localLastUpdated")
 }
 
 extension RuuviCloudQueuedRequestSQLite: FetchableRecord {
@@ -61,6 +65,7 @@ extension RuuviCloudQueuedRequestSQLite: FetchableRecord {
         attempts = row[RuuviCloudQueuedRequestSQLite.attemptsColumn]
         requestBodyData = row[RuuviCloudQueuedRequestSQLite.requestBodyDataColumn]
         additionalData = row[RuuviCloudQueuedRequestSQLite.additionalDataColumn]
+        localLastUpdated = Int64.fromDatabaseValue(row[RuuviCloudQueuedRequestSQLite.localLastUpdatedColumn])
     }
 }
 
@@ -79,6 +84,7 @@ extension RuuviCloudQueuedRequestSQLite: PersistableRecord {
         container[RuuviCloudQueuedRequestSQLite.attemptsColumn] = attempts
         container[RuuviCloudQueuedRequestSQLite.requestBodyDataColumn] = requestBodyData
         container[RuuviCloudQueuedRequestSQLite.additionalDataColumn] = additionalData
+        container[RuuviCloudQueuedRequestSQLite.localLastUpdatedColumn] = localLastUpdated
     }
 }
 
@@ -112,7 +118,8 @@ public extension RuuviCloudQueuedRequestSQLite {
             successDate: successDate,
             attempts: attempts,
             requestBodyData: requestBodyData,
-            additionalData: additionalData
+            additionalData: additionalData,
+            localLastUpdated: localLastUpdated
         )
     }
 }
@@ -128,7 +135,8 @@ public extension RuuviCloudQueuedRequest {
             successDate: successDate,
             attempts: attempts,
             requestBodyData: requestBodyData,
-            additionalData: additionalData
+            additionalData: additionalData,
+            localLastUpdated: localLastUpdated
         )
     }
 }

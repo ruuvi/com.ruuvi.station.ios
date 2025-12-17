@@ -11,6 +11,7 @@ public extension RuuviServiceAlertImpl {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func register(type: AlertType, ruuviTag: RuuviTagSensor) {
         register(type: type, for: ruuviTag)
+        markAlertUpdated(type: type, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             switch type {
             case let .temperature(lower, upper):
@@ -240,6 +241,7 @@ public extension RuuviServiceAlertImpl {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func unregister(type: AlertType, ruuviTag: RuuviTagSensor) {
         unregister(type: type, for: ruuviTag)
+        markAlertUpdated(type: type, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             switch type {
             case let .temperature(lower, upper):
@@ -1665,6 +1667,25 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                     break
                 }
                 if let type {
+                    // Collision handling: Compare timestamps
+                    let cloudTimestamp = cloudAlert.lastUpdated ?? 0
+                    let localTimestamp = alertPersistence.lastUpdated(
+                        for: physicalSensor.id,
+                        of: type
+                    ) ?? 0
+
+                    if localTimestamp > cloudTimestamp {
+                        // Local is newer - queue push to cloud
+                        queueAlertToCloud(
+                            type: type,
+                            cloudAlertType: cloudAlert.type,
+                            for: physicalSensor
+                        )
+                        // Don't update local - it's newer
+                        continue
+                    }
+
+                    // Cloud is newer or equal - update local
                     if let enabled = cloudAlert.enabled, enabled {
                         register(type: type, for: physicalSensor)
                         trigger(
@@ -1673,12 +1694,144 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                             trigerredAt: cloudAlert.triggeredAt,
                             for: physicalSensor
                         )
+                        // Store cloud timestamp locally
+                        alertPersistence.setLastUpdated(
+                            cloudAlert.lastUpdated,
+                            for: physicalSensor.id,
+                            of: type
+                        )
                     } else {
                         unregister(type: type, for: physicalSensor)
+                        // Store cloud timestamp locally
+                        alertPersistence.setLastUpdated(
+                            cloudAlert.lastUpdated,
+                            for: physicalSensor.id,
+                            of: type
+                        )
                     }
                 }
             }
         }
+    }
+
+    // Queue local alert to cloud when local is newer
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    private func queueAlertToCloud(
+        type: AlertType,
+        cloudAlertType: RuuviCloudAlertType?,
+        for sensor: PhysicalSensor
+    ) {
+        guard let macId = sensor.macId,
+              let cloudType = cloudAlertType else { return }
+
+        // Get the local alert settings
+        guard let localAlert = alert(for: sensor, of: type) else { return }
+
+        let isEnabled = isOn(type: type, for: sensor)
+        var min: Double?
+        var max: Double?
+        var counter: Int?
+        var description: String?
+
+        switch localAlert {
+        case let .temperature(lower, upper):
+            min = lower
+            max = upper
+            description = alertPersistence.temperatureDescription(for: sensor.id)
+        case let .relativeHumidity(lower, upper):
+            // Convert to cloud format (percent)
+            min = lower * 100
+            max = upper * 100
+            description = alertPersistence.relativeHumidityDescription(for: sensor.id)
+        case let .pressure(lower, upper):
+            // Convert to cloud format (Pa)
+            min = lower * 100
+            max = upper * 100
+            description = alertPersistence.pressureDescription(for: sensor.id)
+        case let .signal(lower, upper):
+            min = lower
+            max = upper
+            description = alertPersistence.signalDescription(for: sensor.id)
+        case let .movement(last):
+            counter = last
+            description = alertPersistence.movementDescription(for: sensor.id)
+        case let .cloudConnection(unseenDuration):
+            max = unseenDuration
+            description = alertPersistence.cloudConnectionDescription(for: sensor.id)
+        case let .aqi(lower, upper):
+            min = lower
+            max = upper
+            description = alertPersistence.aqiDescription(for: sensor.id)
+        case let .carbonDioxide(lower, upper):
+            min = lower
+            max = upper
+            description = alertPersistence.carbonDioxideDescription(for: sensor.id)
+        case let .pMatter1(lower, upper):
+            min = lower
+            max = upper
+            description = alertPersistence.pm1Description(for: sensor.id)
+        case let .pMatter25(lower, upper):
+            min = lower
+            max = upper
+            description = alertPersistence.pm25Description(for: sensor.id)
+        case let .pMatter4(lower, upper):
+            min = lower
+            max = upper
+            description = alertPersistence.pm4Description(for: sensor.id)
+        case let .pMatter10(lower, upper):
+            min = lower
+            max = upper
+            description = alertPersistence.pm10Description(for: sensor.id)
+        case let .voc(lower, upper):
+            min = lower
+            max = upper
+            description = alertPersistence.vocDescription(for: sensor.id)
+        case let .nox(lower, upper):
+            min = lower
+            max = upper
+            description = alertPersistence.noxDescription(for: sensor.id)
+        case let .soundInstant(lower, upper):
+            min = lower
+            max = upper
+            description = alertPersistence.soundInstantDescription(for: sensor.id)
+        case let .soundAverage(lower, upper):
+            min = lower
+            max = upper
+            description = alertPersistence.soundAverageDescription(for: sensor.id)
+        case let .soundPeak(lower, upper):
+            min = lower
+            max = upper
+            description = alertPersistence.soundPeakDescription(for: sensor.id)
+        case let .luminosity(lower, upper):
+            min = lower
+            max = upper
+            description = alertPersistence.luminosityDescription(for: sensor.id)
+        default:
+            break
+        }
+
+        cloud.setAlert(
+            type: cloudType,
+            settingType: .state,
+            isEnabled: isEnabled,
+            min: min,
+            max: max,
+            counter: counter,
+            delay: nil,
+            description: description,
+            for: macId
+        )
+        .observe(on: .global(qos: .utility))
+        .on()
+        // Note: RuuviCloud.setAlert already handles creating queued request on failure
+    }
+
+    private func markAlertUpdated(type: AlertType, for sensor: PhysicalSensor) {
+        alertPersistence.setLastUpdated(
+            Int64(Date().timeIntervalSince1970),
+            for: sensor.id,
+            of: type
+        )
     }
 
     // Physical Sensor
@@ -1997,6 +2150,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     private func setTemperature(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .temperature(lower: 0, upper: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setTemperature(description: description, for: luid.value)
             alertPersistence.setTemperature(description: description, for: macId.value)
@@ -2105,6 +2259,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     private func setRelativeHumidity(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .relativeHumidity(lower: 0, upper: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setRelativeHumidity(description: description, for: luid.value)
             alertPersistence.setRelativeHumidity(description: description, for: macId.value)
@@ -2200,6 +2355,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     func setHumidity(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .humidity(lower: 0, upper: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setHumidity(description: description, for: luid.value)
             alertPersistence.setHumidity(description: description, for: macId.value)
@@ -2323,6 +2479,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     private func setPressure(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .pressure(lower: 0, upper: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setPressure(description: description, for: luid.value)
             alertPersistence.setPressure(description: description, for: macId.value)
@@ -2433,6 +2590,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     private func setSignal(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .signal(lower: 0, upper: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setSignal(description: description, for: luid.value)
             alertPersistence.setSignal(description: description, for: macId.value)
@@ -2532,6 +2690,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     private func setAQI(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .aqi(lower: 0, upper: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setAQI(description: description, for: luid.value)
             alertPersistence.setAQI(description: description, for: macId.value)
@@ -2642,6 +2801,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     private func setCarbonDioxide(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .carbonDioxide(lower: 0, upper: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setCarbonDioxide(description: description, for: luid.value)
             alertPersistence.setCarbonDioxide(description: description, for: macId.value)
@@ -2743,6 +2903,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     private func setPM1(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .pMatter1(lower: 0, upper: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setPM1(description: description, for: luid.value)
             alertPersistence.setPM1(description: description, for: macId.value)
@@ -2837,6 +2998,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     private func setPM25(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .pMatter25(lower: 0, upper: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setPM25(description: description, for: luid.value)
             alertPersistence.setPM25(description: description, for: macId.value)
@@ -2931,6 +3093,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     private func setPM4(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .pMatter4(lower: 0, upper: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setPM4(description: description, for: luid.value)
             alertPersistence.setPM4(description: description, for: macId.value)
@@ -3025,6 +3188,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     private func setPM10(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .pMatter10(lower: 0, upper: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setPM10(description: description, for: luid.value)
             alertPersistence.setPM10(description: description, for: macId.value)
@@ -3119,6 +3283,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     private func setVOC(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .voc(lower: 0, upper: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setVOC(description: description, for: luid.value)
             alertPersistence.setVOC(description: description, for: macId.value)
@@ -3214,6 +3379,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     private func setNOX(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .nox(lower: 0, upper: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setNOX(description: description, for: luid.value)
             alertPersistence.setNOX(description: description, for: macId.value)
@@ -3309,6 +3475,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     private func setSoundInstant(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .soundInstant(lower: 0, upper: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setSoundInstant(description: description, for: luid.value)
             alertPersistence.setSoundInstant(description: description, for: macId.value)
@@ -3404,6 +3571,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     private func setSoundAverage(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .soundAverage(lower: 0, upper: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setSoundAverage(description: description, for: luid.value)
             alertPersistence.setSoundAverage(description: description, for: macId.value)
@@ -3499,6 +3667,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     private func setSoundPeak(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .soundPeak(lower: 0, upper: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setSoundPeak(description: description, for: luid.value)
             alertPersistence.setSoundPeak(description: description, for: macId.value)
@@ -3593,6 +3762,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     private func setLuminosity(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .luminosity(lower: 0, upper: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setLuminosity(description: description, for: luid.value)
             alertPersistence.setLuminosity(description: description, for: macId.value)
@@ -3624,6 +3794,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     func setConnection(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .cloudConnection(unseenDuration: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setConnection(description: description, for: luid.value)
             alertPersistence.setConnection(description: description, for: macId.value)
@@ -3660,6 +3831,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     func setCloudConnection(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .cloudConnection(unseenDuration: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setCloudConnection(description: description, for: luid.value)
             alertPersistence.setCloudConnection(description: description, for: macId.value)
@@ -3749,6 +3921,7 @@ public extension RuuviServiceAlertImpl {
     }
 
     func setMovement(description: String?, for sensor: PhysicalSensor) {
+        markAlertUpdated(type: .movement(last: 0), for: sensor)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.setMovement(description: description, for: luid.value)
             alertPersistence.setMovement(description: description, for: macId.value)

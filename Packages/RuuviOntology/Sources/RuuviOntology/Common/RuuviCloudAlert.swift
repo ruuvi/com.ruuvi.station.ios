@@ -44,4 +44,5 @@ public protocol RuuviCloudAlert {
     var description: String? { get }
     var triggered: Bool? { get }
     var triggeredAt: String? { get }
+    var lastUpdated: Int64? { get }
 }

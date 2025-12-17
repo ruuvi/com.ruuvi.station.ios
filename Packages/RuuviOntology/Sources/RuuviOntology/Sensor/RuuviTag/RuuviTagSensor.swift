@@ -7,6 +7,7 @@ public protocol RuuviTagSensor: PhysicalSensor,
                                 Connectable,
                                 Nameable,
                                 Shareable,
+                                Updatable,
                                 HistoryFetchable,
                                 BackgroundScanable {}
 
@@ -66,7 +67,8 @@ public extension RuuviTagSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -326,9 +328,33 @@ public extension RuuviTagSensor {
             isCloudSensor: cloudSensor.isCloudSensor ?? true,
             canShare: cloudSensor.canShare,
             sharedTo: cloudSensor.sharedTo,
-            maxHistoryDays: cloudSensor.maxHistoryDays
+            maxHistoryDays: cloudSensor.maxHistoryDays,
+            lastUpdated: cloudSensor.lastUpdated
         )
         return sensor
+    }
+
+    /// Updates cloud metadata (owner, plan, sharing) but preserves local name and timestamp
+    /// Used when local data is newer and should not be overwritten
+    func withCloudMetadata(from cloudSensor: CloudSensor) -> RuuviTagSensor {
+        RuuviTagSensorStruct(
+            version: version,
+            firmwareVersion: firmwareVersion,
+            luid: luid,
+            macId: macId,
+            serviceUUID: serviceUUID,
+            isConnectable: isConnectable,
+            name: name, // Preserve local name
+            isClaimed: cloudSensor.isOwner,
+            isOwner: cloudSensor.isOwner,
+            owner: cloudSensor.owner,
+            ownersPlan: cloudSensor.ownersPlan,
+            isCloudSensor: cloudSensor.isCloudSensor ?? true,
+            canShare: cloudSensor.canShare,
+            sharedTo: cloudSensor.sharedTo,
+            maxHistoryDays: cloudSensor.maxHistoryDays,
+            lastUpdated: lastUpdated // Preserve local timestamp
+        )
     }
 
     func with(isCloudSensor: Bool) -> RuuviTagSensor {
@@ -454,6 +480,7 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
     public var canShare: Bool
     public var sharedTo: [String]
     public var maxHistoryDays: Int?
+    public var lastUpdated: Int64?
 
     public init(
         version: Int,
@@ -470,7 +497,8 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
         isCloudSensor: Bool?,
         canShare: Bool,
         sharedTo: [String],
-        maxHistoryDays: Int?
+        maxHistoryDays: Int?,
+        lastUpdated: Int64? = nil
     ) {
         self.version = version
         self.firmwareVersion = firmwareVersion
@@ -487,6 +515,7 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
         self.canShare = canShare
         self.sharedTo = sharedTo
         self.maxHistoryDays = maxHistoryDays
+        self.lastUpdated = lastUpdated
     }
 }
 
@@ -561,6 +590,10 @@ public struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderabl
 
     public var maxHistoryDays: Int? {
         object.maxHistoryDays
+    }
+
+    public var lastUpdated: Int64? {
+        object.lastUpdated
     }
 
     public static func == (lhs: AnyRuuviTagSensor, rhs: AnyRuuviTagSensor) -> Bool {

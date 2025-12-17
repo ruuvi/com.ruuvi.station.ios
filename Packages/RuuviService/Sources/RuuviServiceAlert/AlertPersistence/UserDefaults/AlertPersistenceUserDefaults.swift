@@ -317,6 +317,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     private let movementAlertTriggeredAtUDKeyPrefix
         = "AlertPersistenceUserDefaults.movementAlertTriggeredAtUDKeyPrefix."
 
+    // lastUpdated for sync collision handling
+    private let alertLastUpdatedUDKeyPrefix
+        = "AlertPersistenceUserDefaults.alertLastUpdatedUDKeyPrefix."
+
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
         switch type {
@@ -1651,6 +1655,25 @@ extension AlertPersistenceUserDefaults {
 
     func setMovement(description: String?, for uuid: String) {
         prefs.set(description, forKey: movementAlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - LastUpdated for Sync Collision Handling
+
+extension AlertPersistenceUserDefaults {
+    func lastUpdated(for uuid: String, of type: AlertType) -> Int64? {
+        let key = alertLastUpdatedUDKeyPrefix + type.rawValue + "." + uuid
+        let value = prefs.object(forKey: key) as? Int64
+        return value
+    }
+
+    func setLastUpdated(_ timestamp: Int64?, for uuid: String, of type: AlertType) {
+        let key = alertLastUpdatedUDKeyPrefix + type.rawValue + "." + uuid
+        if let timestamp {
+            prefs.set(timestamp, forKey: key)
+        } else {
+            prefs.removeObject(forKey: key)
+        }
     }
 }
 

@@ -16,6 +16,7 @@ public struct RuuviCloudApiSensor: Decodable {
     public let temperatureOffset: Double? // in degrees
     public let humidityOffset: Double? // in percents
     public let pressureOffset: Double? // in Pa
+    public let lastUpdated: Int64?
 
     enum CodingKeys: String, CodingKey {
         case sensorId = "sensor"
@@ -26,6 +27,7 @@ public struct RuuviCloudApiSensor: Decodable {
         case temperatureOffset = "offsetTemperature"
         case humidityOffset = "offsetHumidity"
         case pressureOffset = "offsetPressure"
+        case lastUpdated
     }
 }
 

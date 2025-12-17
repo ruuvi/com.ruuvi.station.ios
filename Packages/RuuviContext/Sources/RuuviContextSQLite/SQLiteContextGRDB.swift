@@ -324,6 +324,46 @@ extension SQLiteGRDBDatabase {
             })
         }
 
+        // v19 - Add lastUpdated columns for sync collision handling
+        migrator.registerMigration("Add lastUpdated columns for sync collision handling") { db in
+            // RuuviTagSQLite - sensor lastUpdated
+            if try db.columns(in: RuuviTagSQLite.databaseTableName)
+                .contains(where: { $0.name == RuuviTagSQLite.lastUpdatedColumn.name }) == false {
+                try db.alter(table: RuuviTagSQLite.databaseTableName, body: { t in
+                    t.add(column: RuuviTagSQLite.lastUpdatedColumn.name, .integer)
+                        .defaults(to: 0)
+                })
+            }
+
+            // SensorSettingsSQLite - display order timestamps (offsets use sensor's root lastUpdated)
+            if try db.columns(in: SensorSettingsSQLite.databaseTableName)
+                .contains(where: { $0.name == SensorSettingsSQLite.displayOrderLastUpdatedColumn.name }) == false {
+                try db.alter(table: SensorSettingsSQLite.databaseTableName, body: { t in
+                    t.add(column: SensorSettingsSQLite.displayOrderLastUpdatedColumn.name, .integer)
+                        .defaults(to: 0)
+                    t.add(column: SensorSettingsSQLite.defaultDisplayOrderLastUpdatedColumn.name, .integer)
+                        .defaults(to: 0)
+                })
+            }
+
+            // RuuviCloudSensorSubscriptionSQLite - subscription lastUpdated
+            if try db.columns(in: RuuviCloudSensorSubscriptionSQLite.databaseTableName)
+                .contains(where: { $0.name == RuuviCloudSensorSubscriptionSQLite.lastUpdatedColumn.name }) == false {
+                try db.alter(table: RuuviCloudSensorSubscriptionSQLite.databaseTableName, body: { t in
+                    t.add(column: RuuviCloudSensorSubscriptionSQLite.lastUpdatedColumn.name, .integer)
+                        .defaults(to: 0)
+                })
+            }
+
+            // RuuviCloudQueuedRequestSQLite - local change tracking
+            if try db.columns(in: RuuviCloudQueuedRequestSQLite.databaseTableName)
+                .contains(where: { $0.name == RuuviCloudQueuedRequestSQLite.localLastUpdatedColumn.name }) == false {
+                try db.alter(table: RuuviCloudQueuedRequestSQLite.databaseTableName, body: { t in
+                    t.add(column: RuuviCloudQueuedRequestSQLite.localLastUpdatedColumn.name, .integer)
+                })
+            }
+        }
+
         try migrator.migrate(dbPool)
     }
 }

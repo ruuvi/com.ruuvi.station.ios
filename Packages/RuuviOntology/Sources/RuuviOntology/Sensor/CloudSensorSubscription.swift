@@ -17,6 +17,7 @@ public protocol CloudSensorSubscription {
     var pushAlertAllowed: Bool? { get }
     var telegramAlertAllowed: Bool? { get }
     var endAt: String? { get }
+    var lastUpdated: Int64? { get }
 }
 
 public extension CloudSensorSubscription {
@@ -46,7 +47,8 @@ public extension CloudSensorSubscription {
             pdfExportAllowed: pdfExportAllowed,
             pushAlertAllowed: pushAlertAllowed,
             telegramAlertAllowed: telegramAlertAllowed,
-            endAt: endAt
+            endAt: endAt,
+            lastUpdated: lastUpdated
         )
     }
 }
@@ -68,6 +70,7 @@ public struct CloudSensorSubscriptionStruct: CloudSensorSubscription {
     public var pushAlertAllowed: Bool?
     public var telegramAlertAllowed: Bool?
     public var endAt: String?
+    public var lastUpdated: Int64?
 
     init(
         macId: String? = nil,
@@ -84,7 +87,8 @@ public struct CloudSensorSubscriptionStruct: CloudSensorSubscription {
         pdfExportAllowed: Bool?,
         pushAlertAllowed: Bool?,
         telegramAlertAllowed: Bool?,
-        endAt: String?
+        endAt: String?,
+        lastUpdated: Int64? = nil
     ) {
         self.macId = macId
         self.subscriptionName = subscriptionName
@@ -101,5 +105,6 @@ public struct CloudSensorSubscriptionStruct: CloudSensorSubscription {
         self.pushAlertAllowed = pushAlertAllowed
         self.telegramAlertAllowed = telegramAlertAllowed
         self.endAt = endAt
+        self.lastUpdated = lastUpdated
     }
 }

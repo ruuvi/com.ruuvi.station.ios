@@ -26,6 +26,7 @@ public protocol RuuviCloudQueuedRequest {
     var attempts: Int? { get }
     var requestBodyData: Data? { get }
     var additionalData: Data? { get }
+    var localLastUpdated: Int64? { get }
 }
 
 public extension RuuviCloudQueuedRequest {
@@ -39,7 +40,8 @@ public extension RuuviCloudQueuedRequest {
             successDate: successDate,
             attempts: attempts,
             requestBodyData: requestBodyData,
-            additionalData: additionalData
+            additionalData: additionalData,
+            localLastUpdated: localLastUpdated
         )
     }
 }
@@ -54,6 +56,7 @@ public struct RuuviCloudQueuedRequestStruct: RuuviCloudQueuedRequest {
     public var attempts: Int?
     public var requestBodyData: Data?
     public var additionalData: Data?
+    public var localLastUpdated: Int64?
 
     public init(
         id: Int64?,
@@ -64,7 +67,8 @@ public struct RuuviCloudQueuedRequestStruct: RuuviCloudQueuedRequest {
         successDate: Date?,
         attempts: Int?,
         requestBodyData: Data?,
-        additionalData: Data?
+        additionalData: Data?,
+        localLastUpdated: Int64? = nil
     ) {
         self.id = id
         self.type = type
@@ -75,5 +79,6 @@ public struct RuuviCloudQueuedRequestStruct: RuuviCloudQueuedRequest {
         self.attempts = attempts
         self.requestBodyData = requestBodyData
         self.additionalData = additionalData
+        self.localLastUpdated = localLastUpdated
     }
 }

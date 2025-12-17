@@ -208,7 +208,8 @@ final class RuuviPoolCoordinator: RuuviPool {
         type: OffsetCorrectionType,
         with value: Double?,
         of ruuviTag: RuuviTagSensor,
-        lastOriginalRecord record: RuuviTagSensorRecord?
+        lastOriginalRecord record: RuuviTagSensorRecord?,
+        lastUpdatedTimestamp: Int64?
     ) -> Future<SensorSettings, RuuviPoolError> {
         let promise = Promise<SensorSettings, RuuviPoolError>()
         if ruuviTag.macId != nil {
@@ -216,7 +217,8 @@ final class RuuviPoolCoordinator: RuuviPool {
                 type: type,
                 with: value,
                 of: ruuviTag,
-                lastOriginalRecord: record
+                lastOriginalRecord: record,
+                lastUpdatedTimestamp: lastUpdatedTimestamp
             )
             .on(success: { settings in
                 promise.succeed(value: settings)
@@ -232,13 +234,17 @@ final class RuuviPoolCoordinator: RuuviPool {
     func updateDisplaySettings(
         for ruuviTag: RuuviTagSensor,
         displayOrder: [String]?,
-        defaultDisplayOrder: Bool?
+        defaultDisplayOrder: Bool?,
+        displayOrderTimestamp: Int64?,
+        defaultDisplayOrderTimestamp: Int64?
     ) -> Future<SensorSettings, RuuviPoolError> {
         let promise = Promise<SensorSettings, RuuviPoolError>()
         sqlite.updateDisplaySettings(
             for: ruuviTag,
             displayOrder: displayOrder,
-            defaultDisplayOrder: defaultDisplayOrder
+            defaultDisplayOrder: defaultDisplayOrder,
+            displayOrderTimestamp: displayOrderTimestamp,
+            defaultDisplayOrderTimestamp: defaultDisplayOrderTimestamp
         )
         .on(success: { settings in
             promise.succeed(value: settings)

@@ -35,6 +35,10 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         do {
             try database.dbPool.write { db in
                 let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+                let existing = try Entity
+                    .filter(Entity.idColumn == normalizedTag.id)
+                    .fetchOne(db)
+                let lastUpdated = normalizedTag.lastUpdated ?? existing?.lastUpdated
                 let entity = Entity(
                     id: normalizedTag.id,
                     macId: normalizedTag.macId,
@@ -51,7 +55,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     isCloudSensor: normalizedTag.isCloudSensor,
                     canShare: normalizedTag.canShare,
                     sharedTo: normalizedTag.sharedTo,
-                    maxHistoryDays: normalizedTag.maxHistoryDays
+                    maxHistoryDays: normalizedTag.maxHistoryDays,
+                    lastUpdated: normalizedTag.lastUpdated
                 )
                 try entity.insert(db)
             }
@@ -444,7 +449,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     isCloudSensor: normalizedTag.isCloudSensor,
                     canShare: normalizedTag.canShare,
                     sharedTo: normalizedTag.sharedTo,
-                    maxHistoryDays: normalizedTag.maxHistoryDays
+                    maxHistoryDays: normalizedTag.maxHistoryDays,
+                    lastUpdated: normalizedTag.lastUpdated
                 )
                 try entity.update(db)
             }
@@ -602,18 +608,20 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         return promise.future
     }
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     public func updateOffsetCorrection(
         type: OffsetCorrectionType,
         with value: Double?,
         of ruuviTag: RuuviTagSensor,
-        lastOriginalRecord record: RuuviTagSensorRecord?
+        lastOriginalRecord record: RuuviTagSensorRecord?,
+        lastUpdatedTimestamp: Int64?
     ) -> Future<SensorSettings, RuuviPersistenceError> {
         let promise = Promise<SensorSettings, RuuviPersistenceError>()
         assert(ruuviTag.macId != nil)
         do {
             let settings: Settings = try database.dbPool.write { db in
                 let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+                let timestamp = lastUpdatedTimestamp ?? Int64(Date().timeIntervalSince1970)
                 var isAddNewRecord = true
                 var sqliteSensorSettings = Settings(
                     luid: normalizedTag.luid,
@@ -652,6 +660,16 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     try sqliteSensorSettings.update(db)
                 }
 
+                // Keep sensor lastUpdated in sync for collision handling
+                try db.execute(sql: """
+                UPDATE \(Entity.databaseTableName)
+                SET \(Entity.lastUpdatedColumn.name) = :lastUpdated
+                WHERE \(Entity.idColumn.name) = :id
+                """, arguments: [
+                    "lastUpdated": timestamp,
+                    "id": normalizedTag.id
+                ])
+
                 if let sqliteSensorRecord = record {
                     let normalizedRecord = try normalizedRecord(sqliteSensorRecord, db: db)
                     try normalizedRecord.sqlite.insert(db)
@@ -671,12 +689,15 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     public func updateDisplaySettings(
         for ruuviTag: RuuviTagSensor,
         displayOrder: [String]?,
-        defaultDisplayOrder: Bool?
+        defaultDisplayOrder: Bool?,
+        displayOrderTimestamp: Int64?,
+        defaultDisplayOrderTimestamp: Int64?
     ) -> Future<SensorSettings, RuuviPersistenceError> {
         let promise = Promise<SensorSettings, RuuviPersistenceError>()
         do {
             let settings: Settings = try database.dbPool.write { db in
                 let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+
                 var seed = Settings(
                     luid: normalizedTag.luid,
                     macId: normalizedTag.macId,
@@ -686,15 +707,20 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 )
                 seed.displayOrder = displayOrder
                 seed.defaultDisplayOrder = defaultDisplayOrder
+                seed.displayOrderLastUpdated = displayOrderTimestamp
+                seed.defaultDisplayOrderLastUpdated = defaultDisplayOrderTimestamp
 
                 try db.execute(sql: """
                 INSERT INTO \(Settings.databaseTableName)
                     (\(Settings.idColumn.name), \(Settings.luidColumn.name), \(Settings.macIdColumn.name),
-                     \(Settings.displayOrderColumn.name), \(Settings.defaultDisplayOrderColumn.name))
-                VALUES (:id, :luid, :macId, :displayOrder, :defaultDisplayOrder)
+                     \(Settings.displayOrderColumn.name), \(Settings.defaultDisplayOrderColumn.name),
+                     \(Settings.displayOrderLastUpdatedColumn.name), \(Settings.defaultDisplayOrderLastUpdatedColumn.name))
+                VALUES (:id, :luid, :macId, :displayOrder, :defaultDisplayOrder, :displayOrderLastUpdated, :defaultDisplayOrderLastUpdated)
                 ON CONFLICT(\(Settings.idColumn.name)) DO UPDATE SET
                     \(Settings.displayOrderColumn.name) = excluded.\(Settings.displayOrderColumn.name),
                     \(Settings.defaultDisplayOrderColumn.name) = excluded.\(Settings.defaultDisplayOrderColumn.name),
+                    \(Settings.displayOrderLastUpdatedColumn.name) = excluded.\(Settings.displayOrderLastUpdatedColumn.name),
+                    \(Settings.defaultDisplayOrderLastUpdatedColumn.name) = excluded.\(Settings.defaultDisplayOrderLastUpdatedColumn.name),
                     \(Settings.luidColumn.name) = COALESCE(excluded.\(Settings.luidColumn.name),
                         \(Settings.databaseTableName).\(Settings.luidColumn.name)),
                     \(Settings.macIdColumn.name) = COALESCE(excluded.\(Settings.macIdColumn.name),
@@ -703,12 +729,14 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     "id": seed.id,
                     "luid": normalizedTag.luid?.value,
                     "macId": normalizedTag.macId?.value,
-                    "displayOrder": SensorSettingsSQLite.encodeDisplayOrder(displayOrder),
-                    "defaultDisplayOrder": defaultDisplayOrder,
+                    "displayOrder": SensorSettingsSQLite.encodeDisplayOrder(seed.displayOrder),
+                    "defaultDisplayOrder": seed.defaultDisplayOrder,
+                    "displayOrderLastUpdated": seed.displayOrderLastUpdated,
+                    "defaultDisplayOrderLastUpdated": seed.defaultDisplayOrderLastUpdated,
                 ])
 
-                let request = Settings.filter(Settings.idColumn == seed.id)
-                if let updated = try request.fetchOne(db) {
+                let updatedRequest = Settings.filter(Settings.idColumn == seed.id)
+                if let updated = try updatedRequest.fetchOne(db) {
                     return updated
                 } else {
                     return seed
@@ -941,7 +969,11 @@ extension RuuviPersistenceSQLite {
             do {
                 try database.dbPool.write { db in
                     assert(newRequest.uniqueKey != nil)
-                    try newRequest.sqlite.insert(db)
+                    var entity = newRequest.sqlite
+                    if entity.localLastUpdated == nil {
+                        entity.localLastUpdated = Int64(Date().timeIntervalSince1970)
+                    }
+                    try entity.insert(db)
                 }
                 promise.succeed(value: true)
             } catch {
@@ -963,7 +995,8 @@ extension RuuviPersistenceSQLite {
                 successDate: newRequest.successDate,
                 attempts: retryCount,
                 requestBodyData: newRequest.requestBodyData,
-                additionalData: newRequest.additionalData
+                additionalData: newRequest.additionalData,
+                localLastUpdated: newRequest.localLastUpdated ?? existingRequest.localLastUpdated
             )
             do {
                 try database.dbPool.write { db in
