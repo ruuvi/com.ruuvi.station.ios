@@ -107,7 +107,8 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
             offset: offset,
             of: view.viewModel.type,
             for: ruuviTag,
-            lastOriginalRecord: lastSensorRecord
+            lastOriginalRecord: lastSensorRecord,
+            lastUpdatedTimestamp: Int64(Date().timeIntervalSince1970)
         )
         .on(success: { [weak self] settings in
             self?.sensorSettings = settings
@@ -128,7 +129,8 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
             offset: nil,
             of: view.viewModel.type,
             for: ruuviTag,
-            lastOriginalRecord: lastSensorRecord
+            lastOriginalRecord: lastSensorRecord,
+            lastUpdatedTimestamp: Int64(Date().timeIntervalSince1970)
         )
         .on(success: { [weak self] sensorSettings in
             self?.sensorSettings = sensorSettings

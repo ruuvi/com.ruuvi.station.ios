@@ -56,7 +56,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     canShare: normalizedTag.canShare,
                     sharedTo: normalizedTag.sharedTo,
                     maxHistoryDays: normalizedTag.maxHistoryDays,
-                    lastUpdated: normalizedTag.lastUpdated
+                    lastUpdated: lastUpdated
                 )
                 try entity.insert(db)
             }
