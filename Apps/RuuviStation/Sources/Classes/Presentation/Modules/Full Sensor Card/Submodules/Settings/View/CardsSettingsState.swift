@@ -18,6 +18,8 @@ final class CardsSettingsState: ObservableObject {
     @Published private(set) var shareSummary: String
     @Published private(set) var visibleMeasurementsValue: String?
     @Published private(set) var showVisibleMeasurementsRow: Bool = false
+    @Published private(set) var ledBrightnessSelection: RuuviLedBrightnessLevel = .defaultSelection
+    @Published private(set) var showLedBrightnessRow: Bool = false
     @Published private(set) var backgroundImage: Image?
     @Published private(set) var moreInfoRows: [CardsSettingsMoreInfoRowModel]
     @Published private(set) var firmwareVersion: String
@@ -99,6 +101,9 @@ final class CardsSettingsState: ObservableObject {
         showHumidityOffset = snapshot.calibration.isHumidityOffsetVisible
         showPressureOffset = snapshot.calibration.isPressureOffsetVisible
         hasLatestMeasurement = snapshot.latestRawRecord != nil
+        showLedBrightnessRow = CardsSettingsState.shouldShowLedBrightness(
+            for: snapshot
+        )
     }
 
     // MARK: - Public Interface
@@ -123,6 +128,11 @@ final class CardsSettingsState: ObservableObject {
         snapshot.capabilities.showKeepConnection
     }
 
+    var ledBrightnessValue: String {
+//        ledBrightnessSelection.title // TODO: Implement this when fw supports.
+        ""
+    }
+
     var shouldShowNoValuesIndicator: Bool {
         guard let version = snapshot.displayData.version else { return false }
         return version < 5
@@ -134,6 +144,10 @@ final class CardsSettingsState: ObservableObject {
     ) {
         visibleMeasurementsValue = value
         showVisibleMeasurementsRow = isVisible
+    }
+
+    func updateLedBrightnessSelection(_ selection: RuuviLedBrightnessLevel) {
+        ledBrightnessSelection = selection
     }
 
     // MARK: - Settings Sections
@@ -423,6 +437,17 @@ private extension CardsSettingsState {
         metadata: RuuviTagCardSnapshotMetadata
     ) -> Bool {
         ownership.isAuthorized && !metadata.isOwner && metadata.isCloud
+    }
+
+    static func shouldShowLedBrightness(
+        for snapshot: RuuviTagCardSnapshot
+    ) -> Bool {
+        let format = RuuviDataFormat.dataFormat(
+            from: snapshot.displayData.version.bound
+        )
+        let ruuviDeviceType: RuuviDeviceType =
+            format == .e1 || format == .v6 ? .ruuviAir : .ruuviTag
+        return ruuviDeviceType == .ruuviAir
     }
 
     static func calculateShareSummary(

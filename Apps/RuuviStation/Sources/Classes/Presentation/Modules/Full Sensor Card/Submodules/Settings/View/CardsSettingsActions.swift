@@ -8,6 +8,7 @@ import RuuviOntology
     let didTapOwnerRow = PassthroughSubject<Void, Never>()
     let didTapShareRow = PassthroughSubject<Void, Never>()
     let didTapVisibleMeasurementsRow = PassthroughSubject<Void, Never>()
+    let didTapLedBrightnessRow = PassthroughSubject<Void, Never>()
 
     // Keep connection
     let didToggleKeepConnection = PassthroughSubject<Bool, Never>()

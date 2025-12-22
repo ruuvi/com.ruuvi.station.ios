@@ -115,6 +115,28 @@ class CardsSettingsRouter: NSObject, CardsSettingsRouterInput {
         }
     }
 
+    func openLedBrightnessSettings(
+        selection: RuuviLedBrightnessLevel?,
+        firmwareVersion: String?,
+        snapshotId: String?,
+        onUpdateFirmware: (() -> Void)?,
+        onSelection: @escaping (RuuviLedBrightnessLevel, @escaping (Result<Void, Error>) -> Void) -> Void
+    ) {
+        let controller = LEDBrightnessSettingsViewController(
+            selection: selection,
+            firmwareVersion: firmwareVersion,
+            snapshotId: snapshotId
+        )
+        controller.onSelection = onSelection
+        controller.onUpdateFirmware = onUpdateFirmware
+        transitionHandler?
+            .navigationController?
+            .pushViewController(
+                controller,
+                animated: true
+            )
+    }
+
     func openVisibilitySettings(
         snapshot: RuuviTagCardSnapshot,
         ruuviTag: RuuviTagSensor,

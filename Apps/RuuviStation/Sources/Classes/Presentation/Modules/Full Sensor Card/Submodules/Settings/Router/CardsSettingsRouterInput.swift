@@ -1,6 +1,5 @@
 import Foundation
 import RuuviOntology
-import UIKit
 
 protocol CardsSettingsRouterInput {
     func dismiss(completion: (() -> Void)?)
@@ -18,6 +17,21 @@ protocol CardsSettingsRouterInput {
     func openSensorRemoval(
         ruuviTag: RuuviTagSensor,
         output: SensorRemovalModuleOutput
+    )
+    func openLedBrightnessSettings(
+        selection: RuuviLedBrightnessLevel?,
+        firmwareVersion: String?,
+        snapshotId: String?,
+        onUpdateFirmware: (() -> Void)?,
+        onSelection: @escaping (
+            RuuviLedBrightnessLevel,
+            @escaping (
+                Result<
+                Void,
+                Error
+                >
+            ) -> Void
+        ) -> Void
     )
     func openVisibilitySettings(
         snapshot: RuuviTagCardSnapshot,
