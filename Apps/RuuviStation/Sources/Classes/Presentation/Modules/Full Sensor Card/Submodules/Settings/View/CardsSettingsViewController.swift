@@ -192,6 +192,10 @@ extension CardsSettingsViewController: CardsSettingsViewInput {
             isVisible: isVisible
         )
     }
+
+    func updateLedBrightnessSelection(_ selection: RuuviLedBrightnessLevel) {
+        state.updateLedBrightnessSelection(selection)
+    }
 }
 
 // MARK: - UITextFieldDelegate
@@ -297,6 +301,12 @@ extension CardsSettingsViewController {
         actions.didTapVisibleMeasurementsRow
             .sink { [weak self] in
                 self?.output.viewDidTapVisibleMeasurements()
+            }
+            .store(in: &cancellables)
+
+        actions.didTapLedBrightnessRow
+            .sink { [weak self] in
+                self?.output.viewDidTapLedBrightness()
             }
             .store(in: &cancellables)
 

@@ -31,6 +31,8 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
     private var snapshot: RuuviTagCardSnapshot?
     private var sensor: AnyRuuviTagSensor?
     private var sensorSettings: SensorSettings?
+    private var ledBrightnessSelection: RuuviOntology.RuuviLedBrightnessLevel = .defaultSelection
+    private var airShellClient: RuuviAirShellClient?
 
     // MARK: - Subscriptions
     private var ruuviTagSensorOwnerCheckToken: NSObjectProtocol?
@@ -96,6 +98,7 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
                 dashboardSortingType: settings.dashboardSensorOrder.count == 0 ? .alphabetical : .manual
             )
             refreshVisibleMeasurementsSummary()
+            view?.updateLedBrightnessSelection(ledBrightnessSelection)
             updateAlertSections(for: snapshot)
         }
         refreshFirmwareVersionIfNeeded()
@@ -218,6 +221,34 @@ extension CardsSettingsPresenter: CardsSettingsViewOutput {
             snapshot: snapshot,
             ruuviTag: sensor,
             sensorSettings: sensorSettings
+        )
+    }
+
+    func viewDidTapLedBrightness() {
+        router?.openLedBrightnessSettings(
+            selection: nil, // TODO: Implement this when fw supports.
+            firmwareVersion: snapshot?.displayData.firmwareVersion,
+            snapshotId: snapshot?.id,
+            onUpdateFirmware: { [weak self] in
+                guard let self else { return }
+                self.withSensor { sensor in
+                    self.router?.openUpdateFirmware(ruuviTag: sensor)
+                }
+            },
+            onSelection: { [weak self] selection, completion in
+                guard let self else { return }
+                self.applyLedBrightnessSelection(selection) { [weak self] result in
+                    guard let self else { return }
+                    switch result {
+                    case .success:
+                        self.ledBrightnessSelection = selection
+                        self.view?.updateLedBrightnessSelection(selection)
+                    case let .failure(error):
+                        self.errorPresenter.present(error: error)
+                    }
+                    completion(result)
+                }
+            }
         )
     }
 
@@ -669,6 +700,30 @@ private extension CardsSettingsPresenter {
     func withSnapshot(_ block: (RuuviTagCardSnapshot) -> Void) {
         guard let snapshot else { return }
         block(snapshot)
+    }
+
+    func applyLedBrightnessSelection(
+        _ selection: RuuviOntology.RuuviLedBrightnessLevel,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        guard let sensor else {
+            completion(.failure(UnexpectedError.failedToFindRuuviTag))
+            return
+        }
+        guard let luid = sensor.luid else {
+            completion(.failure(UnexpectedError.viewModelUUIDIsNil))
+            return
+        }
+
+        let client = RuuviAirShellClient()
+        airShellClient = client
+        client.setLedBrightness(
+            uuid: luid.value,
+            level: selection
+        ) { [weak self] result in
+            self?.airShellClient = nil
+            completion(result)
+        }
     }
 
     func refreshVisibleMeasurementsSummary() {

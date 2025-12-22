@@ -10,11 +10,14 @@ struct CardsSettingsBasicInfoSectionView: View {
     let onOwnerTap: () -> Void
     let onShareTap: () -> Void
     let onVisibleMeasurementsTap: () -> Void
+    let onLedBrightnessTap: () -> Void
     var showsOwner: Bool
     var showOwnersPlan: Bool
     var showsShare: Bool
     var visibleMeasurementsValue: String?
+    var ledBrightnessValue: String?
     var showsVisibleMeasurementsRow: Bool = false
+    var showsLedBrightnessRow: Bool = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -35,7 +38,7 @@ struct CardsSettingsBasicInfoSectionView: View {
                 onTap: onEditName
             )
 
-            if showsOwner || showsShare || showsVisibleMeasurementsRow {
+            if showsOwner || showsShare || showsVisibleMeasurementsRow || showsLedBrightnessRow {
                 SettingsDivider()
             }
 
@@ -46,7 +49,7 @@ struct CardsSettingsBasicInfoSectionView: View {
                     onTap: onOwnerTap
                 )
 
-                if showsShare || showOwnersPlan || showsVisibleMeasurementsRow {
+                if showsShare || showOwnersPlan || showsVisibleMeasurementsRow || showsLedBrightnessRow {
                     SettingsDivider()
                 }
             }
@@ -57,7 +60,7 @@ struct CardsSettingsBasicInfoSectionView: View {
                     value: ownersPlan
                 )
 
-                if showsShare || showsVisibleMeasurementsRow {
+                if showsShare || showsVisibleMeasurementsRow || showsLedBrightnessRow {
                     SettingsDivider()
                 }
             }
@@ -69,7 +72,7 @@ struct CardsSettingsBasicInfoSectionView: View {
                     onTap: onShareTap
                 )
 
-                if showsVisibleMeasurementsRow {
+                if showsVisibleMeasurementsRow || showsLedBrightnessRow {
                     SettingsDivider()
                 }
             }
@@ -79,6 +82,18 @@ struct CardsSettingsBasicInfoSectionView: View {
                     title: RuuviLocalization.visibleMeasurements,
                     value: visibleMeasurementsValue ?? RuuviLocalization.na,
                     onTap: onVisibleMeasurementsTap
+                )
+
+                if showsLedBrightnessRow {
+                    SettingsDivider()
+                }
+            }
+
+            if showsLedBrightnessRow {
+                SettingsNavigationRow(
+                    title: RuuviLocalization.ledBrightnessControl,
+                    value: ledBrightnessValue ?? RuuviLocalization.na,
+                    onTap: onLedBrightnessTap
                 )
             }
         }
