@@ -1,3 +1,5 @@
+import Foundation
+
 public struct RuuviAlertConstants {
     public struct Temperature {
         public static let lowerBound = -40.0 // Celsius
@@ -55,6 +57,10 @@ public struct RuuviAlertConstants {
     public struct Luminosity {
         public static let lowerBound = 0.0     // lx
         public static let upperBound = 144284.0 // lx
+    }
+
+    public struct Movement {
+        public static let firingHoldDuration: TimeInterval = 10 * 60 // sec
     }
 
     public struct CloudConnection {

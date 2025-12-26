@@ -704,6 +704,8 @@ extension CardsBaseViewController: TimestampUpdateable {
         } else {
             updatedAtLabel.text = RuuviLocalization.Cards.UpdatedLabel.NoData.message
         }
+
+        _ = currentSnapshot.clearExpiredMovementFiringIfNeeded()
     }
 }
 

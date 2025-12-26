@@ -300,6 +300,7 @@ class RuuviTagAlertService {
                 isActive: isOn,
                 isFiring: currentConfig.isFiring,
                 mutedTill: nil,
+                firingUntil: isOn ? currentConfig.firingUntil : nil,
                 lowerBound: currentConfig.lowerBound,
                 upperBound: currentConfig.upperBound,
                 description: currentConfig.description,
@@ -329,6 +330,7 @@ class RuuviTagAlertService {
                 isActive: currentConfig.isActive,
                 isFiring: currentConfig.isFiring,
                 mutedTill: currentConfig.mutedTill,
+                firingUntil: currentConfig.firingUntil,
                 lowerBound: lowerBound,
                 upperBound: currentConfig.upperBound,
                 description: currentConfig.description,
@@ -349,6 +351,7 @@ class RuuviTagAlertService {
                 isActive: updatedConfig.isActive,
                 isFiring: updatedConfig.isFiring,
                 mutedTill: updatedConfig.mutedTill,
+                firingUntil: updatedConfig.firingUntil,
                 lowerBound: updatedConfig.lowerBound,
                 upperBound: upperBound,
                 description: updatedConfig.description,
@@ -385,6 +388,7 @@ class RuuviTagAlertService {
             isActive: currentConfig.isActive,
             isFiring: currentConfig.isFiring,
             mutedTill: currentConfig.mutedTill,
+            firingUntil: currentConfig.firingUntil,
             lowerBound: currentConfig.lowerBound,
             upperBound: currentConfig.upperBound,
             description: description,
@@ -410,6 +414,7 @@ class RuuviTagAlertService {
             isActive: currentConfig.isActive,
             isFiring: currentConfig.isFiring,
             mutedTill: currentConfig.mutedTill,
+            firingUntil: currentConfig.firingUntil,
             lowerBound: currentConfig.lowerBound,
             upperBound: currentConfig.upperBound,
             description: currentConfig.description,
@@ -489,6 +494,7 @@ class RuuviTagAlertService {
                 isActive: currentConfig.isActive,
                 isFiring: currentConfig.isFiring,
                 mutedTill: till,
+                firingUntil: currentConfig.firingUntil,
                 lowerBound: currentConfig.lowerBound,
                 upperBound: currentConfig.upperBound,
                 description: currentConfig.description,
@@ -514,6 +520,7 @@ class RuuviTagAlertService {
                 isActive: currentConfig.isActive,
                 isFiring: currentConfig.isFiring,
                 mutedTill: nil,
+                firingUntil: currentConfig.firingUntil,
                 lowerBound: currentConfig.lowerBound,
                 upperBound: currentConfig.upperBound,
                 description: currentConfig.description,
@@ -584,6 +591,7 @@ class RuuviTagAlertService {
                         isActive: config.isActive,
                         isFiring: config.isFiring,
                         mutedTill: nil,
+                        firingUntil: config.firingUntil,
                         lowerBound: config.lowerBound,
                         upperBound: config.upperBound,
                         description: config.description,
@@ -603,6 +611,7 @@ class RuuviTagAlertService {
                         isActive: config.isActive,
                         isFiring: config.isFiring,
                         mutedTill: nil,
+                        firingUntil: config.firingUntil,
                         lowerBound: config.lowerBound,
                         upperBound: config.upperBound,
                         description: config.description,
@@ -746,6 +755,7 @@ private extension RuuviTagAlertService {
                     isActive: isOn,
                     isFiring: currentConfig.isFiring,
                     mutedTill: mutedTill,
+                    firingUntil: currentConfig.firingUntil,
                     lowerBound: newLower,
                     upperBound: newUpper,
                     description: newDescription,
@@ -760,6 +770,7 @@ private extension RuuviTagAlertService {
                 isActive: isOn,
                 isFiring: false,
                 mutedTill: mutedTill,
+                firingUntil: nil,
                 lowerBound: lowerBound,
                 upperBound: upperBound,
                 description: description
@@ -809,6 +820,7 @@ private extension RuuviTagAlertService {
                     isActive: isOn,
                     isFiring: currentConfig.isFiring,
                     mutedTill: mutedTill,
+                    firingUntil: currentConfig.firingUntil,
                     description: newDescription,
                     unseenDuration: newUnseenDuration
                 )
@@ -821,6 +833,7 @@ private extension RuuviTagAlertService {
                 isActive: isOn,
                 isFiring: false,
                 mutedTill: mutedTill,
+                firingUntil: nil,
                 description: description,
                 unseenDuration: unseenDuration
             )
@@ -1312,17 +1325,37 @@ extension RuuviTagAlertService: RuuviNotifierObserver {
                                 snapshot.connectionData.isConnected ||
                                 snapshot.identifierData.serviceUUID != nil
 
-                let isTriggeredAndFireable = isTriggered && isFireable
-                let isFiring = isTriggeredAndFireable
-
                 let isOn = self.alertService.isOn(type: alertType, for: uuid)
                 let mutedTill = self.alertService.mutedTill(type: alertType, for: uuid)
+                let isTriggeredAndFireable = isTriggered && isFireable
+                let now = Date()
 
                 if let currentConfig = snapshot.getAlertConfig(for: alertType) {
+                    var firingUntil = currentConfig.firingUntil
+                    var isFiring = isTriggeredAndFireable
+
+                    if case .movement = alertType {
+                        if !isOn {
+                            firingUntil = nil
+                            isFiring = false
+                        } else if isTriggeredAndFireable {
+                            firingUntil = now.addingTimeInterval(
+                                RuuviAlertConstants.Movement.firingHoldDuration
+                            )
+                            isFiring = true
+                        } else if let until = firingUntil, until > now {
+                            isFiring = isFireable
+                        } else {
+                            firingUntil = nil
+                            isFiring = false
+                        }
+                    }
+
                     // Check if any values actually changed
                     let hasChanges = currentConfig.isActive != isOn ||
                                    currentConfig.isFiring != isFiring ||
-                                   currentConfig.mutedTill != mutedTill
+                                   currentConfig.mutedTill != mutedTill ||
+                                   currentConfig.firingUntil != firingUntil
 
                     if hasChanges {
                         let updatedConfig = RuuviTagCardSnapshotAlertConfig(
@@ -1331,6 +1364,7 @@ extension RuuviTagAlertService: RuuviNotifierObserver {
                             isActive: isOn,
                             isFiring: isFiring,
                             mutedTill: mutedTill,
+                            firingUntil: firingUntil,
                             lowerBound: currentConfig.lowerBound,
                             upperBound: currentConfig.upperBound,
                             description: currentConfig.description,
@@ -1341,12 +1375,29 @@ extension RuuviTagAlertService: RuuviNotifierObserver {
                     }
                 } else {
                     if let measurementType = alertType.toMeasurementType() {
+                        var firingUntil: Date?
+                        var isFiring = isTriggeredAndFireable
+
+                        if case .movement = alertType {
+                            if !isOn {
+                                isFiring = false
+                            } else if isTriggeredAndFireable {
+                                firingUntil = now.addingTimeInterval(
+                                    RuuviAlertConstants.Movement.firingHoldDuration
+                                )
+                                isFiring = true
+                            } else {
+                                isFiring = false
+                            }
+                        }
+
                         let newConfig = RuuviTagCardSnapshotAlertConfig(
                             type: measurementType,
                             alertType: alertType,
                             isActive: isOn,
                             isFiring: isFiring,
                             mutedTill: mutedTill,
+                            firingUntil: firingUntil,
                             lowerBound: nil,
                             upperBound: nil,
                             description: nil,

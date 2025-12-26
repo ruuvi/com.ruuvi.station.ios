@@ -272,6 +272,7 @@ public struct RuuviTagCardSnapshotAlertConfig: Equatable {
     let isActive: Bool
     let isFiring: Bool
     let mutedTill: Date?
+    let firingUntil: Date?
     let lowerBound: Double?
     let upperBound: Double?
     let description: String?
@@ -283,6 +284,7 @@ public struct RuuviTagCardSnapshotAlertConfig: Equatable {
         isActive: false,
         isFiring: false,
         mutedTill: nil,
+        firingUntil: nil,
         lowerBound: nil,
         upperBound: nil,
         description: nil,
@@ -299,6 +301,7 @@ public struct RuuviTagCardSnapshotAlertConfig: Equatable {
         isActive: Bool,
         isFiring: Bool,
         mutedTill: Date?,
+        firingUntil: Date? = nil,
         lowerBound: Double? = nil,
         upperBound: Double? = nil,
         description: String? = nil,
@@ -309,6 +312,7 @@ public struct RuuviTagCardSnapshotAlertConfig: Equatable {
         self.isActive = isActive
         self.isFiring = isFiring
         self.mutedTill = mutedTill
+        self.firingUntil = firingUntil
         self.lowerBound = lowerBound
         self.upperBound = upperBound
         self.description = description
@@ -414,6 +418,66 @@ extension RuuviTagCardSnapshot {
             alertData.nonMeasurementAlerts[alertType] = config
         }
         updateOverallAlertState()
+    }
+
+    @discardableResult
+    func clearExpiredMovementFiringIfNeeded(now: Date = Date()) -> Bool {
+        let movementMeasurementType: MeasurementType = .movementCounter
+        if let config = getAlertConfig(for: movementMeasurementType) {
+            guard let firingUntil = config.firingUntil,
+                  firingUntil <= now
+            else {
+                return false
+            }
+
+            let updatedConfig = RuuviTagCardSnapshotAlertConfig(
+                type: config.type,
+                alertType: config.alertType,
+                isActive: config.isActive,
+                isFiring: false,
+                mutedTill: config.mutedTill,
+                firingUntil: nil,
+                lowerBound: config.lowerBound,
+                upperBound: config.upperBound,
+                description: config.description,
+                unseenDuration: config.unseenDuration
+            )
+
+            updateAlertConfig(for: movementMeasurementType, config: updatedConfig)
+            return true
+        }
+
+        guard let movementEntry = alertData.nonMeasurementAlerts.first(where: { key, _ in
+            if case .movement = key { return true }
+            return false
+        }) else {
+            return false
+        }
+
+        let alertType = movementEntry.key
+        let config = movementEntry.value
+
+        guard let firingUntil = config.firingUntil,
+              firingUntil <= now
+        else {
+            return false
+        }
+
+        let updatedConfig = RuuviTagCardSnapshotAlertConfig(
+            type: config.type,
+            alertType: config.alertType,
+            isActive: config.isActive,
+            isFiring: false,
+            mutedTill: config.mutedTill,
+            firingUntil: nil,
+            lowerBound: config.lowerBound,
+            upperBound: config.upperBound,
+            description: config.description,
+            unseenDuration: config.unseenDuration
+        )
+
+        updateAlertConfig(for: alertType, config: updatedConfig)
+        return true
     }
 
     func removeAlertConfig(for measurementType: MeasurementType) {

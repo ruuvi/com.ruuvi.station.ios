@@ -430,10 +430,16 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
 
     public func userNotificationCenter(
         _: UNUserNotificationCenter,
-        willPresent _: UNNotification,
+        willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
-        completionHandler([.banner, .list, .badge, .sound])
+        let category = notification.request.content.categoryIdentifier
+        let isAlertCategory = category == lowHigh.id || category == blast.id
+        if !settings.limitAlertNotificationsEnabled, isAlertCategory {
+            completionHandler([.list, .badge])
+        } else {
+            completionHandler([.banner, .list, .badge, .sound])
+        }
     }
 
     // swiftlint:disable:next function_body_length
@@ -568,7 +574,8 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
             guard let self = self else { return }
             if let triggeredAt = self.ruuviAlertService.triggeredAt(for: ruuviTag, of: type),
                let date = self.dateFormatter.date(from: triggeredAt) {
-                let intervalPassed = Date() > self.muteOffset(from: date)
+                let intervalPassed = !self.settings.limitAlertNotificationsEnabled
+                    || Date() > self.muteOffset(from: date)
                 self.evaluateMutedState(
                     for: type,
                     uuid: uuid,
@@ -614,17 +621,11 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
     }
 
     /// Limit alert notification settings prevents new alerts within one hour
-    /// of last one. When the settings is off we still will prevent new notifications
-    /// based on save heartbeats background interval minutes (5mins).
-    /// When app is in foreground we save heartbeats every 2 seconds, but that's not
-    /// very user friendly to trigger notifications as that frequent alerts basically
-    /// makes app unusable by spamming. Besides, if user is in foreground they will
-    /// see the alert bells anyway.
+    /// of last one. When the setting is off, alerts are not time-throttled here.
     private func muteOffset(from shown: Date) -> Date {
         Calendar.current.date(
             byAdding: .minute,
-            value: settings.limitAlertNotificationsEnabled ?
-                settings.alertsMuteIntervalMinutes : settings.saveHeartbeatsIntervalMinutes,
+            value: settings.alertsMuteIntervalMinutes,
             to: shown
         ) ?? Date()
     }

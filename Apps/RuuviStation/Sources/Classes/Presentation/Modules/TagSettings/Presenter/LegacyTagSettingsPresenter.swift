@@ -81,6 +81,7 @@ class LegacyTagSettingsPresenter: NSObject, LegacyTagSettingsModuleInput {
             syncOffsetCorrection()
         }
     }
+    private var movementFiringUntil: Date?
 
     private var firmwareUpdateDialogShown: Bool = false
     private var firmwareVersionCheckInProgress = false
@@ -1558,6 +1559,15 @@ extension LegacyTagSettingsPresenter {
         if let date = viewModel.movementAlertMutedTill.value, date < now {
             viewModel.movementAlertMutedTill.value = nil
         }
+
+        if let firingUntil = movementFiringUntil, firingUntil < now {
+            movementFiringUntil = nil
+            let isOn = viewModel.isMovementAlertOn.value ?? false
+            let newValue: AlertState? = isOn ? .registered : .empty
+            if viewModel.movementAlertState.value != newValue {
+                viewModel.movementAlertState.value = newValue
+            }
+        }
     }
 
     private func updateMutedTill(of type: AlertType, for uuid: String) {
@@ -1838,9 +1848,28 @@ extension LegacyTagSettingsPresenter: RuuviNotifierObserver {
                     viewModel.connectionAlertState.value = newValue
                 }
             case .movement:
-                let isTriggered = isTriggered && isFireable && (viewModel.isAlertsEnabled.value ?? false)
+                let alertsEnabled = viewModel.isAlertsEnabled.value ?? false
                 let isOn = viewModel.isMovementAlertOn.value ?? false
-                let newValue: AlertState? = isTriggered ? .firing : (isOn ? .registered : .empty)
+                let now = Date()
+
+                if !isOn || !alertsEnabled {
+                    movementFiringUntil = nil
+                }
+
+                let isTriggeredAndFireable = isTriggered && isFireable && alertsEnabled && isOn
+                if isTriggeredAndFireable {
+                    movementFiringUntil = now.addingTimeInterval(
+                        RuuviAlertConstants.Movement.firingHoldDuration
+                    )
+                }
+
+                let hasHysteresis = movementFiringUntil.map { $0 > now } ?? false
+                if !hasHysteresis {
+                    movementFiringUntil = nil
+                }
+
+                let isFiring = hasHysteresis && isFireable && alertsEnabled
+                let newValue: AlertState? = isFiring ? .firing : (isOn ? .registered : .empty)
                 if viewModel.movementAlertState.value != newValue {
                     viewModel.movementAlertState.value = newValue
                 }

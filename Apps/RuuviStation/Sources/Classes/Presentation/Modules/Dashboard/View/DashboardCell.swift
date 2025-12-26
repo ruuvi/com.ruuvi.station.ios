@@ -659,6 +659,8 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         } else {
             updatedAtLabel.text = RuuviLocalization.Cards.UpdatedLabel.NoData.message
         }
+
+        _ = snapshot.clearExpiredMovementFiringIfNeeded()
     }
 
     // MARK: - Indicator Grid Building
