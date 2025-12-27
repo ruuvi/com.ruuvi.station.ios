@@ -9,6 +9,27 @@ import RuuviStorage
 import UIKit
 // swiftlint:disable file_length
 // swiftlint:disable:next type_body_length
+private struct EmptyCloudSettings: RuuviCloudSettings {
+    var unitTemperature: TemperatureUnit? { nil }
+    var accuracyTemperature: MeasurementAccuracyType? { nil }
+    var unitHumidity: HumidityUnit? { nil }
+    var accuracyHumidity: MeasurementAccuracyType? { nil }
+    var unitPressure: UnitPressure? { nil }
+    var accuracyPressure: MeasurementAccuracyType? { nil }
+    var chartShowAllPoints: Bool? { nil }
+    var chartDrawDots: Bool? { nil }
+    var chartViewPeriod: Int? { nil }
+    var chartShowMinMaxAvg: Bool? { nil }
+    var cloudModeEnabled: Bool? { nil }
+    var dashboardEnabled: Bool? { nil }
+    var dashboardType: DashboardType? { nil }
+    var dashboardTapActionType: DashboardTapActionType? { nil }
+    var pushAlertDisabled: Bool? { nil }
+    var emailAlertDisabled: Bool? { nil }
+    var profileLanguageCode: String? { nil }
+    var dashboardSensorOrder: String? { nil }
+}
+
 public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private let ruuviStorage: RuuviStorage
     private let ruuviCloud: RuuviCloud
@@ -22,7 +43,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private let ruuviAppSettingsService: RuuviServiceAppSettings
 
     // Private property to keep track of ongoing history sync
-    private var ongoingHistorySyncs: Set<AnyRuuviTagSensor> = []
+    private let ongoingHistorySyncsQueue = DispatchQueue(label: "RuuviServiceCloudSyncImpl.ongoingHistorySyncs")
+    private var ongoingHistorySyncs = Set<String>()
 
     public init(
         ruuviStorage: RuuviStorage,
@@ -55,7 +77,11 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         ruuviCloud.getCloudSettings()
             .observe(on: .global(qos: .utility))
             .on(success: { [weak self] cloudSettings in
-                guard let cloudSettings, let sSelf = self else { return }
+                guard let sSelf = self else { return }
+                guard let cloudSettings else {
+                    promise.succeed(value: EmptyCloudSettings())
+                    return
+                }
                 if let unitTemperature = cloudSettings.unitTemperature,
                    unitTemperature != sSelf.ruuviLocalSettings.temperatureUnit {
                     sSelf.ruuviLocalSettings.temperatureUnit = unitTemperature
@@ -84,8 +110,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                    chartShowAllData != !sSelf.ruuviLocalSettings.chartDownsamplingOn {
                     sSelf.ruuviLocalSettings.chartDownsamplingOn = !chartShowAllData
                 }
-                if let chartDrawDots = cloudSettings.chartDrawDots,
-                   chartDrawDots != sSelf.ruuviLocalSettings.chartDrawDotsOn {
+                if cloudSettings.chartDrawDots != nil,
+                   sSelf.ruuviLocalSettings.chartDrawDotsOn {
                     // Draw dots feature is disabled from v1.3.0 onwards to
                     // maintain better performance until we find a better approach to do it.
                     sSelf.ruuviLocalSettings.chartDrawDotsOn = false
@@ -139,12 +165,10 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
                 promise.succeed(value: cloudSettings)
             }, failure: { [weak self] error in
-                switch error {
-                case .api(.api(.erUnauthorized)):
+                if case .api(.api(.erUnauthorized)) = error {
                     self?.postNotification()
-                default:
-                    promise.fail(error: .ruuviCloud(error))
                 }
+                promise.fail(error: .ruuviCloud(error))
             })
         return promise.future
     }
@@ -162,53 +186,51 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             .dataTask(with: pictureUrl,
                       completionHandler: {
                 data,
-                _,
+                response,
                 error in
                 if let error {
                     promise.fail(error: .networking(error))
-                } else if let data {
-                    if let image = UIImage(data: data) {
-                        // Sync the image with original quality from cloud
-                        DispatchQueue.main.async {
-                            self.ruuviLocalImages
-                                .setCustomBackground(
-                                    image: image,
-                                    compressionQuality: 1.0,
-                                    for: sensor.id.mac
-                                )
-                                .observe(on: .global(qos: .utility))
-                                .on(success: { fileUrl in
-                                    self.ruuviLocalImages.setPictureIsCached(for: sensor)
-                                    promise.succeed(value: fileUrl)
-                                }, failure: { error in
-                                    promise.fail(error: .ruuviLocal(error))
-                                })
-                        }
-                    } else {
-                        promise.fail(error: .failedToParseNetworkResponse)
-                    }
-                } else {
-                    promise.fail(error: .failedToParseNetworkResponse)
+                    return
                 }
+                guard let httpResponse = response as? HTTPURLResponse,
+                      (200..<300).contains(httpResponse.statusCode) else {
+                    promise.fail(error: .failedToParseNetworkResponse)
+                    return
+                }
+                guard let data,
+                      let image = UIImage(data: data) else {
+                    promise.fail(error: .failedToParseNetworkResponse)
+                    return
+                }
+                self.ruuviLocalImages
+                    .setCustomBackground(
+                        image: image,
+                        compressionQuality: 1.0,
+                        for: sensor.id.mac
+                    )
+                    .observe(on: .global(qos: .utility))
+                    .on(success: { fileUrl in
+                        self.ruuviLocalImages.setPictureIsCached(for: sensor)
+                        promise.succeed(value: fileUrl)
+                    }, failure: { error in
+                        promise.fail(error: .ruuviLocal(error))
+                    })
             }).resume()
         return promise.future
     }
 
     @discardableResult
-    public func syncAll() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
-        let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
+    public func syncAll() -> Future<[AnyRuuviTagSensor], RuuviServiceError> {
+        let promise = Promise<[AnyRuuviTagSensor], RuuviServiceError>()
 
-        let queuedRequests = executePendingRequests()
-        let settings = syncSettings()
-        let sensors = syncSensors()
-
-        queuedRequests
+        executePendingRequests()
             .observe(on: .global(qos: .utility))
-            .on(success: { _ in
-                settings
+            .on(success: { [weak self] _ in
+                guard let sSelf = self else { return }
+                sSelf.syncSettings()
                     .observe(on: .global(qos: .utility))
                     .on(success: { _ in
-                        sensors
+                        sSelf.syncSensors()
                             .observe(on: .global(qos: .utility))
                             .on(success: { [weak self] updatedSensors in
                                 self?.ruuviLocalSyncState.setSyncDate(Date())
@@ -279,21 +301,27 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     self?.syncQueuedRequest(request: request)
                 }
 
-                Future.zip(queuedRequests).on(completion: {
-                    promise.succeed(value: true)
-                })
+                Future.zip(queuedRequests)
+                    .observe(on: .global(qos: .utility))
+                    .on(success: { _ in
+                        promise.succeed(value: true)
+                    }, failure: { error in
+                        promise.fail(error: error)
+                    })
+            }, failure: { error in
+                promise.fail(error: .ruuviStorage(error))
             })
         return promise.future
     }
 
     private func offsetSyncs(
         cloudSensors: [CloudSensor],
-        updatedSensors: Set<AnyRuuviTagSensor>
+        updatedSensors: [AnyRuuviTagSensor]
     ) -> [Future<SensorSettings, RuuviPoolError>] {
         let temperatureSyncs: [Future<SensorSettings, RuuviPoolError>]
         = cloudSensors.compactMap { cloudSensor in
             if let updatedSensor = updatedSensors
-                .first(where: { $0.id == cloudSensor.id }) {
+                .first(where: { $0.id.isLast3BytesEqual(to: cloudSensor.id) }) {
                 self.ruuviPool.updateOffsetCorrection(
                     type: .temperature,
                     with: cloudSensor.offsetTemperature,
@@ -307,7 +335,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         let humiditySyncs: [Future<SensorSettings, RuuviPoolError>]
         = cloudSensors.compactMap { cloudSensor in
             if let updatedSensor = updatedSensors
-                .first(where: { $0.id == cloudSensor.id }),
+                .first(where: { $0.id.isLast3BytesEqual(to: cloudSensor.id) }),
                let offsetHumidity = cloudSensor.offsetHumidity {
                 self.ruuviPool.updateOffsetCorrection(
                     type: .humidity,
@@ -322,7 +350,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         let pressureSyncs: [Future<SensorSettings, RuuviPoolError>]
         = cloudSensors.compactMap { cloudSensor in
             if let updatedSensor = updatedSensors
-                .first(where: { $0.id == cloudSensor.id }),
+                .first(where: { $0.id.isLast3BytesEqual(to: cloudSensor.id) }),
                let offsetPressure = cloudSensor.offsetPressure {
                 self.ruuviPool.updateOffsetCorrection(
                     type: .pressure,
@@ -354,12 +382,12 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
     private func subscriptionSyncs(
         cloudSensors: [RuuviCloudSensorDense],
-        updatedSensors: Set<AnyRuuviTagSensor>
+        updatedSensors: [AnyRuuviTagSensor]
     ) -> [Future<CloudSensorSubscription, RuuviPoolError>] {
         let syncs: [Future<CloudSensorSubscription, RuuviPoolError>]
         = cloudSensors.compactMap { [weak self] cloudSensor in
             if let updatedSensor = updatedSensors
-                .first(where: { $0.id == cloudSensor.sensor.id }),
+                .first(where: { $0.id.isLast3BytesEqual(to: cloudSensor.sensor.id) }),
                let macId = updatedSensor.macId?.mac,
                let cloudSubscription = cloudSensor.subscription {
                 let subscription = cloudSubscription.with(macId: macId)
@@ -376,18 +404,20 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     public func sync(sensor: RuuviTagSensor) -> Future<[AnyRuuviTagSensorRecord], RuuviServiceError> {
         let promise = Promise<[AnyRuuviTagSensorRecord], RuuviServiceError>()
 
-        // Check if a history sync is already in progress for this sensor
-        // and return early if so.
-        if ongoingHistorySyncs.contains(sensor.any) {
+        guard let maxHistoryDays = sensor.maxHistoryDays, maxHistoryDays > 0 else {
+            promise.succeed(value: [])
             return promise.future
         }
 
-        guard let maxHistoryDays = sensor.maxHistoryDays, maxHistoryDays > 0 else {
+        // Check if a history sync is already in progress for this sensor
+        // and return early if so.
+        if !startHistorySync(for: sensor) {
+            promise.succeed(value: [])
             return promise.future
         }
 
         let networkPruningOffset = -TimeInterval(ruuviLocalSettings.networkPruningIntervalHours * 60 * 60)
-        let networkPuningDate = Date(timeIntervalSinceNow: networkPruningOffset)
+        let networkPruningDate = Date(timeIntervalSinceNow: networkPruningOffset)
         let lastSynDate = ruuviLocalSyncState.getSyncDate(for: sensor.macId)
 
         var syncFullHistory = false
@@ -398,17 +428,19 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
         ruuviLocalSyncState
             .setSyncStatusHistory(.syncing, for: sensor.macId)
-        ongoingHistorySyncs.insert(sensor.any)
-        let since: Date = syncFullHistory ? networkPuningDate : (lastSynDate ?? networkPuningDate)
+        let since: Date = syncFullHistory ? networkPruningDate : (lastSynDate ?? networkPruningDate)
         syncRecordsOperation(for: sensor, since: since)
             .observe(on: .global(qos: .utility))
             .on(success: { [weak self] result in
                 self?.ruuviLocalSyncState.setSyncStatusHistory(.complete, for: sensor.macId)
                 self?.ruuviLocalSyncState.setDownloadFullHistory(for: sensor.macId, downloadFull: false)
-                self?.ruuviLocalSyncState.setSyncDate(
-                    Date(),
-                    for: sensor.macId
-                )
+                let latestRecordDate = result.max { $0.date < $1.date }?.date
+                if let syncDate = latestRecordDate ?? lastSynDate {
+                    self?.ruuviLocalSyncState.setSyncDate(
+                        syncDate,
+                        for: sensor.macId
+                    )
+                }
                 promise.succeed(value: result)
             }, failure: { [weak self] error in
                 self?.ruuviLocalSyncState
@@ -417,7 +449,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             }, completion: { [weak self] in
                 self?.ruuviLocalSyncState
                     .setSyncStatusHistory(.none, for: sensor.macId)
-                self?.ongoingHistorySyncs.remove(sensor.any)
+                self?.endHistorySync(for: sensor)
             })
         return promise.future
     }
@@ -431,51 +463,83 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             .on(success: { [weak self] localSensors in
                 guard let sSelf = self else { return }
 
-                // Read the latest record for each sensor asynchronously, filter sensors with history.
-                let sensorHistoryFutures = localSensors.compactMap {
-                    sensor -> Future<(AnyRuuviTagSensor, RuuviTagSensorRecord?), RuuviServiceError>? in
-
-                    // Sensor should be a cloud sensor with allow max history days greater than 0.
-                    // Also, the sensor should already have a measurement on the latest measurement
-                    // table from database.
+                let sensorsToSync = localSensors.filter { sensor in
                     guard sensor.isCloud,
                           let maxHistoryDays = sensor.maxHistoryDays,
                           maxHistoryDays > 0 else {
-                        return nil
+                        return false
                     }
-
-                    // Read the latest record for the sensor
-                    return sSelf.ruuviStorage.readLatest(sensor).map { record in
-                        (sensor, record)
-                    }.mapError({ error in
-                        return .ruuviStorage(error)
-                    })
+                    return true
                 }
 
-                Future.zip(sensorHistoryFutures)
+                guard !sensorsToSync.isEmpty else {
+                    promise.succeed(value: true)
+                    return
+                }
+
+                let syncHistoryFutures = sensorsToSync.map { sSelf.sync(sensor: $0) }
+
+                // Zip all sync operations together and handle the final result
+                Future.zip(syncHistoryFutures)
                     .observe(on: .global(qos: .utility))
-                    .on(success: { sensorRecords in
-                        // Filter sensors that have no records, then sync
-                        let sensorsToSync = sensorRecords
-                            .filter { $0.1 != nil } // Only include sensors that have a valid record
-                            .map { $0.0 } // Extract the sensors
-
-                        let syncHistoryFutures = sensorsToSync.map { sSelf.sync(sensor: $0) }
-
-                        // Zip all sync operations together and handle the final result
-                        Future.zip(syncHistoryFutures)
-                            .observe(on: .global(qos: .utility))
-                            .on(success: { _ in
-                                promise.succeed(value: true)
-                            }, failure: { error in
-                                promise.fail(error: error)
-                            })
+                    .on(success: { _ in
+                        promise.succeed(value: true)
                     }, failure: { error in
                         promise.fail(error: error)
                     })
+            }, failure: { error in
+                promise.fail(error: .ruuviStorage(error))
             })
 
         return promise.future
+    }
+
+    private func startHistorySync(for sensor: RuuviTagSensor) -> Bool {
+        let key = historySyncKey(for: sensor)
+        return ongoingHistorySyncsQueue.sync {
+            if ongoingHistorySyncs.contains(key) {
+                return false
+            }
+            ongoingHistorySyncs.insert(key)
+            return true
+        }
+    }
+
+    private func endHistorySync(for sensor: RuuviTagSensor) {
+        let key = historySyncKey(for: sensor)
+        ongoingHistorySyncsQueue.sync {
+            ongoingHistorySyncs.remove(key)
+        }
+    }
+
+    private func historySyncKey(for sensor: RuuviTagSensor) -> String {
+        if let macValue = sensor.macId?.value {
+            return last3BytesKey(macValue)
+        }
+        return sensor.id
+    }
+
+    private func last3BytesKey(_ value: String) -> String {
+        let cleaned = normalizedHexString(value)
+        return cleaned.count > 6 ? String(cleaned.suffix(6)) : cleaned
+    }
+
+    private func normalizedHexString(_ value: String) -> String {
+        let hexCharacterSet = CharacterSet(charactersIn: "0123456789abcdefABCDEF")
+        return value.unicodeScalars
+            .filter { hexCharacterSet.contains($0) }
+            .map { Character($0).lowercased() }
+            .joined()
+    }
+
+    private func sensorUniqueKey(for sensor: AnyRuuviTagSensor) -> String {
+        if let macValue = sensor.macId?.value {
+            return "mac:\(normalizedHexString(macValue))"
+        }
+        if let luidValue = sensor.luid?.value {
+            return "luid:\(luidValue)"
+        }
+        return "id:\(sensor.id)"
     }
 
     private lazy var syncRecordsQueue: OperationQueue = {
@@ -510,8 +574,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
     // This method syncs the sensors, latest measurements and alerts.
     // swiftlint:disable:next function_body_length
-    private func syncSensors() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
-        let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
+    private func syncSensors() -> Future<[AnyRuuviTagSensor], RuuviServiceError> {
+        let promise = Promise<[AnyRuuviTagSensor], RuuviServiceError>()
 
         // Set cloud sensors in syncing state
         // Skip the sensors if not claimed or cloud sensors
@@ -610,14 +674,14 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         }, failure: { error in
                             promise.fail(error: error)
                         })
+                }, failure: { error in
+                    promise.fail(error: error)
                 })
         }, failure: { [weak self] error in
-            switch error {
-            case .api(.api(.erUnauthorized)):
+            if case .api(.api(.erUnauthorized)) = error {
                 self?.postNotification()
-            default:
-                promise.fail(error: .ruuviCloud(error))
             }
+            promise.fail(error: .ruuviCloud(error))
         })
         return promise.future
     }
@@ -626,9 +690,17 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private func syncSensors(
         cloudSensors: [AnyCloudSensor],
         denseSensor: [RuuviCloudSensorDense]
-    ) -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
-        let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
-        var updatedSensors = Set<AnyRuuviTagSensor>()
+    ) -> Future<[AnyRuuviTagSensor], RuuviServiceError> {
+        let promise = Promise<[AnyRuuviTagSensor], RuuviServiceError>()
+        var updatedSensorsByKey = [String: AnyRuuviTagSensor]()
+        var updatedSensorOrder = [String]()
+        let upsertUpdatedSensor: (AnyRuuviTagSensor) -> Void = { sensor in
+            let key = self.sensorUniqueKey(for: sensor)
+            if updatedSensorsByKey[key] == nil {
+                updatedSensorOrder.append(key)
+            }
+            updatedSensorsByKey[key] = sensor
+        }
         ruuviStorage.readAll()
             .observe(on: .global(qos: .utility))
             .on(success: {
@@ -638,7 +710,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         if let cloudSensor = cloudSensors.first(where: {
                             $0.id.isLast3BytesEqual(to: localSensor.id)
                         }) {
-                            updatedSensors.insert(localSensor)
+                            upsertUpdatedSensor(localSensor)
                             // Update the local sensor data with cloud data
                             // if there's a match of sensor in local storage and cloud
                             // TODO: @priyonto - Need to improve this once backend flattens and improves the plans
@@ -656,7 +728,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                             let unclaimed = localSensor.unclaimed()
                             // If there is a local sensor which is unclaimed insert it to the list
                             if unclaimed.any != localSensor {
-                                updatedSensors.insert(localSensor)
+                                upsertUpdatedSensor(localSensor)
                                 return self.ruuviPool.update(unclaimed)
                             } else {
                                 // If there is a local sensor which is claimed and deleted from the cloud,
@@ -681,7 +753,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         })
                     }.map { newCloudSensor in
                         let newLocalSensor = newCloudSensor.ruuviTagSensor
-                        updatedSensors.insert(newLocalSensor.any)
+                        upsertUpdatedSensor(newLocalSensor.any)
                         return self.ruuviPool.create(newLocalSensor)
                     }
 
@@ -694,6 +766,10 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     .on(success: { _ in
 
                         Future.zip(syncImages).observe(on: .global(qos: .utility)).on()
+
+                        let updatedSensors = updatedSensorOrder.compactMap {
+                            updatedSensorsByKey[$0]
+                        }
 
                         let syncSubscriptions = self.subscriptionSyncs(
                             cloudSensors: denseSensor,
@@ -749,74 +825,84 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             return promise.future
         }
 
-        // First update the version number of the tag if there is a difference between
-        // cloud data and local data.
-        if cloudRecord.version > 0 && cloudRecord.version != ruuviTag.version {
-            ruuviPool.update(ruuviTag.with(version: cloudRecord.version))
-        }
-
-        ruuviStorage.readLatest(ruuviTag)
-            .observe(on: .global(qos: .utility))
-            .on(
-                success: { [weak self] record in
-                    guard let sSelf = self else { return }
-                    // If the latest table already have a data point for the mac update that record
-                    if let record, record.macId != nil,
-                       record.macId?.any == cloudRecord.macId?.any {
-                        // Store cloud point only if the cloud data is newer than the local data
-                        let isMeasurementNew = cloudRecord.date > record.date
-                        if sSelf.ruuviLocalSettings.cloudModeEnabled || isMeasurementNew {
-                            let recordWithId = cloudRecord.with(macId: record.macId!.any)
-                            sSelf.ruuviPool.updateLast(recordWithId)
+        let readLatest: () -> Void = { [weak self] in
+            self?.ruuviStorage.readLatest(ruuviTag)
+                .observe(on: .global(qos: .utility))
+                .on(
+                    success: { [weak self] record in
+                        guard let sSelf = self else { return }
+                        // If the latest table already have a data point for the mac update that record
+                        if let record, record.macId != nil,
+                           record.macId?.any == cloudRecord.macId?.any {
+                            // Store cloud point only if the cloud data is newer than the local data
+                            let isMeasurementNew = cloudRecord.date > record.date
+                            if sSelf.ruuviLocalSettings.cloudModeEnabled || isMeasurementNew {
+                                let recordWithId = cloudRecord.with(macId: record.macId!.any)
+                                sSelf.ruuviPool.updateLast(recordWithId)
+                                    .observe(on: .global(qos: .utility))
+                                    .on(
+                                        success: { _ in
+                                            sSelf.ruuviLocalSyncState
+                                                .setSyncStatusLatestRecord(
+                                                    .complete,
+                                                    for: ruuviTag.id.mac
+                                                )
+                                            promise.succeed(value: true)
+                                        },
+                                        failure: { error in
+                                            sSelf.ruuviLocalSyncState
+                                                .setSyncStatusLatestRecord(
+                                                    .onError,
+                                                    for: ruuviTag.id.mac
+                                                )
+                                            promise.fail(error: .ruuviPool(error))
+                                    })
+                            } else {
+                                sSelf.ruuviLocalSyncState.setSyncStatusLatestRecord(.complete, for: ruuviTag.id.mac)
+                                promise.succeed(value: false)
+                            }
+                        } else {
+                            // If no record found, create a new record
+                            self?.ruuviPool.createLast(cloudRecord)
                                 .observe(on: .global(qos: .utility))
                                 .on(
-                                    success: { _ in
-                                        sSelf.ruuviLocalSyncState
+                                    success: { [weak self] _ in
+                                        self?.ruuviLocalSyncState
                                             .setSyncStatusLatestRecord(
                                                 .complete,
                                                 for: ruuviTag.id.mac
                                             )
                                         promise.succeed(value: true)
                                     },
-                                    failure: { error in
-                                        sSelf.ruuviLocalSyncState
+                                    failure: { [weak self] error in
+                                        self?.ruuviLocalSyncState
                                             .setSyncStatusLatestRecord(
                                                 .onError,
                                                 for: ruuviTag.id.mac
                                             )
-                                    promise.fail(error: .ruuviPool(error))
-                                })
-                        } else {
-                            sSelf.ruuviLocalSyncState.setSyncStatusLatestRecord(.complete, for: ruuviTag.id.mac)
-                            promise.succeed(value: false)
+                                        promise.fail(error: .ruuviPool(error))
+                                    })
                         }
-                    } else {
-                        // If no record found, create a new record
-                        self?.ruuviPool.createLast(cloudRecord)
-                            .observe(on: .global(qos: .utility))
-                            .on(
-                                success: { [weak self] _ in
-                                    self?.ruuviLocalSyncState
-                                        .setSyncStatusLatestRecord(
-                                            .complete,
-                                            for: ruuviTag.id.mac
-                                        )
-                                    promise.succeed(value: true)
-                                },
-                                failure: { [weak self] error in
-                                    self?.ruuviLocalSyncState
-                                        .setSyncStatusLatestRecord(
-                                            .onError,
-                                            for: ruuviTag.id.mac
-                                        )
-                                    promise.fail(error: .ruuviPool(error))
-                                })
-                    }
-                },
-                failure: { [weak self] error in
-                self?.ruuviLocalSyncState.setSyncStatusLatestRecord(.onError, for: ruuviTag.id.mac)
-                promise.fail(error: .ruuviStorage(error))
-            })
+                    },
+                    failure: { [weak self] error in
+                        self?.ruuviLocalSyncState.setSyncStatusLatestRecord(.onError, for: ruuviTag.id.mac)
+                        promise.fail(error: .ruuviStorage(error))
+                })
+        }
+
+        if cloudRecord.version > 0 && cloudRecord.version != ruuviTag.version {
+            ruuviPool.update(ruuviTag.with(version: cloudRecord.version))
+                .observe(on: .global(qos: .utility))
+                .on(success: { _ in
+                    readLatest()
+                }, failure: { [weak self] error in
+                    self?.ruuviLocalSyncState
+                        .setSyncStatusLatestRecord(.onError, for: ruuviTag.id.mac)
+                    promise.fail(error: .ruuviPool(error))
+                })
+        } else {
+            readLatest()
+        }
 
         return promise.future
     }
@@ -867,9 +953,13 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         with cloudRecord: RuuviTagSensorRecord,
         promise: Promise<Bool, RuuviServiceError>
     ) {
-        ruuviPool.create(cloudRecord).on(completion: {
-            promise.succeed(value: true)
-        })
+        ruuviPool.create(cloudRecord)
+            .observe(on: .global(qos: .utility))
+            .on(success: { _ in
+                promise.succeed(value: true)
+            }, failure: { error in
+                promise.fail(error: .ruuviPool(error))
+            })
     }
 
     @discardableResult
@@ -879,14 +969,24 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             .observe(on: .global(qos: .utility))
             .on(success: { [weak self] success in
                 self?.ruuviPool.deleteQueuedRequest(request)
-                promise.succeed(value: success)
+                    .observe(on: .global(qos: .utility))
+                    .on(success: { _ in
+                        promise.succeed(value: success)
+                    }, failure: { error in
+                        promise.fail(error: .ruuviPool(error))
+                    })
             }, failure: { [weak self] error in
                 switch error {
                 case .api(.api(.erConflict)):
                     // We should delete the request from local db when there's
                     // already new data available on the cloud.
                     self?.ruuviPool.deleteQueuedRequest(request)
-                    promise.fail(error: .ruuviCloud(error))
+                        .observe(on: .global(qos: .utility))
+                        .on(success: { _ in
+                            promise.fail(error: .ruuviCloud(error))
+                        }, failure: { error in
+                            promise.fail(error: .ruuviPool(error))
+                        })
                 default:
                     promise.fail(error: .ruuviCloud(error))
                 }

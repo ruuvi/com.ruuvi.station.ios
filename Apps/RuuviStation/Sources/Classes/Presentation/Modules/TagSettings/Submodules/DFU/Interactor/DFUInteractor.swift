@@ -19,7 +19,7 @@ final class DFUInteractor {
     private var timer: Timer?
     private var timeoutDuration: Double = 15
     private var downloadCancellables = Set<AnyCancellable>()
-    private var ruuviTags = Set<AnyRuuviTagSensor>()
+    private var ruuviTags = [AnyRuuviTagSensor]()
     private var airScanToken: ObservationToken?
     private var airScanTimeoutTimer: Timer?
 
@@ -443,7 +443,9 @@ extension DFUInteractor {
         target: RuuviTagSensor,
         onMatch: @escaping () -> Void
     ) {
-        ruuviTags.update(with: target.any)
+        if !ruuviTags.contains(where: { $0 == target.any }) {
+            ruuviTags.append(target.any)
+        }
 
         if isSameDevice(advertisement, target) {
             onMatch()

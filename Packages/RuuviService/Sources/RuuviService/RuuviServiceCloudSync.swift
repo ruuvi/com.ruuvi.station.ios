@@ -4,7 +4,7 @@ import RuuviOntology
 
 public protocol RuuviServiceCloudSync {
     @discardableResult
-    func syncAll() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError>
+    func syncAll() -> Future<[AnyRuuviTagSensor], RuuviServiceError>
 
     @discardableResult
     func sync(sensor: RuuviTagSensor) -> Future<[AnyRuuviTagSensorRecord], RuuviServiceError>
