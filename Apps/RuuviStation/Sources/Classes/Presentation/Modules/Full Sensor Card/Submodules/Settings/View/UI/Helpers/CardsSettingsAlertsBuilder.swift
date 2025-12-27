@@ -409,7 +409,10 @@ private extension CardsSettingsAlertsBuilder {
             ).value
         } ?? sliderRange.upperBound
 
-        let selected = clamp(range: sliderRange, proposal: lower...upper)
+        let selected = clamp(
+            range: sliderRange,
+            proposal: normalizedProposalRange(range: sliderRange, lower: lower, upper: upper)
+        )
 
         let slider = CardsSettingsAlertSliderConfiguration(
             range: sliderRange,
@@ -450,7 +453,10 @@ private extension CardsSettingsAlertsBuilder {
         RuuviAlertConstants.RelativeHumidity.lowerBound...RuuviAlertConstants.RelativeHumidity.upperBound
         let lower = config.lowerBound ?? sliderRange.lowerBound
         let upper = config.upperBound ?? sliderRange.upperBound
-        let selected = clamp(range: sliderRange, proposal: lower...upper)
+        let selected = clamp(
+            range: sliderRange,
+            proposal: normalizedProposalRange(range: sliderRange, lower: lower, upper: upper)
+        )
 
         let slider = CardsSettingsAlertSliderConfiguration(
             range: sliderRange,
@@ -499,7 +505,10 @@ private extension CardsSettingsAlertsBuilder {
             convertPressureValue($0, to: pressureUnit)
         } ?? sliderRange.upperBound
 
-        let selected = clamp(range: sliderRange, proposal: lower...upper)
+        let selected = clamp(
+            range: sliderRange,
+            proposal: normalizedProposalRange(range: sliderRange, lower: lower, upper: upper)
+        )
 
         let slider = CardsSettingsAlertSliderConfiguration(
             range: sliderRange,
@@ -541,7 +550,10 @@ private extension CardsSettingsAlertsBuilder {
     ) -> (CardsSettingsAlertUIConfiguration, Bool) {
         let lower = config.lowerBound ?? range.lowerBound
         let upper = config.upperBound ?? range.upperBound
-        let selected = clamp(range: range, proposal: lower...upper)
+        let selected = clamp(
+            range: range,
+            proposal: normalizedProposalRange(range: range, lower: lower, upper: upper)
+        )
 
         let slider = CardsSettingsAlertSliderConfiguration(
             range: range,
@@ -796,6 +808,18 @@ private extension CardsSettingsAlertsBuilder {
         return lower...upper
     }
 
+    static func normalizedProposalRange(
+        range: ClosedRange<Double>,
+        lower: Double,
+        upper: Double
+    ) -> ClosedRange<Double> {
+        let safeLower = lower.isFinite ? lower : range.lowerBound
+        let safeUpper = upper.isFinite ? upper : range.upperBound
+        let normalizedLower = min(safeLower, safeUpper)
+        let normalizedUpper = max(safeLower, safeUpper)
+        return normalizedLower...normalizedUpper
+    }
+
     static func convertPressureValue(
         _ value: Double,
         to unit: UnitPressure
@@ -810,7 +834,8 @@ private extension CardsSettingsAlertsBuilder {
         measurementService: RuuviServiceMeasurement?
     ) -> String? {
         guard let measurementService,
-              let temperature = snapshot.latestRawRecord?.temperature else {
+              let temperature = snapshot.latestRawRecord?.temperature,
+              temperature.value.isFinite else {
             return nil
         }
         return measurementService.string(for: temperature, allowSettings: true)
@@ -822,12 +847,15 @@ private extension CardsSettingsAlertsBuilder {
     ) -> String? {
         guard let measurementService,
               let record = snapshot.latestRawRecord,
-              let humidity = record.humidity else {
+              let humidity = record.humidity,
+              humidity.value.isFinite else {
             return nil
         }
+        let temperature = record.temperature
+        let safeTemperature = temperature?.value.isFinite == true ? temperature : nil
         return measurementService.string(
             for: humidity,
-            temperature: record.temperature,
+            temperature: safeTemperature,
             allowSettings: true,
             unit: .percent
         )
