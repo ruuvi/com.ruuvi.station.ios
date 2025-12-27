@@ -64,19 +64,32 @@ class RuuviTagDataService {
     private var ruuviTags: [AnyRuuviTagSensor] = []
     private var snapshots: [RuuviTagCardSnapshot] = []
     private var sensorSettingsList: [SensorSettings] = []
+    private let sensorSettingsLock = NSLock()
+    private func withSensorSettingsList<T>(_ block: ([SensorSettings]) -> T) -> T {
+        sensorSettingsLock.lock()
+        defer { sensorSettingsLock.unlock() }
+        return block(sensorSettingsList)
+    }
+    private func updateSensorSettingsList(_ block: (inout [SensorSettings]) -> Void) {
+        sensorSettingsLock.lock()
+        defer { sensorSettingsLock.unlock() }
+        block(&sensorSettingsList)
+    }
     private func matchingSensorSettings(for sensor: RuuviTagSensor) -> SensorSettings? {
-        sensorSettingsList.first { candidate in
-            if let sensorLuid = sensor.luid?.any,
-               let luid = candidate.luid?.any,
-               sensorLuid == luid {
-                return true
+        withSensorSettingsList { list in
+            list.first { candidate in
+                if let sensorLuid = sensor.luid?.any,
+                   let luid = candidate.luid?.any,
+                   sensorLuid == luid {
+                    return true
+                }
+                if let sensorMac = sensor.macId?.any,
+                   let mac = candidate.macId?.any,
+                   sensorMac == mac {
+                    return true
+                }
+                return false
             }
-            if let sensorMac = sensor.macId?.any,
-               let mac = candidate.macId?.any,
-               sensorMac == mac {
-                return true
-            }
-            return false
         }
     }
 
@@ -137,10 +150,7 @@ class RuuviTagDataService {
         guard let snapshotIndex = snapshots.firstIndex(where: { $0.id == sensorId }),
               let sensor = ruuviTags.first(where: { $0.id == sensorId }) else { return }
 
-        let sensorSettings = sensorSettingsList.first { settings in
-            (settings.luid?.any != nil && settings.luid?.any == sensor.luid?.any) ||
-            (settings.macId?.any != nil && settings.macId?.any == sensor.macId?.any)
-        }
+        let sensorSettings = matchingSensorSettings(for: sensor)
 
         let snapshot = snapshots[snapshotIndex]
 
@@ -229,14 +239,16 @@ class RuuviTagDataService {
     }
 
     func getSensorSettings() -> [SensorSettings] {
-        return sensorSettingsList
+        return withSensorSettingsList { $0 }
     }
 
     func getSensorSettings(for sensorId: String) -> SensorSettings? {
-        return sensorSettingsList.first(where: { settings in
-            (settings.luid != nil && (settings.luid?.value == sensorId)) ||
-            (settings.macId != nil && (settings.macId?.any == sensorId.mac.any))
-        })
+        return withSensorSettingsList { list in
+            list.first(where: { settings in
+                (settings.luid != nil && (settings.luid?.value == sensorId)) ||
+                (settings.macId != nil && (settings.macId?.any == sensorId.mac.any))
+            })
+        }
     }
 
     // MARK: - Background Loading
@@ -638,15 +650,17 @@ private extension RuuviTagDataService {
 
                     switch change {
                     case let .insert(sensorSettings):
-                        self.sensorSettingsList.append(sensorSettings)
+                        self.updateSensorSettingsList { $0.append(sensorSettings) }
                         self.applySensorSettings(sensorSettings, to: sensor)
 
                     case let .update(sensorSettings):
                         self.updateSensorSettings(sensorSettings, for: sensor)
 
                     case let .delete(sensorSettings):
-                        if let index = self.sensorSettingsList.firstIndex(where: { $0.id == sensorSettings.id }) {
-                            self.sensorSettingsList.remove(at: index)
+                        self.updateSensorSettingsList { list in
+                            if let index = list.firstIndex(where: { $0.id == sensorSettings.id }) {
+                                list.remove(at: index)
+                            }
                         }
                         self.applySensorSettings(nil, to: sensor)
 
@@ -664,10 +678,12 @@ private extension RuuviTagDataService {
     }
 
     func updateSensorSettings(_ sensorSettings: SensorSettings, for sensor: AnyRuuviTagSensor) {
-        if let index = sensorSettingsList.firstIndex(where: { $0.id == sensorSettings.id }) {
-            sensorSettingsList[index] = sensorSettings
-        } else {
-            sensorSettingsList.append(sensorSettings)
+        updateSensorSettingsList { list in
+            if let index = list.firstIndex(where: { $0.id == sensorSettings.id }) {
+                list[index] = sensorSettings
+            } else {
+                list.append(sensorSettings)
+            }
         }
 
         applySensorSettings(sensorSettings, to: sensor)
@@ -803,10 +819,7 @@ private extension RuuviTagDataService {
                    let snapshot = self.snapshots.first(where: { $0.id == sensor.id }) {
 
                     DispatchQueue.global(qos: .userInitiated).async {
-                        let sensorSettings = self.sensorSettingsList.first { settings in
-                            (settings.luid?.any != nil && settings.luid?.any == sensor.luid?.any) ||
-                            (settings.macId?.any != nil && settings.macId?.any == sensor.macId?.any)
-                        }
+                        let sensorSettings = self.matchingSensorSettings(for: sensor)
 
                         let updatedRecord = record.with(
                             sensorSettings: sensorSettings
@@ -995,15 +1008,7 @@ private extension RuuviTagDataService {
             didChange = true
         }
 
-        let sensorSettings = sensorSettingsList.first(where: { candidate in
-            if let luid = candidate.luid?.any, let sensorLuid = sensor.luid?.any {
-                return luid == sensorLuid
-            }
-            if let mac = candidate.macId?.any, let sensorMac = sensor.macId?.any {
-                return mac == sensorMac
-            }
-            return false
-        })
+        let sensorSettings = matchingSensorSettings(for: sensor)
 
         if let sensorSettings {
             var updatedCalibration = snapshot.calibration
