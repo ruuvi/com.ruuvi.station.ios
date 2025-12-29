@@ -67,6 +67,9 @@ public protocol RuuviLocalSettings {
     var serviceTimeout: TimeInterval { get set }
     var cardsSwipeHintWasShown: Bool { get set }
     var alertsMuteIntervalMinutes: Int { get set }
+    var movementAlertHysteresisMinutes: Int { get set }
+    func movementAlertHysteresisLastEvents() -> [String: Date]
+    func setMovementAlertHysteresisLastEvents(_ values: [String: Date])
     var saveHeartbeats: Bool { get set }
     var saveHeartbeatsIntervalMinutes: Int { get set }
     var saveHeartbeatsForegroundIntervalSeconds: Int { get set }

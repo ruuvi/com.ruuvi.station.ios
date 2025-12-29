@@ -167,21 +167,20 @@ public extension RuuviNotifierImpl {
                 isTriggered = isTriggered || isLuminosity
                 notify(alertType: type, uuid: luid.value, isTriggered: isLuminosity)
             case .movement:
-                let isMovement = process(
+                let movementResult = process(
                     movement: type,
                     record: record,
                     trigger: trigger
                 )
-                isTriggered = isTriggered || isMovement
-                notify(alertType: type, uuid: luid.value, isTriggered: isMovement)
+                isTriggered = isTriggered || movementResult.isTriggered
+                notify(alertType: type, uuid: luid.value, isTriggered: movementResult.isTriggered)
+                if let movementCounter = record.movementCounter, movementResult.didMove {
+                    ruuviAlertService.setMovement(counter: movementCounter, for: record)
+                }
             default:
                 // do nothing, see RuuviTagHeartbeatDaemon
                 break
             }
-        }
-
-        if let movementCounter = record.movementCounter {
-            ruuviAlertService.setMovement(counter: movementCounter, for: record)
         }
 
         notify(uuid: luid.value, isTriggered: isTriggered)
@@ -1343,28 +1342,218 @@ extension RuuviNotifierImpl {
         movement: AlertType,
         record: RuuviTagSensorRecord,
         trigger: Bool = true
-    ) -> Bool {
-        guard let luid = record.luid else { return false }
-        if case let .movement(last) = ruuviAlertService.alert(for: luid.value, of: movement),
-           let movementCounter = record.movementCounter {
-            let isGreater = movementCounter > last
-            if trigger {
-                if isGreater {
-                    DispatchQueue.main.async { [weak self] in
-                        guard let sSelf = self else { return }
-                        sSelf.localNotificationsManager
-                            .notifyDidMove(
-                                for: luid.value,
-                                counter: movementCounter,
-                                title: sSelf.titles.didMove
-                            )
-                    }
+    ) -> (isTriggered: Bool, didMove: Bool) {
+        guard let luid = record.luid else { return (false, false) }
+        guard case let .movement(last) = ruuviAlertService.alert(for: luid.value, of: movement) else {
+            clearMovementHysteresis(for: luid.value)
+            return (false, false)
+        }
+
+        let didMove: Bool
+        if let movementCounter = record.movementCounter {
+            didMove = movementCounter > last
+            if trigger, didMove {
+                DispatchQueue.main.async { [weak self] in
+                    guard let sSelf = self else { return }
+                    sSelf.localNotificationsManager
+                        .notifyDidMove(
+                            for: luid.value,
+                            counter: movementCounter,
+                            title: sSelf.titles.didMove
+                        )
                 }
             }
-            return isGreater
+            if didMove {
+                updateMovementHysteresis(for: luid.value, eventDate: record.date)
+            }
         } else {
+            didMove = false
+        }
+
+        let isTriggered = didMove || isMovementHysteresisActive(for: luid.value, now: Date())
+        return (isTriggered, didMove)
+    }
+
+    private func movementHysteresisInterval() -> TimeInterval {
+        let minutes = settings.movementAlertHysteresisMinutes
+        guard minutes > 0 else { return 0 }
+        return TimeInterval(minutes) * 60
+    }
+
+    func restoreMovementHysteresisState() {
+        let interval = movementHysteresisInterval()
+        let now = Date()
+        var didMutate = false
+        movementAlertHysteresisLock.lock()
+        movementAlertHysteresisLastEventByUUID = settings.movementAlertHysteresisLastEvents()
+        if interval <= 0 {
+            if !movementAlertHysteresisLastEventByUUID.isEmpty {
+                movementAlertHysteresisLastEventByUUID.removeAll()
+                didMutate = true
+            }
+        } else {
+            let before = movementAlertHysteresisLastEventByUUID.count
+            movementAlertHysteresisLastEventByUUID = movementAlertHysteresisLastEventByUUID.filter {
+                $0.value.addingTimeInterval(interval) > now
+            }
+            didMutate = movementAlertHysteresisLastEventByUUID.count != before
+        }
+        movementAlertHysteresisLock.unlock()
+        if didMutate {
+            persistMovementHysteresisState()
+        }
+        scheduleMovementHysteresisTimerIfNeeded()
+    }
+
+    private func updateMovementHysteresis(for uuid: String, eventDate: Date) {
+        let interval = movementHysteresisInterval()
+        var didMutate = false
+        movementAlertHysteresisLock.lock()
+        guard interval > 0 else {
+            didMutate = movementAlertHysteresisLastEventByUUID.removeValue(forKey: uuid) != nil
+            movementAlertHysteresisLock.unlock()
+            if didMutate {
+                persistMovementHysteresisState()
+                scheduleMovementHysteresisTimerIfNeeded()
+            }
+            return
+        }
+        let safeDate = min(eventDate, Date())
+        if let existingDate = movementAlertHysteresisLastEventByUUID[uuid],
+           existingDate > safeDate {
+            movementAlertHysteresisLock.unlock()
+            return
+        }
+        movementAlertHysteresisLastEventByUUID[uuid] = safeDate
+        didMutate = true
+        movementAlertHysteresisLock.unlock()
+        if didMutate {
+            persistMovementHysteresisState()
+            scheduleMovementHysteresisTimerIfNeeded()
+        }
+    }
+
+    private func isMovementHysteresisActive(for uuid: String, now: Date) -> Bool {
+        let interval = movementHysteresisInterval()
+        var didMutate = false
+        var isActive = false
+        movementAlertHysteresisLock.lock()
+        guard interval > 0 else {
+            didMutate = movementAlertHysteresisLastEventByUUID.removeValue(forKey: uuid) != nil
+            movementAlertHysteresisLock.unlock()
+            if didMutate {
+                persistMovementHysteresisState()
+                scheduleMovementHysteresisTimerIfNeeded()
+            }
             return false
         }
+        guard let lastEvent = movementAlertHysteresisLastEventByUUID[uuid] else {
+            movementAlertHysteresisLock.unlock()
+            return false
+        }
+        let expiry = lastEvent.addingTimeInterval(interval)
+        if expiry > now {
+            isActive = true
+            movementAlertHysteresisLock.unlock()
+            return isActive
+        }
+        movementAlertHysteresisLastEventByUUID.removeValue(forKey: uuid)
+        didMutate = true
+        movementAlertHysteresisLock.unlock()
+        if didMutate {
+            persistMovementHysteresisState()
+            scheduleMovementHysteresisTimerIfNeeded()
+        }
+        return isActive
+    }
+
+    private func clearMovementHysteresis(for uuid: String) {
+        let didMutate: Bool
+        movementAlertHysteresisLock.lock()
+        didMutate = movementAlertHysteresisLastEventByUUID.removeValue(forKey: uuid) != nil
+        movementAlertHysteresisLock.unlock()
+        if didMutate {
+            persistMovementHysteresisState()
+            scheduleMovementHysteresisTimerIfNeeded()
+        }
+    }
+
+    private func scheduleMovementHysteresisTimerIfNeeded() {
+        let interval = movementHysteresisInterval()
+        var nextExpiry: Date?
+        movementAlertHysteresisLock.lock()
+        if interval > 0 {
+            for (_, lastEvent) in movementAlertHysteresisLastEventByUUID {
+                let expiry = lastEvent.addingTimeInterval(interval)
+                if let current = nextExpiry {
+                    if expiry < current {
+                        nextExpiry = expiry
+                    }
+                } else {
+                    nextExpiry = expiry
+                }
+            }
+        }
+        movementAlertHysteresisLock.unlock()
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.movementAlertHysteresisTimer?.invalidate()
+            self.movementAlertHysteresisTimer = nil
+            guard let nextExpiry else { return }
+            let delay = max(0.1, nextExpiry.timeIntervalSinceNow)
+            self.movementAlertHysteresisTimer = Timer.scheduledTimer(
+                withTimeInterval: delay,
+                repeats: false
+            ) { [weak self] _ in
+                self?.handleMovementHysteresisTimerFired()
+            }
+        }
+    }
+
+    private func handleMovementHysteresisTimerFired() {
+        let now = Date()
+        let interval = movementHysteresisInterval()
+        var expiredUUIDs = [String]()
+        var didMutate = false
+        movementAlertHysteresisLock.lock()
+        if interval <= 0 {
+            if !movementAlertHysteresisLastEventByUUID.isEmpty {
+                movementAlertHysteresisLastEventByUUID.removeAll()
+                didMutate = true
+            }
+        } else {
+            for (uuid, lastEvent) in movementAlertHysteresisLastEventByUUID {
+                let expiry = lastEvent.addingTimeInterval(interval)
+                if expiry <= now {
+                    expiredUUIDs.append(uuid)
+                }
+            }
+            for uuid in expiredUUIDs {
+                movementAlertHysteresisLastEventByUUID.removeValue(forKey: uuid)
+            }
+            didMutate = !expiredUUIDs.isEmpty
+        }
+        movementAlertHysteresisLock.unlock()
+
+        if didMutate {
+            persistMovementHysteresisState()
+        }
+        if !expiredUUIDs.isEmpty {
+            expiredUUIDs.forEach { uuid in
+                notify(alertType: .movement(last: 0), uuid: uuid, isTriggered: false)
+            }
+        }
+
+        scheduleMovementHysteresisTimerIfNeeded()
+    }
+
+    private func persistMovementHysteresisState() {
+        let snapshot: [String: Date]
+        movementAlertHysteresisLock.lock()
+        snapshot = movementAlertHysteresisLastEventByUUID
+        movementAlertHysteresisLock.unlock()
+        settings.setMovementAlertHysteresisLastEvents(snapshot)
     }
 
     private func processCloudConnection(

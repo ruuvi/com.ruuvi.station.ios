@@ -290,6 +290,35 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDegaults.alertsMuteIntervalMinutes", defaultValue: 60)
     var alertsMuteIntervalMinutes: Int
 
+    @UserDefault("SettingsUserDefaults.movementAlertHysteresisMinutes", defaultValue: 5)
+    var movementAlertHysteresisMinutes: Int
+    private let movementAlertHysteresisLastEventsUDKey =
+        "SettingsUserDefaults.movementAlertHysteresisLastEvents"
+
+    func movementAlertHysteresisLastEvents() -> [String: Date] {
+        let stored = UserDefaults.standard.dictionary(
+            forKey: movementAlertHysteresisLastEventsUDKey
+        ) ?? [:]
+        var result = [String: Date]()
+        result.reserveCapacity(stored.count)
+        for (uuid, value) in stored {
+            if let timeInterval = value as? TimeInterval {
+                result[uuid] = Date(timeIntervalSince1970: timeInterval)
+            } else if let number = value as? NSNumber {
+                result[uuid] = Date(timeIntervalSince1970: number.doubleValue)
+            }
+        }
+        return result
+    }
+
+    func setMovementAlertHysteresisLastEvents(_ values: [String: Date]) {
+        let stored = values.mapValues { $0.timeIntervalSince1970 }
+        UserDefaults.standard.set(
+            stored,
+            forKey: movementAlertHysteresisLastEventsUDKey
+        )
+    }
+
     @UserDefault("SettingsUserDegaults.saveHeartbeats", defaultValue: true)
     var saveHeartbeats: Bool
 

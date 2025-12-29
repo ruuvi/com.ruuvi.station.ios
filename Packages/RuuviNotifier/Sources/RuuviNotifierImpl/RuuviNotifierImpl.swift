@@ -11,12 +11,17 @@ public final class RuuviNotifierImpl: RuuviNotifier {
     let localNotificationsManager: RuuviNotificationLocal
     let localSyncState: RuuviLocalSyncState
     let measurementService: RuuviServiceMeasurement
+    let settings: RuuviLocalSettings
+    let movementAlertHysteresisLock = NSLock()
+    var movementAlertHysteresisLastEventByUUID = [String: Date]()
+    var movementAlertHysteresisTimer: Timer?
 
     public init(
         ruuviAlertService: RuuviServiceAlert,
         ruuviNotificationLocal: RuuviNotificationLocal,
         localSyncState: RuuviLocalSyncState,
         measurementService: RuuviServiceMeasurement,
+        settings: RuuviLocalSettings,
         titles: RuuviNotifierTitles
     ) {
         self.ruuviAlertService = ruuviAlertService
@@ -24,6 +29,8 @@ public final class RuuviNotifierImpl: RuuviNotifier {
         self.localSyncState = localSyncState
         self.titles = titles
         self.measurementService = measurementService
+        self.settings = settings
+        restoreMovementHysteresisState()
     }
 
     public func subscribe(_ observer: some RuuviNotifierObserver, to uuid: String) {

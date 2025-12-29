@@ -57,6 +57,7 @@ extension DefaultsPresenter {
             buildChartDurationHours(),
             saveAdvertisementsInterval(),
             saveHeartbeatsForgroundInterval(),
+            movementAlertHysteresisInterval(),
             buildImageCompressionQuality(),
             buildAskForReviewFirstTime(),
             buildAskForReviewLater(),
@@ -294,6 +295,19 @@ extension DefaultsPresenter {
             observer.settings.advertisementDaemonIntervalMinutes = interval.bound
         }
         return advertisementInterval
+    }
+
+    private func movementAlertHysteresisInterval() -> DefaultsViewModel {
+        let hysteresisInterval = DefaultsViewModel()
+        hysteresisInterval.title = "Movement alert blink hysteresis"
+        hysteresisInterval.integer.value = settings.movementAlertHysteresisMinutes
+        hysteresisInterval.unit = .minutes
+        hysteresisInterval.type.value = .stepper
+
+        bind(hysteresisInterval.integer, fire: false) { observer, interval in
+            observer.settings.movementAlertHysteresisMinutes = interval.bound
+        }
+        return hysteresisInterval
     }
 
     private func buildAskForReviewFirstTime() -> DefaultsViewModel {
