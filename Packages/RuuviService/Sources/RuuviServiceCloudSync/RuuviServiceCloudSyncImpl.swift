@@ -379,10 +379,12 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         // Check if a history sync is already in progress for this sensor
         // and return early if so.
         if ongoingHistorySyncs.contains(sensor.any) {
+            promise.succeed(value: [])
             return promise.future
         }
 
         guard let maxHistoryDays = sensor.maxHistoryDays, maxHistoryDays > 0 else {
+            promise.succeed(value: [])
             return promise.future
         }
 
@@ -405,10 +407,12 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             .on(success: { [weak self] result in
                 self?.ruuviLocalSyncState.setSyncStatusHistory(.complete, for: sensor.macId)
                 self?.ruuviLocalSyncState.setDownloadFullHistory(for: sensor.macId, downloadFull: false)
-                self?.ruuviLocalSyncState.setSyncDate(
-                    Date(),
-                    for: sensor.macId
-                )
+                if let latestRecordDate = result.map(\.date).max() {
+                    self?.ruuviLocalSyncState.setSyncDate(
+                        latestRecordDate,
+                        for: sensor.macId
+                    )
+                }
                 promise.succeed(value: result)
             }, failure: { [weak self] error in
                 self?.ruuviLocalSyncState
@@ -612,12 +616,10 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         })
                 })
         }, failure: { [weak self] error in
-            switch error {
-            case .api(.api(.erUnauthorized)):
+            if case .api(.api(.erUnauthorized)) = error {
                 self?.postNotification()
-            default:
-                promise.fail(error: .ruuviCloud(error))
             }
+            promise.fail(error: .ruuviCloud(error))
         })
         return promise.future
     }
@@ -867,9 +869,13 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         with cloudRecord: RuuviTagSensorRecord,
         promise: Promise<Bool, RuuviServiceError>
     ) {
-        ruuviPool.create(cloudRecord).on(completion: {
-            promise.succeed(value: true)
-        })
+        ruuviPool.create(cloudRecord)
+            .observe(on: .global(qos: .utility))
+            .on(success: { _ in
+                promise.succeed(value: true)
+            }, failure: { error in
+                promise.fail(error: .ruuviPool(error))
+            })
     }
 
     @discardableResult
