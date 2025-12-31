@@ -93,6 +93,9 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
         syncAlertsIfNeeded()
         startObservingCloudRequestState()
         if let snapshot {
+            ledBrightnessSelection = settings.ledBrightnessSelection(
+                for: ledBrightnessMacId()
+            ) ?? .defaultSelection
             view?.configure(
                 snapshot: snapshot,
                 dashboardSortingType: settings.dashboardSensorOrder.count == 0 ? .alphabetical : .manual
@@ -225,8 +228,12 @@ extension CardsSettingsPresenter: CardsSettingsViewOutput {
     }
 
     func viewDidTapLedBrightness() {
+        let currentSelection = settings.ledBrightnessSelection(
+            for: ledBrightnessMacId()
+        ) ?? ledBrightnessSelection
+        ledBrightnessSelection = currentSelection
         router?.openLedBrightnessSettings(
-            selection: nil, // TODO: Implement this when fw supports.
+            selection: currentSelection,
             firmwareVersion: snapshot?.displayData.firmwareVersion,
             snapshotId: snapshot?.id,
             onUpdateFirmware: { [weak self] in
@@ -237,15 +244,10 @@ extension CardsSettingsPresenter: CardsSettingsViewOutput {
             },
             onSelection: { [weak self] selection, completion in
                 guard let self else { return }
-                self.applyLedBrightnessSelection(selection) { [weak self] result in
-                    guard let self else { return }
-                    switch result {
-                    case .success:
-                        self.ledBrightnessSelection = selection
-                        self.view?.updateLedBrightnessSelection(selection)
-                    case let .failure(error):
-                        self.errorPresenter.present(error: error)
-                    }
+                self.ledBrightnessSelection = selection
+                self.view?.updateLedBrightnessSelection(selection)
+                self.settings.setLedBrightnessSelection(selection, for: self.ledBrightnessMacId())
+                self.applyLedBrightnessSelection(selection) { result in
                     completion(result)
                 }
             }
@@ -692,6 +694,10 @@ extension CardsSettingsPresenter {
 }
 
 private extension CardsSettingsPresenter {
+    func ledBrightnessMacId() -> MACIdentifier? {
+        snapshot?.identifierData.mac ?? sensor?.macId
+    }
+
     func withSensor(_ block: (AnyRuuviTagSensor) -> Void) {
         guard let sensor else { return }
         block(sensor)

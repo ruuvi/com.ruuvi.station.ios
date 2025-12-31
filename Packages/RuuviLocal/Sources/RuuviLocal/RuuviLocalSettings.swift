@@ -147,6 +147,9 @@ public protocol RuuviLocalSettings {
     func setOwnerCheckDate(for macId: MACIdentifier?, value: Date?)
     func ownerCheckDate(for macId: MACIdentifier?) -> Date?
 
+    func ledBrightnessSelection(for macId: MACIdentifier?) -> RuuviLedBrightnessLevel?
+    func setLedBrightnessSelection(_ selection: RuuviLedBrightnessLevel?, for macId: MACIdentifier?)
+
     func syncDialogHidden(for luid: LocalIdentifier) -> Bool
     func setSyncDialogHidden(_ hidden: Bool, for luid: LocalIdentifier)
 

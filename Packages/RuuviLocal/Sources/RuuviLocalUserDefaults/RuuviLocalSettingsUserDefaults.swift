@@ -521,6 +521,51 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         return UserDefaults.standard.value(forKey: ownerCheckDateKey + macId.mac) as? Date
     }
 
+    private let ledBrightnessSelectionKey = "SettingsUserDefaults.ledBrightnessSelection."
+    func ledBrightnessSelection(for macId: MACIdentifier?) -> RuuviLedBrightnessLevel? {
+        guard let macId else { return nil }
+        guard let storedValue = UserDefaults.standard.value(
+            forKey: ledBrightnessSelectionKey + macId.mac
+        ) as? Int else {
+            return nil
+        }
+        switch storedValue {
+        case 0:
+            return .off
+        case 1:
+            return .dim
+        case 2:
+            return .normal
+        case 3:
+            return .bright
+        default:
+            return nil
+        }
+    }
+
+    func setLedBrightnessSelection(_ selection: RuuviLedBrightnessLevel?, for macId: MACIdentifier?) {
+        guard let macId else { return }
+        let key = ledBrightnessSelectionKey + macId.mac
+        guard let selection else {
+            UserDefaults.standard.removeObject(forKey: key)
+            return
+        }
+        UserDefaults.standard.set(ledBrightnessSelectionValue(selection), forKey: key)
+    }
+
+    private func ledBrightnessSelectionValue(_ selection: RuuviLedBrightnessLevel) -> Int {
+        switch selection {
+        case .off:
+            return 0
+        case .dim:
+            return 1
+        case .normal:
+            return 2
+        case .bright:
+            return 3
+        }
+    }
+
     @UserDefault("SettingsUserDefaults.dashboardEnabled", defaultValue: true)
     var dashboardEnabled: Bool
 

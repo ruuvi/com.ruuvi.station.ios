@@ -216,14 +216,10 @@ extension LEDBrightnessSettingsViewController: UITableViewDelegate {
         guard isFirmwareSupported else { return }
         guard let onSelection, !isApplyingSelection else { return }
         let option = options[indexPath.row]
+        selection = option
         isApplyingSelection = true
-        onSelection(option) { [weak self] result in
-            guard let self else { return }
-            self.isApplyingSelection = false
-            if case .success = result {
-                self.selection = option
-                self.navigationController?.popViewController(animated: true)
-            }
+        onSelection(option) { [weak self] _ in
+            self?.isApplyingSelection = false
         }
     }
 }
