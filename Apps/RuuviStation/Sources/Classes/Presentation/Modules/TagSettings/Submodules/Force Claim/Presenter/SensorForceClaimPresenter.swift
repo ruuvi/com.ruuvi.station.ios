@@ -42,6 +42,18 @@ extension SensorForceClaimPresenter: SensorForceClaimViewOutput {
         }
     }
 
+    func viewWillAppear() {
+        guard let ruuviTag = ruuviTag else {
+            return
+        }
+        let format = RuuviDataFormat.dataFormat(
+            from: ruuviTag.version
+        )
+        let ruuviDeviceType: RuuviDeviceType =
+            format == .e1 || format == .v6 ? .ruuviAir : .ruuviTag
+        view?.deviceType = ruuviDeviceType
+    }
+
     func viewDidTapUseNFC() {
         view?.startNFCSession()
     }
@@ -116,7 +128,9 @@ extension SensorForceClaimPresenter {
         ) { [weak self] _, result in
             switch result {
             case let .success(secret):
-                self?.contestSensor(with: secret)
+                if  secret != "XX:XX:XX:XX:XX:XX:XX:XX" {
+                    self?.contestSensor(with: secret)
+                }
             case let .failure(error):
                 self?.activityPresenter.dismiss()
                 self?.errorPresenter.present(error: error)

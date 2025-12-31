@@ -97,6 +97,14 @@ class SensorForceClaimViewController: UIViewController {
     }()
 
     // Implementation
+    var deviceType: RuuviDeviceType = .ruuviTag {
+        didSet {
+            sensorClaimNotesView.text = deviceType == .ruuviTag ?
+                RuuviLocalization.forceClaimSensorDescription2 :
+                RuuviLocalization.forceClaimAirDescription2
+        }
+    }
+
     private var isNFCAvailable: Bool {
         NFCNDEFReaderSession.readingAvailable
     }
@@ -122,6 +130,11 @@ extension SensorForceClaimViewController {
         setUpUI()
         localize()
         output?.viewDidLoad()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        output?.viewWillAppear()
     }
 }
 
