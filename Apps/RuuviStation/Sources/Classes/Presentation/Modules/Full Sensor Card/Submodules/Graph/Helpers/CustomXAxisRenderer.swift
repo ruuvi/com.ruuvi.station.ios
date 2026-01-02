@@ -2,7 +2,7 @@ import DGCharts
 import Foundation
 import RuuviOntology
 
-public class CustomXAxisRenderer: XAxisRenderer {
+public final class CustomXAxisRenderer: XAxisRenderer {
     private var from: TimeInterval = 0
 
     // Intervals in seconds - minimum is now 60 seconds (1 minute)
@@ -25,21 +25,16 @@ public class CustomXAxisRenderer: XAxisRenderer {
         691200,    // 8d
     ]
 
-    convenience init(
+    public convenience init(
         from time: Double,
         viewPortHandler: ViewPortHandler,
         axis: XAxis,
         transformer: Transformer?
     ) {
-        self.init(
-            viewPortHandler: viewPortHandler,
-            axis: axis,
-            transformer: transformer
-        )
+        self.init(viewPortHandler: viewPortHandler, axis: axis, transformer: transformer)
         from = time
     }
 
-    // swiftlint:disable:next function_body_length
     override public func computeAxisValues(
         min: Double,
         max: Double
@@ -47,96 +42,73 @@ public class CustomXAxisRenderer: XAxisRenderer {
         let labelCount = axis.labelCount
         let range = abs(max - min)
 
-        guard
-            labelCount != 0,
-            range > 0,
-            range.isFinite
-        else {
+        guard labelCount != 0, range > 0, range.isFinite else {
             axis.entries = []
             axis.centeredEntries = []
             return
         }
 
-        // Calculate raw interval
         let rawInterval = range / Double(labelCount)
-
-        // Get appropriate interval - enforce minimum 60s
         let interval = getClosestPredefinedInterval(from: rawInterval)
 
-        // Special handling for very small datasets (e.g., single point)
-        if range < 60 { // Less than a minute
-            // For a single data point or very small range, just show one label at that point
+        // Preserve old behavior for very small datasets (< 1 minute)
+        if range < 60 {
             axis.entries = [min]
             computeSize()
             return
         }
 
-        // Align first and last points to minute boundaries
-        // Round to nearest minute boundary based on interval
-        var firstPoint = floor((from + min) / interval) * interval - from
-        var lastPoint = ceil((from + max) / interval) * interval - from
+        // Epsilon to avoid off-by-one at exact boundaries due to floating rounding
+        let eps = 1e-9
 
-        // Ensure they're within the data range
-        if firstPoint < min {
-            firstPoint += interval
-        }
+        // Absolute time range (epoch seconds)
+        let tMin = from + min
+        let tMax = from + max
 
-        if lastPoint > max {
-            lastPoint -= interval
-        }
+        // Match Android: pad by 2 ticks on both ends
+        let extraTicks: Int64 = 2
 
-        // Handle case where range is smaller than interval
-        if lastPoint < firstPoint {
-            // Just use the midpoint
+        // Use integer multipliers to avoid drift
+        var startMult = Int64(floor((tMin / interval) + eps)) - extraTicks
+        var endMult   = Int64(ceil((tMax / interval) - eps)) + extraTicks
+
+        // Handle behavior when alignment collapses (end < start)
+        if endMult < startMult {
             let midPoint = (min + max) / 2
-            firstPoint = floor((from + midPoint) / interval) * interval - from
-            lastPoint = firstPoint
+            let tMid = from + midPoint
+            let midMult = Int64(floor((tMid / interval) + eps))
+            startMult = midMult - extraTicks
+            endMult = midMult + extraTicks
         }
 
-        // Calculate number of points
-        var numberOfPoints = 0
-        if lastPoint >= firstPoint {
-            for _ in stride(from: firstPoint, through: lastPoint, by: interval) {
-                numberOfPoints += 1
-            }
-        }
+        let numberOfPoints = Swift.max(1, Int(endMult - startMult) + 1)
 
-        // Ensure at least one point
-        if numberOfPoints == 0 {
-            numberOfPoints = 1
-            lastPoint = firstPoint
-        }
-
-        axis.entries.removeAll(keepingCapacity: true)
-        axis.entries.reserveCapacity(numberOfPoints)
         axis.entries = [Double](repeating: 0, count: numberOfPoints)
 
-        var i = 0
-        for value in stride(from: firstPoint, through: lastPoint, by: interval) {
-            guard i < numberOfPoints else { break }
+        for i in 0..<numberOfPoints {
+            let mult = startMult + Int64(i)
 
-            let date = Date(timeIntervalSince1970: from + value)
+            // Absolute tick time (epoch seconds aligned to interval)
+            let absTick = Double(mult) * interval
 
-            // Apply timezone offset only for larger intervals (> 1h)
+            // Chart x is relative to `from`
+            let value = absTick - from
+
+            let date = Date(timeIntervalSince1970: absTick)
+
+            // Preserve Android/iOS behavior: apply timezone offset only for intervals > 1h
             let localOffset = (interval > 3600)
                 ? TimeZone.autoupdatingCurrent.secondsFromGMT(for: date)
                 : 0
 
             axis.entries[i] = value - Double(localOffset)
-            i += 1
         }
 
         computeSize()
     }
 
     private func getClosestPredefinedInterval(from rawInterval: Double) -> TimeInterval {
-        // Enforce minimum interval of 60 seconds (1 minute)
-        if rawInterval < 60 {
-            return 60
-        }
-
-        return intervals.min(by: {
-            abs($0 - rawInterval) < abs($1 - rawInterval)
-        }) ?? 60
+        if rawInterval < 60 { return 60 }
+        return intervals.min(by: { abs($0 - rawInterval) < abs($1 - rawInterval) }) ?? 60
     }
 }

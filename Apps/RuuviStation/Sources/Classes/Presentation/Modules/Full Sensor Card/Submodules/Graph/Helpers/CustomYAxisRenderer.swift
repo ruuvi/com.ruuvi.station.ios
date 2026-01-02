@@ -1,7 +1,7 @@
 import DGCharts
 import UIKit
 
-class CustomYAxisRenderer: YAxisRenderer {
+final class CustomYAxisRenderer: YAxisRenderer {
     private let intervals = [
         0.01,
         0.02,
@@ -36,8 +36,7 @@ class CustomYAxisRenderer: YAxisRenderer {
     ]
 
     override func computeAxisValues(min: Double, max: Double) {
-        guard min != CGFloat.greatestFiniteMagnitude && max != CGFloat.greatestFiniteMagnitude
-        else {
+        guard min != Double.greatestFiniteMagnitude, max != Double.greatestFiniteMagnitude else {
             super.computeAxisValues(min: min, max: max)
             return
         }
@@ -45,7 +44,7 @@ class CustomYAxisRenderer: YAxisRenderer {
         let labelCount = axis.labelCount
         let range = abs(max - min)
 
-        if labelCount == 0 || range <= 0 {
+        guard labelCount != 0, range > 0, range.isFinite else {
             axis.entries = []
             axis.centeredEntries = []
             return
@@ -53,30 +52,25 @@ class CustomYAxisRenderer: YAxisRenderer {
 
         let interval = getClosestPredefinedInterval(range: range, labelCount: labelCount)
 
-        var firstPoint = round(min / CGFloat(interval)) * CGFloat(interval)
-        var lastPoint = round(max / CGFloat(interval)) * CGFloat(interval)
-
-        if range < CGFloat(interval) {
-            firstPoint = min
-            lastPoint = firstPoint
+        if range < interval {
+            axis.entries = [min]
+            return
         }
 
-        let numberOfPoints = interval != 0.0 ? Int(
-            round(abs(lastPoint - firstPoint) / CGFloat(interval))
-        ) + 1 : 1
+        let eps = 1e-12
 
-        axis.entries.removeAll(keepingCapacity: true)
-        axis.entries.reserveCapacity(numberOfPoints)
-        axis.entries = stride(
-            from: firstPoint,
-            to: firstPoint + CGFloat(numberOfPoints) * CGFloat(interval),
-            by: CGFloat(interval)
-        ).map { Double($0) }
+        let firstPoint = Darwin.floor((min / interval) + eps) * interval
+        let lastPoint  = Darwin.ceil((max / interval) - eps) * interval
+
+        let span = lastPoint - firstPoint
+        let numberOfPoints = Swift.max(1, Int(Darwin.floor((span / interval) + eps)) + 1)
+
+        axis.entries = (0..<numberOfPoints).map { i in
+            firstPoint + Double(i) * interval
+        }
     }
 
     private func getClosestPredefinedInterval(range: Double, labelCount: Int) -> Double {
-        return intervals.min(
-            by: { abs(range / $0 - Double(labelCount)) < abs(range / $1 - Double(labelCount)) }
-        ) ?? 0
+        intervals.min(by: { abs(range / $0 - Double(labelCount)) < abs(range / $1 - Double(labelCount)) }) ?? 0
     }
 }
