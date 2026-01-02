@@ -523,12 +523,20 @@ private extension VisibilitySettingsPresenter {
 
     func hasActiveAlert(for type: MeasurementType) -> Bool {
         guard let snapshot else { return false }
-        guard let configuration = snapshot.alertData.alertConfigurations.first(
-            where: { $0.key.isSameCase(as: type) }
-        )?.value else {
-            return false
+        let hasMeasurementAlert = snapshot.alertData.alertConfigurations.values.contains { config in
+            guard let alertType = config.alertType ?? config.type?.toAlertType() else { return false }
+            guard let measurementType = alertType.toMeasurementType() else { return false }
+            return measurementType.isSameCase(as: type) && config.isActive
         }
-        return configuration.isActive
+
+        if hasMeasurementAlert {
+            return true
+        }
+
+        return snapshot.alertData.nonMeasurementAlerts.contains { alertType, config in
+            guard let measurementType = alertType.toMeasurementType() else { return false }
+            return measurementType.isSameCase(as: type) && config.isActive
+        }
     }
 
     func forcedVisibleMeasurementTypes(for snapshot: RuuviTagCardSnapshot) -> [MeasurementType] {

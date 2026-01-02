@@ -291,6 +291,10 @@ class RuuviTagAlertService {
         if currentState != isOn {
             if isOn {
                 alertService.register(type: alertTypeWithBounds, ruuviTag: physicalSensor)
+                if case .movement = alertType,
+                   let counter = snapshot.latestRawRecord?.movementCounter {
+                    alertService.setMovement(counter: counter, for: physicalSensor)
+                }
             } else {
                 alertService.unregister(type: alertTypeWithBounds, ruuviTag: physicalSensor)
             }
@@ -556,8 +560,8 @@ class RuuviTagAlertService {
 
     func validateAlertState(for snapshot: RuuviTagCardSnapshot, physicalSensor: PhysicalSensor) -> Bool {
         // Check measurement-based alerts
-        for (measurementType, config) in snapshot.alertData.alertConfigurations {
-            guard let alertType = config.alertType ?? measurementType.toAlertType() else { continue }
+        for config in snapshot.alertData.alertConfigurations.values {
+            guard let alertType = config.alertType ?? config.type?.toAlertType() else { continue }
             let serviceIsOn = alertService.isOn(type: alertType, for: physicalSensor)
             if serviceIsOn != config.isActive {
                 return false
@@ -583,7 +587,7 @@ class RuuviTagAlertService {
             var hasChanges = false
 
             // Check measurement-based alerts
-            for (measurementType, config) in snapshot.alertData.alertConfigurations {
+            for config in snapshot.alertData.alertConfigurations.values {
                 if let mutedTill = config.mutedTill, mutedTill < currentDate {
                     let updatedConfig = RuuviTagCardSnapshotAlertConfig(
                         type: config.type,
@@ -596,8 +600,10 @@ class RuuviTagAlertService {
                         description: config.description,
                         unseenDuration: config.unseenDuration
                     )
-                    snapshot.updateAlertConfig(for: measurementType, config: updatedConfig)
-                    hasChanges = true
+                    if let alertType = config.alertType ?? config.type?.toAlertType() {
+                        snapshot.updateAlertConfig(for: alertType, config: updatedConfig)
+                        hasChanges = true
+                    }
                 }
             }
 
@@ -786,7 +792,7 @@ private extension RuuviTagAlertService {
                 upperBound: upperBound,
                 description: description
             )
-            snapshot.updateAlertConfig(for: measurementType, config: config)
+            snapshot.updateAlertConfig(for: alertType, config: config)
         }
     }
 

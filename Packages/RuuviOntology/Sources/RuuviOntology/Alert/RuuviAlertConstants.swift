@@ -69,7 +69,7 @@ public struct RuuviAlertConstants {
 
     public struct BatteryVoltage {
         public static let lowerBound = 0.0 // volts
-        public static let upperBound = 6.0 // volts
+        public static let upperBound = 5.0 // volts
     }
 
     public struct CloudConnection {
