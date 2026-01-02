@@ -7,6 +7,7 @@ public protocol RuuviNotifier {
 
     func subscribe<T: RuuviNotifierObserver>(_ observer: T, to uuid: String)
     func isSubscribed<T: RuuviNotifierObserver>(_ observer: T, to uuid: String) -> Bool
+    func clearMovementHysteresis(for uuid: String)
 }
 
 public protocol RuuviNotifierObserver: AnyObject {

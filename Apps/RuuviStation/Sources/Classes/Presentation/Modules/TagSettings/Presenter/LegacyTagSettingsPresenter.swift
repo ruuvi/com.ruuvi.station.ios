@@ -2745,6 +2745,9 @@ extension LegacyTagSettingsPresenter {
                 processAlerts()
             } else {
                 alertService.unregister(type: type, ruuviTag: ruuviTag)
+                if let luid = ruuviTag.luid {
+                    alertHandler.clearMovementHysteresis(for: luid.value)
+                }
             }
             alertService.unmute(type: type, for: ruuviTag)
         }

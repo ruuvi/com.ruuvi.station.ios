@@ -10,6 +10,7 @@ import RuuviDaemon
 import RuuviPool
 import RuuviCloud
 import RuuviLocalization
+import RuuviNotifier
 
 class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
 
@@ -45,6 +46,8 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
         AppAssembly.shared.assembler.resolver.resolve(BTBackground.self)
     private lazy var ruuviPool: RuuviPool? =
         AppAssembly.shared.assembler.resolver.resolve(RuuviPool.self)
+    private lazy var alertHandler: RuuviNotifier? =
+        AppAssembly.shared.assembler.resolver.resolve(RuuviNotifier.self)
     private var firmwareVersionCheckInProgress = false
     private var keepConnectionTimer: Timer?
     private var observedCloudRequestMac: String?
@@ -281,6 +284,9 @@ extension CardsSettingsPresenter: CardsSettingsViewOutput {
         isOn: Bool
     ) {
         guard shouldApplyAlertStateChange(for: type, isOn: isOn) else { return }
+        if case .movement = type, !isOn, let luid = sensor?.luid {
+            alertHandler?.clearMovementHysteresis(for: luid.value)
+        }
         withAlertService { service, snapshot, sensor in
             service.setAlertState(
                 for: type,

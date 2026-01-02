@@ -1351,7 +1351,12 @@ extension RuuviNotifierImpl {
 
         let didMove: Bool
         if let movementCounter = record.movementCounter {
-            didMove = movementCounter > last
+            if last == 0, movementCounter > 0 {
+                ruuviAlertService.setMovement(counter: movementCounter, for: record)
+                didMove = false
+            } else {
+                didMove = movementCounter > last
+            }
             if trigger, didMove {
                 DispatchQueue.main.async { [weak self] in
                     guard let sSelf = self else { return }
@@ -1467,7 +1472,7 @@ extension RuuviNotifierImpl {
         return isActive
     }
 
-    private func clearMovementHysteresis(for uuid: String) {
+    public func clearMovementHysteresis(for uuid: String) {
         let didMutate: Bool
         movementAlertHysteresisLock.lock()
         didMutate = movementAlertHysteresisLastEventByUUID.removeValue(forKey: uuid) != nil
