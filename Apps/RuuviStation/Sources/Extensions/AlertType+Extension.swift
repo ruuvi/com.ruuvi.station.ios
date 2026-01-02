@@ -9,6 +9,12 @@ extension AlertType {
             return .temperature
         case .relativeHumidity:
             return .humidity
+        case .humidity:
+            return .humidity
+        case .dewPoint:
+            return .humidity
+        case .batteryVoltage:
+            return .voltage
         case .pressure:
             return .pressure
         case .movement:
@@ -50,8 +56,15 @@ extension AlertType {
         case .temperature:
             return RuuviLocalization.temperatureWithUnit(unit)
         case .relativeHumidity:
-            // We only support relative humidity alert on iOS
+            // Relative humidity uses percent unit.
             return RuuviLocalization.relHumidity + " (\(HumidityUnit.percent.symbol))"
+        case .humidity:
+            return RuuviLocalization.absoluteHumidity + " (\(HumidityUnit.gm3.symbol))"
+        case .dewPoint:
+            if unit.isEmpty {
+                return RuuviLocalization.dewpoint
+            }
+            return RuuviLocalization.dewpoint + " (\(unit))"
         case .pressure:
             return RuuviLocalization.pressureWithUnit(unit)
         case .movement:
@@ -82,6 +95,11 @@ extension AlertType {
             return RuuviLocalization.luminosityWithUnit(unit)
         case .signal:
             return RuuviLocalization.signalStrengthWithUnit
+        case .batteryVoltage:
+            if unit.isEmpty {
+                return RuuviLocalization.batteryVoltage
+            }
+            return RuuviLocalization.batteryVoltage + " (\(unit))"
         case.connection:
             return RuuviLocalization.alertConnection
         case .cloudConnection:

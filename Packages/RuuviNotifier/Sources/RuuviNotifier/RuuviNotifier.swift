@@ -31,11 +31,19 @@ public extension RuuviNotifierObserver {
     ) {}
 }
 
+public extension RuuviNotifier {
+    func clearMovementAlertHysteresis(for _: String) {}
+}
+
 public protocol RuuviNotifierTitles {
     func lowTemperature(_ value: String) -> String
     func highTemperature(_ value: String) -> String
     func lowHumidity(_ value: String) -> String
     func highHumidity(_ value: String) -> String
+    func lowAbsoluteHumidity(_ value: String) -> String
+    func highAbsoluteHumidity(_ value: String) -> String
+    func lowDewPoint(_ value: String) -> String
+    func highDewPoint(_ value: String) -> String
     func lowPressure(_ value: String) -> String
     func highPressure(_ value: String) -> String
     func lowSignal(_ value: String) -> String
@@ -64,6 +72,8 @@ public protocol RuuviNotifierTitles {
     func highSoundPeak(_ value: String) -> String
     func lowLuminosity(_ value: String) -> String
     func highLuminosity(_ value: String) -> String
+    func lowBatteryVoltage(_ value: String) -> String
+    func highBatteryVoltage(_ value: String) -> String
 
     var didMove: String { get }
 }

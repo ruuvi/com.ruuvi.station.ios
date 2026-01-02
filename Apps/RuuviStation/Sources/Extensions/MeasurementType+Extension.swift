@@ -365,6 +365,8 @@ extension MeasurementType {
             return .temperature(lower: 0, upper: 0)
         case .humidity:
             return .relativeHumidity(lower: 0, upper: 0)
+        case .voltage:
+            return .batteryVoltage(lower: 0, upper: 0)
         case .pressure:
             return .pressure(lower: 0, upper: 0)
         case .movementCounter:
@@ -395,6 +397,26 @@ extension MeasurementType {
             return .signal(lower: 0, upper: 0)
         default:
             return nil
+        }
+    }
+}
+
+extension MeasurementDisplayVariant {
+    func toAlertType() -> AlertType? {
+        switch type {
+        case .humidity:
+            switch humidityUnit {
+            case .gm3:
+                return .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute)
+            case .dew:
+                return .dewPoint(lower: 0, upper: 0)
+            case .percent, .none:
+                return .relativeHumidity(lower: 0, upper: 0)
+            }
+        case .voltage:
+            return .batteryVoltage(lower: 0, upper: 0)
+        default:
+            return type.toAlertType()
         }
     }
 }

@@ -36,6 +36,26 @@ public extension RuuviNotifierImpl {
                 )
                 isTriggered = isTriggered || isRelativeHumidity
                 notify(alertType: type, uuid: luid.value, isTriggered: isRelativeHumidity)
+            case .humidity:
+                let isAbsoluteHumidity = process(
+                    absoluteHumidity: record.humidity,
+                    temperature: record.temperature,
+                    alertType: type,
+                    identifier: record.luid,
+                    trigger: trigger
+                )
+                isTriggered = isTriggered || isAbsoluteHumidity
+                notify(alertType: type, uuid: luid.value, isTriggered: isAbsoluteHumidity)
+            case .dewPoint:
+                let isDewPoint = process(
+                    dewPoint: record.humidity,
+                    temperature: record.temperature,
+                    alertType: type,
+                    identifier: record.luid,
+                    trigger: trigger
+                )
+                isTriggered = isTriggered || isDewPoint
+                notify(alertType: type, uuid: luid.value, isTriggered: isDewPoint)
             case .pressure:
                 let isPressure = process(
                     pressure: record.pressure,
@@ -54,6 +74,15 @@ public extension RuuviNotifierImpl {
                 )
                 isTriggered = isTriggered || isSignal
                 notify(alertType: type, uuid: luid.value, isTriggered: isSignal)
+            case .batteryVoltage:
+                let isBatteryVoltage = process(
+                    batteryVoltage: record.voltage,
+                    alertType: type,
+                    identifier: record.luid,
+                    trigger: trigger
+                )
+                isTriggered = isTriggered || isBatteryVoltage
+                notify(alertType: type, uuid: luid.value, isTriggered: isBatteryVoltage)
             case .aqi:
                 let currentAQI = measurementService.aqi(
                     for: record.co2,
@@ -231,6 +260,34 @@ public extension RuuviNotifierImpl {
                     uuid: identifier.value,
                     isTriggered: isRelativeHumidity
                 )
+            case .humidity:
+                let isAbsoluteHumidity = process(
+                    absoluteHumidity: record.humidity,
+                    temperature: record.temperature,
+                    alertType: type,
+                    identifier: identifier,
+                    trigger: trigger
+                )
+                isTriggered = isTriggered || isAbsoluteHumidity
+                notify(
+                    alertType: type,
+                    uuid: identifier.value,
+                    isTriggered: isAbsoluteHumidity
+                )
+            case .dewPoint:
+                let isDewPoint = process(
+                    dewPoint: record.humidity,
+                    temperature: record.temperature,
+                    alertType: type,
+                    identifier: identifier,
+                    trigger: trigger
+                )
+                isTriggered = isTriggered || isDewPoint
+                notify(
+                    alertType: type,
+                    uuid: identifier.value,
+                    isTriggered: isDewPoint
+                )
             case .pressure:
                 let isPressure = process(
                     pressure: record.pressure,
@@ -256,6 +313,19 @@ public extension RuuviNotifierImpl {
                     alertType: type,
                     uuid: identifier.value,
                     isTriggered: isSignal
+                )
+            case .batteryVoltage:
+                let isBatteryVoltage = process(
+                    batteryVoltage: record.voltage,
+                    alertType: type,
+                    identifier: identifier,
+                    trigger: trigger
+                )
+                isTriggered = isTriggered || isBatteryVoltage
+                notify(
+                    alertType: type,
+                    uuid: identifier.value,
+                    isTriggered: isBatteryVoltage
                 )
             case .aqi:
                 let currentAQI = measurementService.aqi(
@@ -587,6 +657,121 @@ extension RuuviNotifierImpl {
     }
 
     private func process(
+        absoluteHumidity: Humidity?,
+        temperature: Temperature?,
+        alertType: AlertType,
+        identifier: Identifier?,
+        trigger: Bool = true
+    ) -> Bool {
+        guard let identifier,
+              let temperature,
+              let absoluteHumidity
+        else {
+            return false
+        }
+
+        if case let .humidity(lower, upper) = ruuviAlertService.alert(for: identifier.value, of: alertType) {
+            let humidityWithTemperature = absoluteHumidity
+                .converted(to: .relative(temperature: temperature))
+            let current = humidityWithTemperature.converted(to: .absolute)
+            let lowerValue = lower.converted(to: .absolute).value
+            let upperValue = upper.converted(to: .absolute).value
+
+            let isLower = current.value < lowerValue
+            let isUpper = current.value > upperValue
+            if trigger {
+                if isLower {
+                    let lowerString = measurementService.stringWithoutSign(humidity: lowerValue)
+                    let valueWithUnit = "\(lowerString) \(RuuviLocalization.gm³)"
+                    DispatchQueue.main.async { [weak self] in
+                        guard let sSelf = self else { return }
+                        sSelf.localNotificationsManager.notify(
+                            .low,
+                            .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute),
+                            for: identifier.value,
+                            title: sSelf.titles.lowAbsoluteHumidity(valueWithUnit)
+                        )
+                    }
+                } else if isUpper {
+                    let upperString = measurementService.stringWithoutSign(humidity: upperValue)
+                    let valueWithUnit = "\(upperString) \(RuuviLocalization.gm³)"
+                    DispatchQueue.main.async { [weak self] in
+                        guard let sSelf = self else { return }
+                        sSelf.localNotificationsManager.notify(
+                            .high,
+                            .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute),
+                            for: identifier.value,
+                            title: sSelf.titles.highAbsoluteHumidity(valueWithUnit)
+                        )
+                    }
+                }
+            }
+            return isLower || isUpper
+        }
+
+        return false
+    }
+
+    private func process(
+        dewPoint: Humidity?,
+        temperature: Temperature?,
+        alertType: AlertType,
+        identifier: Identifier?,
+        trigger: Bool = true
+    ) -> Bool {
+        guard let identifier,
+              let temperature,
+              let dewPoint
+        else {
+            return false
+        }
+
+        if case let .dewPoint(lower, upper) = ruuviAlertService.alert(for: identifier.value, of: alertType),
+           let lowerTemperature = Temperature(lower),
+           let upperTemperature = Temperature(upper),
+           let dewPointTemperature = try? dewPoint
+                .converted(to: .relative(temperature: temperature))
+                .dewPoint(temperature: temperature) {
+            let isLower = dewPointTemperature < lowerTemperature
+            let isUpper = dewPointTemperature > upperTemperature
+            if trigger {
+                if isLower {
+                    let lowerString = measurementService.string(
+                        for: lowerTemperature,
+                        allowSettings: false
+                    )
+                    DispatchQueue.main.async { [weak self] in
+                        guard let sSelf = self else { return }
+                        sSelf.localNotificationsManager.notify(
+                            .low,
+                            .dewPoint(lower: 0, upper: 0),
+                            for: identifier.value,
+                            title: sSelf.titles.lowDewPoint(lowerString)
+                        )
+                    }
+                } else if isUpper {
+                    let upperString = measurementService.string(
+                        for: upperTemperature,
+                        allowSettings: false
+                    )
+                    DispatchQueue.main.async { [weak self] in
+                        guard let sSelf = self else { return }
+                        sSelf.localNotificationsManager.notify(
+                            .high,
+                            .dewPoint(lower: 0, upper: 0),
+                            for: identifier.value,
+                            title: sSelf.titles.highDewPoint(upperString)
+                        )
+                    }
+                }
+            }
+            return isLower || isUpper
+        }
+
+        return false
+    }
+
+    private func process(
         pressure: Pressure?,
         alertType: AlertType,
         identifier: Identifier?,
@@ -678,6 +863,50 @@ extension RuuviNotifierImpl {
                             title: sSelf.titles.highSignal(
                                 "\(upperString) \(RuuviLocalization.dBm)"
                             )
+                        )
+                    }
+                }
+            }
+            return isLower || isUpper
+        } else {
+            return false
+        }
+    }
+
+    private func process(
+        batteryVoltage: Voltage?,
+        alertType: AlertType,
+        identifier: Identifier?,
+        trigger: Bool = true
+    ) -> Bool {
+        guard let identifier else { return false }
+        if case let .batteryVoltage(lower, upper) = ruuviAlertService.alert(for: identifier.value, of: alertType),
+           let voltage = batteryVoltage {
+            let l = Voltage(value: lower, unit: .volts)
+            let u = Voltage(value: upper, unit: .volts)
+            let isLower = voltage < l
+            let isUpper = voltage > u
+            if trigger {
+                if isLower {
+                    let lowerString = measurementService.string(for: l)
+                    DispatchQueue.main.async { [weak self] in
+                        guard let sSelf = self else { return }
+                        sSelf.localNotificationsManager.notify(
+                            .low,
+                            .batteryVoltage(lower: 0, upper: 0),
+                            for: identifier.value,
+                            title: sSelf.titles.lowBatteryVoltage(lowerString)
+                        )
+                    }
+                } else if isUpper {
+                    let upperString = measurementService.string(for: u)
+                    DispatchQueue.main.async { [weak self] in
+                        guard let sSelf = self else { return }
+                        sSelf.localNotificationsManager.notify(
+                            .high,
+                            .batteryVoltage(lower: 0, upper: 0),
+                            for: identifier.value,
+                            title: sSelf.titles.highBatteryVoltage(upperString)
                         )
                     }
                 }
@@ -1391,6 +1620,13 @@ extension RuuviNotifierImpl {
         var didMutate = false
         movementAlertHysteresisLock.lock()
         movementAlertHysteresisLastEventByUUID = settings.movementAlertHysteresisLastEvents()
+        let beforeCount = movementAlertHysteresisLastEventByUUID.count
+        movementAlertHysteresisLastEventByUUID = movementAlertHysteresisLastEventByUUID.filter {
+            ruuviAlertService.isOn(type: .movement(last: 0), for: $0.key)
+        }
+        if movementAlertHysteresisLastEventByUUID.count != beforeCount {
+            didMutate = true
+        }
         if interval <= 0 {
             if !movementAlertHysteresisLastEventByUUID.isEmpty {
                 movementAlertHysteresisLastEventByUUID.removeAll()
@@ -1408,6 +1644,11 @@ extension RuuviNotifierImpl {
             persistMovementHysteresisState()
         }
         scheduleMovementHysteresisTimerIfNeeded()
+    }
+
+    public func clearMovementAlertHysteresis(for uuid: String) {
+        clearMovementHysteresis(for: uuid)
+        notify(alertType: .movement(last: 0), uuid: uuid, isTriggered: false)
     }
 
     private func updateMovementHysteresis(for uuid: String, eventDate: Date) {

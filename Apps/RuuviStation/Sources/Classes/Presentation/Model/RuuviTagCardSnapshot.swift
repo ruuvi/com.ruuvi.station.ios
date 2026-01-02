@@ -30,7 +30,7 @@ public final class RuuviTagCardSnapshot: ObservableObject, Hashable, Equatable {
         return $displayData
             .map { displayData -> [RuuviTagCardSnapshotAlertConfig] in
                 return displayData.indicatorGrid?.indicators.compactMap { indicator in
-                    self.getAlertConfig(for: indicator.type)
+                    self.alertConfig(for: indicator)
                 } ?? []
             }
             .removeDuplicates()
@@ -252,7 +252,7 @@ struct RuuviTagCardSnapshotCalibrationData: Equatable {
 struct RuuviTagCardSnapshotAlertData: Equatable {
     var alertState: AlertState?
     var hasActiveAlerts: Bool = false
-    var alertConfigurations: [MeasurementType: RuuviTagCardSnapshotAlertConfig] = [:]
+    var alertConfigurations: [String: RuuviTagCardSnapshotAlertConfig] = [:]
     var nonMeasurementAlerts: [AlertType: RuuviTagCardSnapshotAlertConfig] = [:]
 
     static func == (
@@ -365,15 +365,61 @@ struct RuuviTagCardSnapshotIndicatorData: Equatable, Hashable {
 extension RuuviTagCardSnapshot {
 
     // MARK: - Alert Configuration Access
+    private func isNonMeasurementAlertType(_ alertType: AlertType) -> Bool {
+        switch alertType {
+        case .connection, .cloudConnection, .movement:
+            return true
+        default:
+            return false
+        }
+    }
+
+    private func alertKey(for alertType: AlertType) -> String {
+        alertType.rawValue
+    }
+
+    private func normalizedAlertType(_ alertType: AlertType) -> AlertType {
+        AlertType.alertType(from: alertType.rawValue) ?? alertType
+    }
+
+    private func alertConfig(
+        for indicator: RuuviTagCardSnapshotIndicatorData
+    ) -> RuuviTagCardSnapshotAlertConfig? {
+        if let alertType = indicator.variant.toAlertType() {
+            return getAlertConfig(for: alertType)
+        }
+        return getAlertConfig(for: indicator.type)
+    }
+
+    private func storeAlertConfig(
+        for alertType: AlertType,
+        config: RuuviTagCardSnapshotAlertConfig
+    ) {
+        if isNonMeasurementAlertType(alertType) {
+            alertData.nonMeasurementAlerts[normalizedAlertType(alertType)] = config
+        } else {
+            alertData.alertConfigurations[alertKey(for: alertType)] = config
+        }
+    }
+
     func getAlertConfig(for measurementType: MeasurementType) -> RuuviTagCardSnapshotAlertConfig? {
-        return alertData.alertConfigurations[measurementType]
+        guard let alertType = measurementType.toAlertType() else { return nil }
+        return getAlertConfig(for: alertType)
     }
 
     func getAlertConfig(for alertType: AlertType) -> RuuviTagCardSnapshotAlertConfig? {
-        if let measurementType = alertType.toMeasurementType() {
-            return alertData.alertConfigurations[measurementType]
+        if isNonMeasurementAlertType(alertType) {
+            return alertData.nonMeasurementAlerts[normalizedAlertType(alertType)]
         }
-        return alertData.nonMeasurementAlerts[alertType]
+
+        guard let config = alertData.alertConfigurations[alertKey(for: alertType)] else {
+            return nil
+        }
+        if let storedType = config.alertType,
+           storedType.rawValue != alertType.rawValue {
+            return nil
+        }
+        return config
     }
 
     func getAllActiveAlerts() -> [RuuviTagCardSnapshotAlertConfig] {
@@ -388,7 +434,7 @@ extension RuuviTagCardSnapshot {
 
     // MARK: - Indicator Alert Access
     func getIndicatorAlertConfig(for indicator: RuuviTagCardSnapshotIndicatorData) -> RuuviTagCardSnapshotAlertConfig {
-        return getAlertConfig(for: indicator.type) ?? .inactive
+        return alertConfig(for: indicator) ?? .inactive
     }
 
     func isIndicatorHighlighted(for indicator: RuuviTagCardSnapshotIndicatorData) -> Bool {
@@ -400,32 +446,28 @@ extension RuuviTagCardSnapshot {
         for measurementType: MeasurementType,
         config: RuuviTagCardSnapshotAlertConfig
     ) {
-        alertData.alertConfigurations[measurementType] = config
-        updateOverallAlertState()
+        guard let alertType = measurementType.toAlertType() else { return }
+        updateAlertConfig(for: alertType, config: config)
     }
 
     func updateAlertConfig(
         for alertType: AlertType,
         config: RuuviTagCardSnapshotAlertConfig
     ) {
-        if let measurementType = alertType.toMeasurementType() {
-            alertData.alertConfigurations[measurementType] = config
-        } else {
-            alertData.nonMeasurementAlerts[alertType] = config
-        }
+        storeAlertConfig(for: alertType, config: config)
         updateOverallAlertState()
     }
 
     func removeAlertConfig(for measurementType: MeasurementType) {
-        alertData.alertConfigurations.removeValue(forKey: measurementType)
-        updateOverallAlertState()
+        guard let alertType = measurementType.toAlertType() else { return }
+        removeAlertConfig(for: alertType)
     }
 
     func removeAlertConfig(for alertType: AlertType) {
-        if let measurementType = alertType.toMeasurementType() {
-            alertData.alertConfigurations.removeValue(forKey: measurementType)
+        if isNonMeasurementAlertType(alertType) {
+            alertData.nonMeasurementAlerts.removeValue(forKey: normalizedAlertType(alertType))
         } else {
-            alertData.nonMeasurementAlerts.removeValue(forKey: alertType)
+            alertData.alertConfigurations.removeValue(forKey: alertKey(for: alertType))
         }
         updateOverallAlertState()
     }
@@ -611,30 +653,32 @@ extension RuuviTagCardSnapshot {
         from alertService: RuuviServiceAlert,
         physicalSensor: PhysicalSensor
     ) {
-        // Sync measurement-based alerts
         alertData.alertConfigurations.removeAll()
+        alertData.nonMeasurementAlerts.removeAll()
 
+        // Sync measurement-based alerts
         let profile = RuuviTagDataService.measurementDisplayProfile(for: self)
-        let measurementTypes = profile.entries(for: .alert).map(\.type)
+        let alertVariants = profile.entries(for: .alert).map(\.variant)
+        var syncedAlertTypes: Set<String> = []
 
-        for measurementType in measurementTypes {
-            guard let alertType = measurementType.toAlertType() else { continue }
+        for variant in alertVariants {
+            guard let alertType = variant.toAlertType() else { continue }
+            guard syncedAlertTypes.insert(alertType.rawValue).inserted else { continue }
             let isOn = alertService.isOn(type: alertType, for: physicalSensor)
             let mutedTill = alertService.mutedTill(type: alertType, for: physicalSensor)
 
             let config = RuuviTagCardSnapshotAlertConfig(
-                type: measurementType,
+                type: variant.type,
                 alertType: alertType,
                 isActive: isOn,
                 isFiring: false, // Will be updated by alert handler
                 mutedTill: mutedTill
             )
 
-            alertData.alertConfigurations[measurementType] = config
+            storeAlertConfig(for: alertType, config: config)
         }
 
         // Sync non-measurement alerts
-        alertData.nonMeasurementAlerts.removeAll()
         let nonMeasurementAlertTypes: [AlertType] = [
             .connection, .cloudConnection(unseenDuration: 0), .movement(last: 0)
         ]
@@ -649,7 +693,7 @@ extension RuuviTagCardSnapshot {
                 mutedTill: mutedTill
             )
 
-            alertData.nonMeasurementAlerts[alertType] = config
+            storeAlertConfig(for: alertType, config: config)
         }
 
         updateOverallAlertState()

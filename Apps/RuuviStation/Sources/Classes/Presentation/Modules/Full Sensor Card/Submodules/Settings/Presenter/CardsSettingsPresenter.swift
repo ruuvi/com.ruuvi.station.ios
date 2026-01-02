@@ -816,6 +816,12 @@ private extension CardsSettingsPresenter {
                 unit: measurementService.units.temperatureUnit
             )
             return measurement.converted(to: .celsius).value
+        case .dewPoint:
+            let measurement = Measurement(
+                value: value,
+                unit: measurementService.units.temperatureUnit
+            )
+            return measurement.converted(to: .celsius).value
         case .pressure:
             let measurement = Measurement(
                 value: value,

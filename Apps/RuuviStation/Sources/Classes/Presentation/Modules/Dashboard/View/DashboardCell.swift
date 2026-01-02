@@ -849,11 +849,11 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         }
 
         let alertsAvailable = snapshot.metadata.isAlertAvailable
-        let primaryType = snapshot.displayData.primaryIndicator?.type
+        let primaryIndicator = snapshot.displayData.primaryIndicator
 
         if dashboardType == .image {
-            if let primaryType,
-               let alertConfig = snapshot.getAlertConfig(for: primaryType) {
+            if let primaryIndicator {
+                let alertConfig = snapshot.getIndicatorAlertConfig(for: primaryIndicator)
                 prominentView
                     .changeColor(
                         highlight: alertConfig.isHighlighted && alertsAvailable
@@ -871,9 +871,9 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
             snapshot.displayData.indicatorGrid?.indicators ?? []
 
         indicators.forEach { indicatorData in
-            let isHighlighted = snapshot.getAlertConfig(
-                for: indicatorData.type
-            )?.isHighlighted ?? false
+            let isHighlighted = snapshot.getIndicatorAlertConfig(
+                for: indicatorData
+            ).isHighlighted
             let indicatorView = indicatorView(for: indicatorData.variant)
             indicatorView.changeColor(
                 highlight: isHighlighted && alertsAvailable

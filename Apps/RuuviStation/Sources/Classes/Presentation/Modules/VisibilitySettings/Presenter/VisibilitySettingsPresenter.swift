@@ -523,12 +523,20 @@ private extension VisibilitySettingsPresenter {
 
     func hasActiveAlert(for type: MeasurementType) -> Bool {
         guard let snapshot else { return false }
-        guard let configuration = snapshot.alertData.alertConfigurations.first(
-            where: { $0.key.isSameCase(as: type) }
-        )?.value else {
-            return false
+        let hasMeasurementAlert = snapshot.alertData.alertConfigurations.values.contains { config in
+            guard let alertType = config.alertType ?? config.type?.toAlertType() else { return false }
+            guard let measurementType = alertType.toMeasurementType() else { return false }
+            return measurementType.isSameCase(as: type) && config.isActive
         }
-        return configuration.isActive
+
+        if hasMeasurementAlert {
+            return true
+        }
+
+        return snapshot.alertData.nonMeasurementAlerts.contains { alertType, config in
+            guard let measurementType = alertType.toMeasurementType() else { return false }
+            return measurementType.isSameCase(as: type) && config.isActive
+        }
     }
 
     func forcedVisibleMeasurementTypes(for snapshot: RuuviTagCardSnapshot) -> [MeasurementType] {
@@ -617,10 +625,10 @@ private extension VisibilitySettingsPresenter {
 
     func disableAlertIfNeeded(for variant: MeasurementDisplayVariant) {
         guard let snapshot else { return }
-        guard let alertType = variant.type.toAlertType() else { return }
-        guard snapshot.getAlertConfig(for: variant.type)?.isActive == true else { return }
+        guard let alertType = variant.toAlertType() else { return }
+        guard snapshot.getAlertConfig(for: alertType)?.isActive == true else { return }
         let hasOtherVisibleVariants = visibleVariants.contains {
-            $0.type.isSameCase(as: variant.type)
+            $0.type.isSameCase(as: variant.type) && $0 != variant
         }
         guard !hasOtherVisibleVariants else { return }
         withAlertService { service, snapshot, sensor in

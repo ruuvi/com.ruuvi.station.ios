@@ -2,10 +2,12 @@ import Foundation
 
 public enum AlertType: CaseIterable, Hashable {
     case temperature(lower: Double, upper: Double) // celsius
-    case humidity(lower: Humidity, upper: Humidity)
+    case humidity(lower: Humidity, upper: Humidity) // Abs.
     case relativeHumidity(lower: Double, upper: Double) // fraction of one
+    case dewPoint(lower: Double, upper: Double) // celsius
     case pressure(lower: Double, upper: Double) // hPa
     case signal(lower: Double, upper: Double) // dB
+    case batteryVoltage(lower: Double, upper: Double) // volts
     case aqi(lower: Double, upper: Double)
     case carbonDioxide(lower: Double, upper: Double) // ppm
     case pMatter1(lower: Double, upper: Double) // µg/m³
@@ -26,8 +28,11 @@ public enum AlertType: CaseIterable, Hashable {
         [
             .temperature(lower: 0, upper: 0),
             .relativeHumidity(lower: 0, upper: 0),
+            .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute),
+            .dewPoint(lower: 0, upper: 0),
             .pressure(lower: 0, upper: 0),
             .signal(lower: 0, upper: 0),
+            .batteryVoltage(lower: 0, upper: 0),
             .aqi(lower: 0, upper: 0),
             .carbonDioxide(lower: 0, upper: 0),
             .pMatter1(lower: 0, upper: 0),
@@ -50,12 +55,18 @@ public enum AlertType: CaseIterable, Hashable {
         switch self {
         case .temperature:
             return "temperature"
+        case .humidity:
+            return "absoluteHumidity"
         case .relativeHumidity:
             return "relativeHumidity"
+        case .dewPoint:
+            return "dewPoint"
         case .pressure:
             return "pressure"
         case .signal:
             return "signal"
+        case .batteryVoltage:
+            return "batteryVoltage"
         case .aqi:
             return "aqi"
         case .carbonDioxide:
@@ -86,8 +97,6 @@ public enum AlertType: CaseIterable, Hashable {
             return "cloudConnection"
         case .movement:
             return "movement"
-        default:
-            return ""
         }
     }
 
@@ -96,12 +105,18 @@ public enum AlertType: CaseIterable, Hashable {
         switch rawValue {
         case "temperature":
             return .temperature(lower: 0, upper: 0)
+        case "absoluteHumidity":
+            return .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute)
         case "relativeHumidity":
             return .relativeHumidity(lower: 0, upper: 0)
+        case "dewPoint":
+            return .dewPoint(lower: 0, upper: 0)
         case "pressure":
             return .pressure(lower: 0, upper: 0)
         case "signal":
             return .signal(lower: 0, upper: 0)
+        case "batteryVoltage":
+            return .batteryVoltage(lower: 0, upper: 0)
         case "aqi":
             return .aqi(lower: 0, upper: 0)
         case "carbonDioxide":

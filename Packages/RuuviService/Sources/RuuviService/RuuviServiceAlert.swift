@@ -33,6 +33,11 @@ public protocol RuuviServiceAlertRuuviTag {
     func setUpper(relativeHumidity: Double?, ruuviTag: RuuviTagSensor)
     func setRelativeHumidity(description: String?, ruuviTag: RuuviTagSensor)
 
+    // dew point (celsius)
+    func setLower(dewPoint: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(dewPoint: Double?, ruuviTag: RuuviTagSensor)
+    func setDewPoint(description: String?, ruuviTag: RuuviTagSensor)
+
     // pressure
     func setLower(pressure: Double?, ruuviTag: RuuviTagSensor)
     func setUpper(pressure: Double?, ruuviTag: RuuviTagSensor)
@@ -103,6 +108,11 @@ public protocol RuuviServiceAlertRuuviTag {
     func setUpper(luminosity: Double?, ruuviTag: RuuviTagSensor)
     func setLuminosity(description: String?, ruuviTag: RuuviTagSensor)
 
+    // Battery voltage
+    func setLower(batteryVoltage: Double?, ruuviTag: RuuviTagSensor)
+    func setUpper(batteryVoltage: Double?, ruuviTag: RuuviTagSensor)
+    func setBatteryVoltage(description: String?, ruuviTag: RuuviTagSensor)
+
     // movement
     func setMovement(description: String?, ruuviTag: RuuviTagSensor)
 
@@ -134,6 +144,11 @@ public protocol RuuviServiceAlertDeprecated {
     func lowerHumidity(for uuid: String) -> Humidity?
     func upperHumidity(for uuid: String) -> Humidity?
     func humidityDescription(for uuid: String) -> String?
+
+    // dew point (celsius)
+    func lowerDewPoint(for uuid: String) -> Double?
+    func upperDewPoint(for uuid: String) -> Double?
+    func dewPointDescription(for uuid: String) -> String?
 
     // pressure (hPa)
     func lowerPressure(for uuid: String) -> Double?
@@ -205,6 +220,11 @@ public protocol RuuviServiceAlertDeprecated {
     func upperLuminosity(for uuid: String) -> Double?
     func luminosityDescription(for uuid: String) -> String?
 
+    // Battery voltage
+    func lowerBatteryVoltage(for uuid: String) -> Double?
+    func upperBatteryVoltage(for uuid: String) -> Double?
+    func batteryVoltageDescription(for uuid: String) -> String?
+
     // connection
     func connectionDescription(for uuid: String) -> String?
 
@@ -242,6 +262,11 @@ public protocol RuuviServiceAlertPhysicalSensor {
     func setUpper(humidity: Humidity?, for sensor: PhysicalSensor)
     func humidityDescription(for sensor: PhysicalSensor) -> String?
     func setHumidity(description: String?, for sensor: PhysicalSensor)
+
+    // dew point (celsius)
+    func lowerDewPoint(for sensor: PhysicalSensor) -> Double?
+    func upperDewPoint(for sensor: PhysicalSensor) -> Double?
+    func dewPointDescription(for sensor: PhysicalSensor) -> String?
 
     /// pressure (hPa)
     func lowerPressure(for sensor: PhysicalSensor) -> Double?
@@ -312,6 +337,11 @@ public protocol RuuviServiceAlertPhysicalSensor {
     func lowerLuminosity(for sensor: PhysicalSensor) -> Double?
     func upperLuminosity(for sensor: PhysicalSensor) -> Double?
     func luminosityDescription(for sensor: PhysicalSensor) -> String?
+
+    // Battery voltage
+    func lowerBatteryVoltage(for sensor: PhysicalSensor) -> Double?
+    func upperBatteryVoltage(for sensor: PhysicalSensor) -> Double?
+    func batteryVoltageDescription(for sensor: PhysicalSensor) -> String?
 
     // connection
     func connectionDescription(for sensor: PhysicalSensor) -> String?

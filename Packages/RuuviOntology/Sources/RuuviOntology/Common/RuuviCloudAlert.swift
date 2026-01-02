@@ -3,6 +3,8 @@ import Foundation
 public enum RuuviCloudAlertType: String, Codable {
     case temperature
     case humidity
+    case humidityAbsolute
+    case dewPoint
     case pressure
     case signal
     case movement
@@ -19,6 +21,7 @@ public enum RuuviCloudAlertType: String, Codable {
     case soundAverage
     case soundPeak
     case luminosity
+    case battery
 }
 
 public enum RuuviCloudAlertSettingType: String {

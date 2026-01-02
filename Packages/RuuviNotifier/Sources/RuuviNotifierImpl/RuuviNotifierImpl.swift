@@ -15,6 +15,7 @@ public final class RuuviNotifierImpl: RuuviNotifier {
     let movementAlertHysteresisLock = NSLock()
     var movementAlertHysteresisLastEventByUUID = [String: Date]()
     var movementAlertHysteresisTimer: Timer?
+    private var alertDidChangeToken: NSObjectProtocol?
 
     public init(
         ruuviAlertService: RuuviServiceAlert,
@@ -31,6 +32,14 @@ public final class RuuviNotifierImpl: RuuviNotifier {
         self.measurementService = measurementService
         self.settings = settings
         restoreMovementHysteresisState()
+        startObservingAlertChanges()
+    }
+
+    deinit {
+        movementAlertHysteresisTimer?.invalidate()
+        if let alertDidChangeToken {
+            NotificationCenter.default.removeObserver(alertDidChangeToken)
+        }
     }
 
     public func subscribe(_ observer: some RuuviNotifierObserver, to uuid: String) {
@@ -60,5 +69,32 @@ public final class RuuviNotifierImpl: RuuviNotifier {
         } else {
             return false
         }
+    }
+
+    private func startObservingAlertChanges() {
+        alertDidChangeToken = NotificationCenter
+            .default
+            .addObserver(
+                forName: .RuuviServiceAlertDidChange,
+                object: nil,
+                queue: .main
+            ) { [weak self] notification in
+                guard let self = self else { return }
+                guard let userInfo = notification.userInfo,
+                      let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType,
+                      let physicalSensor = userInfo[
+                          RuuviServiceAlertDidChangeKey.physicalSensor
+                      ] as? PhysicalSensor
+                else {
+                    return
+                }
+                guard case .movement = type else { return }
+                let isOn = self.ruuviAlertService.isOn(type: type, for: physicalSensor)
+                guard !isOn else { return }
+                guard let uuid = physicalSensor.luid?.value ?? physicalSensor.macId?.value else {
+                    return
+                }
+                self.clearMovementAlertHysteresis(for: uuid)
+            }
     }
 }

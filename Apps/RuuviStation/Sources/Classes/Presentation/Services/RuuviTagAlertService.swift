@@ -237,11 +237,14 @@ class RuuviTagAlertService {
 
             // Sync all measurement-based alerts
             let profile = RuuviTagDataService.measurementDisplayProfile(for: snapshot)
-            let measurementTypes = profile.entries(for: .alert).map(\.type)
-
-            for measurementType in measurementTypes {
+            let alertVariants = profile.entries(for: .alert).map(\.variant)
+            var syncedAlertTypes: Set<String> = []
+            for variant in alertVariants {
+                guard let alertType = variant.toAlertType() else { continue }
+                guard syncedAlertTypes.insert(alertType.rawValue).inserted else { continue }
                 self.syncMeasurementAlert(
-                    type: measurementType,
+                    alertType: alertType,
+                    measurementType: variant.type,
                     snapshot: snapshot,
                     physicalSensor: physicalSensor
                 )
@@ -288,10 +291,18 @@ class RuuviTagAlertService {
         if currentState != isOn {
             if isOn {
                 alertService.register(type: alertTypeWithBounds, ruuviTag: physicalSensor)
+                if case .movement = alertType,
+                   let counter = snapshot.latestRawRecord?.movementCounter {
+                    alertService.setMovement(counter: counter, for: physicalSensor)
+                }
             } else {
                 alertService.unregister(type: alertTypeWithBounds, ruuviTag: physicalSensor)
             }
             alertService.unmute(type: alertTypeWithBounds, for: physicalSensor)
+            if case .movement = alertType,
+               let uuid = physicalSensor.luid?.value ?? physicalSensor.macId?.value {
+                alertHandler.clearMovementAlertHysteresis(for: uuid)
+            }
 
             // Update snapshot
             let updatedConfig = RuuviTagCardSnapshotAlertConfig(
@@ -549,8 +560,8 @@ class RuuviTagAlertService {
 
     func validateAlertState(for snapshot: RuuviTagCardSnapshot, physicalSensor: PhysicalSensor) -> Bool {
         // Check measurement-based alerts
-        for (measurementType, config) in snapshot.alertData.alertConfigurations {
-            guard let alertType = measurementType.toAlertType() else { continue }
+        for config in snapshot.alertData.alertConfigurations.values {
+            guard let alertType = config.alertType ?? config.type?.toAlertType() else { continue }
             let serviceIsOn = alertService.isOn(type: alertType, for: physicalSensor)
             if serviceIsOn != config.isActive {
                 return false
@@ -576,7 +587,7 @@ class RuuviTagAlertService {
             var hasChanges = false
 
             // Check measurement-based alerts
-            for (measurementType, config) in snapshot.alertData.alertConfigurations {
+            for config in snapshot.alertData.alertConfigurations.values {
                 if let mutedTill = config.mutedTill, mutedTill < currentDate {
                     let updatedConfig = RuuviTagCardSnapshotAlertConfig(
                         type: config.type,
@@ -589,8 +600,10 @@ class RuuviTagAlertService {
                         description: config.description,
                         unseenDuration: config.unseenDuration
                     )
-                    snapshot.updateAlertConfig(for: measurementType, config: updatedConfig)
-                    hasChanges = true
+                    if let alertType = config.alertType ?? config.type?.toAlertType() {
+                        snapshot.updateAlertConfig(for: alertType, config: updatedConfig)
+                        hasChanges = true
+                    }
                 }
             }
 
@@ -626,11 +639,11 @@ private extension RuuviTagAlertService {
     // MARK: - Alert Syncing
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func syncMeasurementAlert(
-        type: MeasurementType,
+        alertType: AlertType,
+        measurementType: MeasurementType,
         snapshot: RuuviTagCardSnapshot,
         physicalSensor: PhysicalSensor
     ) {
-        guard let alertType = type.toAlertType() else { return }
         let isOn = alertService.isOn(type: alertType, for: physicalSensor)
         let mutedTill = alertService.mutedTill(type: alertType, for: physicalSensor)
         let activeAlert = alertService.alert(for: physicalSensor, of: alertType)
@@ -650,6 +663,16 @@ private extension RuuviTagAlertService {
             lowerBound = lower * 100.0
             upperBound = upper * 100.0
             description = alertService.relativeHumidityDescription(for: physicalSensor)
+
+        case let .humidity(lower, upper):
+            lowerBound = lower.converted(to: .absolute).value
+            upperBound = upper.converted(to: .absolute).value
+            description = alertService.humidityDescription(for: physicalSensor)
+
+        case let .dewPoint(lower, upper):
+            lowerBound = lower
+            upperBound = upper
+            description = alertService.dewPointDescription(for: physicalSensor)
 
         case let .pressure(lower, upper):
             lowerBound = lower
@@ -721,11 +744,16 @@ private extension RuuviTagAlertService {
             upperBound = upper
             description = alertService.signalDescription(for: physicalSensor)
 
+        case let .batteryVoltage(lower, upper):
+            lowerBound = lower
+            upperBound = upper
+            description = alertService.batteryVoltageDescription(for: physicalSensor)
+
         default:
             // Get default bounds from service if not in alert
-            lowerBound = getDefaultLowerBound(for: type, physicalSensor: physicalSensor)
-            upperBound = getDefaultUpperBound(for: type, physicalSensor: physicalSensor)
-            description = getDefaultDescription(for: type, physicalSensor: physicalSensor)
+            lowerBound = getDefaultLowerBound(for: alertType, physicalSensor: physicalSensor)
+            upperBound = getDefaultUpperBound(for: alertType, physicalSensor: physicalSensor)
+            description = getDefaultDescription(for: alertType, physicalSensor: physicalSensor)
         }
 
         if let currentConfig = snapshot.getAlertConfig(for: alertType) {
@@ -741,7 +769,7 @@ private extension RuuviTagAlertService {
 
             if hasChanges {
                 let updatedConfig = RuuviTagCardSnapshotAlertConfig(
-                    type: currentConfig.type ?? type,
+                    type: currentConfig.type ?? measurementType,
                     alertType: currentConfig.alertType ?? alertType,
                     isActive: isOn,
                     isFiring: currentConfig.isFiring,
@@ -755,7 +783,7 @@ private extension RuuviTagAlertService {
             }
         } else {
             let config = RuuviTagCardSnapshotAlertConfig(
-                type: type,
+                type: measurementType,
                 alertType: alertType,
                 isActive: isOn,
                 isFiring: false,
@@ -764,7 +792,7 @@ private extension RuuviTagAlertService {
                 upperBound: upperBound,
                 description: description
             )
-            snapshot.updateAlertConfig(for: type, config: config)
+            snapshot.updateAlertConfig(for: alertType, config: config)
         }
     }
 
@@ -857,7 +885,8 @@ private extension RuuviTagAlertService {
                     DispatchQueue.main.async {
                         if let measurementType = type.toMeasurementType() {
                             self.syncMeasurementAlert(
-                                type: measurementType,
+                                alertType: type,
+                                measurementType: measurementType,
                                 snapshot: snapshot,
                                 physicalSensor: physicalSensor
                             )
@@ -899,6 +928,10 @@ private extension RuuviTagAlertService {
         switch type {
         case .temperature: alertService.setLower(celsius: value, ruuviTag: physicalSensor)
         case .relativeHumidity: alertService.setLower(relativeHumidity: value / 100.0, ruuviTag: physicalSensor)
+        case .humidity:
+            alertService.setLower(humidity: Humidity(value: value, unit: .absolute), for: physicalSensor)
+        case .dewPoint:
+            alertService.setLower(dewPoint: value, ruuviTag: physicalSensor)
         case .pressure: alertService.setLower(pressure: value, ruuviTag: physicalSensor)
         case .aqi: alertService.setLower(aqi: value, ruuviTag: physicalSensor)
         case .carbonDioxide: alertService.setLower(carbonDioxide: value, ruuviTag: physicalSensor)
@@ -913,6 +946,7 @@ private extension RuuviTagAlertService {
         case .soundPeak: alertService.setLower(soundPeak: value, ruuviTag: physicalSensor)
         case .luminosity: alertService.setLower(luminosity: value, ruuviTag: physicalSensor)
         case .signal: alertService.setLower(signal: value, ruuviTag: physicalSensor)
+        case .batteryVoltage: alertService.setLower(batteryVoltage: value, ruuviTag: physicalSensor)
         default: break
         }
     }
@@ -926,6 +960,10 @@ private extension RuuviTagAlertService {
         switch type {
         case .temperature: alertService.setUpper(celsius: value, ruuviTag: physicalSensor)
         case .relativeHumidity: alertService.setUpper(relativeHumidity: value / 100.0, ruuviTag: physicalSensor)
+        case .humidity:
+            alertService.setUpper(humidity: Humidity(value: value, unit: .absolute), for: physicalSensor)
+        case .dewPoint:
+            alertService.setUpper(dewPoint: value, ruuviTag: physicalSensor)
         case .pressure: alertService.setUpper(pressure: value, ruuviTag: physicalSensor)
         case .aqi: alertService.setUpper(aqi: value, ruuviTag: physicalSensor)
         case .carbonDioxide: alertService.setUpper(carbonDioxide: value, ruuviTag: physicalSensor)
@@ -940,6 +978,7 @@ private extension RuuviTagAlertService {
         case .soundPeak: alertService.setUpper(soundPeak: value, ruuviTag: physicalSensor)
         case .luminosity: alertService.setUpper(luminosity: value, ruuviTag: physicalSensor)
         case .signal: alertService.setUpper(signal: value, ruuviTag: physicalSensor)
+        case .batteryVoltage: alertService.setUpper(batteryVoltage: value, ruuviTag: physicalSensor)
         default: break
         }
     }
@@ -953,6 +992,8 @@ private extension RuuviTagAlertService {
         switch type {
         case .temperature: alertService.setTemperature(description: description, ruuviTag: physicalSensor)
         case .relativeHumidity: alertService.setRelativeHumidity(description: description, ruuviTag: physicalSensor)
+        case .humidity: alertService.setHumidity(description: description, for: physicalSensor)
+        case .dewPoint: alertService.setDewPoint(description: description, ruuviTag: physicalSensor)
         case .pressure: alertService.setPressure(description: description, ruuviTag: physicalSensor)
         case .aqi: alertService.setAQI(description: description, ruuviTag: physicalSensor)
         case .carbonDioxide: alertService.setCarbonDioxide(description: description, ruuviTag: physicalSensor)
@@ -976,6 +1017,7 @@ private extension RuuviTagAlertService {
         )
         case .luminosity: alertService.setLuminosity(description: description, ruuviTag: physicalSensor)
         case .signal: alertService.setSignal(description: description, ruuviTag: physicalSensor)
+        case .batteryVoltage: alertService.setBatteryVoltage(description: description, ruuviTag: physicalSensor)
         case .movement: alertService.setMovement(description: description, ruuviTag: physicalSensor)
         case .connection: alertService.setConnection(description: description, for: physicalSensor)
         case .cloudConnection: alertService.setCloudConnection(description: description, ruuviTag: physicalSensor)
@@ -985,49 +1027,59 @@ private extension RuuviTagAlertService {
 
     // MARK: - Default Values
     // swiftlint:disable:next cyclomatic_complexity
-    func getDefaultLowerBound(for type: MeasurementType, physicalSensor: PhysicalSensor) -> Double? {
-        switch type {
+    func getDefaultLowerBound(for alertType: AlertType, physicalSensor: PhysicalSensor) -> Double? {
+        switch alertType {
         case .temperature: return alertService.lowerCelsius(for: physicalSensor)
-        case .humidity: return alertService.lowerRelativeHumidity(for: physicalSensor).map { $0 * 100.0 }
+        case .relativeHumidity: return alertService.lowerRelativeHumidity(for: physicalSensor).map { $0 * 100.0 }
+        case .humidity:
+            return alertService.lowerHumidity(for: physicalSensor)?
+                .converted(to: .absolute)
+                .value
+        case .dewPoint: return alertService.lowerDewPoint(for: physicalSensor)
         case .pressure: return alertService.lowerPressure(for: physicalSensor)
         case .aqi: return alertService.lowerAQI(for: physicalSensor)
-        case .co2: return alertService.lowerCarbonDioxide(for: physicalSensor)
-        case .pm10: return alertService.lowerPM1(for: physicalSensor)
-        case .pm25: return alertService.lowerPM25(for: physicalSensor)
-        case .pm40: return alertService.lowerPM4(for: physicalSensor)
-        case .pm100: return alertService.lowerPM10(for: physicalSensor)
+        case .carbonDioxide: return alertService.lowerCarbonDioxide(for: physicalSensor)
+        case .pMatter1: return alertService.lowerPM1(for: physicalSensor)
+        case .pMatter25: return alertService.lowerPM25(for: physicalSensor)
+        case .pMatter4: return alertService.lowerPM4(for: physicalSensor)
+        case .pMatter10: return alertService.lowerPM10(for: physicalSensor)
         case .voc: return alertService.lowerVOC(for: physicalSensor)
         case .nox: return alertService.lowerNOX(for: physicalSensor)
         case .soundInstant: return alertService.lowerSoundInstant(for: physicalSensor)
-        case .soundAverage: return alertService.lowerSoundAverage(
-            for: physicalSensor
-        )
+        case .soundAverage: return alertService.lowerSoundAverage(for: physicalSensor)
         case .soundPeak: return alertService.lowerSoundPeak(for: physicalSensor)
         case .luminosity: return alertService.lowerLuminosity(for: physicalSensor)
+        case .signal: return alertService.lowerSignal(for: physicalSensor)
+        case .batteryVoltage: return alertService.lowerBatteryVoltage(for: physicalSensor)
         default: return nil
         }
     }
 
     // swiftlint:disable:next cyclomatic_complexity
-    func getDefaultUpperBound(for type: MeasurementType, physicalSensor: PhysicalSensor) -> Double? {
-        switch type {
+    func getDefaultUpperBound(for alertType: AlertType, physicalSensor: PhysicalSensor) -> Double? {
+        switch alertType {
         case .temperature: return alertService.upperCelsius(for: physicalSensor)
-        case .humidity: return alertService.upperRelativeHumidity(for: physicalSensor).map { $0 * 100.0 }
+        case .relativeHumidity: return alertService.upperRelativeHumidity(for: physicalSensor).map { $0 * 100.0 }
+        case .humidity:
+            return alertService.upperHumidity(for: physicalSensor)?
+                .converted(to: .absolute)
+                .value
+        case .dewPoint: return alertService.upperDewPoint(for: physicalSensor)
         case .pressure: return alertService.upperPressure(for: physicalSensor)
         case .aqi: return alertService.upperAQI(for: physicalSensor)
-        case .co2: return alertService.upperCarbonDioxide(for: physicalSensor)
-        case .pm10: return alertService.upperPM1(for: physicalSensor)
-        case .pm25: return alertService.upperPM25(for: physicalSensor)
-        case .pm40: return alertService.upperPM4(for: physicalSensor)
-        case .pm100: return alertService.upperPM10(for: physicalSensor)
+        case .carbonDioxide: return alertService.upperCarbonDioxide(for: physicalSensor)
+        case .pMatter1: return alertService.upperPM1(for: physicalSensor)
+        case .pMatter25: return alertService.upperPM25(for: physicalSensor)
+        case .pMatter4: return alertService.upperPM4(for: physicalSensor)
+        case .pMatter10: return alertService.upperPM10(for: physicalSensor)
         case .voc: return alertService.upperVOC(for: physicalSensor)
         case .nox: return alertService.upperNOX(for: physicalSensor)
         case .soundInstant: return alertService.upperSoundInstant(for: physicalSensor)
         case .soundAverage: return alertService.upperSoundAverage(for: physicalSensor)
-        case .soundPeak: return alertService.upperSoundPeak(
-            for: physicalSensor
-        )
+        case .soundPeak: return alertService.upperSoundPeak(for: physicalSensor)
         case .luminosity: return alertService.upperLuminosity(for: physicalSensor)
+        case .signal: return alertService.upperSignal(for: physicalSensor)
+        case .batteryVoltage: return alertService.upperBatteryVoltage(for: physicalSensor)
         default: return nil
         }
     }
@@ -1044,23 +1096,27 @@ private extension RuuviTagAlertService {
     }
 
     // swiftlint:disable:next cyclomatic_complexity
-    func getDefaultDescription(for type: MeasurementType, physicalSensor: PhysicalSensor) -> String? {
-        switch type {
+    func getDefaultDescription(for alertType: AlertType, physicalSensor: PhysicalSensor) -> String? {
+        switch alertType {
         case .temperature: return alertService.temperatureDescription(for: physicalSensor)
-        case .humidity: return alertService.relativeHumidityDescription(for: physicalSensor)
+        case .relativeHumidity: return alertService.relativeHumidityDescription(for: physicalSensor)
+        case .humidity: return alertService.humidityDescription(for: physicalSensor)
+        case .dewPoint: return alertService.dewPointDescription(for: physicalSensor)
         case .pressure: return alertService.pressureDescription(for: physicalSensor)
         case .aqi: return alertService.aqiDescription(for: physicalSensor)
-        case .co2: return alertService.carbonDioxideDescription(for: physicalSensor)
-        case .pm10: return alertService.pm1Description(for: physicalSensor)
-        case .pm25: return alertService.pm25Description(for: physicalSensor)
-        case .pm40: return alertService.pm4Description(for: physicalSensor)
-        case .pm100: return alertService.pm10Description(for: physicalSensor)
+        case .carbonDioxide: return alertService.carbonDioxideDescription(for: physicalSensor)
+        case .pMatter1: return alertService.pm1Description(for: physicalSensor)
+        case .pMatter25: return alertService.pm25Description(for: physicalSensor)
+        case .pMatter4: return alertService.pm4Description(for: physicalSensor)
+        case .pMatter10: return alertService.pm10Description(for: physicalSensor)
         case .voc: return alertService.vocDescription(for: physicalSensor)
         case .nox: return alertService.noxDescription(for: physicalSensor)
         case .soundInstant: return alertService.soundInstantDescription(for: physicalSensor)
         case .soundAverage: return alertService.soundAverageDescription(for: physicalSensor)
         case .soundPeak: return alertService.soundPeakDescription(for: physicalSensor)
         case .luminosity: return alertService.luminosityDescription(for: physicalSensor)
+        case .signal: return alertService.signalDescription(for: physicalSensor)
+        case .batteryVoltage: return alertService.batteryVoltageDescription(for: physicalSensor)
         default: return nil
         }
     }
@@ -1070,6 +1126,8 @@ private extension RuuviTagAlertService {
         switch alertType {
         case .temperature: return RuuviAlertConstants.Temperature.lowerBound
         case .relativeHumidity: return RuuviAlertConstants.RelativeHumidity.lowerBound
+        case .humidity: return RuuviAlertConstants.AbsoluteHumidity.lowerBound
+        case .dewPoint: return RuuviAlertConstants.DewPoint.lowerBound
         case .pressure: return RuuviAlertConstants.Pressure.lowerBound
         case .aqi: return RuuviAlertConstants.AQI.lowerBound
         case .carbonDioxide: return RuuviAlertConstants.CarbonDioxide.lowerBound
@@ -1082,6 +1140,7 @@ private extension RuuviTagAlertService {
         case .soundInstant, .soundAverage, .soundPeak: return RuuviAlertConstants.Sound.lowerBound
         case .luminosity: return RuuviAlertConstants.Luminosity.lowerBound
         case .signal: return RuuviAlertConstants.Signal.lowerBound
+        case .batteryVoltage: return RuuviAlertConstants.BatteryVoltage.lowerBound
         default: return nil
         }
     }
@@ -1091,6 +1150,8 @@ private extension RuuviTagAlertService {
         switch alertType {
         case .temperature: return RuuviAlertConstants.Temperature.upperBound
         case .relativeHumidity: return RuuviAlertConstants.RelativeHumidity.upperBound
+        case .humidity: return RuuviAlertConstants.AbsoluteHumidity.upperBound
+        case .dewPoint: return RuuviAlertConstants.DewPoint.upperBound
         case .pressure: return RuuviAlertConstants.Pressure.upperBound
         case .aqi: return RuuviAlertConstants.AQI.upperBound
         case .carbonDioxide: return RuuviAlertConstants.CarbonDioxide.upperBound
@@ -1103,6 +1164,7 @@ private extension RuuviTagAlertService {
         case .soundInstant, .soundAverage, .soundPeak: return RuuviAlertConstants.Sound.upperBound
         case .luminosity: return RuuviAlertConstants.Luminosity.upperBound
         case .signal: return RuuviAlertConstants.Signal.upperBound
+        case .batteryVoltage: return RuuviAlertConstants.BatteryVoltage.upperBound
         default: return nil
         }
     }
@@ -1123,6 +1185,20 @@ private extension RuuviTagAlertService {
             return .relativeHumidity(
                 lower: (config.lowerBound ?? RuuviAlertConstants.RelativeHumidity.lowerBound) / 100.0,
                 upper: (config.upperBound ?? RuuviAlertConstants.RelativeHumidity.upperBound) / 100.0
+            )
+
+        case .humidity:
+            let lowerValue = config.lowerBound ?? RuuviAlertConstants.AbsoluteHumidity.lowerBound
+            let upperValue = config.upperBound ?? RuuviAlertConstants.AbsoluteHumidity.upperBound
+            return .humidity(
+                lower: Humidity(value: lowerValue, unit: .absolute),
+                upper: Humidity(value: upperValue, unit: .absolute)
+            )
+
+        case .dewPoint:
+            return .dewPoint(
+                lower: config.lowerBound ?? RuuviAlertConstants.DewPoint.lowerBound,
+                upper: config.upperBound ?? RuuviAlertConstants.DewPoint.upperBound
             )
 
         case .pressure:
@@ -1203,6 +1279,12 @@ private extension RuuviTagAlertService {
             return .signal(
                 lower: config.lowerBound ?? RuuviAlertConstants.Signal.lowerBound,
                 upper: config.upperBound ?? RuuviAlertConstants.Signal.upperBound
+            )
+
+        case .batteryVoltage:
+            return .batteryVoltage(
+                lower: config.lowerBound ?? RuuviAlertConstants.BatteryVoltage.lowerBound,
+                upper: config.upperBound ?? RuuviAlertConstants.BatteryVoltage.upperBound
             )
 
         case .movement:

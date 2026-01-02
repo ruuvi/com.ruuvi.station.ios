@@ -414,10 +414,8 @@ private extension CardsMeasurementPageViewController {
 
         if let gridIndicators = getFilteredIndicators() {
             gridIndicators.forEach { indicatorData in
-                guard
-                    let card = currentMeasurementCards[indicatorData.variant],
-                    let alertConfig = snapshot.getAlertConfig(for: indicatorData.type)
-                else { return }
+                guard let card = currentMeasurementCards[indicatorData.variant] else { return }
+                let alertConfig = snapshot.getIndicatorAlertConfig(for: indicatorData)
                 card.updateAlertState(
                     isHighlighted: alertConfig.isHighlighted && snapshot.metadata.isAlertAvailable
                 )
@@ -429,19 +427,17 @@ private extension CardsMeasurementPageViewController {
     }
 
     func updateProminentIndicatorAlert() {
-        guard let type = snapshot?.displayData.primaryIndicator?.type else {
+        guard let snapshot,
+              let primaryIndicator = snapshot.displayData.primaryIndicator else {
             prominentIndicatorView.indicatorData = nil
             return
         }
 
-        if
-            let alertConfig = snapshot?.getAlertConfig(for: type),
-            let metadata = snapshot?.metadata {
-            prominentIndicatorView
-                .updateAlertState(
-                    isHighlighted: alertConfig.isHighlighted && metadata.isAlertAvailable
-                )
-        }
+        let alertConfig = snapshot.getIndicatorAlertConfig(for: primaryIndicator)
+        prominentIndicatorView
+            .updateAlertState(
+                isHighlighted: alertConfig.isHighlighted && snapshot.metadata.isAlertAvailable
+            )
     }
 
     func restartAllAlertAnimations() {

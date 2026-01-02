@@ -12,6 +12,16 @@ public struct RuuviAlertConstants {
         public static let upperBound = 100.0 // Percentage (%)
     }
 
+    public struct AbsoluteHumidity {
+        public static let lowerBound = 0.0   // g/m3
+        public static let upperBound = 650.0  // g/m3
+    }
+
+    public struct DewPoint {
+        public static let lowerBound = -55.0 // celsius
+        public static let upperBound = 150.0  // celsius
+    }
+
     public struct Pressure {
         public static let lowerBound = 500.0  // hPa
         public static let upperBound = 1155.0 // hPa
@@ -55,6 +65,11 @@ public struct RuuviAlertConstants {
     public struct Luminosity {
         public static let lowerBound = 0.0     // lx
         public static let upperBound = 144284.0 // lx
+    }
+
+    public struct BatteryVoltage {
+        public static let lowerBound = 1.8 // volts
+        public static let upperBound = 3.6 // volts
     }
 
     public struct CloudConnection {
