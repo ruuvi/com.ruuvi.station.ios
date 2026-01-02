@@ -53,6 +53,22 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     private let relativeHumidityAlertTriggeredAtUDKeyPrefix
         = "AlertPersistenceUserDefaults.relativeHumidityAlertTriggeredAtUDKeyPrefix."
 
+    // dew point
+    private let dewPointLowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.dewPointLowerBoundUDKeyPrefix."
+    private let dewPointUpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.dewPointUpperBoundUDKeyPrefix."
+    private let dewPointAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.dewPointAlertIsOnUDKeyPrefix."
+    private let dewPointAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.dewPointAlertDescriptionUDKeyPrefix."
+    private let dewPointAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.dewPointAlertMuteTillDateUDKeyPrefix."
+    private let dewPointAlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.dewPointAlertIsTriggeredUDKeyPrefix."
+    private let dewPointAlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.dewPointAlertTriggeredAtUDKeyPrefix."
+
     // pressure
     private let pressureLowerBoundUDKeyPrefix
         = "AlertPersistenceUserDefaults.pressureLowerBoundUDKeyPrefix."
@@ -84,6 +100,22 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         = "AlertPersistenceUserDefaults.signalAlertIsTriggeredUDKeyPrefix."
     private let signalAlertTriggeredAtUDKeyPrefix
         = "AlertPersistenceUserDefaults.signalAlertTriggeredAtUDKeyPrefix."
+
+    // battery voltage
+    private let batteryVoltageLowerBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.batteryVoltageLowerBoundUDKeyPrefix."
+    private let batteryVoltageUpperBoundUDKeyPrefix
+        = "AlertPersistenceUserDefaults.batteryVoltageUpperBoundUDKeyPrefix."
+    private let batteryVoltageAlertIsOnUDKeyPrefix
+        = "AlertPersistenceUserDefaults.batteryVoltageAlertIsOnUDKeyPrefix."
+    private let batteryVoltageAlertDescriptionUDKeyPrefix
+        = "AlertPersistenceUserDefaults.batteryVoltageAlertDescriptionUDKeyPrefix."
+    private let batteryVoltageAlertMuteTillDateUDKeyPrefix
+        = "AlertPersistenceUserDefaults.batteryVoltageAlertMuteTillDateUDKeyPrefix."
+    private let batteryVoltageAlertIsTriggeredUDKeyPrefix
+        = "AlertPersistenceUserDefaults.batteryVoltageAlertIsTriggeredUDKeyPrefix."
+    private let batteryVoltageAlertTriggeredAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.batteryVoltageAlertTriggeredAtUDKeyPrefix."
 
     // AQI
     private let aqiLowerBoundUDKeyPrefix
@@ -346,6 +378,14 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             } else {
                 return nil
             }
+        case .dewPoint:
+            if prefs.bool(forKey: dewPointAlertIsOnUDKeyPrefix + uuid),
+               let lower = prefs.optionalDouble(forKey: dewPointLowerBoundUDKeyPrefix + uuid),
+               let upper = prefs.optionalDouble(forKey: dewPointUpperBoundUDKeyPrefix + uuid) {
+                return .dewPoint(lower: lower, upper: upper)
+            } else {
+                return nil
+            }
         case .pressure:
             if prefs.bool(forKey: pressureAlertIsOnUDKeyPrefix + uuid),
                let lower = prefs.optionalDouble(forKey: pressureLowerBoundUDKeyPrefix + uuid),
@@ -359,6 +399,14 @@ class AlertPersistenceUserDefaults: AlertPersistence {
                let lower = prefs.optionalDouble(forKey: signalLowerBoundUDKeyPrefix + uuid),
                let upper = prefs.optionalDouble(forKey: signalUpperBoundUDKeyPrefix + uuid) {
                 return .signal(lower: lower, upper: upper)
+            } else {
+                return nil
+            }
+        case .batteryVoltage:
+            if prefs.bool(forKey: batteryVoltageAlertIsOnUDKeyPrefix + uuid),
+               let lower = prefs.optionalDouble(forKey: batteryVoltageLowerBoundUDKeyPrefix + uuid),
+               let upper = prefs.optionalDouble(forKey: batteryVoltageUpperBoundUDKeyPrefix + uuid) {
+                return .batteryVoltage(lower: lower, upper: upper)
             } else {
                 return nil
             }
@@ -502,6 +550,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(true, forKey: humidityAlertIsOnUDKeyPrefix + uuid)
             prefs.set(KeyedArchiver.archive(object: lower), forKey: humidityLowerBoundUDKeyPrefix + uuid)
             prefs.set(KeyedArchiver.archive(object: upper), forKey: humidityUpperBoundUDKeyPrefix + uuid)
+        case let .dewPoint(lower, upper):
+            prefs.set(true, forKey: dewPointAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: dewPointLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: dewPointUpperBoundUDKeyPrefix + uuid)
         case let .pressure(lower, upper):
             prefs.set(true, forKey: pressureAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: pressureLowerBoundUDKeyPrefix + uuid)
@@ -510,6 +562,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(true, forKey: signalAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: signalLowerBoundUDKeyPrefix + uuid)
             prefs.set(upper, forKey: signalUpperBoundUDKeyPrefix + uuid)
+        case let .batteryVoltage(lower, upper):
+            prefs.set(true, forKey: batteryVoltageAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: batteryVoltageLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: batteryVoltageUpperBoundUDKeyPrefix + uuid)
         case let .aqi(lower, upper):
             prefs.set(true, forKey: aqiAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: aqiLowerBoundUDKeyPrefix + uuid)
@@ -590,6 +646,12 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(KeyedArchiver.archive(object: upper), forKey: humidityUpperBoundUDKeyPrefix + uuid)
             prefs.set(false, forKey: humidityAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(nil, forKey: humidityAlertTriggeredAtUDKeyPrefix + uuid)
+        case let .dewPoint(lower, upper):
+            prefs.set(false, forKey: dewPointAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: dewPointLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: dewPointUpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: dewPointAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: dewPointAlertTriggeredAtUDKeyPrefix + uuid)
         case let .pressure(lower, upper):
             prefs.set(false, forKey: pressureAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: pressureLowerBoundUDKeyPrefix + uuid)
@@ -602,6 +664,12 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(upper, forKey: signalUpperBoundUDKeyPrefix + uuid)
             prefs.set(false, forKey: signalAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(nil, forKey: signalAlertTriggeredAtUDKeyPrefix + uuid)
+        case let .batteryVoltage(lower, upper):
+            prefs.set(false, forKey: batteryVoltageAlertIsOnUDKeyPrefix + uuid)
+            prefs.set(lower, forKey: batteryVoltageLowerBoundUDKeyPrefix + uuid)
+            prefs.set(upper, forKey: batteryVoltageUpperBoundUDKeyPrefix + uuid)
+            prefs.set(false, forKey: batteryVoltageAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(nil, forKey: batteryVoltageAlertTriggeredAtUDKeyPrefix + uuid)
         case let .aqi(lower, upper):
             prefs.set(false, forKey: aqiAlertIsOnUDKeyPrefix + uuid)
             prefs.set(lower, forKey: aqiLowerBoundUDKeyPrefix + uuid)
@@ -710,6 +778,12 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.removeObject(forKey: humidityUpperBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: humidityAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.removeObject(forKey: humidityAlertTriggeredAtUDKeyPrefix + uuid)
+        case .dewPoint:
+            prefs.removeObject(forKey: dewPointAlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: dewPointLowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: dewPointUpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: dewPointAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: dewPointAlertTriggeredAtUDKeyPrefix + uuid)
         case .pressure:
             prefs.removeObject(forKey: pressureAlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: pressureLowerBoundUDKeyPrefix + uuid)
@@ -722,6 +796,12 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.removeObject(forKey: signalUpperBoundUDKeyPrefix + uuid)
             prefs.removeObject(forKey: signalAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.removeObject(forKey: signalAlertTriggeredAtUDKeyPrefix + uuid)
+        case .batteryVoltage:
+            prefs.removeObject(forKey: batteryVoltageAlertIsOnUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: batteryVoltageLowerBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: batteryVoltageUpperBoundUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: batteryVoltageAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.removeObject(forKey: batteryVoltageAlertTriggeredAtUDKeyPrefix + uuid)
         case .aqi:
             prefs.removeObject(forKey: aqiAlertIsOnUDKeyPrefix + uuid)
             prefs.removeObject(forKey: aqiLowerBoundUDKeyPrefix + uuid)
@@ -818,10 +898,14 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(date, forKey: relativeHumidityAlertMuteTillDateUDKeyPrefix + uuid)
         case .humidity:
             prefs.set(date, forKey: humidityAlertMuteTillDateUDKeyPrefix + uuid)
+        case .dewPoint:
+            prefs.set(date, forKey: dewPointAlertMuteTillDateUDKeyPrefix + uuid)
         case .pressure:
             prefs.set(date, forKey: pressureAlertMuteTillDateUDKeyPrefix + uuid)
         case .signal:
             prefs.set(date, forKey: signalAlertMuteTillDateUDKeyPrefix + uuid)
+        case .batteryVoltage:
+            prefs.set(date, forKey: batteryVoltageAlertMuteTillDateUDKeyPrefix + uuid)
         case .aqi:
             prefs.set(date, forKey: aqiAlertMuteTillDateUDKeyPrefix + uuid)
         case .carbonDioxide:
@@ -864,10 +948,14 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.set(nil, forKey: relativeHumidityAlertMuteTillDateUDKeyPrefix + uuid)
         case .humidity:
             prefs.set(nil, forKey: humidityAlertMuteTillDateUDKeyPrefix + uuid)
+        case .dewPoint:
+            prefs.set(nil, forKey: dewPointAlertMuteTillDateUDKeyPrefix + uuid)
         case .pressure:
             prefs.set(nil, forKey: pressureAlertMuteTillDateUDKeyPrefix + uuid)
         case .signal:
             prefs.set(nil, forKey: signalAlertMuteTillDateUDKeyPrefix + uuid)
+        case .batteryVoltage:
+            prefs.set(nil, forKey: batteryVoltageAlertMuteTillDateUDKeyPrefix + uuid)
         case .aqi:
             prefs.set(nil, forKey: aqiAlertMuteTillDateUDKeyPrefix + uuid)
         case .carbonDioxide:
@@ -910,10 +998,14 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             return prefs.value(forKey: relativeHumidityAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .humidity:
             return prefs.value(forKey: humidityAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .dewPoint:
+            return prefs.value(forKey: dewPointAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .pressure:
             return prefs.value(forKey: pressureAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .signal:
             return prefs.value(forKey: signalAlertMuteTillDateUDKeyPrefix + uuid) as? Date
+        case .batteryVoltage:
+            return prefs.value(forKey: batteryVoltageAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .aqi:
             return prefs.value(forKey: aqiAlertMuteTillDateUDKeyPrefix + uuid) as? Date
         case .carbonDioxide:
@@ -959,12 +1051,18 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         case .humidity:
             prefs.set(trigerred, forKey: humidityAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(trigerredAt, forKey: humidityAlertTriggeredAtUDKeyPrefix + uuid)
+        case .dewPoint:
+            prefs.set(trigerred, forKey: dewPointAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: dewPointAlertTriggeredAtUDKeyPrefix + uuid)
         case .pressure:
             prefs.set(trigerred, forKey: pressureAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(trigerredAt, forKey: pressureAlertTriggeredAtUDKeyPrefix + uuid)
         case .signal:
             prefs.set(trigerred, forKey: signalAlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(trigerredAt, forKey: signalAlertTriggeredAtUDKeyPrefix + uuid)
+        case .batteryVoltage:
+            prefs.set(trigerred, forKey: batteryVoltageAlertIsTriggeredUDKeyPrefix + uuid)
+            prefs.set(trigerredAt, forKey: batteryVoltageAlertTriggeredAtUDKeyPrefix + uuid)
         case .carbonDioxide:
             prefs.set(trigerred, forKey: co2AlertIsTriggeredUDKeyPrefix + uuid)
             prefs.set(trigerredAt, forKey: co2AlertTriggeredAtUDKeyPrefix + uuid)
@@ -1022,10 +1120,14 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.bool(forKey: relativeHumidityAlertIsTriggeredUDKeyPrefix + uuid)
         case .humidity:
             prefs.bool(forKey: humidityAlertIsTriggeredUDKeyPrefix + uuid)
+        case .dewPoint:
+            prefs.bool(forKey: dewPointAlertIsTriggeredUDKeyPrefix + uuid)
         case .pressure:
             prefs.bool(forKey: pressureAlertIsTriggeredUDKeyPrefix + uuid)
         case .signal:
             prefs.bool(forKey: signalAlertIsTriggeredUDKeyPrefix + uuid)
+        case .batteryVoltage:
+            prefs.bool(forKey: batteryVoltageAlertIsTriggeredUDKeyPrefix + uuid)
         case .aqi:
             prefs.bool(forKey: aqiAlertIsTriggeredUDKeyPrefix + uuid)
         case .carbonDioxide:
@@ -1068,10 +1170,14 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             prefs.string(forKey: relativeHumidityAlertTriggeredAtUDKeyPrefix + uuid)
         case .humidity:
             prefs.string(forKey: humidityAlertTriggeredAtUDKeyPrefix + uuid)
+        case .dewPoint:
+            prefs.string(forKey: dewPointAlertTriggeredAtUDKeyPrefix + uuid)
         case .pressure:
             prefs.string(forKey: pressureAlertTriggeredAtUDKeyPrefix + uuid)
         case .signal:
             prefs.string(forKey: signalAlertTriggeredAtUDKeyPrefix + uuid)
+        case .batteryVoltage:
+            prefs.string(forKey: batteryVoltageAlertTriggeredAtUDKeyPrefix + uuid)
         case .aqi:
             prefs.string(forKey: aqiAlertTriggeredAtUDKeyPrefix + uuid)
         case .carbonDioxide:
@@ -1203,6 +1309,34 @@ extension AlertPersistenceUserDefaults {
 
     func setHumidity(description: String?, for uuid: String) {
         prefs.set(description, forKey: humidityAlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - Dew Point
+
+extension AlertPersistenceUserDefaults {
+    func lowerDewPoint(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: dewPointLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func setLower(dewPoint: Double?, for uuid: String) {
+        prefs.set(dewPoint, forKey: dewPointLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func upperDewPoint(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: dewPointUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func setUpper(dewPoint: Double?, for uuid: String) {
+        prefs.set(dewPoint, forKey: dewPointUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func dewPointDescription(for uuid: String) -> String? {
+        prefs.string(forKey: dewPointAlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setDewPoint(description: String?, for uuid: String) {
+        prefs.set(description, forKey: dewPointAlertDescriptionUDKeyPrefix + uuid)
     }
 }
 
@@ -1599,6 +1733,34 @@ extension AlertPersistenceUserDefaults {
 
     func setLuminosity(description: String?, for uuid: String) {
         prefs.set(description, forKey: luminosityAlertDescriptionUDKeyPrefix + uuid)
+    }
+}
+
+// MARK: - Battery Voltage
+
+extension AlertPersistenceUserDefaults {
+    func lowerBatteryVoltage(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: batteryVoltageLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func setLower(batteryVoltage: Double?, for uuid: String) {
+        prefs.set(batteryVoltage, forKey: batteryVoltageLowerBoundUDKeyPrefix + uuid)
+    }
+
+    func upperBatteryVoltage(for uuid: String) -> Double? {
+        prefs.optionalDouble(forKey: batteryVoltageUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func setUpper(batteryVoltage: Double?, for uuid: String) {
+        prefs.set(batteryVoltage, forKey: batteryVoltageUpperBoundUDKeyPrefix + uuid)
+    }
+
+    func batteryVoltageDescription(for uuid: String) -> String? {
+        prefs.string(forKey: batteryVoltageAlertDescriptionUDKeyPrefix + uuid)
+    }
+
+    func setBatteryVoltage(description: String?, for uuid: String) {
+        prefs.set(description, forKey: batteryVoltageAlertDescriptionUDKeyPrefix + uuid)
     }
 }
 

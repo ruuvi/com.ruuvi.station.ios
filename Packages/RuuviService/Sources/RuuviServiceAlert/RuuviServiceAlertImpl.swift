@@ -38,7 +38,11 @@ public extension RuuviServiceAlertImpl {
                     for: macId
                 )
             case .humidity:
-                break // absolute is not on cloud yet (11.06.2021)
+                // TODO: Cloud absolute humidity alert is not supported yet.
+                break
+            case .dewPoint:
+                // TODO: Cloud dew point alert is not supported yet.
+                break
             case let .pressure(lower, upper):
                 cloud.setAlert(
                     type: .pressure,
@@ -63,6 +67,9 @@ public extension RuuviServiceAlertImpl {
                     description: signalDescription(for: ruuviTag),
                     for: macId
                 )
+            case .batteryVoltage:
+                // TODO: Cloud battery voltage alert is not supported yet.
+                break
             case let .aqi(lower, upper):
                 cloud.setAlert(
                     type: .aqi,
@@ -267,7 +274,11 @@ public extension RuuviServiceAlertImpl {
                     for: macId
                 )
             case .humidity:
-                break // absolute is not on cloud yet (11.06.2021)
+                // TODO: Cloud absolute humidity alert is not supported yet.
+                break
+            case .dewPoint:
+                // TODO: Cloud dew point alert is not supported yet.
+                break
             case let .pressure(lower, upper):
                 cloud.setAlert(
                     type: .pressure,
@@ -292,6 +303,9 @@ public extension RuuviServiceAlertImpl {
                     description: signalDescription(for: ruuviTag),
                     for: macId
                 )
+            case .batteryVoltage:
+                // TODO: Cloud battery voltage alert is not supported yet.
+                break
             case let .aqi(lower, upper):
                 cloud.setAlert(
                     type: .aqi,
@@ -570,6 +584,28 @@ public extension RuuviServiceAlertImpl {
         }
     }
 
+    // MARK: - Dew Point
+    func setLower(dewPoint: Double?, ruuviTag: RuuviTagSensor) {
+        setLower(dewPoint: dewPoint, for: ruuviTag)
+        if ruuviTag.isCloud {
+            // TODO: Cloud dew point alert is not supported yet.
+        }
+    }
+
+    func setUpper(dewPoint: Double?, ruuviTag: RuuviTagSensor) {
+        setUpper(dewPoint: dewPoint, for: ruuviTag)
+        if ruuviTag.isCloud {
+            // TODO: Cloud dew point alert is not supported yet.
+        }
+    }
+
+    func setDewPoint(description: String?, ruuviTag: RuuviTagSensor) {
+        setDewPoint(description: description, for: ruuviTag)
+        if ruuviTag.isCloud {
+            // TODO: Cloud dew point alert is not supported yet.
+        }
+    }
+
     // MARK: - Pressure
     func setLower(pressure: Double?, ruuviTag: RuuviTagSensor) {
         setLower(pressure: pressure, for: ruuviTag)
@@ -680,6 +716,28 @@ public extension RuuviServiceAlertImpl {
                 description: description,
                 for: macId
             )
+        }
+    }
+
+    // MARK: - Battery Voltage
+    func setLower(batteryVoltage: Double?, ruuviTag: RuuviTagSensor) {
+        setLower(batteryVoltage: batteryVoltage, for: ruuviTag)
+        if ruuviTag.isCloud {
+            // TODO: Cloud battery voltage alert is not supported yet.
+        }
+    }
+
+    func setUpper(batteryVoltage: Double?, ruuviTag: RuuviTagSensor) {
+        setUpper(batteryVoltage: batteryVoltage, for: ruuviTag)
+        if ruuviTag.isCloud {
+            // TODO: Cloud battery voltage alert is not supported yet.
+        }
+    }
+
+    func setBatteryVoltage(description: String?, ruuviTag: RuuviTagSensor) {
+        setBatteryVoltage(description: description, for: ruuviTag)
+        if ruuviTag.isCloud {
+            // TODO: Cloud battery voltage alert is not supported yet.
         }
     }
 
@@ -2230,6 +2288,115 @@ public extension RuuviServiceAlertImpl {
     }
 }
 
+// MARK: - Dew Point
+
+public extension RuuviServiceAlertImpl {
+    func lowerDewPoint(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.lowerDewPoint(for: luid.value)
+                ?? alertPersistence.lowerDewPoint(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.lowerDewPoint(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.lowerDewPoint(for: macId.value)
+        } else {
+            assertionFailure()
+            return nil
+        }
+    }
+
+    func upperDewPoint(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.upperDewPoint(for: luid.value)
+                ?? alertPersistence.upperDewPoint(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.upperDewPoint(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.upperDewPoint(for: macId.value)
+        } else {
+            assertionFailure()
+            return nil
+        }
+    }
+
+    func dewPointDescription(for sensor: PhysicalSensor) -> String? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.dewPointDescription(for: luid.value)
+                ?? alertPersistence.dewPointDescription(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.dewPointDescription(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.dewPointDescription(for: macId.value)
+        } else {
+            assertionFailure()
+            return nil
+        }
+    }
+
+    func lowerDewPoint(for uuid: String) -> Double? {
+        alertPersistence.lowerDewPoint(for: uuid)
+    }
+
+    func upperDewPoint(for uuid: String) -> Double? {
+        alertPersistence.upperDewPoint(for: uuid)
+    }
+
+    func dewPointDescription(for uuid: String) -> String? {
+        alertPersistence.dewPointDescription(for: uuid)
+    }
+
+    // Private helpers
+    private func setLower(dewPoint: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(dewPoint: dewPoint, for: luid.value)
+            alertPersistence.setLower(dewPoint: dewPoint, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(dewPoint: dewPoint, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(dewPoint: dewPoint, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+        if let l = dewPoint, let u = upperDewPoint(for: sensor) {
+            postAlertDidChange(with: sensor, of: .dewPoint(lower: l, upper: u))
+        }
+    }
+
+    private func setUpper(dewPoint: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(dewPoint: dewPoint, for: luid.value)
+            alertPersistence.setUpper(dewPoint: dewPoint, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(dewPoint: dewPoint, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(dewPoint: dewPoint, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+        if let u = dewPoint, let l = lowerDewPoint(for: sensor) {
+            postAlertDidChange(with: sensor, of: .dewPoint(lower: l, upper: u))
+        }
+    }
+
+    private func setDewPoint(description: String?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setDewPoint(description: description, for: luid.value)
+            alertPersistence.setDewPoint(description: description, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setDewPoint(description: description, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setDewPoint(description: description, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+
+        if let l = lowerDewPoint(for: sensor),
+           let u = upperDewPoint(for: sensor) {
+            postAlertDidChange(with: sensor, of: .dewPoint(lower: l, upper: u))
+        }
+    }
+}
+
 // MARK: - Pressure
 
 public extension RuuviServiceAlertImpl {
@@ -2446,6 +2613,117 @@ public extension RuuviServiceAlertImpl {
 
         if let l = lowerSignal(for: sensor), let u = upperSignal(for: sensor) {
             postAlertDidChange(with: sensor, of: .signal(lower: l, upper: u))
+        }
+    }
+}
+
+// MARK: - Battery Voltage
+
+public extension RuuviServiceAlertImpl {
+    func lowerBatteryVoltage(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.lowerBatteryVoltage(for: luid.value)
+                ?? alertPersistence.lowerBatteryVoltage(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.lowerBatteryVoltage(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.lowerBatteryVoltage(for: macId.value)
+        } else {
+            assertionFailure()
+            return nil
+        }
+    }
+
+    func upperBatteryVoltage(for sensor: PhysicalSensor) -> Double? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.upperBatteryVoltage(for: luid.value)
+                ?? alertPersistence.upperBatteryVoltage(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.upperBatteryVoltage(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.upperBatteryVoltage(for: macId.value)
+        } else {
+            assertionFailure()
+            return nil
+        }
+    }
+
+    func batteryVoltageDescription(for sensor: PhysicalSensor) -> String? {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            return alertPersistence.batteryVoltageDescription(for: luid.value)
+                ?? alertPersistence.batteryVoltageDescription(for: macId.value)
+        } else if let luid = sensor.luid {
+            return alertPersistence.batteryVoltageDescription(for: luid.value)
+        } else if let macId = sensor.macId {
+            return alertPersistence.batteryVoltageDescription(for: macId.value)
+        } else {
+            assertionFailure()
+            return nil
+        }
+    }
+
+    func lowerBatteryVoltage(for uuid: String) -> Double? {
+        alertPersistence.lowerBatteryVoltage(for: uuid)
+    }
+
+    func upperBatteryVoltage(for uuid: String) -> Double? {
+        alertPersistence.upperBatteryVoltage(for: uuid)
+    }
+
+    func batteryVoltageDescription(for uuid: String) -> String? {
+        alertPersistence.batteryVoltageDescription(for: uuid)
+    }
+
+    // Private helpers
+    private func setLower(batteryVoltage: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setLower(batteryVoltage: batteryVoltage, for: luid.value)
+            alertPersistence.setLower(batteryVoltage: batteryVoltage, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setLower(batteryVoltage: batteryVoltage, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setLower(batteryVoltage: batteryVoltage, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+
+        if let l = batteryVoltage, let u = upperBatteryVoltage(for: sensor) {
+            postAlertDidChange(with: sensor, of: .batteryVoltage(lower: l, upper: u))
+        }
+    }
+
+    private func setUpper(batteryVoltage: Double?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setUpper(batteryVoltage: batteryVoltage, for: luid.value)
+            alertPersistence.setUpper(batteryVoltage: batteryVoltage, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setUpper(batteryVoltage: batteryVoltage, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setUpper(batteryVoltage: batteryVoltage, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+
+        if let u = batteryVoltage, let l = lowerBatteryVoltage(for: sensor) {
+            postAlertDidChange(with: sensor, of: .batteryVoltage(lower: l, upper: u))
+        }
+    }
+
+    private func setBatteryVoltage(description: String?, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid, let macId = sensor.macId {
+            alertPersistence.setBatteryVoltage(description: description, for: luid.value)
+            alertPersistence.setBatteryVoltage(description: description, for: macId.value)
+        } else if let luid = sensor.luid {
+            alertPersistence.setBatteryVoltage(description: description, for: luid.value)
+        } else if let macId = sensor.macId {
+            alertPersistence.setBatteryVoltage(description: description, for: macId.value)
+        } else {
+            assertionFailure()
+        }
+
+        if let l = lowerBatteryVoltage(for: sensor),
+           let u = upperBatteryVoltage(for: sensor) {
+            postAlertDidChange(with: sensor, of: .batteryVoltage(lower: l, upper: u))
         }
     }
 }

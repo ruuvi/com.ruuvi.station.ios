@@ -1579,7 +1579,7 @@ extension RuuviTagDataService {
             isVisible: true
         ),
         MeasurementDisplayVariant(type: .voltage): MeasurementDisplayConfiguration(
-            contexts: [.indicator, .graph],
+            contexts: [.indicator, .graph, .alert],
             isVisible: false
         ),
         MeasurementDisplayVariant(type: .rssi): MeasurementDisplayConfiguration(
@@ -1671,7 +1671,7 @@ extension RuuviTagDataService {
             if unit == .percent {
                 return MeasurementDisplayConfiguration(contexts: .all, isVisible: true)
             } else {
-                return MeasurementDisplayConfiguration(contexts: [.indicator, .graph], isVisible: false)
+                return MeasurementDisplayConfiguration(contexts: [.indicator, .graph, .alert], isVisible: false)
             }
         case .pressure:
             guard let unit = variant.pressureUnit else {

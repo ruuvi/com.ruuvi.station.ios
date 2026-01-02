@@ -19,6 +19,22 @@ struct RuuviNotifierTitlesImpl: RuuviNotifierTitles {
         RuuviLocalization.alertNotificationHumidityHighThreshold(value)
     }
 
+    func lowAbsoluteHumidity(_ value: String) -> String {
+        RuuviLocalization.alertNotificationAbsoluteHumidityLowThreshold(value)
+    }
+
+    func highAbsoluteHumidity(_ value: String) -> String {
+        RuuviLocalization.alertNotificationAbsoluteHumidityHighThreshold(value)
+    }
+
+    func lowDewPoint(_ value: String) -> String {
+        RuuviLocalization.alertNotificationDewPointLowThreshold(value)
+    }
+
+    func highDewPoint(_ value: String) -> String {
+        RuuviLocalization.alertNotificationDewPointHighThreshold(value)
+    }
+
     func lowPressure(_ value: String) -> String {
         RuuviLocalization.alertNotificationPressureLowThreshold(value)
     }
@@ -129,6 +145,14 @@ struct RuuviNotifierTitlesImpl: RuuviNotifierTitles {
 
     func highLuminosity(_ value: String) -> String {
         RuuviLocalization.alertNotificationLuminosityHighThreshold(value)
+    }
+
+    func lowBatteryVoltage(_ value: String) -> String {
+        RuuviLocalization.alertNotificationBatteryVoltageLowThreshold(value)
+    }
+
+    func highBatteryVoltage(_ value: String) -> String {
+        RuuviLocalization.alertNotificationBatteryVoltageHighThreshold(value)
     }
 
     let didMove = RuuviLocalization.LocalNotificationsManager.DidMove.title

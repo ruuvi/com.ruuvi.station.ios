@@ -371,7 +371,14 @@ extension RuuviTagCardSnapshot {
 
     func getAlertConfig(for alertType: AlertType) -> RuuviTagCardSnapshotAlertConfig? {
         if let measurementType = alertType.toMeasurementType() {
-            return alertData.alertConfigurations[measurementType]
+            guard let config = alertData.alertConfigurations[measurementType] else {
+                return nil
+            }
+            if let storedType = config.alertType,
+               storedType.rawValue != alertType.rawValue {
+                return nil
+            }
+            return config
         }
         return alertData.nonMeasurementAlerts[alertType]
     }

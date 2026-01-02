@@ -253,10 +253,14 @@ public extension RuuviNotificationLocalImpl {
                 sSelf.ruuviAlertService.relativeHumidityDescription(for: uuid) ?? ""
             case .humidity:
                 sSelf.ruuviAlertService.humidityDescription(for: uuid) ?? ""
+            case .dewPoint:
+                sSelf.ruuviAlertService.dewPointDescription(for: uuid) ?? ""
             case .pressure:
                 sSelf.ruuviAlertService.pressureDescription(for: uuid) ?? ""
             case .signal:
                 sSelf.ruuviAlertService.signalDescription(for: uuid) ?? ""
+            case .batteryVoltage:
+                sSelf.ruuviAlertService.batteryVoltageDescription(for: uuid) ?? ""
             case .aqi:
                 sSelf.ruuviAlertService.aqiDescription(for: uuid) ?? ""
             case .carbonDioxide:
@@ -348,10 +352,14 @@ extension RuuviNotificationLocalImpl {
                         .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute),
                         for: uuid
                     )
+                case .dewPoint:
+                    self?.cancel(.dewPoint(lower: 0, upper: 0), for: uuid)
                 case .pressure:
                     self?.cancel(.pressure(lower: 0, upper: 0), for: uuid)
                 case .signal:
                     self?.cancel(.signal(lower: 0, upper: 0), for: uuid)
+                case .batteryVoltage:
+                    self?.cancel(.batteryVoltage(lower: 0, upper: 0), for: uuid)
                 case .carbonDioxide:
                     self?.cancel(.carbonDioxide(lower: 0, upper: 0), for: uuid)
                 case .aqi:

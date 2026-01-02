@@ -37,6 +37,14 @@ protocol AlertPersistence {
     func humidityDescription(for uuid: String) -> String?
     func setHumidity(description: String?, for uuid: String)
 
+    // dew point (celsius)
+    func lowerDewPoint(for uuid: String) -> Double?
+    func setLower(dewPoint: Double?, for uuid: String)
+    func upperDewPoint(for uuid: String) -> Double?
+    func setUpper(dewPoint: Double?, for uuid: String)
+    func dewPointDescription(for uuid: String) -> String?
+    func setDewPoint(description: String?, for uuid: String)
+
     // pressure (hPa)
     func lowerPressure(for uuid: String) -> Double?
     func setLower(pressure: Double?, for uuid: String)
@@ -148,6 +156,14 @@ protocol AlertPersistence {
     func setUpper(luminosity: Double?, for uuid: String)
     func luminosityDescription(for uuid: String) -> String?
     func setLuminosity(description: String?, for uuid: String)
+
+    // Battery voltage (volts)
+    func lowerBatteryVoltage(for uuid: String) -> Double?
+    func setLower(batteryVoltage: Double?, for uuid: String)
+    func upperBatteryVoltage(for uuid: String) -> Double?
+    func setUpper(batteryVoltage: Double?, for uuid: String)
+    func batteryVoltageDescription(for uuid: String) -> String?
+    func setBatteryVoltage(description: String?, for uuid: String)
 
     // connection
     func connectionDescription(for uuid: String) -> String?

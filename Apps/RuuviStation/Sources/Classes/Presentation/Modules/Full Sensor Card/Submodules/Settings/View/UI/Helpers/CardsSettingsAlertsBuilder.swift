@@ -49,7 +49,7 @@ struct CardsSettingsAlertsBuilder {
 
         // Honor the visible order for measurement-based alerts (e.g., humidity variants).
         for variant in visibilityOrder {
-            guard let alertType = variant.type.toAlertType() else { continue }
+            guard let alertType = variant.toAlertType() else { continue }
             if !ordered.contains(where: { $0.rawValue == alertType.rawValue }) {
                 ordered.append(alertType)
             }
@@ -57,7 +57,7 @@ struct CardsSettingsAlertsBuilder {
 
         // Append any remaining alert-capable variants from the alert profile.
         for variant in alertVariants {
-            guard let alertType = variant.type.toAlertType() else { continue }
+            guard let alertType = variant.toAlertType() else { continue }
             if !ordered.contains(where: { $0.rawValue == alertType.rawValue }) {
                 ordered.append(alertType)
             }
@@ -156,6 +156,26 @@ private extension CardsSettingsAlertsBuilder {
                 ),
                 snapshot: snapshot
             )
+        case .humidity:
+            return adjustedInteraction(
+                absoluteHumidityConfiguration(
+                    snapshot: snapshot,
+                    config: config,
+                    measurementService: measurementService,
+                    hasMeasurement: hasMeasurement
+                ),
+                snapshot: snapshot
+            )
+        case .dewPoint:
+            return adjustedInteraction(
+                dewPointConfiguration(
+                    snapshot: snapshot,
+                    config: config,
+                    measurementService: measurementService,
+                    hasMeasurement: hasMeasurement
+                ),
+                snapshot: snapshot
+            )
         case .pressure:
             return adjustedInteraction(
                 pressureConfiguration(
@@ -177,6 +197,16 @@ private extension CardsSettingsAlertsBuilder {
                     format: Constants.configFormat,
                     latestMeasurement: latestSignal(snapshot: snapshot),
                     notice: RuuviLocalization.rssiAlertDescription
+                ),
+                snapshot: snapshot
+            )
+        case .batteryVoltage:
+            return adjustedInteraction(
+                batteryVoltageConfiguration(
+                    snapshot: snapshot,
+                    config: config,
+                    measurementService: measurementService,
+                    hasMeasurement: hasMeasurement
                 ),
                 snapshot: snapshot
             )
@@ -487,6 +517,111 @@ private extension CardsSettingsAlertsBuilder {
         )
     }
 
+    static func absoluteHumidityConfiguration(
+        snapshot: RuuviTagCardSnapshot,
+        config: RuuviTagCardSnapshotAlertConfig,
+        measurementService: RuuviServiceMeasurement?,
+        hasMeasurement: Bool
+    ) -> (CardsSettingsAlertUIConfiguration, Bool) {
+        let sliderRange: ClosedRange<Double> =
+        RuuviAlertConstants.AbsoluteHumidity.lowerBound...RuuviAlertConstants.AbsoluteHumidity.upperBound
+        let lower = config.lowerBound ?? sliderRange.lowerBound
+        let upper = config.upperBound ?? sliderRange.upperBound
+        let selected = clamp(
+            range: sliderRange,
+            proposal: normalizedProposalRange(range: sliderRange, lower: lower, upper: upper)
+        )
+
+        let slider = CardsSettingsAlertSliderConfiguration(
+            range: sliderRange,
+            selectedRange: selected,
+            unit: HumidityUnit.gm3.symbol,
+            format: Constants.configFormat,
+            step: 1,
+            minDistance: 1
+        )
+
+        let latest = latestAbsoluteHumidity(
+            snapshot: snapshot,
+            measurementService: measurementService
+        )
+
+        return (
+            CardsSettingsAlertUIConfiguration(
+                isEnabled: config.isActive,
+                noticeText: nil,
+                customDescriptionText: config.description,
+                limitDescription: .sliderLocalized,
+                showsLimitEditIcon: true,
+                sliderConfiguration: slider,
+                additionalInfo: nil,
+                latestMeasurement: latest
+            ),
+            hasMeasurement
+        )
+    }
+
+    static func dewPointConfiguration(
+        snapshot: RuuviTagCardSnapshot,
+        config: RuuviTagCardSnapshotAlertConfig,
+        measurementService: RuuviServiceMeasurement?,
+        hasMeasurement: Bool
+    ) -> (CardsSettingsAlertUIConfiguration, Bool) {
+        let temperatureUnit = preferredTemperatureUnit(measurementService: measurementService)
+        let rangeLower = Temperature(value: RuuviAlertConstants.DewPoint.lowerBound, unit: .celsius)
+            .converted(to: temperatureUnit.unitTemperature)
+            .value
+        let rangeUpper = Temperature(value: RuuviAlertConstants.DewPoint.upperBound, unit: .celsius)
+            .converted(to: temperatureUnit.unitTemperature)
+            .value
+        let sliderRange = ClosedRange(uncheckedBounds: (rangeLower, rangeUpper))
+
+        let lower = config.lowerBound.map {
+            Temperature(value: $0, unit: .celsius)
+                .converted(to: temperatureUnit.unitTemperature)
+                .value
+        } ?? sliderRange.lowerBound
+
+        let upper = config.upperBound.map {
+            Temperature(value: $0, unit: .celsius)
+                .converted(to: temperatureUnit.unitTemperature)
+                .value
+        } ?? sliderRange.upperBound
+
+        let selected = clamp(
+            range: sliderRange,
+            proposal: normalizedProposalRange(range: sliderRange, lower: lower, upper: upper)
+        )
+
+        let slider = CardsSettingsAlertSliderConfiguration(
+            range: sliderRange,
+            selectedRange: selected,
+            unit: temperatureUnit.symbol,
+            format: Constants.configFormat,
+            step: 1,
+            minDistance: 1
+        )
+
+        let latest = latestDewPoint(
+            snapshot: snapshot,
+            measurementService: measurementService
+        )
+
+        return (
+            CardsSettingsAlertUIConfiguration(
+                isEnabled: config.isActive,
+                noticeText: nil,
+                customDescriptionText: config.description,
+                limitDescription: .sliderLocalized,
+                showsLimitEditIcon: true,
+                sliderConfiguration: slider,
+                additionalInfo: nil,
+                latestMeasurement: latest
+            ),
+            hasMeasurement
+        )
+    }
+
     static func pressureConfiguration(
         snapshot: RuuviTagCardSnapshot,
         config: RuuviTagCardSnapshotAlertConfig,
@@ -531,6 +666,50 @@ private extension CardsSettingsAlertsBuilder {
                 limitDescription: .sliderLocalized,
                 showsLimitEditIcon: true,
                 sliderConfiguration: slider,
+                latestMeasurement: latest
+            ),
+            hasMeasurement
+        )
+    }
+
+    static func batteryVoltageConfiguration(
+        snapshot: RuuviTagCardSnapshot,
+        config: RuuviTagCardSnapshotAlertConfig,
+        measurementService: RuuviServiceMeasurement?,
+        hasMeasurement: Bool
+    ) -> (CardsSettingsAlertUIConfiguration, Bool) {
+        let sliderRange: ClosedRange<Double> =
+        RuuviAlertConstants.BatteryVoltage.lowerBound...RuuviAlertConstants.BatteryVoltage.upperBound
+        let lower = config.lowerBound ?? sliderRange.lowerBound
+        let upper = config.upperBound ?? sliderRange.upperBound
+        let selected = clamp(
+            range: sliderRange,
+            proposal: normalizedProposalRange(range: sliderRange, lower: lower, upper: upper)
+        )
+
+        let slider = CardsSettingsAlertSliderConfiguration(
+            range: sliderRange,
+            selectedRange: selected,
+            unit: RuuviLocalization.v,
+            format: "%.2f",
+            step: 0.1,
+            minDistance: 0.1
+        )
+
+        let latest = latestBatteryVoltage(
+            snapshot: snapshot,
+            measurementService: measurementService
+        )
+
+        return (
+            CardsSettingsAlertUIConfiguration(
+                isEnabled: config.isActive,
+                noticeText: nil,
+                customDescriptionText: config.description,
+                limitDescription: .sliderLocalized,
+                showsLimitEditIcon: true,
+                sliderConfiguration: slider,
+                additionalInfo: nil,
                 latestMeasurement: latest
             ),
             hasMeasurement
@@ -679,6 +858,9 @@ private extension CardsSettingsAlertsBuilder {
         case .temperature:
             let unit = units?.temperatureUnit.symbol ?? TemperatureUnit.celsius.symbol
             return AlertType.temperature(lower: 0, upper: 0).title(with: unit)
+        case .dewPoint:
+            let unit = units?.temperatureUnit.symbol ?? TemperatureUnit.celsius.symbol
+            return AlertType.dewPoint(lower: 0, upper: 0).title(with: unit)
         case .pressure:
             let unit = units?.pressureUnit.ruuviSymbol ?? UnitPressure.hectopascals.ruuviSymbol
             return AlertType.pressure(lower: 0, upper: 0).title(with: unit)
@@ -716,6 +898,10 @@ private extension CardsSettingsAlertsBuilder {
             return AlertType
                 .soundAverage(lower: 0, upper: 0)
                 .title(with: RuuviLocalization.unitSound)
+        case .batteryVoltage:
+            return AlertType
+                .batteryVoltage(lower: 0, upper: 0)
+                .title(with: RuuviLocalization.v)
         default:
             return alertType.title()
         }
@@ -780,6 +966,10 @@ private extension CardsSettingsAlertsBuilder {
             return record.temperature != nil
         case .relativeHumidity:
             return record.humidity != nil
+        case .humidity:
+            return record.humidity != nil && record.temperature != nil
+        case .dewPoint:
+            return record.humidity != nil && record.temperature != nil
         case .pressure:
             return record.pressure != nil
         case .luminosity:
@@ -794,6 +984,8 @@ private extension CardsSettingsAlertsBuilder {
             return record.dbaAvg != nil
         case .signal:
             return record.rssi != nil
+        case .batteryVoltage:
+            return record.voltage != nil
         default:
             return false
         }
@@ -861,6 +1053,46 @@ private extension CardsSettingsAlertsBuilder {
         )
     }
 
+    static func latestAbsoluteHumidity(
+        snapshot: RuuviTagCardSnapshot,
+        measurementService: RuuviServiceMeasurement?
+    ) -> String? {
+        guard let measurementService,
+              let record = snapshot.latestRawRecord,
+              let humidity = record.humidity,
+              let temperature = record.temperature,
+              humidity.value.isFinite,
+              temperature.value.isFinite else {
+            return nil
+        }
+        return measurementService.string(
+            for: humidity,
+            temperature: temperature,
+            allowSettings: true,
+            unit: .gm3
+        )
+    }
+
+    static func latestDewPoint(
+        snapshot: RuuviTagCardSnapshot,
+        measurementService: RuuviServiceMeasurement?
+    ) -> String? {
+        guard let measurementService,
+              let record = snapshot.latestRawRecord,
+              let humidity = record.humidity,
+              let temperature = record.temperature,
+              humidity.value.isFinite,
+              temperature.value.isFinite else {
+            return nil
+        }
+        return measurementService.string(
+            for: humidity,
+            temperature: temperature,
+            allowSettings: true,
+            unit: .dew
+        )
+    }
+
     static func latestPressure(
         snapshot: RuuviTagCardSnapshot,
         measurementService: RuuviServiceMeasurement?
@@ -870,6 +1102,17 @@ private extension CardsSettingsAlertsBuilder {
             return nil
         }
         return measurementService.string(for: pressure, allowSettings: true)
+    }
+
+    static func latestBatteryVoltage(
+        snapshot: RuuviTagCardSnapshot,
+        measurementService: RuuviServiceMeasurement?
+    ) -> String? {
+        guard let measurementService,
+              let voltage = snapshot.latestRawRecord?.voltage else {
+            return nil
+        }
+        return measurementService.string(for: voltage)
     }
 
     static func latestSignal(snapshot: RuuviTagCardSnapshot) -> String? {
@@ -986,6 +1229,26 @@ private extension RuuviTagCardSnapshotAlertConfig {
                 lowerBound: RuuviAlertConstants.RelativeHumidity.lowerBound,
                 upperBound: RuuviAlertConstants.RelativeHumidity.upperBound
             )
+        case .humidity:
+            return RuuviTagCardSnapshotAlertConfig(
+                type: measurementType,
+                alertType: .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute),
+                isActive: false,
+                isFiring: false,
+                mutedTill: nil,
+                lowerBound: RuuviAlertConstants.AbsoluteHumidity.lowerBound,
+                upperBound: RuuviAlertConstants.AbsoluteHumidity.upperBound
+            )
+        case .dewPoint:
+            return RuuviTagCardSnapshotAlertConfig(
+                type: measurementType,
+                alertType: .dewPoint(lower: 0, upper: 0),
+                isActive: false,
+                isFiring: false,
+                mutedTill: nil,
+                lowerBound: RuuviAlertConstants.DewPoint.lowerBound,
+                upperBound: RuuviAlertConstants.DewPoint.upperBound
+            )
         case .pressure:
             return RuuviTagCardSnapshotAlertConfig(
                 type: measurementType,
@@ -1095,6 +1358,16 @@ private extension RuuviTagCardSnapshotAlertConfig {
                 mutedTill: nil,
                 lowerBound: RuuviAlertConstants.Luminosity.lowerBound,
                 upperBound: RuuviAlertConstants.Luminosity.upperBound
+            )
+        case .batteryVoltage:
+            return RuuviTagCardSnapshotAlertConfig(
+                type: measurementType,
+                alertType: .batteryVoltage(lower: 0, upper: 0),
+                isActive: false,
+                isFiring: false,
+                mutedTill: nil,
+                lowerBound: RuuviAlertConstants.BatteryVoltage.lowerBound,
+                upperBound: RuuviAlertConstants.BatteryVoltage.upperBound
             )
         case .movement:
             return RuuviTagCardSnapshotAlertConfig(
