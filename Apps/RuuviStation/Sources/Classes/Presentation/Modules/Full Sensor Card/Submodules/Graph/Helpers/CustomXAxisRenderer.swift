@@ -1,9 +1,11 @@
 import DGCharts
 import Foundation
+import UIKit
 import RuuviOntology
 
 public final class CustomXAxisRenderer: XAxisRenderer {
     private var from: TimeInterval = 0
+    private let extraTicks: Int64 = 2
 
     // Intervals in seconds - minimum is now 60 seconds (1 minute)
     let intervals: [TimeInterval] = [
@@ -39,17 +41,13 @@ public final class CustomXAxisRenderer: XAxisRenderer {
         min: Double,
         max: Double
     ) {
-        let labelCount = axis.labelCount
         let range = abs(max - min)
 
-        guard labelCount != 0, range > 0, range.isFinite else {
+        guard range > 0, range.isFinite else {
             axis.entries = []
             axis.centeredEntries = []
             return
         }
-
-        let rawInterval = range / Double(labelCount)
-        let interval = getClosestPredefinedInterval(from: rawInterval)
 
         // Preserve old behavior for very small datasets (< 1 minute)
         if range < 60 {
@@ -58,15 +56,18 @@ public final class CustomXAxisRenderer: XAxisRenderer {
             return
         }
 
+        let interval = selectInterval(
+            min: min,
+            max: max,
+            range: range
+        )
+
         // Epsilon to avoid off-by-one at exact boundaries due to floating rounding
         let eps = 1e-9
 
         // Absolute time range (epoch seconds)
         let tMin = from + min
         let tMax = from + max
-
-        // Match Android: pad by 2 ticks on both ends
-        let extraTicks: Int64 = 2
 
         // Use integer multipliers to avoid drift
         var startMult = Int64(floor((tMin / interval) + eps)) - extraTicks
@@ -107,8 +108,160 @@ public final class CustomXAxisRenderer: XAxisRenderer {
         computeSize()
     }
 
-    private func getClosestPredefinedInterval(from rawInterval: Double) -> TimeInterval {
+    private func selectInterval(
+        min: Double,
+        max: Double,
+        range: Double
+    ) -> TimeInterval {
+        let rawInterval = range / Double(axis.labelCount)
+        let baseInterval = closestInterval(to: rawInterval)
+
+        guard let transformer = transformer,
+              viewPortHandler.contentWidth > 0
+        else {
+            return baseInterval
+        }
+
+        if visibleTickCount(
+            min: min,
+            max: max,
+            interval: baseInterval
+        ) >= axis.labelCount {
+            return baseInterval
+        }
+
+        guard let baseIndex = intervals.firstIndex(of: baseInterval) else {
+            return baseInterval
+        }
+
+        for i in stride(from: baseIndex - 1, through: 0, by: -1) {
+            let candidate = intervals[i]
+
+            if !labelsFit(
+                interval: candidate,
+                min: min,
+                max: max,
+                transformer: transformer
+            ) {
+                break
+            }
+
+            if visibleTickCount(
+                min: min,
+                max: max,
+                interval: candidate
+            ) >= axis.labelCount {
+                return candidate
+            }
+        }
+
+        return baseInterval
+    }
+
+    private func closestInterval(to rawInterval: Double) -> TimeInterval {
         if rawInterval < 60 { return 60 }
         return intervals.min(by: { abs($0 - rawInterval) < abs($1 - rawInterval) }) ?? 60
+    }
+
+    private func labelsFit(
+        interval: TimeInterval,
+        min: Double,
+        max: Double,
+        transformer: Transformer
+    ) -> Bool {
+        let eps = 1e-9
+        let tMin = from + min
+        let tMax = from + max
+
+        var startMult = Int64(floor((tMin / interval) + eps)) - extraTicks
+        var endMult = Int64(ceil((tMax / interval) - eps)) + extraTicks
+
+        if endMult < startMult {
+            let midPoint = (min + max) / 2
+            let tMid = from + midPoint
+            let midMult = Int64(floor((tMid / interval) + eps))
+            startMult = midMult - extraTicks
+            endMult = midMult + extraTicks
+        }
+
+        let valueToPixel = transformer.valueToPixelMatrix
+        let labelAttrs: [NSAttributedString.Key: Any] = [.font: axis.labelFont]
+        var prevRight: CGFloat?
+
+        for i in 0...Int(endMult - startMult) {
+            let mult = startMult + Int64(i)
+            let absTick = Double(mult) * interval
+            let date = Date(timeIntervalSince1970: absTick)
+            let localOffset = (interval > 3600)
+                ? TimeZone.autoupdatingCurrent.secondsFromGMT(for: date)
+                : 0
+            let value = absTick - from - Double(localOffset)
+
+            var position = CGPoint(x: value, y: 0)
+            position = position.applying(valueToPixel)
+
+            guard viewPortHandler.isInBoundsX(position.x) else { continue }
+
+            let label = axis.valueFormatter?.stringForValue(value, axis: axis) ?? ""
+            let labelSize = (label as NSString).size(withAttributes: labelAttrs)
+            let rotatedWidth = rotatedLabelWidth(
+                for: labelSize,
+                angle: axis.labelRotationAngle
+            )
+            let halfWidth = rotatedWidth / 2
+            let left = position.x - halfWidth
+            let right = position.x + halfWidth
+
+            if let prevRight = prevRight, left < prevRight - eps {
+                return false
+            }
+
+            prevRight = right
+        }
+
+        return true
+    }
+
+    private func visibleTickCount(
+        min: Double,
+        max: Double,
+        interval: TimeInterval
+    ) -> Int {
+        let eps = 1e-9
+        let tMin = from + min
+        let tMax = from + max
+
+        let startMult = Int64(floor((tMin / interval) + eps)) - extraTicks
+        let endMult = Int64(ceil((tMax / interval) - eps)) + extraTicks
+
+        if endMult < startMult {
+            return 0
+        }
+
+        var count = 0
+        for i in 0...Int(endMult - startMult) {
+            let mult = startMult + Int64(i)
+            let absTick = Double(mult) * interval
+            let date = Date(timeIntervalSince1970: absTick)
+            let localOffset = (interval > 3600)
+                ? TimeZone.autoupdatingCurrent.secondsFromGMT(for: date)
+                : 0
+            let value = absTick - from - Double(localOffset)
+            if value + eps >= min && value - eps <= max {
+                count += 1
+            }
+        }
+
+        return count
+    }
+
+    private func rotatedLabelWidth(
+        for size: CGSize,
+        angle: CGFloat
+    ) -> CGFloat {
+        let radians = Double(angle) * Double.pi / 180.0
+        let width = abs(Double(size.width) * cos(radians)) +
+            abs(Double(size.height) * sin(radians))
+        return CGFloat(width)
     }
 }

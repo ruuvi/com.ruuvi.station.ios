@@ -85,6 +85,7 @@ targets:
         UIAppFonts: [Oswald-Bold.ttf,Oswald-Regular.ttf,Oswald-Light.ttf,Oswald-ExtraLight.ttf,Mulish-Regular.ttf,Mulish-Bold.ttf,Mulish-SemiBoldItalic.ttf,Mulish-ExtraBold.ttf,Montserrat-Bold.ttf,Montserrat-Regular.ttf,Montserrat-ExtraBold.ttf]
         UIBackgroundModes: [bluetooth-central, processing, remote-notification]
         UIRequiredDeviceCapabilities: [armv7]
+        UIDesignRequiresCompatibility: true
         UIRequiresFullScreen: true
         UIStatusBarStyle: UIStatusBarStyleLightContent
         UISupportedInterfaceOrientations~ipad: [UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight,UIInterfaceOrientationPortrait,  UIInterfaceOrientationPortraitUpsideDown]

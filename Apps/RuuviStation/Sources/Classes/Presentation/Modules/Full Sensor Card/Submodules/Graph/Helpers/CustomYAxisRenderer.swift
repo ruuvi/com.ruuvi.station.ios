@@ -41,16 +41,19 @@ final class CustomYAxisRenderer: YAxisRenderer {
             return
         }
 
-        let labelCount = axis.labelCount
         let range = abs(max - min)
 
-        guard labelCount != 0, range > 0, range.isFinite else {
+        guard range > 0, range.isFinite else {
             axis.entries = []
             axis.centeredEntries = []
             return
         }
 
-        let interval = getClosestPredefinedInterval(range: range, labelCount: labelCount)
+        let interval = selectInterval(
+            min: min,
+            max: max,
+            range: range
+        )
 
         if range < interval {
             axis.entries = [min]
@@ -68,6 +71,87 @@ final class CustomYAxisRenderer: YAxisRenderer {
         axis.entries = (0..<numberOfPoints).map { i in
             firstPoint + Double(i) * interval
         }
+    }
+
+    private func selectInterval(
+        min: Double,
+        max: Double,
+        range: Double
+    ) -> Double {
+        let baseInterval = getClosestPredefinedInterval(
+            range: range,
+            labelCount: axis.labelCount
+        )
+
+        guard let transformer = transformer,
+              viewPortHandler.contentHeight > 0
+        else {
+            return baseInterval
+        }
+
+        if visibleTickCount(
+            min: min,
+            max: max,
+            interval: baseInterval
+        ) >= axis.labelCount {
+            return baseInterval
+        }
+
+        guard let baseIndex = intervals.firstIndex(of: baseInterval) else {
+            return baseInterval
+        }
+
+        for i in stride(from: baseIndex - 1, through: 0, by: -1) {
+            let candidate = intervals[i]
+
+            if !labelsFit(
+                interval: candidate,
+                min: min,
+                transformer: transformer
+            ) {
+                break
+            }
+
+            if visibleTickCount(
+                min: min,
+                max: max,
+                interval: candidate
+            ) >= axis.labelCount {
+                return candidate
+            }
+        }
+
+        return baseInterval
+    }
+
+    private func labelsFit(
+        interval: Double,
+        min: Double,
+        transformer: Transformer
+    ) -> Bool {
+        let labelHeight = axis.labelFont.lineHeight
+        let p1 = transformer.pixelForValues(x: 0, y: min)
+        let p2 = transformer.pixelForValues(x: 0, y: min + interval)
+        let spacing = abs(p2.y - p1.y)
+
+        return spacing >= labelHeight
+    }
+
+    private func visibleTickCount(
+        min: Double,
+        max: Double,
+        interval: Double
+    ) -> Int {
+        let eps = 1e-12
+        let firstPoint = Darwin.floor((min / interval) + eps) * interval
+        let lastPoint = Darwin.ceil((max / interval) - eps) * interval
+
+        let span = lastPoint - firstPoint
+        if span < 0 {
+            return 0
+        }
+
+        return Swift.max(1, Int(Darwin.floor((span / interval) + eps)) + 1)
     }
 
     private func getClosestPredefinedInterval(range: Double, labelCount: Int) -> Double {

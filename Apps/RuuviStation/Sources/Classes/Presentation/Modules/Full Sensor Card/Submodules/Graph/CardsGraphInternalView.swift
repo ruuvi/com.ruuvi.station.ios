@@ -103,7 +103,7 @@ class CardsGraphInternalView: LineChartView {
         drawMarkers = true
         markerView.chartView = self
         marker = markerView
-        setExtraOffsets(left: 2, top: 4, right: 0, bottom: 2)
+        setExtraOffsets(left: 2, top: 4, right: 20, bottom: 2)
     }
 
     private func reloadData() {
