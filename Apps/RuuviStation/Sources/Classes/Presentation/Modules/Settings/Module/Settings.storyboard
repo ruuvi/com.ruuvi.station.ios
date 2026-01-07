@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="23727" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ivn-QC-p8c">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ivn-QC-p8c">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Settings-->
+        <!--Settings Table View Controller-->
         <scene sceneID="lkx-vK-Gew">
             <objects>
                 <tableViewController storyboardIdentifier="SettingsTableViewController" id="Vxh-DE-JMT" customClass="SettingsTableViewController" customModule="station" customModuleProvider="target" sceneMemberID="viewController">
@@ -20,20 +20,20 @@
                             <tableViewSection id="gh8-AV-gmb">
                                 <cells>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="7Hf-la-egS">
-                                        <rect key="frame" x="0.0" y="50" width="414" height="51.5"/>
+                                        <rect key="frame" x="0.0" y="50" width="414" height="55"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="7Hf-la-egS" id="tmL-RI-Hh0">
-                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="51.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="55"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Language" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B4i-sU-siT">
-                                                    <rect key="frame" x="20" y="16" width="72" height="19.5"/>
+                                                    <rect key="frame" x="20" y="18" width="72" height="19.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" name="RuuviMenuTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="English" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mhK-Ub-ply">
-                                                    <rect key="frame" x="323" y="16" width="52.5" height="19.5"/>
+                                                    <rect key="frame" x="323" y="18" width="52.5" height="19.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" name="RuuviMenuTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -49,14 +49,14 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="2Vp-8f-tBy">
-                                        <rect key="frame" x="0.0" y="101.5" width="414" height="51.5"/>
+                                        <rect key="frame" x="0.0" y="105" width="414" height="55"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="2Vp-8f-tBy" id="WaQ-tE-CHN">
-                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="51.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="55"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notifications" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mo2-1Z-Rja" userLabel="Notifications">
-                                                    <rect key="frame" x="20" y="16" width="91.5" height="19.5"/>
+                                                    <rect key="frame" x="20" y="18" width="91.5" height="19.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" name="RuuviMenuTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -70,14 +70,14 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="UiW-AF-Gxq">
-                                        <rect key="frame" x="0.0" y="153" width="414" height="51.5"/>
+                                        <rect key="frame" x="0.0" y="160" width="414" height="55"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="UiW-AF-Gxq" id="EP4-5R-1la">
-                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="51.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="55"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Appearance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g9p-LN-7sG">
-                                                    <rect key="frame" x="20" y="16" width="88" height="19.5"/>
+                                                    <rect key="frame" x="20" y="18" width="88" height="19.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" name="RuuviMenuTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -91,14 +91,14 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="RUN-da-hOO">
-                                        <rect key="frame" x="0.0" y="204.5" width="414" height="51.5"/>
+                                        <rect key="frame" x="0.0" y="215" width="414" height="55"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="RUN-da-hOO" id="EXQ-Ox-Oiq">
-                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="51.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="55"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Heartbeat" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dMV-BV-f9G">
-                                                    <rect key="frame" x="20" y="16" width="73" height="19.5"/>
+                                                    <rect key="frame" x="20" y="18" width="73" height="19.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" name="RuuviMenuTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -112,7 +112,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" rowHeight="43" id="De9-cF-dnb">
-                                        <rect key="frame" x="0.0" y="256" width="414" height="43"/>
+                                        <rect key="frame" x="0.0" y="270" width="414" height="43"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="De9-cF-dnb" id="4h7-3h-1Kj">
                                             <rect key="frame" x="0.0" y="0.0" width="383.5" height="43"/>
@@ -134,7 +134,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" rowHeight="43" id="uMV-2q-Kaj">
-                                        <rect key="frame" x="0.0" y="299" width="414" height="43"/>
+                                        <rect key="frame" x="0.0" y="313" width="414" height="43"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="uMV-2q-Kaj" id="D6Q-cF-tJm">
                                             <rect key="frame" x="0.0" y="0.0" width="383.5" height="43"/>
@@ -156,7 +156,7 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" rowHeight="43" id="yyb-LA-bNN">
-                                        <rect key="frame" x="0.0" y="342" width="414" height="43"/>
+                                        <rect key="frame" x="0.0" y="356" width="414" height="43"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yyb-LA-bNN" id="wPp-s7-JyM">
                                             <rect key="frame" x="0.0" y="0.0" width="383.5" height="43"/>
@@ -178,14 +178,14 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="SettingsSwitchTableViewCell" id="mUW-OK-ZJ7">
-                                        <rect key="frame" x="0.0" y="385" width="414" height="46.5"/>
+                                        <rect key="frame" x="0.0" y="399" width="414" height="50.5"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mUW-OK-ZJ7" id="bpW-jO-TXI">
-                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="46.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="50.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" text="Ruuvi Cloud" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AD2-Ou-Tdi">
-                                                    <rect key="frame" x="20" y="13" width="347.5" height="20.5"/>
+                                                    <rect key="frame" x="20" y="15" width="347.5" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" name="RuuviMenuTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -201,14 +201,14 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="ApR-a7-gMY">
-                                        <rect key="frame" x="0.0" y="431.5" width="414" height="51.5"/>
+                                        <rect key="frame" x="0.0" y="449.5" width="414" height="55"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ApR-a7-gMY" id="O5F-PG-kNA">
-                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="51.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="55"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Chart Settings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b46-Rg-0X0">
-                                                    <rect key="frame" x="20" y="16" width="104.5" height="19.5"/>
+                                                    <rect key="frame" x="20" y="18" width="104.5" height="19.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" name="RuuviMenuTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -222,14 +222,14 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="Ukf-1h-Vb7">
-                                        <rect key="frame" x="0.0" y="483" width="414" height="51.5"/>
+                                        <rect key="frame" x="0.0" y="504.5" width="414" height="55"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ukf-1h-Vb7" id="qxS-V8-cDz">
-                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="51.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="55"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Experimental functions" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BNA-1F-nDb">
-                                                    <rect key="frame" x="20" y="16" width="166.5" height="19.5"/>
+                                                    <rect key="frame" x="20" y="18" width="166.5" height="19.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" name="RuuviMenuTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -243,14 +243,14 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="zPg-YI-U3o">
-                                        <rect key="frame" x="0.0" y="534.5" width="414" height="51.5"/>
+                                        <rect key="frame" x="0.0" y="559.5" width="414" height="55"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="zPg-YI-U3o" id="Ef4-m6-xcK">
-                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="51.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="55"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Defaults" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xAA-Ek-iEf">
-                                                    <rect key="frame" x="20" y="16" width="60.5" height="19.5"/>
+                                                    <rect key="frame" x="20" y="18" width="60.5" height="19.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" name="RuuviMenuTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -264,14 +264,14 @@
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="cMS-SB-dB3">
-                                        <rect key="frame" x="0.0" y="586" width="414" height="51.5"/>
+                                        <rect key="frame" x="0.0" y="614.5" width="414" height="55"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="cMS-SB-dB3" id="nNX-25-a6m">
-                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="51.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="55"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Devices" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ccZ-CG-R72">
-                                                    <rect key="frame" x="20" y="16" width="58" height="19.5"/>
+                                                    <rect key="frame" x="20" y="18" width="58" height="19.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" name="RuuviMenuTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -292,8 +292,7 @@
                             <outlet property="delegate" destination="Vxh-DE-JMT" id="Wvl-Vf-Aed"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Settings" id="zVX-j9-FXb">
-                        <barButtonItem key="backBarButtonItem" title=" " id="hHD-hc-87e"/>
+                    <navigationItem key="navigationItem" id="zVX-j9-FXb">
                         <barButtonItem key="leftBarButtonItem" image="dismiss-modal-icon" id="lsn-T2-IDJ">
                             <color key="tintColor" systemColor="labelColor"/>
                             <connections>
@@ -344,7 +343,7 @@
             <objects>
                 <navigationController id="ivn-QC-p8c" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="6X1-LP-kkX">
-                        <rect key="frame" x="0.0" y="96" width="414" height="44"/>
+                        <rect key="frame" x="0.0" y="96" width="414" height="54"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="tintColor" systemColor="labelColor"/>
                     </navigationBar>

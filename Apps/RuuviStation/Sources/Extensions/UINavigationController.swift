@@ -3,6 +3,9 @@ import UIKit
 extension UINavigationController {
     override open func viewWillLayoutSubviews() {
         navigationBar.topItem?.backButtonDisplayMode = .minimal
+        if #available(iOS 26.0, *) {
+            navigationBar.topItem?.backButtonTitle = ""
+        }
     }
 
     func makeTransparent() {

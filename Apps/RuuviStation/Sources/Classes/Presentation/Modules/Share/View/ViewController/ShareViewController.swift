@@ -66,7 +66,9 @@ class ShareViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTableView()
-        setupCustomBackButton()
+        if #unavailable(iOS 26) {
+            setupCustomBackButton()
+        }
         localize()
         styleViews()
         output.viewDidLoad()

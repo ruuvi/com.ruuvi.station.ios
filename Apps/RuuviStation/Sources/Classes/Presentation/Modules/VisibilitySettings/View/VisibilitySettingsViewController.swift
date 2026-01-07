@@ -30,17 +30,19 @@ final class VisibilitySettingsViewController: UIViewController, VisibilitySettin
         title = RuuviLocalization.visibleMeasurements
         view.backgroundColor = RuuviColor.primary.color
 
-        let backBarButtonItemView = UIView()
-        backBarButtonItemView.addSubview(backButton)
-        backButton.anchor(
-            top: backBarButtonItemView.topAnchor,
-            leading: backBarButtonItemView.leadingAnchor,
-            bottom: backBarButtonItemView.bottomAnchor,
-            trailing: backBarButtonItemView.trailingAnchor,
-            padding: .init(top: 0, left: -16, bottom: 0, right: 0),
-            size: .init(width: 48, height: 48)
-        )
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
+        if #unavailable(iOS 26) {
+            let backBarButtonItemView = UIView()
+            backBarButtonItemView.addSubview(backButton)
+            backButton.anchor(
+                top: backBarButtonItemView.topAnchor,
+                leading: backBarButtonItemView.leadingAnchor,
+                bottom: backBarButtonItemView.bottomAnchor,
+                trailing: backBarButtonItemView.trailingAnchor,
+                padding: .init(top: 0, left: -16, bottom: 0, right: 0),
+                size: .init(width: 48, height: 48)
+            )
+            navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBarButtonItemView)
+        }
     }
 
     @objc func backButtonDidTap() {

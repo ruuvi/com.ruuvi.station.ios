@@ -85,19 +85,21 @@ private extension BackgroundSelectionViewController {
     }
 
     func setUpHeaderView() {
-        let leftBarButtonView = UIView(color: .clear)
+        if #unavailable(iOS 26) {
+            let leftBarButtonView = UIView(color: .clear)
 
-        leftBarButtonView.addSubview(backButton)
-        backButton.anchor(
-            top: leftBarButtonView.topAnchor,
-            leading: leftBarButtonView.leadingAnchor,
-            bottom: leftBarButtonView.bottomAnchor,
-            trailing: leftBarButtonView.trailingAnchor,
-            padding: .init(top: 0, left: -16, bottom: 0, right: 0),
-            size: .init(width: 48, height: 48)
-        )
+            leftBarButtonView.addSubview(backButton)
+            backButton.anchor(
+                top: leftBarButtonView.topAnchor,
+                leading: leftBarButtonView.leadingAnchor,
+                bottom: leftBarButtonView.bottomAnchor,
+                trailing: leftBarButtonView.trailingAnchor,
+                padding: .init(top: 0, left: -16, bottom: 0, right: 0),
+                size: .init(width: 48, height: 48)
+            )
 
-        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonView)
+            navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonView)
+        }
     }
 
     func setUpContentView() {

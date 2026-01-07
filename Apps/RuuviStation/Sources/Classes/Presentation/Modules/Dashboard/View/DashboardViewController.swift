@@ -140,7 +140,15 @@ final class DashboardViewController: UIViewController {
         return ai
     }()
 
+    // MARK: - Custom Header View (iOS 26+)
+    private lazy var customHeaderView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        return view
+    }()
+
     // MARK: - Constraints
+    private var customHeaderHeightConstraint: NSLayoutConstraint?
     private var showSignInBannerConstraint: NSLayoutConstraint!
     private var hideSignInBannerConstraint: NSLayoutConstraint!
 
@@ -175,7 +183,11 @@ extension DashboardViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.makeTransparent()
+        if #available(iOS 26.0, *) {
+            navigationController?.setNavigationBarHidden(true, animated: animated)
+        } else {
+            navigationController?.makeTransparent()
+        }
         output.viewWillAppear()
     }
 
@@ -186,7 +198,11 @@ extension DashboardViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        navigationController?.resetStyleToDefault()
+        if #available(iOS 26.0, *) {
+            navigationController?.setNavigationBarHidden(false, animated: animated)
+        } else {
+            navigationController?.resetStyleToDefault()
+        }
         output.viewWillDisappear()
     }
 
@@ -210,26 +226,43 @@ private extension DashboardViewController {
     }
 
     func setupUI() {
-        setupBaseView()
+        view.backgroundColor = RuuviColor.dashboardBG.color
         setupHeaderView()
+        setupNoSensorView()
         setupContentView()
     }
 
-    func setupBaseView() {
-        view.backgroundColor = RuuviColor.dashboardBG.color
-
+    func setupNoSensorView() {
         view.addSubview(noSensorView)
-        noSensorView.anchor(
-            top: view.safeTopAnchor,
-            leading: view.safeLeftAnchor,
-            bottom: view.safeBottomAnchor,
-            trailing: view.safeRightAnchor,
-            padding: .init(top: 12, left: 12, bottom: 12, right: 12)
-        )
+        if #available(iOS 26.0, *) {
+            noSensorView.anchor(
+                top: customHeaderView.bottomAnchor,
+                leading: view.safeLeftAnchor,
+                bottom: view.safeBottomAnchor,
+                trailing: view.safeRightAnchor,
+                padding: .init(top: 12, left: 12, bottom: 12, right: 12)
+            )
+        } else {
+            noSensorView.anchor(
+                top: view.safeTopAnchor,
+                leading: view.safeLeftAnchor,
+                bottom: view.safeBottomAnchor,
+                trailing: view.safeRightAnchor,
+                padding: .init(top: 12, left: 12, bottom: 12, right: 12)
+            )
+        }
         noSensorView.isHidden = true
     }
 
     func setupHeaderView() {
+        if #available(iOS 26.0, *) {
+            setupCustomHeaderView()
+        } else {
+            setupNavigationBarItems()
+        }
+    }
+
+    func setupNavigationBarItems() {
         let leftBarButtonView = createLeftBarButtonView()
         let rightBarButtonView = createRightBarButtonView()
         let titleView = createTitleView()
@@ -237,6 +270,69 @@ private extension DashboardViewController {
         navigationItem.titleView = titleView
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: leftBarButtonView)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBarButtonView)
+    }
+
+    @available(iOS 26.0, *)
+    func setupCustomHeaderView() {
+        view.addSubview(customHeaderView)
+        customHeaderView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            customHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            customHeaderView.leadingAnchor
+                .constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            customHeaderView.trailingAnchor
+                .constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            customHeaderView.heightAnchor.constraint(equalToConstant: 44)
+        ])
+
+        // Left side: Menu button + Ruuvi logo
+        let leftContainer = UIView()
+        leftContainer.translatesAutoresizingMaskIntoConstraints = false
+        leftContainer.isUserInteractionEnabled = true
+        customHeaderView.addSubview(leftContainer)
+
+        menuButton.translatesAutoresizingMaskIntoConstraints = false
+        menuButton.isUserInteractionEnabled = true
+        leftContainer.addSubview(menuButton)
+
+        ruuviLogoView.translatesAutoresizingMaskIntoConstraints = false
+        leftContainer.addSubview(ruuviLogoView)
+
+        NSLayoutConstraint.activate([
+            leftContainer.leadingAnchor.constraint(equalTo: customHeaderView.leadingAnchor, constant: 4),
+            leftContainer.centerYAnchor.constraint(equalTo: customHeaderView.centerYAnchor),
+            leftContainer.heightAnchor.constraint(equalToConstant: 44),
+
+            menuButton.leadingAnchor
+                .constraint(equalTo: leftContainer.leadingAnchor, constant: 4),
+            menuButton.centerYAnchor.constraint(equalTo: leftContainer.centerYAnchor),
+
+            ruuviLogoView.leadingAnchor.constraint(equalTo: menuButton.trailingAnchor, constant: 4),
+            ruuviLogoView.centerYAnchor.constraint(equalTo: leftContainer.centerYAnchor),
+            ruuviLogoView.widthAnchor.constraint(equalToConstant: 90),
+            ruuviLogoView.heightAnchor.constraint(equalToConstant: 22),
+            ruuviLogoView.trailingAnchor.constraint(equalTo: leftContainer.trailingAnchor)
+        ])
+
+        // Center: Activity indicator
+        customHeaderView.addSubview(activityIndicator)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: customHeaderView.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: customHeaderView.centerYAnchor)
+        ])
+
+        // Right side: View button
+        customHeaderView.addSubview(viewButton)
+        viewButton.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            viewButton.trailingAnchor.constraint(equalTo: customHeaderView.trailingAnchor, constant: -16),
+            viewButton.centerYAnchor.constraint(equalTo: customHeaderView.centerYAnchor),
+            viewButton.heightAnchor.constraint(equalToConstant: 32)
+        ])
     }
 
     func createLeftBarButtonView() -> UIView {
@@ -294,12 +390,21 @@ private extension DashboardViewController {
 
     func setupSignInBanner() {
         view.addSubview(dashboardSignInBannerView)
-        dashboardSignInBannerView.anchor(
-            top: view.safeTopAnchor,
-            leading: view.safeLeftAnchor,
-            bottom: nil,
-            trailing: view.safeRightAnchor
-        )
+        if #available(iOS 26.0, *) {
+            dashboardSignInBannerView.anchor(
+                top: customHeaderView.bottomAnchor,
+                leading: view.safeLeftAnchor,
+                bottom: nil,
+                trailing: view.safeRightAnchor
+            )
+        } else {
+            dashboardSignInBannerView.anchor(
+                top: view.safeTopAnchor,
+                leading: view.safeLeftAnchor,
+                bottom: nil,
+                trailing: view.safeRightAnchor
+            )
+        }
         dashboardSignInBannerView.alpha = 0
     }
 
@@ -322,10 +427,18 @@ private extension DashboardViewController {
             equalTo: dashboardSignInBannerView.bottomAnchor,
             constant: 8
         )
-        hideSignInBannerConstraint = collectionView.topAnchor.constraint(
-            equalTo: view.safeTopAnchor,
-            constant: 4
-        )
+
+        if #available(iOS 26.0, *) {
+            hideSignInBannerConstraint = collectionView.topAnchor.constraint(
+                equalTo: customHeaderView.bottomAnchor,
+                constant: 4
+            )
+        } else {
+            hideSignInBannerConstraint = collectionView.topAnchor.constraint(
+                equalTo: view.safeTopAnchor,
+                constant: 4
+            )
+        }
         hideSignInBannerConstraint.isActive = true
     }
 

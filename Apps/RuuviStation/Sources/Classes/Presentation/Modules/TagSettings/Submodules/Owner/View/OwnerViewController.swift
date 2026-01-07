@@ -36,7 +36,9 @@ final class OwnerViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setUpCustomBackButton()
+        if #unavailable(iOS 26) {
+            setUpCustomBackButton()
+        }
         setUpCloudHistoryContentView()
         localize()
         styleViews()

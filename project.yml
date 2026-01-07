@@ -20,6 +20,9 @@ options:
   developmentLanguage: en
   deploymentTarget:
     iOS: 16.0
+  fileTypes:
+    "icon":
+      file: true
 
 targetTemplates:
   Framework:

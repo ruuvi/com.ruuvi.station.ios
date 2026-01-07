@@ -74,6 +74,10 @@ extension MenuTableEmbededViewController {
 // MARK: - UITableViewDelegate
 
 extension MenuTableEmbededViewController {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        44
+    }
+
     override func tableView(
         _: UITableView,
         willDisplay cell: UITableViewCell,
