@@ -530,8 +530,9 @@ private extension CardsSettingsViewController {
             guard let self else { return }
             textField.delegate = self
             textField.keyboardType = .numbersAndPunctuation
-            textField.placeholder = RuuviLocalization.TagSettings.AlertSettings.Dialog.min(
-                Float(slider.range.lowerBound)
+            textField.placeholder = alertRangePlaceholder(
+                isLower: true,
+                slider: slider
             )
             textField.text = self.formattedValue(slider.selectedRange.lowerBound)
             alertMinRangeTextField = textField
@@ -543,8 +544,9 @@ private extension CardsSettingsViewController {
             guard let self else { return }
             textField.delegate = self
             textField.keyboardType = .numbersAndPunctuation
-            textField.placeholder = RuuviLocalization.TagSettings.AlertSettings.Dialog.max(
-                Float(slider.range.upperBound)
+            textField.placeholder = alertRangePlaceholder(
+                isLower: false,
+                slider: slider
             )
             textField.text = self.formattedValue(slider.selectedRange.upperBound)
             alertMaxRangeTextField = textField
@@ -637,6 +639,22 @@ private extension CardsSettingsViewController {
 }
 
 private extension CardsSettingsViewController {
+    func alertRangePlaceholder(
+        isLower: Bool,
+        slider: CardsSettingsAlertSliderConfiguration
+    ) -> String {
+        let value = isLower ? slider.range.lowerBound : slider.range.upperBound
+        let hasFractional = value.truncatingRemainder(dividingBy: 1) != 0
+        if slider.step < 1 || hasFractional {
+            let label = isLower ? RuuviLocalization.chartStatMin : RuuviLocalization.chartStatMax
+            return "\(label) (\(formattedValue(value)))"
+        }
+        if isLower {
+            return RuuviLocalization.TagSettings.AlertSettings.Dialog.min(Float(value))
+        }
+        return RuuviLocalization.TagSettings.AlertSettings.Dialog.max(Float(value))
+    }
+
      func showSensorNameRenameDialog(
         sortingType: DashboardSortingType?
     ) {
