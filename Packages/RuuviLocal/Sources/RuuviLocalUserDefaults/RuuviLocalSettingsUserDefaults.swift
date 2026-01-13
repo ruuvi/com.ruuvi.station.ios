@@ -253,6 +253,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDefaults.welcomeShown", defaultValue: false)
     var welcomeShown: Bool
 
+    @UserDefault("SettingsUserDefaults.showGraphTutorial", defaultValue: true)
+    var showGraphLongPressTutorial: Bool
+
     @UserDefault("SettingsUserDefaults.tosAccepted", defaultValue: false)
     var tosAccepted: Bool
 

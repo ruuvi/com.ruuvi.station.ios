@@ -45,6 +45,7 @@ extension DefaultsPresenter {
             buildWelcomeShown(),
             buildTOSAccepted(),
             buildChartsSwipeInstruction(),
+            buildGraphLongPressInstruction(),
             buildConnectionTimeout(),
             buildServiceTimeout(),
             buildCardsSwipeHint(),
@@ -124,6 +125,20 @@ extension DefaultsPresenter {
                 tagChartsLandscapeSwipeInstructionWasShown.bound
         }
         return tagChartsLandscapeSwipeInstructionWasShown
+    }
+
+    private func buildGraphLongPressInstruction() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Show graph long press instruction"
+        viewModel.boolean.value = settings.showGraphLongPressTutorial
+        viewModel.hideStatusLabel.value =
+                !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, value in
+            observer.settings.showGraphLongPressTutorial = value.bound
+        }
+        return viewModel
     }
 
     private func buildConnectionTimeout() -> DefaultsViewModel {

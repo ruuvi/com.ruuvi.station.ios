@@ -266,6 +266,15 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
         settings.setSyncDialogHidden(true, for: luid)
     }
 
+    func viewDidAskGraphLongPressTutorialDialog() {
+        guard settings.showGraphLongPressTutorial else { return }
+        view?.showGraphLongPressTutorialDialog()
+    }
+
+    func viewDidTriggerDoNotShowGraphLongPressTutorialDialog() {
+        settings.showGraphLongPressTutorial = false
+    }
+
     func viewDidStartSync(for snapshot: RuuviTagCardSnapshot?) {
         guard let snapshot = snapshot else { return }
         // Check bluetooth

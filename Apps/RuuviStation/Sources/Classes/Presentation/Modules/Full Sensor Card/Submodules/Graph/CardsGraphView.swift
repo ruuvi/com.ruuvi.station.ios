@@ -13,6 +13,9 @@ protocol CardsGraphViewDelegate: NSObjectProtocol {
         highlight: Highlight
     )
     func chartValueDidDeselect(_ chartView: CardsGraphView)
+    func chartDidSingleTap(_ chartView: CardsGraphView, location: CGPoint)
+    func chartMarkerInteractionDidBegin(_ chartView: CardsGraphView)
+    func chartMarkerInteractionDidEnd(_ chartView: CardsGraphView)
 }
 
 class CardsGraphView: UIView {
@@ -138,6 +141,21 @@ extension CardsGraphView: CardsGraphInternalViewDelegate {
 
     func chartValueDidDeselect(_ chartView: CardsGraphInternalView) {
         chartDelegate?.chartValueDidDeselect(self)
+    }
+
+    func chartDidSingleTap(
+        _ chartView: CardsGraphInternalView,
+        location: CGPoint
+    ) {
+        chartDelegate?.chartDidSingleTap(self, location: location)
+    }
+
+    func chartMarkerInteractionDidBegin(_ chartView: CardsGraphInternalView) {
+        chartDelegate?.chartMarkerInteractionDidBegin(self)
+    }
+
+    func chartMarkerInteractionDidEnd(_ chartView: CardsGraphInternalView) {
+        chartDelegate?.chartMarkerInteractionDidEnd(self)
     }
 }
 

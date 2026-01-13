@@ -43,4 +43,5 @@ protocol CardsGraphViewInput: ViewInput {
     func showSyncAbortAlertForSwipe(to index: Int)
     func showExportSheet(with path: URL)
     func showLongerHistoryDialog()
+    func showGraphLongPressTutorialDialog()
 }

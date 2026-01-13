@@ -9,6 +9,8 @@ protocol CardsGraphViewOutput: AnyObject {
     func viewDidTriggerSync(for snapshot: RuuviTagCardSnapshot?)
     func viewDidStartSync(for snapshot: RuuviTagCardSnapshot?)
     func viewDidTriggerDoNotShowSyncDialog()
+    func viewDidAskGraphLongPressTutorialDialog()
+    func viewDidTriggerDoNotShowGraphLongPressTutorialDialog()
     func viewDidTriggerStopSync(for snapshot: RuuviTagCardSnapshot?)
     func viewDidTriggerClear(for snapshot: RuuviTagCardSnapshot?)
     func viewDidConfirmToClear(for snapshot: RuuviTagCardSnapshot?)

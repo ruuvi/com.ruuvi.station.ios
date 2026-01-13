@@ -152,6 +152,8 @@ class CardsGraphViewController: UIViewController {
     private var chartViews: [CardsGraphView] = []
     private var pendingScrollVariant: MeasurementDisplayVariant?
     private var needsDeferredLayoutUpdate = false
+    private var isMarkerInteractionActive = false
+    private var isSyncingHighlights = false
 
     private var isLandscapeLayout: Bool {
         if let interfaceOrientation = view.window?.windowScene?.interfaceOrientation {
@@ -591,9 +593,26 @@ extension CardsGraphViewController: CardsGraphViewDelegate {
         }
     }
 
+    func chartDidSingleTap(
+        _: CardsGraphView,
+        location _: CGPoint
+    ) {
+        output?.viewDidAskGraphLongPressTutorialDialog()
+    }
+
+    func chartMarkerInteractionDidBegin(_: CardsGraphView) {
+        isMarkerInteractionActive = true
+        updateScrollviewBehaviour()
+    }
+
+    func chartMarkerInteractionDidEnd(_: CardsGraphView) {
+        isMarkerInteractionActive = false
+        updateScrollviewBehaviour()
+    }
+
     func chartValueDidSelect(
         _ chartView: CardsGraphView,
-        entry _: ChartDataEntry,
+        entry: ChartDataEntry,
         highlight: Highlight
     ) {
         guard chartViews.count > 1
@@ -601,8 +620,16 @@ extension CardsGraphViewController: CardsGraphViewDelegate {
             return
         }
 
+        guard !isSyncingHighlights else { return }
+        isSyncingHighlights = true
+        defer { isSyncingHighlights = false }
+
         chartViews.filter { $0 != chartView }.forEach { otherChart in
-            otherChart.underlyingView.highlightValue(highlight)
+            otherChart.underlyingView.highlightEntry(
+                atX: highlight.x,
+                closestToY: entry.y,
+                dataSetIndex: highlight.dataSetIndex
+            )
         }
     }
 
@@ -612,8 +639,12 @@ extension CardsGraphViewController: CardsGraphViewDelegate {
             return
         }
 
+        guard !isSyncingHighlights else { return }
+        isSyncingHighlights = true
+        defer { isSyncingHighlights = false }
+
         chartViews.forEach { chart in
-            chart.underlyingView.highlightValue(nil)
+            chart.underlyingView.clearMarker()
         }
     }
 }
@@ -914,6 +945,27 @@ extension CardsGraphViewController: CardsGraphViewInput {
         ))
         present(controller, animated: true)
     }
+
+    func showGraphLongPressTutorialDialog() {
+        let message = RuuviLocalization.tutorialChartLongTap
+        let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertVC
+            .addAction(
+                UIAlertAction(
+                    title: RuuviLocalization.ok,
+                    style: .cancel,
+                    handler: nil
+                )
+            )
+        alertVC.addAction(UIAlertAction(
+            title: RuuviLocalization.doNotShowAgain,
+            style: .default,
+            handler: { [weak self] _ in
+                self?.output?.viewDidTriggerDoNotShowGraphLongPressTutorialDialog()
+            }
+        ))
+        present(alertVC, animated: true)
+    }
 }
 
 extension CardsGraphViewController {
@@ -1040,6 +1092,13 @@ extension CardsGraphViewController {
     }
 
     private func updateScrollviewBehaviour() {
+        if isMarkerInteractionActive {
+            scrollView.isScrollEnabled = false
+            scrollView.showsVerticalScrollIndicator = false
+            updateScrollInsetsForFade()
+            scrollView.edgeFader?.updateFadeMask()
+            return
+        }
         if compactChartView {
             if isLandscapeLayout || chartModules.count > 3 {
                 scrollView.isPagingEnabled = isLandscapeLayout

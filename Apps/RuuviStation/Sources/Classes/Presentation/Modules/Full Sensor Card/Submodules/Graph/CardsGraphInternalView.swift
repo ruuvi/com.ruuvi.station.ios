@@ -1,3 +1,5 @@
+// swiftlint:disable file_length
+
 import DGCharts
 import RuuviLocal
 import RuuviLocalization
@@ -18,6 +20,9 @@ protocol CardsGraphInternalViewDelegate: NSObjectProtocol {
         highlight: Highlight
     )
     func chartValueDidDeselect(_ chartView: CardsGraphInternalView)
+    func chartDidSingleTap(_ chartView: CardsGraphInternalView, location: CGPoint)
+    func chartMarkerInteractionDidBegin(_ chartView: CardsGraphInternalView)
+    func chartMarkerInteractionDidEnd(_ chartView: CardsGraphInternalView)
 }
 
 class CardsGraphInternalView: LineChartView {
@@ -31,6 +36,24 @@ class CardsGraphInternalView: LineChartView {
     private lazy var markerView = CardsGraphMarkerView()
     private var settings: RuuviLocalSettings!
     private var source: CardsGraphSource = .cards
+    private var markerInteractionActive = false
+    private var dragWasEnabled: Bool?
+    private var pinnedHighlight: Highlight?
+    private var currentHighlight: Highlight?
+    private var suppressNextDeselectCallback = false
+    private var isLongPressActive = false
+    private lazy var longPressRecognizer = UILongPressGestureRecognizer(
+        target: self,
+        action: #selector(handleLongPress(_:))
+    )
+    private lazy var tapRecognizer: UITapGestureRecognizer = {
+        let recognizer = UITapGestureRecognizer(
+            target: self,
+            action: #selector(handleTap(_:))
+        )
+        recognizer.cancelsTouchesInView = false
+        return recognizer
+    }()
 
     // MARK: - LifeCycle
     init(source: CardsGraphSource, graphType: MeasurementType) {
@@ -62,6 +85,7 @@ class CardsGraphInternalView: LineChartView {
         setScaleEnabled(true)
         pinchZoomEnabled = false
         highlightPerDragEnabled = false
+        highlightPerTapEnabled = false
         backgroundColor = .clear
         legend.enabled = false
 
@@ -104,11 +128,130 @@ class CardsGraphInternalView: LineChartView {
         markerView.chartView = self
         marker = markerView
         setExtraOffsets(left: 2, top: 4, right: 20, bottom: 2)
+
+        tapRecognizer.require(toFail: longPressRecognizer)
+        addGestureRecognizer(tapRecognizer)
+        addGestureRecognizer(longPressRecognizer)
     }
 
     private func reloadData() {
         data?.notifyDataChanged()
         notifyDataSetChanged()
+    }
+
+    @objc private func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
+        let point = gesture.location(in: self)
+        switch gesture.state {
+        case .began:
+            pinnedHighlight = nil
+            guard highlightTouchPoint(
+                point,
+                pin: true,
+                notifyDelegate: true
+            ) != nil else { return }
+            isLongPressActive = true
+            beginMarkerInteractionIfNeeded()
+        case .changed:
+            guard isLongPressActive else { return }
+            highlightTouchPoint(point, pin: true, notifyDelegate: true)
+        case .ended, .cancelled, .failed:
+            isLongPressActive = false
+            endMarkerInteraction(clearHighlight: false)
+        default:
+            break
+        }
+    }
+
+    @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
+        guard gesture.state == .ended else { return }
+        if currentHighlight != nil,
+           let markerView = marker as? CardsGraphMarkerView {
+            let location = gesture.location(in: self)
+            if markerView.lastDrawnRect.contains(location) {
+                clearPinnedHighlight()
+                return
+            }
+        }
+        chartDelegate?.chartDidSingleTap(
+            self,
+            location: gesture.location(in: self)
+        )
+    }
+
+    private func beginMarkerInteractionIfNeeded() {
+        guard !markerInteractionActive else { return }
+        markerInteractionActive = true
+        dragWasEnabled = dragEnabled
+        dragEnabled = false
+        chartDelegate?.chartMarkerInteractionDidBegin(self)
+    }
+
+    private func endMarkerInteraction(clearHighlight: Bool) {
+        if markerInteractionActive {
+            markerInteractionActive = false
+            chartDelegate?.chartMarkerInteractionDidEnd(self)
+        }
+
+        if let dragWasEnabled {
+            dragEnabled = dragWasEnabled
+        }
+
+        if clearHighlight {
+            clearPinnedHighlight()
+        }
+
+        dragWasEnabled = nil
+    }
+
+    private func clearPinnedHighlight() {
+        pinnedHighlight = nil
+        clearHighlight(notifyDelegate: true)
+    }
+
+    private func clearHighlight(notifyDelegate: Bool) {
+        currentHighlight = nil
+        suppressNextDeselectCallback = true
+        highlightValue(nil)
+        if notifyDelegate {
+            chartDelegate?.chartValueDidDeselect(self)
+        }
+    }
+
+    @discardableResult
+    private func highlightTouchPoint(
+        _ point: CGPoint,
+        pin: Bool,
+        notifyDelegate: Bool
+    ) -> Highlight? {
+        guard let highlight = getHighlightByTouchPoint(point) else { return nil }
+        if pin {
+            pinnedHighlight = highlight
+        }
+        applyHighlight(highlight, notifyDelegate: notifyDelegate)
+        return highlight
+    }
+
+    private func applyHighlight(_ highlight: Highlight, notifyDelegate: Bool) {
+        currentHighlight = highlight
+        highlightValue(highlight)
+        guard notifyDelegate,
+              let entry = entry(for: highlight) else {
+            return
+        }
+        chartDelegate?.chartValueDidSelect(
+            self,
+            entry: entry,
+            highlight: highlight
+        )
+    }
+
+    private func entry(for highlight: Highlight) -> ChartDataEntry? {
+        guard let data else { return nil }
+        let dataSetCount = data.dataSets.count
+        guard dataSetCount > 0 else { return nil }
+        let resolvedIndex = min(max(0, highlight.dataSetIndex), dataSetCount - 1)
+        let dataSet = data.dataSets[resolvedIndex]
+        return dataSet.entryForXValue(highlight.x, closestToY: highlight.y)
     }
 }
 
@@ -142,6 +285,16 @@ extension CardsGraphInternalView: ChartViewDelegate {
     }
 
     func chartValueNothingSelected(_: ChartViewBase) {
+        if let pinnedHighlight {
+            suppressNextDeselectCallback = false
+            applyHighlight(pinnedHighlight, notifyDelegate: false)
+            return
+        }
+        if suppressNextDeselectCallback {
+            suppressNextDeselectCallback = false
+            return
+        }
+        currentHighlight = nil
         chartDelegate?.chartValueDidDeselect(self)
     }
 }
@@ -279,6 +432,42 @@ extension CardsGraphInternalView {
         }
     }
 
+    func highlightEntry(
+        atX xValue: Double,
+        closestToY yValue: Double,
+        dataSetIndex: Int
+    ) {
+        guard let data else {
+            clearHighlight(notifyDelegate: false)
+            return
+        }
+
+        let dataSetCount = data.dataSets.count
+        guard dataSetCount > 0 else {
+            clearHighlight(notifyDelegate: false)
+            return
+        }
+
+        let resolvedIndex = min(max(0, dataSetIndex), dataSetCount - 1)
+        let dataSet = data.dataSets[resolvedIndex]
+        guard let entry = dataSet.entryForXValue(xValue, closestToY: yValue) else {
+            clearHighlight(notifyDelegate: false)
+            return
+        }
+
+        let highlight = Highlight(
+            x: entry.x,
+            y: entry.y,
+            dataSetIndex: resolvedIndex
+        )
+        applyHighlight(highlight, notifyDelegate: false)
+    }
+
+    func clearMarker() {
+        pinnedHighlight = nil
+        clearHighlight(notifyDelegate: false)
+    }
+
     /// The lowest y-index (value on the y-axis) that is still visible on he chart.
     var lowestVisibleY: Double {
         var pt = CGPoint(
@@ -303,3 +492,5 @@ extension CardsGraphInternalView {
         return min(leftAxis.axisMaximum, Double(pt.y))
     }
 }
+
+// swiftlint:enable file_length
