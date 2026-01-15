@@ -14,12 +14,12 @@ public struct RuuviAlertConstants {
 
     public struct AbsoluteHumidity {
         public static let lowerBound = 0.0   // g/m3
-        public static let upperBound = 650.0  // g/m3
+        public static let upperBound = 50.0  // g/m3
     }
 
     public struct DewPoint {
-        public static let lowerBound = -55.0 // celsius
-        public static let upperBound = 150.0  // celsius
+        public static let lowerBound = -40.0 // celsius
+        public static let upperBound = 85.0  // celsius
     }
 
     public struct Pressure {
