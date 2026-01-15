@@ -128,13 +128,44 @@ extension RuuviServiceExportImpl {
 
     // Helper function that builds the column with the header and a closure
     // that extracts the cell value.
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func buildColumnDefinitions(
         firmware: RuuviDataFormat,
-        units: RuuviServiceMeasurementSettingsUnit,
         settings: RuuviLocalSettings,
         records: [RuuviTagSensorRecord]
     ) -> [ColumnDefinition] {
+
+        let emptyValueString = emptyValueString
+        let measurementService = measurementService
+        let includeAirMeasurements = firmware == .e1 || firmware == .v6
+        let includeTagMeasurements = firmware == .v5
+        let hasTemperature = records.contains { $0.temperature != nil }
+        let hasHumidityAndTemperature = records.contains { $0.humidity != nil && $0.temperature != nil }
+        let hasPressure = records.contains { record in
+            guard let pressure = record.pressure else { return false }
+            return pressure.converted(to: .hectopascals).value != -0.01
+        }
+        let hasRssi = records.contains { $0.rssi != nil }
+        let hasVoltage = records.contains { $0.voltage != nil }
+        let hasMovement = records.contains { $0.movementCounter != nil }
+        let hasAcceleration = records.contains { $0.acceleration != nil }
+        let hasMeasurementSequenceNumber = records.contains { $0.measurementSequenceNumber != nil }
+        let hasCo2 = records.contains { $0.co2 != nil }
+        let hasPm1 = records.contains { $0.pm1 != nil }
+        let hasPm25 = records.contains { $0.pm25 != nil }
+        let hasPm4 = records.contains { $0.pm4 != nil }
+        let hasPm10 = records.contains { $0.pm10 != nil }
+        let hasVoc = records.contains { $0.voc != nil }
+        let hasNox = records.contains { $0.nox != nil }
+        let hasAqi = records.contains { record in
+            let aqi = measurementService.aqi(for: record.co2, and: record.pm25)
+            return aqi.isFinite
+        }
+        let hasSoundInstant = records.contains(where: { $0.dbaInstant != nil })
+        let hasSoundAvg = records.contains(where: { $0.dbaAvg != nil })
+        let hasSoundPeak = records.contains(where: { $0.dbaPeak != nil })
+        let hasLuminance = records.contains(where: { $0.luminance != nil })
+        let hasTxPower = records.contains(where: { $0.txPower != nil })
 
         // Local numeric-to-string helper
         func toString(
@@ -148,246 +179,433 @@ extension RuuviServiceExportImpl {
             return numberFormatter.string(from: NSNumber(value: v)) ?? emptyValueString
         }
 
-        // MARK: Common columns
-        func buildCommonColumns() -> [ColumnDefinition] {
-            // Temperature, humidity, rssi, voltage, etc
-            return [
-                ColumnDefinition(
-                    header: RuuviLocalization.ExportService.date,
-                    cellExtractor: { record in
-                        Self.dataDateFormatter.string(from: record.date)
-                    }
-                ),
-                ColumnDefinition(
-                    header: RuuviLocalization.ExportService.temperature(units.temperatureUnit.symbol),
-                    cellExtractor: { [weak self] record in
-                        let val = self?.measurementService.double(for: record.temperature)
-                        return toString(val)
-                    }
-                ),
-                ColumnDefinition(
-                    // if .dew, or else...
-                    header: (units.humidityUnit == .dew)
-                      ? RuuviLocalization.ExportService.humidity(units.temperatureUnit.symbol)
-                      : RuuviLocalization.ExportService.humidity(units.temperatureUnit.symbol),
-                    cellExtractor: { [weak self] record in
-                        let val = self?.measurementService.double(
-                            for: record.humidity,
-                            temperature: record.temperature,
-                            isDecimal: false
-                        )
-                        return toString(val)
-                    }
-                ),
-                ColumnDefinition(
-                    header: RuuviLocalization.ExportService.pressure(units.pressureUnit.ruuviSymbol),
-                    cellExtractor: { [weak self] record in
-                        let pressureVal = self?.measurementService.double(for: record.pressure)
-                        if pressureVal == -0.01 { return toString(nil) }
-                        return toString(pressureVal)
-                    }
-                ),
-                ColumnDefinition(
-                    header: "RSSI (\(RuuviLocalization.dBm))",
-                    cellExtractor: { [weak self] record in
-                        guard let sSelf = self else { return "" }
-                        if let rssi = record.rssi {
-                            return "\(rssi)"
-                        }
-                        return sSelf.emptyValueString
-                    }
-                ),
-            ]
+        func temperatureValue(
+            for record: RuuviTagSensorRecord,
+            unit: UnitTemperature
+        ) -> String {
+            guard let temperature = record.temperature else { return emptyValueString }
+            let value = temperature.converted(to: unit).value.round(to: 2)
+            return toString(value)
         }
 
-        // MARK: E1/V6 columns
-        // swiftlint:disable:next function_body_length
-        func buildE1V6Columns() -> [ColumnDefinition] {
-            let hasSoundInstant = records.contains(where: { $0.dbaInstant != nil })
-            let hasSoundAvg = records.contains(where: { $0.dbaAvg != nil })
-            let hasSoundPeak = records.contains(where: { $0.dbaPeak != nil })
-            let hasLuminance = records.contains(where: { $0.luminance != nil })
-
-            var columns: [ColumnDefinition] = [
-                ColumnDefinition(
-                    header: RuuviLocalization.aqi,
-                    cellExtractor: { [weak self] record in
-                        guard let sSelf = self else { return "" }
-                        let aqi = sSelf.measurementService.aqi(
-                            for: record.co2,
-                            and: record.pm25
-                        )
-                        if aqi.isFinite {
-                            return "\(aqi)"
-                        }
-                        return sSelf.emptyValueString
-                    }
-                ),
-                ColumnDefinition(
-                    header: RuuviLocalization.co2 + " (\(RuuviLocalization.unitCo2))",
-                    cellExtractor: { record in
-                        toString(record.co2)
-                    }
-                ),
-                ColumnDefinition(
-                    header: RuuviLocalization.pm10 + " (\(RuuviLocalization.unitPm10))",
-                    cellExtractor: { record in
-                        toString(record.pm1)
-                    }
-                ),
-                ColumnDefinition(
-                    header: RuuviLocalization.pm25 + " (\(RuuviLocalization.unitPm25))",
-                    cellExtractor: { record in
-                        toString(record.pm25)
-                    }
-                ),
-                ColumnDefinition(
-                    header: RuuviLocalization.pm40 + " (\(RuuviLocalization.unitPm40))",
-                    cellExtractor: { record in
-                        toString(record.pm4)
-                    }
-                ),
-                ColumnDefinition(
-                    header: RuuviLocalization.pm100 + " (\(RuuviLocalization.unitPm100))",
-                    cellExtractor: { record in
-                        toString(record.pm10)
-                    }
-                ),
-                ColumnDefinition(
-                    header: RuuviLocalization.voc + " (\(RuuviLocalization.unitVoc))",
-                    cellExtractor: { record in
-                        toString(record.voc)
-                    }
-                ),
-                ColumnDefinition(
-                    header: RuuviLocalization.nox + " (\(RuuviLocalization.unitNox))",
-                    cellExtractor: { record in
-                        toString(record.nox)
-                    }
-                ),
-            ]
-
-            if hasSoundInstant {
-                columns.append(
-                    ColumnDefinition(
-                        header: RuuviLocalization.soundInstant + " (\(RuuviLocalization.unitSound))",
-                        cellExtractor: { record in
-                            toString(record.dbaInstant)
-                        }
-                    )
-                )
+        func humidityRelativeValue(
+            for record: RuuviTagSensorRecord
+        ) -> String {
+            guard let humidity = record.humidity,
+                  let temperature = record.temperature else {
+                return emptyValueString
             }
-
-            if hasSoundAvg {
-                columns.append(
-                    ColumnDefinition(
-                        header: RuuviLocalization.soundAvg + " (\(RuuviLocalization.unitSound))",
-                        cellExtractor: { record in
-                            toString(record.dbaAvg)
-                        }
-                    )
-                )
-            }
-
-            if hasSoundPeak {
-                columns.append(
-                    ColumnDefinition(
-                        header: RuuviLocalization.soundPeak + " (\(RuuviLocalization.unitSound))",
-                        cellExtractor: { record in
-                            toString(record.dbaPeak)
-                        }
-                    )
-                )
-            }
-
-            if hasLuminance {
-                columns.append(
-                    ColumnDefinition(
-                        header: RuuviLocalization.luminosity + " (\(RuuviLocalization.unitLuminosity))",
-                        cellExtractor: { record in
-                            toString(record.luminance)
-                        }
-                    )
-                )
-            }
-
-            return columns
+            let base = Humidity(value: humidity.value, unit: .relative(temperature: temperature))
+            let percentValue = (base.value * 100).round(to: 2)
+            return toString(percentValue)
         }
 
-        // MARK: v5 columns
-        func buildV5Columns() -> [ColumnDefinition] {
-            return [
+        func humidityAbsoluteValue(
+            for record: RuuviTagSensorRecord
+        ) -> String {
+            guard let humidity = record.humidity,
+                  let temperature = record.temperature else {
+                return emptyValueString
+            }
+            let base = Humidity(value: humidity.value, unit: .relative(temperature: temperature))
+            let absoluteValue = base.converted(to: .absolute).value.round(to: 2)
+            return toString(absoluteValue)
+        }
+
+        func dewPointValue(
+            for record: RuuviTagSensorRecord,
+            unit: UnitTemperature
+        ) -> String {
+            guard let humidity = record.humidity,
+                  let temperature = record.temperature else {
+                return emptyValueString
+            }
+            let base = Humidity(value: humidity.value, unit: .relative(temperature: temperature))
+            guard let dewPoint = try? base.dewPoint(temperature: temperature) else {
+                return emptyValueString
+            }
+            let value = dewPoint.converted(to: unit).value.round(to: 2)
+            return toString(value)
+        }
+
+        func pressureValue(
+            for record: RuuviTagSensorRecord,
+            unit: UnitPressure
+        ) -> String {
+            guard let pressure = record.pressure else { return emptyValueString }
+            if pressure.converted(to: .hectopascals).value == -0.01 {
+                return emptyValueString
+            }
+            let convertedValue = unit.convertedValue(from: pressure)
+            if unit == .newtonsPerMetersSquared {
+                return toString(convertedValue.round(to: 0), maxDecimal: 0)
+            }
+            if unit == .inchesOfMercury {
+                return toString(convertedValue)
+            }
+            return toString(convertedValue.round(to: 2))
+        }
+
+        func movementValue(
+            for record: RuuviTagSensorRecord
+        ) -> String {
+            guard let movementCounter = record.movementCounter else { return emptyValueString }
+            return "\(movementCounter)"
+        }
+
+        func txPowerValue(
+            for record: RuuviTagSensorRecord
+        ) -> String {
+            guard let txPower = record.txPower else { return emptyValueString }
+            return "\(txPower)"
+        }
+
+        func measurementSequenceNumberValue(
+            for record: RuuviTagSensorRecord
+        ) -> String {
+            guard let measurementSequenceNumber = record.measurementSequenceNumber else {
+                return emptyValueString
+            }
+            return "\(measurementSequenceNumber)"
+        }
+
+        func rssiValue(
+            for record: RuuviTagSensorRecord
+        ) -> String {
+            guard let rssi = record.rssi else { return emptyValueString }
+            return "\(rssi)"
+        }
+
+        var columns: [ColumnDefinition] = [
+            ColumnDefinition(
+                header: RuuviLocalization.ExportService.date,
+                cellExtractor: { record in
+                    Self.dataDateFormatter.string(from: record.date)
+                }
+            ),
+        ]
+
+        if includeAirMeasurements {
+            if hasAqi {
+                columns.append(
+                    ColumnDefinition(
+                        header: RuuviLocalization.aqi,
+                        cellExtractor: { record in
+                            let aqi = measurementService.aqi(
+                                for: record.co2,
+                                and: record.pm25
+                            )
+                            if aqi.isFinite {
+                                return "\(aqi)"
+                            }
+                            return emptyValueString
+                        }
+                    )
+                )
+            }
+            if hasCo2 {
+                columns.append(
+                    ColumnDefinition(
+                        header: RuuviLocalization.co2 + " (\(RuuviLocalization.unitCo2))",
+                        cellExtractor: { record in
+                            toString(record.co2)
+                        }
+                    )
+                )
+            }
+            if hasPm1 {
+                columns.append(
+                    ColumnDefinition(
+                        header: RuuviLocalization.pm10 + " (\(RuuviLocalization.unitPm10))",
+                        cellExtractor: { record in
+                            toString(record.pm1)
+                        }
+                    )
+                )
+            }
+            if hasPm25 {
+                columns.append(
+                    ColumnDefinition(
+                        header: RuuviLocalization.pm25 + " (\(RuuviLocalization.unitPm25))",
+                        cellExtractor: { record in
+                            toString(record.pm25)
+                        }
+                    )
+                )
+            }
+            if hasPm4 {
+                columns.append(
+                    ColumnDefinition(
+                        header: RuuviLocalization.pm40 + " (\(RuuviLocalization.unitPm40))",
+                        cellExtractor: { record in
+                            toString(record.pm4)
+                        }
+                    )
+                )
+            }
+            if hasPm10 {
+                columns.append(
+                    ColumnDefinition(
+                        header: RuuviLocalization.pm100 + " (\(RuuviLocalization.unitPm100))",
+                        cellExtractor: { record in
+                            toString(record.pm10)
+                        }
+                    )
+                )
+            }
+            if hasVoc {
+                columns.append(
+                    ColumnDefinition(
+                        header: RuuviLocalization.voc + " (\(RuuviLocalization.unitVoc))",
+                        cellExtractor: { record in
+                            toString(record.voc)
+                        }
+                    )
+                )
+            }
+            if hasNox {
+                columns.append(
+                    ColumnDefinition(
+                        header: RuuviLocalization.nox + " (\(RuuviLocalization.unitNox))",
+                        cellExtractor: { record in
+                            toString(record.nox)
+                        }
+                    )
+                )
+            }
+        }
+
+        if hasTemperature {
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.temperature(UnitTemperature.celsius.symbol),
+                    cellExtractor: { record in
+                        temperatureValue(for: record, unit: .celsius)
+                    }
+                )
+            )
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.temperature(UnitTemperature.fahrenheit.symbol),
+                    cellExtractor: { record in
+                        temperatureValue(for: record, unit: .fahrenheit)
+                    }
+                )
+            )
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.temperature(UnitTemperature.kelvin.symbol),
+                    cellExtractor: { record in
+                        temperatureValue(for: record, unit: .kelvin)
+                    }
+                )
+            )
+        }
+
+        if hasHumidityAndTemperature {
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.humidity(RuuviLocalization.humidityRelativeUnit),
+                    cellExtractor: { record in
+                        humidityRelativeValue(for: record)
+                    }
+                )
+            )
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.absHumidity + " (\(RuuviLocalization.gm³))",
+                    cellExtractor: { record in
+                        humidityAbsoluteValue(for: record)
+                    }
+                )
+            )
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.dewPoint(UnitTemperature.celsius.symbol),
+                    cellExtractor: { record in
+                        dewPointValue(for: record, unit: .celsius)
+                    }
+                )
+            )
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.dewPoint(UnitTemperature.fahrenheit.symbol),
+                    cellExtractor: { record in
+                        dewPointValue(for: record, unit: .fahrenheit)
+                    }
+                )
+            )
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.dewPoint(UnitTemperature.kelvin.symbol),
+                    cellExtractor: { record in
+                        dewPointValue(for: record, unit: .kelvin)
+                    }
+                )
+            )
+        }
+
+        if hasPressure {
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.pressure(UnitPressure.hectopascals.ruuviSymbol),
+                    cellExtractor: { record in
+                        pressureValue(for: record, unit: .hectopascals)
+                    }
+                )
+            )
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.pressure(UnitPressure.newtonsPerMetersSquared.ruuviSymbol),
+                    cellExtractor: { record in
+                        pressureValue(for: record, unit: .newtonsPerMetersSquared)
+                    }
+                )
+            )
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.pressure(UnitPressure.millimetersOfMercury.ruuviSymbol),
+                    cellExtractor: { record in
+                        pressureValue(for: record, unit: .millimetersOfMercury)
+                    }
+                )
+            )
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.pressure(UnitPressure.inchesOfMercury.ruuviSymbol),
+                    cellExtractor: { record in
+                        pressureValue(for: record, unit: .inchesOfMercury)
+                    }
+                )
+            )
+        }
+
+        if includeTagMeasurements && hasMovement {
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.movementCounter +
+                        " (\(RuuviLocalization.movements))",
+                    cellExtractor: { record in
+                        movementValue(for: record)
+                    }
+                )
+            )
+        }
+
+        if includeAirMeasurements && hasSoundInstant {
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.soundInstant + " (\(RuuviLocalization.unitSound))",
+                    cellExtractor: { record in
+                        toString(record.dbaInstant)
+                    }
+                )
+            )
+        }
+
+        if includeAirMeasurements && hasSoundAvg {
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.soundAvg + " (\(RuuviLocalization.unitSound))",
+                    cellExtractor: { record in
+                        toString(record.dbaAvg)
+                    }
+                )
+            )
+        }
+
+        if includeAirMeasurements && hasSoundPeak {
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.soundPeak + " (\(RuuviLocalization.unitSound))",
+                    cellExtractor: { record in
+                        toString(record.dbaPeak)
+                    }
+                )
+            )
+        }
+
+        if includeAirMeasurements && hasLuminance {
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.luminosity + " (\(RuuviLocalization.unitLuminosity))",
+                    cellExtractor: { record in
+                        toString(record.luminance)
+                    }
+                )
+            )
+        }
+
+        if includeTagMeasurements && hasVoltage {
+            columns.append(
                 ColumnDefinition(
                     header: RuuviLocalization.ExportService.voltage,
                     cellExtractor: { record in
                         let v = record.voltage?.converted(to: .volts).value
                         return toString(v)
                     }
-                ),
+                )
+            )
+        }
+        if includeTagMeasurements && hasAcceleration {
+            columns.append(
                 ColumnDefinition(
                     header: RuuviLocalization.ExportService.accelerationX + " (\(RuuviLocalization.g))",
                     cellExtractor: { record in
                         toString(record.acceleration?.x.value)
                     }
-                ),
+                )
+            )
+            columns.append(
                 ColumnDefinition(
                     header: RuuviLocalization.ExportService.accelerationY + " (\(RuuviLocalization.g))",
                     cellExtractor: { record in
                         toString(record.acceleration?.y.value)
                     }
-                ),
+                )
+            )
+            columns.append(
                 ColumnDefinition(
                     header: RuuviLocalization.ExportService.accelerationZ + " (\(RuuviLocalization.g))",
                     cellExtractor: { record in
                         toString(record.acceleration?.z.value)
                     }
-                ),
+                )
+            )
+        }
+
+        if hasRssi {
+            columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.movementCounter +
-                        " (\(RuuviLocalization.movements))",
-                    cellExtractor: { [weak self] record in
-                        if let movementCounter = record.movementCounter {
-                            return "\(movementCounter)"
-                        }
-                        guard let sSelf = self else { return "" }
-                        return sSelf.emptyValueString
+                    header: "RSSI (\(RuuviLocalization.dBm))",
+                    cellExtractor: { record in
+                        rssiValue(for: record)
                     }
-                ),
+                )
+            )
+        }
+
+        if hasMeasurementSequenceNumber {
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.measurementSequenceNumber,
+                    cellExtractor: { record in
+                        measurementSequenceNumberValue(for: record)
+                    }
+                )
+            )
+        }
+
+        if includeTagMeasurements && hasTxPower {
+            columns.append(
                 ColumnDefinition(
                     header: RuuviLocalization.ExportService.txPower + " (\(RuuviLocalization.dBm))",
-                    cellExtractor: { [weak self] record in
-                        if let txPower = record.txPower {
-                            return "\(txPower)"
-                        }
-                        guard let sSelf = self else { return "" }
-                        return sSelf.emptyValueString
+                    cellExtractor: { record in
+                        txPowerValue(for: record)
                     }
-                ),
-            ]
+                )
+            )
         }
-
-        // Start assembling the columns
-        var columns = buildCommonColumns()
-        switch firmware {
-        case .e1, .v6:
-            columns += buildE1V6Columns()
-        case .v5:
-            columns += buildV5Columns()
-        default:
-            break
-        }
-
-        // Add measurement sequence number
-        columns.append(ColumnDefinition(
-            header: RuuviLocalization.ExportService.measurementSequenceNumber,
-            cellExtractor: { [weak self] record in
-                if let measurementSequenceNumber = record.measurementSequenceNumber {
-                    return "\(measurementSequenceNumber)"
-                }
-                guard let sSelf = self else { return "" }
-                return sSelf.emptyValueString
-            }
-        ))
 
         // Possibly data source
         if settings.includeDataSourceInHistoryExport {
@@ -419,7 +637,6 @@ extension RuuviServiceExportImpl {
                 let firmware = RuuviDataFormat.dataFormat(from: version)
                 let columns = self.buildColumnDefinitions(
                     firmware: firmware,
-                    units: self.measurementService.units,
                     settings: self.ruuviLocalSettings,
                     records: records
                 )
@@ -470,7 +687,6 @@ extension RuuviServiceExportImpl {
 
                 let columns = self.buildColumnDefinitions(
                     firmware: firmwareType,
-                    units: self.measurementService.units,
                     settings: self.ruuviLocalSettings,
                     records: records
                 )
