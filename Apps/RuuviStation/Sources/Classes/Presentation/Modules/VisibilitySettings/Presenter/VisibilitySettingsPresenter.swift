@@ -178,6 +178,60 @@ extension VisibilitySettingsPresenter: VisibilitySettingsViewOutput {
 
 // MARK: - Private helpers
 private extension VisibilitySettingsPresenter {
+    enum HiddenMeasurementsOrder {
+        static let variants: [MeasurementDisplayVariant] = [
+            MeasurementDisplayVariant(type: .aqi),
+            MeasurementDisplayVariant(type: .co2),
+            MeasurementDisplayVariant(type: .pm10),
+            MeasurementDisplayVariant(type: .pm25),
+            MeasurementDisplayVariant(type: .pm40),
+            MeasurementDisplayVariant(type: .pm100),
+            MeasurementDisplayVariant(type: .voc),
+            MeasurementDisplayVariant(type: .nox),
+            MeasurementDisplayVariant(type: .temperature, temperatureUnit: .celsius),
+            MeasurementDisplayVariant(type: .temperature, temperatureUnit: .fahrenheit),
+            MeasurementDisplayVariant(type: .temperature, temperatureUnit: .kelvin),
+            MeasurementDisplayVariant(type: .humidity, humidityUnit: .percent),
+            MeasurementDisplayVariant(type: .humidity, humidityUnit: .gm3),
+            MeasurementDisplayVariant(
+                type: .humidity,
+                temperatureUnit: .celsius,
+                humidityUnit: .dew
+            ),
+            MeasurementDisplayVariant(
+                type: .humidity,
+                temperatureUnit: .fahrenheit,
+                humidityUnit: .dew
+            ),
+            MeasurementDisplayVariant(
+                type: .humidity,
+                temperatureUnit: .kelvin,
+                humidityUnit: .dew
+            ),
+            MeasurementDisplayVariant(type: .pressure, pressureUnit: .hectopascals),
+            MeasurementDisplayVariant(type: .pressure, pressureUnit: .newtonsPerMetersSquared),
+            MeasurementDisplayVariant(type: .pressure, pressureUnit: .millimetersOfMercury),
+            MeasurementDisplayVariant(type: .pressure, pressureUnit: .inchesOfMercury),
+            MeasurementDisplayVariant(type: .movementCounter),
+            MeasurementDisplayVariant(type: .soundInstant),
+            MeasurementDisplayVariant(type: .soundAverage),
+            MeasurementDisplayVariant(type: .soundPeak),
+            MeasurementDisplayVariant(type: .luminosity),
+            MeasurementDisplayVariant(type: .voltage),
+            MeasurementDisplayVariant(type: .accelerationX),
+            MeasurementDisplayVariant(type: .accelerationY),
+            MeasurementDisplayVariant(type: .accelerationZ),
+            MeasurementDisplayVariant(type: .rssi),
+            MeasurementDisplayVariant(type: .measurementSequenceNumber),
+        ]
+
+        static let index: [MeasurementDisplayVariant: Int] = {
+            Dictionary(
+                uniqueKeysWithValues: variants.enumerated().map { ($0.element, $0.offset) }
+            )
+        }()
+    }
+
     func closeModule() {
         output?.visibilitySettingsModuleDidFinish(self)
         dismiss { [weak self] in
@@ -323,7 +377,7 @@ private extension VisibilitySettingsPresenter {
             !visible.contains($0) && !hidden.contains($0)
         }
         hidden.append(contentsOf: remainder)
-        return hidden
+        return orderedHiddenVariants(hidden)
     }
 
     func presentCurrentState() {
@@ -503,7 +557,8 @@ private extension VisibilitySettingsPresenter {
         let variant = visibleVariants.remove(at: index)
         disableAlertIfNeeded(for: variant)
         if !hiddenVariants.contains(variant) {
-            hiddenVariants.insert(variant, at: 0)
+            hiddenVariants.append(variant)
+            hiddenVariants = orderedHiddenVariants(hiddenVariants)
         }
         usesDefaultOrder = false
         persistCurrentSelection()
@@ -673,6 +728,47 @@ private extension VisibilitySettingsPresenter {
 
         if !inserted {
             visibleVariants.append(variant)
+        }
+    }
+
+    func orderedHiddenVariants(
+        _ variants: [MeasurementDisplayVariant]
+    ) -> [MeasurementDisplayVariant] {
+        guard variants.count > 1 else { return variants }
+        let orderIndex = HiddenMeasurementsOrder.index
+        return variants.enumerated().sorted { lhs, rhs in
+            let lhsRank = orderIndex[normalizedHiddenVariant(lhs.element)] ?? Int.max
+            let rhsRank = orderIndex[normalizedHiddenVariant(rhs.element)] ?? Int.max
+            if lhsRank != rhsRank {
+                return lhsRank < rhsRank
+            }
+            return lhs.offset < rhs.offset
+        }.map(\.element)
+    }
+
+    func normalizedHiddenVariant(
+        _ variant: MeasurementDisplayVariant
+    ) -> MeasurementDisplayVariant {
+        switch variant.type {
+        case .temperature:
+            let unit = variant.temperatureUnit ?? .celsius
+            return MeasurementDisplayVariant(type: .temperature, temperatureUnit: unit)
+        case .humidity:
+            let unit = variant.humidityUnit ?? .percent
+            if unit == .dew {
+                let temperatureUnit = variant.temperatureUnit ?? .celsius
+                return MeasurementDisplayVariant(
+                    type: .humidity,
+                    temperatureUnit: temperatureUnit,
+                    humidityUnit: .dew
+                )
+            }
+            return MeasurementDisplayVariant(type: .humidity, humidityUnit: unit)
+        case .pressure:
+            let unit = variant.pressureUnit ?? .hectopascals
+            return MeasurementDisplayVariant(type: .pressure, pressureUnit: unit)
+        default:
+            return MeasurementDisplayVariant(type: variant.type)
         }
     }
 
