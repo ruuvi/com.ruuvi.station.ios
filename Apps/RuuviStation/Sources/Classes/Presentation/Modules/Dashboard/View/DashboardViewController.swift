@@ -283,7 +283,7 @@ private extension DashboardViewController {
                 .constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             customHeaderView.trailingAnchor
                 .constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            customHeaderView.heightAnchor.constraint(equalToConstant: 44)
+            customHeaderView.heightAnchor.constraint(equalToConstant: 44),
         ])
 
         // Left side: Menu button + Ruuvi logo
@@ -312,7 +312,7 @@ private extension DashboardViewController {
             ruuviLogoView.centerYAnchor.constraint(equalTo: leftContainer.centerYAnchor),
             ruuviLogoView.widthAnchor.constraint(equalToConstant: 90),
             ruuviLogoView.heightAnchor.constraint(equalToConstant: 22),
-            ruuviLogoView.trailingAnchor.constraint(equalTo: leftContainer.trailingAnchor)
+            ruuviLogoView.trailingAnchor.constraint(equalTo: leftContainer.trailingAnchor),
         ])
 
         // Center: Activity indicator
@@ -321,7 +321,7 @@ private extension DashboardViewController {
 
         NSLayoutConstraint.activate([
             activityIndicator.centerXAnchor.constraint(equalTo: customHeaderView.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: customHeaderView.centerYAnchor)
+            activityIndicator.centerYAnchor.constraint(equalTo: customHeaderView.centerYAnchor),
         ])
 
         // Right side: View button
@@ -331,7 +331,7 @@ private extension DashboardViewController {
         NSLayoutConstraint.activate([
             viewButton.trailingAnchor.constraint(equalTo: customHeaderView.trailingAnchor, constant: -16),
             viewButton.centerYAnchor.constraint(equalTo: customHeaderView.centerYAnchor),
-            viewButton.heightAnchor.constraint(equalToConstant: 32)
+            viewButton.heightAnchor.constraint(equalToConstant: 32),
         ])
     }
 

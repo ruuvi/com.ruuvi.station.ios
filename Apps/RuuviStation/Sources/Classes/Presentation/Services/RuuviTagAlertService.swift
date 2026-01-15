@@ -1021,7 +1021,6 @@ private extension RuuviTagAlertService {
         case .movement: alertService.setMovement(description: description, ruuviTag: physicalSensor)
         case .connection: alertService.setConnection(description: description, for: physicalSensor)
         case .cloudConnection: alertService.setCloudConnection(description: description, ruuviTag: physicalSensor)
-        default: break
         }
     }
 

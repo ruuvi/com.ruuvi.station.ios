@@ -398,19 +398,6 @@ private extension CardsSettingsAlertsBuilder {
                 cloudConnectionConfiguration(config: config),
                 snapshot: snapshot
             )
-        default:
-            return adjustedInteraction(
-                simpleRangeConfiguration(
-                    snapshot: snapshot,
-                    config: config,
-                    hasMeasurement: hasMeasurement,
-                    range: 0...1,
-                    unit: "",
-                    format: Constants.configFormat,
-                    latestMeasurement: RuuviLocalization.na
-                ),
-                snapshot: snapshot
-            )
         }
     }
 }
@@ -848,7 +835,7 @@ private extension CardsSettingsAlertsBuilder {
 // MARK: - Helpers
 private extension CardsSettingsAlertsBuilder {
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     static func alertTitle(
         for alertType: AlertType,
         measurementService: RuuviServiceMeasurement?
@@ -1390,14 +1377,6 @@ private extension RuuviTagCardSnapshotAlertConfig {
                 isFiring: false,
                 mutedTill: nil,
                 unseenDuration: Double(RuuviAlertConstants.CloudConnection.defaultUnseenDuration)
-            )
-        default:
-            return RuuviTagCardSnapshotAlertConfig(
-                type: measurementType,
-                alertType: alertType,
-                isActive: false,
-                isFiring: false,
-                mutedTill: nil
             )
         }
     }

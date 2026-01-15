@@ -50,7 +50,7 @@ extension AlertType {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func title(with unit: String = "") -> String {
         switch self {
         case .temperature:
@@ -104,8 +104,6 @@ extension AlertType {
             return RuuviLocalization.alertConnection
         case .cloudConnection:
             return RuuviLocalization.alertCloudConnectionTitle
-        default:
-            return ""
         }
     }
 }
