@@ -10,6 +10,8 @@ public protocol RuuviPool {
     func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError>
     @discardableResult
     func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError>
+    @discardableResult
+    func deleteSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError>
 
     // records
     @discardableResult

@@ -230,6 +230,7 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         let deleteTagOperation = pool.delete(sensor)
         let deleteRecordsOperation = pool.deleteAllRecords(sensor.id)
         let deleteLastRecordOperation = pool.deleteLast(sensor.id)
+        let deleteSensorSettingsOperation = pool.deleteSensorSettings(sensor)
         var unshareOperation: Future<MACIdentifier, RuuviServiceError>?
         var unclaimOperation: Future<AnyRuuviTagSensor, RuuviServiceError>?
 
@@ -255,6 +256,7 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
             deleteTagOperation,
             deleteRecordsOperation,
             deleteLastRecordOperation,
+            deleteSensorSettingsOperation,
         ])
         .on(success: { [weak self] _ in
             // Check if we should clear global settings after deletion

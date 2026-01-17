@@ -85,6 +85,16 @@ final class RuuviPoolCoordinator: RuuviPool {
         return promise.future
     }
 
+    func deleteSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError> {
+        let promise = Promise<Bool, RuuviPoolError>()
+        sqlite.deleteSensorSettings(ruuviTag).on(success: { success in
+            promise.succeed(value: success)
+        }, failure: { error in
+            promise.fail(error: .ruuviPersistence(error))
+        })
+        return promise.future
+    }
+
     func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError> {
         let promise = Promise<Bool, RuuviPoolError>()
         if record.macId != nil {

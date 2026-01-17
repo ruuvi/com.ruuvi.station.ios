@@ -750,6 +750,41 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         return promise.future
     }
 
+    public func deleteSensorSettings(
+        _ ruuviTag: RuuviTagSensor
+    ) -> Future<Bool, RuuviPersistenceError> {
+        let promise = Promise<Bool, RuuviPersistenceError>()
+        do {
+            let deletedCount = try database.dbPool.write { db -> Int in
+                let settingsId = SensorSettingsStruct(
+                    luid: ruuviTag.luid,
+                    macId: ruuviTag.macId,
+                    temperatureOffset: nil,
+                    humidityOffset: nil,
+                    pressureOffset: nil,
+                ).id
+
+                var filter = Settings.idColumn == settingsId
+
+                if let luidValue = ruuviTag.luid?.value {
+                    filter = filter || Settings.luidColumn == luidValue
+                }
+
+                if let macValue = ruuviTag.macId?.value {
+                    filter = filter || Settings.macIdColumn == macValue
+                    filter = filter || Settings.macIdColumn.like("%\(macValue.lastThreeBytes)")
+                }
+
+                let request = Settings.filter(filter)
+                return try request.deleteAll(db)
+            }
+            promise.succeed(value: deletedCount > 0)
+        } catch {
+            promise.fail(error: .grdb(error))
+        }
+        return promise.future
+    }
+
     public func cleanupDBSpace() -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         do {

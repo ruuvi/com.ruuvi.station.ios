@@ -61,6 +61,10 @@ public protocol RuuviPersistence {
         ruuviTag: RuuviTagSensor
     ) -> Future<Bool, RuuviPersistenceError>
 
+    func deleteSensorSettings(
+        _ ruuviTag: RuuviTagSensor
+    ) -> Future<Bool, RuuviPersistenceError>
+
     func save(
         sensorSettings: SensorSettings
     ) -> Future<SensorSettings, RuuviPersistenceError>
