@@ -9,15 +9,10 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     @UserDefault("RuuviFeatureFlags.showNewCardsMenu", defaultValue: false)
     var showNewCardsMenu: Bool
 
-    @UserDefault("RuuviFeatureFlags.showImprovedSensorSettingsUI", defaultValue: true)
-    var showImprovedSensorSettingsUI: Bool
-
     @UserDefault("RuuviFeatureFlags.downloadBetaFirmware", defaultValue: false)
     var downloadBetaFirmware: Bool
 
     @UserDefault("RuuviFeatureFlags.downloadAlphaFirmware", defaultValue: false)
     var downloadAlphaFirmware: Bool
 
-    @UserDefault("RuuviFeatureFlags.showVisibilitySettings", defaultValue: true)
-    var showVisibilitySettings: Bool
 }

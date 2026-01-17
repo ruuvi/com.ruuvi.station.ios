@@ -73,8 +73,7 @@ private extension CardsSettingsCoordinator {
             measurementService: r.resolve(RuuviServiceMeasurement.self)!,
             settings: r.resolve(RuuviLocalSettings.self)!,
             errorPresenter: r.resolve(ErrorPresenter.self)!,
-            activityPresenter: r.resolve(ActivityPresenter.self)!,
-            flags: r.resolve(RuuviLocalFlags.self)!
+            activityPresenter: r.resolve(ActivityPresenter.self)!
         )
         let viewController = CardsSettingsViewController(
             snapshot: snapshot

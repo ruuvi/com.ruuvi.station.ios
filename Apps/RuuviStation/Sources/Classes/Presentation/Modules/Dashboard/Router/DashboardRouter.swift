@@ -12,7 +12,6 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     private weak var backgroundSelectionModule: BackgroundSelectionModuleInput?
     var settings: RuuviLocalSettings!
     var cardsCoordinator: CardsCoordinator!
-    var flags: RuuviLocalFlags!
     var cardsSettingsCoordinator: CardsSettingsCoordinator!
 
     // swiftlint:disable weak_delegate
@@ -100,37 +99,17 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     func openTagSettings(
         snapshot: RuuviTagCardSnapshot,
         ruuviTag: RuuviTagSensor,
-        latestMeasurement: RuuviTagSensorRecord?,
-        sensorSettings: SensorSettings?,
-        output: LegacyTagSettingsModuleOutput
+        sensorSettings: SensorSettings?
     ) {
-        if flags.showImprovedSensorSettingsUI, let transitionHandler {
-            cardsSettingsCoordinator = CardsSettingsCoordinator(
-                baseViewController: transitionHandler,
-                for: snapshot,
-                ruuviTagSensor: ruuviTag,
-                sensorSettings: sensorSettings,
-                delegate: self
-            )
-            cardsSettingsCoordinator.start()
-        } else {
-            let factory: LegacyTagSettingsModuleFactory = LegacyTagSettingsModuleFactoryImpl()
-            let module = factory.create()
-            transitionHandler
-                .navigationController?
-                .pushViewController(
-                    module,
-                    animated: true
-                )
-            if let presenter = module.output as? LegacyTagSettingsModuleInput {
-                presenter.configure(output: output)
-                presenter.configure(
-                    ruuviTag: ruuviTag,
-                    latestMeasurement: latestMeasurement,
-                    sensorSettings: sensorSettings
-                )
-            }
-        }
+        guard let transitionHandler else { return }
+        cardsSettingsCoordinator = CardsSettingsCoordinator(
+            baseViewController: transitionHandler,
+            for: snapshot,
+            ruuviTagSensor: ruuviTag,
+            sensorSettings: sensorSettings,
+            delegate: self
+        )
+        cardsSettingsCoordinator.start()
     }
 
     // swiftlint:disable:next function_parameter_count

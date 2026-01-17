@@ -12,7 +12,6 @@ final class VisibilitySettingsPresenter: VisibilitySettingsModuleInput {
     var router: VisibilitySettingsRouterInput?
     weak var output: VisibilitySettingsModuleOutput?
 
-    private let flags: RuuviLocalFlags
     private let sensorPropertiesService: RuuviServiceSensorProperties
     private let settings: RuuviLocalSettings
     private var snapshotCancellables = Set<AnyCancellable>()
@@ -31,11 +30,9 @@ final class VisibilitySettingsPresenter: VisibilitySettingsModuleInput {
     private var needsPersistVisibleReorder: Bool = false
 
     init(
-        flags: RuuviLocalFlags,
         sensorPropertiesService: RuuviServiceSensorProperties,
         settings: RuuviLocalSettings
     ) {
-        self.flags = flags
         self.sensorPropertiesService = sensorPropertiesService
         self.settings = settings
     }
@@ -63,10 +60,6 @@ final class VisibilitySettingsPresenter: VisibilitySettingsModuleInput {
 
 extension VisibilitySettingsPresenter: VisibilitySettingsViewOutput {
     func viewDidLoad() {
-        guard flags.showVisibilitySettings else {
-            closeModule()
-            return
-        }
         guard let snapshot, snapshot.metadata.isOwner else {
             closeModule()
             return

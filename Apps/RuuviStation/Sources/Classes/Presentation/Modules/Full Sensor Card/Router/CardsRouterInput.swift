@@ -6,9 +6,7 @@ protocol CardsRouterInput {
     func openTagSettings(
         snapshot: RuuviTagCardSnapshot,
         ruuviTag: RuuviTagSensor,
-        latestMeasurement: RuuviTagSensorRecord?,
-        sensorSettings: SensorSettings?,
-        output: LegacyTagSettingsModuleOutput
+        sensorSettings: SensorSettings?
     )
     func dismiss()
 }

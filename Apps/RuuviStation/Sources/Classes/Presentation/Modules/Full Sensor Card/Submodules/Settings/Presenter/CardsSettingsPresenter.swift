@@ -23,7 +23,6 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
     private let measurementService: RuuviServiceMeasurement
     private let errorPresenter: ErrorPresenter
     private let activityPresenter: ActivityPresenter
-    private let flags: RuuviLocalFlags
 
     private var settings: RuuviLocalSettings
 
@@ -57,15 +56,13 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
         measurementService: RuuviServiceMeasurement,
         settings: RuuviLocalSettings,
         errorPresenter: ErrorPresenter,
-        activityPresenter: ActivityPresenter,
-        flags: RuuviLocalFlags
+        activityPresenter: ActivityPresenter
     ) {
         self.ruuviSensorPropertiesService = ruuviSensorPropertiesService
         self.measurementService = measurementService
         self.settings = settings
         self.errorPresenter = errorPresenter
         self.activityPresenter = activityPresenter
-        self.flags = flags
         super.init()
     }
 
@@ -217,8 +214,7 @@ extension CardsSettingsPresenter: CardsSettingsViewOutput {
     }
 
     func viewDidTapVisibleMeasurements() {
-        guard flags.showVisibilitySettings,
-              let snapshot,
+        guard let snapshot,
               let sensor = sensor,
               snapshot.metadata.isOwner else {
             return
@@ -739,14 +735,6 @@ private extension CardsSettingsPresenter {
     }
 
     func refreshVisibleMeasurementsSummary() {
-        guard flags.showVisibilitySettings else {
-            view?.updateVisibleMeasurementsSummary(
-                value: nil,
-                isVisible: false
-            )
-            return
-        }
-
         guard let snapshot else {
             view?.updateVisibleMeasurementsSummary(
                 value: nil,

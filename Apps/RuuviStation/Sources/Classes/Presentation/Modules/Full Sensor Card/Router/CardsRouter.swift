@@ -1,11 +1,8 @@
 import Foundation
-import LightRoute
-import RuuviLocal
 import RuuviOntology
 import UIKit
 
 class CardsRouter: NSObject, CardsRouterInput {
-    var flags: RuuviLocalFlags!
     weak var transitionHandler: UIViewController?
     var cardsSettingsCoordinator: CardsSettingsCoordinator!
     private weak var dfuModule: DFUModuleInput?
@@ -19,37 +16,17 @@ class CardsRouter: NSObject, CardsRouterInput {
     func openTagSettings(
         snapshot: RuuviTagCardSnapshot,
         ruuviTag: RuuviTagSensor,
-        latestMeasurement: RuuviTagSensorRecord?,
-        sensorSettings: SensorSettings?,
-        output: LegacyTagSettingsModuleOutput
+        sensorSettings: SensorSettings?
     ) {
-        if flags.showImprovedSensorSettingsUI, let transitionHandler {
-            cardsSettingsCoordinator = CardsSettingsCoordinator(
-                baseViewController: transitionHandler,
-                for: snapshot,
-                ruuviTagSensor: ruuviTag,
-                sensorSettings: sensorSettings,
-                delegate: self
-            )
-            cardsSettingsCoordinator.start()
-        } else {
-            let factory: LegacyTagSettingsModuleFactory = LegacyTagSettingsModuleFactoryImpl()
-            let module = factory.create()
-            transitionHandler?
-                .navigationController?
-                .pushViewController(
-                    module,
-                    animated: true
-                )
-            if let presenter = module.output as? LegacyTagSettingsModuleInput {
-                presenter.configure(output: output)
-                presenter.configure(
-                    ruuviTag: ruuviTag,
-                    latestMeasurement: latestMeasurement,
-                    sensorSettings: sensorSettings
-                )
-            }
-        }
+        guard let transitionHandler else { return }
+        cardsSettingsCoordinator = CardsSettingsCoordinator(
+            baseViewController: transitionHandler,
+            for: snapshot,
+            ruuviTagSensor: ruuviTag,
+            sensorSettings: sensorSettings,
+            delegate: self
+        )
+        cardsSettingsCoordinator.start()
     }
 
     func openUpdateFirmware(ruuviTag: RuuviTagSensor) {

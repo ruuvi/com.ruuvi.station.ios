@@ -720,29 +720,6 @@ private extension RuuviTagDataService {
         for sensor: AnyRuuviTagSensor,
         settings: SensorSettings?
     ) {
-        guard flags.showVisibilitySettings else {
-            RuuviTagDataService.clearMeasurementDisplayPreference(for: sensor.id)
-            if let snapshot = snapshots.first(where: { $0.id == sensor.id }) {
-                let didChange = updateMeasurementVisibilityMetadata(
-                    for: snapshot,
-                    sensor: sensor,
-                    sensorSettings: settings,
-                    availableVariants: snapshot.displayData.measurementVisibility?.availableVariants
-                )
-                if didChange {
-                    rebuildIndicatorGrid(for: snapshot, sensor: sensor, sensorSettings: settings)
-                }
-                DispatchQueue.main.async {
-                    if didChange {
-                        self.publishSnapshotUpdate(snapshot, force: true)
-                    } else {
-                        self.publishSnapshotUpdate(snapshot)
-                    }
-                }
-            }
-            return
-        }
-
         guard let codes = settings?.displayOrder, !codes.isEmpty else {
             RuuviTagDataService.clearMeasurementDisplayPreference(for: sensor.id)
             if let snapshot = snapshots.first(where: { $0.id == sensor.id }) {
@@ -1104,10 +1081,6 @@ private extension RuuviTagDataService {
         sensorSettings: SensorSettings?,
         availableVariants: [MeasurementDisplayVariant]? = nil
     ) -> Bool {
-        guard flags.showVisibilitySettings else {
-            return snapshot.updateMeasurementVisibility(nil)
-        }
-
         let preference: MeasurementDisplayPreference?
         if let sensor {
             preference = Self.measurementDisplayPreference(for: sensor.id)

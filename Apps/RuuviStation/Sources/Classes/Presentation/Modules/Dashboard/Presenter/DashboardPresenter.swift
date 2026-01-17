@@ -467,9 +467,7 @@ private extension DashboardPresenter {
             router.openTagSettings(
                 snapshot: snapshot,
                 ruuviTag: sensor,
-                latestMeasurement: snapshot.latestRawRecord,
-                sensorSettings: relevantSetting,
-                output: self
+                sensorSettings: relevantSetting
             )
         }
     }
@@ -813,19 +811,6 @@ extension DashboardPresenter: DashboardRouterDelegate {
 
     func shouldDismissDiscover() -> Bool {
         return !serviceCoordinatorManager.getAllSnapshots().isEmpty
-    }
-}
-
-extension DashboardPresenter: LegacyTagSettingsModuleOutput {
-
-    func tagSettingsDidDeleteTag(module: LegacyTagSettingsModuleInput, ruuviTag: RuuviTagSensor) {
-        module.dismiss { [weak self] in
-            self?.restartServiceCoordinatorSensors()
-        }
-    }
-
-    func tagSettingsDidDismiss(module: LegacyTagSettingsModuleInput) {
-        module.dismiss(completion: nil)
     }
 }
 

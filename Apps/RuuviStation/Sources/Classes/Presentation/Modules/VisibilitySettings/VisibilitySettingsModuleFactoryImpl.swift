@@ -15,7 +15,6 @@ final class VisibilitySettingsModuleFactoryImpl: VisibilitySettingsModuleFactory
         router.transitionHandler = viewController
 
         let presenter = VisibilitySettingsPresenter(
-            flags: resolver.resolve(RuuviLocalFlags.self)!,
             sensorPropertiesService: resolver.resolve(RuuviServiceSensorProperties.self)!,
             settings: resolver.resolve(RuuviLocalSettings.self)!
         )

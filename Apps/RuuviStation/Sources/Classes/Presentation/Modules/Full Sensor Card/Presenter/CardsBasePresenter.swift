@@ -400,23 +400,6 @@ extension CardsBasePresenter: CardsSettingsPresenterOutput {
     }
 }
 
-// MARK: TagSettingsModuleOutput
-extension CardsBasePresenter: LegacyTagSettingsModuleOutput {
-    func tagSettingsDidDeleteTag(
-        module: LegacyTagSettingsModuleInput,
-        ruuviTag: RuuviTagSensor
-    ) {
-        module.dismiss(completion: {
-            // No need to anything on completion.
-            // View should get updated state from Data Service.
-        })
-    }
-
-    func tagSettingsDidDismiss(module: any LegacyTagSettingsModuleInput) {
-        module.dismiss(completion: nil)
-    }
-}
-
 // MARK: RuuviTagServiceCoordinatorObserver
 extension CardsBasePresenter: RuuviTagServiceCoordinatorObserver {
 
@@ -771,9 +754,7 @@ private extension CardsBasePresenter {
             router?.openTagSettings(
                 snapshot: snapshot,
                 ruuviTag: sensor,
-                latestMeasurement: snapshot.latestRawRecord,
-                sensorSettings: settings,
-                output: self
+                sensorSettings: settings
             )
         }
     }

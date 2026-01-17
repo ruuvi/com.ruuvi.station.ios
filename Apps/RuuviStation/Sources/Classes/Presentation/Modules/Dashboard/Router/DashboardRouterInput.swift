@@ -19,13 +19,11 @@ protocol DashboardRouterInput {
         activeMenu: CardsMenuType,
         openSettings: Bool // Legacy flow support, we can remove this with new menu.
     )
-    // Opens legacy settings. Can be removed when full settings is implemented in new menu.
+    // Opens sensor settings.
     func openTagSettings(
         snapshot: RuuviTagCardSnapshot,
         ruuviTag: RuuviTagSensor,
-        latestMeasurement: RuuviTagSensorRecord?,
-        sensorSettings: SensorSettings?,
-        output: LegacyTagSettingsModuleOutput
+        sensorSettings: SensorSettings?
     )
     func openUpdateFirmware(ruuviTag: RuuviTagSensor)
     func openBackgroundSelectionView(ruuviTag: RuuviTagSensor)
