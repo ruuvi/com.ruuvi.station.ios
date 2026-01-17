@@ -165,7 +165,6 @@ extension RuuviServiceExportImpl {
         let hasSoundAvg = records.contains(where: { $0.dbaAvg != nil })
         let hasSoundPeak = records.contains(where: { $0.dbaPeak != nil })
         let hasLuminance = records.contains(where: { $0.luminance != nil })
-        let hasTxPower = records.contains(where: { $0.txPower != nil })
 
         // Local numeric-to-string helper
         func toString(
@@ -177,6 +176,133 @@ extension RuuviServiceExportImpl {
             numberFormatter.minimumFractionDigits = minDecimal
             numberFormatter.maximumFractionDigits = maxDecimal
             return numberFormatter.string(from: NSNumber(value: v)) ?? emptyValueString
+        }
+
+        // swiftlint:disable:next cyclomatic_complexity function_body_length
+        func shortName(for variant: MeasurementDisplayVariant) -> String {
+            switch variant.type {
+            case .temperature:
+                return RuuviLocalization.temperature
+            case .humidity:
+                switch variant.humidityUnit ?? .percent {
+                case .percent:
+                    return RuuviLocalization.relHumidity
+                case .gm3:
+                    return RuuviLocalization.absHumidity
+                case .dew:
+                    return RuuviLocalization.dewpoint
+                }
+            case .pressure:
+                return RuuviLocalization.pressure
+            case .movementCounter:
+                return RuuviLocalization.movements
+            case .voltage:
+                return RuuviLocalization.battery
+            case .rssi:
+                return RuuviLocalization.signalStrength
+            case .accelerationX:
+                return RuuviLocalization.accX
+            case .accelerationY:
+                return RuuviLocalization.accY
+            case .accelerationZ:
+                return RuuviLocalization.accZ
+            case .aqi:
+                return RuuviLocalization.airQuality
+            case .co2:
+                return RuuviLocalization.co2
+            case .pm10:
+                return RuuviLocalization.pm10
+            case .pm25:
+                return RuuviLocalization.pm25
+            case .pm40:
+                return RuuviLocalization.pm40
+            case .pm100:
+                return RuuviLocalization.pm100
+            case .nox:
+                return RuuviLocalization.nox
+            case .voc:
+                return RuuviLocalization.voc
+            case .soundInstant:
+                return RuuviLocalization.soundInstant
+            case .soundAverage:
+                return RuuviLocalization.soundAvg
+            case .soundPeak:
+                return RuuviLocalization.soundPeak
+            case .luminosity:
+                return RuuviLocalization.light
+            case .measurementSequenceNumber:
+                return RuuviLocalization.measSeqNumber
+            default:
+                return ""
+            }
+        }
+
+        // swiftlint:disable:next cyclomatic_complexity function_body_length
+        func shortNameWithUnit(for variant: MeasurementDisplayVariant) -> String {
+            switch variant.type {
+            case .temperature:
+                let unit = variant.temperatureUnit ?? .celsius
+                return RuuviLocalization.temperatureWithUnit(unit.symbol)
+            case .humidity:
+                let name = shortName(for: variant)
+                let temperatureUnit = variant.temperatureUnit ?? .celsius
+                let unit = variant.humidityUnit ?? .percent
+                let unitSymbol: String
+                switch unit {
+                case .percent:
+                    unitSymbol = RuuviLocalization.humidityRelativeUnit
+                case .gm3:
+                    unitSymbol = RuuviLocalization.gm³
+                case .dew:
+                    unitSymbol = temperatureUnit.symbol
+                }
+                if unit == .dew {
+                    return name + " (\(temperatureUnit.symbol))"
+                } else {
+                    return name + " (\(unitSymbol))"
+                }
+            case .pressure:
+                let unit = variant.pressureUnit ?? .hectopascals
+                return RuuviLocalization.pressureWithUnit(unit.ruuviSymbol)
+            case .movementCounter:
+                return RuuviLocalization.movements
+            case .voltage:
+                return RuuviLocalization.battery + " (\(RuuviLocalization.v))"
+            case .accelerationX:
+                return RuuviLocalization.accX + " (\(RuuviLocalization.g))"
+            case .accelerationY:
+                return RuuviLocalization.accY + " (\(RuuviLocalization.g))"
+            case .accelerationZ:
+                return RuuviLocalization.accZ + " (\(RuuviLocalization.g))"
+            case .aqi:
+                return RuuviLocalization.airQuality
+            case .co2:
+                return RuuviLocalization.co2WithUnit(RuuviLocalization.unitCo2)
+            case .pm10:
+                return RuuviLocalization.pm10WithUnit(RuuviLocalization.unitPm10)
+            case .pm25:
+                return RuuviLocalization.pm25WithUnit(RuuviLocalization.unitPm25)
+            case .pm40:
+                return RuuviLocalization.pm40WithUnit(RuuviLocalization.unitPm40)
+            case .pm100:
+                return RuuviLocalization.pm100WithUnit(RuuviLocalization.unitPm100)
+            case .voc:
+                return RuuviLocalization.vocWithUnit(RuuviLocalization.unitVoc)
+            case .nox:
+                return RuuviLocalization.noxWithUnit(RuuviLocalization.unitNox)
+            case .soundInstant:
+                return RuuviLocalization.soundInstantWithUnit(RuuviLocalization.unitSound)
+            case .soundAverage:
+                return RuuviLocalization.soundAverageWithUnit(RuuviLocalization.unitSound)
+            case .soundPeak:
+                return RuuviLocalization.soundPeakWithUnit(RuuviLocalization.unitSound)
+            case .luminosity:
+                return RuuviLocalization.luminosityWithUnit(RuuviLocalization.unitLuminosity)
+            case .rssi:
+                return RuuviLocalization.signalStrengthWithUnit()
+            default:
+                return shortName(for: variant)
+            }
         }
 
         func temperatureValue(
@@ -253,13 +379,6 @@ extension RuuviServiceExportImpl {
             return "\(movementCounter)"
         }
 
-        func txPowerValue(
-            for record: RuuviTagSensorRecord
-        ) -> String {
-            guard let txPower = record.txPower else { return emptyValueString }
-            return "\(txPower)"
-        }
-
         func measurementSequenceNumberValue(
             for record: RuuviTagSensorRecord
         ) -> String {
@@ -289,7 +408,7 @@ extension RuuviServiceExportImpl {
             if hasAqi {
                 columns.append(
                     ColumnDefinition(
-                        header: RuuviLocalization.aqi,
+                        header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .aqi)),
                         cellExtractor: { record in
                             let aqi = measurementService.aqi(
                                 for: record.co2,
@@ -306,7 +425,7 @@ extension RuuviServiceExportImpl {
             if hasCo2 {
                 columns.append(
                     ColumnDefinition(
-                        header: RuuviLocalization.co2 + " (\(RuuviLocalization.unitCo2))",
+                        header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .co2)),
                         cellExtractor: { record in
                             toString(record.co2)
                         }
@@ -316,7 +435,7 @@ extension RuuviServiceExportImpl {
             if hasPm1 {
                 columns.append(
                     ColumnDefinition(
-                        header: RuuviLocalization.pm10 + " (\(RuuviLocalization.unitPm10))",
+                        header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .pm10)),
                         cellExtractor: { record in
                             toString(record.pm1)
                         }
@@ -326,7 +445,7 @@ extension RuuviServiceExportImpl {
             if hasPm25 {
                 columns.append(
                     ColumnDefinition(
-                        header: RuuviLocalization.pm25 + " (\(RuuviLocalization.unitPm25))",
+                        header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .pm25)),
                         cellExtractor: { record in
                             toString(record.pm25)
                         }
@@ -336,7 +455,7 @@ extension RuuviServiceExportImpl {
             if hasPm4 {
                 columns.append(
                     ColumnDefinition(
-                        header: RuuviLocalization.pm40 + " (\(RuuviLocalization.unitPm40))",
+                        header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .pm40)),
                         cellExtractor: { record in
                             toString(record.pm4)
                         }
@@ -346,7 +465,7 @@ extension RuuviServiceExportImpl {
             if hasPm10 {
                 columns.append(
                     ColumnDefinition(
-                        header: RuuviLocalization.pm100 + " (\(RuuviLocalization.unitPm100))",
+                        header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .pm100)),
                         cellExtractor: { record in
                             toString(record.pm10)
                         }
@@ -356,7 +475,7 @@ extension RuuviServiceExportImpl {
             if hasVoc {
                 columns.append(
                     ColumnDefinition(
-                        header: RuuviLocalization.voc + " (\(RuuviLocalization.unitVoc))",
+                        header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .voc)),
                         cellExtractor: { record in
                             toString(record.voc)
                         }
@@ -366,7 +485,7 @@ extension RuuviServiceExportImpl {
             if hasNox {
                 columns.append(
                     ColumnDefinition(
-                        header: RuuviLocalization.nox + " (\(RuuviLocalization.unitNox))",
+                        header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .nox)),
                         cellExtractor: { record in
                             toString(record.nox)
                         }
@@ -378,7 +497,12 @@ extension RuuviServiceExportImpl {
         if hasTemperature {
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.temperature(UnitTemperature.celsius.symbol),
+                    header: shortNameWithUnit(
+                        for: MeasurementDisplayVariant(
+                            type: .temperature,
+                            temperatureUnit: .celsius
+                        )
+                    ),
                     cellExtractor: { record in
                         temperatureValue(for: record, unit: .celsius)
                     }
@@ -386,7 +510,12 @@ extension RuuviServiceExportImpl {
             )
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.temperature(UnitTemperature.fahrenheit.symbol),
+                    header: shortNameWithUnit(
+                        for: MeasurementDisplayVariant(
+                            type: .temperature,
+                            temperatureUnit: .fahrenheit
+                        )
+                    ),
                     cellExtractor: { record in
                         temperatureValue(for: record, unit: .fahrenheit)
                     }
@@ -394,7 +523,12 @@ extension RuuviServiceExportImpl {
             )
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.temperature(UnitTemperature.kelvin.symbol),
+                    header: shortNameWithUnit(
+                        for: MeasurementDisplayVariant(
+                            type: .temperature,
+                            temperatureUnit: .kelvin
+                        )
+                    ),
                     cellExtractor: { record in
                         temperatureValue(for: record, unit: .kelvin)
                     }
@@ -405,7 +539,9 @@ extension RuuviServiceExportImpl {
         if hasHumidityAndTemperature {
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.humidity(RuuviLocalization.humidityRelativeUnit),
+                    header: shortNameWithUnit(
+                        for: MeasurementDisplayVariant(type: .humidity, humidityUnit: .percent)
+                    ),
                     cellExtractor: { record in
                         humidityRelativeValue(for: record)
                     }
@@ -413,7 +549,9 @@ extension RuuviServiceExportImpl {
             )
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.absHumidity + " (\(RuuviLocalization.gm³))",
+                    header: shortNameWithUnit(
+                        for: MeasurementDisplayVariant(type: .humidity, humidityUnit: .gm3)
+                    ),
                     cellExtractor: { record in
                         humidityAbsoluteValue(for: record)
                     }
@@ -421,7 +559,13 @@ extension RuuviServiceExportImpl {
             )
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.dewPoint(UnitTemperature.celsius.symbol),
+                    header: shortNameWithUnit(
+                        for: MeasurementDisplayVariant(
+                            type: .humidity,
+                            temperatureUnit: .celsius,
+                            humidityUnit: .dew
+                        )
+                    ),
                     cellExtractor: { record in
                         dewPointValue(for: record, unit: .celsius)
                     }
@@ -429,7 +573,13 @@ extension RuuviServiceExportImpl {
             )
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.dewPoint(UnitTemperature.fahrenheit.symbol),
+                    header: shortNameWithUnit(
+                        for: MeasurementDisplayVariant(
+                            type: .humidity,
+                            temperatureUnit: .fahrenheit,
+                            humidityUnit: .dew
+                        )
+                    ),
                     cellExtractor: { record in
                         dewPointValue(for: record, unit: .fahrenheit)
                     }
@@ -437,7 +587,13 @@ extension RuuviServiceExportImpl {
             )
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.dewPoint(UnitTemperature.kelvin.symbol),
+                    header: shortNameWithUnit(
+                        for: MeasurementDisplayVariant(
+                            type: .humidity,
+                            temperatureUnit: .kelvin,
+                            humidityUnit: .dew
+                        )
+                    ),
                     cellExtractor: { record in
                         dewPointValue(for: record, unit: .kelvin)
                     }
@@ -448,7 +604,12 @@ extension RuuviServiceExportImpl {
         if hasPressure {
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.pressure(UnitPressure.hectopascals.ruuviSymbol),
+                    header: shortNameWithUnit(
+                        for: MeasurementDisplayVariant(
+                            type: .pressure,
+                            pressureUnit: .hectopascals
+                        )
+                    ),
                     cellExtractor: { record in
                         pressureValue(for: record, unit: .hectopascals)
                     }
@@ -456,7 +617,12 @@ extension RuuviServiceExportImpl {
             )
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.pressure(UnitPressure.newtonsPerMetersSquared.ruuviSymbol),
+                    header: shortNameWithUnit(
+                        for: MeasurementDisplayVariant(
+                            type: .pressure,
+                            pressureUnit: .newtonsPerMetersSquared
+                        )
+                    ),
                     cellExtractor: { record in
                         pressureValue(for: record, unit: .newtonsPerMetersSquared)
                     }
@@ -464,7 +630,12 @@ extension RuuviServiceExportImpl {
             )
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.pressure(UnitPressure.millimetersOfMercury.ruuviSymbol),
+                    header: shortNameWithUnit(
+                        for: MeasurementDisplayVariant(
+                            type: .pressure,
+                            pressureUnit: .millimetersOfMercury
+                        )
+                    ),
                     cellExtractor: { record in
                         pressureValue(for: record, unit: .millimetersOfMercury)
                     }
@@ -472,7 +643,12 @@ extension RuuviServiceExportImpl {
             )
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.pressure(UnitPressure.inchesOfMercury.ruuviSymbol),
+                    header: shortNameWithUnit(
+                        for: MeasurementDisplayVariant(
+                            type: .pressure,
+                            pressureUnit: .inchesOfMercury
+                        )
+                    ),
                     cellExtractor: { record in
                         pressureValue(for: record, unit: .inchesOfMercury)
                     }
@@ -483,8 +659,7 @@ extension RuuviServiceExportImpl {
         if includeTagMeasurements && hasMovement {
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.movementCounter +
-                        " (\(RuuviLocalization.movements))",
+                    header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .movementCounter)),
                     cellExtractor: { record in
                         movementValue(for: record)
                     }
@@ -495,7 +670,7 @@ extension RuuviServiceExportImpl {
         if includeAirMeasurements && hasSoundInstant {
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.soundInstant + " (\(RuuviLocalization.unitSound))",
+                    header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .soundInstant)),
                     cellExtractor: { record in
                         toString(record.dbaInstant)
                     }
@@ -506,7 +681,7 @@ extension RuuviServiceExportImpl {
         if includeAirMeasurements && hasSoundAvg {
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.soundAvg + " (\(RuuviLocalization.unitSound))",
+                    header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .soundAverage)),
                     cellExtractor: { record in
                         toString(record.dbaAvg)
                     }
@@ -517,7 +692,7 @@ extension RuuviServiceExportImpl {
         if includeAirMeasurements && hasSoundPeak {
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.soundPeak + " (\(RuuviLocalization.unitSound))",
+                    header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .soundPeak)),
                     cellExtractor: { record in
                         toString(record.dbaPeak)
                     }
@@ -528,7 +703,7 @@ extension RuuviServiceExportImpl {
         if includeAirMeasurements && hasLuminance {
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.luminosity + " (\(RuuviLocalization.unitLuminosity))",
+                    header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .luminosity)),
                     cellExtractor: { record in
                         toString(record.luminance)
                     }
@@ -539,7 +714,7 @@ extension RuuviServiceExportImpl {
         if includeTagMeasurements && hasVoltage {
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.voltage,
+                    header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .voltage)),
                     cellExtractor: { record in
                         let v = record.voltage?.converted(to: .volts).value
                         return toString(v)
@@ -550,7 +725,7 @@ extension RuuviServiceExportImpl {
         if includeTagMeasurements && hasAcceleration {
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.accelerationX + " (\(RuuviLocalization.g))",
+                    header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .accelerationX)),
                     cellExtractor: { record in
                         toString(record.acceleration?.x.value)
                     }
@@ -558,7 +733,7 @@ extension RuuviServiceExportImpl {
             )
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.accelerationY + " (\(RuuviLocalization.g))",
+                    header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .accelerationY)),
                     cellExtractor: { record in
                         toString(record.acceleration?.y.value)
                     }
@@ -566,7 +741,7 @@ extension RuuviServiceExportImpl {
             )
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.accelerationZ + " (\(RuuviLocalization.g))",
+                    header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .accelerationZ)),
                     cellExtractor: { record in
                         toString(record.acceleration?.z.value)
                     }
@@ -577,7 +752,7 @@ extension RuuviServiceExportImpl {
         if hasRssi {
             columns.append(
                 ColumnDefinition(
-                    header: "RSSI (\(RuuviLocalization.dBm))",
+                    header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .rssi)),
                     cellExtractor: { record in
                         rssiValue(for: record)
                     }
@@ -588,20 +763,9 @@ extension RuuviServiceExportImpl {
         if hasMeasurementSequenceNumber {
             columns.append(
                 ColumnDefinition(
-                    header: RuuviLocalization.ExportService.measurementSequenceNumber,
+                    header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .measurementSequenceNumber)),
                     cellExtractor: { record in
                         measurementSequenceNumberValue(for: record)
-                    }
-                )
-            )
-        }
-
-        if includeTagMeasurements && hasTxPower {
-            columns.append(
-                ColumnDefinition(
-                    header: RuuviLocalization.ExportService.txPower + " (\(RuuviLocalization.dBm))",
-                    cellExtractor: { record in
-                        txPowerValue(for: record)
                     }
                 )
             )
