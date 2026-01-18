@@ -221,8 +221,9 @@ final class CardsMenuBarView: UIView {
                   $0.menuType == selectedMenu
               }) else { return }
 
-        let selectedButton = modernButtons[selectedButtonIndex]
         layoutIfNeeded()
+        stackView.layoutIfNeeded()
+        let selectedButton = modernButtons[selectedButtonIndex]
 
         let buttonCenterX = selectedButton.frame.midX
         let newConstant = buttonCenterX - (Constants.underlineWidth / 2)
@@ -252,6 +253,7 @@ final class CardsMenuBarView: UIView {
     private func updateUnderlinePosition() {
         guard let selectedButtonIndex = modernButtons.firstIndex(where: { $0.menuType == selectedMenu }) else { return }
 
+        stackView.layoutIfNeeded()
         let selectedButton = modernButtons[selectedButtonIndex]
         let buttonCenterX = selectedButton.frame.midX
         underlineLeadingConstraint.constant = buttonCenterX - (Constants.underlineWidth / 2)
