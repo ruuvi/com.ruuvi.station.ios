@@ -92,7 +92,7 @@ final class CardsBaseViewController: UIViewController {
 
     // MARK: - Base UI Components
     private lazy var cardBackgroundView = CardsBackgroundView()
-    private lazy var chartViewBackground = UIView(color: RuuviColor.graphBGColor.color)
+    private lazy var tabBackgroundView = UIView(color: .clear)
     private lazy var headerContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
@@ -233,6 +233,10 @@ final class CardsBaseViewController: UIViewController {
     }()
 
     private var dataSourceIconViewWidthConstraint: NSLayoutConstraint!
+    private var footerStackHeightConstraint: NSLayoutConstraint!
+    private var footerBottomToSafeConstraint: NSLayoutConstraint!
+    private var footerBottomToViewConstraint: NSLayoutConstraint!
+    private var tabContainerBottomToViewConstraint: NSLayoutConstraint!
 
     // MARK: - Init
     init(
@@ -291,6 +295,7 @@ private extension CardsBaseViewController {
         setUpTabContainer()
         setUpFooterView()
         embedChildViewControllers()
+        updateFooterVisibility(for: activeTab, animated: false)
     }
 
     func setUpBaseView() {
@@ -299,9 +304,9 @@ private extension CardsBaseViewController {
         view.addSubview(cardBackgroundView)
         cardBackgroundView.fillSuperview()
 
-        view.addSubview(chartViewBackground)
-        chartViewBackground.fillSuperview()
-        chartViewBackground.alpha = Constants.Alpha.chartBackgroundHidden
+        view.addSubview(tabBackgroundView)
+        tabBackgroundView.fillSuperview()
+        updateTabBackground(for: activeTab, animated: false)
     }
 
     func setUpHeaderView() {
@@ -429,6 +434,11 @@ private extension CardsBaseViewController {
                 right: 0
             )
         )
+
+        tabContainerBottomToViewConstraint = tabContainerView.bottomAnchor.constraint(
+            equalTo: view.bottomAnchor
+        )
+        tabContainerBottomToViewConstraint.isActive = false
     }
 
     func setUpFooterView() {
@@ -436,9 +446,18 @@ private extension CardsBaseViewController {
         footerView.anchor(
             top: tabContainerView.bottomAnchor,
             leading: view.safeLeftAnchor,
-            bottom: view.safeBottomAnchor,
+            bottom: nil,
             trailing: view.safeRightAnchor
         )
+
+        footerBottomToSafeConstraint = footerView.bottomAnchor.constraint(
+            equalTo: view.safeBottomAnchor
+        )
+        footerBottomToSafeConstraint.isActive = true
+        footerBottomToViewConstraint = footerView.bottomAnchor.constraint(
+            equalTo: view.bottomAnchor
+        )
+        footerBottomToViewConstraint.isActive = false
 
         let sourceAndUpdateStack = UIStackView(
             arrangedSubviews: [
@@ -478,7 +497,10 @@ private extension CardsBaseViewController {
                 )
             )
 
-        footerStack.constrainHeight(constant: Constants.Layout.footerStackHeight)
+        footerStackHeightConstraint = footerStack.heightAnchor.constraint(
+            equalToConstant: Constants.Layout.footerStackHeight
+        )
+        footerStackHeightConstraint.isActive = true
         batteryLevelView.isHidden = true
     }
 
@@ -487,7 +509,11 @@ private extension CardsBaseViewController {
             for (tab, vc) in tabs {
                 addChild(vc)
                 tabContainerView.addSubview(vc.view)
-                vc.view.fillSuperviewToSafeArea()
+                if tab == .measurement || tab == .graph {
+                    vc.view.fillSuperviewToSafeArea()
+                } else if tab == .alerts || tab == .settings {
+                    vc.view.fillSuperview()
+                }
                 vc.didMove(toParent: self)
                 vc.view.isHidden = tab != activeTab
             }
@@ -565,13 +591,7 @@ private extension CardsBaseViewController {
     }
 
     func handleTabChange(_ tab: CardsMenuType) {
-        if flags.showNewCardsMenu {
-            showTabViewController(for: tab)
-            activeTab = tab
-            menuBarView.setSelectedTab(tab, animated: true)
-        } else {
-            output?.viewDidChangeTab(tab)
-        }
+        output?.viewDidChangeTab(tab)
     }
 
     // MARK: - Navigation Helpers
@@ -620,16 +640,58 @@ private extension CardsBaseViewController {
     // MARK: - Footer Update Methods
     private func updateFooter() {
         guard currentSnapshotIndex < currentSnapshots.count else {
-            footerView.isHidden = true
+            updateFooterVisibility(for: activeTab, animated: false)
             return
         }
 
         let currentSnapshot = currentSnapshots[currentSnapshotIndex]
-        footerView.isHidden = false
 
         updateSourceIcon(for: currentSnapshot.displayData.source)
         batteryLevelView.isHidden = !currentSnapshot.displayData.batteryNeedsReplacement
         updateTimestampLabel()
+        updateFooterVisibility(for: activeTab, animated: false)
+    }
+
+    func updateFooterVisibility(
+        for tab: CardsMenuType,
+        animated: Bool
+    ) {
+        let hasSnapshot = currentSnapshotIndex < currentSnapshots.count
+        guard flags.showNewCardsMenu else {
+            footerView.isHidden = !hasSnapshot
+            footerView.alpha = 1
+            footerStackHeightConstraint.constant = Constants.Layout.footerStackHeight
+            tabContainerBottomToViewConstraint.isActive = false
+            footerBottomToViewConstraint.isActive = false
+            footerBottomToSafeConstraint.isActive = true
+            return
+        }
+
+        let shouldExtendToBottom = tab == .alerts || tab == .settings
+        tabContainerBottomToViewConstraint.isActive = shouldExtendToBottom
+        footerBottomToViewConstraint.isActive = shouldExtendToBottom
+        footerBottomToSafeConstraint.isActive = !shouldExtendToBottom
+
+        let shouldCollapse = !hasSnapshot || tab == .alerts || tab == .settings
+        let targetAlpha: CGFloat = shouldCollapse ? 0 : 1
+        footerStackHeightConstraint.constant = shouldCollapse ? 0 : Constants.Layout.footerStackHeight
+        footerView.isUserInteractionEnabled = !shouldCollapse
+        footerView.isHidden = !hasSnapshot
+
+        if animated {
+            UIView.animate(
+                withDuration: Constants.Animation.tabTransitionDuration,
+                delay: 0,
+                options: [.curveEaseInOut, .allowUserInteraction],
+                animations: {
+                    self.footerView.alpha = targetAlpha
+                    self.view.layoutIfNeeded()
+                }
+            )
+        } else {
+            footerView.alpha = targetAlpha
+            view.layoutIfNeeded()
+        }
     }
 
     private func updateSourceIcon(for source: RuuviTagSensorRecordSource?) {
@@ -739,20 +801,15 @@ extension CardsBaseViewController: CardsBaseViewInput {
 
     func showContentsForTab(_ tab: CardsMenuType) {
         if flags.showNewCardsMenu {
+            updateTabBackground(for: tab, animated: true)
             showTabViewController(for: tab)
             activeTab = tab
             menuBarView.setSelectedTab(tab, animated: true)
+            updateFooterVisibility(for: tab, animated: true)
         } else {
             switch tab {
             case .measurement, .graph:
-                UIView
-                    .animate(
-                    withDuration: Constants.Animation.chartBackgroundTransitionDuration,
-                    animations: { [weak self] in
-                    self?.chartViewBackground.alpha = tab == .graph ?
-                        Constants.Alpha.chartBackgroundVisible :
-                            Constants.Alpha.chartBackgroundHidden
-                })
+                updateTabBackground(for: tab, animated: true)
                 showTabViewController(for: tab)
                 activeTab = tab
             default:
@@ -884,6 +941,33 @@ extension CardsBaseViewController: CardsBaseViewInput {
             delegate: self
         )
         detailsCoordinator?.start()
+    }
+}
+
+// MARK: - Tab Background
+private extension CardsBaseViewController {
+    func updateTabBackground(for tab: CardsMenuType, animated: Bool) {
+        let targetColor = tabBackgroundColor(for: tab)
+        if animated {
+            UIView.animate(
+                withDuration: Constants.Animation.chartBackgroundTransitionDuration
+            ) { [weak self] in
+                self?.tabBackgroundView.backgroundColor = targetColor
+            }
+        } else {
+            tabBackgroundView.backgroundColor = targetColor
+        }
+    }
+
+    func tabBackgroundColor(for tab: CardsMenuType) -> UIColor {
+        switch tab {
+        case .measurement:
+            return .clear
+        case .graph:
+            return RuuviColor.graphBGColor.color
+        case  .alerts, .settings:
+            return RuuviColor.ruuviGreen.color.withAlphaComponent(0.7)
+        }
     }
 }
 

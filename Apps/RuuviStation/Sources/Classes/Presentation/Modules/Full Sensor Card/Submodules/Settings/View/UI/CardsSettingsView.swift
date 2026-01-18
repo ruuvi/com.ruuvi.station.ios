@@ -5,7 +5,16 @@ import RuuviLocalization
 struct CardsSettingsView: View {
     @ObservedObject var state: CardsSettingsState
     @EnvironmentObject var actions: CardsSettingsActions
+    let showsAlertSections: Bool
     @State private var pendingAnchorID: String?
+
+    init(
+        state: CardsSettingsState,
+        showsAlertSections: Bool = true
+    ) {
+        self.state = state
+        self.showsAlertSections = showsAlertSections
+    }
 
     private func sectionAnchorID(for id: String) -> String {
         "\(id)-\(Constants.bottomAnchorID)"
@@ -83,7 +92,7 @@ struct CardsSettingsView: View {
                         )
                     }
 
-                    if !state.alertSections.isEmpty {
+                    if showsAlertSections, !state.alertSections.isEmpty {
                         CardsSettingsAlertSectionsGroupView()
                     }
                     VStack(spacing: Constants.sectionSpacing) {

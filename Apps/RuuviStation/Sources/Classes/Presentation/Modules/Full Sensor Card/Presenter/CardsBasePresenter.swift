@@ -29,6 +29,7 @@ class CardsBasePresenter: NSObject {
     private let connectionPersistence: RuuviLocalConnections
     private let errorPresenter: ErrorPresenter
     private let featureToggleService: FeatureToggleService
+    private let flags: RuuviLocalFlags
 
     // MARK: Properties
     private var snapshot: RuuviTagCardSnapshot!
@@ -66,7 +67,8 @@ class CardsBasePresenter: NSObject {
         settings: RuuviLocalSettings,
         connectionPersistence: RuuviLocalConnections,
         errorPresenter: ErrorPresenter,
-        featureToggleService: FeatureToggleService
+        featureToggleService: FeatureToggleService,
+        flags: RuuviLocalFlags
     ) {
         self.measurementPresenter = measurementPresenter
         self.graphPresenter = graphPresenter
@@ -79,6 +81,7 @@ class CardsBasePresenter: NSObject {
         self.connectionPersistence = connectionPersistence
         self.errorPresenter = errorPresenter
         self.featureToggleService = featureToggleService
+        self.flags = flags
         super.init()
 
         self.startObservingSensorOrderChanges()
@@ -184,6 +187,17 @@ extension CardsBasePresenter: CardsBaseViewOutput {
     }
 
     func viewDidChangeTab(_ tab: CardsMenuType) {
+        if flags.showNewCardsMenu, tab == .alerts || tab == .settings {
+            activeMenu = tab
+            view?.showContentsForTab(tab)
+            if tab == .alerts {
+                alertsPresenter?.start()
+            } else {
+                settingsPresenter?.start()
+            }
+            return
+        }
+
         switch tab {
         case .measurement:
             viewDidRequestToShowMeasurement(for: snapshot, tab: tab)
@@ -245,7 +259,12 @@ extension CardsBasePresenter: CardsBaseViewOutput {
             measurementPresenter?.scroll(to: currentSnapshotIndex(), animated: false)
             graphPresenter?.scroll(to: currentSnapshotIndex(), animated: true)
         case .alerts, .settings:
-            break // TODO: Implement
+            guard flags.showNewCardsMenu else { return }
+            if activeMenu == .alerts {
+                alertsPresenter?.start()
+            } else {
+                settingsPresenter?.start()
+            }
         }
     }
 

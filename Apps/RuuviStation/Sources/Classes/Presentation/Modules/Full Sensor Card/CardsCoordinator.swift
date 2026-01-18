@@ -129,7 +129,9 @@ private extension CardsCoordinator {
     ) -> [CardsMenuType: UIViewController] {
         cardsMeasurementViewController = createMeasurementViewController()
         cardsGraphViewController = createGraphViewController()
-        cardsAlertsViewController = createAlertsViewController()
+        cardsAlertsViewController = createAlertsViewController(
+            snapshot: snapshot
+        )
         cardsSettingsViewController = createSettingsViewController(
             snapshot: snapshot
         )
@@ -174,7 +176,8 @@ private extension CardsCoordinator {
             settings: r.resolve(RuuviLocalSettings.self)!,
             connectionPersistence: r.resolve(RuuviLocalConnections.self)!,
             errorPresenter: r.resolve(ErrorPresenter.self)!,
-            featureToggleService: r.resolve(FeatureToggleService.self)!
+            featureToggleService: r.resolve(FeatureToggleService.self)!,
+            flags: r.resolve(RuuviLocalFlags.self)!
 
         )
         presenter.configure(
@@ -261,10 +264,16 @@ private extension CardsCoordinator {
 
 // MARK: Alerts
 private extension CardsCoordinator {
-    func createAlertsViewController() -> CardsAlertsViewController {
-        let viewController = CardsAlertsViewController()
-        viewController.view.backgroundColor = .gray
-        let presenter = CardsAlertsPresenter()
+    func createAlertsViewController(
+        snapshot: RuuviTagCardSnapshot
+    ) -> CardsAlertsViewController {
+        let r = AppAssembly.shared.assembler.resolver
+        let viewController = CardsAlertsViewController(
+            snapshot: snapshot
+        )
+        let presenter = CardsAlertsPresenter(
+            measurementService: r.resolve(RuuviServiceMeasurement.self)!
+        )
         presenter.view = viewController
         viewController.output = presenter
         cardsAlertsViewPresenter = presenter
@@ -288,7 +297,8 @@ private extension CardsCoordinator {
             activityPresenter: r.resolve(ActivityPresenter.self)!
         )
         let viewController = CardsSettingsViewController(
-            snapshot: snapshot
+            snapshot: snapshot,
+            showsAlertSections: !flags.showNewCardsMenu
         )
         viewController.output = presenter
         if flags.showNewCardsMenu {

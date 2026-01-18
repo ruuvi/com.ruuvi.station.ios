@@ -10,6 +10,13 @@ import RuuviOntology
 struct CardsSettingsAlertSectionsGroupView: View {
     @EnvironmentObject private var state: CardsSettingsState
     @EnvironmentObject private var actions: CardsSettingsActions
+    let showsHeader: Bool
+    let showsToggleInHeader: Bool
+
+    init(showsHeader: Bool = true, showsToggleInHeader: Bool = false) {
+        self.showsHeader = showsHeader
+        self.showsToggleInHeader = showsToggleInHeader
+    }
 
     private struct Constants {
         static let sectionSpacing: CGFloat = 0.5
@@ -20,13 +27,16 @@ struct CardsSettingsAlertSectionsGroupView: View {
 
     var body: some View {
         VStack(spacing: Constants.sectionSpacing) {
-            CardsSettingsAlertSectionGroupHeaderView()
+            if showsHeader {
+                CardsSettingsAlertSectionGroupHeaderView()
+            }
 
             ForEach(state.alertSections) { section in
                 let sectionID = section.id
                 CardsSettingsAlertSectionRow(
                     model: section,
                     isExpanded: state.isAlertSectionExpanded(sectionID),
+                    showsToggleInHeader: showsToggleInHeader,
                     onToggleSection: {
                         withAnimation(
                             .easeInOut(duration: Constants.animationDuration)
@@ -87,6 +97,7 @@ private struct CardsSettingsAlertSectionGroupHeaderView: View {
 struct CardsSettingsAlertSectionRow: View {
     let model: CardsSettingsAlertSectionModel
     let isExpanded: Bool
+    let showsToggleInHeader: Bool
     let onToggleSection: () -> Void
     let onToggleAlert: (Bool) -> Void
     let onRangeChange: (ClosedRange<Double>, Bool) -> Void
@@ -103,6 +114,7 @@ struct CardsSettingsAlertSectionRow: View {
     init(
         model: CardsSettingsAlertSectionModel,
         isExpanded: Bool,
+        showsToggleInHeader: Bool,
         onToggleSection: @escaping () -> Void,
         onToggleAlert: @escaping (Bool) -> Void,
         onRangeChange: @escaping (ClosedRange<Double>, Bool) -> Void,
@@ -112,6 +124,7 @@ struct CardsSettingsAlertSectionRow: View {
     ) {
         self.model = model
         self.isExpanded = isExpanded
+        self.showsToggleInHeader = showsToggleInHeader
         self.onToggleSection = onToggleSection
         self.onToggleAlert = onToggleAlert
         self.onRangeChange = onRangeChange
@@ -134,6 +147,7 @@ struct CardsSettingsAlertSectionRow: View {
             if isExpanded {
                 CardsSettingsAlertSectionContentView(
                     model: model,
+                    showsToggleInHeader: showsToggleInHeader,
                     toggleValue: $toggleValue,
                     sliderRange: $sliderRange,
                     onToggleAlert: onToggleAlert,
@@ -171,6 +185,11 @@ struct CardsSettingsAlertSectionRow: View {
             alertIconAccessibilityLabel: alertIconAccessibilityLabel,
             alertIconOpacity: alertIconOpacity,
             mutedText: mutedText,
+            showsToggleInHeader: showsToggleInHeader,
+            toggleValue: $toggleValue,
+            isToggleEnabled: model.isInteractionEnabled,
+            showsStatusLabel: model.headerState.showStatusLabel,
+            onToggleAlert: onToggleAlert,
             onToggleSection: onToggleSection
         )
     }
@@ -235,6 +254,7 @@ struct CardsSettingsAlertSectionRow: View {
 // MARK: CardsSettingsAlertSectionContentView
 private struct CardsSettingsAlertSectionContentView: View {
     let model: CardsSettingsAlertSectionModel
+    let showsToggleInHeader: Bool
     @Binding var toggleValue: Bool
     @Binding var sliderRange: ClosedRange<Double>?
 
@@ -252,12 +272,15 @@ private struct CardsSettingsAlertSectionContentView: View {
                 CardsSettingsAlertNoticeRow(text: notice)
             }
 
-            CardsSettingsAlertEnableRow(
-                isOn: $toggleValue,
-                isEnabled: model.isInteractionEnabled,
-                showsStatusLabel: model.headerState.showStatusLabel,
-                onToggle: onToggleAlert
-            )
+            if !showsToggleInHeader {
+                CardsSettingsAlertEnableRow(
+                    isOn: $toggleValue,
+                    isEnabled: model.isInteractionEnabled,
+                    showsStatusLabel: model.headerState.showStatusLabel,
+                    onToggle: onToggleAlert,
+                    isCompact: true
+                )
+            }
 
             if let descriptionTitle = customDescriptionTitle {
                 SettingsDivider()
@@ -359,6 +382,11 @@ private struct CardsSettingsAlertSectionRowHeader: View {
     let alertIconAccessibilityLabel: String
     let alertIconOpacity: Double
     let mutedText: String?
+    let showsToggleInHeader: Bool
+    @Binding var toggleValue: Bool
+    let isToggleEnabled: Bool
+    let showsStatusLabel: Bool
+    let onToggleAlert: (Bool) -> Void
     let onToggleSection: () -> Void
 
     private struct Constants {
@@ -370,27 +398,42 @@ private struct CardsSettingsAlertSectionRowHeader: View {
 
     var body: some View {
         HStack(spacing: Constants.spacing) {
-            Text(model.title)
-                .ruuviHeadline()
-                .foregroundStyle(RuuviColor.dashboardIndicator.swiftUIColor)
-                .multilineTextAlignment(.leading)
+            HStack(spacing: Constants.spacing) {
+                Text(model.title)
+                    .ruuviHeadline()
+                    .foregroundStyle(RuuviColor.dashboardIndicator.swiftUIColor)
+                    .multilineTextAlignment(.leading)
 
-            Spacer()
+                Spacer()
 
-            if let icon = alertIconImage {
-                icon
-                    .scaledToFit()
-                    .foregroundColor(alertIconColor)
-                    .accessibilityLabel(alertIconAccessibilityLabel)
-                    .opacity(alertIconOpacity)
+                if let icon = alertIconImage {
+                    icon
+                        .scaledToFit()
+                        .foregroundColor(alertIconColor)
+                        .accessibilityLabel(alertIconAccessibilityLabel)
+                        .opacity(alertIconOpacity)
+                }
+
+                if let muted = mutedText {
+                    Text(muted)
+                        .font(.ruuviFootnote())
+                        .foregroundColor(
+                            RuuviColor.textColor.swiftUIColor.opacity(Constants.muteTextOpacity)
+                        )
+                }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
+            .onTapGesture(perform: onToggleSection)
 
-            if let muted = mutedText {
-                Text(muted)
-                    .font(.ruuviFootnote())
-                    .foregroundColor(
-                        RuuviColor.textColor.swiftUIColor.opacity(Constants.muteTextOpacity)
-                    )
+            if showsToggleInHeader {
+                CardsSettingsAlertEnableRow(
+                    isOn: $toggleValue,
+                    isEnabled: isToggleEnabled,
+                    showsStatusLabel: showsStatusLabel,
+                    onToggle: onToggleAlert,
+                    isCompact: true
+                )
             }
 
             RuuviAsset.arrowDropDown.swiftUIImage
@@ -404,11 +447,10 @@ private struct CardsSettingsAlertSectionRowHeader: View {
                     ),
                     value: isExpanded
                 )
+                .onTapGesture(perform: onToggleSection)
         }
         .padding(Constants.spacing)
         .background(RuuviColor.tagSettingsItemHeaderColor.swiftUIColor)
-        .contentShape(Rectangle())
-        .onTapGesture(perform: onToggleSection)
     }
 }
 
@@ -418,6 +460,7 @@ private struct CardsSettingsAlertEnableRow: View {
     let isEnabled: Bool
     let showsStatusLabel: Bool
     let onToggle: (Bool) -> Void
+    let isCompact: Bool
 
     private struct Constants {
         static let horizontalPadding: CGFloat = 12
@@ -426,7 +469,9 @@ private struct CardsSettingsAlertEnableRow: View {
 
     var body: some View {
         HStack {
-            Spacer()
+            if !isCompact {
+                Spacer()
+            }
             RuuviSwitchRepresentable(
                 isOn: $isOn,
                 isEnabled: isEnabled,
@@ -437,9 +482,9 @@ private struct CardsSettingsAlertEnableRow: View {
                 }
             )
         }
-        .padding(.horizontal, Constants.horizontalPadding)
-        .padding(.vertical, Constants.verticalPadding)
-        .background(RuuviColor.primary.swiftUIColor)
+        .padding(.horizontal, isCompact ? 0 : Constants.horizontalPadding)
+        .padding(.vertical, isCompact ? 0 : Constants.verticalPadding)
+        .background(isCompact ? Color.clear : RuuviColor.primary.swiftUIColor)
         .contentShape(Rectangle())
         .onTapGesture {
             guard isEnabled else { return }

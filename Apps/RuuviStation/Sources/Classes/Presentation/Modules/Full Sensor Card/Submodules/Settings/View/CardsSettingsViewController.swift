@@ -41,11 +41,14 @@ final class CardsSettingsViewController: UIViewController {
         button.addTarget(self, action: #selector(backButtonDidTap), for: .touchUpInside)
         return button
     }()
+    private let showsAlertSections: Bool
 
     init(
-        snapshot: RuuviTagCardSnapshot
+        snapshot: RuuviTagCardSnapshot,
+        showsAlertSections: Bool = true
     ) {
         self.state = CardsSettingsState(snapshot: snapshot)
+        self.showsAlertSections = showsAlertSections
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -430,7 +433,10 @@ extension CardsSettingsViewController {
     }
 
     private func makeContentViewController() -> UIViewController {
-        let contentView = CardsSettingsView(state: state)
+        let contentView = CardsSettingsView(
+            state: state,
+            showsAlertSections: showsAlertSections
+        )
             .environmentObject(actions)
         let hostingController = UIHostingController(rootView: contentView)
         hostingController.view.backgroundColor = .clear
