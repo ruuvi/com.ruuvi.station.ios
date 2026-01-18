@@ -161,11 +161,11 @@ extension CardsAlertsPresenter: RuuviTagServiceCoordinatorObserver {
             self.snapshots = snapshots
             guard let updatedSnapshot = snapshots.first(where: { matchesCurrentSnapshot($0) })
             else { return }
-            handleSnapshotUpdate(updatedSnapshot)
+            processSnapshotUpdate(updatedSnapshot)
         case let .snapshotUpdated(updatedSnapshot, _),
              let .connectionSnapshotUpdated(updatedSnapshot),
              let .alertSnapshotUpdated(updatedSnapshot):
-            handleSnapshotUpdate(updatedSnapshot)
+            processSnapshotUpdate(updatedSnapshot)
         default:
             break
         }
@@ -173,6 +173,13 @@ extension CardsAlertsPresenter: RuuviTagServiceCoordinatorObserver {
 }
 
 private extension CardsAlertsPresenter {
+    func processSnapshotUpdate(_ updatedSnapshot: RuuviTagCardSnapshot) {
+        guard matchesCurrentSnapshot(updatedSnapshot) else { return }
+        DispatchQueue.main.async { [weak self] in
+            self?.handleSnapshotUpdate(updatedSnapshot)
+        }
+    }
+
     func updateAlertSections(for snapshot: RuuviTagCardSnapshot) {
         let sections = CardsSettingsAlertsBuilder.makeSections(
             snapshot: snapshot,
