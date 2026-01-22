@@ -177,6 +177,14 @@ extension CardsBasePresenter: CardsBaseViewOutput {
                 settings: currentSensorSettings()
             )
 
+        alertsPresenter?
+            .configure(
+                with: snapshots,
+                snapshot: snapshot,
+                sensor: currentSensor(),
+                settings: currentSensorSettings()
+            )
+
         settingsPresenter?
             .configure(
                 with: snapshots,
@@ -487,6 +495,14 @@ extension CardsBasePresenter: RuuviTagServiceCoordinatorObserver {
                         settings: currentSensorSettings()
                     )
 
+                alertsPresenter?
+                    .configure(
+                        with: snapshots,
+                        snapshot: snapshot,
+                        sensor: currentSensor(),
+                        settings: currentSensorSettings()
+                    )
+
                 settingsPresenter?
                     .configure(
                         with: snapshots,
@@ -526,6 +542,14 @@ extension CardsBasePresenter: RuuviTagServiceCoordinatorObserver {
                         settings: currentSensorSettings()
                     )
                 graphPresenter?
+                    .configure(
+                        with: snapshots,
+                        snapshot: self.snapshot,
+                        sensor: currentSensor(),
+                        settings: currentSensorSettings()
+                    )
+
+                alertsPresenter?
                     .configure(
                         with: snapshots,
                         snapshot: self.snapshot,

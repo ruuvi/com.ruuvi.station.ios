@@ -272,7 +272,8 @@ private extension CardsCoordinator {
             snapshot: snapshot
         )
         let presenter = CardsAlertsPresenter(
-            measurementService: r.resolve(RuuviServiceMeasurement.self)!
+            measurementService: r.resolve(RuuviServiceMeasurement.self)!,
+            activityPresenter: r.resolve(ActivityPresenter.self)!
         )
         presenter.view = viewController
         viewController.output = presenter

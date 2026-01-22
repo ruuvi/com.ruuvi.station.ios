@@ -1,25 +1,32 @@
 import Foundation
-import RuuviOntology
-import RuuviService
+import RuuviCloud
+import RuuviLocalization
 import RuuviNotifier
+import RuuviOntology
+import RuuviPresenters
+import RuuviService
 
 final class CardsAlertsPresenter: NSObject {
     weak var view: CardsAlertsViewInput?
     weak var output: CardsAlertsPresenterOutput?
 
     private let measurementService: RuuviServiceMeasurement
+    private let activityPresenter: ActivityPresenter
     private var snapshots: [RuuviTagCardSnapshot] = []
     private var snapshot: RuuviTagCardSnapshot?
     private var sensor: AnyRuuviTagSensor?
     private var sensorSettings: SensorSettings?
     private var isObservingCoordinator = false
+    private var observedCloudRequestMac: String?
     private lazy var alertHandler: RuuviNotifier? =
         AppAssembly.shared.assembler.resolver.resolve(RuuviNotifier.self)
 
     init(
-        measurementService: RuuviServiceMeasurement
+        measurementService: RuuviServiceMeasurement,
+        activityPresenter: ActivityPresenter
     ) {
         self.measurementService = measurementService
+        self.activityPresenter = activityPresenter
         super.init()
     }
 }
@@ -49,6 +56,7 @@ extension CardsAlertsPresenter: CardsAlertsPresenterInput {
     func start() {
         startObservingCoordinator()
         syncAlertsIfNeeded()
+        startObservingCloudRequestState()
         if let snapshot {
             view?.configure(snapshot: snapshot)
             updateAlertSections(for: snapshot)
@@ -58,6 +66,7 @@ extension CardsAlertsPresenter: CardsAlertsPresenterInput {
 
     func stop() {
         stopObservingCoordinator()
+        stopObservingCloudRequestState()
         RuuviTagServiceCoordinatorManager.shared.setAlertMuteRefreshActive(false)
     }
 
@@ -207,6 +216,48 @@ private extension CardsAlertsPresenter {
         guard isObservingCoordinator else { return }
         RuuviTagServiceCoordinatorManager.shared.removeObserver(self)
         isObservingCoordinator = false
+    }
+
+    func startObservingCloudRequestState() {
+        guard let mac = snapshot?.identifierData.mac?.value else { return }
+        if let previous = observedCloudRequestMac {
+            RuuviCloudRequestStateObserverManager.shared.stopObserving(for: previous)
+        }
+        observedCloudRequestMac = mac
+        RuuviCloudRequestStateObserverManager.shared.startObserving(for: mac) { [weak self] state in
+            self?.presentActivityIndicator(with: state)
+        }
+    }
+
+    func stopObservingCloudRequestState() {
+        guard let mac = observedCloudRequestMac else { return }
+        RuuviCloudRequestStateObserverManager.shared.stopObserving(for: mac)
+        observedCloudRequestMac = nil
+    }
+
+    func presentActivityIndicator(with state: RuuviCloudRequestStateType) {
+        switch state {
+        case .loading:
+            activityPresenter.show(
+                with: .loading(
+                    message: RuuviLocalization.activitySavingToCloud
+                )
+            )
+        case .success:
+            activityPresenter.update(
+                with: .success(
+                    message: RuuviLocalization.activitySavingSuccess
+                )
+            )
+        case .failed:
+            activityPresenter.update(
+                with: .failed(
+                    message: RuuviLocalization.activitySavingFail
+                )
+            )
+        case .complete:
+            activityPresenter.dismiss()
+        }
     }
 
     func matchesCurrentSnapshot(_ candidate: RuuviTagCardSnapshot) -> Bool {

@@ -278,7 +278,7 @@ private struct CardsSettingsAlertSectionContentView: View {
                     isEnabled: model.isInteractionEnabled,
                     showsStatusLabel: model.headerState.showStatusLabel,
                     onToggle: onToggleAlert,
-                    isCompact: true
+                    isCompact: false
                 )
             }
 
@@ -397,6 +397,18 @@ private struct CardsSettingsAlertSectionRowHeader: View {
     }
 
     var body: some View {
+        Group {
+            if showsToggleInHeader {
+                compactHeader
+            } else {
+                regularHeader
+            }
+        }
+        .padding(Constants.spacing)
+        .background(RuuviColor.tagSettingsItemHeaderColor.swiftUIColor)
+    }
+
+    private var regularHeader: some View {
         HStack(spacing: Constants.spacing) {
             HStack(spacing: Constants.spacing) {
                 Text(model.title)
@@ -426,16 +438,6 @@ private struct CardsSettingsAlertSectionRowHeader: View {
             .contentShape(Rectangle())
             .onTapGesture(perform: onToggleSection)
 
-            if showsToggleInHeader {
-                CardsSettingsAlertEnableRow(
-                    isOn: $toggleValue,
-                    isEnabled: isToggleEnabled,
-                    showsStatusLabel: showsStatusLabel,
-                    onToggle: onToggleAlert,
-                    isCompact: true
-                )
-            }
-
             RuuviAsset.arrowDropDown.swiftUIImage
                 .foregroundColor(RuuviColor.tintColor.swiftUIColor)
                 .rotationEffect(
@@ -449,8 +451,66 @@ private struct CardsSettingsAlertSectionRowHeader: View {
                 )
                 .onTapGesture(perform: onToggleSection)
         }
-        .padding(Constants.spacing)
-        .background(RuuviColor.tagSettingsItemHeaderColor.swiftUIColor)
+    }
+
+    private var compactHeader: some View {
+        VStack(alignment: .leading, spacing: Constants.spacing) {
+            HStack(spacing: Constants.spacing) {
+                HStack(spacing: Constants.spacing) {
+                    Text(model.title)
+                        .ruuviHeadline()
+                        .foregroundStyle(RuuviColor.dashboardIndicator.swiftUIColor)
+                        .multilineTextAlignment(.leading)
+
+                    Spacer()
+
+                    if let icon = alertIconImage {
+                        icon
+                            .scaledToFit()
+                            .foregroundColor(alertIconColor)
+                            .accessibilityLabel(alertIconAccessibilityLabel)
+                            .opacity(alertIconOpacity)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
+                .onTapGesture(perform: onToggleSection)
+
+                CardsSettingsAlertEnableRow(
+                    isOn: $toggleValue,
+                    isEnabled: isToggleEnabled,
+                    showsStatusLabel: showsStatusLabel,
+                    onToggle: onToggleAlert,
+                    isCompact: true
+                )
+
+                RuuviAsset.arrowDropDown.swiftUIImage
+                    .foregroundColor(RuuviColor.tintColor.swiftUIColor)
+                    .rotationEffect(
+                        .degrees(isExpanded ? Constants.rotatedArrowAngle : 0)
+                    )
+                    .animation(
+                        .easeInOut(
+                            duration: Constants.animationDuration
+                        ),
+                        value: isExpanded
+                    )
+                    .onTapGesture(perform: onToggleSection)
+            }
+//            if let muted = mutedText {
+//                Text(muted)
+//                    .font(.ruuviFootnote())
+//                    .foregroundColor(
+//                        RuuviColor.textColor.swiftUIColor.opacity(Constants.muteTextOpacity)
+//                    )
+//            }
+
+            Text("muted till 1113")
+                .font(.ruuviFootnote())
+                .foregroundColor(
+                    RuuviColor.textColor.swiftUIColor.opacity(Constants.muteTextOpacity)
+                )
+        }
     }
 }
 
