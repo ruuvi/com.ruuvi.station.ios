@@ -24,6 +24,7 @@ public final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalib
         lastOriginalRecord record: RuuviTagSensorRecord?
     ) -> Future<SensorSettings, RuuviServiceError> {
         let promise = Promise<SensorSettings, RuuviServiceError>()
+        let updatedSensor = sensor.with(lastUpdated: Date())
         if sensor.isCloud {
             updateOnCloud(offset: offset, of: type, for: sensor).on()
         }
@@ -33,6 +34,7 @@ public final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalib
             of: sensor,
             lastOriginalRecord: record
         ).on(success: { settings in
+            self.pool.update(updatedSensor).on()
             promise.succeed(value: settings)
         }, failure: { error in
             promise.fail(error: .ruuviPool(error))

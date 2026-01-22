@@ -17,7 +17,8 @@ public extension CloudSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -37,7 +38,8 @@ public extension CloudSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 }
@@ -58,6 +60,7 @@ public struct CloudSensorStruct: CloudSensor {
     public var sharedTo: [String]
     public var ownersPlan: String?
     public var maxHistoryDays: Int?
+    public var lastUpdated: Date?
 
     public init(
         id: String,
@@ -74,7 +77,8 @@ public struct CloudSensorStruct: CloudSensor {
         isCloudSensor: Bool?,
         canShare: Bool,
         sharedTo: [String],
-        maxHistoryDays: Int?
+        maxHistoryDays: Int?,
+        lastUpdated: Date? = nil
     ) {
         self.id = id
         self.serviceUUID = serviceUUID
@@ -91,6 +95,7 @@ public struct CloudSensorStruct: CloudSensor {
         self.canShare = canShare
         self.sharedTo = sharedTo
         self.maxHistoryDays = maxHistoryDays
+        self.lastUpdated = lastUpdated
     }
 }
 
@@ -161,6 +166,10 @@ public struct AnyCloudSensor: CloudSensor, Equatable, Hashable, Reorderable {
 
     public var maxHistoryDays: Int? {
         object.maxHistoryDays
+    }
+
+    public var lastUpdated: Date? {
+        object.lastUpdated
     }
 
     public static func == (lhs: AnyCloudSensor, rhs: AnyCloudSensor) -> Bool {

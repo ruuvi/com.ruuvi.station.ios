@@ -324,6 +324,26 @@ extension SQLiteGRDBDatabase {
             })
         }
 
+        // v19
+        migrator.registerMigration("Add lastUpdated columns") { db in
+            // RuuviTagSQLite - sensor metadata lastUpdated
+            if try db.columns(in: RuuviTagSQLite.databaseTableName)
+                .contains(where: { $0.name == RuuviTagSQLite.lastUpdatedColumn.name }) == false {
+                try db.alter(table: RuuviTagSQLite.databaseTableName, body: { t in
+                    t.add(column: RuuviTagSQLite.lastUpdatedColumn.name, .datetime)
+                })
+            }
+
+            // SensorSettingsSQLite - per-field timestamps
+            if try db.columns(in: SensorSettingsSQLite.databaseTableName)
+                .contains(where: { $0.name == SensorSettingsSQLite.displayOrderLastUpdatedColumn.name }) == false {
+                try db.alter(table: SensorSettingsSQLite.databaseTableName, body: { t in
+                    t.add(column: SensorSettingsSQLite.displayOrderLastUpdatedColumn.name, .datetime)
+                    t.add(column: SensorSettingsSQLite.defaultDisplayOrderLastUpdatedColumn.name, .datetime)
+                })
+            }
+        }
+
         try migrator.migrate(dbPool)
     }
 }

@@ -4,6 +4,8 @@ import RuuviOntology
 // swiftlint:disable file_length type_body_length
 class AlertPersistenceUserDefaults: AlertPersistence {
     private let prefs = UserDefaults.standard
+    private let alertUpdatedAtUDKeyPrefix
+        = "AlertPersistenceUserDefaults.alertUpdatedAtUDKeyPrefix."
 
     // temperature
     private let temperatureLowerBoundUDKeyPrefix
@@ -1209,6 +1211,18 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         case .connection:
             prefs.string(forKey: connectionAlertTriggeredAtUDKeyPrefix + uuid)
         }
+    }
+
+    func updatedAt(for uuid: String, of type: AlertType) -> Date? {
+        prefs.object(forKey: alertUpdatedAtKey(for: type, uuid: uuid)) as? Date
+    }
+
+    func setUpdatedAt(_ date: Date?, for uuid: String, of type: AlertType) {
+        prefs.set(date, forKey: alertUpdatedAtKey(for: type, uuid: uuid))
+    }
+
+    private func alertUpdatedAtKey(for type: AlertType, uuid: String) -> String {
+        "\(alertUpdatedAtUDKeyPrefix)\(type.rawValue).\(uuid)"
     }
 }
 

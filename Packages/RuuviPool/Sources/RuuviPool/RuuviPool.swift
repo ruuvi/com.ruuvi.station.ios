@@ -42,7 +42,9 @@ public protocol RuuviPool {
     func updateDisplaySettings(
         for ruuviTag: RuuviTagSensor,
         displayOrder: [String]?,
-        defaultDisplayOrder: Bool?
+        defaultDisplayOrder: Bool?,
+        displayOrderLastUpdated: Date?,
+        defaultDisplayOrderLastUpdated: Date?
     ) -> Future<SensorSettings, RuuviPoolError>
 
     // MARK: - Queued cloud requests

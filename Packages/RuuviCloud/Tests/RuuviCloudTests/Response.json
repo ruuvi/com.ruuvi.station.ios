@@ -1,0 +1,1955 @@
+  "result" : "success",
+  "data" : {
+    "sensors" : [
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+
+        ],
+        "sensor" : "AB:AB:AB:AB:AB:BA",
+        "lastUpdated" : 1751486555,
+        "owner" : "priyontoo@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/3d855b22-c001-42b6-a847-59073f7ed29f.jpg",
+        "customProfile" : false,
+        "alerts" : [
+
+        ],
+        "canShare" : true,
+        "settings" : {
+
+        },
+        "measurements" : [
+
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 40,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1758276225,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-09-25T20:48:54.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Ruuvi ABBA",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+
+        ],
+        "sensor" : "C1:0F:5B:B4:2A:49",
+        "lastUpdated" : 1753388388,
+        "owner" : "priyontoo@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/9441f50d-fa2c-4fb8-b032-07293906a7b5.jpg",
+        "customProfile" : false,
+        "alerts" : [
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "aqi",
+            "max" : 21,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "nox",
+            "max" : 500,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : -40,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "temperature",
+            "max" : -11,
+            "counter" : 0,
+            "description" : ""
+          }
+        ],
+        "canShare" : true,
+        "settings" : {
+          "displayOrder" : "[\"AQI_INDEX\",\"CO2_PPM\",\"PM25_MGM3\",\"VOC_INDEX\",\"NOX_INDEX\",\"TEMPERATURE_C\",\"HUMIDITY_0\",\"SOUNDINSTANT_SPL\",\"SOUNDPEAK_SPL\",\"SOUNDAVG_DBA\"]",
+          "defaultDisplayOrder" : "false",
+          "defaultDisplayOrder_lastUpdated" : 1763324396,
+          "displayOrder_lastUpdated" : 1763324396
+        },
+        "measurements" : [
+          {
+            "gwmac" : "F7:26:1B:F5:E5:B3",
+            "data" : "2BFF9904E1124924FCFFFF00240028002B002C02A32F000005354D509600037088FFFFFFFFFFC10F5BB42A49030398FC",
+            "timestamp" : 1767715439,
+            "rssi" : -51,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 40,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1758276225,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-09-25T20:48:54.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Ruuvi Air H1-1",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+
+        ],
+        "sensor" : "C2:FD:46:91:33:5E",
+        "lastUpdated" : 1761688607,
+        "owner" : "dg@cccu.us",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/9e5a9939-4c06-47c1-a169-7e14612c518e.jpg",
+        "customProfile" : true,
+        "alerts" : [
+
+        ],
+        "canShare" : false,
+        "settings" : {
+          "displayOrder" : "[\"AQI_INDEX\",\"CO2_PPM\",\"PM25_MGM3\",\"VOC_INDEX\",\"NOX_INDEX\",\"TEMPERATURE_C\",\"HUMIDITY_0\",\"PRESSURE_1\",\"LUMINOSITY_LX\",\"SOUNDINSTANT_SPL\",\"SIGNAL_DBM\"]",
+          "defaultDisplayOrder" : "false",
+          "defaultDisplayOrder_lastUpdated" : 1766757250,
+          "displayOrder_lastUpdated" : 1766757250
+        },
+        "measurements" : [
+          {
+            "gwmac" : "E1:43:48:48:FC:C3",
+            "data" : "2BFF9904E1101042DCC052000E00130016001802152400FFFFFFFFFFFF258597F8FFFFFFFFFFC2FD4691335E030398FC",
+            "timestamp" : 1767739469,
+            "rssi" : -63,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 50,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1753654390,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-07-28T22:13:11.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Ruuvi Air 335E",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+          "saibeensultana@gmail.com",
+          "priyoneer@gmail.com",
+          "saibeenlima@gmail.com"
+        ],
+        "sensor" : "C7:36:59:AE:62:37",
+        "lastUpdated" : 1679955571,
+        "owner" : "priyontoo@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/46b3d7b7-db94-4300-80b8-160a44783a7e.jpg",
+        "customProfile" : false,
+        "alerts" : [
+          {
+            "triggeredAt" : "2023-02-24T20:32:55.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "humidity",
+            "max" : 9,
+            "counter" : 0,
+            "description" : "Bo Bo Bo"
+          },
+          {
+            "triggeredAt" : "2023-09-10T18:14:58.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "movement",
+            "max" : 1.7976931348623155e+308,
+            "counter" : 202,
+            "description" : "Sensor moved"
+          },
+          {
+            "triggeredAt" : "2024-01-02T17:07:20.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "offline",
+            "max" : 120,
+            "counter" : 0,
+            "description" : "Ho Ho Ho"
+          },
+          {
+            "triggeredAt" : "2022-12-26T11:57:22.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "pressure",
+            "max" : 0,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "2023-02-14T06:59:17.000Z",
+            "min" : -105,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "signal",
+            "max" : 0,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "2023-02-24T18:45:27.000Z",
+            "min" : -40,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "temperature",
+            "max" : -26,
+            "counter" : 0,
+            "description" : "Testing"
+          }
+        ],
+        "canShare" : true,
+        "settings" : {
+
+        },
+        "measurements" : [
+          {
+            "gwmac" : "F7:26:1B:F5:E5:B3",
+            "data" : "0201061BFF990405EC95717CBF5AFE94FC48FEE879561F1A5EC73659AE6237",
+            "timestamp" : 1767739424,
+            "rssi" : -62,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 40,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1758276225,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-09-25T20:48:54.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Fridge Lower",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+
+        ],
+        "sensor" : "CA:E7:DD:09:AB:F9",
+        "lastUpdated" : 1637824167,
+        "owner" : "eliaseberg@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/6c096af1-b9e5-4894-b41d-5ab293521490.jpg",
+        "customProfile" : true,
+        "alerts" : [
+          {
+            "triggeredAt" : "2023-06-20T23:17:04.000Z",
+            "min" : 15.119999999999999,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "humidity",
+            "max" : 67.099999999999994,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "2022-04-08T07:53:12.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "movement",
+            "max" : 1.7976931348623155e+308,
+            "counter" : 102,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "2023-08-08T18:12:44.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "offline",
+            "max" : 120,
+            "counter" : 0,
+            "description" : "Let me know. "
+          },
+          {
+            "triggeredAt" : "2023-01-18T22:30:17.000Z",
+            "min" : 51400,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "pressure",
+            "max" : 73213,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "2023-02-24T19:54:28.000Z",
+            "min" : -95,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "signal",
+            "max" : -85,
+            "counter" : 0,
+            "description" : "testing"
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : -38,
+            "enabled" : true,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "temperature",
+            "max" : 82,
+            "counter" : 0,
+            "description" : ""
+          }
+        ],
+        "canShare" : false,
+        "settings" : {
+          "displayOrder" : "[\"TEMPERATURE_C\",\"TEMPERATURE_F\",\"TEMPERATURE_K\",\"HUMIDITY_0\",\"HUMIDITY_1\",\"HUMIDITY_2\",\"PRESSURE_0\",\"PRESSURE_1\",\"PRESSURE_2\",\"PRESSURE_3\",\"MOVEMENT_COUNT\",\"BATTERY_VOLT\",\"SIGNAL_DBM\",\"ACCELERATION_GX\",\"ACCELERATION_GY\",\"ACCELERATION_GZ\"]",
+          "defaultDisplayOrder" : "false",
+          "defaultDisplayOrder_lastUpdated" : 1763067771,
+          "displayOrder_lastUpdated" : 1763068391
+        },
+        "measurements" : [
+          {
+            "gwmac" : "F0:1F:66:DC:1A:D7",
+            "data" : "0201061BFF99040511691EB9CB980208FC90001C96564DF884CAE7DD09ABF9",
+            "timestamp" : 1767739475,
+            "rssi" : -71,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 40,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1753939991,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-07-31T05:33:12.000Z",
+          "maxSharesPerSensor" : 20,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Bastu",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+
+        ],
+        "sensor" : "CE:2A:C8:CE:A2:32",
+        "lastUpdated" : 1620922563,
+        "owner" : "eliaseberg@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/71cc4dd5-d21b-42cc-bca8-a6d5b832a050.jpg",
+        "customProfile" : true,
+        "alerts" : [
+
+        ],
+        "canShare" : false,
+        "settings" : {
+          "displayOrder" : "[\"TEMPERATURE_C\",\"HUMIDITY_0\",\"PRESSURE_1\",\"MOVEMENT_COUNT\",\"ACCELERATION_GX\",\"SIGNAL_DBM\"]",
+          "defaultDisplayOrder" : "true",
+          "defaultDisplayOrder_lastUpdated" : 1763585814,
+          "displayOrder_lastUpdated" : 1763585814
+        },
+        "measurements" : [
+          {
+            "gwmac" : "C4:54:05:EB:8F:34",
+            "data" : "0201061BFF990405F18557CFCBAFFFA0FFD003F854764CE296CE2AC8CEA232",
+            "timestamp" : 1767739451,
+            "rssi" : -74,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 40,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1753939991,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-07-31T05:33:12.000Z",
+          "maxSharesPerSensor" : 20,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Frysen",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+
+        ],
+        "sensor" : "D2:D2:5F:61:BB:12",
+        "lastUpdated" : 1646018891,
+        "owner" : "dg@cccu.us",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/14641c70-7cba-477f-baf7-dd2918ab92ad.jpg",
+        "customProfile" : true,
+        "alerts" : [
+
+        ],
+        "canShare" : false,
+        "settings" : {
+
+        },
+        "measurements" : [
+          {
+            "gwmac" : "E1:43:48:48:FC:C3",
+            "data" : "0201061BFF99040510894616C0980060039000C872B6DA82B2D2D25F61BB12",
+            "timestamp" : 1767739463,
+            "rssi" : -64,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 50,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1753654390,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-07-28T22:13:11.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Ruuvi BB12 water inlet",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 980.07000000000005,
+        "sharedTo" : [
+          "saibeensultana@gmail.com",
+          "priyoneer@gmail.com"
+        ],
+        "sensor" : "DA:DC:04:5F:51:91",
+        "lastUpdated" : 1762374077,
+        "owner" : "priyontoo@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/df323760-fa7f-4b7f-b593-71314103ba97.jpg",
+        "customProfile" : false,
+        "alerts" : [
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 9.2300000000000004,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "humidity",
+            "max" : 30,
+            "counter" : 0,
+            "description" : "Test"
+          },
+          {
+            "triggeredAt" : "2023-01-04T21:24:04.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "movement",
+            "max" : 1.7976931348623155e+308,
+            "counter" : 114,
+            "description" : "lol"
+          },
+          {
+            "triggeredAt" : "2023-08-18T15:56:46.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "offline",
+            "max" : 120,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "2023-01-04T21:24:04.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "pressure",
+            "max" : 0,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "2023-02-05T14:37:10.000Z",
+            "min" : -98,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "signal",
+            "max" : 0,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : -7.2300000000000004,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "temperature",
+            "max" : 19,
+            "counter" : 0,
+            "description" : "Testing 123"
+          }
+        ],
+        "canShare" : true,
+        "settings" : {
+          "displayOrder" : "[\"TEMPERATURE_C\",\"HUMIDITY_0\",\"MOVEMENT_COUNT\",\"HUMIDITY_1\",\"TEMPERATURE_K\"]",
+          "defaultDisplayOrder" : "true",
+          "defaultDisplayOrder_lastUpdated" : 1763573541,
+          "displayOrder_lastUpdated" : 1763573526
+        },
+        "measurements" : [
+          {
+            "gwmac" : "F7:26:1B:F5:E5:B3",
+            "data" : "0201061BFF9904050F927076FFFF0018FFE404089AB6E7F73FDADC045F5191",
+            "timestamp" : 1748081165,
+            "rssi" : -69,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 40,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1758276225,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-09-25T20:48:54.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : -50.975000000000001,
+        "name" : "Bathroom Old",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+
+        ],
+        "sensor" : "DD:62:2D:6C:34:CF",
+        "lastUpdated" : 1762925887,
+        "owner" : "eliaseberg@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/d61a4932-cf04-4a77-ad6a-713fece2412d.jpg",
+        "customProfile" : true,
+        "alerts" : [
+          {
+            "triggeredAt" : "2022-10-20T18:03:48.000Z",
+            "min" : 58000,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "pressure",
+            "max" : 75700,
+            "counter" : 0,
+            "description" : ""
+          }
+        ],
+        "canShare" : false,
+        "settings" : {
+          "displayOrder" : "[\"TEMPERATURE_C\",\"MOVEMENT_COUNT\",\"ACCELERATION_GY\",\"BATTERY_VOLT\",\"PRESSURE_1\"]",
+          "defaultDisplayOrder" : "false",
+          "defaultDisplayOrder_lastUpdated" : 1765730744,
+          "displayOrder_lastUpdated" : 1765730744
+        },
+        "measurements" : [
+          {
+            "gwmac" : "C4:54:05:EB:8F:34",
+            "data" : "0201061BFF9904050A5B2F66CB65FFB8FFE804103F56FEB3F2DD622D6C34CF",
+            "timestamp" : 1767739451,
+            "rssi" : -72,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 40,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1753939991,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-07-31T05:33:12.000Z",
+          "maxSharesPerSensor" : 20,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Diskmaskin",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+
+        ],
+        "sensor" : "DD:E6:CD:7A:EF:37",
+        "lastUpdated" : 1767233941,
+        "owner" : "marko@ruuvi.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/f373b38f-92db-4cd8-91e9-cfb2bc575fe0.jpg",
+        "customProfile" : true,
+        "alerts" : [
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "pm25",
+            "max" : 250,
+            "counter" : 0,
+            "description" : ""
+          }
+        ],
+        "canShare" : false,
+        "settings" : {
+          "displayOrder" : "[\"HUMIDITY_1\"]",
+          "defaultDisplayOrder" : "true",
+          "defaultDisplayOrder_lastUpdated" : 1767667488,
+          "displayOrder_lastUpdated" : 1767667488
+        },
+        "measurements" : [
+          {
+            "gwmac" : "E5:40:C6:DB:5F:C4",
+            "data" : "2BFF9904E1110B6EE4BC55007A0087008E0092020E1200001B14FFFFFF070E1EFCFFFFFFFFFFDDE6CD7AEF37030398FC",
+            "timestamp" : 1767739458,
+            "rssi" : -72,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 50,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1766982987,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-03-31T04:36:26.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Ruuvi EF37",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+          "priyoneer@gmail.com",
+          "saibeenlima@gmail.com"
+        ],
+        "sensor" : "E0:3A:F2:D5:34:36",
+        "lastUpdated" : 1745348042,
+        "owner" : "priyontoo@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/cdd69f49-7edf-489b-8ec5-e53facc7527d.jpg",
+        "customProfile" : false,
+        "alerts" : [
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 39,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "humidity",
+            "max" : 45,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "movement",
+            "max" : 1.7976931348623155e+308,
+            "counter" : 78,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 50000,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "pressure",
+            "max" : 115500,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : -105,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "signal",
+            "max" : -22,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 18,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "temperature",
+            "max" : 19,
+            "counter" : 0,
+            "description" : ""
+          }
+        ],
+        "canShare" : true,
+        "settings" : {
+
+        },
+        "measurements" : [
+          {
+            "gwmac" : "F7:26:1B:F5:E5:B3",
+            "data" : "0201061BFF99040513012C97BF130000000C03D0ACB6966832E03AF2D53436",
+            "timestamp" : 1767739426,
+            "rssi" : -31,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 40,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1758276225,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-09-25T20:48:54.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Living Room",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+          "saibeenlima@gmail.com"
+        ],
+        "sensor" : "E1:AE:15:86:C1:27",
+        "lastUpdated" : 1752861569,
+        "owner" : "priyontoo@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/89304e63-db6c-4bae-869b-48804c8dd9af.jpg",
+        "customProfile" : false,
+        "alerts" : [
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "humidity",
+            "max" : 100,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : -105,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "signal",
+            "max" : 0,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : -40,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "temperature",
+            "max" : -16,
+            "counter" : 0,
+            "description" : "Testing"
+          }
+        ],
+        "canShare" : true,
+        "settings" : {
+          "displayOrder" : "[\"TEMPERATURE_C\",\"HUMIDITY_0\",\"PRESSURE_1\",\"MOVEMENT_COUNT\",\"SIGNAL_DBM\"]",
+          "defaultDisplayOrder" : "false",
+          "defaultDisplayOrder_lastUpdated" : 1764270719,
+          "displayOrder_lastUpdated" : 1764270719
+        },
+        "measurements" : [
+          {
+            "gwmac" : "F7:26:1B:F5:E5:B3",
+            "data" : "0201061BFF9904051193455EBF400024000003F0A3761A5661E1AE1586C127",
+            "timestamp" : 1767739426,
+            "rssi" : -64,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 40,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1758276225,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-09-25T20:48:54.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Bathroom",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+
+        ],
+        "sensor" : "E5:89:2A:5F:77:97",
+        "lastUpdated" : 1750941262,
+        "owner" : "otso@ruuvi.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/831b6204-972a-458c-b614-d9fdb031044e.jpg",
+        "customProfile" : true,
+        "alerts" : [
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 26,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "aqi",
+            "max" : 62,
+            "counter" : 0,
+            "description" : "test"
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 350,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "co2",
+            "max" : 477,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "luminosity",
+            "max" : 97635,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "nox",
+            "max" : 500,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "soundInstant",
+            "max" : 29,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 20,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "temperature",
+            "max" : 22,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "voc",
+            "max" : 61,
+            "counter" : 0,
+            "description" : ""
+          }
+        ],
+        "canShare" : false,
+        "settings" : {
+          "displayOrder" : "[\"AQI_INDEX\",\"CO2_PPM\",\"VOC_INDEX\",\"TEMPERATURE_C\",\"HUMIDITY_0\",\"PM25_MGM3\",\"HUMIDITY_2\",\"PRESSURE_1\"]",
+          "defaultDisplayOrder" : "false",
+          "defaultDisplayOrder_lastUpdated" : 1755198188,
+          "displayOrder_lastUpdated" : 1758608029
+        },
+        "measurements" : [
+          {
+            "gwmac" : "F9:15:8F:92:D8:69",
+            "data" : "2BFF9904E18000FFFFC803FFFFFFFFFFFFFFFFFFFFFFFF4E962643327D000408C8FFFFFFFFFFE5892A5F7797030398FC",
+            "timestamp" : 1760429498,
+            "rssi" : -47,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 50,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1748506803,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Standard",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-07-24T10:35:42.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "This is Otso's Air r",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+          "saibeenlima@gmail.com"
+        ],
+        "sensor" : "E6:AA:87:46:5C:18",
+        "lastUpdated" : 1758142970,
+        "owner" : "priyontoo@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/17173693-6275-43d2-ab76-43cd0cec0a9e.jpg",
+        "customProfile" : false,
+        "alerts" : [
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "pressure",
+            "max" : 63500,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : -105,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "signal",
+            "max" : 0,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : -40,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "temperature",
+            "max" : -28,
+            "counter" : 0,
+            "description" : ""
+          }
+        ],
+        "canShare" : true,
+        "settings" : {
+          "displayOrder" : "[\"TEMPERATURE_C\",\"TEMPERATURE_F\",\"HUMIDITY_0\",\"PRESSURE_1\",\"MOVEMENT_COUNT\"]",
+          "defaultDisplayOrder" : "false",
+          "defaultDisplayOrder_lastUpdated" : 1766541072,
+          "displayOrder_lastUpdated" : 1766541072
+        },
+        "measurements" : [
+          {
+            "gwmac" : "F7:26:1B:F5:E5:B3",
+            "data" : "0201061BFF99040511123A01BF48FFE4FFE00400B116736820E6AA87465C18",
+            "timestamp" : 1767739424,
+            "rssi" : -65,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 40,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1758276225,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-09-25T20:48:54.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Bedside",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+          "saibeenlima@gmail.com"
+        ],
+        "sensor" : "E6:CA:06:9A:F6:98",
+        "lastUpdated" : 1767114944,
+        "owner" : "priyontoo@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/ec5d0f57-52b1-48eb-a454-9d4fe4fafe93.jpg",
+        "customProfile" : false,
+        "alerts" : [
+
+        ],
+        "canShare" : true,
+        "settings" : {
+
+        },
+        "measurements" : [
+          {
+            "gwmac" : "F7:26:1B:F5:E5:B3",
+            "data" : "0201061BFF99040510553D07BF360010FFF803F4AE16FC6802E6CA069AF698",
+            "timestamp" : 1767739427,
+            "rssi" : -66,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 40,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1758276225,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-09-25T20:48:54.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Bedside 2",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+
+        ],
+        "sensor" : "E8:6A:F4:57:19:54",
+        "lastUpdated" : 1635401086,
+        "owner" : "eliaseberg@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/b132fd8c-4b24-4475-a608-45f9f8a8532f.jpg",
+        "customProfile" : true,
+        "alerts" : [
+
+        ],
+        "canShare" : false,
+        "settings" : {
+
+        },
+        "measurements" : [
+          {
+            "gwmac" : "C4:54:05:EB:8F:34",
+            "data" : "0201061BFF9904050F9323DDCB5E0000FFE403D877166EAD9BE86AF4571954",
+            "timestamp" : 1767739452,
+            "rssi" : -80,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 40,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1753939991,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-07-31T05:33:12.000Z",
+          "maxSharesPerSensor" : 20,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Reningsverk 3.30.4-RC3+default",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+
+        ],
+        "sensor" : "EB:51:09:0C:4D:95",
+        "lastUpdated" : 1762378866,
+        "owner" : "priyontoo@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/badb086d-59fd-4d37-b2db-dda7a67e53d0.jpg",
+        "customProfile" : false,
+        "alerts" : [
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 50795.849999999999,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "pressure",
+            "max" : 60955.019999999997,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : -40,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "temperature",
+            "max" : 85,
+            "counter" : 0,
+            "description" : ""
+          }
+        ],
+        "canShare" : true,
+        "settings" : {
+          "displayOrder" : "[\"TEMPERATURE_C\",\"HUMIDITY_0\",\"HUMIDITY_1\",\"PRESSURE_0\",\"HUMIDITY_2\",\"MOVEMENT_COUNT\",\"BATTERY_VOLT\",\"TEMPERATURE_F\"]",
+          "defaultDisplayOrder" : "false",
+          "defaultDisplayOrder_lastUpdated" : 1767384207,
+          "displayOrder_lastUpdated" : 1767384207
+        },
+        "measurements" : [
+          {
+            "gwmac" : "F7:26:1B:F5:E5:B3",
+            "data" : "020106030298FC15FF9904C512002EB9BF0F8C3681DF3FEB51090C4D95",
+            "timestamp" : 1767739423,
+            "rssi" : -68,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 1158.0000000000041,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 40,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1758276225,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-09-25T20:48:54.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "RuuviTag 4D95",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+
+        ],
+        "sensor" : "F2:82:8C:53:C0:44",
+        "lastUpdated" : 1767216188,
+        "owner" : "priyontoo@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/664b8231-ba2f-441c-a5c3-ee17ad20972f.jpg",
+        "customProfile" : false,
+        "alerts" : [
+
+        ],
+        "canShare" : true,
+        "settings" : {
+
+        },
+        "measurements" : [
+          {
+            "gwmac" : "F7:26:1B:F5:E5:B3",
+            "data" : "2BFF9904E1115D2350BF17001200130014001401E93200FFFFFFFFFFFF005C69FCFFFFFFFFFFF2828C53C044030398FC",
+            "timestamp" : 1767739428,
+            "rssi" : -59,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 40,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1758276225,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-09-25T20:48:54.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Ruuvi Air Stable",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+
+        ],
+        "sensor" : "F4:2F:89:0C:E7:A2",
+        "lastUpdated" : 1680728378,
+        "owner" : "eliaseberg@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/8c164718-ed39-4971-823e-9e1bb922264b.jpg",
+        "customProfile" : true,
+        "alerts" : [
+          {
+            "triggeredAt" : "2022-10-20T17:55:06.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "humidity",
+            "max" : 100,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "2023-08-18T15:56:44.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "offline",
+            "max" : 120,
+            "counter" : 0,
+            "description" : "hmma"
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "signal",
+            "max" : 0,
+            "counter" : 0,
+            "description" : "hmm"
+          },
+          {
+            "triggeredAt" : "2023-02-23T21:11:18.000Z",
+            "min" : -40,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "temperature",
+            "max" : 5,
+            "counter" : 0,
+            "description" : ""
+          }
+        ],
+        "canShare" : false,
+        "settings" : {
+
+        },
+        "measurements" : [
+          {
+            "gwmac" : "C4:54:05:EB:8F:34",
+            "data" : "0201061BFF990405F27A926ECC82FFE4002803F867B60EEDA9F42F890CE7A2",
+            "timestamp" : 1767739458,
+            "rssi" : -65,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 40,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1753939991,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-07-31T05:33:12.000Z",
+          "maxSharesPerSensor" : 20,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "BrewTag",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+
+        ],
+        "sensor" : "F5:D2:36:0E:ED:9B",
+        "lastUpdated" : 1646688835,
+        "owner" : "eliaseberg@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/c5242d47-238d-4d49-aa8f-1ab3591a8b95.jpg",
+        "customProfile" : true,
+        "alerts" : [
+          {
+            "triggeredAt" : "2022-10-16T18:08:52.000Z",
+            "min" : 31,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "humidity",
+            "max" : 47,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "2022-10-16T17:04:52.000Z",
+            "min" : 30000,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "pressure",
+            "max" : 50300,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "2022-10-16T16:59:52.000Z",
+            "min" : -40,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "temperature",
+            "max" : 27,
+            "counter" : 0,
+            "description" : ""
+          }
+        ],
+        "canShare" : false,
+        "settings" : {
+          "displayOrder" : "[\"TEMPERATURE_C\",\"HUMIDITY_0\",\"PRESSURE_1\",\"MOVEMENT_COUNT\",\"SIGNAL_DBM\",\"HUMIDITY_2\"]",
+          "defaultDisplayOrder" : "false",
+          "defaultDisplayOrder_lastUpdated" : 1765395453,
+          "displayOrder_lastUpdated" : 1765395453
+        },
+        "measurements" : [
+          {
+            "gwmac" : "C4:54:05:EB:8F:34",
+            "data" : "0201061BFF9904050B632B6ECB7002D002BC00109EB6F962D1F5D2360EED9B",
+            "timestamp" : 1767739455,
+            "rssi" : -82,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 40,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1753939991,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-07-31T05:33:12.000Z",
+          "maxSharesPerSensor" : 20,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "BrewTag Kylskåp B8",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+
+        ],
+        "sensor" : "F6:07:52:34:28:C6",
+        "lastUpdated" : 1663150489,
+        "owner" : "lauri.jamsa@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/4acab527-8588-45d7-834d-bf6281394dc1.jpg",
+        "customProfile" : true,
+        "alerts" : [
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 69,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "humidity",
+            "max" : 70,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 50000,
+            "enabled" : true,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "pressure",
+            "max" : 115500,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 4,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "temperature",
+            "max" : 5,
+            "counter" : 0,
+            "description" : ""
+          }
+        ],
+        "canShare" : false,
+        "settings" : {
+
+        },
+        "measurements" : [
+          {
+            "gwmac" : "DE:8A:DB:68:C5:26",
+            "data" : "0201061BFF990405017B752CC18500680088FC189DD622C98CF607523428C6",
+            "timestamp" : 1765250584,
+            "rssi" : -85,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 50,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1741675035,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-03-18T03:36:49.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Mökki Sauna",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+
+        ],
+        "sensor" : "F8:30:BA:AC:CB:4B",
+        "lastUpdated" : 1761735897,
+        "owner" : "marko@ruuvi.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/943e2f4d-facf-4ea4-b4aa-d5b6e76101d2.jpg",
+        "customProfile" : true,
+        "alerts" : [
+
+        ],
+        "canShare" : false,
+        "settings" : {
+          "displayOrder" : "[\"TEMPERATURE_C\",\"HUMIDITY_0\",\"PRESSURE_0\",\"PRESSURE_1\",\"TEMPERATURE_F\"]",
+          "defaultDisplayOrder" : "false",
+          "defaultDisplayOrder_lastUpdated" : 1765942367,
+          "displayOrder_lastUpdated" : 1765942367
+        },
+        "measurements" : [
+          {
+            "gwmac" : "E5:40:C6:DB:5F:C4",
+            "data" : "020106030298FC15FF9904C515A3683EBC0AA07602001CF830BAACCB4B",
+            "timestamp" : 1765157264,
+            "rssi" : -55,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 50,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1766982987,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-03-31T04:36:26.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Hollow",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+
+        ],
+        "sensor" : "FC:2E:47:18:51:0E",
+        "lastUpdated" : 1739406940,
+        "owner" : "aamunkajom@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/5518d75b-dbe1-4a9d-b408-b477d66b4afb.jpg",
+        "customProfile" : true,
+        "alerts" : [
+
+        ],
+        "canShare" : false,
+        "settings" : {
+          "displayOrder" : "[\"TEMPERATURE_C\",\"TEMPERATURE_F\",\"TEMPERATURE_K\",\"PRESSURE_0\",\"HUMIDITY_1\",\"MOVEMENT_COUNT\",\"BATTERY_VOLT\",\"ACCELERATION_GX\",\"HUMIDITY_2\"]",
+          "defaultDisplayOrder" : "false",
+          "defaultDisplayOrder_lastUpdated" : 1762845054,
+          "displayOrder_lastUpdated" : 1765176663
+        },
+        "measurements" : [
+          {
+            "gwmac" : "E5:40:C6:DB:5F:C4",
+            "data" : "0201061BFF990405188B6E03B7FC80008000800033D6000022FC2E4718510E",
+            "timestamp" : 1750553592,
+            "rssi" : -64,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : false,
+          "isActive" : true,
+          "maxClaims" : 25,
+          "delayedAlertAllowed" : false,
+          "lastUpdated" : 1765852023,
+          "maxShares" : 40,
+          "subscriptionName" : "Free",
+          "offlineAlertAllowed" : false,
+          "pushAlertAllowed" : false,
+          "endAt" : "2026-01-15T02:27:01.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 0,
+          "maxResolutionMinutes" : 10,
+          "telegramAlertAllowed" : false,
+          "emailAlertAllowed" : false
+        },
+        "offsetHumidity" : 4.984999999999995,
+        "name" : "Garden",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+          "saibeenlima@gmail.com"
+        ],
+        "sensor" : "FC:31:F0:8E:E4:77",
+        "lastUpdated" : 1689780985,
+        "owner" : "priyontoo@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/d007b391-8c82-487b-b75b-576c5bb7047a.jpg",
+        "customProfile" : false,
+        "alerts" : [
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "humidity",
+            "max" : 8,
+            "counter" : 0,
+            "description" : "Eki obostha"
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : -50,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "temperature",
+            "max" : -14,
+            "counter" : 0,
+            "description" : ""
+          }
+        ],
+        "canShare" : true,
+        "settings" : {
+
+        },
+        "measurements" : [
+          {
+            "gwmac" : "F7:26:1B:F5:E5:B3",
+            "data" : "0201061BFF990405FD415208BF2F0014FFD803D48CB6566E86FC31F08EE477",
+            "timestamp" : 1767739424,
+            "rssi" : -66,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 40,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1758276225,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-09-25T20:48:54.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Fridge Upper",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+
+        ],
+        "sensor" : "FE:3B:AD:DA:FD:D1",
+        "lastUpdated" : 1737602481,
+        "owner" : "marko@ruuvi.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/d00be54e-214c-41d6-8af1-3df65ec80c3d.jpg",
+        "customProfile" : true,
+        "alerts" : [
+
+        ],
+        "canShare" : false,
+        "settings" : {
+          "displayOrder" : "[\"TEMPERATURE_C\",\"TEMPERATURE_F\",\"TEMPERATURE_K\",\"SIGNAL_DBM\",\"MOVEMENT_COUNT\",\"MSN_COUNT\",\"BATTERY_VOLT\"]",
+          "defaultDisplayOrder" : "false",
+          "defaultDisplayOrder_lastUpdated" : 1767571164,
+          "displayOrder_lastUpdated" : 1767571164
+        },
+        "measurements" : [
+          {
+            "gwmac" : "E5:40:C6:DB:5F:C4",
+            "data" : "0201061BFF99040512DCFFFFFFFFFFBCFFF803D08CB6D285DFFE3BADDAFDD1",
+            "timestamp" : 1767739456,
+            "rssi" : -29,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 50,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1766982987,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-03-31T04:36:26.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "RuuviTag Pro + external 1.5m",
+        "public" : false
+      },
+      {
+        "offsetTemperature" : 0,
+        "sharedTo" : [
+          "priyoneer@gmail.com"
+        ],
+        "sensor" : "FE:C1:F2:A2:F0:21",
+        "lastUpdated" : 1749573087,
+        "owner" : "priyontoo@gmail.com",
+        "picture" : "https:\/\/prod-sensor-profile-pictures.s3.eu-central-1.amazonaws.com\/3b72a539-8400-4fd2-b445-fd4ef4ad8940.jpg",
+        "customProfile" : false,
+        "alerts" : [
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 47,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "humidity",
+            "max" : 53,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "movement",
+            "max" : 0,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "2023-08-08T18:43:35.000Z",
+            "min" : 0,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "offline",
+            "max" : 900,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : 50000,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "pressure",
+            "max" : 80200,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : -105,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "signal",
+            "max" : 0,
+            "counter" : 0,
+            "description" : ""
+          },
+          {
+            "triggeredAt" : "0000-00-00T00:00:00.000Z",
+            "min" : -40,
+            "enabled" : false,
+            "delay" : 0,
+            "triggered" : false,
+            "type" : "temperature",
+            "max" : -10,
+            "counter" : 0,
+            "description" : "Custom text testing"
+          }
+        ],
+        "canShare" : true,
+        "settings" : {
+          "displayOrder" : "[\"TEMPERATURE_C\",\"TEMPERATURE_F\",\"HUMIDITY_0\",\"PRESSURE_1\",\"MOVEMENT_COUNT\",\"SIGNAL_DBM\"]",
+          "defaultDisplayOrder" : "false",
+          "defaultDisplayOrder_lastUpdated" : 1765315894,
+          "displayOrder_lastUpdated" : 1765315894
+        },
+        "measurements" : [
+          {
+            "gwmac" : "F7:26:1B:F5:E5:B3",
+            "data" : "0201061BFF9904050E463E7BBF5E03D8FF0C0060A69697B6F6FEC1F2A2F021",
+            "timestamp" : 1767739425,
+            "rssi" : -54,
+            "coordinates" : "N\/A"
+          }
+        ],
+        "offsetPressure" : 0,
+        "subscription" : {
+          "pdfExportAllowed" : true,
+          "isActive" : true,
+          "maxClaims" : 40,
+          "delayedAlertAllowed" : true,
+          "lastUpdated" : 1758276225,
+          "maxShares" : 80,
+          "subscriptionName" : "Business Starter",
+          "offlineAlertAllowed" : true,
+          "pushAlertAllowed" : true,
+          "endAt" : "2026-09-25T20:48:54.000Z",
+          "maxSharesPerSensor" : 10,
+          "maxHistoryDays" : 1096,
+          "maxResolutionMinutes" : 1,
+          "telegramAlertAllowed" : true,
+          "emailAlertAllowed" : true
+        },
+        "offsetHumidity" : 0,
+        "name" : "Bedroom",
+        "public" : false
+      }
+    ]
+  }
+}
