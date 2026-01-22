@@ -21,6 +21,7 @@ class CardsGraphMarkerView: MarkerImage {
     private let vPadding: CGFloat = 4.0
     private let cornerRadius: CGFloat = 4.0
     private let yBottomPadding: CGFloat = 32.0
+    private let pointSpacing: CGFloat = 8.0
 
     init(
         color: UIColor? = RuuviColor.graphMarkerColor.color,
@@ -63,18 +64,21 @@ class CardsGraphMarkerView: MarkerImage {
             rectangle.origin.x -= rectangle.width / 2
         }
 
-        let distanceFromTop = point.y - rectangle.height
-        let distanceFromBottom = point.y + rectangle.height
+        let maxY = max(0, parentFrame.height - yBottomPadding)
+        let minY: CGFloat = 0
+        let aboveY = point.y - pointSpacing - rectangle.height
+        let belowY = point.y + pointSpacing
+        let canFitAbove = aboveY >= minY
+        let canFitBelow = (belowY + rectangle.height) <= maxY
 
-        if distanceFromTop <= 0 {
-            // near top → shift marker down
-            rectangle.origin.y = rectangle.height / 2
-        } else if distanceFromBottom >= (parentFrame.height - yBottomPadding) {
-            // near bottom → shift marker up
-            rectangle.origin.y -= (rectangle.height + yBottomPadding)
+        if canFitAbove {
+            rectangle.origin.y = aboveY
+        } else if canFitBelow {
+            rectangle.origin.y = belowY
         } else {
-            // otherwise → standard “center vertically” offset
-            rectangle.origin.y -= rectangle.height / 2 + yBottomPadding
+            let aboveOverflow = minY - aboveY
+            let belowOverflow = (belowY + rectangle.height) - maxY
+            rectangle.origin.y = aboveOverflow <= belowOverflow ? aboveY : belowY
         }
 
         if rectangle.minX < 0 {
@@ -83,12 +87,12 @@ class CardsGraphMarkerView: MarkerImage {
             rectangle.origin.x = chartWidth - rectangle.width
         }
 
-        // parentFrame is the chart area or superview bounds you want to respect.
-        let maxY = parentFrame.height
-        if rectangle.minY < 0 {
-            rectangle.origin.y = 0
-        } else if rectangle.maxY > maxY {
-            rectangle.origin.y = maxY - rectangle.height
+        if canFitAbove || canFitBelow {
+            if rectangle.minY < minY {
+                rectangle.origin.y = minY
+            } else if rectangle.maxY > maxY {
+                rectangle.origin.y = maxY - rectangle.height
+            }
         }
 
         // Draw the background rectangle (rounded corners).
