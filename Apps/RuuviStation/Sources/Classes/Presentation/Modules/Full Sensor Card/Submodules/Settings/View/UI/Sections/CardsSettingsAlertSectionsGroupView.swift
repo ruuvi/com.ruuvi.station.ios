@@ -497,19 +497,13 @@ private struct CardsSettingsAlertSectionRowHeader: View {
                     )
                     .onTapGesture(perform: onToggleSection)
             }
-//            if let muted = mutedText {
-//                Text(muted)
-//                    .font(.ruuviFootnote())
-//                    .foregroundColor(
-//                        RuuviColor.textColor.swiftUIColor.opacity(Constants.muteTextOpacity)
-//                    )
-//            }
-
-            Text("muted till 1113")
-                .font(.ruuviFootnote())
-                .foregroundColor(
-                    RuuviColor.textColor.swiftUIColor.opacity(Constants.muteTextOpacity)
-                )
+            if let muted = mutedText {
+                Text(muted)
+                    .font(.ruuviFootnote())
+                    .foregroundColor(
+                        RuuviColor.textColor.swiftUIColor.opacity(Constants.muteTextOpacity)
+                    )
+            }
         }
     }
 }
