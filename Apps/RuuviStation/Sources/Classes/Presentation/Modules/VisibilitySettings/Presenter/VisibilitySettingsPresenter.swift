@@ -8,6 +8,11 @@ import RuuviLocal
 import RuuviService
 
 final class VisibilitySettingsPresenter: VisibilitySettingsModuleInput {
+    private struct PersistSignature: Equatable {
+        let usesDefaultOrder: Bool
+        let displayOrderCodes: [String]?
+    }
+
     weak var view: VisibilitySettingsViewInput?
     var router: VisibilitySettingsRouterInput?
     weak var output: VisibilitySettingsModuleOutput?
@@ -28,6 +33,10 @@ final class VisibilitySettingsPresenter: VisibilitySettingsModuleInput {
     private var isSaving: Bool = false
     private var hasPendingPersistRequest = false
     private var needsPersistVisibleReorder: Bool = false
+    private let persistDebouncer = Debouncer(delay: 1.0)
+    private var isPersistScheduled = false
+    private var hasUnsavedChanges = false
+    private var inFlightPersistSignature: PersistSignature?
 
     init(
         sensorPropertiesService: RuuviServiceSensorProperties,
@@ -70,6 +79,7 @@ extension VisibilitySettingsPresenter: VisibilitySettingsViewOutput {
     }
 
     func viewDidAskToDismiss() {
+        flushPendingPersistIfNeeded()
         closeModule()
     }
 
@@ -96,7 +106,7 @@ extension VisibilitySettingsPresenter: VisibilitySettingsViewOutput {
                     )
                 }
             }
-            persistCurrentSelection()
+            schedulePersist()
             presentCurrentState()
         }
     }
@@ -139,7 +149,7 @@ extension VisibilitySettingsPresenter: VisibilitySettingsViewOutput {
         }
         visibleVariants.append(variant)
         usesDefaultOrder = false
-        persistCurrentSelection()
+        schedulePersist()
         presentCurrentState()
     }
 
@@ -165,7 +175,11 @@ extension VisibilitySettingsPresenter: VisibilitySettingsViewOutput {
     func viewDidFinishReorderingVisibleItems() {
         guard needsPersistVisibleReorder else { return }
         needsPersistVisibleReorder = false
-        persistCurrentSelection()
+        schedulePersist()
+    }
+
+    func viewWillDisappear() {
+        flushPendingPersistIfNeeded()
     }
 }
 
@@ -233,6 +247,10 @@ private extension VisibilitySettingsPresenter {
     }
 
     func shutdown() {
+        persistDebouncer.cancel()
+        isPersistScheduled = false
+        hasUnsavedChanges = false
+        inFlightPersistSignature = nil
         snapshotCancellables.removeAll()
         availableVariants.removeAll()
         visibleVariants.removeAll()
@@ -492,7 +510,7 @@ private extension VisibilitySettingsPresenter {
                 visible: self.visibleVariants
             )
             self.usesDefaultOrder = true
-            self.persistCurrentSelection()
+            self.schedulePersist()
             self.presentCurrentState()
         }
 
@@ -554,7 +572,7 @@ private extension VisibilitySettingsPresenter {
             hiddenVariants = orderedHiddenVariants(hiddenVariants)
         }
         usesDefaultOrder = false
-        persistCurrentSelection()
+        schedulePersist()
         presentCurrentState()
     }
 
@@ -603,16 +621,11 @@ private extension VisibilitySettingsPresenter {
             return
         }
 
-        let displayOrderCodes: [String]? = {
-            guard !usesDefaultOrder else { return nil }
-            let codes = visibleVariants.compactMap { variant in
-                RuuviTagDataService.measurementCode(for: variant)
-            }
-            if !codes.isEmpty {
-                lastKnownCustomOrderCodes = codes
-            }
-            return codes.isEmpty ? nil : codes
-        }()
+        let displayOrderCodes = currentDisplayOrderCodes()
+        inFlightPersistSignature = PersistSignature(
+            usesDefaultOrder: usesDefaultOrder,
+            displayOrderCodes: displayOrderCodes
+        )
 
         isSaving = true
         view?.setSaving(true)
@@ -786,6 +799,10 @@ private extension VisibilitySettingsPresenter {
             }
             self.updateMeasurementPreferenceCache(with: displayOrderCodes)
             self.applySelectionToSnapshot()
+            if !self.hasPendingPersistRequest && !self.isPersistScheduled {
+                self.hasUnsavedChanges = false
+            }
+            self.inFlightPersistSignature = nil
             self.finishPersist()
         }
     }
@@ -794,6 +811,10 @@ private extension VisibilitySettingsPresenter {
         runOnMain { [weak self] in
             guard let self else { return }
             self.view?.showMessage(error.localizedDescription)
+            if !self.hasPendingPersistRequest && !self.isPersistScheduled {
+                self.hasUnsavedChanges = false
+            }
+            self.inFlightPersistSignature = nil
             self.finishPersist()
             self.rebuildState()
             self.presentCurrentState()
@@ -807,6 +828,50 @@ private extension VisibilitySettingsPresenter {
             hasPendingPersistRequest = false
             persistCurrentSelection()
         }
+    }
+
+    func schedulePersist() {
+        let displayOrderCodes = currentDisplayOrderCodes()
+        updateMeasurementPreferenceCache(with: displayOrderCodes)
+        applySelectionToSnapshot()
+        hasUnsavedChanges = true
+        isPersistScheduled = true
+        persistDebouncer.run { [weak self] in
+            guard let self else { return }
+            self.isPersistScheduled = false
+            self.persistCurrentSelection()
+        }
+    }
+
+    func flushPendingPersistIfNeeded() {
+        guard hasUnsavedChanges || isPersistScheduled || isSaving || hasPendingPersistRequest else {
+            return
+        }
+        persistDebouncer.cancel()
+        isPersistScheduled = false
+        let currentSignature = PersistSignature(
+            usesDefaultOrder: usesDefaultOrder,
+            displayOrderCodes: currentDisplayOrderCodes()
+        )
+        if isSaving {
+            if let inFlightPersistSignature, inFlightPersistSignature == currentSignature {
+                return
+            }
+            hasPendingPersistRequest = true
+            return
+        }
+        persistCurrentSelection()
+    }
+
+    func currentDisplayOrderCodes() -> [String]? {
+        guard !usesDefaultOrder else { return nil }
+        let codes = visibleVariants.compactMap { variant in
+            RuuviTagDataService.measurementCode(for: variant)
+        }
+        if !codes.isEmpty {
+            lastKnownCustomOrderCodes = codes
+        }
+        return codes.isEmpty ? nil : codes
     }
 
     func runOnMain(_ block: @escaping () -> Void) {

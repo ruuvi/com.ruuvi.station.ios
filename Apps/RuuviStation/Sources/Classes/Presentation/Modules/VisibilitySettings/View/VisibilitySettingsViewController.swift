@@ -26,6 +26,11 @@ final class VisibilitySettingsViewController: UIViewController, VisibilitySettin
         output?.viewDidLoad()
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        output?.viewWillDisappear()
+    }
+
     private func setUpUI() {
         title = RuuviLocalization.visibleMeasurements
         view.backgroundColor = RuuviColor.primary.color
