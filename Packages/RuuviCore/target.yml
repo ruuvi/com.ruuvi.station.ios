@@ -6,5 +6,4 @@ targets:
     sources:
     - path: Sources
       name: Core
-    dependencies:
-    - package: Future
+    dependencies: []

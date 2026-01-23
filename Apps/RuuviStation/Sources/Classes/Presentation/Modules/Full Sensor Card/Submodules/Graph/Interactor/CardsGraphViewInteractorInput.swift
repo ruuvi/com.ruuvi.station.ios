@@ -1,6 +1,5 @@
 import BTKit
 import Foundation
-import Future
 import RuuviOntology
 
 protocol CardsGraphViewInteractorInput: AnyObject {
@@ -16,10 +15,10 @@ protocol CardsGraphViewInteractorInput: AnyObject {
     func stopObservingTags()
     func restartObservingData()
     func stopObservingRuuviTagsData()
-    func export() -> Future<URL, RUError>
-    func syncRecords(progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError>
-    func stopSyncRecords() -> Future<Bool, RUError>
+    func export() async throws -> URL
+    func syncRecords(progress: ((BTServiceProgress) -> Void)?) async throws -> Void
+    func stopSyncRecords() async throws -> Bool
     func isSyncingRecords() -> Bool
-    func deleteAllRecords(for sensor: RuuviTagSensor) -> Future<Void, RUError>
+    func deleteAllRecords(for sensor: RuuviTagSensor) async throws -> Void
     func updateChartShowMinMaxAvgSetting(with show: Bool)
 }

@@ -11,6 +11,7 @@ enum OwnershipMode {
     case unclaim
 }
 
+@MainActor
 final class OwnerPresenter: OwnerModuleInput {
     weak var view: OwnerViewInput!
     var router: OwnerRouterInput!
@@ -53,14 +54,17 @@ extension OwnerPresenter: OwnerViewOutput {
 
     /// Update the tag with owner information
     func updateOwnerInfo(with email: String) {
-        ruuviStorage.readAll().on(success: { [weak self] localSensors in
-            guard let sSelf = self else { return }
-            if let sensor = localSensors.first(where: { $0.id == sSelf.ruuviTag.id }) {
-                sSelf.ruuviPool.update(sensor
-                    .with(owner: email.lowercased())
-                    .with(isOwner: false))
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            if let localSensors = try? await ruuviStorage.readAll(),
+               let sensor = localSensors.first(where: { $0.id == ruuviTag.id }) {
+                _ = try? await ruuviPool.update(
+                    sensor
+                        .with(owner: email.lowercased())
+                        .with(isOwner: false)
+                )
             }
-        })
+        }
     }
 
     func viewDidTriggerFirmwareUpdateDialog() {
@@ -96,41 +100,43 @@ extension OwnerPresenter {
 
     private func claimSensor() {
         activityPresenter.show(with: .loading(message: nil))
-        ruuviOwnershipService
-            .claim(sensor: ruuviTag)
-            .on(success: { [weak self] _ in
-                self?.router.dismiss()
-                self?.removeConnection()
-                self?.activityPresenter.show(with: .success(message: nil))
-            }, failure: { [weak self] error in
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await ruuviOwnershipService.claim(sensor: ruuviTag)
+                router.dismiss()
+                removeConnection()
+                activityPresenter.show(with: .success(message: nil))
+            } catch let error as RuuviServiceError {
                 switch error {
                 case .ruuviCloud(.api(.api(.erSensorAlreadyClaimed))):
-                    if let luid = self?.ruuviTag.luid {
-                        self?.connectionPersistence.setKeepConnection(false, for: luid)
+                    if let luid = ruuviTag.luid {
+                        connectionPersistence.setKeepConnection(false, for: luid)
                     }
-                    self?.view.showSensorAlreadyClaimedDialog()
+                    view.showSensorAlreadyClaimedDialog()
                 default:
-                    self?.activityPresenter.show(with: .failed(message: error.localizedDescription))
+                    activityPresenter.show(with: .failed(message: error.localizedDescription))
                 }
-            }, completion: { [weak self] in
-                self?.activityPresenter.dismiss()
-            })
+            } catch {
+                activityPresenter.show(with: .failed(message: error.localizedDescription))
+            }
+            activityPresenter.dismiss()
+        }
     }
 
     private func unclaimSensor(removeCloudHistory: Bool) {
         activityPresenter.show(with: .loading(message: nil))
-        ruuviOwnershipService
-            .unclaim(
-                sensor: ruuviTag,
-                removeCloudHistory: removeCloudHistory
-            )
-            .on(success: { [weak self] _ in
-                self?.router.dismiss()
-                self?.activityPresenter.update(with: .success(message: nil))
-            }, failure: { [weak self] error in
-                self?.activityPresenter.show(with: .failed(message: error.localizedDescription))
-            }, completion: { [weak self] in
-                self?.activityPresenter.dismiss()
-            })
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await ruuviOwnershipService
+                    .unclaim(sensor: ruuviTag, removeCloudHistory: removeCloudHistory)
+                router.dismiss()
+                activityPresenter.update(with: .success(message: nil))
+            } catch {
+                activityPresenter.show(with: .failed(message: error.localizedDescription))
+            }
+            activityPresenter.dismiss()
+        }
     }
 }

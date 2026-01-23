@@ -1,11 +1,13 @@
 import BackgroundTasks
 import Foundation
-import Future
 
 @available(iOS 13, *)
 public final class BackgroundProcessServiceiOS13: BackgroundProcessService {
     private let dataPruningOperationsManager: DataPruningOperationsManager
     private let dataPruning = "com.ruuvi.station.BackgroundProcessServiceiOS13.dataPruning"
+
+    /// Task handle for cancellation support
+    private var currentPruningTask: Task<Void, Never>?
 
     public init(dataPruningOperationsManager: DataPruningOperationsManager) {
         self.dataPruningOperationsManager = dataPruningOperationsManager
@@ -35,28 +37,17 @@ public final class BackgroundProcessServiceiOS13: BackgroundProcessService {
     private func handleDataPruning(task: BGProcessingTask) {
         schedule()
 
-        let ruuviTags = dataPruningOperationsManager.ruuviTagPruningOperations()
-        ruuviTags.on(success: { ruuviTagOperations in
-            let operations = ruuviTagOperations
-            if operations.count > 0 {
-                let queue = OperationQueue()
-                queue.maxConcurrentOperationCount = 1
-                let lastOperation = operations.last!
-
-                lastOperation.completionBlock = {
-                    task.setTaskCompleted(success: !lastOperation.isCancelled)
-                }
-
-                queue.addOperations(operations, waitUntilFinished: false)
-
-                task.expirationHandler = {
-                    queue.cancelAllOperations()
-                }
-            } else {
+        currentPruningTask = Task {
+            do {
+                _ = try await dataPruningOperationsManager.pruneAllSensors()
                 task.setTaskCompleted(success: true)
+            } catch {
+                task.setTaskCompleted(success: false)
             }
-        }, failure: { _ in
-            task.setTaskCompleted(success: false)
-        })
+        }
+
+        task.expirationHandler = { [weak self] in
+            self?.currentPruningTask?.cancel()
+        }
     }
 }

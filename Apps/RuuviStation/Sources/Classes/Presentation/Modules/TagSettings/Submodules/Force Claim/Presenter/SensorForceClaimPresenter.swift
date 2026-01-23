@@ -8,6 +8,7 @@ import RuuviPresenters
 import RuuviService
 import RuuviUser
 
+@MainActor
 final class SensorForceClaimPresenter: SensorForceClaimModuleInput {
     weak var view: SensorForceClaimViewInput?
     var router: SensorForceClaimRouterInput?
@@ -144,15 +145,17 @@ extension SensorForceClaimPresenter {
               let secret else { return }
 
         activityPresenter.show(with: .loading(message: nil))
-        ruuviOwnershipService
-            .contest(sensor: ruuviTag, secret: secret)
-            .on(success: { [weak self] _ in
-                self?.router?.dismiss()
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            }, completion: { [weak self] in
-                self?.activityPresenter.dismiss()
-            })
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await ruuviOwnershipService
+                    .contest(sensor: ruuviTag, secret: secret)
+                router?.dismiss()
+            } catch {
+                errorPresenter.present(error: error)
+            }
+            activityPresenter.dismiss()
+        }
     }
 
     /// Parse the NFC payload

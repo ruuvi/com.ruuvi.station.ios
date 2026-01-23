@@ -1,5 +1,4 @@
 import Foundation
-import Future
 import RuuviCloud
 import RuuviLocal
 import RuuviOntology
@@ -17,231 +16,176 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     }
 
     @discardableResult
-    public func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviServiceError> {
-        let promise = Promise<TemperatureUnit, RuuviServiceError>()
+    public func set(temperatureUnit: TemperatureUnit) async throws -> TemperatureUnit {
         localSettings.temperatureUnit = temperatureUnit
-        cloud.set(temperatureUnit: temperatureUnit)
-            .on(success: { temperatureUnit in
-                promise.succeed(value: temperatureUnit)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+        do {
+            return try await cloud.set(temperatureUnit: temperatureUnit)
+        } catch {
+            throw RuuviServiceError.ruuviCloud(error)
+        }
     }
 
     @discardableResult
     public func set(
         temperatureAccuracy: MeasurementAccuracyType
-    ) -> Future<MeasurementAccuracyType, RuuviServiceError> {
-        let promise = Promise<MeasurementAccuracyType, RuuviServiceError>()
+    ) async throws -> MeasurementAccuracyType {
         localSettings.temperatureAccuracy = temperatureAccuracy
-        cloud.set(temperatureAccuracy: temperatureAccuracy)
-            .on(success: { accuracy in
-                promise.succeed(value: accuracy)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+        do {
+            return try await cloud.set(temperatureAccuracy: temperatureAccuracy)
+        } catch {
+            throw RuuviServiceError.ruuviCloud(error)
+        }
     }
 
     @discardableResult
-    public func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviServiceError> {
-        let promise = Promise<HumidityUnit, RuuviServiceError>()
+    public func set(humidityUnit: HumidityUnit) async throws -> HumidityUnit {
         localSettings.humidityUnit = humidityUnit
-        cloud.set(humidityUnit: humidityUnit)
-            .on(success: { humidityUnit in
-                promise.succeed(value: humidityUnit)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+        do {
+            return try await cloud.set(humidityUnit: humidityUnit)
+        } catch {
+            throw RuuviServiceError.ruuviCloud(error)
+        }
     }
 
     @discardableResult
     public func set(
         humidityAccuracy: MeasurementAccuracyType
-    ) -> Future<MeasurementAccuracyType, RuuviServiceError> {
-        let promise = Promise<MeasurementAccuracyType, RuuviServiceError>()
+    ) async throws -> MeasurementAccuracyType {
         localSettings.humidityAccuracy = humidityAccuracy
-        cloud.set(humidityAccuracy: humidityAccuracy)
-            .on(success: { accuracy in
-                promise.succeed(value: accuracy)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+        do {
+            return try await cloud.set(humidityAccuracy: humidityAccuracy)
+        } catch {
+            throw RuuviServiceError.ruuviCloud(error)
+        }
     }
 
     @discardableResult
-    public func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviServiceError> {
-        let promise = Promise<UnitPressure, RuuviServiceError>()
+    public func set(pressureUnit: UnitPressure) async throws -> UnitPressure {
         localSettings.pressureUnit = pressureUnit
-        cloud.set(pressureUnit: pressureUnit)
-            .on(success: { pressureUnit in
-                promise.succeed(value: pressureUnit)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+        do {
+            return try await cloud.set(pressureUnit: pressureUnit)
+        } catch {
+            throw RuuviServiceError.ruuviCloud(error)
+        }
     }
 
     @discardableResult
     public func set(
         pressureAccuracy: MeasurementAccuracyType
-    ) -> Future<MeasurementAccuracyType, RuuviServiceError> {
-        let promise = Promise<MeasurementAccuracyType, RuuviServiceError>()
+    ) async throws -> MeasurementAccuracyType {
         localSettings.pressureAccuracy = pressureAccuracy
-        cloud.set(pressureAccuracy: pressureAccuracy)
-            .on(success: { accuracy in
-                promise.succeed(value: accuracy)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+        do {
+            return try await cloud.set(pressureAccuracy: pressureAccuracy)
+        } catch {
+            throw RuuviServiceError.ruuviCloud(error)
+        }
     }
 
     @discardableResult
-    public func set(showAllData: Bool) -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
-        cloud.set(showAllData: showAllData)
-            .on(success: { showAllData in
-                promise.succeed(value: showAllData)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+    public func set(showAllData: Bool) async throws -> Bool {
+        do {
+            return try await cloud.set(showAllData: showAllData)
+        } catch {
+            throw RuuviServiceError.ruuviCloud(error)
+        }
     }
 
     @discardableResult
-    public func set(drawDots: Bool) -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
-        cloud.set(drawDots: drawDots)
-            .on(success: { drawDots in
-                promise.succeed(value: drawDots)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+    public func set(drawDots: Bool) async throws -> Bool {
+        do {
+            return try await cloud.set(drawDots: drawDots)
+        } catch {
+            throw RuuviServiceError.ruuviCloud(error)
+        }
     }
 
     @discardableResult
-    public func set(chartDuration: Int) -> Future<Int, RuuviServiceError> {
-        let promise = Promise<Int, RuuviServiceError>()
-        cloud.set(chartDuration: chartDuration)
-            .on(success: { chartDuration in
-                promise.succeed(value: chartDuration)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+    public func set(chartDuration: Int) async throws -> Int {
+        do {
+            return try await cloud.set(chartDuration: chartDuration)
+        } catch {
+            throw RuuviServiceError.ruuviCloud(error)
+        }
     }
 
     @discardableResult
-    public func set(showMinMaxAvg: Bool) -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
-        cloud.set(showMinMaxAvg: showMinMaxAvg)
-            .on(success: { show in
-                promise.succeed(value: show)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+    public func set(showMinMaxAvg: Bool) async throws -> Bool {
+        do {
+            return try await cloud.set(showMinMaxAvg: showMinMaxAvg)
+        } catch {
+            throw RuuviServiceError.ruuviCloud(error)
+        }
     }
 
     @discardableResult
-    public func set(cloudMode: Bool) -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
-        cloud.set(cloudMode: cloudMode)
-            .on(success: { cloudMode in
-                promise.succeed(value: cloudMode)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+    public func set(cloudMode: Bool) async throws -> Bool {
+        do {
+            return try await cloud.set(cloudMode: cloudMode)
+        } catch {
+            throw RuuviServiceError.ruuviCloud(error)
+        }
     }
 
     @discardableResult
-    public func set(dashboard: Bool) -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
-        cloud.set(dashboard: dashboard)
-            .on(success: { enabled in
-                promise.succeed(value: enabled)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+    public func set(dashboard: Bool) async throws -> Bool {
+        do {
+            return try await cloud.set(dashboard: dashboard)
+        } catch {
+            throw RuuviServiceError.ruuviCloud(error)
+        }
     }
 
     @discardableResult
-    public func set(dashboardType: DashboardType) -> Future<DashboardType, RuuviServiceError> {
-        let promise = Promise<DashboardType, RuuviServiceError>()
-        cloud.set(dashboardType: dashboardType)
-            .on(success: { type in
-                promise.succeed(value: type)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+    public func set(dashboardType: DashboardType) async throws -> DashboardType {
+        do {
+            return try await cloud.set(dashboardType: dashboardType)
+        } catch {
+            throw RuuviServiceError.ruuviCloud(error)
+        }
     }
 
     @discardableResult
-    public func set(dashboardTapActionType: DashboardTapActionType) ->
-    Future<DashboardTapActionType, RuuviServiceError> {
-        let promise = Promise<DashboardTapActionType, RuuviServiceError>()
-        cloud.set(dashboardTapActionType: dashboardTapActionType)
-            .on(success: { type in
-                promise.succeed(value: type)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+    public func set(dashboardTapActionType: DashboardTapActionType) async throws -> DashboardTapActionType {
+        do {
+            return try await cloud.set(dashboardTapActionType: dashboardTapActionType)
+        } catch {
+            throw RuuviServiceError.ruuviCloud(error)
+        }
     }
 
     @discardableResult
-    public func set(disableEmailAlert: Bool) -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
-        cloud.set(disableEmailAlert: disableEmailAlert)
-            .on(success: { disabled in
-                promise.succeed(value: disabled)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+    public func set(disableEmailAlert: Bool) async throws -> Bool {
+        do {
+            return try await cloud.set(disableEmailAlert: disableEmailAlert)
+        } catch {
+            throw RuuviServiceError.ruuviCloud(error)
+        }
     }
 
     @discardableResult
-    public func set(disablePushAlert: Bool) -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
-        cloud.set(disablePushAlert: disablePushAlert)
-            .on(success: { disabled in
-                promise.succeed(value: disabled)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+    public func set(disablePushAlert: Bool) async throws -> Bool {
+        do {
+            return try await cloud.set(disablePushAlert: disablePushAlert)
+        } catch {
+            throw RuuviServiceError.ruuviCloud(error)
+        }
     }
 
     @discardableResult
-    public func set(profileLanguageCode: String) -> Future<String, RuuviServiceError> {
-        let promise = Promise<String, RuuviServiceError>()
-        cloud.set(profileLanguageCode: profileLanguageCode)
-            .on(success: { profileLanguageCode in
-                promise.succeed(value: profileLanguageCode)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+    public func set(profileLanguageCode: String) async throws -> String {
+        do {
+            return try await cloud.set(profileLanguageCode: profileLanguageCode)
+        } catch {
+            throw RuuviServiceError.ruuviCloud(error)
+        }
     }
 
     @discardableResult
-    public func set(dashboardSensorOrder: [String]) -> Future<[String], RuuviServiceError> {
-        let promise = Promise<[String], RuuviServiceError>()
-        cloud.set(dashboardSensorOrder: dashboardSensorOrder)
-            .on(success: { dashboardSensorOrder in
-                promise.succeed(value: dashboardSensorOrder)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+    public func set(dashboardSensorOrder: [String]) async throws -> [String] {
+        do {
+            return try await cloud.set(dashboardSensorOrder: dashboardSensorOrder)
+        } catch {
+            throw RuuviServiceError.ruuviCloud(error)
+        }
     }
 }

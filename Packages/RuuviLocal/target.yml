@@ -11,5 +11,4 @@ targets:
     - path: Sources
       name: Local
     dependencies:
-    - package: Future
     - target: RuuviOntology

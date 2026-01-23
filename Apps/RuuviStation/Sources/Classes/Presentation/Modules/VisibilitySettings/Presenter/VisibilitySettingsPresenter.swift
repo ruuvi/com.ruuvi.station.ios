@@ -617,20 +617,22 @@ private extension VisibilitySettingsPresenter {
         isSaving = true
         view?.setSaving(true)
 
-        sensorPropertiesService
-            .updateDisplaySettings(
-                for: sensor,
-                displayOrder: displayOrderCodes,
-                defaultDisplayOrder: usesDefaultOrder
-            )
-            .on(success: { [weak self] settings in
-                self?.handlePersistSuccess(
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let settings = try await sensorPropertiesService.updateDisplaySettings(
+                    for: sensor,
+                    displayOrder: displayOrderCodes,
+                    defaultDisplayOrder: usesDefaultOrder
+                )
+                handlePersistSuccess(
                     settings: settings,
                     displayOrderCodes: displayOrderCodes
                 )
-            }, failure: { [weak self] error in
-                self?.handlePersistFailure(error: error)
-            })
+            } catch {
+                handlePersistFailure(error: error)
+            }
+        }
     }
 
     private func applySelectionToSnapshot() {

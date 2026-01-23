@@ -13,7 +13,6 @@ targets:
       name: Persistence
     dependencies:
     - package: Humidity
-    - package: Future
     - package: GRDB
     - target: RuuviOntology
     - target: RuuviContext

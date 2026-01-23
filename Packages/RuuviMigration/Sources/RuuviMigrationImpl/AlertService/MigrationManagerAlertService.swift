@@ -73,23 +73,15 @@ final class MigrationManagerAlertService: RuuviMigration {
 
 extension MigrationManagerAlertService {
     private func migrateTo1Version(completion: @escaping ((Bool) -> Void)) {
-        let group = DispatchGroup()
-        group.enter()
-        fetchRuuviSensors { ruuviTagSensors in
-            self.queue.async {
-                ruuviTagSensors.forEach { element in
-                    group.enter()
-                    self.migrateTo1Version(element: element, completion: {
-                        group.leave()
-                    })
-                }
-                group.leave()
+        Task { [weak self] in
+            guard let self else { return }
+            let sensors = await fetchRuuviSensors()
+            for element in sensors {
+                migrateTo1Version(element: element, completion: {})
             }
-        }
-        queue.async {
-            group.notify(queue: .main, execute: {
+            DispatchQueue.main.async {
                 completion(true)
-            })
+            }
         }
     }
 
@@ -140,38 +132,19 @@ extension MigrationManagerAlertService {
         completion()
     }
 
-    private func fetchRuuviSensors(completion: @escaping ([(RuuviTagSensor, Temperature?)]) -> Void) {
-        queue.async {
-            let group = DispatchGroup()
-            group.enter()
-            var result = [(RuuviTagSensor, Temperature?)]()
-            self.ruuviStorage.readAll().on(success: { sensors in
-                sensors.forEach { sensor in
-                    group.enter()
-                    self.fetchRecord(for: sensor) {
-                        result.append($0)
-                        group.leave()
-                    }
-                }
-                group.leave()
-            }, failure: { _ in
-                group.leave()
-            })
-            group.notify(queue: .main, execute: {
-                completion(result)
-            })
+    private func fetchRuuviSensors() async -> [(RuuviTagSensor, Temperature?)] {
+        let sensors: [AnyRuuviTagSensor]
+        do {
+            sensors = try await ruuviStorage.readAll()
+        } catch {
+            return []
         }
-    }
 
-    private func fetchRecord(
-        for sensor: RuuviTagSensor,
-        complete: @escaping (((RuuviTagSensor, Temperature?)) -> Void)
-    ) {
-        ruuviStorage.readLatest(sensor)
-            .on(success: { record in
-                complete((sensor, record?.temperature))
-            }, failure: { _ in
-                complete((sensor, nil))
-            })
+        var result = [(RuuviTagSensor, Temperature?)]()
+        for sensor in sensors {
+            let record = try? await ruuviStorage.readLatest(sensor)
+            result.append((sensor, record?.temperature))
+        }
+        return result
     }
 }

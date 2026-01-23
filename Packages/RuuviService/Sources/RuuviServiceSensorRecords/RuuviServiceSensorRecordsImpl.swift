@@ -1,5 +1,4 @@
 import Foundation
-import Future
 import RuuviLocal
 import RuuviOntology
 import RuuviPool
@@ -17,18 +16,14 @@ public final class RuuviServiceSensorRecordsImpl: RuuviServiceSensorRecords {
     }
 
     @discardableResult
-    public func clear(for sensor: RuuviTagSensor) -> Future<Void, RuuviServiceError> {
-        let promise = Promise<Void, RuuviServiceError>()
-        pool.deleteAllRecords(sensor.id)
-            .on(success: { [weak self] _ in
-                guard let sSelf = self else { return }
-                sSelf.localSyncState.setSyncDate(nil, for: sensor.macId)
-                sSelf.localSyncState.setSyncDate(nil)
-                sSelf.localSyncState.setGattSyncDate(nil, for: sensor.macId)
-                promise.succeed(value: ())
-            }, failure: { error in
-                promise.fail(error: .ruuviPool(error))
-            })
-        return promise.future
+    public func clear(for sensor: RuuviTagSensor) async throws {
+        do {
+            _ = try await pool.deleteAllRecords(sensor.id)
+        } catch let error as RuuviPoolError {
+            throw RuuviServiceError.ruuviPool(error)
+        }
+        localSyncState.setSyncDate(nil, for: sensor.macId)
+        localSyncState.setSyncDate(nil)
+        localSyncState.setGattSyncDate(nil, for: sensor.macId)
     }
 }

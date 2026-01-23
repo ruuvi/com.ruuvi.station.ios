@@ -148,32 +148,35 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
             return
         }
         set(.loggedIn(ruuviUser.isAuthorized))
-        ruuviStorage.readAll().on(success: { tags in
-            // Version 2/3/4 tags isOwner property was set 'false' in iOS app until version v1.1.0
-            // So we log them first before filtering
-            let df2_tags_count = tags.filter { $0.version == 2 }.count
-            let df3_tags_count = tags.filter { $0.version == 3 }.count
-            let df4_tags_count = tags.filter { $0.version == 4 }.count
-            let df5_tags_count = tags.filter { $0.version == 5 }.count
-            self.set(.df2_tags(df2_tags_count))
-            self.set(.df3_tags(df3_tags_count))
-            self.set(.df4_tags(df4_tags_count))
-            self.set(.df5_tags(df5_tags_count))
-            self.set(.addedTags(tags.count))
+        Task { [weak self] in
+            guard let self else { return }
+            if let tags = try? await ruuviStorage.readAll() {
+                // Version 2/3/4 tags isOwner property was set 'false' in iOS app until version v1.1.0
+                // So we log them first before filtering
+                let df2_tags_count = tags.filter { $0.version == 2 }.count
+                let df3_tags_count = tags.filter { $0.version == 3 }.count
+                let df4_tags_count = tags.filter { $0.version == 4 }.count
+                let df5_tags_count = tags.filter { $0.version == 5 }.count
+                self.set(.df2_tags(df2_tags_count))
+                self.set(.df3_tags(df3_tags_count))
+                self.set(.df4_tags(df4_tags_count))
+                self.set(.df5_tags(df5_tags_count))
+                self.set(.addedTags(tags.count))
 
-            // Alerts
-            let (temperature, humidity, pressure, movement) = self.calculateAlerts(from: tags)
-            self.set(.alertTemperature(temperature))
-            self.set(.alertHumidity(humidity))
-            self.set(.alertPressure(pressure))
-            self.set(.alertMovement(movement))
-        })
-        ruuviStorage.getClaimedTagsCount().on(success: { count in
-            self.set(.claimedTags(count))
-        })
-        ruuviStorage.getOfflineTagsCount().on(success: { count in
-            self.set(.offlineTags(count))
-        })
+                // Alerts
+                let (temperature, humidity, pressure, movement) = self.calculateAlerts(from: tags)
+                self.set(.alertTemperature(temperature))
+                self.set(.alertHumidity(humidity))
+                self.set(.alertPressure(pressure))
+                self.set(.alertMovement(movement))
+            }
+            if let count = try? await ruuviStorage.getClaimedTagsCount() {
+                self.set(.claimedTags(count))
+            }
+            if let count = try? await ruuviStorage.getOfflineTagsCount() {
+                self.set(.offlineTags(count))
+            }
+        }
         set(.backgroundScanEnabled(settings.saveHeartbeats))
         set(.backgroundScanInterval(settings.saveHeartbeatsIntervalMinutes * 60))
         set(.dashboardEnabled(false))

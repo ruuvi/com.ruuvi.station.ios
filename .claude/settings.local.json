@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git diff:*)",
+      "Bash(swift build:*)",
+      "Bash(xcodegen --help:*)",
+      "Bash(xcodebuild:*)"
+    ]
+  }
+}

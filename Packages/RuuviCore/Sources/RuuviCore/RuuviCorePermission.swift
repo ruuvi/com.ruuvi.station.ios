@@ -3,6 +3,7 @@ import CoreLocation
 import Foundation
 import Photos
 
+@MainActor
 public protocol RuuviCorePermission {
     var isPhotoLibraryPermissionGranted: Bool { get }
     var photoLibraryAuthorizationStatus: PHAuthorizationStatus { get }

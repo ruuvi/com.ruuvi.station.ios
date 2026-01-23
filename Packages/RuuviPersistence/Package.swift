@@ -17,7 +17,6 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
         .package(name: "GRDB", url: "https://github.com/groue/GRDB.swift", .upToNextMajor(from: "4.14.0")),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviContext"),
@@ -28,7 +27,6 @@ let package = Package(
             dependencies: [
                 "RuuviOntology",
                 "RuuviContext",
-                "Future",
             ]
         ),
         .target(
@@ -40,7 +38,6 @@ let package = Package(
                 "RuuviPersistence",
                 "RuuviOntology",
                 "RuuviContext",
-                "Future",
             ]
         ),
         .testTarget(

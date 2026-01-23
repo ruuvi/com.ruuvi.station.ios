@@ -1,4 +1,3 @@
-import Future
 import RuuviOntology
 import UIKit
 
@@ -88,36 +87,30 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
         image: UIImage,
         compressionQuality: CGFloat,
         for identifier: Identifier
-    ) -> Future<URL, RuuviLocalError> {
-        let promise = Promise<URL, RuuviLocalError>()
-        let persist = imagePersistence.persistBg(
+    ) async throws -> URL {
+        let url = try await imagePersistence.persistBg(
             image: image,
             compressionQuality: compressionQuality,
             for: identifier
         )
-        persist.on(success: { url in
-            self.setBackground(0, for: identifier)
-            let userInfoKey: BPDidChangeBackgroundKey
-            if identifier is LocalIdentifier {
-                userInfoKey = .luid
-            } else if identifier is MACIdentifier {
-                userInfoKey = .macId
-            } else {
-                userInfoKey = .luid
-                assertionFailure()
-            }
-            NotificationCenter
-                .default
-                .post(
-                    name: .BackgroundPersistenceDidChangeBackground,
-                    object: nil,
-                    userInfo: [userInfoKey: identifier]
-                )
-            promise.succeed(value: url)
-        }, failure: { error in
-            promise.fail(error: error)
-        })
-        return promise.future
+        setBackground(0, for: identifier)
+        let userInfoKey: BPDidChangeBackgroundKey
+        if identifier is LocalIdentifier {
+            userInfoKey = .luid
+        } else if identifier is MACIdentifier {
+            userInfoKey = .macId
+        } else {
+            userInfoKey = .luid
+            assertionFailure()
+        }
+        NotificationCenter
+            .default
+            .post(
+                name: .BackgroundPersistenceDidChangeBackground,
+                object: nil,
+                userInfo: [userInfoKey: identifier]
+            )
+        return url
     }
 
     func setBackground(_ id: Int, for identifier: Identifier) {

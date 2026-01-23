@@ -1,5 +1,4 @@
 import Foundation
-import Future
 
 public extension Notification.Name {
     static let RuuviAuthServiceWillLogout =
@@ -15,5 +14,5 @@ public enum RuuviAuthServiceLogoutDidFinishKey: String {
 }
 
 public protocol RuuviServiceAuth {
-    func logout() -> Future<Bool, RuuviServiceError>
+    func logout() async throws -> Bool
 }

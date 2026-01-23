@@ -17,7 +17,6 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
         .package(path: "../RuuviOntology"),
     ],
     targets: [
@@ -25,13 +24,13 @@ let package = Package(
             name: "RuuviLocal",
             dependencies: [
                 "RuuviOntology",
-                "Future",
             ]
         ),
         .target(
             name: "RuuviLocalUserDefaults",
             dependencies: [
-                "RuuviLocal"
+                "RuuviLocal",
+                "RuuviOntology"
             ]
         ),
         .testTarget(

@@ -126,15 +126,19 @@ final class DFUViewModel: ObservableObject {
                 updatedVersion = prefix + " " + latestRelease.version
             }
             guard let updatedVersion = updatedVersion else { return }
-            isLoading = true
-            ruuviPool.update(ruuviTag
+            let updatedTag = ruuviTag
                 .with(isConnectable: true)
-                .with(firmwareVersion: updatedVersion))
-                .on(success: { [weak self] _ in
-                    self?.isLoading = false
-                }, failure: { [weak self] _ in
-                    self?.isLoading = false
-                })
+                .with(firmwareVersion: updatedVersion)
+            Task { [weak self] in
+                guard let self else { return }
+                await MainActor.run {
+                    self.isLoading = true
+                }
+                _ = try? await ruuviPool.update(updatedTag)
+                await MainActor.run {
+                    self.isLoading = false
+                }
+            }
         } else {
             assertionFailure()
         }
@@ -147,27 +151,31 @@ final class DFUViewModel: ObservableObject {
         else {
             return
         }
-        ruuviPool.update(ruuviTag
+        let updatedTag = ruuviTag
             .with(isConnectable: true)
-            .with(firmwareVersion: currentRelease.version))
+            .with(firmwareVersion: currentRelease.version)
+        Task { [weak self] in
+            guard let self else { return }
+            _ = try? await ruuviPool.update(updatedTag)
+        }
     }
 
     // Migration ends
 
     func checkBatteryState(completion: @escaping (Bool) -> Void) {
         let batteryStatusProvider = RuuviTagBatteryStatusProvider()
-        ruuviStorage
-            .readLatest(ruuviTag)
-            .on(success: { record in
-                let batteryNeedsReplacement = batteryStatusProvider
-                    .batteryNeedsReplacement(
-                        temperature: record?.temperature,
-                        voltage: record?.voltage
-                    )
+        Task { [weak self] in
+            guard let self else { return }
+            let record = try? await ruuviStorage.readLatest(ruuviTag)
+            let batteryNeedsReplacement = batteryStatusProvider
+                .batteryNeedsReplacement(
+                    temperature: record?.temperature,
+                    voltage: record?.voltage
+                )
+            await MainActor.run {
                 completion(batteryNeedsReplacement)
-            }, failure: { _ in
-                completion(false)
-            })
+            }
+        }
     }
 
     func isRuuviAir() -> Bool {

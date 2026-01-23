@@ -1,6 +1,5 @@
 import BTKit
 import Foundation
-import Future
 import RuuviLocal
 import RuuviOntology
 import RuuviPool
@@ -8,6 +7,7 @@ import RuuviService
 import RuuviStorage
 import RuuviUser
 
+@MainActor
 class DashboardInteractor {
     var connectionPersistence: RuuviLocalConnections!
     var background: BTBackground!
@@ -20,49 +20,51 @@ class DashboardInteractor {
 
 extension DashboardInteractor: DashboardInteractorInput {
     func checkAndUpdateFirmwareVersion(for ruuviTag: RuuviTagSensor) {
-        resolveLatestSensor(for: ruuviTag) { [weak self] currentTag in
-            self?.handleFirmwareVersionCheck(for: currentTag)
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            let currentTag = await resolveLatestSensor(for: ruuviTag)
+            handleFirmwareVersionCheck(for: currentTag)
         }
     }
 
     private func checkOwner(for ruuviTag: RuuviTagSensor) {
-        resolveLatestSensor(for: ruuviTag) { [weak self] currentTag in
+        Task { @MainActor [weak self] in
             guard let self else { return }
+            let currentTag = await resolveLatestSensor(for: ruuviTag)
             guard let macId = currentTag.macId,
                   currentTag.owner == nil else {
                 return
             }
 
             // Check in every 15 days if the tag doesn't have any owner.
-            if let checkedDate = self.settings.ownerCheckDate(for: macId),
+            if let checkedDate = settings.ownerCheckDate(for: macId),
                let days = checkedDate.numberOfDaysFromNow(), days < 15 {
                 return
             }
 
-            self.ruuviOwnershipService.checkOwner(macId: macId)
-                .on(success: { [weak self] result in
-                    guard let self else { return }
-                    let owner = result.0
-                    guard let owner, !owner.isEmpty else {
-                        NotificationCenter.default.post(
-                            name: .RuuviTagOwnershipCheckDidEnd,
-                            object: nil,
-                            userInfo: [RuuviTagOwnershipCheckResultKey.hasOwner: false]
-                        )
-                        self.settings.setOwnerCheckDate(for: macId, value: Date())
-                        return
-                    }
+            do {
+                let result = try await ruuviOwnershipService.checkOwner(macId: macId)
+                let owner = result.0
+                guard let owner, !owner.isEmpty else {
+                    NotificationCenter.default.post(
+                        name: .RuuviTagOwnershipCheckDidEnd,
+                        object: nil,
+                        userInfo: [RuuviTagOwnershipCheckResultKey.hasOwner: false]
+                    )
+                    settings.setOwnerCheckDate(for: macId, value: Date())
+                    return
+                }
 
-                    self.resolveLatestSensor(for: currentTag) { [weak self] latestTag in
-                        guard let self else { return }
-                        let normalizedOwner = owner.lowercased()
-                        self.ruuviPool.update(
-                            latestTag
-                                .with(owner: normalizedOwner)
-                                .with(isOwner: normalizedOwner == self.ruuviUser.email)
-                        )
-                    }
-                })
+                let latestTag = await resolveLatestSensor(for: currentTag)
+                let normalizedOwner = owner.lowercased()
+                _ = try? await ruuviPool.update(
+                    latestTag
+                        .with(owner: normalizedOwner)
+                        .with(isOwner: normalizedOwner == ruuviUser.email)
+                )
+            } catch {
+                // ignore failures
+            }
         }
     }
 
@@ -99,28 +101,26 @@ extension DashboardInteractor: DashboardInteractorInput {
     }
 
     private func applyFirmwareVersion(_ version: String, to ruuviTag: RuuviTagSensor) {
-        resolveLatestSensor(for: ruuviTag) { [weak self] latestTag in
+        Task { @MainActor [weak self] in
             guard let self else { return }
+            let latestTag = await resolveLatestSensor(for: ruuviTag)
             let updatedTag = latestTag.with(firmwareVersion: version)
-            self.ruuviPool.update(updatedTag)
-            self.checkOwner(for: updatedTag)
+            _ = try? await ruuviPool.update(updatedTag)
+            checkOwner(for: updatedTag)
         }
     }
 
     private func resolveLatestSensor(
-        for ruuviTag: RuuviTagSensor,
-        completion: @escaping (RuuviTagSensor) -> Void
-    ) {
+        for ruuviTag: RuuviTagSensor
+    ) async -> RuuviTagSensor {
         guard let ruuviStorage else {
-            completion(ruuviTag)
-            return
+            return ruuviTag
         }
 
         let sensorId = ruuviTag.macId?.value ?? ruuviTag.id
-        ruuviStorage.readOne(sensorId)
-            .on(
-                success: { completion($0) },
-                failure: { _ in completion(ruuviTag) }
-            )
+        if let sensor = try? await ruuviStorage.readOne(sensorId) {
+            return sensor
+        }
+        return ruuviTag
     }
 }

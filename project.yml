@@ -113,9 +113,6 @@ packages:
   Humidity:
     url: https://github.com/rinat-enikeev/Humidity
     from: 0.1.5
-  Future:
-    url: https://github.com/kean/Future
-    from: 1.3.0
   NordicDFU:
     url: https://github.com/NordicSemiconductor/IOS-Pods-DFU-Library
     from: 4.15.3

@@ -1,6 +1,7 @@
 import Foundation
 import Photos
 
+@MainActor
 public final class RuuviCorePermissionImpl: RuuviCorePermission {
     private let locationManager: RuuviCoreLocation
 

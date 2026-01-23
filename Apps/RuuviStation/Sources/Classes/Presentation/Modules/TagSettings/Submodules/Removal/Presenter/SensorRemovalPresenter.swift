@@ -4,6 +4,7 @@ import RuuviOntology
 import RuuviPresenters
 import RuuviService
 
+@MainActor
 final class SensorRemovalPresenter: SensorRemovalModuleInput {
     weak var view: SensorRemovalViewInput?
     weak var output: SensorRemovalModuleOutput?
@@ -39,18 +40,21 @@ extension SensorRemovalPresenter: SensorRemovalViewOutput {
 
     func viewDidConfirmTagRemoval(with removeCloudData: Bool) {
         guard let ruuviTag else { return }
-        ruuviOwnershipService.remove(
-            sensor: ruuviTag,
-            removeCloudHistory: removeCloudData
-        ).on(success: { [weak self] _ in
-            guard let sSelf = self else { return }
-            sSelf.output?.sensorRemovalDidRemoveTag(
-                module: sSelf,
-                ruuviTag: ruuviTag
-            )
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await ruuviOwnershipService.remove(
+                    sensor: ruuviTag,
+                    removeCloudHistory: removeCloudData
+                )
+                output?.sensorRemovalDidRemoveTag(
+                    module: self,
+                    ruuviTag: ruuviTag
+                )
+            } catch {
+                errorPresenter.present(error: error)
+            }
+        }
     }
 
     func viewDidDismiss() {

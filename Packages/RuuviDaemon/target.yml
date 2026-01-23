@@ -8,7 +8,6 @@ targets:
       name: Daemon
     dependencies:
     - package: BTKit
-    - package: Future
     - package: Humidity
     - target: RuuviOntology
     - target: RuuviLocal

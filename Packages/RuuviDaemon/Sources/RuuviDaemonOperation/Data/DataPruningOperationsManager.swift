@@ -1,6 +1,6 @@
 import Foundation
-import Future
 import RuuviLocal
+import RuuviOntology
 import RuuviPool
 import RuuviStorage
 
@@ -19,21 +19,24 @@ public final class DataPruningOperationsManager {
         self.ruuviPool = ruuviPool
     }
 
-    public func ruuviTagPruningOperations() -> Future<[Operation], RuuviDaemonError> {
-        let promise = Promise<[Operation], RuuviDaemonError>()
-        ruuviStorage.readAll().on(success: { [weak self] ruuviTags in
-            guard let sSelf = self else { return }
-            let ops = ruuviTags.map {
-                RuuviTagDataPruningOperation(
-                    id: $0.id,
-                    ruuviPool: sSelf.ruuviPool,
-                    settings: sSelf.settings
-                )
-            }
-            promise.succeed(value: ops)
-        }, failure: { error in
-            promise.fail(error: .ruuviStorage(error))
-        })
-        return promise.future
+    /// Prunes old data for all sensors sequentially
+    /// - Returns: true if pruning completed successfully
+    public func pruneAllSensors() async throws -> Bool {
+        let ruuviTags: [AnyRuuviTagSensor]
+        do {
+            ruuviTags = try await ruuviStorage.readAll()
+        } catch let error as RuuviStorageError {
+            throw RuuviDaemonError.ruuviStorage(error)
+        }
+
+        for sensor in ruuviTags {
+            await RuuviTagDataPruning.prune(
+                id: sensor.id,
+                ruuviPool: ruuviPool,
+                settings: settings
+            )
+        }
+
+        return true
     }
 }

@@ -7,7 +7,6 @@ targets:
     - path: Sources
       name: Notification
     dependencies:
-    - package: Future
     - package: Humidity
     - target: RuuviOntology
     - target: RuuviLocal

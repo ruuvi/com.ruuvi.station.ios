@@ -1,10 +1,9 @@
 import Foundation
-import Future
 import RuuviOntology
 import RuuviPool
 import RuuviStorage
 
-final class RuuviRepositoryCoordinator: RuuviRepository {
+actor RuuviRepositoryCoordinator: RuuviRepository {
     private let pool: RuuviPool
     private let storage: RuuviStorage
 
@@ -16,32 +15,34 @@ final class RuuviRepositoryCoordinator: RuuviRepository {
         self.storage = storage
     }
 
+    private func mapPoolError<T>(_ operation: () async throws -> T) async throws -> T {
+        do {
+            return try await operation()
+        } catch let error as RuuviPoolError {
+            throw RuuviRepositoryError.ruuviPool(error)
+        } catch {
+            throw RuuviRepositoryError.ruuviPool(.ruuviPersistence(.grdb(error)))
+        }
+    }
+
     func create(
         record: RuuviTagSensorRecord,
         for _: RuuviTagSensor
-    ) -> Future<AnyRuuviTagSensorRecord, RuuviRepositoryError> {
-        let promise = Promise<AnyRuuviTagSensorRecord, RuuviRepositoryError>()
-        pool.create(record)
-            .on(success: { _ in
-                promise.succeed(value: record.any)
-            }, failure: { error in
-                promise.fail(error: .ruuviPool(error))
-            })
-        return promise.future
+    ) async throws -> AnyRuuviTagSensorRecord {
+        _ = try await mapPoolError {
+            try await pool.create(record)
+        }
+        return record.any
     }
 
     func create(
         records: [RuuviTagSensorRecord],
         for _: RuuviTagSensor
-    ) -> Future<[AnyRuuviTagSensorRecord], RuuviRepositoryError> {
-        let promise = Promise<[AnyRuuviTagSensorRecord], RuuviRepositoryError>()
+    ) async throws -> [AnyRuuviTagSensorRecord] {
         let mappedRecords = records.map(\.any)
-        pool.create(mappedRecords)
-            .on(success: { _ in
-                promise.succeed(value: mappedRecords)
-            }, failure: { error in
-                promise.fail(error: .ruuviPool(error))
-            })
-        return promise.future
+        _ = try await mapPoolError {
+            try await pool.create(records)
+        }
+        return mappedRecords
     }
 }

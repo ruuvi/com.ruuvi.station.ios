@@ -1,6 +1,5 @@
 import BTKit
 import Foundation
-import Future
 import RuuviOntology
 
 public extension Notification.Name {
@@ -44,10 +43,10 @@ public protocol GATTService {
         progress: ((BTServiceProgress) -> Void)?,
         connectionTimeout: TimeInterval?,
         serviceTimeout: TimeInterval?
-    ) -> Future<Bool, RuuviServiceError>
+    ) async throws -> Bool
 
     @discardableResult
-    func stopGattSync(for uuid: String) -> Future<Bool, RuuviServiceError>
+    func stopGattSync(for uuid: String) async throws -> Bool
 }
 
 public extension GATTService {
@@ -58,8 +57,8 @@ public extension GATTService {
         firmware: Int,
         from: Date,
         settings: SensorSettings?
-    ) -> Future<Bool, RuuviServiceError> {
-        syncLogs(
+    ) async throws -> Bool {
+        try await syncLogs(
             uuid: uuid,
             mac: mac,
             firmware: firmware,
@@ -72,7 +71,7 @@ public extension GATTService {
     }
 
     @discardableResult
-    func stopGattSync(for uuid: String) -> Future<Bool, RuuviServiceError> {
-        stopGattSync(for: uuid)
+    func stopGattSync(for uuid: String) async throws -> Bool {
+        try await stopGattSync(for: uuid)
     }
 }

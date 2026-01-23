@@ -1,4 +1,3 @@
-import Future
 import RuuviOntology
 import UIKit
 
@@ -23,23 +22,23 @@ class ImagePersistenceDocuments: ImagePersistence {
         image: UIImage,
         compressionQuality: CGFloat,
         for identifier: Identifier
-    ) -> Future<URL, RuuviLocalError> {
+    ) async throws -> URL {
         let uuid = identifier.value
-        let promise = Promise<URL, RuuviLocalError>()
-        DispatchQueue.global().async {
-            if let data = image.jpegData(compressionQuality: compressionQuality) {
-                do {
-                    let url = try self.getBgDirectory().appendingPathComponent(uuid + self.ext)
-                    try data.write(to: url)
-                    promise.succeed(value: url)
-                } catch {
-                    promise.fail(error: .disk(error))
+        return try await withCheckedThrowingContinuation { continuation in
+            DispatchQueue.global().async {
+                if let data = image.jpegData(compressionQuality: compressionQuality) {
+                    do {
+                        let url = try self.getBgDirectory().appendingPathComponent(uuid + self.ext)
+                        try data.write(to: url)
+                        continuation.resume(returning: url)
+                    } catch {
+                        continuation.resume(throwing: RuuviLocalError.disk(error))
+                    }
+                } else {
+                    continuation.resume(throwing: RuuviLocalError.failedToGetJpegRepresentation)
                 }
-            } else {
-                promise.fail(error: .failedToGetJpegRepresentation)
             }
         }
-        return promise.future
     }
 
     private func getBgDirectory() throws -> URL {

@@ -8,7 +8,6 @@ targets:
       name: Migration
     dependencies:
     - package: Humidity
-    - package: Future
     - target: RuuviOntology
     - target: RuuviLocal
     - target: RuuviPool

@@ -35,93 +35,71 @@ final class MigrationManagerSignalVisibility: RuuviMigration {
 
         ruuviLocalSettings.signalVisibilityMigrationInProgress = true
 
-        ruuviStorage.readAll().on(success: { sensors in
-            guard !sensors.isEmpty else {
-                self.ruuviLocalSettings.signalVisibilityMigrationInProgress = false
-                return
-            }
-
-            let group = DispatchGroup()
-            sensors.forEach { sensor in
-                group.enter()
-                self.process(sensor: sensor) {
-                    group.leave()
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let sensors = try await ruuviStorage.readAll()
+                guard !sensors.isEmpty else {
+                    ruuviLocalSettings.signalVisibilityMigrationInProgress = false
+                    return
                 }
-            }
 
-            group.notify(queue: .global(qos: .utility)) {
-                self.didMigrateSignalVisibility = true
-                self.ruuviLocalSettings.signalVisibilityMigrationInProgress = false
+                for sensor in sensors {
+                    await process(sensor: sensor)
+                }
+
+                didMigrateSignalVisibility = true
+            } catch {
+                // Ignore migration errors to avoid blocking.
             }
-        }, failure: { _ in
-            self.ruuviLocalSettings.signalVisibilityMigrationInProgress = false
-        })
+            ruuviLocalSettings.signalVisibilityMigrationInProgress = false
+        }
     }
 }
 
 private extension MigrationManagerSignalVisibility {
-    func process(sensor: AnyRuuviTagSensor, completion: @escaping () -> Void) {
-        guard sensor.isOwner else { completion(); return }
+    func process(sensor: AnyRuuviTagSensor) async {
+        guard sensor.isOwner else { return }
         let signalAlertProbe = AlertType.signal(lower: 0, upper: 0)
-        guard ruuviAlertService.isOn(type: signalAlertProbe, for: sensor) else {
-            completion()
-            return
-        }
+        guard ruuviAlertService.isOn(type: signalAlertProbe, for: sensor) else { return }
 
-        ruuviStorage.readSensorSettings(sensor).on(success: { settings in
-            self.ensureSignalMeasurementVisible(
-                sensor: sensor,
-                settings: settings,
-                completion: completion
-            )
-        }, failure: { _ in
-            self.ensureSignalMeasurementVisible(
-                sensor: sensor,
-                settings: nil,
-                completion: completion
-            )
-        })
+        let settings = try? await ruuviStorage.readSensorSettings(sensor)
+        await ensureSignalMeasurementVisible(
+            sensor: sensor,
+            settings: settings
+        )
     }
 
     func ensureSignalMeasurementVisible(
         sensor: AnyRuuviTagSensor,
-        settings: SensorSettings?,
-        completion: @escaping () -> Void
-    ) {
+        settings: SensorSettings?
+    ) async {
         let signalCode = MeasurementDisplayCode.signal
         var displayOrder = settings?.displayOrder ?? []
 
         if displayOrder.contains(signalCode) {
-            completion()
             return
         }
 
         if displayOrder.isEmpty {
             let defaults = Self.defaultVisibleCodes(for: sensor)
             guard !defaults.isEmpty else {
-                completion()
                 return
             }
             displayOrder = defaults
         }
 
         guard !displayOrder.contains(signalCode) else {
-            completion()
             return
         }
         displayOrder.append(signalCode)
 
-        ruuviSensorProperties
+        _ = try? await ruuviSensorProperties
             .updateDisplaySettings(
                 for: sensor,
                 displayOrder: displayOrder,
                 defaultDisplayOrder: false
             )
-            .on(success: { _ in
-                completion()
-            }, failure: { _ in
-                completion()
-            })
     }
 }
 

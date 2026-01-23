@@ -91,9 +91,8 @@ final class FirmwareInteractor {
             .eraseToAnyPublisher()
     }
 
-    func serveCurrentRelease(uuid: String) -> Future<CurrentRelease, Error> {
-        Future { [weak self] promise in
-            guard let self else { return }
+    func serveCurrentRelease(uuid: String) async throws -> CurrentRelease {
+        try await withCheckedThrowingContinuation { continuation in
             background.services.gatt.firmwareRevision(
                 for: self,
                 uuid: uuid,
@@ -106,9 +105,9 @@ final class FirmwareInteractor {
                 case let .success(version):
                     let sanitizedVersion = version.ruuviFirmwareDisplayValue
                     let currentRelease = CurrentRelease(version: sanitizedVersion)
-                    promise(.success(currentRelease))
+                    continuation.resume(returning: currentRelease)
                 case let .failure(error):
-                    promise(.failure(error))
+                    continuation.resume(throwing: error)
                 }
             }
         }
@@ -168,22 +167,24 @@ final class FirmwareInteractor {
             .eraseToAnyPublisher()
     }
 
-    func listen() -> Future<String, Never> {
-        Future { [weak self] promise in
-            guard let self else { return }
+    func listen() async -> String {
+        await withCheckedContinuation { continuation in
+            var didResume = false
             ruuviDFU.scan(self, includeScanServices: false) { _, device in
-                promise(.success(device.uuid))
+                guard !didResume else { return }
+                didResume = true
+                continuation.resume(returning: device.uuid)
             }
         }
     }
 
-    func observeLost(uuid: String) -> Future<String, Never> {
-        Future { [weak self] promise in
-            guard let self else { return }
+    func observeLost(uuid: String) async -> String {
+        await withCheckedContinuation { continuation in
+            var didResume = false
             ruuviDFU.lost(self, closure: { _, device in
-                if device.uuid == uuid {
-                    promise(.success(uuid))
-                }
+                guard device.uuid == uuid, !didResume else { return }
+                didResume = true
+                continuation.resume(returning: uuid)
             })
         }
     }

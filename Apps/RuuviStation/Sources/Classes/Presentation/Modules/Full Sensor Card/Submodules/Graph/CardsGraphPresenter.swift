@@ -284,26 +284,33 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
             return
         }
         isSyncing = true
-        let op = interactor?.syncRecords { [weak self] progress in
-            DispatchQueue.main.async { [weak self] in
-                guard let syncing = self?.isSyncing, syncing
-                else {
-                    self?.view?.setSync(progress: nil, for: snapshot)
-                    return
+        Task { [weak self] in
+            guard let self, let interactor else { return }
+            do {
+                try await interactor.syncRecords { [weak self] progress in
+                    DispatchQueue.main.async { [weak self] in
+                        guard let syncing = self?.isSyncing, syncing else {
+                            self?.view?.setSync(progress: nil, for: snapshot)
+                            return
+                        }
+                        self?.view?.setSync(progress: progress, for: snapshot)
+                    }
                 }
-                self?.view?.setSync(progress: progress, for: snapshot)
+                await MainActor.run {
+                    view?.setSync(progress: nil, for: snapshot)
+                    interactor.restartObservingData()
+                }
+            } catch {
+                await MainActor.run {
+                    view?.setSync(progress: nil, for: snapshot)
+                    view?.showFailedToSyncIn()
+                }
+            }
+            await MainActor.run {
+                view?.setSync(progress: nil, for: snapshot)
+                isSyncing = false
             }
         }
-        op?.on(success: { [weak self] _ in
-            self?.view?.setSync(progress: nil, for: snapshot)
-            self?.interactor?.restartObservingData()
-        }, failure: { [weak self] _ in
-            self?.view?.setSync(progress: nil, for: snapshot)
-            self?.view?.showFailedToSyncIn()
-        }, completion: { [weak self] in
-            self?.view?.setSync(progress: nil, for: snapshot)
-            self?.isSyncing = false
-        })
     }
 
     func viewDidTriggerStopSync(for snapshot: RuuviTagCardSnapshot?) {
@@ -318,12 +325,19 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
     func viewDidConfirmToClear(for snapshot: RuuviTagCardSnapshot?) {
         activityPresenter.show(with: .loading(message: nil))
         if let sensor = sensor {
-            interactor?.deleteAllRecords(for: sensor)
-                .on(failure: { [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                }, completion: { [weak self] in
-                    self?.activityPresenter.dismiss(immediately: true)
-                })
+            Task { [weak self] in
+                guard let self, let interactor else { return }
+                do {
+                    try await interactor.deleteAllRecords(for: sensor)
+                } catch {
+                    await MainActor.run {
+                        errorPresenter.present(error: error)
+                    }
+                }
+                await MainActor.run {
+                    activityPresenter.dismiss(immediately: true)
+                }
+            }
         }
     }
 
@@ -339,35 +353,51 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
     func viewDidTapOnExportCSV() {
         guard let ruuviTag = sensor else { return }
         activityPresenter.show(with: .loading(message: nil))
-        exportService.csvLog(
-            for: ruuviTag.id,
-            version: ruuviTag.version,
-            settings: sensorSettings
-        )
-        .on(success: { [weak self] url in
-            self?.view?.showExportSheet(with: url)
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        }, completion: { [weak self] in
-            self?.activityPresenter.dismiss(immediately: true)
-        })
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let url = try await exportService.csvLog(
+                    for: ruuviTag.id,
+                    version: ruuviTag.version,
+                    settings: sensorSettings
+                )
+                await MainActor.run {
+                    view?.showExportSheet(with: url)
+                }
+            } catch {
+                await MainActor.run {
+                    errorPresenter.present(error: error)
+                }
+            }
+            await MainActor.run {
+                activityPresenter.dismiss(immediately: true)
+            }
+        }
     }
 
     func viewDidTapOnExportXLSX() {
         guard let ruuviTag = sensor else { return }
         activityPresenter.show(with: .loading(message: nil))
-        exportService.xlsxLog(
-            for: ruuviTag.id,
-            version: ruuviTag.version,
-            settings: sensorSettings
-        )
-        .on(success: { [weak self] url in
-            self?.view?.showExportSheet(with: url)
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        }, completion: { [weak self] in
-            self?.activityPresenter.dismiss(immediately: true)
-        })
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let url = try await exportService.xlsxLog(
+                    for: ruuviTag.id,
+                    version: ruuviTag.version,
+                    settings: sensorSettings
+                )
+                await MainActor.run {
+                    view?.showExportSheet(with: url)
+                }
+            } catch {
+                await MainActor.run {
+                    errorPresenter.present(error: error)
+                }
+            }
+            await MainActor.run {
+                activityPresenter.dismiss(immediately: true)
+            }
+        }
     }
 
     func viewDidSelectChartHistoryLength(hours: Int) {
@@ -597,11 +627,14 @@ extension CardsGraphPresenter {
     }
 
     private func stopGattSync() {
-        interactor?.stopSyncRecords()
-            .on(success: { [weak self] _ in
-                guard self?.view != nil else { return }
-                self?.view?.setSyncProgressViewHidden()
-            })
+        Task { [weak self] in
+            guard let self, let interactor else { return }
+            _ = try? await interactor.stopSyncRecords()
+            await MainActor.run {
+                guard view != nil else { return }
+                view?.setSyncProgressViewHidden()
+            }
+        }
     }
 
     // swiftlint:disable:next function_body_length

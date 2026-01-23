@@ -1,36 +1,35 @@
 import Foundation
-import Future
 import RuuviOntology
 
 public protocol RuuviPool {
     // entities
     @discardableResult
-    func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError>
+    func create(_ ruuviTag: RuuviTagSensor) async throws -> Bool
     @discardableResult
-    func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError>
+    func update(_ ruuviTag: RuuviTagSensor) async throws -> Bool
     @discardableResult
-    func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError>
+    func delete(_ ruuviTag: RuuviTagSensor) async throws -> Bool
     @discardableResult
-    func deleteSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError>
+    func deleteSensorSettings(_ ruuviTag: RuuviTagSensor) async throws -> Bool
 
     // records
     @discardableResult
-    func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError>
+    func create(_ record: RuuviTagSensorRecord) async throws -> Bool
     @discardableResult
-    func createLast(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError>
+    func createLast(_ record: RuuviTagSensorRecord) async throws -> Bool
     @discardableResult
-    func updateLast(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError>
+    func updateLast(_ record: RuuviTagSensorRecord) async throws -> Bool
     @discardableResult
-    func deleteLast(_ ruuviTagId: String) -> Future<Bool, RuuviPoolError>
+    func deleteLast(_ ruuviTagId: String) async throws -> Bool
     @discardableResult
-    func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RuuviPoolError>
+    func create(_ records: [RuuviTagSensorRecord]) async throws -> Bool
     @discardableResult
-    func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RuuviPoolError>
+    func deleteAllRecords(_ ruuviTagId: String) async throws -> Bool
     @discardableResult
-    func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RuuviPoolError>
+    func deleteAllRecords(_ ruuviTagId: String, before date: Date) async throws -> Bool
 
     @discardableResult
-    func cleanupDBSpace() -> Future<Bool, RuuviPoolError>
+    func cleanupDBSpace() async throws -> Bool
 
     // offset calibration
     func updateOffsetCorrection(
@@ -38,30 +37,30 @@ public protocol RuuviPool {
         with value: Double?,
         of ruuviTag: RuuviTagSensor,
         lastOriginalRecord record: RuuviTagSensorRecord?
-    ) -> Future<SensorSettings, RuuviPoolError>
+    ) async throws -> SensorSettings
     func updateDisplaySettings(
         for ruuviTag: RuuviTagSensor,
         displayOrder: [String]?,
         defaultDisplayOrder: Bool?
-    ) -> Future<SensorSettings, RuuviPoolError>
+    ) async throws -> SensorSettings
 
     // MARK: - Queued cloud requests
 
     @discardableResult
-    func createQueuedRequest(_ request: RuuviCloudQueuedRequest) -> Future<Bool, RuuviPoolError>
+    func createQueuedRequest(_ request: RuuviCloudQueuedRequest) async throws -> Bool
     @discardableResult
-    func deleteQueuedRequest(_ request: RuuviCloudQueuedRequest) -> Future<Bool, RuuviPoolError>
+    func deleteQueuedRequest(_ request: RuuviCloudQueuedRequest) async throws -> Bool
     @discardableResult
-    func deleteQueuedRequests() -> Future<Bool, RuuviPoolError>
+    func deleteQueuedRequests() async throws -> Bool
 
     // MARK: - Subscription
     func save(
         subscription: CloudSensorSubscription
-    ) -> Future<CloudSensorSubscription, RuuviPoolError>
+    ) async throws -> CloudSensorSubscription
 
     func readSensorSubscriptionSettings(
         _ ruuviTag: RuuviTagSensor
-    ) -> Future<CloudSensorSubscription?, RuuviPoolError>
+    ) async throws -> CloudSensorSubscription?
 }
 
 public extension RuuviPool {
@@ -69,8 +68,8 @@ public extension RuuviPool {
         type: OffsetCorrectionType,
         with value: Double?,
         of ruuviTag: RuuviTagSensor
-    ) -> Future<SensorSettings, RuuviPoolError> {
-        updateOffsetCorrection(
+    ) async throws -> SensorSettings {
+        try await updateOffsetCorrection(
             type: type,
             with: value,
             of: ruuviTag,

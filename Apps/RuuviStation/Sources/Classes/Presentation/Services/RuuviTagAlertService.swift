@@ -47,9 +47,8 @@ class RuuviTagAlertService {
     // MARK: - Background Processing
     private let backgroundQueue = DispatchQueue(label: "com.ruuvi.alertBackground", qos: .utility)
 
-    // MARK: - Loop Prevention
-    private var isProcessingAlertChange = false
-    private let processingLock = NSLock()
+    // MARK: - Loop Prevention (MainActor-isolated)
+    @MainActor private var isProcessingAlertChange = false
 
     // MARK: - Debouncing Management
     private var debouncers: [String: Debouncer] = [:]
@@ -224,16 +223,16 @@ class RuuviTagAlertService {
             return
         }
 
-        processingLock.lock()
-        guard !isProcessingAlertChange else {
-            processingLock.unlock()
-            return
-        }
-        isProcessingAlertChange = true
-        processingLock.unlock()
-
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
+
+            // Check processing flag on main actor
+            let shouldProcess = MainActor.assumeIsolated {
+                guard !self.isProcessingAlertChange else { return false }
+                self.isProcessingAlertChange = true
+                return true
+            }
+            guard shouldProcess else { return }
 
             // Sync all measurement-based alerts
             let profile = RuuviTagDataService.measurementDisplayProfile(for: snapshot)
@@ -268,9 +267,9 @@ class RuuviTagAlertService {
                 )
             }
 
-            self.processingLock.lock()
-            self.isProcessingAlertChange = false
-            self.processingLock.unlock()
+            MainActor.assumeIsolated {
+                self.isProcessingAlertChange = false
+            }
 
             self.delegate?.alertService(self, didUpdateSnapshot: snapshot)
         }
@@ -867,12 +866,9 @@ private extension RuuviTagAlertService {
         ) { [weak self] notification in
             guard let self = self else { return }
 
-            self.processingLock.lock()
-            guard !self.isProcessingAlertChange else {
-                self.processingLock.unlock()
-                return
-            }
-            self.processingLock.unlock()
+            // Check processing flag on main actor (we're on main queue)
+            let isProcessing = MainActor.assumeIsolated { self.isProcessingAlertChange }
+            guard !isProcessing else { return }
 
             if let userInfo = notification.userInfo,
                let physicalSensor = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
@@ -1381,13 +1377,13 @@ extension RuuviTagAlertService: RuuviNotifierObserver {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
 
-                self.processingLock.lock()
-                guard !self.isProcessingAlertChange else {
-                    self.processingLock.unlock()
-                    return
+                // Check processing flag on main actor
+                let shouldProcess = MainActor.assumeIsolated {
+                    guard !self.isProcessingAlertChange else { return false }
+                    self.isProcessingAlertChange = true
+                    return true
                 }
-                self.isProcessingAlertChange = true
-                self.processingLock.unlock()
+                guard shouldProcess else { return }
 
                 let isFireable = snapshot.metadata.isCloud ||
                                 snapshot.connectionData.isConnected ||
@@ -1441,9 +1437,9 @@ extension RuuviTagAlertService: RuuviNotifierObserver {
                         self.addToPendingUpdates(snapshotId: snapshot.id)
                     }
                 }
-                self.processingLock.lock()
-                self.isProcessingAlertChange = false
-                self.processingLock.unlock()
+                MainActor.assumeIsolated {
+                    self.isProcessingAlertChange = false
+                }
             }
         }
     }

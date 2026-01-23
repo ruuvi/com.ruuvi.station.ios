@@ -12,10 +12,21 @@ public final class RuuviNotifierImpl: RuuviNotifier {
     let localSyncState: RuuviLocalSyncState
     let measurementService: RuuviServiceMeasurement
     let settings: RuuviLocalSettings
-    let movementAlertHysteresisLock = NSLock()
-    var movementAlertHysteresisLastEventByUUID = [String: Date]()
+    /// State isolated to main thread - all access must be on main queue
+    @MainActor var movementAlertHysteresisLastEventByUUID = [String: Date]()
     var movementAlertHysteresisTimer: Timer?
     private var alertDidChangeToken: NSObjectProtocol?
+
+    /// Synchronously access the hysteresis state on main thread
+    func withHysteresisState<T>(_ block: @MainActor () -> T) -> T {
+        if Thread.isMainThread {
+            return MainActor.assumeIsolated { block() }
+        } else {
+            return DispatchQueue.main.sync {
+                MainActor.assumeIsolated { block() }
+            }
+        }
+    }
 
     public init(
         ruuviAlertService: RuuviServiceAlert,

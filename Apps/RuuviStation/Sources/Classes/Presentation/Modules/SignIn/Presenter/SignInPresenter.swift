@@ -1,6 +1,5 @@
 import FirebaseMessaging
 import Foundation
-import Future
 import RuuviCloud
 import RuuviDaemon
 import RuuviLocal
@@ -11,6 +10,7 @@ import RuuviUser
 import UIKit
 import WidgetKit
 
+@MainActor
 class SignInPresenter: NSObject {
     enum State {
         case enterEmail
@@ -95,10 +95,12 @@ extension SignInPresenter: SignInViewOutput {
     }
 
     func viewDidTapOkFromUnexpectedHTTPStatusCodeError() {
-        authService.logout().on(success: { [weak self] _ in
-            self?.settings.isSyncing = false
-            self?.dismiss(completion: {})
-        })
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            _ = try? await authService.logout()
+            settings.isSyncing = false
+            dismiss(completion: {})
+        }
     }
 }
 
@@ -146,67 +148,78 @@ extension SignInPresenter {
 
     private func sendVerificationCode(for email: String) {
         activityPresenter.show(with: .loading(message: nil))
-        ruuviCloud.requestCode(email: email)
-            .on(success: { [weak self] email in
-                guard let sSelf = self else { return }
-                sSelf.activityPresenter.dismiss()
-                sSelf.ruuviUser.email = email
-                sSelf.viewModel.showVerficationScreen.value = true
-                sSelf.state = .enterVerificationCode(nil)
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            }, completion: { [weak self] in
-                self?.activityPresenter.dismiss()
-            })
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                let email = try await ruuviCloud.requestCode(email: email)
+                activityPresenter.dismiss()
+                ruuviUser.email = email
+                viewModel.showVerficationScreen.value = true
+                state = .enterVerificationCode(nil)
+            } catch {
+                errorPresenter.present(error: error)
+            }
+            activityPresenter.dismiss()
+        }
     }
 
     private func verify(_ code: String) {
         activityPresenter.show(with: .loading(message: RuuviLocalization.SignIn.Sync.message))
-        ruuviCloud.validateCode(code: code)
-            .on(success: { [weak self] result in
-                guard let sSelf = self else { return }
-                if sSelf.ruuviUser.email == result.email.lowercased() {
-                    if !sSelf.settings.signedInAtleastOnce {
-                        sSelf.settings.signedInAtleastOnce = true
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                let result = try await ruuviCloud.validateCode(code: code)
+                if ruuviUser.email == result.email.lowercased() {
+                    if !settings.signedInAtleastOnce {
+                        settings.signedInAtleastOnce = true
                     }
-                    sSelf.ruuviUser.login(apiKey: result.apiKey)
-                    sSelf.reloadWidgets()
-                    sSelf.state = .isSyncing
-                    sSelf.settings.isSyncing = true
-                    sSelf.settings.syncExtensiveChangesInProgress = true
-                    sSelf.registerFCMToken()
-                    sSelf.syncAllRecords()
-                } else if let requestedEmail = sSelf.ruuviUser.email {
-                    sSelf.activityPresenter.dismiss()
-                    sSelf.view.showEmailsAreDifferent(
+                    ruuviUser.login(apiKey: result.apiKey)
+                    reloadWidgets()
+                    state = .isSyncing
+                    settings.isSyncing = true
+                    settings.syncExtensiveChangesInProgress = true
+                    registerFCMToken()
+                    syncAllRecords()
+                } else if let requestedEmail = ruuviUser.email {
+                    activityPresenter.dismiss()
+                    view.showEmailsAreDifferent(
                         requestedEmail: requestedEmail,
                         validatedEmail: result.email.lowercased()
                     )
                 } else {
-                    sSelf.view.showFailedToGetRequestedEmail()
-                    sSelf.activityPresenter.dismiss()
+                    view.showFailedToGetRequestedEmail()
+                    activityPresenter.dismiss()
                 }
-            }, failure: { [weak self] error in
-                self?.activityPresenter.dismiss()
-                self?.view.showInvalidTokenEntered()
-                self?.errorPresenter.present(error: error)
-            })
+            } catch {
+                activityPresenter.dismiss()
+                view.showInvalidTokenEntered()
+                errorPresenter.present(error: error)
+            }
+        }
     }
 
     private func syncAllRecords() {
-        cloudSyncService.syncAllRecords().on(success: { [weak self] _ in
-            self?.executePostSuccessfullSignInAction()
-        }, failure: { [weak self] error in
-            self?.retryFetchingTheSensorsOnFailIfNeeded(from: error)
-        })
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await cloudSyncService.syncAllRecords()
+                executePostSuccessfullSignInAction()
+            } catch {
+                retryFetchingTheSensorsOnFailIfNeeded(from: error as? RuuviServiceError ?? .networking(error))
+            }
+        }
     }
 
     private func syncSensors() {
-        cloudSyncService.refreshLatestRecord().on(success: { [weak self] _ in
-            self?.executePostSuccessfullSignInAction()
-        }, failure: { [weak self] error in
-            self?.retryFetchingTheSensorsOnFailIfNeeded(from: error)
-        })
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await cloudSyncService.refreshLatestRecord()
+                executePostSuccessfullSignInAction()
+            } catch {
+                retryFetchingTheSensorsOnFailIfNeeded(from: error as? RuuviServiceError ?? .networking(error))
+            }
+        }
     }
 
     private func executePostSuccessfullSignInAction() {

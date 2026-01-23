@@ -3,7 +3,6 @@ import BTKit
 import CoreBluetooth
 import CoreNFC
 import Foundation
-import Future
 import RuuviContext
 import RuuviCore
 import RuuviDaemon
@@ -17,6 +16,7 @@ import RuuviReactor
 import RuuviService
 import UIKit
 
+@MainActor
 class DiscoverPresenter: NSObject, RuuviDiscover {
     var viewController: UIViewController {
         if let view {
@@ -598,17 +598,19 @@ extension DiscoverPresenter {
     ) {
         let sanitizedFirmware = firmwareVersion?.ruuviFirmwareDisplayValue ?? firmwareVersion ?? ""
 
-        ruuviOwnershipService.add(
-            sensor: ruuviTag.with(name: displayName)
-                .with(firmwareVersion: sanitizedFirmware),
-            record: ruuviTag.with(source: .advertisement)
-        )
-        .on(success: { [weak self] anyRuuviTagSensor in
-            guard let sSelf = self else { return }
-            sSelf.output?.ruuvi(discover: sSelf, didAdd: anyRuuviTagSensor)
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let anyRuuviTagSensor = try await ruuviOwnershipService.add(
+                    sensor: ruuviTag.with(name: displayName)
+                        .with(firmwareVersion: sanitizedFirmware),
+                    record: ruuviTag.with(source: .advertisement)
+                )
+                output?.ruuvi(discover: self, didAdd: anyRuuviTagSensor)
+            } catch {
+                errorPresenter.present(error: error)
+            }
+        }
     }
 
     private func trimNulls(from string: String) -> String {
