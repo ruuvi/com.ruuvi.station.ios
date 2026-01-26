@@ -242,13 +242,17 @@ final class RuuviPoolCoordinator: RuuviPool {
     func updateDisplaySettings(
         for ruuviTag: RuuviTagSensor,
         displayOrder: [String]?,
-        defaultDisplayOrder: Bool?
+        defaultDisplayOrder: Bool?,
+        displayOrderLastUpdated: Date?,
+        defaultDisplayOrderLastUpdated: Date?
     ) -> Future<SensorSettings, RuuviPoolError> {
         let promise = Promise<SensorSettings, RuuviPoolError>()
         sqlite.updateDisplaySettings(
             for: ruuviTag,
             displayOrder: displayOrder,
-            defaultDisplayOrder: defaultDisplayOrder
+            defaultDisplayOrder: defaultDisplayOrder,
+            displayOrderLastUpdated: displayOrderLastUpdated,
+            defaultDisplayOrderLastUpdated: defaultDisplayOrderLastUpdated
         )
         .on(success: { settings in
             promise.succeed(value: settings)
