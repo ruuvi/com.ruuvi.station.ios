@@ -2,7 +2,7 @@ import Foundation
 import RuuviOntology
 
 // swiftlint:disable type_body_length file_length
-final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
+final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings, @unchecked Sendable {
     @UserDefault("SettingsUserDefaults.signedInAtleastOnce", defaultValue: false)
     var signedInAtleastOnce: Bool
 

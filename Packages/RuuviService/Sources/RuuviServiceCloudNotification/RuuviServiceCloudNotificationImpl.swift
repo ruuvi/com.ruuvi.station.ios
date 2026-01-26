@@ -112,7 +112,7 @@ public final class RuuviServiceCloudNotificationImpl: RuuviServiceCloudNotificat
                 data: data,
                 params: params
             )
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -127,7 +127,7 @@ public final class RuuviServiceCloudNotificationImpl: RuuviServiceCloudNotificat
                 token: token,
                 tokenId: tokenId
             )
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -136,7 +136,7 @@ public final class RuuviServiceCloudNotificationImpl: RuuviServiceCloudNotificat
     public func listTokens() async throws -> [RuuviCloudPNToken] {
         do {
             return try await cloud.listPNTokens()
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }

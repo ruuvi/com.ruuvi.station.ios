@@ -1664,16 +1664,17 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
 
     // RuuviCloudAlert
     // swiftlint:disable:next cyclomatic_complexity function_body_length
-    public func sync(cloudAlerts: [RuuviCloudSensorAlerts]) {
-        cloudAlerts.forEach { cloudSensorAlert in
-            guard let macId = cloudSensorAlert.sensor?.mac else { return }
-            let luid = localIDs.luid(for: macId)
+    public func sync(cloudAlerts: [RuuviCloudSensorAlerts]) async {
+        for cloudSensorAlert in cloudAlerts {
+            guard let macId = cloudSensorAlert.sensor?.mac else { continue }
+            let luid = await localIDs.luid(for: macId)
             let physicalSensor = PhysicalSensorStruct(luid: luid, macId: macId)
-            cloudSensorAlert.alerts?.forEach { cloudAlert in
+            guard let alerts = cloudSensorAlert.alerts else { continue }
+            for cloudAlert in alerts {
                 var type: AlertType?
                 switch cloudAlert.type {
                 case .temperature:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     // This sets the increased limit for external sensor when synced to cloud
                     // data.
                     let temperatureUnit = ruuviLocalSettings.temperatureUnit
@@ -1686,7 +1687,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                     type = .temperature(lower: min, upper: max)
                     setTemperature(description: cloudAlert.description, for: physicalSensor)
                 case .humidity:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     // in percent on cloud, in fraction locally
                     type = .relativeHumidity(
                         lower: min / 100.0,
@@ -1694,21 +1695,21 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                     )
                     setRelativeHumidity(description: cloudAlert.description, for: physicalSensor)
                 case .humidityAbsolute:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     type = .humidity(
                         lower: Humidity(value: min, unit: .absolute),
                         upper: Humidity(value: max, unit: .absolute)
                     )
                     setHumidity(description: cloudAlert.description, for: physicalSensor)
                 case .dewPoint:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     type = .dewPoint(
                         lower: min,
                         upper: max
                     )
                     setDewPoint(description: cloudAlert.description, for: physicalSensor)
                 case .pressure:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     // in Pa on cloud, in hPa locally
                     type = .pressure(
                         lower: min / 100.0,
@@ -1716,18 +1717,18 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                     )
                     setPressure(description: cloudAlert.description, for: physicalSensor)
                 case .movement:
-                    guard let counter = cloudAlert.counter else { return }
+                    guard let counter = cloudAlert.counter else { continue }
                     type = .movement(last: counter)
                     setMovement(description: cloudAlert.description, for: physicalSensor)
                 case .signal:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     type = .signal(
                         lower: min,
                         upper: max
                     )
                     setSignal(description: cloudAlert.description, for: physicalSensor)
                 case .aqi:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     type = .aqi(
                         lower: min,
                         upper: max
@@ -1737,7 +1738,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         for: physicalSensor
                     )
                 case .co2:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     type = .carbonDioxide(
                         lower: min,
                         upper: max
@@ -1747,7 +1748,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         for: physicalSensor
                     )
                 case .pm10:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     type = .pMatter1(
                         lower: min,
                         upper: max
@@ -1757,7 +1758,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         for: physicalSensor
                     )
                 case .pm25:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     type = .pMatter25(
                         lower: min,
                         upper: max
@@ -1767,7 +1768,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         for: physicalSensor
                     )
                 case .pm40:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     type = .pMatter4(
                         lower: min,
                         upper: max
@@ -1777,7 +1778,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         for: physicalSensor
                     )
                 case .pm100:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     type = .pMatter10(
                         lower: min,
                         upper: max
@@ -1787,7 +1788,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         for: physicalSensor
                     )
                 case .voc:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     type = .voc(
                         lower: min,
                         upper: max
@@ -1797,7 +1798,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         for: physicalSensor
                     )
                 case .nox:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     type = .nox(
                         lower: min,
                         upper: max
@@ -1807,7 +1808,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         for: physicalSensor
                     )
                 case .soundInstant:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     type = .soundInstant(
                         lower: min,
                         upper: max
@@ -1817,7 +1818,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         for: physicalSensor
                     )
                 case .soundAverage:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     type = .soundAverage(
                         lower: min,
                         upper: max
@@ -1827,7 +1828,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         for: physicalSensor
                     )
                 case .soundPeak:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     type = .soundPeak(
                         lower: min,
                         upper: max
@@ -1837,7 +1838,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         for: physicalSensor
                     )
                 case .luminosity:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     type = .luminosity(
                         lower: min,
                         upper: max
@@ -1847,7 +1848,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         for: physicalSensor
                     )
                 case .battery:
-                    guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
+                    guard let min = cloudAlert.min, let max = cloudAlert.max else { continue }
                     type = .batteryVoltage(
                         lower: min,
                         upper: max
@@ -1857,7 +1858,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         for: physicalSensor
                     )
                 case .offline:
-                    guard let unseenDuration = cloudAlert.max else { return }
+                    guard let unseenDuration = cloudAlert.max else { continue }
                     type = .cloudConnection(unseenDuration: unseenDuration)
                     setCloudConnection(description: cloudAlert.description, for: physicalSensor)
                 default:

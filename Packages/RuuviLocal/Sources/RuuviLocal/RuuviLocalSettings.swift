@@ -40,7 +40,7 @@ public enum AppearanceTypeKey: String {
     case style
 }
 
-public protocol RuuviLocalSettings {
+public protocol RuuviLocalSettings: Sendable {
     var signedInAtleastOnce: Bool { get set }
     /// When syncing for the first time (after sign in) or extensive changes
     /// like cloud sync

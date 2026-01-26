@@ -2,7 +2,7 @@ import Foundation
 import GRDB
 import RuuviOntology
 
-class SQLiteContextGRDB: SQLiteContext {
+final class SQLiteContextGRDB: SQLiteContext, @unchecked Sendable {
     let database: GRDBDatabase = SQLiteGRDBDatabase.shared
 }
 
@@ -12,7 +12,7 @@ public protocol DatabaseService {
     var database: GRDBDatabase { get }
 }
 
-class SQLiteGRDBDatabase: GRDBDatabase {
+final class SQLiteGRDBDatabase: GRDBDatabase, @unchecked Sendable {
     static let shared: SQLiteGRDBDatabase = {
         let instance = try! SQLiteGRDBDatabase()
         return instance

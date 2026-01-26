@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol CloudSensorSubscription {
+public protocol CloudSensorSubscription: Sendable {
     var id: String { get }
     var macId: String? { get }
     var subscriptionName: String? { get }

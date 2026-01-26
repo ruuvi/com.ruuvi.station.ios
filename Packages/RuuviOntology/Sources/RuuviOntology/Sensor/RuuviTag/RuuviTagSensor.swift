@@ -8,9 +8,10 @@ public protocol RuuviTagSensor: PhysicalSensor,
                                 Nameable,
                                 Shareable,
                                 HistoryFetchable,
-                                BackgroundScanable {}
+                                BackgroundScanable,
+                                Sendable {}
 
-public enum SensorOwnership {
+public enum SensorOwnership: Sendable {
     case claimedByMe
     case sharedWithMe
     case locallyAddedButNotMine

@@ -4,7 +4,7 @@ public extension Notification.Name {
     static let RuuviUserDidAuthorized = Notification.Name("RuuviUser.AuthorizationSuccessful")
 }
 
-public protocol RuuviUser {
+public protocol RuuviUser: Sendable {
     var apiKey: String? { get }
     var email: String? { get set }
     var isAuthorized: Bool { get }

@@ -54,6 +54,20 @@ public final class RuuviDiscoverFactory {
     public init() {}
 
     public func create(dependencies: RuuviDiscoverDependencies) -> RuuviDiscover {
+        if Thread.isMainThread {
+            return MainActor.assumeIsolated {
+                buildPresenter(dependencies: dependencies)
+            }
+        }
+        return DispatchQueue.main.sync {
+            MainActor.assumeIsolated {
+                buildPresenter(dependencies: dependencies)
+            }
+        }
+    }
+
+    @MainActor
+    private func buildPresenter(dependencies: RuuviDiscoverDependencies) -> RuuviDiscover {
         let presenter = DiscoverPresenter()
         presenter.errorPresenter = dependencies.errorPresenter
         presenter.activityPresenter = dependencies.activityPresenter

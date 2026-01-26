@@ -1,7 +1,7 @@
 import Foundation
 import RuuviOntology
 
-public protocol RuuviRepository {
+public protocol RuuviRepository: Sendable {
     @discardableResult
     func create(
         record: RuuviTagSensorRecord,

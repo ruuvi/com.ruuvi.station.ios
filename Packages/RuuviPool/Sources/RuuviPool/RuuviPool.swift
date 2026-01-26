@@ -1,7 +1,7 @@
 import Foundation
 import RuuviOntology
 
-public protocol RuuviPool {
+public protocol RuuviPool: Sendable {
     // entities
     @discardableResult
     func create(_ ruuviTag: RuuviTagSensor) async throws -> Bool

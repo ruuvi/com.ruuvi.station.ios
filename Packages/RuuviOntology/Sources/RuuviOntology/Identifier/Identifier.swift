@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol Identifier {
+public protocol Identifier: Sendable {
     var value: String { get }
 }
 

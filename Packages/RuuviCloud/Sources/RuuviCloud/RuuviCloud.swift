@@ -23,7 +23,7 @@ public struct ShareSensorResponse {
     }
 }
 
-public protocol RuuviCloud {
+public protocol RuuviCloud: Sendable {
     @discardableResult
     func requestCode(email: String) async throws -> String?
 

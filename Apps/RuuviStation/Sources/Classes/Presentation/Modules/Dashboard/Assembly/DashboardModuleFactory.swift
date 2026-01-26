@@ -20,6 +20,20 @@ protocol DashboardModuleFactory {
 final class DashboardModuleFactoryImpl: DashboardModuleFactory {
 
     func create() -> UIViewController {
+        if Thread.isMainThread {
+            return MainActor.assumeIsolated {
+                buildModule()
+            }
+        }
+        return DispatchQueue.main.sync {
+            MainActor.assumeIsolated {
+                buildModule()
+            }
+        }
+    }
+
+    @MainActor
+    private func buildModule() -> UIViewController {
         let r = AppAssembly.shared.assembler.resolver
 
         let view = DashboardViewController()
@@ -107,6 +121,29 @@ extension DashboardModuleFactoryImpl {
     func createWithConfiguration(
         customFeedbackEmail: String? = nil,
         customFeedbackSubject: String? = nil
+    ) -> UIViewController {
+        if Thread.isMainThread {
+            return MainActor.assumeIsolated {
+                buildModuleWithConfiguration(
+                    customFeedbackEmail: customFeedbackEmail,
+                    customFeedbackSubject: customFeedbackSubject
+                )
+            }
+        }
+        return DispatchQueue.main.sync {
+            MainActor.assumeIsolated {
+                buildModuleWithConfiguration(
+                    customFeedbackEmail: customFeedbackEmail,
+                    customFeedbackSubject: customFeedbackSubject
+                )
+            }
+        }
+    }
+
+    @MainActor
+    private func buildModuleWithConfiguration(
+        customFeedbackEmail: String?,
+        customFeedbackSubject: String?
     ) -> UIViewController {
         let r = AppAssembly.shared.assembler.resolver
 

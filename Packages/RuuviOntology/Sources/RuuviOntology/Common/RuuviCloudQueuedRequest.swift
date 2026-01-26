@@ -1,6 +1,6 @@
 import Foundation
 
-public enum RuuviCloudQueuedRequestType: Int, Codable {
+public enum RuuviCloudQueuedRequestType: Int, Codable, Sendable {
     case none = 0
     case sensor = 1
     case unclaim = 2
@@ -11,12 +11,12 @@ public enum RuuviCloudQueuedRequestType: Int, Codable {
     case sensorSettings = 7
 }
 
-public enum RuuviCloudQueuedRequestStatusType: Int, Codable {
+public enum RuuviCloudQueuedRequestStatusType: Int, Codable, Sendable {
     case success = 1
     case failed = 2
 }
 
-public protocol RuuviCloudQueuedRequest {
+public protocol RuuviCloudQueuedRequest: Sendable {
     var id: Int64? { get }
     var type: RuuviCloudQueuedRequestType? { get }
     var status: RuuviCloudQueuedRequestStatusType? { get }

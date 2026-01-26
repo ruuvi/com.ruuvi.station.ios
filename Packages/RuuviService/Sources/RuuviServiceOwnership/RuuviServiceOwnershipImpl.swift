@@ -243,8 +243,8 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
 
         if let sensorString = result.1 {
             let fullMac = sensorString.lowercased().mac
-            let original = localIDs.originalMac(for: fullMac) ?? macId
-            localIDs.set(fullMac: fullMac, for: original)
+            let original = await localIDs.originalMac(for: fullMac) ?? macId
+            await localIDs.set(fullMac: fullMac, for: original)
         }
 
         return result
@@ -383,7 +383,7 @@ private extension RuuviServiceOwnershipImpl {
             throw RuuviServiceError.macIdIsNil
         }
 
-        let storedFull = localIDs.fullMac(for: macId)
+        let storedFull = await localIDs.fullMac(for: macId)
         let dataFormat = RuuviDataFormat.dataFormat(from: sensor.version)
         if dataFormat == .v6,
            macId.value.needsFullMacLookup,
@@ -391,8 +391,8 @@ private extension RuuviServiceOwnershipImpl {
             let result = try await checkOwner(macId: macId)
             if let sensorString = result.1 {
                 let fullMac = sensorString.lowercased().mac
-                let original = localIDs.originalMac(for: fullMac) ?? macId
-                localIDs.set(fullMac: fullMac, for: original)
+                let original = await localIDs.originalMac(for: fullMac) ?? macId
+                await localIDs.set(fullMac: fullMac, for: original)
                 return fullMac
             }
             return macId

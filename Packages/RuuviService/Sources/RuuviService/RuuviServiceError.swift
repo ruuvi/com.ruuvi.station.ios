@@ -15,6 +15,7 @@ public enum RuuviServiceError: Error {
     case btkit(BTError)
     case networking(Error)
     case writeToDisk(Error)
+    case unexpectedError(RuuviServiceErrorUnexpected)
     case macIdIsNil
     case pictureUrlIsNil
     case failedToParseNetworkResponse
@@ -22,4 +23,8 @@ public enum RuuviServiceError: Error {
     case failedToGetJpegRepresentation
     case failedToFindOrGenerateBackgroundImage
     case isAlreadySyncingLogsWithThisTag
+}
+
+public enum RuuviServiceErrorUnexpected: Error {
+    case callerDeallocated
 }

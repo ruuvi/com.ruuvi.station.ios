@@ -3,7 +3,7 @@ import Foundation
 import RuuviOntology
 
 /// https://docs.ruuvi.com/communication/ruuvi-network/backends/serverless/user-api
-public protocol RuuviCloudApi {
+public protocol RuuviCloudApi: Sendable {
     func register(
         _ requestModel: RuuviCloudApiRegisterRequest
     ) async throws -> RuuviCloudApiRegisterResponse

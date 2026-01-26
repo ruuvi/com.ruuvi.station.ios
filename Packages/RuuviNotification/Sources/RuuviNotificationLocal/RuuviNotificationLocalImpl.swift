@@ -78,8 +78,9 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
         alertDidChangeToken?.invalidate()
     }
 
-    private func id(for uuid: String) -> String {
-        idPersistence.mac(for: uuid.luid)?.value ?? uuid
+    private func id(for uuid: String) async -> String {
+        let mac = await idPersistence.mac(for: uuid.luid)
+        return mac?.value ?? uuid
     }
 
     public func showDidConnect(uuid: String, title: String) {
@@ -106,7 +107,7 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
             content.categoryIdentifier = sSelf.blast.id
             sSelf.setAlertBadge(for: content)
 
-            sSelf.ruuviTag(for: sSelf.id(for: uuid)) { [weak self] ruuviTag in
+            sSelf.ruuviTag(for: uuid) { [weak self] ruuviTag in
                 guard let sSelf = self else { return }
                 content.subtitle = ruuviTag.name
                 content.body = sSelf.ruuviAlertService.connectionDescription(for: uuid) ?? ""
@@ -149,7 +150,7 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
             content.title = title
             sSelf.setAlertBadge(for: content)
 
-            sSelf.ruuviTag(for: sSelf.id(for: uuid)) { [weak self] ruuviTag in
+            sSelf.ruuviTag(for: uuid) { [weak self] ruuviTag in
                 guard let sSelf = self else { return }
                 content.subtitle = ruuviTag.name
                 content.body = sSelf.ruuviAlertService.connectionDescription(for: uuid) ?? ""
@@ -192,7 +193,7 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
 
             content.title = title
 
-            sSelf.ruuviTag(for: sSelf.id(for: uuid)) { [weak self] ruuviTag in
+            sSelf.ruuviTag(for: uuid) { [weak self] ruuviTag in
                 guard let sSelf = self else { return }
                 content.subtitle = ruuviTag.name
                 content.body = sSelf.ruuviAlertService.movementDescription(for: uuid) ?? ""
@@ -290,7 +291,7 @@ public extension RuuviNotificationLocalImpl {
             }
             content.body = body
 
-            sSelf.ruuviTag(for: sSelf.id(for: uuid)) { [weak self] ruuviTag in
+            sSelf.ruuviTag(for: uuid) { [weak self] ruuviTag in
                 content.subtitle = ruuviTag.name
                 let trigger = UNTimeIntervalNotificationTrigger(
                     timeInterval: 0.1,
@@ -657,7 +658,8 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
     ) {
         Task { [weak self] in
             guard let self else { return }
-            if let tag = try? await ruuviStorage.readOne(uuid) {
+            let resolvedId = await id(for: uuid)
+            if let tag = try? await ruuviStorage.readOne(resolvedId) {
                 completion(tag)
             }
         }

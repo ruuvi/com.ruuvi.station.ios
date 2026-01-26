@@ -221,7 +221,7 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
 
     @objc private func stopDaemon() {
         invalidateTokens()
-        connectionPersistence.keepConnectionUUIDs.forEach { disconnect(uuid: $0.value) }
+        keepConnectionUUIDs().forEach { disconnect(uuid: $0.value) }
         stopWork()
     }
 }
@@ -416,7 +416,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
 extension RuuviTagHeartbeatDaemonBTKit {
     /// Updates connections and observations based on changes in Ruuvi tags.
     private func handleRuuviTagsChange() {
-        for luid in connectionPersistence.keepConnectionUUIDs {
+        for luid in keepConnectionUUIDs() {
             let isRuuviTagPresent = ruuviTags.contains { $0.luid?.any == luid }
             if isRuuviTagPresent && !connectTokens.keys.contains(luid.value) {
                 connect(uuid: luid.value)
@@ -506,6 +506,25 @@ extension RuuviTagHeartbeatDaemonBTKit {
                 title: sSelf.titles.didConnect
             )
         }
+    }
+
+    private func keepConnectionUUIDs() -> [AnyLocalIdentifier] {
+        let result = UnsafeMutablePointer<[AnyLocalIdentifier]>.allocate(capacity: 1)
+        result.initialize(to: [])
+        defer {
+            result.deinitialize(count: 1)
+            result.deallocate()
+        }
+
+        let group = DispatchGroup()
+        group.enter()
+        let connectionPersistence = connectionPersistence
+        Task {
+            result.pointee = await connectionPersistence.getKeepConnectionUUIDs()
+            group.leave()
+        }
+        group.wait()
+        return result.pointee
     }
 }
 

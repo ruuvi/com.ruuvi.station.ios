@@ -29,6 +29,7 @@ extension RuuviCloudApiURLSession {
 }
 
 // swiftlint:disable:next type_body_length
+@MainActor
 public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
     private lazy var uploadSession: URLSession = {
         let config = URLSessionConfiguration.default
@@ -42,10 +43,10 @@ public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
         )
     }()
 
-    @MainActor private var progressHandlersByTaskID = [Int: ProgressHandler]()
+    private var progressHandlersByTaskID = [Int: ProgressHandler]()
     private let baseUrl: URL
 
-    public init(baseUrl: URL) {
+    public nonisolated init(baseUrl: URL) {
         self.baseUrl = baseUrl
         Reachability.start()
     }
@@ -457,22 +458,15 @@ extension RuuviCloudApiURLSession {
         request.setValue(mimeType.rawValue, forHTTPHeaderField: "Content-Type")
 
         return try await withCheckedThrowingContinuation { continuation in
-            let task = uploadSession.uploadTask(
+            var task: URLSessionUploadTask!
+            task = uploadSession.uploadTask(
                 with: request,
                 from: data,
                 completionHandler: { [weak self] data, response, error in
                     // Completion runs on main thread (delegateQueue: .main)
-                    // Clean up handler synchronously since we're on main thread
-                    if Thread.isMainThread {
-                        MainActor.assumeIsolated {
-                            self?.progressHandlersByTaskID[task.taskIdentifier] = nil
-                        }
-                    } else {
-                        DispatchQueue.main.async {
-                            MainActor.assumeIsolated {
-                                self?.progressHandlersByTaskID[task.taskIdentifier] = nil
-                            }
-                        }
+                    // Clean up handler - we're already on MainActor since class is @MainActor
+                    Task { @MainActor in
+                        self?.progressHandlersByTaskID[task.taskIdentifier] = nil
                     }
                     if let error {
                         continuation.resume(throwing: RuuviCloudApiError.networking(error))
@@ -488,26 +482,15 @@ extension RuuviCloudApiURLSession {
                     }
                 }
             )
-            // Store progress handler synchronously BEFORE resuming task
-            // This ensures the handler is registered before any progress events fire
-            if Thread.isMainThread {
-                MainActor.assumeIsolated { [weak self] in
-                    self?.progressHandlersByTaskID[task.taskIdentifier] = progress
-                }
-            } else {
-                DispatchQueue.main.sync { [weak self] in
-                    MainActor.assumeIsolated {
-                        self?.progressHandlersByTaskID[task.taskIdentifier] = progress
-                    }
-                }
-            }
+            // Store progress handler - we're on MainActor so this is safe
+            progressHandlersByTaskID[task.taskIdentifier] = progress
             task.resume()
         }
     }
 }
 
 extension RuuviCloudApiURLSession: URLSessionTaskDelegate {
-    public func urlSession(
+    nonisolated public func urlSession(
         _: URLSession,
         task: URLSessionTask,
         didSendBodyData _: Int64,
@@ -516,8 +499,8 @@ extension RuuviCloudApiURLSession: URLSessionTaskDelegate {
     ) {
         // This delegate method runs on main thread (delegateQueue: .main)
         let progress = Double(totalBytesSent) / Double(totalBytesExpectedToSend)
-        // Access handler synchronously since we're on main thread
-        MainActor.assumeIsolated { [weak self] in
+        // Access handler on MainActor since progressHandlersByTaskID is MainActor-isolated
+        Task { @MainActor [weak self] in
             let handler = self?.progressHandlersByTaskID[task.taskIdentifier]
             handler?(progress)
         }

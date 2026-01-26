@@ -6,6 +6,21 @@ import RuuviService
 
 class ShareConfigurator {
     func configure(view: ShareViewController) {
+        if Thread.isMainThread {
+            MainActor.assumeIsolated {
+                buildModule(view: view)
+            }
+            return
+        }
+        DispatchQueue.main.sync {
+            MainActor.assumeIsolated {
+                buildModule(view: view)
+            }
+        }
+    }
+
+    @MainActor
+    private func buildModule(view: ShareViewController) {
         let r = AppAssembly.shared.assembler.resolver
 
         let router = ShareRouter()

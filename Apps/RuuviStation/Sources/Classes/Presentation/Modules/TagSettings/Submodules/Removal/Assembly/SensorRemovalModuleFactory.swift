@@ -9,6 +9,20 @@ protocol SensorRemovalModuleFactory {
 
 final class SensorRemovalModuleFactoryImpl: SensorRemovalModuleFactory {
     func create() -> SensorRemovalViewController {
+        if Thread.isMainThread {
+            return MainActor.assumeIsolated {
+                buildModule()
+            }
+        }
+        return DispatchQueue.main.sync {
+            MainActor.assumeIsolated {
+                buildModule()
+            }
+        }
+    }
+
+    @MainActor
+    private func buildModule() -> SensorRemovalViewController {
         let r = AppAssembly.shared.assembler.resolver
 
         let view = SensorRemovalViewController()

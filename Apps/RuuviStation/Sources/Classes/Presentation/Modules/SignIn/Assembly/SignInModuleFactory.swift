@@ -12,6 +12,20 @@ protocol SignInModuleFactory: AnyObject {
 
 class SignInModuleFactoryImpl: SignInModuleFactory {
     func create() -> SignInViewController {
+        if Thread.isMainThread {
+            return MainActor.assumeIsolated {
+                buildModule()
+            }
+        }
+        return DispatchQueue.main.sync {
+            MainActor.assumeIsolated {
+                buildModule()
+            }
+        }
+    }
+
+    @MainActor
+    private func buildModule() -> SignInViewController {
         let r = AppAssembly.shared.assembler.resolver
 
         let view = SignInViewController()

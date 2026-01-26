@@ -493,7 +493,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         }
 
         let alerts = denseSensors.map { $0.alerts }
-        alertService.sync(cloudAlerts: alerts)
+        await alertService.sync(cloudAlerts: alerts)
 
         let cloudSensors = denseSensors.map { $0.sensor.any }
         let updatedSensors = try await syncSensors(

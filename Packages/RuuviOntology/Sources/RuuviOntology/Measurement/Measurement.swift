@@ -7,7 +7,7 @@ public typealias Humidity = Measurement<UnitHumidity>
 public typealias Voltage = Measurement<UnitElectricPotentialDifference>
 public typealias AccelerationMeasurement = Measurement<UnitAcceleration>
 
-public struct Acceleration {
+public struct Acceleration: Sendable {
     public let x: AccelerationMeasurement
     public let y: AccelerationMeasurement
     public let z: AccelerationMeasurement

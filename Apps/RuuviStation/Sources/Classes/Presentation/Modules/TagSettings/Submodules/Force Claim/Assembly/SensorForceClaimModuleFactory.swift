@@ -13,6 +13,20 @@ protocol SensorForceClaimModuleFactory {
 
 final class SensorForceClaimModuleFactoryImpl: SensorForceClaimModuleFactory {
     func create() -> SensorForceClaimViewController {
+        if Thread.isMainThread {
+            return MainActor.assumeIsolated {
+                buildModule()
+            }
+        }
+        return DispatchQueue.main.sync {
+            MainActor.assumeIsolated {
+                buildModule()
+            }
+        }
+    }
+
+    @MainActor
+    private func buildModule() -> SensorForceClaimViewController {
         let r = AppAssembly.shared.assembler.resolver
 
         let view = SensorForceClaimViewController()

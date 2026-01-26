@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol SensorSettings {
+public protocol SensorSettings: Sendable {
     var id: String { get }
     var luid: LocalIdentifier? { get }
     var macId: MACIdentifier? { get }
@@ -35,7 +35,7 @@ public extension SensorSettings {
     }
 }
 
-public enum OffsetCorrectionType: Int {
+public enum OffsetCorrectionType: Int, Sendable {
     case temperature = 0 // in degrees
     case humidity = 1 // in fraction of one
     case pressure = 2 // in hPa

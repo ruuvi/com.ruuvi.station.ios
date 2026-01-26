@@ -79,13 +79,15 @@ public final class RuuviCloudSyncRecordsLoader: Sendable {
             return []
         }
 
-        let recordsWithLuid: [AnyRuuviTagSensorRecord] = loadedRecords.map { record in
+        var recordsWithLuid: [AnyRuuviTagSensorRecord] = []
+        for record in loadedRecords {
             if record.luid == nil,
                let macId = record.macId,
-               let luid = ruuviLocalIDs.luid(for: macId) {
-                return record.with(luid: luid).any
+               let luid = await ruuviLocalIDs.luid(for: macId) {
+                recordsWithLuid.append(record.with(luid: luid).any)
+            } else {
+                recordsWithLuid.append(record)
             }
-            return record
         }
 
         do {

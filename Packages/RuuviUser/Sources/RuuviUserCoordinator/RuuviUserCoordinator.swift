@@ -1,7 +1,7 @@
 import Foundation
 import WidgetKit
 
-final class RuuviUserCoordinator: RuuviUser {
+final class RuuviUserCoordinator: RuuviUser, @unchecked Sendable {
     var apiKey: String? {
         get {
             keychainService.ruuviUserApiKey

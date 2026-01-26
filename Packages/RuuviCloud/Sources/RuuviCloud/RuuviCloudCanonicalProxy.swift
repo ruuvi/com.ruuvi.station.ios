@@ -69,7 +69,10 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         alerts: Bool?,
         settings: Bool?
     ) async throws -> [RuuviCloudSensorDense] {
-        let sensorForCloud = sensor.map { canonicalizedSensor($0) }
+        var sensorForCloud: RuuviTagSensor?
+        if let sensor {
+            sensorForCloud = await canonicalizedSensor(sensor)
+        }
         return try await cloud.loadSensorsDense(
             for: sensorForCloud,
             measurements: measurements,
@@ -86,7 +89,7 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         until: Date?
     ) async throws -> [AnyRuuviTagSensorRecord] {
         try await cloud.loadRecords(
-            macId: canonical(macId),
+            macId: await canonical(macId),
             since: since,
             until: until
         )
@@ -98,9 +101,12 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
     ) async throws -> MACIdentifier? {
         let response = try await cloud.claim(
             name: name,
-            macId: canonical(macId)
+            macId: await canonical(macId)
         )
-        return response.map { original(for: $0, fallback: macId) }
+        if let response {
+            return await original(for: response, fallback: macId)
+        }
+        return nil
     }
 
     public func contest(
@@ -108,10 +114,13 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         secret: String
     ) async throws -> MACIdentifier? {
         let response = try await cloud.contest(
-            macId: canonical(macId),
+            macId: await canonical(macId),
             secret: secret
         )
-        return response.map { original(for: $0, fallback: macId) }
+        if let response {
+            return await original(for: response, fallback: macId)
+        }
+        return nil
     }
 
     public func unclaim(
@@ -119,10 +128,10 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         removeCloudHistory: Bool
     ) async throws -> MACIdentifier {
         let response = try await cloud.unclaim(
-            macId: canonical(macId),
+            macId: await canonical(macId),
             removeCloudHistory: removeCloudHistory
         )
-        return original(for: response, fallback: macId)
+        return await original(for: response, fallback: macId)
     }
 
     public func share(
@@ -130,12 +139,12 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         with email: String
     ) async throws -> ShareSensorResponse {
         let response = try await cloud.share(
-            macId: canonical(macId),
+            macId: await canonical(macId),
             with: email
         )
         var adjusted = response
         if let returnedMac = response.macId {
-            adjusted.macId = original(for: returnedMac, fallback: macId)
+            adjusted.macId = await original(for: returnedMac, fallback: macId)
         } else {
             adjusted.macId = macId
         }
@@ -147,20 +156,20 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         with email: String?
     ) async throws -> MACIdentifier {
         let response = try await cloud.unshare(
-            macId: canonical(macId),
+            macId: await canonical(macId),
             with: email
         )
-        return original(for: response, fallback: macId)
+        return await original(for: response, fallback: macId)
     }
 
     public func loadShared(
         for sensor: RuuviTagSensor
     ) async throws -> Set<AnyShareableSensor> {
-        try await cloud.loadShared(for: canonicalizedSensor(sensor))
+        try await cloud.loadShared(for: await canonicalizedSensor(sensor))
     }
 
     public func checkOwner(macId: MACIdentifier) async throws -> (String?, String?) {
-        try await cloud.checkOwner(macId: canonical(macId))
+        try await cloud.checkOwner(macId: await canonical(macId))
     }
 
     public func update(
@@ -169,9 +178,9 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
     ) async throws -> AnyRuuviTagSensor {
         let updated = try await cloud.update(
             name: name,
-            for: canonicalizedSensor(sensor)
+            for: await canonicalizedSensor(sensor)
         )
-        return restore(sensor: updated, originalMac: sensor.macId)
+        return await restore(sensor: updated, originalMac: sensor.macId)
     }
 
     public func upload(
@@ -180,16 +189,12 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         progress: ((MACIdentifier, Double) -> Void)?,
         for macId: MACIdentifier
     ) async throws -> URL {
-        let canonicalMac = canonical(macId)
+        let canonicalMac = await canonical(macId)
         let wrappedProgress: ((MACIdentifier, Double) -> Void)?
         if let progress {
-            wrappedProgress = { [weak self] mac, value in
-                guard let self else {
-                    progress(mac, value)
-                    return
-                }
-                let originalMac = self.original(for: mac, fallback: macId)
-                progress(originalMac, value)
+            wrappedProgress = { mac, value in
+                // Note: Can't use await in closure, so we use the fallback
+                progress(macId, value)
             }
         } else {
             wrappedProgress = nil
@@ -205,7 +210,7 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
     public func resetImage(
         for macId: MACIdentifier
     ) async throws -> Void {
-        try await cloud.resetImage(for: canonical(macId))
+        try await cloud.resetImage(for: await canonical(macId))
     }
 
     public func getCloudSettings() async throws -> RuuviCloudSettings? {
@@ -291,12 +296,12 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         timestamp: Int?
     ) async throws -> AnyRuuviTagSensor {
         let updated = try await cloud.updateSensorSettings(
-            for: canonicalizedSensor(sensor),
+            for: await canonicalizedSensor(sensor),
             types: types,
             values: values,
             timestamp: timestamp
         )
-        return restore(sensor: updated, originalMac: sensor.macId)
+        return await restore(sensor: updated, originalMac: sensor.macId)
     }
 
     public func update(
@@ -309,9 +314,9 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
             temperatureOffset: temperatureOffset,
             humidityOffset: humidityOffset,
             pressureOffset: pressureOffset,
-            for: canonicalizedSensor(sensor)
+            for: await canonicalizedSensor(sensor)
         )
-        return restore(sensor: updated, originalMac: sensor.macId)
+        return await restore(sensor: updated, originalMac: sensor.macId)
     }
 
     // swiftlint:disable:next function_parameter_count
@@ -335,7 +340,7 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
             counter: counter,
             delay: delay,
             description: description,
-            for: canonical(macId)
+            for: await canonical(macId)
         )
     }
 
@@ -349,33 +354,33 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
 }
 
 private extension RuuviCloudCanonicalProxy {
-    func canonical(_ mac: MACIdentifier) -> MACIdentifier {
-        localIDs.fullMac(for: mac) ?? mac
+    func canonical(_ mac: MACIdentifier) async -> MACIdentifier {
+        await localIDs.fullMac(for: mac) ?? mac
     }
 
-    func canonicalizedSensor(_ sensor: RuuviTagSensor) -> RuuviTagSensor {
+    func canonicalizedSensor(_ sensor: RuuviTagSensor) async -> RuuviTagSensor {
         guard let mac = sensor.macId else {
             return sensor
         }
-        let canonicalMac = canonical(mac)
+        let canonicalMac = await canonical(mac)
         guard canonicalMac.value != mac.value else {
             return sensor
         }
         return sensor.with(macId: canonicalMac)
     }
 
-    func original(for mac: MACIdentifier, fallback: MACIdentifier) -> MACIdentifier {
-        localIDs.originalMac(for: mac) ?? fallback
+    func original(for mac: MACIdentifier, fallback: MACIdentifier) async -> MACIdentifier {
+        await localIDs.originalMac(for: mac) ?? fallback
     }
 
-    func restore(sensor: AnyRuuviTagSensor, originalMac: MACIdentifier?) -> AnyRuuviTagSensor {
+    func restore(sensor: AnyRuuviTagSensor, originalMac: MACIdentifier?) async -> AnyRuuviTagSensor {
         guard let originalMac else {
             return sensor
         }
         guard let currentMac = sensor.macId else {
             return sensor
         }
-        let restored = original(for: currentMac, fallback: originalMac)
+        let restored = await original(for: currentMac, fallback: originalMac)
         if restored.value == currentMac.value {
             return sensor
         }

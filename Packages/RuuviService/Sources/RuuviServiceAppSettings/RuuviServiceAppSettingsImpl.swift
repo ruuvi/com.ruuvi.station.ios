@@ -20,7 +20,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
         localSettings.temperatureUnit = temperatureUnit
         do {
             return try await cloud.set(temperatureUnit: temperatureUnit)
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -32,7 +32,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
         localSettings.temperatureAccuracy = temperatureAccuracy
         do {
             return try await cloud.set(temperatureAccuracy: temperatureAccuracy)
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -42,7 +42,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
         localSettings.humidityUnit = humidityUnit
         do {
             return try await cloud.set(humidityUnit: humidityUnit)
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -54,7 +54,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
         localSettings.humidityAccuracy = humidityAccuracy
         do {
             return try await cloud.set(humidityAccuracy: humidityAccuracy)
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -64,7 +64,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
         localSettings.pressureUnit = pressureUnit
         do {
             return try await cloud.set(pressureUnit: pressureUnit)
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -76,7 +76,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
         localSettings.pressureAccuracy = pressureAccuracy
         do {
             return try await cloud.set(pressureAccuracy: pressureAccuracy)
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -85,7 +85,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     public func set(showAllData: Bool) async throws -> Bool {
         do {
             return try await cloud.set(showAllData: showAllData)
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -94,7 +94,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     public func set(drawDots: Bool) async throws -> Bool {
         do {
             return try await cloud.set(drawDots: drawDots)
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -103,7 +103,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     public func set(chartDuration: Int) async throws -> Int {
         do {
             return try await cloud.set(chartDuration: chartDuration)
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -112,7 +112,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     public func set(showMinMaxAvg: Bool) async throws -> Bool {
         do {
             return try await cloud.set(showMinMaxAvg: showMinMaxAvg)
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -121,7 +121,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     public func set(cloudMode: Bool) async throws -> Bool {
         do {
             return try await cloud.set(cloudMode: cloudMode)
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -130,7 +130,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     public func set(dashboard: Bool) async throws -> Bool {
         do {
             return try await cloud.set(dashboard: dashboard)
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -139,7 +139,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     public func set(dashboardType: DashboardType) async throws -> DashboardType {
         do {
             return try await cloud.set(dashboardType: dashboardType)
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -148,7 +148,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     public func set(dashboardTapActionType: DashboardTapActionType) async throws -> DashboardTapActionType {
         do {
             return try await cloud.set(dashboardTapActionType: dashboardTapActionType)
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -157,7 +157,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     public func set(disableEmailAlert: Bool) async throws -> Bool {
         do {
             return try await cloud.set(disableEmailAlert: disableEmailAlert)
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -166,7 +166,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     public func set(disablePushAlert: Bool) async throws -> Bool {
         do {
             return try await cloud.set(disablePushAlert: disablePushAlert)
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -175,7 +175,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     public func set(profileLanguageCode: String) async throws -> String {
         do {
             return try await cloud.set(profileLanguageCode: profileLanguageCode)
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }
@@ -184,7 +184,7 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     public func set(dashboardSensorOrder: [String]) async throws -> [String] {
         do {
             return try await cloud.set(dashboardSensorOrder: dashboardSensorOrder)
-        } catch {
+        } catch let error as RuuviCloudError {
             throw RuuviServiceError.ruuviCloud(error)
         }
     }

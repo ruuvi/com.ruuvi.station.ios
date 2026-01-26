@@ -2,7 +2,7 @@
 import Foundation
 import Humidity
 
-public enum RuuviTagSensorRecordSource: String {
+public enum RuuviTagSensorRecordSource: String, Sendable {
     case unknown
     case advertisement
     case bgAdvertisement
@@ -11,7 +11,7 @@ public enum RuuviTagSensorRecordSource: String {
     case ruuviNetwork
 }
 
-public protocol RuuviTagSensorRecord: PhysicalSensor {
+public protocol RuuviTagSensorRecord: PhysicalSensor, Sendable {
     var luid: LocalIdentifier? { get }
     var date: Date { get }
     var source: RuuviTagSensorRecordSource { get }

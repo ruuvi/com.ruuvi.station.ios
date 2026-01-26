@@ -1,31 +1,31 @@
 import Foundation
 
-public protocol StringIdentifieable {
+public protocol StringIdentifieable: Sendable {
     var id: String { get }
 }
 
-public protocol BackgroundScanable {
+public protocol BackgroundScanable: Sendable {
     var serviceUUID: String? { get }
 }
 
-public protocol Connectable {
+public protocol Connectable: Sendable {
     var isConnectable: Bool { get }
 }
 
-public protocol Nameable {
+public protocol Nameable: Sendable {
     var name: String { get }
 }
 
-public protocol Versionable {
+public protocol Versionable: Sendable {
     var version: Int { get }
     var firmwareVersion: String? { get }
 }
 
-public protocol Locateable {
+public protocol Locateable: Sendable {
     var loc: Location? { get }
 }
 
-public protocol Claimable {
+public protocol Claimable: Sendable {
     var isClaimed: Bool { get }
     var isOwner: Bool { get }
     var owner: String? { get }
@@ -35,11 +35,11 @@ public protocol Claimable {
 
 public protocol Sensor: StringIdentifieable {}
 
-public protocol HasRemotePicture {
+public protocol HasRemotePicture: Sendable {
     var picture: URL? { get }
 }
 
-public protocol Calibratable {
+public protocol Calibratable: Sendable {
     var offsetTemperature: Double? { get } // in degrees
     var offsetHumidity: Double? { get } // in fraction of one
     var offsetPressure: Double? { get } // in hPa
@@ -54,12 +54,12 @@ public protocol CloudSensor: Sensor,
                              HistoryFetchable,
                              BackgroundScanable {}
 
-public protocol Shareable {
+public protocol Shareable: Sendable {
     var canShare: Bool { get }
     var sharedTo: [String] { get } // emails
 }
 
-public protocol HistoryFetchable {
+public protocol HistoryFetchable: Sendable {
     var maxHistoryDays: Int? { get }
 }
 

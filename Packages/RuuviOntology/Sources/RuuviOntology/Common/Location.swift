@@ -1,7 +1,7 @@
 import CoreLocation
 import Foundation
 
-public protocol Location {
+public protocol Location: Sendable {
     var city: String? { get }
     var state: String? { get }
     var country: String? { get }

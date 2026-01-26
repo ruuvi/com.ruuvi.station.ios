@@ -2,7 +2,7 @@ import Foundation
 import RuuviOntology
 import RuuviPersistence
 
-public protocol RuuviStorage {
+public protocol RuuviStorage: Sendable {
     func read(
         _ id: String,
         after date: Date,

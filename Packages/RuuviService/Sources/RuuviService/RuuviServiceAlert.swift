@@ -121,7 +121,7 @@ public protocol RuuviServiceAlertRuuviTag {
 }
 
 public protocol RuuviServiceAlertCloud {
-    func sync(cloudAlerts: [RuuviCloudSensorAlerts])
+    func sync(cloudAlerts: [RuuviCloudSensorAlerts]) async
 }
 
 public protocol RuuviServiceAlertDeprecated {

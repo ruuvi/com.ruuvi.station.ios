@@ -25,9 +25,10 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
 
     public func create(_ ruuviTag: RuuviTagSensor) async throws -> Bool {
         assert(ruuviTag.macId != nil)
+        let sensor = ruuviTag.struct
         do {
-            try database.dbPool.write { db in
-                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+            try await database.dbPool.write { db in
+                let normalizedTag = try self.normalizedSensor(sensor, db: db)
                 let entity = Entity(
                     id: normalizedTag.id,
                     macId: normalizedTag.macId,
@@ -56,9 +57,10 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
 
     public func create(_ record: RuuviTagSensorRecord) async throws -> Bool {
         assert(record.macId != nil)
+        let recordStruct = recordStruct(from: record)
         do {
-            try database.dbPool.write { db in
-                let normalizedRecord = try normalizedRecord(record, db: db)
+            try await database.dbPool.write { db in
+                let normalizedRecord = try self.normalizedRecord(recordStruct, db: db)
                 assert(normalizedRecord.macId != nil)
                 try normalizedRecord.sqlite.insert(db)
             }
@@ -70,9 +72,10 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
 
     public func createLast(_ record: RuuviTagSensorRecord) async throws -> Bool {
         assert(record.macId != nil)
+        let recordStruct = recordStruct(from: record)
         do {
-            try database.dbPool.write { db in
-                let normalizedRecord = try normalizedRecord(record, db: db)
+            try await database.dbPool.write { db in
+                let normalizedRecord = try self.normalizedRecord(recordStruct, db: db)
                 assert(normalizedRecord.macId != nil)
                 try normalizedRecord.latest.insert(db)
             }
@@ -84,9 +87,10 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
 
     public func updateLast(_ record: RuuviTagSensorRecord) async throws -> Bool {
         assert(record.macId != nil)
+        let recordStruct = recordStruct(from: record)
         do {
-            try database.dbPool.write { db in
-                let normalizedRecord = try normalizedRecord(record, db: db)
+            try await database.dbPool.write { db in
+                let normalizedRecord = try self.normalizedRecord(recordStruct, db: db)
                 assert(normalizedRecord.macId != nil)
                 try normalizedRecord.latest.update(db)
             }
@@ -97,11 +101,14 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
     }
 
     public func create(_ records: [RuuviTagSensorRecord]) async throws -> Bool {
+        let recordStructs = records.map { record in
+            assert(record.macId != nil)
+            return recordStruct(from: record)
+        }
         do {
-            try database.dbPool.write { db in
-                for record in records {
-                    assert(record.macId != nil)
-                    let normalizedRecord = try normalizedRecord(record, db: db)
+            try await database.dbPool.write { db in
+                for record in recordStructs {
+                    let normalizedRecord = try self.normalizedRecord(record, db: db)
                     assert(normalizedRecord.macId != nil)
                     try normalizedRecord.sqlite.insert(db)
                 }
@@ -114,7 +121,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
 
     public func readAll() async throws -> [AnyRuuviTagSensor] {
         do {
-            let sqliteEntities = try database.dbPool.read { db -> [RuuviTagSensor] in
+            let sqliteEntities = try await database.dbPool.read { db -> [RuuviTagSensor] in
                 let request = Entity.order(Entity.versionColumn)
                 return try request.fetchAll(db)
             }
@@ -126,7 +133,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
 
     public func readOne(_ ruuviTagId: String) async throws -> AnyRuuviTagSensor {
         do {
-            let entity = try database.dbPool.read { db -> Entity? in
+            let entity = try await database.dbPool.read { db -> Entity? in
                 let request = Entity.filter(Entity.luidColumn == ruuviTagId || Entity.macColumn == ruuviTagId)
                 return try request.fetchOne(db)
             }
@@ -143,7 +150,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
 
     public func readAll(_ ruuviTagId: String) async throws -> [RuuviTagSensorRecord] {
         do {
-            let sqliteEntities = try database.dbPool.read { db -> [RuuviTagSensorRecord] in
+            let sqliteEntities = try await database.dbPool.read { db -> [RuuviTagSensorRecord] in
                 let request = Record.order(Record.dateColumn)
                     .filter(Record.luidColumn == ruuviTagId || Record.macColumn == ruuviTagId)
                 return try request.fetchAll(db)
@@ -160,7 +167,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
     ) async throws -> [RuuviTagSensorRecord] {
         let lastThree = ruuviTagId.lastThreeBytes
         do {
-            let sqliteEntities = try database.dbPool.read { db -> [RuuviTagSensorRecord] in
+            let sqliteEntities = try await database.dbPool.read { db -> [RuuviTagSensorRecord] in
                 let request = """
                 SELECT *
                 FROM ruuvi_tag_sensor_records rtsr
@@ -187,7 +194,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
     ) async throws -> [RuuviTagSensorRecord] {
         let lastThree = ruuviTagId.lastThreeBytes
         do {
-            let sqliteEntities = try database.dbPool.read { db -> [RuuviTagSensorRecord] in
+            let sqliteEntities = try await database.dbPool.read { db -> [RuuviTagSensorRecord] in
                 let request = """
                 SELECT *
                 FROM ruuvi_tag_sensor_records rtsr
@@ -223,7 +230,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
         let lastThree = ruuviTagId.lastThreeBytes
 
         do {
-            let sqliteEntities = try database.dbPool.read { db -> [RuuviTagSensorRecord] in
+            let sqliteEntities = try await database.dbPool.read { db -> [RuuviTagSensorRecord] in
                 let request = """
                 SELECT *
                 FROM ruuvi_tag_sensor_records rtsr
@@ -256,7 +263,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
     ) async throws -> [RuuviTagSensorRecord] {
         let lastThree = ruuviTagId.lastThreeBytes
         do {
-            let sqliteEntities = try database.dbPool.read { db -> [RuuviTagSensorRecord] in
+            let sqliteEntities = try await database.dbPool.read { db -> [RuuviTagSensorRecord] in
                 let request = """
                 SELECT *
                 FROM ruuvi_tag_sensor_records rtsr
@@ -281,7 +288,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
         from: TimeInterval
     ) async throws -> [RuuviTagSensorRecord] {
         do {
-            let sqliteEntities = try database.dbPool.read { db -> [RuuviTagSensorRecord] in
+            let sqliteEntities = try await database.dbPool.read { db -> [RuuviTagSensorRecord] in
                 let request = Record.order(Record.dateColumn)
                     .filter((Record.luidColumn == ruuviTagId || Record.macColumn == ruuviTagId)
                         && Record.dateColumn > Date(timeIntervalSince1970: from))
@@ -294,18 +301,20 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
     }
 
     public func readLast(_ ruuviTag: RuuviTagSensor) async throws -> RuuviTagSensorRecord? {
+        let luidValue = ruuviTag.luid?.value
+        let macSuffix = ruuviTag.macId?.value.lastThreeBytes
         do {
-            let sqliteRecord = try database.dbPool.read { db -> Record? in
+            let sqliteRecord = try await database.dbPool.read { db -> Record? in
                 let request = Record.order(
                     Record.dateColumn.desc
                 ).filter(
                         (
-                            ruuviTag.luid?.value != nil && Record.luidColumn == ruuviTag.luid?.value
+                            luidValue != nil && Record.luidColumn == luidValue
                         )
                         || (
-                            ruuviTag.macId?.value != nil && Record.macColumn
+                            macSuffix != nil && Record.macColumn
                                 .like(
-                                "%\(ruuviTag.macId!.value.lastThreeBytes)"
+                                "%\(macSuffix!)"
                             )
                         )
                     )
@@ -318,16 +327,18 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
     }
 
     public func readLatest(_ ruuviTag: RuuviTagSensor) async throws -> RuuviTagSensorRecord? {
+        let luidValue = ruuviTag.luid?.value
+        let macSuffix = ruuviTag.macId?.value.lastThreeBytes
         do {
-            let sqliteRecord = try database.dbPool.read { db -> RecordLatest? in
+            let sqliteRecord = try await database.dbPool.read { db -> RecordLatest? in
                 let request = RecordLatest.order(RecordLatest.dateColumn.desc)
                     .filter(
                         (
-                            ruuviTag.luid?.value != nil && RecordLatest.luidColumn == ruuviTag.luid?.value
+                            luidValue != nil && RecordLatest.luidColumn == luidValue
                         )
                         || (
-                            ruuviTag.macId?.value != nil && RecordLatest.macColumn.like(
-                                "%\(ruuviTag.macId!.value.lastThreeBytes)"
+                            macSuffix != nil && RecordLatest.macColumn.like(
+                                "%\(macSuffix!)"
                             )
                         )
                     )
@@ -341,7 +352,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
 
     public func deleteLatest(_ ruuviTagId: String) async throws -> Bool {
         do {
-            let deletedCount = try database.dbPool.write { db -> Int in
+            let deletedCount = try await database.dbPool.write { db -> Int in
                 let request = RecordLatest
                     .filter(RecordLatest.luidColumn == ruuviTagId || RecordLatest.macColumn == ruuviTagId)
                 return try request.deleteAll(db)
@@ -354,9 +365,10 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
 
     public func update(_ ruuviTag: RuuviTagSensor) async throws -> Bool {
         assert(ruuviTag.macId != nil)
+        let sensor = ruuviTag.struct
         do {
-            try database.dbPool.write { db in
-                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+            try await database.dbPool.write { db in
+                let normalizedTag = try self.normalizedSensor(sensor, db: db)
                 let entity = Entity(
                     id: normalizedTag.id,
                     macId: normalizedTag.macId,
@@ -392,9 +404,10 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
 
     public func delete(_ ruuviTag: RuuviTagSensor) async throws -> Bool {
         assert(ruuviTag.macId != nil)
+        let sensor = ruuviTag.struct
         do {
-            let success = try database.dbPool.write { db -> Bool in
-                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+            let success = try await database.dbPool.write { db -> Bool in
+                let normalizedTag = try self.normalizedSensor(sensor, db: db)
                 let entity = Entity(
                     id: normalizedTag.id,
                     macId: normalizedTag.macId,
@@ -423,7 +436,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
 
     public func deleteAllRecords(_ ruuviTagId: String) async throws -> Bool {
         do {
-            let deletedCount = try database.dbPool.write { db -> Int in
+            let deletedCount = try await database.dbPool.write { db -> Int in
                 let request = Record.filter(
                     Record.luidColumn == ruuviTagId || Record.macColumn.like("%\(ruuviTagId.lastThreeBytes)")
                 )
@@ -437,7 +450,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
 
     public func deleteAllRecords(_ ruuviTagId: String, before date: Date) async throws -> Bool {
         do {
-            let deletedCount = try database.dbPool.write { db -> Int in
+            let deletedCount = try await database.dbPool.write { db -> Int in
                 let request = Record.filter(
                     Record.luidColumn == ruuviTagId || Record.macColumn.like("%\(ruuviTagId.lastThreeBytes)")
                 ).filter(Record.dateColumn < date)
@@ -451,7 +464,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
 
     public func getStoredTagsCount() async throws -> Int {
         do {
-            return try database.dbPool.read { db in
+            return try await database.dbPool.read { db in
                 try Entity.fetchCount(db)
             }
         } catch {
@@ -461,7 +474,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
 
     public func getStoredMeasurementsCount() async throws -> Int {
         do {
-            return try database.dbPool.read { db in
+            return try await database.dbPool.read { db in
                 try Record.fetchCount(db)
             }
         } catch {
@@ -470,9 +483,10 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
     }
 
     public func readSensorSettings(_ ruuviTag: RuuviTagSensor) async throws -> SensorSettings? {
+        let sensor = ruuviTag.struct
         do {
-            return try database.dbPool.read { db -> Settings? in
-                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+            return try await database.dbPool.read { db -> Settings? in
+                let normalizedTag = try self.normalizedSensor(sensor, db: db)
                 let request = Settings.filter(
                     (
                         normalizedTag.luid?.value != nil && Settings.luidColumn == normalizedTag.luid?.value
@@ -493,9 +507,10 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
     public func save(
         sensorSettings: SensorSettings
     ) async throws -> SensorSettings {
+        let sqliteSettings = sensorSettings.sqlite
         do {
-            try database.dbPool.write { db in
-                try sensorSettings.sqlite.save(db)
+            try await database.dbPool.write { db in
+                try sqliteSettings.save(db)
             }
             return sensorSettings
         } catch {
@@ -511,9 +526,11 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
         lastOriginalRecord record: RuuviTagSensorRecord?
     ) async throws -> SensorSettings {
         assert(ruuviTag.macId != nil)
+        let sensor = ruuviTag.struct
+        let recordStructValue = record.map { self.recordStruct(from: $0) }
         do {
-            let settings: Settings = try database.dbPool.write { db in
-                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+            let settings: Settings = try await database.dbPool.write { db in
+                let normalizedTag = try self.normalizedSensor(sensor, db: db)
                 var isAddNewRecord = true
                 var sqliteSensorSettings = Settings(
                     luid: normalizedTag.luid,
@@ -552,8 +569,8 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
                     try sqliteSensorSettings.update(db)
                 }
 
-                if let sqliteSensorRecord = record {
-                    let normalizedRecord = try normalizedRecord(sqliteSensorRecord, db: db)
+                if let sqliteSensorRecord = recordStructValue {
+                let normalizedRecord = try self.normalizedRecord(sqliteSensorRecord, db: db)
                     try normalizedRecord.sqlite.insert(db)
                 }
 
@@ -570,9 +587,10 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
         displayOrder: [String]?,
         defaultDisplayOrder: Bool?
     ) async throws -> SensorSettings {
+        let sensor = ruuviTag.struct
         do {
-            let settings: Settings = try database.dbPool.write { db in
-                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+            let settings: Settings = try await database.dbPool.write { db in
+                let normalizedTag = try self.normalizedSensor(sensor, db: db)
                 var seed = Settings(
                     luid: normalizedTag.luid,
                     macId: normalizedTag.macId,
@@ -618,9 +636,10 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
 
     public func deleteOffsetCorrection(ruuviTag: RuuviTagSensor) async throws -> Bool {
         assert(ruuviTag.macId != nil)
+        let sensor = ruuviTag.struct
         do {
-            let success = try database.dbPool.write { db -> Bool in
-                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+            let success = try await database.dbPool.write { db -> Bool in
+                let normalizedTag = try self.normalizedSensor(sensor, db: db)
                 let request = Settings.filter(
                     (
                         normalizedTag.luid?.value != nil && Settings.luidColumn == normalizedTag.luid?.value
@@ -646,25 +665,30 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
     public func deleteSensorSettings(
         _ ruuviTag: RuuviTagSensor
     ) async throws -> Bool {
+        let settingsId = SensorSettingsStruct(
+            luid: ruuviTag.luid,
+            macId: ruuviTag.macId,
+            temperatureOffset: nil,
+            humidityOffset: nil,
+            pressureOffset: nil,
+        ).id
+        let luidValue = ruuviTag.luid?.value
+        let macValue = ruuviTag.macId?.value
+        let macSuffix = macValue?.lastThreeBytes
         do {
-            let deletedCount = try database.dbPool.write { db -> Int in
-                let settingsId = SensorSettingsStruct(
-                    luid: ruuviTag.luid,
-                    macId: ruuviTag.macId,
-                    temperatureOffset: nil,
-                    humidityOffset: nil,
-                    pressureOffset: nil,
-                ).id
-
+            let deletedCount = try await database.dbPool.write { db -> Int in
                 var filter = Settings.idColumn == settingsId
 
-                if let luidValue = ruuviTag.luid?.value {
+                if let luidValue = luidValue {
                     filter = filter || Settings.luidColumn == luidValue
                 }
 
-                if let macValue = ruuviTag.macId?.value {
+                if let macValue = macValue {
                     filter = filter || Settings.macIdColumn == macValue
-                    filter = filter || Settings.macIdColumn.like("%\(macValue.lastThreeBytes)")
+                }
+
+                if let macSuffix = macSuffix {
+                    filter = filter || Settings.macIdColumn.like("%\(macSuffix)")
                 }
 
                 let request = Settings.filter(filter)
@@ -678,7 +702,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
 
     public func cleanupDBSpace() async throws -> Bool {
         do {
-            try database.dbPool.vacuum()
+            try await database.dbPool.vacuum()
             return true
         } catch {
             throw RuuviPersistenceError.grdb(error)
@@ -691,7 +715,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
     public func readQueuedRequests()
     async throws -> [RuuviCloudQueuedRequest] {
         do {
-            let sqliteEntities = try database.dbPool.read { db -> [QueuedRequest] in
+            let sqliteEntities = try await database.dbPool.read { db -> [QueuedRequest] in
                 let request = QueuedRequest.order(QueuedRequest.requestDateColumn)
                 return try request.fetchAll(db)
             }
@@ -759,7 +783,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
             additionalData: request.additionalData
         )
         do {
-            let success = try database.dbPool.write { db -> Bool in
+            let success = try await database.dbPool.write { db -> Bool in
                 try entity.delete(db)
             }
             return success
@@ -771,7 +795,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
     @discardableResult
     public func deleteQueuedRequests() async throws -> Bool {
         do {
-            let deletedCount = try database.dbPool.write { db -> Int in
+            let deletedCount = try await database.dbPool.write { db -> Int in
                 try QueuedRequest.deleteAll(db)
             }
             return deletedCount > 0
@@ -784,9 +808,10 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
     public func save(
         subscription: CloudSensorSubscription
     ) async throws -> CloudSensorSubscription {
+        let sqliteSubscription = subscription.sqlite
         do {
-            try database.dbPool.write { db in
-                try subscription.sqlite.save(db)
+            try await database.dbPool.write { db in
+                try sqliteSubscription.save(db)
             }
             return subscription
         } catch {
@@ -797,9 +822,10 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
     public func readSensorSubscriptionSettings(
         _ ruuviTag: RuuviTagSensor
     ) async throws -> CloudSensorSubscription? {
+        let sensor = ruuviTag.struct
         do {
-            return try database.dbPool.read { db -> CloudSensorSubscription? in
-                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+            return try await database.dbPool.read { db -> CloudSensorSubscription? in
+                let normalizedTag = try self.normalizedSensor(sensor, db: db)
                 let request = SensorSubscription.filter(
                     normalizedTag.macId?.value != nil
                     && SensorSubscription.macIdColumn == normalizedTag.macId?.value
@@ -823,10 +849,11 @@ extension RuuviPersistenceSQLite {
     )
     async throws -> Bool {
         if isCreate {
+            let sqliteRequest = newRequest.sqlite
             do {
-                try database.dbPool.write { db in
-                    assert(newRequest.uniqueKey != nil)
-                    try newRequest.sqlite.insert(db)
+                try await database.dbPool.write { db in
+                    assert(sqliteRequest.uniqueKey != nil)
+                    try sqliteRequest.insert(db)
                 }
                 return true
             } catch {
@@ -850,7 +877,7 @@ extension RuuviPersistenceSQLite {
                 additionalData: newRequest.additionalData
             )
             do {
-                try database.dbPool.write { db in
+                try await database.dbPool.write { db in
                     try entity.update(db)
                 }
                 return true
@@ -860,10 +887,43 @@ extension RuuviPersistenceSQLite {
         }
     }
 
-    private func normalizedSensor(
-        _ sensor: RuuviTagSensor,
+    private nonisolated func recordStruct(from record: RuuviTagSensorRecord) -> RuuviTagSensorRecordStruct {
+        RuuviTagSensorRecordStruct(
+            luid: record.luid,
+            date: record.date,
+            source: record.source,
+            macId: record.macId,
+            rssi: record.rssi,
+            version: record.version,
+            temperature: record.temperature,
+            humidity: record.humidity,
+            pressure: record.pressure,
+            acceleration: record.acceleration,
+            voltage: record.voltage,
+            movementCounter: record.movementCounter,
+            measurementSequenceNumber: record.measurementSequenceNumber,
+            txPower: record.txPower,
+            pm1: record.pm1,
+            pm25: record.pm25,
+            pm4: record.pm4,
+            pm10: record.pm10,
+            co2: record.co2,
+            voc: record.voc,
+            nox: record.nox,
+            luminance: record.luminance,
+            dbaInstant: record.dbaInstant,
+            dbaAvg: record.dbaAvg,
+            dbaPeak: record.dbaPeak,
+            temperatureOffset: record.temperatureOffset,
+            humidityOffset: record.humidityOffset,
+            pressureOffset: record.pressureOffset
+        )
+    }
+
+    private nonisolated func normalizedSensor(
+        _ sensor: RuuviTagSensorStruct,
         db: Database
-    ) throws -> RuuviTagSensor {
+    ) throws -> RuuviTagSensorStruct {
         guard
             let normalizedMac = try normalizedMacId(
                 macId: sensor.macId,
@@ -880,16 +940,16 @@ extension RuuviPersistenceSQLite {
         }
 
         if currentMac.value.isLast3BytesEqual(to: normalizedMac.value) {
-            return sensor.with(macId: normalizedMac)
+            return sensor.with(macId: normalizedMac).struct
         }
 
         return sensor
     }
 
-    private func normalizedRecord(
-        _ record: RuuviTagSensorRecord,
+    private nonisolated func normalizedRecord(
+        _ record: RuuviTagSensorRecordStruct,
         db: Database
-    ) throws -> RuuviTagSensorRecord {
+    ) throws -> RuuviTagSensorRecordStruct {
         guard
             let normalizedMac = try normalizedMacId(
                 macId: record.macId,
@@ -906,13 +966,14 @@ extension RuuviPersistenceSQLite {
         }
 
         if currentMac.value.isLast3BytesEqual(to: normalizedMac.value) {
-            return record.with(macId: normalizedMac)
+            return record.with(macId: normalizedMac) as? RuuviTagSensorRecordStruct
+                ?? recordStruct(from: record.with(macId: normalizedMac))
         }
 
         return record
     }
 
-    private func normalizedMacId(
+    private nonisolated func normalizedMacId(
         macId: MACIdentifier?,
         luid: LocalIdentifier?,
         db: Database
@@ -942,7 +1003,7 @@ extension RuuviPersistenceSQLite {
         return macId
     }
 
-    private func fetchCandidateMacsMatchingSuffix(
+    private nonisolated func fetchCandidateMacsMatchingSuffix(
         of macId: MACIdentifier,
         db: Database
     ) throws -> [MACIdentifier] {

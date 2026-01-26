@@ -122,12 +122,16 @@ class DashboardSettingsService {
 
     func updateDashboardType(_ type: DashboardType) {
         settings.dashboardType = type
-        ruuviAppSettingsService.set(dashboardType: type)
+        syncCloudSetting { service in
+            _ = try await service.set(dashboardType: type)
+        }
     }
 
     func updateDashboardTapAction(_ type: DashboardTapActionType) {
         settings.dashboardTapActionType = type
-        ruuviAppSettingsService.set(dashboardTapActionType: type)
+        syncCloudSetting { service in
+            _ = try await service.set(dashboardTapActionType: type)
+        }
     }
 
     func updateShowFullSensorCardOnDashboardTap(_ show: Bool) {
@@ -136,12 +140,16 @@ class DashboardSettingsService {
 
     func updateSensorOrder(_ orderedIds: [String]) {
         settings.dashboardSensorOrder = orderedIds
-        ruuviAppSettingsService.set(dashboardSensorOrder: orderedIds)
+        syncCloudSetting { service in
+            _ = try await service.set(dashboardSensorOrder: orderedIds)
+        }
     }
 
     func resetSensorOrder() {
         settings.dashboardSensorOrder = []
-        ruuviAppSettingsService.set(dashboardSensorOrder: [])
+        syncCloudSetting { service in
+            _ = try await service.set(dashboardSensorOrder: [])
+        }
     }
 
     func getCurrentDashboardSortingType() -> DashboardSortingType {
@@ -319,6 +327,17 @@ private extension DashboardSettingsService {
         syncMeasurementUnits()
         reloadWidgets()
         delegate?.settingsService(self, languageDidChange: true)
+    }
+}
+
+private extension DashboardSettingsService {
+    func syncCloudSetting(
+        _ update: @escaping (RuuviServiceAppSettings) async throws -> Void
+    ) {
+        let service = ruuviAppSettingsService
+        Task {
+            try? await update(service)
+        }
     }
 }
 

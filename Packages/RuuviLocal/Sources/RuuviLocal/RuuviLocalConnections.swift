@@ -1,12 +1,12 @@
 import Foundation
 import RuuviOntology
 
-public protocol RuuviLocalConnections {
-    var keepConnectionUUIDs: [AnyLocalIdentifier] { get }
+public protocol RuuviLocalConnections: Sendable {
+    func getKeepConnectionUUIDs() async -> [AnyLocalIdentifier]
 
-    func keepConnection(to luid: LocalIdentifier) -> Bool
-    func setKeepConnection(_ value: Bool, for luid: LocalIdentifier)
-    func unpairAllConnection()
+    func keepConnection(to luid: LocalIdentifier) async -> Bool
+    func setKeepConnection(_ value: Bool, for luid: LocalIdentifier) async
+    func unpairAllConnection() async
 }
 
 public extension Notification.Name {

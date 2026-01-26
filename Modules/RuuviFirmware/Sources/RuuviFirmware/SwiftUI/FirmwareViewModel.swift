@@ -99,7 +99,11 @@ extension FirmwareViewModel {
                     .map(Event.onServed)
                     .eraseToAnyPublisher()
             } else {
-                return interactor.serveCurrentRelease(uuid: uuid)
+                let interactor = interactor
+                let uuid = uuid
+                return asyncThrowingPublisher {
+                    try await interactor.serveCurrentRelease(uuid: uuid)
+                }
                     .receive(on: RunLoop.main)
                     .map(Event.onServed)
                     .catch { _ in Just(Event.onServed(nil)) }
@@ -137,7 +141,10 @@ extension FirmwareViewModel {
             else {
                 return Empty().eraseToAnyPublisher()
             }
-            return sSelf.interactor.listen()
+            let interactor = sSelf.interactor
+            return sSelf.asyncPublisher {
+                await interactor.listen()
+            }
                 .receive(on: RunLoop.main)
                 .map { uuid in
                     Event.onHeardRuuviBootDevice(
@@ -159,7 +166,10 @@ extension FirmwareViewModel {
             else {
                 return Empty().eraseToAnyPublisher()
             }
-            return sSelf.interactor.observeLost(uuid: uuid)
+            let interactor = sSelf.interactor
+            return sSelf.asyncPublisher {
+                await interactor.observeLost(uuid: uuid)
+            }
                 .receive(on: RunLoop.main)
                 .map { uuid in
                     Event.onLostRuuviBootDevice(
@@ -393,5 +403,43 @@ extension FirmwareViewModel {
         }
 
         return Array.compareVersions(latest, current) == .orderedDescending
+    }
+}
+
+private extension FirmwareViewModel {
+    func asyncPublisher<T>(_ operation: @escaping () async -> T) -> AnyPublisher<T, Never> {
+        Deferred {
+            let subject = PassthroughSubject<T, Never>()
+            let task = Task {
+                let value = await operation()
+                subject.send(value)
+                subject.send(completion: .finished)
+            }
+            return subject
+                .handleEvents(receiveCancel: { task.cancel() })
+                .eraseToAnyPublisher()
+        }
+        .eraseToAnyPublisher()
+    }
+
+    func asyncThrowingPublisher<T>(
+        _ operation: @escaping () async throws -> T
+    ) -> AnyPublisher<T, Error> {
+        Deferred {
+            let subject = PassthroughSubject<T, Error>()
+            let task = Task {
+                do {
+                    let value = try await operation()
+                    subject.send(value)
+                    subject.send(completion: .finished)
+                } catch {
+                    subject.send(completion: .failure(error))
+                }
+            }
+            return subject
+                .handleEvents(receiveCancel: { task.cancel() })
+                .eraseToAnyPublisher()
+        }
+        .eraseToAnyPublisher()
     }
 }

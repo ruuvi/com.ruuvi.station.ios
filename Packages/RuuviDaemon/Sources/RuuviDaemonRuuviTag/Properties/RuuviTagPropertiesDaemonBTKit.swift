@@ -141,53 +141,60 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
     }
 
     @objc private func tryToUpdate(pair: RuuviTagPropertiesDaemonPair) {
-        if let mac = pair.device.mac, mac != pair.ruuviTag.macId?.value {
+        let ruuviTag = pair.ruuviTag
+        let deviceMac = pair.device.mac
+        let deviceLuid = pair.device.uuid.luid
+        let deviceVersion = pair.device.version
+        let existingMacValue = ruuviTag.macId?.value
+        let existingVersion = ruuviTag.version
+
+        if let deviceMac, deviceMac != existingMacValue {
             // this is the case when data format 3 tag (2.5.9) changes format
             // either by pressing B or by upgrading firmware
-            if let mac = idPersistence.mac(for: pair.device.uuid.luid) {
-                // tag is already saved to SQLite
-                Task { [weak self] in
-                    guard let self else { return }
+            Task { [weak self] in
+                guard let self else { return }
+                if let mac = await idPersistence.mac(for: deviceLuid) {
+                    // tag is already saved to SQLite
                     do {
                         _ = try await ruuviPool.update(
-                            pair.ruuviTag
+                            ruuviTag
                                 .with(macId: mac)
-                                .with(version: pair.device.version)
+                                .with(version: deviceVersion)
                         )
                     } catch let error as RuuviPoolError {
-                        handlePoolFailure(error, ruuviTag: pair.ruuviTag)
+                        handlePoolFailure(error, ruuviTag: ruuviTag)
                     }
                 }
             }
-        } else if pair.ruuviTag.macId?.value != nil, pair.device.mac == nil {
+        } else if existingMacValue != nil, deviceMac == nil {
             // this is the case when 2.5.9 tag is returning to data format 3 mode
             // but we have it in sqlite database already
-            if let mac = idPersistence.mac(for: pair.device.uuid.luid),
-               pair.device.version != pair.ruuviTag.version {
-                Task { [weak self] in
-                    guard let self else { return }
+            Task { [weak self] in
+                guard let self else { return }
+                if let mac = await idPersistence.mac(for: deviceLuid),
+                   deviceVersion != existingVersion {
                     do {
                         _ = try await ruuviPool.update(
-                            pair.ruuviTag
+                            ruuviTag
                                 .with(macId: mac)
-                                .with(version: pair.device.version)
+                                .with(version: deviceVersion)
                         )
                     } catch let error as RuuviPoolError {
-                        handlePoolFailure(error, ruuviTag: pair.ruuviTag)
+                        handlePoolFailure(error, ruuviTag: ruuviTag)
                     }
                 }
             }
         } else {
-            if pair.device.version != pair.ruuviTag.version {
+            if deviceVersion != existingVersion {
                 Task { [weak self] in
                     guard let self else { return }
                     do {
                         _ = try await ruuviPool.update(
-                            pair.ruuviTag
-                                .with(version: pair.device.version)
+                            ruuviTag
+                                .with(version: deviceVersion)
                         )
                     } catch let error as RuuviPoolError {
-                        handlePoolFailure(error, ruuviTag: pair.ruuviTag)
+                        handlePoolFailure(error, ruuviTag: ruuviTag)
                     }
                 }
             }
@@ -202,13 +209,15 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
             else {
                 return
             }
-            if observer.idPersistence.luid(for: macId)?.any != luid.any {
-                observer.idPersistence.set(luid: luid, for: macId)
-                Task { [weak observer] in
-                    guard let observer else { return }
-                    if let sensor = try? await observer.sqiltePersistence.readOne(macId.mac) {
-                        _ = try? await observer.ruuviPool.update(sensor.with(luid: luid))
-                    }
+            let idPersistence = observer.idPersistence
+            let ruuviPool = observer.ruuviPool
+            let sqiltePersistence = observer.sqiltePersistence
+            Task {
+                let existingLuid = await idPersistence.luid(for: macId)
+                guard existingLuid?.any != luid.any else { return }
+                await idPersistence.set(luid: luid, for: macId)
+                if let sensor = try? await sqiltePersistence.readOne(macId.mac) {
+                    _ = try? await ruuviPool.update(sensor.with(luid: luid))
                 }
             }
         })
@@ -248,13 +257,15 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                 sharedTo: ruuviTag.sharedTo,
                 maxHistoryDays: ruuviTag.maxHistoryDays
             )
-            sSelf.idPersistence.set(mac: mac, for: device.uuid.luid)
-            sSelf.idPersistence.set(luid: device.uuid.luid, for: mac)
+            let deviceLuid = device.uuid.luid
+            let tagUuid = tag.uuid
             Task { [weak sSelf] in
                 guard let sSelf else { return }
                 defer {
-                    sSelf.processingUUIDs.remove(tag.uuid)
+                    sSelf.processingUUIDs.remove(tagUuid)
                 }
+                await sSelf.idPersistence.set(mac: mac, for: deviceLuid)
+                await sSelf.idPersistence.set(luid: deviceLuid, for: mac)
                 do {
                     _ = try await sSelf.ruuviPool.update(ruuviSensor)
                 } catch let error as RuuviPoolError {

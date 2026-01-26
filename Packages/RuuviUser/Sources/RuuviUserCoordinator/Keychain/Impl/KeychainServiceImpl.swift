@@ -1,7 +1,7 @@
 import Foundation
 import KeychainAccess
 
-final class KeychainServiceImpl {
+final class KeychainServiceImpl: @unchecked Sendable {
     private let keychain: Keychain = .init(
         service: "com.ruuvi.station",
         accessGroup: "4MUYJ4YYH4.com.ruuvi.station"

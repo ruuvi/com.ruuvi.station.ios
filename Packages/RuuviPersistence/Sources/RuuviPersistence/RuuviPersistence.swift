@@ -1,7 +1,7 @@
 import Foundation
 import RuuviOntology
 
-public protocol RuuviPersistence {
+public protocol RuuviPersistence: Sendable {
     func create(_ ruuviTag: RuuviTagSensor) async throws -> Bool
     func update(_ ruuviTag: RuuviTagSensor) async throws -> Bool
     func delete(_ ruuviTag: RuuviTagSensor) async throws -> Bool

@@ -1,7 +1,7 @@
 import Foundation
 import RuuviOntology
 
-class RuuviLocalIDsUserDefaults: RuuviLocalIDs {
+actor RuuviLocalIDsUserDefaults: RuuviLocalIDs {
     func mac(for luid: LocalIdentifier) -> MACIdentifier? {
         UserDefaults.standard.string(forKey: luid.value)?.mac
     }

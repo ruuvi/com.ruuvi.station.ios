@@ -1,11 +1,11 @@
 import Foundation
 import RuuviOntology
 
-final class RuuviLocalConnectionsUserDefaults: RuuviLocalConnections {
+actor RuuviLocalConnectionsUserDefaults: RuuviLocalConnections {
     private let prefs = UserDefaults.standard
     private let keepConnectionArrayUDKey = "ConnectionPersistenceUserDefaults.keepConnection.array"
 
-    var keepConnectionUUIDs: [AnyLocalIdentifier] {
+    func getKeepConnectionUUIDs() -> [AnyLocalIdentifier] {
         let strings = prefs.array(
             forKey: keepConnectionArrayUDKey
         ) as? [String]
