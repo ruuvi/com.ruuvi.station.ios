@@ -71,6 +71,7 @@ extension OwnerViewController: OwnerViewInput {
     }
 
     func localize() {
+        // No op.
         switch mode {
         case .claim:
             title = RuuviLocalization.Owner.title
