@@ -260,6 +260,7 @@ final class CardsBaseViewController: UIViewController {
         setUpUI()
         startObservingAppState()
         TimestampUpdateService.shared.addSubscriber(self)
+        updateCurrentSnapshotUI()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -441,6 +442,7 @@ private extension CardsBaseViewController {
         tabContainerBottomToViewConstraint.isActive = false
     }
 
+    // swiftlint:disable:next function_body_length
     func setUpFooterView() {
         view.addSubview(footerView)
         footerView.anchor(
@@ -656,6 +658,7 @@ private extension CardsBaseViewController {
         for tab: CardsMenuType,
         animated: Bool
     ) {
+        guard isViewLoaded else { return }
         let hasSnapshot = currentSnapshotIndex < currentSnapshots.count
         guard flags.showNewCardsMenu else {
             footerView.isHidden = !hasSnapshot
