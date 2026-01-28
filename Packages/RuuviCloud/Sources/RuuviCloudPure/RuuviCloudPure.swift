@@ -848,14 +848,17 @@ public final class RuuviCloudPure: RuuviCloud {
         api.sensorsDense(request, authorization: apiKey)
             .on(success: { [weak self] response in
                 let arrayOfAny = response.sensors?.compactMap { sensor in
+                    let ownerEmail = sensor.owner.lowercased()
+                    let userEmail = self?.user.email?.lowercased()
+                    let isOwner = ownerEmail == userEmail
                     RuuviCloudSensorDense(
                         sensor: CloudSensorStruct(
                             id: sensor.sensor,
                             serviceUUID: nil,
                             name: sensor.name,
                             isClaimed: true,
-                            isOwner: sensor.owner == self?.user.email,
-                            owner: sensor.owner,
+                            isOwner: isOwner,
+                            owner: ownerEmail,
                             ownersPlan: sensor.subscription?.subscriptionName,
                             picture: URL(string: sensor.picture),
                             offsetTemperature: sensor.offsetTemperature,
