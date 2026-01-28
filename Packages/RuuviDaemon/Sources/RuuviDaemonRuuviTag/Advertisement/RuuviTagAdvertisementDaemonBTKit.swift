@@ -21,6 +21,9 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     private var ruuviTags = [AnyRuuviTagSensor]()
     private var sensorSettingsList = [SensorSettings]()
     private var savedDate = [String: Date]() // uuid:date
+    private var tagsByMac = [String: AnyRuuviTagSensor]()
+    private var tagsByLuid = [String: AnyRuuviTagSensor]()
+    private var hasLatestByUuid = [String: Bool]() // uuid: known latest exists
     private var isOnToken: NSObjectProtocol?
     private var cloudModeOnToken: NSObjectProtocol?
     private var daemonRestartToken: NSObjectProtocol?
@@ -113,17 +116,25 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
                 case let .initial(ruuviTags):
                     sSelf.ruuviTags = ruuviTags
                     sSelf.reloadSensorSettings()
+                    sSelf.rebuildTagCaches()
+                    sSelf.syncHasLatestCache()
                     sSelf.restartObserving()
                 case let .update(ruuviTag):
                     if let index = sSelf.ruuviTags.firstIndex(of: ruuviTag) {
                         sSelf.ruuviTags[index] = ruuviTag
                     }
+                    sSelf.rebuildTagCaches()
+                    sSelf.syncHasLatestCache()
                     sSelf.restartObserving()
                 case let .insert(ruuviTag):
                     sSelf.ruuviTags.append(ruuviTag)
+                    sSelf.rebuildTagCaches()
+                    sSelf.syncHasLatestCache()
                     sSelf.restartObserving()
                 case let .delete(ruuviTag):
                     sSelf.ruuviTags.removeAll(where: { $0.id == ruuviTag.id })
+                    sSelf.rebuildTagCaches()
+                    sSelf.syncHasLatestCache()
                     sSelf.restartObserving()
                 case let .error(error):
                     sSelf.post(error: .ruuviReactor(error))
@@ -145,6 +156,8 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     public func restart() {
         ruuviStorage.readAll().on(success: { [weak self] sensors in
             self?.ruuviTags = sensors
+            self?.rebuildTagCaches()
+            self?.syncHasLatestCache()
             self?.restartObserving()
         })
     }
@@ -155,6 +168,9 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         sensorSettingsTokens.forEach { $0.invalidate() }
         sensorSettingsTokens.removeAll()
         ruuviTagsToken?.invalidate()
+        tagsByMac.removeAll()
+        tagsByLuid.removeAll()
+        hasLatestByUuid.removeAll()
         stopWork()
     }
 
@@ -167,6 +183,48 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
                 }
             }
         }
+    }
+
+    private func rebuildTagCaches() {
+        tagsByMac.removeAll()
+        tagsByLuid.removeAll()
+        for ruuviTag in ruuviTags {
+            if let macValue = ruuviTag.macId?.value {
+                tagsByMac[macValue] = ruuviTag
+            }
+            if let luidValue = ruuviTag.luid?.value {
+                tagsByLuid[luidValue] = ruuviTag
+            }
+        }
+    }
+
+    private func syncHasLatestCache() {
+        let currentIds = Set(ruuviTags.map { $0.id })
+        hasLatestByUuid.keys
+            .filter { !currentIds.contains($0) }
+            .forEach { hasLatestByUuid.removeValue(forKey: $0) }
+        for ruuviTag in ruuviTags where hasLatestByUuid[ruuviTag.id] == nil {
+            prefetchLatest(for: ruuviTag)
+        }
+    }
+
+    private func prefetchLatest(for ruuviTag: AnyRuuviTagSensor) {
+        let uuid = ruuviTag.id
+        ruuviStorage.readLatest(ruuviTag).on(success: { [weak self] localRecord in
+            if localRecord != nil {
+                self?.hasLatestByUuid[uuid] = true
+            }
+        })
+    }
+
+    private func tagExists(for record: RuuviTag) -> Bool {
+        if let macValue = record.mac, tagsByMac[macValue] != nil {
+            return true
+        }
+        if let luidValue = record.luid?.value, tagsByLuid[luidValue] != nil {
+            return true
+        }
+        return false
     }
 
     // swiftlint:disable:next cyclomatic_complexity
@@ -280,23 +338,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     }
 
     private func persist(_ record: RuuviTag, _ uuid: String) {
-        let tagExists = ruuviTags.contains { tagSensor in
-            if let tagMacId = tagSensor.macId?.value,
-               let recordMac = record.mac,
-               tagMacId == recordMac {
-                return true
-            }
-            if let tagLuid = tagSensor.luid?.any,
-               let recordLuid = record.luid?.any,
-               tagLuid == recordLuid {
-                return true
-            }
-            return false
-        }
-
-        guard tagExists else {
-            return
-        }
+        guard tagExists(for: record) else { return }
 
         // Do not store advertisement for history only if it is v6 firmware and legacy advertisement.
         if record.version == 0x06 {
@@ -319,6 +361,8 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
                 switch persistenceError {
                 case .failedToFindRuuviTag:
                     self?.ruuviTags.removeAll(where: { $0.id == uuid })
+                    self?.rebuildTagCaches()
+                    self?.syncHasLatestCache()
                     self?.restartObserving()
                 default:
                     break
@@ -329,25 +373,37 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     }
 
     private func createLatestRecord(with record: RuuviTag) {
-        if let ruuviTag = ruuviTags.first(where: {
-            if let luid = $0.luid?.value, let recordLuid = record.luid?.value,
-               luid == recordLuid {
-                true
-            } else {
-                false
+        guard let recordLuid = record.luid?.value,
+              let ruuviTag = tagsByLuid[recordLuid] else { return }
+        let uuid = record.uuid
+        let updateLatest: () -> Void = { [weak self] in
+            guard let self else { return }
+            var advertisement: RuuviTagSensorRecord = record.with(source: .advertisement)
+            if let macId = ruuviTag.macId {
+                advertisement = advertisement.with(macId: macId)
             }
-        }) {
-            ruuviStorage.readLatest(ruuviTag).on(success: { [weak self] localRecord in
-                guard localRecord != nil
-                else {
-                    self?.ruuviPool.createLast(record)
-                    return
+            self.ruuviPool.updateLast(advertisement).on(success: { [weak self] _ in
+                self?.hasLatestByUuid[uuid] = true
+            }, failure: { [weak self] _ in
+                self?.hasLatestByUuid.removeValue(forKey: uuid)
+            })
+        }
+        let createLatest: () -> Void = { [weak self] in
+            self?.ruuviPool.createLast(record).on(success: { [weak self] _ in
+                self?.hasLatestByUuid[uuid] = true
+            }, failure: { [weak self] _ in
+                self?.hasLatestByUuid.removeValue(forKey: uuid)
+            })
+        }
+        if hasLatestByUuid[uuid] == true {
+            updateLatest()
+        } else {
+            ruuviStorage.readLatest(ruuviTag).on(success: { localRecord in
+                if localRecord != nil {
+                    updateLatest()
+                } else {
+                    createLatest()
                 }
-                var advertisement: RuuviTagSensorRecord = record.with(source: .advertisement)
-                if let macId = ruuviTag.macId {
-                    advertisement = advertisement.with(macId: macId)
-                }
-                self?.ruuviPool.updateLast(advertisement)
             })
         }
     }

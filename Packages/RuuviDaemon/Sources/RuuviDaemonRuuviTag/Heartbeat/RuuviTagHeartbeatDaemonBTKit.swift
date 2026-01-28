@@ -26,6 +26,11 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
 
     private var ruuviTags = [AnyRuuviTagSensor]()
     private var sensorSettingsList = [SensorSettings]()
+    private var tagsByMac = [String: AnyRuuviTagSensor]()
+    private var tagsByMacAny = [AnyMACIdentifier: AnyRuuviTagSensor]()
+    private var tagsByLuid = [String: AnyRuuviTagSensor]()
+    private var sensorSettingsByMacAny = [AnyMACIdentifier: SensorSettings]()
+    private var sensorSettingsByLuid = [String: SensorSettings]()
     private var observeTokens = [ObservationToken]()
     private var connectTokens = [String: ObservationToken]()
     private var disconnectTokens = [String: ObservationToken]()
@@ -179,17 +184,21 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
                 switch change {
                 case let .initial(ruuviTags):
                     sSelf.ruuviTags = ruuviTags
+                    sSelf.rebuildTagCaches()
                     sSelf.handleRuuviTagsChange()
                 case let .update(ruuviTag):
                     if let index = sSelf.ruuviTags.firstIndex(of: ruuviTag) {
                         sSelf.ruuviTags[index] = ruuviTag
                     }
+                    sSelf.rebuildTagCaches()
                     sSelf.handleRuuviTagsChange()
                 case let .insert(ruuviTag):
                     sSelf.ruuviTags.append(ruuviTag)
+                    sSelf.rebuildTagCaches()
                     sSelf.handleRuuviTagsChange()
                 case let .delete(ruuviTag):
                     sSelf.ruuviTags.removeAll(where: { $0.id == ruuviTag.id })
+                    sSelf.rebuildTagCaches()
                     sSelf.handleRuuviTagsChange()
                 case let .error(error):
                     sSelf.post(error: .ruuviReactor(error))
@@ -211,6 +220,7 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
     public func restart() {
         ruuviStorage.readAll().on(success: { [weak self] sensors in
             self?.ruuviTags = sensors
+            self?.rebuildTagCaches()
             self?.handleRuuviTagsChange()
             self?.restartObserving()
         })
@@ -279,18 +289,8 @@ extension RuuviTagHeartbeatDaemonBTKit {
 
     /// Processes a RuuviTag for alerts and record creation based on settings.
     private func processRuuviTag(_ ruuviTag: RuuviTag, source: RuuviTagSensorRecordSource) {
-        var sensorSettings: SensorSettings?
-        if let ruuviTagSensor = ruuviTags.first(where: {
-            ($0.macId?.any == ruuviTag.macId?.any && ruuviTag.macId?.any != nil) ||
-            ($0.luid?.any == ruuviTag.luid?.any && ruuviTag.luid?.any != nil)
-        }) {
-            if let settings = sensorSettingsList.first(where: {
-                ($0.macId?.any == ruuviTagSensor.macId?.any && ruuviTagSensor.macId?.any != nil) ||
-                ($0.luid?.any == ruuviTagSensor.luid?.any && ruuviTagSensor.luid?.any != nil)
-            }) {
-                sensorSettings = settings
-            }
-        }
+        let sensorSettings: SensorSettings? = cachedRuuviTagSensor(for: ruuviTag)
+            .flatMap { cachedSensorSettings(for: $0) }
         alertHandler.process(
             record: ruuviTag.with(sensorSettings: sensorSettings).with(source: source),
             trigger: true
@@ -333,23 +333,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
     ) {
         guard !uuid.isEmpty else { return }
 
-        let tagExists = ruuviTags.contains { tagSensor in
-            if let tagMacId = tagSensor.macId?.value,
-               let ruuviTagMac = ruuviTag.mac,
-               tagMacId == ruuviTagMac {
-                return true
-            }
-            if let tagLuid = tagSensor.luid?.any,
-               let ruuviTagLuid = ruuviTag.luid?.any,
-               tagLuid == ruuviTagLuid {
-                return true
-            }
-            return false
-        }
-
-        guard tagExists else {
-            return
-        }
+        guard tagExists(for: ruuviTag) else { return }
 
         // Check for duplicate sequence number
         let measurementSequenceNumber = ruuviTag.measurementSequenceNumber
@@ -409,8 +393,77 @@ extension RuuviTagHeartbeatDaemonBTKit {
 // MARK: - Private
 
 extension RuuviTagHeartbeatDaemonBTKit {
+    private func rebuildTagCaches() {
+        tagsByMac.removeAll()
+        tagsByMacAny.removeAll()
+        tagsByLuid.removeAll()
+        for ruuviTag in ruuviTags {
+            if let macValue = ruuviTag.macId?.value {
+                tagsByMac[macValue] = ruuviTag
+            }
+            if let macAny = ruuviTag.macId?.any {
+                if tagsByMacAny[macAny] == nil {
+                    tagsByMacAny[macAny] = ruuviTag
+                }
+            }
+            if let luidValue = ruuviTag.luid?.value {
+                tagsByLuid[luidValue] = ruuviTag
+            }
+        }
+    }
+
+    private func rebuildSensorSettingsCaches() {
+        sensorSettingsByMacAny.removeAll()
+        sensorSettingsByLuid.removeAll()
+        sensorSettingsList.forEach { settings in
+            if let macAny = settings.macId?.any, sensorSettingsByMacAny[macAny] == nil {
+                sensorSettingsByMacAny[macAny] = settings
+            }
+            if let luidValue = settings.luid?.value, sensorSettingsByLuid[luidValue] == nil {
+                sensorSettingsByLuid[luidValue] = settings
+            }
+        }
+    }
+
+    private func cachedRuuviTagSensor(for ruuviTag: RuuviTag) -> AnyRuuviTagSensor? {
+        if let macAny = ruuviTag.macId?.any,
+           let cached = tagsByMacAny[macAny] {
+            return cached
+        }
+        if let luidValue = ruuviTag.luid?.value,
+           let cached = tagsByLuid[luidValue] {
+            return cached
+        }
+        return nil
+    }
+
+    private func cachedSensorSettings(for ruuviTagSensor: AnyRuuviTagSensor) -> SensorSettings? {
+        if let macAny = ruuviTagSensor.macId?.any,
+           let cached = sensorSettingsByMacAny[macAny] {
+            return cached
+        }
+        if let luidValue = ruuviTagSensor.luid?.value,
+           let cached = sensorSettingsByLuid[luidValue] {
+            return cached
+        }
+        return nil
+    }
+
+    private func tagExists(for ruuviTag: RuuviTag) -> Bool {
+        if let macValue = ruuviTag.mac,
+           tagsByMac[macValue] != nil {
+            return true
+        }
+        if let luidValue = ruuviTag.luid?.value,
+           tagsByLuid[luidValue] != nil {
+            return true
+        }
+        return false
+    }
+
     /// Updates connections and observations based on changes in Ruuvi tags.
     private func handleRuuviTagsChange() {
+        rebuildTagCaches()
         for luid in connectionPersistence.keepConnectionUUIDs {
             let isRuuviTagPresent = ruuviTags.contains { $0.luid?.any == luid }
             if isRuuviTagPresent && !connectTokens.keys.contains(luid.value) {
@@ -420,10 +473,12 @@ extension RuuviTagHeartbeatDaemonBTKit {
             }
         }
         sensorSettingsList.removeAll()
+        rebuildSensorSettingsCaches()
         ruuviTags.forEach { ruuviTag in
             ruuviStorage.readSensorSettings(ruuviTag).on { [weak self] sensorSettings in
                 if let sensorSettings {
                     self?.sensorSettingsList.append(sensorSettings)
+                    self?.rebuildSensorSettingsCaches()
                 }
             }
         }
@@ -558,6 +613,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                         self.updateSensorSettings(ruuviTagSensor, updateSensorSettings)
                     case let .insert(sensorSettings):
                         self.sensorSettingsList.append(sensorSettings)
+                        self.rebuildSensorSettingsCaches()
                         if let luid = ruuviTagSensor.luid?.value {
                             savedDateQueue.async { [weak self] in
                                 self?.savedDate.removeValue(forKey: luid)
@@ -568,6 +624,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
                             $0.id == deleteSensorSettings.id
                         }) {
                             self.sensorSettingsList.remove(at: deleteIndex)
+                            self.rebuildSensorSettingsCaches()
                         }
                     default:
                         break
@@ -583,6 +640,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
         } else {
             sensorSettingsList.append(sensorSettings)
         }
+        rebuildSensorSettingsCaches()
         if let luid = ruuviTagSensor.luid?.value {
             savedDateQueue.async { [weak self] in
                 self?.savedDate.removeValue(forKey: luid)
