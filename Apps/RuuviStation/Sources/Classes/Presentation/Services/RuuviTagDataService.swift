@@ -715,7 +715,7 @@ private extension RuuviTagDataService {
         }
     }
 
-    // swiftlint:disable:next function_body_length cyclomatic_complexity
+    // swiftlint:disable:next function_body_length
     private func updateMeasurementDisplayPreference(
         for sensor: AnyRuuviTagSensor,
         settings: SensorSettings?

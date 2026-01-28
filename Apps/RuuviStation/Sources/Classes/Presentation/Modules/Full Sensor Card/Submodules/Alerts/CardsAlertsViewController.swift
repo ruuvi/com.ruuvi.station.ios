@@ -55,7 +55,7 @@ extension CardsAlertsViewController: CardsAlertsViewInput {
 
 // MARK: - UITextFieldDelegate
 extension CardsAlertsViewController: UITextFieldDelegate {
-    // swiftlint:disable:next cyclomatic_complexity
+
     func textField(
         _ textField: UITextField,
         shouldChangeCharactersIn range: NSRange,

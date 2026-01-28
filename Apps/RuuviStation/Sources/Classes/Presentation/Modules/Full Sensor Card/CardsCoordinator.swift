@@ -63,7 +63,6 @@ class CardsCoordinator: RuuviCoordinator {
         self.delegate = delegate
     }
 
-    // swiftlint:disable:next function_body_length
     override func start() {
         super.start()
 
