@@ -510,6 +510,7 @@ private extension CardsBaseViewController {
         if flags.showNewCardsMenu {
             for (tab, vc) in tabs {
                 addChild(vc)
+                vc.view.overrideUserInterfaceStyle = .dark
                 tabContainerView.addSubview(vc.view)
                 if tab == .measurement || tab == .graph {
                     vc.view.fillSuperviewToSafeArea()
@@ -523,6 +524,7 @@ private extension CardsBaseViewController {
             for (tab, vc) in tabs {
                 if tab == .settings { continue }
                 addChild(vc)
+                vc.view.overrideUserInterfaceStyle = .unspecified
                 tabContainerView.addSubview(vc.view)
                 vc.view.fillSuperviewToSafeArea()
                 vc.didMove(toParent: self)
