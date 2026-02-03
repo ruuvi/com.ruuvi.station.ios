@@ -60,6 +60,8 @@ class CardsGraphPresenter: NSObject {
             output?.setGraphGattSyncInProgress(isSyncing)
         }
     }
+    private var isLoadingHistory: Bool = false
+    private var shouldRefreshEmptyStateAfterLoad: Bool = false
     private var lastSyncSnapshotDate = Date()
     private var lastChartSyncDate = Date()
     private var datasource: [RuuviGraphViewDataModel] = []
@@ -205,6 +207,8 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
     }
 
     func reloadChartsData(shouldSyncFromCloud: Bool) {
+        isLoadingHistory = true
+        view?.setChartLoading(hideCharts: false)
         if let sensor {
             interactor?.configure(
                 withTag: sensor,
@@ -407,11 +411,13 @@ extension CardsGraphPresenter {
         newSnapshot: RuuviTagCardSnapshot
     ) {
         guard previousSnapshotId != newSnapshot.id else { return }
+        invalidatePendingChartComputation()
         pendingMeasurements.removeAll()
         newpoints.removeAll()
 
         if !applyCachedChartIfAvailable(for: newSnapshot) {
             clearChartStateForNewSensor()
+            view?.setChartLoading(hideCharts: true)
         }
     }
 
@@ -435,6 +441,8 @@ extension CardsGraphPresenter {
         )
         datasource = models
         view?.createChartViews(from: chartModules)
+        let hasData = restoredEntries.contains(where: { !$0.value.isEmpty })
+        view?.setHasChartData(hasData)
         view?.setChartViewData(from: models, settings: settings)
         if let lastMeasurement = ruuviTagData.last {
             updateLatestMeasurement(lastMeasurement)
@@ -726,6 +734,8 @@ extension CardsGraphPresenter {
     }
 
     private func reloadChartsWithSensorSettingsChanges() {
+        isLoadingHistory = true
+        view?.setChartLoading(hideCharts: false)
         interactor?.restartObservingData()
     }
 
@@ -737,6 +747,11 @@ extension CardsGraphPresenter {
 }
 
 extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
+    func interactorDidFinishLoadingHistory() {
+        isLoadingHistory = false
+        shouldRefreshEmptyStateAfterLoad = true
+    }
+
     func updateLatestRecord(_ record: RuuviTagSensorRecord) {
         // No op.
     }
@@ -746,6 +761,9 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         let filtered = filteredVariants(from: from)
         chartModules = filtered.isEmpty ? from : filtered
         view?.createChartViews(from: chartModules)
+        if chartModules.isEmpty, !isLoadingHistory {
+            view?.setHasChartData(false)
+        }
         if let pending = pendingScrollRequest {
             scroll(to: pending.type, variant: pending.variant)
         }
@@ -761,8 +779,14 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         let newFingerprint = MeasurementFingerprint(measurements: newMeasurements)
         ruuviTagData = newMeasurements
         if newFingerprint == currentFingerprint {
+            if shouldRefreshEmptyStateAfterLoad {
+                let hasData = !datasource.isEmpty
+                view?.setHasChartData(hasData)
+                shouldRefreshEmptyStateAfterLoad = false
+            }
             return
         }
+        shouldRefreshEmptyStateAfterLoad = false
         rebuildChartData(updateView: true)
     }
 
@@ -788,6 +812,9 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
             firstEntry: ruuviTagData.first,
             settings: settings
         )
+        if !newValues.isEmpty {
+            view?.setHasChartData(true)
+        }
 
         // Update the latest measurement label.
         if let lastMeasurement = newValues.last {
@@ -828,6 +855,7 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
             if updateView {
                 view?.setChartViewData(from: [], settings: settings)
             }
+            view?.setHasChartData(false)
             cacheCurrentChartData(entries: [:], measurements: measurements)
             return
         }
@@ -849,7 +877,11 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
                 guard let self,
                       generation == self.chartDataGeneration else { return }
                 self.datasource = models
-                if updateView {
+                let hasData = chartEntries.contains(where: { !$0.value.isEmpty })
+                if !self.isLoadingHistory || hasData {
+                    self.view?.setHasChartData(hasData)
+                }
+                if updateView, !self.isLoadingHistory || !models.isEmpty {
                     self.view?.setChartViewData(from: models, settings: self.settings)
                     if let lastMeasurement = measurements.last {
                         self.updateLatestMeasurement(lastMeasurement)

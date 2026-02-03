@@ -7,4 +7,5 @@ protocol CardsGraphViewInteractorOutput: AnyObject {
     func interactorDidError(_ error: RUError)
     func createChartModules(from: [MeasurementDisplayVariant])
     func interactorDidUpdate(sensor: AnyRuuviTagSensor)
+    func interactorDidFinishLoadingHistory()
 }

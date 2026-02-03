@@ -89,6 +89,7 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
         sensorSettings = settings
         lastMeasurement = nil
         lastMeasurementRecord = nil
+        ruuviTagData.removeAll()
         restartScheduler()
         fetchLast()
 
@@ -99,7 +100,8 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             self?.fetchPoints { [weak self] in
                 guard let self else { return }
-                presenter.interactorDidUpdate(sensor: ruuviTagSensor)
+                self.presenter.interactorDidFinishLoadingHistory()
+                self.presenter.interactorDidUpdate(sensor: self.ruuviTagSensor)
             }
         }
     }
@@ -111,8 +113,10 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
     func restartObservingData() {
         ruuviTagData.removeAll()
         fetchPoints { [weak self] in
-            self?.restartScheduler()
-            self?.reloadCharts()
+            guard let self else { return }
+            self.presenter.interactorDidFinishLoadingHistory()
+            self.restartScheduler()
+            self.reloadCharts()
         }
     }
 
