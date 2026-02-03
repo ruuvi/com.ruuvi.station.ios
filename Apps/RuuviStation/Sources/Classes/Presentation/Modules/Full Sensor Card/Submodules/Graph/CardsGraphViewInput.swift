@@ -33,6 +33,8 @@ protocol CardsGraphViewInput: ViewInput {
         _ entries: [MeasurementDisplayVariant: ChartDataEntry?],
         settings: RuuviLocalSettings
     )
+    func setHasChartData(_ hasData: Bool)
+    func setChartLoading(hideCharts: Bool)
     func showClearConfirmationDialog(for snapshot: RuuviTagCardSnapshot)
     func setSync(progress: BTServiceProgress?, for snapshot: RuuviTagCardSnapshot)
     func setSyncProgressViewHidden()

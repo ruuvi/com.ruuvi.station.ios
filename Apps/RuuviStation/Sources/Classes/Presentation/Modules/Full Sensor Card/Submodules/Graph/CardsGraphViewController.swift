@@ -230,9 +230,10 @@ class CardsGraphViewController: UIViewController {
     private let maximumHistoryLimit: Int = 10 // Days
     private let highlightAnimationDelay: TimeInterval = 0.3
 
-    private var chartViewData: [RuuviGraphViewDataModel] = []
     private var settings: RuuviLocalSettings!
     private var shouldHighlightOnScroll = false
+    private var hasChartData: Bool?
+    private var shouldHideChartsForLoading = false
 
     // MARK: - LIFECYCLE
 
@@ -240,18 +241,13 @@ class CardsGraphViewController: UIViewController {
         super.viewDidLoad()
         setUpUI()
         localize()
+        applyHasChartDataState()
         output?.viewDidLoad()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        hideNoDataLabel()
         output?.viewWillAppear()
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        hideNoDataLabel()
     }
 
     override func viewDidLayoutSubviews() {
@@ -409,7 +405,7 @@ class CardsGraphViewController: UIViewController {
             trailing: view.safeRightAnchor
         )
         noDataLabel.centerYInSuperview()
-        noDataLabel.alpha = 0
+        noDataLabel.alpha = hasChartData == false ? 1 : 0
     }
 
     private func configureViews() {
@@ -712,13 +708,11 @@ extension CardsGraphViewController: CardsGraphViewInput {
         self.settings = settings
         if chartViewData.isEmpty {
             clearChartData()
-            showNoDataLabel()
             hideChartViews()
             return
         }
 
         clearChartData()
-        hideNoDataLabel()
         showChartViews()
 
         for data in chartViewData {
@@ -748,7 +742,6 @@ extension CardsGraphViewController: CardsGraphViewInput {
         settings: RuuviLocalSettings
     ) {
         self.settings = settings
-        hideNoDataLabel()
         showChartViews()
 
         entries.forEach { variant, dataEntries in
@@ -775,6 +768,24 @@ extension CardsGraphViewController: CardsGraphViewInput {
                 type: variant.type,
                 measurementService: measurementService
             )
+        }
+    }
+
+    func setHasChartData(_ hasData: Bool) {
+        hasChartData = hasData
+        shouldHideChartsForLoading = false
+        guard isViewLoaded else { return }
+        applyHasChartDataState()
+    }
+
+    func setChartLoading(hideCharts: Bool) {
+        hasChartData = nil
+        hideNoDataLabel()
+        if hideCharts {
+            shouldHideChartsForLoading = true
+            hideChartViews()
+        } else {
+            shouldHideChartsForLoading = false
         }
     }
 
@@ -974,13 +985,10 @@ extension CardsGraphViewController {
         withAnimation: Bool = false
     ) {
         if variants.isEmpty {
-            noDataLabel.alpha = 1
             chartViews.removeAll()
             hideChartViews()
             return
         }
-
-        noDataLabel.alpha = 0
 
         guard viewIsVisible, scrollView.frame.height > 0 else {
             needsDeferredLayoutUpdate = true
@@ -996,9 +1004,10 @@ extension CardsGraphViewController {
         let scrollViewHeight = scrollView.frame.height
         let itemCount = variants.count
 
+        let shouldShowCharts = !shouldHideChartsForLoading && (hasChartData ?? true)
         variants.forEach { variant in
             let view = chartView(for: variant)
-            view.isHidden = false
+            view.isHidden = !shouldShowCharts
             updateChartViewHeight(
                 for: variant,
                 totalHeight: scrollViewHeight,
@@ -1239,6 +1248,17 @@ extension CardsGraphViewController {
     private func showChartViews() {
         chartViews.forEach {
             $0.isHidden = false
+        }
+    }
+
+    private func applyHasChartDataState() {
+        guard let hasData = hasChartData else { return }
+        if hasData {
+            hideNoDataLabel()
+            showChartViews()
+        } else {
+            showNoDataLabel()
+            hideChartViews()
         }
     }
 
