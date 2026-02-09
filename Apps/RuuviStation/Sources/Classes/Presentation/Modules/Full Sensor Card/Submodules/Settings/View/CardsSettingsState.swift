@@ -442,16 +442,12 @@ private extension CardsSettingsState {
     static func shouldShowLedBrightness(
         for snapshot: RuuviTagCardSnapshot
     ) -> Bool {
-        // TODO: Enable this later. Disabled for v3.3
-        /*
         let format = RuuviDataFormat.dataFormat(
             from: snapshot.displayData.version.bound
         )
         let ruuviDeviceType: RuuviDeviceType =
             format == .e1 || format == .v6 ? .ruuviAir : .ruuviTag
         return ruuviDeviceType == .ruuviAir
-         */
-        return false
     }
 
     static func calculateShareSummary(
