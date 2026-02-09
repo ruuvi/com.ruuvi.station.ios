@@ -22,10 +22,6 @@ public final class WidgetViewModel: ObservableObject {
 
 public extension WidgetViewModel {
     func fetchRuuviTags(completion: @escaping ([RuuviCloudSensorDense]) -> Void) {
-        guard isAuthorized(), hasCloudSensors()
-        else {
-            return
-        }
         foceRefreshWidget(false)
         ruuviCloud.loadSensorsDense(
             for: nil,
@@ -37,6 +33,8 @@ public extension WidgetViewModel {
         ).on(success: { sensors in
             let sensorsWithRecord = sensors.filter { $0.record != nil }
             completion(sensorsWithRecord)
+        }, failure: { _ in
+            completion([])
         })
     }
 }

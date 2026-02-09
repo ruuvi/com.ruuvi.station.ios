@@ -83,6 +83,7 @@ let package = Package(
                 "RuuviDaemon",
                 "RuuviDaemonOperation",
                 "RuuviNotification",
+                "RuuviLocal",
             ]
         ),
         .testTarget(
