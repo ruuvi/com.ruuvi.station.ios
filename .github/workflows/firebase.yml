@@ -16,7 +16,7 @@ on:
 jobs:
   build:
     if: (github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true)
-    runs-on: macos-latest
+    runs-on: macos-15
 
     steps:
       - uses: maxim-lobanov/setup-xcode@v1
@@ -79,17 +79,23 @@ jobs:
         run: |
           make xcodeproj
 
-      - name: Resolve Swift Packages
-        run: |
-          xcodebuild -resolvePackageDependencies
-
       - name: SPM Cache
         uses: actions/cache@v4
         with:
-          path: ~/Library/Developer/Xcode/DerivedData/Ruuvi*/SourcePackages/
-          key: ${{ runner.os }}-Ruuvi-${{ hashFiles('Ruuvi.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
+          path: |
+            ${{ runner.temp }}/spm
+            ~/Library/Caches/org.swift.swiftpm
+            ~/.swiftpm
+          key: ${{ runner.os }}-swiftpm-${{ hashFiles('Ruuvi.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved') }}
           restore-keys: |
-            ${{ runner.os }}-Ruuvi-
+            ${{ runner.os }}-swiftpm-
+
+      - name: Resolve Swift Packages
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project Ruuvi.xcodeproj \
+            -scheme station \
+            -clonedSourcePackagesDirPath ${{ runner.temp }}/spm
 
       - name: Build app
         run: |
@@ -100,6 +106,8 @@ jobs:
               -archivePath ./Build/Station_Dev.xcarchive \
               -sdk iphoneos \
               -destination 'generic/platform=iOS' \
+              -clonedSourcePackagesDirPath ${{ runner.temp }}/spm \
+              -disableAutomaticPackageResolution \
               archive \
               -allowProvisioningUpdates \
               -quiet
