@@ -894,7 +894,8 @@ public final class RuuviCloudPure: RuuviCloud {
                             isCloudSensor: true,
                             canShare: sensor.canShare,
                             sharedTo: sensor.sharedTo ?? [],
-                            maxHistoryDays: sensor.subscription?.maxHistoryDays
+                            maxHistoryDays: sensor.subscription?.maxHistoryDays,
+                            lastUpdated: sensor.lastUpdatedDate
                         ),
                         record: self?.decodeSensorRecord(
                             macId: sensor.sensor.mac,
@@ -905,7 +906,9 @@ public final class RuuviCloudPure: RuuviCloud {
                         settings: sensor.settings.map {
                             RuuviCloudSensorSettings(
                                 displayOrderCodes: $0.displayOrderCodes,
-                                defaultDisplayOrder: $0.defaultDisplayOrder
+                                defaultDisplayOrder: $0.defaultDisplayOrder,
+                                displayOrderLastUpdated: $0.displayOrderLastUpdatedDate,
+                                defaultDisplayOrderLastUpdated: $0.defaultDisplayOrderLastUpdatedDate
                             )
                         }
                     )

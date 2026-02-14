@@ -31,6 +31,7 @@ public protocol Claimable {
     var owner: String? { get }
     var isCloudSensor: Bool? { get }
     var ownersPlan: String? { get }
+    var lastUpdated: Date? { get }
 }
 
 public protocol Sensor: StringIdentifieable {}

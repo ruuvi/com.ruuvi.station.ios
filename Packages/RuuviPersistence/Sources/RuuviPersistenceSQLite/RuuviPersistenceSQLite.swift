@@ -51,7 +51,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     isCloudSensor: normalizedTag.isCloudSensor,
                     canShare: normalizedTag.canShare,
                     sharedTo: normalizedTag.sharedTo,
-                    maxHistoryDays: normalizedTag.maxHistoryDays
+                    maxHistoryDays: normalizedTag.maxHistoryDays,
+                    lastUpdated: normalizedTag.lastUpdated
                 )
                 try entity.insert(db)
             }
@@ -444,7 +445,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     isCloudSensor: normalizedTag.isCloudSensor,
                     canShare: normalizedTag.canShare,
                     sharedTo: normalizedTag.sharedTo,
-                    maxHistoryDays: normalizedTag.maxHistoryDays
+                    maxHistoryDays: normalizedTag.maxHistoryDays,
+                    lastUpdated: normalizedTag.lastUpdated
                 )
                 try entity.update(db)
             }
@@ -668,10 +670,13 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         return promise.future
     }
 
+    // swiftlint:disable:next function_body_length
     public func updateDisplaySettings(
         for ruuviTag: RuuviTagSensor,
         displayOrder: [String]?,
-        defaultDisplayOrder: Bool?
+        defaultDisplayOrder: Bool?,
+        displayOrderLastUpdated: Date?,
+        defaultDisplayOrderLastUpdated: Date?
     ) -> Future<SensorSettings, RuuviPersistenceError> {
         let promise = Promise<SensorSettings, RuuviPersistenceError>()
         do {
@@ -686,15 +691,24 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 )
                 seed.displayOrder = displayOrder
                 seed.defaultDisplayOrder = defaultDisplayOrder
+                seed.displayOrderLastUpdated = displayOrderLastUpdated
+                seed.defaultDisplayOrderLastUpdated = defaultDisplayOrderLastUpdated
 
                 try db.execute(sql: """
                 INSERT INTO \(Settings.databaseTableName)
                     (\(Settings.idColumn.name), \(Settings.luidColumn.name), \(Settings.macIdColumn.name),
-                     \(Settings.displayOrderColumn.name), \(Settings.defaultDisplayOrderColumn.name))
-                VALUES (:id, :luid, :macId, :displayOrder, :defaultDisplayOrder)
+                     \(Settings.displayOrderColumn.name), \(Settings.defaultDisplayOrderColumn.name),
+                     \(Settings.displayOrderLastUpdatedColumn.name),
+                     \(Settings.defaultDisplayOrderLastUpdatedColumn.name))
+                VALUES (:id, :luid, :macId, :displayOrder, :defaultDisplayOrder,
+                        :displayOrderLastUpdated, :defaultDisplayOrderLastUpdated)
                 ON CONFLICT(\(Settings.idColumn.name)) DO UPDATE SET
                     \(Settings.displayOrderColumn.name) = excluded.\(Settings.displayOrderColumn.name),
                     \(Settings.defaultDisplayOrderColumn.name) = excluded.\(Settings.defaultDisplayOrderColumn.name),
+                    \(Settings.displayOrderLastUpdatedColumn.name)
+                        = excluded.\(Settings.displayOrderLastUpdatedColumn.name),
+                    \(Settings.defaultDisplayOrderLastUpdatedColumn.name)
+                        = excluded.\(Settings.defaultDisplayOrderLastUpdatedColumn.name),
                     \(Settings.luidColumn.name) = COALESCE(excluded.\(Settings.luidColumn.name),
                         \(Settings.databaseTableName).\(Settings.luidColumn.name)),
                     \(Settings.macIdColumn.name) = COALESCE(excluded.\(Settings.macIdColumn.name),
@@ -705,6 +719,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     "macId": normalizedTag.macId?.value,
                     "displayOrder": SensorSettingsSQLite.encodeDisplayOrder(displayOrder),
                     "defaultDisplayOrder": defaultDisplayOrder,
+                    "displayOrderLastUpdated": displayOrderLastUpdated,
+                    "defaultDisplayOrderLastUpdated": defaultDisplayOrderLastUpdated,
                 ])
 
                 let request = Settings.filter(Settings.idColumn == seed.id)

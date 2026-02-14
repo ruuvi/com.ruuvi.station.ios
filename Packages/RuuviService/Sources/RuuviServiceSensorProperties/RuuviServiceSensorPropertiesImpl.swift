@@ -31,20 +31,19 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         for sensor: RuuviTagSensor
     ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
+        let updatedSensor = sensor.with(name: name).with(lastUpdated: Date())
         if sensor.isCloud {
-            let namedSensor = sensor.with(name: name)
-            pool.update(namedSensor)
+            pool.update(updatedSensor)
                 .on(success: { [weak self] _ in
                     self?.cloud.update(name: name, for: sensor)
-                    promise.succeed(value: namedSensor.any)
+                    promise.succeed(value: updatedSensor.any)
                 }, failure: { error in
                     promise.fail(error: .ruuviPool(error))
                 })
         } else {
-            let namedSensor = sensor.with(name: name)
-            pool.update(namedSensor)
+            pool.update(updatedSensor)
                 .on(success: { _ in
-                    promise.succeed(value: namedSensor.any)
+                    promise.succeed(value: updatedSensor.any)
                 }, failure: { error in
                     promise.fail(error: .ruuviPool(error))
                 })
@@ -201,33 +200,75 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
     }
 
     @discardableResult
+    // swiftlint:disable:next function_body_length
     public func updateDisplaySettings(
         for sensor: RuuviTagSensor,
         displayOrder: [String]?,
         defaultDisplayOrder: Bool
     ) -> Future<SensorSettings, RuuviServiceError> {
         let promise = Promise<SensorSettings, RuuviServiceError>()
+        let updatedAt = Date()
 
-        pool
-            .updateDisplaySettings(
-                for: sensor,
-                displayOrder: displayOrder,
-                defaultDisplayOrder: defaultDisplayOrder
-            )
-            .on(success: { [weak self] settings in
-                if sensor.isCloud {
-                    self?.pushDisplaySettingsToCloudIfNeeded(
+        // Fetch current settings to determine which timestamps to update
+        pool.readSensorSettings(sensor)
+            .on(success: { [weak self] currentSettings in
+                guard let self = self else {
+                    promise.fail(
+                        error: .ruuviCloud(.api(.failedToGetDataFromResponse))
+                    )
+                    return
+                }
+
+                // Determine which timestamps to update based on what changed
+                var displayOrderTimestamp: Date?
+                var defaultDisplayOrderTimestamp: Date?
+
+                // Update displayOrder timestamp only if the value changed
+                if let currentDisplayOrder = currentSettings?.displayOrder,
+                   let newDisplayOrder = displayOrder {
+                    if currentDisplayOrder != newDisplayOrder {
+                        displayOrderTimestamp = updatedAt
+                    }
+                } else if displayOrder != nil {
+                    // New value being set, no previous value
+                    displayOrderTimestamp = updatedAt
+                }
+
+                // Update defaultDisplayOrder timestamp only if the value changed
+                if let currentDefaultDisplayOrder = currentSettings?.defaultDisplayOrder {
+                    if currentDefaultDisplayOrder != defaultDisplayOrder {
+                        defaultDisplayOrderTimestamp = updatedAt
+                    }
+                } else {
+                    // New value being set, no previous value
+                    defaultDisplayOrderTimestamp = updatedAt
+                }
+
+                self.pool
+                    .updateDisplaySettings(
                         for: sensor,
                         displayOrder: displayOrder,
-                        defaultDisplayOrder: defaultDisplayOrder
-                    ).on(success: { _ in
-                        promise.succeed(value: settings)
+                        defaultDisplayOrder: defaultDisplayOrder,
+                        displayOrderLastUpdated: displayOrderTimestamp,
+                        defaultDisplayOrderLastUpdated: defaultDisplayOrderTimestamp
+                    )
+                    .on(success: { [weak self] settings in
+                        if sensor.isCloud {
+                            self?.pushDisplaySettingsToCloudIfNeeded(
+                                for: sensor,
+                                displayOrder: displayOrder,
+                                defaultDisplayOrder: defaultDisplayOrder
+                            ).on(success: { _ in
+                                promise.succeed(value: settings)
+                            }, failure: { error in
+                                promise.fail(error: error)
+                            })
+                        } else {
+                            promise.succeed(value: settings)
+                        }
                     }, failure: { error in
-                        promise.fail(error: error)
+                        promise.fail(error: .ruuviPool(error))
                     })
-                } else {
-                    promise.succeed(value: settings)
-                }
             }, failure: { error in
                 promise.fail(error: .ruuviPool(error))
             })

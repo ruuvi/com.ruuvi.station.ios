@@ -25,13 +25,19 @@ public struct RuuviCloudSensorDense {
 public struct RuuviCloudSensorSettings {
     public let displayOrderCodes: [String]?
     public let defaultDisplayOrder: Bool?
+    public let displayOrderLastUpdated: Date?
+    public let defaultDisplayOrderLastUpdated: Date?
 
     public init(
         displayOrderCodes: [String]?,
-        defaultDisplayOrder: Bool?
+        defaultDisplayOrder: Bool?,
+        displayOrderLastUpdated: Date? = nil,
+        defaultDisplayOrderLastUpdated: Date? = nil
     ) {
         self.displayOrderCodes = displayOrderCodes
         self.defaultDisplayOrder = defaultDisplayOrder
+        self.displayOrderLastUpdated = displayOrderLastUpdated
+        self.defaultDisplayOrderLastUpdated = defaultDisplayOrderLastUpdated
     }
 }
 
@@ -108,6 +114,10 @@ public struct AnyCloudSensorDense: CloudSensor, Equatable, Hashable, Reorderable
 
     public var maxHistoryDays: Int? {
         subscription?.maxHistoryDays
+    }
+
+    public var lastUpdated: Date? {
+        sensor.lastUpdated
     }
 
     public static func == (lhs: AnyCloudSensorDense, rhs: AnyCloudSensorDense) -> Bool {
