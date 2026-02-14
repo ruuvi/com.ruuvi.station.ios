@@ -1918,8 +1918,8 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                 if ruuviLocalSettings.cloudModeEnabled {
                     syncAction = .updateLocal
                 } else if cloudUpdatedAt == nil {
-                    // API doesn't provide lastUpdated for alerts yet
-                    // Fall back to cloud-authoritative behavior for backward compatibility
+                    // API may not provide lastUpdated for some alerts (optional field)
+                    // Fall back to cloud-authoritative behavior when not available
                     syncAction = .updateLocal
                 } else {
                     syncAction = SyncCollisionResolver.resolve(
