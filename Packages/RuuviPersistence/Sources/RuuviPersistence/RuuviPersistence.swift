@@ -54,7 +54,9 @@ public protocol RuuviPersistence {
     func updateDisplaySettings(
         for ruuviTag: RuuviTagSensor,
         displayOrder: [String]?,
-        defaultDisplayOrder: Bool?
+        defaultDisplayOrder: Bool?,
+        displayOrderLastUpdated: Date?,
+        defaultDisplayOrderLastUpdated: Date?
     ) -> Future<SensorSettings, RuuviPersistenceError>
 
     func deleteOffsetCorrection(

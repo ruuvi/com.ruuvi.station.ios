@@ -31,20 +31,19 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         for sensor: RuuviTagSensor
     ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
+        let updatedSensor = sensor.with(name: name).with(lastUpdated: Date())
         if sensor.isCloud {
-            let namedSensor = sensor.with(name: name)
-            pool.update(namedSensor)
+            pool.update(updatedSensor)
                 .on(success: { [weak self] _ in
                     self?.cloud.update(name: name, for: sensor)
-                    promise.succeed(value: namedSensor.any)
+                    promise.succeed(value: updatedSensor.any)
                 }, failure: { error in
                     promise.fail(error: .ruuviPool(error))
                 })
         } else {
-            let namedSensor = sensor.with(name: name)
-            pool.update(namedSensor)
+            pool.update(updatedSensor)
                 .on(success: { _ in
-                    promise.succeed(value: namedSensor.any)
+                    promise.succeed(value: updatedSensor.any)
                 }, failure: { error in
                     promise.fail(error: .ruuviPool(error))
                 })
@@ -207,12 +206,15 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         defaultDisplayOrder: Bool
     ) -> Future<SensorSettings, RuuviServiceError> {
         let promise = Promise<SensorSettings, RuuviServiceError>()
+        let updatedAt = Date()
 
         pool
             .updateDisplaySettings(
                 for: sensor,
                 displayOrder: displayOrder,
-                defaultDisplayOrder: defaultDisplayOrder
+                defaultDisplayOrder: defaultDisplayOrder,
+                displayOrderLastUpdated: updatedAt,
+                defaultDisplayOrderLastUpdated: updatedAt
             )
             .on(success: { [weak self] settings in
                 if sensor.isCloud {
