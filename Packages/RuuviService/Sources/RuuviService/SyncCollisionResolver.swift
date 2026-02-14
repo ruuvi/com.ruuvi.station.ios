@@ -52,17 +52,15 @@ public struct SyncCollisionResolver {
         return .keepLocalAndQueue
     }
 
-    /// Resolves sync collision with cloudMode and backward compatibility handling.
+    /// Resolves sync collision with backward compatibility handling.
     /// This is a convenience method that handles common sync patterns:
     /// - Both timestamps nil: accept cloud data for backward compatibility
-    /// - Otherwise: use standard timestamp comparison with ownership check
+    /// - Otherwise: use standard timestamp comparison
     /// - Parameters:
-    ///   - isOwner: Whether the current user owns the sensor
     ///   - localTimestamp: The local database timestamp
     ///   - cloudTimestamp: The cloud API timestamp
     /// - Returns: The action to take
-    public static func resolve(
-        isOwner: Bool,
+    public static func resolveWithBackwardCompatibility(
         localTimestamp: Date?,
         cloudTimestamp: Date?
     ) -> SyncAction {
@@ -72,7 +70,7 @@ public struct SyncCollisionResolver {
             return .updateLocal
         }
 
-        // For owned sensors, use standard timestamp comparison
+        // Use standard timestamp comparison
         return resolve(localTimestamp: localTimestamp, cloudTimestamp: cloudTimestamp)
     }
 }

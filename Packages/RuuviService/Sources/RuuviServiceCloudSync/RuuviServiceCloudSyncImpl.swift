@@ -318,8 +318,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
             // swiftlint:disable:next function_body_length
             func handle(localSettings: SensorSettings?) {
-                let syncAction = SyncCollisionResolver.resolve(
-                    isOwner: sensor.isOwner,
+                let syncAction = SyncCollisionResolver.resolveWithBackwardCompatibility(
                     localTimestamp: sensor.lastUpdated,
                     cloudTimestamp: cloudSensor.lastUpdated
                 )
@@ -443,14 +442,12 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
             // swiftlint:disable:next function_body_length
             func handle(localSettings: SensorSettings?) {
-                let displayOrderAction = SyncCollisionResolver.resolve(
-                    isOwner: denseSensor.sensor.isOwner,
+                let displayOrderAction = SyncCollisionResolver.resolveWithBackwardCompatibility(
                     localTimestamp: localSettings?.displayOrderLastUpdated,
                     cloudTimestamp: sensorSettings.displayOrderLastUpdated
                 )
 
-                let defaultOrderAction = SyncCollisionResolver.resolve(
-                    isOwner: denseSensor.sensor.isOwner,
+                let defaultOrderAction = SyncCollisionResolver.resolveWithBackwardCompatibility(
                     localTimestamp: localSettings?.defaultDisplayOrderLastUpdated,
                     cloudTimestamp: sensorSettings.defaultDisplayOrderLastUpdated
                 )
@@ -797,8 +794,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                             $0.id.isLast3BytesEqual(to: localSensor.id)
                         }) {
                             // Resolve sync collision based on timestamps
-                            let syncAction = SyncCollisionResolver.resolve(
-                                isOwner: localSensor.isOwner,
+                            let syncAction = SyncCollisionResolver.resolveWithBackwardCompatibility(
                                 localTimestamp: localSensor.lastUpdated,
                                 cloudTimestamp: cloudSensor.lastUpdated
                             )
