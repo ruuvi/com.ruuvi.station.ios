@@ -210,11 +210,12 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         record: RuuviTagSensorRecord
     ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
-        let entity = pool.create(sensor)
+        let updatedSensor = sensor.with(lastUpdated: Date())
+        let entity = pool.create(updatedSensor)
         let recordEntity = pool.create(record)
         let recordLast = pool.createLast(record)
         Future.zip(entity, recordEntity, recordLast).on(success: { _ in
-            promise.succeed(value: sensor.any)
+            promise.succeed(value: updatedSensor.any)
         }, failure: { error in
             promise.fail(error: .ruuviPool(error))
         })

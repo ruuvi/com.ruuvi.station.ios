@@ -66,7 +66,8 @@ public extension RuuviTagSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -86,7 +87,8 @@ public extension RuuviTagSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -106,7 +108,8 @@ public extension RuuviTagSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -126,7 +129,8 @@ public extension RuuviTagSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -146,7 +150,8 @@ public extension RuuviTagSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -166,7 +171,8 @@ public extension RuuviTagSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -186,7 +192,8 @@ public extension RuuviTagSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -206,7 +213,8 @@ public extension RuuviTagSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -226,7 +234,8 @@ public extension RuuviTagSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -246,7 +255,8 @@ public extension RuuviTagSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -266,7 +276,8 @@ public extension RuuviTagSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -286,7 +297,8 @@ public extension RuuviTagSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -306,7 +318,8 @@ public extension RuuviTagSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -326,7 +339,8 @@ public extension RuuviTagSensor {
             isCloudSensor: cloudSensor.isCloudSensor ?? true,
             canShare: cloudSensor.canShare,
             sharedTo: cloudSensor.sharedTo,
-            maxHistoryDays: cloudSensor.maxHistoryDays
+            maxHistoryDays: cloudSensor.maxHistoryDays,
+            lastUpdated: cloudSensor.lastUpdated
         )
         return sensor
     }
@@ -347,7 +361,8 @@ public extension RuuviTagSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -367,7 +382,8 @@ public extension RuuviTagSensor {
             isCloudSensor: false,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -387,7 +403,8 @@ public extension RuuviTagSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -407,7 +424,8 @@ public extension RuuviTagSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -427,7 +445,29 @@ public extension RuuviTagSensor {
             isCloudSensor: isCloudSensor,
             canShare: canShare,
             sharedTo: sharedTo,
-            maxHistoryDays: maxHistoryDays
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
+        )
+    }
+
+    func with(lastUpdated: Date?) -> RuuviTagSensor {
+        RuuviTagSensorStruct(
+            version: version,
+            firmwareVersion: firmwareVersion,
+            luid: luid,
+            macId: macId,
+            serviceUUID: serviceUUID,
+            isConnectable: isConnectable,
+            name: name,
+            isClaimed: isClaimed,
+            isOwner: isOwner,
+            owner: owner,
+            ownersPlan: ownersPlan,
+            isCloudSensor: isCloudSensor,
+            canShare: canShare,
+            sharedTo: sharedTo,
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
         )
     }
 
@@ -454,6 +494,7 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
     public var canShare: Bool
     public var sharedTo: [String]
     public var maxHistoryDays: Int?
+    public var lastUpdated: Date?
 
     public init(
         version: Int,
@@ -470,7 +511,8 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
         isCloudSensor: Bool?,
         canShare: Bool,
         sharedTo: [String],
-        maxHistoryDays: Int?
+        maxHistoryDays: Int?,
+        lastUpdated: Date? = nil
     ) {
         self.version = version
         self.firmwareVersion = firmwareVersion
@@ -487,6 +529,7 @@ public struct RuuviTagSensorStruct: RuuviTagSensor {
         self.canShare = canShare
         self.sharedTo = sharedTo
         self.maxHistoryDays = maxHistoryDays
+        self.lastUpdated = lastUpdated
     }
 }
 
@@ -561,6 +604,10 @@ public struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderabl
 
     public var maxHistoryDays: Int? {
         object.maxHistoryDays
+    }
+
+    public var lastUpdated: Date? {
+        object.lastUpdated
     }
 
     public static func == (lhs: AnyRuuviTagSensor, rhs: AnyRuuviTagSensor) -> Bool {

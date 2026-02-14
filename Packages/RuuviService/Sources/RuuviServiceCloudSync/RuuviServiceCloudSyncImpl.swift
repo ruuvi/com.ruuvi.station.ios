@@ -198,13 +198,20 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     public func syncAll() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
         let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
 
-        let queuedRequests = executePendingRequests()
-        let settings = syncSettings()
-        let sensors = syncSensors()
-
-        queuedRequests
+        // IMPORTANT: Execute pending requests FIRST, then sync.
+        // We must wait for queued requests to complete before fetching from cloud,
+        // otherwise the cloud data will be stale (e.g., old sensor name) and
+        // overwrite the local changes the user made while offline.
+        // We continue with sync regardless of whether queued requests succeed or fail.
+        executePendingRequests()
             .observe(on: .global(qos: .utility))
-            .on(success: { _ in
+            .on(completion: { [weak self] in
+                guard let self else { return }
+                // Only start syncing AFTER queued requests attempt completes
+                // (regardless of success/failure)
+                let settings = self.syncSettings()
+                let sensors = self.syncSensors()
+
                 settings
                     .observe(on: .global(qos: .utility))
                     .on(success: { _ in
@@ -219,8 +226,6 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     }, failure: { error in
                         promise.fail(error: error)
                     })
-            }, failure: { error in
-                promise.fail(error: error)
             })
         return promise.future
     }
@@ -286,87 +291,263 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         return promise.future
     }
 
+    // swiftlint:disable:next function_body_length
     private func offsetSyncs(
         cloudSensors: [CloudSensor],
         updatedSensors: Set<AnyRuuviTagSensor>
     ) -> [Future<SensorSettings, RuuviPoolError>] {
-        let temperatureSyncs: [Future<SensorSettings, RuuviPoolError>]
-        = cloudSensors.compactMap { cloudSensor in
-            if let updatedSensor = updatedSensors
-                .first(where: { $0.id == cloudSensor.id }) {
-                self.ruuviPool.updateOffsetCorrection(
-                    type: .temperature,
-                    with: cloudSensor.offsetTemperature,
-                    of: updatedSensor
-                )
-            } else {
-                nil
+        cloudSensors.compactMap { [weak self] cloudSensor in
+            guard let self else { return nil }
+            guard let updatedSensor = updatedSensors
+                .first(where: { $0.id == cloudSensor.id }) else {
+                return nil
             }
-        }
 
-        let humiditySyncs: [Future<SensorSettings, RuuviPoolError>]
-        = cloudSensors.compactMap { cloudSensor in
-            if let updatedSensor = updatedSensors
-                .first(where: { $0.id == cloudSensor.id }),
-               let offsetHumidity = cloudSensor.offsetHumidity {
-                self.ruuviPool.updateOffsetCorrection(
-                    type: .humidity,
-                    with: offsetHumidity / 100,
-                    of: updatedSensor
+            let promise = Promise<SensorSettings, RuuviPoolError>()
+            let sensor = updatedSensor
+
+            let fallbackSettings: (SensorSettings?) -> SensorSettings = { localSettings in
+                localSettings ?? SensorSettingsStruct(
+                    luid: sensor.luid,
+                    macId: sensor.macId,
+                    temperatureOffset: nil,
+                    humidityOffset: nil,
+                    pressureOffset: nil
                 )
-            } else {
-                nil
             }
-        }
 
-        let pressureSyncs: [Future<SensorSettings, RuuviPoolError>]
-        = cloudSensors.compactMap { cloudSensor in
-            if let updatedSensor = updatedSensors
-                .first(where: { $0.id == cloudSensor.id }),
-               let offsetPressure = cloudSensor.offsetPressure {
-                self.ruuviPool.updateOffsetCorrection(
-                    type: .pressure,
-                    with: offsetPressure / 100,
-                    of: updatedSensor
+            // swiftlint:disable:next function_body_length cyclomatic_complexity
+            func handle(localSettings: SensorSettings?) {
+                let syncAction = SyncCollisionResolver.resolve(
+                    isOwner: sensor.isOwner,
+                    localTimestamp: sensor.lastUpdated,
+                    cloudTimestamp: cloudSensor.lastUpdated
                 )
-            } else {
-                nil
-            }
-        }
 
-        return temperatureSyncs + humiditySyncs + pressureSyncs
+                switch syncAction {
+                case .updateLocal:
+                    var updates = [Future<SensorSettings, RuuviPoolError>]()
+
+                    // Update temperature offset only if it differs from local settings
+                    if cloudSensor.offsetTemperature != localSettings?.temperatureOffset {
+                        updates.append(
+                            self.ruuviPool.updateOffsetCorrection(
+                                type: .temperature,
+                                with: cloudSensor.offsetTemperature,
+                                of: sensor
+                            )
+                        )
+                    }
+
+                    // Update humidity offset only if cloud value is present and differs (after scaling)
+                    if let offsetHumidity = cloudSensor.offsetHumidity {
+                        let newHumidityOffset = offsetHumidity / 100
+                        if newHumidityOffset != localSettings?.humidityOffset {
+                            updates.append(
+                                self.ruuviPool.updateOffsetCorrection(
+                                    type: .humidity,
+                                    with: newHumidityOffset,
+                                    of: sensor
+                                )
+                            )
+                        }
+                    }
+
+                    // Update pressure offset only if cloud value is present and differs (after scaling)
+                    if let offsetPressure = cloudSensor.offsetPressure {
+                        let newPressureOffset = offsetPressure / 100
+                        if newPressureOffset != localSettings?.pressureOffset {
+                            updates.append(
+                                self.ruuviPool.updateOffsetCorrection(
+                                    type: .pressure,
+                                    with: newPressureOffset,
+                                    of: sensor
+                                )
+                            )
+                        }
+                    }
+
+                    Future.zip(updates)
+                        .on(success: { settings in
+                            if let last = settings.last {
+                                promise.succeed(value: last)
+                            } else {
+                                promise.succeed(value: fallbackSettings(localSettings))
+                            }
+                        }, failure: { error in
+                            promise.fail(error: error)
+                        })
+
+                case .keepLocalAndQueue:
+                    // Only queue offsets that actually differ from cloud values
+                    let baseSettings = fallbackSettings(localSettings)
+
+                    // Determine which offsets actually differ from cloud
+                    var queuedTemperatureOffset: Double? = baseSettings.temperatureOffset
+                    var queuedHumidityOffset: Double? = baseSettings.humidityOffset
+                    var queuedPressureOffset: Double? = baseSettings.pressureOffset
+
+                    // Temperature: compare local offset to cloud offset as-is
+                    if let localTempOffset = baseSettings.temperatureOffset,
+                       let cloudTempOffset = cloudSensor.offsetTemperature,
+                       localTempOffset == cloudTempOffset {
+                        queuedTemperatureOffset = nil
+                    }
+
+                    // Humidity: local offset is in %, cloud offset stored as int * 100
+                    if let localHumidityOffset = baseSettings.humidityOffset,
+                       let cloudHumidityRaw = cloudSensor.offsetHumidity {
+                        let cloudHumidityOffset = cloudHumidityRaw / 100
+                        if localHumidityOffset == cloudHumidityOffset {
+                            queuedHumidityOffset = nil
+                        }
+                    }
+
+                    // Pressure: local offset is in hPa, cloud offset stored as int * 100
+                    if let localPressureOffset = baseSettings.pressureOffset,
+                       let cloudPressureRaw = cloudSensor.offsetPressure {
+                        let cloudPressureOffset = cloudPressureRaw / 100
+                        if localPressureOffset == cloudPressureOffset {
+                            queuedPressureOffset = nil
+                        }
+                    }
+
+                    // Create new settings struct with only the differing offsets
+                    let diffSettings = SensorSettingsStruct(
+                        luid: baseSettings.luid,
+                        macId: baseSettings.macId,
+                        temperatureOffset: queuedTemperatureOffset,
+                        humidityOffset: queuedHumidityOffset,
+                        pressureOffset: queuedPressureOffset
+                    )
+
+                    self.queueOffsetUpdatesToCloud(
+                        sensor: sensor,
+                        settings: diffSettings
+                    )
+                    promise.succeed(value: baseSettings)
+
+                case .noAction:
+                    promise.succeed(value: fallbackSettings(localSettings))
+                }
+            }
+
+            ruuviStorage.readSensorSettings(sensor)
+                .on(success: { settings in
+                    handle(localSettings: settings)
+                }, failure: { _ in
+                    handle(localSettings: nil)
+                })
+
+            return promise.future
+        }
     }
 
+    // swiftlint:disable:next function_body_length
     private func displaySettingsSyncs(
         denseSensors: [RuuviCloudSensorDense]
     ) -> [Future<SensorSettings, RuuviPoolError>] {
-        denseSensors.compactMap { denseSensor in
+        denseSensors.compactMap { [weak self] denseSensor in
+            guard let self else { return nil }
             guard let sensorSettings = denseSensor.settings else {
                 return nil
             }
-            return ruuviPool.updateDisplaySettings(
-                for: denseSensor.sensor.ruuviTagSensor,
-                displayOrder: sensorSettings.displayOrderCodes,
-                defaultDisplayOrder: sensorSettings.defaultDisplayOrder
-            )
+
+            let sensor = denseSensor.sensor.ruuviTagSensor
+            let promise = Promise<SensorSettings, RuuviPoolError>()
+
+            let fallbackSettings: (SensorSettings?) -> SensorSettings = { localSettings in
+                localSettings ?? SensorSettingsStruct(
+                    luid: sensor.luid,
+                    macId: sensor.macId,
+                    temperatureOffset: nil,
+                    humidityOffset: nil,
+                    pressureOffset: nil
+                )
+            }
+
+            // swiftlint:disable:next function_body_length
+            func handle(localSettings: SensorSettings?) {
+                let displayOrderAction = SyncCollisionResolver.resolve(
+                    isOwner: denseSensor.sensor.isOwner,
+                    localTimestamp: localSettings?.displayOrderLastUpdated,
+                    cloudTimestamp: sensorSettings.displayOrderLastUpdated
+                )
+
+                let defaultOrderAction = SyncCollisionResolver.resolve(
+                    isOwner: denseSensor.sensor.isOwner,
+                    localTimestamp: localSettings?.defaultDisplayOrderLastUpdated,
+                    cloudTimestamp: sensorSettings.defaultDisplayOrderLastUpdated
+                )
+
+                let queueDisplayOrder = displayOrderAction == .keepLocalAndQueue
+                    ? localSettings?.displayOrder
+                    : nil
+                let queueDefaultDisplayOrder = defaultOrderAction == .keepLocalAndQueue
+                    ? localSettings?.defaultDisplayOrder
+                    : nil
+
+                if queueDisplayOrder != nil || queueDefaultDisplayOrder != nil {
+                    self.queueDisplaySettingsToCloud(
+                        sensor: sensor,
+                        displayOrder: queueDisplayOrder,
+                        defaultDisplayOrder: queueDefaultDisplayOrder
+                    )
+                }
+
+                guard displayOrderAction == .updateLocal || defaultOrderAction == .updateLocal else {
+                    promise.succeed(value: fallbackSettings(localSettings))
+                    return
+                }
+
+                let resolvedDisplayOrder = displayOrderAction == .updateLocal
+                    ? sensorSettings.displayOrderCodes
+                    : localSettings?.displayOrder
+                let resolvedDisplayOrderLastUpdated = displayOrderAction == .updateLocal
+                    ? sensorSettings.displayOrderLastUpdated
+                    : localSettings?.displayOrderLastUpdated
+
+                let resolvedDefaultDisplayOrder = defaultOrderAction == .updateLocal
+                    ? sensorSettings.defaultDisplayOrder
+                    : localSettings?.defaultDisplayOrder
+                let resolvedDefaultDisplayOrderLastUpdated = defaultOrderAction == .updateLocal
+                    ? sensorSettings.defaultDisplayOrderLastUpdated
+                    : localSettings?.defaultDisplayOrderLastUpdated
+
+                self.ruuviPool.updateDisplaySettings(
+                    for: sensor,
+                    displayOrder: resolvedDisplayOrder,
+                    defaultDisplayOrder: resolvedDefaultDisplayOrder,
+                    displayOrderLastUpdated: resolvedDisplayOrderLastUpdated,
+                    defaultDisplayOrderLastUpdated: resolvedDefaultDisplayOrderLastUpdated
+                )
+                .on(success: { settings in
+                    promise.succeed(value: settings)
+                }, failure: { error in
+                    promise.fail(error: error)
+                })
+            }
+
+            ruuviStorage.readSensorSettings(sensor)
+                .on(success: { settings in
+                    handle(localSettings: settings)
+                }, failure: { _ in
+                    handle(localSettings: nil)
+                })
+
+            return promise.future
         }
     }
 
     private func subscriptionSyncs(
-        cloudSensors: [RuuviCloudSensorDense],
-        updatedSensors: Set<AnyRuuviTagSensor>
+        cloudSensors: [RuuviCloudSensorDense]
     ) -> [Future<CloudSensorSubscription, RuuviPoolError>] {
-        let syncs: [Future<CloudSensorSubscription, RuuviPoolError>]
-        = cloudSensors.compactMap { [weak self] cloudSensor in
-            if let updatedSensor = updatedSensors
-                .first(where: { $0.id == cloudSensor.sensor.id }),
-               let macId = updatedSensor.macId?.mac,
-               let cloudSubscription = cloudSensor.subscription {
-                let subscription = cloudSubscription.with(macId: macId)
-                return self?.ruuviPool.save(subscription: subscription)
-            } else {
-                return nil
-            }
+        let pool = ruuviPool
+        let subscriptions = cloudSensors.compactMap { cloudSensor in
+            cloudSensor.subscription?.with(macId: cloudSensor.sensor.id.mac.mac)
+        }
+        let syncs = subscriptions.map { subscription in
+            pool.save(subscription: subscription)
         }
 
         return syncs
@@ -640,20 +821,40 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         if let cloudSensor = cloudSensors.first(where: {
                             $0.id.isLast3BytesEqual(to: localSensor.id)
                         }) {
-                            updatedSensors.insert(localSensor)
-                            // Update the local sensor data with cloud data
-                            // if there's a match of sensor in local storage and cloud
-                            // TODO: @priyonto - Need to improve this once backend flattens and improves the plans
-                            // If user goes from free to pro or above plan, download full history
-                            if localSensor.ownersPlan?.lowercased() == "free",
-                               localSensor.ownersPlan?.lowercased() != cloudSensor.ownersPlan?.lowercased() {
-                                self.ruuviLocalSyncState.setDownloadFullHistory(
-                                    for: localSensor.macId,
-                                    downloadFull: true
-                                )
-                            }
+                            // Resolve sync collision based on timestamps
+                            let syncAction = SyncCollisionResolver.resolve(
+                                isOwner: localSensor.isOwner,
+                                localTimestamp: localSensor.lastUpdated,
+                                cloudTimestamp: cloudSensor.lastUpdated
+                            )
 
-                            return self.ruuviPool.update(localSensor.with(cloudSensor: cloudSensor))
+                            switch syncAction {
+                            case .updateLocal:
+                                updatedSensors.insert(localSensor)
+                                // Update the local sensor data with cloud data
+                                // if there's a match of sensor in local storage and cloud
+                                // TODO: @priyonto - Need to improve this once backend flattens and improves the plans
+                                // If user goes from free to pro or above plan, download full history
+                                if localSensor.ownersPlan?.lowercased() == "free",
+                                   localSensor.ownersPlan?.lowercased() != cloudSensor.ownersPlan?.lowercased() {
+                                    self.ruuviLocalSyncState.setDownloadFullHistory(
+                                        for: localSensor.macId,
+                                        downloadFull: true
+                                    )
+                                }
+                                return self.ruuviPool.update(localSensor.with(cloudSensor: cloudSensor))
+
+                            case .keepLocalAndQueue:
+                                // Local is newer - push changes to cloud
+                                if let macId = localSensor.macId {
+                                    self.queueSensorUpdateToCloud(localSensor, macId: macId)
+                                }
+                                return nil
+
+                            case .noAction:
+                                // Timestamps are equal or within tolerance - no update needed
+                                return nil
+                            }
                         } else {
                             let unclaimed = localSensor.unclaimed()
                             // If there is a local sensor which is unclaimed insert it to the list
@@ -698,8 +899,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         Future.zip(syncImages).observe(on: .global(qos: .utility)).on()
 
                         let syncSubscriptions = self.subscriptionSyncs(
-                            cloudSensors: denseSensor,
-                            updatedSensors: updatedSensors
+                            cloudSensors: denseSensor
                         )
                         let syncOffsets = self.offsetSyncs(
                             cloudSensors: cloudSensors,
@@ -908,5 +1108,72 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 userInfo: nil
             )
         }
+    }
+
+    /// Queue local sensor update to cloud when local data is newer.
+    /// This pushes local sensor name to cloud, which will handle offline queuing.
+    private func queueSensorUpdateToCloud(_ sensor: RuuviTagSensor, macId: MACIdentifier) {
+        ruuviCloud.update(name: sensor.name, for: sensor)
+            .on(success: { _ in
+                // Successfully pushed local data to cloud
+            }, failure: { _ in
+                // Failed to push to cloud - RuuviCloudPure will handle queuing
+            })
+    }
+
+    /// Queue local display settings update to cloud when local data is newer.
+    private func queueDisplaySettingsToCloud(
+        sensor: RuuviTagSensor,
+        displayOrder: [String]?,
+        defaultDisplayOrder: Bool?
+    ) {
+        guard sensor.isCloud else { return }
+
+        var types: [String] = []
+        var values: [String] = []
+
+        if let defaultOrder = defaultDisplayOrder {
+            types.append(RuuviCloudApiSetting.sensorDefaultDisplayOrder.rawValue)
+            values.append(defaultOrder ? "true" : "false")
+        }
+
+        if let displayOrder, !displayOrder.isEmpty,
+           let data = try? JSONEncoder().encode(displayOrder),
+           let encoded = String(data: data, encoding: .utf8) {
+            types.append(RuuviCloudApiSetting.sensorDisplayOrder.rawValue)
+            values.append(encoded)
+        }
+
+        guard !types.isEmpty else { return }
+
+        ruuviCloud.updateSensorSettings(
+            for: sensor,
+            types: types,
+            values: values,
+            timestamp: Int(Date().timeIntervalSince1970)
+        ).on()
+    }
+
+    /// Queue local offset updates to cloud when local data is newer.
+    private func queueOffsetUpdatesToCloud(
+        sensor: RuuviTagSensor,
+        settings: SensorSettings?
+    ) {
+        guard sensor.isCloud else { return }
+
+        let temperatureOffset = settings?.temperatureOffset
+        let humidityOffset = settings?.humidityOffset.map { $0 * 100 }
+        let pressureOffset = settings?.pressureOffset.map { $0 * 100 }
+
+        guard temperatureOffset != nil || humidityOffset != nil || pressureOffset != nil else {
+            return
+        }
+
+        ruuviCloud.update(
+            temperatureOffset: temperatureOffset,
+            humidityOffset: humidityOffset,
+            pressureOffset: pressureOffset,
+            for: sensor
+        ).on()
     }
 }
