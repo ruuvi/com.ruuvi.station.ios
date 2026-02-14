@@ -318,9 +318,10 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
             // swiftlint:disable:next function_body_length
             func handle(localSettings: SensorSettings?) {
+                let localTimestamp = localSettings?.lastUpdated ?? sensor.lastUpdated
                 let syncAction = SyncCollisionResolver.resolve(
                     isOwner: sensor.isOwner,
-                    localTimestamp: sensor.lastUpdated,
+                    localTimestamp: localTimestamp,
                     cloudTimestamp: cloudSensor.lastUpdated
                 )
 
