@@ -367,11 +367,40 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         })
 
                 case .keepLocalAndQueue:
+                    // Only queue offsets that actually differ from cloud values
+                    let baseSettings = fallbackSettings(localSettings)
+                    var diffSettings = baseSettings
+
+                    // Temperature: compare local offset to cloud offset as-is
+                    if let localTempOffset = baseSettings.temperatureOffset,
+                       let cloudTempOffset = cloudSensor.offsetTemperature,
+                       localTempOffset == cloudTempOffset {
+                        diffSettings.temperatureOffset = nil
+                    }
+
+                    // Humidity: local offset is in %, cloud offset stored as int * 100
+                    if let localHumidityOffset = baseSettings.humidityOffset,
+                       let cloudHumidityRaw = cloudSensor.offsetHumidity {
+                        let cloudHumidityOffset = cloudHumidityRaw / 100
+                        if localHumidityOffset == cloudHumidityOffset {
+                            diffSettings.humidityOffset = nil
+                        }
+                    }
+
+                    // Pressure: local offset is in hPa, cloud offset stored as int * 100
+                    if let localPressureOffset = baseSettings.pressureOffset,
+                       let cloudPressureRaw = cloudSensor.offsetPressure {
+                        let cloudPressureOffset = cloudPressureRaw / 100
+                        if localPressureOffset == cloudPressureOffset {
+                            diffSettings.pressureOffset = nil
+                        }
+                    }
+
                     self.queueOffsetUpdatesToCloud(
                         sensor: sensor,
-                        settings: localSettings
+                        settings: diffSettings
                     )
-                    promise.succeed(value: fallbackSettings(localSettings))
+                    promise.succeed(value: baseSettings)
 
                 case .noAction:
                     promise.succeed(value: fallbackSettings(localSettings))
