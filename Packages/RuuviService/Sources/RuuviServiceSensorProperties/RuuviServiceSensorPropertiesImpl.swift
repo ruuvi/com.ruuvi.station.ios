@@ -213,7 +213,7 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
                 for: sensor,
                 displayOrder: displayOrder,
                 defaultDisplayOrder: defaultDisplayOrder,
-                displayOrderLastUpdated: updatedAt,
+                displayOrderLastUpdated: displayOrder != nil ? updatedAt : nil,
                 defaultDisplayOrderLastUpdated: updatedAt
             )
             .on(success: { [weak self] settings in
