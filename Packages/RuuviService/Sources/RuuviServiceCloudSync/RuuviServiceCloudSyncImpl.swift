@@ -328,32 +328,44 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 switch syncAction {
                 case .updateLocal:
                     var updates = [Future<SensorSettings, RuuviPoolError>]()
-                    updates.append(
-                        self.ruuviPool.updateOffsetCorrection(
-                            type: .temperature,
-                            with: cloudSensor.offsetTemperature,
-                            of: sensor
-                        )
-                    )
 
-                    if let offsetHumidity = cloudSensor.offsetHumidity {
+                    // Update temperature offset only if it differs from local settings
+                    if cloudSensor.offsetTemperature != localSettings.offsetTemperature {
                         updates.append(
                             self.ruuviPool.updateOffsetCorrection(
-                                type: .humidity,
-                                with: offsetHumidity / 100,
+                                type: .temperature,
+                                with: cloudSensor.offsetTemperature,
                                 of: sensor
                             )
                         )
                     }
 
-                    if let offsetPressure = cloudSensor.offsetPressure {
-                        updates.append(
-                            self.ruuviPool.updateOffsetCorrection(
-                                type: .pressure,
-                                with: offsetPressure / 100,
-                                of: sensor
+                    // Update humidity offset only if cloud value is present and differs (after scaling)
+                    if let offsetHumidity = cloudSensor.offsetHumidity {
+                        let newHumidityOffset = offsetHumidity / 100
+                        if newHumidityOffset != localSettings.offsetHumidity {
+                            updates.append(
+                                self.ruuviPool.updateOffsetCorrection(
+                                    type: .humidity,
+                                    with: newHumidityOffset,
+                                    of: sensor
+                                )
                             )
-                        )
+                        }
+                    }
+
+                    // Update pressure offset only if cloud value is present and differs (after scaling)
+                    if let offsetPressure = cloudSensor.offsetPressure {
+                        let newPressureOffset = offsetPressure / 100
+                        if newPressureOffset != localSettings.offsetPressure {
+                            updates.append(
+                                self.ruuviPool.updateOffsetCorrection(
+                                    type: .pressure,
+                                    with: newPressureOffset,
+                                    of: sensor
+                                )
+                            )
+                        }
                     }
 
                     Future.zip(updates)
