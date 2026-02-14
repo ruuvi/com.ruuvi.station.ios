@@ -4,10 +4,8 @@ import RuuviOntology
 // swiftlint:disable file_length type_body_length
 class AlertPersistenceUserDefaults: AlertPersistence {
     private let prefs = UserDefaults.standard
-    // Note: Keeping the key prefix as "alertUpdatedAtUDKeyPrefix" for backward compatibility
-    // with existing UserDefaults data, even though the property is now called "lastUpdated"
-    private let alertUpdatedAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.alertUpdatedAtUDKeyPrefix."
+    private let alertLastUpdatedUDKeyPrefix
+        = "AlertPersistenceUserDefaults.alertLastUpdatedUDKeyPrefix."
 
     // temperature
     private let temperatureLowerBoundUDKeyPrefix
@@ -1224,7 +1222,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     }
 
     private func alertLastUpdatedKey(for type: AlertType, uuid: String) -> String {
-        "\(alertUpdatedAtUDKeyPrefix)\(type.rawValue).\(uuid)"
+        "\(alertLastUpdatedUDKeyPrefix)\(type.rawValue).\(uuid)"
     }
 }
 
