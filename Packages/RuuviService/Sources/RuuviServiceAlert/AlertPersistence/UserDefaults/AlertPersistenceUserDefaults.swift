@@ -1213,15 +1213,15 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         }
     }
 
-    func updatedAt(for uuid: String, of type: AlertType) -> Date? {
-        prefs.object(forKey: alertUpdatedAtKey(for: type, uuid: uuid)) as? Date
+    func lastUpdated(for uuid: String, of type: AlertType) -> Date? {
+        prefs.object(forKey: alertLastUpdatedKey(for: type, uuid: uuid)) as? Date
     }
 
-    func setUpdatedAt(_ date: Date?, for uuid: String, of type: AlertType) {
-        prefs.set(date, forKey: alertUpdatedAtKey(for: type, uuid: uuid))
+    func setLastUpdated(_ date: Date?, for uuid: String, of type: AlertType) {
+        prefs.set(date, forKey: alertLastUpdatedKey(for: type, uuid: uuid))
     }
 
-    private func alertUpdatedAtKey(for type: AlertType, uuid: String) -> String {
+    private func alertLastUpdatedKey(for type: AlertType, uuid: String) -> String {
         "\(alertUpdatedAtUDKeyPrefix)\(type.rawValue).\(uuid)"
     }
 }

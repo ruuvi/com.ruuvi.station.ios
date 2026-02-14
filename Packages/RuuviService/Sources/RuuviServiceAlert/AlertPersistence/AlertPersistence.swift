@@ -12,8 +12,8 @@ protocol AlertPersistence {
     func trigger(type: AlertType, trigerred: Bool?, trigerredAt: String?, for uuid: String)
     func triggered(for uuid: String, of type: AlertType) -> Bool?
     func triggeredAt(for uuid: String, of type: AlertType) -> String?
-    func updatedAt(for uuid: String, of type: AlertType) -> Date?
-    func setUpdatedAt(_ date: Date?, for uuid: String, of type: AlertType)
+    func lastUpdated(for uuid: String, of type: AlertType) -> Date?
+    func setLastUpdated(_ date: Date?, for uuid: String, of type: AlertType)
 
     // temperature (celsius)
     func lowerCelsius(for uuid: String) -> Double?

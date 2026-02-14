@@ -1912,7 +1912,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                 guard let type else { return }
 
                 let localUpdatedAt = alertUpdatedAt(for: physicalSensor, type: type)
-                let cloudUpdatedAt = cloudAlert.updatedAt
+                let cloudUpdatedAt = cloudAlert.lastUpdated
 
                 let syncAction: SyncAction
                 if ruuviLocalSettings.cloudModeEnabled {
@@ -1957,11 +1957,11 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
     private func alertUpdatedAt(for sensor: PhysicalSensor, type: AlertType) -> Date? {
         var dates = [Date]()
         if let luid = sensor.luid?.value,
-           let date = alertPersistence.updatedAt(for: luid, of: type) {
+           let date = alertPersistence.lastUpdated(for: luid, of: type) {
             dates.append(date)
         }
         if let macId = sensor.macId?.value,
-           let date = alertPersistence.updatedAt(for: macId, of: type) {
+           let date = alertPersistence.lastUpdated(for: macId, of: type) {
             dates.append(date)
         }
         return dates.max()
@@ -1969,10 +1969,10 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
 
     private func setAlertUpdatedAt(_ date: Date?, type: AlertType, for sensor: PhysicalSensor) {
         if let luid = sensor.luid?.value {
-            alertPersistence.setUpdatedAt(date, for: luid, of: type)
+            alertPersistence.setLastUpdated(date, for: luid, of: type)
         }
         if let macId = sensor.macId?.value {
-            alertPersistence.setUpdatedAt(date, for: macId, of: type)
+            alertPersistence.setLastUpdated(date, for: macId, of: type)
         }
     }
 
