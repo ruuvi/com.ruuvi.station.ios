@@ -46,6 +46,7 @@ public protocol RuuviPool {
         displayOrderLastUpdated: Date?,
         defaultDisplayOrderLastUpdated: Date?
     ) -> Future<SensorSettings, RuuviPoolError>
+    func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RuuviPoolError>
 
     // MARK: - Queued cloud requests
 
