@@ -19,6 +19,7 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
         public let apiAlerts: [RuuviCloudApiGetAlert]?
         public let subscription: RuuviCloudApiGetSensorSubsription?
         public let settings: CloudApiSensorSettings?
+        public let lastUpdated: Int?
 
         enum CodingKeys: String, CodingKey {
             case sensor
@@ -35,10 +36,16 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
             case apiAlerts = "alerts"
             case subscription
             case settings
+            case lastUpdated
         }
 
         public var lastMeasurement: UserApiSensorRecord? {
             measurements?.first
+        }
+
+        public var lastUpdatedDate: Date? {
+            guard let lastUpdated else { return nil }
+            return Date(timeIntervalSince1970: TimeInterval(lastUpdated))
         }
 
         public var alerts: RuuviCloudSensorAlerts {
@@ -50,10 +57,14 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
         public struct CloudApiSensorSettings: Decodable {
             public let displayOrderCodes: [String]?
             public let defaultDisplayOrder: Bool?
+            public let displayOrderLastUpdated: Int?
+            public let defaultDisplayOrderLastUpdated: Int?
 
             enum CodingKeys: CodingKey {
                 case displayOrder
                 case defaultDisplayOrder
+                case displayOrderLastUpdated
+                case defaultDisplayOrderLastUpdated
 
                 var stringValue: String {
                     switch self {
@@ -61,6 +72,10 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
                         return RuuviCloudApiSetting.sensorDisplayOrder.rawValue
                     case .defaultDisplayOrder:
                         return RuuviCloudApiSetting.sensorDefaultDisplayOrder.rawValue
+                    case .displayOrderLastUpdated:
+                        return RuuviCloudApiSetting.sensorDisplayOrder.rawValue + "_lastUpdated"
+                    case .defaultDisplayOrderLastUpdated:
+                        return RuuviCloudApiSetting.sensorDefaultDisplayOrder.rawValue + "_lastUpdated"
                     }
                 }
 
@@ -70,6 +85,10 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
                         self = .displayOrder
                     case RuuviCloudApiSetting.sensorDefaultDisplayOrder.rawValue:
                         self = .defaultDisplayOrder
+                    case RuuviCloudApiSetting.sensorDisplayOrder.rawValue + "_lastUpdated":
+                        self = .displayOrderLastUpdated
+                    case RuuviCloudApiSetting.sensorDefaultDisplayOrder.rawValue + "_lastUpdated":
+                        self = .defaultDisplayOrderLastUpdated
                     default:
                         return nil
                     }
@@ -100,6 +119,19 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
                 } else {
                     defaultDisplayOrder = nil
                 }
+
+                displayOrderLastUpdated = try? container.decode(Int.self, forKey: .displayOrderLastUpdated)
+                defaultDisplayOrderLastUpdated = try? container.decode(Int.self, forKey: .defaultDisplayOrderLastUpdated)
+            }
+
+            public var displayOrderLastUpdatedDate: Date? {
+                guard let displayOrderLastUpdated else { return nil }
+                return Date(timeIntervalSince1970: TimeInterval(displayOrderLastUpdated))
+            }
+
+            public var defaultDisplayOrderLastUpdatedDate: Date? {
+                guard let defaultDisplayOrderLastUpdated else { return nil }
+                return Date(timeIntervalSince1970: TimeInterval(defaultDisplayOrderLastUpdated))
             }
 
             private static func parseDisplayOrder(_ raw: String) -> [String]? {

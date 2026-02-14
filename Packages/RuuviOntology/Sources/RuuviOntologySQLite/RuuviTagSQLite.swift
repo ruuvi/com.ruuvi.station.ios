@@ -18,6 +18,7 @@ public struct RuuviTagSQLite: RuuviTagSensor, Equatable {
     public var canShare: Bool
     public var sharedTo: [String]
     public var maxHistoryDays: Int?
+    public var lastUpdated: Date?
 
     public init(
         id: String,
@@ -35,7 +36,8 @@ public struct RuuviTagSQLite: RuuviTagSensor, Equatable {
         isCloudSensor: Bool?,
         canShare: Bool,
         sharedTo: [String],
-        maxHistoryDays: Int?
+        maxHistoryDays: Int?,
+        lastUpdated: Date? = nil
     ) {
         self.id = id
         self.macId = macId
@@ -53,25 +55,32 @@ public struct RuuviTagSQLite: RuuviTagSensor, Equatable {
         self.canShare = canShare
         self.sharedTo = sharedTo
         self.maxHistoryDays = maxHistoryDays
+        self.lastUpdated = lastUpdated
     }
 
     public static func == (lhs: RuuviTagSQLite, rhs: RuuviTagSQLite) -> Bool {
-        return lhs.id == rhs.id
-        && lhs.macId?.any == rhs.macId?.any
-        && lhs.luid?.any == rhs.luid?.any
-        && lhs.serviceUUID == rhs.serviceUUID
-        && lhs.name == rhs.name
-        && lhs.version == rhs.version
-        && lhs.firmwareVersion == rhs.firmwareVersion
-        && lhs.isConnectable == rhs.isConnectable
-        && lhs.isClaimed == rhs.isClaimed
-        && lhs.isOwner == rhs.isOwner
-        && lhs.owner == rhs.owner
-        && lhs.ownersPlan == rhs.ownersPlan
-        && lhs.isCloudSensor == rhs.isCloudSensor
-        && lhs.canShare == rhs.canShare
-        && lhs.sharedTo == rhs.sharedTo
-        && lhs.maxHistoryDays == rhs.maxHistoryDays
+        let identifiersEqual = lhs.id == rhs.id
+            && lhs.macId?.any == rhs.macId?.any
+            && lhs.luid?.any == rhs.luid?.any
+            && lhs.serviceUUID == rhs.serviceUUID
+
+        let metadataEqual = lhs.name == rhs.name
+            && lhs.version == rhs.version
+            && lhs.firmwareVersion == rhs.firmwareVersion
+            && lhs.isConnectable == rhs.isConnectable
+
+        let ownershipEqual = lhs.isClaimed == rhs.isClaimed
+            && lhs.isOwner == rhs.isOwner
+            && lhs.owner == rhs.owner
+            && lhs.ownersPlan == rhs.ownersPlan
+
+        let cloudEqual = lhs.isCloudSensor == rhs.isCloudSensor
+            && lhs.canShare == rhs.canShare
+            && lhs.sharedTo == rhs.sharedTo
+            && lhs.maxHistoryDays == rhs.maxHistoryDays
+            && lhs.lastUpdated == rhs.lastUpdated
+
+        return identifiersEqual && metadataEqual && ownershipEqual && cloudEqual
     }
 }
 
@@ -93,6 +102,7 @@ public extension RuuviTagSQLite {
     static let canShareColumn = Column("canShare")
     static let sharedToColumn = Column("sharedTo")
     static let maxHistoryDaysColumn = Column("maxHistoryDays")
+    static let lastUpdatedColumn = Column("lastUpdated")
 }
 
 extension RuuviTagSQLite: FetchableRecord {
@@ -116,6 +126,7 @@ extension RuuviTagSQLite: FetchableRecord {
         isCloudSensor = row[RuuviTagSQLite.isCloudSensor]
         canShare = row[RuuviTagSQLite.canShareColumn]
         maxHistoryDays = row[RuuviTagSQLite.maxHistoryDaysColumn]
+        lastUpdated = row[RuuviTagSQLite.lastUpdatedColumn]
         if let sharedToColumn = row[RuuviTagSQLite.sharedToColumn] as? String {
             sharedTo = sharedToColumn.components(separatedBy: ",")
         } else {
@@ -146,6 +157,7 @@ extension RuuviTagSQLite: PersistableRecord {
         container[RuuviTagSQLite.canShareColumn] = canShare
         container[RuuviTagSQLite.sharedToColumn] = sharedTo.joined(separator: ",")
         container[RuuviTagSQLite.maxHistoryDaysColumn] = maxHistoryDays
+        container[RuuviTagSQLite.lastUpdatedColumn] = lastUpdated
     }
 }
 
@@ -172,6 +184,7 @@ public extension RuuviTagSQLite {
             table.column(RuuviTagSQLite.canShareColumn.name, .boolean)
             table.column(RuuviTagSQLite.sharedToColumn.name, .text)
             table.column(RuuviTagSQLite.maxHistoryDaysColumn.name, .integer)
+            table.column(RuuviTagSQLite.lastUpdatedColumn.name, .datetime)
         })
     }
 }

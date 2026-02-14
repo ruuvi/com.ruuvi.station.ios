@@ -4,6 +4,7 @@ import Future
 import RuuviCloud
 import RuuviLocal
 import RuuviOntology
+import RuuviService
 
 // MARK: - RuuviTag
 
@@ -1671,21 +1672,24 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
             let luid = localIDs.luid(for: macId)
             let physicalSensor = PhysicalSensorStruct(luid: luid, macId: macId)
             cloudSensorAlert.alerts?.forEach { cloudAlert in
+                guard let cloudAlertType = cloudAlert.type else { return }
                 var type: AlertType?
-                switch cloudAlert.type {
+                var applyCloudMetadata: (() -> Void)?
+                switch cloudAlertType {
                 case .temperature:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
-                    // This sets the increased limit for external sensor when synced to cloud
-                    // data.
-                    let temperatureUnit = ruuviLocalSettings.temperatureUnit
-                    let standardMinmimumBound = temperatureUnit.alertRange.lowerBound
-                    let standardMaximumBound = temperatureUnit.alertRange.upperBound
-                    if min < standardMinmimumBound || max > standardMaximumBound {
-                        ruuviLocalSettings.setShowCustomTempAlertBound(true, for: physicalSensor.id)
-                    }
-
                     type = .temperature(lower: min, upper: max)
-                    setTemperature(description: cloudAlert.description, for: physicalSensor)
+                    applyCloudMetadata = { [weak self] in
+                        guard let self else { return }
+                        // This sets the increased limit for external sensor when synced to cloud data.
+                        let temperatureUnit = self.ruuviLocalSettings.temperatureUnit
+                        let standardMinmimumBound = temperatureUnit.alertRange.lowerBound
+                        let standardMaximumBound = temperatureUnit.alertRange.upperBound
+                        if min < standardMinmimumBound || max > standardMaximumBound {
+                            self.ruuviLocalSettings.setShowCustomTempAlertBound(true, for: physicalSensor.id)
+                        }
+                        self.setTemperature(description: cloudAlert.description, for: physicalSensor)
+                    }
                 case .humidity:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     // in percent on cloud, in fraction locally
@@ -1693,21 +1697,27 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         lower: min / 100.0,
                         upper: max / 100.0
                     )
-                    setRelativeHumidity(description: cloudAlert.description, for: physicalSensor)
+                    applyCloudMetadata = { [weak self] in
+                        self?.setRelativeHumidity(description: cloudAlert.description, for: physicalSensor)
+                    }
                 case .humidityAbsolute:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     type = .humidity(
                         lower: Humidity(value: min, unit: .absolute),
                         upper: Humidity(value: max, unit: .absolute)
                     )
-                    setHumidity(description: cloudAlert.description, for: physicalSensor)
+                    applyCloudMetadata = { [weak self] in
+                        self?.setHumidity(description: cloudAlert.description, for: physicalSensor)
+                    }
                 case .dewPoint:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     type = .dewPoint(
                         lower: min,
                         upper: max
                     )
-                    setDewPoint(description: cloudAlert.description, for: physicalSensor)
+                    applyCloudMetadata = { [weak self] in
+                        self?.setDewPoint(description: cloudAlert.description, for: physicalSensor)
+                    }
                 case .pressure:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     // in Pa on cloud, in hPa locally
@@ -1715,156 +1725,212 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         lower: min / 100.0,
                         upper: max / 100.0
                     )
-                    setPressure(description: cloudAlert.description, for: physicalSensor)
+                    applyCloudMetadata = { [weak self] in
+                        self?.setPressure(description: cloudAlert.description, for: physicalSensor)
+                    }
                 case .movement:
                     guard let counter = cloudAlert.counter else { return }
                     type = .movement(last: counter)
-                    setMovement(description: cloudAlert.description, for: physicalSensor)
+                    applyCloudMetadata = { [weak self] in
+                        self?.setMovement(description: cloudAlert.description, for: physicalSensor)
+                    }
                 case .signal:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     type = .signal(
                         lower: min,
                         upper: max
                     )
-                    setSignal(description: cloudAlert.description, for: physicalSensor)
+                    applyCloudMetadata = { [weak self] in
+                        self?.setSignal(description: cloudAlert.description, for: physicalSensor)
+                    }
                 case .aqi:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     type = .aqi(
                         lower: min,
                         upper: max
                     )
-                    setAQI(
-                        description: cloudAlert.description,
-                        for: physicalSensor
-                    )
+                    applyCloudMetadata = { [weak self] in
+                        self?.setAQI(
+                            description: cloudAlert.description,
+                            for: physicalSensor
+                        )
+                    }
                 case .co2:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     type = .carbonDioxide(
                         lower: min,
                         upper: max
                     )
-                    setCarbonDioxide(
-                        description: cloudAlert.description,
-                        for: physicalSensor
-                    )
+                    applyCloudMetadata = { [weak self] in
+                        self?.setCarbonDioxide(
+                            description: cloudAlert.description,
+                            for: physicalSensor
+                        )
+                    }
                 case .pm10:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     type = .pMatter1(
                         lower: min,
                         upper: max
                     )
-                    setPM1(
-                        description: cloudAlert.description,
-                        for: physicalSensor
-                    )
+                    applyCloudMetadata = { [weak self] in
+                        self?.setPM1(
+                            description: cloudAlert.description,
+                            for: physicalSensor
+                        )
+                    }
                 case .pm25:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     type = .pMatter25(
                         lower: min,
                         upper: max
                     )
-                    setPM25(
-                        description: cloudAlert.description,
-                        for: physicalSensor
-                    )
+                    applyCloudMetadata = { [weak self] in
+                        self?.setPM25(
+                            description: cloudAlert.description,
+                            for: physicalSensor
+                        )
+                    }
                 case .pm40:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     type = .pMatter4(
                         lower: min,
                         upper: max
                     )
-                    setPM4(
-                        description: cloudAlert.description,
-                        for: physicalSensor
-                    )
+                    applyCloudMetadata = { [weak self] in
+                        self?.setPM4(
+                            description: cloudAlert.description,
+                            for: physicalSensor
+                        )
+                    }
                 case .pm100:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     type = .pMatter10(
                         lower: min,
                         upper: max
                     )
-                    setPM10(
-                        description: cloudAlert.description,
-                        for: physicalSensor
-                    )
+                    applyCloudMetadata = { [weak self] in
+                        self?.setPM10(
+                            description: cloudAlert.description,
+                            for: physicalSensor
+                        )
+                    }
                 case .voc:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     type = .voc(
                         lower: min,
                         upper: max
                     )
-                    setVOC(
-                        description: cloudAlert.description,
-                        for: physicalSensor
-                    )
+                    applyCloudMetadata = { [weak self] in
+                        self?.setVOC(
+                            description: cloudAlert.description,
+                            for: physicalSensor
+                        )
+                    }
                 case .nox:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     type = .nox(
                         lower: min,
                         upper: max
                     )
-                    setNOX(
-                        description: cloudAlert.description,
-                        for: physicalSensor
-                    )
+                    applyCloudMetadata = { [weak self] in
+                        self?.setNOX(
+                            description: cloudAlert.description,
+                            for: physicalSensor
+                        )
+                    }
                 case .soundInstant:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     type = .soundInstant(
                         lower: min,
                         upper: max
                     )
-                    setSoundInstant(
-                        description: cloudAlert.description,
-                        for: physicalSensor
-                    )
+                    applyCloudMetadata = { [weak self] in
+                        self?.setSoundInstant(
+                            description: cloudAlert.description,
+                            for: physicalSensor
+                        )
+                    }
                 case .soundAverage:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     type = .soundAverage(
                         lower: min,
                         upper: max
                     )
-                    setSoundAverage(
-                        description: cloudAlert.description,
-                        for: physicalSensor
-                    )
+                    applyCloudMetadata = { [weak self] in
+                        self?.setSoundAverage(
+                            description: cloudAlert.description,
+                            for: physicalSensor
+                        )
+                    }
                 case .soundPeak:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     type = .soundPeak(
                         lower: min,
                         upper: max
                     )
-                    setSoundPeak(
-                        description: cloudAlert.description,
-                        for: physicalSensor
-                    )
+                    applyCloudMetadata = { [weak self] in
+                        self?.setSoundPeak(
+                            description: cloudAlert.description,
+                            for: physicalSensor
+                        )
+                    }
                 case .luminosity:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     type = .luminosity(
                         lower: min,
                         upper: max
                     )
-                    setLuminosity(
-                        description: cloudAlert.description,
-                        for: physicalSensor
-                    )
+                    applyCloudMetadata = { [weak self] in
+                        self?.setLuminosity(
+                            description: cloudAlert.description,
+                            for: physicalSensor
+                        )
+                    }
                 case .battery:
                     guard let min = cloudAlert.min, let max = cloudAlert.max else { return }
                     type = .batteryVoltage(
                         lower: min,
                         upper: max
                     )
-                    setBatteryVoltage(
-                        description: cloudAlert.description,
-                        for: physicalSensor
-                    )
+                    applyCloudMetadata = { [weak self] in
+                        self?.setBatteryVoltage(
+                            description: cloudAlert.description,
+                            for: physicalSensor
+                        )
+                    }
                 case .offline:
                     guard let unseenDuration = cloudAlert.max else { return }
                     type = .cloudConnection(unseenDuration: unseenDuration)
-                    setCloudConnection(description: cloudAlert.description, for: physicalSensor)
+                    applyCloudMetadata = { [weak self] in
+                        self?.setCloudConnection(description: cloudAlert.description, for: physicalSensor)
+                    }
                 default:
                     break
                 }
-                if let type {
+
+                guard let type else { return }
+
+                let localUpdatedAt = alertUpdatedAt(for: physicalSensor, type: type)
+                let cloudUpdatedAt = cloudAlert.lastUpdated
+
+                let syncAction: SyncAction
+                if ruuviLocalSettings.cloudModeEnabled {
+                    syncAction = .updateLocal
+                } else if cloudUpdatedAt == nil {
+                    // API doesn't provide lastUpdated for alerts yet
+                    // Fall back to cloud-authoritative behavior for backward compatibility
+                    syncAction = .updateLocal
+                } else {
+                    syncAction = SyncCollisionResolver.resolve(
+                        localTimestamp: localUpdatedAt,
+                        cloudTimestamp: cloudUpdatedAt
+                    )
+                }
+
+                switch syncAction {
+                case .updateLocal:
+                    applyCloudMetadata?()
                     if let enabled = cloudAlert.enabled, enabled {
                         register(type: type, for: physicalSensor)
                         trigger(
@@ -1876,8 +1942,305 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                     } else {
                         unregister(type: type, for: physicalSensor)
                     }
+                    setAlertUpdatedAt(cloudUpdatedAt, type: type, for: physicalSensor)
+
+                case .keepLocalAndQueue:
+                    queueAlertStateToCloud(type: type, for: physicalSensor)
+
+                case .noAction:
+                    break
                 }
             }
+        }
+    }
+
+    private func alertUpdatedAt(for sensor: PhysicalSensor, type: AlertType) -> Date? {
+        var dates = [Date]()
+        if let luid = sensor.luid?.value,
+           let date = alertPersistence.updatedAt(for: luid, of: type) {
+            dates.append(date)
+        }
+        if let macId = sensor.macId?.value,
+           let date = alertPersistence.updatedAt(for: macId, of: type) {
+            dates.append(date)
+        }
+        return dates.max()
+    }
+
+    private func setAlertUpdatedAt(_ date: Date?, type: AlertType, for sensor: PhysicalSensor) {
+        if let luid = sensor.luid?.value {
+            alertPersistence.setUpdatedAt(date, for: luid, of: type)
+        }
+        if let macId = sensor.macId?.value {
+            alertPersistence.setUpdatedAt(date, for: macId, of: type)
+        }
+    }
+
+    private func touchAlertUpdatedAt(type: AlertType, for sensor: PhysicalSensor) {
+        setAlertUpdatedAt(Date(), type: type, for: sensor)
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    private func queueAlertStateToCloud(type: AlertType, for sensor: PhysicalSensor) {
+        guard let macId = sensor.macId else { return }
+
+        let isEnabled = isOn(type: type, for: sensor)
+
+        switch type {
+        case .temperature:
+            cloud.setAlert(
+                type: .temperature,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerCelsius(for: sensor),
+                max: upperCelsius(for: sensor),
+                counter: nil,
+                delay: nil,
+                description: temperatureDescription(for: sensor),
+                for: macId
+            )
+        case .relativeHumidity:
+            cloud.setAlert(
+                type: .humidity,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerRelativeHumidity(for: sensor).map { $0 * 100.0 },
+                max: upperRelativeHumidity(for: sensor).map { $0 * 100.0 },
+                counter: nil,
+                delay: nil,
+                description: relativeHumidityDescription(for: sensor),
+                for: macId
+            )
+        case .humidity:
+            cloud.setAlert(
+                type: .humidityAbsolute,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerHumidity(for: sensor)?.converted(to: .absolute).value,
+                max: upperHumidity(for: sensor)?.converted(to: .absolute).value,
+                counter: nil,
+                delay: nil,
+                description: humidityDescription(for: sensor),
+                for: macId
+            )
+        case .dewPoint:
+            cloud.setAlert(
+                type: .dewPoint,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerDewPoint(for: sensor),
+                max: upperDewPoint(for: sensor),
+                counter: nil,
+                delay: nil,
+                description: dewPointDescription(for: sensor),
+                for: macId
+            )
+        case .pressure:
+            cloud.setAlert(
+                type: .pressure,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerPressure(for: sensor).map { $0 * 100.0 },
+                max: upperPressure(for: sensor).map { $0 * 100.0 },
+                counter: nil,
+                delay: nil,
+                description: pressureDescription(for: sensor),
+                for: macId
+            )
+        case .signal:
+            cloud.setAlert(
+                type: .signal,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerSignal(for: sensor),
+                max: upperSignal(for: sensor),
+                counter: nil,
+                delay: nil,
+                description: signalDescription(for: sensor),
+                for: macId
+            )
+        case .batteryVoltage:
+            cloud.setAlert(
+                type: .battery,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerBatteryVoltage(for: sensor),
+                max: upperBatteryVoltage(for: sensor),
+                counter: nil,
+                delay: nil,
+                description: batteryVoltageDescription(for: sensor),
+                for: macId
+            )
+        case .aqi:
+            cloud.setAlert(
+                type: .aqi,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerAQI(for: sensor),
+                max: upperAQI(for: sensor),
+                counter: nil,
+                delay: nil,
+                description: aqiDescription(for: sensor),
+                for: macId
+            )
+        case .carbonDioxide:
+            cloud.setAlert(
+                type: .co2,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerCarbonDioxide(for: sensor),
+                max: upperCarbonDioxide(for: sensor),
+                counter: nil,
+                delay: nil,
+                description: carbonDioxideDescription(for: sensor),
+                for: macId
+            )
+        case .pMatter1:
+            cloud.setAlert(
+                type: .pm10,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerPM1(for: sensor),
+                max: upperPM1(for: sensor),
+                counter: nil,
+                delay: nil,
+                description: pm1Description(for: sensor),
+                for: macId
+            )
+        case .pMatter25:
+            cloud.setAlert(
+                type: .pm25,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerPM25(for: sensor),
+                max: upperPM25(for: sensor),
+                counter: nil,
+                delay: nil,
+                description: pm25Description(for: sensor),
+                for: macId
+            )
+        case .pMatter4:
+            cloud.setAlert(
+                type: .pm40,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerPM4(for: sensor),
+                max: upperPM4(for: sensor),
+                counter: nil,
+                delay: nil,
+                description: pm4Description(for: sensor),
+                for: macId
+            )
+        case .pMatter10:
+            cloud.setAlert(
+                type: .pm100,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerPM10(for: sensor),
+                max: upperPM10(for: sensor),
+                counter: nil,
+                delay: nil,
+                description: pm10Description(for: sensor),
+                for: macId
+            )
+        case .voc:
+            cloud.setAlert(
+                type: .voc,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerVOC(for: sensor),
+                max: upperVOC(for: sensor),
+                counter: nil,
+                delay: nil,
+                description: vocDescription(for: sensor),
+                for: macId
+            )
+        case .nox:
+            cloud.setAlert(
+                type: .nox,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerNOX(for: sensor),
+                max: upperNOX(for: sensor),
+                counter: nil,
+                delay: nil,
+                description: noxDescription(for: sensor),
+                for: macId
+            )
+        case .soundInstant:
+            cloud.setAlert(
+                type: .soundInstant,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerSoundInstant(for: sensor),
+                max: upperSoundInstant(for: sensor),
+                counter: nil,
+                delay: nil,
+                description: soundInstantDescription(for: sensor),
+                for: macId
+            )
+        case .soundAverage:
+            cloud.setAlert(
+                type: .soundAverage,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerSoundAverage(for: sensor),
+                max: upperSoundAverage(for: sensor),
+                counter: nil,
+                delay: nil,
+                description: soundAverageDescription(for: sensor),
+                for: macId
+            )
+        case .soundPeak:
+            cloud.setAlert(
+                type: .soundPeak,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerSoundPeak(for: sensor),
+                max: upperSoundPeak(for: sensor),
+                counter: nil,
+                delay: nil,
+                description: soundPeakDescription(for: sensor),
+                for: macId
+            )
+        case .luminosity:
+            cloud.setAlert(
+                type: .luminosity,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: lowerLuminosity(for: sensor),
+                max: upperLuminosity(for: sensor),
+                counter: nil,
+                delay: nil,
+                description: luminosityDescription(for: sensor),
+                for: macId
+            )
+        case .connection:
+            break
+        case .cloudConnection:
+            cloud.setAlert(
+                type: .offline,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: 0,
+                max: cloudConnectionUnseenDuration(for: sensor),
+                counter: nil,
+                delay: 0,
+                description: cloudConnectionDescription(for: sensor),
+                for: macId
+            )
+        case .movement:
+            cloud.setAlert(
+                type: .movement,
+                settingType: .state,
+                isEnabled: isEnabled,
+                min: nil,
+                max: nil,
+                counter: movementCounter(for: sensor),
+                delay: nil,
+                description: movementDescription(for: sensor),
+                for: macId
+            )
         }
     }
 
@@ -1915,6 +2278,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: type, for: sensor)
         postAlertDidChange(with: sensor, of: type)
     }
 
@@ -1929,6 +2293,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: type, for: sensor)
         postAlertDidChange(with: sensor, of: type)
     }
 
@@ -1943,6 +2308,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: type, for: ruuviTag)
     }
 
     public func mute(type: AlertType, for sensor: PhysicalSensor, till date: Date) {
@@ -2174,6 +2540,7 @@ public extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
+        touchAlertUpdatedAt(type: .temperature(lower: 0, upper: 0), for: sensor)
         if let l = celsius, let u = upperCelsius(for: sensor) {
             postAlertDidChange(with: sensor, of: .temperature(lower: l, upper: u))
         }
@@ -2191,6 +2558,7 @@ public extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
+        touchAlertUpdatedAt(type: .temperature(lower: 0, upper: 0), for: sensor)
         if let u = celsius, let l = lowerCelsius(for: sensor) {
             postAlertDidChange(with: sensor, of: .temperature(lower: l, upper: u))
         }
@@ -2208,6 +2576,7 @@ public extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
+        touchAlertUpdatedAt(type: .temperature(lower: 0, upper: 0), for: sensor)
         if let l = lowerCelsius(for: sensor), let u = upperCelsius(for: sensor) {
             postAlertDidChange(with: sensor, of: .temperature(lower: l, upper: u))
         }
@@ -2283,6 +2652,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .relativeHumidity(lower: 0, upper: 0), for: sensor)
         if let l = relativeHumidity, let u = upperRelativeHumidity(for: sensor) {
             postAlertDidChange(with: sensor, of: .relativeHumidity(lower: l, upper: u))
         }
@@ -2299,6 +2669,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .relativeHumidity(lower: 0, upper: 0), for: sensor)
         if let u = relativeHumidity, let l = lowerRelativeHumidity(for: sensor) {
             postAlertDidChange(with: sensor, of: .relativeHumidity(lower: l, upper: u))
         }
@@ -2316,6 +2687,7 @@ public extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
+        touchAlertUpdatedAt(type: .relativeHumidity(lower: 0, upper: 0), for: sensor)
         if let l = lowerRelativeHumidity(for: sensor), let u = upperRelativeHumidity(for: sensor) {
             postAlertDidChange(with: sensor, of: .relativeHumidity(lower: l, upper: u))
         }
@@ -2350,6 +2722,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute), for: sensor)
         if let ruuviTag = sensor as? RuuviTagSensor,
            ruuviTag.isCloud,
            let macId = ruuviTag.macId {
@@ -2400,6 +2773,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute), for: sensor)
         if let ruuviTag = sensor as? RuuviTagSensor,
            ruuviTag.isCloud,
            let macId = ruuviTag.macId {
@@ -2450,6 +2824,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute), for: sensor)
         if let ruuviTag = sensor as? RuuviTagSensor,
            ruuviTag.isCloud,
            let macId = ruuviTag.macId {
@@ -2559,6 +2934,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .dewPoint(lower: 0, upper: 0), for: sensor)
         if let l = dewPoint, let u = upperDewPoint(for: sensor) {
             postAlertDidChange(with: sensor, of: .dewPoint(lower: l, upper: u))
         }
@@ -2575,6 +2951,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .dewPoint(lower: 0, upper: 0), for: sensor)
         if let u = dewPoint, let l = lowerDewPoint(for: sensor) {
             postAlertDidChange(with: sensor, of: .dewPoint(lower: l, upper: u))
         }
@@ -2592,6 +2969,7 @@ public extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
+        touchAlertUpdatedAt(type: .dewPoint(lower: 0, upper: 0), for: sensor)
         if let l = lowerDewPoint(for: sensor),
            let u = upperDewPoint(for: sensor) {
             postAlertDidChange(with: sensor, of: .dewPoint(lower: l, upper: u))
@@ -2669,6 +3047,7 @@ public extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
+        touchAlertUpdatedAt(type: .pressure(lower: 0, upper: 0), for: sensor)
         if let l = pressure, let u = upperPressure(for: sensor) {
             postAlertDidChange(with: sensor, of: .pressure(lower: l, upper: u))
         }
@@ -2686,6 +3065,7 @@ public extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
+        touchAlertUpdatedAt(type: .pressure(lower: 0, upper: 0), for: sensor)
         if let u = pressure, let l = lowerPressure(for: sensor) {
             postAlertDidChange(with: sensor, of: .pressure(lower: l, upper: u))
         }
@@ -2703,6 +3083,7 @@ public extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
+        touchAlertUpdatedAt(type: .pressure(lower: 0, upper: 0), for: sensor)
         if let l = lowerPressure(for: sensor), let u = upperPressure(for: sensor) {
             postAlertDidChange(with: sensor, of: .pressure(lower: l, upper: u))
         }
@@ -2779,6 +3160,7 @@ public extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
+        touchAlertUpdatedAt(type: .signal(lower: 0, upper: 0), for: sensor)
         if let l = signal, let u = upperSignal(for: sensor) {
             postAlertDidChange(with: sensor, of: .signal(lower: l, upper: u))
         }
@@ -2796,6 +3178,7 @@ public extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
+        touchAlertUpdatedAt(type: .signal(lower: 0, upper: 0), for: sensor)
         if let u = signal, let l = lowerSignal(for: sensor) {
             postAlertDidChange(with: sensor, of: .signal(lower: l, upper: u))
         }
@@ -2813,6 +3196,7 @@ public extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
+        touchAlertUpdatedAt(type: .signal(lower: 0, upper: 0), for: sensor)
         if let l = lowerSignal(for: sensor), let u = upperSignal(for: sensor) {
             postAlertDidChange(with: sensor, of: .signal(lower: l, upper: u))
         }
@@ -2889,6 +3273,7 @@ public extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
+        touchAlertUpdatedAt(type: .batteryVoltage(lower: 0, upper: 0), for: sensor)
         if let l = batteryVoltage, let u = upperBatteryVoltage(for: sensor) {
             postAlertDidChange(with: sensor, of: .batteryVoltage(lower: l, upper: u))
         }
@@ -2906,6 +3291,7 @@ public extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
+        touchAlertUpdatedAt(type: .batteryVoltage(lower: 0, upper: 0), for: sensor)
         if let u = batteryVoltage, let l = lowerBatteryVoltage(for: sensor) {
             postAlertDidChange(with: sensor, of: .batteryVoltage(lower: l, upper: u))
         }
@@ -2923,6 +3309,7 @@ public extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
+        touchAlertUpdatedAt(type: .batteryVoltage(lower: 0, upper: 0), for: sensor)
         if let l = lowerBatteryVoltage(for: sensor),
            let u = upperBatteryVoltage(for: sensor) {
             postAlertDidChange(with: sensor, of: .batteryVoltage(lower: l, upper: u))
@@ -2996,6 +3383,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .aqi(lower: 0, upper: 0), for: sensor)
     }
 
     private func setUpper(aqi: Double?, for sensor: PhysicalSensor) {
@@ -3009,6 +3397,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .aqi(lower: 0, upper: 0), for: sensor)
     }
 
     private func setAQI(description: String?, for sensor: PhysicalSensor) {
@@ -3022,6 +3411,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .aqi(lower: 0, upper: 0), for: sensor)
     }
 }
 
@@ -3093,6 +3483,7 @@ public extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
+        touchAlertUpdatedAt(type: .carbonDioxide(lower: 0, upper: 0), for: sensor)
         if let l = carbonDioxide, let u = upperCarbonDioxide(for: sensor) {
             postAlertDidChange(
                 with: sensor,
@@ -3113,6 +3504,7 @@ public extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
+        touchAlertUpdatedAt(type: .carbonDioxide(lower: 0, upper: 0), for: sensor)
         if let l = lowerCarbonDioxide(for: sensor), let u = carbonDioxide {
             postAlertDidChange(
                 with: sensor,
@@ -3133,6 +3525,7 @@ public extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
+        touchAlertUpdatedAt(type: .carbonDioxide(lower: 0, upper: 0), for: sensor)
         if let l = lowerCarbonDioxide(for: sensor), let u = upperCarbonDioxide(for: sensor) {
             postAlertDidChange(
                 with: sensor,
@@ -3207,6 +3600,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .pMatter1(lower: 0, upper: 0), for: sensor)
     }
 
     private func setUpper(pm1: Double?, for sensor: PhysicalSensor) {
@@ -3220,6 +3614,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .pMatter1(lower: 0, upper: 0), for: sensor)
     }
 
     private func setPM1(description: String?, for sensor: PhysicalSensor) {
@@ -3233,6 +3628,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .pMatter1(lower: 0, upper: 0), for: sensor)
     }
 }
 
@@ -3301,6 +3697,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .pMatter25(lower: 0, upper: 0), for: sensor)
     }
 
     private func setUpper(pm25: Double?, for sensor: PhysicalSensor) {
@@ -3314,6 +3711,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .pMatter25(lower: 0, upper: 0), for: sensor)
     }
 
     private func setPM25(description: String?, for sensor: PhysicalSensor) {
@@ -3327,6 +3725,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .pMatter25(lower: 0, upper: 0), for: sensor)
     }
 }
 
@@ -3395,6 +3794,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .pMatter4(lower: 0, upper: 0), for: sensor)
     }
 
     private func setUpper(pm4: Double?, for sensor: PhysicalSensor) {
@@ -3408,6 +3808,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .pMatter4(lower: 0, upper: 0), for: sensor)
     }
 
     private func setPM4(description: String?, for sensor: PhysicalSensor) {
@@ -3421,6 +3822,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .pMatter4(lower: 0, upper: 0), for: sensor)
     }
 }
 
@@ -3489,6 +3891,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .pMatter10(lower: 0, upper: 0), for: sensor)
     }
 
     private func setUpper(pm10: Double?, for sensor: PhysicalSensor) {
@@ -3502,6 +3905,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .pMatter10(lower: 0, upper: 0), for: sensor)
     }
 
     private func setPM10(description: String?, for sensor: PhysicalSensor) {
@@ -3515,6 +3919,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .pMatter10(lower: 0, upper: 0), for: sensor)
     }
 }
 
@@ -3583,6 +3988,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .voc(lower: 0, upper: 0), for: sensor)
     }
 
     private func setUpper(voc: Double?, for sensor: PhysicalSensor) {
@@ -3596,6 +4002,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .voc(lower: 0, upper: 0), for: sensor)
     }
 
     private func setVOC(description: String?, for sensor: PhysicalSensor) {
@@ -3609,6 +4016,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .voc(lower: 0, upper: 0), for: sensor)
     }
 }
 
@@ -3678,6 +4086,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .nox(lower: 0, upper: 0), for: sensor)
     }
 
     private func setUpper(nox: Double?, for sensor: PhysicalSensor) {
@@ -3691,6 +4100,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .nox(lower: 0, upper: 0), for: sensor)
     }
 
     private func setNOX(description: String?, for sensor: PhysicalSensor) {
@@ -3704,6 +4114,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .nox(lower: 0, upper: 0), for: sensor)
     }
 }
 
@@ -3773,6 +4184,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .soundInstant(lower: 0, upper: 0), for: sensor)
     }
 
     private func setUpper(soundInstant: Double?, for sensor: PhysicalSensor) {
@@ -3786,6 +4198,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .soundInstant(lower: 0, upper: 0), for: sensor)
     }
 
     private func setSoundInstant(description: String?, for sensor: PhysicalSensor) {
@@ -3799,6 +4212,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .soundInstant(lower: 0, upper: 0), for: sensor)
     }
 }
 
@@ -3868,6 +4282,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .soundAverage(lower: 0, upper: 0), for: sensor)
     }
 
     private func setUpper(soundAverage: Double?, for sensor: PhysicalSensor) {
@@ -3881,6 +4296,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .soundAverage(lower: 0, upper: 0), for: sensor)
     }
 
     private func setSoundAverage(description: String?, for sensor: PhysicalSensor) {
@@ -3894,6 +4310,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .soundAverage(lower: 0, upper: 0), for: sensor)
     }
 }
 
@@ -3963,6 +4380,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .soundPeak(lower: 0, upper: 0), for: sensor)
     }
 
     private func setUpper(soundPeak: Double?, for sensor: PhysicalSensor) {
@@ -3976,6 +4394,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .soundPeak(lower: 0, upper: 0), for: sensor)
     }
 
     private func setSoundPeak(description: String?, for sensor: PhysicalSensor) {
@@ -3989,6 +4408,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .soundPeak(lower: 0, upper: 0), for: sensor)
     }
 }
 
@@ -4057,6 +4477,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .luminosity(lower: 0, upper: 0), for: sensor)
     }
 
     private func setUpper(luminosity: Double?, for sensor: PhysicalSensor) {
@@ -4070,6 +4491,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .luminosity(lower: 0, upper: 0), for: sensor)
     }
 
     private func setLuminosity(description: String?, for sensor: PhysicalSensor) {
@@ -4083,6 +4505,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .luminosity(lower: 0, upper: 0), for: sensor)
     }
 }
 
@@ -4114,6 +4537,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .connection, for: sensor)
         postAlertDidChange(with: sensor, of: .connection)
     }
 
@@ -4150,6 +4574,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .cloudConnection(unseenDuration: 0), for: sensor)
     }
 
     func setCloudConnection(unseenDuration: Double?, for sensor: PhysicalSensor) {
@@ -4163,6 +4588,7 @@ public extension RuuviServiceAlertImpl {
         } else {
             assertionFailure()
         }
+        touchAlertUpdatedAt(type: .cloudConnection(unseenDuration: 0), for: sensor)
         if let unseenDuration {
             postAlertDidChange(with: sensor, of: .cloudConnection(unseenDuration: unseenDuration))
         }
@@ -4240,6 +4666,7 @@ public extension RuuviServiceAlertImpl {
             assertionFailure()
         }
 
+        touchAlertUpdatedAt(type: .movement(last: 0), for: sensor)
         if let c = movementCounter(for: sensor) {
             postAlertDidChange(with: sensor, of: .movement(last: c))
         }
