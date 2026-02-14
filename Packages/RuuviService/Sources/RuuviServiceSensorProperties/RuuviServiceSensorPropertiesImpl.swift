@@ -211,11 +211,14 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         // Fetch current settings to determine which timestamps to update
         pool.readSensorSettings(sensor)
             .on(success: { [weak self] currentSettings in
-                guard let self = self else { return }
+                guard let self = self else {
+                    promise.fail(error: .ruuviPool(.unexpected))
+                    return
+                }
                 
                 // Determine which timestamps to update based on what changed
-                var displayOrderTimestamp: Date? = nil
-                var defaultDisplayOrderTimestamp: Date? = nil
+                var displayOrderTimestamp: Date?
+                var defaultDisplayOrderTimestamp: Date?
                 
                 // Update displayOrder timestamp only if the value changed
                 if let currentDisplayOrder = currentSettings?.displayOrder,
