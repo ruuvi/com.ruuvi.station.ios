@@ -164,6 +164,7 @@ final class DashboardViewController: UIViewController {
     // MARK: - Drag and reorder Properties
     private var currentSnapshotIdentifiers: [RuuviTagCardSnapshot] = []
     private var isDragSessionInProgress: Bool = false
+    private var isReadyForAnimations: Bool = false
 
     // MARK: - Observers
     private var appDidBecomeActiveToken: NSObjectProtocol?
@@ -183,8 +184,9 @@ extension DashboardViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        let shouldAnimateTransition = shouldAnimate(animated)
         if #available(iOS 26.0, *) {
-            navigationController?.setNavigationBarHidden(true, animated: animated)
+            navigationController?.setNavigationBarHidden(true, animated: shouldAnimateTransition)
         } else {
             navigationController?.makeTransparent()
         }
@@ -193,13 +195,15 @@ extension DashboardViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        isReadyForAnimations = true
         AppUtility.lockOrientation(.all)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        let shouldAnimateTransition = shouldAnimate(animated)
         if #available(iOS 26.0, *) {
-            navigationController?.setNavigationBarHidden(false, animated: animated)
+            navigationController?.setNavigationBarHidden(false, animated: shouldAnimateTransition)
         } else {
             navigationController?.resetStyleToDefault()
         }
@@ -211,12 +215,16 @@ extension DashboardViewController {
         with coordinator: UIViewControllerTransitionCoordinator
     ) {
         super.viewWillTransition(to: size, with: coordinator)
-        updateSnapshot(redrawLayout: false, animated: true)
+        updateSnapshot(redrawLayout: false, animated: shouldAnimate(true))
     }
 }
 
 // MARK: - Setup Methods
 private extension DashboardViewController {
+    func shouldAnimate(_ animated: Bool) -> Bool {
+        return isReadyForAnimations && animated
+    }
+
     func setupViewController() {
         setupUI()
         setupDataSource()
@@ -544,7 +552,7 @@ private extension DashboardViewController {
         var snapshot = NSDiffableDataSourceSnapshot<MasonrySection, RuuviTagCardSnapshot>()
         snapshot.appendSections([.main])
         snapshot.appendItems(newSnapshots)
-        dataSource.apply(snapshot, animatingDifferences: animated)
+        dataSource.apply(snapshot, animatingDifferences: shouldAnimate(animated))
     }
 
     func updateActivityIndicator() {
@@ -576,7 +584,10 @@ private extension DashboardViewController {
             } else {
                 newSnapshot.reconfigureItems(newSnapshot.itemIdentifiers)
             }
-            self.dataSource.apply(newSnapshot, animatingDifferences: animated) { [weak self] in
+            self.dataSource.apply(
+                newSnapshot,
+                animatingDifferences: self.shouldAnimate(animated)
+            ) { [weak self] in
                 if redrawLayout {
                     self?.collectionView.collectionViewLayout.invalidateLayout()
                 }
@@ -825,7 +836,7 @@ private extension DashboardViewController {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
 
-            UIView.animate(withDuration: 0.3) {
+            let updates = {
                 self.dashboardSignInBannerView.alpha = self.shouldShowSignInBanner ? 1 : 0
 
                 if self.shouldShowSignInBanner {
@@ -837,6 +848,12 @@ private extension DashboardViewController {
                 }
 
                 self.view.layoutIfNeeded()
+            }
+
+            if self.shouldAnimate(true) {
+                UIView.animate(withDuration: 0.3, animations: updates)
+            } else {
+                UIView.performWithoutAnimation(updates)
             }
         }
     }
