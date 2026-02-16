@@ -12,6 +12,13 @@ class RuuviReactorImpl: RuuviReactor {
     private let sqliteContext: SQLiteContext
     private let sqlitePersistence: RuuviPersistence
     private let errorReporter: RuuviErrorReporter
+    private let stateLock = NSLock()
+    private let entityCombine: RuuviTagSubjectCombine
+
+    private var recordCombines = [String: RuuviTagRecordSubjectCombine]()
+    private var lastRecordCombines = [String: RuuviTagLastRecordSubjectCombine]()
+    private var latestRecordCombines = [String: RuuviTagLatestRecordSubjectCombine]()
+    private var sensorSettingsCombines = [String: SensorSettingsCombine]()
 
     init(
         sqliteContext: SQLiteContext,
@@ -21,25 +28,26 @@ class RuuviReactorImpl: RuuviReactor {
         self.sqliteContext = sqliteContext
         self.sqlitePersistence = sqlitePersistence
         self.errorReporter = errorReporter
+        self.entityCombine = RuuviTagSubjectCombine(
+            sqlite: sqliteContext,
+            errorReporter: errorReporter
+        )
     }
 
-    private lazy var entityCombine = RuuviTagSubjectCombine(
-        sqlite: sqliteContext,
-        errorReporter: errorReporter
-    )
-    private lazy var recordCombines = [String: RuuviTagRecordSubjectCombine]()
-    private lazy var lastRecordCombines = [String: RuuviTagLastRecordSubjectCombine]()
-    private lazy var latestRecordCombines = [String: RuuviTagLatestRecordSubjectCombine]()
-    private lazy var sensorSettingsCombines = [String: SensorSettingsCombine]()
+    private func synchronized<T>(_ block: () -> T) -> T {
+        stateLock.lock()
+        defer { stateLock.unlock() }
+        return block()
+    }
 
     func observe(
         _ luid: LocalIdentifier,
         _ block: @escaping ([AnyRuuviTagSensorRecord]) -> Void
     ) -> RuuviReactorToken {
-        var recordCombine: RuuviTagRecordSubjectCombine
-        if let combine = recordCombines[luid.value] {
-            recordCombine = combine
-        } else {
+        let recordCombine: RuuviTagRecordSubjectCombine = synchronized {
+            if let combine = recordCombines[luid.value] {
+                return combine
+            }
             let combine = RuuviTagRecordSubjectCombine(
                 luid: luid,
                 macId: nil,
@@ -47,12 +55,21 @@ class RuuviReactorImpl: RuuviReactor {
                 errorReporter: errorReporter
             )
             recordCombines[luid.value] = combine
-            recordCombine = combine
+            return combine
         }
+
         let cancellable = recordCombine.subject.sink { values in
             block(values)
         }
-        if !recordCombine.isServing {
+
+        let shouldStart = synchronized {
+            if recordCombine.isServing {
+                return false
+            }
+            recordCombine.isServing = true
+            return true
+        }
+        if shouldStart {
             recordCombine.start()
         }
         return RuuviReactorToken {
@@ -96,10 +113,10 @@ class RuuviReactorImpl: RuuviReactor {
                 let result = [sqliteRecord].compactMap { $0?.any }.last
                 block(.update(result))
             })
-        var recordCombine: RuuviTagLastRecordSubjectCombine
-        if let combine = lastRecordCombines[ruuviTag.id] {
-            recordCombine = combine
-        } else {
+        let recordCombine: RuuviTagLastRecordSubjectCombine = synchronized {
+            if let combine = lastRecordCombines[ruuviTag.id] {
+                return combine
+            }
             let combine = RuuviTagLastRecordSubjectCombine(
                 luid: ruuviTag.luid,
                 macId: ruuviTag.macId,
@@ -107,12 +124,21 @@ class RuuviReactorImpl: RuuviReactor {
                 errorReporter: errorReporter
             )
             lastRecordCombines[ruuviTag.id] = combine
-            recordCombine = combine
+            return combine
         }
+
         let cancellable = recordCombine.subject.sink { record in
             block(.update(record))
         }
-        if !recordCombine.isServing {
+
+        let shouldStart = synchronized {
+            if recordCombine.isServing {
+                return false
+            }
+            recordCombine.isServing = true
+            return true
+        }
+        if shouldStart {
             recordCombine.start()
         }
         return RuuviReactorToken {
@@ -129,10 +155,10 @@ class RuuviReactorImpl: RuuviReactor {
             let result = [sqliteRecord].compactMap { $0?.any }.last
             block(.update(result))
         })
-        var recordCombine: RuuviTagLatestRecordSubjectCombine
-        if let combine = latestRecordCombines[ruuviTag.id] {
-            recordCombine = combine
-        } else {
+        let recordCombine: RuuviTagLatestRecordSubjectCombine = synchronized {
+            if let combine = latestRecordCombines[ruuviTag.id] {
+                return combine
+            }
             let combine = RuuviTagLatestRecordSubjectCombine(
                 luid: ruuviTag.luid,
                 macId: ruuviTag.macId,
@@ -140,12 +166,21 @@ class RuuviReactorImpl: RuuviReactor {
                 errorReporter: errorReporter
             )
             latestRecordCombines[ruuviTag.id] = combine
-            recordCombine = combine
+            return combine
         }
+
         let cancellable = recordCombine.subject.sink { record in
             block(.update(record))
         }
-        if !recordCombine.isServing {
+
+        let shouldStart = synchronized {
+            if recordCombine.isServing {
+                return false
+            }
+            recordCombine.isServing = true
+            return true
+        }
+        if shouldStart {
             recordCombine.start()
         }
         return RuuviReactorToken {
@@ -162,10 +197,10 @@ class RuuviReactorImpl: RuuviReactor {
                 block(.initial([sensorSettings]))
             }
         }
-        var sensorSettingsCombine: SensorSettingsCombine
-         if let combine = sensorSettingsCombines[ruuviTag.id] {
-            sensorSettingsCombine = combine
-        } else {
+        let sensorSettingsCombine: SensorSettingsCombine = synchronized {
+            if let combine = sensorSettingsCombines[ruuviTag.id] {
+                return combine
+            }
             let combine = SensorSettingsCombine(
                 luid: ruuviTag.luid,
                 macId: ruuviTag.macId,
@@ -173,8 +208,9 @@ class RuuviReactorImpl: RuuviReactor {
                 errorReporter: errorReporter
             )
             sensorSettingsCombines[ruuviTag.id] = combine
-            sensorSettingsCombine = combine
+            return combine
         }
+
         let insert = sensorSettingsCombine.insertSubject.sink { value in
             block(.insert(value))
         }
