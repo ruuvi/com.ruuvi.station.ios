@@ -318,10 +318,9 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
             // swiftlint:disable:next function_body_length
             func handle(localSettings: SensorSettings?) {
-                let localTimestamp = localSettings?.lastUpdated ?? sensor.lastUpdated
                 let syncAction = SyncCollisionResolver.resolve(
                     isOwner: sensor.isOwner,
-                    localTimestamp: localTimestamp,
+                    localTimestamp: sensor.lastUpdated,
                     cloudTimestamp: cloudSensor.lastUpdated
                 )
 
@@ -382,13 +381,17 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 case .keepLocalAndQueue:
                     // Only queue offsets that actually differ from cloud values
                     let baseSettings = fallbackSettings(localSettings)
-                    var diffSettings = baseSettings
+                    
+                    // Determine which offsets actually differ from cloud
+                    var queuedTemperatureOffset: Double? = baseSettings.temperatureOffset
+                    var queuedHumidityOffset: Double? = baseSettings.humidityOffset
+                    var queuedPressureOffset: Double? = baseSettings.pressureOffset
 
                     // Temperature: compare local offset to cloud offset as-is
                     if let localTempOffset = baseSettings.temperatureOffset,
                        let cloudTempOffset = cloudSensor.offsetTemperature,
                        localTempOffset == cloudTempOffset {
-                        diffSettings.temperatureOffset = nil
+                        queuedTemperatureOffset = nil
                     }
 
                     // Humidity: local offset is in %, cloud offset stored as int * 100
@@ -396,7 +399,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                        let cloudHumidityRaw = cloudSensor.offsetHumidity {
                         let cloudHumidityOffset = cloudHumidityRaw / 100
                         if localHumidityOffset == cloudHumidityOffset {
-                            diffSettings.humidityOffset = nil
+                            queuedHumidityOffset = nil
                         }
                     }
 
@@ -405,9 +408,18 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                        let cloudPressureRaw = cloudSensor.offsetPressure {
                         let cloudPressureOffset = cloudPressureRaw / 100
                         if localPressureOffset == cloudPressureOffset {
-                            diffSettings.pressureOffset = nil
+                            queuedPressureOffset = nil
                         }
                     }
+
+                    // Create new settings struct with only the differing offsets
+                    let diffSettings = SensorSettingsStruct(
+                        luid: baseSettings.luid,
+                        macId: baseSettings.macId,
+                        temperatureOffset: queuedTemperatureOffset,
+                        humidityOffset: queuedHumidityOffset,
+                        pressureOffset: queuedPressureOffset
+                    )
 
                     self.queueOffsetUpdatesToCloud(
                         sensor: sensor,
