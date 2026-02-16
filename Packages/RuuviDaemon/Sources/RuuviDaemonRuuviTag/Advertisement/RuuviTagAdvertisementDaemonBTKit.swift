@@ -1,3 +1,5 @@
+// swiftlint:disable file_length
+
 import BTKit
 import Foundation
 import RuuviLocal
@@ -215,7 +217,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func restartObserving() {
         let desiredTags = ruuviTags.filter { !(settings.cloudModeEnabled && $0.isCloud) }
         let desiredLuidValues = Set(desiredTags.compactMap { $0.luid?.value })
@@ -266,7 +268,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
                     case let .insert(sensorSettings):
                         self?.sensorSettingsList.append(sensorSettings)
                         // remove last update timestamp to force add new record in db
-                        self?.stateQueue.sync {
+                        _ = self?.stateQueue.sync {
                             self?.savedDate.removeValue(forKey: luid.value)
                         }
                     case let .update(sensorSettings):
@@ -291,7 +293,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         } else {
             sensorSettingsList.append(sensorSettings)
         }
-        stateQueue.sync {
+        _ = stateQueue.sync {
             savedDate.removeValue(forKey: luid.value)
         }
     }
@@ -427,3 +429,5 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         }
     }
 }
+
+// swiftlint:enable file_length

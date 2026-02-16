@@ -283,7 +283,8 @@ extension RuuviTagHeartbeatDaemonBTKit {
         }
     }
 
-    /// Processes a RuuviTag for alerts and record creation based on settings.
+    // Processes a RuuviTag for alerts and record creation based on settings.
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func processRuuviTag(_ ruuviTag: RuuviTag, source: RuuviTagSensorRecordSource) {
         var sensorSettings: SensorSettings?
         let ruuviTagSensor: AnyRuuviTagSensor? = {
@@ -433,7 +434,8 @@ extension RuuviTagHeartbeatDaemonBTKit {
 // MARK: - Private
 
 extension RuuviTagHeartbeatDaemonBTKit {
-    /// Updates connections and observations based on changes in Ruuvi tags.
+    // Updates connections and observations based on changes in Ruuvi tags.
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func handleRuuviTagsChange() {
         var luidIndex = [AnyLocalIdentifier: AnyRuuviTagSensor]()
         for tag in ruuviTags {
