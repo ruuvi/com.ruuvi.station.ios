@@ -10,7 +10,7 @@ public enum SyncAction {
 }
 
 public struct SyncCollisionResolver {
-    /// Tolerance for clock skew (1 seconds)
+    /// Tolerance for clock skew (1 second)
     private static let tolerance: TimeInterval = 1.0
 
     /// Resolves sync collision based on timestamps.

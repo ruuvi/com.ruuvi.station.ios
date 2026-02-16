@@ -29,7 +29,7 @@ public struct RuuviCloudApiGetAlert: Decodable, RuuviCloudAlert {
     public let description: String?
     public let triggered: Bool?
     public let triggeredAt: String?
-    public let updatedAt: Date?
+    public let lastUpdated: Date?
 
     enum CodingKeys: String, CodingKey {
         case type, enabled, min, max, counter, delay, description, triggered, triggeredAt
@@ -62,11 +62,11 @@ public struct RuuviCloudApiGetAlert: Decodable, RuuviCloudAlert {
         triggeredAt = try container.decode(String.self, forKey: .triggeredAt)
 
         if let lastUpdatedValue = try? container.decode(Int.self, forKey: .lastUpdated) {
-            updatedAt = Date(timeIntervalSince1970: TimeInterval(lastUpdatedValue))
+            lastUpdated = Date(timeIntervalSince1970: TimeInterval(lastUpdatedValue))
         } else if let lastUpdatedValue = try? container.decode(Double.self, forKey: .lastUpdated) {
-            updatedAt = Date(timeIntervalSince1970: lastUpdatedValue)
+            lastUpdated = Date(timeIntervalSince1970: lastUpdatedValue)
         } else {
-            updatedAt = nil
+            lastUpdated = nil
         }
     }
 }

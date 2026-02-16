@@ -1912,7 +1912,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                 guard let type else { return }
 
                 let localUpdatedAt = alertUpdatedAt(for: physicalSensor, type: type)
-                let cloudUpdatedAt = cloudAlert.updatedAt
+                let cloudUpdatedAt = cloudAlert.lastUpdated
 
                 let syncAction: SyncAction
                 if ruuviLocalSettings.cloudModeEnabled {

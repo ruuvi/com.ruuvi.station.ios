@@ -318,41 +318,54 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
             // swiftlint:disable:next function_body_length
             func handle(localSettings: SensorSettings?) {
+                let localTimestamp = localSettings?.lastUpdated ?? sensor.lastUpdated
                 let syncAction = SyncCollisionResolver.resolve(
                     isOwner: sensor.isOwner,
-                    localTimestamp: sensor.lastUpdated,
+                    localTimestamp: localTimestamp,
                     cloudTimestamp: cloudSensor.lastUpdated
                 )
 
                 switch syncAction {
                 case .updateLocal:
                     var updates = [Future<SensorSettings, RuuviPoolError>]()
-                    updates.append(
-                        self.ruuviPool.updateOffsetCorrection(
-                            type: .temperature,
-                            with: cloudSensor.offsetTemperature,
-                            of: sensor
-                        )
-                    )
 
-                    if let offsetHumidity = cloudSensor.offsetHumidity {
+                    // Update temperature offset only if it differs from local settings
+                    if cloudSensor.offsetTemperature != localSettings.offsetTemperature {
                         updates.append(
                             self.ruuviPool.updateOffsetCorrection(
-                                type: .humidity,
-                                with: offsetHumidity / 100,
+                                type: .temperature,
+                                with: cloudSensor.offsetTemperature,
                                 of: sensor
                             )
                         )
                     }
 
-                    if let offsetPressure = cloudSensor.offsetPressure {
-                        updates.append(
-                            self.ruuviPool.updateOffsetCorrection(
-                                type: .pressure,
-                                with: offsetPressure / 100,
-                                of: sensor
+                    // Update humidity offset only if cloud value is present and differs (after scaling)
+                    if let offsetHumidity = cloudSensor.offsetHumidity {
+                        let newHumidityOffset = offsetHumidity / 100
+                        if newHumidityOffset != localSettings.offsetHumidity {
+                            updates.append(
+                                self.ruuviPool.updateOffsetCorrection(
+                                    type: .humidity,
+                                    with: newHumidityOffset,
+                                    of: sensor
+                                )
                             )
-                        )
+                        }
+                    }
+
+                    // Update pressure offset only if cloud value is present and differs (after scaling)
+                    if let offsetPressure = cloudSensor.offsetPressure {
+                        let newPressureOffset = offsetPressure / 100
+                        if newPressureOffset != localSettings.offsetPressure {
+                            updates.append(
+                                self.ruuviPool.updateOffsetCorrection(
+                                    type: .pressure,
+                                    with: newPressureOffset,
+                                    of: sensor
+                                )
+                            )
+                        }
                     }
 
                     Future.zip(updates)
@@ -367,11 +380,40 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         })
 
                 case .keepLocalAndQueue:
+                    // Only queue offsets that actually differ from cloud values
+                    let baseSettings = fallbackSettings(localSettings)
+                    var diffSettings = baseSettings
+
+                    // Temperature: compare local offset to cloud offset as-is
+                    if let localTempOffset = baseSettings.temperatureOffset,
+                       let cloudTempOffset = cloudSensor.offsetTemperature,
+                       localTempOffset == cloudTempOffset {
+                        diffSettings.temperatureOffset = nil
+                    }
+
+                    // Humidity: local offset is in %, cloud offset stored as int * 100
+                    if let localHumidityOffset = baseSettings.humidityOffset,
+                       let cloudHumidityRaw = cloudSensor.offsetHumidity {
+                        let cloudHumidityOffset = cloudHumidityRaw / 100
+                        if localHumidityOffset == cloudHumidityOffset {
+                            diffSettings.humidityOffset = nil
+                        }
+                    }
+
+                    // Pressure: local offset is in hPa, cloud offset stored as int * 100
+                    if let localPressureOffset = baseSettings.pressureOffset,
+                       let cloudPressureRaw = cloudSensor.offsetPressure {
+                        let cloudPressureOffset = cloudPressureRaw / 100
+                        if localPressureOffset == cloudPressureOffset {
+                            diffSettings.pressureOffset = nil
+                        }
+                    }
+
                     self.queueOffsetUpdatesToCloud(
                         sensor: sensor,
-                        settings: localSettings
+                        settings: diffSettings
                     )
-                    promise.succeed(value: fallbackSettings(localSettings))
+                    promise.succeed(value: baseSettings)
 
                 case .noAction:
                     promise.succeed(value: fallbackSettings(localSettings))
