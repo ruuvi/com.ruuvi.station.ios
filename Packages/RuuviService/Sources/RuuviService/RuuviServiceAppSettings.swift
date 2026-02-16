@@ -52,6 +52,9 @@ public protocol RuuviServiceAppSettings {
     func set(disablePushAlert: Bool) -> Future<Bool, RuuviServiceError>
 
     @discardableResult
+    func set(marketingPreference: Bool) -> Future<Bool, RuuviServiceError>
+
+    @discardableResult
     func set(profileLanguageCode: String) -> Future<String, RuuviServiceError>
 
     @discardableResult

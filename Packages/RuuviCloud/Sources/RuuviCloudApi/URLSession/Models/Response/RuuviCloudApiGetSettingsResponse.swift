@@ -71,6 +71,10 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
         emailAlertDisabledString?.ruuviCloudApiSettingBoolean
     }
 
+    public var marketingPreference: Bool? {
+        marketingPreferenceString?.ruuviCloudApiSettingBoolean
+    }
+
     public var profileLanguageCode: String? {
         profileLanguageCodeString
     }
@@ -95,6 +99,7 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
     var dashboardTapActionTypeString: String?
     var emailAlertDisabledString: String?
     var pushAlertDisabledString: String?
+    var marketingPreferenceString: String?
     var profileLanguageCodeString: String?
     var dashboardSensorOrderString: String?
 
@@ -115,6 +120,7 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
         case dashboardTapActionTypeString = "DASHBOARD_TAP_ACTION"
         case emailAlertDisabledString = "DISABLE_EMAIL_NOTIFICATIONS"
         case pushAlertDisabledString = "DISABLE_PUSH_NOTIFICATIONS"
+        case marketingPreferenceString = "MARKETING_PREFERENCE"
         case profileLanguageCodeString = "PROFILE_LANGUAGE_CODE"
         case dashboardSensorOrderString = "SENSOR_ORDER"
     }

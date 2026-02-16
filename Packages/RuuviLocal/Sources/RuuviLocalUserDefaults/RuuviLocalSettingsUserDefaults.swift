@@ -775,6 +775,21 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
+    @UserDefault("SettingsUserDefaults.marketingPreference", defaultValue: false)
+    var marketingPreference: Bool {
+        didSet {
+            DispatchQueue.global(qos: .userInitiated).async {
+                NotificationCenter
+                    .default
+                    .post(
+                        name: .MarketingPreferenceDidChange,
+                        object: self,
+                        userInfo: nil
+                    )
+            }
+        }
+    }
+
     @UserDefault("SettingsUserDefaults.limitAlertNotificationsEnabled", defaultValue: true)
     var limitAlertNotificationsEnabled: Bool {
         didSet {

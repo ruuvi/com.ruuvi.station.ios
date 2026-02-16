@@ -22,6 +22,7 @@ public extension Notification.Name {
     static let AlertSoundSettingsDidChange = Notification.Name("AlertSoundSettingsDidChange")
     static let EmailAlertSettingsDidChange = Notification.Name("EmailAlertSettingsDidChange")
     static let PushAlertSettingsDidChange = Notification.Name("PushAlertSettingsDidChange")
+    static let MarketingPreferenceDidChange = Notification.Name("MarketingPreferenceDidChange")
     static let LimitAlertNotificationsSettingsDidChange =
         Notification.Name("LimitAlertNotificationsSettingsDidChange")
     static let DashboardSensorOrderDidChange = Notification.Name("DashboardSensorOrderDidChange")
@@ -111,6 +112,7 @@ public protocol RuuviLocalSettings {
     var alertSound: RuuviAlertSound { get set }
     var emailAlertDisabled: Bool { get set }
     var pushAlertDisabled: Bool { get set }
+    var marketingPreference: Bool { get set }
     var limitAlertNotificationsEnabled: Bool { get set }
     var showSwitchStatusLabel: Bool { get set }
     var showAlertsRangeInGraph: Bool { get set }

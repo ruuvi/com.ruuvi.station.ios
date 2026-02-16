@@ -23,6 +23,7 @@ class MyRuuviAccountConfigurator {
         presenter.authService = r.resolve(RuuviServiceAuth.self)
         presenter.pnManager = r.resolve(RuuviCorePN.self)
         presenter.cloudNotificationService = r.resolve(RuuviServiceCloudNotification.self)
+        presenter.ruuviAppSettingsService = r.resolve(RuuviServiceAppSettings.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.mailComposerPresenter = r.resolve(MailComposerPresenter.self)
         view.output = presenter
