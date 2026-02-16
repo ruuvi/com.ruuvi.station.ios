@@ -656,6 +656,13 @@ private extension CardsBaseViewController {
         for tab: CardsMenuType,
         animated: Bool
     ) {
+        guard isViewLoaded else { return }
+        guard footerStackHeightConstraint != nil,
+              tabContainerBottomToViewConstraint != nil,
+              footerBottomToViewConstraint != nil,
+              footerBottomToSafeConstraint != nil else {
+            return
+        }
         let hasSnapshot = currentSnapshotIndex < currentSnapshots.count
         guard flags.showNewCardsMenu else {
             footerView.isHidden = !hasSnapshot
