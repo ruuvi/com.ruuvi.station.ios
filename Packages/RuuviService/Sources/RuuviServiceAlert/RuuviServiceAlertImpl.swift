@@ -1915,9 +1915,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                 let cloudUpdatedAt = cloudAlert.lastUpdated
 
                 let syncAction: SyncAction
-                if ruuviLocalSettings.cloudModeEnabled {
-                    syncAction = .updateLocal
-                } else if cloudUpdatedAt == nil {
+                if cloudUpdatedAt == nil {
                     // API doesn't provide lastUpdated for alerts yet
                     // Fall back to cloud-authoritative behavior for backward compatibility
                     syncAction = .updateLocal
