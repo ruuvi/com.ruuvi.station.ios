@@ -18,6 +18,7 @@ public enum RuuviCloudApiSetting: String, CaseIterable, Codable {
     case dashboardTapActionType = "DASHBOARD_TAP_ACTION"
     case pushAlertDisabled = "DISABLE_PUSH_NOTIFICATIONS"
     case emailAlertDisabled = "DISABLE_EMAIL_NOTIFICATIONS"
+    case marketingPreference = "MARKETING_PREFERENCE"
     case profileLanguageCode = "PROFILE_LANGUAGE_CODE"
     case dashboardSensorOrder = "SENSOR_ORDER"
     case sensorDisplayOrder = "displayOrder"

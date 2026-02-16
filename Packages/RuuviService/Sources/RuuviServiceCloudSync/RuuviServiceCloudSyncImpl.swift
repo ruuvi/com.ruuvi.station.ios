@@ -118,6 +118,10 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                    emailAlertDisabled != sSelf.ruuviLocalSettings.emailAlertDisabled {
                     sSelf.ruuviLocalSettings.emailAlertDisabled = emailAlertDisabled
                 }
+                if let marketingPreference = cloudSettings.marketingPreference,
+                   marketingPreference != sSelf.ruuviLocalSettings.marketingPreference {
+                    sSelf.ruuviLocalSettings.marketingPreference = marketingPreference
+                }
                 if let cloudProfileLanguageCode = cloudSettings.profileLanguageCode {
                     if cloudProfileLanguageCode !=
                         sSelf.ruuviLocalSettings.cloudProfileLanguageCode {

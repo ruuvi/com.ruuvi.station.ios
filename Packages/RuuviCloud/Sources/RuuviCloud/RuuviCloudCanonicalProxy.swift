@@ -323,6 +323,10 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         cloud.set(disablePushAlert: disablePushAlert)
     }
 
+    public func set(marketingPreference: Bool) -> Future<Bool, RuuviCloudError> {
+        cloud.set(marketingPreference: marketingPreference)
+    }
+
     public func set(profileLanguageCode: String) -> Future<String, RuuviCloudError> {
         cloud.set(profileLanguageCode: profileLanguageCode)
     }

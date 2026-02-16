@@ -24,6 +24,7 @@ final class MyRuuviAccountPresenter: MyRuuviAccountModuleInput {
     var activityPresenter: ActivityPresenter!
     var pnManager: RuuviCorePN!
     var cloudNotificationService: RuuviServiceCloudNotification!
+    var ruuviAppSettingsService: RuuviServiceAppSettings!
     var settings: RuuviLocalSettings!
     var mailComposerPresenter: MailComposerPresenter!
 }
@@ -61,6 +62,11 @@ extension MyRuuviAccountPresenter: MyRuuviAccountViewOutput {
     func viewDidTriggerSupport(with email: String) {
         mailComposerPresenter.present(email: email.lowercased())
     }
+
+    func viewDidChangeMarketingPreference(isEnabled: Bool) {
+        settings.marketingPreference = isEnabled
+        ruuviAppSettingsService.set(marketingPreference: isEnabled)
+    }
 }
 
 // MARK: - Private
@@ -71,6 +77,7 @@ extension MyRuuviAccountPresenter {
         if ruuviUser.isAuthorized {
             viewModel.username.value = ruuviUser.email?.lowercased()
         }
+        viewModel.marketingPreference.value = settings.marketingPreference
         view.viewModel = viewModel
     }
 }

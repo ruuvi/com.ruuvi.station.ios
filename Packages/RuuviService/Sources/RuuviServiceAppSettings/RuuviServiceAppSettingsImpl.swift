@@ -222,6 +222,19 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     }
 
     @discardableResult
+    public func set(marketingPreference: Bool) -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+        localSettings.marketingPreference = marketingPreference
+        cloud.set(marketingPreference: marketingPreference)
+            .on(success: { marketingPreference in
+                promise.succeed(value: marketingPreference)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
     public func set(profileLanguageCode: String) -> Future<String, RuuviServiceError> {
         let promise = Promise<String, RuuviServiceError>()
         cloud.set(profileLanguageCode: profileLanguageCode)

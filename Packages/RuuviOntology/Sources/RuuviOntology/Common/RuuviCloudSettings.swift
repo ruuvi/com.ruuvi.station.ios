@@ -17,6 +17,7 @@ public protocol RuuviCloudSettings {
     var dashboardTapActionType: DashboardTapActionType? { get }
     var pushAlertDisabled: Bool? { get }
     var emailAlertDisabled: Bool? { get }
+    var marketingPreference: Bool? { get }
     var profileLanguageCode: String? { get }
     var dashboardSensorOrder: String? { get }
 }
