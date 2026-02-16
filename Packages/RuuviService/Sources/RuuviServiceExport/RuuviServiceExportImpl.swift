@@ -146,7 +146,10 @@ extension RuuviServiceExportImpl {
             return pressure.converted(to: .hectopascals).value != -0.01
         }
         let hasRssi = records.contains { $0.rssi != nil }
-        let hasVoltage = records.contains { $0.voltage != nil }
+        let hasVoltage = records.contains { record in
+            guard let voltage = record.voltage else { return false }
+            return voltage.converted(to: .volts).value != 0
+        }
         let hasMovement = records.contains { $0.movementCounter != nil }
         let hasAcceleration = records.contains { $0.acceleration != nil }
         let hasMeasurementSequenceNumber = records.contains { $0.measurementSequenceNumber != nil }
@@ -393,6 +396,17 @@ extension RuuviServiceExportImpl {
         ) -> String {
             guard let rssi = record.rssi else { return emptyValueString }
             return "\(rssi)"
+        }
+
+        func voltageValue(
+            for record: RuuviTagSensorRecord
+        ) -> String {
+            guard let voltage = record.voltage else { return emptyValueString }
+            let value = voltage.converted(to: .volts).value
+            if value == 0 {
+                return emptyValueString
+            }
+            return toString(value)
         }
 
         var columns: [ColumnDefinition] = [
@@ -716,8 +730,7 @@ extension RuuviServiceExportImpl {
                 ColumnDefinition(
                     header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .voltage)),
                     cellExtractor: { record in
-                        let v = record.voltage?.converted(to: .volts).value
-                        return toString(v)
+                        voltageValue(for: record)
                     }
                 )
             )
