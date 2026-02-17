@@ -15,4 +15,7 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     @UserDefault("RuuviFeatureFlags.downloadAlphaFirmware", defaultValue: false)
     var downloadAlphaFirmware: Bool
 
+    @UserDefault("RuuviFeatureFlags.autoSyncGattHistoryForRuuviAir", defaultValue: true)
+    var autoSyncGattHistoryForRuuviAir: Bool
+
 }

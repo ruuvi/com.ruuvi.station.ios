@@ -55,6 +55,8 @@ class CardsGraphPresenter: NSObject {
 
     // MARK: Helper Properties
     private var shouldSyncFromCloud: Bool = true
+    private let autoGattSyncStartDelay: TimeInterval = 0.25
+    private var autoGattSyncWorkItem: DispatchWorkItem?
     private var isSyncing: Bool = false {
         didSet {
             output?.setGraphGattSyncInProgress(isSyncing)
@@ -164,15 +166,19 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
 
     func start(shouldSyncFromCloud: Bool) {
         self.shouldSyncFromCloud = shouldSyncFromCloud
+        cancelScheduledAutoGattSync()
         view?.resetScrollPosition()
         observeLastOpenedChart()
         startListeningToSettings()
         tryToShowSwipeUpHint()
         reloadChartsData(shouldSyncFromCloud: shouldSyncFromCloud)
         stopGattSync()
+        scheduleAutoGattSyncIfNeeded()
     }
 
-    func stop() {}
+    func stop() {
+        cancelScheduledAutoGattSync()
+    }
 
     func scroll(to index: Int, animated: Bool) {
         view?.setActiveSnapshot(snapshot)
@@ -281,6 +287,7 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
 
     func viewDidStartSync(for snapshot: RuuviTagCardSnapshot?) {
         guard let snapshot = snapshot else { return }
+        cancelScheduledAutoGattSync()
         // Check bluetooth
         let resolvedState = serviceCoordinatorManager.getCurrentBluetoothState()
         guard resolvedState.isEnabled && !resolvedState.userDeclined else {
@@ -526,6 +533,7 @@ extension CardsGraphPresenter {
     }
 
     private func restartObserving() {
+        cancelScheduledAutoGattSync()
         shutDownModule()
         startObservingSensorSettingsChanges()
         startObservingCloudSyncNotification()
@@ -535,6 +543,7 @@ extension CardsGraphPresenter {
         tryToShowSwipeUpHint()
 
         reloadChartsData(shouldSyncFromCloud: shouldSyncFromCloud)
+        scheduleAutoGattSyncIfNeeded()
     }
 
     private func startObservingNetworkSyncNotification(
@@ -610,6 +619,41 @@ extension CardsGraphPresenter {
                 guard self?.view != nil else { return }
                 self?.view?.setSyncProgressViewHidden()
             })
+    }
+
+    private func scheduleAutoGattSyncIfNeeded() {
+        cancelScheduledAutoGattSync()
+        guard shouldAutoStartGattSyncOnGraphOpen() else { return }
+
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            guard self.shouldAutoStartGattSyncOnGraphOpen() else { return }
+            guard self.view?.graphIsVisibleForUser == true else { return }
+            guard !self.isSyncing else { return }
+            guard self.interactor?.isSyncingRecords() != true else { return }
+            self.viewDidStartSync(for: self.snapshot)
+        }
+        autoGattSyncWorkItem = workItem
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + autoGattSyncStartDelay,
+            execute: workItem
+        )
+    }
+
+    private func cancelScheduledAutoGattSync() {
+        autoGattSyncWorkItem?.cancel()
+        autoGattSyncWorkItem = nil
+    }
+
+    private func shouldAutoStartGattSyncOnGraphOpen() -> Bool {
+        guard flags.autoSyncGattHistoryForRuuviAir else { return false }
+        guard let snapshot else { return false }
+        let firmwareVersion = sensor?.version ?? snapshot.displayData.version.bound
+        let firmwareType = RuuviDataFormat.dataFormat(from: firmwareVersion)
+        let isRuuviAir = firmwareType == .e1 || firmwareType == .v6
+        guard isRuuviAir else { return false }
+        let isCloudSensor = sensor?.isCloud ?? snapshot.metadata.isCloud
+        return !isCloudSensor
     }
 
     // swiftlint:disable:next function_body_length

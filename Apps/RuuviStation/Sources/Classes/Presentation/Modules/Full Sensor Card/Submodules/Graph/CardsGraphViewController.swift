@@ -658,6 +658,10 @@ extension CardsGraphViewController: CardsGraphViewInput {
         isViewLoaded && view.window != nil
     }
 
+    var graphIsVisibleForUser: Bool {
+        viewIsVisible && !view.isHidden && view.alpha > 0.01
+    }
+
     func clearChartHistory() {
         clearChartData()
     }
