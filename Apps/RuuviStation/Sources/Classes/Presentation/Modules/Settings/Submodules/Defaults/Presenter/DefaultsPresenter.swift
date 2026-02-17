@@ -78,6 +78,7 @@ extension DefaultsPresenter {
             buildShowRedesignedCardsUIWithMenu(),
             buildDownloadBetaFirmware(),
             buildDownloadAlphaFirmware(),
+            buildAutoSyncGattHistoryForRuuviAir(),
         ]
     }
 
@@ -562,6 +563,21 @@ extension DefaultsPresenter {
 
         bind(viewModel.boolean, fire: false) { observer, bool in
             observer.flags.downloadAlphaFirmware = GlobalHelpers
+                .getBool(from: bool)
+        }
+
+        return viewModel
+    }
+
+    private func buildAutoSyncGattHistoryForRuuviAir() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Auto sync Ruuvi Air GATT history on graph open"
+        viewModel.boolean.value = flags.autoSyncGattHistoryForRuuviAir
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, bool in
+            observer.flags.autoSyncGattHistoryForRuuviAir = GlobalHelpers
                 .getBool(from: bool)
         }
 
