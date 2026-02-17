@@ -645,6 +645,7 @@ extension RuuviTagServiceCoordinator: RuuviCloudServiceDelegate {
         _ service: RuuviCloudService,
         syncDidComplete: Bool
     ) {
+        dataService.refreshSubscriptionDataForSnapshots()
         notifyEvent(.cloudSyncCompleted)
     }
 

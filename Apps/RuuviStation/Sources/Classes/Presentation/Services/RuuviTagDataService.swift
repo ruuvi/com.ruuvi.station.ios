@@ -251,6 +251,14 @@ class RuuviTagDataService {
         }
     }
 
+    func refreshSubscriptionDataForSnapshots() {
+        let currentSnapshots = snapshots
+        for snapshot in currentSnapshots {
+            guard let sensor = getSensor(for: snapshot.id) else { continue }
+            syncMaxShareCount(for: snapshot, sensor: sensor)
+        }
+    }
+
     // MARK: - Background Loading
     func loadBackgroundsForCurrentSnapshots() {
         // This method can be called externally to force load backgrounds
