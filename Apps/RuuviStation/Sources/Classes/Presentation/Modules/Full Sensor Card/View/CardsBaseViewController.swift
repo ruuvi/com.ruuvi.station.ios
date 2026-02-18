@@ -672,16 +672,13 @@ private extension CardsBaseViewController {
             footerView.isHidden = !hasSnapshot
             footerView.alpha = 1
             footerStackHeightConstraint.constant = Constants.Layout.footerStackHeight
-            tabContainerBottomToViewConstraint.isActive = false
-            footerBottomToViewConstraint.isActive = false
-            footerBottomToSafeConstraint.isActive = true
+            applyFooterBottomLayout(extendToBottom: false)
+            applyFooterLayoutIfNeeded()
             return
         }
 
         let shouldExtendToBottom = tab == .alerts || tab == .settings
-        tabContainerBottomToViewConstraint.isActive = shouldExtendToBottom
-        footerBottomToViewConstraint.isActive = shouldExtendToBottom
-        footerBottomToSafeConstraint.isActive = !shouldExtendToBottom
+        applyFooterBottomLayout(extendToBottom: shouldExtendToBottom)
 
         let shouldCollapse = !hasSnapshot || tab == .alerts || tab == .settings
         let targetAlpha: CGFloat = shouldCollapse ? 0 : 1
@@ -689,19 +686,41 @@ private extension CardsBaseViewController {
         footerView.isUserInteractionEnabled = !shouldCollapse
         footerView.isHidden = !hasSnapshot
 
-        if animated {
+        if animated && view.window != nil {
             UIView.animate(
                 withDuration: Constants.Animation.tabTransitionDuration,
                 delay: 0,
                 options: [.curveEaseInOut, .allowUserInteraction],
                 animations: {
                     self.footerView.alpha = targetAlpha
-                    self.view.layoutIfNeeded()
+                    self.applyFooterLayoutIfNeeded()
                 }
             )
         } else {
             footerView.alpha = targetAlpha
+            applyFooterLayoutIfNeeded()
+        }
+    }
+
+    private func applyFooterBottomLayout(extendToBottom: Bool) {
+        // Deactivate incompatible constraints first to avoid transient invalid states.
+        if extendToBottom {
+            footerBottomToSafeConstraint.isActive = false
+            tabContainerBottomToViewConstraint.isActive = true
+            footerBottomToViewConstraint.isActive = true
+        } else {
+            tabContainerBottomToViewConstraint.isActive = false
+            footerBottomToViewConstraint.isActive = false
+            footerBottomToSafeConstraint.isActive = true
+        }
+    }
+
+    private func applyFooterLayoutIfNeeded() {
+        // Avoid forcing an immediate layout pass while the VC is off-screen.
+        if view.window != nil {
             view.layoutIfNeeded()
+        } else {
+            view.setNeedsLayout()
         }
     }
 
