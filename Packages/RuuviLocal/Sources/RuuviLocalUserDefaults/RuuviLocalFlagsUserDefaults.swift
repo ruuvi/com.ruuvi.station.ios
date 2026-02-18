@@ -18,4 +18,7 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     @UserDefault("RuuviFeatureFlags.autoSyncGattHistoryForRuuviAir", defaultValue: true)
     var autoSyncGattHistoryForRuuviAir: Bool
 
+    @UserDefault("RuuviFeatureFlags.showMarketingPreference", defaultValue: false)
+    var showMarketingPreference: Bool
+
 }

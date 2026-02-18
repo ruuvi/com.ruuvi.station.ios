@@ -53,6 +53,7 @@ class MyRuuviAccountViewController: UIViewController {
         stackView.axis = .vertical
         stackView.spacing = 8
         stackView.alignment = .fill
+        stackView.isHidden = true
         return stackView
     }()
 
@@ -163,6 +164,9 @@ extension MyRuuviAccountViewController {
         }
         loggedInLabel.bind(viewModel.username) { label, username in
             label.text = username == nil ? nil : RuuviLocalization.Menu.LoggedIn.title
+        }
+        communicationSectionStackView.bind(viewModel.showMarketingPreference) { view, isVisible in
+            view.isHidden = !(isVisible ?? false)
         }
         communicationSwitchView.bind(viewModel.marketingPreference) { view, isEnabled in
             view.toggleState(with: isEnabled)

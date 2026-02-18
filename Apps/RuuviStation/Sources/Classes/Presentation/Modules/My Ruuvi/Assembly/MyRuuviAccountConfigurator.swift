@@ -25,6 +25,7 @@ class MyRuuviAccountConfigurator {
         presenter.cloudNotificationService = r.resolve(RuuviServiceCloudNotification.self)
         presenter.ruuviAppSettingsService = r.resolve(RuuviServiceAppSettings.self)
         presenter.settings = r.resolve(RuuviLocalSettings.self)
+        presenter.flags = r.resolve(RuuviLocalFlags.self)
         presenter.mailComposerPresenter = r.resolve(MailComposerPresenter.self)
         view.output = presenter
     }

@@ -26,6 +26,7 @@ final class MyRuuviAccountPresenter: MyRuuviAccountModuleInput {
     var cloudNotificationService: RuuviServiceCloudNotification!
     var ruuviAppSettingsService: RuuviServiceAppSettings!
     var settings: RuuviLocalSettings!
+    var flags: RuuviLocalFlags!
     var mailComposerPresenter: MailComposerPresenter!
 }
 
@@ -77,6 +78,7 @@ extension MyRuuviAccountPresenter {
         if ruuviUser.isAuthorized {
             viewModel.username.value = ruuviUser.email?.lowercased()
         }
+        viewModel.showMarketingPreference.value = flags.showMarketingPreference
         viewModel.marketingPreference.value = settings.marketingPreference
         view.viewModel = viewModel
     }
