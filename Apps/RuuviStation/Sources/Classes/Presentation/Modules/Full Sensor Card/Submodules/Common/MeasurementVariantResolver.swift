@@ -135,7 +135,9 @@ struct MeasurementVariantResolver {
         case .soundPeak:
             return measurementService.double(for: measurement.soundPeak)
         case .voltage:
-            return measurementService.double(for: measurement.voltage)
+            guard let value = measurementService.double(for: measurement.voltage),
+                  value != 0 else { return nil }
+            return value
         case .rssi:
             return measurement.rssi.map(Double.init)
         case .accelerationX:
