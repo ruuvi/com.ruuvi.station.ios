@@ -32,16 +32,11 @@ class IntentHandler: INExtension, RuuviTagSelectionIntentHandling {
         ) -> Void
     ) {
         let type = intent.ruuviWidgetTag?.deviceType ?? .unknown
-        let allowed: [WidgetSensorEnum]
-        switch type {
-        case .ruuviAir: allowed = WidgetSensorEnum.ruuviAir
-        default: allowed = WidgetSensorEnum.ruuviTag
-        }
-
-        let items = allowed.map {
+        let options = viewModel.measurementOptions(for: type)
+        let items = options.map {
             RuuviWidgetTagSensor(
-                identifier: "\($0.rawValue)",
-                display: $0.displayName() + unit(for: $0)
+                identifier: $0.code.rawValue,
+                display: $0.title
             )
         }
         completion(INObjectCollection(items: items), nil)
@@ -57,22 +52,5 @@ extension IntentHandler {
             from: record.version
         )
         return (firmwareType == .e1 || firmwareType == .v6) ? .ruuviAir : .ruuviTag
-    }
-
-    private func unit(for widgetSensor: WidgetSensorEnum) -> String {
-        if hasUnits(for: widgetSensor) {
-            return " (\(widgetSensor.unit(from: viewModel.getAppSettings())))"
-        } else {
-            return ""
-        }
-    }
-
-    private func hasUnits(for widgetSensor: WidgetSensorEnum) -> Bool {
-        switch widgetSensor {
-        case .air_quality, .voc, .nox, .movement_counter:
-            return false
-        default:
-            return true
-        }
     }
 }

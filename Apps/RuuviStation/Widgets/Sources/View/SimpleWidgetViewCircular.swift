@@ -27,10 +27,7 @@ struct SimpleWidgetViewCircular: View {
             .padding(.top, -4)
 
             Text(
-                viewModel
-                    .getUnit(
-                        for: viewModel.getSensor(from: entry.config)
-                    )
+                viewModel.getUnit(from: entry.config)
             )
             .foregroundColor(Color.unitTextColor)
             .font(.mulish(.bold, size: 10, relativeTo: .body))

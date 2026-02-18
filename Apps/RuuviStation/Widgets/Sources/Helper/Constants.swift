@@ -9,6 +9,8 @@ public enum Constants: String {
 
     case simpleWidgetKindId = "ruuvi.simpleWidget"
     case simpleWidgetDisplayName = "Ruuvi Widget"
+    case multiSensorWidgetKindId = "ruuvi.multiSensorWidget"
+    case multiSensorWidgetDisplayName = "Ruuvi Sensors Widget"
 
     case isAuthorizedUDKey = "RuuviUserCoordinator.isAuthorizedUDKey"
     case hasCloudSensorsKey

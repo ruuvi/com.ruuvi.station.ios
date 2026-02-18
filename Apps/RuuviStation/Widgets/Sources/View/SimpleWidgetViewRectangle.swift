@@ -24,10 +24,7 @@ struct SimpleWidgetViewRectangle: View {
                     .foregroundColor(.bodyTextColor)
                     .font(.oswald(.bold, size: 30, relativeTo: .title))
                     Text(
-                        viewModel
-                            .getUnit(
-                                for: viewModel.getSensor(from: entry.config)
-                            )
+                        viewModel.getUnit(from: entry.config)
                     )
                     .foregroundColor(Color.unitTextColor)
                     .font(.oswald(.extraLight, size: 18, relativeTo: .title3))

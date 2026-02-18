@@ -15,7 +15,7 @@ struct EmptyWidgetView: View {
     var entry: WidgetProvider.Entry
 
     var body: some View {
-        if family == .systemSmall {
+        if family == .systemSmall || family == .systemMedium || family == .systemLarge {
             RegularEmptyWidgetView(entry: entry, isSimple: true)
         } else {
             if #available(iOSApplicationExtension 16.0, *) {
@@ -47,7 +47,7 @@ struct EmptyWidgetView: View {
                     (isSimple ? texts.messageSimple.localized :
                         texts.messageRectangular.localized)
                     : texts.loading.localized)
-                    .font(.mulish(.bold, size: family == .systemSmall ? 16 : 10, relativeTo: .subheadline))
+                    .font(.mulish(.bold, size: family == .systemSmall ? 16 : 14, relativeTo: .subheadline))
                     .foregroundColor(.sensorNameColor1)
                     .multilineTextAlignment(.center)
             }.padding(4)

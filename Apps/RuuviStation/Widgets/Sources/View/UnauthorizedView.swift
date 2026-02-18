@@ -12,7 +12,7 @@ struct UnauthorizedView: View {
     private let texts = Texts()
 
     var body: some View {
-        if family == .systemSmall {
+        if family == .systemSmall || family == .systemMedium || family == .systemLarge {
             RegularUnauthorizedWidgetView()
         } else {
             if #available(iOSApplicationExtension 16.0, *) {
@@ -39,7 +39,7 @@ struct UnauthorizedView: View {
             .cornerRadius(8)
             VStack {
                 Text(texts.unauthorizedRegular.localized)
-                    .font(.mulish(.bold, size: family == .systemSmall ? 16 : 10, relativeTo: .subheadline))
+                    .font(.mulish(.bold, size: family == .systemSmall ? 16 : 14, relativeTo: .subheadline))
                     .foregroundColor(.sensorNameColor1)
                     .multilineTextAlignment(.center)
             }.padding(4)

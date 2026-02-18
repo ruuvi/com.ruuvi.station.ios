@@ -79,6 +79,7 @@ final class WidgetProvider: IntentTimelineProvider {
                 from: tag.sensor.any,
                 configuration: configuration,
                 record: record,
+                cloudSettings: tag.settings,
                 completion: completion
             )
         })
@@ -110,6 +111,7 @@ final class WidgetProvider: IntentTimelineProvider {
             from: tag.sensor.any,
             configuration: configuration,
             record: record,
+            cloudSettings: tag.settings,
             completion: completion
         )
     }
@@ -138,6 +140,7 @@ extension WidgetProvider {
         from ruuviTag: AnyCloudSensor,
         configuration: RuuviTagSelectionIntent,
         record: RuuviTagSensorRecord,
+        cloudSettings: RuuviCloudSensorSettings?,
         completion: @escaping (Timeline<WidgetEntry>) -> Void
     ) {
         var entries: [WidgetEntry] = []
@@ -150,6 +153,7 @@ extension WidgetProvider {
             tag: RuuviWidgetTag(identifier: ruuviTag.id, display: ruuviTag.name),
             record: record,
             settings: settings,
+            cloudSettings: cloudSettings,
             config: configuration
         )
         entries.append(entry)
