@@ -57,10 +57,14 @@ class CardsGraphPresenter: NSObject {
     private var shouldSyncFromCloud: Bool = true
     private let autoGattSyncStartDelay: TimeInterval = 0.25
     private var autoGattSyncWorkItem: DispatchWorkItem?
-    private var isSyncing: Bool = false {
-        didSet {
-            output?.setGraphGattSyncInProgress(isSyncing)
-        }
+    private struct SnapshotGATTSyncState {
+        var isSyncing: Bool
+        var isQueued: Bool
+        var progress: BTServiceProgress?
+    }
+    private var syncStateBySnapshotId: [String: SnapshotGATTSyncState] = [:]
+    private var hasAnySyncInProgress: Bool {
+        syncStateBySnapshotId.values.contains(where: { $0.isSyncing })
     }
     private var isLoadingHistory: Bool = false
     private var shouldRefreshEmptyStateAfterLoad: Bool = false
@@ -151,6 +155,7 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
         self.sensorSettings = settings
         handleSnapshotChangeIfNeeded(previousSnapshotId: previousId, newSnapshot: snapshot)
         applyVisibilityChangeIfNeeded()
+        refreshSyncUIForCurrentSnapshot()
     }
 
     func configure(output: CardsGraphPresenterOutput?) {
@@ -182,6 +187,7 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
 
     func scroll(to index: Int, animated: Bool) {
         view?.setActiveSnapshot(snapshot)
+        refreshSyncUIForCurrentSnapshot()
         restartObserving()
     }
 
@@ -235,6 +241,7 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
 
     func viewWillAppear() {
         view?.setActiveSnapshot(snapshot)
+        refreshSyncUIForCurrentSnapshot()
 
         view?.historyLengthInHours = settings.chartDurationHours
         view?.showChartStat = settings.chartStatsOn
@@ -294,26 +301,60 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
             view?.showBluetoothDisabled(userDeclined: resolvedState.userDeclined)
             return
         }
-        isSyncing = true
+        guard syncStateBySnapshotId[snapshot.id]?.isSyncing != true else {
+            refreshSyncUIForCurrentSnapshot()
+            return
+        }
+        setSyncState(
+            isSyncing: true,
+            isQueued: false,
+            progress: .connecting,
+            for: snapshot
+        )
         let op = interactor?.syncRecords { [weak self] progress in
             DispatchQueue.main.async { [weak self] in
-                guard let syncing = self?.isSyncing, syncing
-                else {
-                    self?.view?.setSync(progress: nil, for: snapshot)
-                    return
-                }
-                self?.view?.setSync(progress: progress, for: snapshot)
+                self?.updateSyncProgress(progress, for: snapshot)
             }
         }
-        op?.on(success: { [weak self] _ in
-            self?.view?.setSync(progress: nil, for: snapshot)
-            self?.interactor?.restartObservingData()
+        let isQueued = interactor?.isSyncingRecordsQueued() == true
+        if isQueued {
+            setSyncState(
+                isSyncing: true,
+                isQueued: true,
+                progress: nil,
+                for: snapshot
+            )
+        }
+        guard let op else {
+            setSyncState(
+                isSyncing: false,
+                isQueued: false,
+                progress: nil,
+                for: snapshot
+            )
+            return
+        }
+        op.on(success: { [weak self] _ in
+            DispatchQueue.main.async { [weak self] in
+                guard self?.syncStateBySnapshotId[snapshot.id]?.isSyncing == true else { return }
+                guard self?.snapshot?.id == snapshot.id else { return }
+                self?.interactor?.restartObservingData()
+            }
         }, failure: { [weak self] _ in
-            self?.view?.setSync(progress: nil, for: snapshot)
-            self?.view?.showFailedToSyncIn()
+            DispatchQueue.main.async { [weak self] in
+                guard self?.syncStateBySnapshotId[snapshot.id]?.isSyncing == true else { return }
+                guard self?.snapshot?.id == snapshot.id else { return }
+                self?.view?.showFailedToSyncIn()
+            }
         }, completion: { [weak self] in
-            self?.view?.setSync(progress: nil, for: snapshot)
-            self?.isSyncing = false
+            DispatchQueue.main.async { [weak self] in
+                self?.setSyncState(
+                    isSyncing: false,
+                    isQueued: false,
+                    progress: nil,
+                    for: snapshot
+                )
+            }
         })
     }
 
@@ -340,7 +381,14 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
 
     func viewDidConfirmAbortSync(source: GraphHistoryAbortSyncSource) {
         stopGattSync()
-        isSyncing = false
+        if let snapshot = snapshot {
+            setSyncState(
+                isSyncing: false,
+                isQueued: false,
+                progress: nil,
+                for: snapshot
+            )
+        }
 
         if let snapshot = snapshot {
             output?.graphGattSyncAborted(for: snapshot, source: source)
@@ -629,7 +677,9 @@ extension CardsGraphPresenter {
             guard let self else { return }
             guard self.shouldAutoStartGattSyncOnGraphOpen() else { return }
             guard self.view?.graphIsVisibleForUser == true else { return }
-            guard !self.isSyncing else { return }
+            if !self.flags.allowConcurrentGattSyncForMultipleSensors {
+                guard !self.hasAnySyncInProgress else { return }
+            }
             guard self.interactor?.isSyncingRecords() != true else { return }
             self.viewDidStartSync(for: self.snapshot)
         }
@@ -643,6 +693,72 @@ extension CardsGraphPresenter {
     private func cancelScheduledAutoGattSync() {
         autoGattSyncWorkItem?.cancel()
         autoGattSyncWorkItem = nil
+    }
+
+    private func updateSyncProgress(
+        _ progress: BTServiceProgress,
+        for snapshot: RuuviTagCardSnapshot
+    ) {
+        guard var state = syncStateBySnapshotId[snapshot.id], state.isSyncing else {
+            syncStateBySnapshotId[snapshot.id] = SnapshotGATTSyncState(
+                isSyncing: true,
+                isQueued: false,
+                progress: progress
+            )
+            if self.snapshot?.id == snapshot.id {
+                refreshSyncUIForCurrentSnapshot()
+            }
+            return
+        }
+        state.isQueued = false
+        state.progress = progress
+        syncStateBySnapshotId[snapshot.id] = state
+        if self.snapshot?.id == snapshot.id {
+            refreshSyncUIForCurrentSnapshot()
+        }
+    }
+
+    private func setSyncState(
+        isSyncing: Bool,
+        isQueued: Bool,
+        progress: BTServiceProgress?,
+        for snapshot: RuuviTagCardSnapshot
+    ) {
+        if isSyncing {
+            syncStateBySnapshotId[snapshot.id] = SnapshotGATTSyncState(
+                isSyncing: true,
+                isQueued: isQueued,
+                progress: progress
+            )
+        } else {
+            syncStateBySnapshotId.removeValue(forKey: snapshot.id)
+        }
+
+        if self.snapshot?.id == snapshot.id {
+            refreshSyncUIForCurrentSnapshot()
+        }
+    }
+
+    private func refreshSyncUIForCurrentSnapshot() {
+        guard let snapshot else {
+            output?.setGraphGattSyncInProgress(false)
+            return
+        }
+
+        guard let state = syncStateBySnapshotId[snapshot.id], state.isSyncing else {
+            output?.setGraphGattSyncInProgress(false)
+            view?.setSync(status: nil, for: snapshot)
+            return
+        }
+
+        output?.setGraphGattSyncInProgress(true)
+        if state.isQueued {
+            view?.setSync(status: .queued, for: snapshot)
+        } else if let progress = state.progress {
+            view?.setSync(status: .progress(progress), for: snapshot)
+        } else {
+            view?.setSync(status: nil, for: snapshot)
+        }
     }
 
     private func shouldAutoStartGattSyncOnGraphOpen() -> Bool {

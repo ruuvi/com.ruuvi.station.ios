@@ -68,6 +68,19 @@ public final class GATTServiceQueue: GATTService {
         queue.operations.contains(where: { ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid })
     }
 
+    public func isSyncingLogsQueued(with uuid: String) -> Bool {
+        queue.operations.contains(where: { operation in
+            guard let readLogsOperation = operation as? RuuviTagReadLogsOperation,
+                  readLogsOperation.uuid == uuid
+            else {
+                return false
+            }
+            return !readLogsOperation.isExecuting &&
+                !readLogsOperation.isFinished &&
+                !readLogsOperation.isCancelled
+        })
+    }
+
     @discardableResult
     public func stopGattSync(for uuid: String) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()

@@ -18,6 +18,10 @@ public protocol RuuviLocalFlags {
     /// for local (non-cloud) Ruuvi Air sensors.
     var autoSyncGattHistoryForRuuviAir: Bool { get set }
 
+    /// When enabled, multiple GATT history sync operations can run
+    /// while navigating between sensors in graph.
+    var allowConcurrentGattSyncForMultipleSensors: Bool { get set }
+
     /// When enabled, the marketing/communication preference toggle
     /// is shown on the My Ruuvi account screen.
     var showMarketingPreference: Bool { get set }

@@ -38,6 +38,9 @@ class CardsBasePresenter: NSObject {
     private var sensorSettings: [SensorSettings] = []
     private var activeMenu: CardsMenuType = .measurement
     private var graphGattSyncInProgress: Bool = false
+    private var shouldLimitGraphGattSyncToSingleSensor: Bool {
+        !flags.allowConcurrentGattSyncForMultipleSensors
+    }
     private var isBluetoothPermissionGranted: Bool {
         let centralAuthorization = CBManager.authorization
         if centralAuthorization == .denied || centralAuthorization == .restricted {
@@ -228,7 +231,7 @@ extension CardsBasePresenter: CardsBaseViewOutput {
     func viewDidRequestNavigateToSnapshotIndex(_ index: Int) {
         switch activeMenu {
         case .graph:
-            if graphGattSyncInProgress {
+            if shouldLimitGraphGattSyncToSingleSensor && graphGattSyncInProgress {
                 graphPresenter?
                     .showAbortSyncConfirmationDialog(
                         for: snapshot,
@@ -277,7 +280,7 @@ extension CardsBasePresenter: CardsBaseViewOutput {
     }
 
     func viewDidTapBackButton() {
-        if graphGattSyncInProgress {
+        if shouldLimitGraphGattSyncToSingleSensor && graphGattSyncInProgress {
             graphPresenter?
                 .showAbortSyncConfirmationDialog(
                     for: snapshot,
@@ -736,7 +739,7 @@ private extension CardsBasePresenter {
         for snapshot: RuuviTagCardSnapshot,
         tab: CardsMenuType
     ) {
-        if graphGattSyncInProgress {
+        if shouldLimitGraphGattSyncToSingleSensor && graphGattSyncInProgress {
             graphPresenter?
                 .showAbortSyncConfirmationDialog(
                     for: snapshot,
