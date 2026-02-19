@@ -140,10 +140,97 @@ final class DashboardViewController: UIViewController {
         return ai
     }()
 
+    // MARK: - Search UI
+    private lazy var searchButton: RuuviCustomButton = {
+        let button = RuuviCustomButton(
+            icon: UIImage(systemName: "magnifyingglass"),
+            tintColor: RuuviColor.dashboardIndicator.color,
+            iconSize: .init(width: 20, height: 20),
+            leadingPadding: 4,
+            trailingPadding: 4
+        )
+        button.addGestureRecognizer(
+            UITapGestureRecognizer(target: self, action: #selector(handleSearchButtonTap))
+        )
+        return button
+    }()
+
+    private lazy var searchTextField: UITextField = {
+        let tf = UITextField()
+        tf.placeholder = RuuviLocalization.sensorSearchPlaceholder
+        tf.backgroundColor = RuuviColor.dashboardCardBG.color
+        tf.textColor = RuuviColor.dashboardIndicator.color
+        tf.clearButtonMode = .whileEditing
+        tf.returnKeyType = .search
+        tf.autocorrectionType = .no
+        tf.autocapitalizationType = .none
+        tf.layer.cornerRadius = 8
+        tf.layer.masksToBounds = true
+        let leftPadding = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
+        tf.leftView = leftPadding
+        tf.leftViewMode = .always
+        tf.rightView = searchLoadingIndicator
+        tf.rightViewMode = .always
+        tf.delegate = self
+        tf.addTarget(self, action: #selector(searchTextChanged(_:)), for: .editingChanged)
+        return tf
+    }()
+
+    private lazy var searchCancelButton: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setTitle(RuuviLocalization.cancel, for: .normal)
+        btn.setTitleColor(RuuviColor.tintColor.color, for: .normal)
+        btn.addTarget(self, action: #selector(handleSearchCancelTap), for: .touchUpInside)
+        return btn
+    }()
+
+    private lazy var searchLoadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .medium)
+        indicator.color = RuuviColor.dashboardIndicator.color
+        indicator.hidesWhenStopped = true
+        indicator.alpha = 0
+        return indicator
+    }()
+
+    private lazy var searchContainerView: UIView = {
+        let container = UIView()
+        container.backgroundColor = .clear
+
+        container.addSubview(searchTextField)
+        container.addSubview(searchCancelButton)
+
+        searchTextField.translatesAutoresizingMaskIntoConstraints = false
+        searchCancelButton.translatesAutoresizingMaskIntoConstraints = false
+        searchCancelButton.setContentHuggingPriority(.required, for: .horizontal)
+        searchCancelButton.setContentCompressionResistancePriority(.required, for: .horizontal)
+
+        NSLayoutConstraint.activate([
+            searchTextField.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 8),
+            searchTextField.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+            searchTextField.heightAnchor.constraint(equalToConstant: 32),
+            searchTextField.trailingAnchor.constraint(
+                equalTo: searchCancelButton.leadingAnchor,
+                constant: -8
+            ),
+
+            searchCancelButton.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -8),
+            searchCancelButton.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+        ])
+
+        return container
+    }()
+
     // MARK: - Custom Header View (iOS 26+)
     private lazy var customHeaderView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
+        return view
+    }()
+
+    private lazy var headerLeftContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.isUserInteractionEnabled = true
         return view
     }()
 
@@ -165,6 +252,15 @@ final class DashboardViewController: UIViewController {
     private var currentSnapshotIdentifiers: [RuuviTagCardSnapshot] = []
     private var isDragSessionInProgress: Bool = false
     private var isReadyForAnimations: Bool = false
+
+    // MARK: - Search Properties
+    private var searchText: String = ""
+    private var isSearchActive: Bool = false
+    private var searchDebounceWorkItem: DispatchWorkItem?
+    private var savedLeftBarButtonItem: UIBarButtonItem?
+    private var savedRightBarButtonItem: UIBarButtonItem?
+    private var savedTitleView: UIView?
+    private var hasAppliedInitialNonEmptySnapshot = false
 
     // MARK: - Observers
     private var appDidBecomeActiveToken: NSObjectProtocol?
@@ -295,32 +391,32 @@ private extension DashboardViewController {
         ])
 
         // Left side: Menu button + Ruuvi logo
-        let leftContainer = UIView()
-        leftContainer.translatesAutoresizingMaskIntoConstraints = false
-        leftContainer.isUserInteractionEnabled = true
-        customHeaderView.addSubview(leftContainer)
+        customHeaderView.addSubview(headerLeftContainer)
 
         menuButton.translatesAutoresizingMaskIntoConstraints = false
         menuButton.isUserInteractionEnabled = true
-        leftContainer.addSubview(menuButton)
+        headerLeftContainer.addSubview(menuButton)
 
         ruuviLogoView.translatesAutoresizingMaskIntoConstraints = false
-        leftContainer.addSubview(ruuviLogoView)
+        headerLeftContainer.addSubview(ruuviLogoView)
 
         NSLayoutConstraint.activate([
-            leftContainer.leadingAnchor.constraint(equalTo: customHeaderView.leadingAnchor, constant: 4),
-            leftContainer.centerYAnchor.constraint(equalTo: customHeaderView.centerYAnchor),
-            leftContainer.heightAnchor.constraint(equalToConstant: 44),
+            headerLeftContainer.leadingAnchor.constraint(
+                equalTo: customHeaderView.leadingAnchor,
+                constant: 4
+            ),
+            headerLeftContainer.centerYAnchor.constraint(equalTo: customHeaderView.centerYAnchor),
+            headerLeftContainer.heightAnchor.constraint(equalToConstant: 44),
 
             menuButton.leadingAnchor
-                .constraint(equalTo: leftContainer.leadingAnchor, constant: 4),
-            menuButton.centerYAnchor.constraint(equalTo: leftContainer.centerYAnchor),
+                .constraint(equalTo: headerLeftContainer.leadingAnchor, constant: 4),
+            menuButton.centerYAnchor.constraint(equalTo: headerLeftContainer.centerYAnchor),
 
             ruuviLogoView.leadingAnchor.constraint(equalTo: menuButton.trailingAnchor, constant: 4),
-            ruuviLogoView.centerYAnchor.constraint(equalTo: leftContainer.centerYAnchor),
+            ruuviLogoView.centerYAnchor.constraint(equalTo: headerLeftContainer.centerYAnchor),
             ruuviLogoView.widthAnchor.constraint(equalToConstant: 90),
             ruuviLogoView.heightAnchor.constraint(equalToConstant: 22),
-            ruuviLogoView.trailingAnchor.constraint(equalTo: leftContainer.trailingAnchor),
+            ruuviLogoView.trailingAnchor.constraint(equalTo: headerLeftContainer.trailingAnchor),
         ])
 
         // Center: Activity indicator
@@ -332,7 +428,7 @@ private extension DashboardViewController {
             activityIndicator.centerYAnchor.constraint(equalTo: customHeaderView.centerYAnchor),
         ])
 
-        // Right side: View button
+        // Right side: View button (and optional search button)
         customHeaderView.addSubview(viewButton)
         viewButton.translatesAutoresizingMaskIntoConstraints = false
 
@@ -341,6 +437,31 @@ private extension DashboardViewController {
             viewButton.centerYAnchor.constraint(equalTo: customHeaderView.centerYAnchor),
             viewButton.heightAnchor.constraint(equalToConstant: 32),
         ])
+
+        if flags.showDashboardSensorSearch {
+            customHeaderView.addSubview(searchButton)
+            searchButton.translatesAutoresizingMaskIntoConstraints = false
+
+            NSLayoutConstraint.activate([
+                searchButton.trailingAnchor.constraint(equalTo: viewButton.leadingAnchor, constant: -4),
+                searchButton.centerYAnchor.constraint(equalTo: customHeaderView.centerYAnchor),
+                searchButton.widthAnchor.constraint(equalToConstant: 36),
+                searchButton.heightAnchor.constraint(equalToConstant: 32),
+            ])
+
+            // Search overlay - covers the full header when search is active
+            customHeaderView.addSubview(searchContainerView)
+            searchContainerView.translatesAutoresizingMaskIntoConstraints = false
+            searchContainerView.isHidden = true
+            searchContainerView.alpha = 0
+
+            NSLayoutConstraint.activate([
+                searchContainerView.topAnchor.constraint(equalTo: customHeaderView.topAnchor),
+                searchContainerView.leadingAnchor.constraint(equalTo: customHeaderView.leadingAnchor),
+                searchContainerView.trailingAnchor.constraint(equalTo: customHeaderView.trailingAnchor),
+                searchContainerView.bottomAnchor.constraint(equalTo: customHeaderView.bottomAnchor),
+            ])
+        }
     }
 
     func createLeftBarButtonView() -> UIView {
@@ -371,15 +492,37 @@ private extension DashboardViewController {
 
     func createRightBarButtonView() -> UIView {
         let rightBarButtonView = UIView(color: .clear)
-        rightBarButtonView.addSubview(viewButton)
-        viewButton.anchor(
-            top: rightBarButtonView.topAnchor,
-            leading: rightBarButtonView.leadingAnchor,
-            bottom: rightBarButtonView.bottomAnchor,
-            trailing: rightBarButtonView.trailingAnchor,
-            padding: .init(top: 0, left: 0, bottom: 0, right: 4),
-            size: .init(width: 0, height: 32)
-        )
+
+        if flags.showDashboardSensorSearch {
+            rightBarButtonView.addSubview(searchButton)
+            searchButton.anchor(
+                top: rightBarButtonView.topAnchor,
+                leading: rightBarButtonView.leadingAnchor,
+                bottom: rightBarButtonView.bottomAnchor,
+                trailing: nil,
+                size: .init(width: 36, height: 32)
+            )
+            rightBarButtonView.addSubview(viewButton)
+            viewButton.anchor(
+                top: rightBarButtonView.topAnchor,
+                leading: searchButton.trailingAnchor,
+                bottom: rightBarButtonView.bottomAnchor,
+                trailing: rightBarButtonView.trailingAnchor,
+                padding: .init(top: 0, left: 4, bottom: 0, right: 4),
+                size: .init(width: 0, height: 32)
+            )
+        } else {
+            rightBarButtonView.addSubview(viewButton)
+            viewButton.anchor(
+                top: rightBarButtonView.topAnchor,
+                leading: rightBarButtonView.leadingAnchor,
+                bottom: rightBarButtonView.bottomAnchor,
+                trailing: rightBarButtonView.trailingAnchor,
+                padding: .init(top: 0, left: 0, bottom: 0, right: 4),
+                size: .init(width: 0, height: 32)
+            )
+        }
+
         return rightBarButtonView
     }
 
@@ -516,6 +659,7 @@ private extension DashboardViewController {
 private extension DashboardViewController {
     func cleanup() {
         appDidBecomeActiveToken?.invalidate()
+        searchDebounceWorkItem?.cancel()
     }
 
     func configureRestartAnimationsOnAppDidBecomeActive() {
@@ -549,10 +693,16 @@ private extension DashboardViewController {
         animated: Bool = true
     ) {
         guard !isDragSessionInProgress, !isContextMenuPresented else { return }
+        let shouldAnimateDiff = shouldAnimate(animated) && hasAppliedInitialNonEmptySnapshot
+
         var snapshot = NSDiffableDataSourceSnapshot<MasonrySection, RuuviTagCardSnapshot>()
         snapshot.appendSections([.main])
         snapshot.appendItems(newSnapshots)
-        dataSource.apply(snapshot, animatingDifferences: shouldAnimate(animated))
+        dataSource.apply(snapshot, animatingDifferences: shouldAnimateDiff)
+
+        if !hasAppliedInitialNonEmptySnapshot, !newSnapshots.isEmpty {
+            hasAppliedInitialNonEmptySnapshot = true
+        }
     }
 
     func updateActivityIndicator() {
@@ -611,6 +761,150 @@ private extension DashboardViewController {
             isPulling = false
             refresher.endRefreshing()
             output.viewDidTriggerPullToRefresh()
+        }
+    }
+
+    @objc func handleSearchButtonTap() {
+        activateSearch()
+    }
+
+    @objc func searchTextChanged(_ textField: UITextField) {
+        searchText = textField.text ?? ""
+        performSearchWithLoadingAnimation()
+    }
+
+    @objc func handleSearchCancelTap() {
+        deactivateSearch()
+    }
+}
+
+// MARK: - Search Management
+private extension DashboardViewController {
+    var displayedSnapshots: [RuuviTagCardSnapshot] {
+        guard !searchText.isEmpty else { return snapshots }
+        return snapshots.filter {
+            $0.displayData.name.localizedCaseInsensitiveContains(searchText)
+        }
+    }
+
+    func activateSearch() {
+        isSearchActive = true
+        if #available(iOS 26.0, *) {
+            activateSearchiOS26()
+        } else {
+            activateSearchLegacy()
+        }
+        searchTextField.becomeFirstResponder()
+    }
+
+    func deactivateSearch() {
+        isSearchActive = false
+        searchDebounceWorkItem?.cancel()
+        searchText = ""
+        searchTextField.text = ""
+        searchTextField.resignFirstResponder()
+        if #available(iOS 26.0, *) {
+            deactivateSearchiOS26()
+        } else {
+            deactivateSearchLegacy()
+        }
+        stopSearchLoadingAnimation()
+        updateData(with: snapshots, animated: false)
+    }
+
+    func performSearchWithLoadingAnimation() {
+        searchDebounceWorkItem?.cancel()
+        startSearchLoadingAnimation()
+
+        let workItem = DispatchWorkItem { [weak self] in
+            guard let self else { return }
+            UIView.transition(
+                with: self.collectionView,
+                duration: 0.2,
+                options: [.transitionCrossDissolve, .allowUserInteraction]
+            ) {
+                self.updateData(with: self.displayedSnapshots, animated: false)
+            } completion: { _ in
+                self.stopSearchLoadingAnimation()
+            }
+        }
+
+        searchDebounceWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.18, execute: workItem)
+    }
+
+    func startSearchLoadingAnimation() {
+        searchLoadingIndicator.startAnimating()
+        UIView.animate(withDuration: 0.15) {
+            self.searchLoadingIndicator.alpha = 1
+        }
+    }
+
+    func stopSearchLoadingAnimation() {
+        UIView.animate(withDuration: 0.15) {
+            self.searchLoadingIndicator.alpha = 0
+        } completion: { _ in
+            self.searchLoadingIndicator.stopAnimating()
+        }
+    }
+
+    @available(iOS 26.0, *)
+    func activateSearchiOS26() {
+        searchContainerView.isHidden = false
+        UIView.animate(withDuration: 0.2) {
+            self.searchContainerView.alpha = 1
+            self.headerLeftContainer.alpha = 0
+            self.activityIndicator.alpha = 0
+            self.searchButton.alpha = 0
+            self.viewButton.alpha = 0
+        }
+    }
+
+    @available(iOS 26.0, *)
+    func deactivateSearchiOS26() {
+        UIView.animate(withDuration: 0.2) {
+            self.searchContainerView.alpha = 0
+            self.headerLeftContainer.alpha = 1
+            self.activityIndicator.alpha = 1
+            self.searchButton.alpha = 1
+            self.viewButton.alpha = 1
+        } completion: { _ in
+            self.searchContainerView.isHidden = true
+        }
+    }
+
+    func activateSearchLegacy() {
+        savedLeftBarButtonItem = navigationItem.leftBarButtonItem
+        savedRightBarButtonItem = navigationItem.rightBarButtonItem
+        savedTitleView = navigationItem.titleView
+
+        navigationItem.setLeftBarButton(nil, animated: false)
+        navigationItem.setRightBarButton(nil, animated: false)
+
+        let width = view.bounds.width - 32
+        searchContainerView.frame = CGRect(x: 0, y: 0, width: width, height: 40)
+        searchContainerView.alpha = 0
+        navigationItem.titleView = searchContainerView
+        UIView.animate(withDuration: 0.2) {
+            self.searchContainerView.alpha = 1
+        }
+    }
+
+    func deactivateSearchLegacy() {
+        UIView.animate(withDuration: 0.2) {
+            self.searchContainerView.alpha = 0
+        } completion: { _ in
+            self.navigationItem.titleView = self.savedTitleView
+            if let left = self.savedLeftBarButtonItem {
+                self.navigationItem.setLeftBarButton(left, animated: false)
+            }
+            if let right = self.savedRightBarButtonItem {
+                self.navigationItem.setRightBarButton(right, animated: false)
+            }
+            self.savedLeftBarButtonItem = nil
+            self.savedRightBarButtonItem = nil
+            self.savedTitleView = nil
+            self.searchContainerView.alpha = 1
         }
     }
 }
@@ -1058,7 +1352,7 @@ extension DashboardViewController: NewDashboardViewInput {
     ) {
         self.snapshots = snapshots
         showNoSensorsAddedMessage(show: snapshots.isEmpty)
-        updateData(with: snapshots, animated: withAnimation)
+        updateData(with: displayedSnapshots, animated: withAnimation)
     }
 
     func updateSnapshot(
@@ -1256,10 +1550,17 @@ extension DashboardViewController: UITextFieldDelegate {
         shouldChangeCharactersIn range: NSRange,
         replacementString string: String
     ) -> Bool {
-        guard let text = textField.text, textField == tagNameTextField else { return false }
+        guard let text = textField.text, textField == tagNameTextField else { return true }
 
         let limit = text.utf16.count + string.utf16.count - range.length
         return limit <= tagNameCharacterLimit
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == searchTextField {
+            textField.resignFirstResponder()
+        }
+        return true
     }
 }
 

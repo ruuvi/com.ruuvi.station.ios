@@ -26,4 +26,8 @@ public protocol RuuviLocalFlags {
     /// is shown on the My Ruuvi account screen.
     var showMarketingPreference: Bool { get set }
 
+    /// When enabled, shows a search button on the dashboard that
+    /// expands into a search bar to filter sensors by name.
+    var showDashboardSensorSearch: Bool { get set }
+
 }

@@ -81,6 +81,7 @@ extension DefaultsPresenter {
             buildAutoSyncGattHistoryForRuuviAir(),
             buildAllowConcurrentGattSyncForMultipleSensors(),
             buildShowMarketingPreference(),
+            buildShowDashboardSensorSearch(),
         ]
     }
 
@@ -610,6 +611,21 @@ extension DefaultsPresenter {
 
         bind(viewModel.boolean, fire: false) { observer, bool in
             observer.flags.showMarketingPreference = GlobalHelpers
+                .getBool(from: bool)
+        }
+
+        return viewModel
+    }
+
+    private func buildShowDashboardSensorSearch() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Show dashboard sensor search"
+        viewModel.boolean.value = flags.showDashboardSensorSearch
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, bool in
+            observer.flags.showDashboardSensorSearch = GlobalHelpers
                 .getBool(from: bool)
         }
 

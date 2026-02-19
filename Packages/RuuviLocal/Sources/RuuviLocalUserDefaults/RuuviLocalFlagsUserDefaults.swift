@@ -24,4 +24,7 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     @UserDefault("RuuviFeatureFlags.showMarketingPreference", defaultValue: false)
     var showMarketingPreference: Bool
 
+    @UserDefault("RuuviFeatureFlags.showDashboardSensorSearch", defaultValue: false)
+    var showDashboardSensorSearch: Bool
+
 }
