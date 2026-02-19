@@ -156,6 +156,14 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
         }
     }
 
+    func isSyncingRecordsQueued() -> Bool {
+        guard let luid = ruuviTagSensor.luid
+        else {
+            return false
+        }
+        return gattService.isSyncingLogsQueued(with: luid.value)
+    }
+
     func syncRecords(progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
         guard let luid = ruuviTagSensor.luid
@@ -163,9 +171,10 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
             promise.fail(error: .unexpected(.callbackErrorAndResultAreNil))
             return promise.future
         }
+        let sensorMacId = ruuviTagSensor.macId
         let connectionTimeout: TimeInterval = settings.connectionTimeout
         let serviceTimeout: TimeInterval = settings.serviceTimeout
-        var syncFrom = localSyncState.getGattSyncDate(for: ruuviTagSensor.macId)
+        var syncFrom = localSyncState.getGattSyncDate(for: sensorMacId)
         let historyLength = Calendar.autoupdatingCurrent.date(
             byAdding: .hour,
             value: -settings.dataPruningOffsetHours,
@@ -181,7 +190,7 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
 
         let op = gattService.syncLogs(
             uuid: luid.value,
-            mac: ruuviTagSensor.macId?.value,
+            mac: sensorMacId?.value,
             firmware: ruuviTagSensor.version,
             from: syncFrom ?? Date.distantPast,
             settings: sensorSettings,
@@ -191,7 +200,7 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
         )
         op.on(success: { [weak self] _ in
             if let isInterrupted = self?.gattSyncInterruptedByUser, !isInterrupted {
-                self?.localSyncState.setGattSyncDate(Date(), for: self?.ruuviTagSensor.macId)
+                self?.localSyncState.setGattSyncDate(Date(), for: sensorMacId)
             }
             self?.gattSyncInterruptedByUser = false
             promise.succeed(value: ())

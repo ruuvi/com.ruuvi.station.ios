@@ -79,6 +79,7 @@ extension DefaultsPresenter {
             buildDownloadBetaFirmware(),
             buildDownloadAlphaFirmware(),
             buildAutoSyncGattHistoryForRuuviAir(),
+            buildAllowConcurrentGattSyncForMultipleSensors(),
             buildShowMarketingPreference(),
         ]
     }
@@ -579,6 +580,21 @@ extension DefaultsPresenter {
 
         bind(viewModel.boolean, fire: false) { observer, bool in
             observer.flags.autoSyncGattHistoryForRuuviAir = GlobalHelpers
+                .getBool(from: bool)
+        }
+
+        return viewModel
+    }
+
+    private func buildAllowConcurrentGattSyncForMultipleSensors() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Allow multiple sensors GATT sync"
+        viewModel.boolean.value = flags.allowConcurrentGattSyncForMultipleSensors
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, bool in
+            observer.flags.allowConcurrentGattSyncForMultipleSensors = GlobalHelpers
                 .getBool(from: bool)
         }
 

@@ -32,6 +32,7 @@ public enum RuuviTagReadLogsOperationDidFinishKey: String {
 
 public protocol GATTService {
     func isSyncingLogs(with uuid: String) -> Bool
+    func isSyncingLogsQueued(with uuid: String) -> Bool
 
     @discardableResult
     // swiftlint:disable:next function_parameter_count
@@ -51,6 +52,10 @@ public protocol GATTService {
 }
 
 public extension GATTService {
+    func isSyncingLogsQueued(with uuid: String) -> Bool {
+        false
+    }
+
     @discardableResult
     func syncLogs(
         uuid: String,

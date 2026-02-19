@@ -20,6 +20,7 @@ protocol CardsGraphViewInteractorInput: AnyObject {
     func syncRecords(progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError>
     func stopSyncRecords() -> Future<Bool, RUError>
     func isSyncingRecords() -> Bool
+    func isSyncingRecordsQueued() -> Bool
     func deleteAllRecords(for sensor: RuuviTagSensor) -> Future<Void, RUError>
     func updateChartShowMinMaxAvgSetting(with show: Bool)
 }

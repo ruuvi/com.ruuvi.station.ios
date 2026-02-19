@@ -4,6 +4,11 @@ import Foundation
 import RuuviLocal
 import RuuviOntology
 
+enum GraphGattSyncStatus {
+    case queued
+    case progress(BTServiceProgress)
+}
+
 protocol CardsGraphViewInput: ViewInput {
     var historyLengthInHours: Int { get set }
     var showChartStat: Bool { get set }
@@ -37,7 +42,7 @@ protocol CardsGraphViewInput: ViewInput {
     func setHasChartData(_ hasData: Bool)
     func setChartLoading(hideCharts: Bool)
     func showClearConfirmationDialog(for snapshot: RuuviTagCardSnapshot)
-    func setSync(progress: BTServiceProgress?, for snapshot: RuuviTagCardSnapshot)
+    func setSync(status: GraphGattSyncStatus?, for snapshot: RuuviTagCardSnapshot)
     func setSyncProgressViewHidden()
     func showFailedToSyncIn()
     func showSwipeUpInstruction()

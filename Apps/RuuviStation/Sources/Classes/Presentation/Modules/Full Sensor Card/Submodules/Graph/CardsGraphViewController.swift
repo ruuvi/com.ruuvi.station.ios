@@ -831,23 +831,29 @@ extension CardsGraphViewController: CardsGraphViewInput {
         present(alertVC, animated: true)
     }
 
-    func setSync(progress: BTServiceProgress?, for snapshot: RuuviTagCardSnapshot) {
-        if let progress {
+    func setSync(status: GraphGattSyncStatus?, for snapshot: RuuviTagCardSnapshot) {
+        guard self.snapshot?.id == snapshot.id else { return }
+        if let status {
             showSyncStatusLabel(show: true)
-            switch progress {
-            case .connecting:
-                syncStatusLabel.text = RuuviLocalization.TagCharts.Status.connecting
-            case .serving:
-                syncStatusLabel.text = RuuviLocalization.TagCharts.Status.serving
-            case let .reading(points):
-                let format = RuuviLocalization.readingHistoryX
-                syncStatusLabel.text = format(Float(points))
-            case .disconnecting:
-                syncStatusLabel.text = RuuviLocalization.TagCharts.Status.disconnecting
-            case .success:
-                syncStatusLabel.text = RuuviLocalization.TagCharts.Status.success
-            case .failure:
-                syncStatusLabel.text = RuuviLocalization.TagCharts.Status.error
+            switch status {
+            case .queued:
+                syncStatusLabel.text = RuuviLocalization.TagCharts.Status.queued
+            case .progress(let progress):
+                switch progress {
+                case .connecting:
+                    syncStatusLabel.text = RuuviLocalization.TagCharts.Status.connecting
+                case .serving:
+                    syncStatusLabel.text = RuuviLocalization.TagCharts.Status.serving
+                case let .reading(points):
+                    let format = RuuviLocalization.readingHistoryX
+                    syncStatusLabel.text = format(Float(points))
+                case .disconnecting:
+                    syncStatusLabel.text = RuuviLocalization.TagCharts.Status.disconnecting
+                case .success:
+                    syncStatusLabel.text = RuuviLocalization.TagCharts.Status.success
+                case .failure:
+                    syncStatusLabel.text = RuuviLocalization.TagCharts.Status.error
+                }
             }
         } else {
             showSyncStatusLabel(show: false)
