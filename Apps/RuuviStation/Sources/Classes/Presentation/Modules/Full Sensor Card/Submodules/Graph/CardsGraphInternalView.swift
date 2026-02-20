@@ -344,7 +344,10 @@ extension CardsGraphInternalView {
         leftAxis.drawBottomYLabelEntryEnabled = !entriesNotZero
     }
 
-    func setXAxisRenderer(showAll: Bool) {
+    func setXAxisRenderer(
+        showAll: Bool,
+        timelineRange: ClosedRange<Double>? = nil
+    ) {
         let axisRenderer = CustomXAxisRenderer(
             from: 0,
             viewPortHandler: viewPortHandler,
@@ -353,7 +356,22 @@ extension CardsGraphInternalView {
         )
         xAxisRenderer = axisRenderer
 
-        if !showAll {
+        if showAll {
+            if let timelineRange {
+                applyXAxisRange(
+                    min: timelineRange.lowerBound,
+                    max: timelineRange.upperBound
+                )
+            } else if let dataTimelineRange = resolveDataTimelineRange() {
+                applyXAxisRange(
+                    min: dataTimelineRange.lowerBound,
+                    max: dataTimelineRange.upperBound
+                )
+            } else {
+                resetCustomAxisMinMax()
+            }
+            return
+        } else {
             let from = Calendar.autoupdatingCurrent.date(
                 byAdding: .hour,
                 value: -settings.chartDurationHours,
@@ -362,6 +380,31 @@ extension CardsGraphInternalView {
             xAxis.axisMinimum = from.timeIntervalSince1970
             xAxis.axisMaximum = Date().timeIntervalSince1970
         }
+    }
+
+    private func applyXAxisRange(min: Double, max: Double) {
+        guard min.isFinite, max.isFinite else {
+            return
+        }
+        xAxis.axisMinimum = min
+        xAxis.axisMaximum = max > min ? max : min + 1
+    }
+
+    private func resolveDataTimelineRange() -> ClosedRange<Double>? {
+        guard let dataSet = data?.dataSets.first as? LineChartDataSet,
+              !dataSet.entries.isEmpty else {
+            return nil
+        }
+
+        let xValues = dataSet.entries.map(\.x)
+        guard let minX = xValues.min(),
+              let maxX = xValues.max(),
+              minX.isFinite,
+              maxX.isFinite else {
+            return nil
+        }
+
+        return minX...maxX
     }
 
     func resetCustomAxisMinMax() {

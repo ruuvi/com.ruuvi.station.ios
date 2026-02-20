@@ -172,8 +172,14 @@ extension CardsGraphView {
         chartView.setYAxisLimit(min: min, max: max)
     }
 
-    func setXAxisRenderer(showAll: Bool) {
-        chartView.setXAxisRenderer(showAll: showAll)
+    func setXAxisRenderer(
+        showAll: Bool,
+        timelineRange: ClosedRange<Double>? = nil
+    ) {
+        chartView.setXAxisRenderer(
+            showAll: showAll,
+            timelineRange: timelineRange
+        )
     }
 
     func resetCustomAxisMinMax() {

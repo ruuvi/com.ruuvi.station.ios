@@ -28,7 +28,7 @@ enum RuuviGraphDataSetFactory {
         static let full = ChartStyle(
             fillEnabled: true,
             fillColor: RuuviColor.graphFillColor.color,
-            showGapBetweenPoints: false,
+            showGapBetweenPoints: true,
             drawAlertRangeThresholdLine: true
         )
 

@@ -718,6 +718,7 @@ extension CardsGraphViewController: CardsGraphViewInput {
 
         clearChartData()
         showChartViews()
+        let timelineRange = resolveGlobalTimelineRange(from: chartViewData)
 
         for data in chartViewData {
             let view = chartView(for: data.variant)
@@ -727,6 +728,13 @@ extension CardsGraphViewController: CardsGraphViewInput {
                 unit: data.variant.type.unit(for: data.variant, settings: settings),
                 settings: settings,
                 view: view
+            )
+        }
+
+        chartViews.forEach {
+            $0.setXAxisRenderer(
+                showAll: settings.chartShowAll,
+                timelineRange: timelineRange
             )
         }
 
@@ -757,6 +765,16 @@ extension CardsGraphViewController: CardsGraphViewInput {
                 firstEntry: firstEntry,
                 showAlertRangeInGraph: settings.showAlertsRangeInGraph
             )
+        }
+
+        if settings.chartShowAll {
+            let timelineRange = resolveGlobalTimelineRange(from: chartViews)
+            chartViews.forEach {
+                $0.setXAxisRenderer(
+                    showAll: true,
+                    timelineRange: timelineRange
+                )
+            }
         }
     }
 
@@ -1210,7 +1228,6 @@ extension CardsGraphViewController {
         view.setSettings(settings: settings)
         view.localize()
         view.setYAxisLimit(min: data.chartData?.yMin ?? 0, max: data.chartData?.yMax ?? 0)
-        view.setXAxisRenderer(showAll: settings.chartShowAll)
         view.setChartStatVisible(show: showChartStat)
 
         // Calculation of min/max depends on the chart
@@ -1240,6 +1257,57 @@ extension CardsGraphViewController {
         chartViewCache.values.forEach {
             $0.resetCustomAxisMinMax()
         }
+    }
+
+    private func resolveGlobalTimelineRange(
+        from chartViewData: [RuuviGraphViewDataModel]
+    ) -> ClosedRange<Double>? {
+        let ranges = chartViewData.compactMap { model -> ClosedRange<Double>? in
+            guard let dataSet = model.chartData?.dataSets.first as? LineChartDataSet,
+                  !dataSet.entries.isEmpty else {
+                return nil
+            }
+            return resolveTimelineRange(from: dataSet.entries)
+        }
+
+        return mergeTimelineRanges(ranges)
+    }
+
+    private func resolveGlobalTimelineRange(
+        from chartViews: [CardsGraphView]
+    ) -> ClosedRange<Double>? {
+        let ranges = chartViews.compactMap { view -> ClosedRange<Double>? in
+            guard let dataSet = view.underlyingView.data?.dataSets.first as? LineChartDataSet,
+                  !dataSet.entries.isEmpty else {
+                return nil
+            }
+            return resolveTimelineRange(from: dataSet.entries)
+        }
+
+        return mergeTimelineRanges(ranges)
+    }
+
+    private func resolveTimelineRange(
+        from entries: [ChartDataEntry]
+    ) -> ClosedRange<Double>? {
+        let xValues = entries.map(\.x)
+        guard let minX = xValues.min(),
+              let maxX = xValues.max(),
+              minX.isFinite,
+              maxX.isFinite else {
+            return nil
+        }
+        return minX...maxX
+    }
+
+    private func mergeTimelineRanges(
+        _ ranges: [ClosedRange<Double>]
+    ) -> ClosedRange<Double>? {
+        guard let minX = ranges.map(\.lowerBound).min(),
+              let maxX = ranges.map(\.upperBound).max() else {
+            return nil
+        }
+        return minX...maxX
     }
 
     // MARK: - UI RELATED METHODS
