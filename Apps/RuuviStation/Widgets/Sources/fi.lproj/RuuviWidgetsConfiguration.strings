@@ -22,6 +22,7 @@
 
 "gFuAkN" = "Valittu anturi"; // Selected Ruuvi Sensor
 "MbquV0" = "Valitse anturin tyyppi"; // Selected sensor type
+"Y9n2Qa" = "Sensoreita ei ole saatavilla. Lisää sensori ensin sovelluksessa."; // No sensors available. Add a sensor in the app first.
 
 "W4gPB4" = "Ei mitään"; // None
 "GheCHn" = "Lämpötila"; // Temperature

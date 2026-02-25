@@ -16,6 +16,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     private let ruuviReactor: RuuviReactor
     private let foreground: BTForeground
     private let settings: RuuviLocalSettings
+    private let widgetCache = WidgetSensorCache()
 
     private var ruuviTagsToken: RuuviReactorToken?
     private var observeTokens = [String: ObservationToken]()
@@ -180,6 +181,9 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
             }
         }
         ruuviTagsByLuid = luidIndex
+        widgetCache.syncSensors(ruuviTags) { [weak self] sensor in
+            self?.sensorSettings(for: sensor)
+        }
     }
 
     private func tagIdentifierValues() -> Set<String> {
@@ -298,6 +302,64 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         }
     }
 
+    private func sensorSettings(
+        for ruuviTagSensor: AnyRuuviTagSensor
+    ) -> SensorSettings? {
+        if let sensorLuid = ruuviTagSensor.luid?.any {
+            if let settings = sensorSettingsList.first(where: { $0.luid?.any == sensorLuid }) {
+                return settings
+            }
+        }
+        if let sensorMac = ruuviTagSensor.macId?.any {
+            return sensorSettingsList.first(where: { $0.macId?.any == sensorMac })
+        }
+        return nil
+    }
+
+    private func snapshot(
+        from ruuviTag: RuuviTag,
+        source: RuuviTagSensorRecordSource
+    ) -> WidgetSensorRecordSnapshot {
+        let humidityFraction: Double? = {
+            if let relative = ruuviTag.relativeHumidity {
+                return relative / 100.0
+            }
+            return nil
+        }()
+        return WidgetSensorRecordSnapshot(
+            date: Date(),
+            source: source.rawValue,
+            macId: ruuviTag.macId?.value,
+            luid: ruuviTag.luid?.value,
+            rssi: nil,
+            version: ruuviTag.version,
+            temperature: ruuviTag.celsius,
+            humidity: humidityFraction,
+            pressure: ruuviTag.hectopascals,
+            accelerationX: ruuviTag.accelerationX,
+            accelerationY: ruuviTag.accelerationY,
+            accelerationZ: ruuviTag.accelerationZ,
+            voltage: ruuviTag.volts,
+            movementCounter: ruuviTag.movementCounter,
+            measurementSequenceNumber: ruuviTag.measurementSequenceNumber,
+            txPower: ruuviTag.txPower,
+            pm1: ruuviTag.pMatter1,
+            pm25: ruuviTag.pMatter25,
+            pm4: ruuviTag.pMatter4,
+            pm10: ruuviTag.pMatter10,
+            co2: ruuviTag.carbonDioxide,
+            voc: ruuviTag.volatileOrganicCompound,
+            nox: ruuviTag.nitrogenOxide,
+            luminance: ruuviTag.luminanceValue,
+            dbaInstant: ruuviTag.decibelInstant,
+            dbaAvg: ruuviTag.decibelAverage,
+            dbaPeak: ruuviTag.decibelPeak,
+            temperatureOffset: 0.0,
+            humidityOffset: 0.0,
+            pressureOffset: 0.0
+        )
+    }
+
     @objc private func persist(wrapper: RuuviTagWrapper) {
         let uuid = wrapper.device.uuid
         guard wrapper.device.luid != nil else { return }
@@ -367,6 +429,27 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
 
         guard tagExists else {
             return
+        }
+
+        let ruuviTagSensor: AnyRuuviTagSensor? = {
+            if let recordLuid = record.luid?.any {
+                if let match = ruuviTagsByLuid[recordLuid] {
+                    return match
+                }
+                return ruuviTags.first(where: { $0.luid?.any == recordLuid })
+            }
+            if let recordMac = record.macId?.any {
+                return ruuviTags.first(where: { $0.macId?.any == recordMac })
+            }
+            return nil
+        }()
+        if let ruuviTagSensor {
+            let settings = sensorSettings(for: ruuviTagSensor)
+            widgetCache.upsert(
+                sensor: ruuviTagSensor,
+                record: snapshot(from: record, source: .advertisement),
+                settings: settings
+            )
         }
 
         // Do not store advertisement for history only if it is v6 firmware and legacy advertisement.

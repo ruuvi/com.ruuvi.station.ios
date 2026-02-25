@@ -37,6 +37,7 @@
 
 "gFuAkN" = "Capteur Ruuvi sélectionné"; // Selected Ruuvi Sensor
 "MbquV0" = "Type de capteur sélectionné"; // Selected sensor type
+"Y9n2Qa" = "Aucun capteur disponible. Ajoutez d'abord un capteur dans l'application."; // No sensors available. Add a sensor in the app first.
 
 "W4gPB4" = "non connecté"; // None
 "GheCHn" = "Température"; // Temperature

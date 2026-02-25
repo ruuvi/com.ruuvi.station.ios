@@ -23,6 +23,7 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
     private let alertHandler: RuuviNotifier
     private let settings: RuuviLocalSettings
     private let titles: RuuviTagHeartbeatDaemonTitles
+    private let widgetCache = WidgetSensorCache()
 
     private var ruuviTags = [AnyRuuviTagSensor]()
     private var sensorSettingsList = [SensorSettings]()
@@ -286,7 +287,6 @@ extension RuuviTagHeartbeatDaemonBTKit {
     // Processes a RuuviTag for alerts and record creation based on settings.
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func processRuuviTag(_ ruuviTag: RuuviTag, source: RuuviTagSensorRecordSource) {
-        var sensorSettings: SensorSettings?
         let ruuviTagSensor: AnyRuuviTagSensor? = {
             if let ruuviTagLuid = ruuviTag.luid?.any {
                 if let match = ruuviTagsByLuid[ruuviTagLuid] {
@@ -301,19 +301,13 @@ extension RuuviTagHeartbeatDaemonBTKit {
             }
             return nil
         }()
+        let sensorSettings = sensorSettings(for: ruuviTagSensor)
         if let ruuviTagSensor {
-            if let sensorLuid = ruuviTagSensor.luid?.any {
-                if let settings = sensorSettingsByLuid[sensorLuid] {
-                    sensorSettings = settings
-                } else {
-                    sensorSettings = sensorSettingsList.first(where: { $0.luid?.any == sensorLuid })
-                }
-                if sensorSettings == nil, let sensorMac = ruuviTagSensor.macId?.any {
-                    sensorSettings = sensorSettingsList.first(where: { $0.macId?.any == sensorMac })
-                }
-            } else if let sensorMac = ruuviTagSensor.macId?.any {
-                sensorSettings = sensorSettingsList.first(where: { $0.macId?.any == sensorMac })
-            }
+            widgetCache.upsert(
+                sensor: ruuviTagSensor,
+                record: snapshot(from: ruuviTag, source: source),
+                settings: sensorSettings
+            )
         }
         alertHandler.process(
             record: ruuviTag.with(sensorSettings: sensorSettings).with(source: source),
@@ -456,6 +450,9 @@ extension RuuviTagHeartbeatDaemonBTKit {
                 ruuviTagIdentifierValues.insert(mac)
             }
         }
+        widgetCache.syncSensors(ruuviTags) { [weak self] sensor in
+            self?.sensorSettings(for: sensor)
+        }
         for luid in connectionPersistence.keepConnectionUUIDs {
             let luidValue = luid.value
             let isRuuviTagPresent = ruuviTagLuidValues.contains(luidValue)
@@ -490,6 +487,73 @@ extension RuuviTagHeartbeatDaemonBTKit {
         restartSensorSettingsObservers()
         restartObserving()
     }
+
+    private func sensorSettings(
+        for ruuviTagSensor: AnyRuuviTagSensor?
+    ) -> SensorSettings? {
+        guard let ruuviTagSensor else { return nil }
+        if let sensorLuid = ruuviTagSensor.luid?.any {
+            if let settings = sensorSettingsByLuid[sensorLuid] {
+                return settings
+            }
+            if let settings = sensorSettingsList.first(where: { $0.luid?.any == sensorLuid }) {
+                return settings
+            }
+            if let sensorMac = ruuviTagSensor.macId?.any {
+                return sensorSettingsList.first(where: { $0.macId?.any == sensorMac })
+            }
+            return nil
+        }
+        if let sensorMac = ruuviTagSensor.macId?.any {
+            return sensorSettingsList.first(where: { $0.macId?.any == sensorMac })
+        }
+        return nil
+    }
+
+    private func snapshot(
+        from ruuviTag: RuuviTag,
+        source: RuuviTagSensorRecordSource
+    ) -> WidgetSensorRecordSnapshot {
+        let humidityFraction: Double? = {
+            if let relative = ruuviTag.relativeHumidity {
+                return relative / 100.0
+            }
+            return nil
+        }()
+        return WidgetSensorRecordSnapshot(
+            date: Date(),
+            source: source.rawValue,
+            macId: ruuviTag.macId?.value,
+            luid: ruuviTag.luid?.value,
+            rssi: nil,
+            version: ruuviTag.version,
+            temperature: ruuviTag.celsius,
+            humidity: humidityFraction,
+            pressure: ruuviTag.hectopascals,
+            accelerationX: ruuviTag.accelerationX,
+            accelerationY: ruuviTag.accelerationY,
+            accelerationZ: ruuviTag.accelerationZ,
+            voltage: ruuviTag.volts,
+            movementCounter: ruuviTag.movementCounter,
+            measurementSequenceNumber: ruuviTag.measurementSequenceNumber,
+            txPower: ruuviTag.txPower,
+            pm1: ruuviTag.pMatter1,
+            pm25: ruuviTag.pMatter25,
+            pm4: ruuviTag.pMatter4,
+            pm10: ruuviTag.pMatter10,
+            co2: ruuviTag.carbonDioxide,
+            voc: ruuviTag.volatileOrganicCompound,
+            nox: ruuviTag.nitrogenOxide,
+            luminance: ruuviTag.luminanceValue,
+            dbaInstant: ruuviTag.decibelInstant,
+            dbaAvg: ruuviTag.decibelAverage,
+            dbaPeak: ruuviTag.decibelPeak,
+            temperatureOffset: 0.0,
+            humidityOffset: 0.0,
+            pressureOffset: 0.0
+        )
+    }
+
 
     @objc private func connect(uuid: String) {
         disconnectTokens[uuid]?.invalidate()

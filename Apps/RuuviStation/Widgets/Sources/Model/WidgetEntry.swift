@@ -25,18 +25,6 @@ extension WidgetEntry {
         )
     }
 
-    static func unauthorized() -> WidgetEntry {
-        WidgetEntry(
-            date: Date(),
-            isAuthorized: false,
-            isPreview: false,
-            tag: .preview,
-            record: nil,
-            settings: nil,
-            config: .preview
-        )
-    }
-
     static func empty() -> WidgetEntry {
         WidgetEntry(
             date: Date(),

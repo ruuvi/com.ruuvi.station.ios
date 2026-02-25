@@ -37,6 +37,7 @@
 
 "gFuAkN" = "Vald Ruuvi sensor"; // Selected Ruuvi Sensor
 "MbquV0" = "Vald sensortyp"; // Selected sensor type
+"Y9n2Qa" = "Inga sensorer tillgängliga. Lägg först till en sensor i appen."; // No sensors available. Add a sensor in the app first.
 
 "W4gPB4" = "ingen"; // None
 "GheCHn" = "Temperatur"; // Temperature

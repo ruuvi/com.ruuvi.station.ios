@@ -9,22 +9,18 @@ struct RuuviWidgetEntryView: View {
 
     var body: some View {
         ZStack {
-            if entry.isAuthorized {
-                if entry.record == nil {
-                    EmptyWidgetView(entry: entry)
-                } else {
-                    if family == .systemSmall {
-                        SimpleWidgetView(entry: entry)
-                    } else                  if family == .accessoryInline {
-                        SimpleWidgetViewInline(entry: entry)
-                    } else if family == .accessoryRectangular {
-                        SimpleWidgetViewRectangle(entry: entry)
-                    } else if family == .accessoryCircular {
-                        SimpleWidgetViewCircular(entry: entry)
-                    } else {}
-                }
+            if entry.record == nil {
+                EmptyWidgetView(entry: entry)
             } else {
-                UnauthorizedView()
+                if family == .systemSmall {
+                    SimpleWidgetView(entry: entry)
+                } else if family == .accessoryInline {
+                    SimpleWidgetViewInline(entry: entry)
+                } else if family == .accessoryRectangular {
+                    SimpleWidgetViewRectangle(entry: entry)
+                } else if family == .accessoryCircular {
+                    SimpleWidgetViewCircular(entry: entry)
+                } else {}
             }
         }.containerBackground()
     }

@@ -41,6 +41,7 @@
 
 "gFuAkN" = "Ausgewählter Ruuvi-Sensor"; // Selected Ruuvi Sensor
 "MbquV0" = "Ausgewählter Sensortyp"; // Selected sensor type
+"Y9n2Qa" = "Keine Sensoren verfügbar. Bitte füge zuerst einen Sensor in der App hinzu."; // No sensors available. Add a sensor in the app first.
 
 "W4gPB4" = "keiner"; // None
 "GheCHn" = "Temperatur"; // Temperature

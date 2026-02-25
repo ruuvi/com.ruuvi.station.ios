@@ -283,21 +283,31 @@
 					<string>RuuviWidgetTag</string>
 					<key>INIntentParameterObjectTypeNamespace</key>
 					<string>88xZPY</string>
-					<key>INIntentParameterPromptDialogs</key>
-					<array>
-						<dict>
-							<key>INIntentParameterPromptDialogCustom</key>
-							<true/>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>Configuration</string>
-						</dict>
-						<dict>
-							<key>INIntentParameterPromptDialogCustom</key>
-							<true/>
-							<key>INIntentParameterPromptDialogType</key>
-							<string>Primary</string>
-						</dict>
-					</array>
+						<key>INIntentParameterPromptDialogs</key>
+						<array>
+							<dict>
+								<key>INIntentParameterPromptDialogCustom</key>
+								<true/>
+								<key>INIntentParameterPromptDialogType</key>
+								<string>Configuration</string>
+							</dict>
+							<dict>
+								<key>INIntentParameterPromptDialogCustom</key>
+								<true/>
+								<key>INIntentParameterPromptDialogType</key>
+								<string>Primary</string>
+							</dict>
+							<dict>
+								<key>INIntentParameterPromptDialogCustom</key>
+								<true/>
+								<key>INIntentParameterPromptDialogFormatString</key>
+								<string>No sensors available. Add a sensor in the app first.</string>
+								<key>INIntentParameterPromptDialogFormatStringID</key>
+								<string>Y9n2Qa</string>
+								<key>INIntentParameterPromptDialogType</key>
+								<string>NoOptions</string>
+							</dict>
+						</array>
 					<key>INIntentParameterSupportsDynamicEnumeration</key>
 					<true/>
 					<key>INIntentParameterTag</key>
