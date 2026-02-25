@@ -377,6 +377,7 @@ private extension DashboardViewController {
     }
 
     @available(iOS 26.0, *)
+    // swiftlint:disable:next function_body_length
     func setupCustomHeaderView() {
         view.addSubview(customHeaderView)
         customHeaderView.translatesAutoresizingMaskIntoConstraints = false
