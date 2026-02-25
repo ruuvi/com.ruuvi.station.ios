@@ -18,6 +18,11 @@ public protocol RuuviLocalFlags {
     /// for local (non-cloud) Ruuvi Air sensors.
     var autoSyncGattHistoryForRuuviAir: Bool { get set }
 
+    /// Minimum age (in minutes) of the last datapoint before
+    /// auto GATT sync starts for Ruuvi Air.
+    /// `0` means always auto sync.
+    var autoSyncGattHistoryForRuuviAirMinimumLastDataAgeMinutes: Int { get set }
+
     /// When enabled, multiple GATT history sync operations can run
     /// while navigating between sensors in graph.
     var allowConcurrentGattSyncForMultipleSensors: Bool { get set }

@@ -517,7 +517,6 @@ private extension DashboardPresenter {
             .RuuviTagAdvertisementDaemonDidFail,
             .RuuviTagPropertiesDaemonDidFail,
             .RuuviTagHeartbeatDaemonDidFail,
-            .RuuviTagReadLogsOperationDidFail,
         ]
 
         for notificationName in daemonNotifications {

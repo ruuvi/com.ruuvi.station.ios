@@ -18,6 +18,9 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     @UserDefault("RuuviFeatureFlags.autoSyncGattHistoryForRuuviAir", defaultValue: true)
     var autoSyncGattHistoryForRuuviAir: Bool
 
+    @UserDefault("RuuviFeatureFlags.autoSyncGattHistoryForRuuviAirMinimumLastDataAgeMinutes", defaultValue: 5)
+    var autoSyncGattHistoryForRuuviAirMinimumLastDataAgeMinutes: Int
+
     @UserDefault("RuuviFeatureFlags.allowConcurrentGattSyncForMultipleSensors", defaultValue: false)
     var allowConcurrentGattSyncForMultipleSensors: Bool
 

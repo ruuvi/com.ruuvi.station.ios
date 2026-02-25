@@ -57,6 +57,10 @@ class CardsGraphPresenter: NSObject {
     private var shouldSyncFromCloud: Bool = true
     private let autoGattSyncStartDelay: TimeInterval = 0.25
     private var autoGattSyncWorkItem: DispatchWorkItem?
+    private enum GATTSyncStartSource {
+        case manual
+        case automatic
+    }
     private struct SnapshotGATTSyncState {
         var isSyncing: Bool
         var isQueued: Bool
@@ -293,6 +297,14 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
     }
 
     func viewDidStartSync(for snapshot: RuuviTagCardSnapshot?) {
+        startSync(for: snapshot, source: .manual)
+    }
+
+    // swiftlint:disable:next function_body_length
+    private func startSync(
+        for snapshot: RuuviTagCardSnapshot?,
+        source: GATTSyncStartSource
+    ) {
         guard let snapshot = snapshot else { return }
         cancelScheduledAutoGattSync()
         // Check bluetooth
@@ -344,6 +356,7 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
             DispatchQueue.main.async { [weak self] in
                 guard self?.syncStateBySnapshotId[snapshot.id]?.isSyncing == true else { return }
                 guard self?.snapshot?.id == snapshot.id else { return }
+                guard source == .manual else { return }
                 self?.view?.showFailedToSyncIn()
             }
         }, completion: { [weak self] in
@@ -681,7 +694,7 @@ extension CardsGraphPresenter {
                 guard !self.hasAnySyncInProgress else { return }
             }
             guard self.interactor?.isSyncingRecords() != true else { return }
-            self.viewDidStartSync(for: self.snapshot)
+            self.startSync(for: self.snapshot, source: .automatic)
         }
         autoGattSyncWorkItem = workItem
         DispatchQueue.main.asyncAfter(
@@ -769,7 +782,12 @@ extension CardsGraphPresenter {
         let isRuuviAir = firmwareType == .e1 || firmwareType == .v6
         guard isRuuviAir else { return false }
         let isCloudSensor = sensor?.isCloud ?? snapshot.metadata.isCloud
-        return !isCloudSensor
+        guard !isCloudSensor else { return false }
+        let minimumLastDataAgeMinutes = max(0, flags.autoSyncGattHistoryForRuuviAirMinimumLastDataAgeMinutes)
+        guard minimumLastDataAgeMinutes > 0 else { return true }
+        guard let lastMeasurementDate = interactor?.lastMeasurement?.date else { return true }
+        let minimumLastDataAge = TimeInterval(minimumLastDataAgeMinutes * 60)
+        return Date().timeIntervalSince(lastMeasurementDate) >= minimumLastDataAge
     }
 
     // swiftlint:disable:next function_body_length
