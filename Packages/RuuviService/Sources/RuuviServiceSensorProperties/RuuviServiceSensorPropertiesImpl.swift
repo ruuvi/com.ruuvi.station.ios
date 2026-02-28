@@ -57,7 +57,11 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         if sensor.isCloud {
             resetCloudImage(for: sensor).on()
         }
-        return setNextDefaultBackground(luid: luid, macId: macId)
+        let result = setNextDefaultBackground(luid: luid, macId: macId)
+        result.on(success: { [weak self] _ in
+            self?.updateSensorTimestamp(for: sensor)
+        })
+        return result
     }
 
     public func setNextDefaultBackground(
@@ -146,6 +150,10 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
             }
         }
 
+        local?.on(success: { [weak self] _ in
+            self?.updateSensorTimestamp(for: sensor)
+        })
+
         if let local, let remote {
             if let mac = macId {
                 localImages.setBackgroundUploadProgress(percentage: 0.0, for: mac)
@@ -194,6 +202,7 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
             localImages.deleteCustomBackground(for: luid)
         }
         localImages.setPictureRemovedFromCache(for: sensor)
+        updateSensorTimestamp(for: sensor)
         if sensor.isCloud {
             resetCloudImage(for: sensor)
         }
@@ -374,5 +383,10 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
             return string
         }
         return nil
+    }
+
+    private func updateSensorTimestamp(for sensor: RuuviTagSensor) {
+        let updatedSensor = sensor.with(lastUpdated: Date())
+        pool.update(updatedSensor).on()
     }
 }
