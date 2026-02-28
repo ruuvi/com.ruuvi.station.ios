@@ -67,6 +67,7 @@ class CardsGraphPresenter: NSObject {
         var progress: BTServiceProgress?
     }
     private var syncStateBySnapshotId: [String: SnapshotGATTSyncState] = [:]
+    private var syncSessionIdBySnapshotId: [String: UUID] = [:]
     private var hasAnySyncInProgress: Bool {
         syncStateBySnapshotId.values.contains(where: { $0.isSyncing })
     }
@@ -317,6 +318,11 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
             refreshSyncUIForCurrentSnapshot()
             return
         }
+        if source == .automatic {
+            interactor?.setHasLoggedFirstAutoSyncGattHistoryForRuuviAir(true)
+        }
+        let syncSessionId = UUID()
+        syncSessionIdBySnapshotId[snapshot.id] = syncSessionId
         setSyncState(
             isSyncing: true,
             isQueued: false,
@@ -325,6 +331,7 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
         )
         let op = interactor?.syncRecords { [weak self] progress in
             DispatchQueue.main.async { [weak self] in
+                guard self?.isActiveSyncSession(syncSessionId, for: snapshot.id) == true else { return }
                 self?.updateSyncProgress(progress, for: snapshot)
             }
         }
@@ -348,19 +355,20 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
         }
         op.on(success: { [weak self] _ in
             DispatchQueue.main.async { [weak self] in
-                guard self?.syncStateBySnapshotId[snapshot.id]?.isSyncing == true else { return }
+                guard self?.isActiveSyncSession(syncSessionId, for: snapshot.id) == true else { return }
                 guard self?.snapshot?.id == snapshot.id else { return }
                 self?.interactor?.restartObservingData()
             }
         }, failure: { [weak self] _ in
             DispatchQueue.main.async { [weak self] in
-                guard self?.syncStateBySnapshotId[snapshot.id]?.isSyncing == true else { return }
+                guard self?.isActiveSyncSession(syncSessionId, for: snapshot.id) == true else { return }
                 guard self?.snapshot?.id == snapshot.id else { return }
                 guard source == .manual else { return }
                 self?.view?.showFailedToSyncIn()
             }
         }, completion: { [weak self] in
             DispatchQueue.main.async { [weak self] in
+                guard self?.isActiveSyncSession(syncSessionId, for: snapshot.id) == true else { return }
                 self?.setSyncState(
                     isSyncing: false,
                     isQueued: false,
@@ -712,17 +720,7 @@ extension CardsGraphPresenter {
         _ progress: BTServiceProgress,
         for snapshot: RuuviTagCardSnapshot
     ) {
-        guard var state = syncStateBySnapshotId[snapshot.id], state.isSyncing else {
-            syncStateBySnapshotId[snapshot.id] = SnapshotGATTSyncState(
-                isSyncing: true,
-                isQueued: false,
-                progress: progress
-            )
-            if self.snapshot?.id == snapshot.id {
-                refreshSyncUIForCurrentSnapshot()
-            }
-            return
-        }
+        guard var state = syncStateBySnapshotId[snapshot.id], state.isSyncing else { return }
         state.isQueued = false
         state.progress = progress
         syncStateBySnapshotId[snapshot.id] = state
@@ -743,12 +741,11 @@ extension CardsGraphPresenter {
                 isQueued: isQueued,
                 progress: progress
             )
+            if self.snapshot?.id == snapshot.id {
+                refreshSyncUIForCurrentSnapshot()
+            }
         } else {
-            syncStateBySnapshotId.removeValue(forKey: snapshot.id)
-        }
-
-        if self.snapshot?.id == snapshot.id {
-            refreshSyncUIForCurrentSnapshot()
+            clearSyncState(for: snapshot.id)
         }
     }
 
@@ -783,11 +780,27 @@ extension CardsGraphPresenter {
         guard isRuuviAir else { return false }
         let isCloudSensor = sensor?.isCloud ?? snapshot.metadata.isCloud
         guard !isCloudSensor else { return false }
+        if interactor?.hasLoggedFirstAutoSyncGattHistoryForRuuviAir() != true {
+            return true
+        }
         let minimumLastDataAgeMinutes = max(0, flags.autoSyncGattHistoryForRuuviAirMinimumLastDataAgeMinutes)
         guard minimumLastDataAgeMinutes > 0 else { return true }
         guard let lastMeasurementDate = interactor?.lastMeasurement?.date else { return true }
         let minimumLastDataAge = TimeInterval(minimumLastDataAgeMinutes * 60)
         return Date().timeIntervalSince(lastMeasurementDate) >= minimumLastDataAge
+    }
+
+    private func isActiveSyncSession(_ sessionId: UUID, for snapshotId: String) -> Bool {
+        syncStateBySnapshotId[snapshotId]?.isSyncing == true &&
+            syncSessionIdBySnapshotId[snapshotId] == sessionId
+    }
+
+    private func clearSyncState(for snapshotId: String) {
+        syncStateBySnapshotId.removeValue(forKey: snapshotId)
+        syncSessionIdBySnapshotId.removeValue(forKey: snapshotId)
+        if self.snapshot?.id == snapshotId {
+            refreshSyncUIForCurrentSnapshot()
+        }
     }
 
     // swiftlint:disable:next function_body_length

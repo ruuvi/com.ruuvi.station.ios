@@ -8,6 +8,7 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     private let syncDateAllIDKey = "RuuviLocalSyncStateUserDefaults.syncDateAllIDKey."
     private let fullHistorySyncPrefix = "RuuviLocalSyncStateUserDefaults.fullHistorySyncPrefix."
     private let gattSyncDatePrefix = "RuuviLocalSyncStateUserDefaults.gattSyncDate."
+    private let firstAutoGattSyncLogPrefix = "RuuviLocalSyncStateUserDefaults.firstAutoGattSyncLog."
     private var syncingEnqueue: [AnyMACIdentifier] = []
 
     func setSyncStatus(_ status: NetworkSyncStatus) {
@@ -64,6 +65,16 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     func getGattSyncDate(for macId: MACIdentifier?) -> Date? {
         guard let macId else { assertionFailure(); return nil }
         return UserDefaults.standard.value(forKey: gattSyncDatePrefix + macId.mac) as? Date
+    }
+
+    func setHasLoggedFirstAutoSyncGattHistoryForRuuviAir(_ logged: Bool, for macId: MACIdentifier?) {
+        guard let macId else { return }
+        UserDefaults.standard.set(logged, forKey: firstAutoGattSyncLogPrefix + macId.mac)
+    }
+
+    func hasLoggedFirstAutoSyncGattHistoryForRuuviAir(for macId: MACIdentifier?) -> Bool {
+        guard let macId else { return false }
+        return UserDefaults.standard.bool(forKey: firstAutoGattSyncLogPrefix + macId.mac)
     }
 
     func setSyncDate(_ date: Date?) {

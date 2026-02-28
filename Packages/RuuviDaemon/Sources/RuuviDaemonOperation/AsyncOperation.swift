@@ -43,8 +43,10 @@ extension AsyncOperation {
             state = .finished
             return
         }
-        main()
+        // Mark as executing before `main()` to avoid finishing-state races
+        // when async APIs can invoke callbacks immediately.
         state = .executing
+        main()
     }
 
     override func cancel() {

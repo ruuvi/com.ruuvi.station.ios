@@ -33,6 +33,8 @@ public protocol RuuviLocalSyncState {
     func getSyncDate(for macId: MACIdentifier?) -> Date?
     func setGattSyncDate(_ date: Date?, for macId: MACIdentifier?)
     func getGattSyncDate(for macId: MACIdentifier?) -> Date?
+    func setHasLoggedFirstAutoSyncGattHistoryForRuuviAir(_ logged: Bool, for macId: MACIdentifier?)
+    func hasLoggedFirstAutoSyncGattHistoryForRuuviAir(for macId: MACIdentifier?) -> Bool
     func setSyncDate(_ date: Date?)
     func getSyncDate() -> Date?
     func setDownloadFullHistory(for macId: MACIdentifier?, downloadFull: Bool?)

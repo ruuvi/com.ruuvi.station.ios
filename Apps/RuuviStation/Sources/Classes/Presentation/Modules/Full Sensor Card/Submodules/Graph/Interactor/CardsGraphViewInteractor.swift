@@ -164,6 +164,17 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
         return gattService.isSyncingLogsQueued(with: luid.value)
     }
 
+    func hasLoggedFirstAutoSyncGattHistoryForRuuviAir() -> Bool {
+        localSyncState.hasLoggedFirstAutoSyncGattHistoryForRuuviAir(for: ruuviTagSensor.macId)
+    }
+
+    func setHasLoggedFirstAutoSyncGattHistoryForRuuviAir(_ logged: Bool) {
+        localSyncState.setHasLoggedFirstAutoSyncGattHistoryForRuuviAir(
+            logged,
+            for: ruuviTagSensor.macId
+        )
+    }
+
     func syncRecords(progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
         guard let luid = ruuviTagSensor.luid
@@ -219,7 +230,9 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
         }
         let op = gattService.stopGattSync(for: luid.value)
         op.on(success: { [weak self] response in
-            self?.gattSyncInterruptedByUser = true
+            if response {
+                self?.gattSyncInterruptedByUser = true
+            }
             promise.succeed(value: response)
         }, failure: { error in
             promise.fail(error: .ruuviService(error))
