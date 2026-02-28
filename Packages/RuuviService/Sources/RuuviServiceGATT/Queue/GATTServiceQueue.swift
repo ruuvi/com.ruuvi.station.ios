@@ -84,14 +84,15 @@ public final class GATTServiceQueue: GATTService {
     @discardableResult
     public func stopGattSync(for uuid: String) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
-        if isSyncingLogs(with: uuid) {
-            if let operation = queue.operations.filter({ ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid }).first {
-                if let queueOperation = operation as? RuuviTagReadLogsOperation {
-                    queueOperation.stopSync()
-                }
-                operation.cancel()
-                promise.succeed(value: operation.isCancelled)
+        if let operation = queue.operations
+            .first(where: { ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid }) {
+            if let queueOperation = operation as? RuuviTagReadLogsOperation {
+                queueOperation.stopSync()
             }
+            operation.cancel()
+            promise.succeed(value: operation.isCancelled)
+        } else {
+            promise.succeed(value: false)
         }
         return promise.future
     }
