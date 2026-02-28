@@ -8,6 +8,7 @@ enum DefaultsType {
 
 enum DefaultItem {
     case imageCompressionQuality
+    case graphDownsampleMaximumPoints
     case other
 }
 

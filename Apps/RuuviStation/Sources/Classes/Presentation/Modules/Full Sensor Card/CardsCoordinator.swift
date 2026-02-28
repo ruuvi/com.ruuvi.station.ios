@@ -237,6 +237,7 @@ private extension CardsCoordinator {
 
         interactor.gattService = r.resolve(GATTService.self)
         interactor.settings = r.resolve(RuuviLocalSettings.self)
+        interactor.flags = r.resolve(RuuviLocalFlags.self)
         interactor.exportService = r.resolve(RuuviServiceExport.self)
         interactor.ruuviReactor = r.resolve(RuuviReactor.self)
         interactor.ruuviPool = r.resolve(RuuviPool.self)

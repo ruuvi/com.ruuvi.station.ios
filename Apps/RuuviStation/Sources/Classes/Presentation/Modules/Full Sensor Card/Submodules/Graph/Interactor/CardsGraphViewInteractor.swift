@@ -17,6 +17,7 @@ class CardsGraphViewInteractor {
     var ruuviReactor: RuuviReactor!
     var cloudSyncService: RuuviServiceCloudSync!
     var settings: RuuviLocalSettings!
+    var flags: RuuviLocalFlags!
     var ruuviTagSensor: AnyRuuviTagSensor!
     var sensorSettings: SensorSettings?
     var exportService: RuuviServiceExport!
@@ -34,8 +35,10 @@ class CardsGraphViewInteractor {
     private var sensors: [AnyRuuviTagSensor] = []
 
     private let highDensityIntervalMinutes: Int = 15
-    private let maximumPointsCount: Double = 3000.0
     private let minimumDownsampleThreshold: Int = 1000
+    private var maximumPointsCount: Double {
+        Double(min(5000, max(1000, flags.graphDownsampleMaximumPoints)))
+    }
 
     private var gattSyncInterruptedByUser: Bool = false
 

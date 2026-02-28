@@ -16,6 +16,7 @@ class MeasurementDetailsPresenter: NSObject {
 
     // Dependencies
     private let settings: RuuviLocalSettings
+    private let flags: RuuviLocalFlags
     private let measurementService: RuuviServiceMeasurement
     private let alertService: RuuviServiceAlert
     private let ruuviStorage: RuuviStorage
@@ -79,12 +80,15 @@ class MeasurementDetailsPresenter: NSObject {
 
     // Configuration constants
     private let highDensityIntervalMinutes: Int = 15
-    private let maximumPointsCount: Double = 3000.0
     private let minimumDownsampleThreshold: Int = 1000
     private let defaultDurationHours: Int = 48
+    private var maximumPointsCount: Double {
+        Double(min(5000, max(1000, flags.graphDownsampleMaximumPoints)))
+    }
 
     init(
         settings: RuuviLocalSettings,
+        flags: RuuviLocalFlags,
         measurementService: RuuviServiceMeasurement,
         alertService: RuuviServiceAlert,
         ruuviStorage: RuuviStorage,
@@ -93,6 +97,7 @@ class MeasurementDetailsPresenter: NSObject {
         localSyncState: RuuviLocalSyncState
     ) {
         self.settings = settings
+        self.flags = flags
         self.measurementService = measurementService
         self.alertService = alertService
         self.ruuviStorage = ruuviStorage

@@ -30,4 +30,7 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     @UserDefault("RuuviFeatureFlags.showDashboardSensorSearch", defaultValue: false)
     var showDashboardSensorSearch: Bool
 
+    @UserDefault("RuuviFeatureFlags.graphDownsampleMaximumPoints", defaultValue: 3000)
+    var graphDownsampleMaximumPoints: Int
+
 }

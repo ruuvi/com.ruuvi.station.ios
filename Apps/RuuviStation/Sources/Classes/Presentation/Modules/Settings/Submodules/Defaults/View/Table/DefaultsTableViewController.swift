@@ -102,6 +102,12 @@ extension DefaultsTableViewController {
                 cell.stepper.minimumValue = 10
                 cell.stepper.maximumValue = 100
                 cell.stepper.value = Double(viewModel.integer.value.bound)
+            case .graphDownsampleMaximumPoints:
+                cell.titleLabel.text = title + " " + "(" + "\(result)" + ")"
+                cell.stepper.stepValue = 100
+                cell.stepper.minimumValue = 1000
+                cell.stepper.maximumValue = 5000
+                cell.stepper.value = Double(viewModel.integer.value.bound)
             default:
                 let unitString: String
                 switch viewModel.unit {

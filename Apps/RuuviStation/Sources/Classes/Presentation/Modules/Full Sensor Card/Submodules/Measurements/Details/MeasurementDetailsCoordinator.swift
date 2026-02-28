@@ -123,6 +123,7 @@ private extension MeasurementDetailsCoordinator {
 
         let presenter = MeasurementDetailsPresenter(
             settings: r.resolve(RuuviLocalSettings.self)!,
+            flags: r.resolve(RuuviLocalFlags.self)!,
             measurementService: r.resolve(RuuviServiceMeasurement.self)!,
             alertService: r.resolve(RuuviServiceAlert.self)!,
             ruuviStorage: r.resolve(RuuviStorage.self)!,

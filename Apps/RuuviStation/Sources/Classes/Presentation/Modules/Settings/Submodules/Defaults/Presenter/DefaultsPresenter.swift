@@ -56,6 +56,7 @@ extension DefaultsPresenter {
             buildPruningOffsetHours(),
             buildChartIntervalSeconds(),
             buildChartDurationHours(),
+            buildGraphDownsampleMaximumPoints(),
             saveAdvertisementsInterval(),
             saveHeartbeatsForgroundInterval(),
             movementAlertHysteresisInterval(),
@@ -273,6 +274,20 @@ extension DefaultsPresenter {
             observer.settings.chartDurationHours = chartDurationHours.bound
         }
         return chartDurationHours
+    }
+
+    private func buildGraphDownsampleMaximumPoints() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.item.value = .graphDownsampleMaximumPoints
+        viewModel.title = "Graph downsample max points"
+        viewModel.integer.value = min(5000, max(1000, flags.graphDownsampleMaximumPoints))
+        viewModel.unit = .decimal
+        viewModel.type.value = .stepper
+
+        bind(viewModel.integer, fire: false) { observer, points in
+            observer.flags.graphDownsampleMaximumPoints = min(5000, max(1000, points.bound))
+        }
+        return viewModel
     }
 
     private func saveHeartbeatsForgroundInterval() -> DefaultsViewModel {

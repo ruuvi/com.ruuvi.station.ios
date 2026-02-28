@@ -35,4 +35,7 @@ public protocol RuuviLocalFlags {
     /// expands into a search bar to filter sensors by name.
     var showDashboardSensorSearch: Bool { get set }
 
+    /// Maximum number of points used for graph downsampling.
+    /// Defaults to 3000.
+    var graphDownsampleMaximumPoints: Int { get set }
 }
