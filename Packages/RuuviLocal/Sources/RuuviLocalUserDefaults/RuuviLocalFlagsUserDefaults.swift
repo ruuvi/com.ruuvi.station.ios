@@ -18,8 +18,9 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     @UserDefault("RuuviFeatureFlags.autoSyncGattHistoryForRuuviAir", defaultValue: true)
     var autoSyncGattHistoryForRuuviAir: Bool
 
+    // Keep the existing storage key to preserve previously saved values.
     @UserDefault("RuuviFeatureFlags.autoSyncGattHistoryForRuuviAirMinimumLastDataAgeMinutes", defaultValue: 5)
-    var autoSyncGattHistoryForRuuviAirMinimumLastDataAgeMinutes: Int
+    var autoSyncGattHistoryForRuuviAirMinimumLastSyncDateAgeMinutes: Int
 
     @UserDefault("RuuviFeatureFlags.allowConcurrentGattSyncForMultipleSensors", defaultValue: false)
     var allowConcurrentGattSyncForMultipleSensors: Bool

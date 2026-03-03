@@ -559,6 +559,7 @@ extension CardsSettingsPresenter {
         if let mac = snapshot.identifierData.mac {
             localSyncState?.setSyncDate(nil, for: mac)
             localSyncState?.setGattSyncDate(nil, for: mac)
+            localSyncState?.setAutoGattSyncAttemptDate(nil, for: mac)
             settings.setOwnerCheckDate(for: mac, value: nil)
         }
 

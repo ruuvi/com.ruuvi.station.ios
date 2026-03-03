@@ -25,6 +25,7 @@ public final class RuuviServiceSensorRecordsImpl: RuuviServiceSensorRecords {
                 sSelf.localSyncState.setSyncDate(nil, for: sensor.macId)
                 sSelf.localSyncState.setSyncDate(nil)
                 sSelf.localSyncState.setGattSyncDate(nil, for: sensor.macId)
+                sSelf.localSyncState.setAutoGattSyncAttemptDate(nil, for: sensor.macId)
                 promise.succeed(value: ())
             }, failure: { error in
                 promise.fail(error: .ruuviPool(error))

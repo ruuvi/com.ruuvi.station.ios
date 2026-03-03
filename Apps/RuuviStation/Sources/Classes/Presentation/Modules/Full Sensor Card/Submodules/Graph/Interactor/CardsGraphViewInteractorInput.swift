@@ -21,6 +21,9 @@ protocol CardsGraphViewInteractorInput: AnyObject {
     func stopSyncRecords() -> Future<Bool, RUError>
     func isSyncingRecords() -> Bool
     func isSyncingRecordsQueued() -> Bool
+    func getLastGattSyncDate() -> Date?
+    func getAutoGattSyncAttemptDate() -> Date?
+    func setAutoGattSyncAttemptDate(_ date: Date?)
     func hasLoggedFirstAutoSyncGattHistoryForRuuviAir() -> Bool
     func setHasLoggedFirstAutoSyncGattHistoryForRuuviAir(_ logged: Bool)
     func deleteAllRecords(for sensor: RuuviTagSensor) -> Future<Void, RUError>

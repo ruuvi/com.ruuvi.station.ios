@@ -167,6 +167,21 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
         return gattService.isSyncingLogsQueued(with: luid.value)
     }
 
+    func getLastGattSyncDate() -> Date? {
+        guard let ruuviTagSensor = ruuviTagSensor else { return nil }
+        return localSyncState.getGattSyncDate(for: ruuviTagSensor.macId)
+    }
+
+    func getAutoGattSyncAttemptDate() -> Date? {
+        guard let ruuviTagSensor = ruuviTagSensor else { return nil }
+        return localSyncState.getAutoGattSyncAttemptDate(for: ruuviTagSensor.macId)
+    }
+
+    func setAutoGattSyncAttemptDate(_ date: Date?) {
+        guard let ruuviTagSensor = ruuviTagSensor else { return }
+        localSyncState.setAutoGattSyncAttemptDate(date, for: ruuviTagSensor.macId)
+    }
+
     func hasLoggedFirstAutoSyncGattHistoryForRuuviAir() -> Bool {
         localSyncState.hasLoggedFirstAutoSyncGattHistoryForRuuviAir(for: ruuviTagSensor.macId)
     }
@@ -252,6 +267,7 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
                 self?.localSyncState.setSyncDate(nil, for: self?.ruuviTagSensor.macId)
                 self?.localSyncState.setSyncDate(nil)
                 self?.localSyncState.setGattSyncDate(nil, for: self?.ruuviTagSensor.macId)
+                self?.localSyncState.setAutoGattSyncAttemptDate(nil, for: self?.ruuviTagSensor.macId)
                 self?.restartObservingData()
                 promise.succeed(value: ())
             })

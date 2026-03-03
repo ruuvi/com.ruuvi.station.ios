@@ -109,6 +109,7 @@ private extension RuuviServiceAuthImpl {
         if let macId = sensor.macId {
             localSyncState.setSyncDate(nil, for: macId)
             localSyncState.setGattSyncDate(nil, for: macId)
+            localSyncState.setAutoGattSyncAttemptDate(nil, for: macId)
             settings.setOwnerCheckDate(for: macId, value: nil)
 
             // Clean up widget card reference if it matches this sensor

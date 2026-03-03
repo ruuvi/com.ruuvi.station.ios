@@ -318,9 +318,6 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
             refreshSyncUIForCurrentSnapshot()
             return
         }
-        if source == .automatic {
-            interactor?.setHasLoggedFirstAutoSyncGattHistoryForRuuviAir(true)
-        }
         let syncSessionId = UUID()
         syncSessionIdBySnapshotId[snapshot.id] = syncSessionId
         setSyncState(
@@ -352,6 +349,10 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
                 for: snapshot
             )
             return
+        }
+        if source == .automatic {
+            interactor?.setHasLoggedFirstAutoSyncGattHistoryForRuuviAir(true)
+            interactor?.setAutoGattSyncAttemptDate(Date())
         }
         op.on(success: { [weak self] _ in
             DispatchQueue.main.async { [weak self] in
@@ -783,11 +784,18 @@ extension CardsGraphPresenter {
         if interactor?.hasLoggedFirstAutoSyncGattHistoryForRuuviAir() != true {
             return true
         }
-        let minimumLastDataAgeMinutes = max(0, flags.autoSyncGattHistoryForRuuviAirMinimumLastDataAgeMinutes)
-        guard minimumLastDataAgeMinutes > 0 else { return true }
-        guard let lastMeasurementDate = interactor?.lastMeasurement?.date else { return true }
-        let minimumLastDataAge = TimeInterval(minimumLastDataAgeMinutes * 60)
-        return Date().timeIntervalSince(lastMeasurementDate) >= minimumLastDataAge
+        let minimumLastSyncDateAgeMinutes = max(0, flags.autoSyncGattHistoryForRuuviAirMinimumLastSyncDateAgeMinutes)
+        guard minimumLastSyncDateAgeMinutes > 0 else { return true }
+        let lastAutoGattSyncAttemptDate = interactor?.getAutoGattSyncAttemptDate()
+        let lastGattSyncDate = interactor?.getLastGattSyncDate()
+        guard let lastSyncReferenceDate = [lastAutoGattSyncAttemptDate, lastGattSyncDate]
+            .compactMap({ $0 })
+            .max()
+        else {
+            return true
+        }
+        let minimumLastSyncDateAge = TimeInterval(minimumLastSyncDateAgeMinutes * 60)
+        return Date().timeIntervalSince(lastSyncReferenceDate) >= minimumLastSyncDateAge
     }
 
     private func isActiveSyncSession(_ sessionId: UUID, for snapshotId: String) -> Bool {

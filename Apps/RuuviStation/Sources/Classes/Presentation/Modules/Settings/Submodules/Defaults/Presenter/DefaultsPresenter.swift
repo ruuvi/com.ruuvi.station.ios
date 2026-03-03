@@ -80,7 +80,7 @@ extension DefaultsPresenter {
             buildDownloadBetaFirmware(),
             buildDownloadAlphaFirmware(),
             buildAutoSyncGattHistoryForRuuviAir(),
-            buildAutoSyncGattHistoryForRuuviAirMinimumLastDataAgeMinutes(),
+            buildAutoSyncGattHistoryForRuuviAirMinimumLastSyncDateAgeMinutes(),
             buildAllowConcurrentGattSyncForMultipleSensors(),
             buildShowMarketingPreference(),
             buildShowDashboardSensorSearch(),
@@ -603,15 +603,15 @@ extension DefaultsPresenter {
         return viewModel
     }
 
-    private func buildAutoSyncGattHistoryForRuuviAirMinimumLastDataAgeMinutes() -> DefaultsViewModel {
+    private func buildAutoSyncGattHistoryForRuuviAirMinimumLastSyncDateAgeMinutes() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
-        viewModel.title = "Auto sync Ruuvi Air minimum last data age"
-        viewModel.integer.value = flags.autoSyncGattHistoryForRuuviAirMinimumLastDataAgeMinutes
+        viewModel.title = "Auto sync Ruuvi Air minimum age since last sync date"
+        viewModel.integer.value = flags.autoSyncGattHistoryForRuuviAirMinimumLastSyncDateAgeMinutes
         viewModel.unit = .minutes
         viewModel.type.value = .stepper
 
         bind(viewModel.integer, fire: false) { observer, value in
-            observer.flags.autoSyncGattHistoryForRuuviAirMinimumLastDataAgeMinutes = max(0, value.bound)
+            observer.flags.autoSyncGattHistoryForRuuviAirMinimumLastSyncDateAgeMinutes = max(0, value.bound)
         }
 
         return viewModel
