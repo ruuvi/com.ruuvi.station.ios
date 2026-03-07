@@ -382,18 +382,29 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     private var temperatureUnitInt: Int {
         get {
-            let int = UserDefaults.standard.integer(forKey: temperatureUnitIntUDKey)
-            if int == 0 {
-                if useFahrenheit {
-                    temperatureUnit = .fahrenheit
-                    return 3
-                } else {
-                    temperatureUnit = .celsius
-                    return 2
-                }
-            } else {
+            let defaults = UserDefaults.standard
+            let int = defaults.integer(forKey: temperatureUnitIntUDKey)
+            if int != 0 {
                 return int
             }
+
+            let hasLegacyPreference = defaults.object(
+                forKey: "SettingsUserDegaults.useFahrenheit"
+            ) != nil
+            // Keep pre-existing users on historical Celsius default when no explicit
+            // temperature unit was stored yet; only fresh installs should use
+            // region/system-derived defaults.
+            let isExistingInstall = defaults.object(
+                forKey: appOpenedCountUDKey
+            ) != nil
+            let resolvedDefaultUnit: TemperatureUnit = hasLegacyPreference
+                ? (useFahrenheit ? .fahrenheit : .celsius)
+                : (isExistingInstall ? .celsius : .defaultFromSystemPreferences())
+            let resolvedInt = temperatureUnitInt(for: resolvedDefaultUnit)
+
+            useFahrenheit = resolvedDefaultUnit == .fahrenheit
+            defaults.set(resolvedInt, forKey: temperatureUnitIntUDKey)
+            return resolvedInt
         }
         set {
             UserDefaults.standard.set(newValue, forKey: temperatureUnitIntUDKey)
@@ -401,6 +412,18 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     }
 
     private let temperatureUnitIntUDKey = "SettingsUserDegaults.temperatureUnitIntUDKey"
+    private let appOpenedCountUDKey = "SettingsUserDefaults.appOpenedCount"
+
+    private func temperatureUnitInt(for unit: TemperatureUnit) -> Int {
+        switch unit {
+        case .kelvin:
+            return 1
+        case .celsius:
+            return 2
+        case .fahrenheit:
+            return 3
+        }
+    }
 
     private var humidityUnitInt: Int {
         get {

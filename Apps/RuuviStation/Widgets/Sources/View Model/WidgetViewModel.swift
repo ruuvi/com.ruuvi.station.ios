@@ -307,7 +307,7 @@ extension WidgetViewModel {
         case 3:
             return .fahrenheit
         default:
-            return .celsius
+            return .defaultFromSystemPreferences()
         }
     }
 

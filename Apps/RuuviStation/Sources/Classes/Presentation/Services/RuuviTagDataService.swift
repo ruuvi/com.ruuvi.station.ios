@@ -1311,7 +1311,7 @@ extension RuuviTagDataService {
         attributes: .concurrent
     )
     private static var preferredUnits = RuuviServiceMeasurementSettingsUnit(
-        temperatureUnit: .celsius,
+        temperatureUnit: .defaultFromSystemPreferences(),
         humidityUnit: .percent,
         pressureUnit: .hectopascals
     )
@@ -1896,7 +1896,11 @@ extension RuuviTagDataService {
     private static func resolvedTemperatureUnit(
         _ unit: UnitTemperature?
     ) -> TemperatureUnit {
-        guard let unit else { return .celsius }
+        guard let unit else {
+            return temperatureUnit(
+                from: preferredUnitsSnapshot().temperatureUnit
+            )
+        }
         switch unit {
         case .fahrenheit:
             return .fahrenheit
