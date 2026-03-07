@@ -301,7 +301,7 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
         startSync(for: snapshot, source: .manual)
     }
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func startSync(
         for snapshot: RuuviTagCardSnapshot?,
         source: GATTSyncStartSource

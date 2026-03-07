@@ -285,7 +285,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
     }
 
     // Processes a RuuviTag for alerts and record creation based on settings.
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    // swiftlint:disable:next function_body_length
     private func processRuuviTag(_ ruuviTag: RuuviTag, source: RuuviTagSensorRecordSource) {
         let ruuviTagSensor: AnyRuuviTagSensor? = {
             if let ruuviTagLuid = ruuviTag.luid?.any {
@@ -553,7 +553,6 @@ extension RuuviTagHeartbeatDaemonBTKit {
             pressureOffset: 0.0
         )
     }
-
 
     @objc private func connect(uuid: String) {
         disconnectTokens[uuid]?.invalidate()

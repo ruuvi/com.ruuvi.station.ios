@@ -33,7 +33,7 @@ class IntentHandler: INExtension, RuuviTagSelectionIntentHandling {
                 [
                     sensor.sensor.id,
                     sensor.record?.macId?.value,
-                    sensor.record?.luid?.value
+                    sensor.record?.luid?.value,
                 ].compactMap { $0 }.forEach {
                     seenIdentifiers.insert($0)
                 }

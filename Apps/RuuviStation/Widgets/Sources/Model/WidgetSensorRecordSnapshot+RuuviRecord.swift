@@ -4,6 +4,8 @@ import RuuviLocal
 import RuuviOntology
 
 extension WidgetSensorRecordSnapshot {
+
+    // swiftlint:disable:next function_body_length
     func toRecord() -> RuuviTagSensorRecordStruct {
         let temperatureMeasurement = Temperature(temperature)
         let humidityMeasurement: Humidity?
