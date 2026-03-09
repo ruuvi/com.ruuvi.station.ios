@@ -22,7 +22,7 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     @UserDefault("RuuviFeatureFlags.autoSyncGattHistoryForRuuviAirMinimumLastDataAgeMinutes", defaultValue: 5)
     var autoSyncGattHistoryForRuuviAirMinimumLastSyncDateAgeMinutes: Int
 
-    @UserDefault("RuuviFeatureFlags.allowConcurrentGattSyncForMultipleSensors", defaultValue: false)
+    @UserDefault("RuuviFeatureFlags.allowConcurrentGattSyncForMultipleSensors", defaultValue: true)
     var allowConcurrentGattSyncForMultipleSensors: Bool
 
     @UserDefault("RuuviFeatureFlags.showMarketingPreference", defaultValue: false)
