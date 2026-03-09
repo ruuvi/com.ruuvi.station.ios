@@ -13,4 +13,5 @@ enum AppAssemblyConstants {
     static let ruuviCloudUrl = networkingPlist.RuuviCloudURL
     static let ruuviCloudUrlDev = networkingPlist.RuuviCloudURLDev
     static let simpleWidgetKindId = "ruuvi.simpleWidget"
+    static let multiSensorWidgetKindId = "ruuvi.multiSensorWidget"
 }

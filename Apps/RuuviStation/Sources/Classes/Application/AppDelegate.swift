@@ -195,8 +195,8 @@ extension AppDelegate {
         open url: URL,
         options _: [UIApplication.OpenURLOptionsKey: Any] = [:]
     ) -> Bool {
-        let macId = url.absoluteString
-        openSelectedCard(for: macId, application: app)
+        let sensorId = widgetSensorIdentifier(from: url)
+        openSelectedCard(for: sensorId, application: app)
         return true
     }
 }
@@ -211,6 +211,22 @@ extension AppDelegate: RuuviNotificationLocalOutput {
 
 // TODO: - SEE IF WE CAN MOVE THIS TO APP_STATE_SERVICE
 extension AppDelegate {
+    private func widgetSensorIdentifier(from url: URL) -> String {
+        if let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+           let sensorId = components.queryItems?.first(where: { $0.name == "sensorId" })?.value,
+           !sensorId.isEmpty {
+            return sensorId
+        }
+
+        if let scheme = url.scheme,
+           url.host == nil,
+           !url.path.isEmpty {
+            return "\(scheme):\(url.path)"
+        }
+
+        return url.absoluteString.removingPercentEncoding ?? url.absoluteString
+    }
+
     private func openSelectedCard(
         for uuid: String,
         application: UIApplication? = nil

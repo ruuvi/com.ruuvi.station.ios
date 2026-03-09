@@ -12,10 +12,10 @@ struct EmptyWidgetView: View {
     }
 
     private let texts = Texts()
-    var entry: WidgetProvider.Entry
+    var entry: WidgetEntry
 
     var body: some View {
-        if family == .systemSmall {
+        if family == .systemSmall || family == .systemMedium || family == .systemLarge {
             RegularEmptyWidgetView(entry: entry, isSimple: true)
         } else {
             if #available(iOSApplicationExtension 16.0, *) {
@@ -33,68 +33,73 @@ struct EmptyWidgetView: View {
     // Empty view for small and rectangular widget.
     struct RegularEmptyWidgetView: View {
         @Environment(\.widgetFamily) private var family
-        var entry: WidgetProvider.Entry
+        var entry: WidgetEntry
         var isSimple: Bool
         private let texts = Texts()
 
         var body: some View {
             ZStack {
                 Color.backgroundColor.edgesIgnoringSafeArea(.all)
-            }
-            .cornerRadius(8)
-            VStack {
-                Text(entry.config.ruuviWidgetTag == nil ?
+                Text(entry.config.sensorId == nil ?
                     (isSimple ? texts.messageSimple.localized :
                         texts.messageRectangular.localized)
                     : texts.loading.localized)
-                    .font(.mulish(.bold, size: family == .systemSmall ? 16 : 10, relativeTo: .subheadline))
+                    .font(
+                        .mulish(
+                            .bold,
+                            size: family == .systemSmall ? 16 : (isSimple ? 14 : 10),
+                            relativeTo: .subheadline
+                        )
+                    )
                     .foregroundColor(.sensorNameColor1)
                     .multilineTextAlignment(.center)
-            }.padding(4)
+                    .padding(4)
+            }
+            .cornerRadius(8)
         }
     }
 
     // Empty view circular
     struct CircularEmptyWidgetView: View {
-        var entry: WidgetProvider.Entry
+        var entry: WidgetEntry
         private let texts = Texts()
 
         var body: some View {
             ZStack {
                 Color.backgroundColor.edgesIgnoringSafeArea(.all).clipShape(Circle())
+                VStack {
+                    Image(Constants.ruuviLogo.rawValue)
+                        .renderingMode(.template)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .padding(.init(
+                            top: 4,
+                            leading: 8,
+                            bottom: -4,
+                            trailing: 8
+                        ))
+                    Text(entry.config.sensorId == nil ?
+                        texts.messageCircular.localized : texts.loading.localized)
+                        .font(.mulish(.bold, size: 8, relativeTo: .headline))
+                        .foregroundColor(.sensorNameColor1)
+                        .multilineTextAlignment(.center)
+                }
+                .padding(4)
             }
-
-            VStack {
-                Image(Constants.ruuviLogo.rawValue)
-                    .renderingMode(.template)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .padding(.init(
-                        top: 4,
-                        leading: 8,
-                        bottom: -4,
-                        trailing: 8
-                    ))
-                Text(entry.config.ruuviWidgetTag == nil ?
-                    texts.messageCircular.localized : texts.loading.localized)
-                    .font(.mulish(.bold, size: 8, relativeTo: .headline))
-                    .foregroundColor(.sensorNameColor1)
-                    .multilineTextAlignment(.center)
-            }.padding(4)
         }
     }
 
     // Empty view inline
     struct InlineEmptyWidgetView: View {
-        var entry: WidgetProvider.Entry
+        var entry: WidgetEntry
         private let texts = Texts()
 
         var body: some View {
             ZStack {
                 Color.backgroundColor.edgesIgnoringSafeArea(.all)
+                Text(entry.config.sensorId == nil ?
+                    texts.messageInline.localized : texts.loading.localized)
             }
-            Text(entry.config.ruuviWidgetTag == nil ?
-                texts.messageInline.localized : texts.loading.localized)
         }
     }
 }

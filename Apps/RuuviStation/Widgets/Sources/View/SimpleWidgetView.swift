@@ -1,9 +1,12 @@
+import RuuviLocalization
+import RuuviOntology
 import SwiftUI
+import WidgetKit
 
 struct SimpleWidgetView: View {
     @Environment(\.canShowWidgetContainerBackground) private var canShowBackground
     private let viewModel = WidgetViewModel()
-    var entry: WidgetProvider.Entry
+    var entry: WidgetEntry
     var body: some View {
         GeometryReader { geometry in
             VStack {
@@ -30,8 +33,9 @@ struct SimpleWidgetView: View {
                             .minimumScaleFactor(0.5)
                     }
 
-                    if let sensorName = viewModel.getSensor(from: entry.config)?.displayName() {
-                        Text(sensorName)
+                    let measurementShortName = viewModel.measurementShortName(from: entry.config)
+                    if !measurementShortName.isEmpty {
+                        Text(measurementShortName)
                             .foregroundColor(Color.sensorNameColor1)
                             .font(
                                 .mulish(
@@ -56,10 +60,7 @@ struct SimpleWidgetView: View {
                         .frame(alignment: .bottomLeading)
                         .minimumScaleFactor(0.5)
                         Text(
-                            viewModel
-                                .getUnit(
-                                    for: viewModel.getSensor(from: entry.config)
-                                )
+                            viewModel.getUnit(from: entry.config)
                         )
                         .foregroundColor(Color.unitTextColor)
                         .font(
@@ -75,7 +76,7 @@ struct SimpleWidgetView: View {
                         Spacer()
                         if #available(iOS 17.0, *) {
                             if !entry.isPreview {
-                                Button(intent: WidgetRefresher()
+                                Button(intent: WidgetRefresher(target: .simple)
                                 ) {
                                     Image(systemName: "arrow.clockwise")
                                         .foregroundColor(Color.sensorNameColor1)
@@ -89,7 +90,13 @@ struct SimpleWidgetView: View {
                         }
                     }
                 }.padding(EdgeInsets(top: 12, leading: 12, bottom: 8, trailing: 12))
-            }.widgetURL(URL(string: "\(entry.tag.identifier.unwrapped)"))
+            }
+            .widgetURL(
+                viewModel.widgetDeepLinkURL(
+                    sensorId: entry.tag.identifier,
+                    record: entry.record
+                )
+            )
         }
     }
 
@@ -110,10 +117,18 @@ struct SimpleWidgetView: View {
 
 extension EnvironmentValues {
     var canShowWidgetContainerBackground: Bool {
-        if #available(iOSApplicationExtension 15.0, *) {
+        if #available(iOSApplicationExtension 16.0, *) {
             self.showsWidgetContainerBackground
         } else {
             false
+        }
+    }
+
+    var isFullColorWidgetRenderingMode: Bool {
+        if #available(iOSApplicationExtension 16.0, *) {
+            self.widgetRenderingMode == .fullColor
+        } else {
+            true
         }
     }
 }

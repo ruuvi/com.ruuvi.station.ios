@@ -3,7 +3,7 @@ import RuuviLocalization
 
 struct SimpleWidgetViewCircular: View {
     private let viewModel = WidgetViewModel()
-    var entry: WidgetProvider.Entry
+    var entry: WidgetEntry
     var body: some View {
         ZStack {
             Color.backgroundColor.edgesIgnoringSafeArea(.all).clipShape(Circle())
@@ -27,10 +27,7 @@ struct SimpleWidgetViewCircular: View {
             .padding(.top, -4)
 
             Text(
-                viewModel
-                    .getUnit(
-                        for: viewModel.getSensor(from: entry.config)
-                    )
+                viewModel.getUnit(from: entry.config)
             )
             .foregroundColor(Color.unitTextColor)
             .font(.mulish(.bold, size: 10, relativeTo: .body))
@@ -38,6 +35,11 @@ struct SimpleWidgetViewCircular: View {
             .padding(.top, -2)
 
         }.padding(EdgeInsets(top: 4, leading: 10, bottom: 4, trailing: 10))
-            .widgetURL(URL(string: "\(entry.tag.identifier.unwrapped)"))
+            .widgetURL(
+                viewModel.widgetDeepLinkURL(
+                    sensorId: entry.tag.identifier,
+                    record: entry.record
+                )
+            )
     }
 }

@@ -1,16 +1,30 @@
 import Intents
+import RuuviLocalization
 import SwiftUI
 import WidgetKit
-import RuuviLocalization
 
-struct RuuviWidgetEntryView: View {
+struct SingleSensorWidgetEntryView: View {
     @Environment(\.widgetFamily) private var family
-    var entry: WidgetProvider.Entry
+    var entry: WidgetEntry
 
     var body: some View {
         ZStack {
-            if entry.record == nil {
-                EmptyWidgetView(entry: entry)
+            if entry.isAuthorized {
+                if entry.record == nil {
+                    EmptyWidgetView(entry: entry)
+                } else {
+                    if family == .systemSmall {
+                        SimpleWidgetView(entry: entry)
+                    } else if family == .accessoryInline {
+                        SimpleWidgetViewInline(entry: entry)
+                    } else if family == .accessoryRectangular {
+                        SimpleWidgetViewRectangle(entry: entry)
+                    } else if family == .accessoryCircular {
+                        SimpleWidgetViewCircular(entry: entry)
+                    } else {
+                        EmptyView()
+                    }
+                }
             } else {
                 if family == .systemSmall {
                     SimpleWidgetView(entry: entry)
@@ -22,14 +36,15 @@ struct RuuviWidgetEntryView: View {
                     SimpleWidgetViewCircular(entry: entry)
                 } else {}
             }
-        }.containerBackground()
+        }
+        .containerBackground()
     }
 }
 
-@main
-struct RuuviWidgets: Widget {
+struct RuuviSingleSensorWidget: Widget {
     let kind: String = Constants.simpleWidgetKindId.rawValue
     let viewModel = WidgetViewModel()
+
     private var supportedFamilies: [WidgetFamily] {
         if #available(iOSApplicationExtension 16.0, *) {
             [
@@ -40,7 +55,7 @@ struct RuuviWidgets: Widget {
             ]
         } else {
             [
-                .systemSmall
+                .systemSmall,
             ]
         }
     }
@@ -51,12 +66,46 @@ struct RuuviWidgets: Widget {
             intent: RuuviTagSelectionIntent.self,
             provider: WidgetProvider()
         ) { entry in
-            RuuviWidgetEntryView(entry: entry)
+            SingleSensorWidgetEntryView(entry: entry)
                 .environment(\.locale, viewModel.locale())
-        }.configurationDisplayName(Constants.simpleWidgetDisplayName.rawValue)
-            .description(RuuviLocalization.Widgets.Description.message)
-            .supportedFamilies(supportedFamilies)
-            .contentMarginsDisabledIfAvailable()
+        }
+        .configurationDisplayName(Constants.widgetDisplayName.rawValue)
+        .description(RuuviLocalization.Widgets.Description.message)
+        .supportedFamilies(supportedFamilies)
+        .contentMarginsDisabledIfAvailable()
+    }
+}
+
+struct RuuviMultiSensorWidget: Widget {
+    let kind: String = Constants.multiSensorWidgetKindId.rawValue
+    let viewModel = WidgetViewModel()
+
+    var body: some WidgetConfiguration {
+        IntentConfiguration(
+            kind: kind,
+            intent: RuuviMultiSensorSelectionIntent.self,
+            provider: MultiSensorWidgetProvider()
+        ) { entry in
+            MultiSensorWidgetEntryView(entry: entry)
+                .environment(\.locale, viewModel.locale())
+        }
+        .configurationDisplayName(Constants.widgetDisplayName.rawValue)
+        .description(RuuviLocalization.Widgets.Description.message)
+        .supportedFamilies([
+            .systemMedium,
+            .systemLarge,
+            .systemExtraLarge,
+        ])
+        .contentMarginsDisabledIfAvailable()
+    }
+}
+
+@main
+struct RuuviWidgetsBundle: WidgetBundle {
+    @WidgetBundleBuilder
+    var body: some Widget {
+        RuuviSingleSensorWidget()
+        RuuviMultiSensorWidget()
     }
 }
 
@@ -74,10 +123,10 @@ extension WidgetConfiguration {
 
 extension View {
     @ViewBuilder
-    func containerBackground() -> some View {
+    func containerBackground(_ color: Color = .backgroundColor) -> some View {
         if #available(iOSApplicationExtension 17.0, *) {
             self.containerBackground(for: .widget) {
-                Color.backgroundColor
+                color
             }
         } else {
             self
@@ -87,7 +136,19 @@ extension View {
 
 struct RuuviWidgets_Previews: PreviewProvider {
     static var previews: some View {
-        RuuviWidgetEntryView(entry: .placeholder())
-            .previewContext(WidgetPreviewContext(family: .systemSmall))
+        Group {
+            SingleSensorWidgetEntryView(entry: .placeholder())
+                .previewContext(WidgetPreviewContext(family: .systemSmall))
+
+            MultiSensorWidgetEntryView(
+                entry: .placeholder(for: .systemMedium)
+            )
+            .previewContext(WidgetPreviewContext(family: .systemMedium))
+
+            MultiSensorWidgetEntryView(
+                entry: .placeholder(for: .systemLarge)
+            )
+            .previewContext(WidgetPreviewContext(family: .systemLarge))
+        }
     }
 }

@@ -6,6 +6,9 @@ import RuuviLocalization
 import RuuviOntology
 import RuuviLocal
 import RuuviService
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
 
 final class VisibilitySettingsPresenter: VisibilitySettingsModuleInput {
     private struct PersistSignature: Equatable {
@@ -794,6 +797,13 @@ private extension VisibilitySettingsPresenter {
         runOnMain { [weak self] in
             guard let self else { return }
             self.sensorSettings = settings
+            if let sensor = self.sensor {
+                WidgetSensorCache().upsert(
+                    sensor: sensor.any,
+                    record: nil,
+                    settings: settings
+                )
+            }
             if let codes = settings.displayOrder, !codes.isEmpty {
                 self.lastKnownCustomOrderCodes = codes
             }
@@ -802,6 +812,13 @@ private extension VisibilitySettingsPresenter {
             if !self.hasPendingPersistRequest && !self.isPersistScheduled {
                 self.hasUnsavedChanges = false
             }
+#if canImport(WidgetKit)
+            UserDefaults(suiteName: AppGroupConstants.appGroupSuiteIdentifier)?.set(
+                true,
+                forKey: AppGroupConstants.forceRefreshWidgetKey
+            )
+            WidgetCenter.shared.reloadAllTimelines()
+#endif
             self.inFlightPersistSignature = nil
             self.finishPersist()
         }

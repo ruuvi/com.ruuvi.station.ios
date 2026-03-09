@@ -9,7 +9,8 @@ struct WidgetEntry: TimelineEntry {
     let tag: RuuviWidgetTag
     let record: RuuviTagSensorRecord?
     let settings: SensorSettings?
-    let config: RuuviTagSelectionIntent
+    let cloudSettings: RuuviCloudSensorSettings?
+    let config: SingleSensorWidgetConfiguration
 }
 
 extension WidgetEntry {
@@ -21,6 +22,7 @@ extension WidgetEntry {
             tag: .preview,
             record: RuuviTagSensorRecordStruct.preview(),
             settings: nil,
+            cloudSettings: nil,
             config: .preview
         )
     }
@@ -33,22 +35,23 @@ extension WidgetEntry {
             tag: .preview,
             record: nil,
             settings: nil,
+            cloudSettings: nil,
             config: .preview
         )
     }
 
     static func empty(
-        with configuration: RuuviTagSelectionIntent,
-        authorized: Bool = false
+        with configuration: SingleSensorWidgetConfiguration
     ) -> WidgetEntry {
         WidgetEntry(
             date: Date(),
-            isAuthorized: authorized,
+            isAuthorized: true,
             isPreview: false,
             tag: .preview,
             record: nil,
             settings: nil,
-            config: authorized ? configuration : .preview
+            cloudSettings: nil,
+            config: configuration
         )
     }
 }
