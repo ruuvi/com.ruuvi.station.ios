@@ -40,6 +40,7 @@
 "Y9n2Qa" = "Aucun capteur disponible. Ajoutez d'abord un capteur dans l'application."; // No sensors available. Add a sensor in the app first.
 
 "W4gPB4" = "non connecté"; // None
+"WidgetConfiguration.NoneOption" = "non connecté";
 "GheCHn" = "Température"; // Temperature
 "Nm8fuJ" = "Hum. relative"; // Humidity
 "HaVaak" = "Pression"; // Pressure

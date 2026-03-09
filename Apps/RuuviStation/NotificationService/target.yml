@@ -38,6 +38,16 @@ targets:
         - "*.entitlements"
         - Info.plist
       - path: ../Widgets/Sources
+        excludes:
+          - "*.entitlements"
+          - Info.plist
+          - RuuviWidgets.swift
+          - Intent/*
+          - Model/MultiSensorWidgetEntry.swift
+          - Provider/MultiSensorWidgetProvider.swift
+          - Provider/MultiSensorWidgetLegacyProvider.swift
+          - Provider/SingleSensorWidgetProvider.swift
+          - View/MultiSensorWidgetView.swift
     resources:
       - path: ../Sources/Resources/Strings/
       - path: ../Sources/Resources/Sounds/

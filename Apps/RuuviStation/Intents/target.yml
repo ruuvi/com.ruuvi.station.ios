@@ -10,7 +10,7 @@ targets:
           NSExtensionAttributes: 
             IntentsRestrictedWhileLocked: []
             IntentsRestrictedWhileProtectedDataUnavailable: []
-            IntentsSupported: [RuuviTagSelectionIntent]
+            IntentsSupported: [RuuviTagSelectionIntent,RuuviMultiSensorSelectionIntent]
           NSExtensionPointIdentifier: com.apple.intents-service
           NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).IntentHandler
         CFBundleDisplayName: Ruuvi Station
@@ -42,6 +42,13 @@ targets:
         excludes:
           - "*.entitlements"
           - Info.plist
+          - RuuviWidgets.swift
+          - Intent/*
+          - Model/MultiSensorWidgetEntry.swift
+          - Provider/MultiSensorWidgetProvider.swift
+          - Provider/MultiSensorWidgetLegacyProvider.swift
+          - Provider/SingleSensorWidgetProvider.swift
+          - View/MultiSensorWidgetView.swift
     resources:
       - path: ../Widgets/Sources/Resources/
     dependencies:

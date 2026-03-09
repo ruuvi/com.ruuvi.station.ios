@@ -2,9 +2,10 @@ import Intents
 import RuuviLocal
 import RuuviOntology
 
-class IntentHandler: INExtension, RuuviTagSelectionIntentHandling {
+class IntentHandler: INExtension, RuuviTagSelectionIntentHandling, RuuviMultiSensorSelectionIntentHandling {
     private let viewModel = WidgetViewModel()
     private let localCache = WidgetSensorCache()
+
     func provideRuuviWidgetTagOptionsCollection(
         for _: RuuviTagSelectionIntent,
         with completion: @escaping (
@@ -12,9 +13,85 @@ class IntentHandler: INExtension, RuuviTagSelectionIntentHandling {
             Error?
         ) -> Void
     ) {
+        provideWidgetTagOptionsCollection(completion: completion)
+    }
+
+    func provideSensor1OptionsCollection(
+        for _: RuuviMultiSensorSelectionIntent,
+        with completion: @escaping (
+            INObjectCollection<RuuviWidgetTag>?,
+            Error?
+        ) -> Void
+    ) {
+        provideWidgetTagOptionsCollection(completion: completion)
+    }
+
+    func provideSensor2OptionsCollection(
+        for _: RuuviMultiSensorSelectionIntent,
+        with completion: @escaping (
+            INObjectCollection<RuuviWidgetTag>?,
+            Error?
+        ) -> Void
+    ) {
+        provideWidgetTagOptionsCollection(completion: completion)
+    }
+
+    func provideSensor3OptionsCollection(
+        for _: RuuviMultiSensorSelectionIntent,
+        with completion: @escaping (
+            INObjectCollection<RuuviWidgetTag>?,
+            Error?
+        ) -> Void
+    ) {
+        provideWidgetTagOptionsCollection(completion: completion)
+    }
+
+    func provideSensor4OptionsCollection(
+        for _: RuuviMultiSensorSelectionIntent,
+        with completion: @escaping (
+            INObjectCollection<RuuviWidgetTag>?,
+            Error?
+        ) -> Void
+    ) {
+        provideWidgetTagOptionsCollection(completion: completion)
+    }
+
+    func provideSensor5OptionsCollection(
+        for _: RuuviMultiSensorSelectionIntent,
+        with completion: @escaping (
+            INObjectCollection<RuuviWidgetTag>?,
+            Error?
+        ) -> Void
+    ) {
+        provideWidgetTagOptionsCollection(completion: completion)
+    }
+
+    func provideSensor6OptionsCollection(
+        for _: RuuviMultiSensorSelectionIntent,
+        with completion: @escaping (
+            INObjectCollection<RuuviWidgetTag>?,
+            Error?
+        ) -> Void
+    ) {
+        provideWidgetTagOptionsCollection(completion: completion)
+    }
+
+    func provideWidgetTagOptionsCollection(
+        completion: @escaping (
+            INObjectCollection<RuuviWidgetTag>?,
+            Error?
+        ) -> Void
+    ) {
         let localSnapshots = localCache.loadAll()
         guard viewModel.isAuthorized() else {
-            completion(INObjectCollection(items: localTags(from: localSnapshots)), nil)
+            completion(
+                INObjectCollection(
+                    items: widgetTagOptions(
+                        from: localTags(from: localSnapshots)
+                    )
+                ),
+                nil
+            )
             return
         }
 
@@ -24,9 +101,20 @@ class IntentHandler: INExtension, RuuviTagSelectionIntentHandling {
             var seenIdentifiers = Set<String>()
 
             response.forEach { sensor in
+                let sensorIdentifiers = [
+                    sensor.sensor.id,
+                    sensor.record?.macId?.value,
+                    sensor.record?.luid?.value,
+                ].compactMap { $0 }
+                let localName = localSnapshots.first(where: { snapshot in
+                    sensorIdentifiers.contains { identifier in
+                        snapshot.matches(identifier: identifier)
+                    }
+                })?.name
+
                 let tag = RuuviWidgetTag(
                     identifier: sensor.sensor.id,
-                    display: sensor.sensor.name
+                    display: localName ?? sensor.sensor.name
                 )
                 tag.deviceType = self.deviceType(from: sensor.record)
                 tags.append(tag)
@@ -46,7 +134,7 @@ class IntentHandler: INExtension, RuuviTagSelectionIntentHandling {
                 identifiers.forEach { seenIdentifiers.insert($0) }
             }
 
-            let items = INObjectCollection(items: tags)
+            let items = INObjectCollection(items: self.widgetTagOptions(from: tags))
             completion(items, nil)
         })
     }
@@ -59,16 +147,11 @@ class IntentHandler: INExtension, RuuviTagSelectionIntentHandling {
         ) -> Void
     ) {
         let type = intent.ruuviWidgetTag?.deviceType ?? .unknown
-        let allowed: [WidgetSensorEnum]
-        switch type {
-        case .ruuviAir: allowed = WidgetSensorEnum.ruuviAir
-        default: allowed = WidgetSensorEnum.ruuviTag
-        }
-
-        let items = allowed.map {
+        let options = viewModel.measurementOptions(for: type)
+        let items = options.map {
             RuuviWidgetTagSensor(
-                identifier: "\($0.rawValue)",
-                display: $0.displayName() + unit(for: $0)
+                identifier: $0.code.rawValue,
+                display: $0.title
             )
         }
         completion(INObjectCollection(items: items), nil)
@@ -124,5 +207,15 @@ extension IntentHandler {
         default:
             return true
         }
+    }
+
+    private func widgetTagOptions(
+        from tags: [RuuviWidgetTag]
+    ) -> [RuuviWidgetTag] {
+        guard !tags.isEmpty else {
+            return tags
+        }
+
+        return [WidgetConfigurationSelection.noneTag()] + tags
     }
 }

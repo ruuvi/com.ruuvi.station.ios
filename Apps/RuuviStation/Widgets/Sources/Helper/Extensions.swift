@@ -9,6 +9,9 @@ import RuuviLocalization
 extension Color {
     static let logoColor = Color("LogoColor")
     static let backgroundColor = Color("BackgroundColor")
+    static let dashboardBackgroundColor = RuuviColor.dashboardBG.swiftUIColor
+    static let dashboardCardBackgroundColor = RuuviColor.dashboardCardBG.swiftUIColor
+    static let dashboardTitleColor = RuuviColor.dashboardIndicatorBig.swiftUIColor
     static let bodyTextColor = Color("BodyTextColor")
     static let sensorNameColor1 = Color("SensorNameColor1")
     static let sensorNameColor2 = Color("SensorNameColor2")
