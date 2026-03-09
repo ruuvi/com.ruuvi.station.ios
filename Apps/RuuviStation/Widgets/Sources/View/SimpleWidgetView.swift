@@ -30,6 +30,20 @@ struct SimpleWidgetView: View {
                             .minimumScaleFactor(0.5)
                     }
 
+                    if let sensorName = viewModel.getSensor(from: entry.config)?.displayName() {
+                        Text(sensorName)
+                            .foregroundColor(Color.sensorNameColor1)
+                            .font(
+                                .mulish(
+                                    .regular,
+                                    size: canShowBackground ? 10 : 14,
+                                    relativeTo: .body
+                                )
+                            )
+                            .frame(maxWidth: .infinity, alignment: .bottomLeading)
+                            .minimumScaleFactor(0.5)
+                    }
+
                     HStack(spacing: 2) {
                         Text(viewModel.getValue(
                             from: entry.record,
