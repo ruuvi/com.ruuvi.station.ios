@@ -286,6 +286,52 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
     }
 
     @discardableResult
+    public func updateDescription(
+        for sensor: RuuviTagSensor,
+        description: String?
+    ) -> Future<SensorSettings, RuuviServiceError> {
+        let promise = Promise<SensorSettings, RuuviServiceError>()
+        let updatedAt = Date()
+
+        pool.readSensorSettings(sensor)
+            .on(success: { [weak self] currentSettings in
+                guard let self else {
+                    promise.fail(
+                        error: .ruuviCloud(.api(.failedToGetDataFromResponse))
+                    )
+                    return
+                }
+
+                let descriptionTimestamp: Date? =
+                    currentSettings?.description != description ? updatedAt : nil
+
+                self.pool.updateDescription(
+                    for: sensor,
+                    description: description,
+                    descriptionLastUpdated: descriptionTimestamp
+                ).on(success: { [weak self] settings in
+                    if sensor.isCloud {
+                        self?.pushDescriptionToCloudIfNeeded(
+                            for: sensor,
+                            description: description
+                        ).on(success: { _ in
+                            promise.succeed(value: settings)
+                        }, failure: { error in
+                            promise.fail(error: error)
+                        })
+                    } else {
+                        promise.succeed(value: settings)
+                    }
+                }, failure: { error in
+                    promise.fail(error: .ruuviPool(error))
+                })
+            }, failure: { error in
+                promise.fail(error: .ruuviPool(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
     private func resetCloudImage(for sensor: RuuviTagSensor) -> Future<Void, RuuviServiceError> {
         let promise = Promise<Void, RuuviServiceError>()
         guard let macId = sensor.macId
@@ -360,6 +406,27 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
             for: sensor,
             types: types,
             values: values,
+            timestamp: Int(Date().timeIntervalSince1970)
+        ).on(success: { _ in
+            promise.succeed(value: true)
+        }, failure: { error in
+            promise.fail(error: .ruuviCloud(error))
+        })
+
+        return promise.future
+    }
+
+    private func pushDescriptionToCloudIfNeeded(
+        for sensor: RuuviTagSensor,
+        description: String?
+    ) -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+        guard sensor.isCloud else { return promise.future }
+
+        cloud.updateSensorSettings(
+            for: sensor,
+            types: [RuuviCloudApiSetting.sensorDescription.rawValue],
+            values: [description ?? ""],
             timestamp: Int(Date().timeIntervalSince1970)
         ).on(success: { _ in
             promise.succeed(value: true)

@@ -16,6 +16,7 @@ protocol CardsSettingsViewOutput: AnyObject {
     func viewDidTapOnOwner()
     func viewDidTapVisibleMeasurements()
     func viewDidTapLedBrightness()
+    func viewDidTapNotes()
     func viewDidTriggerFirmwareUpdateDialog()
     func viewDidConfirmFirmwareUpdate()
     /// Trigger this method when user cancel the legacy firmware update dialog for the first time

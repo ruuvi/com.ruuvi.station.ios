@@ -22,4 +22,8 @@ protocol CardsSettingsViewInput: AnyObject {
         isVisible: Bool
     )
     func updateLedBrightnessSelection(_ selection: RuuviLedBrightnessLevel)
+    func updateNotes(
+        value: String?,
+        isEditable: Bool
+    )
 }

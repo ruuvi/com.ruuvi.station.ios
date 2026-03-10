@@ -33,6 +33,18 @@ protocol CardsSettingsRouterInput {
             ) -> Void
         ) -> Void
     )
+    func openNotesSettings(
+        notes: String?,
+        onSave: @escaping (
+            String?,
+            @escaping (
+                Result<
+                Void,
+                Error
+                >
+            ) -> Void
+        ) -> Void
+    )
     func openVisibilitySettings(
         snapshot: RuuviTagCardSnapshot,
         ruuviTag: RuuviTagSensor,

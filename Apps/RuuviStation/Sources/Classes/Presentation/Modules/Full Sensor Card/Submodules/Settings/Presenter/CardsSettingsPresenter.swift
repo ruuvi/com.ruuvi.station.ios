@@ -101,6 +101,7 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
                 dashboardSortingType: settings.dashboardSensorOrder.count == 0 ? .alphabetical : .manual
             )
             refreshVisibleMeasurementsSummary()
+            refreshNotesSummary()
             view?.updateLedBrightnessSelection(ledBrightnessSelection)
             updateAlertSections(for: snapshot)
         }
@@ -249,6 +250,19 @@ extension CardsSettingsPresenter: CardsSettingsViewOutput {
                 self.applyLedBrightnessSelection(selection) { result in
                     completion(result)
                 }
+            }
+        )
+    }
+
+    func viewDidTapNotes() {
+        guard let snapshot, snapshot.metadata.isOwner else {
+            return
+        }
+
+        router?.openNotesSettings(
+            notes: sensorSettings?.description,
+            onSave: { [weak self] notes, completion in
+                self?.updateNotes(notes, completion: completion)
             }
         )
     }
@@ -517,6 +531,7 @@ extension CardsSettingsPresenter {
             dashboardSortingType: sortingType
         )
         refreshVisibleMeasurementsSummary()
+        refreshNotesSummary()
         updateAlertSections(for: updatedSnapshot)
         startObservingCloudRequestState()
     }
@@ -775,6 +790,42 @@ private extension CardsSettingsPresenter {
             value: summary,
             isVisible: true
         )
+    }
+
+    func refreshNotesSummary() {
+        let isEditable = snapshot?.metadata.isOwner ?? false
+        view?.updateNotes(
+            value: sensorSettings?.description,
+            isEditable: isEditable
+        )
+    }
+
+    func updateNotes(
+        _ notes: String?,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        guard let sensor = sensor?.any else {
+            completion(.failure(UnexpectedError.failedToFindRuuviTag))
+            return
+        }
+
+        let value: String? = {
+            guard let notes else { return nil }
+            let limited = String(notes.prefix(1000))
+            return limited.isEmpty ? nil : limited
+        }()
+
+        ruuviSensorPropertiesService.updateDescription(
+            for: sensor,
+            description: value
+        ).on(success: { [weak self] settings in
+            self?.sensorSettings = settings
+            self?.refreshNotesSummary()
+            completion(.success(()))
+        }, failure: { [weak self] error in
+            self?.errorPresenter.present(error: error)
+            completion(.failure(error))
+        })
     }
 
     func withAlertService(

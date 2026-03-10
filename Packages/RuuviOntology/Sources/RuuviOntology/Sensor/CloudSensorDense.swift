@@ -27,17 +27,23 @@ public struct RuuviCloudSensorSettings {
     public let defaultDisplayOrder: Bool?
     public let displayOrderLastUpdated: Date?
     public let defaultDisplayOrderLastUpdated: Date?
+    public let description: String?
+    public let descriptionLastUpdated: Date?
 
     public init(
         displayOrderCodes: [String]?,
         defaultDisplayOrder: Bool?,
         displayOrderLastUpdated: Date? = nil,
-        defaultDisplayOrderLastUpdated: Date? = nil
+        defaultDisplayOrderLastUpdated: Date? = nil,
+        description: String? = nil,
+        descriptionLastUpdated: Date? = nil
     ) {
         self.displayOrderCodes = displayOrderCodes
         self.defaultDisplayOrder = defaultDisplayOrder
         self.displayOrderLastUpdated = displayOrderLastUpdated
         self.defaultDisplayOrderLastUpdated = defaultDisplayOrderLastUpdated
+        self.description = description
+        self.descriptionLastUpdated = descriptionLastUpdated
     }
 }
 

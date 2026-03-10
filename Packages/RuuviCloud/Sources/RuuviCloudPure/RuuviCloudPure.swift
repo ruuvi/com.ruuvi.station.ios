@@ -908,7 +908,9 @@ public final class RuuviCloudPure: RuuviCloud {
                                 displayOrderCodes: $0.displayOrderCodes,
                                 defaultDisplayOrder: $0.defaultDisplayOrder,
                                 displayOrderLastUpdated: $0.displayOrderLastUpdatedDate,
-                                defaultDisplayOrderLastUpdated: $0.defaultDisplayOrderLastUpdatedDate
+                                defaultDisplayOrderLastUpdated: $0.defaultDisplayOrderLastUpdatedDate,
+                                description: $0.description,
+                                descriptionLastUpdated: $0.descriptionLastUpdatedDate
                             )
                         }
                     )

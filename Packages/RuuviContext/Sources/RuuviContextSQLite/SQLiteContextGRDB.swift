@@ -344,6 +344,22 @@ extension SQLiteGRDBDatabase {
             }
         }
 
+        // v20
+        migrator.registerMigration("Add description columns to SensorSettingsSQLite") { db in
+            if try db.columns(in: SensorSettingsSQLite.databaseTableName)
+                .contains(where: { $0.name == SensorSettingsSQLite.descriptionColumn.name }) == false {
+                try db.alter(table: SensorSettingsSQLite.databaseTableName, body: { t in
+                    t.add(column: SensorSettingsSQLite.descriptionColumn.name, .text)
+                })
+            }
+            if try db.columns(in: SensorSettingsSQLite.databaseTableName)
+                .contains(where: { $0.name == SensorSettingsSQLite.descriptionLastUpdatedColumn.name }) == false {
+                try db.alter(table: SensorSettingsSQLite.databaseTableName, body: { t in
+                    t.add(column: SensorSettingsSQLite.descriptionLastUpdatedColumn.name, .datetime)
+                })
+            }
+        }
+
         try migrator.migrate(dbPool)
     }
 }

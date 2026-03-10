@@ -155,6 +155,30 @@ class CardsSettingsRouter: NSObject, CardsSettingsRouterInput {
                 animated: true
             )
     }
+
+    func openNotesSettings(
+        notes: String?,
+        onSave: @escaping (
+            String?,
+            @escaping (
+                Result<
+                Void,
+                Error
+                >
+            ) -> Void
+        ) -> Void
+    ) {
+        let controller = NotesSettingsViewController(
+            notes: notes
+        )
+        controller.onSave = onSave
+        transitionHandler?
+            .navigationController?
+            .pushViewController(
+                controller,
+                animated: true
+            )
+    }
 }
 
 extension CardsSettingsRouter: UIAdaptivePresentationControllerDelegate {

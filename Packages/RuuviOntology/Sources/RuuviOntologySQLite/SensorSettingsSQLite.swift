@@ -7,10 +7,12 @@ public struct SensorSettingsSQLite: SensorSettings, Equatable {
     public var temperatureOffset: Double?
     public var humidityOffset: Double?
     public var pressureOffset: Double?
+    public var description: String?
     public var displayOrder: [String]?
     public var defaultDisplayOrder: Bool?
     public var displayOrderLastUpdated: Date?
     public var defaultDisplayOrderLastUpdated: Date?
+    public var descriptionLastUpdated: Date?
 
     public init(
         luid: LocalIdentifier?,
@@ -18,20 +20,24 @@ public struct SensorSettingsSQLite: SensorSettings, Equatable {
         temperatureOffset: Double?,
         humidityOffset: Double?,
         pressureOffset: Double?,
+        description: String? = nil,
         displayOrder: [String]? = nil,
         defaultDisplayOrder: Bool? = nil,
         displayOrderLastUpdated: Date? = nil,
-        defaultDisplayOrderLastUpdated: Date? = nil
+        defaultDisplayOrderLastUpdated: Date? = nil,
+        descriptionLastUpdated: Date? = nil
     ) {
         self.luid = luid
         self.macId = macId
         self.temperatureOffset = temperatureOffset
         self.humidityOffset = humidityOffset
         self.pressureOffset = pressureOffset
+        self.description = description
         self.displayOrder = displayOrder
         self.defaultDisplayOrder = defaultDisplayOrder
         self.displayOrderLastUpdated = displayOrderLastUpdated
         self.defaultDisplayOrderLastUpdated = defaultDisplayOrderLastUpdated
+        self.descriptionLastUpdated = descriptionLastUpdated
     }
 
     public static func == (lhs: SensorSettingsSQLite, rhs: SensorSettingsSQLite) -> Bool {
@@ -40,10 +46,12 @@ public struct SensorSettingsSQLite: SensorSettings, Equatable {
         && lhs.temperatureOffset == rhs.temperatureOffset
         && lhs.humidityOffset == rhs.humidityOffset
         && lhs.pressureOffset == rhs.pressureOffset
+        && lhs.description == rhs.description
         && lhs.displayOrder == rhs.displayOrder
         && lhs.defaultDisplayOrder == rhs.defaultDisplayOrder
         && lhs.displayOrderLastUpdated == rhs.displayOrderLastUpdated
         && lhs.defaultDisplayOrderLastUpdated == rhs.defaultDisplayOrderLastUpdated
+        && lhs.descriptionLastUpdated == rhs.descriptionLastUpdated
     }
 }
 
@@ -54,10 +62,12 @@ public extension SensorSettingsSQLite {
     static let temperatureOffsetColumn = Column("temperatureOffset")
     static let humidityOffsetColumn = Column("humidityOffset")
     static let pressureOffsetColumn = Column("pressureOffset")
+    static let descriptionColumn = Column("description")
     static let displayOrderColumn = Column("displayOrder")
     static let defaultDisplayOrderColumn = Column("defaultDisplayOrder")
     static let displayOrderLastUpdatedColumn = Column("displayOrderLastUpdated")
     static let defaultDisplayOrderLastUpdatedColumn = Column("defaultDisplayOrderLastUpdated")
+    static let descriptionLastUpdatedColumn = Column("descriptionLastUpdated")
 }
 
 extension SensorSettingsSQLite: FetchableRecord {
@@ -71,6 +81,7 @@ extension SensorSettingsSQLite: FetchableRecord {
         temperatureOffset = row[SensorSettingsSQLite.temperatureOffsetColumn]
         humidityOffset = row[SensorSettingsSQLite.humidityOffsetColumn]
         pressureOffset = row[SensorSettingsSQLite.pressureOffsetColumn]
+        description = row[SensorSettingsSQLite.descriptionColumn]
         if let rawDisplayOrder: String = row[SensorSettingsSQLite.displayOrderColumn] {
             displayOrder = SensorSettingsSQLite.decodeDisplayOrder(rawDisplayOrder)
         } else {
@@ -79,6 +90,7 @@ extension SensorSettingsSQLite: FetchableRecord {
         defaultDisplayOrder = row[SensorSettingsSQLite.defaultDisplayOrderColumn]
         displayOrderLastUpdated = row[SensorSettingsSQLite.displayOrderLastUpdatedColumn]
         defaultDisplayOrderLastUpdated = row[SensorSettingsSQLite.defaultDisplayOrderLastUpdatedColumn]
+        descriptionLastUpdated = row[SensorSettingsSQLite.descriptionLastUpdatedColumn]
     }
 }
 
@@ -94,11 +106,13 @@ extension SensorSettingsSQLite: PersistableRecord {
         container[SensorSettingsSQLite.temperatureOffsetColumn] = temperatureOffset
         container[SensorSettingsSQLite.humidityOffsetColumn] = humidityOffset
         container[SensorSettingsSQLite.pressureOffsetColumn] = pressureOffset
+        container[SensorSettingsSQLite.descriptionColumn] = description
         container[SensorSettingsSQLite.displayOrderColumn] = SensorSettingsSQLite
             .encodeDisplayOrder(displayOrder)
         container[SensorSettingsSQLite.defaultDisplayOrderColumn] = defaultDisplayOrder
         container[SensorSettingsSQLite.displayOrderLastUpdatedColumn] = displayOrderLastUpdated
         container[SensorSettingsSQLite.defaultDisplayOrderLastUpdatedColumn] = defaultDisplayOrderLastUpdated
+        container[SensorSettingsSQLite.descriptionLastUpdatedColumn] = descriptionLastUpdated
     }
 }
 
@@ -111,10 +125,12 @@ public extension SensorSettingsSQLite {
             table.column(SensorSettingsSQLite.temperatureOffsetColumn.name, .double)
             table.column(SensorSettingsSQLite.humidityOffsetColumn.name, .double)
             table.column(SensorSettingsSQLite.pressureOffsetColumn.name, .double)
+            table.column(SensorSettingsSQLite.descriptionColumn.name, .text)
             table.column(SensorSettingsSQLite.displayOrderColumn.name, .text)
             table.column(SensorSettingsSQLite.defaultDisplayOrderColumn.name, .boolean)
             table.column(SensorSettingsSQLite.displayOrderLastUpdatedColumn.name, .datetime)
             table.column(SensorSettingsSQLite.defaultDisplayOrderLastUpdatedColumn.name, .datetime)
+            table.column(SensorSettingsSQLite.descriptionLastUpdatedColumn.name, .datetime)
         })
     }
 }
@@ -127,10 +143,12 @@ public extension SensorSettingsSQLite {
             temperatureOffset: temperatureOffset,
             humidityOffset: humidityOffset,
             pressureOffset: pressureOffset,
+            description: description,
             displayOrder: displayOrder,
             defaultDisplayOrder: defaultDisplayOrder,
             displayOrderLastUpdated: displayOrderLastUpdated,
-            defaultDisplayOrderLastUpdated: defaultDisplayOrderLastUpdated
+            defaultDisplayOrderLastUpdated: defaultDisplayOrderLastUpdated,
+            descriptionLastUpdated: descriptionLastUpdated
         )
     }
 }
@@ -143,10 +161,12 @@ public extension SensorSettings {
             temperatureOffset: temperatureOffset,
             humidityOffset: humidityOffset,
             pressureOffset: pressureOffset,
+            description: description,
             displayOrder: displayOrder,
             defaultDisplayOrder: defaultDisplayOrder,
             displayOrderLastUpdated: displayOrderLastUpdated,
-            defaultDisplayOrderLastUpdated: defaultDisplayOrderLastUpdated
+            defaultDisplayOrderLastUpdated: defaultDisplayOrderLastUpdated,
+            descriptionLastUpdated: descriptionLastUpdated
         )
     }
 }

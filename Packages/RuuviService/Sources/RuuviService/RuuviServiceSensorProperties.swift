@@ -32,6 +32,12 @@ public protocol RuuviServiceSensorProperties {
         displayOrder: [String]?,
         defaultDisplayOrder: Bool
     ) -> Future<SensorSettings, RuuviServiceError>
+
+    @discardableResult
+    func updateDescription(
+        for sensor: RuuviTagSensor,
+        description: String?
+    ) -> Future<SensorSettings, RuuviServiceError>
 }
 
 public extension RuuviServiceSensorProperties {
