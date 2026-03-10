@@ -1,6 +1,22 @@
 import UIKit
 import RuuviLocalization
 
+private final class NotesEditorTextView: UITextView {
+    override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+        let allowedActions: Set<Selector> = [
+            #selector(copy(_:)),
+            #selector(cut(_:)),
+            #selector(paste(_:)),
+            #selector(select(_:)),
+            #selector(selectAll(_:)),
+        ]
+        guard allowedActions.contains(action) else {
+            return false
+        }
+        return super.canPerformAction(action, withSender: sender)
+    }
+}
+
 final class NotesSettingsViewController: UIViewController {
     var onSave: ((String?, @escaping (Result<Void, Error>) -> Void) -> Void)?
 
@@ -35,7 +51,7 @@ final class NotesSettingsViewController: UIViewController {
     }()
 
     private lazy var textView: UITextView = {
-        let textView = UITextView()
+        let textView = NotesEditorTextView()
         textView.backgroundColor = .clear
         textView.textColor = RuuviColor.textColor.color
         textView.font = UIFont.ruuviBody()
@@ -49,10 +65,10 @@ final class NotesSettingsViewController: UIViewController {
 
     private lazy var editorContainerView: UIView = {
         let view = UIView()
-        view.backgroundColor = .secondarySystemBackground
+        view.backgroundColor = RuuviColor.tintColor.color.withAlphaComponent(0.2)
         view.layer.cornerRadius = Constants.editorCornerRadius
         view.layer.borderWidth = Constants.editorBorderWidth
-        view.layer.borderColor = RuuviColor.lineColor.color.cgColor
+        view.layer.borderColor = RuuviColor.tintColor.color.cgColor
         return view
     }()
 
@@ -114,6 +130,7 @@ private extension NotesSettingsViewController {
             target: self,
             action: #selector(saveButtonDidTap)
         )
+        navigationItem.rightBarButtonItem?.tintColor = RuuviColor.tintColor.color
 
         view.addSubview(editorContainerView)
         editorContainerView.anchor(

@@ -159,6 +159,10 @@ private struct CardsSettingsNotesPreview: View {
         hasNotes ? notePreview : RuuviLocalization.na
     }
 
+    private var chevronName: String {
+        isExpanded ? "chevron.up" : "chevron.down"
+    }
+
     var body: some View {
         VStack(
             alignment: .leading,
@@ -175,16 +179,16 @@ private struct CardsSettingsNotesPreview: View {
                 )
                 .contentShape(Rectangle())
                 .onTapGesture {
-                    expandIfNeeded()
+                    toggleExpandedIfNeeded()
                 }
 
-            if shouldTruncate, !isExpanded {
+            if shouldTruncate {
                 HStack {
                     Spacer()
                     Button(action: {
-                        expandIfNeeded()
+                        toggleExpandedIfNeeded()
                     }, label: {
-                        Image(systemName: "chevron.down")
+                        Image(systemName: chevronName)
                             .foregroundStyle(RuuviColor.tintColor.swiftUIColor)
                     })
                     .buttonStyle(.plain)
@@ -199,12 +203,12 @@ private struct CardsSettingsNotesPreview: View {
         }
     }
 
-    private func expandIfNeeded() {
-        guard shouldTruncate, !isExpanded else { return }
+    private func toggleExpandedIfNeeded() {
+        guard shouldTruncate else { return }
         withAnimation(
             .easeInOut(duration: Constants.animationDuration)
         ) {
-            isExpanded = true
+            isExpanded.toggle()
         }
     }
 }
