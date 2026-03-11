@@ -170,14 +170,14 @@ private extension MultiSensorWidgetProvider {
     func configuredSensors(
         from configuration: Intent
     ) -> [RuuviWidgetTag?] {
-        (1 ... 6).map { index in
-            let key = "sensor\(index)"
-            let selector = NSSelectorFromString(key)
-            guard configuration.responds(to: selector) else {
-                return nil
-            }
-            return configuration.value(forKey: key) as? RuuviWidgetTag
-        }
+        [
+            configuration.sensor1,
+            configuration.sensor2,
+            configuration.sensor3,
+            configuration.sensor4,
+            configuration.sensor5,
+            configuration.sensor6,
+        ]
     }
 
     func sensorSettings(

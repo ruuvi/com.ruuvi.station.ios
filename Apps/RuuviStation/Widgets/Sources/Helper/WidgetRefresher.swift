@@ -32,7 +32,7 @@ struct WidgetRefresher: AppIntent {
     @MainActor
     func perform() async throws -> some IntentResult {
         let viewModel = WidgetViewModel()
-        viewModel.foceRefreshWidget(true)
+        viewModel.forceRefreshWidget(true)
         switch target {
         case .simple:
             WidgetCenter.shared.reloadTimelines(ofKind: Constants.simpleWidgetKindId.rawValue)

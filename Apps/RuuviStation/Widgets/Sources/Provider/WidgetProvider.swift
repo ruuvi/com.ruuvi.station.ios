@@ -230,25 +230,6 @@ extension WidgetProvider {
     }
 
     private func timeline(
-        from ruuviTag: AnyCloudSensor,
-        configuration: SingleSensorWidgetConfiguration,
-        record: RuuviTagSensorRecord,
-        cloudSettings: RuuviCloudSensorSettings?,
-        completion: @escaping (Timeline<WidgetEntry>) -> Void
-    ) {
-        let settings = SensorSettingsStruct.settings(from: ruuviTag)
-        let tag = RuuviWidgetTag(identifier: ruuviTag.id, display: ruuviTag.name)
-        timeline(
-            tag: tag,
-            record: record,
-            settings: settings,
-            cloudSettings: cloudSettings,
-            configuration: configuration,
-            completion: completion
-        )
-    }
-
-    private func timeline(
         tag: RuuviWidgetTag,
         record: RuuviTagSensorRecord,
         settings: SensorSettings?,

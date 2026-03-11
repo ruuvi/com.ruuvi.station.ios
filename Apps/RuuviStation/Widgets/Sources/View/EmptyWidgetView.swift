@@ -15,7 +15,7 @@ struct EmptyWidgetView: View {
     var entry: WidgetEntry
 
     var body: some View {
-        if family == .systemSmall || family == .systemMedium || family == .systemLarge {
+        if family == .systemSmall {
             RegularEmptyWidgetView(entry: entry, isSimple: true)
         } else {
             if #available(iOSApplicationExtension 16.0, *) {

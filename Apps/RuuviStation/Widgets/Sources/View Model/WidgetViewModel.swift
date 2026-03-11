@@ -24,7 +24,7 @@ struct WidgetIndicatorDisplayItem: Identifiable, Hashable {
     }
 }
 
-public final class WidgetViewModel: ObservableObject {
+public final class WidgetViewModel {
     private let widgetAssembly = WidgetAssembly.shared.assembler.resolver
     private let appGroupDefaults = UserDefaults(suiteName: Constants.appGroupBundleId.rawValue)
     private let userDefaultsQueue = DispatchQueue(label: Constants.queue.rawValue)
@@ -63,7 +63,7 @@ public extension WidgetViewModel {
             completion([])
             return
         }
-        foceRefreshWidget(false)
+        forceRefreshWidget(false)
         ruuviCloud.loadSensorsDense(
             for: nil,
             measurements: true,
@@ -348,7 +348,7 @@ public extension WidgetViewModel {
         return false
     }
 
-    func foceRefreshWidget(_ refresh: Bool) {
+    func forceRefreshWidget(_ refresh: Bool) {
         userDefaultsQueue.sync {
             appGroupDefaults?.set(
                 refresh,
@@ -450,9 +450,11 @@ public extension WidgetViewModel {
     }
 
     internal func measurementTime(from date: Date?) -> String {
+        guard let resolved = date else {
+            return RuuviLocalization.Cards.UpdatedLabel.NoData.message
+        }
         let formatter = DateFormatter()
         formatter.locale = Locale.autoupdatingCurrent
-        let resolved = date ?? Date()
         let calendar = Calendar.current
         if calendar.isDateInToday(resolved) {
             formatter.dateStyle = .none
