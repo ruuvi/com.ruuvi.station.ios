@@ -262,6 +262,25 @@ final class RuuviPoolCoordinator: RuuviPool {
         return promise.future
     }
 
+    func updateDescription(
+        for ruuviTag: RuuviTagSensor,
+        description: String?,
+        descriptionLastUpdated: Date?
+    ) -> Future<SensorSettings, RuuviPoolError> {
+        let promise = Promise<SensorSettings, RuuviPoolError>()
+        sqlite.updateDescription(
+            for: ruuviTag,
+            description: description,
+            descriptionLastUpdated: descriptionLastUpdated
+        )
+            .on(success: { settings in
+                promise.succeed(value: settings)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
+        return promise.future
+    }
+
     func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RuuviPoolError> {
         let promise = Promise<SensorSettings?, RuuviPoolError>()
         sqlite.readSensorSettings(ruuviTag)

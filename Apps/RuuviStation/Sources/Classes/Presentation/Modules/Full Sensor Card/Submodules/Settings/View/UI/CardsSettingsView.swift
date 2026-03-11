@@ -64,13 +64,18 @@ struct CardsSettingsView: View {
                         onLedBrightnessTap: {
                             actions.didTapLedBrightnessRow.send()
                         },
+                        onNotesTap: {
+                            actions.didTapNotesRow.send()
+                        },
                         showsOwner: state.showOwner,
                         showOwnersPlan: state.showOwnersPlan,
                         showsShare: state.showShare,
                         visibleMeasurementsValue: state.visibleMeasurementsValue,
                         ledBrightnessValue: state.ledBrightnessValue,
                         showsVisibleMeasurementsRow: state.showVisibleMeasurementsRow,
-                        showsLedBrightnessRow: state.showLedBrightnessRow
+                        showsLedBrightnessRow: state.showLedBrightnessRow,
+                        notes: state.notes,
+                        isNotesEditable: state.isNotesEditable
                     )
 
                     if state.showBluetoothSection {

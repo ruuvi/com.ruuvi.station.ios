@@ -23,6 +23,7 @@ public enum RuuviCloudApiSetting: String, CaseIterable, Codable {
     case dashboardSensorOrder = "SENSOR_ORDER"
     case sensorDisplayOrder = "displayOrder"
     case sensorDefaultDisplayOrder = "defaultDisplayOrder"
+    case sensorDescription = "description"
 }
 
 public extension TemperatureUnit {

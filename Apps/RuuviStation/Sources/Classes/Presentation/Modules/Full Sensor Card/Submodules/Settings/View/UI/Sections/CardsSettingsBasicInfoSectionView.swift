@@ -11,6 +11,7 @@ struct CardsSettingsBasicInfoSectionView: View {
     let onShareTap: () -> Void
     let onVisibleMeasurementsTap: () -> Void
     let onLedBrightnessTap: () -> Void
+    let onNotesTap: () -> Void
     var showsOwner: Bool
     var showOwnersPlan: Bool
     var showsShare: Bool
@@ -18,6 +19,12 @@ struct CardsSettingsBasicInfoSectionView: View {
     var ledBrightnessValue: String?
     var showsVisibleMeasurementsRow: Bool = false
     var showsLedBrightnessRow: Bool = false
+    var notes: String = ""
+    var isNotesEditable: Bool = false
+
+    private var hasNotes: Bool {
+        !notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -38,9 +45,7 @@ struct CardsSettingsBasicInfoSectionView: View {
                 onTap: onEditName
             )
 
-            if showsOwner || showsShare || showsVisibleMeasurementsRow || showsLedBrightnessRow {
-                SettingsDivider()
-            }
+            SettingsDivider()
 
             if showsOwner {
                 SettingsNavigationRow(
@@ -49,9 +54,7 @@ struct CardsSettingsBasicInfoSectionView: View {
                     onTap: onOwnerTap
                 )
 
-                if showsShare || showOwnersPlan || showsVisibleMeasurementsRow || showsLedBrightnessRow {
-                    SettingsDivider()
-                }
+                SettingsDivider()
             }
 
             if showOwnersPlan {
@@ -60,9 +63,7 @@ struct CardsSettingsBasicInfoSectionView: View {
                     value: ownersPlan
                 )
 
-                if showsShare || showsVisibleMeasurementsRow || showsLedBrightnessRow {
-                    SettingsDivider()
-                }
+                SettingsDivider()
             }
 
             if showsShare {
@@ -72,9 +73,7 @@ struct CardsSettingsBasicInfoSectionView: View {
                     onTap: onShareTap
                 )
 
-                if showsVisibleMeasurementsRow || showsLedBrightnessRow {
-                    SettingsDivider()
-                }
+                SettingsDivider()
             }
 
             if showsVisibleMeasurementsRow {
@@ -84,9 +83,7 @@ struct CardsSettingsBasicInfoSectionView: View {
                     onTap: onVisibleMeasurementsTap
                 )
 
-                if showsLedBrightnessRow {
-                    SettingsDivider()
-                }
+                SettingsDivider()
             }
 
             if showsLedBrightnessRow {
@@ -95,7 +92,119 @@ struct CardsSettingsBasicInfoSectionView: View {
                     value: ledBrightnessValue ?? RuuviLocalization.na,
                     onTap: onLedBrightnessTap
                 )
+
+                SettingsDivider()
             }
+
+            if isNotesEditable {
+                CardsSettingsSettingsValueRow(
+                    title: RuuviLocalization.notes,
+                    value: "",
+                    trailing: {
+                        RuuviAsset.editPen.swiftUIImage
+                            .aspectRatio(contentMode: .fit)
+                            .foregroundColor(RuuviColor.tintColor.swiftUIColor)
+                    },
+                    onTap: onNotesTap
+                )
+            } else {
+                CardsSettingsSettingsValueRow(
+                    title: RuuviLocalization.notes,
+                    value: ""
+                )
+            }
+
+            if hasNotes {
+                SettingsDivider()
+
+                CardsSettingsNotesPreview(
+                    notes: notes
+                )
+            }
+        }
+    }
+}
+
+private struct CardsSettingsNotesPreview: View {
+    let notes: String
+    @State private var isExpanded = false
+
+    private struct Constants {
+        static let previewCharacterLimit: Int = 200
+        static let verticalSpacing: CGFloat = 8
+        static let rowPadding: CGFloat = 12
+        static let animationDuration: Double = 0.2
+    }
+
+    private var hasNotes: Bool {
+        !notes.isEmpty
+    }
+
+    private var shouldTruncate: Bool {
+        notes.count > Constants.previewCharacterLimit
+    }
+
+    private var notePreview: String {
+        if shouldTruncate, !isExpanded {
+            return String(notes.prefix(Constants.previewCharacterLimit)) + "…"
+        }
+        return notes
+    }
+
+    private var displayText: String {
+        hasNotes ? notePreview : RuuviLocalization.na
+    }
+
+    private var chevronName: String {
+        isExpanded ? "chevron.up" : "chevron.down"
+    }
+
+    var body: some View {
+        VStack(
+            alignment: .leading,
+            spacing: Constants.verticalSpacing
+        ) {
+            Text(displayText)
+                .foregroundStyle(
+                    hasNotes ? RuuviColor.textColor.swiftUIColor : Color.secondary
+                )
+                .font(.ruuviBodySmall())
+                .frame(
+                    maxWidth: .infinity,
+                    alignment: .leading
+                )
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    toggleExpandedIfNeeded()
+                }
+
+            if shouldTruncate {
+                HStack {
+                    Spacer()
+                    Button(action: {
+                        toggleExpandedIfNeeded()
+                    }, label: {
+                        Image(systemName: chevronName)
+                            .foregroundStyle(RuuviColor.tintColor.swiftUIColor)
+                    })
+                    .buttonStyle(.plain)
+                    Spacer()
+                }
+            }
+        }
+        .padding(.horizontal, Constants.rowPadding)
+        .padding(.vertical, Constants.rowPadding)
+        .onChange(of: notes) { _ in
+            isExpanded = false
+        }
+    }
+
+    private func toggleExpandedIfNeeded() {
+        guard shouldTruncate else { return }
+        withAnimation(
+            .easeInOut(duration: Constants.animationDuration)
+        ) {
+            isExpanded.toggle()
         }
     }
 }

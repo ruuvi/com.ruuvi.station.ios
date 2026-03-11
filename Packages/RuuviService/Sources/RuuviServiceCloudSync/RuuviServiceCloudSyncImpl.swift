@@ -484,22 +484,36 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     cloudTimestamp: sensorSettings.defaultDisplayOrderLastUpdated
                 )
 
+                let descriptionAction = SyncCollisionResolver.resolve(
+                    isOwner: denseSensor.sensor.isOwner,
+                    localTimestamp: localSettings?.descriptionLastUpdated,
+                    cloudTimestamp: sensorSettings.descriptionLastUpdated
+                )
+
                 let queueDisplayOrder = displayOrderAction == .keepLocalAndQueue
                     ? localSettings?.displayOrder
                     : nil
                 let queueDefaultDisplayOrder = defaultOrderAction == .keepLocalAndQueue
                     ? localSettings?.defaultDisplayOrder
                     : nil
+                let shouldQueueDescription = descriptionAction == .keepLocalAndQueue
+                let queueDescription = shouldQueueDescription
+                    ? localSettings?.description
+                    : nil
 
-                if queueDisplayOrder != nil || queueDefaultDisplayOrder != nil {
+                if queueDisplayOrder != nil || queueDefaultDisplayOrder != nil || shouldQueueDescription {
                     self.queueDisplaySettingsToCloud(
                         sensor: sensor,
                         displayOrder: queueDisplayOrder,
-                        defaultDisplayOrder: queueDefaultDisplayOrder
+                        defaultDisplayOrder: queueDefaultDisplayOrder,
+                        description: queueDescription,
+                        includesDescription: shouldQueueDescription
                     )
                 }
 
-                guard displayOrderAction == .updateLocal || defaultOrderAction == .updateLocal else {
+                guard displayOrderAction == .updateLocal
+                    || defaultOrderAction == .updateLocal
+                    || descriptionAction == .updateLocal else {
                     promise.succeed(value: fallbackSettings(localSettings))
                     return
                 }
@@ -517,19 +531,47 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 let resolvedDefaultDisplayOrderLastUpdated = defaultOrderAction == .updateLocal
                     ? sensorSettings.defaultDisplayOrderLastUpdated
                     : localSettings?.defaultDisplayOrderLastUpdated
+                let resolvedDescription = descriptionAction == .updateLocal
+                    ? sensorSettings.description
+                    : localSettings?.description
+                let resolvedDescriptionLastUpdated = descriptionAction == .updateLocal
+                    ? sensorSettings.descriptionLastUpdated
+                    : localSettings?.descriptionLastUpdated
 
-                self.ruuviPool.updateDisplaySettings(
-                    for: sensor,
-                    displayOrder: resolvedDisplayOrder,
-                    defaultDisplayOrder: resolvedDefaultDisplayOrder,
-                    displayOrderLastUpdated: resolvedDisplayOrderLastUpdated,
-                    defaultDisplayOrderLastUpdated: resolvedDefaultDisplayOrderLastUpdated
-                )
-                .on(success: { settings in
-                    promise.succeed(value: settings)
-                }, failure: { error in
-                    promise.fail(error: error)
-                })
+                var updates = [Future<SensorSettings, RuuviPoolError>]()
+
+                if displayOrderAction == .updateLocal || defaultOrderAction == .updateLocal {
+                    updates.append(
+                        self.ruuviPool.updateDisplaySettings(
+                            for: sensor,
+                            displayOrder: resolvedDisplayOrder,
+                            defaultDisplayOrder: resolvedDefaultDisplayOrder,
+                            displayOrderLastUpdated: resolvedDisplayOrderLastUpdated,
+                            defaultDisplayOrderLastUpdated: resolvedDefaultDisplayOrderLastUpdated
+                        )
+                    )
+                }
+
+                if descriptionAction == .updateLocal {
+                    updates.append(
+                        self.ruuviPool.updateDescription(
+                            for: sensor,
+                            description: resolvedDescription,
+                            descriptionLastUpdated: resolvedDescriptionLastUpdated
+                        )
+                    )
+                }
+
+                Future.zip(updates)
+                    .on(success: { settings in
+                        if let last = settings.last {
+                            promise.succeed(value: last)
+                        } else {
+                            promise.succeed(value: fallbackSettings(localSettings))
+                        }
+                    }, failure: { error in
+                        promise.fail(error: error)
+                    })
             }
 
             ruuviStorage.readSensorSettings(sensor)
@@ -1181,7 +1223,9 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private func queueDisplaySettingsToCloud(
         sensor: RuuviTagSensor,
         displayOrder: [String]?,
-        defaultDisplayOrder: Bool?
+        defaultDisplayOrder: Bool?,
+        description: String?,
+        includesDescription: Bool
     ) {
         guard sensor.isCloud else { return }
 
@@ -1198,6 +1242,11 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
            let encoded = String(data: data, encoding: .utf8) {
             types.append(RuuviCloudApiSetting.sensorDisplayOrder.rawValue)
             values.append(encoded)
+        }
+
+        if includesDescription {
+            types.append(RuuviCloudApiSetting.sensorDescription.rawValue)
+            values.append(description ?? "")
         }
 
         guard !types.isEmpty else { return }

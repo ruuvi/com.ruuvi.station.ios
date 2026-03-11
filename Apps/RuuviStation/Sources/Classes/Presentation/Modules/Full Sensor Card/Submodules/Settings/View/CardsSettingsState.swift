@@ -20,6 +20,8 @@ final class CardsSettingsState: ObservableObject {
     @Published private(set) var showVisibleMeasurementsRow: Bool = false
     @Published private(set) var ledBrightnessSelection: RuuviLedBrightnessLevel = .defaultSelection
     @Published private(set) var showLedBrightnessRow: Bool = false
+    @Published private(set) var notes: String = ""
+    @Published private(set) var isNotesEditable: Bool = false
     @Published private(set) var backgroundImage: Image?
     @Published private(set) var moreInfoRows: [CardsSettingsMoreInfoRowModel]
     @Published private(set) var firmwareVersion: String
@@ -64,6 +66,8 @@ final class CardsSettingsState: ObservableObject {
         self.ownersPlan = ""
         self.showShare = false
         self.shareSummary = ""
+        self.notes = ""
+        self.isNotesEditable = false
         self.backgroundImage = nil
         self.moreInfoRows = []
         self.firmwareVersion = ""
@@ -90,6 +94,7 @@ final class CardsSettingsState: ObservableObject {
         ownersPlan = snapshot.ownership.ownersPlan.unwrapped
         showShare = snapshot.metadata.canShareTag
         shareSummary = Self.calculateShareSummary(from: snapshot)
+        isNotesEditable = snapshot.metadata.isOwner
         backgroundImage = snapshot.displayData.background.map { Image(uiImage: $0) }
         moreInfoRows = CardsSettingsMoreInfoRowBuilder.buildMoreInfoRows(from: snapshot)
         firmwareVersion = snapshot.displayData.firmwareVersion.unwrapped
@@ -148,6 +153,14 @@ final class CardsSettingsState: ObservableObject {
 
     func updateLedBrightnessSelection(_ selection: RuuviLedBrightnessLevel) {
         ledBrightnessSelection = selection
+    }
+
+    func updateNotes(
+        _ notes: String?,
+        isEditable: Bool
+    ) {
+        self.notes = notes ?? ""
+        self.isNotesEditable = isEditable
     }
 
     // MARK: - Settings Sections
