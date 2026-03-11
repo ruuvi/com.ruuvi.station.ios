@@ -11,6 +11,9 @@ import RuuviDaemon
 import RuuviPool
 import RuuviLocalization
 import RuuviCloud
+#if canImport(WidgetKit)
+import WidgetKit
+#endif
 protocol RuuviTagDataServiceDelegate: AnyObject {
     func sensorDataService(
         _ service: RuuviTagDataService,
@@ -220,6 +223,15 @@ class RuuviTagDataService {
     ) {
         guard let sensor = getSensor(for: snapshot.id) else { return }
         ruuviSensorPropertiesService.set(name: newName, for: sensor)
+            .on(success: { _ in
+#if canImport(WidgetKit)
+                UserDefaults(suiteName: AppGroupConstants.appGroupSuiteIdentifier)?.set(
+                    true,
+                    forKey: AppGroupConstants.forceRefreshWidgetKey
+                )
+                WidgetCenter.shared.reloadAllTimelines()
+#endif
+            })
     }
 
     func getSnapshot(for sensorId: String) -> RuuviTagCardSnapshot? {

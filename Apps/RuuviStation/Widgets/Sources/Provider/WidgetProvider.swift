@@ -26,18 +26,19 @@ final class WidgetProvider: IntentTimelineProvider {
         in _: Context,
         completion: @escaping (Timeline<WidgetEntry>) -> Void
     ) {
+        let resolvedConfiguration = SingleSensorWidgetConfiguration(intent: configuration)
         let isAuthorized = viewModel.isAuthorized()
-        guard configuration.ruuviWidgetTag != nil else {
+        guard resolvedConfiguration.sensorId != nil else {
             return emptyTimeline(
-                for: configuration,
+                for: resolvedConfiguration,
                 completion: completion
             )
         }
 
-        let localSnapshot = localSnapshot(for: configuration)
+        let localSnapshot = localSnapshot(for: resolvedConfiguration)
         if !isAuthorized {
             return buildTimeline(
-                configuration: configuration,
+                configuration: resolvedConfiguration,
                 cloudTags: nil,
                 localSnapshot: localSnapshot,
                 completion: completion
@@ -51,21 +52,21 @@ final class WidgetProvider: IntentTimelineProvider {
 
         if cacheIsRecent, !cachedTags.isEmpty, !viewModel.shouldForceRefresh() {
             return useCachedData(
-                for: configuration,
+                for: resolvedConfiguration,
                 localSnapshot: localSnapshot,
                 completion: completion
             )
         }
 
         return fetchData(
-            for: configuration,
+            for: resolvedConfiguration,
             localSnapshot: localSnapshot,
             completion: completion
         )
     }
 
     private func fetchData(
-        for configuration: RuuviTagSelectionIntent,
+        for configuration: SingleSensorWidgetConfiguration,
         localSnapshot: WidgetSensorSnapshot?,
         completion: @escaping (Timeline<WidgetEntry>) -> Void
     ) {
@@ -104,7 +105,7 @@ final class WidgetProvider: IntentTimelineProvider {
     }
 
     private func useCachedData(
-        for configuration: RuuviTagSelectionIntent,
+        for configuration: SingleSensorWidgetConfiguration,
         localSnapshot: WidgetSensorSnapshot?,
         completion: @escaping (Timeline<WidgetEntry>) -> Void
     ) {
@@ -119,21 +120,20 @@ final class WidgetProvider: IntentTimelineProvider {
 
 extension WidgetProvider {
     private func localSnapshot(
-        for configuration: RuuviTagSelectionIntent
+        for configuration: SingleSensorWidgetConfiguration
     ) -> WidgetSensorSnapshot? {
-        guard let identifier = configuration.ruuviWidgetTag?.identifier else { return nil }
+        guard let identifier = configuration.sensorId else { return nil }
         return localCache.snapshot(matching: identifier)
     }
 
     private func emptyTimeline(
-        for configuration: RuuviTagSelectionIntent,
+        for configuration: SingleSensorWidgetConfiguration,
         completion: @escaping (Timeline<WidgetEntry>) -> Void
     ) {
         var entries: [WidgetEntry] = []
 
         let entry = WidgetEntry.empty(
-            with: configuration,
-            authorized: true
+            with: configuration
         )
         entries.append(entry)
         let timeline = Timeline(
@@ -144,17 +144,17 @@ extension WidgetProvider {
     }
 
     private func buildTimeline(
-        configuration: RuuviTagSelectionIntent,
+        configuration: SingleSensorWidgetConfiguration,
         cloudTags: [RuuviCloudSensorDense]?,
         localSnapshot: WidgetSensorSnapshot?,
         completion: @escaping (Timeline<WidgetEntry>) -> Void
     ) {
-        guard let configuredTag = configuration.ruuviWidgetTag else {
+        guard let sensorId = configuration.sensorId else {
             return emptyTimeline(for: configuration, completion: completion)
         }
 
         let cloudMatch = cloudTags?.first(where: { result in
-            result.sensor.id == configuredTag.identifier
+            sensorIdentifiers(for: result).contains(sensorId)
         })
         let cloudRecord = cloudMatch?.record
         let cloudSensor = cloudMatch?.sensor.any
@@ -165,8 +165,8 @@ extension WidgetProvider {
             RuuviWidgetTag(identifier: $0.id, display: $0.name)
         }
 
-        if let cloudRecord, let cloudSensor, let localRecord, let localTag {
-            if localRecord.date > cloudRecord.date {
+        if let cloudRecord, let cloudSensor {
+            if let localRecord, let localTag, localRecord.date > cloudRecord.date {
                 timeline(
                     tag: localTag,
                     record: localRecord,
@@ -174,22 +174,21 @@ extension WidgetProvider {
                     configuration: configuration,
                     completion: completion
                 )
-            } else {
-                timeline(
-                    from: cloudSensor,
-                    configuration: configuration,
-                    record: cloudRecord,
-                    completion: completion
-                )
+                return
             }
-            return
-        }
 
-        if let cloudRecord, let cloudSensor {
+            let resolvedTag = localTag ?? RuuviWidgetTag(
+                identifier: cloudSensor.id,
+                display: cloudSensor.name
+            )
+            let resolvedSettings = localSettings ?? SensorSettingsStruct.settings(from: cloudSensor)
+
             return timeline(
-                from: cloudSensor,
-                configuration: configuration,
+                tag: resolvedTag,
                 record: cloudRecord,
+                settings: resolvedSettings,
+                cloudSettings: cloudMatch?.settings,
+                configuration: configuration,
                 completion: completion
             )
         }
@@ -220,28 +219,22 @@ extension WidgetProvider {
         )
     }
 
-    private func timeline(
-        from ruuviTag: AnyCloudSensor,
-        configuration: RuuviTagSelectionIntent,
-        record: RuuviTagSensorRecord,
-        completion: @escaping (Timeline<WidgetEntry>) -> Void
-    ) {
-        let settings = SensorSettingsStruct.settings(from: ruuviTag)
-        let tag = RuuviWidgetTag(identifier: ruuviTag.id, display: ruuviTag.name)
-        timeline(
-            tag: tag,
-            record: record,
-            settings: settings,
-            configuration: configuration,
-            completion: completion
-        )
+    private func sensorIdentifiers(
+        for sensor: RuuviCloudSensorDense
+    ) -> [String] {
+        [
+            sensor.sensor.id,
+            sensor.record?.macId?.value,
+            sensor.record?.luid?.value,
+        ].compactMap { $0 }
     }
 
     private func timeline(
         tag: RuuviWidgetTag,
         record: RuuviTagSensorRecord,
         settings: SensorSettings?,
-        configuration: RuuviTagSelectionIntent,
+        cloudSettings: RuuviCloudSensorSettings? = nil,
+        configuration: SingleSensorWidgetConfiguration,
         completion: @escaping (Timeline<WidgetEntry>) -> Void
     ) {
         var entries: [WidgetEntry] = []
@@ -253,6 +246,7 @@ extension WidgetProvider {
             tag: tag,
             record: record,
             settings: settings,
+            cloudSettings: cloudSettings,
             config: configuration
         )
         entries.append(entry)

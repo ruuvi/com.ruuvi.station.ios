@@ -5,21 +5,29 @@ public struct WidgetSensorSettingsSnapshot: Codable, Equatable {
     public var temperatureOffset: Double?
     public var humidityOffset: Double?
     public var pressureOffset: Double?
+    public var displayOrder: [String]?
+    public var defaultDisplayOrder: Bool?
 
     public init(
         temperatureOffset: Double?,
         humidityOffset: Double?,
-        pressureOffset: Double?
+        pressureOffset: Double?,
+        displayOrder: [String]? = nil,
+        defaultDisplayOrder: Bool? = nil
     ) {
         self.temperatureOffset = temperatureOffset
         self.humidityOffset = humidityOffset
         self.pressureOffset = pressureOffset
+        self.displayOrder = displayOrder
+        self.defaultDisplayOrder = defaultDisplayOrder
     }
 
     public init(settings: SensorSettings) {
         self.temperatureOffset = settings.temperatureOffset
         self.humidityOffset = settings.humidityOffset
         self.pressureOffset = settings.pressureOffset
+        self.displayOrder = settings.displayOrder
+        self.defaultDisplayOrder = settings.defaultDisplayOrder
     }
 }
 

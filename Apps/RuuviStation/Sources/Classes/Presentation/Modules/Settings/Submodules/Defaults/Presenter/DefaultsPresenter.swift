@@ -672,6 +672,9 @@ extension DefaultsPresenter {
         WidgetCenter.shared.reloadTimelines(
             ofKind: AppAssemblyConstants.simpleWidgetKindId
         )
+        WidgetCenter.shared.reloadTimelines(
+            ofKind: AppAssemblyConstants.multiSensorWidgetKindId
+        )
         NotificationCenter
             .default
             .post(

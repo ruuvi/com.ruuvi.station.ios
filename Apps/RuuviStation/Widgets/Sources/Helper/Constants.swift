@@ -8,7 +8,8 @@ public enum Constants: String {
     case ruuviCloudBaseURLDev = "https://j9ul2pfmol.execute-api.eu-central-1.amazonaws.com"
 
     case simpleWidgetKindId = "ruuvi.simpleWidget"
-    case simpleWidgetDisplayName = "Ruuvi Widget"
+    case multiSensorWidgetKindId = "ruuvi.multiSensorWidget"
+    case widgetDisplayName = "Ruuvi Widget"
 
     case isAuthorizedUDKey = "RuuviUserCoordinator.isAuthorizedUDKey"
     case hasCloudSensorsKey

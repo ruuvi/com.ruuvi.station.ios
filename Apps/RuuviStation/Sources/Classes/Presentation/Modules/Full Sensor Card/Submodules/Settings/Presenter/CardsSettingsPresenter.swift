@@ -156,12 +156,8 @@ extension CardsSettingsPresenter: CardsSettingsViewOutput {
     }
 
     func viewDidChangeTag(name: String) {
-        withSensor { sensor in
-            ruuviSensorPropertiesService.set(name: name, for: sensor.any)
-                .on(failure: { [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                })
-        }
+        guard let snapshot else { return }
+        RuuviTagServiceCoordinatorManager.shared.updateSensorName(name, for: snapshot)
     }
 
     func viewDidTapOnMacAddress() {

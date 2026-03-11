@@ -330,6 +330,9 @@ extension SignInPresenter {
         WidgetCenter.shared.reloadTimelines(
             ofKind: AppAssemblyConstants.simpleWidgetKindId
         )
+        WidgetCenter.shared.reloadTimelines(
+            ofKind: AppAssemblyConstants.multiSensorWidgetKindId
+        )
     }
 
     private func registerFCMToken() {

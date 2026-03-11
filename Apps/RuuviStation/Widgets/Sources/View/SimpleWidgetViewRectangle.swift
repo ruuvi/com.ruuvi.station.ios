@@ -3,7 +3,7 @@ import RuuviLocalization
 
 struct SimpleWidgetViewRectangle: View {
     private let viewModel = WidgetViewModel()
-    var entry: WidgetProvider.Entry
+    var entry: WidgetEntry
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(entry.tag.displayString.capitalized)
@@ -12,8 +12,9 @@ struct SimpleWidgetViewRectangle: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
 
-            if let sensorName = viewModel.getSensor(from: entry.config)?.displayName() {
-                Text(sensorName)
+            let measurementShortName = viewModel.measurementShortName(from: entry.config)
+            if !measurementShortName.isEmpty {
+                Text(measurementShortName)
                     .font(.mulish(.regular, size: 10, relativeTo: .caption))
                     .foregroundColor(Color.sensorNameColor1)
                     .lineLimit(1)
@@ -32,10 +33,7 @@ struct SimpleWidgetViewRectangle: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
                 Text(
-                    viewModel
-                        .getUnit(
-                            for: viewModel.getSensor(from: entry.config)
-                        )
+                    viewModel.getUnit(from: entry.config)
                 )
                 .foregroundColor(Color.unitTextColor)
                 .font(.oswald(.extraLight, size: 10, relativeTo: .caption))
@@ -45,6 +43,11 @@ struct SimpleWidgetViewRectangle: View {
         }
         .padding(.horizontal, 4)
         .edgesIgnoringSafeArea(.all)
-        .widgetURL(URL(string: "\(entry.tag.identifier.unwrapped)"))
+        .widgetURL(
+            viewModel.widgetDeepLinkURL(
+                sensorId: entry.tag.identifier,
+                record: entry.record
+            )
+        )
     }
 }

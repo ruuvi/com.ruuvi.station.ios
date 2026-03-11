@@ -25,6 +25,7 @@
 "Y9n2Qa" = "Sensoreita ei ole saatavilla. Lisää sensori ensin sovelluksessa."; // No sensors available. Add a sensor in the app first.
 
 "W4gPB4" = "Ei mitään"; // None
+"WidgetConfiguration.NoneOption" = "Ei mitään";
 "GheCHn" = "Lämpötila"; // Temperature
 "Nm8fuJ" = "Suht. ilmankosteus"; // Humidity
 "HaVaak" = "Ilmanpaine"; // Pressure

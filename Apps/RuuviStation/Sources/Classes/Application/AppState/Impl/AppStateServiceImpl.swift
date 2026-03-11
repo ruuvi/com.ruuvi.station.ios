@@ -100,6 +100,9 @@ class AppStateServiceImpl: AppStateService {
             WidgetCenter.shared.reloadTimelines(
                 ofKind: AppAssemblyConstants.simpleWidgetKindId
             )
+            WidgetCenter.shared.reloadTimelines(
+                ofKind: AppAssemblyConstants.multiSensorWidgetKindId
+            )
 #endif
         }
         propertiesDaemon.stop()
