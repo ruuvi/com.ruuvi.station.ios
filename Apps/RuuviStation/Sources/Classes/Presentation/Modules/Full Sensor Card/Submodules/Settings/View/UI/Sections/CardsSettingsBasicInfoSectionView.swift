@@ -128,9 +128,11 @@ struct CardsSettingsBasicInfoSectionView: View {
 private struct CardsSettingsNotesPreview: View {
     let notes: String
     @State private var isExpanded = false
+    @State private var fullTextHeight: CGFloat = 0
+    @State private var collapsedTextHeight: CGFloat = 0
 
     private struct Constants {
-        static let previewCharacterLimit: Int = 200
+        static let collapsedLineLimit: Int = 4
         static let verticalSpacing: CGFloat = 8
         static let rowPadding: CGFloat = 12
         static let animationDuration: Double = 0.2
@@ -140,19 +142,16 @@ private struct CardsSettingsNotesPreview: View {
         !notes.isEmpty
     }
 
-    private var shouldTruncate: Bool {
-        notes.count > Constants.previewCharacterLimit
-    }
-
-    private var notePreview: String {
-        if shouldTruncate, !isExpanded {
-            return String(notes.prefix(Constants.previewCharacterLimit)) + "…"
-        }
-        return notes
-    }
-
     private var displayText: String {
-        hasNotes ? notePreview : RuuviLocalization.na
+        hasNotes ? notes : RuuviLocalization.na
+    }
+
+    private var shouldTruncate: Bool {
+        hasNotes && fullTextHeight > (collapsedTextHeight + 1)
+    }
+
+    private var lineLimit: Int? {
+        isExpanded ? nil : Constants.collapsedLineLimit
     }
 
     private var chevronName: String {
@@ -169,9 +168,29 @@ private struct CardsSettingsNotesPreview: View {
                     hasNotes ? RuuviColor.textColor.swiftUIColor : Color.secondary
                 )
                 .font(.ruuviBodySmall())
+                .lineLimit(lineLimit)
                 .frame(
                     maxWidth: .infinity,
                     alignment: .leading
+                )
+                .background(
+                    Text(displayText)
+                        .font(.ruuviBodySmall())
+                        .lineLimit(Constants.collapsedLineLimit)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .hidden()
+                        .readCollapsedHeight { height in
+                            collapsedTextHeight = height
+                        }
+                )
+                .background(
+                    Text(displayText)
+                        .font(.ruuviBodySmall())
+                        .fixedSize(horizontal: false, vertical: true)
+                        .hidden()
+                        .readFullHeight { height in
+                            fullTextHeight = height
+                        }
                 )
                 .contentShape(Rectangle())
                 .onTapGesture {
@@ -196,6 +215,8 @@ private struct CardsSettingsNotesPreview: View {
         .padding(.vertical, Constants.rowPadding)
         .onChange(of: notes) { _ in
             isExpanded = false
+            fullTextHeight = 0
+            collapsedTextHeight = 0
         }
     }
 
@@ -206,5 +227,53 @@ private struct CardsSettingsNotesPreview: View {
         ) {
             isExpanded.toggle()
         }
+    }
+}
+
+private struct NotesPreviewCollapsedHeightPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+}
+
+private struct NotesPreviewFullHeightPreferenceKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+}
+
+private extension View {
+    func readCollapsedHeight(_ onChange: @escaping (CGFloat) -> Void) -> some View {
+        background(
+            GeometryReader { proxy in
+                Color.clear.preference(
+                    key: NotesPreviewCollapsedHeightPreferenceKey.self,
+                    value: proxy.size.height
+                )
+            }
+        )
+        .onPreferenceChange(
+            NotesPreviewCollapsedHeightPreferenceKey.self,
+            perform: onChange
+        )
+    }
+
+    func readFullHeight(_ onChange: @escaping (CGFloat) -> Void) -> some View {
+        background(
+            GeometryReader { proxy in
+                Color.clear.preference(
+                    key: NotesPreviewFullHeightPreferenceKey.self,
+                    value: proxy.size.height
+                )
+            }
+        )
+        .onPreferenceChange(
+            NotesPreviewFullHeightPreferenceKey.self,
+            perform: onChange
+        )
     }
 }
