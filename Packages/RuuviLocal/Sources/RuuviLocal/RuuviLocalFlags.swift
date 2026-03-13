@@ -35,6 +35,9 @@ public protocol RuuviLocalFlags {
     /// expands into a search bar to filter sensors by name.
     var showDashboardSensorSearch: Bool { get set }
 
+    /// When enabled, shows the notes row and preview in Cards Settings.
+    var showCardsSettingsNotesSection: Bool { get set }
+
     /// Maximum number of points used for graph downsampling.
     /// Defaults to 3000.
     var graphDownsampleMaximumPoints: Int { get set }

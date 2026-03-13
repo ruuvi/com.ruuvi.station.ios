@@ -84,6 +84,7 @@ extension DefaultsPresenter {
             buildAllowConcurrentGattSyncForMultipleSensors(),
             buildShowMarketingPreference(),
             buildShowDashboardSensorSearch(),
+            buildShowCardsSettingsNotesSection(),
         ]
     }
 
@@ -656,6 +657,21 @@ extension DefaultsPresenter {
 
         bind(viewModel.boolean, fire: false) { observer, bool in
             observer.flags.showDashboardSensorSearch = GlobalHelpers
+                .getBool(from: bool)
+        }
+
+        return viewModel
+    }
+
+    private func buildShowCardsSettingsNotesSection() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Show Cards Settings notes section"
+        viewModel.boolean.value = flags.showCardsSettingsNotesSection
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, bool in
+            observer.flags.showCardsSettingsNotesSection = GlobalHelpers
                 .getBool(from: bool)
         }
 

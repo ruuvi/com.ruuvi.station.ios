@@ -75,8 +75,10 @@ private extension CardsSettingsCoordinator {
             errorPresenter: r.resolve(ErrorPresenter.self)!,
             activityPresenter: r.resolve(ActivityPresenter.self)!
         )
+        let flags = r.resolve(RuuviLocalFlags.self)!
         let viewController = CardsSettingsViewController(
-            snapshot: snapshot
+            snapshot: snapshot,
+            showsNotesSection: flags.showCardsSettingsNotesSection
         )
         viewController.output = presenter
         presenter.view = viewController

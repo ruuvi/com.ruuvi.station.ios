@@ -21,6 +21,7 @@ struct CardsSettingsBasicInfoSectionView: View {
     var showsLedBrightnessRow: Bool = false
     var notes: String = ""
     var isNotesEditable: Bool = false
+    var showsNotesSection: Bool = false
 
     private var hasNotes: Bool {
         !notes.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -96,30 +97,32 @@ struct CardsSettingsBasicInfoSectionView: View {
                 SettingsDivider()
             }
 
-            if isNotesEditable {
-                CardsSettingsSettingsValueRow(
-                    title: RuuviLocalization.notes,
-                    value: "",
-                    trailing: {
-                        RuuviAsset.editPen.swiftUIImage
-                            .aspectRatio(contentMode: .fit)
-                            .foregroundColor(RuuviColor.tintColor.swiftUIColor)
-                    },
-                    onTap: onNotesTap
-                )
-            } else {
-                CardsSettingsSettingsValueRow(
-                    title: RuuviLocalization.notes,
-                    value: ""
-                )
-            }
+            if showsNotesSection {
+                if isNotesEditable {
+                    CardsSettingsSettingsValueRow(
+                        title: RuuviLocalization.notes,
+                        value: "",
+                        trailing: {
+                            RuuviAsset.editPen.swiftUIImage
+                                .aspectRatio(contentMode: .fit)
+                                .foregroundColor(RuuviColor.tintColor.swiftUIColor)
+                        },
+                        onTap: onNotesTap
+                    )
+                } else {
+                    CardsSettingsSettingsValueRow(
+                        title: RuuviLocalization.notes,
+                        value: ""
+                    )
+                }
 
-            if hasNotes {
-                SettingsDivider()
+                if hasNotes {
+                    SettingsDivider()
 
-                CardsSettingsNotesPreview(
-                    notes: notes
-                )
+                    CardsSettingsNotesPreview(
+                        notes: notes
+                    )
+                }
             }
         }
     }
