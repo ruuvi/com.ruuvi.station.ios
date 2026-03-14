@@ -298,17 +298,22 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     // swiftlint:disable:next function_body_length
     private func offsetSyncs(
         cloudSensors: [CloudSensor],
+        localSensors: [AnyRuuviTagSensor],
         updatedSensors: Set<AnyRuuviTagSensor>
     ) -> [Future<SensorSettings, RuuviPoolError>] {
         cloudSensors.compactMap { [weak self] cloudSensor in
             guard let self else { return nil }
-            guard let updatedSensor = updatedSensors
-                .first(where: { $0.id == cloudSensor.id }) else {
+            let matchedSensor = updatedSensors.first(where: {
+                cloudSensor.id.isLast3BytesEqual(to: $0.id)
+            }) ?? localSensors.first(where: {
+                cloudSensor.id.isLast3BytesEqual(to: $0.id)
+            })
+
+            guard let sensor = matchedSensor else {
                 return nil
             }
 
             let promise = Promise<SensorSettings, RuuviPoolError>()
-            let sensor = updatedSensor
 
             let fallbackSettings: (SensorSettings?) -> SensorSettings = { localSettings in
                 localSettings ?? SensorSettingsStruct(
@@ -958,6 +963,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         )
                         let syncOffsets = self.offsetSyncs(
                             cloudSensors: cloudSensors,
+                            localSensors: localSensors,
                             updatedSensors: updatedSensors
                         )
                         let displaySettingsSyncs = self.displaySettingsSyncs(

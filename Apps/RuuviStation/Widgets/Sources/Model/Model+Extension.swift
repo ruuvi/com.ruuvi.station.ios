@@ -224,8 +224,8 @@ extension SensorSettingsStruct {
             luid: ruuviTag.ruuviTagSensor.luid,
             macId: ruuviTag.ruuviTagSensor.macId,
             temperatureOffset: ruuviTag.offsetTemperature,
-            humidityOffset: ruuviTag.offsetHumidity,
-            pressureOffset: ruuviTag.offsetPressure
+            humidityOffset: ruuviTag.offsetHumidity.map { $0 / 100 },
+            pressureOffset: ruuviTag.offsetPressure.map { $0 / 100 }
         )
     }
 }
