@@ -207,14 +207,19 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     @discardableResult
     public func add(
         sensor: RuuviTagSensor,
-        record: RuuviTagSensorRecord
+        record: RuuviTagSensorRecord?
     ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
         let updatedSensor = sensor.with(lastUpdated: Date())
-        let entity = pool.create(updatedSensor)
-        let recordEntity = pool.create(record)
-        let recordLast = pool.createLast(record)
-        Future.zip(entity, recordEntity, recordLast).on(success: { _ in
+        var operations: [Future<Bool, RuuviPoolError>] = [pool.create(updatedSensor)]
+        if let record {
+            // NFC-only adds persist the sensor immediately and attach records later,
+            // once the first BT measurement is actually available.
+            operations.append(pool.create(record.with(source: .advertisement)))
+            operations
+                .append(pool.createLast(record.with(source: .advertisement)))
+        }
+        Future.zip(operations).on(success: { _ in
             promise.succeed(value: updatedSensor.any)
         }, failure: { error in
             promise.fail(error: .ruuviPool(error))

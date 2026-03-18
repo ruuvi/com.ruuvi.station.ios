@@ -7,7 +7,7 @@ public protocol RuuviServiceOwnership {
     @discardableResult
     func add(
         sensor: RuuviTagSensor,
-        record: RuuviTagSensorRecord
+        record: RuuviTagSensorRecord?
     ) -> Future<AnyRuuviTagSensor, RuuviServiceError>
 
     @discardableResult
