@@ -155,7 +155,7 @@ private struct MultiSensorWidgetView: View {
                         .minimumScaleFactor(0.5)
                 }
 
-                if indicators.count < 3 {
+                if indicators.count == 1 {
                     VStack(alignment: .leading, spacing: Layout.rowSpacing) {
                         ForEach(indicators) { indicator in
                             indicatorRow(indicator)

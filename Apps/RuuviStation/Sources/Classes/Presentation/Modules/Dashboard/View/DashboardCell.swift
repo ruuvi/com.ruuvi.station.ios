@@ -123,8 +123,8 @@ struct DashboardCellLayoutConstants {
         }
 
         let numberOfRows: Int
-        if actualIndicatorCount < 3 {
-            numberOfRows = actualIndicatorCount
+        if actualIndicatorCount == 1 {
+            numberOfRows = 1
         } else {
             numberOfRows = Int(
                 ceil(
@@ -926,8 +926,10 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
             .gridRowSpacing(showIndicatorTitle: dashboardType == .image)
         rowsStackView.distribution = .fill
 
-        if indicators.count < 3 {
-            // Less than 3 indicators: arrange vertically
+        guard !indicators.isEmpty else { return }
+
+        if indicators.count == 1 {
+            // A single indicator fills one row.
             for indicator in indicators {
                 // Set fixed height for each indicator
                 indicator
@@ -941,7 +943,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                     )
             }
         } else {
-            // 3 or more indicators: arrange in rows of two
+            // Two or more indicators: arrange in rows of two.
             var index = 0
             while index < indicators.count {
                 // Create a horizontal stack view for each row
