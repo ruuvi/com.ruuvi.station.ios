@@ -178,6 +178,14 @@ class DashboardSettingsService {
         }
         return false
     }
+
+    func pendingCardToOpenFromWidget() -> String? {
+        settings.cardToOpenFromWidget()
+    }
+
+    func clearPendingCardToOpenFromWidget() {
+        settings.setCardToOpenFromWidget(for: nil)
+    }
 }
 
 // MARK: - Private Implementation

@@ -43,6 +43,7 @@ class DashboardPresenter {
 
     // MARK: - State
     private var didLoadInitialSensors = false
+    private var isOpeningPendingWidgetCard = false
 
     // MARK: - Initialization
     init(
@@ -332,6 +333,7 @@ private extension DashboardPresenter {
     ) {
         view?.updateSnapshots(snapshots, withAnimation: withAnimation)
         view?.showNoSensorsAddedMessage(show: snapshots.isEmpty)
+        openPendingWidgetCardIfNeeded(from: snapshots)
 
         if didLoadInitialSensors {
             settingsService.askAppStoreReview(with: snapshots.count)
@@ -582,6 +584,32 @@ private extension DashboardPresenter {
               !serviceCoordinatorManager.isCloudAuthorized() else { return }
 
         router.openSignIn(output: self)
+    }
+
+    func openPendingWidgetCardIfNeeded(from snapshots: [RuuviTagCardSnapshot]) {
+        guard !isOpeningPendingWidgetCard,
+              let pendingCardId = settingsService.pendingCardToOpenFromWidget(),
+              let snapshot = snapshots.first(where: { matchesWidgetCard($0, cardId: pendingCardId) }),
+              let sensor = serviceCoordinatorManager.getSensor(for: snapshot.id)
+        else {
+            return
+        }
+
+        isOpeningPendingWidgetCard = true
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            let showCharts = self.settingsService.getDashboardTapActionType() == .chart
+            self.openCardView(for: snapshot, sensor: sensor, showCharts: showCharts)
+            self.settingsService.clearPendingCardToOpenFromWidget()
+            self.isOpeningPendingWidgetCard = false
+        }
+    }
+
+    func matchesWidgetCard(_ snapshot: RuuviTagCardSnapshot, cardId: String) -> Bool {
+        snapshot.identifierData.mac?.value == cardId ||
+            snapshot.identifierData.luid?.value == cardId ||
+            snapshot.id == cardId
     }
 }
 

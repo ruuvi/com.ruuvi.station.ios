@@ -84,6 +84,12 @@ targets:
         NSUserActivityTypes: [RuuviTagSelectionIntent]
         UIAppFonts: [Oswald-Bold.ttf,Oswald-Regular.ttf,Oswald-Light.ttf,Oswald-ExtraLight.ttf,Mulish-Regular.ttf,Mulish-Bold.ttf,Mulish-SemiBoldItalic.ttf,Mulish-ExtraBold.ttf,Montserrat-Bold.ttf,Montserrat-Regular.ttf,Montserrat-ExtraBold.ttf]
         UIBackgroundModes: [bluetooth-central, processing, remote-notification]
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Default Configuration
+                UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
         UIRequiredDeviceCapabilities: [armv7]
         UIRequiresFullScreen: true
         UIStatusBarStyle: UIStatusBarStyleLightContent

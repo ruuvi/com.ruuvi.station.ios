@@ -19,7 +19,6 @@ import UserNotifications
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    var window: UIWindow?
     var appStateService: AppStateService!
     var localNotificationsManager: RuuviNotificationLocal!
     var featureToggleService: FeatureToggleService!
@@ -27,8 +26,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var pnManager: RuuviCorePN!
     var settings: RuuviLocalSettings!
     var orientationLock = UIInterfaceOrientationMask.allButUpsideDown
-
-    private var appRouter: AppRouter?
 
     func application(
         _ application: UIApplication,
@@ -78,33 +75,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             )
         #endif
 
-        window = UIWindow(frame: UIScreen.main.bounds)
-        let appRouter = AppRouter()
-        appRouter.settings = r.resolve(RuuviLocalSettings.self)
-        appRouter.ruuviAnalytics = r.resolve(RuuviAnalytics.self)
-        window?.rootViewController = appRouter.viewController
-        window?.makeKeyAndVisible()
-        self.appRouter = appRouter
-        window?.overrideUserInterfaceStyle = settings.theme.uiInterfaceStyle
-
         return true
     }
 
-    func applicationWillResignActive(_ application: UIApplication) {
-        appStateService.applicationWillResignActive(application)
-    }
-
-    func applicationDidEnterBackground(_ application: UIApplication) {
-        appStateService.applicationDidEnterBackground(application)
-    }
-
-    func applicationWillEnterForeground(_ application: UIApplication) {
-        appStateService.applicationWillEnterForeground(application)
-    }
-
-    func applicationDidBecomeActive(_ application: UIApplication) {
-        resetNotificationsBadge()
-        appStateService.applicationDidBecomeActive(application)
+    func application(
+        _: UIApplication,
+        configurationForConnecting connectingSceneSession: UISceneSession,
+        options _: UIScene.ConnectionOptions
+    ) -> UISceneConfiguration {
+        let configuration = UISceneConfiguration(
+            name: "Default Configuration",
+            sessionRole: connectingSceneSession.role
+        )
+        configuration.delegateClass = SceneDelegate.self
+        return configuration
     }
 
     func application(
@@ -169,38 +153,6 @@ extension AppDelegate: MessagingDelegate {
     }
 }
 
-// MARK: - UniversalLins
-
-extension AppDelegate {
-    func application(
-        _ application: UIApplication,
-        continue userActivity: NSUserActivity,
-        restorationHandler _: @escaping ([UIUserActivityRestoring]?) -> Void
-    ) -> Bool {
-        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-              let url = userActivity.webpageURL
-        else {
-            return false
-        }
-        appStateService.applicationDidOpenWithUniversalLink(application, url: url)
-        return true
-    }
-}
-
-// MARK: - Widget Deeplink Handler
-
-extension AppDelegate {
-    func application(
-        _ app: UIApplication,
-        open url: URL,
-        options _: [UIApplication.OpenURLOptionsKey: Any] = [:]
-    ) -> Bool {
-        let sensorId = widgetSensorIdentifier(from: url)
-        openSelectedCard(for: sensorId, application: app)
-        return true
-    }
-}
-
 // MARK: - Notification tap handler
 
 extension AppDelegate: RuuviNotificationLocalOutput {
@@ -211,7 +163,7 @@ extension AppDelegate: RuuviNotificationLocalOutput {
 
 // TODO: - SEE IF WE CAN MOVE THIS TO APP_STATE_SERVICE
 extension AppDelegate {
-    private func widgetSensorIdentifier(from url: URL) -> String {
+    func widgetSensorIdentifier(from url: URL) -> String {
         if let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
            let sensorId = components.queryItems?.first(where: { $0.name == "sensorId" })?.value,
            !sensorId.isEmpty {
@@ -227,7 +179,7 @@ extension AppDelegate {
         return url.absoluteString.removingPercentEncoding ?? url.absoluteString
     }
 
-    private func openSelectedCard(
+    func openSelectedCard(
         for uuid: String,
         application: UIApplication? = nil
     ) {
@@ -242,7 +194,7 @@ extension AppDelegate {
 
 // MARK: Notifications badge reset
 extension AppDelegate {
-    private func resetNotificationsBadge() {
+    func resetNotificationsBadge() {
         if #available(iOS 16.0, *) {
             UNUserNotificationCenter.current().setBadgeCount(0) { [weak self] error in
                 guard error == nil else {
