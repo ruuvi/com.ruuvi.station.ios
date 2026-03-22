@@ -22,6 +22,7 @@ final class CardsBaseViewController: UIViewController {
             static let secondaryToolbarTopPadding: CGFloat = 2
             static let arrowButtonTopPadding: CGFloat = 6
             static let arrowButtonSidePadding: CGFloat = 4
+            static let titleStackSpacing: CGFloat = 2
             static let tagNameLabelPadding = UIEdgeInsets(top: 4, left: 4, bottom: 6, right: 4)
             static let tabContainerVerticalPadding: CGFloat = 8
             static let sourceUpdateStackSpacing: CGFloat = 6
@@ -41,10 +42,12 @@ final class CardsBaseViewController: UIViewController {
 
         enum Typography {
             static let tagNameLabelFontSize: CGFloat = 20
+            static let pageTitleLabelFontSize: CGFloat = 14
             static let batteryLabelFontSize: CGFloat = 10
             static let batteryIconSize: CGFloat = 16
             static let updatedAtLabelFontSize: CGFloat = 10
             static let tagNameLabelLines: Int = 2
+            static let pageTitleLabelLines: Int = 1
             static let updatedAtLabelLines: Int = 0
         }
 
@@ -187,6 +190,9 @@ final class CardsBaseViewController: UIViewController {
         return label
     }()
 
+    private lazy var pageTitleLabel: UILabel = makePageTitleLabel()
+    private lazy var titleStackView: UIStackView = makeTitleStackView()
+
     // MARK: - Tab Container
     private lazy var tabContainerView: UIView = {
         let view = UIView()
@@ -289,6 +295,27 @@ final class CardsBaseViewController: UIViewController {
 
 // MARK: - UI Setup
 private extension CardsBaseViewController {
+    func makePageTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.textColor = .white
+        label.textAlignment = .center
+        label.numberOfLines = Constants.Typography.pageTitleLabelLines
+        label.font = UIFont.mulish(.bold, size: Constants.Typography.pageTitleLabelFontSize)
+        label.isHidden = true
+        label.setContentHuggingPriority(.required, for: .vertical)
+        label.setContentCompressionResistancePriority(.required, for: .vertical)
+        return label
+    }
+
+    func makeTitleStackView() -> UIStackView {
+        let stackView = UIStackView(arrangedSubviews: [ruuviTagNameLabel, pageTitleLabel])
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = Constants.Layout.titleStackSpacing
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        return stackView
+    }
+
     func setUpUI() {
         setUpBaseView()
         setUpHeaderView()
@@ -410,14 +437,16 @@ private extension CardsBaseViewController {
             )
         )
 
-        secondaryToolbarView.addSubview(ruuviTagNameLabel)
-        ruuviTagNameLabel.anchor(
+        secondaryToolbarView.addSubview(titleStackView)
+        titleStackView.anchor(
             top: secondaryToolbarView.topAnchor,
             leading: cardLeftArrowButton.trailingAnchor,
             bottom: secondaryToolbarView.bottomAnchor,
             trailing: cardRightArrowButton.leadingAnchor,
             padding: Constants.Layout.tagNameLabelPadding
         )
+
+        updateHeaderSubtitle(for: activeTab)
     }
 
     func setUpTabContainer() {
@@ -598,6 +627,30 @@ private extension CardsBaseViewController {
         output?.viewDidChangeTab(tab)
     }
 
+    func updateHeaderSubtitle(for tab: CardsMenuType) {
+        let subtitle = headerSubtitle(for: tab)
+        UIView.performWithoutAnimation {
+            pageTitleLabel.text = subtitle
+            pageTitleLabel.isHidden = subtitle == nil
+            titleStackView.layoutIfNeeded()
+        }
+    }
+
+    func headerSubtitle(for tab: CardsMenuType) -> String? {
+        guard flags.showNewCardsMenu else {
+            return nil
+        }
+
+        switch tab {
+        case .alerts:
+            return RuuviLocalization.TagSettings.Label.Alerts.text
+        case .settings:
+            return RuuviLocalization.Settings.NavigationItem.title
+        case .measurement, .graph:
+            return nil
+        }
+    }
+
     // MARK: - Navigation Helpers
     func canNavigateLeft() -> Bool {
         return currentSnapshotIndex > 0
@@ -629,6 +682,7 @@ private extension CardsBaseViewController {
             )
 
         ruuviTagNameLabel.text = currentSnapshot.displayData.name
+        updateHeaderSubtitle(for: activeTab)
 
         updateNavigationButtonsVisibility()
         updateFooter()
@@ -834,6 +888,7 @@ extension CardsBaseViewController: CardsBaseViewInput {
             updateTabBackground(for: tab, animated: true)
             showTabViewController(for: tab)
             activeTab = tab
+            updateHeaderSubtitle(for: tab)
             menuBarView.setSelectedTab(tab, animated: true)
             updateFooterVisibility(for: tab, animated: true)
         } else {
@@ -842,6 +897,7 @@ extension CardsBaseViewController: CardsBaseViewInput {
                 updateTabBackground(for: tab, animated: true)
                 showTabViewController(for: tab)
                 activeTab = tab
+                updateHeaderSubtitle(for: tab)
             default:
                 break
             }
