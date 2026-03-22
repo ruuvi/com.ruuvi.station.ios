@@ -32,4 +32,21 @@ extension String {
         }
         return components.count == 3 ? components : nil
     }
+
+    var normalizedFirmwareVersionIdentifier: String? {
+        let regex = try! NSRegularExpression(
+            pattern: "[vV]?\\d+\\.\\d+\\.\\d+(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?"
+        )
+        let range = NSRange(self.startIndex..<self.endIndex, in: self)
+        guard let match = regex.firstMatch(in: self, options: [], range: range),
+              let matchRange = Range(match.range, in: self) else {
+            return nil
+        }
+
+        var version = String(self[matchRange])
+        if let first = version.first, first == "v" || first == "V" {
+            version.removeFirst()
+        }
+        return version
+    }
 }

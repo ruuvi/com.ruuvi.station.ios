@@ -6,11 +6,15 @@ import RuuviDFU
 import RuuviFirmware
 import RuuviOntology
 import RuuviLocal
+import RuuviPool
+import RuuviStorage
 
 final class DFUInteractor {
     var ruuviDFU: RuuviDFU!
     var background: BTBackground!
     var foreground: BTForeground!
+    var ruuviPool: RuuviPool!
+    var ruuviStorage: RuuviStorage!
     private let deviceType: RuuviDeviceType
     private let firmwareType: RuuviDFUFirmwareType
 
@@ -330,8 +334,10 @@ extension DFUInteractor: DFUInteractorInput {
                     .serviceTimeout(sSelf.timeoutDuration),
                 ]
             ) { _, result in
+                sSelf.invalidateTimer()
                 switch result {
                 case let .success(version):
+                    sSelf.syncStoredFirmwareVersionIfNeeded(version, for: ruuviTag)
                     let currentRelease = CurrentRelease(version: version)
                     promise(.success(currentRelease))
                 case let .failure(error):
@@ -482,6 +488,54 @@ extension DFUInteractor {
     private func invalidateTimer() {
         timer?.invalidate()
         timer = nil
+    }
+
+    private func syncStoredFirmwareVersionIfNeeded(
+        _ version: String,
+        for ruuviTag: RuuviTagSensor
+    ) {
+        resolveLatestSensor(for: ruuviTag) { [weak self] latestTag in
+            guard let self else { return }
+            guard let ruuviPool = self.ruuviPool else { return }
+            let storedVersion = latestTag.firmwareVersion
+            let latestVersion = version
+
+            guard !self.areFirmwareVersionsEquivalent(
+                storedVersion,
+                latestVersion
+            ) else { return }
+
+            ruuviPool.update(latestTag.with(firmwareVersion: version))
+        }
+    }
+
+    private func areFirmwareVersionsEquivalent(
+        _ lhs: String?,
+        _ rhs: String
+    ) -> Bool {
+        let normalizedLhs = lhs?.normalizedFirmwareVersionIdentifier ??
+            lhs?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let normalizedRhs = rhs.normalizedFirmwareVersionIdentifier ??
+            rhs.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        return normalizedLhs == normalizedRhs
+    }
+
+    private func resolveLatestSensor(
+        for ruuviTag: RuuviTagSensor,
+        completion: @escaping (RuuviTagSensor) -> Void
+    ) {
+        guard let ruuviStorage = ruuviStorage else {
+            completion(ruuviTag)
+            return
+        }
+
+        let sensorId = ruuviTag.macId?.value ?? ruuviTag.id
+        ruuviStorage.readOne(sensorId)
+            .on(
+                success: { completion($0) },
+                failure: { _ in completion(ruuviTag) }
+            )
     }
 
     private func firmwareDownloadURL(for deviceType: RuuviDeviceType) -> String {

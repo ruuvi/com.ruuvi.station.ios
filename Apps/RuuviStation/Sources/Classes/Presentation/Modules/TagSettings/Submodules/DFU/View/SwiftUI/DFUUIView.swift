@@ -202,7 +202,6 @@ struct DFUUIView: View {
                 alignment: .topLeading
             )
             .padding()
-            .onAppear { viewModel.storeCurrentFirmwareVersion(from: currentRelease) }
             .eraseToAnyView()
         case let .isAbleToUpgrade(latestRelease, currentRelease):
             return VStack {

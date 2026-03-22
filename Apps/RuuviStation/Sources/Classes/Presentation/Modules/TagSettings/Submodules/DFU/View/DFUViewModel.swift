@@ -140,18 +140,6 @@ final class DFUViewModel: ObservableObject {
         }
     }
 
-    func storeCurrentFirmwareVersion(from currentRelease: CurrentRelease?) {
-        guard ruuviTag.firmwareVersion == nil ||
-            !ruuviTag.firmwareVersion.hasText(),
-            let currentRelease
-        else {
-            return
-        }
-        ruuviPool.update(ruuviTag
-            .with(isConnectable: true)
-            .with(firmwareVersion: currentRelease.version))
-    }
-
     // Migration ends
 
     func checkBatteryState(completion: @escaping (Bool) -> Void) {
@@ -450,15 +438,12 @@ extension DFUViewModel {
     }
 
     private func areVersionsEqual(expected: String, actual: String) -> Bool {
-        let expectedSem = expected.semVar
-        let actualSem = actual.semVar
+        let normalizedExpected = expected.normalizedFirmwareVersionIdentifier ??
+            expected.trimmingCharacters(in: .whitespacesAndNewlines)
+        let normalizedActual = actual.normalizedFirmwareVersionIdentifier ??
+            actual.trimmingCharacters(in: .whitespacesAndNewlines)
 
-        if let expectedSem, let actualSem {
-            return Array.compareVersions(expectedSem, actualSem) == .orderedSame
-        }
-
-        return expected.trimmingCharacters(in: .whitespacesAndNewlines)
-            == actual.trimmingCharacters(in: .whitespacesAndNewlines)
+        return normalizedExpected == normalizedActual
     }
 
     func whenFlashing() -> Feedback<State, Event> {

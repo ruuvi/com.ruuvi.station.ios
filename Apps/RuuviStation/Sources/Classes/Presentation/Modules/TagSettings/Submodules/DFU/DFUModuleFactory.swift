@@ -44,6 +44,8 @@ final class DFUModuleFactoryImpl: DFUModuleFactory {
         let sqiltePersistence = r.resolve(RuuviPersistence.self, name: "sqlite")!
         let ruuviPool = r.resolve(RuuviPool.self)!
         let ruuviStorage = r.resolve(RuuviStorage.self)!
+        interactor.ruuviPool = ruuviPool
+        interactor.ruuviStorage = ruuviStorage
         let settings = r.resolve(RuuviLocalSettings.self)!
         let propertiesDaemon = r.resolve(RuuviTagPropertiesDaemon.self)!
         let activityPresenter = r.resolve(ActivityPresenter.self)!
