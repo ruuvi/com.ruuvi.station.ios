@@ -6,5 +6,6 @@ protocol CardsSettingsPresenterOutput: AnyObject {
         module: CardsSettingsPresenterInput,
         ruuviTag: RuuviTagSensor
     )
+    func cardSettingsDidRequestOpenAlerts(module: CardsSettingsPresenterInput)
     func cardSettingsDidDismiss(module: CardsSettingsPresenterInput)
 }

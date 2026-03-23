@@ -6,16 +6,19 @@ struct CardsSettingsView: View {
     @ObservedObject var state: CardsSettingsState
     @EnvironmentObject var actions: CardsSettingsActions
     let showsAlertSections: Bool
+    let showsAlertShortcutSection: Bool
     let showsNotesSection: Bool
     @State private var pendingAnchorID: String?
 
     init(
         state: CardsSettingsState,
         showsAlertSections: Bool = true,
+        showsAlertShortcutSection: Bool = false,
         showsNotesSection: Bool = false
     ) {
         self.state = state
         self.showsAlertSections = showsAlertSections
+        self.showsAlertShortcutSection = showsAlertShortcutSection
         self.showsNotesSection = showsNotesSection
     }
 
@@ -101,7 +104,9 @@ struct CardsSettingsView: View {
                         )
                     }
 
-                    if showsAlertSections, !state.alertSections.isEmpty {
+                    if showsAlertShortcutSection {
+                        CardsSettingsAlertShortcutSectionView()
+                    } else if showsAlertSections, !state.alertSections.isEmpty {
                         CardsSettingsAlertSectionsGroupView()
                     }
                     VStack(spacing: Constants.sectionSpacing) {

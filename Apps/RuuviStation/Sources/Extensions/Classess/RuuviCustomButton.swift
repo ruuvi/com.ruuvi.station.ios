@@ -1,6 +1,11 @@
 import UIKit
 
 class RuuviCustomButton: UIView {
+    private enum IconVerticalAlignment {
+        case center
+        case top(CGFloat)
+    }
+
     var image: UIImage? {
         didSet {
             iconView.image = image
@@ -15,12 +20,7 @@ class RuuviCustomButton: UIView {
         return iv
     }()
 
-    private lazy var iconViewContainer: UIView = {
-        let view = UIView(color: .clear)
-        view.addSubview(iconView)
-        iconView.centerInSuperview(size: iconSize)
-        return view
-    }()
+    private lazy var iconViewContainer = UIView(color: .clear)
 
     lazy var button: UIButton = {
         let button = UIButton()
@@ -33,6 +33,9 @@ class RuuviCustomButton: UIView {
     private var iconSize: CGSize = .zero
     private var leadingPadding: CGFloat = 0
     private var trailingPadding: CGFloat = 0
+    private var iconVerticalAlignment: IconVerticalAlignment = .center
+    private var iconVerticalConstraint: NSLayoutConstraint?
+    private var iconBottomConstraint: NSLayoutConstraint?
 
     convenience init(
         menu: UIMenu? = nil,
@@ -40,7 +43,8 @@ class RuuviCustomButton: UIView {
         tintColor: UIColor = .white,
         iconSize: CGSize = .init(width: 20, height: 20),
         leadingPadding: CGFloat = 12,
-        trailingPadding: CGFloat = 12
+        trailingPadding: CGFloat = 12,
+        iconTopPadding: CGFloat? = nil
     ) {
         self.init()
         self.menu = menu
@@ -50,6 +54,9 @@ class RuuviCustomButton: UIView {
         self.iconSize = iconSize
         self.leadingPadding = leadingPadding
         self.trailingPadding = trailingPadding
+        if let iconTopPadding {
+            iconVerticalAlignment = .top(iconTopPadding)
+        }
         setUpUI()
     }
 
@@ -76,6 +83,9 @@ extension RuuviCustomButton {
                 )
             )
 
+        iconViewContainer.addSubview(iconView)
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+
         iconViewContainer.heightAnchor.constraint(
             greaterThanOrEqualToConstant: iconSize.height
         ).isActive = true
@@ -83,9 +93,44 @@ extension RuuviCustomButton {
             equalToConstant: iconSize.width
         ).isActive = true
 
+        NSLayoutConstraint.activate([
+            iconView.centerXAnchor.constraint(equalTo: iconViewContainer.centerXAnchor),
+            iconView.widthAnchor.constraint(equalToConstant: iconSize.width),
+            iconView.heightAnchor.constraint(equalToConstant: iconSize.height),
+        ])
+
+        applyIconVerticalAlignment()
+
         if menu != nil {
             addSubview(button)
             button.fillSuperview()
+        }
+    }
+
+    private func applyIconVerticalAlignment() {
+        iconVerticalConstraint?.isActive = false
+        iconBottomConstraint?.isActive = false
+
+        switch iconVerticalAlignment {
+        case .center:
+            let centerYConstraint = iconView.centerYAnchor.constraint(
+                equalTo: iconViewContainer.centerYAnchor
+            )
+            iconVerticalConstraint = centerYConstraint
+            iconBottomConstraint = nil
+            centerYConstraint.isActive = true
+        case .top(let topPadding):
+            let topConstraint = iconView.topAnchor.constraint(
+                equalTo: iconViewContainer.topAnchor,
+                constant: topPadding
+            )
+            let bottomConstraint = iconView.bottomAnchor.constraint(
+                lessThanOrEqualTo: iconViewContainer.bottomAnchor
+            )
+            iconVerticalConstraint = topConstraint
+            iconBottomConstraint = bottomConstraint
+            topConstraint.isActive = true
+            bottomConstraint.isActive = true
         }
     }
 }
@@ -97,5 +142,14 @@ extension RuuviCustomButton {
 
     func updateMenu(with menu: UIMenu?) {
         button.menu = menu
+    }
+
+    func setIconTopPadding(_ topPadding: CGFloat) {
+        if case .top(let currentPadding) = iconVerticalAlignment,
+           abs(currentPadding - topPadding) < 0.5 {
+            return
+        }
+        iconVerticalAlignment = .top(topPadding)
+        applyIconVerticalAlignment()
     }
 }

@@ -425,6 +425,11 @@ extension CardsBasePresenter: CardsSettingsPresenterOutput {
         module.stop()
     }
 
+    func cardSettingsDidRequestOpenAlerts(module _: any CardsSettingsPresenterInput) {
+        guard flags.showNewCardsMenu else { return }
+        viewDidChangeTab(.alerts)
+    }
+
     func cardSettingsDidDismiss(module: any CardsSettingsPresenterInput) {
         module.dismiss(completion: nil)
     }

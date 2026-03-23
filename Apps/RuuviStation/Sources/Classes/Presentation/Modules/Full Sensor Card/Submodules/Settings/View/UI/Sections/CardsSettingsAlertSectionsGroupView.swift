@@ -93,6 +93,42 @@ private struct CardsSettingsAlertSectionGroupHeaderView: View {
     }
 }
 
+struct CardsSettingsAlertShortcutSectionView: View {
+    @EnvironmentObject private var actions: CardsSettingsActions
+
+    private enum Constants {
+        static let sectionSpacing: CGFloat = 0.5
+        static let rowPadding: CGFloat = 12
+    }
+
+    var body: some View {
+        VStack(spacing: Constants.sectionSpacing) {
+            CardsSettingsAlertSectionGroupHeaderView()
+
+            Button(action: {
+                actions.didTapAlertsShortcut.send()
+            }) {
+                HStack(alignment: .center, spacing: Constants.rowPadding) {
+                    Text(RuuviLocalization.TagSettings.Label.AlertsTopMenuHint.text)
+                        .font(.ruuviBody())
+                        .foregroundStyle(RuuviColor.textColor.swiftUIColor)
+                        .multilineTextAlignment(.leading)
+
+                    Spacer(minLength: Constants.rowPadding)
+
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.secondary)
+                }
+                .padding(Constants.rowPadding)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .background(RuuviColor.primary.swiftUIColor)
+        }
+    }
+}
+
 // MARK: CardsSettingsAlertSectionRow
 struct CardsSettingsAlertSectionRow: View {
     let model: CardsSettingsAlertSectionModel

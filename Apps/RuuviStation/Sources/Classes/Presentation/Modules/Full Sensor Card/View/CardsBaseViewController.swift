@@ -20,8 +20,8 @@ final class CardsBaseViewController: UIViewController {
             static let headerItemSpacing: CGFloat = 12
             static let headerLogoSpacing: CGFloat = 8
             static let secondaryToolbarTopPadding: CGFloat = 2
-            static let arrowButtonTopPadding: CGFloat = 6
             static let arrowButtonSidePadding: CGFloat = 4
+            static let arrowButtonIconTopPadding: CGFloat = 7
             static let titleStackSpacing: CGFloat = 2
             static let tagNameLabelPadding = UIEdgeInsets(top: 4, left: 4, bottom: 6, right: 4)
             static let tabContainerVerticalPadding: CGFloat = 8
@@ -148,7 +148,8 @@ final class CardsBaseViewController: UIViewController {
     private lazy var cardLeftArrowButton: RuuviCustomButton = {
         let button = RuuviCustomButton(
             icon: UIImage(systemName: "chevron.left"),
-            leadingPadding: 10
+            leadingPadding: 10,
+            iconTopPadding: Constants.Layout.arrowButtonIconTopPadding
         )
         button.backgroundColor = .clear
         button.addGestureRecognizer(
@@ -163,7 +164,8 @@ final class CardsBaseViewController: UIViewController {
     private lazy var cardRightArrowButton: RuuviCustomButton = {
         let button = RuuviCustomButton(
             icon: UIImage(systemName: "chevron.right"),
-            trailingPadding: 10
+            trailingPadding: 10,
+            iconTopPadding: Constants.Layout.arrowButtonIconTopPadding
         )
         button.backgroundColor = .clear
         button.addGestureRecognizer(
@@ -301,6 +303,7 @@ private extension CardsBaseViewController {
         label.textAlignment = .center
         label.numberOfLines = Constants.Typography.pageTitleLabelLines
         label.font = UIFont.mulish(.bold, size: Constants.Typography.pageTitleLabelFontSize)
+        label.alpha = 0
         label.isHidden = true
         label.setContentHuggingPriority(.required, for: .vertical)
         label.setContentCompressionResistancePriority(.required, for: .vertical)
@@ -312,6 +315,8 @@ private extension CardsBaseViewController {
         stackView.axis = .vertical
         stackView.alignment = .center
         stackView.spacing = Constants.Layout.titleStackSpacing
+        stackView.setContentHuggingPriority(.required, for: .vertical)
+        stackView.setContentCompressionResistancePriority(.required, for: .vertical)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }
@@ -413,10 +418,10 @@ private extension CardsBaseViewController {
         cardLeftArrowButton.anchor(
             top: secondaryToolbarView.topAnchor,
             leading: secondaryToolbarView.leadingAnchor,
-            bottom: nil,
+            bottom: secondaryToolbarView.bottomAnchor,
             trailing: nil,
             padding: .init(
-                top: Constants.Layout.arrowButtonTopPadding,
+                top: 0,
                 left: Constants.Layout.arrowButtonSidePadding,
                 bottom: 0,
                 right: 0
@@ -427,10 +432,10 @@ private extension CardsBaseViewController {
         cardRightArrowButton.anchor(
             top: secondaryToolbarView.topAnchor,
             leading: nil,
-            bottom: nil,
+            bottom: secondaryToolbarView.bottomAnchor,
             trailing: secondaryToolbarView.trailingAnchor,
             padding: .init(
-                top: Constants.Layout.arrowButtonTopPadding,
+                top: 0,
                 left: 0,
                 bottom: 0,
                 right: Constants.Layout.arrowButtonSidePadding
@@ -441,10 +446,19 @@ private extension CardsBaseViewController {
         titleStackView.anchor(
             top: secondaryToolbarView.topAnchor,
             leading: cardLeftArrowButton.trailingAnchor,
-            bottom: secondaryToolbarView.bottomAnchor,
+            bottom: nil,
             trailing: cardRightArrowButton.leadingAnchor,
-            padding: Constants.Layout.tagNameLabelPadding
+            padding: .init(
+                top: Constants.Layout.tagNameLabelPadding.top,
+                left: Constants.Layout.tagNameLabelPadding.left,
+                bottom: 0,
+                right: Constants.Layout.tagNameLabelPadding.right
+            )
         )
+        titleStackView.bottomAnchor.constraint(
+            equalTo: secondaryToolbarView.bottomAnchor,
+            constant: -Constants.Layout.tagNameLabelPadding.bottom
+        ).isActive = true
 
         updateHeaderSubtitle(for: activeTab)
     }
@@ -627,13 +641,49 @@ private extension CardsBaseViewController {
         output?.viewDidChangeTab(tab)
     }
 
-    func updateHeaderSubtitle(for tab: CardsMenuType) {
-        let subtitle = headerSubtitle(for: tab)
-        UIView.performWithoutAnimation {
-            pageTitleLabel.text = subtitle
-            pageTitleLabel.isHidden = subtitle == nil
-            titleStackView.layoutIfNeeded()
+    func updateHeaderSubtitle(for tab: CardsMenuType, animated: Bool = false) {
+        guard flags.showNewCardsMenu else {
+            UIView.performWithoutAnimation {
+                self.pageTitleLabel.text = nil
+                self.pageTitleLabel.alpha = 0
+                self.pageTitleLabel.isHidden = true
+            }
+            return
         }
+
+        let subtitle = headerSubtitle(for: tab)
+        let shouldShowSubtitle = subtitle != nil
+
+        guard animated, view.window != nil else {
+            UIView.performWithoutAnimation {
+                self.pageTitleLabel.text = subtitle
+                self.pageTitleLabel.alpha = shouldShowSubtitle ? 1 : 0
+                self.pageTitleLabel.isHidden = !shouldShowSubtitle
+                self.view.layoutIfNeeded()
+            }
+            return
+        }
+
+        view.layoutIfNeeded()
+
+        if shouldShowSubtitle {
+            self.pageTitleLabel.text = subtitle
+            self.pageTitleLabel.alpha = 0
+            self.pageTitleLabel.isHidden = false
+        } else {
+            self.pageTitleLabel.alpha = 0
+            self.pageTitleLabel.isHidden = true
+        }
+
+        UIView.animate(
+            withDuration: Constants.Animation.tabTransitionDuration,
+            delay: 0,
+            options: [.curveEaseInOut, .allowUserInteraction],
+            animations: {
+                self.pageTitleLabel.alpha = shouldShowSubtitle ? 1 : 0
+                self.view.layoutIfNeeded()
+            }
+        )
     }
 
     func headerSubtitle(for tab: CardsMenuType) -> String? {
@@ -888,7 +938,7 @@ extension CardsBaseViewController: CardsBaseViewInput {
             updateTabBackground(for: tab, animated: true)
             showTabViewController(for: tab)
             activeTab = tab
-            updateHeaderSubtitle(for: tab)
+            updateHeaderSubtitle(for: tab, animated: true)
             menuBarView.setSelectedTab(tab, animated: true)
             updateFooterVisibility(for: tab, animated: true)
         } else {
@@ -897,7 +947,6 @@ extension CardsBaseViewController: CardsBaseViewInput {
                 updateTabBackground(for: tab, animated: true)
                 showTabViewController(for: tab)
                 activeTab = tab
-                updateHeaderSubtitle(for: tab)
             default:
                 break
             }

@@ -78,6 +78,8 @@ private extension CardsSettingsCoordinator {
         let flags = r.resolve(RuuviLocalFlags.self)!
         let viewController = CardsSettingsViewController(
             snapshot: snapshot,
+            showsAlertSections: !flags.showNewCardsMenu,
+            showsAlertShortcutSection: flags.showNewCardsMenu,
             showsNotesSection: flags.showCardsSettingsNotesSection
         )
         viewController.output = presenter
@@ -106,6 +108,17 @@ extension CardsSettingsCoordinator: CardsSettingsPresenterOutput {
         module.dismiss(completion: { [weak self] in
             guard let self else { return }
             self.baseViewController.navigationController?.popViewController(animated: true)
+            self.delegate?.cardsSettingsCoordinatorDidDismiss(self)
+        })
+    }
+
+    func cardSettingsDidRequestOpenAlerts(module: CardsSettingsPresenterInput) {
+        module.dismiss(completion: { [weak self] in
+            guard let self else { return }
+            self.baseViewController.navigationController?.popViewController(animated: true)
+            (self.baseViewController as? CardsBaseViewController)?
+                .output?
+                .viewDidChangeTab(.alerts)
             self.delegate?.cardsSettingsCoordinatorDidDismiss(self)
         })
     }

@@ -12,6 +12,7 @@ protocol CardsSettingsViewOutput: AnyObject {
     func viewDidTapOnTxPower()
     func viewDidTapOnMeasurementSequenceNumber()
     func viewDidTapOnNoValuesView()
+    func viewDidTapAlertsShortcut()
     func viewDidTapShareButton()
     func viewDidTapOnOwner()
     func viewDidTapVisibleMeasurements()

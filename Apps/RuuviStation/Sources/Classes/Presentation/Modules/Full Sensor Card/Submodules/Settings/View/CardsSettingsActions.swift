@@ -21,6 +21,7 @@ import RuuviOntology
     let didRequestAlertLimitEdit = PassthroughSubject<AlertType, Never>()
     let didTapCloudConnectionDelay = PassthroughSubject<Void, Never>()
     let didTapNoValuesIndicator = PassthroughSubject<Void, Never>()
+    let didTapAlertsShortcut = PassthroughSubject<Void, Never>()
 
     // Offset correction actions
     let didTapTemperatureOffset = PassthroughSubject<Void, Never>()

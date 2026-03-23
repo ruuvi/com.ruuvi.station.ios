@@ -299,7 +299,8 @@ private extension CardsCoordinator {
         )
         let viewController = CardsSettingsViewController(
             snapshot: snapshot,
-            showsAlertSections: !flags.showNewCardsMenu
+            showsAlertSections: !flags.showNewCardsMenu,
+            showsAlertShortcutSection: flags.showNewCardsMenu
         )
         viewController.output = presenter
         if flags.showNewCardsMenu {
@@ -348,6 +349,10 @@ extension CardsCoordinator: CardsSettingsPresenterOutput {
             self.baseViewController.navigationController?.popViewController(animated: true)
             self.delegate?.cardsCoordinatorDidDismiss(self)
         })
+    }
+
+    func cardSettingsDidRequestOpenAlerts(module _: any CardsSettingsPresenterInput) {
+        cardsBaseViewPresenter.viewDidChangeTab(.alerts)
     }
 
     func cardSettingsDidDismiss(module: any CardsSettingsPresenterInput) {

@@ -189,6 +189,10 @@ extension CardsSettingsPresenter: CardsSettingsViewOutput {
         viewDidTriggerFirmwareUpdateDialog()
     }
 
+    func viewDidTapAlertsShortcut() {
+        output?.cardSettingsDidRequestOpenAlerts(module: self)
+    }
+
     func viewDidTapShareButton() {
         withSensor { router?.openShare(for: $0) }
     }

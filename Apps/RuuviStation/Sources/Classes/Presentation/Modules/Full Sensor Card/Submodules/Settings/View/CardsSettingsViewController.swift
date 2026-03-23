@@ -42,15 +42,18 @@ final class CardsSettingsViewController: UIViewController {
         return button
     }()
     private let showsAlertSections: Bool
+    private let showsAlertShortcutSection: Bool
     private let showsNotesSection: Bool
 
     init(
         snapshot: RuuviTagCardSnapshot,
         showsAlertSections: Bool = true,
+        showsAlertShortcutSection: Bool = false,
         showsNotesSection: Bool = false
     ) {
         self.state = CardsSettingsState(snapshot: snapshot)
         self.showsAlertSections = showsAlertSections
+        self.showsAlertShortcutSection = showsAlertShortcutSection
         self.showsNotesSection = showsNotesSection
         super.init(nibName: nil, bundle: nil)
     }
@@ -392,6 +395,12 @@ extension CardsSettingsViewController {
             }
             .store(in: &cancellables)
 
+        actions.didTapAlertsShortcut
+            .sink { [weak self] in
+                self?.output.viewDidTapAlertsShortcut()
+            }
+            .store(in: &cancellables)
+
         actions.didToggleAlert
             .sink { [weak self] payload in
                 self?.output.viewDidChangeAlertState(for: payload.0, isOn: payload.1)
@@ -455,6 +464,7 @@ extension CardsSettingsViewController {
         let contentView = CardsSettingsView(
             state: state,
             showsAlertSections: showsAlertSections,
+            showsAlertShortcutSection: showsAlertShortcutSection,
             showsNotesSection: showsNotesSection
         )
             .environmentObject(actions)
