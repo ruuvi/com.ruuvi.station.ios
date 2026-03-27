@@ -1,3 +1,4 @@
+#if canImport(BTKit)
 import BTKit
 import Foundation
 
@@ -22,3 +23,4 @@ public extension RuuviTag {
         )
     }
 }
+#endif

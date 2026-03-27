@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -E \"\\\\.swift$\")",
+      "Bash(xargs cat:*)",
+      "Bash(python3 -c \"import sys,json; data=json.load\\(sys.stdin\\); [print\\(p[''''identity''''], p.get\\(''''location'''',''''''''\\)\\) for p in data.get\\(''''pins'''',[]\\)]\")",
+      "Bash(xcodegen)",
+      "Bash(grep -l \"struct\\\\|class\" /Users/ipriyonto/Desktop/Ruuvi/ruuvi_dev/Apps/RuuviStation/Sources/Classes/Presentation/Modules/Dashboard/View/*.swift)",
+      "Bash(xargs -I {} basename {})"
+    ]
+  }
+}

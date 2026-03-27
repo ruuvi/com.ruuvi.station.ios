@@ -40,6 +40,7 @@ final class AppAssembly {
                 PersistenceAssembly(),
                 PresentationAssembly(),
                 DfuAssembly(),
+                WatchAssembly(),
             ])
     }
 }
@@ -686,6 +687,19 @@ private final class ModulesAssembly: Assembly {
             )
             return factory.create(dependencies: dependencies)
         }
+    }
+}
+
+private final class WatchAssembly: Assembly {
+    func assemble(container: Container) {
+        container.register(WatchSyncService.self) { r in
+            let ruuviUser = r.resolve(RuuviUser.self)!
+            let cloudSyncDaemon = r.resolve(RuuviDaemonCloudSync.self)!
+            return WatchSyncService(
+                ruuviUser: ruuviUser,
+                refreshHandler: { cloudSyncDaemon.refreshLatestRecord() }
+            )
+        }.inObjectScope(.container)
     }
 }
 

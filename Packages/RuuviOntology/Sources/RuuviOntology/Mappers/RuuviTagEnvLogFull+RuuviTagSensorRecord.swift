@@ -1,3 +1,4 @@
+#if canImport(BTKit)
 import BTKit
 import Humidity
 
@@ -63,3 +64,4 @@ extension RuuviTagEnvLogFull {
         )
     }
 }
+#endif

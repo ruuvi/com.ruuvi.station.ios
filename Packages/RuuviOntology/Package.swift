@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "RuuviOntology",
-    platforms: [.macOS(.v10_15), .iOS(.v14)],
+    platforms: [.macOS(.v10_15), .iOS(.v14), .watchOS(.v9)],
     products: [
         .library(
             name: "RuuviOntology",
@@ -26,7 +26,7 @@ let package = Package(
             name: "RuuviOntology",
             dependencies: [
                 "Humidity",
-                "BTKit",
+                .product(name: "BTKit", package: "BTKit", condition: .when(platforms: [.macOS, .iOS])),
             ]
         ),
         .target(

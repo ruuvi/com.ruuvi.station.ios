@@ -1,4 +1,6 @@
+#if canImport(UIKit)
 import UIKit
+#endif
 
 // TODO: Remove this when legacy menu is removed
 public enum CardsMenuMode {

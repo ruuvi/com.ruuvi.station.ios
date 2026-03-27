@@ -161,6 +161,7 @@ include:
 - Modules/RuuviFirmware/target.yml
 - Apps/RuuviStation/target.yml
 - Apps/RuuviStation/Widgets/target.yml
+- Apps/RuuviStation/Watch/target.yml
 - Apps/RuuviStation/NotificationService/target.yml
 - Apps/RuuviStation/Intents/target.yml
 

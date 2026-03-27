@@ -1,3 +1,4 @@
+#if canImport(BTKit)
 import BTKit
 import Foundation
 import Humidity
@@ -118,3 +119,4 @@ extension RuuviTag: RuuviTagSensorRecord {
     public var humidityOffset: Double { 0.0 }
     public var pressureOffset: Double { 0.0 }
 }
+#endif

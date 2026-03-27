@@ -28,12 +28,14 @@ targets:
           CODE_SIGN_IDENTITY: "iPhone Distribution"
           PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.widgets"
           EXCLUDED_SOURCE_FILE_NAMES: "FLEX*"
-    sources: 
+    sources:
       - path: Sources/
         name: Widgets
         excludes:
         - "*.entitlements"
         - Info.plist
+      - path: ../../../Common/RuuviCardUI/Sources
+        name: RuuviCardUI
     resources:
       - path: Sources/Resources/
       - path: ../Sources/Resources/Strings/

@@ -26,6 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var cloudNotificationService: RuuviServiceCloudNotification!
     var pnManager: RuuviCorePN!
     var settings: RuuviLocalSettings!
+    var watchSyncService: WatchSyncService!
     var orientationLock = UIInterfaceOrientationMask.allButUpsideDown
 
     private var appRouter: AppRouter?
@@ -69,6 +70,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         )
 
         cloudNotificationService = r.resolve(RuuviServiceCloudNotification.self)
+
+        watchSyncService = r.resolve(WatchSyncService.self)
+        watchSyncService.start()
 
         #if (DEBUG || ALPHA) && canImport(FLEX)
             FLEXManager.shared.registerGlobalEntry(

@@ -55,5 +55,12 @@ final class RuuviUserCoordinator: RuuviUser {
         email = nil
         apiKey = nil
         isAuthorized = false
+        NotificationCenter
+            .default
+            .post(
+                name: .RuuviUserDidLogout,
+                object: self,
+                userInfo: nil
+            )
     }
 }

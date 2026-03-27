@@ -1,0 +1,42 @@
+---
+targets:
+  station.watchapp:
+    type: application
+    platform: watchOS
+    deploymentTarget: "9.0"
+    sources:
+      - path: Sources
+        name: WatchApp
+        excludes:
+          - "*.entitlements"
+      - path: ../../../Common/RuuviCardUI/Sources
+        name: RuuviCardUI
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: Ruuvi Watch
+        CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UIAppFonts: [Oswald-Bold.ttf,Oswald-Regular.ttf,Oswald-Light.ttf,Oswald-ExtraLight.ttf,Mulish-Regular.ttf,Mulish-Bold.ttf,Mulish-SemiBoldItalic.ttf,Mulish-ExtraBold.ttf,Montserrat-Bold.ttf,Montserrat-Regular.ttf,Montserrat-ExtraBold.ttf]
+        WKCompanionAppBundleIdentifier: com.ruuvi.station
+        WKApplication: true
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ruuvi.station.watchapp
+        TARGETED_DEVICE_FAMILY: 4
+        SKIP_INSTALL: YES
+        CODE_SIGN_ENTITLEMENTS: Apps/RuuviStation/Watch/Sources/RuuviWatch.entitlements
+        MARKETING_VERSION: "$(MARKETING_VERSION)"
+        CURRENT_PROJECT_VERSION: "$(CURRENT_PROJECT_VERSION)"
+      configs:
+        Alpha:
+          CODE_SIGN_IDENTITY: "iPhone Distribution"
+          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.watchapp"
+        Debug:
+          CODE_SIGN_STYLE: Automatic
+        Release:
+          CODE_SIGN_IDENTITY: "iPhone Distribution"
+          PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.watchapp"
+    resources:
+      - path: ../Sources/Resources/Fonts/

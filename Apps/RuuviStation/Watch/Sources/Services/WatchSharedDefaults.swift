@@ -1,9 +1,8 @@
 import Foundation
 
-enum AppGroupConstants {
-    static let appGroupSuiteIdentifier = "group.com.ruuvi.station.widgets"
-    static let isAuthorizedUDKey = "RuuviUserCoordinator.isAuthorizedUDKey"
-    static let hasCloudSensorsKey = "hasCloudSensorsKey"
+enum WatchSharedDefaults {
+    static let suiteName = "group.com.ruuvi.station.widgets"
+    static let watchApiKeyKey = "watch.apiKey"
     static let languageKey = "languageKey"
     static let temperatureUnitKey = "temperatureUnitKey"
     static let temperatureAccuracyKey = "temperatureAccuracyKey"
@@ -12,10 +11,8 @@ enum AppGroupConstants {
     static let pressureUnitKey = "pressureUnitKey"
     static let pressureAccuracyKey = "pressureAccuracyKey"
     static let useDevServerKey = "useDevServerKey"
-    static let widgetRefreshIntervalKey = "widgetRefreshIntervalKey"
-    static let forceRefreshWidgetKey = "forceRefreshWidgetKey"
-    static let watchApiKeyKey = "watch.apiKey"
-    static let watchSyncedSettingsKeys = [
+
+    static let syncedSettingKeys = [
         languageKey,
         temperatureUnitKey,
         temperatureAccuracyKey,

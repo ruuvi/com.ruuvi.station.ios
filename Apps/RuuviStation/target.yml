@@ -13,6 +13,8 @@ targets:
       - target: "station.widgets"
       - target: "station.intents"
       - target: "station.pnservice"
+      - target: "station.watchapp"
+        embed: true
       - package: BTKit
       - package: DGCharts
       - package: GRDB
