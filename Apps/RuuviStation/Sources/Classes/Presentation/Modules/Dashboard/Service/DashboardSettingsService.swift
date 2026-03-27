@@ -122,12 +122,16 @@ class DashboardSettingsService {
 
     func updateDashboardType(_ type: DashboardType) {
         settings.dashboardType = type
-        ruuviAppSettingsService.set(dashboardType: type)
+        Task {
+            _ = try? await ruuviAppSettingsService.set(dashboardType: type)
+        }
     }
 
     func updateDashboardTapAction(_ type: DashboardTapActionType) {
         settings.dashboardTapActionType = type
-        ruuviAppSettingsService.set(dashboardTapActionType: type)
+        Task {
+            _ = try? await ruuviAppSettingsService.set(dashboardTapActionType: type)
+        }
     }
 
     func updateShowFullSensorCardOnDashboardTap(_ show: Bool) {
@@ -136,12 +140,16 @@ class DashboardSettingsService {
 
     func updateSensorOrder(_ orderedIds: [String]) {
         settings.dashboardSensorOrder = orderedIds
-        ruuviAppSettingsService.set(dashboardSensorOrder: orderedIds)
+        Task {
+            _ = try? await ruuviAppSettingsService.set(dashboardSensorOrder: orderedIds)
+        }
     }
 
     func resetSensorOrder() {
         settings.dashboardSensorOrder = []
-        ruuviAppSettingsService.set(dashboardSensorOrder: [])
+        Task {
+            _ = try? await ruuviAppSettingsService.set(dashboardSensorOrder: [])
+        }
     }
 
     func getCurrentDashboardSortingType() -> DashboardSortingType {

@@ -22,21 +22,29 @@ class MigrationManagerSensorSettings: RuuviMigration {
 
     func migrateIfNeeded() {
         if !didMigrateSensorSettings {
-            ruuviStorage.readAll().on(success: { ruuviTags in
-                ruuviTags.forEach { ruuviTag in
-                    if let luid = ruuviTag.luid {
-                        let pair = self.calibrationPersistence.humidityOffset(for: luid)
-                        self.ruuviOffsetCalibrationService.set(
-                            offset: pair.0 / 100.0,
-                            of: .humidity,
-                            for: ruuviTag
-                        ).on(success: { _ in
-                            self.calibrationPersistence
-                                .setHumidity(date: nil, offset: 0.0, for: luid)
-                        })
+            Task {
+                if let ruuviTags = try? await self.ruuviStorage.readAll() {
+                    ruuviTags.forEach { ruuviTag in
+                        if let luid = ruuviTag.luid {
+                            let pair = self.calibrationPersistence.humidityOffset(for: luid)
+                            Task { [weak self] in
+                                guard let self else { return }
+                                do {
+                                    _ = try await self.ruuviOffsetCalibrationService.set(
+                                        offset: pair.0 / 100.0,
+                                        of: .humidity,
+                                        for: ruuviTag
+                                    )
+                                    self.calibrationPersistence
+                                        .setHumidity(date: nil, offset: 0.0, for: luid)
+                                } catch {
+                                    return
+                                }
+                            }
+                        }
                     }
                 }
-            })
+            }
             didMigrateSensorSettings = true
         }
     }

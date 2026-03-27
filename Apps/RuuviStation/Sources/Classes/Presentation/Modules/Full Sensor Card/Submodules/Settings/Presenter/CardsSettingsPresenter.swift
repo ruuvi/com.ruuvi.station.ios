@@ -657,7 +657,11 @@ extension CardsSettingsPresenter {
 
             if case let .success(version) = result {
                 let updatedTag = currentSensor.with(firmwareVersion: version)
-                self.ruuviPool?.update(updatedTag)
+                if let ruuviPool = self.ruuviPool {
+                    Task {
+                        _ = try? await ruuviPool.update(updatedTag)
+                    }
+                }
                 self.sensor = updatedTag.any
             }
 
@@ -816,19 +820,24 @@ private extension CardsSettingsPresenter {
         }()
 
         activityPresenter.show(with: .loading(message: nil))
-        ruuviSensorPropertiesService.updateDescription(
-            for: sensor,
-            description: value
-        ).on(success: { [weak self] settings in
-            self?.sensorSettings = settings
-            self?.refreshNotesSummary()
-            completion(.success(()))
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-            completion(.failure(error))
-        }, completion: { [weak self] in
-            self?.activityPresenter.dismiss()
-        })
+        Task { [weak self] in
+            defer {
+                self?.activityPresenter.dismiss()
+            }
+            do {
+                let settings = try await self?.ruuviSensorPropertiesService.updateDescription(
+                    for: sensor,
+                    description: value
+                )
+                guard let self, let settings else { return }
+                self.sensorSettings = settings
+                self.refreshNotesSummary()
+                completion(.success(()))
+            } catch {
+                self?.errorPresenter.present(error: error)
+                completion(.failure(error))
+            }
+        }
     }
 
     func withAlertService(

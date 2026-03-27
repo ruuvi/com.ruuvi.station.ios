@@ -1,5 +1,4 @@
 import Foundation
-import Future
 import RuuviCloud
 import RuuviCore
 import RuuviLocal
@@ -28,6 +27,16 @@ final class MyRuuviAccountPresenter: MyRuuviAccountModuleInput {
     var settings: RuuviLocalSettings!
     var flags: RuuviLocalFlags!
     var mailComposerPresenter: MailComposerPresenter!
+
+    private var deleteAccountTask: Task<Void, Never>?
+    private var signOutTask: Task<Void, Never>?
+    private var marketingPreferenceTask: Task<Void, Never>?
+
+    deinit {
+        deleteAccountTask?.cancel()
+        signOutTask?.cancel()
+        marketingPreferenceTask?.cancel()
+    }
 }
 
 // MARK: - MyRuuviAccountViewOutput
@@ -40,16 +49,24 @@ extension MyRuuviAccountPresenter: MyRuuviAccountViewOutput {
     func viewDidTapDeleteButton() {
         guard let email = ruuviUser.email?.lowercased() else { return }
         activityPresenter.show(with: .loading(message: nil))
-        ruuviCloud.deleteAccount(email: email).on(success: {
-            [weak self] _ in
-            self?.activityPresenter.update(with: .success(message: nil))
-            self?.view.viewDidShowAccountDeletionConfirmation()
-        }, failure: { [weak self] error in
-            self?.activityPresenter.update(with: .failed(message: nil))
-            self?.errorPresenter.present(error: error)
-        }, completion: { [weak self] in
-            self?.activityPresenter.dismiss(immediately: false)
-        })
+        deleteAccountTask?.cancel()
+        deleteAccountTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            defer {
+                self.activityPresenter.dismiss(immediately: false)
+            }
+            do {
+                _ = try await self.ruuviCloud.deleteAccount(email: email)
+                self.activityPresenter.update(with: .success(message: nil))
+                self.view.viewDidShowAccountDeletionConfirmation()
+            } catch let error as RuuviCloudError {
+                self.activityPresenter.update(with: .failed(message: nil))
+                self.errorPresenter.present(error: error)
+            } catch {
+                self.activityPresenter.update(with: .failed(message: nil))
+                self.errorPresenter.present(error: RuuviCloudError.api(.networking(error)))
+            }
+        }
     }
 
     func viewDidTapSignoutButton() {
@@ -66,7 +83,10 @@ extension MyRuuviAccountPresenter: MyRuuviAccountViewOutput {
 
     func viewDidChangeMarketingPreference(isEnabled: Bool) {
         settings.marketingPreference = isEnabled
-        ruuviAppSettingsService.set(marketingPreference: isEnabled)
+        marketingPreferenceTask?.cancel()
+        marketingPreferenceTask = Task {
+            _ = try? await ruuviAppSettingsService.set(marketingPreference: isEnabled)
+        }
     }
 }
 
@@ -96,26 +116,28 @@ extension MyRuuviAccountPresenter {
         ) { [weak self] _ in
             guard let sSelf = self else { return }
             sSelf.activityPresenter.show(with: .loading(message: nil))
-            if let token = sSelf.pnManager.fcmToken, !token.isEmpty {
-                sSelf.cloudNotificationService.unregister(
-                    token: token,
-                    tokenId: nil
-                ).on(success: { _ in
+            self?.signOutTask?.cancel()
+            self?.signOutTask = Task { @MainActor [weak self] in
+                guard let self else { return }
+                defer {
+                    self.activityPresenter.dismiss()
+                }
+                if let token = sSelf.pnManager.fcmToken, !token.isEmpty {
+                    _ = try? await sSelf.cloudNotificationService.unregister(
+                        token: token,
+                        tokenId: nil
+                    )
                     sSelf.pnManager.fcmToken = nil
                     sSelf.pnManager.fcmTokenLastRefreshed = nil
                     sSelf.activityPresenter.update(with: .success(message: nil))
-                })
-            }
+                }
 
-            sSelf.authService.logout()
-                .on(success: { _ in
-                    sSelf.settings.cloudModeEnabled = false
-                    sSelf.viewDidTriggerClose()
-                    sSelf.syncViewModel()
-                    sSelf.reloadWidgets()
-                }, completion: { [weak self] in
-                    self?.activityPresenter.dismiss()
-                })
+                _ = try? await self.authService.logout()
+                sSelf.settings.cloudModeEnabled = false
+                sSelf.viewDidTriggerClose()
+                sSelf.syncViewModel()
+                sSelf.reloadWidgets()
+            }
         }
         let cancleAction = UIAlertAction(
             title: cancelActionTitle,

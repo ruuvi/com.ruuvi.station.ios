@@ -1,5 +1,4 @@
 import Foundation
-import Future
 
 public extension Notification.Name {
     static let RuuviTagHeartbeatDaemonDidFail = Notification.Name("RuuviTagHeartbeatDaemonDidFail")

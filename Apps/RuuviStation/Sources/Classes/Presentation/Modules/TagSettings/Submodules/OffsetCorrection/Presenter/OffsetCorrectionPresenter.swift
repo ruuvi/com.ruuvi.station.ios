@@ -41,9 +41,10 @@ final class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
                 type: type,
                 sensorSettings: self.sensorSettings
             )
-            ruuviStorage.readLatest(ruuviTag).on { [weak self] record in
-                if let record {
-                    self?.lastSensorRecord = record
+            Task { [weak self] in
+                guard let self else { return }
+                if let record = try? await self.ruuviStorage.readLatest(ruuviTag) {
+                    self.lastSensorRecord = record
                     vm.update(
                         ruuviTagRecord: record
                             .with(sensorSettings: sensorSettings)
@@ -103,46 +104,52 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
                 offset = correctValue - view.viewModel.originalValue.value.bound
             }
         }
-        ruuviOffsetCalibrationService.set(
-            offset: offset,
-            of: view.viewModel.type,
-            for: ruuviTag,
-            lastOriginalRecord: lastSensorRecord
-        )
-        .on(success: { [weak self] settings in
-            self?.sensorSettings = settings
-            self?.view.viewModel.update(sensorSettings: settings)
-            if let lastRecord = self?.lastSensorRecord {
-                self?.view.viewModel.update(
-                    ruuviTagRecord: lastRecord.with(sensorSettings: settings)
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let settings = try await self.ruuviOffsetCalibrationService.set(
+                    offset: offset,
+                    of: self.view.viewModel.type,
+                    for: self.ruuviTag,
+                    lastOriginalRecord: self.lastSensorRecord
                 )
+                self.sensorSettings = settings
+                self.view.viewModel.update(sensorSettings: settings)
+                if let lastRecord = self.lastSensorRecord {
+                    self.view.viewModel.update(
+                        ruuviTagRecord: lastRecord.with(sensorSettings: settings)
+                    )
+                }
+                self.notifyCalibrationSettingsUpdate()
+            } catch {
+                self.errorPresenter.present(error: error)
             }
-            self?.notifyCalibrationSettingsUpdate()
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        }
     }
 
     func viewDidClearOffsetValue() {
-        ruuviOffsetCalibrationService.set(
-            offset: nil,
-            of: view.viewModel.type,
-            for: ruuviTag,
-            lastOriginalRecord: lastSensorRecord
-        )
-        .on(success: { [weak self] sensorSettings in
-            self?.sensorSettings = sensorSettings
-            self?.view.viewModel.update(sensorSettings: sensorSettings)
-            if let lastRecord = self?.lastSensorRecord {
-                self?.view.viewModel.update(
-                    ruuviTagRecord: lastRecord
-                        .with(sensorSettings: sensorSettings)
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let sensorSettings = try await self.ruuviOffsetCalibrationService.set(
+                    offset: nil,
+                    of: self.view.viewModel.type,
+                    for: self.ruuviTag,
+                    lastOriginalRecord: self.lastSensorRecord
                 )
+                self.sensorSettings = sensorSettings
+                self.view.viewModel.update(sensorSettings: sensorSettings)
+                if let lastRecord = self.lastSensorRecord {
+                    self.view.viewModel.update(
+                        ruuviTagRecord: lastRecord
+                            .with(sensorSettings: sensorSettings)
+                    )
+                }
+                self.notifyCalibrationSettingsUpdate()
+            } catch {
+                self.errorPresenter.present(error: error)
             }
-            self?.notifyCalibrationSettingsUpdate()
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        }
     }
 
     private func notifyCalibrationSettingsUpdate() {

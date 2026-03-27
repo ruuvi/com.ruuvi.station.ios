@@ -123,7 +123,9 @@ class RuuviCloudService {
 
             if self.settings.historySyncOnDashboard &&
                (!self.settings.historySyncLegacy || !self.settings.historySyncForEachSensor) {
-                self.cloudSyncService.syncAllHistory()
+                Task {
+                    _ = try? await self.cloudSyncService.syncAllHistory()
+                }
             }
         }
     }
@@ -145,16 +147,18 @@ class RuuviCloudService {
 
         // Unregister push notifications
         if let token = pnManager.fcmToken, !token.isEmpty {
-            cloudNotificationService.unregister(token: token, tokenId: nil)
-                .on(success: { [weak self] _ in
-                    self?.pnManager.fcmToken = nil
-                    self?.pnManager.fcmTokenLastRefreshed = nil
-                })
+            Task { [weak self] in
+                guard let self else { return }
+                _ = try? await self.cloudNotificationService.unregister(token: token, tokenId: nil)
+                self.pnManager.fcmToken = nil
+                self.pnManager.fcmTokenLastRefreshed = nil
+            }
         }
 
         // Perform logout
-        authService.logout()
-            .on(success: { [weak self] _ in
+        Task { [weak self] in
+            do {
+                _ = try await self?.authService.logout()
                 guard let self = self else { return }
 
                 // Stop observing cloud mode state to avoid simultaneous access
@@ -169,12 +173,11 @@ class RuuviCloudService {
 
                 // Restart cloud mode observation
                 self.observeCloudModeChanges()
-
-            }, completion: { [weak self] in
-                // Logout completed
+            } catch {
                 guard let self = self else { return }
                 self.delegate?.ruuviCloudService(self, authorizationFailed: true)
-            })
+            }
+        }
     }
 }
 

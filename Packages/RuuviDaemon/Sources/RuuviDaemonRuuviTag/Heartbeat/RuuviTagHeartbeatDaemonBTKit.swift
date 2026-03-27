@@ -216,11 +216,14 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
     }
 
     public func restart() {
-        ruuviStorage.readAll().on(success: { [weak self] sensors in
-            self?.ruuviTags = sensors
-            self?.handleRuuviTagsChange()
-            self?.restartObserving()
-        })
+        Task { [weak self] in
+            guard let self else { return }
+            if let sensors = try? await self.ruuviStorage.readAll() {
+                self.ruuviTags = sensors
+                self.handleRuuviTagsChange()
+                self.restartObserving()
+            }
+        }
     }
 
     @objc private func stopDaemon() {
@@ -406,10 +409,11 @@ extension RuuviTagHeartbeatDaemonBTKit {
         if ruuviTag.version == 0x06 {
             createLastRecord(observer: observer, ruuviTag: ruuviTag, uuid: uuid, source: source)
         } else {
-            observer.ruuviPool.create(ruuviTag.with(source: source)).on(
-                success: { [weak self] _ in
+            Task { [weak self] in
+                if (try? await observer.ruuviPool.create(ruuviTag.with(source: source))) != nil {
                     self?.createLastRecord(observer: observer, ruuviTag: ruuviTag, uuid: uuid, source: source)
-                })
+                }
+            }
         }
     }
 
@@ -421,7 +425,9 @@ extension RuuviTagHeartbeatDaemonBTKit {
         source: RuuviTagSensorRecordSource
     ) {
         let record = ruuviTag.with(source: source)
-        observer.ruuviPool.createLast(record)
+        Task {
+            _ = try? await observer.ruuviPool.createLast(record)
+        }
     }
 }
 
@@ -474,13 +480,18 @@ extension RuuviTagHeartbeatDaemonBTKit {
         }
         sensorSettingsList.removeAll()
         sensorSettingsByLuid.removeAll()
-        ruuviTags.forEach { ruuviTag in
-            ruuviStorage.readSensorSettings(ruuviTag).on { [weak self] sensorSettings in
-                if let sensorSettings {
-                    self?.sensorSettingsList.append(sensorSettings)
-                    if let luid = sensorSettings.luid?.any {
-                        self?.sensorSettingsByLuid[luid] = sensorSettings
+        Task { [weak self] in
+            guard let self else { return }
+            for ruuviTag in self.ruuviTags {
+                do {
+                    if let sensorSettings = try await self.ruuviStorage.readSensorSettings(ruuviTag) {
+                        self.sensorSettingsList.append(sensorSettings)
+                        if let luid = sensorSettings.luid?.any {
+                            self.sensorSettingsByLuid[luid] = sensorSettings
+                        }
                     }
+                } catch {
+                    continue
                 }
             }
         }

@@ -6,7 +6,7 @@ import RuuviService
 import RuuviStorage
 import UIKit
 
-final class RuuviMigrationFixRHAlerts: RuuviMigration {
+final class RuuviMigrationFixRHAlerts: RuuviMigration, @unchecked Sendable {
     private let ruuviStorage: RuuviStorage
     private let ruuviAlertService: RuuviServiceAlert
     private let queue = DispatchQueue(label: "RuuviMigrationFixRHAlerts", qos: .utility)
@@ -23,8 +23,8 @@ final class RuuviMigrationFixRHAlerts: RuuviMigration {
     func migrateIfNeeded() {
         guard !UserDefaults.standard.bool(forKey: migratedUdKey) else { return }
         queue.async {
-            self.ruuviStorage.readAll()
-                .on(success: { sensors in
+            Task {
+                if let sensors = try? await self.ruuviStorage.readAll() {
                     sensors.forEach { sensor in
                         if let lower = self.ruuviAlertService.lowerRelativeHumidity(for: sensor),
                            lower > 1.0 {
@@ -40,7 +40,8 @@ final class RuuviMigrationFixRHAlerts: RuuviMigration {
                             )
                         }
                     }
-                })
+                }
+            }
         }
         UserDefaults.standard.set(true, forKey: migratedUdKey)
     }

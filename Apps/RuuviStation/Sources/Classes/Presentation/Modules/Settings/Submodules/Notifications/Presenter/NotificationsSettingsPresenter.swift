@@ -81,7 +81,9 @@ extension NotificationsSettingsPresenter {
         bind(viewModel.boolean, fire: false) { observer, enabled in
             let alertDisabled = !GlobalHelpers.getBool(from: enabled)
             observer.settings.emailAlertDisabled = alertDisabled
-            observer.ruuviAppSettingsService.set(disableEmailAlert: alertDisabled)
+            Task {
+                _ = try? await observer.ruuviAppSettingsService.set(disableEmailAlert: alertDisabled)
+            }
         }
 
         return viewModel
@@ -99,7 +101,9 @@ extension NotificationsSettingsPresenter {
         bind(viewModel.boolean, fire: false) { observer, enabled in
             let alertDisabled = !GlobalHelpers.getBool(from: enabled)
             observer.settings.pushAlertDisabled = alertDisabled
-            observer.ruuviAppSettingsService.set(disablePushAlert: alertDisabled)
+            Task {
+                _ = try? await observer.ruuviAppSettingsService.set(disablePushAlert: alertDisabled)
+            }
         }
 
         return viewModel
@@ -143,11 +147,13 @@ extension NotificationsSettingsPresenter {
                     self?.configure()
                     guard let sSelf = self else { return }
                     DispatchQueue.main.async {
-                        sSelf.cloudNotificationService.set(
-                            sound: sSelf.settings.alertSound,
-                            language: sSelf.settings.language,
-                            deviceName: UIDevice.modelName
-                        )
+                        Task {
+                            _ = try? await sSelf.cloudNotificationService.set(
+                                sound: sSelf.settings.alertSound,
+                                language: sSelf.settings.language,
+                                deviceName: UIDevice.modelName
+                            )
+                        }
                     }
                 }
             )

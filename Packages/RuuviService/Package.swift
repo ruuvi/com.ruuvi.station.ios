@@ -65,13 +65,12 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
         .package(url: "https://github.com/rinat-enikeev/Humidity", from: "0.1.5"),
         .package(url: "https://github.com/ruuvi/BTKit", branch: "master"),
         .package(url: "https://github.com/ruuvi/xlsxwriter.swift", branch: "SPM"),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviStorage"),
-        .package(path: "../RuuviLocalization"),
+        .package(path: "../../Common/RuuviLocalization"),
         .package(path: "../RuuviCloud"),
         .package(path: "../RuuviPool"),
         .package(path: "../RuuviLocal"),
@@ -82,7 +81,6 @@ let package = Package(
         .target(
             name: "RuuviService",
             dependencies: [
-                "Future",
                 "RuuviOntology",
                 "RuuviStorage",
                 "RuuviCloud",

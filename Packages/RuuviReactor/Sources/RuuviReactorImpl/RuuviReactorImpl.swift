@@ -1,5 +1,4 @@
 import Foundation
-import Future
 import GRDB
 import RuuviAnalytics
 import RuuviContext
@@ -78,14 +77,16 @@ class RuuviReactorImpl: RuuviReactor {
     }
 
     func observe(_ block: @escaping (RuuviReactorChange<AnyRuuviTagSensor>) -> Void) -> RuuviReactorToken {
-        let sqliteOperation = sqlitePersistence.readAll()
-        sqliteOperation
-            .on(success: { sqliteEntities in
-                let combinedValues = sqliteEntities
+        Task {
+            do {
+                let combinedValues = try await sqlitePersistence.readAll()
                 block(.initial(combinedValues))
-            }, failure: { error in
+            } catch let error as RuuviPersistenceError {
                 block(.error(.ruuviPersistence(error)))
-            })
+            } catch {
+                block(.error(.ruuviPersistence(.grdb(error))))
+            }
+        }
 
         let insert = entityCombine.insertSubject.sink { value in
             block(.insert(value))
@@ -107,12 +108,12 @@ class RuuviReactorImpl: RuuviReactor {
         _ ruuviTag: RuuviTagSensor,
         _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void
     ) -> RuuviReactorToken {
-        let sqliteOperation = sqlitePersistence.readLast(ruuviTag)
-        sqliteOperation
-            .on(success: { sqliteRecord in
+        Task {
+            if let sqliteRecord = try? await sqlitePersistence.readLast(ruuviTag) {
                 let result = [sqliteRecord].compactMap { $0?.any }.last
                 block(.update(result))
-            })
+            }
+        }
         let recordCombine: RuuviTagLastRecordSubjectCombine = synchronized {
             if let combine = lastRecordCombines[ruuviTag.id] {
                 return combine
@@ -150,11 +151,12 @@ class RuuviReactorImpl: RuuviReactor {
         _ ruuviTag: RuuviTagSensor,
         _ block: @escaping (RuuviReactorChange<AnyRuuviTagSensorRecord?>) -> Void
     ) -> RuuviReactorToken {
-        let sqliteOperation = sqlitePersistence.readLatest(ruuviTag)
-        sqliteOperation.on(success: { sqliteRecord in
-            let result = [sqliteRecord].compactMap { $0?.any }.last
-            block(.update(result))
-        })
+        Task {
+            if let sqliteRecord = try? await sqlitePersistence.readLatest(ruuviTag) {
+                let result = [sqliteRecord].compactMap { $0?.any }.last
+                block(.update(result))
+            }
+        }
         let recordCombine: RuuviTagLatestRecordSubjectCombine = synchronized {
             if let combine = latestRecordCombines[ruuviTag.id] {
                 return combine
@@ -192,8 +194,8 @@ class RuuviReactorImpl: RuuviReactor {
         _ ruuviTag: RuuviTagSensor,
         _ block: @escaping (RuuviReactorChange<SensorSettings>) -> Void
     ) -> RuuviReactorToken {
-        sqlitePersistence.readSensorSettings(ruuviTag).on { sqliteRecord in
-            if let sensorSettings = sqliteRecord {
+        Task {
+            if let sensorSettings = try? await sqlitePersistence.readSensorSettings(ruuviTag) {
                 block(.initial([sensorSettings]))
             }
         }

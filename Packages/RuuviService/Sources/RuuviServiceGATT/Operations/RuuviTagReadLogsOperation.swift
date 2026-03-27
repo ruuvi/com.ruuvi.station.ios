@@ -3,7 +3,7 @@ import Foundation
 import RuuviOntology
 import RuuviPool
 
-final class RuuviTagReadLogsOperation: AsyncOperation {
+final class RuuviTagReadLogsOperation: AsyncOperation, @unchecked Sendable {
     var uuid: String
     var mac: String?
     var firmware: Int
@@ -70,15 +70,22 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
                         .with(source: .log)
                         .any
                     }
-                    let opLogs = observer.ruuviPool.create(records)
-                    opLogs.on(success: { _ in
-                        observer.post(logs: logs, with: observer.uuid)
-                        observer.state = .finished
-                    }, failure: { error in
-                        observer.post(error: error, with: observer.uuid)
-                        observer.error = .ruuviPool(error)
-                        observer.state = .finished
-                    })
+                    Task {
+                        do {
+                            _ = try await observer.ruuviPool.create(records)
+                            observer.post(logs: logs, with: observer.uuid)
+                            observer.state = .finished
+                        } catch let error as RuuviPoolError {
+                            observer.post(error: error, with: observer.uuid)
+                            observer.error = .ruuviPool(error)
+                            observer.state = .finished
+                        } catch {
+                            let poolError = RuuviPoolError.ruuviPersistence(.grdb(error))
+                            observer.post(error: poolError, with: observer.uuid)
+                            observer.error = .ruuviPool(poolError)
+                            observer.state = .finished
+                        }
+                    }
                 }
             case let .failure(error):
                 observer.post(error: error, with: observer.uuid)

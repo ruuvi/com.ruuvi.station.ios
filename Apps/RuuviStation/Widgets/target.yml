@@ -40,7 +40,6 @@ targets:
     dependencies:
       - package: Swinject
       - package: BTKit
-      - package: Future
       - package: GRDB
       - package: Humidity
       - package: KeychainAccess

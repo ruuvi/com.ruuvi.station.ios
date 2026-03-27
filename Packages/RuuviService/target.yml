@@ -7,7 +7,6 @@ targets:
     - path: Sources
       name: Service
     dependencies:
-    - package: Future
     - package: Humidity
     - package: BTKit
     - package: xlsxwriter

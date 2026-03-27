@@ -1,9 +1,44 @@
 // swiftlint:disable file_length
 import Foundation
-import Future
 import RuuviCloud
 import RuuviLocal
 import RuuviOntology
+
+private struct RuuviCloudAlertBridge {
+    private let cloud: RuuviCloud
+
+    init(cloud: RuuviCloud) {
+        self.cloud = cloud
+    }
+
+    @discardableResult
+    // swiftlint:disable:next function_parameter_count
+    func setAlert(
+        type: RuuviCloudAlertType,
+        settingType: RuuviCloudAlertSettingType,
+        isEnabled: Bool,
+        min: Double?,
+        max: Double?,
+        counter: Int?,
+        delay: Int?,
+        description: String?,
+        for macId: MACIdentifier
+    ) -> Task<Void, Never> {
+        Task {
+            try? await cloud.setAlert(
+                type: type,
+                settingType: settingType,
+                isEnabled: isEnabled,
+                min: min,
+                max: max,
+                counter: counter,
+                delay: delay,
+                description: description,
+                for: macId
+            )
+        }
+    }
+}
 
 // MARK: - RuuviTag
 
@@ -1647,7 +1682,7 @@ public extension RuuviServiceAlertImpl {
 
 // swiftlint:disable:next type_body_length
 public final class RuuviServiceAlertImpl: RuuviServiceAlert {
-    private let cloud: RuuviCloud
+    private let cloud: RuuviCloudAlertBridge
     private let alertPersistence: AlertPersistence
     private let localIDs: RuuviLocalIDs
     private var ruuviLocalSettings: RuuviLocalSettings
@@ -1657,7 +1692,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
         localIDs: RuuviLocalIDs,
         ruuviLocalSettings: RuuviLocalSettings
     ) {
-        self.cloud = cloud
+        self.cloud = RuuviCloudAlertBridge(cloud: cloud)
         self.localIDs = localIDs
         self.ruuviLocalSettings = ruuviLocalSettings
         alertPersistence = AlertPersistenceUserDefaults()

@@ -1,4 +1,3 @@
-import Future
 import RuuviOntology
 import UIKit
 
@@ -33,10 +32,7 @@ public protocol RuuviLocalImages {
         image: UIImage,
         compressionQuality: CGFloat,
         for identifier: Identifier
-    ) -> Future<
-        URL,
-        RuuviLocalError
-    >
+    ) async throws -> URL
     func deleteCustomBackground(for uuid: Identifier)
 
     func backgroundUploadProgress(for identifier: Identifier) -> Double?

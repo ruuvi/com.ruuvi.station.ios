@@ -91,10 +91,14 @@ final class FirmwareInteractor {
             .eraseToAnyPublisher()
     }
 
-    func serveCurrentRelease(uuid: String) -> Future<CurrentRelease, Error> {
-        Future { [weak self] promise in
-            guard let self else { return }
-            background.services.gatt.firmwareRevision(
+    func serveCurrentRelease(uuid: String) -> AnyPublisher<CurrentRelease, Error> {
+        Deferred { [weak self] () -> AnyPublisher<CurrentRelease, Error> in
+            let subject = PassthroughSubject<CurrentRelease, Error>()
+            guard let self else {
+                subject.send(completion: .failure(CancellationError()))
+                return subject.eraseToAnyPublisher()
+            }
+            self.background.services.gatt.firmwareRevision(
                 for: self,
                 uuid: uuid,
                 options: [
@@ -105,13 +109,15 @@ final class FirmwareInteractor {
                 switch result {
                 case let .success(version):
                     let sanitizedVersion = version.ruuviFirmwareDisplayValue
-                    let currentRelease = CurrentRelease(version: sanitizedVersion)
-                    promise(.success(currentRelease))
+                    subject.send(CurrentRelease(version: sanitizedVersion))
+                    subject.send(completion: .finished)
                 case let .failure(error):
-                    promise(.failure(error))
+                    subject.send(completion: .failure(error))
                 }
             }
+            return subject.eraseToAnyPublisher()
         }
+        .eraseToAnyPublisher()
     }
 
     func download(release: GitHubRelease) -> AnyPublisher<FirmwareDownloadResponse, Error> {
@@ -168,24 +174,36 @@ final class FirmwareInteractor {
             .eraseToAnyPublisher()
     }
 
-    func listen() -> Future<String, Never> {
-        Future { [weak self] promise in
-            guard let self else { return }
-            ruuviDFU.scan(self, includeScanServices: false) { _, device in
-                promise(.success(device.uuid))
+    func listen() -> AnyPublisher<String, Never> {
+        Deferred { [weak self] () -> AnyPublisher<String, Never> in
+            let subject = PassthroughSubject<String, Never>()
+            guard let self else {
+                return Empty().eraseToAnyPublisher()
             }
+            self.ruuviDFU.scan(self, includeScanServices: false) { _, device in
+                subject.send(device.uuid)
+                subject.send(completion: .finished)
+            }
+            return subject.eraseToAnyPublisher()
         }
+        .eraseToAnyPublisher()
     }
 
-    func observeLost(uuid: String) -> Future<String, Never> {
-        Future { [weak self] promise in
-            guard let self else { return }
-            ruuviDFU.lost(self, closure: { _, device in
+    func observeLost(uuid: String) -> AnyPublisher<String, Never> {
+        Deferred { [weak self] () -> AnyPublisher<String, Never> in
+            let subject = PassthroughSubject<String, Never>()
+            guard let self else {
+                return Empty().eraseToAnyPublisher()
+            }
+            self.ruuviDFU.lost(self, closure: { _, device in
                 if device.uuid == uuid {
-                    promise(.success(uuid))
+                    subject.send(uuid)
+                    subject.send(completion: .finished)
                 }
             })
+            return subject.eraseToAnyPublisher()
         }
+        .eraseToAnyPublisher()
     }
 
     func flash(

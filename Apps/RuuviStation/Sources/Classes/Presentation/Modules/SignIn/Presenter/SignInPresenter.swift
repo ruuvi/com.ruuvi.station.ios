@@ -1,6 +1,5 @@
 import FirebaseMessaging
 import Foundation
-import Future
 import RuuviCloud
 import RuuviDaemon
 import RuuviLocal
@@ -36,6 +35,12 @@ class SignInPresenter: NSObject {
     private var currentRetryCount: Int = 0
     private var state: State = .enterEmail
     private var universalLinkObservationToken: NSObjectProtocol?
+    private var requestCodeTask: Task<Void, Never>?
+    private var verifyCodeTask: Task<Void, Never>?
+    private var syncAllRecordsTask: Task<Void, Never>?
+    private var refreshLatestRecordTask: Task<Void, Never>?
+    private var logoutTask: Task<Void, Never>?
+    private var registerTokenTask: Task<Void, Never>?
     private var viewModel: SignInViewModel! {
         didSet {
             view.viewModel = viewModel
@@ -43,6 +48,12 @@ class SignInPresenter: NSObject {
     }
 
     deinit {
+        requestCodeTask?.cancel()
+        verifyCodeTask?.cancel()
+        syncAllRecordsTask?.cancel()
+        refreshLatestRecordTask?.cancel()
+        logoutTask?.cancel()
+        registerTokenTask?.cancel()
         universalLinkObservationToken?.invalidate()
         NotificationCenter.default.removeObserver(self)
     }
@@ -95,10 +106,13 @@ extension SignInPresenter: SignInViewOutput {
     }
 
     func viewDidTapOkFromUnexpectedHTTPStatusCodeError() {
-        authService.logout().on(success: { [weak self] _ in
-            self?.settings.isSyncing = false
-            self?.dismiss(completion: {})
-        })
+        logoutTask?.cancel()
+        logoutTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            _ = try? await self.authService.logout()
+            self.settings.isSyncing = false
+            self.dismiss(completion: {})
+        }
     }
 }
 
@@ -146,67 +160,91 @@ extension SignInPresenter {
 
     private func sendVerificationCode(for email: String) {
         activityPresenter.show(with: .loading(message: nil))
-        ruuviCloud.requestCode(email: email)
-            .on(success: { [weak self] email in
-                guard let sSelf = self else { return }
-                sSelf.activityPresenter.dismiss()
-                sSelf.ruuviUser.email = email
-                sSelf.viewModel.showVerficationScreen.value = true
-                sSelf.state = .enterVerificationCode(nil)
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            }, completion: { [weak self] in
-                self?.activityPresenter.dismiss()
-            })
+        requestCodeTask?.cancel()
+        requestCodeTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            defer {
+                self.activityPresenter.dismiss()
+            }
+            do {
+                let verifiedEmail = try await self.ruuviCloud.requestCode(email: email)
+                self.ruuviUser.email = verifiedEmail
+                self.viewModel.showVerficationScreen.value = true
+                self.state = .enterVerificationCode(nil)
+            } catch let error as RuuviCloudError {
+                self.errorPresenter.present(error: error)
+            } catch {
+                self.errorPresenter.present(error: RuuviCloudError.api(.networking(error)))
+            }
+        }
     }
 
     private func verify(_ code: String) {
         activityPresenter.show(with: .loading(message: RuuviLocalization.SignIn.Sync.message))
-        ruuviCloud.validateCode(code: code)
-            .on(success: { [weak self] result in
-                guard let sSelf = self else { return }
-                if sSelf.ruuviUser.email == result.email.lowercased() {
-                    if !sSelf.settings.signedInAtleastOnce {
-                        sSelf.settings.signedInAtleastOnce = true
+        verifyCodeTask?.cancel()
+        verifyCodeTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                let result = try await self.ruuviCloud.validateCode(code: code)
+                if self.ruuviUser.email == result.email.lowercased() {
+                    if !self.settings.signedInAtleastOnce {
+                        self.settings.signedInAtleastOnce = true
                     }
-                    sSelf.ruuviUser.login(apiKey: result.apiKey)
-                    sSelf.reloadWidgets()
-                    sSelf.state = .isSyncing
-                    sSelf.settings.isSyncing = true
-                    sSelf.settings.syncExtensiveChangesInProgress = true
-                    sSelf.registerFCMToken()
-                    sSelf.syncAllRecords()
-                } else if let requestedEmail = sSelf.ruuviUser.email {
-                    sSelf.activityPresenter.dismiss()
-                    sSelf.view.showEmailsAreDifferent(
+                    self.ruuviUser.login(apiKey: result.apiKey)
+                    self.reloadWidgets()
+                    self.state = .isSyncing
+                    self.settings.isSyncing = true
+                    self.settings.syncExtensiveChangesInProgress = true
+                    self.registerFCMToken()
+                    self.syncAllRecords()
+                } else if let requestedEmail = self.ruuviUser.email {
+                    self.activityPresenter.dismiss()
+                    self.view.showEmailsAreDifferent(
                         requestedEmail: requestedEmail,
                         validatedEmail: result.email.lowercased()
                     )
                 } else {
-                    sSelf.view.showFailedToGetRequestedEmail()
-                    sSelf.activityPresenter.dismiss()
+                    self.view.showFailedToGetRequestedEmail()
+                    self.activityPresenter.dismiss()
                 }
-            }, failure: { [weak self] error in
-                self?.activityPresenter.dismiss()
-                self?.view.showInvalidTokenEntered()
-                self?.errorPresenter.present(error: error)
-            })
+            } catch let error as RuuviCloudError {
+                self.activityPresenter.dismiss()
+                self.view.showInvalidTokenEntered()
+                self.errorPresenter.present(error: error)
+            } catch {
+                self.activityPresenter.dismiss()
+                self.view.showInvalidTokenEntered()
+                self.errorPresenter.present(error: RuuviCloudError.api(.networking(error)))
+            }
+        }
     }
 
     private func syncAllRecords() {
-        cloudSyncService.syncAllRecords().on(success: { [weak self] _ in
-            self?.executePostSuccessfullSignInAction()
-        }, failure: { [weak self] error in
-            self?.retryFetchingTheSensorsOnFailIfNeeded(from: error)
-        })
+        syncAllRecordsTask?.cancel()
+        syncAllRecordsTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await self.cloudSyncService.syncAllRecords()
+                self.executePostSuccessfullSignInAction()
+            } catch {
+                let serviceError = error as? RuuviServiceError ?? .networking(error)
+                self.retryFetchingTheSensorsOnFailIfNeeded(from: serviceError)
+            }
+        }
     }
 
     private func syncSensors() {
-        cloudSyncService.refreshLatestRecord().on(success: { [weak self] _ in
-            self?.executePostSuccessfullSignInAction()
-        }, failure: { [weak self] error in
-            self?.retryFetchingTheSensorsOnFailIfNeeded(from: error)
-        })
+        refreshLatestRecordTask?.cancel()
+        refreshLatestRecordTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                _ = try await self.cloudSyncService.refreshLatestRecord()
+                self.executePostSuccessfullSignInAction()
+            } catch {
+                let serviceError = error as? RuuviServiceError ?? .networking(error)
+                self.retryFetchingTheSensorsOnFailIfNeeded(from: serviceError)
+            }
+        }
     }
 
     private func executePostSuccessfullSignInAction() {
@@ -339,13 +377,16 @@ extension SignInPresenter {
         let sound = settings.alertSound
         let language = settings.language
         Messaging.messaging().token { [weak self] fcmToken, _ in
-            self?.cloudNotificationService.set(
-                token: fcmToken,
-                name: UIDevice.modelName,
-                data: nil,
-                language: language,
-                sound: sound
-            )
+            self?.registerTokenTask?.cancel()
+            self?.registerTokenTask = Task { [weak self] in
+                _ = try? await self?.cloudNotificationService.set(
+                    token: fcmToken,
+                    name: UIDevice.modelName,
+                    data: nil,
+                    language: language,
+                    sound: sound
+                )
+            }
         }
     }
 }

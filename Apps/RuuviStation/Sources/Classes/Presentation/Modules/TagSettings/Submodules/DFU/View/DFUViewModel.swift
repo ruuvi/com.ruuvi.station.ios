@@ -127,14 +127,15 @@ final class DFUViewModel: ObservableObject {
             }
             guard let updatedVersion = updatedVersion else { return }
             isLoading = true
-            ruuviPool.update(ruuviTag
-                .with(isConnectable: true)
-                .with(firmwareVersion: updatedVersion))
-                .on(success: { [weak self] _ in
-                    self?.isLoading = false
-                }, failure: { [weak self] _ in
-                    self?.isLoading = false
-                })
+            Task { [weak self] in
+                guard let self else { return }
+                _ = try? await self.ruuviPool.update(
+                    self.ruuviTag
+                        .with(isConnectable: true)
+                        .with(firmwareVersion: updatedVersion)
+                )
+                self.isLoading = false
+            }
         } else {
             assertionFailure()
         }
@@ -144,18 +145,19 @@ final class DFUViewModel: ObservableObject {
 
     func checkBatteryState(completion: @escaping (Bool) -> Void) {
         let batteryStatusProvider = RuuviTagBatteryStatusProvider()
-        ruuviStorage
-            .readLatest(ruuviTag)
-            .on(success: { record in
+        Task {
+            do {
+                let record = try await ruuviStorage.readLatest(ruuviTag)
                 let batteryNeedsReplacement = batteryStatusProvider
                     .batteryNeedsReplacement(
                         temperature: record?.temperature,
                         voltage: record?.voltage
                     )
                 completion(batteryNeedsReplacement)
-            }, failure: { _ in
+            } catch {
                 completion(false)
-            })
+            }
+        }
     }
 
     func isRuuviAir() -> Bool {

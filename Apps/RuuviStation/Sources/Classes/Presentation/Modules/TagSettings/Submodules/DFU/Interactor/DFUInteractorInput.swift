@@ -5,8 +5,8 @@ import RuuviDFU
 import RuuviOntology
 
 protocol DFUInteractorInput {
-    func listen(ruuviTag: RuuviTagSensor) -> Future<DFUDevice, Never>
-    func observeLost(uuid: String) -> Future<String, Never>
+    func listen(ruuviTag: RuuviTagSensor) -> AnyPublisher<DFUDevice, Never>
+    func observeLost(uuid: String) -> AnyPublisher<String, Never>
     func download(
         release: LatestRelease,
         currentRelease: CurrentRelease?
@@ -15,7 +15,7 @@ protocol DFUInteractorInput {
         Error
     >
     func loadLatestRelease() -> AnyPublisher<LatestRelease, Error>
-    func serveCurrentRelease(for ruuviTag: RuuviTagSensor) -> Future<CurrentRelease, Error>
+    func serveCurrentRelease(for ruuviTag: RuuviTagSensor) -> AnyPublisher<CurrentRelease, Error>
     func waitForAirDevice(
         ruuviTag: RuuviTagSensor,
         timeout: TimeInterval

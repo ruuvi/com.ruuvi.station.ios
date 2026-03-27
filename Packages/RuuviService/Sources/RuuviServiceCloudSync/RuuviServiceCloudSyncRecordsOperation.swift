@@ -4,7 +4,7 @@ import RuuviLocal
 import RuuviOntology
 import RuuviRepository
 
-final class RuuviServiceCloudSyncRecordsOperation: AsyncOperation {
+final class RuuviServiceCloudSyncRecordsOperation: AsyncOperation, @unchecked Sendable {
     var sensor: RuuviTagSensor
     var error: RuuviServiceError?
     var records: [AnyRuuviTagSensorRecord] = []
@@ -38,40 +38,44 @@ final class RuuviServiceCloudSyncRecordsOperation: AsyncOperation {
             state = .finished
             return
         }
-        let op = ruuviCloud.loadRecords(macId: macId, since: since, until: until)
-        op.on(success: { [weak self] loadedRecords in
-            guard let sSelf = self else { return }
-            guard !loadedRecords.isEmpty
-            else {
-                sSelf.state = .finished
-                return
-            }
-            let recordsWithLuid: [AnyRuuviTagSensorRecord] = loadedRecords.map { record in
-                if record.luid == nil,
-                   let macId = record.macId,
-                   let luid = sSelf.ruuviLocalIDs.luid(for: macId) {
-                    record.with(luid: luid).any
-                } else {
-                    record
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let loadedRecords = try await ruuviCloud.loadRecords(
+                    macId: macId,
+                    since: since,
+                    until: until
+                )
+                guard !loadedRecords.isEmpty else {
+                    state = .finished
+                    return
                 }
+                let recordsWithLuid: [AnyRuuviTagSensorRecord] = loadedRecords.map { record in
+                    if record.luid == nil,
+                       let macId = record.macId,
+                       let luid = self.ruuviLocalIDs.luid(for: macId) {
+                        record.with(luid: luid).any
+                    } else {
+                        record
+                    }
+                }
+                _ = try await ruuviRepository.create(
+                    records: recordsWithLuid,
+                    for: sensor
+                )
+                self.records = recordsWithLuid
+                self.state = .finished
+                
+            } catch let error as RuuviCloudError {
+                self.error = .ruuviCloud(error)
+                self.state = .finished
+            } catch let error as RuuviRepositoryError {
+                self.error = .ruuviRepository(error)
+                self.state = .finished
+            } catch {
+                self.error = .networking(error)
+                self.state = .finished
             }
-            let persist = sSelf.ruuviRepository.create(
-                records: recordsWithLuid,
-                for: sSelf.sensor
-            )
-            persist.on(success: { [weak sSelf] _ in
-                guard let ssSelf = sSelf else { return }
-                ssSelf.records = recordsWithLuid
-                ssSelf.state = .finished
-            }, failure: { [weak sSelf] error in
-                guard let ssSelf = sSelf else { return }
-                ssSelf.error = .ruuviRepository(error)
-                ssSelf.state = .finished
-            })
-        }, failure: { [weak self] error in
-            guard let sSelf = self else { return }
-            sSelf.error = .ruuviCloud(error)
-            sSelf.state = .finished
-        })
+        }
     }
 }

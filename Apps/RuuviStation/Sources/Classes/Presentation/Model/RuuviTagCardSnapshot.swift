@@ -8,7 +8,7 @@ import RuuviLocalization
 import Humidity
 import RuuviService
 
-public final class RuuviTagCardSnapshot: ObservableObject, Hashable, Equatable {
+public final class RuuviTagCardSnapshot: ObservableObject, Hashable, Equatable, @unchecked Sendable {
 
     // MARK: - Identifier
     let id: String

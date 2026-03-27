@@ -1,5 +1,4 @@
 import Foundation
-import Future
 import RuuviLocalization
 import RuuviOntology
 import RuuviPool
@@ -33,8 +32,18 @@ class SharePresenter {
     }
 
     private var ruuviTagToken: RuuviReactorToken?
+    private var shareTask: Task<Void, Never>?
+    private var unshareTask: Task<Void, Never>?
+    private var loadSharedTask: Task<Void, Never>?
+    private var updateSharedTask: Task<Void, Never>?
+    private var syncMaxShareCountTask: Task<Void, Never>?
 
     deinit {
+        shareTask?.cancel()
+        unshareTask?.cancel()
+        loadSharedTask?.cancel()
+        updateSharedTask?.cancel()
+        syncMaxShareCountTask?.cancel()
         ruuviTagToken?.invalidate()
     }
 }
@@ -56,35 +65,44 @@ extension SharePresenter: ShareViewOutput {
         }
 
         activityPresenter.show(with: .loading(message: nil))
-        ruuviOwnershipService
-            .share(macId: sensor.id.mac, with: email.lowercased())
-            .on(success: { [weak self] result in
-                self?.view.clearInput()
+        shareTask?.cancel()
+        shareTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            defer {
+                self.activityPresenter.dismiss()
+            }
+            do {
+                let result = try await self.ruuviOwnershipService
+                    .share(macId: self.sensor.id.mac, with: email.lowercased())
+                self.view.clearInput()
                 if let invited = result.invited, invited {
-                    self?.view.showSuccessfullyInvited()
+                    self.view.showSuccessfullyInvited()
                 } else {
-                    self?.updateShared(email: email.lowercased(), add: true)
-                    self?.view.showSuccessfullyShared()
+                    self.updateShared(email: email.lowercased(), add: true)
+                    self.view.showSuccessfullyShared()
                 }
-
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            }, completion: { [weak self] in
-                self?.activityPresenter.dismiss()
-            })
+            } catch {
+                self.errorPresenter.present(error: error)
+            }
+        }
     }
 
     private func unshareTag(_ email: String) {
         activityPresenter.show(with: .loading(message: nil))
-        ruuviOwnershipService
-            .unshare(macId: sensor.id.mac, with: email.lowercased())
-            .on(success: { [weak self] _ in
-                self?.updateShared(email: email.lowercased(), add: false)
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            }, completion: { [weak self] in
-                self?.activityPresenter.dismiss()
-            })
+        unshareTask?.cancel()
+        unshareTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            defer {
+                self.activityPresenter.dismiss()
+            }
+            do {
+                _ = try await self.ruuviOwnershipService
+                    .unshare(macId: self.sensor.id.mac, with: email.lowercased())
+                self.updateShared(email: email.lowercased(), add: false)
+            } catch {
+                self.errorPresenter.present(error: error)
+            }
+        }
     }
 
     func viewDidTapUnshareEmail(_ email: String?) {
@@ -163,26 +181,26 @@ extension SharePresenter {
             return
         }
 
-        ruuviOwnershipService
-            .loadShared(for: sensor)
-            .on(success: { [weak self] shareableSensors in
-                guard let sSelf = self else { return }
-                if let shareable = shareableSensors
-                    .first(where: {
-                        $0.id == sSelf.sensor.id
-                    }) {
-                    guard shareable.canShare
-                    else {
+        loadSharedTask?.cancel()
+        loadSharedTask = Task { @MainActor [weak self] in
+            guard let self else { return }
+            do {
+                let shareableSensors = try await self.ruuviOwnershipService.loadShared(for: self.sensor)
+                if let shareable = shareableSensors.first(where: {
+                    $0.id == self.sensor.id
+                }) {
+                    guard shareable.canShare else {
                         return
                     }
 
-                    let updated = sSelf.sensor.with(canShare: shareable.canShare)
-                    sSelf.ruuviOwnershipService.updateShareable(for: updated)
-                    sSelf.sensor = updated
+                    let updated = self.sensor.with(canShare: shareable.canShare)
+                    _ = try? await self.ruuviOwnershipService.updateShareable(for: updated)
+                    self.sensor = updated
                 }
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            })
+            } catch {
+                self.errorPresenter.present(error: error)
+            }
+        }
     }
 
     private func updateViewModel() {
@@ -205,17 +223,25 @@ extension SharePresenter {
             }
         }
         let sensor = sensor.with(sharedTo: sharedTo)
-        ruuviOwnershipService.updateShareable(for: sensor)
+        updateSharedTask?.cancel()
+        updateSharedTask = Task {
+            _ = try? await self.ruuviOwnershipService.updateShareable(for: sensor)
+        }
     }
 
     private func syncMaxShareCount(ruuviTag: RuuviTagSensor) {
-        ruuviPool.readSensorSubscriptionSettings(
-            ruuviTag
-        ).on(success: { [weak self] subscription in
-            if let maxShares = subscription?.maxSharesPerSensor {
-                self?.maxShareCount = maxShares
+        syncMaxShareCountTask?.cancel()
+        syncMaxShareCountTask = Task { [weak self] in
+            guard let self else { return }
+            do {
+                if let subscription = try await self.ruuviPool.readSensorSubscriptionSettings(ruuviTag),
+                   let maxShares = subscription.maxSharesPerSensor {
+                    self.maxShareCount = maxShares
+                }
+            } catch {
+                return
             }
-        })
+        }
     }
 
     private func isValidEmail(_ email: String) -> Bool {

@@ -309,21 +309,37 @@ extension DFUInteractor: DFUInteractorInput {
         }
     }
 
-    func serveCurrentRelease(for ruuviTag: RuuviTagSensor) -> Future<CurrentRelease, Error> {
-        Future { [weak self] promise in
-            guard let sSelf = self else { return }
-            guard let uuid = ruuviTag.luid?.value
-            else {
-                promise(.failure(DFUError.failedToGetLuid))
-                return
+    func serveCurrentRelease(for ruuviTag: RuuviTagSensor) -> AnyPublisher<CurrentRelease, Error> {
+        Deferred { [weak self] () -> AnyPublisher<CurrentRelease, Error> in
+            let subject = PassthroughSubject<CurrentRelease, Error>()
+            guard let sSelf = self else {
+                subject.send(completion: .failure(CancellationError()))
+                return subject.eraseToAnyPublisher()
+            }
+            guard let uuid = ruuviTag.luid?.value else {
+                subject.send(completion: .failure(DFUError.failedToGetLuid))
+                return subject.eraseToAnyPublisher()
+            }
+
+            var hasCompleted = false
+            func complete(_ result: Result<CurrentRelease, Error>) {
+                guard !hasCompleted else { return }
+                hasCompleted = true
+                sSelf.invalidateTimer()
+                switch result {
+                case let .success(currentRelease):
+                    subject.send(currentRelease)
+                    subject.send(completion: .finished)
+                case let .failure(error):
+                    subject.send(completion: .failure(error))
+                }
             }
 
             sSelf.invalidateTimer()
             sSelf.timer = Timer.scheduledTimer(
                 withTimeInterval: sSelf.timeoutDuration, repeats: false
             ) { _ in
-                sSelf.invalidateTimer()
-                promise(.failure(BTError.logic(.connectionTimedOut)))
+                complete(.failure(BTError.logic(.connectionTimedOut)))
             }
 
             sSelf.background.services.gatt.firmwareRevision(
@@ -334,42 +350,48 @@ extension DFUInteractor: DFUInteractorInput {
                     .serviceTimeout(sSelf.timeoutDuration),
                 ]
             ) { _, result in
-                sSelf.invalidateTimer()
                 switch result {
                 case let .success(version):
                     sSelf.syncStoredFirmwareVersionIfNeeded(version, for: ruuviTag)
-                    let currentRelease = CurrentRelease(version: version)
-                    promise(.success(currentRelease))
+                    complete(.success(CurrentRelease(version: version)))
                 case let .failure(error):
-                    promise(.failure(error))
+                    complete(.failure(error))
                 }
             }
+            return subject.eraseToAnyPublisher()
         }
+        .eraseToAnyPublisher()
     }
 
-    func listen(ruuviTag: RuuviTagSensor) -> Future<DFUDevice, Never> {
+    func listen(ruuviTag: RuuviTagSensor) -> AnyPublisher<DFUDevice, Never> {
         let firmwareType = RuuviDataFormat.dataFormat(
             from: ruuviTag.version
         )
         let skipScanServices = firmwareType == .e1 || firmwareType == .v6
 
-        return Future { [weak self] promise in
-            guard let sSelf = self else { return }
+        return Deferred { [weak self] () -> AnyPublisher<DFUDevice, Never> in
+            let subject = PassthroughSubject<DFUDevice, Never>()
+            guard let sSelf = self else {
+                return Empty().eraseToAnyPublisher()
+            }
             sSelf.ruuviDFU.scan(
                 sSelf,
                 includeScanServices: !skipScanServices
-            ) { _,
-                device in
+            ) { _, device in
                 if skipScanServices {
                     if device.uuid == ruuviTag.luid?.value {
-                        promise(.success(device))
+                        subject.send(device)
+                        subject.send(completion: .finished)
                     }
                 } else {
                     // For older devices we return the device found in Bootloader mode.
-                    promise(.success(device))
+                    subject.send(device)
+                    subject.send(completion: .finished)
                 }
             }
+            return subject.eraseToAnyPublisher()
         }
+        .eraseToAnyPublisher()
     }
 
     func waitForAirDevice(
@@ -380,8 +402,12 @@ extension DFUInteractor: DFUInteractorInput {
             return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
         }
 
-        return Future { [weak self] promise in
-            guard let self else { return }
+        return Deferred { [weak self] () -> AnyPublisher<Void, Error> in
+            let subject = PassthroughSubject<Void, Error>()
+            guard let self else {
+                subject.send(completion: .failure(CancellationError()))
+                return subject.eraseToAnyPublisher()
+            }
 
             var hasCompleted = false
 
@@ -391,9 +417,10 @@ extension DFUInteractor: DFUInteractorInput {
                 self.stopAirScan()
                 switch result {
                 case .success:
-                    promise(.success(()))
+                    subject.send(())
+                    subject.send(completion: .finished)
                 case let .failure(error):
-                    promise(.failure(error))
+                    subject.send(completion: .failure(error))
                 }
             }
 
@@ -427,19 +454,26 @@ extension DFUInteractor: DFUInteractorInput {
                     complete(.failure(DFUError.airDeviceTimeout))
                 }
             }
+            return subject.eraseToAnyPublisher()
         }
         .eraseToAnyPublisher()
     }
 
-    func observeLost(uuid: String) -> Future<String, Never> {
-        Future { [weak self] promise in
-            guard let sSelf = self else { return }
+    func observeLost(uuid: String) -> AnyPublisher<String, Never> {
+        Deferred { [weak self] () -> AnyPublisher<String, Never> in
+            let subject = PassthroughSubject<String, Never>()
+            guard let sSelf = self else {
+                return Empty().eraseToAnyPublisher()
+            }
             sSelf.ruuviDFU.lost(sSelf, closure: { _, device in
                 if device.uuid == uuid {
-                    promise(.success(uuid))
+                    subject.send(uuid)
+                    subject.send(completion: .finished)
                 }
             })
+            return subject.eraseToAnyPublisher()
         }
+        .eraseToAnyPublisher()
     }
 }
 
@@ -505,7 +539,9 @@ extension DFUInteractor {
                 latestVersion
             ) else { return }
 
-            ruuviPool.update(latestTag.with(firmwareVersion: version))
+            Task {
+                _ = try? await ruuviPool.update(latestTag.with(firmwareVersion: version))
+            }
         }
     }
 
@@ -531,11 +567,13 @@ extension DFUInteractor {
         }
 
         let sensorId = ruuviTag.macId?.value ?? ruuviTag.id
-        ruuviStorage.readOne(sensorId)
-            .on(
-                success: { completion($0) },
-                failure: { _ in completion(ruuviTag) }
-            )
+        Task {
+            if let sensor = try? await ruuviStorage.readOne(sensorId) {
+                completion(sensor)
+            } else {
+                completion(ruuviTag)
+            }
+        }
     }
 
     private func firmwareDownloadURL(for deviceType: RuuviDeviceType) -> String {

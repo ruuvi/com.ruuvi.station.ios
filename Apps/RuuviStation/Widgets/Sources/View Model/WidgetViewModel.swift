@@ -64,26 +64,25 @@ public extension WidgetViewModel {
             return
         }
         forceRefreshWidget(false)
-        ruuviCloud.loadSensorsDense(
-            for: nil,
-            measurements: true,
-            sharedToOthers: nil,
-            sharedToMe: true,
-            alerts: nil,
-            settings: true
-        ).on(success: { sensors in
-            let sensorsWithRecord = sensors.filter { $0.record != nil }
-            completion(sensorsWithRecord)
-        }, failure: { _ in
-            completion([])
-        })
+        Task {
+            let sensors = await fetchRuuviTagsAsync()
+            completion(sensors)
+        }
     }
 
     internal func fetchRuuviTagsAsync() async -> [RuuviCloudSensorDense] {
-        await withCheckedContinuation { continuation in
-            fetchRuuviTags { sensors in
-                continuation.resume(returning: sensors)
-            }
+        do {
+            let sensors = try await ruuviCloud.loadSensorsDense(
+                for: nil,
+                measurements: true,
+                sharedToOthers: nil,
+                sharedToMe: true,
+                alerts: nil,
+                settings: true
+            )
+            return sensors.filter { $0.record != nil }
+        } catch {
+            return []
         }
     }
 }

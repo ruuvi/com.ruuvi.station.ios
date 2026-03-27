@@ -1,5 +1,4 @@
 import Foundation
-import Future
 import RuuviLocal
 import RuuviOntology
 
@@ -8,10 +7,10 @@ public protocol RuuviServiceExport {
         for uuid: String,
         version: Int,
         settings: SensorSettings?
-    ) -> Future<URL, RuuviServiceError>
+    ) async throws -> URL
     func xlsxLog(
         for uuid: String,
         version: Int,
         settings: SensorSettings?
-    ) -> Future<URL, RuuviServiceError>
+    ) async throws -> URL
 }

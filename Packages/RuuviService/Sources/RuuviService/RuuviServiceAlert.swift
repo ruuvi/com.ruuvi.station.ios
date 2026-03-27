@@ -1,5 +1,4 @@
 import Foundation
-import Future
 import RuuviOntology
 
 public extension Notification.Name {

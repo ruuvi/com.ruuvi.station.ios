@@ -1,5 +1,4 @@
 import Foundation
-import Future
 import RuuviOntology
 import RuuviPool
 import RuuviUser
@@ -24,15 +23,16 @@ public struct ShareSensorResponse {
     }
 }
 
+// MIGRATE: Phase 2 migrated RuuviCloud protocol declarations to async/await.
 public protocol RuuviCloud {
     @discardableResult
-    func requestCode(email: String) -> Future<String?, RuuviCloudError>
+    func requestCode(email: String) async throws -> String?
 
     @discardableResult
-    func validateCode(code: String) -> Future<ValidateCodeResponse, RuuviCloudError>
+    func validateCode(code: String) async throws -> ValidateCodeResponse
 
     @discardableResult
-    func deleteAccount(email: String) -> Future<Bool, RuuviCloudError>
+    func deleteAccount(email: String) async throws -> Bool
 
     @discardableResult
     func registerPNToken(
@@ -41,19 +41,19 @@ public protocol RuuviCloud {
         name: String?,
         data: String?,
         params: [String: String]?
-    ) -> Future<Int, RuuviCloudError>
+    ) async throws -> Int
 
     @discardableResult
     func unregisterPNToken(
         token: String?,
         tokenId: Int?
-    ) -> Future<Bool, RuuviCloudError>
+    ) async throws -> Bool
 
     @discardableResult
-    func listPNTokens() -> Future<[RuuviCloudPNToken], RuuviCloudError>
+    func listPNTokens() async throws -> [RuuviCloudPNToken]
 
     @discardableResult
-    func loadSensors() -> Future<[AnyCloudSensor], RuuviCloudError>
+    func loadSensors() async throws -> [AnyCloudSensor]
 
     @discardableResult
     // swiftlint:disable:next function_parameter_count
@@ -64,58 +64,58 @@ public protocol RuuviCloud {
         sharedToMe: Bool?,
         alerts: Bool?,
         settings: Bool?
-    ) -> Future<[RuuviCloudSensorDense], RuuviCloudError>
+    ) async throws -> [RuuviCloudSensorDense]
 
     @discardableResult
     func loadRecords(
         macId: MACIdentifier,
         since: Date,
         until: Date?
-    ) -> Future<[AnyRuuviTagSensorRecord], RuuviCloudError>
+    ) async throws -> [AnyRuuviTagSensorRecord]
 
     @discardableResult
     func claim(
         name: String,
         macId: MACIdentifier
-    ) -> Future<MACIdentifier?, RuuviCloudError>
+    ) async throws -> MACIdentifier?
 
     @discardableResult
     func contest(
         macId: MACIdentifier,
         secret: String
-    ) -> Future<MACIdentifier?, RuuviCloudError>
+    ) async throws -> MACIdentifier?
 
     @discardableResult
     func unclaim(
         macId: MACIdentifier,
         removeCloudHistory: Bool
-    ) -> Future<MACIdentifier, RuuviCloudError>
+    ) async throws -> MACIdentifier
 
     @discardableResult
     func share(
         macId: MACIdentifier,
         with email: String
-    ) -> Future<ShareSensorResponse, RuuviCloudError>
+    ) async throws -> ShareSensorResponse
 
     @discardableResult
     func unshare(
         macId: MACIdentifier,
         with email: String?
-    ) -> Future<MACIdentifier, RuuviCloudError>
+    ) async throws -> MACIdentifier
 
     @discardableResult
     func loadShared(
         for sensor: RuuviTagSensor
-    ) -> Future<Set<AnyShareableSensor>, RuuviCloudError>
+    ) async throws -> Set<AnyShareableSensor>
 
     @discardableResult
-    func checkOwner(macId: MACIdentifier) -> Future<(String?, String?), RuuviCloudError>
+    func checkOwner(macId: MACIdentifier) async throws -> (String?, String?)
 
     @discardableResult
     func update(
         name: String,
         for sensor: RuuviTagSensor
-    ) -> Future<AnyRuuviTagSensor, RuuviCloudError>
+    ) async throws -> AnyRuuviTagSensor
 
     @discardableResult
     func upload(
@@ -123,72 +123,72 @@ public protocol RuuviCloud {
         mimeType: MimeType,
         progress: ((MACIdentifier, Double) -> Void)?,
         for macId: MACIdentifier
-    ) -> Future<URL, RuuviCloudError>
+    ) async throws -> URL
 
     @discardableResult
     func resetImage(
         for macId: MACIdentifier
-    ) -> Future<Void, RuuviCloudError>
+    ) async throws
 
     @discardableResult
-    func getCloudSettings() -> Future<RuuviCloudSettings?, RuuviCloudError>
+    func getCloudSettings() async throws -> RuuviCloudSettings?
 
     @discardableResult
-    func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviCloudError>
+    func set(temperatureUnit: TemperatureUnit) async throws -> TemperatureUnit
 
     @discardableResult
-    func set(temperatureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError>
+    func set(temperatureAccuracy: MeasurementAccuracyType) async throws -> MeasurementAccuracyType
 
     @discardableResult
-    func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviCloudError>
+    func set(humidityUnit: HumidityUnit) async throws -> HumidityUnit
 
     @discardableResult
-    func set(humidityAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError>
+    func set(humidityAccuracy: MeasurementAccuracyType) async throws -> MeasurementAccuracyType
 
     @discardableResult
-    func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviCloudError>
+    func set(pressureUnit: UnitPressure) async throws -> UnitPressure
 
     @discardableResult
-    func set(pressureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError>
+    func set(pressureAccuracy: MeasurementAccuracyType) async throws -> MeasurementAccuracyType
 
     @discardableResult
-    func set(showAllData: Bool) -> Future<Bool, RuuviCloudError>
+    func set(showAllData: Bool) async throws -> Bool
 
     @discardableResult
-    func set(drawDots: Bool) -> Future<Bool, RuuviCloudError>
+    func set(drawDots: Bool) async throws -> Bool
 
     @discardableResult
-    func set(chartDuration: Int) -> Future<Int, RuuviCloudError>
+    func set(chartDuration: Int) async throws -> Int
 
     @discardableResult
-    func set(showMinMaxAvg: Bool) -> Future<Bool, RuuviCloudError>
+    func set(showMinMaxAvg: Bool) async throws -> Bool
 
     @discardableResult
-    func set(cloudMode: Bool) -> Future<Bool, RuuviCloudError>
+    func set(cloudMode: Bool) async throws -> Bool
 
     @discardableResult
-    func set(dashboard: Bool) -> Future<Bool, RuuviCloudError>
+    func set(dashboard: Bool) async throws -> Bool
 
     @discardableResult
-    func set(dashboardType: DashboardType) -> Future<DashboardType, RuuviCloudError>
+    func set(dashboardType: DashboardType) async throws -> DashboardType
 
     @discardableResult
-    func set(dashboardTapActionType: DashboardTapActionType) -> Future<DashboardTapActionType, RuuviCloudError>
+    func set(dashboardTapActionType: DashboardTapActionType) async throws -> DashboardTapActionType
 
     @discardableResult
-    func set(disableEmailAlert: Bool) -> Future<Bool, RuuviCloudError>
+    func set(disableEmailAlert: Bool) async throws -> Bool
 
     @discardableResult
-    func set(disablePushAlert: Bool) -> Future<Bool, RuuviCloudError>
+    func set(disablePushAlert: Bool) async throws -> Bool
 
     @discardableResult
-    func set(marketingPreference: Bool) -> Future<Bool, RuuviCloudError>
+    func set(marketingPreference: Bool) async throws -> Bool
 
     @discardableResult
-    func set(profileLanguageCode: String) -> Future<String, RuuviCloudError>
+    func set(profileLanguageCode: String) async throws -> String
 
     @discardableResult
-    func set(dashboardSensorOrder: [String]) -> Future<[String], RuuviCloudError>
+    func set(dashboardSensorOrder: [String]) async throws -> [String]
 
     @discardableResult
     func updateSensorSettings(
@@ -196,7 +196,7 @@ public protocol RuuviCloud {
         types: [String],
         values: [String],
         timestamp: Int?
-    ) -> Future<AnyRuuviTagSensor, RuuviCloudError>
+    ) async throws -> AnyRuuviTagSensor
 
     @discardableResult
     func update(
@@ -204,7 +204,7 @@ public protocol RuuviCloud {
         humidityOffset: Double?,
         pressureOffset: Double?,
         for sensor: RuuviTagSensor
-    ) -> Future<AnyRuuviTagSensor, RuuviCloudError>
+    ) async throws -> AnyRuuviTagSensor
 
     @discardableResult
     // swiftlint:disable:next function_parameter_count
@@ -218,16 +218,15 @@ public protocol RuuviCloud {
         delay: Int?,
         description: String?,
         for macId: MACIdentifier
-    ) -> Future<Void, RuuviCloudError>
+    ) async throws
 
     @discardableResult
-    func loadAlerts() -> Future<[RuuviCloudSensorAlerts], RuuviCloudError>
+    func loadAlerts() async throws -> [RuuviCloudSensorAlerts]
 
     // MARK: Queued requests
 
     @discardableResult
-    func executeQueuedRequest(from request: RuuviCloudQueuedRequest)
-        -> Future<Bool, RuuviCloudError>
+    func executeQueuedRequest(from request: RuuviCloudQueuedRequest) async throws -> Bool
 }
 
 public protocol RuuviCloudFactory {

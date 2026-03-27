@@ -1,6 +1,5 @@
 import BTKit
 import Foundation
-import Future
 import RuuviLocal
 import RuuviOntology
 import RuuviPool
@@ -39,30 +38,33 @@ extension DashboardInteractor: DashboardInteractorInput {
                 return
             }
 
-            self.ruuviOwnershipService.checkOwner(macId: macId)
-                .on(success: { [weak self] result in
-                    guard let self else { return }
-                    let owner = result.0
-                    guard let owner, !owner.isEmpty else {
-                        NotificationCenter.default.post(
-                            name: .RuuviTagOwnershipCheckDidEnd,
-                            object: nil,
-                            userInfo: [RuuviTagOwnershipCheckResultKey.hasOwner: false]
-                        )
-                        self.settings.setOwnerCheckDate(for: macId, value: Date())
-                        return
-                    }
+            Task { [weak self] in
+                guard let self else { return }
+                let result = try? await self.ruuviOwnershipService.checkOwner(macId: macId)
+                guard let result else { return }
+                let owner = result.0
+                guard let owner, !owner.isEmpty else {
+                    NotificationCenter.default.post(
+                        name: .RuuviTagOwnershipCheckDidEnd,
+                        object: nil,
+                        userInfo: [RuuviTagOwnershipCheckResultKey.hasOwner: false]
+                    )
+                    self.settings.setOwnerCheckDate(for: macId, value: Date())
+                    return
+                }
 
-                    self.resolveLatestSensor(for: currentTag) { [weak self] latestTag in
-                        guard let self else { return }
-                        let normalizedOwner = owner.lowercased()
-                        self.ruuviPool.update(
+                self.resolveLatestSensor(for: currentTag) { [weak self] latestTag in
+                    guard let self else { return }
+                    let normalizedOwner = owner.lowercased()
+                    Task {
+                        _ = try? await self.ruuviPool.update(
                             latestTag
                                 .with(owner: normalizedOwner)
                                 .with(isOwner: normalizedOwner == self.ruuviUser.email)
                         )
                     }
-                })
+                }
+            }
         }
     }
 
@@ -102,7 +104,9 @@ extension DashboardInteractor: DashboardInteractorInput {
         resolveLatestSensor(for: ruuviTag) { [weak self] latestTag in
             guard let self else { return }
             let updatedTag = latestTag.with(firmwareVersion: version)
-            self.ruuviPool.update(updatedTag)
+            Task {
+                _ = try? await self.ruuviPool.update(updatedTag)
+            }
             self.checkOwner(for: updatedTag)
         }
     }
@@ -117,10 +121,12 @@ extension DashboardInteractor: DashboardInteractorInput {
         }
 
         let sensorId = ruuviTag.macId?.value ?? ruuviTag.id
-        ruuviStorage.readOne(sensorId)
-            .on(
-                success: { completion($0) },
-                failure: { _ in completion(ruuviTag) }
-            )
+        Task {
+            if let sensor = try? await ruuviStorage.readOne(sensorId) {
+                completion(sensor)
+            } else {
+                completion(ruuviTag)
+            }
+        }
     }
 }

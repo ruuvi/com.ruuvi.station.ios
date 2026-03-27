@@ -1,5 +1,4 @@
 import Foundation
-import Future
 import RuuviLocal
 import RuuviPool
 import RuuviStorage
@@ -19,21 +18,20 @@ public final class DataPruningOperationsManager {
         self.ruuviPool = ruuviPool
     }
 
-    public func ruuviTagPruningOperations() -> Future<[Operation], RuuviDaemonError> {
-        let promise = Promise<[Operation], RuuviDaemonError>()
-        ruuviStorage.readAll().on(success: { [weak self] ruuviTags in
-            guard let sSelf = self else { return }
-            let ops = ruuviTags.map {
+    public func ruuviTagPruningOperations() async throws -> [Operation] {
+        do {
+            let ruuviTags = try await ruuviStorage.readAll()
+            return ruuviTags.map {
                 RuuviTagDataPruningOperation(
                     id: $0.id,
-                    ruuviPool: sSelf.ruuviPool,
-                    settings: sSelf.settings
+                    ruuviPool: ruuviPool,
+                    settings: settings
                 )
             }
-            promise.succeed(value: ops)
-        }, failure: { error in
-            promise.fail(error: .ruuviStorage(error))
-        })
-        return promise.future
+        } catch let error as RuuviStorageError {
+            throw RuuviDaemonError.ruuviStorage(error)
+        } catch {
+            throw RuuviDaemonError.ruuviStorage(.ruuviPersistence(.grdb(error)))
+        }
     }
 }

@@ -144,15 +144,17 @@ extension SensorForceClaimPresenter {
               let secret else { return }
 
         activityPresenter.show(with: .loading(message: nil))
-        ruuviOwnershipService
-            .contest(sensor: ruuviTag, secret: secret)
-            .on(success: { [weak self] _ in
-                self?.router?.dismiss()
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            }, completion: { [weak self] in
+        Task { [weak self] in
+            defer {
                 self?.activityPresenter.dismiss()
-            })
+            }
+            do {
+                _ = try await self?.ruuviOwnershipService.contest(sensor: ruuviTag, secret: secret)
+                self?.router?.dismiss()
+            } catch {
+                self?.errorPresenter.present(error: error)
+            }
+        }
     }
 
     /// Parse the NFC payload

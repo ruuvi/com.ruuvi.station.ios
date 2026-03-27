@@ -69,7 +69,9 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
                 return
             }
 
-            self.cloudSyncService.syncAllRecords()
+            Task {
+                _ = try? await self.cloudSyncService.syncAllRecords()
+            }
         }
     }
 
@@ -77,7 +79,9 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
         DispatchQueue.global(qos: .default).async { [weak self] in
             guard let self else { return }
             guard !self.localSettings.signalVisibilityMigrationInProgress else { return }
-            self.cloudSyncService.refreshLatestRecord()
+            Task {
+                _ = try? await self.cloudSyncService.refreshLatestRecord()
+            }
         }
     }
 

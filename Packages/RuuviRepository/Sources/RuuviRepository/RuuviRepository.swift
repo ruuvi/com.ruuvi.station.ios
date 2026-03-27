@@ -1,17 +1,17 @@
 import Foundation
-import Future
 import RuuviOntology
 
+// MIGRATE: Phase 4 converts the coordinator layer to async/await.
 public protocol RuuviRepository {
     @discardableResult
     func create(
         record: RuuviTagSensorRecord,
         for sensor: RuuviTagSensor
-    ) -> Future<AnyRuuviTagSensorRecord, RuuviRepositoryError>
+    ) async throws -> AnyRuuviTagSensorRecord
 
     @discardableResult
     func create(
         records: [RuuviTagSensorRecord],
         for sensor: RuuviTagSensor
-    ) -> Future<[AnyRuuviTagSensorRecord], RuuviRepositoryError>
+    ) async throws -> [AnyRuuviTagSensorRecord]
 }

@@ -5,7 +5,7 @@ import RuuviOntology
 import RuuviService
 import RuuviStorage
 
-final class MigrationManagerAlertService: RuuviMigration {
+final class MigrationManagerAlertService: RuuviMigration, @unchecked Sendable {
     private let ruuviStorage: RuuviStorage
     private let ruuviAlertService: RuuviServiceAlert
 
@@ -142,10 +142,11 @@ extension MigrationManagerAlertService {
 
     private func fetchRuuviSensors(completion: @escaping ([(RuuviTagSensor, Temperature?)]) -> Void) {
         queue.async {
-            let group = DispatchGroup()
-            group.enter()
-            var result = [(RuuviTagSensor, Temperature?)]()
-            self.ruuviStorage.readAll().on(success: { sensors in
+            Task {
+                let sensors = (try? await self.ruuviStorage.readAll()) ?? []
+                let group = DispatchGroup()
+                var result = [(RuuviTagSensor, Temperature?)]()
+
                 sensors.forEach { sensor in
                     group.enter()
                     self.fetchRecord(for: sensor) {
@@ -153,13 +154,11 @@ extension MigrationManagerAlertService {
                         group.leave()
                     }
                 }
-                group.leave()
-            }, failure: { _ in
-                group.leave()
-            })
-            group.notify(queue: .main, execute: {
-                completion(result)
-            })
+
+                group.notify(queue: .main, execute: {
+                    completion(result)
+                })
+            }
         }
     }
 
@@ -167,11 +166,9 @@ extension MigrationManagerAlertService {
         for sensor: RuuviTagSensor,
         complete: @escaping (((RuuviTagSensor, Temperature?)) -> Void)
     ) {
-        ruuviStorage.readLatest(sensor)
-            .on(success: { record in
-                complete((sensor, record?.temperature))
-            }, failure: { _ in
-                complete((sensor, nil))
-            })
+        Task {
+            let record = try? await ruuviStorage.readLatest(sensor)
+            complete((sensor, record?.temperature))
+        }
     }
 }

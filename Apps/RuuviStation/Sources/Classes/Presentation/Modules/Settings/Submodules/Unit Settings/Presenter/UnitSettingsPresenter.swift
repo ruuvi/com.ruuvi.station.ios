@@ -78,13 +78,19 @@ extension UnitSettingsPresenter: SelectionModuleOutput {
         case .unit:
             switch item {
             case let temperatureUnit as TemperatureUnit:
-                ruuviAppSettingsService.set(temperatureUnit: temperatureUnit)
+                Task {
+                    _ = try? await self.ruuviAppSettingsService.set(temperatureUnit: temperatureUnit)
+                }
                 view.temperatureUnit = temperatureUnit
             case let humidityUnit as HumidityUnit:
-                ruuviAppSettingsService.set(humidityUnit: humidityUnit)
+                Task {
+                    _ = try? await self.ruuviAppSettingsService.set(humidityUnit: humidityUnit)
+                }
                 view.humidityUnit = humidityUnit
             case let pressureUnit as UnitPressure:
-                ruuviAppSettingsService.set(pressureUnit: pressureUnit)
+                Task {
+                    _ = try? await self.ruuviAppSettingsService.set(pressureUnit: pressureUnit)
+                }
                 view.pressureUnit = pressureUnit
             default:
                 break
@@ -102,13 +108,19 @@ extension UnitSettingsPresenter: SelectionModuleOutput {
             }
             switch viewModel.measurementType {
             case .temperature:
-                ruuviAppSettingsService.set(temperatureAccuracy: item)
+                Task {
+                    _ = try? await self.ruuviAppSettingsService.set(temperatureAccuracy: item)
+                }
                 view.temperatureAccuracy = item
             case .humidity:
-                ruuviAppSettingsService.set(humidityAccuracy: item)
+                Task {
+                    _ = try? await self.ruuviAppSettingsService.set(humidityAccuracy: item)
+                }
                 view.humidityAccuracy = item
             case .pressure:
-                ruuviAppSettingsService.set(pressureAccuracy: item)
+                Task {
+                    _ = try? await self.ruuviAppSettingsService.set(pressureAccuracy: item)
+                }
                 view.pressureAccuracy = item
             default:
                 return

@@ -2,7 +2,7 @@ import Foundation
 import RuuviLocal
 import RuuviPool
 
-class RuuviTagDataPruningOperation: AsyncOperation {
+class RuuviTagDataPruningOperation: AsyncOperation, @unchecked Sendable {
     private var id: String
     private var settings: RuuviLocalSettings
     private var ruuviPool: RuuviPool
@@ -20,10 +20,13 @@ class RuuviTagDataPruningOperation: AsyncOperation {
             value: -offset,
             to: Date()
         ) ?? Date()
-        ruuviPool.deleteAllRecords(id, before: date).on(failure: { error in
-            print(error.localizedDescription)
-        }, completion: {
+        Task {
+            do {
+                _ = try await ruuviPool.deleteAllRecords(id, before: date)
+            } catch {
+                print(error.localizedDescription)
+            }
             self.state = .finished
-        })
+        }
     }
 }

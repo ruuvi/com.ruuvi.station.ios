@@ -17,7 +17,6 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviPool"),
         .package(path: "../RuuviStorage"),
@@ -29,7 +28,6 @@ let package = Package(
                 "RuuviOntology",
                 "RuuviPool",
                 "RuuviStorage",
-                "Future",
             ]
         ),
         .target(
@@ -39,7 +37,6 @@ let package = Package(
                 "RuuviOntology",
                 "RuuviPool",
                 "RuuviStorage",
-                "Future",
             ]
         ),
         .testTarget(

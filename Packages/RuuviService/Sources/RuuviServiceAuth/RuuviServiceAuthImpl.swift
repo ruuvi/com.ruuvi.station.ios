@@ -1,5 +1,4 @@
 import Foundation
-import Future
 import RuuviLocal
 import RuuviOntology
 import RuuviPool
@@ -36,67 +35,54 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
         self.settings = settings
     }
 
-    public func logout() -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
+    public func logout() async throws -> Bool {
         NotificationCenter
             .default
             .post(name: .RuuviAuthServiceWillLogout, object: self, userInfo: nil)
         ruuviUser.logout()
 
-        storage.readAll()
-            .on(success: { [weak self] localSensors in
-                guard let sSelf = self else {
-                    return
+        return try await RuuviServiceError.perform {
+            let localSensors = try await self.storage.readAll()
+            let sensorsToDelete = localSensors.filter { $0.isClaimed || $0.isCloud }
+
+            guard !sensorsToDelete.isEmpty else {
+                self.clearGlobalSettings()
+                self.postLogoutCompletion(success: true)
+                self.postNotification()
+                return true
+            }
+
+            do {
+                try await withThrowingTaskGroup(of: Void.self) { group in
+                    for sensor in sensorsToDelete {
+                        self.cleanupSensorData(for: sensor)
+                        group.addTask {
+                            _ = try await self.pool.delete(sensor)
+                        }
+                        group.addTask {
+                            _ = try await self.pool.deleteAllRecords(sensor.id)
+                        }
+                        group.addTask {
+                            _ = try await self.pool.deleteLast(sensor.id)
+                        }
+                    }
+
+                    group.addTask {
+                        _ = try await self.pool.deleteQueuedRequests()
+                    }
+
+                    for try await _ in group {}
                 }
 
-                let sensorsToDelete = localSensors.filter { $0.isClaimed || $0.isCloud }
-                guard !sensorsToDelete.isEmpty else {
-                    // Clear global settings even if no sensors to delete
-                    sSelf.clearGlobalSettings()
-                    promise.succeed(value: true)
-                    sSelf.postLogoutCompletion(success: true)
-                    sSelf.postNotification()
-                    return
-                }
-
-                // Collect all individual operations from all sensors
-                var allOperations: [Future<Bool, RuuviPoolError>] = []
-
-                for sensor in sensorsToDelete {
-                    let deleteSensorOperation = sSelf.pool.delete(sensor)
-                    let deleteRecordsOperation = sSelf.pool.deleteAllRecords(sensor.id)
-                    let deleteLatestRecordOperation = sSelf.pool.deleteLast(sensor.id)
-
-                    allOperations.append(deleteSensorOperation)
-                    allOperations.append(deleteRecordsOperation)
-                    allOperations.append(deleteLatestRecordOperation)
-
-                    // Perform comprehensive synchronous cleanup
-                    sSelf.cleanupSensorData(for: sensor)
-                }
-
-                // Add the global deleteQueuedRequests operation
-                allOperations.append(sSelf.pool.deleteQueuedRequests())
-
-                // Wait for all operations to complete
-                Future.zip(allOperations)
-                    .on(success: { _ in
-                        // Clear any remaining global settings
-                        sSelf.clearGlobalSettings()
-                        promise.succeed(value: true)
-                        sSelf.postLogoutCompletion(success: true)
-                        sSelf.postNotification()
-                    }, failure: { error in
-                        sSelf.postLogoutCompletion(success: false)
-                        promise.fail(error: .ruuviPool(error))
-                    })
-
-            }, failure: { [weak self]error in
-                self?.postLogoutCompletion(success: false)
-                promise.fail(error: .ruuviStorage(error))
-            })
-
-        return promise.future
+                self.clearGlobalSettings()
+                self.postLogoutCompletion(success: true)
+                self.postNotification()
+                return true
+            } catch {
+                self.postLogoutCompletion(success: false)
+                throw error
+            }
+        }
     }
 }
 

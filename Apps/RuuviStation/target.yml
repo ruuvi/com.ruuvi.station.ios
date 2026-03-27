@@ -34,7 +34,6 @@ targets:
         product: FirebaseInAppMessaging-Beta
       - package: KeychainAccess
       - package: Humidity
-      - package: Future
       - package: FLEX
       - target: RuuviAnalytics
       - target: RuuviCloud

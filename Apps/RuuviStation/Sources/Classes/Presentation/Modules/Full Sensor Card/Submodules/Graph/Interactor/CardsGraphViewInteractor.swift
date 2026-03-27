@@ -1,7 +1,6 @@
 // swiftlint:disable file_length
 import BTKit
 import Foundation
-import Future
 import RuuviLocal
 import RuuviOntology
 import RuuviPool
@@ -128,23 +127,16 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
         timer = nil
     }
 
-    func export() -> Future<URL, RUError> {
-        let promise = Promise<URL, RUError>()
-        guard let sensorSettings
-        else {
-            return promise.future
+    func export() async throws -> URL {
+        do {
+            return try await exportService.csvLog(
+                for: ruuviTagSensor.id,
+                version: ruuviTagSensor.version,
+                settings: sensorSettings
+            )
+        } catch {
+            throw Self.mapToRUError(error)
         }
-        let op = exportService.csvLog(
-            for: ruuviTagSensor.id,
-            version: ruuviTagSensor.version,
-            settings: sensorSettings
-        )
-        op.on(success: { url in
-            promise.succeed(value: url)
-        }, failure: { error in
-            promise.fail(error: .ruuviService(error))
-        })
-        return promise.future
     }
 
     func isSyncingRecords() -> Bool {
@@ -193,12 +185,9 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
         )
     }
 
-    func syncRecords(progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError> {
-        let promise = Promise<Void, RUError>()
-        guard let luid = ruuviTagSensor.luid
-        else {
-            promise.fail(error: .unexpected(.callbackErrorAndResultAreNil))
-            return promise.future
+    func syncRecords(progress: ((BTServiceProgress) -> Void)?) async throws {
+        guard let luid = ruuviTagSensor.luid else {
+            throw RUError.unexpected(.callbackErrorAndResultAreNil)
         }
         let sensorMacId = ruuviTagSensor.macId
         let connectionTimeout: TimeInterval = settings.connectionTimeout
@@ -217,65 +206,60 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
             syncFrom = history
         }
 
-        let op = gattService.syncLogs(
-            uuid: luid.value,
-            mac: sensorMacId?.value,
-            firmware: ruuviTagSensor.version,
-            from: syncFrom ?? Date.distantPast,
-            settings: sensorSettings,
-            progress: progress,
-            connectionTimeout: connectionTimeout,
-            serviceTimeout: serviceTimeout
-        )
-        op.on(success: { [weak self] _ in
-            if let isInterrupted = self?.gattSyncInterruptedByUser, !isInterrupted {
-                self?.localSyncState.setGattSyncDate(Date(), for: sensorMacId)
+        do {
+            _ = try await gattService.syncLogs(
+                uuid: luid.value,
+                mac: sensorMacId?.value,
+                firmware: ruuviTagSensor.version,
+                from: syncFrom ?? Date.distantPast,
+                settings: sensorSettings,
+                progress: progress,
+                connectionTimeout: connectionTimeout,
+                serviceTimeout: serviceTimeout
+            )
+            if !gattSyncInterruptedByUser {
+                localSyncState.setGattSyncDate(Date(), for: sensorMacId)
             }
-            self?.gattSyncInterruptedByUser = false
-            promise.succeed(value: ())
-        }, failure: { error in
-            promise.fail(error: .ruuviService(error))
-        })
-        return promise.future
-    }
-
-    func stopSyncRecords() -> Future<Bool, RUError> {
-        let promise = Promise<Bool, RUError>()
-        guard let luid = ruuviTagSensor.luid
-        else {
-            promise.fail(error: .unexpected(.callbackErrorAndResultAreNil))
-            return promise.future
+            gattSyncInterruptedByUser = false
+        } catch {
+            throw Self.mapToRUError(error)
         }
-        let op = gattService.stopGattSync(for: luid.value)
-        op.on(success: { [weak self] response in
+    }
+
+    func stopSyncRecords() async throws -> Bool {
+        guard let luid = ruuviTagSensor.luid else {
+            throw RUError.unexpected(.callbackErrorAndResultAreNil)
+        }
+        do {
+            let response = try await gattService.stopGattSync(for: luid.value)
             if response {
-                self?.gattSyncInterruptedByUser = true
+                gattSyncInterruptedByUser = true
             }
-            promise.succeed(value: response)
-        }, failure: { error in
-            promise.fail(error: .ruuviService(error))
-        })
-        return promise.future
+            return response
+        } catch {
+            throw Self.mapToRUError(error)
+        }
     }
 
-    func deleteAllRecords(for sensor: RuuviTagSensor) -> Future<Void, RUError> {
-        let promise = Promise<Void, RUError>()
-        ruuviSensorRecords.clear(for: sensor)
-            .on(failure: { error in
-                promise.fail(error: .ruuviService(error))
-            }, completion: { [weak self] in
-                self?.localSyncState.setSyncDate(nil, for: self?.ruuviTagSensor.macId)
-                self?.localSyncState.setSyncDate(nil)
-                self?.localSyncState.setGattSyncDate(nil, for: self?.ruuviTagSensor.macId)
-                self?.localSyncState.setAutoGattSyncAttemptDate(nil, for: self?.ruuviTagSensor.macId)
-                self?.restartObservingData()
-                promise.succeed(value: ())
-            })
-        return promise.future
+    func deleteAllRecords(for sensor: RuuviTagSensor) async throws {
+        do {
+            try await ruuviSensorRecords.clear(for: sensor)
+            localSyncState.setSyncDate(nil, for: ruuviTagSensor.macId)
+            localSyncState.setSyncDate(nil)
+            localSyncState.setGattSyncDate(nil, for: ruuviTagSensor.macId)
+            localSyncState.setAutoGattSyncAttemptDate(nil, for: ruuviTagSensor.macId)
+            restartObservingData()
+        } catch {
+            throw Self.mapToRUError(error)
+        }
     }
 
-    func updateChartShowMinMaxAvgSetting(with show: Bool) {
-        ruuviAppSettingsService.set(showMinMaxAvg: show)
+    func updateChartShowMinMaxAvgSetting(with show: Bool) async throws {
+        do {
+            try await ruuviAppSettingsService.set(showMinMaxAvg: show)
+        } catch {
+            throw Self.mapToRUError(error)
+        }
     }
 }
 
@@ -307,26 +291,26 @@ extension CardsGraphViewInteractor {
     }
 
     private func fetchLast() {
-        guard ruuviTagSensor != nil
-        else {
-            return
-        }
-        let op = ruuviStorage.readLatest(ruuviTagSensor)
-        op.on(success: { [weak self] record in
-            guard let sSelf = self else { return }
-            guard let record
-            else {
-                sSelf.presenter.createChartModules(from: [])
-                return
+        guard let ruuviTagSensor = ruuviTagSensor else { return }
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let record = try await self.ruuviStorage.readLatest(ruuviTagSensor)
+                guard let record else {
+                    self.presenter.createChartModules(from: [])
+                    return
+                }
+                self.lastMeasurement = record.measurement
+                self.lastMeasurementRecord = record
+                let chartVariants = self.chartVariants(for: record)
+                self.presenter.createChartModules(from: chartVariants)
+                self.presenter.updateLatestRecord(record)
+            } catch let error as RuuviStorageError {
+                self.presenter.interactorDidError(.ruuviStorage(error))
+            } catch {
+                self.presenter.interactorDidError(.persistence(error))
             }
-            sSelf.lastMeasurement = record.measurement
-            sSelf.lastMeasurementRecord = record
-            let chartVariants = sSelf.chartVariants(for: record)
-            sSelf.presenter.createChartModules(from: chartVariants)
-            sSelf.presenter.updateLatestRecord(record)
-        }, failure: { [weak self] error in
-            self?.presenter.interactorDidError(.ruuviStorage(error))
-        })
+        }
     }
 
     private func fetchLastFromDate() {
@@ -335,27 +319,32 @@ extension CardsGraphViewInteractor {
         else {
             return
         }
-        let op = ruuviStorage.readLast(
-            ruuviTagSensor.id,
-            from: lastMeasurement.date.timeIntervalSince1970
-        )
-        op.on(success: { [weak self] results in
-            guard results.count > 0,
-                  let last = results.last
-            else {
-                self?.presenter.updateLatestRecord(lastMeasurementRecord)
-                return
+        let sensorId = ruuviTagSensor.id
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let results = try await self.ruuviStorage.readLast(
+                    sensorId,
+                    from: lastMeasurement.date.timeIntervalSince1970
+                )
+                guard results.count > 0,
+                      let last = results.last else {
+                    self.presenter.updateLatestRecord(lastMeasurementRecord)
+                    return
+                }
+                self.lastMeasurement = last.measurement
+                self.lastMeasurementRecord = last
+                self.ruuviTagData.append(last.measurement)
+                self.insertMeasurements([last.measurement])
+                self.presenter.updateLatestRecord(last)
+            } catch let error as RuuviStorageError {
+                self.presenter.updateLatestRecord(lastMeasurementRecord)
+                self.presenter.interactorDidError(.ruuviStorage(error))
+            } catch {
+                self.presenter.updateLatestRecord(lastMeasurementRecord)
+                self.presenter.interactorDidError(.persistence(error))
             }
-            guard let sSelf = self else { return }
-            sSelf.lastMeasurement = last.measurement
-            sSelf.lastMeasurementRecord = last
-            sSelf.ruuviTagData.append(last.measurement)
-            sSelf.insertMeasurements([last.measurement])
-            sSelf.presenter.updateLatestRecord(last)
-        }, failure: { [weak self] error in
-            self?.presenter.updateLatestRecord(lastMeasurementRecord)
-            self?.presenter.interactorDidError(.ruuviStorage(error))
-        })
+        }
     }
 
     private func chartVariants(
@@ -399,65 +388,85 @@ extension CardsGraphViewInteractor {
     }
 
     private func fetchAll(_ completion: (() -> Void)? = nil) {
-        guard ruuviTagSensor != nil
-        else {
-            return
-        }
+        guard let ruuviTagSensor = ruuviTagSensor else { return }
 
         let date = Calendar.autoupdatingCurrent.date(
             byAdding: .hour,
             value: -settings.chartDurationHours,
             to: Date()
         ) ?? Date.distantPast
-        let op = ruuviStorage.read(
-            ruuviTagSensor.id,
-            after: date,
-            with: TimeInterval(2)
-        )
-        op.on(success: { [weak self] results in
-            self?.ruuviTagData = results.map(\.measurement)
-        }, failure: { [weak self] error in
-            self?.presenter.interactorDidError(.ruuviStorage(error))
-        }, completion: completion)
+        Task { [weak self] in
+            defer { completion?() }
+            guard let self else { return }
+            do {
+                let results = try await self.ruuviStorage.read(
+                    ruuviTagSensor.id,
+                    after: date,
+                    with: TimeInterval(2)
+                )
+                self.ruuviTagData = results.map(\.measurement)
+            } catch let error as RuuviStorageError {
+                self.presenter.interactorDidError(.ruuviStorage(error))
+            } catch {
+                self.presenter.interactorDidError(.persistence(error))
+            }
+        }
     }
 
     private func fetchDownSampled(_ competion: (() -> Void)? = nil) {
-        guard ruuviTagSensor != nil
-        else {
-            return
-        }
+        guard let ruuviTagSensor = ruuviTagSensor else { return }
 
         let date = Calendar.autoupdatingCurrent.date(
             byAdding: .hour,
             value: -settings.chartDurationHours,
             to: Date()
         ) ?? Date.distantPast
-        let op = ruuviStorage.readDownsampled(
-            ruuviTagSensor.id,
-            after: date,
-            with: highDensityIntervalMinutes,
-            pick: maximumPointsCount
-        )
-        op.on(success: { [weak self] results in
-            self?.ruuviTagData = results.map(\.measurement)
-        }, failure: { [weak self] error in
-            self?.presenter.interactorDidError(.ruuviStorage(error))
-        }, completion: competion)
+        Task { [weak self] in
+            defer { competion?() }
+            guard let self else { return }
+            do {
+                let results = try await self.ruuviStorage.readDownsampled(
+                    ruuviTagSensor.id,
+                    after: date,
+                    with: highDensityIntervalMinutes,
+                    pick: maximumPointsCount
+                )
+                self.ruuviTagData = results.map(\.measurement)
+            } catch let error as RuuviStorageError {
+                self.presenter.interactorDidError(.ruuviStorage(error))
+            } catch {
+                self.presenter.interactorDidError(.persistence(error))
+            }
+        }
     }
 
     private func syncFullHistory(for ruuviTag: RuuviTagSensor) {
         if ruuviTag.isCloud && settings.historySyncForEachSensor {
-            ruuviStorage.readLatest(ruuviTag).on(success: { [weak self] record in
-                if record != nil {
-                    self?.cloudSyncService.sync(
-                        sensor: ruuviTag
-                    ).on(success: {
-                        [weak self] _ in
-                        self?.restartScheduler()
-                    })
+            Task { [weak self] in
+                guard let self else { return }
+                do {
+                    if let _ = try await self.ruuviStorage.readLatest(ruuviTag) {
+                        _ = try await self.cloudSyncService.sync(sensor: ruuviTag)
+                        self.restartScheduler()
+                    }
+                } catch {
+                    return
                 }
-            })
+            }
         }
+    }
+
+    private static func mapToRUError(_ error: Error) -> RUError {
+        if let error = error as? RUError {
+            return error
+        }
+        if let error = error as? RuuviServiceError {
+            return .ruuviService(error)
+        }
+        if let error = error as? RuuviStorageError {
+            return .ruuviStorage(error)
+        }
+        return .networking(error)
     }
 
     // MARK: - Charts

@@ -132,13 +132,15 @@ extension AppDelegate: MessagingDelegate {
             return
         }
 
-        cloudNotificationService.set(
-            token: fcmToken,
-            name: UIDevice.modelName,
-            data: nil,
-            language: settings.language,
-            sound: settings.alertSound
-        )
+        Task {
+            _ = try? await cloudNotificationService.set(
+                token: fcmToken,
+                name: UIDevice.modelName,
+                data: nil,
+                language: settings.language,
+                sound: settings.alertSound
+            )
+        }
     }
 
     fileprivate func setPreferrerdLanguage() {

@@ -1,11 +1,9 @@
-import Future
 import RuuviOntology
 import UIKit
 
 class ImagePersistenceDocuments: ImagePersistence {
     private let ext = ".png"
     private let bgDir = "bg"
-    private var isBgDirCreated = false
 
     func fetchBg(for identifier: Identifier) -> UIImage? {
         let uuid = identifier.value
@@ -23,23 +21,25 @@ class ImagePersistenceDocuments: ImagePersistence {
         image: UIImage,
         compressionQuality: CGFloat,
         for identifier: Identifier
-    ) -> Future<URL, RuuviLocalError> {
+    ) async throws -> URL {
         let uuid = identifier.value
-        let promise = Promise<URL, RuuviLocalError>()
-        DispatchQueue.global().async {
-            if let data = image.jpegData(compressionQuality: compressionQuality) {
-                do {
-                    let url = try self.getBgDirectory().appendingPathComponent(uuid + self.ext)
-                    try data.write(to: url)
-                    promise.succeed(value: url)
-                } catch {
-                    promise.fail(error: .disk(error))
+        let ext = self.ext
+        let directory = try getBgDirectory()
+        return try await withCheckedThrowingContinuation { continuation in
+            DispatchQueue.global(qos: .utility).async {
+                if let data = image.jpegData(compressionQuality: compressionQuality) {
+                    do {
+                        let url = directory.appendingPathComponent(uuid + ext)
+                        try data.write(to: url)
+                        continuation.resume(returning: url)
+                    } catch {
+                        continuation.resume(throwing: RuuviLocalError.disk(error))
+                    }
+                } else {
+                    continuation.resume(throwing: RuuviLocalError.failedToGetJpegRepresentation)
                 }
-            } else {
-                promise.fail(error: .failedToGetJpegRepresentation)
             }
         }
-        return promise.future
     }
 
     private func getBgDirectory() throws -> URL {
@@ -48,10 +48,7 @@ class ImagePersistenceDocuments: ImagePersistence {
             throw RuuviLocalError.failedToGetDocumentsDirectory
         }
         let dir = docDir.appendingPathComponent(bgDir, isDirectory: true)
-        if !isBgDirCreated {
-            try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-            isBgDirCreated = true
-        }
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         return dir
     }
 }
