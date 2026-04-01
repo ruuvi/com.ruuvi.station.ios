@@ -732,6 +732,7 @@ extension CardsGraphViewController: CardsGraphViewInput {
         }
 
         chartViews.forEach {
+            $0.setSettings(settings: settings)
             $0.setXAxisRenderer(
                 showAll: settings.chartShowAll,
                 timelineRange: timelineRange
@@ -770,6 +771,7 @@ extension CardsGraphViewController: CardsGraphViewInput {
         if settings.chartShowAll {
             let timelineRange = resolveGlobalTimelineRange(from: chartViews)
             chartViews.forEach {
+                $0.setSettings(settings: settings)
                 $0.setXAxisRenderer(
                     showAll: true,
                     timelineRange: timelineRange
