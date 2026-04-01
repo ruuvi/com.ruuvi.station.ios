@@ -42,7 +42,7 @@ public extension RuuviTagSensorRecord {
         case .pressure:
             return pressure != nil
         case .aqi:
-            return co2 != nil || pm25 != nil
+            return co2 != nil && pm25 != nil
         case .co2:
             return co2 != nil
         case .pm10:
