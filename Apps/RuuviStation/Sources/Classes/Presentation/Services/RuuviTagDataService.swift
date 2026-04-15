@@ -955,6 +955,9 @@ private extension RuuviTagDataService {
         if updatedOwnership.sharedTo != sensor.sharedTo {
             updatedOwnership.sharedTo = sensor.sharedTo
         }
+        if updatedOwnership.sharedToPending != sensor.sharedToPending {
+            updatedOwnership.sharedToPending = sensor.sharedToPending
+        }
         let canBeClaimed = !sensor.isClaimed &&
             sensor.macId != nil &&
             (sensor.owner == nil || sensor.isOwner)

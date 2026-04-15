@@ -4,15 +4,18 @@ public struct ShareableSensorStruct: ShareableSensor {
     public var id: String
     public var canShare: Bool
     public var sharedTo: [String]
+    public var sharedToPending: [String]
 
     public init(
         id: String,
         canShare: Bool,
-        sharedTo: [String]
+        sharedTo: [String],
+        sharedToPending: [String] = []
     ) {
         self.id = id
         self.canShare = canShare
         self.sharedTo = sharedTo
+        self.sharedToPending = sharedToPending
     }
 }
 
@@ -39,6 +42,10 @@ public struct AnyShareableSensor: ShareableSensor, Equatable, Hashable, Reordera
 
     public var sharedTo: [String] {
         object.sharedTo
+    }
+
+    public var sharedToPending: [String] {
+        object.sharedToPending
     }
 
     public static func == (lhs: AnyShareableSensor, rhs: AnyShareableSensor) -> Bool {

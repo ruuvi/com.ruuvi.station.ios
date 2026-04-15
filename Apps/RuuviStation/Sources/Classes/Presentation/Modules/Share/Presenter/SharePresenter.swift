@@ -25,7 +25,7 @@ class SharePresenter {
         }
     }
 
-    private var maxShareCount: Int = 10
+    private var observedSensors: [String: AnyRuuviTagSensor] = [:]
     private var viewModel: ShareViewModel! {
         didSet {
             view.viewModel = viewModel
@@ -61,9 +61,10 @@ extension SharePresenter: ShareViewOutput {
             .on(success: { [weak self] result in
                 self?.view.clearInput()
                 if let invited = result.invited, invited {
+                    self?.updatePendingShared(email: email.lowercased(), add: true)
                     self?.view.showSuccessfullyInvited()
                 } else {
-                    self?.updateShared(email: email.lowercased(), add: true)
+                    self?.updateAcceptedShared(email: email.lowercased(), add: true)
                     self?.view.showSuccessfullyShared()
                 }
 
@@ -79,7 +80,7 @@ extension SharePresenter: ShareViewOutput {
         ruuviOwnershipService
             .unshare(macId: sensor.id.mac, with: email.lowercased())
             .on(success: { [weak self] _ in
-                self?.updateShared(email: email.lowercased(), add: false)
+                self?.removeShared(email: email.lowercased())
             }, failure: { [weak self] error in
                 self?.errorPresenter.present(error: error)
             }, completion: { [weak self] in
@@ -126,8 +127,8 @@ extension SharePresenter: ShareViewOutput {
 
 extension SharePresenter: ShareModuleInput {
     func configure(sensor: RuuviTagSensor) {
-        syncMaxShareCount(ruuviTag: sensor)
-        viewModel = ShareViewModel(maxCount: maxShareCount)
+        viewModel = ShareViewModel()
+        syncShareLimits(ruuviTag: sensor)
         self.sensor = sensor
     }
 
@@ -143,7 +144,12 @@ extension SharePresenter {
         ruuviTagToken?.invalidate()
         ruuviTagToken = ruuviReactor.observe { [weak self] change in
             switch change {
+            case let .initial(sensors):
+                self?.replaceObservedSensors(with: sensors)
+                self?.syncPlanShareUsage()
             case let .update(sensor):
+                self?.storeObservedSensor(sensor)
+                self?.syncPlanShareUsage()
                 if (sensor.luid?.any != nil &&
                     sensor.luid?.any == self?.sensor.luid?.any)
                     ||
@@ -151,6 +157,12 @@ extension SharePresenter {
                         sensor.macId?.any == self?.sensor.macId?.any) {
                     self?.sensor = sensor
                 }
+            case let .insert(sensor):
+                self?.storeObservedSensor(sensor)
+                self?.syncPlanShareUsage()
+            case let .delete(sensor):
+                self?.observedSensors.removeValue(forKey: sensor.id)
+                self?.syncPlanShareUsage()
             default: return
             }
         }
@@ -171,12 +183,17 @@ extension SharePresenter {
                     .first(where: {
                         $0.id == sSelf.sensor.id
                     }) {
-                    guard shareable.canShare
+                    guard sSelf.sensor.canShare != shareable.canShare
+                        || sSelf.sensor.sharedTo != shareable.sharedTo
+                        || sSelf.sensor.sharedToPending != shareable.sharedToPending
                     else {
+                        sSelf.updateViewModel()
                         return
                     }
-
-                    let updated = sSelf.sensor.with(canShare: shareable.canShare)
+                    let updated = sSelf.sensor
+                        .with(canShare: shareable.canShare)
+                        .with(sharedTo: shareable.sharedTo)
+                        .with(sharedToPending: shareable.sharedToPending)
                     sSelf.ruuviOwnershipService.updateShareable(for: updated)
                     sSelf.sensor = updated
                 }
@@ -187,11 +204,12 @@ extension SharePresenter {
 
     private func updateViewModel() {
         viewModel.sharedEmails.value = sensor.sharedTo.map({ $0.lowercased() })
+        viewModel.pendingSharedEmails.value = sensor.sharedToPending.map({ $0.lowercased() })
         viewModel.canShare.value = sensor.canShare
         view.reloadTableView()
     }
 
-    private func updateShared(email: String, add: Bool) {
+    private func updateAcceptedShared(email: String, add: Bool) {
         var sharedTo = sensor.sharedTo
         if add {
             sharedTo.append(email)
@@ -208,14 +226,62 @@ extension SharePresenter {
         ruuviOwnershipService.updateShareable(for: sensor)
     }
 
-    private func syncMaxShareCount(ruuviTag: RuuviTagSensor) {
+    private func updatePendingShared(email: String, add: Bool) {
+        var sharedToPending = sensor.sharedToPending
+        if add {
+            sharedToPending.append(email)
+        } else {
+            if let index = sharedToPending.firstIndex(where: { shared in
+                shared.lowercased() == email.lowercased()
+            }) {
+                sharedToPending.remove(at: index)
+            } else {
+                return
+            }
+        }
+        let sensor = sensor.with(sharedToPending: sharedToPending)
+        ruuviOwnershipService.updateShareable(for: sensor)
+    }
+
+    private func removeShared(email: String) {
+        let sharedTo = sensor.sharedTo.filter { shared in
+            shared.lowercased() != email.lowercased()
+        }
+        let sharedToPending = sensor.sharedToPending.filter { shared in
+            shared.lowercased() != email.lowercased()
+        }
+        let sensor = sensor
+            .with(sharedTo: sharedTo)
+            .with(sharedToPending: sharedToPending)
+        ruuviOwnershipService.updateShareable(for: sensor)
+    }
+
+    private func syncShareLimits(ruuviTag: RuuviTagSensor) {
         ruuviPool.readSensorSubscriptionSettings(
             ruuviTag
         ).on(success: { [weak self] subscription in
-            if let maxShares = subscription?.maxSharesPerSensor {
-                self?.maxShareCount = maxShares
-            }
+            self?.viewModel.maxCount.value = subscription?.maxSharesPerSensor ?? 10
+            self?.viewModel.totalAvailableCount.value = subscription?.maxShares ?? 0
+            self?.view.reloadTableView()
         })
+    }
+
+    private func replaceObservedSensors(with sensors: [AnyRuuviTagSensor]) {
+        observedSensors = Dictionary(uniqueKeysWithValues: sensors.map { ($0.id, $0) })
+    }
+
+    private func storeObservedSensor(_ sensor: AnyRuuviTagSensor) {
+        observedSensors[sensor.id] = sensor
+    }
+
+    private func syncPlanShareUsage() {
+        let totalUsed = observedSensors.values
+            .filter { $0.isOwner }
+            .reduce(0) { partialResult, sensor in
+                partialResult + sensor.sharedTo.count + sensor.sharedToPending.count
+            }
+        viewModel.totalUsedCount.value = totalUsed
+        view.reloadTableView()
     }
 
     private func isValidEmail(_ email: String) -> Bool {

@@ -58,6 +58,7 @@ public protocol CloudSensor: Sensor,
 public protocol Shareable {
     var canShare: Bool { get }
     var sharedTo: [String] { get } // emails
+    var sharedToPending: [String] { get } // emails
 }
 
 public protocol HistoryFetchable {

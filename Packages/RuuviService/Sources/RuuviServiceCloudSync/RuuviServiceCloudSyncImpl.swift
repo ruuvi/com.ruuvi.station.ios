@@ -874,11 +874,21 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                             $0.id.isLast3BytesEqual(to: localSensor.id)
                         }) {
                             // Resolve sync collision based on timestamps
-                            let syncAction = SyncCollisionResolver.resolve(
+                            let resolvedAction = SyncCollisionResolver.resolve(
                                 isOwner: localSensor.isOwner,
                                 localTimestamp: localSensor.lastUpdated,
                                 cloudTimestamp: cloudSensor.lastUpdated
                             )
+                            let syncAction: SyncAction = {
+                                if resolvedAction == .noAction,
+                                   SyncCollisionResolver.shouldRefreshCloudAuthoritativeFields(
+                                       localSensor: localSensor,
+                                       cloudSensor: cloudSensor
+                                   ) {
+                                    return .updateLocal
+                                }
+                                return resolvedAction
+                            }()
 
                             switch syncAction {
                             case .updateLocal:

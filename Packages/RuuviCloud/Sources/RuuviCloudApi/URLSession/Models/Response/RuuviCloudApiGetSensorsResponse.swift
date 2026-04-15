@@ -11,6 +11,7 @@ public struct RuuviCloudApiGetSensorsResponse: Decodable {
         public let isPublic: Bool?
         public let canShare: Bool?
         public let sharedTo: [String]?
+        public let sharedToPending: [String]?
 
         enum CodingKeys: String, CodingKey {
             case sensor
@@ -19,13 +20,15 @@ public struct RuuviCloudApiGetSensorsResponse: Decodable {
             case isPublic = "public"
             case canShare
             case sharedTo
+            case sharedToPending
         }
 
         public var shareableSensor: ShareableSensor {
             ShareableSensorStruct(
                 id: sensor,
                 canShare: canShare ?? false,
-                sharedTo: sharedTo ?? []
+                sharedTo: sharedTo ?? [],
+                sharedToPending: sharedToPending ?? []
             )
         }
     }

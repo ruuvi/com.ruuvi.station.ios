@@ -585,6 +585,7 @@ extension DiscoverPresenter {
             isCloudSensor: false,
             canShare: false,
             sharedTo: [],
+            sharedToPending: [],
             maxHistoryDays: nil
         )
     }

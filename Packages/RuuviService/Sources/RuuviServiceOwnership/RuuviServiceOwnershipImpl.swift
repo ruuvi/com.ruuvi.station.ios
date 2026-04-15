@@ -186,6 +186,7 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
                         .with(isClaimed: false)
                         .with(canShare: false)
                         .with(sharedTo: [])
+                        .with(sharedToPending: [])
                         .with(isCloudSensor: false)
                         .withoutOwner()
                     self.pool

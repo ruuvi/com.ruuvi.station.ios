@@ -478,6 +478,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                     isCloudSensor: false,
                     canShare: false,
                     sharedTo: [],
+                    sharedToPending: [],
                     maxHistoryDays: nil
                 )
                 ruuviAlertService.unregister(type: type, ruuviTag: ruuviTag)
@@ -507,6 +508,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                     isCloudSensor: false,
                     canShare: false,
                     sharedTo: [],
+                    sharedToPending: [],
                     maxHistoryDays: nil
                 )
                 ruuviAlertService.unregister(type: Self.alertType(from: type), ruuviTag: ruuviTag)

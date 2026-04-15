@@ -118,6 +118,10 @@ public struct AnyCloudSensorDense: CloudSensor, Equatable, Hashable, Reorderable
         sensor.sharedTo
     }
 
+    public var sharedToPending: [String] {
+        sensor.sharedToPending
+    }
+
     public var maxHistoryDays: Int? {
         subscription?.maxHistoryDays
     }

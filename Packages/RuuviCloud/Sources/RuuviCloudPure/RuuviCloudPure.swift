@@ -894,6 +894,7 @@ public final class RuuviCloudPure: RuuviCloud {
                             isCloudSensor: true,
                             canShare: sensor.canShare,
                             sharedTo: sensor.sharedTo ?? [],
+                            sharedToPending: sensor.sharedToPending ?? [],
                             maxHistoryDays: sensor.subscription?.maxHistoryDays,
                             lastUpdated: sensor.lastUpdatedDate
                         ),

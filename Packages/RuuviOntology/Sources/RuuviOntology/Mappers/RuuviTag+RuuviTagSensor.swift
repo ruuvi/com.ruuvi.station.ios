@@ -18,6 +18,7 @@ public extension RuuviTag {
             isCloudSensor: false,
             canShare: false,
             sharedTo: [],
+            sharedToPending: [],
             maxHistoryDays: nil
         )
     }

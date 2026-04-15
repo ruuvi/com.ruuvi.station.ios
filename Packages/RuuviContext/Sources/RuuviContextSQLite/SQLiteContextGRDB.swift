@@ -196,6 +196,20 @@ extension SQLiteGRDBDatabase {
                     .defaults(to: "")
             })
         }
+        // v10
+        migrator.registerMigration("Create RuuviTagSQLite sharedToPending column") { db in
+            guard try db.columns(in: RuuviTagSQLite.databaseTableName)
+                .contains(
+                    where: { $0.name == RuuviTagSQLite.sharedToPendingColumn.name }
+                ) == false
+            else {
+                return
+            }
+            try db.alter(table: RuuviTagSQLite.databaseTableName, body: { t in
+                t.add(column: RuuviTagSQLite.sharedToPendingColumn.name, .text)
+                    .defaults(to: "")
+            })
+        }
         // v11
         migrator.registerMigration("Create RuuviTagSQLite ownersPlan column") { db in
             guard try db.columns(in: RuuviTagSQLite.databaseTableName)

@@ -4,33 +4,29 @@ import UIKit
 extension ShareViewController {
     enum Section: Int {
         case addFriend = 0
+        case shareSummary
         case sharedEmails
+        case pendingSharedEmails
         case description
 
         init(
             value: Int,
-            sharedEmailsExist: Bool
+            pendingSharedEmailsExist: Bool
         ) {
-            if sharedEmailsExist {
-                switch value {
-                case 0:
-                    self = .addFriend
-                case 1:
-                    self = .sharedEmails
-                case 2:
-                    self = .description
-                default:
-                    fatalError()
-                }
-            } else {
-                switch value {
-                case 0:
-                    self = .addFriend
-                case 1:
-                    self = .description
-                default:
-                    fatalError()
-                }
+            switch (pendingSharedEmailsExist, value) {
+            case (_, 0):
+                self = .addFriend
+            case (_, 1):
+                self = .shareSummary
+            case (_, 2):
+                self = .sharedEmails
+            case (true, 3):
+                self = .pendingSharedEmails
+            case (false, 3),
+                 (true, 4):
+                self = .description
+            default:
+                fatalError()
             }
         }
 
@@ -39,7 +35,10 @@ extension ShareViewController {
             case .description:
                 nil
             case .addFriend: { _, _ in RuuviLocalization.ShareViewController.AddFriend.title }
-            case .sharedEmails: { a, b in RuuviLocalization.ShareViewController.SharedEmails.title(a, b) }
+            case .shareSummary:
+                nil
+            case .sharedEmails: { _, _ in RuuviLocalization.shareActiveAccessSectionTitle }
+            case .pendingSharedEmails: { _, _ in RuuviLocalization.sharePendingSectionTitle }
             }
         }
     }
@@ -82,11 +81,7 @@ class ShareViewController: UITableViewController {
 
     override func numberOfSections(in _: UITableView) -> Int {
         if let canShare = viewModel.canShare.value, canShare {
-            if viewModel.sharedEmails.value?.isEmpty == true {
-                2
-            } else {
-                3
-            }
+            4 + (viewModel.pendingSharedToCount > 0 ? 1 : 0)
         } else {
             1
         }
@@ -95,14 +90,18 @@ class ShareViewController: UITableViewController {
     override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(
             value: section,
-            sharedEmailsExist: viewModel.sharedToCount > 0
+            pendingSharedEmailsExist: viewModel.pendingSharedToCount > 0
         ) {
         case .description:
             1
         case .addFriend:
             2
+        case .shareSummary:
+            0
         case .sharedEmails:
-            viewModel.sharedEmails.value?.count ?? 0
+            max(viewModel.sharedEmails.value?.count ?? 0, 1)
+        case .pendingSharedEmails:
+            viewModel.pendingSharedEmails.value?.count ?? 0
         }
     }
 
@@ -112,22 +111,30 @@ class ShareViewController: UITableViewController {
     ) -> UIView? {
         let section = Section(
             value: section,
-            sharedEmailsExist: viewModel.sharedToCount > 0
+            pendingSharedEmailsExist: viewModel.pendingSharedToCount > 0
         )
+        let titleText: String? = switch section {
+        case .shareSummary:
+            RuuviLocalization.shareSensorSharedToCountMessage(
+                viewModel.totalShareCount,
+                viewModel.sensorMaxCount,
+                viewModel.planTotalUsedCount,
+                viewModel.planTotalAvailableCount
+            )
+        case .pendingSharedEmails:
+            section.title?(0, 0)
+        default:
+            section.title?(0, 0)
+        }
+        guard let titleText, !titleText.isEmpty else {
+            return nil
+        }
         let headerView = UIView(color: .clear)
         let titleLabel = UILabel()
         titleLabel.textColor = RuuviColor.menuTextColor.color
         titleLabel.font = UIFont.ruuviCallout()
         titleLabel.numberOfLines = 0
-        switch section {
-        case .sharedEmails:
-            if let count = viewModel.sharedEmails.value?.count,
-               let title = section.title {
-                titleLabel.text = title(count, viewModel.maxCount)
-            }
-        default:
-            titleLabel.text = section.title?(0, 0)
-        }
+        titleLabel.text = titleText
         headerView.addSubview(titleLabel)
         titleLabel.fillSuperviewToSafeArea(
             padding: .init(
@@ -140,10 +147,31 @@ class ShareViewController: UITableViewController {
         return headerView
     }
 
+    override func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        let section = Section(
+            value: section,
+            pendingSharedEmailsExist: viewModel.pendingSharedToCount > 0
+        )
+        let titleText: String? = switch section {
+        case .shareSummary:
+            RuuviLocalization.shareSensorSharedToCountMessage(
+                viewModel.totalShareCount,
+                viewModel.sensorMaxCount,
+                viewModel.planTotalUsedCount,
+                viewModel.planTotalAvailableCount
+            )
+        case .pendingSharedEmails:
+            section.title?(0, 0)
+        default:
+            section.title?(0, 0)
+        }
+        return (titleText?.isEmpty == false) ? UITableView.automaticDimension : .leastNormalMagnitude
+    }
+
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: UITableViewCell = switch Section(
             value: indexPath.section,
-            sharedEmailsExist: viewModel.sharedToCount > 0
+            pendingSharedEmailsExist: viewModel.pendingSharedToCount > 0
         ) {
         case .description:
             getDescriptionCell(tableView, indexPath: indexPath)
@@ -153,8 +181,12 @@ class ShareViewController: UITableViewController {
             } else {
                 getButtonCell(tableView, indexPath: indexPath)
             }
+        case .shareSummary:
+            UITableViewCell()
         case .sharedEmails:
             getSharedEmailCell(tableView, indexPath: indexPath)
+        case .pendingSharedEmails:
+            getPendingSharedEmailCell(tableView, indexPath: indexPath)
         }
         return cell
     }
@@ -225,6 +257,8 @@ extension ShareViewController {
     func configureTableView() {
         tableView.sectionHeaderHeight = UITableView.automaticDimension
         tableView.estimatedSectionHeaderHeight = 70
+        tableView.sectionFooterHeight = .leastNormalMagnitude
+        tableView.estimatedSectionFooterHeight = .leastNormalMagnitude
         tableView.tableFooterView = UIView(frame: .zero)
     }
 
@@ -247,6 +281,7 @@ extension ShareViewController {
         cell.descriptionLabel.textColor = RuuviColor.textColor.color
         cell.descriptionLabel.tintColor = RuuviColor.tintColor.color
         cell.descriptionLabel.font = UIFont.ruuviFootnote()
+        cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.width, bottom: 0, right: 0)
         return cell
     }
 
@@ -272,7 +307,28 @@ extension ShareViewController {
 
     private func getSharedEmailCell(_ tableView: UITableView, indexPath: IndexPath) -> ShareEmailTableViewCell {
         let cell = tableView.dequeueReusableCell(with: ShareEmailTableViewCell.self, for: indexPath)
-        cell.emailLabel.text = viewModel.sharedEmails.value?[indexPath.row]
+        let sharedEmails = viewModel.sharedEmails.value ?? []
+        let email = sharedEmails.indices.contains(indexPath.row)
+            ? sharedEmails[indexPath.row]
+            : nil
+        cell.emailLabel.text = email ?? RuuviLocalization.shareActiveAccessEmptyValue
+        cell.emailLabel.textColor = RuuviColor.textColor.color
+        cell.emailLabel.font = UIFont.ruuviBody()
+        cell.unshareButton.tintColor = RuuviColor.textColor.color
+        cell.unshareButton.setImage(RuuviAsset.smallCrossClearIcon.image, for: .normal)
+        cell.unshareButton.isHidden = email == nil
+        cell.unshareButton.isUserInteractionEnabled = email != nil
+        cell.delegate = email == nil ? nil : self
+        cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.width, bottom: 0, right: 0)
+        return cell
+    }
+
+    private func getPendingSharedEmailCell(
+        _ tableView: UITableView,
+        indexPath: IndexPath
+    ) -> ShareEmailTableViewCell {
+        let cell = tableView.dequeueReusableCell(with: ShareEmailTableViewCell.self, for: indexPath)
+        cell.emailLabel.text = viewModel.pendingSharedEmails.value?[indexPath.row]
         cell.emailLabel.textColor = RuuviColor.textColor.color
         cell.emailLabel.font = UIFont.ruuviBody()
         cell.unshareButton.tintColor = RuuviColor.textColor.color

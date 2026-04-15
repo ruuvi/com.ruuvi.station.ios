@@ -15,6 +15,7 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
         public let offsetHumidity: Double?
         public let offsetPressure: Double?
         public let sharedTo: [String]?
+        public let sharedToPending: [String]?
         public let measurements: [UserApiSensorRecord]?
         public let apiAlerts: [RuuviCloudApiGetAlert]?
         public let subscription: RuuviCloudApiGetSensorSubsription?
@@ -32,6 +33,7 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
             case offsetHumidity
             case offsetPressure
             case sharedTo
+            case sharedToPending
             case measurements
             case apiAlerts = "alerts"
             case subscription

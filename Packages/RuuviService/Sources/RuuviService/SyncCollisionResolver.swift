@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 
 public enum SyncAction {
     /// Cloud data is newer - update local database
@@ -74,5 +75,27 @@ public struct SyncCollisionResolver {
 
         // For owned sensors, use standard timestamp comparison
         return resolve(localTimestamp: localTimestamp, cloudTimestamp: cloudTimestamp)
+    }
+
+    /// Some sensor fields are cloud-authoritative and can change without being tracked by the
+    /// sensor metadata `lastUpdated` timestamp. These fields may still need a local refresh when
+    /// timestamp-based collision resolution falls into the tolerant `.noAction` branch.
+    ///
+    /// `name` and `lastUpdated` are intentionally excluded here. Local timestamps keep
+    /// sub-second precision while cloud timestamps are integer seconds, so comparing them here
+    /// would make cloud overwrite local changes inside the resolver's equality tolerance window.
+    public static func shouldRefreshCloudAuthoritativeFields(
+        localSensor: AnyRuuviTagSensor,
+        cloudSensor: AnyCloudSensor
+    ) -> Bool {
+        localSensor.isClaimed != cloudSensor.isOwner
+            || localSensor.isOwner != cloudSensor.isOwner
+            || localSensor.owner != cloudSensor.owner
+            || localSensor.ownersPlan != cloudSensor.ownersPlan
+            || localSensor.isCloudSensor != (cloudSensor.isCloudSensor ?? true)
+            || localSensor.canShare != cloudSensor.canShare
+            || localSensor.sharedTo != cloudSensor.sharedTo
+            || localSensor.sharedToPending != cloudSensor.sharedToPending
+            || localSensor.maxHistoryDays != cloudSensor.maxHistoryDays
     }
 }

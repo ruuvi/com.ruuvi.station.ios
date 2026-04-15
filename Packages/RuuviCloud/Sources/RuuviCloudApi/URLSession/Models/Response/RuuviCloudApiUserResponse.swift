@@ -84,6 +84,10 @@ extension RuuviCloudApiSensor: CloudSensor {
         []
     }
 
+    public var sharedToPending: [String] {
+        []
+    }
+
     public var maxHistoryDays: Int? {
         nil
     }

@@ -339,6 +339,7 @@ private extension CardsSettingsState {
             .map { ownership in
                 Self.calculateShareSummary(
                     sharedTo: ownership.sharedTo,
+                    sharedToPending: ownership.sharedToPending,
                     maxShareCount: ownership.maxShareCount
                 )
             }
@@ -468,18 +469,21 @@ private extension CardsSettingsState {
     ) -> String {
         calculateShareSummary(
             sharedTo: snapshot.ownership.sharedTo,
+            sharedToPending: snapshot.ownership.sharedToPending,
             maxShareCount: snapshot.ownership.maxShareCount
         )
     }
 
     static func calculateShareSummary(
         sharedTo: [String],
+        sharedToPending: [String],
         maxShareCount: Int?
     ) -> String {
-        guard !sharedTo.isEmpty else {
+        let shareCount = sharedTo.count + sharedToPending.count
+        guard shareCount > 0 else {
             return RuuviLocalization.TagSettings.NotShared.title
         }
-        return RuuviLocalization.sharedToX(sharedTo.count, maxShareCount ?? 10)
+        return RuuviLocalization.sharedToX(shareCount, maxShareCount ?? 10)
     }
 
     // MARK: - More Info Rows

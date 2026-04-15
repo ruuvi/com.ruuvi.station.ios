@@ -51,6 +51,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     isCloudSensor: normalizedTag.isCloudSensor,
                     canShare: normalizedTag.canShare,
                     sharedTo: normalizedTag.sharedTo,
+                    sharedToPending: normalizedTag.sharedToPending,
                     maxHistoryDays: normalizedTag.maxHistoryDays,
                     lastUpdated: normalizedTag.lastUpdated
                 )
@@ -445,6 +446,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     isCloudSensor: normalizedTag.isCloudSensor,
                     canShare: normalizedTag.canShare,
                     sharedTo: normalizedTag.sharedTo,
+                    sharedToPending: normalizedTag.sharedToPending,
                     maxHistoryDays: normalizedTag.maxHistoryDays,
                     lastUpdated: normalizedTag.lastUpdated
                 )
@@ -487,6 +489,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     isCloudSensor: normalizedTag.isCloudSensor,
                     canShare: normalizedTag.canShare,
                     sharedTo: normalizedTag.sharedTo,
+                    sharedToPending: normalizedTag.sharedToPending,
                     maxHistoryDays: normalizedTag.maxHistoryDays
                 )
                 let success = try entity.delete(db)

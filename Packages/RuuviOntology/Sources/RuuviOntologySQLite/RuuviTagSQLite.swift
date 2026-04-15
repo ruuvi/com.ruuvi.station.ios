@@ -17,6 +17,7 @@ public struct RuuviTagSQLite: RuuviTagSensor, Equatable {
     public var isCloudSensor: Bool?
     public var canShare: Bool
     public var sharedTo: [String]
+    public var sharedToPending: [String]
     public var maxHistoryDays: Int?
     public var lastUpdated: Date?
 
@@ -36,6 +37,7 @@ public struct RuuviTagSQLite: RuuviTagSensor, Equatable {
         isCloudSensor: Bool?,
         canShare: Bool,
         sharedTo: [String],
+        sharedToPending: [String] = [],
         maxHistoryDays: Int?,
         lastUpdated: Date? = nil
     ) {
@@ -54,6 +56,7 @@ public struct RuuviTagSQLite: RuuviTagSensor, Equatable {
         self.isCloudSensor = isCloudSensor
         self.canShare = canShare
         self.sharedTo = sharedTo
+        self.sharedToPending = sharedToPending
         self.maxHistoryDays = maxHistoryDays
         self.lastUpdated = lastUpdated
     }
@@ -77,6 +80,7 @@ public struct RuuviTagSQLite: RuuviTagSensor, Equatable {
         let cloudEqual = lhs.isCloudSensor == rhs.isCloudSensor
             && lhs.canShare == rhs.canShare
             && lhs.sharedTo == rhs.sharedTo
+            && lhs.sharedToPending == rhs.sharedToPending
             && lhs.maxHistoryDays == rhs.maxHistoryDays
             && lhs.lastUpdated == rhs.lastUpdated
 
@@ -101,6 +105,7 @@ public extension RuuviTagSQLite {
     static let isCloudSensor = Column("isCloudSensor")
     static let canShareColumn = Column("canShare")
     static let sharedToColumn = Column("sharedTo")
+    static let sharedToPendingColumn = Column("sharedToPending")
     static let maxHistoryDaysColumn = Column("maxHistoryDays")
     static let lastUpdatedColumn = Column("lastUpdated")
 }
@@ -128,9 +133,14 @@ extension RuuviTagSQLite: FetchableRecord {
         maxHistoryDays = row[RuuviTagSQLite.maxHistoryDaysColumn]
         lastUpdated = row[RuuviTagSQLite.lastUpdatedColumn]
         if let sharedToColumn = row[RuuviTagSQLite.sharedToColumn] as? String {
-            sharedTo = sharedToColumn.components(separatedBy: ",")
+            sharedTo = Self.decodeShareList(sharedToColumn)
         } else {
             sharedTo = []
+        }
+        if let sharedToPendingColumn = row[RuuviTagSQLite.sharedToPendingColumn] as? String {
+            sharedToPending = Self.decodeShareList(sharedToPendingColumn)
+        } else {
+            sharedToPending = []
         }
     }
 }
@@ -156,12 +166,19 @@ extension RuuviTagSQLite: PersistableRecord {
         container[RuuviTagSQLite.isCloudSensor] = isCloudSensor
         container[RuuviTagSQLite.canShareColumn] = canShare
         container[RuuviTagSQLite.sharedToColumn] = sharedTo.joined(separator: ",")
+        container[RuuviTagSQLite.sharedToPendingColumn] = sharedToPending.joined(separator: ",")
         container[RuuviTagSQLite.maxHistoryDaysColumn] = maxHistoryDays
         container[RuuviTagSQLite.lastUpdatedColumn] = lastUpdated
     }
 }
 
 public extension RuuviTagSQLite {
+    static func decodeShareList(_ value: String) -> [String] {
+        value
+            .components(separatedBy: ",")
+            .filter { !$0.isEmpty }
+    }
+
     static func createTable(in db: Database) throws {
         try db.create(table: RuuviTagSQLite.databaseTableName, body: { table in
             table.column(RuuviTagSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
@@ -183,6 +200,7 @@ public extension RuuviTagSQLite {
             table.column(RuuviTagSQLite.isCloudSensor.name, .boolean)
             table.column(RuuviTagSQLite.canShareColumn.name, .boolean)
             table.column(RuuviTagSQLite.sharedToColumn.name, .text)
+            table.column(RuuviTagSQLite.sharedToPendingColumn.name, .text)
             table.column(RuuviTagSQLite.maxHistoryDaysColumn.name, .integer)
             table.column(RuuviTagSQLite.lastUpdatedColumn.name, .datetime)
         })

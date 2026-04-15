@@ -194,7 +194,10 @@ let package = Package(
         ),
         .testTarget(
             name: "RuuviServiceTests",
-            dependencies: ["RuuviService"]
+            dependencies: [
+                "RuuviService",
+                "RuuviOntology",
+            ]
         ),
     ]
 )
