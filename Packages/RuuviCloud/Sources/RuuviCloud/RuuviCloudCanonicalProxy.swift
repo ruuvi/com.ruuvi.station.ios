@@ -182,12 +182,9 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         let canonicalMac = canonical(macId)
         let wrappedProgress: ((MACIdentifier, Double) -> Void)?
         if let progress {
-            wrappedProgress = { [weak self] mac, value in
-                guard let self else {
-                    progress(mac, value)
-                    return
-                }
-                let originalMac = self.original(for: mac, fallback: macId)
+            let localIDs = localIDs
+            wrappedProgress = { mac, value in
+                let originalMac = localIDs.originalMac(for: mac) ?? macId
                 progress(originalMac, value)
             }
         } else {
@@ -379,10 +376,7 @@ private extension RuuviCloudCanonicalProxy {
     }
 
     func restore(sensor: AnyRuuviTagSensor, originalMac: MACIdentifier?) -> AnyRuuviTagSensor {
-        guard let originalMac else {
-            return sensor
-        }
-        guard let currentMac = sensor.macId else {
+        guard let originalMac, let currentMac = sensor.macId else {
             return sensor
         }
         let restored = original(for: currentMac, fallback: originalMac)

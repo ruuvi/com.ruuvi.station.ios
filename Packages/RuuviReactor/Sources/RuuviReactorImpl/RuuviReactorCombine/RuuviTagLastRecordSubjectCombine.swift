@@ -48,9 +48,7 @@ final class RuuviTagLastRecordSubjectCombine {
 
         ruuviTagDataTransactionObserver = observation.start(
             in: sqlite.database.dbPool,
-            onError: { [weak self] error in
-                self?.errorReporter.report(error: error)
-            },
+            onError: errorReporter.report(error:),
             onChange: { [weak self] record in
                 if let lastRecord = record?.any {
                     self?.subject.send(lastRecord)

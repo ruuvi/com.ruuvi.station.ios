@@ -19,8 +19,10 @@
 
 // MARK: - Font Registration
 
-private final class FontRegistration {
+final class FontRegistration {
     static let shared = FontRegistration()
+    static var usesPadFontSizingForTesting: (() -> Bool)?
+
     private var registeredFonts: Set<String> = []
 
     private init() {
@@ -55,9 +57,20 @@ private final class FontRegistration {
 
         guard !registeredFonts.contains(fontName) else { return }
 
-        let bundle = BundleToken.bundle
+        registerFont(named: fontName, from: possibleURLs(for: fontName))
+    }
 
-        let possibleURLs = [
+    func registerFontForTesting(named fontName: String, from possibleURLs: [URL?]? = nil) {
+        if let possibleURLs {
+            registerFont(named: fontName, from: possibleURLs)
+        } else {
+            registerFont(named: fontName)
+        }
+    }
+
+    private func possibleURLs(for fontName: String) -> [URL?] {
+        let bundle = BundleToken.bundle
+        return [
             bundle.url(forResource: fontName, withExtension: "ttf", subdirectory: "Fonts"),
             bundle.url(forResource: fontName, withExtension: "otf", subdirectory: "Fonts"),
             bundle.url(forResource: fontName, withExtension: "ttf", subdirectory: "Resources/Fonts"),
@@ -65,7 +78,9 @@ private final class FontRegistration {
             bundle.url(forResource: fontName, withExtension: "ttf"),
             bundle.url(forResource: fontName, withExtension: "otf"),
         ]
+    }
 
+    private func registerFont(named fontName: String, from possibleURLs: [URL?]) {
         guard let fontURL = possibleURLs.first(where: { $0 != nil }) else {
             return
         }
@@ -83,6 +98,13 @@ private final class FontRegistration {
         if success {
             registeredFonts.insert(fontName)
         }
+    }
+
+    static var usesPadFontSizing: Bool {
+        if let usesPadFontSizingForTesting {
+            return usesPadFontSizingForTesting()
+        }
+        return UIDevice.current.userInterfaceIdiom == .pad
     }
 }
 
@@ -104,7 +126,7 @@ public struct FontAsset {
         _ = FontRegistration.shared
 
         var fontSize = size
-        if UIDevice.current.userInterfaceIdiom == .pad {
+        if FontRegistration.usesPadFontSizing {
             fontSize += 2
         }
 

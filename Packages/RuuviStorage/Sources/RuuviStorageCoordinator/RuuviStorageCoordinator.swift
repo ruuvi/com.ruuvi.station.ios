@@ -76,7 +76,6 @@ final class RuuviStorageCoordinator: RuuviStorage {
 
     func readLast(_ ruuviTag: RuuviTagSensor) async throws -> RuuviTagSensorRecord? {
         guard ruuviTag.macId != nil else {
-            assertionFailure()
             return nil
         }
         return try await storageOperation {
@@ -86,7 +85,6 @@ final class RuuviStorageCoordinator: RuuviStorage {
 
     func readLatest(_ ruuviTag: RuuviTagSensor) async throws -> RuuviTagSensorRecord? {
         guard ruuviTag.macId != nil else {
-            assertionFailure()
             return nil
         }
         return try await storageOperation {
@@ -122,7 +120,6 @@ final class RuuviStorageCoordinator: RuuviStorage {
 
     func readSensorSettings(_ ruuviTag: RuuviTagSensor) async throws -> SensorSettings? {
         guard ruuviTag.macId != nil else {
-            assertionFailure()
             return nil
         }
         return try await storageOperation {

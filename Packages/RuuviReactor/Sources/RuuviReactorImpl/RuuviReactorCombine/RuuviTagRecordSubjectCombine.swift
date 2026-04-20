@@ -47,9 +47,7 @@ final class RuuviTagRecordSubjectCombine {
 
         ruuviTagDataTransactionObserver = observation.start(
             in: sqlite.database.dbPool,
-            onError: { [weak self] error in
-                self?.errorReporter.report(error: error)
-            },
+            onError: errorReporter.report(error:),
             onChange: { [weak self] records in
                 self?.subject.send(records.map(\.any))
             }

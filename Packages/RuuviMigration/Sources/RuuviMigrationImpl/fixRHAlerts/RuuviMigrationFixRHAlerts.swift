@@ -41,8 +41,8 @@ final class RuuviMigrationFixRHAlerts: RuuviMigration, @unchecked Sendable {
                         }
                     }
                 }
+                UserDefaults.standard.set(true, forKey: self.migratedUdKey)
             }
         }
-        UserDefaults.standard.set(true, forKey: migratedUdKey)
     }
 }

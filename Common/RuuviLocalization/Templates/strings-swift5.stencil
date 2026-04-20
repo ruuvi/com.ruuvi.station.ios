@@ -56,7 +56,7 @@ import Foundation
     {% endif %}
     {% endfor %}
     {% for child in item.children %}
-    {{accessModifier}} enum {{child.name|swiftIdentifier:"pretty"|escapeReservedKeywords}} {
+    {{accessModifier}} enum {{child.name|swiftIdentifier:"pretty"|escapeReservedKeywords|replace:"`Type`","SensorType"}} {
         {% filter indent:2," ",true %}{% call recursiveBlock table child %}{% endfilter %}
     }
     {% endfor %}

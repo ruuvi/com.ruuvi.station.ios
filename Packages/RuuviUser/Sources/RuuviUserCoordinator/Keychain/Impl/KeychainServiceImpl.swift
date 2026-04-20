@@ -1,18 +1,42 @@
 import Foundation
 import KeychainAccess
 
+protocol KeychainStore {
+    func get(_ key: String) throws -> String?
+    func set(_ value: String, key: String) throws
+    func remove(_ key: String) throws
+}
+
+extension Keychain: KeychainStore {
+    func get(_ key: String) throws -> String? { try get(key, ignoringAttributeSynchronizable: true) }
+
+    func set(_ value: String, key: String) throws { try set(value, key: key, ignoringAttributeSynchronizable: true) }
+
+    func remove(_ key: String) throws { try remove(key, ignoringAttributeSynchronizable: true) }
+}
+
 final class KeychainServiceImpl {
-    private let keychain: Keychain = .init(
-        service: "com.ruuvi.station",
-        accessGroup: "4MUYJ4YYH4.com.ruuvi.station"
-    )
-    .label("Ruuvi Station")
-    .synchronizable(false)
-    .accessibility(.afterFirstUnlockThisDeviceOnly)
+    private let keychain: any KeychainStore
+
+    init(
+        keychain: any KeychainStore = KeychainServiceImpl.makeDefaultKeychain()
+    ) {
+        self.keychain = keychain
+    }
 
     private enum Account: String {
         case ruuviUserApi
         case userApiEmail
+    }
+
+    private static func makeDefaultKeychain() -> any KeychainStore {
+        Keychain(
+            service: "com.ruuvi.station",
+            accessGroup: "4MUYJ4YYH4.com.ruuvi.station"
+        )
+        .label("Ruuvi Station")
+        .synchronizable(false)
+        .accessibility(.afterFirstUnlockThisDeviceOnly)
     }
 }
 

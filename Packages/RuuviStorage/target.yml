@@ -9,3 +9,14 @@ targets:
     dependencies:
     - target: RuuviOntology
     - target: RuuviPersistence
+  RuuviStorageTests:
+    type: bundle.unit-test
+    platform: iOS
+    hostApplication: station
+    sources:
+    - path: Tests/RuuviStorageTests
+    dependencies:
+    - target: RuuviStorage
+    - target: RuuviOntology
+    - target: RuuviPersistence
+    - package: Humidity

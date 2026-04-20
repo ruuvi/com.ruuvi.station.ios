@@ -19,7 +19,7 @@ class RuuviTagDataPruningOperation: AsyncOperation, @unchecked Sendable {
             byAdding: .hour,
             value: -offset,
             to: Date()
-        ) ?? Date()
+        )!
         Task {
             do {
                 _ = try await ruuviPool.deleteAllRecords(id, before: date)

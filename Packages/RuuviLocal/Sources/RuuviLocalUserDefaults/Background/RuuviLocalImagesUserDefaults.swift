@@ -94,15 +94,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
             for: identifier
         )
         setBackground(0, for: identifier)
-        let userInfoKey: BPDidChangeBackgroundKey
-        if identifier is LocalIdentifier {
-            userInfoKey = .luid
-        } else if identifier is MACIdentifier {
-            userInfoKey = .macId
-        } else {
-            userInfoKey = .luid
-            assertionFailure()
-        }
+        let userInfoKey = backgroundChangeKey(for: identifier)
         NotificationCenter
             .default
             .post(
@@ -118,15 +110,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
         let key = bgUDKeyPrefix + uuid
         UserDefaults.standard.set(id, forKey: key)
         UserDefaults.standard.synchronize()
-        let userInfoKey: BPDidChangeBackgroundKey
-        if identifier is LocalIdentifier {
-            userInfoKey = .luid
-        } else if identifier is MACIdentifier {
-            userInfoKey = .macId
-        } else {
-            userInfoKey = .luid
-            assertionFailure()
-        }
+        let userInfoKey = backgroundChangeKey(for: identifier)
         NotificationCenter
             .default
             .post(
@@ -151,17 +135,9 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     // swiftlint:disable legacy_random
     private func biasedToNotUsedRandom() -> Int {
         let array = usedBackgrounds
-        var result: Int
-        if let min = array.min() {
-            let indicies = array.enumerated().compactMap { $1 == min ? $0 + bgMinIndex : nil }
-            if indicies.count == 0 {
-                result = Int(arc4random_uniform(UInt32(bgMaxIndex)) + UInt32(bgMinIndex))
-            } else {
-                result = indicies.shuffled()[0]
-            }
-        } else {
-            result = Int(arc4random_uniform(UInt32(bgMaxIndex)) + UInt32(bgMinIndex))
-        }
+        let min = array.min()!
+        let indicies = array.enumerated().compactMap { $1 == min ? $0 + bgMinIndex : nil }
+        let result = indicies.shuffled()[0]
 
         assert(result >= bgMinIndex)
         assert(result <= bgMaxIndex)
@@ -181,15 +157,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     func setBackgroundUploadProgress(percentage: Double, for identifier: Identifier) {
         let uuid = identifier.value
         let key = uploadBackgroundKeyPrefix + uuid
-        let userInfoKey: BPDidUpdateBackgroundUploadProgressKey
-        if identifier is LocalIdentifier {
-            userInfoKey = .luid
-        } else if identifier is MACIdentifier {
-            userInfoKey = .macId
-        } else {
-            userInfoKey = .luid
-            assertionFailure()
-        }
+        let userInfoKey = backgroundUploadProgressKey(for: identifier)
         NotificationCenter
             .default
             .post(
@@ -207,6 +175,14 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
         let uuid = identifier.value
         let key = uploadBackgroundKeyPrefix + uuid
         UserDefaults.standard.removeObject(forKey: key)
+    }
+
+    private func backgroundChangeKey(for identifier: Identifier) -> BPDidChangeBackgroundKey {
+        identifier is MACIdentifier ? .macId : .luid
+    }
+
+    private func backgroundUploadProgressKey(for identifier: Identifier) -> BPDidUpdateBackgroundUploadProgressKey {
+        identifier is MACIdentifier ? .macId : .luid
     }
 
     func isPictureCached(for cloudSensor: CloudSensor) -> Bool {

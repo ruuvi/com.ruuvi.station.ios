@@ -161,6 +161,52 @@ include:
 - Apps/RuuviStation/NotificationService/target.yml
 - Apps/RuuviStation/Intents/target.yml
 
+schemes:
+  PackageMigrationTests:
+    build:
+      targets:
+        RuuviAnalyticsTests: all
+        RuuviCloudTests: all
+        RuuviContextTests: all
+        RuuviCoreTests: all
+        RuuviDFUTests: all
+        RuuviMigrationTests: all
+        RuuviNotificationTests: all
+        RuuviNotifierTests: all
+        RuuviOntologyTests: all
+        RuuviPersistenceTests: all
+        RuuviPoolTests: all
+        RuuviReactorTests: all
+        RuuviRepositoryTests: all
+        RuuviServiceTests: all
+        RuuviLocalTests: all
+        RuuviLocalizationTests: all
+        RuuviDaemonTests: all
+        RuuviStorageTests: all
+        RuuviUserTests: all
+    test:
+      gatherCoverageData: true
+      targets:
+      - name: RuuviAnalyticsTests
+      - name: RuuviCloudTests
+      - name: RuuviContextTests
+      - name: RuuviCoreTests
+      - name: RuuviDFUTests
+      - name: RuuviMigrationTests
+      - name: RuuviNotificationTests
+      - name: RuuviNotifierTests
+      - name: RuuviOntologyTests
+      - name: RuuviPersistenceTests
+      - name: RuuviPoolTests
+      - name: RuuviReactorTests
+      - name: RuuviRepositoryTests
+      - name: RuuviServiceTests
+      - name: RuuviLocalTests
+      - name: RuuviLocalizationTests
+      - name: RuuviDaemonTests
+      - name: RuuviStorageTests
+      - name: RuuviUserTests
+
 configs:
   Alpha: release
   Debug: debug

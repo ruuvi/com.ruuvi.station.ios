@@ -83,78 +83,52 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         }
         let luid = sensor.luid
         let macId = sensor.macId
-        assert(luid != nil || macId != nil)
+        guard let identifier = macId ?? luid else {
+            throw RuuviServiceError.bothLuidAndMacAreNil
+        }
 
-        if sensor.isCloud {
-            if let mac = macId {
-                localImages.setBackgroundUploadProgress(percentage: 0.0, for: mac)
-                let localUrl = try await RuuviServiceError.perform {
-                    try await self.localImages.setCustomBackground(
-                        image: croppedImage,
-                        compressionQuality: compressionQuality,
-                        for: mac
-                    )
-                }
-                updateSensorTimestamp(for: sensor)
-                do {
-                    _ = try await RuuviServiceError.perform {
-                        try await self.cloud.upload(
-                            imageData: jpegData,
-                            mimeType: .jpg,
-                            progress: { macId, percentage in
-                                self.localImages.setBackgroundUploadProgress(
-                                    percentage: percentage,
-                                    for: macId
-                                )
-                                progress?(macId, percentage)
-                            },
-                            for: mac
-                        )
-                    }
-                    localImages.deleteBackgroundUploadProgress(for: mac)
-                    return localUrl
-                } catch {
-                    localImages.deleteBackgroundUploadProgress(for: mac)
-                    throw error
-                }
-            } else if let luid {
-                let localUrl = try await RuuviServiceError.perform {
-                    try await self.localImages.setCustomBackground(
-                        image: croppedImage,
-                        compressionQuality: compressionQuality,
-                        for: luid
-                    )
-                }
-                updateSensorTimestamp(for: sensor)
-                return localUrl
-            } else {
-                throw RuuviServiceError.bothLuidAndMacAreNil
+        if sensor.isCloud, let mac = macId {
+            localImages.setBackgroundUploadProgress(percentage: 0.0, for: mac)
+            let localUrl = try await RuuviServiceError.perform {
+                try await self.localImages.setCustomBackground(
+                    image: croppedImage,
+                    compressionQuality: compressionQuality,
+                    for: mac
+                )
             }
-        } else {
-            if let mac = macId {
-                let localUrl = try await RuuviServiceError.perform {
-                    try await self.localImages.setCustomBackground(
-                        image: croppedImage,
-                        compressionQuality: compressionQuality,
+            updateSensorTimestamp(for: sensor)
+            do {
+                _ = try await RuuviServiceError.perform {
+                    try await self.cloud.upload(
+                        imageData: jpegData,
+                        mimeType: .jpg,
+                        progress: { macId, percentage in
+                            self.localImages.setBackgroundUploadProgress(
+                                percentage: percentage,
+                                for: macId
+                            )
+                            progress?(macId, percentage)
+                        },
                         for: mac
                     )
                 }
-                updateSensorTimestamp(for: sensor)
+                localImages.deleteBackgroundUploadProgress(for: mac)
                 return localUrl
-            } else if let luid {
-                let localUrl = try await RuuviServiceError.perform {
-                    try await self.localImages.setCustomBackground(
-                        image: croppedImage,
-                        compressionQuality: compressionQuality,
-                        for: luid
-                    )
-                }
-                updateSensorTimestamp(for: sensor)
-                return localUrl
-            } else {
-                throw RuuviServiceError.bothLuidAndMacAreNil
+            } catch {
+                localImages.deleteBackgroundUploadProgress(for: mac)
+                throw error
             }
         }
+
+        let localUrl = try await RuuviServiceError.perform {
+            try await self.localImages.setCustomBackground(
+                image: croppedImage,
+                compressionQuality: compressionQuality,
+                for: identifier
+            )
+        }
+        updateSensorTimestamp(for: sensor)
+        return localUrl
     }
 
     public func getImage(for sensor: RuuviTagSensor) async throws -> UIImage {
@@ -352,15 +326,7 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         guard let codes, !codes.isEmpty else {
             return nil
         }
-        if let data = try? JSONEncoder().encode(codes),
-           let string = String(data: data, encoding: .utf8) {
-            return string
-        }
-        if let data = try? JSONSerialization.data(withJSONObject: codes, options: []),
-           let string = String(data: data, encoding: .utf8) {
-            return string
-        }
-        return nil
+        return String(data: try! JSONEncoder().encode(codes), encoding: .utf8)!
     }
 
     private func updateSensorTimestamp(for sensor: RuuviTagSensor) {

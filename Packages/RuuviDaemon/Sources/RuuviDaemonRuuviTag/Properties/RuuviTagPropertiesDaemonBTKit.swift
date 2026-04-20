@@ -6,31 +6,256 @@ import RuuviPersistence
 import RuuviPool
 import RuuviReactor
 
+enum RuuviTagPropertiesPoolFailureAction {
+    case removeCachedSensor
+    case postError(RuuviDaemonError)
+}
+
+protocol PropertiesForegrounding {
+    @discardableResult
+    func observe<T: AnyObject>(
+        _ observer: T,
+        uuid: String,
+        options: BTScannerOptionsInfo?,
+        closure: @escaping (T, BTDevice) -> Void
+    ) -> DaemonObservationToken
+
+    @discardableResult
+    func scan<T: AnyObject>(
+        _ observer: T,
+        closure: @escaping (T, BTDevice) -> Void
+    ) -> DaemonObservationToken
+}
+
+private struct PropertiesForegroundAdapter: PropertiesForegrounding {
+    let foreground: BTForeground
+
+    func observe<T: AnyObject>(
+        _ observer: T,
+        uuid: String,
+        options: BTScannerOptionsInfo?,
+        closure: @escaping (T, BTDevice) -> Void
+    ) -> DaemonObservationToken {
+        let token = foreground.observe(
+            observer,
+            uuid: uuid,
+            options: options,
+            closure: closure
+        )
+        return DaemonObservationToken {
+            token.invalidate()
+        }
+    }
+
+    func scan<T: AnyObject>(
+        _ observer: T,
+        closure: @escaping (T, BTDevice) -> Void
+    ) -> DaemonObservationToken {
+        let token = foreground.scan(observer, closure: closure)
+        return DaemonObservationToken {
+            token.invalidate()
+        }
+    }
+}
+
+protocol PropertiesIDPersisting {
+    func mac(for luid: LocalIdentifier) -> MACIdentifier?
+    func luid(for mac: MACIdentifier) -> LocalIdentifier?
+    func set(mac: MACIdentifier, for luid: LocalIdentifier)
+    func set(luid: LocalIdentifier, for mac: MACIdentifier)
+}
+
+struct PropertiesIDPersistenceAdapter: PropertiesIDPersisting {
+    let ids: RuuviLocalIDs
+
+    func mac(for luid: LocalIdentifier) -> MACIdentifier? {
+        ids.mac(for: luid)
+    }
+
+    func luid(for mac: MACIdentifier) -> LocalIdentifier? {
+        ids.luid(for: mac)
+    }
+
+    func set(mac: MACIdentifier, for luid: LocalIdentifier) {
+        ids.set(mac: mac, for: luid)
+    }
+
+    func set(luid: LocalIdentifier, for mac: MACIdentifier) {
+        ids.set(luid: luid, for: mac)
+    }
+}
+
+protocol PropertiesSensorReading {
+    func readOne(_ id: String) async throws -> AnyRuuviTagSensor
+}
+
+struct PropertiesSensorReaderAdapter: PropertiesSensorReading {
+    let persistence: RuuviPersistence
+
+    func readOne(_ id: String) async throws -> AnyRuuviTagSensor {
+        try await persistence.readOne(id)
+    }
+}
+
+struct RuuviTagPropertiesDaemonCore {
+    static func updatedSensor(
+        current ruuviTag: AnyRuuviTagSensor,
+        observed device: RuuviTag,
+        persistedMac: MACIdentifier?
+    ) -> (any RuuviTagSensor)? {
+        if let mac = device.mac, mac != ruuviTag.macId?.value {
+            if let persistedMac {
+                return ruuviTag
+                    .with(macId: persistedMac)
+                    .with(version: device.version)
+            }
+            return nil
+        } else if ruuviTag.macId?.value != nil, device.mac == nil {
+            if let persistedMac, device.version != ruuviTag.version {
+                return ruuviTag
+                    .with(macId: persistedMac)
+                    .with(version: device.version)
+            }
+            return nil
+        } else if device.version != ruuviTag.version {
+            return ruuviTag.with(version: device.version)
+        } else {
+            return nil
+        }
+    }
+
+    static func shouldProcessRemoteScan(
+        ruuviTag: AnyRuuviTagSensor,
+        device: BTDevice,
+        processingUUIDs: Set<String>
+    ) -> Bool {
+        guard let mac = ruuviTag.macId,
+              ruuviTag.luid == nil,
+              let tag = device.ruuvi?.tag,
+              mac.any == tag.macId?.any
+        else {
+            return false
+        }
+        return !processingUUIDs.contains(tag.uuid)
+    }
+
+    static func makeRemoteSensor(
+        from ruuviTag: AnyRuuviTagSensor,
+        device: BTDevice
+    ) -> RuuviTagSensorStruct? {
+        guard let tag = device.ruuvi?.tag,
+              let mac = ruuviTag.macId,
+              ruuviTag.luid == nil
+        else {
+            return nil
+        }
+        return RuuviTagSensorStruct(
+            version: tag.version,
+            firmwareVersion: ruuviTag.firmwareVersion,
+            luid: device.uuid.luid,
+            macId: mac,
+            serviceUUID: device.serviceUUID,
+            isConnectable: device.isConnectable,
+            name: ruuviTag.name,
+            isClaimed: ruuviTag.isClaimed,
+            isOwner: ruuviTag.isOwner,
+            owner: ruuviTag.owner,
+            ownersPlan: ruuviTag.ownersPlan,
+            isCloudSensor: ruuviTag.isCloudSensor,
+            canShare: ruuviTag.canShare,
+            sharedTo: ruuviTag.sharedTo,
+            maxHistoryDays: ruuviTag.maxHistoryDays
+        )
+    }
+
+    static func makeRemoteSensor(
+        from ruuviTag: AnyRuuviTagSensor,
+        mac: MACIdentifier,
+        tag: RuuviTag,
+        device: BTDevice
+    ) -> RuuviTagSensorStruct {
+        RuuviTagSensorStruct(
+            version: tag.version,
+            firmwareVersion: ruuviTag.firmwareVersion,
+            luid: device.uuid.luid,
+            macId: mac,
+            serviceUUID: device.serviceUUID,
+            isConnectable: device.isConnectable,
+            name: ruuviTag.name,
+            isClaimed: ruuviTag.isClaimed,
+            isOwner: ruuviTag.isOwner,
+            owner: ruuviTag.owner,
+            ownersPlan: ruuviTag.ownersPlan,
+            isCloudSensor: ruuviTag.isCloudSensor,
+            canShare: ruuviTag.canShare,
+            sharedTo: ruuviTag.sharedTo,
+            maxHistoryDays: ruuviTag.maxHistoryDays
+        )
+    }
+
+    static func poolFailureAction(
+        for error: RuuviPoolError
+    ) -> RuuviTagPropertiesPoolFailureAction {
+        if case let .ruuviPersistence(persistenceError) = error,
+           case .failedToFindRuuviTag = persistenceError {
+            return .removeCachedSensor
+        }
+        return .postError(.ruuviPool(error))
+    }
+
+    static func removeCachedSensor(
+        matching ruuviTag: RuuviTagSensor,
+        from ruuviTags: [AnyRuuviTagSensor]
+    ) -> [AnyRuuviTagSensor] {
+        ruuviTags.filter { cachedSensor in
+            let matchesMac = cachedSensor.macId != nil && cachedSensor.macId?.any == ruuviTag.macId?.any
+            let matchesLuid = cachedSensor.luid != nil && cachedSensor.luid?.any == ruuviTag.luid?.any
+            return !(matchesMac || matchesLuid)
+        }
+    }
+}
+
 public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPropertiesDaemon {
     private let ruuviPool: RuuviPool
     private let ruuviReactor: RuuviReactor
-    private let foreground: BTForeground
-    private let idPersistence: RuuviLocalIDs
-    private let sqiltePersistence: RuuviPersistence
+    private let foreground: any PropertiesForegrounding
+    private let idPersistence: any PropertiesIDPersisting
+    private let sensorReader: any PropertiesSensorReading
 
-    public init(
+    public convenience init(
         ruuviPool: RuuviPool,
         ruuviReactor: RuuviReactor,
         foreground: BTForeground,
         idPersistence: RuuviLocalIDs,
         sqiltePersistence: RuuviPersistence
     ) {
+        self.init(
+            ruuviPool: ruuviPool,
+            ruuviReactor: ruuviReactor,
+            foreground: PropertiesForegroundAdapter(foreground: foreground),
+            idPersistence: PropertiesIDPersistenceAdapter(ids: idPersistence),
+            sensorReader: PropertiesSensorReaderAdapter(persistence: sqiltePersistence)
+        )
+    }
+
+    init(
+        ruuviPool: RuuviPool,
+        ruuviReactor: RuuviReactor,
+        foreground: any PropertiesForegrounding,
+        idPersistence: any PropertiesIDPersisting,
+        sensorReader: any PropertiesSensorReading
+    ) {
         self.ruuviPool = ruuviPool
         self.ruuviReactor = ruuviReactor
         self.foreground = foreground
         self.idPersistence = idPersistence
-        self.sqiltePersistence = sqiltePersistence
+        self.sensorReader = sensorReader
         super.init()
     }
 
     private var ruuviTagsToken: RuuviReactorToken?
-    private var observeTokens = [ObservationToken]()
-    private var scanTokens = [ObservationToken]()
+    private var observeTokens = [DaemonObservationToken]()
+    private var scanTokens = [DaemonObservationToken]()
     private var ruuviTags = [AnyRuuviTagSensor]()
     private var processingUUIDs = Set<String>()
 
@@ -141,38 +366,11 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
     }
 
     @objc private func tryToUpdate(pair: RuuviTagPropertiesDaemonPair) {
-        let updatedSensor: (any RuuviTagSensor)?
-        if let mac = pair.device.mac, mac != pair.ruuviTag.macId?.value {
-            // this is the case when data format 3 tag (2.5.9) changes format
-            // either by pressing B or by upgrading firmware
-            if let mac = idPersistence.mac(for: pair.device.uuid.luid) {
-                // tag is already saved to SQLite
-                updatedSensor = pair.ruuviTag
-                    .with(macId: mac)
-                    .with(version: pair.device.version)
-            } else {
-                updatedSensor = nil
-            }
-        } else if pair.ruuviTag.macId?.value != nil, pair.device.mac == nil {
-            // this is the case when 2.5.9 tag is returning to data format 3 mode
-            // but we have it in sqlite database already
-            if let mac = idPersistence.mac(for: pair.device.uuid.luid),
-               pair.device.version != pair.ruuviTag.version {
-                updatedSensor = pair.ruuviTag
-                    .with(macId: mac)
-                    .with(version: pair.device.version)
-            } else {
-                updatedSensor = nil
-            }
-        } else {
-            if pair.device.version != pair.ruuviTag.version {
-                updatedSensor = pair.ruuviTag
-                    .with(version: pair.device.version)
-            } else {
-                updatedSensor = nil
-            }
-        }
-
+        let updatedSensor = RuuviTagPropertiesDaemonCore.updatedSensor(
+            current: pair.ruuviTag,
+            observed: pair.device,
+            persistedMac: idPersistence.mac(for: pair.device.uuid.luid)
+        )
         guard let updatedSensor else { return }
 
         Task { [weak self] in
@@ -195,16 +393,16 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
             else {
                 return
             }
-            if observer.idPersistence.luid(for: macId)?.any != luid.any {
-                observer.idPersistence.set(luid: luid, for: macId)
-                Task { [weak observer] in
-                    guard let observer else { return }
-                    if let sensor = try? await observer.sqiltePersistence.readOne(macId.mac) {
-                        _ = try? await observer.ruuviPool.update(sensor.with(luid: luid))
+                    if observer.idPersistence.luid(for: macId)?.any != luid.any {
+                        observer.idPersistence.set(luid: luid, for: macId)
+                        Task { [weak observer] in
+                            guard let observer else { return }
+                            if let sensor = try? await observer.sensorReader.readOne(macId.mac) {
+                                _ = try? await observer.ruuviPool.update(sensor.with(luid: luid))
+                            }
+                        }
                     }
-                }
-            }
-        })
+                })
         scanTokens.append(scanToken)
     }
 
@@ -217,29 +415,20 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
         let scanToken = foreground.scan(self, closure: { [weak self] _, device in
             guard let sSelf = self,
                   let tag = device.ruuvi?.tag,
-                  mac.any == tag.macId?.any,
-                  ruuviTag.luid == nil || ruuviTag.serviceUUID == nil,
-                  !sSelf.processingUUIDs.contains(tag.uuid)
+                  RuuviTagPropertiesDaemonCore.shouldProcessRemoteScan(
+                    ruuviTag: ruuviTag,
+                    device: device,
+                    processingUUIDs: sSelf.processingUUIDs
+                  )
             else {
                 return
             }
             sSelf.processingUUIDs.insert(tag.uuid)
-            let ruuviSensor = RuuviTagSensorStruct(
-                version: tag.version,
-                firmwareVersion: ruuviTag.firmwareVersion,
-                luid: device.uuid.luid,
-                macId: mac,
-                serviceUUID: device.serviceUUID,
-                isConnectable: device.isConnectable,
-                name: ruuviTag.name,
-                isClaimed: ruuviTag.isClaimed,
-                isOwner: ruuviTag.isOwner,
-                owner: ruuviTag.owner,
-                ownersPlan: ruuviTag.ownersPlan,
-                isCloudSensor: ruuviTag.isCloudSensor,
-                canShare: ruuviTag.canShare,
-                sharedTo: ruuviTag.sharedTo,
-                maxHistoryDays: ruuviTag.maxHistoryDays
+            let ruuviSensor = RuuviTagPropertiesDaemonCore.makeRemoteSensor(
+                from: ruuviTag,
+                mac: mac,
+                tag: tag,
+                device: device
             )
             sSelf.idPersistence.set(mac: mac, for: device.uuid.luid)
             sSelf.idPersistence.set(luid: device.uuid.luid, for: mac)
@@ -276,19 +465,19 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
         _ error: RuuviPoolError,
         ruuviTag: RuuviTagSensor
     ) {
-        if case let .ruuviPersistence(persistenceError) = error,
-           case .failedToFindRuuviTag = persistenceError {
+        switch RuuviTagPropertiesDaemonCore.poolFailureAction(for: error) {
+        case .removeCachedSensor:
             removeCachedSensor(matching: ruuviTag)
             restartObserving()
-            return
+        case let .postError(daemonError):
+            post(error: daemonError)
         }
-        post(error: .ruuviPool(error))
     }
 
     private func removeCachedSensor(matching ruuviTag: RuuviTagSensor) {
-        ruuviTags.removeAll(where: {
-            ($0.macId != nil && $0.macId?.any == ruuviTag.macId?.any)
-                || ($0.luid != nil && $0.luid?.any == ruuviTag.luid?.any)
-        })
+        ruuviTags = RuuviTagPropertiesDaemonCore.removeCachedSensor(
+            matching: ruuviTag,
+            from: ruuviTags
+        )
     }
 }

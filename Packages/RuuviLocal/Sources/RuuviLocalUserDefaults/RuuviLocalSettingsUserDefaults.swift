@@ -45,18 +45,19 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         UserDefaults.standard.set(value, forKey: firmwareVersionPrefix + luid.value)
     }
 
-    private let notificationServiceAppGroup = UserDefaults(suiteName: "group.com.ruuvi.station.pnservice")
+    private let notificationServiceAppGroup =
+        UserDefaults(suiteName: "group.com.ruuvi.station.pnservice")!
     var language: Language {
         get {
-            if let savedCode = notificationServiceAppGroup?.string(forKey: languageUDKey) {
+            if let savedCode = notificationServiceAppGroup.string(forKey: languageUDKey) {
                 Language(rawValue: savedCode) ?? .english
             } else {
                 .english
             }
         }
         set {
-            notificationServiceAppGroup?.set(newValue.rawValue, forKey: languageUDKey)
-            notificationServiceAppGroup?.synchronize()
+            notificationServiceAppGroup.set(newValue.rawValue, forKey: languageUDKey)
+            notificationServiceAppGroup.synchronize()
             UserDefaults.standard.set(newValue.rawValue, forKey: languageUDKey)
             NotificationCenter
                 .default
@@ -134,8 +135,6 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     var temperatureUnit: TemperatureUnit {
         get {
             switch temperatureUnitInt {
-            case 0:
-                useFahrenheit ? .fahrenheit : .celsius
             case 1:
                 .kelvin
             case 2:
@@ -307,8 +306,6 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         for (uuid, value) in stored {
             if let timeInterval = value as? TimeInterval {
                 result[uuid] = Date(timeIntervalSince1970: timeInterval)
-            } else if let number = value as? NSNumber {
-                result[uuid] = Date(timeIntervalSince1970: number.doubleValue)
             }
         }
         return result
@@ -520,7 +517,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     }
 
     func setCardToOpenFromWidget(for macId: String?) {
-        UserDefaults.standard.set(macId, forKey: cardToOpenFromWidgetKey)
+        if let macId {
+            UserDefaults.standard.set(macId, forKey: cardToOpenFromWidgetKey)
+        } else {
+            UserDefaults.standard.removeObject(forKey: cardToOpenFromWidgetKey)
+        }
     }
 
     private let lastOpenedChartKey = "SettingsUserDefaults.lastOpenedChart"
@@ -529,7 +530,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     }
 
     func setLastOpenedChart(with id: String?) {
-        UserDefaults.standard.set(id, forKey: lastOpenedChartKey)
+        if let id {
+            UserDefaults.standard.set(id, forKey: lastOpenedChartKey)
+        } else {
+            UserDefaults.standard.removeObject(forKey: lastOpenedChartKey)
+        }
     }
 
     private let ownerCheckDateKey = "SettingsUserDefaults.ownerCheckDate"
@@ -833,19 +838,15 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     private let notificationsBadgeCountUDKey = "SettingsUserDefaults.notificationsBadgeCount"
     func setNotificationsBadgeCount(value: Int) {
-        notificationServiceAppGroup?
-            .set(
-                value,
-                forKey: notificationsBadgeCountUDKey
-            )
-        notificationServiceAppGroup?.synchronize()
+        notificationServiceAppGroup.set(
+            value,
+            forKey: notificationsBadgeCountUDKey
+        )
+        notificationServiceAppGroup.synchronize()
     }
 
     func notificationsBadgeCount() -> Int {
-        return notificationServiceAppGroup?
-            .integer(
-                forKey: notificationsBadgeCountUDKey
-            ) ?? 0
+        notificationServiceAppGroup.integer(forKey: notificationsBadgeCountUDKey)
     }
 
     @UserDefault("SettingsUserDefaults.customTempAlertLowerBound", defaultValue: -55)

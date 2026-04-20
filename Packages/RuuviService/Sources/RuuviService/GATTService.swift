@@ -77,6 +77,6 @@ public extension GATTService {
 
     @discardableResult
     func stopGattSync(for uuid: String) async throws -> Bool {
-        try await stopGattSync(for: uuid)
+        false
     }
 }

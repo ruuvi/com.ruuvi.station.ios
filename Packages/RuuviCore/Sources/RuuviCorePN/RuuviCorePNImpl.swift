@@ -1,99 +1,167 @@
 import UIKit
 import UserNotifications
 
+protocol UserNotificationCentering: AnyObject {
+    func getAuthorizationStatus(
+        completionHandler: @escaping @Sendable (UNAuthorizationStatus) -> Void
+    )
+    func requestAuthorization(
+        options: UNAuthorizationOptions,
+        completionHandler: @escaping @Sendable (Bool, Error?) -> Void
+    )
+}
+
+protocol RemoteNotificationApplicationing: AnyObject {
+    var isRegisteredForRemoteNotifications: Bool { get }
+    func registerForRemoteNotifications()
+    func registerUserNotificationSettings(_ notificationSettings: UIUserNotificationSettings)
+}
+
+extension UNUserNotificationCenter: UserNotificationCentering {
+    func getAuthorizationStatus(
+        completionHandler: @escaping @Sendable (UNAuthorizationStatus) -> Void
+    ) {
+        getNotificationSettings { settings in
+            completionHandler(settings.authorizationStatus)
+        }
+    }
+}
+extension UIApplication: RemoteNotificationApplicationing {}
+
 public final class RuuviCorePNImpl: NSObject, RuuviCorePN {
+    private let userDefaults: UserDefaults
+    private let notificationCenterProvider: () -> UserNotificationCentering
+    private let applicationProvider: () -> RemoteNotificationApplicationing
+
     override public init() {
+        userDefaults = .standard
+        notificationCenterProvider = { UNUserNotificationCenter.current() }
+        applicationProvider = { UIApplication.shared }
         super.init()
+    }
+
+    init(
+        userDefaults: UserDefaults,
+        notificationCenter: UserNotificationCentering,
+        application: RemoteNotificationApplicationing
+    ) {
+        self.userDefaults = userDefaults
+        notificationCenterProvider = { notificationCenter }
+        applicationProvider = { application }
+        super.init()
+    }
+
+    private var notificationCenter: UserNotificationCentering {
+        notificationCenterProvider()
+    }
+
+    private var application: RemoteNotificationApplicationing {
+        applicationProvider()
     }
 
     public var pnTokenData: Data? {
         get {
-            UserDefaults.standard.data(forKey: pnTokenDataUDKey)
+            userDefaults.data(forKey: pnTokenDataUDKey)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: pnTokenDataUDKey)
+            userDefaults.set(newValue, forKey: pnTokenDataUDKey)
         }
     }
 
     public var fcmToken: String? {
         get {
-            UserDefaults.standard.string(forKey: pnFCMTokenUDKey)
+            userDefaults.string(forKey: pnFCMTokenUDKey)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: pnFCMTokenUDKey)
+            userDefaults.set(newValue, forKey: pnFCMTokenUDKey)
         }
     }
 
     public var fcmTokenId: Int? {
         get {
-            UserDefaults.standard.integer(forKey: pnFCMTokenIdUDKey)
+            guard userDefaults.object(forKey: pnFCMTokenIdUDKey) != nil else {
+                return nil
+            }
+            return userDefaults.integer(forKey: pnFCMTokenIdUDKey)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: pnFCMTokenIdUDKey)
+            userDefaults.set(newValue, forKey: pnFCMTokenIdUDKey)
         }
     }
 
     public var fcmTokenLastRefreshed: Date? {
         get {
-            UserDefaults
-                .standard
+            userDefaults
                 .object(forKey: pnFCMTokenLastRefreshUDKey) as? Date
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: pnFCMTokenLastRefreshUDKey)
+            userDefaults.set(newValue, forKey: pnFCMTokenLastRefreshUDKey)
+        }
+    }
+
+    static func authorizationStatus(
+        from status: UNAuthorizationStatus
+    ) -> PNAuthorizationStatus {
+        switch status {
+        case .authorized:
+            return .authorized
+        case .provisional:
+            return .authorized
+        case .denied:
+            return .denied
+        case .notDetermined:
+            return .notDetermined
+        case .ephemeral:
+            return .notDetermined
+        @unknown default:
+            return .denied
+        }
+    }
+
+    static func legacyAuthorizationStatus(
+        isRegisteredForRemoteNotifications: Bool,
+        didAskForRemoteNotificationPermission: Bool
+    ) -> PNAuthorizationStatus {
+        if isRegisteredForRemoteNotifications {
+            return .authorized
+        } else if didAskForRemoteNotificationPermission {
+            return .denied
+        } else {
+            return .notDetermined
         }
     }
 
     public func getRemoteNotificationsAuthorizationStatus(completion: @escaping (PNAuthorizationStatus) -> Void) {
-        if #available(iOS 10.0, *) {
-            UNUserNotificationCenter.current().getNotificationSettings { settings in
-                DispatchQueue.main.async {
-                    switch settings.authorizationStatus {
-                    case .authorized:
-                        completion(.authorized)
-                    case .provisional:
-                        completion(.authorized)
-                    case .denied:
-                        completion(.denied)
-                    case .notDetermined:
-                        completion(.notDetermined)
-                    case .ephemeral:
-                        completion(.notDetermined)
-                    @unknown default:
-                        completion(.denied)
-                    }
-                }
-            }
-        } else {
-            if UIApplication.shared.isRegisteredForRemoteNotifications {
-                completion(.authorized)
-            } else if didAskForRemoteNotificationPermission {
-                completion(.denied)
-            } else {
-                completion(.notDetermined)
+        notificationCenter.getAuthorizationStatus { status in
+            DispatchQueue.main.async {
+                completion(Self.authorizationStatus(from: status))
             }
         }
     }
 
     public func registerForRemoteNotifications() {
-        if #available(iOS 10.0, *) {
-            let center = UNUserNotificationCenter.current()
-            center.requestAuthorization(options: [.sound, .alert, .badge]) { _, error in
-                if error == nil {
-                    DispatchQueue.main.async {
-                        self.didAskForRemoteNotificationPermission = true
-                        UIApplication.shared.registerForRemoteNotifications()
-                    }
+        notificationCenter.requestAuthorization(options: [.sound, .alert, .badge]) { _, error in
+            if error == nil {
+                DispatchQueue.main.async {
+                    self.didAskForRemoteNotificationPermission = true
+                    self.application.registerForRemoteNotifications()
                 }
             }
-        } else {
-            let settings = UIUserNotificationSettings(types: [.sound, .alert, .badge], categories: nil)
-            UIApplication
-                .shared
-                .registerUserNotificationSettings(settings)
-            didAskForRemoteNotificationPermission = true
-            UIApplication.shared.registerForRemoteNotifications()
         }
+    }
+
+    func legacyRemoteNotificationsAuthorizationStatus() -> PNAuthorizationStatus {
+        Self.legacyAuthorizationStatus(
+            isRegisteredForRemoteNotifications: application.isRegisteredForRemoteNotifications,
+            didAskForRemoteNotificationPermission: didAskForRemoteNotificationPermission
+        )
+    }
+
+    func registerForRemoteNotificationsLegacy() {
+        let settings = UIUserNotificationSettings(types: [.sound, .alert, .badge], categories: nil)
+        application.registerUserNotificationSettings(settings)
+        didAskForRemoteNotificationPermission = true
+        application.registerForRemoteNotifications()
     }
 
     private let pnTokenDataUDKey = "PushNotificationsManagerImpl.pnTokenDataUDKey"
@@ -104,10 +172,10 @@ public final class RuuviCorePNImpl: NSObject, RuuviCorePN {
         "PushNotificationsManagerImpl.didAskForRemoteNotificationPermissionUDKey"
     private var didAskForRemoteNotificationPermission: Bool {
         get {
-            UserDefaults.standard.bool(forKey: didAskForRemoteNotificationPermissionUDKey)
+            userDefaults.bool(forKey: didAskForRemoteNotificationPermissionUDKey)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: didAskForRemoteNotificationPermissionUDKey)
+            userDefaults.set(newValue, forKey: didAskForRemoteNotificationPermissionUDKey)
         }
     }
 }

@@ -12,12 +12,13 @@ public final class RuuviNotifierImpl: RuuviNotifier {
     let localSyncState: RuuviLocalSyncState
     let measurementService: RuuviServiceMeasurement
     let settings: RuuviLocalSettings
+    private let observationCenter: NotificationCenter
     let movementAlertHysteresisLock = NSLock()
     var movementAlertHysteresisLastEventByUUID = [String: Date]()
     var movementAlertHysteresisTimer: Timer?
     private var alertDidChangeToken: NSObjectProtocol?
 
-    public init(
+    public convenience init(
         ruuviAlertService: RuuviServiceAlert,
         ruuviNotificationLocal: RuuviNotificationLocal,
         localSyncState: RuuviLocalSyncState,
@@ -25,12 +26,33 @@ public final class RuuviNotifierImpl: RuuviNotifier {
         settings: RuuviLocalSettings,
         titles: RuuviNotifierTitles
     ) {
+        self.init(
+            ruuviAlertService: ruuviAlertService,
+            ruuviNotificationLocal: ruuviNotificationLocal,
+            localSyncState: localSyncState,
+            measurementService: measurementService,
+            settings: settings,
+            titles: titles,
+            observationCenter: .default
+        )
+    }
+
+    init(
+        ruuviAlertService: RuuviServiceAlert,
+        ruuviNotificationLocal: RuuviNotificationLocal,
+        localSyncState: RuuviLocalSyncState,
+        measurementService: RuuviServiceMeasurement,
+        settings: RuuviLocalSettings,
+        titles: RuuviNotifierTitles,
+        observationCenter: NotificationCenter
+    ) {
         self.ruuviAlertService = ruuviAlertService
         localNotificationsManager = ruuviNotificationLocal
         self.localSyncState = localSyncState
         self.titles = titles
         self.measurementService = measurementService
         self.settings = settings
+        self.observationCenter = observationCenter
         restoreMovementHysteresisState()
         startObservingAlertChanges()
     }
@@ -38,7 +60,7 @@ public final class RuuviNotifierImpl: RuuviNotifier {
     deinit {
         movementAlertHysteresisTimer?.invalidate()
         if let alertDidChangeToken {
-            NotificationCenter.default.removeObserver(alertDidChangeToken)
+            observationCenter.removeObserver(alertDidChangeToken)
         }
     }
 
@@ -72,29 +94,32 @@ public final class RuuviNotifierImpl: RuuviNotifier {
     }
 
     private func startObservingAlertChanges() {
-        alertDidChangeToken = NotificationCenter
-            .default
+        alertDidChangeToken = observationCenter
             .addObserver(
                 forName: .RuuviServiceAlertDidChange,
                 object: nil,
                 queue: .main
             ) { [weak self] notification in
                 guard let self = self else { return }
-                guard let userInfo = notification.userInfo,
-                      let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType,
-                      let physicalSensor = userInfo[
-                          RuuviServiceAlertDidChangeKey.physicalSensor
-                      ] as? PhysicalSensor
-                else {
-                    return
-                }
-                guard case .movement = type else { return }
-                let isOn = self.ruuviAlertService.isOn(type: type, for: physicalSensor)
-                guard !isOn else { return }
-                guard let uuid = physicalSensor.luid?.value ?? physicalSensor.macId?.value else {
-                    return
-                }
-                self.clearMovementAlertHysteresis(for: uuid)
+                self.handleAlertDidChange(userInfo: notification.userInfo)
             }
+    }
+
+    func handleAlertDidChange(userInfo: [AnyHashable: Any]?) {
+        guard let userInfo,
+              let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType,
+              let physicalSensor = userInfo[
+                  RuuviServiceAlertDidChangeKey.physicalSensor
+              ] as? PhysicalSensor
+        else {
+            return
+        }
+        guard case .movement = type else { return }
+        guard let uuid = physicalSensor.luid?.value ?? physicalSensor.macId?.value else {
+            return
+        }
+        let isOn = ruuviAlertService.isOn(type: type, for: physicalSensor)
+        guard !isOn else { return }
+        clearMovementAlertHysteresis(for: uuid)
     }
 }

@@ -17,3 +17,15 @@ targets:
     - target: RuuviOntology
     - target: RuuviPersistence
     - target: RuuviContext
+  RuuviReactorTests:
+    type: bundle.unit-test
+    platform: iOS
+    hostApplication: station
+    sources:
+    - path: Tests/RuuviReactorTests
+    dependencies:
+    - package: Humidity
+    - package: GRDB
+    - target: RuuviContext
+    - target: RuuviReactor
+    - target: RuuviPersistence

@@ -395,10 +395,7 @@ private extension RuuviServiceOwnershipImpl {
            storedFull == nil {
             let result = try await checkOwner(macId: macId)
             if let sensorString = result.1 {
-                let fullMac = sensorString.lowercased().mac
-                let original = self.localIDs.originalMac(for: fullMac) ?? macId
-                self.localIDs.set(fullMac: fullMac, for: original)
-                return fullMac
+                return sensorString.lowercased().mac
             } else {
                 return macId
             }

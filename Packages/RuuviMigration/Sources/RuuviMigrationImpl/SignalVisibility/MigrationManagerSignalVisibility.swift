@@ -96,16 +96,7 @@ private extension MigrationManagerSignalVisibility {
 
         if displayOrder.isEmpty {
             let defaults = Self.defaultVisibleCodes(for: sensor)
-            guard !defaults.isEmpty else {
-                completion()
-                return
-            }
             displayOrder = defaults
-        }
-
-        guard !displayOrder.contains(signalCode) else {
-            completion()
-            return
         }
         displayOrder.append(signalCode)
 
@@ -167,9 +158,7 @@ private extension MigrationManagerSignalVisibility {
             return []
         case .accelerationX, .accelerationY, .accelerationZ:
             return []
-        case .rssi:
-            return []
-        case .txPower:
+        case .rssi, .txPower:
             return []
         }
     }

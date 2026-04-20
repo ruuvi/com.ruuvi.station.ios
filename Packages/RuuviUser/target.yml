@@ -11,3 +11,11 @@ targets:
       name: User
     dependencies:
     - package: KeychainAccess
+  RuuviUserTests:
+    type: bundle.unit-test
+    platform: iOS
+    hostApplication: station
+    sources:
+    - path: Tests/RuuviUserTests
+    dependencies:
+    - target: RuuviUser

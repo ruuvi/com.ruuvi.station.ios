@@ -18,3 +18,22 @@ targets:
     - target: RuuviLocalization
     - target: RuuviRepository
     - target: RuuviCore
+  RuuviServiceTests:
+    type: bundle.unit-test
+    platform: iOS
+    hostApplication: station
+    sources:
+    - path: Tests/RuuviServiceTests
+    dependencies:
+    - package: BTKit
+    - package: Humidity
+    - target: RuuviService
+    - target: RuuviCloud
+    - target: RuuviCore
+    - target: RuuviLocal
+    - target: RuuviOntology
+    - target: RuuviPool
+    - target: RuuviRepository
+    - target: RuuviStorage
+    - target: RuuviPersistence
+    - target: RuuviUser

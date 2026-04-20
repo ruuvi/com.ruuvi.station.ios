@@ -14,3 +14,20 @@ targets:
     - target: RuuviContext
     - target: RuuviStorage
     - target: RuuviService
+  RuuviMigrationTests:
+    type: bundle.unit-test
+    platform: iOS
+    hostApplication: station
+    sources:
+    - path: Tests/RuuviMigrationTests
+    dependencies:
+    - target: RuuviMigration
+    - target: RuuviCloud
+    - target: RuuviContext
+    - target: RuuviLocal
+    - target: RuuviOntology
+    - target: RuuviPool
+    - target: RuuviService
+    - target: RuuviStorage
+    - package: GRDB
+    - package: Humidity

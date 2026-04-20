@@ -18,25 +18,9 @@ extension DateFormatter: URLQueryItemEncoderDateFormatter {}
 extension ISO8601DateFormatter: URLQueryItemEncoderDateFormatter {}
 
 let iso8601Formatter: URLQueryItemEncoderDateFormatter = {
-    #if os(Linux)
-        let formatter = DateFormatter()
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = TimeZone(identifier: "UTC")!
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-        return formatter
-    #else
-        if #available(iOS 11.0, macOS 10.13, *) {
-            var formatter = ISO8601DateFormatter()
-            formatter.formatOptions.formUnion([.withFractionalSeconds])
-            return formatter
-        } else {
-            let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: "en_US_POSIX")
-            formatter.timeZone = TimeZone(identifier: "UTC")!
-            formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-            return formatter
-        }
-    #endif
+    var formatter = ISO8601DateFormatter()
+    formatter.formatOptions.formUnion([.withFractionalSeconds])
+    return formatter
 }()
 
 /// `URLQueryItemEncoder` facilitates the encoding of `Encodable` values into URLQueryItems.
@@ -83,7 +67,7 @@ public class URLQueryItemEncoder {
             URLQueryItem(
                 name: $0.name.addingPercentEncoding(
                     withAllowedCharacters: URLQueryItemEncoder.formURLEncodedAllowedCharacters
-                ) ?? $0.name,
+                )!,
                 value: $0.value?.addingPercentEncoding(
                     withAllowedCharacters: URLQueryItemEncoder.formURLEncodedAllowedCharacters
                 )
@@ -95,11 +79,6 @@ public class URLQueryItemEncoder {
 }
 
 private extension [CodingKey] {
-    func queryItemKeyForKey(_ key: CodingKey) -> String {
-        let keysPath = self + [key]
-        return keysPath.queryItemKey
-    }
-
     var queryItemKey: String {
         guard !isEmpty else { return "" }
         var keysPath = self
@@ -112,10 +91,10 @@ private extension [CodingKey] {
     }
 }
 
-private struct URLQueryItemArrayElementKey: CodingKey {
+struct URLQueryItemArrayElementKey: CodingKey {
     let encodingStrategy: URLQueryItemEncoder.ArrayIndexEncodingStrategy
 
-    fileprivate var stringValue: String {
+    var stringValue: String {
         switch encodingStrategy {
         case .emptySquareBrackets:
             ""

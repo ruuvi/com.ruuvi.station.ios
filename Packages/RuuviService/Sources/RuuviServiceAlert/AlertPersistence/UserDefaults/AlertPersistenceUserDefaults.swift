@@ -7,6 +7,10 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     private let alertUpdatedAtUDKeyPrefix
         = "AlertPersistenceUserDefaults.alertUpdatedAtUDKeyPrefix."
 
+    private func optionalBool(forKey key: String) -> Bool? {
+        prefs.object(forKey: key) as? Bool
+    }
+
     // temperature
     private let temperatureLowerBoundUDKeyPrefix
         = "AlertPersistenceUserDefaults.temperatureLowerBoundUDKeyPrefix."
@@ -492,7 +496,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             if prefs.bool(forKey: soundAverageAlertIsOnUDKeyPrefix + uuid),
                let lower = prefs.optionalDouble(forKey: soundAverageLowerBoundUDKeyPrefix + uuid),
                let upper = prefs.optionalDouble(forKey: soundAverageUpperBoundUDKeyPrefix + uuid) {
-                return .soundInstant(lower: lower, upper: upper)
+                return .soundAverage(lower: lower, upper: upper)
             } else {
                 return nil
             }
@@ -1117,49 +1121,49 @@ class AlertPersistenceUserDefaults: AlertPersistence {
     func triggered(for uuid: String, of type: AlertType) -> Bool? {
         switch type {
         case .temperature:
-            prefs.bool(forKey: temperatureAlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: temperatureAlertIsTriggeredUDKeyPrefix + uuid)
         case .relativeHumidity:
-            prefs.bool(forKey: relativeHumidityAlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: relativeHumidityAlertIsTriggeredUDKeyPrefix + uuid)
         case .humidity:
-            prefs.bool(forKey: humidityAlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: humidityAlertIsTriggeredUDKeyPrefix + uuid)
         case .dewPoint:
-            prefs.bool(forKey: dewPointAlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: dewPointAlertIsTriggeredUDKeyPrefix + uuid)
         case .pressure:
-            prefs.bool(forKey: pressureAlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: pressureAlertIsTriggeredUDKeyPrefix + uuid)
         case .signal:
-            prefs.bool(forKey: signalAlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: signalAlertIsTriggeredUDKeyPrefix + uuid)
         case .batteryVoltage:
-            prefs.bool(forKey: batteryVoltageAlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: batteryVoltageAlertIsTriggeredUDKeyPrefix + uuid)
         case .aqi:
-            prefs.bool(forKey: aqiAlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: aqiAlertIsTriggeredUDKeyPrefix + uuid)
         case .carbonDioxide:
-            prefs.bool(forKey: co2AlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: co2AlertIsTriggeredUDKeyPrefix + uuid)
         case .pMatter1:
-            prefs.bool(forKey: pm1AlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: pm1AlertIsTriggeredUDKeyPrefix + uuid)
         case .pMatter25:
-            prefs.bool(forKey: pm25AlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: pm25AlertIsTriggeredUDKeyPrefix + uuid)
         case .pMatter4:
-            prefs.bool(forKey: pm4AlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: pm4AlertIsTriggeredUDKeyPrefix + uuid)
         case .pMatter10:
-            prefs.bool(forKey: pm10AlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: pm10AlertIsTriggeredUDKeyPrefix + uuid)
         case .voc:
-            prefs.bool(forKey: vocAlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: vocAlertIsTriggeredUDKeyPrefix + uuid)
         case .nox:
-            prefs.bool(forKey: noxAlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: noxAlertIsTriggeredUDKeyPrefix + uuid)
         case .soundInstant:
-            prefs.bool(forKey: soundInstantAlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: soundInstantAlertIsTriggeredUDKeyPrefix + uuid)
         case .soundAverage:
-            prefs.bool(forKey: soundAverageAlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: soundAverageAlertIsTriggeredUDKeyPrefix + uuid)
         case .soundPeak:
-            prefs.bool(forKey: soundPeakAlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: soundPeakAlertIsTriggeredUDKeyPrefix + uuid)
         case .luminosity:
-            prefs.bool(forKey: luminosityAlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: luminosityAlertIsTriggeredUDKeyPrefix + uuid)
         case .cloudConnection:
-            prefs.bool(forKey: cloudConnectionAlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: cloudConnectionAlertIsTriggeredUDKeyPrefix + uuid)
         case .movement:
-            prefs.bool(forKey: movementAlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: movementAlertIsTriggeredUDKeyPrefix + uuid)
         case .connection:
-            prefs.bool(forKey: connectionAlertIsTriggeredUDKeyPrefix + uuid)
+            optionalBool(forKey: connectionAlertIsTriggeredUDKeyPrefix + uuid)
         }
     }
 

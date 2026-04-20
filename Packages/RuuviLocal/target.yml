@@ -12,3 +12,12 @@ targets:
       name: Local
     dependencies:
     - target: RuuviOntology
+  RuuviLocalTests:
+    type: bundle.unit-test
+    platform: iOS
+    hostApplication: station
+    sources:
+    - path: Tests/RuuviLocalTests
+    dependencies:
+    - target: RuuviLocal
+    - target: RuuviOntology

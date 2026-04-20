@@ -11,3 +11,17 @@ targets:
     - target: RuuviOntology
     - target: RuuviNotification
     - target: RuuviService
+  RuuviNotifierTests:
+    type: bundle.unit-test
+    platform: iOS
+    hostApplication: station
+    sources:
+    - path: Tests/RuuviNotifierTests
+    dependencies:
+    - target: RuuviNotifier
+    - target: RuuviOntology
+    - target: RuuviCloud
+    - target: RuuviLocal
+    - target: RuuviNotification
+    - target: RuuviService
+    - package: Humidity

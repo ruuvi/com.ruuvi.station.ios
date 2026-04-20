@@ -1,33 +1,66 @@
+import AVFoundation
 import Foundation
 import Photos
 
 public final class RuuviCorePermissionImpl: RuuviCorePermission {
     private let locationManager: RuuviCoreLocation
+    private let photoAuthorizationStatusProvider: () -> PHAuthorizationStatus
+    private let requestPhotoAuthorization: (@escaping (PHAuthorizationStatus) -> Void) -> Void
+    #if targetEnvironment(macCatalyst)
+    #else
+        private let cameraAuthorizationStatusProvider: () -> AVAuthorizationStatus
+        private let requestCameraAccess: (@escaping (Bool) -> Void) -> Void
+    #endif
 
-    public init(locationManager: RuuviCoreLocation) {
+    public convenience init(locationManager: RuuviCoreLocation) {
+        self.init(
+            locationManager: locationManager,
+            photoAuthorizationStatusProvider: PHPhotoLibrary.authorizationStatus,
+            requestPhotoAuthorization: PHPhotoLibrary.requestAuthorization
+        )
+    }
+
+    init(
+        locationManager: RuuviCoreLocation,
+        photoAuthorizationStatusProvider: @escaping () -> PHAuthorizationStatus,
+        requestPhotoAuthorization: @escaping (@escaping (PHAuthorizationStatus) -> Void) -> Void,
+        cameraAuthorizationStatusProvider: @escaping () -> AVAuthorizationStatus = {
+            AVCaptureDevice.authorizationStatus(for: .video)
+        },
+        requestCameraAccess: @escaping (@escaping (Bool) -> Void) -> Void = { completion in
+            AVCaptureDevice.requestAccess(for: .video, completionHandler: completion)
+        }
+    ) {
         self.locationManager = locationManager
+        self.photoAuthorizationStatusProvider = photoAuthorizationStatusProvider
+        self.requestPhotoAuthorization = requestPhotoAuthorization
+        #if targetEnvironment(macCatalyst)
+        #else
+            self.cameraAuthorizationStatusProvider = cameraAuthorizationStatusProvider
+            self.requestCameraAccess = requestCameraAccess
+        #endif
     }
 
     public var isPhotoLibraryPermissionGranted: Bool {
-        PHPhotoLibrary.authorizationStatus() == .authorized
+        photoAuthorizationStatusProvider() == .authorized
     }
 
     public var photoLibraryAuthorizationStatus: PHAuthorizationStatus {
-        PHPhotoLibrary.authorizationStatus()
+        photoAuthorizationStatusProvider()
     }
 
     public var isCameraPermissionGranted: Bool {
         #if targetEnvironment(macCatalyst)
             return false
         #else
-            return AVCaptureDevice.authorizationStatus(for: .video) == .authorized
+            return cameraAuthorizationStatusProvider() == .authorized
         #endif
     }
 
     #if targetEnvironment(macCatalyst)
     #else
         public var cameraAuthorizationStatus: AVAuthorizationStatus {
-            AVCaptureDevice.authorizationStatus(for: .video)
+            cameraAuthorizationStatusProvider()
         }
     #endif
 
@@ -40,7 +73,7 @@ public final class RuuviCorePermissionImpl: RuuviCorePermission {
     }
 
     public func requestPhotoLibraryPermission(completion: ((Bool) -> Void)?) {
-        PHPhotoLibrary.requestAuthorization { status in
+        requestPhotoAuthorization { status in
             DispatchQueue.main.async {
                 completion?(status == .authorized)
             }
@@ -51,7 +84,7 @@ public final class RuuviCorePermissionImpl: RuuviCorePermission {
         #if targetEnvironment(macCatalyst)
             completion?(false)
         #else
-            AVCaptureDevice.requestAccess(for: .video) { granted in
+            requestCameraAccess { granted in
                 DispatchQueue.main.async {
                     completion?(granted)
                 }

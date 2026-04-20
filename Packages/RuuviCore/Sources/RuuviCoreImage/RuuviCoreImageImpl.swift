@@ -19,7 +19,9 @@ public final class RuuviCoreImageImpl: RuuviCoreImage {
 
 extension UIImage {
     func ruuviCoreImageAspectScaled(toFit size: CGSize) -> UIImage {
-        assert(size.width > 0 && size.height > 0, "You cannot safely scale an image to a zero width or height")
+        guard size.width > 0 && size.height > 0 else {
+            return self
+        }
 
         let imageAspectRatio = self.size.width / self.size.height
         let canvasAspectRatio = size.width / size.height
@@ -36,7 +38,7 @@ extension UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
         draw(in: CGRect(origin: origin, size: scaledSize))
 
-        let scaledImage = UIGraphicsGetImageFromCurrentImageContext() ?? self
+        let scaledImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
 
         return scaledImage

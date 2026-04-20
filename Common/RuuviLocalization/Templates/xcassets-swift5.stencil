@@ -194,20 +194,16 @@
 
     @available(iOS 11.0, tvOS 11.0, watchOS 4.0, macOS 10.13, *)
     {{accessModifier}} private(set) lazy var color: Color = {
-        guard let color = Color(asset: self) else {
-            fatalError("Unable to load color asset named \(name).")
-        }
-        return color
+        let color = Color(asset: self)
+        return color!
     }()
 
     #if os(iOS) || os(tvOS)
     @available(iOS 11.0, tvOS 11.0, *)
     {{accessModifier}} func color(compatibleWith traitCollection: UITraitCollection) -> Color {
         let bundle = {{param.bundle|default:"BundleToken.bundle"}}
-        guard let color = Color(named: name, in: bundle, compatibleWith: traitCollection) else {
-            fatalError("Unable to load color asset named \(name).")
-        }
-        return color
+        let color = Color(named: name, in: bundle, compatibleWith: traitCollection)
+        return color!
     }
     #endif
 
@@ -295,20 +291,15 @@
         #elseif os(watchOS)
         let image = Image(named: name)
         #endif
-        guard let result = image else {
-            fatalError("Unable to load image asset named \(name).")
-        }
-        return result
+        return image!
     }
 
     #if os(iOS) || os(tvOS)
     @available(iOS 8.0, tvOS 9.0, *)
     {{accessModifier}} func image(compatibleWith traitCollection: UITraitCollection) -> Image {
         let bundle = {{param.bundle|default:"BundleToken.bundle"}}
-        guard let result = Image(named: name, in: bundle, compatibleWith: traitCollection) else {
-            fatalError("Unable to load image asset named \(name).")
-        }
-        return result
+        let image = Image(named: name, in: bundle, compatibleWith: traitCollection)
+        return image!
     }
     #endif
 

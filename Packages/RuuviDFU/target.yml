@@ -8,3 +8,11 @@ targets:
     dependencies:
     - package: NordicDFU
     - package: iOSMcuManagerLibrary
+  RuuviDFUTests:
+    type: bundle.unit-test
+    platform: iOS
+    hostApplication: station
+    sources:
+    - path: Tests/RuuviDFUTests
+    dependencies:
+    - target: RuuviDFU

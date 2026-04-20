@@ -50,6 +50,7 @@ extension AsyncOperation {
     }
 
     override open func cancel() {
+        super.cancel()
         state = .finished
     }
 }

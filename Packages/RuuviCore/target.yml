@@ -7,3 +7,11 @@ targets:
     - path: Sources
       name: Core
     dependencies: []
+  RuuviCoreTests:
+    type: bundle.unit-test
+    platform: iOS
+    hostApplication: station
+    sources:
+    - path: Tests/RuuviCoreTests
+    dependencies:
+    - target: RuuviCore

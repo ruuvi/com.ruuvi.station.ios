@@ -40,3 +40,11 @@ targets:
           - $(SRCROOT)/Common/RuuviLocalization/Sources/RuuviColor.swift
           - $(SRCROOT)/Common/RuuviLocalization/Sources/RuuviAsset.swift
           - $(SRCROOT)/Common/RuuviLocalization/Sources/RuuviFonts.swift
+  RuuviLocalizationTests:
+    type: bundle.unit-test
+    platform: iOS
+    hostApplication: station
+    sources:
+    - path: Tests/RuuviLocalizationTests
+    dependencies:
+    - target: RuuviLocalization

@@ -49,9 +49,7 @@ final class RuuviTagLatestRecordSubjectCombine {
 
         ruuviTagDataTransactionObserver = observation.start(
             in: sqlite.database.dbPool,
-            onError: { [weak self] error in
-                self?.errorReporter.report(error: error)
-            },
+            onError: errorReporter.report(error:),
             onChange: { [weak self] record in
                 let previousDate = self?.previousRecord?.date ?? Date.distantPast
                 if let lastRecord = record, lastRecord.date > previousDate {

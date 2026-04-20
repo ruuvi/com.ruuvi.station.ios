@@ -13,3 +13,13 @@ targets:
     - target: RuuviOntology
     - target: RuuviPersistence
     - target: RuuviLocal
+  RuuviPoolTests:
+    type: bundle.unit-test
+    platform: iOS
+    hostApplication: station
+    sources:
+    - path: Tests/RuuviPoolTests
+    dependencies:
+    - target: RuuviPool
+    - target: RuuviOntology
+    - package: Humidity

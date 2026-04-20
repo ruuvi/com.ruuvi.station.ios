@@ -890,6 +890,7 @@ public final class RuuviCloudPure: RuuviCloud {
         return measurements.compactMap { measurement in
             guard let rssi = measurement.rssi,
                   let data = measurement.data,
+                  isHexEncodedPayload(data),
                   let device = decoder.decodeNetwork(
                       uuid: macId.value,
                       rssi: rssi,
@@ -941,6 +942,7 @@ public final class RuuviCloudPure: RuuviCloud {
         guard let record,
               let rssi = record.rssi,
               let data = record.data,
+              isHexEncodedPayload(data),
               let device = decoder.decodeNetwork(
                   uuid: macId.value,
                   rssi: rssi,
@@ -981,6 +983,16 @@ public final class RuuviCloudPure: RuuviCloud {
             humidityOffset: 0.0,
             pressureOffset: 0.0
         ).any
+    }
+
+    private func isHexEncodedPayload(_ payload: String) -> Bool {
+        guard payload.count.isMultiple(of: 2) else {
+            return false
+        }
+        let hexCharacters = CharacterSet(charactersIn: "0123456789abcdefABCDEF")
+        return payload.unicodeScalars.allSatisfy {
+            hexCharacters.contains($0)
+        }
     }
 
     private func createQueuedRequest(

@@ -15,3 +15,11 @@ targets:
     - target: RuuviOntology
     - target: RuuviUser
     - target: RuuviPool
+  RuuviCloudTests:
+    type: bundle.unit-test
+    platform: iOS
+    hostApplication: station
+    sources:
+    - path: Tests/RuuviCloudTests
+    dependencies:
+    - target: RuuviCloud

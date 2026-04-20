@@ -18,3 +18,13 @@ targets:
     - target: RuuviPersistence
     - target: RuuviNotifier
     - target: RuuviNotification
+  RuuviDaemonTests:
+    type: bundle.unit-test
+    platform: iOS
+    hostApplication: station
+    sources:
+    - path: Tests/RuuviDaemonTests
+    dependencies:
+    - package: BTKit
+    - package: Humidity
+    - target: RuuviDaemon

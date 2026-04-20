@@ -125,10 +125,6 @@ public final class RuuviServiceMeasurementImpl: NSObject {
         let digits = units.pressureUnit.resolvedAccuracyValue(from: settings.pressureAccuracy)
         formatter.minimumFractionDigits = digits
         formatter.maximumFractionDigits = digits
-        if units.pressureUnit == .newtonsPerMetersSquared {
-            formatter.minimumFractionDigits = 0
-            formatter.maximumFractionDigits = 0
-        }
         formatter.roundingMode = NumberFormatter.RoundingMode.halfUp
         return formatter
     }
@@ -196,8 +192,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         }
         let value = temperature.converted(to: units.temperatureUnit).value
         let number = NSNumber(value: value)
-        tempereatureNumberFormatter.locale = Locale.current
-        return tempereatureNumberFormatter.string(from: number) ?? emptyValueString
+        return tempereatureNumberFormatter.string(from: number)!
     }
 
     public func stringWithoutSign(temperature: Double?) -> String {
@@ -206,7 +201,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return emptyValueString
         }
         let number = NSNumber(value: temperature)
-        return tempereatureNumberFormatter.string(from: number) ?? emptyValueString
+        return tempereatureNumberFormatter.string(from: number)!
     }
 
     public func double(for pressure: Pressure) -> Double {
@@ -253,7 +248,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         if units.pressureUnit == .newtonsPerMetersSquared {
             return String(Int(round(pressureValue)))
         }
-        return pressureNumberFormatter.string(for: pressureValue) ?? emptyValueString
+        return pressureNumberFormatter.string(from: NSNumber(value: pressureValue))!
     }
 
     public func stringWithoutSign(pressure: Double?) -> String {
@@ -265,7 +260,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return String(Int(round(pressure)))
         }
         let number = NSNumber(value: pressure)
-        return pressureNumberFormatter.string(from: number) ?? emptyValueString
+        return pressureNumberFormatter.string(from: number)!
     }
 
     public func double(for voltage: Voltage) -> Double {
@@ -356,11 +351,8 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             else {
                 return emptyValueString
             }
-            let value = dp.converted(to: settings.temperatureUnit.unitTemperature).value
-            guard let value = humidityNumberFormatter.string(from: NSNumber(value: value))
-            else {
-                return emptyValueString
-            }
+            let convertedValue = dp.converted(to: settings.temperatureUnit.unitTemperature).value
+            let value = humidityNumberFormatter.string(from: NSNumber(value: convertedValue))!
             return value + " " + settings.temperatureUnit.symbol
         }
     }
@@ -383,15 +375,15 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         switch units.humidityUnit {
         case .percent:
             let value = NSNumber(value: humidityWithTemperature.value * 100)
-            return humidityNumberFormatter.string(from: value) ?? emptyValueString
+            return humidityNumberFormatter.string(from: value)!
         case .gm3:
             let value = humidityWithTemperature.converted(to: .absolute)
                 .value
-            return humidityNumberFormatter.string(from: NSNumber(value: value)) ?? emptyValueString
+            return humidityNumberFormatter.string(from: NSNumber(value: value))!
         case .dew:
             if let dp = try? humidityWithTemperature.dewPoint(temperature: temperature) {
                 let value = dp.converted(to: settings.temperatureUnit.unitTemperature).value
-                return humidityNumberFormatter.string(from: NSNumber(value: value)) ?? emptyValueString
+                return humidityNumberFormatter.string(from: NSNumber(value: value))!
             } else {
                 return emptyValueString
             }
@@ -404,7 +396,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return emptyValueString
         }
         let number = NSNumber(value: humidity)
-        return humidityNumberFormatter.string(from: number) ?? emptyValueString
+        return humidityNumberFormatter.string(from: number)!
     }
 
     public func string(for measurement: Double?) -> String {
@@ -413,7 +405,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return ""
         }
         let number = NSNumber(value: measurement)
-        return commonNumberFormatter.string(from: number) ?? ""
+        return commonNumberFormatter.string(from: number)!
     }
 
     public func string(
@@ -424,7 +416,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return ""
         }
         let number = NSNumber(value: double)
-        return minimalNumberFormatter.string(from: number) ?? ""
+        return minimalNumberFormatter.string(from: number)!
     }
 
     public func aqi(
@@ -445,7 +437,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         let state = airQualityState(for: currentScore)
 
         return (
-            currentScore: Int(exactly: currentScore) ?? 0,
+            currentScore: Int(currentScore),
             maxScore: maxScore,
             state: state
         )
@@ -514,7 +506,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         }
         let currentScore = aqi.rounded(.toNearestOrAwayFromZero)
         return commonNumberFormatter
-            .string(from: NSNumber(value: currentScore)) ?? emptyValueString
+            .string(from: NSNumber(value: currentScore))!
     }
 
     public func co2String(for carbonDiOxide: Double?) -> String {
@@ -523,7 +515,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return emptyValueString
         }
         let number = NSNumber(value: Int(carbonDiOxide))
-        return commonNumberFormatter.string(from: number) ?? emptyValueString
+        return commonNumberFormatter.string(from: number)!
     }
 
     public func pm10String(for pm10: Double?) -> String {
@@ -532,7 +524,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return emptyValueString
         }
         let number = NSNumber(value: pm10)
-        return commonNumberFormatter.string(from: number) ?? emptyValueString
+        return commonNumberFormatter.string(from: number)!
     }
 
     public func pm25String(for pm25: Double?) -> String {
@@ -541,7 +533,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return emptyValueString
         }
         let number = NSNumber(value: pm25)
-        return commonNumberFormatter.string(from: number) ?? emptyValueString
+        return commonNumberFormatter.string(from: number)!
     }
 
     public func pm40String(for pm40: Double?) -> String {
@@ -550,7 +542,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return emptyValueString
         }
         let number = NSNumber(value: pm40)
-        return commonNumberFormatter.string(from: number) ?? emptyValueString
+        return commonNumberFormatter.string(from: number)!
     }
 
     public func pm100String(for pm100: Double?) -> String {
@@ -559,7 +551,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return emptyValueString
         }
         let number = NSNumber(value: pm100)
-        return commonNumberFormatter.string(from: number) ?? emptyValueString
+        return commonNumberFormatter.string(from: number)!
     }
 
     public func vocString(for voc: Double?) -> String {
@@ -568,7 +560,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return emptyValueString
         }
         let number = NSNumber(value: Int(voc))
-        return commonNumberFormatter.string(from: number) ?? emptyValueString
+        return commonNumberFormatter.string(from: number)!
     }
 
     public func noxString(for nox: Double?) -> String {
@@ -577,7 +569,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return emptyValueString
         }
         let number = NSNumber(value: Int(nox))
-        return commonNumberFormatter.string(from: number) ?? emptyValueString
+        return commonNumberFormatter.string(from: number)!
     }
 
     public func soundString(for sound: Double?) -> String {
@@ -586,7 +578,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return emptyValueString
         }
         let number = NSNumber(value: Int(sound))
-        return commonNumberFormatter.string(from: number) ?? emptyValueString
+        return commonNumberFormatter.string(from: number)!
     }
 
     public func luminosityString(for luminosity: Double?) -> String {
@@ -595,7 +587,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return emptyValueString
         }
         let number = NSNumber(value: Int(luminosity))
-        return commonNumberFormatter.string(from: number) ?? emptyValueString
+        return commonNumberFormatter.string(from: number)!
     }
 
     public func double(for value: Double?) -> Double {
@@ -618,7 +610,6 @@ extension RuuviServiceMeasurementImpl {
 
     private func updateCache() {
         updateUnits()
-        notifyListeners()
     }
 
     public func updateUnits() {

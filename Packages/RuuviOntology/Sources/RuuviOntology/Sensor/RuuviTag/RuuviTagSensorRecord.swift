@@ -57,7 +57,7 @@ public extension RuuviTagSensorRecord {
         } else if let luid {
             luid.value + "\(date.timeIntervalSince1970)"
         } else {
-            fatalError()
+            ""
         }
     }
 
@@ -68,7 +68,7 @@ public extension RuuviTagSensorRecord {
         } else if let luid {
             luid.value
         } else {
-            fatalError()
+            ""
         }
     }
 

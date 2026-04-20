@@ -9,7 +9,7 @@ public struct RuuviMeasurement {
         } else if let luid {
             luid.value
         } else {
-            fatalError()
+            ""
         }
     }
 

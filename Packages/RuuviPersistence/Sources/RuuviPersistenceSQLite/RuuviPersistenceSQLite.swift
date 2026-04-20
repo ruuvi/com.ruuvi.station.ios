@@ -172,11 +172,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
         with intervalMinutes: Int,
         pick points: Double
     ) async throws -> [RuuviTagSensorRecord] {
-        let highDensityDate = Calendar.current.date(
-            byAdding: .minute,
-            value: -intervalMinutes,
-            to: Date()
-        ) ?? Date()
+        let highDensityDate = Date().addingTimeInterval(TimeInterval(-intervalMinutes * 60))
         let pruningInterval =
             (highDensityDate.timeIntervalSince1970 - date.timeIntervalSince1970) / points
         let lastThree = ruuviTagId.lastThreeBytes
@@ -243,30 +239,26 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
 
     public func readLast(_ ruuviTag: RuuviTagSensor) async throws -> RuuviTagSensorRecord? {
         try read { db in
-            let request = Record
-                .order(Record.dateColumn.desc)
-                .filter(
-                    (ruuviTag.luid?.value != nil && Record.luidColumn == ruuviTag.luid?.value)
-                        || (
-                            ruuviTag.macId?.value != nil
-                                && Record.macColumn.like("%\(ruuviTag.macId!.value.lastThreeBytes)")
-                        )
-                )
+            guard let filter = identifierFilter(
+                luid: ruuviTag.luid,
+                macId: ruuviTag.macId,
+                luidColumn: Record.luidColumn,
+                macColumn: Record.macColumn
+            ) else { return nil }
+            let request = Record.order(Record.dateColumn.desc).filter(filter)
             return try request.fetchOne(db)
         }
     }
 
     public func readLatest(_ ruuviTag: RuuviTagSensor) async throws -> RuuviTagSensorRecord? {
         try read { db in
-            let request = RecordLatest
-                .order(RecordLatest.dateColumn.desc)
-                .filter(
-                    (ruuviTag.luid?.value != nil && RecordLatest.luidColumn == ruuviTag.luid?.value)
-                        || (
-                            ruuviTag.macId?.value != nil
-                                && RecordLatest.macColumn.like("%\(ruuviTag.macId!.value.lastThreeBytes)")
-                        )
-                )
+            guard let filter = identifierFilter(
+                luid: ruuviTag.luid,
+                macId: ruuviTag.macId,
+                luidColumn: RecordLatest.luidColumn,
+                macColumn: RecordLatest.macColumn
+            ) else { return nil }
+            let request = RecordLatest.order(RecordLatest.dateColumn.desc).filter(filter)
             return try request.fetchOne(db)
         }
     }
@@ -366,13 +358,13 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
     public func readSensorSettings(_ ruuviTag: RuuviTagSensor) async throws -> SensorSettings? {
         try read { db in
             let normalizedTag = try normalizedSensor(ruuviTag, db: db)
-            let request = Settings.filter(
-                (normalizedTag.luid?.value != nil && Settings.luidColumn == normalizedTag.luid?.value)
-                    || (
-                        normalizedTag.macId?.value != nil
-                            && Settings.macIdColumn.like("%\(normalizedTag.macId!.value.lastThreeBytes)")
-                    )
-            )
+            guard let filter = identifierFilter(
+                luid: normalizedTag.luid,
+                macId: normalizedTag.macId,
+                luidColumn: Settings.luidColumn,
+                macColumn: Settings.macIdColumn
+            ) else { return nil }
+            let request = Settings.filter(filter)
             return try request.fetchOne(db)
         }
     }
@@ -401,14 +393,15 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
                 humidityOffset: nil,
                 pressureOffset: nil
             )
-            let request = Settings.filter(
-                (normalizedTag.luid?.value != nil && Settings.luidColumn == normalizedTag.luid?.value)
-                    || (
-                        normalizedTag.macId?.value != nil
-                            && Settings.macIdColumn.like("%\(normalizedTag.macId!.value.lastThreeBytes)")
-                    )
-            )
-            if let existingSettings = try request.fetchOne(db) {
+            let existingSettings = try identifierFilter(
+                luid: normalizedTag.luid,
+                macId: normalizedTag.macId,
+                luidColumn: Settings.luidColumn,
+                macColumn: Settings.macIdColumn
+            ).flatMap { filter in
+                try Settings.filter(filter).fetchOne(db)
+            }
+            if let existingSettings {
                 sqliteSensorSettings = existingSettings
                 isAddNewRecord = false
             }
@@ -488,7 +481,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
             ])
 
             let request = Settings.filter(Settings.idColumn == seed.id)
-            return try request.fetchOne(db) ?? seed
+            return try request.fetchOne(db)!
         }
     }
 
@@ -531,7 +524,7 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
             ])
 
             let request = Settings.filter(Settings.idColumn == seed.id)
-            return try request.fetchOne(db) ?? seed
+            return try request.fetchOne(db)!
         }
     }
 
@@ -539,13 +532,13 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
         assert(ruuviTag.macId != nil)
         return try write { db in
             let normalizedTag = try normalizedSensor(ruuviTag, db: db)
-            let request = Settings.filter(
-                (normalizedTag.luid?.value != nil && Settings.luidColumn == normalizedTag.luid?.value)
-                    || (
-                        normalizedTag.macId?.value != nil
-                            && Settings.macIdColumn.like("%\(normalizedTag.macId!.value.lastThreeBytes)")
-                    )
-            )
+            guard let filter = identifierFilter(
+                luid: normalizedTag.luid,
+                macId: normalizedTag.macId,
+                luidColumn: Settings.luidColumn,
+                macColumn: Settings.macIdColumn
+            ) else { return false }
+            let request = Settings.filter(filter)
             guard let sensorSettings = try request.fetchOne(db) else {
                 return false
             }
@@ -623,17 +616,18 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
         _ request: RuuviCloudQueuedRequest
     ) async throws -> Bool {
         let requests = try await readQueuedRequests()
-        let existingRequest = requests.first(
-            where: { ($0.uniqueKey != nil && $0.uniqueKey == request.uniqueKey)
+        if let existingRequest = requests.first(
+            where: {
+                ($0.uniqueKey != nil && $0.uniqueKey == request.uniqueKey)
                 && ($0.type != nil && $0.type == request.type)
             }
-        )
-        let isCreate = requests.isEmpty || existingRequest == nil
-        return try createQueueRequest(
-            isCreate: isCreate,
-            newRequest: request,
-            existingRequest: existingRequest
-        )
+        ) {
+            return try updateQueueRequest(
+                newRequest: request,
+                existingRequest: existingRequest
+            )
+        }
+        return try insertQueueRequest(request)
     }
 
     @discardableResult
@@ -692,6 +686,23 @@ public actor RuuviPersistenceSQLite: RuuviPersistence {
 // MARK: - Private
 
 private extension RuuviPersistenceSQLite {
+    func identifierFilter(
+        luid: LocalIdentifier?,
+        macId: MACIdentifier?,
+        luidColumn: Column,
+        macColumn: Column
+    ) -> SQLExpression? {
+        var filter: SQLExpression?
+        if let luidValue = luid?.value {
+            filter = luidColumn == luidValue
+        }
+        if let macValue = macId?.value {
+            let macFilter = macColumn.like("%\(macValue.lastThreeBytes)")
+            filter = filter.map { $0 || macFilter } ?? macFilter
+        }
+        return filter
+    }
+
     func read<Value>(_ operation: (Database) throws -> Value) throws -> Value {
         do {
             return try database.dbPool.read { db in
@@ -716,34 +727,24 @@ private extension RuuviPersistenceSQLite {
         if let persistenceError = error as? RuuviPersistenceError {
             return persistenceError
         }
-        if let recordError = error as? RecordError {
-            if case .recordNotFound = recordError {
-                return .failedToFindRuuviTag
-            } else {
-                return .grdb(recordError)
-            }
+        if error is RecordError {
+            return .failedToFindRuuviTag
         }
         return .grdb(error)
     }
 
-    /// Create or update a queued request.
-    func createQueueRequest(
-        isCreate: Bool,
+    func insertQueueRequest(_ newRequest: RuuviCloudQueuedRequest) throws -> Bool {
+        try write { db in
+            assert(newRequest.uniqueKey != nil)
+            try newRequest.sqlite.insert(db)
+            return true
+        }
+    }
+
+    func updateQueueRequest(
         newRequest: RuuviCloudQueuedRequest,
-        existingRequest: RuuviCloudQueuedRequest?
+        existingRequest: RuuviCloudQueuedRequest
     ) throws -> Bool {
-        if isCreate {
-            return try write { db in
-                assert(newRequest.uniqueKey != nil)
-                try newRequest.sqlite.insert(db)
-                return true
-            }
-        }
-
-        guard let existingRequest else {
-            return false
-        }
-
         let retryCount = (existingRequest.attempts ?? 0) + 1
         let entity = QueuedRequest(
             id: existingRequest.id,
@@ -878,12 +879,6 @@ private extension String {
         let components = self.components(separatedBy: ":")
         guard components.count >= 3 else { return self }
         return components.suffix(3).joined(separator: ":")
-    }
-}
-
-private extension Optional where Wrapped == String {
-    var lastThreeBytes: String? {
-        self?.lastThreeBytes
     }
 }
 

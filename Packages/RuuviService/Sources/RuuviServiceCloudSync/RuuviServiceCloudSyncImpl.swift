@@ -19,6 +19,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private let ruuviLocalIDs: RuuviLocalIDs
     private let alertService: RuuviServiceAlert
     private let ruuviAppSettingsService: RuuviServiceAppSettings
+    private let imageDataLoader: (URL) async throws -> Data
 
     // Private property to keep track of ongoing history sync
     private var ongoingHistorySyncs: Set<AnyRuuviTagSensor> = []
@@ -33,7 +34,11 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         ruuviRepository: RuuviRepository,
         ruuviLocalIDs: RuuviLocalIDs,
         ruuviAlertService: RuuviServiceAlert,
-        ruuviAppSettingsService: RuuviServiceAppSettings
+        ruuviAppSettingsService: RuuviServiceAppSettings,
+        imageDataLoader: @escaping (URL) async throws -> Data = { url in
+            let (data, _) = try await URLSession.shared.data(from: url)
+            return data
+        }
     ) {
         self.ruuviStorage = ruuviStorage
         self.ruuviCloud = ruuviCloud
@@ -45,6 +50,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         self.ruuviLocalIDs = ruuviLocalIDs
         alertService = ruuviAlertService
         self.ruuviAppSettingsService = ruuviAppSettingsService
+        self.imageDataLoader = imageDataLoader
     }
 
     @discardableResult
@@ -157,7 +163,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             throw RuuviServiceError.pictureUrlIsNil
         }
         return try await RuuviServiceError.perform {
-            let (data, _) = try await URLSession.shared.data(from: pictureUrl)
+            let data = try await self.imageDataLoader(pictureUrl)
             guard let image = UIImage(data: data) else {
                 throw RuuviServiceError.failedToParseNetworkResponse
             }
@@ -239,17 +245,16 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         localSensors: [AnyRuuviTagSensor],
         updatedSensors: Set<AnyRuuviTagSensor>
     ) async throws {
-        for cloudSensor in cloudSensors {
-            let matchedSensor = updatedSensors.first(where: {
+        let sensorPairs = cloudSensors.compactMap { cloudSensor in
+            let matchedSensor = updatedSensors.first {
                 cloudSensor.id.isLast3BytesEqual(to: $0.id)
-            }) ?? localSensors.first(where: {
+            } ?? localSensors.first {
                 cloudSensor.id.isLast3BytesEqual(to: $0.id)
-            })
-
-            guard let sensor = matchedSensor else {
-                continue
             }
+            return matchedSensor.map { (cloudSensor, $0) }
+        }
 
+        for (cloudSensor, sensor) in sensorPairs {
             _ = try await RuuviServiceError.perform {
                 let localSettings = try? await self.ruuviStorage.readSensorSettings(sensor)
                 let fallbackSettings = localSettings ?? SensorSettingsStruct(
@@ -268,7 +273,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
                 switch syncAction {
                 case .updateLocal:
-                    var lastUpdatedSettings: SensorSettings?
+                    var lastUpdatedSettings: SensorSettings = fallbackSettings
 
                     if cloudSensor.offsetTemperature != localSettings?.temperatureOffset {
                         lastUpdatedSettings = try await self.ruuviPool.updateOffsetCorrection(
@@ -300,7 +305,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         }
                     }
 
-                    return lastUpdatedSettings ?? fallbackSettings
+                    return lastUpdatedSettings
 
                 case .keepLocalAndQueue:
                     var queuedTemperatureOffset: Double? = fallbackSettings.temperatureOffset
@@ -434,7 +439,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     ? sensorSettings.descriptionLastUpdated
                     : localSettings?.descriptionLastUpdated
 
-                var lastUpdatedSettings: SensorSettings?
+                var lastUpdatedSettings: SensorSettings = fallbackSettings
 
                 if displayOrderAction == .updateLocal || defaultOrderAction == .updateLocal {
                     lastUpdatedSettings = try await self.ruuviPool.updateDisplaySettings(
@@ -454,7 +459,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     )
                 }
 
-                return lastUpdatedSettings ?? fallbackSettings
+                return lastUpdatedSettings
             }
         }
     }
@@ -579,12 +584,12 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     // This method syncs the sensors, latest measurements and alerts.
     // swiftlint:disable:next function_body_length
     private func syncSensors() async throws -> Set<AnyRuuviTagSensor> {
-        if let localSensors = try? await self.ruuviStorage.readAll() {
-            for sensor in localSensors where sensor.isCloud {
-                if let macId = sensor.macId {
-                    self.ruuviLocalSyncState.setSyncStatusLatestRecord(.syncing, for: macId)
-                }
-            }
+        let localCloudMacIds = (try? await self.ruuviStorage.readAll())?
+            .filter(\.isCloud)
+            .compactMap(\.macId) ?? []
+
+        for macId in localCloudMacIds {
+            self.ruuviLocalSyncState.setSyncStatusLatestRecord(.syncing, for: macId)
         }
 
         do {
@@ -634,7 +639,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             for denseSensor in denseSensors {
                 _ = try await self.addLatestRecordToHistory(
                     ruuviTag: denseSensor.sensor.ruuviTagSensor,
-                    cloudRecord: denseSensor.record
+                    cloudRecord: denseSensor.record,
+                    macId: denseSensor.sensor.id.mac
                 )
             }
 
@@ -643,8 +649,18 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 _ = try await self.syncAllHistory()
             }
 
+            let syncedMacValues = Set(
+                denseSensors.compactMap { $0.sensor.ruuviTagSensor.macId?.value }
+            )
+            for macId in localCloudMacIds where !syncedMacValues.contains(macId.value) {
+                self.ruuviLocalSyncState.setSyncStatusLatestRecord(.complete, for: macId)
+            }
+
             return updatedSensors
         } catch let error as RuuviServiceError {
+            for macId in localCloudMacIds {
+                self.ruuviLocalSyncState.setSyncStatusLatestRecord(.onError, for: macId)
+            }
             if case .ruuviCloud(.api(.api(.erUnauthorized))) = error {
                 self.postNotification()
             }
@@ -700,15 +716,15 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     }
                 } else {
                     let unclaimed = localSensor.unclaimed()
-                    if unclaimed.any != localSensor {
-                        updatedSensors.insert(localSensor)
-                        _ = try await self.ruuviPool.update(unclaimed)
-                    } else if localSensor.isCloud {
+                    if localSensor.isCloud {
                         self.ruuviLocalSyncState.setDownloadFullHistory(
                             for: localSensor.macId,
                             downloadFull: nil
                         )
                         _ = try await self.ruuviPool.delete(localSensor)
+                    } else if localSensor.isClaimed {
+                        updatedSensors.insert(localSensor)
+                        _ = try await self.ruuviPool.update(unclaimed)
                     }
                 }
             }
@@ -801,7 +817,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     /// This method writes the latest data point to the history/records table
     private func addLatestRecordToHistory(
         ruuviTag: RuuviTagSensor,
-        cloudRecord: RuuviTagSensorRecord?
+        cloudRecord: RuuviTagSensorRecord?,
+        macId: MACIdentifier
     )
     async throws -> Bool {
         return try await RuuviServiceError.perform {
@@ -825,12 +842,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     return false
                 }
             } catch {
-                if let macId = ruuviTag.macId {
-                    let recordWithId = cloudRecord.with(macId: macId.any)
-                    return try await self.createHistoryRecord(with: recordWithId)
-                } else {
-                    return try await self.createHistoryRecord(with: cloudRecord)
-                }
+                let recordWithId = cloudRecord.with(macId: macId.any)
+                return try await self.createHistoryRecord(with: recordWithId)
             }
         }
     }
@@ -850,18 +863,14 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             let success = try await RuuviServiceError.perform {
             try await self.ruuviCloud.executeQueuedRequest(from: request)
             }
-            Task {
-                _ = try? await self.ruuviPool.deleteQueuedRequest(request)
-            }
+            _ = try? await self.ruuviPool.deleteQueuedRequest(request)
             return success
         } catch let error as RuuviServiceError {
             switch error {
             case .ruuviCloud(.api(.api(.erConflict))):
                 // We should delete the request from local db when there's
                 // already new data available on the cloud.
-                Task {
-                    _ = try? await self.ruuviPool.deleteQueuedRequest(request)
-                }
+                _ = try? await self.ruuviPool.deleteQueuedRequest(request)
                 throw error
             default:
                 throw error
@@ -952,9 +961,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             values.append(defaultOrder ? "true" : "false")
         }
 
-        if let displayOrder, !displayOrder.isEmpty,
-           let data = try? JSONEncoder().encode(displayOrder),
-           let encoded = String(data: data, encoding: .utf8) {
+        if let displayOrder, !displayOrder.isEmpty {
+            let encoded = String(data: try! JSONEncoder().encode(displayOrder), encoding: .utf8)!
             types.append(RuuviCloudApiSetting.sensorDisplayOrder.rawValue)
             values.append(encoded)
         }

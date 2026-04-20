@@ -4,22 +4,50 @@ import RuuviOntology
 import RuuviPool
 
 public final class GATTServiceQueue: GATTService {
-    private let ruuviPool: RuuviPool
-    private let background: BTBackground
+    typealias ReadLogsOperationFactory = (
+        String,
+        String?,
+        Int,
+        Date,
+        SensorSettings?,
+        ((BTServiceProgress) -> Void)?,
+        TimeInterval?,
+        TimeInterval?
+    ) -> Operation & RuuviTagReadLogsOperable
+
+    private let operationFactory: ReadLogsOperationFactory
 
     public init(
         ruuviPool: RuuviPool,
         background: BTBackground
     ) {
-        self.ruuviPool = ruuviPool
-        self.background = background
+        operationFactory = { uuid, mac, firmware, from, settings, progress, connectionTimeout, serviceTimeout in
+            RuuviTagReadLogsOperation(
+                uuid: uuid,
+                mac: mac,
+                firmware: firmware,
+                from: from,
+                settings: settings,
+                ruuviPool: ruuviPool,
+                background: background,
+                progress: progress,
+                connectionTimeout: connectionTimeout,
+                serviceTimeout: serviceTimeout
+            )
+        }
+        queue = OperationQueue()
+        queue.maxConcurrentOperationCount = 3
     }
 
-    lazy var queue: OperationQueue = {
-        var queue = OperationQueue()
-        queue.maxConcurrentOperationCount = 3
-        return queue
-    }()
+    init(
+        queue: OperationQueue,
+        operationFactory: @escaping ReadLogsOperationFactory
+    ) {
+        self.queue = queue
+        self.operationFactory = operationFactory
+    }
+
+    var queue: OperationQueue
 
     @discardableResult
     // swiftlint:disable function_parameter_count
@@ -38,17 +66,15 @@ public final class GATTServiceQueue: GATTService {
         }
 
         return try await withCheckedThrowingContinuation { continuation in
-            let operation = RuuviTagReadLogsOperation(
-                uuid: uuid,
-                mac: mac,
-                firmware: firmware,
-                from: from,
-                settings: settings,
-                ruuviPool: ruuviPool,
-                background: background,
-                progress: progress,
-                connectionTimeout: connectionTimeout,
-                serviceTimeout: serviceTimeout
+            let operation = operationFactory(
+                uuid,
+                mac,
+                firmware,
+                from,
+                settings,
+                progress,
+                connectionTimeout,
+                serviceTimeout
             )
             operation.completionBlock = { [unowned operation] in
                 if let error = operation.error {
@@ -64,12 +90,12 @@ public final class GATTServiceQueue: GATTService {
     // swiftlint:enable function_parameter_count
 
     public func isSyncingLogs(with uuid: String) -> Bool {
-        queue.operations.contains(where: { ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid })
+        queue.operations.contains(where: { ($0 as? RuuviTagReadLogsOperable)?.uuid == uuid })
     }
 
     public func isSyncingLogsQueued(with uuid: String) -> Bool {
         queue.operations.contains(where: { operation in
-            guard let readLogsOperation = operation as? RuuviTagReadLogsOperation,
+            guard let readLogsOperation = operation as? RuuviTagReadLogsOperable,
                   readLogsOperation.uuid == uuid
             else {
                 return false
@@ -83,8 +109,8 @@ public final class GATTServiceQueue: GATTService {
     @discardableResult
     public func stopGattSync(for uuid: String) async throws -> Bool {
         if let operation = queue.operations
-            .first(where: { ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid }) {
-            if let queueOperation = operation as? RuuviTagReadLogsOperation {
+            .first(where: { ($0 as? RuuviTagReadLogsOperable)?.uuid == uuid }) {
+            if let queueOperation = operation as? RuuviTagReadLogsOperable {
                 queueOperation.stopSync()
             }
             operation.cancel()

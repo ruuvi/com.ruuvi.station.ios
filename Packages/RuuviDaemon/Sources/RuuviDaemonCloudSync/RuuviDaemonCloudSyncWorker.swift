@@ -6,6 +6,8 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
     private var localSettings: RuuviLocalSettings
     private var localSyncState: RuuviLocalSyncState
     private let cloudSyncService: RuuviServiceCloudSync
+    private let workExecutor: (@escaping @Sendable () -> Void) -> Void
+    private let delayedWorkExecutor: (TimeInterval, @escaping @Sendable () -> Void) -> DispatchWorkItem
     private var pullTimer: Timer?
     private var refreshAfterMigrationWorkItem: DispatchWorkItem?
     private var running = false
@@ -13,11 +15,32 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
     init(
         localSettings: RuuviLocalSettings,
         localSyncState: RuuviLocalSyncState,
-        cloudSyncService: RuuviServiceCloudSync
+        cloudSyncService: RuuviServiceCloudSync,
+        workExecutor: @escaping (@escaping @Sendable () -> Void) -> Void = { work in
+            DispatchQueue.global(qos: .default).async {
+                work()
+            }
+        },
+        delayedWorkExecutor: @escaping (TimeInterval, @escaping @Sendable () -> Void) -> DispatchWorkItem
+            = RuuviDaemonCloudSyncWorker.defaultDelayedWorkExecutor
     ) {
         self.localSettings = localSettings
         self.localSyncState = localSyncState
         self.cloudSyncService = cloudSyncService
+        self.workExecutor = workExecutor
+        self.delayedWorkExecutor = delayedWorkExecutor
+    }
+
+    static func defaultDelayedWorkExecutor(
+        delay: TimeInterval,
+        work: @escaping @Sendable () -> Void
+    ) -> DispatchWorkItem {
+        let item = DispatchWorkItem(block: work)
+        DispatchQueue.global(qos: .default).asyncAfter(
+            deadline: .now() + delay,
+            execute: item
+        )
+        return item
     }
 
     func start() {
@@ -60,7 +83,7 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
 
     @objc
     func refreshImmediately() {
-        DispatchQueue.global(qos: .default).async { [weak self] in
+        workExecutor { [weak self] in
             guard let self else { return }
 
             guard !self.localSettings.signalVisibilityMigrationInProgress else {
@@ -76,7 +99,7 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
     }
 
     func refreshLatestRecord() {
-        DispatchQueue.global(qos: .default).async { [weak self] in
+        workExecutor { [weak self] in
             guard let self else { return }
             guard !self.localSettings.signalVisibilityMigrationInProgress else { return }
             Task {
@@ -96,13 +119,10 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
     private func scheduleRefreshAfterMigration() {
         guard refreshAfterMigrationWorkItem == nil else { return }
 
-        let workItem = DispatchWorkItem { [weak self] in
+        refreshAfterMigrationWorkItem = delayedWorkExecutor(5, { [weak self] in
             guard let self else { return }
             self.refreshAfterMigrationWorkItem = nil
             self.refreshImmediately()
-        }
-
-        refreshAfterMigrationWorkItem = workItem
-        DispatchQueue.global(qos: .default).asyncAfter(deadline: .now() + 5, execute: workItem)
+        })
     }
 }

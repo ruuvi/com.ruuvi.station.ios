@@ -7,6 +7,26 @@ import UIKit
 // swiftlint:disable file_length
 import UserNotifications
 
+protocol UserNotificationCentering: AnyObject {
+    var delegate: UNUserNotificationCenterDelegate? { get set }
+    func add(
+        _ request: UNNotificationRequest,
+        withCompletionHandler completionHandler: ((Error?) -> Void)?
+    )
+    func setNotificationCategories(_ categories: Set<UNNotificationCategory>)
+    func removePendingNotificationRequests(withIdentifiers identifiers: [String])
+    func removeDeliveredNotifications(withIdentifiers identifiers: [String])
+    func setBadgeCount(_ badgeCount: Int)
+}
+
+extension UNUserNotificationCenter: UserNotificationCentering {
+    func setBadgeCount(_ badgeCount: Int) {
+        if #available(iOS 16.0, *) {
+            setBadgeCount(badgeCount, withCompletionHandler: nil)
+        }
+    }
+}
+
 struct LocalAlertCategory {
     var id: String
     var disable: String
@@ -25,19 +45,45 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
     private let idPersistence: RuuviLocalIDs
     private let settings: RuuviLocalSettings
     private let ruuviAlertService: RuuviServiceAlert
+    private let userNotificationCenter: UserNotificationCentering
+    private let observerCenter: NotificationCenter
+    private let badgeUpdater: (Int) -> Void
 
     private weak var output: RuuviNotificationLocalOutput?
 
-    public init(
+    public convenience init(
         ruuviStorage: RuuviStorage,
         idPersistence: RuuviLocalIDs,
         settings: RuuviLocalSettings,
         ruuviAlertService: RuuviServiceAlert
     ) {
+        self.init(
+            ruuviStorage: ruuviStorage,
+            idPersistence: idPersistence,
+            settings: settings,
+            ruuviAlertService: ruuviAlertService,
+            userNotificationCenter: UNUserNotificationCenter.current(),
+            observerCenter: .default,
+            badgeUpdater: { UIApplication.shared.applicationIconBadgeNumber = $0 }
+        )
+    }
+
+    init(
+        ruuviStorage: RuuviStorage,
+        idPersistence: RuuviLocalIDs,
+        settings: RuuviLocalSettings,
+        ruuviAlertService: RuuviServiceAlert,
+        userNotificationCenter: UserNotificationCentering,
+        observerCenter: NotificationCenter,
+        badgeUpdater: @escaping (Int) -> Void
+    ) {
         self.ruuviStorage = ruuviStorage
         self.idPersistence = idPersistence
         self.settings = settings
         self.ruuviAlertService = ruuviAlertService
+        self.userNotificationCenter = userNotificationCenter
+        self.observerCenter = observerCenter
+        self.badgeUpdater = badgeUpdater
     }
 
     private let lowHigh = LocalAlertCategory(
@@ -75,7 +121,9 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
     }
 
     deinit {
-        alertDidChangeToken?.invalidate()
+        if let alertDidChangeToken {
+            observerCenter.removeObserver(alertDidChangeToken)
+        }
     }
 
     private func id(for uuid: String) -> String {
@@ -119,7 +167,7 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
                     content: content,
                     trigger: trigger
                 )
-                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                sSelf.userNotificationCenter.add(request, withCompletionHandler: nil)
                 sSelf.setTriggered(for: Self.alertType(from: .connection), uuid: uuid)
             }
         }
@@ -162,7 +210,7 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
                     content: content,
                     trigger: trigger
                 )
-                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                sSelf.userNotificationCenter.add(request, withCompletionHandler: nil)
                 sSelf.setTriggered(for: Self.alertType(from: .connection), uuid: uuid)
             }
         }
@@ -205,7 +253,7 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
                     content: content,
                     trigger: trigger
                 )
-                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                sSelf.userNotificationCenter.add(request, withCompletionHandler: nil)
                 sSelf.setTriggered(for: Self.alertType(from: .movement), uuid: uuid)
             }
         }
@@ -301,7 +349,7 @@ public extension RuuviNotificationLocalImpl {
                     content: content,
                     trigger: trigger
                 )
-                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                self?.userNotificationCenter.add(request, withCompletionHandler: nil)
                 self?.setTriggered(for: type, uuid: uuid)
             }
         }
@@ -323,8 +371,7 @@ extension RuuviNotificationLocalImpl {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func startObserving() {
-        alertDidChangeToken = NotificationCenter
-            .default
+        alertDidChangeToken = observerCenter
             .addObserver(
                 forName: .RuuviServiceAlertDidChange,
                 object: nil,
@@ -395,7 +442,7 @@ extension RuuviNotificationLocalImpl {
 
 extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
     private func setupButtons(disableTitle: String, muteTitle: String) {
-        let nc = UNUserNotificationCenter.current()
+        let nc = userNotificationCenter
         nc.delegate = self
 
         // alerts actions and categories
@@ -441,13 +488,9 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         willPresent notification: UNNotification,
         withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
     ) {
-        let category = notification.request.content.categoryIdentifier
-        let isAlertCategory = category == lowHigh.id || category == blast.id
-        if !settings.limitAlertNotificationsEnabled, isAlertCategory {
-            completionHandler([.list, .badge])
-        } else {
-            completionHandler([.banner, .list, .badge, .sound])
-        }
+        completionHandler(
+            presentationOptions(forCategoryIdentifier: notification.request.content.categoryIdentifier)
+        )
     }
 
     // swiftlint:disable:next function_body_length
@@ -456,31 +499,32 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
-        let userInfo = response.notification.request.content.userInfo
+        handleNotificationResponse(
+            userInfo: response.notification.request.content.userInfo,
+            actionIdentifier: response.actionIdentifier
+        )
+        completionHandler()
+    }
+
+    func presentationOptions(forCategoryIdentifier category: String) -> UNNotificationPresentationOptions {
+        let isAlertCategory = category == lowHigh.id || category == blast.id
+        if !settings.limitAlertNotificationsEnabled, isAlertCategory {
+            return [.list, .badge]
+        } else {
+            return [.banner, .list, .badge, .sound]
+        }
+    }
+
+    func handleNotificationResponse(
+        userInfo: [AnyHashable: Any],
+        actionIdentifier: String
+    ) {
         if let uuid = userInfo[lowHigh.uuidKey] as? String,
            let typeString = userInfo[lowHigh.typeKey] as? String,
            let type = AlertType.alertType(from: typeString) {
-            switch response.actionIdentifier {
+            switch actionIdentifier {
             case lowHigh.disable:
-                // TODO: @rinat go with sensors instead of pure uuid
-                let ruuviTag = RuuviTagSensorStruct(
-                    version: 5,
-                    firmwareVersion: nil,
-                    luid: uuid.luid,
-                    macId: uuid.mac,
-                    serviceUUID: nil,
-                    isConnectable: true,
-                    name: "",
-                    isClaimed: false,
-                    isOwner: false,
-                    owner: nil,
-                    ownersPlan: nil,
-                    isCloudSensor: false,
-                    canShare: false,
-                    sharedTo: [],
-                    maxHistoryDays: nil
-                )
-                ruuviAlertService.unregister(type: type, ruuviTag: ruuviTag)
+                unregister(type: type, uuid: uuid)
             case lowHigh.mute:
                 mute(type: type, uuid: uuid)
             default:
@@ -489,27 +533,9 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         } else if let uuid = userInfo[blast.uuidKey] as? String,
                   let typeString = userInfo[blast.typeKey] as? String,
                   let type = BlastNotificationType(rawValue: typeString) {
-            switch response.actionIdentifier {
+            switch actionIdentifier {
             case blast.disable:
-                // TODO: @rinat go with sensors instead of pure uuid
-                let ruuviTag = RuuviTagSensorStruct(
-                    version: 5,
-                    firmwareVersion: nil,
-                    luid: uuid.luid,
-                    macId: uuid.mac,
-                    serviceUUID: nil,
-                    isConnectable: true,
-                    name: "",
-                    isClaimed: false,
-                    isOwner: false,
-                    owner: nil,
-                    ownersPlan: nil,
-                    isCloudSensor: false,
-                    canShare: false,
-                    sharedTo: [],
-                    maxHistoryDays: nil
-                )
-                ruuviAlertService.unregister(type: Self.alertType(from: type), ruuviTag: ruuviTag)
+                unregister(type: Self.alertType(from: type), uuid: uuid)
             case blast.mute:
                 mute(type: type, uuid: uuid)
             default:
@@ -519,29 +545,32 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
 
         if let uuid = userInfo[lowHigh.uuidKey] as? String
             ?? userInfo[blast.uuidKey] as? String {
-            NotificationCenter.default.post(name: .LNMDidReceive, object: nil, userInfo: [LNMDidReceiveKey.uuid: uuid])
+            observerCenter.post(
+                name: .LNMDidReceive,
+                object: nil,
+                userInfo: [LNMDidReceiveKey.uuid: uuid]
+            )
             output?.notificationDidTap(for: uuid)
         }
 
-        // Handle push notification tap
         if let macId = userInfo["id"] as? String {
             output?.notificationDidTap(for: macId)
         }
+    }
 
-        completionHandler()
+    private func unregister(type: AlertType, uuid: String) {
+        ruuviTag(for: uuid) { [weak self] ruuviTag in
+            self?.ruuviAlertService.unregister(type: type, ruuviTag: ruuviTag)
+        }
     }
 
     private func cancel(_ type: AlertType, for uuid: String) {
-        let nc = UNUserNotificationCenter.current()
-        nc.removePendingNotificationRequests(withIdentifiers: [uuid + type.rawValue])
-        nc.removeDeliveredNotifications(withIdentifiers: [uuid + type.rawValue])
+        userNotificationCenter.removePendingNotificationRequests(withIdentifiers: [uuid + type.rawValue])
+        userNotificationCenter.removeDeliveredNotifications(withIdentifiers: [uuid + type.rawValue])
     }
 
     private func mute(type: AlertType, uuid: String) {
-        guard let date = muteOffset()
-        else {
-            assertionFailure(); return
-        }
+        let date = muteOffset()
         ruuviTag(for: uuid) { [weak self] ruuviTag in
             self?.ruuviAlertService.mute(
                 type: type,
@@ -552,10 +581,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
     }
 
     private func mute(type: BlastNotificationType, uuid: String) {
-        guard let date = muteOffset()
-        else {
-            assertionFailure(); return
-        }
+        let date = muteOffset()
         ruuviTag(for: uuid) { [weak self] ruuviTag in
             self?.ruuviAlertService.mute(
                 type: Self.alertType(from: type),
@@ -565,12 +591,8 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         }
     }
 
-    private func muteOffset() -> Date? {
-        Calendar.current.date(
-            byAdding: .minute,
-            value: settings.alertsMuteIntervalMinutes,
-            to: Date()
-        )
+    private func muteOffset() -> Date {
+        Date().addingTimeInterval(TimeInterval(settings.alertsMuteIntervalMinutes * 60))
     }
 
     private func isMuted(
@@ -631,11 +653,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
     /// Limit alert notification settings prevents new alerts within one hour
     /// of last one. When the setting is off, alerts are not time-throttled here.
     private func muteOffset(from shown: Date) -> Date {
-        Calendar.current.date(
-            byAdding: .minute,
-            value: settings.alertsMuteIntervalMinutes,
-            to: shown
-        ) ?? Date()
+        shown.addingTimeInterval(TimeInterval(settings.alertsMuteIntervalMinutes * 60))
     }
 
     private func setAlertBadge(for content: UNMutableNotificationContent) {
@@ -645,9 +663,9 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         settings.setNotificationsBadgeCount(value: newBadgeCount)
 
         if #available(iOS 16.0, *) {
-            UNUserNotificationCenter.current().setBadgeCount(newBadgeCount)
+            userNotificationCenter.setBadgeCount(newBadgeCount)
         } else {
-            UIApplication.shared.applicationIconBadgeNumber = newBadgeCount
+            badgeUpdater(newBadgeCount)
         }
     }
 
@@ -660,15 +678,6 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                 completion(ruuviTag)
             }
         }
-    }
-}
-
-extension NSObjectProtocol {
-    func invalidate() {
-        // swiftlint:disable:next notification_center_detachment
-        NotificationCenter
-            .default
-            .removeObserver(self)
     }
 }
 

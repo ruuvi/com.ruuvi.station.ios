@@ -10,8 +10,16 @@ import Foundation
 public struct RuuviDFUImpl: RuuviDFU {
     public static let shared = RuuviDFUImpl()
 
-    private let scanner = DfuScanner()
-    private let flasher = DfuFlasher()
+    private let scanner: DfuScanner
+    private let flasher: DfuFlasher
+
+    init(
+        scanner: DfuScanner = DfuScanner(),
+        flasher: DfuFlasher = DfuFlasher()
+    ) {
+        self.scanner = scanner
+        self.flasher = flasher
+    }
 
     @discardableResult
     public func scan<T: AnyObject>(

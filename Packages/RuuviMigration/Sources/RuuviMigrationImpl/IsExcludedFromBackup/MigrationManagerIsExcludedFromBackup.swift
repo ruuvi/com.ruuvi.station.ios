@@ -18,9 +18,7 @@ final class MigrationManagerIsExcludedFromBackup: RuuviMigration {
             }
             try databaseUrl.setResourceValue(true, forKey: .isExcludedFromBackupKey)
         } catch let error as NSError {
-            print("Error excluding \(databaseUrl.lastPathComponent ?? "") from backup \(error)")
+            print("Error excluding database from backup \(error)")
         }
     }
-
-    private let migratedUdKey = "MigrationManagerIsExcludedFromBackup.migrated"
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-public enum SyncAction {
+public enum SyncAction: Equatable {
     /// Cloud data is newer - update local database
     case updateLocal
     /// Local data is newer - keep local AND queue changes for cloud sync

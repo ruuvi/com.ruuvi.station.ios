@@ -22,7 +22,7 @@ public extension SensorSettings {
         } else if let luid {
             "\(luid.value)-settings"
         } else {
-            fatalError()
+            ""
         }
     }
 

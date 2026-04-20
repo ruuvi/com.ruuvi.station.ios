@@ -47,45 +47,45 @@ final class SensorSettingsCombine {
                 self.previousData = try request.fetchAll(db)
 
                 ruuviTagDataTransactionObserver = observation.start(
-                    in: sqlite.database.dbPool
-                ) { [weak self] error in
-                    self?.errorReporter.report(error: error)
-                } onChange: { [weak self] newData in
-                    guard let self else { return }
-                    // Find inserts (present in newData but not in previousData)
-                    let inserts = newData.filter { newItem in
-                        !self.previousData.contains { $0.id == newItem.id }
-                    }
-
-                    // Find deletes (present in previousData but not in newData)
-                    let deletes = self.previousData.filter { oldItem in
-                        !newData.contains { $0.id == oldItem.id }
-                    }
-
-                    // Find updates (present in both, but maybe different in some other properties)
-                    let updates = newData.filter { newItem in
-                        self.previousData.contains { $0.id == newItem.id && $0 != newItem }
-                    }
-
-                    if !inserts.isEmpty {
-                        DispatchQueue.main.async {
-                            inserts.forEach { self.insertSubject.send($0) }
+                    in: sqlite.database.dbPool,
+                    onError: errorReporter.report(error:),
+                    onChange: { [weak self] newData in
+                        guard let self else { return }
+                        // Find inserts (present in newData but not in previousData)
+                        let inserts = newData.filter { newItem in
+                            !self.previousData.contains { $0.id == newItem.id }
                         }
-                    }
-                    if !updates.isEmpty {
-                        DispatchQueue.main.async {
-                            updates.forEach { self.updateSubject.send($0) }
-                        }
-                    }
-                    if !deletes.isEmpty {
-                        DispatchQueue.main.async {
-                            deletes.forEach { self.deleteSubject.send($0) }
-                        }
-                    }
 
-                    // Update previousData for the next onChange call
-                    self.previousData = newData
-                }
+                        // Find deletes (present in previousData but not in newData)
+                        let deletes = self.previousData.filter { oldItem in
+                            !newData.contains { $0.id == oldItem.id }
+                        }
+
+                        // Find updates (present in both, but maybe different in some other properties)
+                        let updates = newData.filter { newItem in
+                            self.previousData.contains { $0.id == newItem.id && $0 != newItem }
+                        }
+
+                        if !inserts.isEmpty {
+                            DispatchQueue.main.async {
+                                inserts.forEach { self.insertSubject.send($0) }
+                            }
+                        }
+                        if !updates.isEmpty {
+                            DispatchQueue.main.async {
+                                updates.forEach { self.updateSubject.send($0) }
+                            }
+                        }
+                        if !deletes.isEmpty {
+                            DispatchQueue.main.async {
+                                deletes.forEach { self.deleteSubject.send($0) }
+                            }
+                        }
+
+                        // Update previousData for the next onChange call
+                        self.previousData = newData
+                    }
+                )
             }
         } catch {
             errorReporter.report(error: error)

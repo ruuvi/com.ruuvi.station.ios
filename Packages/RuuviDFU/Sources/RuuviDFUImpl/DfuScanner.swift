@@ -2,6 +2,38 @@ import CoreBluetooth
 import Foundation
 import UIKit
 
+protocol DfuCentralManaging: AnyObject {
+    var state: CBManagerState { get }
+    var isScanning: Bool { get }
+
+    func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?, options: [String: Any]?)
+    func stopScan()
+}
+
+final class DfuCentralManagerAdapter: NSObject, DfuCentralManaging {
+    private let manager: CBCentralManager
+
+    init(delegate: CBCentralManagerDelegate, queue: DispatchQueue) {
+        manager = CBCentralManager(delegate: delegate, queue: queue)
+    }
+
+    var state: CBManagerState {
+        manager.state
+    }
+
+    var isScanning: Bool {
+        manager.isScanning
+    }
+
+    func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?, options: [String: Any]?) {
+        manager.scanForPeripherals(withServices: serviceUUIDs, options: options)
+    }
+
+    func stopScan() {
+        manager.stopScan()
+    }
+}
+
 class DfuScanner: NSObject {
     private class LostObservation {
         var block: (DFUDevice) -> Void
@@ -13,8 +45,11 @@ class DfuScanner: NSObject {
         }
     }
 
-    private let queue = DispatchQueue(label: "DfuScanner", qos: .userInteractive)
-    private lazy var manager: CBCentralManager = .init(delegate: self, queue: queue)
+    let queue: DispatchQueue
+    private let notificationCenter: NotificationCenter
+    private let now: () -> Date
+    private let managerFactory: (CBCentralManagerDelegate, DispatchQueue) -> DfuCentralManaging
+    private lazy var manager: DfuCentralManaging = managerFactory(self, queue)
 
     private var lastSeen = [DFUDevice: Date]()
     private var lostTimer: DispatchSourceTimer?
@@ -38,26 +73,58 @@ class DfuScanner: NSObject {
     ]
 
     deinit {
-        NotificationCenter.default.removeObserver(self)
+        stopLostDevicesTimer()
+        notificationCenter.removeObserver(self)
     }
 
     override required init() {
+        queue = DispatchQueue(label: "DfuScanner", qos: .userInteractive)
+        notificationCenter = .default
+        now = Date.init
+        managerFactory = { delegate, queue in
+            DfuCentralManagerAdapter(delegate: delegate, queue: queue)
+        }
         super.init()
-        NotificationCenter.default.addObserver(
+        observeApplicationState()
+        queue.async { [weak self] in
+            self?.startIfNeeded()
+        }
+    }
+
+    init(
+        queue: DispatchQueue = DispatchQueue(label: "DfuScanner", qos: .userInteractive),
+        notificationCenter: NotificationCenter = .default,
+        now: @escaping () -> Date = Date.init,
+        managerFactory: @escaping (CBCentralManagerDelegate, DispatchQueue) -> DfuCentralManaging = {
+            delegate,
+            queue in
+            DfuCentralManagerAdapter(delegate: delegate, queue: queue)
+        }
+    ) {
+        self.queue = queue
+        self.notificationCenter = notificationCenter
+        self.now = now
+        self.managerFactory = managerFactory
+        super.init()
+        observeApplicationState()
+        queue.async { [weak self] in
+            self?.startIfNeeded()
+        }
+    }
+
+    private func observeApplicationState() {
+        notificationCenter.addObserver(
             self,
             selector: #selector(willResignActiveNotification(_:)),
             name: UIApplication.willResignActiveNotification,
             object: nil
         )
-        NotificationCenter.default.addObserver(
+        notificationCenter.addObserver(
             self,
             selector: #selector(didBecomeActiveNotification(_:)),
             name: UIApplication.didBecomeActiveNotification,
             object: nil
         )
-        queue.async { [weak self] in
-            self?.startIfNeeded()
-        }
     }
 
     @objc func willResignActiveNotification(_: Notification) {
@@ -86,11 +153,12 @@ class DfuScanner: NSObject {
         lostTimer = nil
     }
 
-    private func notifyLostDevices() {
+    func notifyLostDevices(currentDate: Date? = nil) {
+        let referenceDate = currentDate ?? now()
         observations.lost.values.forEach { observation in
             var lostDevices = [DFUDevice]()
             for (device, seen) in lastSeen {
-                let elapsed = Date().timeIntervalSince(seen)
+                let elapsed = referenceDate.timeIntervalSince(seen)
                 if elapsed > observation.lostDeviceDelay {
                     lostDevices.append(device)
                 }
@@ -102,7 +170,7 @@ class DfuScanner: NSObject {
         }
     }
 
-    private func startIfNeeded() {
+    func startIfNeeded() {
         if manager.state == .poweredOn, !manager.isScanning {
             manager.scanForPeripherals(
                 withServices: self.includeScanServices ? scanServices : nil,
@@ -110,23 +178,37 @@ class DfuScanner: NSObject {
             )
         }
         let shouldObserveLostDevices = observations.lost.count > 0
-        if shouldObserveLostDevices, lostTimer == nil {
+        if shouldObserveLostDevices, !hasLostTimer {
             startLostDevicesTimer()
         }
     }
 
-    private func stopIfNeeded() {
+    func stopIfNeeded() {
         if manager.isScanning {
             manager.stopScan()
         }
         let shouldObserveLostDevices = observations.lost.count > 0
-        if !shouldObserveLostDevices, lostTimer != nil {
+        if !shouldObserveLostDevices, hasLostTimer {
             stopLostDevicesTimer()
         }
     }
 
     func setIncludeScanServices(_ includeScanServices: Bool) {
         self.includeScanServices = includeScanServices
+    }
+
+    var hasLostTimer: Bool {
+        lostTimer != nil
+    }
+
+    func processDiscoveredDevice(
+        _ dfuDevice: DFUDevice,
+        seenAt: Date? = nil
+    ) {
+        lastSeen[dfuDevice] = seenAt ?? now()
+        observations.device.values.forEach { closure in
+            closure(dfuDevice)
+        }
     }
 
     @discardableResult
@@ -206,9 +288,6 @@ extension DfuScanner: CBCentralManagerDelegate {
             name: name,
             peripheral: peripheral
         )
-        lastSeen[dfuDevice] = Date()
-        observations.device.values.forEach { closure in
-            closure(dfuDevice)
-        }
+        processDiscoveredDevice(dfuDevice)
     }
 }

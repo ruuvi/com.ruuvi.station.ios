@@ -1,4 +1,5 @@
 import Combine
+import CoreBluetooth
 import Foundation
 import iOSMcuManagerLibrary
 #if canImport(NordicDFU)
@@ -9,17 +10,20 @@ import iOSDFULibrary
 #endif
 
 class DfuFlasher: NSObject {
-    private let queue = DispatchQueue(label: "DfuFlasher", qos: .userInteractive)
-    private var dfuServiceInitiator: DFUServiceInitiator
+    private let queue: DispatchQueue
+    private let legacyStarter: DfuLegacyServiceStarting
+    private let uploadSessionBuilder: DfuUploadSessionBuilding
+    private let fileExists: (String) -> Bool
+    private let loadData: (URL) throws -> Data
+    private let scheduleNextUpload: (@escaping () -> Void) -> Void
     private var firmware: DFUFirmware?
     private var partsCompleted: Int = 0
-    private var dfuServiceController: DFUServiceController?
+    private var dfuServiceController: DfuServiceControlling?
     private var subject: PassthroughSubject<FlashResponse, Error>?
 
     // MCUManager properties
-    private var fsManager: FileSystemManager?
-    private var defaultManager: DefaultManager?
-    private var bleTransport: McuMgrBleTransport?
+    private var fsManager: DfuFileSystemManaging?
+    private var uploadSession: DfuUploadSession?
 
     private var firmwareUploads: [FirmwareUpload] = []
     private var currentUploadIndex: Int = 0
@@ -37,19 +41,39 @@ class DfuFlasher: NSObject {
         let data: Data
     }
 
+    static func defaultScheduleNextUpload(_ work: @escaping () -> Void) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5, execute: work)
+    }
+
     private var partition: String {
         return UserDefaults.standard
             .string(forKey: FilesController.partitionKey)
             ?? FilesController.defaultPartition
     }
 
-    override init() {
-        dfuServiceInitiator = DFUServiceInitiator(
+    override convenience init() {
+        let queue = DispatchQueue(label: "DfuFlasher", qos: .userInteractive)
+        self.init(
             queue: queue,
-            delegateQueue: queue,
-            progressQueue: queue,
-            loggerQueue: queue
+            legacyStarter: NordicDfuLegacyStarter(queue: queue),
+            uploadSessionBuilder: DefaultDfuUploadSessionBuilder()
         )
+    }
+
+    init(
+        queue: DispatchQueue = DispatchQueue(label: "DfuFlasher", qos: .userInteractive),
+        legacyStarter: DfuLegacyServiceStarting,
+        uploadSessionBuilder: DfuUploadSessionBuilding,
+        fileExists: @escaping (String) -> Bool = { FileManager.default.fileExists(atPath: $0) },
+        loadData: @escaping (URL) throws -> Data = { try Data(contentsOf: $0) },
+        scheduleNextUpload: @escaping (@escaping () -> Void) -> Void = DfuFlasher.defaultScheduleNextUpload
+    ) {
+        self.queue = queue
+        self.legacyStarter = legacyStarter
+        self.uploadSessionBuilder = uploadSessionBuilder
+        self.fileExists = fileExists
+        self.loadData = loadData
+        self.scheduleNextUpload = scheduleNextUpload
         super.init()
     }
 
@@ -60,7 +84,6 @@ class DfuFlasher: NSObject {
     ) -> AnyPublisher<FlashResponse, Error> {
         guard let uuid = UUID(uuidString: uuid)
         else {
-            assertionFailure("Invalid UUID")
             return Fail(error: RuuviDfuError(description: "Invalid UUID"))
                 .eraseToAnyPublisher()
         }
@@ -68,12 +91,10 @@ class DfuFlasher: NSObject {
         self.subject = subject
         self.firmware = firmware
         partsCompleted = 0
-        dfuServiceInitiator.delegate = self
-        dfuServiceInitiator.progressDelegate = self
-        dfuServiceInitiator.logger = self
-        dfuServiceController = dfuServiceInitiator
-            .with(firmware: firmware)
-            .start(targetWithIdentifier: uuid)
+        legacyStarter.delegate = self
+        legacyStarter.progressDelegate = self
+        legacyStarter.logger = self
+        dfuServiceController = legacyStarter.start(firmware: firmware, targetIdentifier: uuid)
         return subject.eraseToAnyPublisher()
     }
 
@@ -98,25 +119,18 @@ class DfuFlasher: NSObject {
         self.subject = subject
 
         do {
-            let transport = McuMgrBleTransport(dfuDevice.peripheral)
-            defaultManager = DefaultManager(transport: transport)
-            bleTransport = transport
-            fsManager = FileSystemManager(transport: transport)
+            uploadSession = try uploadSessionBuilder.makeSession(for: dfuDevice.peripheral)
 
             // Load and validate ALL files upfront
             firmwareUploads = []
             for url in firmwareURLs {
-                guard FileManager.default.fileExists(atPath: url.path) else {
+                guard fileExists(url.path) else {
                     throw RuuviDfuError(description: "File does not exist: \(url.lastPathComponent)")
                 }
 
-                let data = try Data(contentsOf: url)
+                let data = try loadData(url)
                 let fullPath = partition + "/" + url.lastPathComponent
                 firmwareUploads.append(FirmwareUpload(path: fullPath, data: data))
-            }
-
-            guard !firmwareUploads.isEmpty else {
-                throw RuuviDfuError(description: "No firmware data available")
             }
 
             totalBatchBytes = firmwareUploads.reduce(0) { $0 + $1.data.count }
@@ -157,23 +171,24 @@ class DfuFlasher: NSObject {
             return
         }
 
-        guard let transport = bleTransport else {
-            subject?.send(completion: .failure(RuuviDfuError(description: "Transport unavailable")))
+        guard let uploadSession else {
+            subject?.send(completion: .failure(RuuviDfuError(description: "Upload session unavailable")))
             cleanup()
             return
         }
 
         // Create NEW FileSystemManager for each upload
-        fsManager = FileSystemManager(transport: transport)
+        let fileSystemManager = uploadSession.makeFileSystemManager()
+        fsManager = fileSystemManager
 
         let upload = firmwareUploads[currentUploadIndex]
-        let started = fsManager?.upload(
+        let started = fileSystemManager.upload(
             name: upload.path,
             data: upload.data,
             delegate: self
         )
 
-        if started != true {
+        if !started {
             subject?
                 .send(
                     completion: .failure(
@@ -191,13 +206,13 @@ class DfuFlasher: NSObject {
         if totalBatchBytes > 0 {
             subject?.send(.progress(1.0))
         }
-        guard let defaultManager = defaultManager else {
+        guard let resetManager = uploadSession?.resetManager else {
             subject?.send(.done)
             subject?.send(completion: .finished)
             cleanup()
             return
         }
-        defaultManager.reset { [weak self] _, _ in
+        resetManager.reset { [weak self] in
             guard let self = self else { return }
             self.subject?.send(.done)
             self.subject?.send(completion: .finished)
@@ -207,8 +222,7 @@ class DfuFlasher: NSObject {
 
     private func cleanup() {
         fsManager = nil
-        defaultManager = nil
-        bleTransport = nil
+        uploadSession = nil
         firmwareUploads = []
         currentUploadIndex = 0
         totalBatchBytes = 0
@@ -284,8 +298,239 @@ extension DfuFlasher: FileUploadDelegate {
     func uploadDidFinish() {
         uploadedBatchBytes += firmwareUploads[currentUploadIndex].data.count
         currentUploadIndex += 1
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+        scheduleNextUpload { [weak self] in
             self?.startNextUpload()
         }
+    }
+}
+
+protocol DfuServiceControlling {
+    func abort() -> Bool
+}
+
+protocol DfuLegacyServiceStarting: AnyObject {
+    var delegate: DFUServiceDelegate? { get set }
+    var progressDelegate: DFUProgressDelegate? { get set }
+    var logger: LoggerDelegate? { get set }
+    func start(firmware: DFUFirmware, targetIdentifier: UUID) -> DfuServiceControlling?
+}
+
+protocol DfuFileSystemManaging: AnyObject {
+    @discardableResult
+    func upload(name: String, data: Data, delegate: FileUploadDelegate) -> Bool
+    func cancelTransfer()
+}
+
+protocol DfuResetManaging: AnyObject {
+    func reset(completion: @escaping () -> Void)
+}
+
+protocol DfuUploadSession: AnyObject {
+    var resetManager: DfuResetManaging { get }
+    func makeFileSystemManager() -> DfuFileSystemManaging
+}
+
+protocol DfuUploadSessionBuilding {
+    func makeSession(for peripheral: CBPeripheral) throws -> DfuUploadSession
+}
+
+protocol NordicDfuTargetStarting {
+    func start(targetWithIdentifier: UUID) -> NordicDfuServiceControlling?
+}
+
+protocol NordicDfuServiceInitiating: AnyObject {
+    var delegate: DFUServiceDelegate? { get set }
+    var progressDelegate: DFUProgressDelegate? { get set }
+    var logger: LoggerDelegate? { get set }
+    func makeStarter(firmware: DFUFirmware) -> NordicDfuTargetStarting
+}
+
+protocol NordicDfuServiceControlling: AnyObject {
+    func abort() -> Bool
+}
+
+extension DFUServiceController: NordicDfuServiceControlling {}
+
+extension DFUServiceInitiator: NordicDfuTargetStarting {
+    func start(targetWithIdentifier: UUID) -> NordicDfuServiceControlling? {
+        let controller: DFUServiceController? = self.start(targetWithIdentifier: targetWithIdentifier)
+        return controller
+    }
+}
+
+extension DFUServiceInitiator: NordicDfuServiceInitiating {
+    func makeStarter(firmware: DFUFirmware) -> NordicDfuTargetStarting {
+        self.with(firmware: firmware)
+    }
+}
+
+protocol DfuTransporting: AnyObject, McuMgrTransport {}
+
+extension McuMgrBleTransport: DfuTransporting {}
+
+final class NordicDfuLegacyStarter: DfuLegacyServiceStarting {
+    private let initiator: NordicDfuServiceInitiating
+
+    init(queue: DispatchQueue) {
+        initiator = DFUServiceInitiator(
+            queue: queue,
+            delegateQueue: queue,
+            progressQueue: queue,
+            loggerQueue: queue
+        )
+    }
+
+    init(initiator: NordicDfuServiceInitiating) {
+        self.initiator = initiator
+    }
+
+    var delegate: DFUServiceDelegate? {
+        get { initiator.delegate }
+        set { initiator.delegate = newValue }
+    }
+
+    var progressDelegate: DFUProgressDelegate? {
+        get { initiator.progressDelegate }
+        set { initiator.progressDelegate = newValue }
+    }
+
+    var logger: LoggerDelegate? {
+        get { initiator.logger }
+        set { initiator.logger = newValue }
+    }
+
+    func start(firmware: DFUFirmware, targetIdentifier: UUID) -> DfuServiceControlling? {
+        initiator
+            .makeStarter(firmware: firmware)
+            .start(targetWithIdentifier: targetIdentifier)
+            .map(DfuServiceControllerAdapter.init)
+    }
+}
+
+final class DfuServiceControllerAdapter: DfuServiceControlling {
+    private let controller: NordicDfuServiceControlling
+
+    init(controller: NordicDfuServiceControlling) {
+        self.controller = controller
+    }
+
+    func abort() -> Bool {
+        controller.abort()
+    }
+}
+
+struct DefaultDfuUploadSessionBuilder: DfuUploadSessionBuilding {
+    private let sessionFactory: (CBPeripheral) -> DfuUploadSession
+
+    init(
+        sessionFactory: @escaping (CBPeripheral) -> DfuUploadSession = {
+            McuManagerDfuUploadSession(peripheral: $0)
+        }
+    ) {
+        self.sessionFactory = sessionFactory
+    }
+
+    init(
+        transportFactory: @escaping (CBPeripheral) -> DfuTransporting,
+        resetManagerFactory: @escaping (DfuTransporting) -> DfuResetManaging = { transport in
+            DefaultManagerAdapter(manager: DefaultManager(transport: transport))
+        },
+        fileSystemManagerFactory: @escaping (DfuTransporting) -> DfuFileSystemManaging = {
+            transport in
+            FileSystemManagerAdapter(manager: FileSystemManager(transport: transport))
+        }
+    ) {
+        sessionFactory = { peripheral in
+            McuManagerDfuUploadSession(
+                peripheral: peripheral,
+                transportFactory: transportFactory,
+                resetManagerFactory: resetManagerFactory,
+                fileSystemManagerFactory: fileSystemManagerFactory
+            )
+        }
+    }
+
+    func makeSession(for peripheral: CBPeripheral) throws -> DfuUploadSession {
+        sessionFactory(peripheral)
+    }
+}
+
+final class McuManagerDfuUploadSession: DfuUploadSession {
+    let resetManager: DfuResetManaging
+    private let fileSystemManagerFactory: () -> DfuFileSystemManaging
+
+    init(
+        peripheral: CBPeripheral,
+        transportFactory: @escaping (CBPeripheral) -> DfuTransporting = {
+            McuMgrBleTransport($0)
+        },
+        resetManagerFactory: @escaping (DfuTransporting) -> DfuResetManaging = { transport in
+            DefaultManagerAdapter(manager: DefaultManager(transport: transport))
+        },
+        fileSystemManagerFactory: @escaping (DfuTransporting) -> DfuFileSystemManaging = {
+            transport in
+            return FileSystemManagerAdapter(manager: FileSystemManager(transport: transport))
+        }
+    ) {
+        let transport = transportFactory(peripheral)
+        resetManager = resetManagerFactory(transport)
+        self.fileSystemManagerFactory = {
+            fileSystemManagerFactory(transport)
+        }
+    }
+
+    func makeFileSystemManager() -> DfuFileSystemManaging {
+        fileSystemManagerFactory()
+    }
+}
+
+final class DefaultManagerAdapter: DfuResetManaging {
+    private let resetClosure: (@escaping () -> Void) -> Void
+
+    init(manager: DefaultManager) {
+        resetClosure = { completion in
+            manager.reset { _, _ in
+                completion()
+            }
+        }
+    }
+
+    init(resetClosure: @escaping (@escaping () -> Void) -> Void) {
+        self.resetClosure = resetClosure
+    }
+
+    func reset(completion: @escaping () -> Void) {
+        resetClosure(completion)
+    }
+}
+
+final class FileSystemManagerAdapter: DfuFileSystemManaging {
+    private let uploadClosure: (String, Data, FileUploadDelegate) -> Bool
+    private let cancelClosure: () -> Void
+
+    init(manager: FileSystemManager) {
+        uploadClosure = { name, data, delegate in
+            manager.upload(name: name, data: data, delegate: delegate)
+        }
+        cancelClosure = {
+            manager.cancelTransfer()
+        }
+    }
+
+    init(
+        uploadClosure: @escaping (String, Data, FileUploadDelegate) -> Bool,
+        cancelClosure: @escaping () -> Void
+    ) {
+        self.uploadClosure = uploadClosure
+        self.cancelClosure = cancelClosure
+    }
+
+    @discardableResult
+    func upload(name: String, data: Data, delegate: FileUploadDelegate) -> Bool {
+        uploadClosure(name, data, delegate)
+    }
+
+    func cancelTransfer() {
+        cancelClosure()
     }
 }

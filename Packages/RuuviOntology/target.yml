@@ -15,3 +15,14 @@ targets:
     - package: Humidity
     - package: BTKit
     - package: GRDB
+  RuuviOntologyTests:
+    type: bundle.unit-test
+    platform: iOS
+    hostApplication: station
+    sources:
+    - path: Tests/RuuviOntologyTests
+    dependencies:
+    - target: RuuviOntology
+    - package: BTKit
+    - package: GRDB
+    - package: Humidity

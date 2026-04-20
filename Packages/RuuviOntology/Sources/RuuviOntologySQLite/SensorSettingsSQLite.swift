@@ -176,27 +176,14 @@ public extension SensorSettingsSQLite {
         guard !raw.isEmpty, let data = raw.data(using: .utf8) else {
             return nil
         }
-        if let decoded = try? JSONDecoder().decode([String].self, from: data) {
-            return decoded
-        }
-        if let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []),
-           let decoded = jsonObject as? [String] {
-            return decoded
-        }
-        return nil
+        return try? JSONDecoder().decode([String].self, from: data)
     }
 
     static func encodeDisplayOrder(_ codes: [String]?) -> String? {
         guard let codes = codes, !codes.isEmpty else {
             return nil
         }
-        if let data = try? JSONEncoder().encode(codes) {
-            return String(data: data, encoding: .utf8)
-        }
-        if let data = try? JSONSerialization.data(withJSONObject: codes, options: []),
-           let string = String(data: data, encoding: .utf8) {
-            return string
-        }
-        return nil
+        let data = try! JSONEncoder().encode(codes)
+        return String(data: data, encoding: .utf8)!
     }
 }

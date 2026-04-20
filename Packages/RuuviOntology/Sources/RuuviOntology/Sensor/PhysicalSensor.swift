@@ -13,7 +13,7 @@ public struct PhysicalSensorStruct: PhysicalSensor {
         } else if let luid {
             luid.value
         } else {
-            fatalError()
+            ""
         }
     }
 

@@ -25,23 +25,11 @@ final class MigrationManagerAlertService: RuuviMigration, @unchecked Sendable {
 
     func migrateIfNeeded() {
         guard persistanceVersion < actualServiceVersion else { return }
-        for version in persistanceVersion ..< actualServiceVersion {
-            let nextVersion = version + 1
-            migrate(to: nextVersion) { result in
-                if result {
-                    self.persistanceVersion = nextVersion
-                }
-            }
-        }
-    }
 
-    private func migrate(to version: UInt, completion: @escaping ((Bool) -> Void)) {
-        switch version {
-        case 1:
-            migrateTo1Version(completion: completion)
-        default:
-            assertionFailure("⛔️ Need implement v\(version) migration before")
-            completion(true)
+        migrateTo1Version { result in
+            if result {
+                self.persistanceVersion = self.actualServiceVersion
+            }
         }
     }
 
@@ -73,23 +61,15 @@ final class MigrationManagerAlertService: RuuviMigration, @unchecked Sendable {
 
 extension MigrationManagerAlertService {
     private func migrateTo1Version(completion: @escaping ((Bool) -> Void)) {
-        let group = DispatchGroup()
-        group.enter()
         fetchRuuviSensors { ruuviTagSensors in
             self.queue.async {
                 ruuviTagSensors.forEach { element in
-                    group.enter()
-                    self.migrateTo1Version(element: element, completion: {
-                        group.leave()
-                    })
+                    self.migrateTo1Version(element: element, completion: {})
                 }
-                group.leave()
+                DispatchQueue.main.async {
+                    completion(true)
+                }
             }
-        }
-        queue.async {
-            group.notify(queue: .main, execute: {
-                completion(true)
-            })
         }
     }
 
@@ -144,31 +124,18 @@ extension MigrationManagerAlertService {
         queue.async {
             Task {
                 let sensors = (try? await self.ruuviStorage.readAll()) ?? []
-                let group = DispatchGroup()
                 var result = [(RuuviTagSensor, Temperature?)]()
+                result.reserveCapacity(sensors.count)
 
-                sensors.forEach { sensor in
-                    group.enter()
-                    self.fetchRecord(for: sensor) {
-                        result.append($0)
-                        group.leave()
-                    }
+                for sensor in sensors {
+                    let record = try? await self.ruuviStorage.readLatest(sensor)
+                    result.append((sensor, record?.temperature))
                 }
 
-                group.notify(queue: .main, execute: {
+                DispatchQueue.main.async {
                     completion(result)
-                })
+                }
             }
-        }
-    }
-
-    private func fetchRecord(
-        for sensor: RuuviTagSensor,
-        complete: @escaping (((RuuviTagSensor, Temperature?)) -> Void)
-    ) {
-        Task {
-            let record = try? await ruuviStorage.readLatest(sensor)
-            complete((sensor, record?.temperature))
         }
     }
 }

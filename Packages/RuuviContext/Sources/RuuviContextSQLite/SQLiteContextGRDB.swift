@@ -3,7 +3,11 @@ import GRDB
 import RuuviOntology
 
 class SQLiteContextGRDB: SQLiteContext {
-    let database: GRDBDatabase = SQLiteGRDBDatabase.shared
+    let database: GRDBDatabase
+
+    init(database: GRDBDatabase = SQLiteGRDBDatabase.shared) {
+        self.database = database
+    }
 }
 
 public protocol DatabaseService {
@@ -28,16 +32,27 @@ class SQLiteGRDBDatabase: GRDBDatabase {
         return databasePath
     }
 
-    var dbPath: String {
-        Self.databasePath
-    }
+    let dbPath: String
 
     private(set) var dbPool: DatabasePool
+    private let fileManager: FileManager
+    private let validator: (DatabasePool) throws -> Void
 
-    private init() throws {
+    init(
+        path: String = SQLiteGRDBDatabase.databasePath,
+        fileManager: FileManager = .default,
+        validator: @escaping (DatabasePool) throws -> Void = { dbPool in
+            try dbPool.read { db in
+                try db.execute(sql: "SELECT * FROM sqlite_master LIMIT 1")
+            }
+        }
+    ) throws {
+        dbPath = path
+        self.fileManager = fileManager
+        self.validator = validator
         var configuration = Configuration()
         configuration.qos = .default
-        let pool = try DatabasePool(path: SQLiteGRDBDatabase.databasePath, configuration: configuration)
+        let pool = try DatabasePool(path: path, configuration: configuration)
         try pool.write { database in
             try database.execute(sql: "PRAGMA auto_vacuum = FULL")
         }
@@ -45,23 +60,35 @@ class SQLiteGRDBDatabase: GRDBDatabase {
         dbPool = pool
     }
 
-    private func recreate() {
-        do {
-            try FileManager.default.removeItem(atPath: SQLiteGRDBDatabase.databasePath)
-            dbPool = try DatabasePool(path: SQLiteGRDBDatabase.databasePath)
-        } catch {
-            print(error.localizedDescription)
+    private func recreate() throws {
+        try? dbPool.close()
+        if fileManager.fileExists(atPath: dbPath) {
+            try fileManager.removeItem(atPath: dbPath)
         }
+        dbPool = try DatabasePool(path: dbPath)
     }
 }
 
 extension SQLiteGRDBDatabase {
     func migrateIfNeeded() {
         do {
+            try validator(dbPool)
             try migrate(dbPool: dbPool)
         } catch {
-            recreate()
+            try! recreate()
             try! migrate(dbPool: dbPool)
+        }
+    }
+
+    func hasTable(named tableName: String) throws -> Bool {
+        try dbPool.read { db in
+            try db.tableExists(tableName)
+        }
+    }
+
+    func columnNames(in tableName: String) throws -> Set<String> {
+        try dbPool.read { db in
+            try Set(db.columns(in: tableName).map(\.name))
         }
     }
 

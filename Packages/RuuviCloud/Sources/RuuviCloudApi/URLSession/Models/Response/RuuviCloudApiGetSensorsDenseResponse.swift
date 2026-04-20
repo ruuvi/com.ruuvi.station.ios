@@ -158,17 +158,7 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
             }
 
             private static func parseDisplayOrder(_ raw: String) -> [String]? {
-                guard let data = raw.data(using: .utf8) else {
-                    return nil
-                }
-                if let decoded = try? JSONDecoder().decode([String].self, from: data) {
-                    return decoded
-                }
-                if let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []),
-                   let decoded = jsonObject as? [String] {
-                    return decoded
-                }
-                return nil
+                try? JSONDecoder().decode([String].self, from: Data(raw.utf8))
             }
 
             private static func parseBoolean(_ raw: String) -> Bool? {

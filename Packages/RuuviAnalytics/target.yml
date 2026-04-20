@@ -7,3 +7,11 @@ targets:
     sources:
     - path: Sources
       name: Analytics
+  RuuviAnalyticsTests:
+    type: bundle.unit-test
+    platform: iOS
+    hostApplication: station
+    sources:
+    - path: Tests/RuuviAnalyticsTests
+    dependencies:
+    - target: RuuviAnalytics

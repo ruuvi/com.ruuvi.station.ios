@@ -25,7 +25,7 @@ public extension RuuviTagSensor {
         } else if let luid {
             luid.value
         } else {
-            fatalError()
+            ""
         }
     }
 

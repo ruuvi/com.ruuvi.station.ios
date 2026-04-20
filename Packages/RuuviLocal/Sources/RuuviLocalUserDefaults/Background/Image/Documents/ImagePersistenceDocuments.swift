@@ -4,6 +4,23 @@ import UIKit
 class ImagePersistenceDocuments: ImagePersistence {
     private let ext = ".png"
     private let bgDir = "bg"
+    private let fileManager: FileManager
+    private let documentsDirectory: () -> URL?
+    private let dataWriter: (Data, URL) throws -> Void
+
+    init(
+        fileManager: FileManager = .default,
+        documentsDirectory: @escaping () -> URL? = {
+            FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        },
+        dataWriter: @escaping (Data, URL) throws -> Void = { data, url in
+            try data.write(to: url)
+        }
+    ) {
+        self.fileManager = fileManager
+        self.documentsDirectory = documentsDirectory
+        self.dataWriter = dataWriter
+    }
 
     func fetchBg(for identifier: Identifier) -> UIImage? {
         let uuid = identifier.value
@@ -24,13 +41,14 @@ class ImagePersistenceDocuments: ImagePersistence {
     ) async throws -> URL {
         let uuid = identifier.value
         let ext = self.ext
+        let dataWriter = self.dataWriter
         let directory = try getBgDirectory()
         return try await withCheckedThrowingContinuation { continuation in
             DispatchQueue.global(qos: .utility).async {
                 if let data = image.jpegData(compressionQuality: compressionQuality) {
                     do {
                         let url = directory.appendingPathComponent(uuid + ext)
-                        try data.write(to: url)
+                        try dataWriter(data, url)
                         continuation.resume(returning: url)
                     } catch {
                         continuation.resume(throwing: RuuviLocalError.disk(error))
@@ -43,12 +61,12 @@ class ImagePersistenceDocuments: ImagePersistence {
     }
 
     private func getBgDirectory() throws -> URL {
-        guard let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+        guard let docDir = documentsDirectory()
         else {
             throw RuuviLocalError.failedToGetDocumentsDirectory
         }
         let dir = docDir.appendingPathComponent(bgDir, isDirectory: true)
-        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        try fileManager.createDirectory(at: dir, withIntermediateDirectories: true)
         return dir
     }
 }

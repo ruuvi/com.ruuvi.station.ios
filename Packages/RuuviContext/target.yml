@@ -14,3 +14,12 @@ targets:
     dependencies:
     - package: GRDB
     - target: RuuviOntology
+  RuuviContextTests:
+    type: bundle.unit-test
+    platform: iOS
+    hostApplication: station
+    sources:
+    - path: Tests/RuuviContextTests
+    dependencies:
+    - target: RuuviContext
+    - package: GRDB

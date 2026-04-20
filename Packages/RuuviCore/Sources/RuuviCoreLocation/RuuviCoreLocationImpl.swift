@@ -1,9 +1,25 @@
 import CoreLocation
 import Foundation
 
+protocol CoreLocationManaging: AnyObject {
+    var delegate: CLLocationManagerDelegate? { get set }
+    var authorizationStatus: CLAuthorizationStatus { get }
+    var distanceFilter: CLLocationDistance { get set }
+    var desiredAccuracy: CLLocationAccuracy { get set }
+
+    func requestAlwaysAuthorization()
+    func startUpdatingLocation()
+    func stopUpdatingLocation()
+}
+
+extension CLLocationManager: CoreLocationManaging {}
+
 public final class RuuviCoreLocationImpl: NSObject, RuuviCoreLocation {
+    private let locationManager: CoreLocationManaging
+    private let locationServicesEnabled: () -> Bool
+
     public var isLocationPermissionGranted: Bool {
-        CLLocationManager.locationServicesEnabled()
+        locationServicesEnabled()
             && (locationManager.authorizationStatus == .authorizedWhenInUse
                 || locationManager.authorizationStatus == .authorizedAlways)
     }
@@ -13,7 +29,7 @@ public final class RuuviCoreLocationImpl: NSObject, RuuviCoreLocation {
     }
 
     var isLocationPermissionDenied: Bool {
-        !CLLocationManager.locationServicesEnabled()
+        !locationServicesEnabled()
             || locationManager.authorizationStatus == .denied || locationManager.authorizationStatus == .denied
     }
 
@@ -21,11 +37,24 @@ public final class RuuviCoreLocationImpl: NSObject, RuuviCoreLocation {
         locationManager.authorizationStatus == .notDetermined
     }
 
-    private let locationManager = CLLocationManager()
     private var requestLocationPermissionCallback: ((Bool) -> Void)?
     private var getCurrentLocationContinuation: CheckedContinuation<CLLocation, Error>?
 
     override public init() {
+        locationManager = CLLocationManager()
+        locationServicesEnabled = CLLocationManager.locationServicesEnabled
+        super.init()
+        locationManager.delegate = self
+        locationManager.distanceFilter = 100
+        locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+    }
+
+    init(
+        locationManager: CoreLocationManaging,
+        locationServicesEnabled: @escaping () -> Bool
+    ) {
+        self.locationManager = locationManager
+        self.locationServicesEnabled = locationServicesEnabled
         super.init()
         locationManager.delegate = self
         locationManager.distanceFilter = 100

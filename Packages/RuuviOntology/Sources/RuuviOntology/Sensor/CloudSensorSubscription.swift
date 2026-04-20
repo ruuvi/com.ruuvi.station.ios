@@ -24,7 +24,7 @@ public extension CloudSensorSubscription {
         if let macId {
             "\(macId)-subscription"
         } else {
-            fatalError()
+            ""
         }
     }
 }

@@ -30,7 +30,6 @@ final class RuuviPoolCoordinator: RuuviPool {
         guard ruuviTag.macId != nil,
               ruuviTag.macId?.value.isEmpty == false
         else {
-            assertionFailure()
             return false
         }
 
@@ -47,7 +46,6 @@ final class RuuviPoolCoordinator: RuuviPool {
 
     func update(_ ruuviTag: RuuviTagSensor) async throws -> Bool {
         guard ruuviTag.macId != nil else {
-            assertionFailure()
             return false
         }
 
@@ -64,7 +62,6 @@ final class RuuviPoolCoordinator: RuuviPool {
 
     func delete(_ ruuviTag: RuuviTagSensor) async throws -> Bool {
         guard ruuviTag.macId != nil else {
-            assertionFailure()
             return false
         }
 
@@ -99,7 +96,6 @@ final class RuuviPoolCoordinator: RuuviPool {
             }
         }
 
-        assertionFailure()
         return false
     }
 
@@ -117,7 +113,6 @@ final class RuuviPoolCoordinator: RuuviPool {
             }
         }
 
-        assertionFailure()
         return false
     }
 
@@ -135,7 +130,6 @@ final class RuuviPoolCoordinator: RuuviPool {
             }
         }
 
-        assertionFailure()
         return false
     }
 
@@ -183,7 +177,6 @@ final class RuuviPoolCoordinator: RuuviPool {
         lastOriginalRecord record: RuuviTagSensorRecord?
     ) async throws -> SensorSettings {
         guard ruuviTag.macId != nil else {
-            assertionFailure()
             throw RuuviPoolError.ruuviPersistence(.failedToFindRuuviTag)
         }
 

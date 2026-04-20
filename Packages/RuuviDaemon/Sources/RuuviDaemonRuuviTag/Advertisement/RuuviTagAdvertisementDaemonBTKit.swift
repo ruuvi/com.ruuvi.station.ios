@@ -9,17 +9,241 @@ import RuuviPool
 import RuuviReactor
 import RuuviStorage
 
+enum RuuviTagAdvertisementRecordPlan: Equatable {
+    case historyAndLatest
+    case latestOnly
+}
+
+enum RuuviTagAdvertisementLatestRecordPlan {
+    case createLast(RuuviTagSensorRecord)
+    case updateLast(RuuviTagSensorRecord)
+}
+
+protocol AdvertisementForegrounding {
+    @discardableResult
+    func observe<T: AnyObject>(
+        _ observer: T,
+        uuid: String,
+        options: BTScannerOptionsInfo?,
+        closure: @escaping (T, BTDevice) -> Void
+    ) -> DaemonObservationToken
+}
+
+private struct AdvertisementForegroundAdapter: AdvertisementForegrounding {
+    let foreground: BTForeground
+
+    func observe<T: AnyObject>(
+        _ observer: T,
+        uuid: String,
+        options: BTScannerOptionsInfo?,
+        closure: @escaping (T, BTDevice) -> Void
+    ) -> DaemonObservationToken {
+        let token = foreground.observe(
+            observer,
+            uuid: uuid,
+            options: options,
+            closure: closure
+        )
+        return DaemonObservationToken {
+            token.invalidate()
+        }
+    }
+}
+
+struct RuuviTagAdvertisementDaemonCore {
+    static func rebuildRuuviTagIndex(
+        from ruuviTags: [AnyRuuviTagSensor]
+    ) -> [AnyLocalIdentifier: AnyRuuviTagSensor] {
+        var luidIndex = [AnyLocalIdentifier: AnyRuuviTagSensor]()
+        for tag in ruuviTags {
+            if let luid = tag.luid?.any {
+                luidIndex[luid] = tag
+            }
+        }
+        return luidIndex
+    }
+
+    static func tagIdentifierValues(from ruuviTags: [AnyRuuviTagSensor]) -> Set<String> {
+        var values = Set<String>()
+        values.reserveCapacity(ruuviTags.count * 2)
+        for tag in ruuviTags {
+            values.insert(tag.id)
+            if let luid = tag.luid?.value {
+                values.insert(luid)
+            }
+            if let mac = tag.macId?.value {
+                values.insert(mac)
+            }
+        }
+        return values
+    }
+
+    static func pruneState(
+        savedDate: [String: Date],
+        advertisementSequence: [String: Int],
+        keeping identifierValues: Set<String>
+    ) -> (
+        savedDate: [String: Date],
+        advertisementSequence: [String: Int]
+    ) {
+        (
+            savedDate: savedDate.filter { identifierValues.contains($0.key) },
+            advertisementSequence: advertisementSequence.filter { identifierValues.contains($0.key) }
+        )
+    }
+
+    static func removeCachedSensor(
+        matching record: RuuviTag,
+        fallbackUUID: String,
+        ruuviTagsByLuid: [AnyLocalIdentifier: AnyRuuviTagSensor],
+        ruuviTags: [AnyRuuviTagSensor]
+    ) -> [AnyRuuviTagSensor] {
+        if let cachedSensor = matchingSensor(
+            for: record,
+            ruuviTagsByLuid: ruuviTagsByLuid,
+            ruuviTags: ruuviTags
+        ) {
+            return ruuviTags.filter { sensor in
+                sensor.id != cachedSensor.id
+                    && sensor.luid?.any != cachedSensor.luid?.any
+                    && sensor.macId?.any != cachedSensor.macId?.any
+            }
+        }
+        return ruuviTags.filter { sensor in
+            sensor.id != fallbackUUID && sensor.luid?.value != fallbackUUID
+        }
+    }
+
+    static func sensorSettings(
+        for ruuviTagSensor: AnyRuuviTagSensor,
+        in sensorSettingsList: [SensorSettings]
+    ) -> SensorSettings? {
+        if let sensorLuid = ruuviTagSensor.luid?.any,
+           let settings = sensorSettingsList.first(where: { $0.luid?.any == sensorLuid }) {
+            return settings
+        }
+        if let sensorMac = ruuviTagSensor.macId?.any {
+            return sensorSettingsList.first(where: { $0.macId?.any == sensorMac })
+        }
+        return nil
+    }
+
+    static func snapshot(
+        from ruuviTag: RuuviTag,
+        source: RuuviTagSensorRecordSource
+    ) -> WidgetSensorRecordSnapshot {
+        let humidityFraction: Double? = {
+            if let relative = ruuviTag.relativeHumidity {
+                return relative / 100.0
+            }
+            return nil
+        }()
+        return WidgetSensorRecordSnapshot(
+            date: Date(),
+            source: source.rawValue,
+            macId: ruuviTag.macId?.value,
+            luid: ruuviTag.luid?.value,
+            rssi: nil,
+            version: ruuviTag.version,
+            temperature: ruuviTag.celsius,
+            humidity: humidityFraction,
+            pressure: ruuviTag.hectopascals,
+            accelerationX: ruuviTag.accelerationX,
+            accelerationY: ruuviTag.accelerationY,
+            accelerationZ: ruuviTag.accelerationZ,
+            voltage: ruuviTag.volts,
+            movementCounter: ruuviTag.movementCounter,
+            measurementSequenceNumber: ruuviTag.measurementSequenceNumber,
+            txPower: ruuviTag.txPower,
+            pm1: ruuviTag.pMatter1,
+            pm25: ruuviTag.pMatter25,
+            pm4: ruuviTag.pMatter4,
+            pm10: ruuviTag.pMatter10,
+            co2: ruuviTag.carbonDioxide,
+            voc: ruuviTag.volatileOrganicCompound,
+            nox: ruuviTag.nitrogenOxide,
+            luminance: ruuviTag.luminanceValue,
+            dbaInstant: ruuviTag.decibelInstant,
+            dbaAvg: ruuviTag.decibelAverage,
+            dbaPeak: ruuviTag.decibelPeak,
+            temperatureOffset: 0.0,
+            humidityOffset: 0.0,
+            pressureOffset: 0.0
+        )
+    }
+
+    static func shouldPersist(
+        appIsOnForeground: Bool,
+        uuid: String,
+        measurementSequenceNumber: Int?,
+        lastSequenceNumber: Int?,
+        lastSavedDate: Date?,
+        saveInterval: TimeInterval,
+        now: Date = Date()
+    ) -> Bool {
+        if appIsOnForeground {
+            if let previous = lastSequenceNumber,
+               let next = measurementSequenceNumber {
+                return next != previous
+            }
+            return true
+        }
+        guard let date = lastSavedDate else {
+            return true
+        }
+        return now.timeIntervalSince(date) > saveInterval && !uuid.isEmpty
+    }
+
+    static func matchingSensor(
+        for record: RuuviTag,
+        ruuviTagsByLuid: [AnyLocalIdentifier: AnyRuuviTagSensor],
+        ruuviTags: [AnyRuuviTagSensor]
+    ) -> AnyRuuviTagSensor? {
+        if let recordLuid = record.luid?.any {
+            if let match = ruuviTagsByLuid[recordLuid] {
+                return match
+            }
+            if let match = ruuviTags.first(where: { $0.luid?.any == recordLuid }) {
+                return match
+            }
+        }
+        if let recordMac = record.macId?.any {
+            return ruuviTags.first(where: { $0.macId?.any == recordMac })
+        }
+        return nil
+    }
+
+    static func recordPlan(for record: RuuviTag) -> RuuviTagAdvertisementRecordPlan {
+        record.version == 0x06 ? .latestOnly : .historyAndLatest
+    }
+
+    static func latestRecordPlan(
+        for record: RuuviTag,
+        sensor: AnyRuuviTagSensor,
+        localRecord: RuuviTagSensorRecord?
+    ) -> RuuviTagAdvertisementLatestRecordPlan {
+        guard localRecord != nil else {
+            return .createLast(record)
+        }
+        var advertisement: RuuviTagSensorRecord = record.with(source: .advertisement)
+        if let macId = sensor.macId {
+            advertisement = advertisement.with(macId: macId)
+        }
+        return .updateLast(advertisement)
+    }
+}
+
 // swiftlint:disable:next type_body_length
 public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTagAdvertisementDaemon {
     private let ruuviPool: RuuviPool
     private let ruuviStorage: RuuviStorage
     private let ruuviReactor: RuuviReactor
-    private let foreground: BTForeground
+    private let foreground: any AdvertisementForegrounding
     private let settings: RuuviLocalSettings
     private let widgetCache = WidgetSensorCache()
 
     private var ruuviTagsToken: RuuviReactorToken?
-    private var observeTokens = [String: ObservationToken]()
+    private var observeTokens = [String: DaemonObservationToken]()
     private var sensorSettingsTokens = [String: RuuviReactorToken]()
     private var ruuviTags = [AnyRuuviTagSensor]()
     private var ruuviTagsByLuid = [AnyLocalIdentifier: AnyRuuviTagSensor]()
@@ -59,11 +283,27 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         }
     }
 
-    public init(
+    public convenience init(
         ruuviPool: RuuviPool,
         ruuviStorage: RuuviStorage,
         ruuviReactor: RuuviReactor,
         foreground: BTForeground,
+        settings: RuuviLocalSettings
+    ) {
+        self.init(
+            ruuviPool: ruuviPool,
+            ruuviStorage: ruuviStorage,
+            ruuviReactor: ruuviReactor,
+            foreground: AdvertisementForegroundAdapter(foreground: foreground),
+            settings: settings
+        )
+    }
+
+    init(
+        ruuviPool: RuuviPool,
+        ruuviStorage: RuuviStorage,
+        ruuviReactor: RuuviReactor,
+        foreground: any AdvertisementForegrounding,
         settings: RuuviLocalSettings
     ) {
         self.ruuviPool = ruuviPool
@@ -177,39 +417,25 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     }
 
     private func rebuildRuuviTagIndex() {
-        var luidIndex = [AnyLocalIdentifier: AnyRuuviTagSensor]()
-        for tag in ruuviTags {
-            if let luid = tag.luid?.any {
-                luidIndex[luid] = tag
-            }
-        }
-        ruuviTagsByLuid = luidIndex
+        ruuviTagsByLuid = RuuviTagAdvertisementDaemonCore.rebuildRuuviTagIndex(from: ruuviTags)
         widgetCache.syncSensors(ruuviTags) { [weak self] sensor in
             self?.sensorSettings(for: sensor)
         }
     }
 
     private func tagIdentifierValues() -> Set<String> {
-        var values = Set<String>()
-        values.reserveCapacity(ruuviTags.count * 2)
-        for tag in ruuviTags {
-            values.insert(tag.id)
-            if let luid = tag.luid?.value {
-                values.insert(luid)
-            }
-            if let mac = tag.macId?.value {
-                values.insert(mac)
-            }
-        }
-        return values
+        RuuviTagAdvertisementDaemonCore.tagIdentifierValues(from: ruuviTags)
     }
 
     private func pruneCachedState(keeping identifierValues: Set<String>) {
         stateQueue.sync {
-            let savedDateKeys = savedDate.keys.filter { !identifierValues.contains($0) }
-            savedDateKeys.forEach { savedDate.removeValue(forKey: $0) }
-            let sequenceKeys = advertisementSequence.keys.filter { !identifierValues.contains($0) }
-            sequenceKeys.forEach { advertisementSequence.removeValue(forKey: $0) }
+            let prunedState = RuuviTagAdvertisementDaemonCore.pruneState(
+                savedDate: savedDate,
+                advertisementSequence: advertisementSequence,
+                keeping: identifierValues
+            )
+            savedDate = prunedState.savedDate
+            advertisementSequence = prunedState.advertisementSequence
         }
     }
 
@@ -313,74 +539,32 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     private func sensorSettings(
         for ruuviTagSensor: AnyRuuviTagSensor
     ) -> SensorSettings? {
-        if let sensorLuid = ruuviTagSensor.luid?.any {
-            if let settings = sensorSettingsList.first(where: { $0.luid?.any == sensorLuid }) {
-                return settings
-            }
-        }
-        if let sensorMac = ruuviTagSensor.macId?.any {
-            return sensorSettingsList.first(where: { $0.macId?.any == sensorMac })
-        }
-        return nil
+        RuuviTagAdvertisementDaemonCore.sensorSettings(
+            for: ruuviTagSensor,
+            in: sensorSettingsList
+        )
     }
 
     private func snapshot(
         from ruuviTag: RuuviTag,
         source: RuuviTagSensorRecordSource
     ) -> WidgetSensorRecordSnapshot {
-        let humidityFraction: Double? = {
-            if let relative = ruuviTag.relativeHumidity {
-                return relative / 100.0
-            }
-            return nil
-        }()
-        return WidgetSensorRecordSnapshot(
-            date: Date(),
-            source: source.rawValue,
-            macId: ruuviTag.macId?.value,
-            luid: ruuviTag.luid?.value,
-            rssi: nil,
-            version: ruuviTag.version,
-            temperature: ruuviTag.celsius,
-            humidity: humidityFraction,
-            pressure: ruuviTag.hectopascals,
-            accelerationX: ruuviTag.accelerationX,
-            accelerationY: ruuviTag.accelerationY,
-            accelerationZ: ruuviTag.accelerationZ,
-            voltage: ruuviTag.volts,
-            movementCounter: ruuviTag.movementCounter,
-            measurementSequenceNumber: ruuviTag.measurementSequenceNumber,
-            txPower: ruuviTag.txPower,
-            pm1: ruuviTag.pMatter1,
-            pm25: ruuviTag.pMatter25,
-            pm4: ruuviTag.pMatter4,
-            pm10: ruuviTag.pMatter10,
-            co2: ruuviTag.carbonDioxide,
-            voc: ruuviTag.volatileOrganicCompound,
-            nox: ruuviTag.nitrogenOxide,
-            luminance: ruuviTag.luminanceValue,
-            dbaInstant: ruuviTag.decibelInstant,
-            dbaAvg: ruuviTag.decibelAverage,
-            dbaPeak: ruuviTag.decibelPeak,
-            temperatureOffset: 0.0,
-            humidityOffset: 0.0,
-            pressureOffset: 0.0
-        )
+        RuuviTagAdvertisementDaemonCore.snapshot(from: ruuviTag, source: source)
     }
 
     @objc private func persist(wrapper: RuuviTagWrapper) {
         let uuid = wrapper.device.uuid
         guard wrapper.device.luid != nil else { return }
         if settings.appIsOnForeground {
-            let shouldPersist: Bool
-            shouldPersist = stateQueue.sync {
-                if let previous = advertisementSequence[uuid],
-                   let next = wrapper.device.measurementSequenceNumber {
-                    // Persist only if sequence number changes, handling wrap-around
-                    return next != previous
-                }
-                // Persist first advertisement when no previous sequence exists
-                return true
+            let shouldPersist = stateQueue.sync {
+                RuuviTagAdvertisementDaemonCore.shouldPersist(
+                    appIsOnForeground: true,
+                    uuid: uuid,
+                    measurementSequenceNumber: wrapper.device.measurementSequenceNumber,
+                    lastSequenceNumber: advertisementSequence[uuid],
+                    lastSavedDate: savedDate[uuid],
+                    saveInterval: saveInterval
+                )
             }
             if shouldPersist {
                 persist(wrapper.device, uuid)
@@ -395,11 +579,14 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         } else {
             // Background: persist based on time interval
             let shouldPersist = stateQueue.sync {
-                if let date = savedDate[uuid] {
-                    return Date().timeIntervalSince(date) > saveInterval
-                } else {
-                    return true
-                }
+                RuuviTagAdvertisementDaemonCore.shouldPersist(
+                    appIsOnForeground: false,
+                    uuid: uuid,
+                    measurementSequenceNumber: wrapper.device.measurementSequenceNumber,
+                    lastSequenceNumber: advertisementSequence[uuid],
+                    lastSavedDate: savedDate[uuid],
+                    saveInterval: saveInterval
+                )
             }
             if shouldPersist {
                 persist(wrapper.device, uuid)
@@ -420,48 +607,20 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     }
 
     private func persist(_ record: RuuviTag, _ uuid: String) {
-        let tagExists: Bool = {
-            if let recordLuid = record.luid?.any {
-                if ruuviTagsByLuid[recordLuid] != nil {
-                    return true
-                }
-                if ruuviTags.contains(where: { $0.luid?.any == recordLuid }) {
-                    return true
-                }
-            }
-            if let recordMac = record.mac {
-                return ruuviTags.contains { $0.macId?.value == recordMac }
-            }
-            return false
-        }()
+        let ruuviTagSensor = RuuviTagAdvertisementDaemonCore.matchingSensor(
+            for: record,
+            ruuviTagsByLuid: ruuviTagsByLuid,
+            ruuviTags: ruuviTags
+        )
+        guard let ruuviTagSensor else { return }
+        let settings = sensorSettings(for: ruuviTagSensor)
+        widgetCache.upsert(
+            sensor: ruuviTagSensor,
+            record: snapshot(from: record, source: .advertisement),
+            settings: settings
+        )
 
-        guard tagExists else {
-            return
-        }
-
-        let ruuviTagSensor: AnyRuuviTagSensor? = {
-            if let recordLuid = record.luid?.any {
-                if let match = ruuviTagsByLuid[recordLuid] {
-                    return match
-                }
-                return ruuviTags.first(where: { $0.luid?.any == recordLuid })
-            }
-            if let recordMac = record.macId?.any {
-                return ruuviTags.first(where: { $0.macId?.any == recordMac })
-            }
-            return nil
-        }()
-        if let ruuviTagSensor {
-            let settings = sensorSettings(for: ruuviTagSensor)
-            widgetCache.upsert(
-                sensor: ruuviTagSensor,
-                record: snapshot(from: record, source: .advertisement),
-                settings: settings
-            )
-        }
-
-        // Do not store advertisement for history only if it is v6 firmware and legacy advertisement.
-        if record.version == 0x06 {
+        if RuuviTagAdvertisementDaemonCore.recordPlan(for: record) == .latestOnly {
             createLatestRecord(with: record)
         } else {
             createRecord(with: record, uuid: uuid)
@@ -485,7 +644,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
                 if case let RuuviPoolError.ruuviPersistence(persistenceError) = error {
                     switch persistenceError {
                     case .failedToFindRuuviTag:
-                        self.ruuviTags.removeAll(where: { $0.id == uuid })
+                        self.removeCachedSensor(matching: record, fallbackUUID: uuid)
                         self.rebuildRuuviTagIndex()
                         self.pruneCachedState(keeping: self.tagIdentifierValues())
                         self.restartObserving()
@@ -500,30 +659,36 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         }
     }
 
+    private func removeCachedSensor(matching record: RuuviTag, fallbackUUID: String) {
+        ruuviTags = RuuviTagAdvertisementDaemonCore.removeCachedSensor(
+            matching: record,
+            fallbackUUID: fallbackUUID,
+            ruuviTagsByLuid: ruuviTagsByLuid,
+            ruuviTags: ruuviTags
+        )
+    }
+
     private func createLatestRecord(with record: RuuviTag) {
-        let ruuviTag: AnyRuuviTagSensor? = {
-            if let recordLuid = record.luid?.any {
-                if let match = ruuviTagsByLuid[recordLuid] {
-                    return match
-                }
-                return ruuviTags.first(where: { $0.luid?.any == recordLuid })
-            }
-            return nil
-        }()
+        let ruuviTag = RuuviTagAdvertisementDaemonCore.matchingSensor(
+            for: record,
+            ruuviTagsByLuid: ruuviTagsByLuid,
+            ruuviTags: ruuviTags
+        )
         if let ruuviTag {
             Task { [weak self] in
                 guard let self else { return }
                 do {
                     let localRecord = try await self.ruuviStorage.readLatest(ruuviTag)
-                    guard localRecord != nil else {
-                        _ = try? await self.ruuviPool.createLast(record)
-                        return
+                    switch RuuviTagAdvertisementDaemonCore.latestRecordPlan(
+                    for: record,
+                    sensor: ruuviTag,
+                    localRecord: localRecord
+                    ) {
+                    case let .createLast(latestRecord):
+                        _ = try? await self.ruuviPool.createLast(latestRecord)
+                    case let .updateLast(latestRecord):
+                        _ = try? await self.ruuviPool.updateLast(latestRecord)
                     }
-                    var advertisement: RuuviTagSensorRecord = record.with(source: .advertisement)
-                    if let macId = ruuviTag.macId {
-                        advertisement = advertisement.with(macId: macId)
-                    }
-                    _ = try? await self.ruuviPool.updateLast(advertisement)
                 } catch {
                     return
                 }
