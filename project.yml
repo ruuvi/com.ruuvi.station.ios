@@ -162,7 +162,7 @@ include:
 - Apps/RuuviStation/Intents/target.yml
 
 schemes:
-  PackageMigrationTests:
+  RuuviPackageTests:
     build:
       targets:
         RuuviAnalyticsTests: all
