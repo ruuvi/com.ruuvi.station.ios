@@ -546,13 +546,20 @@ private extension DashboardPresenter {
                   let userInfo = notification.userInfo,
                   let uuid = userInfo["uuid"] as? String,
                   let isConnected = userInfo["isConnected"] as? Bool else { return }
-            // Find snapshot by UUID and update connection status
+            // Find snapshot by UUID and update connection status.
+            // Read keepConnection from the coordinator (persistence) rather than
+            // the snapshot, because unpairAllConnection() clears the persistence
+            // without updating the snapshot — using the stale snapshot value would
+            // leave the sensor stuck in "Pairing" (spinning wheel) after background
+            // scanning is disabled.
             let snapshots = self.coordinatorSnapshots()
             if let snapshot = snapshots.first(where: { $0.identifierData.luid?.value == uuid }) {
+                let keepConnection = self.serviceCoordinatorManager
+                    .getConnectionStatus(for: snapshot).keepConnection
                 snapshot.updateConnectionData(
                     isConnected: isConnected,
                     isConnectable: snapshot.connectionData.isConnectable,
-                    keepConnection: snapshot.connectionData.keepConnection
+                    keepConnection: keepConnection
                 )
                 self.view?.updateSnapshot(from: snapshot)
             }
