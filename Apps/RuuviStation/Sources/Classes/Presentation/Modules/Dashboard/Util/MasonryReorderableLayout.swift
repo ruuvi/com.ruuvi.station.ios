@@ -918,6 +918,11 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
         return layoutAttributes.first { $0.indexPath == indexPath }
     }
 
+    public override func invalidateLayout() {
+        cachedConfiguration = nil
+        super.invalidateLayout()
+    }
+
     public override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         guard let collectionView = safeCollectionView else { return false }
         let shouldInvalidate = !newBounds.size.equalTo(collectionView.bounds.size)
