@@ -157,8 +157,8 @@ private struct CardsSettingsNotesPreview: View {
         isExpanded ? nil : Constants.collapsedLineLimit
     }
 
-    private var chevronName: String {
-        isExpanded ? "chevron.up" : "chevron.down"
+    private var toggleButtonTitle: String {
+        isExpanded ? RuuviLocalization.showLess : RuuviLocalization.showMore
     }
 
     var body: some View {
@@ -206,12 +206,12 @@ private struct CardsSettingsNotesPreview: View {
                     Button(action: {
                         toggleExpandedIfNeeded()
                     }, label: {
-                        Image(systemName: chevronName)
-                            .foregroundStyle(RuuviColor.tintColor.swiftUIColor)
+                        Text(toggleButtonTitle)
                     })
-                    .buttonStyle(.plain)
+                    .buttonStyle(CardsSettingsNotesToggleButtonStyle())
                     Spacer()
                 }
+                .padding(.vertical)
             }
         }
         .padding(.horizontal, Constants.rowPadding)
