@@ -107,37 +107,27 @@ final class DFUViewModel: ObservableObject {
     }
 
     func storeUpdatedFirmware(
-        latestRelease: LatestRelease,
+        latestRelease _: LatestRelease,
         currentRelease: CurrentRelease?
     ) {
         guard ruuviTag.luid != nil else { return }
-        if ruuviTag.macId != nil {
-            var updatedVersion: String?
-            if let currentVersion = currentRelease?.version {
-                updatedVersion = currentVersion
-            } else {
-                let firmwareType = RuuviDataFormat.dataFormat(
-                    from: ruuviTag.version
-                )
-                let prefix = (
-                    firmwareType == .e1 || firmwareType == .v6
-                ) ? RuuviDeviceType.ruuviAir.fwVersionPrefix :
-                    RuuviDeviceType.ruuviTag.fwVersionPrefix
-                updatedVersion = prefix + " " + latestRelease.version
-            }
-            guard let updatedVersion = updatedVersion else { return }
-            isLoading = true
-            ruuviPool.update(ruuviTag
-                .with(isConnectable: true)
-                .with(firmwareVersion: updatedVersion))
-                .on(success: { [weak self] _ in
-                    self?.isLoading = false
-                }, failure: { [weak self] _ in
-                    self?.isLoading = false
-                })
-        } else {
+        guard ruuviTag.macId != nil else {
             assertionFailure()
+            return
         }
+        persistStoredFirmwareVersion(
+            currentRelease?.version,
+            showLoading: true
+        )
+    }
+
+    func invalidateStoredFirmwareVersion() {
+        guard ruuviTag.luid != nil else { return }
+        guard ruuviTag.macId != nil else {
+            assertionFailure()
+            return
+        }
+        persistStoredFirmwareVersion(nil, showLoading: false)
     }
 
     // Migration ends
@@ -471,6 +461,7 @@ extension DFUViewModel {
             .compactMap { [weak sSelf] response in
                 switch response {
                 case .done:
+                    sSelf?.invalidateStoredFirmwareVersion()
                     return Event.onSuccessfullyFlashedFirmware(latestRelease)
                 case let .progress(percentage):
                     sSelf?.flashProgress = percentage
@@ -481,6 +472,67 @@ extension DFUViewModel {
             }
             .catch { Just(Event.onDidFailFlashingFirmware($0)) }
             .eraseToAnyPublisher()
+        }
+    }
+
+    private func persistStoredFirmwareVersion(
+        _ firmwareVersion: String?,
+        showLoading: Bool
+    ) {
+        if showLoading {
+            setLoading(showLoading)
+        }
+
+        let ruuviStorage = self.ruuviStorage
+        let ruuviPool = self.ruuviPool
+        let fallbackTag = self.ruuviTag
+
+        resolveLatestSensor(using: ruuviStorage, fallback: fallbackTag) { [weak self] latestTag in
+            let currentIdentifier = latestTag.firmwareVersion?.canonicalFirmwareDisplayIdentifier
+            let nextIdentifier = firmwareVersion?.canonicalFirmwareDisplayIdentifier
+            let needsConnectableUpdate = latestTag.isConnectable == false
+
+            guard needsConnectableUpdate || currentIdentifier != nextIdentifier else {
+                self?.setLoading(false, if: showLoading)
+                return
+            }
+
+            let connectableTag = latestTag.with(isConnectable: true)
+            let updatedTag: RuuviTagSensor
+            if let firmwareVersion {
+                updatedTag = connectableTag.with(firmwareVersion: firmwareVersion)
+            } else {
+                updatedTag = connectableTag.withoutFirmwareVersion()
+            }
+
+            ruuviPool.update(updatedTag)
+                .on(success: { [weak self] _ in
+                    self?.setLoading(false, if: showLoading)
+                }, failure: { [weak self] _ in
+                    self?.setLoading(false, if: showLoading)
+                })
+        }
+    }
+
+    private func resolveLatestSensor(
+        using ruuviStorage: RuuviStorage,
+        fallback ruuviTag: RuuviTagSensor,
+        completion: @escaping (RuuviTagSensor) -> Void
+    ) {
+        let sensorId = ruuviTag.macId?.value ?? ruuviTag.id
+        ruuviStorage.readOne(sensorId)
+            .observe(on: .global(qos: .utility))
+            .on(
+                success: { completion($0) },
+                failure: { _ in completion(ruuviTag) }
+            )
+    }
+
+    private func setLoading(_ value: Bool, if condition: Bool = true) {
+        guard condition else { return }
+
+        DispatchQueue.main.async { [weak self] in
+            self?.isLoading = value
         }
     }
 

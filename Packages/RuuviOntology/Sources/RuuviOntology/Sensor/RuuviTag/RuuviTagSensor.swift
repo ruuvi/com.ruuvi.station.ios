@@ -160,6 +160,28 @@ public extension RuuviTagSensor {
         )
     }
 
+    func withoutFirmwareVersion() -> RuuviTagSensor {
+        RuuviTagSensorStruct(
+            version: version,
+            firmwareVersion: nil,
+            luid: luid,
+            macId: macId,
+            serviceUUID: serviceUUID,
+            isConnectable: isConnectable,
+            name: name,
+            isClaimed: isClaimed,
+            isOwner: isOwner,
+            owner: owner,
+            ownersPlan: ownersPlan,
+            isCloudSensor: isCloudSensor,
+            canShare: canShare,
+            sharedTo: sharedTo,
+            sharedToPending: sharedToPending,
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
+        )
+    }
+
     func with(name: String) -> RuuviTagSensor {
         RuuviTagSensorStruct(
             version: version,

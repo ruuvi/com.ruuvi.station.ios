@@ -500,7 +500,7 @@ extension DFUInteractor {
             let storedVersion = latestTag.firmwareVersion
             let latestVersion = version
 
-            guard !self.areFirmwareVersionsEquivalent(
+            guard !self.areStoredFirmwareDisplayValuesEquivalent(
                 storedVersion,
                 latestVersion
             ) else { return }
@@ -509,14 +509,12 @@ extension DFUInteractor {
         }
     }
 
-    private func areFirmwareVersionsEquivalent(
+    private func areStoredFirmwareDisplayValuesEquivalent(
         _ lhs: String?,
         _ rhs: String
     ) -> Bool {
-        let normalizedLhs = lhs?.normalizedFirmwareVersionIdentifier ??
-            lhs?.trimmingCharacters(in: .whitespacesAndNewlines)
-        let normalizedRhs = rhs.normalizedFirmwareVersionIdentifier ??
-            rhs.trimmingCharacters(in: .whitespacesAndNewlines)
+        let normalizedLhs = lhs?.canonicalFirmwareDisplayIdentifier
+        let normalizedRhs = rhs.canonicalFirmwareDisplayIdentifier
 
         return normalizedLhs == normalizedRhs
     }

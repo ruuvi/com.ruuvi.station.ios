@@ -9,6 +9,11 @@ public extension String {
         let endIndex = index(endIndex, offsetBy: -2)
         return String(self[..<endIndex])
     }
+
+    /// Returns a canonical display identifier for comparing persisted firmware labels.
+    var canonicalFirmwareDisplayIdentifier: String {
+        ruuviFirmwareDisplayValue.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
 }
 
 public extension Optional where Wrapped == String {
