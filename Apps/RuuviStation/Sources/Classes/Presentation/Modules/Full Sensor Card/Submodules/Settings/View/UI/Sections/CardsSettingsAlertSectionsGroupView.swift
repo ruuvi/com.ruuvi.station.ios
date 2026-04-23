@@ -145,8 +145,6 @@ struct CardsSettingsAlertSectionRow: View {
     @State private var sliderRange: ClosedRange<Double>?
     @ObservedObject private var blinkTimer = CardsSettingsAlertBlinkTimer.shared
 
-    private let animationDuration: TimeInterval = 0.2
-
     init(
         model: CardsSettingsAlertSectionModel,
         isExpanded: Bool,
@@ -195,10 +193,6 @@ struct CardsSettingsAlertSectionRow: View {
             }
         }
         .background(RuuviColor.primary.swiftUIColor)
-        .animation(
-            .easeInOut(duration: animationDuration),
-            value: isExpanded
-        )
         .onChange(of: model.configuration.isEnabled) { newValue in
             toggleValue = newValue
         }
@@ -428,7 +422,6 @@ private struct CardsSettingsAlertSectionRowHeader: View {
     private struct Constants {
         static let spacing: CGFloat = 12
         static let rotatedArrowAngle: CGFloat = 180
-        static let animationDuration: CGFloat = 0.2
         static let muteTextOpacity: Double = 0.7
     }
 
@@ -479,12 +472,6 @@ private struct CardsSettingsAlertSectionRowHeader: View {
                 .rotationEffect(
                     .degrees(isExpanded ? Constants.rotatedArrowAngle : 0)
                 )
-                .animation(
-                    .easeInOut(
-                        duration: Constants.animationDuration
-                    ),
-                    value: isExpanded
-                )
                 .onTapGesture(perform: onToggleSection)
         }
     }
@@ -524,12 +511,6 @@ private struct CardsSettingsAlertSectionRowHeader: View {
                     .foregroundColor(RuuviColor.tintColor.swiftUIColor)
                     .rotationEffect(
                         .degrees(isExpanded ? Constants.rotatedArrowAngle : 0)
-                    )
-                    .animation(
-                        .easeInOut(
-                            duration: Constants.animationDuration
-                        ),
-                        value: isExpanded
                     )
                     .onTapGesture(perform: onToggleSection)
             }

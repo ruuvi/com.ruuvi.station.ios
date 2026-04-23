@@ -268,8 +268,10 @@ private extension CardsCoordinator {
         snapshot: RuuviTagCardSnapshot
     ) -> CardsAlertsViewController {
         let r = AppAssembly.shared.assembler.resolver
+        let flags = r.resolve(RuuviLocalFlags.self)!
         let viewController = CardsAlertsViewController(
-            snapshot: snapshot
+            snapshot: snapshot,
+            shouldExpandFirstAlertByDefault: flags.showNewCardsMenu
         )
         let presenter = CardsAlertsPresenter(
             measurementService: r.resolve(RuuviServiceMeasurement.self)!,

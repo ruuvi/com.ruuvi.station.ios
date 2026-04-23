@@ -9,7 +9,10 @@ final class CardsAlertsViewController: UIViewController {
 
     private var cancellables = Set<AnyCancellable>()
     private let state: CardsSettingsState
+    private let shouldExpandFirstAlertByDefault: Bool
+    private var configuredSnapshotID: String
     private var actions = CardsSettingsActions()
+    private var hasAppliedDefaultAlertExpansion = false
     private var customAlertDescriptionTextField = UITextField()
     private let customAlertDescriptionCharacterLimit = 32
     private var alertMinRangeTextField = UITextField()
@@ -25,8 +28,13 @@ final class CardsAlertsViewController: UIViewController {
         return formatter
     }()
 
-    init(snapshot: RuuviTagCardSnapshot) {
+    init(
+        snapshot: RuuviTagCardSnapshot,
+        shouldExpandFirstAlertByDefault: Bool = false
+    ) {
         self.state = CardsSettingsState(snapshot: snapshot)
+        self.shouldExpandFirstAlertByDefault = shouldExpandFirstAlertByDefault
+        self.configuredSnapshotID = snapshot.id
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -45,11 +53,13 @@ final class CardsAlertsViewController: UIViewController {
 // MARK: - CardsAlertsViewInput
 extension CardsAlertsViewController: CardsAlertsViewInput {
     func configure(snapshot: RuuviTagCardSnapshot) {
+        resetDefaultAlertExpansionIfNeeded(for: snapshot)
         state.update(with: snapshot)
     }
 
     func updateAlertSections(_ sections: [CardsSettingsAlertSectionModel]) {
         state.setAlertSections(sections)
+        expandFirstAlertSectionIfNeeded(with: sections)
     }
 }
 
@@ -102,6 +112,41 @@ extension CardsAlertsViewController: UITextFieldDelegate {
 
 // MARK: - Private Helpers
 private extension CardsAlertsViewController {
+    func performWithoutAlertSectionAnimation(_ changes: () -> Void) {
+        var transaction = Transaction(animation: nil)
+        transaction.disablesAnimations = true
+        withTransaction(transaction) {
+            changes()
+        }
+    }
+
+    func resetDefaultAlertExpansionIfNeeded(for snapshot: RuuviTagCardSnapshot) {
+        guard configuredSnapshotID != snapshot.id else { return }
+
+        configuredSnapshotID = snapshot.id
+        hasAppliedDefaultAlertExpansion = false
+        performWithoutAlertSectionAnimation {
+            state.expandedAlertSections.removeAll()
+            state.clearLastExpandedAlertID()
+        }
+    }
+
+    func expandFirstAlertSectionIfNeeded(
+        with sections: [CardsSettingsAlertSectionModel]
+    ) {
+        guard shouldExpandFirstAlertByDefault,
+              !hasAppliedDefaultAlertExpansion,
+              state.expandedAlertSections.isEmpty,
+              let firstSection = sections.first else {
+            return
+        }
+
+        performWithoutAlertSectionAnimation {
+            state.expandedAlertSections.insert(firstSection.id)
+        }
+        hasAppliedDefaultAlertExpansion = true
+    }
+
     func setupSubscriptions() {
         actions.didToggleAlert
             .sink { [weak self] payload in
