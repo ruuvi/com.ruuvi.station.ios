@@ -349,12 +349,15 @@ final class RuuviPoolCoordinator: RuuviPool {
         _ ruuviTag: RuuviTagSensor
     ) -> Future<CloudSensorSubscription?, RuuviPoolError> {
         let promise = Promise<CloudSensorSubscription?, RuuviPoolError>()
-        sqlite.readSensorSubscriptionSettings(ruuviTag)
-            .on(success: { subscription in
-                promise.succeed(value: subscription)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
+        let persistence = sqlite
+        DispatchQueue.global(qos: .utility).async {
+            persistence.readSensorSubscriptionSettings(ruuviTag)
+                .on(success: { subscription in
+                    promise.succeed(value: subscription)
+                }, failure: { error in
+                    promise.fail(error: .ruuviPersistence(error))
+                })
+        }
         return promise.future
     }
 }

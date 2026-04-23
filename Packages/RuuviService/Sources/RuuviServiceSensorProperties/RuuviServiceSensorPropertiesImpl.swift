@@ -220,6 +220,7 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
 
         // Fetch current settings to determine which timestamps to update
         pool.readSensorSettings(sensor)
+            .observe(on: .global(qos: .utility))
             .on(success: { [weak self] currentSettings in
                 guard let self = self else {
                     promise.fail(
@@ -294,6 +295,7 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         let updatedAt = Date()
 
         pool.readSensorSettings(sensor)
+            .observe(on: .global(qos: .utility))
             .on(success: { [weak self] currentSettings in
                 guard let self else {
                     promise.fail(

@@ -442,6 +442,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             }
 
             ruuviStorage.readSensorSettings(sensor)
+                .observe(on: .global(qos: .utility))
                 .on(success: { settings in
                     handle(localSettings: settings)
                 }, failure: { _ in
@@ -580,6 +581,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             }
 
             ruuviStorage.readSensorSettings(sensor)
+                .observe(on: .global(qos: .utility))
                 .on(success: { settings in
                     handle(localSettings: settings)
                 }, failure: { _ in
