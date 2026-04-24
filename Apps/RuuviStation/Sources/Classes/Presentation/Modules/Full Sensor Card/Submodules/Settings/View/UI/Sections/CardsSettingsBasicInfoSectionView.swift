@@ -149,8 +149,20 @@ private struct CardsSettingsNotesPreview: View {
         hasNotes ? notes : RuuviLocalization.na
     }
 
+    private var explicitLineCount: Int {
+        displayText
+            .replacingOccurrences(of: "\r\n", with: "\n")
+            .replacingOccurrences(of: "\r", with: "\n")
+            .components(separatedBy: "\n")
+            .count
+    }
+
     private var shouldTruncate: Bool {
-        hasNotes && fullTextHeight > (collapsedTextHeight + 1)
+        hasNotes &&
+            (
+                explicitLineCount > Constants.collapsedLineLimit ||
+                fullTextHeight > (collapsedTextHeight + 1)
+            )
     }
 
     private var lineLimit: Int? {
@@ -176,25 +188,6 @@ private struct CardsSettingsNotesPreview: View {
                     maxWidth: .infinity,
                     alignment: .leading
                 )
-                .background(
-                    Text(displayText)
-                        .font(.ruuviBodySmall())
-                        .lineLimit(Constants.collapsedLineLimit)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .hidden()
-                        .readCollapsedHeight { height in
-                            collapsedTextHeight = height
-                        }
-                )
-                .background(
-                    Text(displayText)
-                        .font(.ruuviBodySmall())
-                        .fixedSize(horizontal: false, vertical: true)
-                        .hidden()
-                        .readFullHeight { height in
-                            fullTextHeight = height
-                        }
-                )
                 .contentShape(Rectangle())
                 .onTapGesture {
                     toggleExpandedIfNeeded()
@@ -216,11 +209,39 @@ private struct CardsSettingsNotesPreview: View {
         }
         .padding(.horizontal, Constants.rowPadding)
         .padding(.vertical, Constants.rowPadding)
+        .background(alignment: .topLeading) {
+            notesMeasurementView
+        }
         .onChange(of: notes) { _ in
             isExpanded = false
             fullTextHeight = 0
             collapsedTextHeight = 0
         }
+    }
+
+    private var notesMeasurementView: some View {
+        ZStack(alignment: .topLeading) {
+            Text(displayText)
+                .font(.ruuviBodySmall())
+                .lineLimit(Constants.collapsedLineLimit)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .hidden()
+                .readCollapsedHeight { height in
+                    collapsedTextHeight = height
+                }
+
+            Text(displayText)
+                .font(.ruuviBodySmall())
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .hidden()
+                .readFullHeight { height in
+                    fullTextHeight = height
+                }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .allowsHitTesting(false)
     }
 
     private func toggleExpandedIfNeeded() {
