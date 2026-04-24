@@ -12,6 +12,7 @@ protocol DashboardViewOutput {
     func viewDidTriggerOpenCardImageView(for snapshot: RuuviTagCardSnapshot?)
     func viewDidTriggerOpenSensorCardFromWidget(for snapshot: RuuviTagCardSnapshot?)
     func viewDidTriggerSettings(for snapshot: RuuviTagCardSnapshot)
+    func viewDidTriggerAlerts(for snapshot: RuuviTagCardSnapshot)
     func viewDidTriggerChart(for snapshot: RuuviTagCardSnapshot)
     func viewDidTriggerChangeBackground(for snapshot: RuuviTagCardSnapshot)
     func viewDidTriggerRename(for snapshot: RuuviTagCardSnapshot)

@@ -130,6 +130,20 @@ extension DashboardPresenter: DashboardViewOutput {
     }
 
     func viewDidTriggerSettings(for snapshot: RuuviTagCardSnapshot) {
+        if flags.showNewCardsMenu {
+            openCardView(for: snapshot, activeMenu: .settings)
+            return
+        }
+
+        viewDidAskToOpenSensorSettings(for: snapshot, isNewlyAdded: false)
+    }
+
+    func viewDidTriggerAlerts(for snapshot: RuuviTagCardSnapshot) {
+        if flags.showNewCardsMenu {
+            openCardView(for: snapshot, activeMenu: .alerts)
+            return
+        }
+
         viewDidAskToOpenSensorSettings(for: snapshot, isNewlyAdded: false)
     }
 
@@ -479,6 +493,31 @@ private extension DashboardPresenter {
         sensor: AnyRuuviTagSensor,
         showCharts: Bool
     ) {
+        openCardView(
+            for: snapshot,
+            sensor: sensor,
+            activeMenu: showCharts ? .graph : .measurement
+        )
+    }
+
+    func openCardView(
+        for snapshot: RuuviTagCardSnapshot,
+        activeMenu: CardsMenuType
+    ) {
+        guard let sensor = serviceCoordinatorManager.getSensor(for: snapshot.id) else { return }
+
+        openCardView(
+            for: snapshot,
+            sensor: sensor,
+            activeMenu: activeMenu
+        )
+    }
+
+    func openCardView(
+        for snapshot: RuuviTagCardSnapshot,
+        sensor: AnyRuuviTagSensor,
+        activeMenu: CardsMenuType
+    ) {
         let allSnapshots = coordinatorSnapshots()
         let allSensors = coordinatorSensors()
         let sensorSettings = coordinatorSensorSettings()
@@ -488,7 +527,7 @@ private extension DashboardPresenter {
             snapshots: allSnapshots,
             ruuviTagSensors: allSensors,
             sensorSettings: sensorSettings,
-            activeMenu: showCharts ? .graph : .measurement,
+            activeMenu: activeMenu,
             openSettings: false
         )
     }

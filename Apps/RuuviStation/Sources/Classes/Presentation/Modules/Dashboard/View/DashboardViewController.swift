@@ -1024,12 +1024,6 @@ private extension DashboardViewController {
             }
         }
 
-        let settingsAction = UIAction(title: RuuviLocalization.settingsAndAlerts) { [weak self] _ in
-            self?.handleContextMenuAction(at: indexPath) { snapshot in
-                self?.output.viewDidTriggerSettings(for: snapshot)
-            }
-        }
-
         let changeBackgroundAction = UIAction(title: RuuviLocalization.changeBackground) { [weak self] _ in
             self?.handleContextMenuAction(at: indexPath) { snapshot in
                 self?.output.viewDidTriggerChangeBackground(for: snapshot)
@@ -1042,13 +1036,50 @@ private extension DashboardViewController {
             }
         }
 
+        let settingsActions = createSettingsContextMenuActions(for: indexPath)
+
         return [
             fullImageViewAction,
             historyViewAction,
-            settingsAction,
+        ] + settingsActions + [
             changeBackgroundAction,
             renameAction,
         ]
+    }
+
+    func createSettingsContextMenuActions(for indexPath: IndexPath) -> [UIAction] {
+        if flags.showNewCardsMenu {
+            let settingsAction = UIAction(
+                title: RuuviLocalization.Settings.NavigationItem.title
+            ) { [weak self] _ in
+                self?.handleContextMenuAction(at: indexPath) { snapshot in
+                    self?.output.viewDidTriggerSettings(for: snapshot)
+                }
+            }
+
+            let alertsAction = UIAction(
+                title: RuuviLocalization.TagSettings.Label.Alerts.text
+            ) { [weak self] _ in
+                self?.handleContextMenuAction(at: indexPath) { snapshot in
+                    self?.output.viewDidTriggerAlerts(for: snapshot)
+                }
+            }
+
+            return [
+                alertsAction,
+                settingsAction,
+            ]
+        } else {
+            let settingsAndAlertsAction = UIAction(
+                title: RuuviLocalization.settingsAndAlerts
+            ) { [weak self] _ in
+                self?.handleContextMenuAction(at: indexPath) { snapshot in
+                    self?.output.viewDidTriggerSettings(for: snapshot)
+                }
+            }
+
+            return [settingsAndAlertsAction]
+        }
     }
 
     func createReorderActions(for indexPath: IndexPath) -> [UIAction] {
@@ -1518,7 +1549,11 @@ extension DashboardViewController: NewDashboardViewInput {
 // MARK: - RuuviTagDashboardCellDelegate
 extension DashboardViewController: DashboardCellDelegate {
     func didTapAlertButton(for snapshot: RuuviTagCardSnapshot) {
-        output.viewDidTriggerSettings(for: snapshot)
+        if flags.showNewCardsMenu {
+            output.viewDidTriggerAlerts(for: snapshot)
+        } else {
+            output.viewDidTriggerSettings(for: snapshot)
+        }
     }
 
     func didChangeMoreButtonMenuPresentationState(
