@@ -217,10 +217,30 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     }
 
     func isPictureCached(for cloudSensor: CloudSensor) -> Bool {
-        guard let url = cloudSensor.picture else { return false }
-        return UserDefaults.standard.url(
-            forKey: cloudSensorPictureUrlPrefix + cloudSensor.id
-        ) == url
+        guard let url = cloudSensor.picture,
+              let cachedUrl = UserDefaults.standard.url(
+                  forKey: cloudSensorPictureUrlPrefix + cloudSensor.id
+              )
+        else {
+            return false
+        }
+
+        if let fileName = pictureFileName(from: url),
+           let cachedFileName = pictureFileName(from: cachedUrl) {
+            return fileName == cachedFileName
+        }
+
+        return cachedUrl == url
+    }
+
+    private func pictureFileName(from url: URL) -> String? {
+        let fileName = url.lastPathComponent
+        guard !fileName.isEmpty,
+              !url.pathExtension.isEmpty
+        else {
+            return nil
+        }
+        return fileName
     }
 
     func setPictureIsCached(for cloudSensor: CloudSensor) {
