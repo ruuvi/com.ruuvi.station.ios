@@ -25,6 +25,11 @@ class RuuviUISwitch: UISwitch {
         updateAppearance()
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateAppearance()
+    }
+
     @objc private func switchValueChanged() {
         updateAppearance()
     }
