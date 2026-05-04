@@ -46,6 +46,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         featureToggleService = r.resolve(FeatureToggleService.self)
         featureToggleService.fetchFeatureToggles()
 
+        #if DEBUG || ALPHA
+            let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "unknown"
+            let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "unknown"
+            RuuviAlertDebugLog.setEnabled(true)
+            RuuviAlertDebugLog.append(
+                "AlertDebug",
+                "session start appVersion=\(appVersion) build=\(buildVersion)"
+            )
+        #endif
+
         // the order is important
         r.resolve(SQLiteContext.self)?
             .database
@@ -72,6 +82,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 withName: "Feature Toggles",
                 viewControllerFutureBlock: { r.resolve(FeatureTogglesViewController.self) ?? UIViewController()
                 }
+            )
+            FLEXManager.shared.registerGlobalEntry(
+                withName: "Alert Debug Log",
+                viewControllerFutureBlock: { AlertDebugLogViewController() }
             )
         #endif
 

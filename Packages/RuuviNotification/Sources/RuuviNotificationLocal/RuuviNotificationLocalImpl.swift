@@ -20,6 +20,18 @@ enum BlastNotificationType: String {
     case movement
 }
 
+#if DEBUG || ALPHA
+private func alertNotificationDebugLog(
+    _ category: String,
+    _ message: @autoclosure () -> String
+) {
+    RuuviAlertDebugLog.append(category, message())
+}
+#else
+@inline(__always)
+private func alertNotificationDebugLog(_: String, _: @autoclosure () -> String) {}
+#endif
+
 public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal {
     private let ruuviStorage: RuuviStorage
     private let idPersistence: RuuviLocalIDs
@@ -69,6 +81,11 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
         muteTitle: String,
         output: RuuviNotificationLocalOutput?
     ) {
+        alertNotificationDebugLog(
+            "AlertNotification",
+            "setup limitEnabled=\(settings.limitAlertNotificationsEnabled) " +
+                "muteIntervalMin=\(settings.alertsMuteIntervalMinutes)"
+        )
         setupButtons(disableTitle: disableTitle, muteTitle: muteTitle)
         startObserving()
         self.output = output
@@ -82,9 +99,20 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
         idPersistence.mac(for: uuid.luid)?.value ?? uuid
     }
 
+    // swiftlint:disable:next function_body_length
     public func showDidConnect(uuid: String, title: String) {
+        alertNotificationDebugLog(
+            "AlertNotification",
+            "showDidConnect requested uuid=\(uuid) storageId=\(id(for: uuid)) title=\(title)"
+        )
         isMuted(for: .connection, uuid: uuid) { [weak self] muted in
-            guard !muted else { return }
+            guard !muted else {
+                alertNotificationDebugLog(
+                    "AlertNotification",
+                    "showDidConnect skipped muted uuid=\(uuid)"
+                )
+                return
+            }
             guard let sSelf = self else { return }
 
             let content = UNMutableNotificationContent()
@@ -106,7 +134,8 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
             content.categoryIdentifier = sSelf.blast.id
             sSelf.setAlertBadge(for: content)
 
-            sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)).on(success: { [weak self] ruuviTag in
+            let readOperation = sSelf.ruuviStorage.readOne(sSelf.id(for: uuid))
+            readOperation.on(success: { [weak self] ruuviTag in
                 guard let sSelf = self else { return }
                 content.subtitle = ruuviTag.name
                 content.body = sSelf.ruuviAlertService.connectionDescription(for: uuid) ?? ""
@@ -119,15 +148,37 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
                     content: content,
                     trigger: trigger
                 )
-                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                sSelf.addNotificationRequest(
+                    request,
+                    uuid: uuid,
+                    type: Self.alertType(from: .connection).rawValue,
+                    kind: "connection"
+                )
                 sSelf.setTriggered(for: Self.alertType(from: .connection), uuid: uuid)
+            })
+            readOperation.on(failure: { error in
+                alertNotificationDebugLog(
+                    "AlertNotification",
+                    "showDidConnect read failed uuid=\(uuid) storageId=\(sSelf.id(for: uuid)) error=\(error)"
+                )
             })
         }
     }
 
+    // swiftlint:disable:next function_body_length
     public func showDidDisconnect(uuid: String, title: String) {
+        alertNotificationDebugLog(
+            "AlertNotification",
+            "showDidDisconnect requested uuid=\(uuid) storageId=\(id(for: uuid)) title=\(title)"
+        )
         isMuted(for: .connection, uuid: uuid) { [weak self] muted in
-            guard !muted else { return }
+            guard !muted else {
+                alertNotificationDebugLog(
+                    "AlertNotification",
+                    "showDidDisconnect skipped muted uuid=\(uuid)"
+                )
+                return
+            }
 
             guard let sSelf = self else { return }
             let content = UNMutableNotificationContent()
@@ -149,7 +200,8 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
             content.title = title
             sSelf.setAlertBadge(for: content)
 
-            sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)).on(success: { [weak self] ruuviTag in
+            let readOperation = sSelf.ruuviStorage.readOne(sSelf.id(for: uuid))
+            readOperation.on(success: { [weak self] ruuviTag in
                 guard let sSelf = self else { return }
                 content.subtitle = ruuviTag.name
                 content.body = sSelf.ruuviAlertService.connectionDescription(for: uuid) ?? ""
@@ -162,15 +214,37 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
                     content: content,
                     trigger: trigger
                 )
-                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                sSelf.addNotificationRequest(
+                    request,
+                    uuid: uuid,
+                    type: Self.alertType(from: .connection).rawValue,
+                    kind: "connection"
+                )
                 sSelf.setTriggered(for: Self.alertType(from: .connection), uuid: uuid)
+            })
+            readOperation.on(failure: { error in
+                alertNotificationDebugLog(
+                    "AlertNotification",
+                    "showDidDisconnect read failed uuid=\(uuid) storageId=\(sSelf.id(for: uuid)) error=\(error)"
+                )
             })
         }
     }
 
+    // swiftlint:disable:next function_body_length
     public func notifyDidMove(for uuid: String, counter _: Int, title: String) {
+        alertNotificationDebugLog(
+            "AlertNotification",
+            "notifyDidMove requested uuid=\(uuid) storageId=\(id(for: uuid)) title=\(title)"
+        )
         isMuted(for: .movement(last: 0), uuid: uuid) { [weak self] muted in
-            guard !muted else { return }
+            guard !muted else {
+                alertNotificationDebugLog(
+                    "AlertNotification",
+                    "notifyDidMove skipped muted uuid=\(uuid)"
+                )
+                return
+            }
 
             guard let sSelf = self else { return }
 
@@ -192,7 +266,8 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
 
             content.title = title
 
-            sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)).on(success: { [weak self] ruuviTag in
+            let readOperation = sSelf.ruuviStorage.readOne(sSelf.id(for: uuid))
+            readOperation.on(success: { [weak self] ruuviTag in
                 guard let sSelf = self else { return }
                 content.subtitle = ruuviTag.name
                 content.body = sSelf.ruuviAlertService.movementDescription(for: uuid) ?? ""
@@ -205,8 +280,19 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
                     content: content,
                     trigger: trigger
                 )
-                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                sSelf.addNotificationRequest(
+                    request,
+                    uuid: uuid,
+                    type: Self.alertType(from: .movement).rawValue,
+                    kind: "movement"
+                )
                 sSelf.setTriggered(for: Self.alertType(from: .movement), uuid: uuid)
+            })
+            readOperation.on(failure: { error in
+                alertNotificationDebugLog(
+                    "AlertNotification",
+                    "notifyDidMove read failed uuid=\(uuid) storageId=\(sSelf.id(for: uuid)) error=\(error)"
+                )
             })
         }
     }
@@ -223,8 +309,19 @@ public extension RuuviNotificationLocalImpl {
         for uuid: String,
         title: String
     ) {
+        alertNotificationDebugLog(
+            "AlertNotification",
+            "notify requested uuid=\(uuid) storageId=\(self.id(for: uuid)) " +
+                "type=\(type.rawValue) reason=\(reason) title=\(title)"
+        )
         isMuted(for: type, uuid: uuid) { [weak self] muted in
-            guard !muted else { return }
+            guard !muted else {
+                alertNotificationDebugLog(
+                    "AlertNotification",
+                    "notify skipped muted uuid=\(uuid) type=\(type.rawValue) reason=\(reason)"
+                )
+                return
+            }
             guard let sSelf = self else { return }
 
             let content = UNMutableNotificationContent()
@@ -290,7 +387,8 @@ public extension RuuviNotificationLocalImpl {
             }
             content.body = body
 
-            sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)).on(success: { [weak self] ruuviTag in
+            let readOperation = sSelf.ruuviStorage.readOne(sSelf.id(for: uuid))
+            readOperation.on(success: { [weak self] ruuviTag in
                 content.subtitle = ruuviTag.name
                 let trigger = UNTimeIntervalNotificationTrigger(
                     timeInterval: 0.1,
@@ -301,8 +399,20 @@ public extension RuuviNotificationLocalImpl {
                     content: content,
                     trigger: trigger
                 )
-                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                sSelf.addNotificationRequest(
+                    request,
+                    uuid: uuid,
+                    type: type.rawValue,
+                    kind: "threshold"
+                )
                 self?.setTriggered(for: type, uuid: uuid)
+            })
+            readOperation.on(failure: { error in
+                alertNotificationDebugLog(
+                    "AlertNotification",
+                    "notify read failed uuid=\(uuid) storageId=\(sSelf.id(for: uuid)) " +
+                        "type=\(type.rawValue) error=\(error)"
+                )
             })
         }
     }
@@ -319,6 +429,42 @@ extension RuuviNotificationLocalImpl {
         case .movement:
             .movement(last: 0)
         }
+    }
+
+    private func addNotificationRequest(
+        _ request: UNNotificationRequest,
+        uuid: String,
+        type: String,
+        kind: String
+    ) {
+        alertNotificationDebugLog(
+            "AlertNotification",
+            "schedule kind=\(kind) uuid=\(uuid) type=\(type) " +
+                "notificationId=\(request.identifier)"
+        )
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error {
+                alertNotificationDebugLog(
+                    "AlertNotification",
+                    "schedule failed kind=\(kind) uuid=\(uuid) type=\(type) " +
+                        "notificationId=\(request.identifier) error=\(error)"
+                )
+            } else {
+                alertNotificationDebugLog(
+                    "AlertNotification",
+                    "schedule succeeded kind=\(kind) uuid=\(uuid) type=\(type) " +
+                        "notificationId=\(request.identifier)"
+                )
+            }
+        }
+    }
+
+    private func debugSummary(for ruuviTag: AnyRuuviTagSensor) -> String {
+        let luid = ruuviTag.luid?.value ?? "nil"
+        let mac = ruuviTag.macId?.value ?? "nil"
+        return "tagId=\(ruuviTag.id) tagLuid=\(luid) tagMac=\(mac) " +
+            "isClaimed=\(ruuviTag.isClaimed) isOwner=\(ruuviTag.isOwner) " +
+            "isCloud=\(ruuviTag.isCloud)"
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
@@ -443,6 +589,12 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
     ) {
         let category = notification.request.content.categoryIdentifier
         let isAlertCategory = category == lowHigh.id || category == blast.id
+        alertNotificationDebugLog(
+            "AlertNotification",
+            "willPresent notificationId=\(notification.request.identifier) " +
+                "category=\(category) isAlertCategory=\(isAlertCategory) " +
+                "limitEnabled=\(self.settings.limitAlertNotificationsEnabled)"
+        )
         if !settings.limitAlertNotificationsEnabled, isAlertCategory {
             completionHandler([.list, .badge])
         } else {
@@ -457,9 +609,17 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
         let userInfo = response.notification.request.content.userInfo
+        alertNotificationDebugLog(
+            "AlertNotification",
+            "didReceive action=\(response.actionIdentifier) notificationId=\(response.notification.request.identifier)"
+        )
         if let uuid = userInfo[lowHigh.uuidKey] as? String,
            let typeString = userInfo[lowHigh.typeKey] as? String,
            let type = AlertType.alertType(from: typeString) {
+            alertNotificationDebugLog(
+                "AlertNotification",
+                "didReceive threshold action=\(response.actionIdentifier) uuid=\(uuid) type=\(type.rawValue)"
+            )
             switch response.actionIdentifier {
             case lowHigh.disable:
                 // TODO: @rinat go with sensors instead of pure uuid
@@ -490,6 +650,10 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         } else if let uuid = userInfo[blast.uuidKey] as? String,
                   let typeString = userInfo[blast.typeKey] as? String,
                   let type = BlastNotificationType(rawValue: typeString) {
+            alertNotificationDebugLog(
+                "AlertNotification",
+                "didReceive blast action=\(response.actionIdentifier) uuid=\(uuid) type=\(type.rawValue)"
+            )
             switch response.actionIdentifier {
             case blast.disable:
                 // TODO: @rinat go with sensors instead of pure uuid
@@ -534,6 +698,10 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
     }
 
     private func cancel(_ type: AlertType, for uuid: String) {
+        alertNotificationDebugLog(
+            "AlertNotification",
+            "cancel notification uuid=\(uuid) type=\(type.rawValue) notificationId=\(uuid + type.rawValue)"
+        )
         let nc = UNUserNotificationCenter.current()
         nc.removePendingNotificationRequests(withIdentifiers: [uuid + type.rawValue])
         nc.removeDeliveredNotifications(withIdentifiers: [uuid + type.rawValue])
@@ -544,11 +712,28 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         else {
             assertionFailure(); return
         }
-        ruuviStorage.readOne(uuid).on(success: { [weak self] ruuviTag in
+        alertNotificationDebugLog(
+            "AlertNotification",
+            "mute threshold start uuid=\(uuid) type=\(type.rawValue) mutedTill=\(date)"
+        )
+        let readOperation = ruuviStorage.readOne(uuid)
+        readOperation.on(success: { [weak self] ruuviTag in
+            let summary = self?.debugSummary(for: ruuviTag) ?? "tag=nil"
+            alertNotificationDebugLog(
+                "AlertNotification",
+                "mute threshold save uuid=\(uuid) type=\(type.rawValue) " +
+                    "\(summary) mutedTill=\(date)"
+            )
             self?.ruuviAlertService.mute(
                 type: type,
                 for: ruuviTag,
                 till: date
+            )
+        })
+        readOperation.on(failure: { error in
+            alertNotificationDebugLog(
+                "AlertNotification",
+                "mute threshold read failed uuid=\(uuid) type=\(type.rawValue) error=\(error)"
             )
         })
     }
@@ -558,11 +743,28 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         else {
             assertionFailure(); return
         }
-        ruuviStorage.readOne(uuid).on(success: { [weak self] ruuviTag in
+        alertNotificationDebugLog(
+            "AlertNotification",
+            "mute blast start uuid=\(uuid) type=\(type.rawValue) mutedTill=\(date)"
+        )
+        let readOperation = ruuviStorage.readOne(uuid)
+        readOperation.on(success: { [weak self] ruuviTag in
+            let summary = self?.debugSummary(for: ruuviTag) ?? "tag=nil"
+            alertNotificationDebugLog(
+                "AlertNotification",
+                "mute blast save uuid=\(uuid) type=\(type.rawValue) " +
+                    "\(summary) mutedTill=\(date)"
+            )
             self?.ruuviAlertService.mute(
                 type: Self.alertType(from: type),
                 for: ruuviTag,
                 till: date
+            )
+        })
+        readOperation.on(failure: { error in
+            alertNotificationDebugLog(
+                "AlertNotification",
+                "mute blast read failed uuid=\(uuid) type=\(type.rawValue) error=\(error)"
             )
         })
     }
@@ -580,12 +782,27 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         uuid: String,
         completion: @escaping (Bool) -> Void
     ) {
-        ruuviStorage.readOne(uuid).on(success: { [weak self] ruuviTag in
+        alertNotificationDebugLog(
+            "AlertNotification",
+            "isMuted start uuid=\(uuid) type=\(type.rawValue) " +
+                "limitEnabled=\(self.settings.limitAlertNotificationsEnabled) " +
+                "muteIntervalMin=\(self.settings.alertsMuteIntervalMinutes)"
+        )
+        let readOperation = ruuviStorage.readOne(uuid)
+        readOperation.on(success: { [weak self] ruuviTag in
             guard let self = self else { return }
+            let summary = self.debugSummary(for: ruuviTag)
             if let triggeredAt = self.ruuviAlertService.triggeredAt(for: ruuviTag, of: type),
                let date = self.dateFormatter.date(from: triggeredAt) {
                 let intervalPassed = !self.settings.limitAlertNotificationsEnabled
                     || Date() > self.muteOffset(from: date)
+                let nextAllowed = self.muteOffset(from: date)
+                alertNotificationDebugLog(
+                    "AlertNotification",
+                    "isMuted state uuid=\(uuid) type=\(type.rawValue) " +
+                        "\(summary) triggeredAt=\(triggeredAt) " +
+                        "nextAllowed=\(nextAllowed) intervalPassed=\(intervalPassed)"
+                )
                 self.evaluateMutedState(
                     for: type,
                     uuid: uuid,
@@ -593,6 +810,11 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                     completion: completion
                 )
             } else {
+                alertNotificationDebugLog(
+                    "AlertNotification",
+                    "isMuted state uuid=\(uuid) type=\(type.rawValue) " +
+                        "\(summary) triggeredAt=nil intervalPassed=true"
+                )
                 self.evaluateMutedState(
                     for: type,
                     uuid: uuid,
@@ -600,6 +822,12 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
                     completion: completion
                 )
             }
+        })
+        readOperation.on(failure: { error in
+            alertNotificationDebugLog(
+                "AlertNotification",
+                "isMuted read failed uuid=\(uuid) type=\(type.rawValue) error=\(error)"
+            )
         })
     }
 
@@ -609,9 +837,22 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         completion: @escaping (Bool) -> Void
     ) {
         if let mutedTill = ruuviAlertService.mutedTill(type: type, for: uuid) {
-            completion(!(intervalPassed && mutedTill > Date()))
+            let isMuted = !(intervalPassed && mutedTill > Date())
+            alertNotificationDebugLog(
+                "AlertNotification",
+                "isMuted result uuid=\(uuid) type=\(type.rawValue) " +
+                    "intervalPassed=\(intervalPassed) mutedTill=\(mutedTill) " +
+                    "mutedTillActive=\(mutedTill > Date()) isMuted=\(isMuted)"
+            )
+            completion(isMuted)
         } else {
-            completion(!intervalPassed)
+            let isMuted = !intervalPassed
+            alertNotificationDebugLog(
+                "AlertNotification",
+                "isMuted result uuid=\(uuid) type=\(type.rawValue) " +
+                    "intervalPassed=\(intervalPassed) mutedTill=nil isMuted=\(isMuted)"
+            )
+            completion(isMuted)
         }
     }
 
@@ -619,13 +860,31 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         for type: AlertType,
         uuid: String
     ) {
-        ruuviStorage.readOne(uuid).on(success: { [weak self] ruuviTag in
+        alertNotificationDebugLog(
+            "AlertNotification",
+            "setTriggered start uuid=\(uuid) type=\(type.rawValue)"
+        )
+        let readOperation = ruuviStorage.readOne(uuid)
+        readOperation.on(success: { [weak self] ruuviTag in
             guard let sSelf = self else { return }
+            let triggeredAt = sSelf.dateFormatter.string(from: Date())
+            let summary = sSelf.debugSummary(for: ruuviTag)
+            alertNotificationDebugLog(
+                "AlertNotification",
+                "setTriggered save uuid=\(uuid) type=\(type.rawValue) " +
+                    "\(summary) triggeredAt=\(triggeredAt)"
+            )
             sSelf.ruuviAlertService.trigger(
                 type: type,
                 trigerred: true,
-                trigerredAt: sSelf.dateFormatter.string(from: Date()),
+                trigerredAt: triggeredAt,
                 for: ruuviTag
+            )
+        })
+        readOperation.on(failure: { error in
+            alertNotificationDebugLog(
+                "AlertNotification",
+                "setTriggered read failed uuid=\(uuid) type=\(type.rawValue) error=\(error)"
             )
         })
     }

@@ -309,8 +309,17 @@ extension RuuviTagHeartbeatDaemonBTKit {
                 settings: sensorSettings
             )
         }
+        let record = ruuviTag.with(sensorSettings: sensorSettings).with(source: source)
+        #if DEBUG || ALPHA
+        logAlertHeartbeatIfNeeded(
+            record: record,
+            ruuviTag: ruuviTag,
+            ruuviTagSensor: ruuviTagSensor,
+            source: source
+        )
+        #endif
         alertHandler.process(
-            record: ruuviTag.with(sensorSettings: sensorSettings).with(source: source),
+            record: record,
             trigger: true
         )
         if settings.saveHeartbeats {
@@ -341,6 +350,39 @@ extension RuuviTagHeartbeatDaemonBTKit {
             }
         }
     }
+
+    #if DEBUG || ALPHA
+    private func logAlertHeartbeatIfNeeded(
+        record: PhysicalSensor,
+        ruuviTag: RuuviTag,
+        ruuviTagSensor: AnyRuuviTagSensor?,
+        source: RuuviTagSensorRecordSource
+    ) {
+        guard alertService.hasRegistrations(for: record) else { return }
+
+        let matchedSensor: String
+        if let sensor = ruuviTagSensor {
+            let sensorLuid = sensor.luid?.value ?? "nil"
+            let sensorMac = sensor.macId?.value ?? "nil"
+            matchedSensor = "sensorId=\(sensor.id) " +
+                "sensorLuid=\(sensorLuid) " +
+                "sensorMac=\(sensorMac) " +
+                "isClaimed=\(sensor.isClaimed) " +
+                "isOwner=\(sensor.isOwner) " +
+                "isCloud=\(sensor.isCloud)"
+        } else {
+            matchedSensor = "sensor=nil"
+        }
+        RuuviAlertDebugLog.append(
+            "AlertHeartbeat",
+            "ble process trigger=true source=\(source.rawValue) " +
+                "tagUuid=\(ruuviTag.uuid) " +
+                "tagLuid=\(ruuviTag.luid?.value ?? "nil") " +
+                "tagMac=\(ruuviTag.macId?.value ?? "nil") " +
+                matchedSensor
+        )
+    }
+    #endif
 
     /// Creates records for a RuuviTag and updates the saved date.
     private func createRecords(

@@ -2,7 +2,22 @@
 import Foundation
 import RuuviOntology
 import RuuviLocalization
+#if DEBUG || ALPHA
+import RuuviNotification
+#endif
 import RuuviService
+
+#if DEBUG || ALPHA
+private func alertProcessDebugLog(
+    _ category: String,
+    _ message: @autoclosure () -> String
+) {
+    RuuviAlertDebugLog.append(category, message())
+}
+#else
+@inline(__always)
+private func alertProcessDebugLog(_: String, _: @autoclosure () -> String) {}
+#endif
 
 // MARK: - Process Physical Sensors
 
@@ -14,6 +29,13 @@ public extension RuuviNotifierImpl {
         else {
             return
         }
+        alertProcessDebugLog(
+            "AlertProcess",
+            "local process trigger=\(trigger) luid=\(luid.value) " +
+                "mac=\(record.macId?.value ?? "nil") " +
+                "source=\(record.source.rawValue) date=\(record.date) " +
+                "temp=\(String(describing: record.temperature?.value))"
+        )
         var isTriggered = false
         AlertType.allCases.forEach { type in
             switch type {
@@ -229,6 +251,13 @@ public extension RuuviNotifierImpl {
         else {
             return
         }
+        alertProcessDebugLog(
+            "AlertProcess",
+            "network process trigger=\(trigger) mac=\(identifier.value) " +
+                "recordLuid=\(record.luid?.value ?? "nil") " +
+                "source=\(record.source.rawValue) date=\(record.date) " +
+                "temp=\(String(describing: record.temperature?.value))"
+        )
 
         var isTriggered = false
         AlertType.allCases.forEach { type in
@@ -567,6 +596,12 @@ extension RuuviNotifierImpl {
            let t = temperature {
             let isLower = t < l
             let isUpper = t > u
+            alertProcessDebugLog(
+                "AlertProcess",
+                "temperature eval id=\(identifier.value) trigger=\(trigger) " +
+                    "temp=\(t.value) lower=\(lower) upper=\(upper) " +
+                    "isLower=\(isLower) isUpper=\(isUpper)"
+            )
             if trigger {
                 if isLower {
                     let lowerString = measurementService.string(
