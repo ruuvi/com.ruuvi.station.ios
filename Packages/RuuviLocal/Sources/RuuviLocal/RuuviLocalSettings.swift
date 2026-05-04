@@ -41,7 +41,7 @@ public enum AppearanceTypeKey: String {
     case style
 }
 
-public protocol RuuviLocalSettings {
+public protocol RuuviLocalSettings: AnyObject {
     var signedInAtleastOnce: Bool { get set }
     /// When syncing for the first time (after sign in) or extensive changes
     /// like cloud sync
@@ -100,6 +100,7 @@ public protocol RuuviLocalSettings {
     var appOpenedCount: Int { get set }
     var appOpenedInitialCountToAskReview: Int { get set }
     var appOpenedCountDivisibleToAskReview: Int { get set }
+    var appStoreReviewLastRequestAppOpenedCount: Int { get set }
     var dashboardEnabled: Bool { get set }
     var dashboardType: DashboardType { get set }
     var dashboardTapActionType: DashboardTapActionType { get set }

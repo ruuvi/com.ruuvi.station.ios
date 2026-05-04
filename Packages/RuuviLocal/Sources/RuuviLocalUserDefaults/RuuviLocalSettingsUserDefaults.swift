@@ -514,6 +514,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDefaults.appOpenedCountDivisibleToAskReview", defaultValue: 100)
     var appOpenedCountDivisibleToAskReview: Int
 
+    @UserDefault("SettingsUserDefaults.appStoreReviewLastRequestAppOpenedCount", defaultValue: 0)
+    var appStoreReviewLastRequestAppOpenedCount: Int
+
     private let cardToOpenFromWidgetKey = "SettingsUserDefaults.cardToOpenFromWidgetKey"
     func cardToOpenFromWidget() -> String? {
         UserDefaults.standard.value(forKey: cardToOpenFromWidgetKey) as? String

@@ -42,7 +42,7 @@ class DashboardPresenter {
     private var daemonFailureTokens: [NSObjectProtocol] = []
 
     // MARK: - State
-    private var didLoadInitialSensors = false
+    private var didEvaluateAppStoreReviewThisSession = false
     private var isOpeningPendingWidgetCard = false
 
     // MARK: - Initialization
@@ -348,16 +348,20 @@ private extension DashboardPresenter {
         view?.updateSnapshots(snapshots, withAnimation: withAnimation)
         view?.showNoSensorsAddedMessage(show: snapshots.isEmpty)
         openPendingWidgetCardIfNeeded(from: snapshots)
-
-        if didLoadInitialSensors {
-            settingsService.askAppStoreReview(with: snapshots.count)
-        }
-        didLoadInitialSensors = true
+        evaluateAppStoreReviewIfNeeded(sensorCount: snapshots.count)
 
         updateSignInBannerVisibility(sensorCount: snapshots.count)
 
         let hasCloudSensors = snapshots.contains { $0.metadata.isCloud }
         settingsService.syncHasCloudSensorToAppGroupContainer(hasCloudSensors: hasCloudSensors)
+    }
+
+    func evaluateAppStoreReviewIfNeeded(sensorCount: Int) {
+        guard !didEvaluateAppStoreReviewThisSession else { return }
+        guard sensorCount > 0 else { return }
+
+        didEvaluateAppStoreReviewThisSession = true
+        settingsService.evaluateAppStoreReviewIfNeeded(with: sensorCount)
     }
 
     func updateAuthorizationState() {

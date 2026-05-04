@@ -152,7 +152,7 @@ class DashboardSettingsService {
         delegate?.settingsService(self, sensorOrderDidChange: true)
     }
 
-    func askAppStoreReview(with sensorsCount: Int) {
+    func evaluateAppStoreReviewIfNeeded(with sensorsCount: Int) {
         guard let dayDifference = Calendar.current.dateComponents(
             [.day],
             from: FileManager().appInstalledDate,
