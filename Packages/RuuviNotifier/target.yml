@@ -3,6 +3,12 @@ targets:
   RuuviNotifier:
     templates:
     - Framework
+    settings:
+      configs:
+        Alpha:
+          OTHER_SWIFT_FLAGS:
+          - $(inherited)
+          - -DALPHA
     sources:
     - path: Sources
       name: Notifier

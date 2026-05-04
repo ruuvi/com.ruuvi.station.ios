@@ -2,10 +2,10 @@ import Foundation
 
 #if DEBUG || ALPHA
 public enum RuuviAlertDebugLog {
-    private static let enabledKey = "RuuviAlertDebugLog.enabled"
     private static let entriesKey = "RuuviAlertDebugLog.entries"
     private static let maximumEntries = 600
     private static let queue = DispatchQueue(label: "com.ruuvi.station.alert-debug-log")
+    private static var enabled = false
 
     private static let formatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -14,12 +14,16 @@ public enum RuuviAlertDebugLog {
         return formatter
     }()
 
-    public static func setEnabled(_ enabled: Bool) {
-        UserDefaults.standard.set(enabled, forKey: enabledKey)
+    public static func setEnabled(_ newValue: Bool) {
+        queue.sync {
+            enabled = newValue
+        }
     }
 
     public static var isEnabled: Bool {
-        UserDefaults.standard.bool(forKey: enabledKey)
+        queue.sync {
+            enabled
+        }
     }
 
     public static func append(
@@ -29,6 +33,7 @@ public enum RuuviAlertDebugLog {
         guard isEnabled else { return }
         let resolvedMessage = message()
         queue.async {
+            guard enabled else { return }
             let timestamp = formatter.string(from: Date())
             let line = "\(timestamp) [\(category)] \(resolvedMessage)"
             var entries = UserDefaults.standard.stringArray(forKey: entriesKey) ?? []
