@@ -34,7 +34,10 @@ class NoSensorView: UIView {
         label.textColor = RuuviColor.textColor.color
         label.textAlignment = .center
         label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
         label.font = UIFont.mulish(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 16 : 20)
+        label.setContentCompressionResistancePriority(.required, for: .vertical)
+        label.setContentHuggingPriority(.required, for: .vertical)
         return label
     }()
 
@@ -104,6 +107,7 @@ class NoSensorView: UIView {
     var messageLabelTopAnchor: NSLayoutConstraint!
     var centerButtonCenterYAnchor: NSLayoutConstraint!
     var buySensorsButtonBottomAnchor: NSLayoutConstraint!
+    var containerHeightAnchor: NSLayoutConstraint!
 }
 
 extension NoSensorView {
@@ -156,12 +160,20 @@ extension NoSensorView {
         scrollView.fillSuperview()
 
         scrollView.addSubview(container)
-        container.fillSuperview()
-        container
-            .widthAnchor
-            .constraint(
-                equalTo: widthAnchor
-            ).isActive = true
+        container.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            container.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            container.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            container.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            container.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            container.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
+            container.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.frameLayoutGuide.heightAnchor),
+        ])
+        containerHeightAnchor = container
+            .heightAnchor
+            .constraint(equalTo: scrollView.frameLayoutGuide.heightAnchor)
+        containerHeightAnchor.priority = .defaultHigh
+        containerHeightAnchor.isActive = true
 
         container.addSubview(messageLabel)
         messageLabel.anchor(
@@ -182,7 +194,6 @@ extension NoSensorView {
                 greaterThanOrEqualTo: container.topAnchor,
                 constant: 30
             )
-        messageLabelTopAnchor.priority = .defaultLow
         messageLabelTopAnchor.isActive = true
 
         container.addSubview(centerButtonStackView)
@@ -210,9 +221,9 @@ extension NoSensorView {
         centerButtonCenterYAnchor = centerButtonStackView
             .centerYAnchor
             .constraint(
-                equalTo: centerYAnchor
+                equalTo: container.centerYAnchor
             )
-        centerButtonCenterYAnchor.priority = .defaultLow
+        centerButtonCenterYAnchor.priority = .defaultHigh
         centerButtonCenterYAnchor.isActive = activateCenterButtonStackConstraint()
 
         container.addSubview(buySensorButton)
@@ -231,9 +242,9 @@ extension NoSensorView {
         buySensorsButtonBottomAnchor = buySensorButton
             .bottomAnchor
             .constraint(
-                lessThanOrEqualTo: container.bottomAnchor
+                lessThanOrEqualTo: container.bottomAnchor,
+                constant: -30
             )
-        buySensorsButtonBottomAnchor.priority = .defaultLow
         buySensorsButtonBottomAnchor.isActive = true
     }
 

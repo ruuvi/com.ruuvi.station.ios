@@ -85,6 +85,8 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         let factory: SignInBenefitsModuleFactory = SignInPromoModuleFactoryImpl()
         let module = factory.create()
 
+        AppUtility.lockOrientation(.portrait)
+
         let navigationController = UINavigationController(
             rootViewController: module)
         transitionHandler.present(navigationController, animated: true)
@@ -93,7 +95,6 @@ class DashboardRouter: NSObject, DashboardRouterInput {
             presenter.configure(output: output)
         }
 
-        AppUtility.lockOrientation(.portrait)
     }
 
     func openTagSettings(

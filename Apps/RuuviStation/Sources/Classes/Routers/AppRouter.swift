@@ -121,10 +121,10 @@ extension AppRouter: OnboardRouterDelegate {
         ruuviAnalytics.setConsent(
             allowed: analyticsConsentGiven
         )
-        AppUtility.lockOrientation(.all)
         let controller = dashboardViewController()
         navigationController.setNavigationBarHidden(false, animated: false)
         navigationController.setViewControllers([controller], animated: true)
+        AppUtility.lockOrientation(.all)
     }
 }
 
