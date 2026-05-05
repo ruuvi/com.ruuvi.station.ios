@@ -294,10 +294,6 @@ class RuuviTagServiceCoordinator {
         cloudService.triggerImmediateSync()
     }
 
-    func triggerFullHistorySync() {
-        cloudService.triggerFullHistorySync()
-    }
-
     func setKeepConnection(_ keep: Bool, for snapshot: RuuviTagCardSnapshot) {
         connectionService.setKeepConnection(keep, for: snapshot)
     }
@@ -850,10 +846,6 @@ class RuuviTagServiceCoordinatorManager {
         withCoordinator { $0.triggerCloudSync() }
     }
 
-    func triggerFullHistorySync() {
-        withCoordinator { $0.triggerFullHistorySync() }
-    }
-
     func setKeepConnection(_ keep: Bool, for snapshot: RuuviTagCardSnapshot) {
         withCoordinator { $0.setKeepConnection(keep, for: snapshot) }
     }
@@ -963,7 +955,6 @@ class RuuviTagCoordinatorFactory {
 
         let ruuviCloudService = RuuviCloudService(
             cloudSyncDaemon: r.resolve(RuuviDaemonCloudSync.self)!,
-            cloudSyncService: r.resolve(RuuviServiceCloudSync.self)!,
             cloudNotificationService: r.resolve(RuuviServiceCloudNotification.self)!,
             authService: r.resolve(RuuviServiceAuth.self)!,
             ruuviUser: r.resolve(RuuviUser.self)!,

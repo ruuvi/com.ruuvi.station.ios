@@ -42,7 +42,6 @@ class RuuviCloudService {
 
     // MARK: - Dependencies
     private let cloudSyncDaemon: RuuviDaemonCloudSync
-    private let cloudSyncService: RuuviServiceCloudSync
     private let cloudNotificationService: RuuviServiceCloudNotification
     private let authService: RuuviServiceAuth
     private let ruuviUser: RuuviUser
@@ -64,7 +63,6 @@ class RuuviCloudService {
     // MARK: - Initialization
     init(
         cloudSyncDaemon: RuuviDaemonCloudSync,
-        cloudSyncService: RuuviServiceCloudSync,
         cloudNotificationService: RuuviServiceCloudNotification,
         authService: RuuviServiceAuth,
         ruuviUser: RuuviUser,
@@ -72,7 +70,6 @@ class RuuviCloudService {
         pnManager: RuuviCorePN
     ) {
         self.cloudSyncDaemon = cloudSyncDaemon
-        self.cloudSyncService = cloudSyncService
         self.cloudNotificationService = cloudNotificationService
         self.authService = authService
         self.ruuviUser = ruuviUser
@@ -114,17 +111,6 @@ class RuuviCloudService {
     func triggerImmediateSync() {
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             self?.cloudSyncDaemon.refreshImmediately()
-        }
-    }
-
-    func triggerFullHistorySync() {
-        DispatchQueue.global(qos: .utility).async { [weak self] in
-            guard let self = self else { return }
-
-            if self.settings.historySyncOnDashboard &&
-               (!self.settings.historySyncLegacy || !self.settings.historySyncForEachSensor) {
-                self.cloudSyncService.syncAllHistory()
-            }
         }
     }
 

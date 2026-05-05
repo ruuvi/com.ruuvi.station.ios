@@ -876,10 +876,6 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDefaults.compactChatView", defaultValue: true)
     var compactChartView: Bool
 
-    @UserDefault("SettingsUserDefaults.historySyncLegacy", defaultValue: false)
-    var historySyncLegacy: Bool
-    @UserDefault("SettingsUserDefaults.historySyncOnDashboard", defaultValue: false)
-    var historySyncOnDashboard: Bool
     @UserDefault("SettingsUserDefaults.historySyncForEachSensor", defaultValue: true)
     var historySyncForEachSensor: Bool
     @UserDefault("SettingsUserDefaults.includeDataSourceInHistoryExport", defaultValue: false)

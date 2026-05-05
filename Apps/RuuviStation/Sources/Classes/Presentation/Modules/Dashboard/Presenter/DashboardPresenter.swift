@@ -98,7 +98,6 @@ extension DashboardPresenter: DashboardViewOutput {
     func viewDidLoad() {
         serviceCoordinatorManager.initialize()
         startAllServices()
-        serviceCoordinatorManager.triggerFullHistorySync()
         pushNotificationsManager.registerForRemoteNotifications()
     }
 
@@ -846,7 +845,6 @@ extension DashboardPresenter: SignInBenefitsModuleOutput {
 
     func signIn(module: SignInBenefitsModuleInput, didSuccessfulyLogin: Any?) {
         startAllServices()
-        serviceCoordinatorManager.triggerFullHistorySync()
         serviceCoordinatorManager.forceReorderSnapshots()
         serviceCoordinatorManager.forceLoadBackgrounds()
         updateAuthorizationState()

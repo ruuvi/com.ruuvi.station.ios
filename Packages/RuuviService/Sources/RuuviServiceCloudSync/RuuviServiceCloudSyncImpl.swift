@@ -830,18 +830,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                             Future.zip(addLatestPointToHistory)
                                 .observe(on: .global(qos: .utility))
                                 .on(success: { _ in
-                                    if sSelf.ruuviLocalSettings.historySyncLegacy ||
-                                        sSelf.ruuviLocalSettings.historySyncOnDashboard {
-                                        sSelf.syncAllHistory()
-                                            .observe(on: .global(qos: .utility))
-                                            .on(success: { _ in
-                                                promise.succeed(value: updatedSensors)
-                                            }, failure: { error in
-                                                promise.fail(error: error)
-                                            })
-                                    } else {
-                                        promise.succeed(value: updatedSensors)
-                                    }
+                                    promise.succeed(value: updatedSensors)
                                 }, failure: { error in
                                     promise.fail(error: error)
                                 })

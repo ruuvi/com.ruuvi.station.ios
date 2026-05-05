@@ -152,7 +152,6 @@ private extension CardsCoordinator {
 
         let ruuviCloudService = RuuviCloudService(
             cloudSyncDaemon: r.resolve(RuuviDaemonCloudSync.self)!,
-            cloudSyncService: r.resolve(RuuviServiceCloudSync.self)!,
             cloudNotificationService: r.resolve(RuuviServiceCloudNotification.self)!,
             authService: r.resolve(RuuviServiceAuth.self)!,
             ruuviUser: r.resolve(RuuviUser.self)!,

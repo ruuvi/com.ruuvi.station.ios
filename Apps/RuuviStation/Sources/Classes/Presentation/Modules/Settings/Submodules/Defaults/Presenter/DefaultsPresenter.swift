@@ -73,8 +73,6 @@ extension DefaultsPresenter {
             buildShowAlertRangeInGraph(),
             buildUseNewChartsRendering(),
             buildDoIndividualHistorySync(),
-            buildDoLegacyHistorySync(),
-            buildDoHistorySyncAfterSignIn(),
             buildIncludeDataSourceInHistoryExport(),
             buildShowRedesignedCardsUIWithMenu(),
             buildDownloadBetaFirmware(),
@@ -488,38 +486,10 @@ extension DefaultsPresenter {
         return viewModel
     }
 
-    private func buildDoHistorySyncAfterSignIn() -> DefaultsViewModel {
-        let viewModel = DefaultsViewModel()
-        viewModel.title = RuuviLocalization.Defaults.HistorySyncDashboard.title
-        viewModel.boolean.value = settings.historySyncOnDashboard
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
-        viewModel.type.value = .switcher
-
-        bind(viewModel.boolean, fire: false) { observer, bool in
-            observer.settings.historySyncLegacy = GlobalHelpers.getBool(from: bool)
-        }
-
-        return viewModel
-    }
-
     private func buildDoIndividualHistorySync() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
         viewModel.title = RuuviLocalization.Defaults.HistorySyncPerSensor.title
         viewModel.boolean.value = settings.historySyncForEachSensor
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
-        viewModel.type.value = .switcher
-
-        bind(viewModel.boolean, fire: false) { observer, bool in
-            observer.settings.historySyncOnDashboard = GlobalHelpers.getBool(from: bool)
-        }
-
-        return viewModel
-    }
-
-    private func buildDoLegacyHistorySync() -> DefaultsViewModel {
-        let viewModel = DefaultsViewModel()
-        viewModel.title = RuuviLocalization.Defaults.HistorySyncLegacy.title
-        viewModel.boolean.value = settings.historySyncLegacy
         viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
         viewModel.type.value = .switcher
 
