@@ -310,6 +310,7 @@ private struct CardsSettingsAlertSectionContentView: View {
                     onToggle: onToggleAlert,
                     isCompact: false
                 )
+                .opacity(editableOpacity)
             }
 
             if let descriptionTitle = customDescriptionTitle {
@@ -321,6 +322,8 @@ private struct CardsSettingsAlertSectionContentView: View {
                     )
                 }
                 .buttonStyle(.plain)
+                .disabled(!model.isInteractionEnabled)
+                .opacity(editableOpacity)
             }
 
             if let limitText = limitDescriptionTitle {
@@ -333,6 +336,8 @@ private struct CardsSettingsAlertSectionContentView: View {
                         )
                     }
                     .buttonStyle(.plain)
+                    .disabled(!model.isInteractionEnabled)
+                    .opacity(editableOpacity)
                 } else {
                     CardsSettingsAlertActionRow(title: limitText, icon: nil)
                 }
@@ -353,7 +358,7 @@ private struct CardsSettingsAlertSectionContentView: View {
                     }
                 )
                 .disabled(!model.isInteractionEnabled)
-                .opacity(model.isInteractionEnabled ? 1 : disabledOpacity)
+                .opacity(editableOpacity)
             }
 
             if let info = model.configuration.additionalInfo {
@@ -400,6 +405,10 @@ private struct CardsSettingsAlertSectionContentView: View {
         default:
             return onTapLimitEdit
         }
+    }
+
+    private var editableOpacity: Double {
+        model.isInteractionEnabled ? 1 : disabledOpacity
     }
 }
 

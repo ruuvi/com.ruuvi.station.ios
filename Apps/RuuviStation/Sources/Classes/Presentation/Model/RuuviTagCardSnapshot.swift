@@ -557,14 +557,13 @@ extension RuuviTagCardSnapshot {
             keepConnection: keepConnection
         )
 
-        // Only update if connection data actually changed
-        guard self.connectionData != newConnectionData else { return false }
+        var didChange = false
 
-        self.connectionData = newConnectionData
+        if self.connectionData != newConnectionData {
+            self.connectionData = newConnectionData
+            didChange = true
+        }
 
-        var didChange = true
-
-        // Update metadata when connection data changes
         if updateMetadata(isConnected: isConnected, isConnectable: isConnectable) {
             didChange = true
         }

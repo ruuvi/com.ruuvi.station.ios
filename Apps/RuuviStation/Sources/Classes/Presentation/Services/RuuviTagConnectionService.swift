@@ -1,3 +1,5 @@
+// swiftlint:disable file_length
+
 import Foundation
 import CoreBluetooth
 import BTKit
@@ -33,10 +35,20 @@ class RuuviTagConnectionService {
 
     // MARK: - Observation Tokens
     private var stateToken: ObservationToken?
-    private var didConnectToken: NSObjectProtocol?
-    private var didDisconnectToken: NSObjectProtocol?
+    private var notificationTokens: [NSObjectProtocol] = []
 
     // MARK: - State
+    // swiftlint:disable:next large_tuple
+    private typealias SnapshotConnectionUpdate = (
+        snapshot: RuuviTagCardSnapshot,
+        isConnected: Bool,
+        keepConnection: Bool,
+        syncStatus: NetworkSyncStatus
+    )
+
+    private let trackedSnapshotsQueue = DispatchQueue(label: "RuuviTagConnectionService.trackedSnapshotsQueue")
+    private var trackedSnapshots: [RuuviTagCardSnapshot] = []
+
     private var isBluetoothPermissionGranted: Bool {
         let centralAuthorization = CBManager.authorization
         if centralAuthorization == .denied || centralAuthorization == .restricted {
@@ -72,17 +84,16 @@ class RuuviTagConnectionService {
     // MARK: - Public Interface
     func startObservingConnections() {
         observeBluetoothState()
+        resetNotificationObservers()
         observeConnectionEvents()
+        observeConnectionPersistenceEvents()
     }
 
     func stopObservingConnections() {
         stateToken?.invalidate()
-        didConnectToken?.invalidate()
-        didDisconnectToken?.invalidate()
+        resetNotificationObservers()
 
         stateToken = nil
-        didConnectToken = nil
-        didDisconnectToken = nil
     }
 
     func refreshBluetoothState() {
@@ -90,43 +101,24 @@ class RuuviTagConnectionService {
     }
 
     func updateConnectionData(for snapshots: [RuuviTagCardSnapshot]) {
+        updateTrackedSnapshots(snapshots)
+
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
             guard let self = self else { return }
-
-            // swiftlint:disable:next large_tuple
-            var snapshotUpdates: [(RuuviTagCardSnapshot, Bool, Bool, NetworkSyncStatus)] = []
-
-            for snapshot in snapshots {
-                var isConnected = false
-                var keepConnection = false
-                var syncStatus: NetworkSyncStatus = .none
-
-                if let luid = snapshot.identifierData.luid {
-                    isConnected = self.background.isConnected(uuid: luid.value)
-                    keepConnection = self.connectionPersistence.keepConnection(to: luid)
-                } else if snapshot.identifierData.mac != nil {
-                    syncStatus = snapshot.identifierData.mac.map {
-                        self.localSyncState.getSyncStatusLatestRecord(for: $0)
-                    } ?? .none
-                    isConnected = false
-                    keepConnection = false
-                }
-
-                snapshotUpdates.append((snapshot, isConnected, keepConnection, syncStatus))
-            }
-
+            let snapshotUpdates = snapshots.map { self.connectionUpdate(for: $0) }
             DispatchQueue.main.async {
-                for (snapshot, isConnected, keepConnection, syncStatus) in snapshotUpdates {
-                    let statusChanged = snapshot.updateNetworkSyncStatus(syncStatus)
-                    let connectionChanged = snapshot.updateConnectionData(
-                        isConnected: isConnected,
-                        isConnectable: snapshot.connectionData.isConnectable,
-                        keepConnection: keepConnection
-                    )
-                    if statusChanged || connectionChanged {
-                        self.delegate?.connectionService(self, didUpdateSnapshot: snapshot)
-                    }
-                }
+                snapshotUpdates.forEach { self.apply($0) }
+            }
+        }
+    }
+
+    func updateConnectionData(for snapshot: RuuviTagCardSnapshot) {
+        updateTrackedSnapshot(snapshot)
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
+            let snapshotUpdate = self.connectionUpdate(for: snapshot)
+            DispatchQueue.main.async {
+                self.apply(snapshotUpdate)
             }
         }
     }
@@ -192,34 +184,54 @@ private extension RuuviTagConnectionService {
     }
 
     func observeConnectionEvents() {
-        // Observe connection events
-        didConnectToken?.invalidate()
-        didConnectToken = NotificationCenter.default.addObserver(
+        notificationTokens.append(observeUUID(
             forName: .BTBackgroundDidConnect,
-            object: nil,
-            queue: .main
-        ) { [weak self] notification in
-            guard let self = self else { return }
+            key: BTBackgroundDidConnectKey.uuid
+        ) { [weak self] uuid in
+            self?.handleConnectionChange(uuid: uuid, isConnected: true)
+        })
 
-            if let userInfo = notification.userInfo,
-               let uuid = userInfo[BTBackgroundDidConnectKey.uuid] as? String {
-                self.handleConnectionChange(uuid: uuid, isConnected: true)
-            }
-        }
-
-        // Observe disconnection events
-        didDisconnectToken?.invalidate()
-        didDisconnectToken = NotificationCenter.default.addObserver(
+        notificationTokens.append(observeUUID(
             forName: .BTBackgroundDidDisconnect,
+            key: BTBackgroundDidDisconnectKey.uuid
+        ) { [weak self] uuid in
+            self?.handleConnectionChange(uuid: uuid, isConnected: false)
+        })
+    }
+
+    func observeConnectionPersistenceEvents() {
+        notificationTokens.append(observeUUID(
+            forName: .ConnectionPersistenceDidStartToKeepConnection,
+            key: CPDidStartToKeepConnectionKey.uuid
+        ) { [weak self] uuid in
+            self?.refreshConnectionState(uuid: uuid)
+        })
+
+        notificationTokens.append(observeUUID(
+            forName: .ConnectionPersistenceDidStopToKeepConnection,
+            key: CPDidStopToKeepConnectionKey.uuid
+        ) { [weak self] uuid in
+            self?.refreshConnectionState(uuid: uuid)
+        })
+    }
+
+    func resetNotificationObservers() {
+        notificationTokens.forEach { $0.invalidate() }
+        notificationTokens.removeAll()
+    }
+
+    func observeUUID<Key: Hashable>(
+        forName name: Notification.Name,
+        key: Key,
+        handler: @escaping (String) -> Void
+    ) -> NSObjectProtocol {
+        NotificationCenter.default.addObserver(
+            forName: name,
             object: nil,
             queue: .main
-        ) { [weak self] notification in
-            guard let self = self else { return }
-
-            if let userInfo = notification.userInfo,
-               let uuid = userInfo[BTBackgroundDidDisconnectKey.uuid] as? String {
-                self.handleConnectionChange(uuid: uuid, isConnected: false)
-            }
+        ) { notification in
+            guard let uuid = notification.userInfo?[AnyHashable(key)] as? String else { return }
+            handler(uuid)
         }
     }
 
@@ -235,8 +247,8 @@ private extension RuuviTagConnectionService {
     }
 
     func handleConnectionChange(uuid: String, isConnected: Bool) {
-        // Notify delegate about connection change for specific sensor
-        // The delegate should update the appropriate snapshot
+        updateConnectionState(uuid: uuid, isConnected: isConnected)
+
         NotificationCenter.default.post(
             name: .DashboardConnectionDidChange,
             object: nil,
@@ -261,6 +273,86 @@ private extension RuuviTagConnectionService {
             return (false, false)
         default:
             return (true, false)
+        }
+    }
+
+    func updateTrackedSnapshots(_ snapshots: [RuuviTagCardSnapshot]) {
+        trackedSnapshotsQueue.sync {
+            trackedSnapshots = snapshots
+        }
+    }
+
+    func updateTrackedSnapshot(_ snapshot: RuuviTagCardSnapshot) {
+        trackedSnapshotsQueue.sync {
+            if let index = trackedSnapshots.firstIndex(where: { trackedSnapshot in
+                let sameLuid = snapshot.identifierData.luid?.any != nil &&
+                    trackedSnapshot.identifierData.luid?.any == snapshot.identifierData.luid?.any
+                let sameMac = snapshot.identifierData.mac?.any != nil &&
+                    trackedSnapshot.identifierData.mac?.any == snapshot.identifierData.mac?.any
+                return trackedSnapshot.id == snapshot.id || sameLuid || sameMac
+            }) {
+                trackedSnapshots[index] = snapshot
+            } else {
+                trackedSnapshots.append(snapshot)
+            }
+        }
+    }
+
+    func snapshot(for uuid: String) -> RuuviTagCardSnapshot? {
+        trackedSnapshotsQueue.sync {
+            trackedSnapshots.first { $0.identifierData.luid?.value == uuid }
+        }
+    }
+
+    func updateConnectionState(uuid: String, isConnected: Bool) {
+        guard let snapshot = snapshot(for: uuid) else { return }
+
+        let keepConnection = snapshot.identifierData.luid.map {
+            connectionPersistence.keepConnection(to: $0)
+        } ?? snapshot.connectionData.keepConnection
+
+        let didChange = snapshot.updateConnectionData(
+            isConnected: isConnected,
+            isConnectable: snapshot.connectionData.isConnectable,
+            keepConnection: keepConnection
+        )
+
+        if didChange {
+            delegate?.connectionService(self, didUpdateSnapshot: snapshot)
+        }
+    }
+
+    func refreshConnectionState(uuid: String) {
+        updateConnectionState(
+            uuid: uuid,
+            isConnected: background.isConnected(uuid: uuid)
+        )
+    }
+
+    private func connectionUpdate(for snapshot: RuuviTagCardSnapshot) -> SnapshotConnectionUpdate {
+        var isConnected = false
+        var keepConnection = false
+        var syncStatus: NetworkSyncStatus = .none
+        if let luid = snapshot.identifierData.luid {
+            isConnected = background.isConnected(uuid: luid.value)
+            keepConnection = connectionPersistence.keepConnection(to: luid)
+        } else if snapshot.identifierData.mac != nil {
+            syncStatus = snapshot.identifierData.mac.map {
+                localSyncState.getSyncStatusLatestRecord(for: $0)
+            } ?? .none
+        }
+        return (snapshot, isConnected, keepConnection, syncStatus)
+    }
+
+    private func apply(_ update: SnapshotConnectionUpdate) {
+        let statusChanged = update.snapshot.updateNetworkSyncStatus(update.syncStatus)
+        let connectionChanged = update.snapshot.updateConnectionData(
+            isConnected: update.isConnected,
+            isConnectable: update.snapshot.connectionData.isConnectable,
+            keepConnection: update.keepConnection
+        )
+        if statusChanged || connectionChanged {
+            delegate?.connectionService(self, didUpdateSnapshot: update.snapshot)
         }
     }
 }
@@ -333,3 +425,5 @@ extension RuuviTagConnectionService {
 extension Notification.Name {
     static let DashboardConnectionDidChange = Notification.Name("DashboardConnectionDidChange")
 }
+
+// swiftlint:enable file_length

@@ -542,7 +542,10 @@ extension RuuviTagServiceCoordinator: RuuviTagDataServiceDelegate {
         if let index = previousSnapshots.firstIndex(where: { $0.id == snapshot.id }) {
             previousSnapshots[index] = snapshot
         }
+
+        alertService.updateSnapshot(snapshot)
         disableHiddenMeasurementAlertsIfNeeded(for: [snapshot])
+        connectionService.updateConnectionData(for: snapshot)
         notifyEvent(.snapshotUpdated(snapshot, invalidateLayout: invalidateLayout))
     }
 

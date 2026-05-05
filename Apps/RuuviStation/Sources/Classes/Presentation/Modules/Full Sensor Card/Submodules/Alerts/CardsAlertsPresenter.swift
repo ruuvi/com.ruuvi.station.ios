@@ -55,6 +55,7 @@ extension CardsAlertsPresenter: CardsAlertsPresenterInput {
 
     func start() {
         startObservingCoordinator()
+        refreshConnectionStateIfNeeded()
         syncAlertsIfNeeded()
         startObservingCloudRequestState()
         if let snapshot {
@@ -175,6 +176,13 @@ extension CardsAlertsPresenter: RuuviTagServiceCoordinatorObserver {
              let .connectionSnapshotUpdated(updatedSnapshot),
              let .alertSnapshotUpdated(updatedSnapshot):
             processSnapshotUpdate(updatedSnapshot)
+        case .bluetoothStateChanged,
+             .cloudModeChanged,
+             .cloudSyncCompleted,
+             .userLoginStateChanged,
+             .userLogoutStateChanged,
+             .alertsChanged:
+            refreshCurrentSnapshot()
         default:
             break
         }
@@ -186,6 +194,14 @@ private extension CardsAlertsPresenter {
         guard matchesCurrentSnapshot(updatedSnapshot) else { return }
         DispatchQueue.main.async { [weak self] in
             self?.handleSnapshotUpdate(updatedSnapshot)
+        }
+    }
+
+    func refreshCurrentSnapshot() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self, let snapshot = self.snapshot else { return }
+            self.refreshConnectionStateIfNeeded()
+            self.updateAlertSections(for: snapshot)
         }
     }
 
@@ -202,6 +218,7 @@ private extension CardsAlertsPresenter {
         sensor = RuuviTagServiceCoordinatorManager.shared.getSensor(for: updatedSnapshot.id)
         sensorSettings = RuuviTagServiceCoordinatorManager.shared
             .getSensorSettings(for: updatedSnapshot.id)
+        refreshConnectionStateIfNeeded()
         view?.configure(snapshot: updatedSnapshot)
         updateAlertSections(for: updatedSnapshot)
     }
@@ -276,6 +293,21 @@ private extension CardsAlertsPresenter {
         RuuviTagServiceCoordinatorManager.shared.withCoordinator { coordinator in
             block(coordinator.services.alert, snapshot, sensor)
         }
+    }
+
+    @discardableResult
+    func refreshConnectionStateIfNeeded() -> Bool {
+        guard let snapshot, snapshot.identifierData.luid != nil else {
+            return false
+        }
+
+        let status = RuuviTagServiceCoordinatorManager.shared
+            .getConnectionStatus(for: snapshot)
+        return snapshot.updateConnectionData(
+            isConnected: status.isConnected,
+            isConnectable: snapshot.connectionData.isConnectable,
+            keepConnection: status.keepConnection
+        )
     }
 
     func syncAlertsIfNeeded() {

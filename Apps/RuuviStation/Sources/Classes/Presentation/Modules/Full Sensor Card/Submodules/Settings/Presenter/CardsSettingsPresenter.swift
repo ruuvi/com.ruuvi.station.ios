@@ -90,6 +90,7 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
     func start() {
         startObservingRuuviTagOwnerCheckResponse()
         startObservingCoordinator()
+        refreshConnectionStateIfNeeded()
         syncAlertsIfNeeded()
         startObservingCloudRequestState()
         if let snapshot {
@@ -513,6 +514,7 @@ extension CardsSettingsPresenter {
         sensor = RuuviTagServiceCoordinatorManager.shared.getSensor(for: updatedSnapshot.id)
         sensorSettings = RuuviTagServiceCoordinatorManager.shared
             .getSensorSettings(for: updatedSnapshot.id)
+        refreshConnectionStateIfNeeded()
 
         if updatedSnapshot.connectionData.isConnected ||
             !updatedSnapshot.connectionData.keepConnection {
@@ -848,6 +850,21 @@ private extension CardsSettingsPresenter {
         )
     }
 
+    @discardableResult
+    func refreshConnectionStateIfNeeded() -> Bool {
+        guard let snapshot, snapshot.identifierData.luid != nil else {
+            return false
+        }
+
+        let status = RuuviTagServiceCoordinatorManager.shared
+            .getConnectionStatus(for: snapshot)
+        return snapshot.updateConnectionData(
+            isConnected: status.isConnected,
+            isConnectable: snapshot.connectionData.isConnectable,
+            keepConnection: status.keepConnection
+        )
+    }
+
     func convertDisplayValueToServiceValue(
         _ value: Double,
         for alertType: AlertType
@@ -933,6 +950,13 @@ extension CardsSettingsPresenter: RuuviTagServiceCoordinatorObserver {
              let .connectionSnapshotUpdated(updatedSnapshot),
              let .alertSnapshotUpdated(updatedSnapshot):
             processSnapshotUpdate(updatedSnapshot)
+        case .bluetoothStateChanged,
+             .cloudModeChanged,
+             .cloudSyncCompleted,
+             .userLoginStateChanged,
+             .userLogoutStateChanged,
+             .alertsChanged:
+            refreshCurrentSnapshot()
         default:
             break
         }
@@ -942,6 +966,14 @@ extension CardsSettingsPresenter: RuuviTagServiceCoordinatorObserver {
         guard matchesCurrentSnapshot(updatedSnapshot) else { return }
         DispatchQueue.main.async { [weak self] in
             self?.handleSnapshotUpdate(updatedSnapshot)
+        }
+    }
+
+    private func refreshCurrentSnapshot() {
+        DispatchQueue.main.async { [weak self] in
+            guard let self, let snapshot = self.snapshot else { return }
+            self.refreshConnectionStateIfNeeded()
+            self.updateAlertSections(for: snapshot)
         }
     }
 }
