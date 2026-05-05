@@ -887,18 +887,15 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                                 // Update the local sensor data with cloud data
                                 // if there's a match of sensor in local storage and cloud
                                 // TODO: @priyonto - Need to improve this once backend flattens and improves the plans
-                                // If user goes from free to pro or above plan, download full history
-                                if localSensor.ownersPlan?.lowercased() == "free",
-                                   localSensor.ownersPlan?.lowercased() != cloudSensor.ownersPlan?.lowercased() {
-                                    self.ruuviLocalSyncState.setDownloadFullHistory(
-                                        for: localSensor.macId,
-                                        downloadFull: true
-                                    )
-                                }
+                                self.handleDownloadFullHistoryAfterSubscriptionChange(
+                                    localSensor: localSensor,
+                                    cloudSensor: cloudSensor
+                                )
                                 return self.ruuviPool.update(localSensor.with(cloudSensor: cloudSensor))
 
                             case .keepLocalAndQueue:
-                                // Local is newer - push changes to cloud
+                                // Local is newer - push local editable fields to cloud, but keep
+                                // cloud-authoritative entitlement fields fresh locally.
                                 skipCloudImageDownloadForSensorIDs.insert(cloudSensor.id)
                                 if let macId = localSensor.macId {
                                     self.queueSensorUpdateToCloud(localSensor, macId: macId)
@@ -907,7 +904,25 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                                     localSensor: localSensor,
                                     cloudSensor: cloudSensor
                                 )
-                                return nil
+
+                                self.handleDownloadFullHistoryAfterSubscriptionChange(
+                                    localSensor: localSensor,
+                                    cloudSensor: cloudSensor
+                                )
+
+                                guard self.shouldRefreshCloudSubscriptionFieldsForLocalNewerSensor(
+                                    localSensor: localSensor,
+                                    cloudSensor: cloudSensor
+                                ) else {
+                                    return nil
+                                }
+
+                                let refreshedSensor = self.subscriptionRefreshedSensor(
+                                    localSensor: localSensor,
+                                    cloudSensor: cloudSensor
+                                )
+                                updatedSensors.insert(refreshedSensor.any)
+                                return self.ruuviPool.update(refreshedSensor)
 
                             case .noAction:
                                 // Timestamps are equal or within tolerance - no update needed
@@ -993,6 +1008,99 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 promise.fail(error: .ruuviStorage(error))
             })
         return promise.future
+    }
+
+    private func handleDownloadFullHistoryAfterSubscriptionChange(
+        localSensor: RuuviTagSensor,
+        cloudSensor: CloudSensor
+    ) {
+        guard hasSubscriptionChanged(
+            localSensor: localSensor,
+            cloudSensor: cloudSensor
+        ) else { return }
+
+        if shouldDownloadFullHistoryAfterSubscriptionChange(
+            localSensor: localSensor,
+            cloudSensor: cloudSensor
+        ) {
+            ruuviLocalSyncState.setDownloadFullHistory(
+                for: localSensor.macId,
+                downloadFull: true
+            )
+        } else if shouldClearDownloadFullHistoryAfterSubscriptionChange(
+            cloudSensor: cloudSensor
+        ) {
+            ruuviLocalSyncState.setDownloadFullHistory(
+                for: localSensor.macId,
+                downloadFull: nil
+            )
+        }
+    }
+
+    private func hasSubscriptionChanged(
+        localSensor: RuuviTagSensor,
+        cloudSensor: CloudSensor
+    ) -> Bool {
+        localSensor.ownersPlan?.lowercased() != cloudSensor.ownersPlan?.lowercased()
+            || localSensor.maxHistoryDays != cloudSensor.maxHistoryDays
+    }
+
+    private func shouldDownloadFullHistoryAfterSubscriptionChange(
+        localSensor: RuuviTagSensor,
+        cloudSensor: CloudSensor
+    ) -> Bool {
+        let localPlan = localSensor.ownersPlan?.lowercased()
+        let cloudPlan = cloudSensor.ownersPlan?.lowercased()
+        let localHistoryDays = localSensor.maxHistoryDays ?? 0
+        let cloudHistoryDays = cloudSensor.maxHistoryDays ?? 0
+        let planChangedFromFreeWithHistory = localPlan == "free"
+            && cloudPlan != nil
+            && cloudPlan != "free"
+            && cloudHistoryDays > 0
+        let historyExpanded = cloudHistoryDays > localHistoryDays
+
+        return planChangedFromFreeWithHistory || historyExpanded
+    }
+
+    private func shouldClearDownloadFullHistoryAfterSubscriptionChange(
+        cloudSensor: CloudSensor
+    ) -> Bool {
+        let cloudHistoryDays = cloudSensor.maxHistoryDays ?? 0
+
+        return cloudHistoryDays <= 0
+    }
+
+    private func shouldRefreshCloudSubscriptionFieldsForLocalNewerSensor(
+        localSensor: RuuviTagSensor,
+        cloudSensor: CloudSensor
+    ) -> Bool {
+        localSensor.ownersPlan != cloudSensor.ownersPlan
+            || localSensor.maxHistoryDays != cloudSensor.maxHistoryDays
+    }
+
+    private func subscriptionRefreshedSensor(
+        localSensor: RuuviTagSensor,
+        cloudSensor: CloudSensor
+    ) -> RuuviTagSensor {
+        RuuviTagSensorStruct(
+            version: localSensor.version,
+            firmwareVersion: localSensor.firmwareVersion,
+            luid: localSensor.luid,
+            macId: localSensor.macId,
+            serviceUUID: localSensor.serviceUUID,
+            isConnectable: localSensor.isConnectable,
+            name: localSensor.name,
+            isClaimed: localSensor.isClaimed,
+            isOwner: localSensor.isOwner,
+            owner: localSensor.owner,
+            ownersPlan: cloudSensor.ownersPlan,
+            isCloudSensor: localSensor.isCloudSensor,
+            canShare: localSensor.canShare,
+            sharedTo: localSensor.sharedTo,
+            sharedToPending: localSensor.sharedToPending,
+            maxHistoryDays: cloudSensor.maxHistoryDays,
+            lastUpdated: localSensor.lastUpdated
+        )
     }
 
     // This method updates the latest data table if a record already exists for the mac address.
