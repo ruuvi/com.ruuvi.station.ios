@@ -73,7 +73,16 @@ public struct RuuviAlertConstants {
     }
 
     public struct CloudConnection {
-        public static let minUnseenDuration: Int = 2     // sec
-        public static let defaultUnseenDuration: Int = 900     // sec
+        public static let minUnseenDuration: Int = 2     // min
+        public static let defaultUnseenDuration: Int = 15 * 60     // sec
+        public static let minUnseenDurationSeconds: Int = minUnseenDuration * 60
+
+        public static func normalizedUnseenDuration(_ duration: Double?) -> Double {
+            guard let duration,
+                  duration >= Double(minUnseenDurationSeconds) else {
+                return Double(defaultUnseenDuration)
+            }
+            return duration
+        }
     }
 }

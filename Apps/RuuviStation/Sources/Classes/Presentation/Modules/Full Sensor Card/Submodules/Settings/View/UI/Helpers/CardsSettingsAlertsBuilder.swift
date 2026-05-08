@@ -813,11 +813,9 @@ private extension CardsSettingsAlertsBuilder {
     static func cloudConnectionConfiguration(
         config: RuuviTagCardSnapshotAlertConfig
     ) -> (CardsSettingsAlertUIConfiguration, Bool) {
-        let delayMinutes = Int(
-            (
-                config.unseenDuration ?? Double(RuuviAlertConstants.CloudConnection.defaultUnseenDuration)
-            ) / 60
-        )
+        let delaySeconds = RuuviAlertConstants.CloudConnection
+            .normalizedUnseenDuration(config.unseenDuration)
+        let delayMinutes = Int(delaySeconds / 60)
         let description = RuuviLocalization.alertCloudConnectionDescription(delayMinutes)
 
         return (

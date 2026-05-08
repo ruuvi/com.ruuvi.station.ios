@@ -5,11 +5,24 @@ import RuuviCloud
 import RuuviLocal
 import RuuviOntology
 
+fileprivate extension RuuviServiceAlertImpl {
+    func normalizedCloudConnectionAlertType(_ type: AlertType) -> AlertType {
+        guard case let .cloudConnection(unseenDuration) = type else {
+            return type
+        }
+        return .cloudConnection(
+            unseenDuration: RuuviAlertConstants.CloudConnection
+                .normalizedUnseenDuration(unseenDuration)
+        )
+    }
+}
+
 // MARK: - RuuviTag
 
 public extension RuuviServiceAlertImpl {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func register(type: AlertType, ruuviTag: RuuviTagSensor) {
+        let type = normalizedCloudConnectionAlertType(type)
         register(type: type, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             switch type {
@@ -246,12 +259,14 @@ public extension RuuviServiceAlertImpl {
             case .connection:
                 break
             case let .cloudConnection(unseenDuration):
+                let normalizedUnseenDuration = RuuviAlertConstants.CloudConnection
+                    .normalizedUnseenDuration(unseenDuration)
                 cloud.setAlert(
                     type: .offline,
                     settingType: .state,
                     isEnabled: true,
                     min: 0,
-                    max: unseenDuration,
+                    max: normalizedUnseenDuration,
                     counter: nil,
                     delay: 0,
                     description: cloudConnectionDescription(for: ruuviTag),
@@ -275,6 +290,7 @@ public extension RuuviServiceAlertImpl {
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func unregister(type: AlertType, ruuviTag: RuuviTagSensor) {
+        let type = normalizedCloudConnectionAlertType(type)
         unregister(type: type, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             switch type {
@@ -511,12 +527,14 @@ public extension RuuviServiceAlertImpl {
             case .connection:
                 break
             case let .cloudConnection(unseenDuration):
+                let normalizedUnseenDuration = RuuviAlertConstants.CloudConnection
+                    .normalizedUnseenDuration(unseenDuration)
                 cloud.setAlert(
                     type: .offline,
                     settingType: .state,
                     isEnabled: false,
                     min: 0,
-                    max: unseenDuration,
+                    max: normalizedUnseenDuration,
                     counter: nil,
                     delay: 0,
                     description: cloudConnectionDescription(for: ruuviTag),
@@ -1611,14 +1629,17 @@ public extension RuuviServiceAlertImpl {
 
     // MARK: - Cloud Connection
     func setCloudConnection(unseenDuration: Double?, ruuviTag: RuuviTagSensor) {
-        setCloudConnection(unseenDuration: unseenDuration, for: ruuviTag)
+        let normalizedUnseenDuration = unseenDuration.map {
+            RuuviAlertConstants.CloudConnection.normalizedUnseenDuration($0)
+        }
+        setCloudConnection(unseenDuration: normalizedUnseenDuration, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             cloud.setAlert(
                 type: .offline,
                 settingType: .delay,
                 isEnabled: isOn(type: .cloudConnection(unseenDuration: 0), for: ruuviTag),
                 min: 0,
-                max: unseenDuration,
+                max: normalizedUnseenDuration,
                 counter: nil,
                 delay: 0,
                 description: cloudConnectionDescription(for: ruuviTag),
@@ -1635,7 +1656,8 @@ public extension RuuviServiceAlertImpl {
                 settingType: .description,
                 isEnabled: isOn(type: .cloudConnection(unseenDuration: 0), for: ruuviTag),
                 min: 0,
-                max: cloudConnectionUnseenDuration(for: ruuviTag) ?? 600, // Default: 15mins
+                max: RuuviAlertConstants.CloudConnection
+                    .normalizedUnseenDuration(cloudConnectionUnseenDuration(for: ruuviTag)),
                 counter: nil,
                 delay: 0,
                 description: description,
@@ -2218,7 +2240,8 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                 settingType: .state,
                 isEnabled: isEnabled,
                 min: 0,
-                max: cloudConnectionUnseenDuration(for: sensor),
+                max: RuuviAlertConstants.CloudConnection
+                    .normalizedUnseenDuration(cloudConnectionUnseenDuration(for: sensor)),
                 counter: nil,
                 delay: 0,
                 description: cloudConnectionDescription(for: sensor),
@@ -2263,6 +2286,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
     }
 
     func register(type: AlertType, for sensor: PhysicalSensor) {
+        let type = normalizedCloudConnectionAlertType(type)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.register(type: type, for: luid.value)
             alertPersistence.register(type: type, for: macId.value)
@@ -2278,6 +2302,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
     }
 
     func unregister(type: AlertType, for sensor: PhysicalSensor) {
+        let type = normalizedCloudConnectionAlertType(type)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.unregister(type: type, for: luid.value)
             alertPersistence.unregister(type: type, for: macId.value)
@@ -4573,19 +4598,25 @@ public extension RuuviServiceAlertImpl {
     }
 
     func setCloudConnection(unseenDuration: Double?, for sensor: PhysicalSensor) {
+        let normalizedUnseenDuration = unseenDuration.map {
+            RuuviAlertConstants.CloudConnection.normalizedUnseenDuration($0)
+        }
         if let luid = sensor.luid, let macId = sensor.macId {
-            alertPersistence.setCloudConnection(unseenDuration: unseenDuration, for: luid.value)
-            alertPersistence.setCloudConnection(unseenDuration: unseenDuration, for: macId.value)
+            alertPersistence.setCloudConnection(unseenDuration: normalizedUnseenDuration, for: luid.value)
+            alertPersistence.setCloudConnection(unseenDuration: normalizedUnseenDuration, for: macId.value)
         } else if let luid = sensor.luid {
-            alertPersistence.setCloudConnection(unseenDuration: unseenDuration, for: luid.value)
+            alertPersistence.setCloudConnection(unseenDuration: normalizedUnseenDuration, for: luid.value)
         } else if let macId = sensor.macId {
-            alertPersistence.setCloudConnection(unseenDuration: unseenDuration, for: macId.value)
+            alertPersistence.setCloudConnection(unseenDuration: normalizedUnseenDuration, for: macId.value)
         } else {
             assertionFailure()
         }
         touchAlertUpdatedAt(type: .cloudConnection(unseenDuration: 0), for: sensor)
-        if let unseenDuration {
-            postAlertDidChange(with: sensor, of: .cloudConnection(unseenDuration: unseenDuration))
+        if let normalizedUnseenDuration {
+            postAlertDidChange(
+                with: sensor,
+                of: .cloudConnection(unseenDuration: normalizedUnseenDuration)
+            )
         }
     }
 

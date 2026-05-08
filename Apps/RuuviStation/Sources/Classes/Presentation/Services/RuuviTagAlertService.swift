@@ -813,7 +813,10 @@ private extension RuuviTagAlertService {
 
         case let .cloudConnection(duration):
             description = alertService.cloudConnectionDescription(for: physicalSensor)
-            unseenDuration = duration
+            unseenDuration = RuuviAlertConstants.CloudConnection
+                .normalizedUnseenDuration(
+                    alertService.cloudConnectionUnseenDuration(for: physicalSensor) ?? duration
+                )
 
         case .movement:
             description = alertService.movementDescription(for: physicalSensor)
@@ -905,6 +908,15 @@ private extension RuuviTagAlertService {
 
     // MARK: - Helper Methods
     func createDefaultConfig(for alertType: AlertType) -> RuuviTagCardSnapshotAlertConfig {
+        let defaultUnseenDuration: Double?
+        if case .cloudConnection = alertType {
+            defaultUnseenDuration = Double(
+                RuuviAlertConstants.CloudConnection.defaultUnseenDuration
+            )
+        } else {
+            defaultUnseenDuration = nil
+        }
+
         return RuuviTagCardSnapshotAlertConfig(
             type: alertType.toMeasurementType(),
             alertType: alertType,
@@ -914,7 +926,7 @@ private extension RuuviTagAlertService {
             lowerBound: getDefaultLowerBoundValue(for: alertType),
             upperBound: getDefaultUpperBoundValue(for: alertType),
             description: nil,
-            unseenDuration: alertType.toMeasurementType() == nil ? 900 : nil
+            unseenDuration: defaultUnseenDuration
         )
     }
 

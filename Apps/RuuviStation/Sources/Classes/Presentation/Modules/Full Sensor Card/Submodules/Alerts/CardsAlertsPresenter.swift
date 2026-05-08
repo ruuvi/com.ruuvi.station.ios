@@ -378,6 +378,9 @@ private extension CardsAlertsPresenter {
 
     func shouldApplyCloudDelayChange(candidate: Double) -> Bool {
         guard let snapshot else { return false }
+        guard candidate >= Double(RuuviAlertConstants.CloudConnection.minUnseenDurationSeconds) else {
+            return false
+        }
         let config = snapshot.getAlertConfig(
             for: .cloudConnection(unseenDuration: 0)
         )

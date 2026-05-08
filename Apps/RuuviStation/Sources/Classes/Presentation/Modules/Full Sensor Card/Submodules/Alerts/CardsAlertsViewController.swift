@@ -18,7 +18,8 @@ final class CardsAlertsViewController: UIViewController {
     private var alertMinRangeTextField = UITextField()
     private var alertMaxRangeTextField = UITextField()
     private var cloudConnectionAlertDelayTextField = UITextField()
-    private let cloudConnectionAlertDelayCharaterLimit: Int = 2
+    private var cloudConnectionAlertDelayAction: UIAlertAction?
+    private let cloudConnectionAlertDelayCharacterLimit: Int = 2
     private lazy var decimalFormatter: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.locale = .current
@@ -103,7 +104,9 @@ extension CardsAlertsViewController: UITextFieldDelegate {
                 return false
             }
         } else if textField == cloudConnectionAlertDelayTextField {
-            return limit <= cloudConnectionAlertDelayCharaterLimit
+            let allowedCharacters = CharacterSet(charactersIn: "0123456789")
+            let containsOnlyDigits = string.rangeOfCharacter(from: allowedCharacters.inverted) == nil
+            return limit <= cloudConnectionAlertDelayCharacterLimit && containsOnlyDigits
         } else {
             return false
         }
@@ -346,21 +349,14 @@ private extension CardsAlertsViewController {
         let config = state.snapshot.getAlertConfig(
             for: .cloudConnection(unseenDuration: 0)
         )
-        let currentSeconds = config?.unseenDuration ??
-            Double(RuuviAlertConstants.CloudConnection.defaultUnseenDuration)
-        let currentMinutes = max(1, Int(currentSeconds) / 60)
-
-        alert.addTextField { [weak self] textField in
-            guard let self else { return }
-            textField.keyboardType = .numberPad
-            textField.text = "\(currentMinutes)"
-            textField.delegate = self
-            cloudConnectionAlertDelayTextField = textField
-        }
+        let currentSeconds = RuuviAlertConstants.CloudConnection
+            .normalizedUnseenDuration(config?.unseenDuration)
+        let currentMinutes = Int(currentSeconds) / 60
 
         let action = UIAlertAction(title: RuuviLocalization.ok, style: .default) { [weak self, weak alert] _ in
-            guard let self, let minutesText = alert?.textFields?.first?.text,
-                  let minutes = Int(minutesText) else { return }
+            guard let self, let minutesText = alert?.textFields?.first?.text else { return }
+            defer { self.resetCloudConnectionDelayDialogState() }
+            guard let minutes = Int(minutesText) else { return }
             let minimum = RuuviAlertConstants.CloudConnection.minUnseenDuration
             guard minutes >= minimum else { return }
 
@@ -369,11 +365,48 @@ private extension CardsAlertsViewController {
                 return
             }
             self.output?.viewDidChangeCloudConnectionAlertUnseenDuration(duration: seconds)
-            self.cloudConnectionAlertDelayTextField = UITextField()
         }
+        action.isEnabled = isCloudConnectionDelayValid(minutesText: "\(currentMinutes)")
+        cloudConnectionAlertDelayAction = action
+
+        alert.addTextField { [weak self] textField in
+            guard let self else { return }
+            textField.keyboardType = .numberPad
+            textField.text = "\(currentMinutes)"
+            textField.delegate = self
+            textField.addTarget(
+                self,
+                action: #selector(cloudConnectionDelayTextFieldDidChange(_:)),
+                for: .editingChanged
+            )
+            cloudConnectionAlertDelayTextField = textField
+        }
+
         alert.addAction(action)
-        alert.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel))
+        alert.addAction(
+            UIAlertAction(title: RuuviLocalization.cancel, style: .cancel) { [weak self] _ in
+                self?.resetCloudConnectionDelayDialogState()
+            }
+        )
         present(alert, animated: true)
+    }
+
+    @objc func cloudConnectionDelayTextFieldDidChange(_ textField: UITextField) {
+        cloudConnectionAlertDelayAction?.isEnabled =
+            isCloudConnectionDelayValid(minutesText: textField.text)
+    }
+
+    func isCloudConnectionDelayValid(minutesText: String?) -> Bool {
+        guard let minutesText = minutesText,
+              let minutes = Int(minutesText) else {
+            return false
+        }
+        return minutes >= RuuviAlertConstants.CloudConnection.minUnseenDuration
+    }
+
+    func resetCloudConnectionDelayDialogState() {
+        cloudConnectionAlertDelayTextField = UITextField()
+        cloudConnectionAlertDelayAction = nil
     }
 
     func parseValue(from text: String?) -> Double? {
