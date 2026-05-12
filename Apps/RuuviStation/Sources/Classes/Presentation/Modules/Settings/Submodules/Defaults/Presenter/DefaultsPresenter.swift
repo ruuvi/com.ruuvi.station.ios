@@ -1,6 +1,7 @@
 import Foundation
 import RuuviLocal
 import RuuviLocalization
+import RuuviService
 import RuuviUser
 import WidgetKit
 
@@ -12,6 +13,7 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
     var settings: RuuviLocalSettings!
     var flags: RuuviLocalFlags!
     var ruuviUser: RuuviUser!
+    var ruuviAppSettingsService: RuuviServiceAppSettings!
     var output: DefaultsModuleOutput?
 
     let appGroupDefaults = UserDefaults(
@@ -270,7 +272,7 @@ extension DefaultsPresenter {
         chartDurationHours.type.value = .stepper
 
         bind(chartDurationHours.integer, fire: false) { observer, chartDurationHours in
-            observer.settings.chartDurationHours = chartDurationHours.bound
+            observer.ruuviAppSettingsService.set(chartDuration: chartDurationHours.bound)
         }
         return chartDurationHours
     }
@@ -393,7 +395,9 @@ extension DefaultsPresenter {
 
         bind(viewModel.boolean, fire: false) { observer, showChart in
             if let showChart {
-                observer.settings.dashboardTapActionType = showChart ? .chart : .card
+                observer.ruuviAppSettingsService.set(
+                    dashboardTapActionType: showChart ? .chart : .card
+                )
             }
         }
         return viewModel

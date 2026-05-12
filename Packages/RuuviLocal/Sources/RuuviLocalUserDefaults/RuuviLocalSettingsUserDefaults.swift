@@ -73,6 +73,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDefaults.cardToOpenFromWidgetKey", defaultValue: nil)
     var cloudProfileLanguageCode: String?
 
+    @UserDefault("SettingsUserDefaults.profileLanguageCodeLastUpdated", defaultValue: nil)
+    var profileLanguageCodeLastUpdated: Date?
+
     var humidityUnit: HumidityUnit {
         get {
             switch humidityUnitInt {
@@ -105,6 +108,12 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     @UserDefault("SettingsUserDefaults.humidityAccuracyInt", defaultValue: 2)
     private var humidityAccuracyInt: Int
+
+    @UserDefault("SettingsUserDefaults.unitHumidityLastUpdated", defaultValue: nil)
+    var unitHumidityLastUpdated: Date?
+
+    @UserDefault("SettingsUserDefaults.accuracyHumidityLastUpdated", defaultValue: nil)
+    var accuracyHumidityLastUpdated: Date?
 
     var humidityAccuracy: MeasurementAccuracyType {
         get {
@@ -169,6 +178,12 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDefaults.temperatureAccuracyInt", defaultValue: 2)
     private var temperatureAccuracyInt: Int
 
+    @UserDefault("SettingsUserDefaults.unitTemperatureLastUpdated", defaultValue: nil)
+    var unitTemperatureLastUpdated: Date?
+
+    @UserDefault("SettingsUserDefaults.accuracyTemperatureLastUpdated", defaultValue: nil)
+    var accuracyTemperatureLastUpdated: Date?
+
     var temperatureAccuracy: MeasurementAccuracyType {
         get {
             switch temperatureAccuracyInt {
@@ -221,6 +236,12 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     @UserDefault("SettingsUserDefaults.pressureAccuracyInt", defaultValue: 2)
     private var pressureAccuracyInt: Int
+
+    @UserDefault("SettingsUserDefaults.unitPressureLastUpdated", defaultValue: nil)
+    var unitPressureLastUpdated: Date?
+
+    @UserDefault("SettingsUserDefaults.accuracyPressureLastUpdated", defaultValue: nil)
+    var accuracyPressureLastUpdated: Date?
 
     var pressureAccuracy: MeasurementAccuracyType {
         get {
@@ -439,6 +460,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDefaults.chartDownsamplingOn", defaultValue: false)
     var chartDownsamplingOn: Bool
 
+    @UserDefault("SettingsUserDefaults.chartShowAllPointsLastUpdated", defaultValue: nil)
+    var chartShowAllPointsLastUpdated: Date?
+
     @UserDefault("SettingsUserDefaults.chartShowAllMeasurements", defaultValue: false)
     var chartShowAllMeasurements: Bool {
         didSet {
@@ -481,6 +505,12 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDefaults.chartShowAll", defaultValue: true)
     var chartShowAll: Bool
 
+    @UserDefault("SettingsUserDefaults.chartDrawDotsLastUpdated", defaultValue: nil)
+    var chartDrawDotsLastUpdated: Date?
+
+    @UserDefault("SettingsUserDefaults.chartShowMinMaxAvgLastUpdated", defaultValue: nil)
+    var chartShowMinMaxAvgLastUpdated: Date?
+
     @UserDefault("SettingsUserDefaults.experimentalFeaturesEnabled", defaultValue: false)
     var experimentalFeaturesEnabled: Bool
 
@@ -499,6 +529,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     @UserDefault("SettingsUserDefaults.useSimpleWidget", defaultValue: true)
     var useSimpleWidget: Bool
+
+    @UserDefault("SettingsUserDefaults.cloudModeEnabledLastUpdated", defaultValue: nil)
+    var cloudModeEnabledLastUpdated: Date?
 
     @UserDefault("SettingsUserDefaults.appIsOnForeground", defaultValue: false)
     var appIsOnForeground: Bool
@@ -598,6 +631,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDefaults.dashboardEnabled", defaultValue: true)
     var dashboardEnabled: Bool
 
+    @UserDefault("SettingsUserDefaults.dashboardEnabledLastUpdated", defaultValue: nil)
+    var dashboardEnabledLastUpdated: Date?
+
     private let dashboardTypeIdKey = "SettingsUserDefaults.dashboardTypeIdKey"
     private var dashboardTypeId: Int {
         get {
@@ -638,6 +674,13 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     private let dashboardTapActionTypeIdKey =
         "SettingsUserDefaults.dashboardTapActionTypeIdKey"
+
+    @UserDefault("SettingsUserDefaults.dashboardTypeLastUpdated", defaultValue: nil)
+    var dashboardTypeLastUpdated: Date?
+
+    @UserDefault("SettingsUserDefaults.dashboardTapActionTypeLastUpdated", defaultValue: nil)
+    var dashboardTapActionTypeLastUpdated: Date?
+
     private var dashboardTapActionTypeId: Int {
         get {
             UserDefaults.standard.integer(forKey: dashboardTapActionTypeIdKey)
@@ -697,6 +740,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
                 )
         }
     }
+
+    @UserDefault("SettingsUserDefaults.dashboardSensorOrderLastUpdated", defaultValue: nil)
+    var dashboardSensorOrderLastUpdated: Date?
 
     private let ruuviThemeIdKey = "SettingsUserDefaults.ruuviThemeIdKey"
     private var ruuviThemeId: Int {
@@ -831,6 +877,15 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
     }
 
+    @UserDefault("SettingsUserDefaults.emailAlertDisabledLastUpdated", defaultValue: nil)
+    var emailAlertDisabledLastUpdated: Date?
+
+    @UserDefault("SettingsUserDefaults.pushAlertDisabledLastUpdated", defaultValue: nil)
+    var pushAlertDisabledLastUpdated: Date?
+
+    @UserDefault("SettingsUserDefaults.marketingPreferenceLastUpdated", defaultValue: nil)
+    var marketingPreferenceLastUpdated: Date?
+
     @UserDefault("SettingsUserDefaults.showSwitchStatusLabel", defaultValue: true)
     var showSwitchStatusLabel: Bool
 
@@ -875,6 +930,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     var imageCompressionQuality: Int
     @UserDefault("SettingsUserDefaults.compactChatView", defaultValue: true)
     var compactChartView: Bool
+
+    @UserDefault("SettingsUserDefaults.chartViewPeriodLastUpdated", defaultValue: nil)
+    var chartViewPeriodLastUpdated: Date?
 
     @UserDefault("SettingsUserDefaults.historySyncForEachSensor", defaultValue: true)
     var historySyncForEachSensor: Bool

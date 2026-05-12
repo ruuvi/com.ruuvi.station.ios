@@ -453,15 +453,15 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
 
     func viewDidSelectChartHistoryLength(hours: Int) {
         settings.chartShowAll = false
-        settings.chartDurationHours = hours
         view?.showChartAll = false
-        view?.historyLengthInHours = settings.chartDurationHours
+        view?.historyLengthInHours = hours
+        interactor?.updateChartViewPeriodSetting(with: hours)
     }
 
     func viewDidSelectAllChartHistory() {
         settings.chartShowAll = true
-        settings.chartDurationHours = 240
         view?.showChartAll = settings.chartShowAll
+        interactor?.updateChartViewPeriodSetting(with: 240)
     }
 
     func viewDidSelectLongerHistory() {
@@ -469,7 +469,6 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
     }
 
     func viewDidSelectTriggerChartStat(show: Bool) {
-        settings.chartStatsOn = show
         view?.showChartStat = show
         interactor?.updateChartShowMinMaxAvgSetting(with: show)
     }

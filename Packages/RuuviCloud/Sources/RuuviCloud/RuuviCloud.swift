@@ -134,61 +134,73 @@ public protocol RuuviCloud {
     func getCloudSettings() -> Future<RuuviCloudSettings?, RuuviCloudError>
 
     @discardableResult
-    func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviCloudError>
+    func set(temperatureUnit: TemperatureUnit, timestamp: Int?) -> Future<TemperatureUnit, RuuviCloudError>
 
     @discardableResult
-    func set(temperatureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError>
+    func set(
+        temperatureAccuracy: MeasurementAccuracyType,
+        timestamp: Int?
+    ) -> Future<MeasurementAccuracyType, RuuviCloudError>
 
     @discardableResult
-    func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviCloudError>
+    func set(humidityUnit: HumidityUnit, timestamp: Int?) -> Future<HumidityUnit, RuuviCloudError>
 
     @discardableResult
-    func set(humidityAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError>
+    func set(
+        humidityAccuracy: MeasurementAccuracyType,
+        timestamp: Int?
+    ) -> Future<MeasurementAccuracyType, RuuviCloudError>
 
     @discardableResult
-    func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviCloudError>
+    func set(pressureUnit: UnitPressure, timestamp: Int?) -> Future<UnitPressure, RuuviCloudError>
 
     @discardableResult
-    func set(pressureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError>
+    func set(
+        pressureAccuracy: MeasurementAccuracyType,
+        timestamp: Int?
+    ) -> Future<MeasurementAccuracyType, RuuviCloudError>
 
     @discardableResult
-    func set(showAllData: Bool) -> Future<Bool, RuuviCloudError>
+    func set(showAllData: Bool, timestamp: Int?) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
-    func set(drawDots: Bool) -> Future<Bool, RuuviCloudError>
+    func set(drawDots: Bool, timestamp: Int?) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
-    func set(chartDuration: Int) -> Future<Int, RuuviCloudError>
+    func set(chartDuration: Int, timestamp: Int?) -> Future<Int, RuuviCloudError>
 
     @discardableResult
-    func set(showMinMaxAvg: Bool) -> Future<Bool, RuuviCloudError>
+    func set(showMinMaxAvg: Bool, timestamp: Int?) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
-    func set(cloudMode: Bool) -> Future<Bool, RuuviCloudError>
+    func set(cloudMode: Bool, timestamp: Int?) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
-    func set(dashboard: Bool) -> Future<Bool, RuuviCloudError>
+    func set(dashboard: Bool, timestamp: Int?) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
-    func set(dashboardType: DashboardType) -> Future<DashboardType, RuuviCloudError>
+    func set(dashboardType: DashboardType, timestamp: Int?) -> Future<DashboardType, RuuviCloudError>
 
     @discardableResult
-    func set(dashboardTapActionType: DashboardTapActionType) -> Future<DashboardTapActionType, RuuviCloudError>
+    func set(
+        dashboardTapActionType: DashboardTapActionType,
+        timestamp: Int?
+    ) -> Future<DashboardTapActionType, RuuviCloudError>
 
     @discardableResult
-    func set(disableEmailAlert: Bool) -> Future<Bool, RuuviCloudError>
+    func set(disableEmailAlert: Bool, timestamp: Int?) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
-    func set(disablePushAlert: Bool) -> Future<Bool, RuuviCloudError>
+    func set(disablePushAlert: Bool, timestamp: Int?) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
-    func set(marketingPreference: Bool) -> Future<Bool, RuuviCloudError>
+    func set(marketingPreference: Bool, timestamp: Int?) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
-    func set(profileLanguageCode: String) -> Future<String, RuuviCloudError>
+    func set(profileLanguageCode: String, timestamp: Int?) -> Future<String, RuuviCloudError>
 
     @discardableResult
-    func set(dashboardSensorOrder: [String]) -> Future<[String], RuuviCloudError>
+    func set(dashboardSensorOrder: [String], timestamp: Int?) -> Future<[String], RuuviCloudError>
 
     @discardableResult
     func updateSensorSettings(
@@ -228,6 +240,103 @@ public protocol RuuviCloud {
     @discardableResult
     func executeQueuedRequest(from request: RuuviCloudQueuedRequest)
         -> Future<Bool, RuuviCloudError>
+}
+
+public extension RuuviCloud {
+    @discardableResult
+    func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviCloudError> {
+        set(temperatureUnit: temperatureUnit, timestamp: nil)
+    }
+
+    @discardableResult
+    func set(temperatureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError> {
+        set(temperatureAccuracy: temperatureAccuracy, timestamp: nil)
+    }
+
+    @discardableResult
+    func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviCloudError> {
+        set(humidityUnit: humidityUnit, timestamp: nil)
+    }
+
+    @discardableResult
+    func set(humidityAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError> {
+        set(humidityAccuracy: humidityAccuracy, timestamp: nil)
+    }
+
+    @discardableResult
+    func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviCloudError> {
+        set(pressureUnit: pressureUnit, timestamp: nil)
+    }
+
+    @discardableResult
+    func set(pressureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError> {
+        set(pressureAccuracy: pressureAccuracy, timestamp: nil)
+    }
+
+    @discardableResult
+    func set(showAllData: Bool) -> Future<Bool, RuuviCloudError> {
+        set(showAllData: showAllData, timestamp: nil)
+    }
+
+    @discardableResult
+    func set(drawDots: Bool) -> Future<Bool, RuuviCloudError> {
+        set(drawDots: drawDots, timestamp: nil)
+    }
+
+    @discardableResult
+    func set(chartDuration: Int) -> Future<Int, RuuviCloudError> {
+        set(chartDuration: chartDuration, timestamp: nil)
+    }
+
+    @discardableResult
+    func set(showMinMaxAvg: Bool) -> Future<Bool, RuuviCloudError> {
+        set(showMinMaxAvg: showMinMaxAvg, timestamp: nil)
+    }
+
+    @discardableResult
+    func set(cloudMode: Bool) -> Future<Bool, RuuviCloudError> {
+        set(cloudMode: cloudMode, timestamp: nil)
+    }
+
+    @discardableResult
+    func set(dashboard: Bool) -> Future<Bool, RuuviCloudError> {
+        set(dashboard: dashboard, timestamp: nil)
+    }
+
+    @discardableResult
+    func set(dashboardType: DashboardType) -> Future<DashboardType, RuuviCloudError> {
+        set(dashboardType: dashboardType, timestamp: nil)
+    }
+
+    @discardableResult
+    func set(dashboardTapActionType: DashboardTapActionType) -> Future<DashboardTapActionType, RuuviCloudError> {
+        set(dashboardTapActionType: dashboardTapActionType, timestamp: nil)
+    }
+
+    @discardableResult
+    func set(disableEmailAlert: Bool) -> Future<Bool, RuuviCloudError> {
+        set(disableEmailAlert: disableEmailAlert, timestamp: nil)
+    }
+
+    @discardableResult
+    func set(disablePushAlert: Bool) -> Future<Bool, RuuviCloudError> {
+        set(disablePushAlert: disablePushAlert, timestamp: nil)
+    }
+
+    @discardableResult
+    func set(marketingPreference: Bool) -> Future<Bool, RuuviCloudError> {
+        set(marketingPreference: marketingPreference, timestamp: nil)
+    }
+
+    @discardableResult
+    func set(profileLanguageCode: String) -> Future<String, RuuviCloudError> {
+        set(profileLanguageCode: profileLanguageCode, timestamp: nil)
+    }
+
+    @discardableResult
+    func set(dashboardSensorOrder: [String]) -> Future<[String], RuuviCloudError> {
+        set(dashboardSensorOrder: dashboardSensorOrder, timestamp: nil)
+    }
 }
 
 public protocol RuuviCloudFactory {

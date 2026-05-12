@@ -49,98 +49,13 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     }
 
     @discardableResult
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     public func syncSettings() -> Future<RuuviCloudSettings, RuuviServiceError> {
         let promise = Promise<RuuviCloudSettings, RuuviServiceError>()
         ruuviCloud.getCloudSettings()
             .observe(on: .global(qos: .utility))
             .on(success: { [weak self] cloudSettings in
                 guard let cloudSettings, let sSelf = self else { return }
-                if let unitTemperature = cloudSettings.unitTemperature,
-                   unitTemperature != sSelf.ruuviLocalSettings.temperatureUnit {
-                    sSelf.ruuviLocalSettings.temperatureUnit = unitTemperature
-                }
-                if let accuracyTemperature = cloudSettings.accuracyTemperature,
-                   accuracyTemperature != sSelf.ruuviLocalSettings.temperatureAccuracy {
-                    sSelf.ruuviLocalSettings.temperatureAccuracy = accuracyTemperature
-                }
-                if let unitHumidity = cloudSettings.unitHumidity,
-                   unitHumidity != sSelf.ruuviLocalSettings.humidityUnit {
-                    sSelf.ruuviLocalSettings.humidityUnit = unitHumidity
-                }
-                if let accuracyHumidity = cloudSettings.accuracyHumidity,
-                   accuracyHumidity != sSelf.ruuviLocalSettings.humidityAccuracy {
-                    sSelf.ruuviLocalSettings.humidityAccuracy = accuracyHumidity
-                }
-                if let unitPressure = cloudSettings.unitPressure,
-                   unitPressure != sSelf.ruuviLocalSettings.pressureUnit {
-                    sSelf.ruuviLocalSettings.pressureUnit = unitPressure
-                }
-                if let accuracyPressure = cloudSettings.accuracyPressure,
-                   accuracyPressure != sSelf.ruuviLocalSettings.pressureAccuracy {
-                    sSelf.ruuviLocalSettings.pressureAccuracy = accuracyPressure
-                }
-                if let chartShowAllData = cloudSettings.chartShowAllPoints,
-                   chartShowAllData != !sSelf.ruuviLocalSettings.chartDownsamplingOn {
-                    sSelf.ruuviLocalSettings.chartDownsamplingOn = !chartShowAllData
-                }
-                if let chartDrawDots = cloudSettings.chartDrawDots,
-                   chartDrawDots != sSelf.ruuviLocalSettings.chartDrawDotsOn {
-                    // Draw dots feature is disabled from v1.3.0 onwards to
-                    // maintain better performance until we find a better approach to do it.
-                    sSelf.ruuviLocalSettings.chartDrawDotsOn = false
-                }
-                if let chartShowMinMaxAvg = cloudSettings.chartShowMinMaxAvg,
-                   chartShowMinMaxAvg != sSelf.ruuviLocalSettings.chartStatsOn {
-                    sSelf.ruuviLocalSettings.chartStatsOn = chartShowMinMaxAvg
-                }
-                if let cloudModeEnabled = cloudSettings.cloudModeEnabled,
-                   cloudModeEnabled != sSelf.ruuviLocalSettings.cloudModeEnabled {
-                    sSelf.ruuviLocalSettings.cloudModeEnabled = cloudModeEnabled
-                }
-                if let dashboardEnabled = cloudSettings.dashboardEnabled,
-                   dashboardEnabled != sSelf.ruuviLocalSettings.dashboardEnabled {
-                    sSelf.ruuviLocalSettings.dashboardEnabled = dashboardEnabled
-                }
-                if let dashboardType = cloudSettings.dashboardType,
-                   dashboardType != sSelf.ruuviLocalSettings.dashboardType {
-                    sSelf.ruuviLocalSettings.dashboardType = dashboardType
-                }
-                if let dashboardTapActionType = cloudSettings.dashboardTapActionType,
-                   dashboardTapActionType != sSelf.ruuviLocalSettings.dashboardTapActionType {
-                    sSelf.ruuviLocalSettings.dashboardTapActionType = dashboardTapActionType
-                }
-                if let pushAlertDisabled = cloudSettings.pushAlertDisabled,
-                   pushAlertDisabled != sSelf.ruuviLocalSettings.pushAlertDisabled {
-                    sSelf.ruuviLocalSettings.pushAlertDisabled = pushAlertDisabled
-                }
-                if let emailAlertDisabled = cloudSettings.emailAlertDisabled,
-                   emailAlertDisabled != sSelf.ruuviLocalSettings.emailAlertDisabled {
-                    sSelf.ruuviLocalSettings.emailAlertDisabled = emailAlertDisabled
-                }
-                if let marketingPreference = cloudSettings.marketingPreference,
-                   marketingPreference != sSelf.ruuviLocalSettings.marketingPreference {
-                    sSelf.ruuviLocalSettings.marketingPreference = marketingPreference
-                }
-                if let cloudProfileLanguageCode = cloudSettings.profileLanguageCode {
-                    if cloudProfileLanguageCode !=
-                        sSelf.ruuviLocalSettings.cloudProfileLanguageCode {
-                        sSelf.ruuviLocalSettings.cloudProfileLanguageCode = cloudProfileLanguageCode
-                    }
-                } else {
-                    let languageCode = sSelf.ruuviLocalSettings.language.rawValue
-                    sSelf.ruuviAppSettingsService.set(
-                        profileLanguageCode: languageCode
-                    )
-                    sSelf.ruuviLocalSettings.cloudProfileLanguageCode = languageCode
-                }
-
-                if let dashboardSensorOrderString = cloudSettings.dashboardSensorOrder,
-                   let dashboardSensorOrder = RuuviCloudApiHelper.jsonArrayFromString(dashboardSensorOrderString),
-                   dashboardSensorOrder != sSelf.ruuviLocalSettings.dashboardSensorOrder {
-                    sSelf.ruuviLocalSettings.dashboardSensorOrder = dashboardSensorOrder
-                }
-
+                sSelf.syncUserSettings(cloudSettings)
                 promise.succeed(value: cloudSettings)
             }, failure: { [weak self] error in
                 switch error {
@@ -151,6 +66,382 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 }
             })
         return promise.future
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
+    private func syncUserSettings(_ cloudSettings: RuuviCloudSettings) {
+        syncUserSetting(
+            cloudValue: cloudSettings.unitTemperature,
+            cloudTimestamp: cloudSettings.unitTemperatureLastUpdated,
+            localValue: ruuviLocalSettings.temperatureUnit,
+            localTimestamp: ruuviLocalSettings.unitTemperatureLastUpdated,
+            applyCloud: { [weak self] value, timestamp in
+                guard let self else { return }
+                if self.ruuviLocalSettings.temperatureUnit != value {
+                    self.ruuviLocalSettings.temperatureUnit = value
+                }
+                self.ruuviLocalSettings.unitTemperatureLastUpdated = timestamp
+            },
+            queueLocal: { [weak self] value in
+                self?.ruuviAppSettingsService.set(temperatureUnit: value).on()
+            }
+        )
+
+        syncUserSetting(
+            cloudValue: cloudSettings.accuracyTemperature,
+            cloudTimestamp: cloudSettings.accuracyTemperatureLastUpdated,
+            localValue: ruuviLocalSettings.temperatureAccuracy,
+            localTimestamp: ruuviLocalSettings.accuracyTemperatureLastUpdated,
+            applyCloud: { [weak self] value, timestamp in
+                guard let self else { return }
+                if self.ruuviLocalSettings.temperatureAccuracy != value {
+                    self.ruuviLocalSettings.temperatureAccuracy = value
+                }
+                self.ruuviLocalSettings.accuracyTemperatureLastUpdated = timestamp
+            },
+            queueLocal: { [weak self] value in
+                self?.ruuviAppSettingsService.set(temperatureAccuracy: value).on()
+            }
+        )
+
+        syncUserSetting(
+            cloudValue: cloudSettings.unitHumidity,
+            cloudTimestamp: cloudSettings.unitHumidityLastUpdated,
+            localValue: ruuviLocalSettings.humidityUnit,
+            localTimestamp: ruuviLocalSettings.unitHumidityLastUpdated,
+            applyCloud: { [weak self] value, timestamp in
+                guard let self else { return }
+                if self.ruuviLocalSettings.humidityUnit != value {
+                    self.ruuviLocalSettings.humidityUnit = value
+                }
+                self.ruuviLocalSettings.unitHumidityLastUpdated = timestamp
+            },
+            queueLocal: { [weak self] value in
+                self?.ruuviAppSettingsService.set(humidityUnit: value).on()
+            }
+        )
+
+        syncUserSetting(
+            cloudValue: cloudSettings.accuracyHumidity,
+            cloudTimestamp: cloudSettings.accuracyHumidityLastUpdated,
+            localValue: ruuviLocalSettings.humidityAccuracy,
+            localTimestamp: ruuviLocalSettings.accuracyHumidityLastUpdated,
+            applyCloud: { [weak self] value, timestamp in
+                guard let self else { return }
+                if self.ruuviLocalSettings.humidityAccuracy != value {
+                    self.ruuviLocalSettings.humidityAccuracy = value
+                }
+                self.ruuviLocalSettings.accuracyHumidityLastUpdated = timestamp
+            },
+            queueLocal: { [weak self] value in
+                self?.ruuviAppSettingsService.set(humidityAccuracy: value).on()
+            }
+        )
+
+        syncUserSetting(
+            cloudValue: cloudSettings.unitPressure,
+            cloudTimestamp: cloudSettings.unitPressureLastUpdated,
+            localValue: ruuviLocalSettings.pressureUnit,
+            localTimestamp: ruuviLocalSettings.unitPressureLastUpdated,
+            applyCloud: { [weak self] value, timestamp in
+                guard let self else { return }
+                if self.ruuviLocalSettings.pressureUnit != value {
+                    self.ruuviLocalSettings.pressureUnit = value
+                }
+                self.ruuviLocalSettings.unitPressureLastUpdated = timestamp
+            },
+            queueLocal: { [weak self] value in
+                self?.ruuviAppSettingsService.set(pressureUnit: value).on()
+            }
+        )
+
+        syncUserSetting(
+            cloudValue: cloudSettings.accuracyPressure,
+            cloudTimestamp: cloudSettings.accuracyPressureLastUpdated,
+            localValue: ruuviLocalSettings.pressureAccuracy,
+            localTimestamp: ruuviLocalSettings.accuracyPressureLastUpdated,
+            applyCloud: { [weak self] value, timestamp in
+                guard let self else { return }
+                if self.ruuviLocalSettings.pressureAccuracy != value {
+                    self.ruuviLocalSettings.pressureAccuracy = value
+                }
+                self.ruuviLocalSettings.accuracyPressureLastUpdated = timestamp
+            },
+            queueLocal: { [weak self] value in
+                self?.ruuviAppSettingsService.set(pressureAccuracy: value).on()
+            }
+        )
+
+        syncUserSetting(
+            cloudValue: cloudSettings.chartShowAllPoints,
+            cloudTimestamp: cloudSettings.chartShowAllPointsLastUpdated,
+            localValue: !ruuviLocalSettings.chartDownsamplingOn,
+            localTimestamp: ruuviLocalSettings.chartShowAllPointsLastUpdated,
+            applyCloud: { [weak self] value, timestamp in
+                guard let self else { return }
+                if self.ruuviLocalSettings.chartDownsamplingOn != !value {
+                    self.ruuviLocalSettings.chartDownsamplingOn = !value
+                }
+                self.ruuviLocalSettings.chartShowAllPointsLastUpdated = timestamp
+            },
+            queueLocal: { [weak self] value in
+                self?.ruuviAppSettingsService.set(showAllData: value).on()
+            }
+        )
+
+        syncUserSetting(
+            cloudValue: cloudSettings.chartDrawDots,
+            cloudTimestamp: cloudSettings.chartDrawDotsLastUpdated,
+            localValue: ruuviLocalSettings.chartDrawDotsOn,
+            localTimestamp: ruuviLocalSettings.chartDrawDotsLastUpdated,
+            applyCloud: { [weak self] _, timestamp in
+                guard let self else { return }
+                // Draw dots is currently disabled on iOS for chart performance.
+                if self.ruuviLocalSettings.chartDrawDotsOn {
+                    self.ruuviLocalSettings.chartDrawDotsOn = false
+                }
+                self.ruuviLocalSettings.chartDrawDotsLastUpdated = timestamp
+            },
+            queueLocal: { [weak self] value in
+                self?.ruuviAppSettingsService.set(drawDots: value).on()
+            }
+        )
+
+        syncUserSetting(
+            cloudValue: cloudSettings.chartViewPeriod,
+            cloudTimestamp: cloudSettings.chartViewPeriodLastUpdated,
+            localValue: ruuviLocalSettings.chartDurationHours,
+            localTimestamp: ruuviLocalSettings.chartViewPeriodLastUpdated,
+            applyCloud: { [weak self] value, timestamp in
+                guard let self else { return }
+                if self.ruuviLocalSettings.chartDurationHours != value {
+                    self.ruuviLocalSettings.chartDurationHours = value
+                }
+                self.ruuviLocalSettings.chartViewPeriodLastUpdated = timestamp
+            },
+            queueLocal: { [weak self] value in
+                self?.ruuviAppSettingsService.set(chartDuration: value).on()
+            }
+        )
+
+        syncUserSetting(
+            cloudValue: cloudSettings.chartShowMinMaxAvg,
+            cloudTimestamp: cloudSettings.chartShowMinMaxAvgLastUpdated,
+            localValue: ruuviLocalSettings.chartStatsOn,
+            localTimestamp: ruuviLocalSettings.chartShowMinMaxAvgLastUpdated,
+            applyCloud: { [weak self] value, timestamp in
+                guard let self else { return }
+                if self.ruuviLocalSettings.chartStatsOn != value {
+                    self.ruuviLocalSettings.chartStatsOn = value
+                }
+                self.ruuviLocalSettings.chartShowMinMaxAvgLastUpdated = timestamp
+            },
+            queueLocal: { [weak self] value in
+                self?.ruuviAppSettingsService.set(showMinMaxAvg: value).on()
+            }
+        )
+
+        syncUserSetting(
+            cloudValue: cloudSettings.cloudModeEnabled,
+            cloudTimestamp: cloudSettings.cloudModeEnabledLastUpdated,
+            localValue: ruuviLocalSettings.cloudModeEnabled,
+            localTimestamp: ruuviLocalSettings.cloudModeEnabledLastUpdated,
+            applyCloud: { [weak self] value, timestamp in
+                guard let self else { return }
+                if self.ruuviLocalSettings.cloudModeEnabled != value {
+                    self.ruuviLocalSettings.cloudModeEnabled = value
+                }
+                self.ruuviLocalSettings.cloudModeEnabledLastUpdated = timestamp
+            },
+            queueLocal: { [weak self] value in
+                self?.ruuviAppSettingsService.set(cloudMode: value).on()
+            }
+        )
+
+        syncUserSetting(
+            cloudValue: cloudSettings.dashboardEnabled,
+            cloudTimestamp: cloudSettings.dashboardEnabledLastUpdated,
+            localValue: ruuviLocalSettings.dashboardEnabled,
+            localTimestamp: ruuviLocalSettings.dashboardEnabledLastUpdated,
+            applyCloud: { [weak self] value, timestamp in
+                guard let self else { return }
+                if self.ruuviLocalSettings.dashboardEnabled != value {
+                    self.ruuviLocalSettings.dashboardEnabled = value
+                }
+                self.ruuviLocalSettings.dashboardEnabledLastUpdated = timestamp
+            },
+            queueLocal: { [weak self] value in
+                self?.ruuviAppSettingsService.set(dashboard: value).on()
+            }
+        )
+
+        syncUserSetting(
+            cloudValue: cloudSettings.dashboardType,
+            cloudTimestamp: cloudSettings.dashboardTypeLastUpdated,
+            localValue: ruuviLocalSettings.dashboardType,
+            localTimestamp: ruuviLocalSettings.dashboardTypeLastUpdated,
+            applyCloud: { [weak self] value, timestamp in
+                guard let self else { return }
+                if self.ruuviLocalSettings.dashboardType != value {
+                    self.ruuviLocalSettings.dashboardType = value
+                }
+                self.ruuviLocalSettings.dashboardTypeLastUpdated = timestamp
+            },
+            queueLocal: { [weak self] value in
+                self?.ruuviAppSettingsService.set(dashboardType: value).on()
+            }
+        )
+
+        syncUserSetting(
+            cloudValue: cloudSettings.dashboardTapActionType,
+            cloudTimestamp: cloudSettings.dashboardTapActionTypeLastUpdated,
+            localValue: ruuviLocalSettings.dashboardTapActionType,
+            localTimestamp: ruuviLocalSettings.dashboardTapActionTypeLastUpdated,
+            applyCloud: { [weak self] value, timestamp in
+                guard let self else { return }
+                if self.ruuviLocalSettings.dashboardTapActionType != value {
+                    self.ruuviLocalSettings.dashboardTapActionType = value
+                }
+                self.ruuviLocalSettings.dashboardTapActionTypeLastUpdated = timestamp
+            },
+            queueLocal: { [weak self] value in
+                self?.ruuviAppSettingsService.set(dashboardTapActionType: value).on()
+            }
+        )
+
+        syncUserSetting(
+            cloudValue: cloudSettings.pushAlertDisabled,
+            cloudTimestamp: cloudSettings.pushAlertDisabledLastUpdated,
+            localValue: ruuviLocalSettings.pushAlertDisabled,
+            localTimestamp: ruuviLocalSettings.pushAlertDisabledLastUpdated,
+            applyCloud: { [weak self] value, timestamp in
+                guard let self else { return }
+                if self.ruuviLocalSettings.pushAlertDisabled != value {
+                    self.ruuviLocalSettings.pushAlertDisabled = value
+                }
+                self.ruuviLocalSettings.pushAlertDisabledLastUpdated = timestamp
+            },
+            queueLocal: { [weak self] value in
+                self?.ruuviAppSettingsService.set(disablePushAlert: value).on()
+            }
+        )
+
+        syncUserSetting(
+            cloudValue: cloudSettings.emailAlertDisabled,
+            cloudTimestamp: cloudSettings.emailAlertDisabledLastUpdated,
+            localValue: ruuviLocalSettings.emailAlertDisabled,
+            localTimestamp: ruuviLocalSettings.emailAlertDisabledLastUpdated,
+            applyCloud: { [weak self] value, timestamp in
+                guard let self else { return }
+                if self.ruuviLocalSettings.emailAlertDisabled != value {
+                    self.ruuviLocalSettings.emailAlertDisabled = value
+                }
+                self.ruuviLocalSettings.emailAlertDisabledLastUpdated = timestamp
+            },
+            queueLocal: { [weak self] value in
+                self?.ruuviAppSettingsService.set(disableEmailAlert: value).on()
+            }
+        )
+
+        syncUserSetting(
+            cloudValue: cloudSettings.marketingPreference,
+            cloudTimestamp: cloudSettings.marketingPreferenceLastUpdated,
+            localValue: ruuviLocalSettings.marketingPreference,
+            localTimestamp: ruuviLocalSettings.marketingPreferenceLastUpdated,
+            applyCloud: { [weak self] value, timestamp in
+                guard let self else { return }
+                if self.ruuviLocalSettings.marketingPreference != value {
+                    self.ruuviLocalSettings.marketingPreference = value
+                }
+                self.ruuviLocalSettings.marketingPreferenceLastUpdated = timestamp
+            },
+            queueLocal: { [weak self] value in
+                self?.ruuviAppSettingsService.set(marketingPreference: value).on()
+            }
+        )
+
+        syncProfileLanguageCode(cloudSettings)
+        syncDashboardSensorOrder(cloudSettings)
+    }
+
+    private func syncProfileLanguageCode(_ cloudSettings: RuuviCloudSettings) {
+        if let profileLanguageCode = cloudSettings.profileLanguageCode {
+            syncUserSetting(
+                cloudValue: profileLanguageCode,
+                cloudTimestamp: cloudSettings.profileLanguageCodeLastUpdated,
+                localValue: ruuviLocalSettings.cloudProfileLanguageCode ?? ruuviLocalSettings.language.rawValue,
+                localTimestamp: ruuviLocalSettings.profileLanguageCodeLastUpdated,
+                applyCloud: { [weak self] value, timestamp in
+                    guard let self else { return }
+                    if self.ruuviLocalSettings.cloudProfileLanguageCode != value {
+                        self.ruuviLocalSettings.cloudProfileLanguageCode = value
+                    }
+                    self.ruuviLocalSettings.profileLanguageCodeLastUpdated = timestamp
+                },
+                queueLocal: { [weak self] value in
+                    self?.ruuviAppSettingsService.set(profileLanguageCode: value).on()
+                }
+            )
+        } else {
+            let languageCode = ruuviLocalSettings.language.rawValue
+            ruuviAppSettingsService.set(profileLanguageCode: languageCode).on()
+            if ruuviLocalSettings.cloudProfileLanguageCode != languageCode {
+                ruuviLocalSettings.cloudProfileLanguageCode = languageCode
+            }
+            ruuviLocalSettings.profileLanguageCodeLastUpdated = Date()
+        }
+    }
+
+    private func syncDashboardSensorOrder(_ cloudSettings: RuuviCloudSettings) {
+        guard let dashboardSensorOrderString = cloudSettings.dashboardSensorOrder,
+              let dashboardSensorOrder = RuuviCloudApiHelper.jsonArrayFromString(dashboardSensorOrderString)
+        else {
+            return
+        }
+
+        syncUserSetting(
+            cloudValue: dashboardSensorOrder,
+            cloudTimestamp: cloudSettings.dashboardSensorOrderLastUpdated,
+            localValue: ruuviLocalSettings.dashboardSensorOrder,
+            localTimestamp: ruuviLocalSettings.dashboardSensorOrderLastUpdated,
+            applyCloud: { [weak self] value, timestamp in
+                guard let self else { return }
+                if self.ruuviLocalSettings.dashboardSensorOrder != value {
+                    self.ruuviLocalSettings.dashboardSensorOrder = value
+                }
+                self.ruuviLocalSettings.dashboardSensorOrderLastUpdated = timestamp
+            },
+            queueLocal: { [weak self] value in
+                self?.ruuviAppSettingsService.set(dashboardSensorOrder: value).on()
+            }
+        )
+    }
+
+    // swiftlint:disable:next function_parameter_count
+    private func syncUserSetting<Value: Equatable>(
+        cloudValue: Value?,
+        cloudTimestamp: Date?,
+        localValue: Value,
+        localTimestamp: Date?,
+        applyCloud: (Value, Date?) -> Void,
+        queueLocal: (Value) -> Void
+    ) {
+        guard let cloudValue else { return }
+        let syncAction = SyncCollisionResolver.resolve(
+            isOwner: true,
+            localTimestamp: localTimestamp,
+            cloudTimestamp: cloudTimestamp
+        )
+
+        switch syncAction {
+        case .updateLocal:
+            applyCloud(cloudValue, cloudTimestamp)
+        case .keepLocalAndQueue:
+            guard localValue != cloudValue else { return }
+            queueLocal(localValue)
+        case .noAction:
+            return
+        }
     }
 
     @discardableResult

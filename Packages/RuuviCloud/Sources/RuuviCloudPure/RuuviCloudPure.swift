@@ -22,6 +22,10 @@ public final class RuuviCloudPure: RuuviCloud {
         self.pool = pool
     }
 
+    private func settingTimestamp(_ timestamp: Int?) -> Int {
+        timestamp ?? Int(Date().timeIntervalSince1970)
+    }
+
     @discardableResult
     public func loadAlerts() -> Future<[RuuviCloudSensorAlerts], RuuviCloudError> {
         let promise = Promise<[RuuviCloudSensorAlerts], RuuviCloudError>()
@@ -93,7 +97,10 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviCloudError> {
+    public func set(
+        temperatureUnit: TemperatureUnit,
+        timestamp: Int? = nil
+    ) -> Future<TemperatureUnit, RuuviCloudError> {
         let promise = Promise<TemperatureUnit, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -103,7 +110,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .unitTemperature,
             value: temperatureUnit.ruuviCloudApiSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -120,7 +127,10 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(temperatureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError> {
+    public func set(
+        temperatureAccuracy: MeasurementAccuracyType,
+        timestamp: Int? = nil
+    ) -> Future<MeasurementAccuracyType, RuuviCloudError> {
         let promise = Promise<MeasurementAccuracyType, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -130,7 +140,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .accuracyTemperature,
             value: temperatureAccuracy.value.ruuviCloudApiSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -147,7 +157,7 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviCloudError> {
+    public func set(humidityUnit: HumidityUnit, timestamp: Int? = nil) -> Future<HumidityUnit, RuuviCloudError> {
         let promise = Promise<HumidityUnit, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -157,7 +167,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .unitHumidity,
             value: humidityUnit.ruuviCloudApiSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -174,7 +184,10 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(humidityAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError> {
+    public func set(
+        humidityAccuracy: MeasurementAccuracyType,
+        timestamp: Int? = nil
+    ) -> Future<MeasurementAccuracyType, RuuviCloudError> {
         let promise = Promise<MeasurementAccuracyType, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -184,7 +197,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .accuracyHumidity,
             value: humidityAccuracy.value.ruuviCloudApiSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -201,7 +214,7 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviCloudError> {
+    public func set(pressureUnit: UnitPressure, timestamp: Int? = nil) -> Future<UnitPressure, RuuviCloudError> {
         let promise = Promise<UnitPressure, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -211,7 +224,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .unitPressure,
             value: pressureUnit.ruuviCloudApiSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -228,7 +241,10 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(pressureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError> {
+    public func set(
+        pressureAccuracy: MeasurementAccuracyType,
+        timestamp: Int? = nil
+    ) -> Future<MeasurementAccuracyType, RuuviCloudError> {
         let promise = Promise<MeasurementAccuracyType, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -238,7 +254,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .accuracyPressure,
             value: pressureAccuracy.value.ruuviCloudApiSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -255,7 +271,7 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(showAllData: Bool) -> Future<Bool, RuuviCloudError> {
+    public func set(showAllData: Bool, timestamp: Int? = nil) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -265,7 +281,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .chartShowAllPoints,
             value: showAllData.chartBoolSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -282,7 +298,7 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(drawDots: Bool) -> Future<Bool, RuuviCloudError> {
+    public func set(drawDots: Bool, timestamp: Int? = nil) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -292,7 +308,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .chartDrawDots,
             value: drawDots.chartBoolSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -309,7 +325,7 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(chartDuration: Int) -> Future<Int, RuuviCloudError> {
+    public func set(chartDuration: Int, timestamp: Int? = nil) -> Future<Int, RuuviCloudError> {
         let promise = Promise<Int, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -319,7 +335,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .chartViewPeriod,
             value: chartDuration.ruuviCloudApiSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -336,7 +352,7 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(showMinMaxAvg: Bool) -> Future<Bool, RuuviCloudError> {
+    public func set(showMinMaxAvg: Bool, timestamp: Int? = nil) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -346,7 +362,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .chartShowMinMaxAverage,
             value: showMinMaxAvg.chartBoolSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -363,7 +379,7 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(cloudMode: Bool) -> Future<Bool, RuuviCloudError> {
+    public func set(cloudMode: Bool, timestamp: Int? = nil) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -373,7 +389,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .cloudModeEnabled,
             value: cloudMode.chartBoolSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -390,7 +406,7 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(dashboard: Bool) -> Future<Bool, RuuviCloudError> {
+    public func set(dashboard: Bool, timestamp: Int? = nil) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -400,7 +416,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .dashboardEnabled,
             value: dashboard.chartBoolSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -417,7 +433,7 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(dashboardType: DashboardType) -> Future<DashboardType, RuuviCloudError> {
+    public func set(dashboardType: DashboardType, timestamp: Int? = nil) -> Future<DashboardType, RuuviCloudError> {
         let promise = Promise<DashboardType, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -427,7 +443,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .dashboardType,
             value: dashboardType.rawValue,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -444,7 +460,7 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(dashboardTapActionType: DashboardTapActionType) ->
+    public func set(dashboardTapActionType: DashboardTapActionType, timestamp: Int? = nil) ->
     Future<DashboardTapActionType, RuuviCloudError> {
         let promise = Promise<DashboardTapActionType, RuuviCloudError>()
         guard let apiKey = user.apiKey
@@ -455,7 +471,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .dashboardTapActionType,
             value: dashboardTapActionType.rawValue,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -472,7 +488,7 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(disableEmailAlert: Bool) -> Future<Bool, RuuviCloudError> {
+    public func set(disableEmailAlert: Bool, timestamp: Int? = nil) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -482,7 +498,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .emailAlertDisabled,
             value: disableEmailAlert.chartBoolSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -499,7 +515,7 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(disablePushAlert: Bool) -> Future<Bool, RuuviCloudError> {
+    public func set(disablePushAlert: Bool, timestamp: Int? = nil) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -509,7 +525,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .pushAlertDisabled,
             value: disablePushAlert.chartBoolSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -526,7 +542,7 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(marketingPreference: Bool) -> Future<Bool, RuuviCloudError> {
+    public func set(marketingPreference: Bool, timestamp: Int? = nil) -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -536,7 +552,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .marketingPreference,
             value: marketingPreference.chartBoolSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -553,7 +569,7 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(profileLanguageCode: String) -> Future<String, RuuviCloudError> {
+    public func set(profileLanguageCode: String, timestamp: Int? = nil) -> Future<String, RuuviCloudError> {
         let promise = Promise<String, RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -563,7 +579,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .profileLanguageCode,
             value: profileLanguageCode,
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in
@@ -580,7 +596,7 @@ public final class RuuviCloudPure: RuuviCloud {
     }
 
     @discardableResult
-    public func set(dashboardSensorOrder: [String]) -> Future<[String], RuuviCloudError> {
+    public func set(dashboardSensorOrder: [String], timestamp: Int? = nil) -> Future<[String], RuuviCloudError> {
         let promise = Promise<[String], RuuviCloudError>()
         guard let apiKey = user.apiKey
         else {
@@ -590,7 +606,7 @@ public final class RuuviCloudPure: RuuviCloud {
         let request = RuuviCloudApiPostSettingRequest(
             name: .dashboardSensorOrder,
             value: RuuviCloudApiHelper.jsonStringFromArray(dashboardSensorOrder),
-            timestamp: Int(Date().timeIntervalSince1970)
+            timestamp: settingTimestamp(timestamp)
         )
         api.postSetting(request, authorization: apiKey)
             .on(success: { _ in

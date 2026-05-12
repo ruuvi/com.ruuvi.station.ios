@@ -27,5 +27,6 @@ protocol CardsGraphViewInteractorInput: AnyObject {
     func hasLoggedFirstAutoSyncGattHistoryForRuuviAir() -> Bool
     func setHasLoggedFirstAutoSyncGattHistoryForRuuviAir(_ logged: Bool)
     func deleteAllRecords(for sensor: RuuviTagSensor) -> Future<Void, RUError>
+    func updateChartViewPeriodSetting(with hours: Int)
     func updateChartShowMinMaxAvgSetting(with show: Bool)
 }

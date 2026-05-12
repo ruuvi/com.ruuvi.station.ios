@@ -82,10 +82,9 @@ extension ChartSettingsPresenter {
         )
         let cell = ChartSettingsCell(type: type)
         cell.boolean.value = value
-        bind(cell.boolean, fire: false) { [weak self] observer, value in
+        bind(cell.boolean, fire: false) { observer, value in
             guard let value else { return }
-            observer.settings.chartDrawDotsOn = value
-            self?.ruuviAppSettingsService.set(drawDots: value)
+            observer.ruuviAppSettingsService.set(drawDots: value)
         }
         return cell
     }

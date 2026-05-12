@@ -960,6 +960,7 @@ class RuuviTagCoordinatorFactory {
             cloudSyncDaemon: r.resolve(RuuviDaemonCloudSync.self)!,
             cloudNotificationService: r.resolve(RuuviServiceCloudNotification.self)!,
             authService: r.resolve(RuuviServiceAuth.self)!,
+            ruuviAppSettingsService: r.resolve(RuuviServiceAppSettings.self)!,
             ruuviUser: r.resolve(RuuviUser.self)!,
             settings: r.resolve(RuuviLocalSettings.self)!,
             pnManager: r.resolve(RuuviCorePN.self)!

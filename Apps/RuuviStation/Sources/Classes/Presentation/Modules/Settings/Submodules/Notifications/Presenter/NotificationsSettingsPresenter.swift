@@ -80,7 +80,6 @@ extension NotificationsSettingsPresenter {
 
         bind(viewModel.boolean, fire: false) { observer, enabled in
             let alertDisabled = !GlobalHelpers.getBool(from: enabled)
-            observer.settings.emailAlertDisabled = alertDisabled
             observer.ruuviAppSettingsService.set(disableEmailAlert: alertDisabled)
         }
 
@@ -98,7 +97,6 @@ extension NotificationsSettingsPresenter {
 
         bind(viewModel.boolean, fire: false) { observer, enabled in
             let alertDisabled = !GlobalHelpers.getBool(from: enabled)
-            observer.settings.pushAlertDisabled = alertDisabled
             observer.ruuviAppSettingsService.set(disablePushAlert: alertDisabled)
         }
 

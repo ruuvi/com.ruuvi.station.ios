@@ -65,7 +65,6 @@ extension MyRuuviAccountPresenter: MyRuuviAccountViewOutput {
     }
 
     func viewDidChangeMarketingPreference(isEnabled: Bool) {
-        settings.marketingPreference = isEnabled
         ruuviAppSettingsService.set(marketingPreference: isEnabled)
     }
 }
@@ -109,7 +108,7 @@ extension MyRuuviAccountPresenter {
 
             sSelf.authService.logout()
                 .on(success: { _ in
-                    sSelf.settings.cloudModeEnabled = false
+                    sSelf.ruuviAppSettingsService.setLocalOnly(cloudMode: false)
                     sSelf.viewDidTriggerClose()
                     sSelf.syncViewModel()
                     sSelf.reloadWidgets()

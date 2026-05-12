@@ -36,6 +36,8 @@ public protocol RuuviServiceAppSettings {
     @discardableResult
     func set(cloudMode: Bool) -> Future<Bool, RuuviServiceError>
 
+    func setLocalOnly(cloudMode: Bool)
+
     @discardableResult
     func set(dashboard: Bool) -> Future<Bool, RuuviServiceError>
 

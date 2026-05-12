@@ -44,6 +44,7 @@ class RuuviCloudService {
     private let cloudSyncDaemon: RuuviDaemonCloudSync
     private let cloudNotificationService: RuuviServiceCloudNotification
     private let authService: RuuviServiceAuth
+    private let ruuviAppSettingsService: RuuviServiceAppSettings
     private let ruuviUser: RuuviUser
 
     private var settings: RuuviLocalSettings
@@ -65,6 +66,7 @@ class RuuviCloudService {
         cloudSyncDaemon: RuuviDaemonCloudSync,
         cloudNotificationService: RuuviServiceCloudNotification,
         authService: RuuviServiceAuth,
+        ruuviAppSettingsService: RuuviServiceAppSettings,
         ruuviUser: RuuviUser,
         settings: RuuviLocalSettings,
         pnManager: RuuviCorePN
@@ -72,6 +74,7 @@ class RuuviCloudService {
         self.cloudSyncDaemon = cloudSyncDaemon
         self.cloudNotificationService = cloudNotificationService
         self.authService = authService
+        self.ruuviAppSettingsService = ruuviAppSettingsService
         self.ruuviUser = ruuviUser
         self.settings = settings
         self.pnManager = pnManager
@@ -147,8 +150,8 @@ class RuuviCloudService {
                 self.cloudModeToken?.invalidate()
                 self.cloudModeToken = nil
 
-                // Disable cloud mode
-                self.settings.cloudModeEnabled = false
+                // Disable cloud mode locally without posting during auth cleanup.
+                self.ruuviAppSettingsService.setLocalOnly(cloudMode: false)
 
                 // Notify delegate
                 self.delegate?.ruuviCloudService(self, cloudModeDidChange: false)

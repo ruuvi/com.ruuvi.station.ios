@@ -1,5 +1,6 @@
 import Foundation
 import RuuviLocal
+import RuuviService
 import RuuviUser
 
 class DefaultsConfigurator {
@@ -15,6 +16,7 @@ class DefaultsConfigurator {
         presenter.settings = r.resolve(RuuviLocalSettings.self)
         presenter.flags = r.resolve(RuuviLocalFlags.self)
         presenter.ruuviUser = r.resolve(RuuviUser.self)
+        presenter.ruuviAppSettingsService = r.resolve(RuuviServiceAppSettings.self)
 
         view.output = presenter
     }

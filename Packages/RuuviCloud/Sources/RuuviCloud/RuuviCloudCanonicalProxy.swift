@@ -259,80 +259,95 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         cloud.getCloudSettings()
     }
 
-    public func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviCloudError> {
-        cloud.set(temperatureUnit: temperatureUnit)
+    public func set(
+        temperatureUnit: TemperatureUnit,
+        timestamp: Int? = nil
+    ) -> Future<TemperatureUnit, RuuviCloudError> {
+        cloud.set(temperatureUnit: temperatureUnit, timestamp: timestamp)
     }
 
-    public func set(temperatureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError> {
-        cloud.set(temperatureAccuracy: temperatureAccuracy)
+    public func set(
+        temperatureAccuracy: MeasurementAccuracyType,
+        timestamp: Int? = nil
+    ) -> Future<MeasurementAccuracyType, RuuviCloudError> {
+        cloud.set(temperatureAccuracy: temperatureAccuracy, timestamp: timestamp)
     }
 
-    public func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviCloudError> {
-        cloud.set(humidityUnit: humidityUnit)
+    public func set(humidityUnit: HumidityUnit, timestamp: Int? = nil) -> Future<HumidityUnit, RuuviCloudError> {
+        cloud.set(humidityUnit: humidityUnit, timestamp: timestamp)
     }
 
-    public func set(humidityAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError> {
-        cloud.set(humidityAccuracy: humidityAccuracy)
+    public func set(
+        humidityAccuracy: MeasurementAccuracyType,
+        timestamp: Int? = nil
+    ) -> Future<MeasurementAccuracyType, RuuviCloudError> {
+        cloud.set(humidityAccuracy: humidityAccuracy, timestamp: timestamp)
     }
 
-    public func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviCloudError> {
-        cloud.set(pressureUnit: pressureUnit)
+    public func set(pressureUnit: UnitPressure, timestamp: Int? = nil) -> Future<UnitPressure, RuuviCloudError> {
+        cloud.set(pressureUnit: pressureUnit, timestamp: timestamp)
     }
 
-    public func set(pressureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError> {
-        cloud.set(pressureAccuracy: pressureAccuracy)
+    public func set(
+        pressureAccuracy: MeasurementAccuracyType,
+        timestamp: Int? = nil
+    ) -> Future<MeasurementAccuracyType, RuuviCloudError> {
+        cloud.set(pressureAccuracy: pressureAccuracy, timestamp: timestamp)
     }
 
-    public func set(showAllData: Bool) -> Future<Bool, RuuviCloudError> {
-        cloud.set(showAllData: showAllData)
+    public func set(showAllData: Bool, timestamp: Int? = nil) -> Future<Bool, RuuviCloudError> {
+        cloud.set(showAllData: showAllData, timestamp: timestamp)
     }
 
-    public func set(drawDots: Bool) -> Future<Bool, RuuviCloudError> {
-        cloud.set(drawDots: drawDots)
+    public func set(drawDots: Bool, timestamp: Int? = nil) -> Future<Bool, RuuviCloudError> {
+        cloud.set(drawDots: drawDots, timestamp: timestamp)
     }
 
-    public func set(chartDuration: Int) -> Future<Int, RuuviCloudError> {
-        cloud.set(chartDuration: chartDuration)
+    public func set(chartDuration: Int, timestamp: Int? = nil) -> Future<Int, RuuviCloudError> {
+        cloud.set(chartDuration: chartDuration, timestamp: timestamp)
     }
 
-    public func set(showMinMaxAvg: Bool) -> Future<Bool, RuuviCloudError> {
-        cloud.set(showMinMaxAvg: showMinMaxAvg)
+    public func set(showMinMaxAvg: Bool, timestamp: Int? = nil) -> Future<Bool, RuuviCloudError> {
+        cloud.set(showMinMaxAvg: showMinMaxAvg, timestamp: timestamp)
     }
 
-    public func set(cloudMode: Bool) -> Future<Bool, RuuviCloudError> {
-        cloud.set(cloudMode: cloudMode)
+    public func set(cloudMode: Bool, timestamp: Int? = nil) -> Future<Bool, RuuviCloudError> {
+        cloud.set(cloudMode: cloudMode, timestamp: timestamp)
     }
 
-    public func set(dashboard: Bool) -> Future<Bool, RuuviCloudError> {
-        cloud.set(dashboard: dashboard)
+    public func set(dashboard: Bool, timestamp: Int? = nil) -> Future<Bool, RuuviCloudError> {
+        cloud.set(dashboard: dashboard, timestamp: timestamp)
     }
 
-    public func set(dashboardType: DashboardType) -> Future<DashboardType, RuuviCloudError> {
-        cloud.set(dashboardType: dashboardType)
+    public func set(dashboardType: DashboardType, timestamp: Int? = nil) -> Future<DashboardType, RuuviCloudError> {
+        cloud.set(dashboardType: dashboardType, timestamp: timestamp)
     }
 
-    public func set(dashboardTapActionType: DashboardTapActionType) -> Future<DashboardTapActionType, RuuviCloudError> {
-        cloud.set(dashboardTapActionType: dashboardTapActionType)
+    public func set(
+        dashboardTapActionType: DashboardTapActionType,
+        timestamp: Int? = nil
+    ) -> Future<DashboardTapActionType, RuuviCloudError> {
+        cloud.set(dashboardTapActionType: dashboardTapActionType, timestamp: timestamp)
     }
 
-    public func set(disableEmailAlert: Bool) -> Future<Bool, RuuviCloudError> {
-        cloud.set(disableEmailAlert: disableEmailAlert)
+    public func set(disableEmailAlert: Bool, timestamp: Int? = nil) -> Future<Bool, RuuviCloudError> {
+        cloud.set(disableEmailAlert: disableEmailAlert, timestamp: timestamp)
     }
 
-    public func set(disablePushAlert: Bool) -> Future<Bool, RuuviCloudError> {
-        cloud.set(disablePushAlert: disablePushAlert)
+    public func set(disablePushAlert: Bool, timestamp: Int? = nil) -> Future<Bool, RuuviCloudError> {
+        cloud.set(disablePushAlert: disablePushAlert, timestamp: timestamp)
     }
 
-    public func set(marketingPreference: Bool) -> Future<Bool, RuuviCloudError> {
-        cloud.set(marketingPreference: marketingPreference)
+    public func set(marketingPreference: Bool, timestamp: Int? = nil) -> Future<Bool, RuuviCloudError> {
+        cloud.set(marketingPreference: marketingPreference, timestamp: timestamp)
     }
 
-    public func set(profileLanguageCode: String) -> Future<String, RuuviCloudError> {
-        cloud.set(profileLanguageCode: profileLanguageCode)
+    public func set(profileLanguageCode: String, timestamp: Int? = nil) -> Future<String, RuuviCloudError> {
+        cloud.set(profileLanguageCode: profileLanguageCode, timestamp: timestamp)
     }
 
-    public func set(dashboardSensorOrder: [String]) -> Future<[String], RuuviCloudError> {
-        cloud.set(dashboardSensorOrder: dashboardSensorOrder)
+    public func set(dashboardSensorOrder: [String], timestamp: Int? = nil) -> Future<[String], RuuviCloudError> {
+        cloud.set(dashboardSensorOrder: dashboardSensorOrder, timestamp: timestamp)
     }
 
     public func updateSensorSettings(

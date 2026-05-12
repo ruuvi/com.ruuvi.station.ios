@@ -51,11 +51,17 @@ public protocol RuuviLocalSettings: AnyObject {
     /// Temporary workaround until proper sync/local data collision handling is in place.
     var signalVisibilityMigrationInProgress: Bool { get set }
     var temperatureUnit: TemperatureUnit { get set }
+    var unitTemperatureLastUpdated: Date? { get set }
     var temperatureAccuracy: MeasurementAccuracyType { get set }
+    var accuracyTemperatureLastUpdated: Date? { get set }
     var humidityUnit: HumidityUnit { get set }
+    var unitHumidityLastUpdated: Date? { get set }
     var humidityAccuracy: MeasurementAccuracyType { get set }
+    var accuracyHumidityLastUpdated: Date? { get set }
     var pressureUnit: UnitPressure { get set }
+    var unitPressureLastUpdated: Date? { get set }
     var pressureAccuracy: MeasurementAccuracyType { get set }
+    var accuracyPressureLastUpdated: Date? { get set }
     var welcomeShown: Bool { get set }
     var showGraphLongPressTutorial: Bool { get set }
     var tosAccepted: Bool { get set }
@@ -63,6 +69,7 @@ public protocol RuuviLocalSettings: AnyObject {
     var tagChartsLandscapeSwipeInstructionWasShown: Bool { get set }
     var language: Language { get set }
     var cloudProfileLanguageCode: String? { get set }
+    var profileLanguageCodeLastUpdated: Date? { get set }
     var isAdvertisementDaemonOn: Bool { get set }
     var advertisementDaemonIntervalMinutes: Int { get set }
     var connectionTimeout: TimeInterval { get set }
@@ -83,11 +90,14 @@ public protocol RuuviLocalSettings: AnyObject {
     // However, it is disabled for now because of performance issue on iOS.
     // Once we fix the performance issue, we will enable this property.
     var chartDownsamplingOn: Bool { get set }
+    var chartShowAllPointsLastUpdated: Date? { get set }
     // This is the property to enable/disable downsampling on the device.
     // This property is not synced to cloud.
     var chartShowAllMeasurements: Bool { get set }
     var chartDrawDotsOn: Bool { get set }
+    var chartDrawDotsLastUpdated: Date? { get set }
     var chartStatsOn: Bool { get set }
+    var chartShowMinMaxAvgLastUpdated: Date? { get set }
     var chartShowAll: Bool { get set }
     var networkPullIntervalSeconds: Int { get set }
     var widgetRefreshIntervalMinutes: Int { get set }
@@ -95,6 +105,7 @@ public protocol RuuviLocalSettings: AnyObject {
     var networkPruningIntervalHours: Int { get set }
     var experimentalFeaturesEnabled: Bool { get set }
     var cloudModeEnabled: Bool { get set }
+    var cloudModeEnabledLastUpdated: Date? { get set }
     var useSimpleWidget: Bool { get set }
     var appIsOnForeground: Bool { get set }
     var appOpenedCount: Int { get set }
@@ -102,24 +113,32 @@ public protocol RuuviLocalSettings: AnyObject {
     var appOpenedCountDivisibleToAskReview: Int { get set }
     var appStoreReviewLastRequestAppOpenedCount: Int { get set }
     var dashboardEnabled: Bool { get set }
+    var dashboardEnabledLastUpdated: Date? { get set }
     var dashboardType: DashboardType { get set }
+    var dashboardTypeLastUpdated: Date? { get set }
     var dashboardTapActionType: DashboardTapActionType { get set }
+    var dashboardTapActionTypeLastUpdated: Date? { get set }
     // For migration of users below version 3.0.0 who might have other
     // dashboard tap action than cards. Default is cards.
     var showFullSensorCardOnDashboardTap: Bool { get set }
     var dashboardSensorOrder: [String] { get set }
+    var dashboardSensorOrderLastUpdated: Date? { get set }
     var theme: RuuviTheme { get set }
     var hideNFCForSensorContest: Bool { get set }
     var alertSound: RuuviAlertSound { get set }
     var emailAlertDisabled: Bool { get set }
+    var emailAlertDisabledLastUpdated: Date? { get set }
     var pushAlertDisabled: Bool { get set }
+    var pushAlertDisabledLastUpdated: Date? { get set }
     var marketingPreference: Bool { get set }
+    var marketingPreferenceLastUpdated: Date? { get set }
     var limitAlertNotificationsEnabled: Bool { get set }
     var showSwitchStatusLabel: Bool { get set }
     var showAlertsRangeInGraph: Bool { get set }
     var useNewGraphRendering: Bool { get set }
     var imageCompressionQuality: Int { get set }
     var compactChartView: Bool { get set }
+    var chartViewPeriodLastUpdated: Date? { get set }
 
     /// Syncs full history for each sensor when associated charts
     /// is presented. Much efficient.
