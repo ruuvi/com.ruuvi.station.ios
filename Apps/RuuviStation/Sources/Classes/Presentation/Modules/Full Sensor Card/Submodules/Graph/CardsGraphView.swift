@@ -34,13 +34,76 @@ class CardsGraphView: UIView {
         let label = UILabel()
         label.textColor = .white
         label.font = UIFont.mulish(.bold, size: UIDevice.isTablet() ? 18 : 14)
+        label.lineBreakMode = .byTruncatingTail
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
+    }()
+
+    private lazy var measurementIconView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.setContentHuggingPriority(.required, for: .horizontal)
+        imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return imageView
+    }()
+
+    private lazy var titleStackView: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [measurementIconView, chartNameLabel])
+        stack.axis = .horizontal
+        stack.alignment = .center
+        stack.distribution = .fill
+        stack.spacing = 6
+        stack.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        return stack
+    }()
+
+    private lazy var latestValueLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.font = UIFont.mulish(.bold, size: UIDevice.isTablet() ? 18 : 14)
+        label.textAlignment = .right
+        label.numberOfLines = 1
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return label
+    }()
+
+    private lazy var latestValueUnitLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.font = UIFont.mulish(.bold, size: UIDevice.isTablet() ? 18 : 14)
+        label.numberOfLines = 1
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return label
+    }()
+
+    private lazy var latestValueStackView: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [latestValueLabel, latestValueUnitLabel])
+        stack.axis = .horizontal
+        stack.alignment = .firstBaseline
+        stack.distribution = .fill
+        stack.spacing = 0
+        stack.setContentHuggingPriority(.required, for: .horizontal)
+        stack.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return stack
+    }()
+
+    private lazy var titleRowStackView: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [titleStackView, latestValueStackView])
+        stack.axis = .horizontal
+        stack.alignment = .center
+        stack.distribution = .fill
+        stack.spacing = 8
+        return stack
     }()
 
     private lazy var chartMinMaxAvgLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.font = UIFont.ruuviCaption1()
+        label.lineBreakMode = .byTruncatingTail
         return label
     }()
 
@@ -56,6 +119,8 @@ class CardsGraphView: UIView {
     private var maxValue: Double?
     private var avgValue: Double?
     private var latestValue: ChartDataEntry?
+    private var latestValueIsHighlighted: Bool = false
+    private var latestValueUnit: String = ""
 
     init(variant: MeasurementDisplayVariant) {
         self.variant = variant
@@ -73,8 +138,8 @@ class CardsGraphView: UIView {
 extension CardsGraphView {
 
     private func addSubviews() {
-        addSubview(chartNameLabel)
-        chartNameLabel.anchor(
+        addSubview(titleRowStackView)
+        titleRowStackView.anchor(
             top: topAnchor,
             leading: leadingAnchor,
             bottom: nil,
@@ -83,18 +148,20 @@ extension CardsGraphView {
                 top: 4,
                 left: 20,
                 bottom: 0,
-                right: 0
+                right: 20
             )
         )
+        measurementIconView.widthAnchor.constraint(equalToConstant: 16).isActive = true
+        measurementIconView.heightAnchor.constraint(equalToConstant: 16).isActive = true
 
         addSubview(chartMinMaxAvgLabel)
         chartMinMaxAvgLabel.anchor(
-            top: chartNameLabel.bottomAnchor,
+            top: titleRowStackView.bottomAnchor,
             leading: chartNameLabel.leadingAnchor,
             bottom: nil,
             trailing: trailingAnchor,
             padding: .init(
-                top: 4, left: 0, bottom: 0, right: 0
+                top: 4, left: 0, bottom: 0, right: 20
             )
         )
         chartMinMaxAvgLabel.isHidden = true
@@ -103,7 +170,7 @@ extension CardsGraphView {
                 equalToConstant: 0
             ),
             chartMinMaxAvgLabel.topAnchor.constraint(
-                equalTo: chartNameLabel.bottomAnchor,
+                equalTo: titleRowStackView.bottomAnchor,
                 constant: 0
             ),
         ]
@@ -209,10 +276,16 @@ extension CardsGraphView {
 
     func updateLatest(
         with entry: ChartDataEntry?,
+        isHighlighted: Bool,
         type: MeasurementType,
         measurementService: RuuviServiceMeasurement,
     ) {
         self.latestValue = entry
+        latestValueIsHighlighted = isHighlighted
+        updateLatestValueLabel(
+            type: type,
+            measurementService: measurementService
+        )
         setChartStat(
             min: minValue,
             max: maxValue,
@@ -228,7 +301,9 @@ extension CardsGraphView {
         unit: String
     ) {
         let hideUnit = MeasurementType.hideUnit(for: type)
-        chartNameLabel.text = type.shortName(for: variant) + (hideUnit ? "" : " (\(unit))")
+        latestValueUnit = hideUnit ? "" : unit
+        chartNameLabel.text = type.shortName(for: variant)
+        measurementIconView.image = type.icon
         chartView.setMarker(
             with: type,
             measurementService: measurementService,
@@ -260,6 +335,12 @@ extension CardsGraphView {
         } else {
             NSLayoutConstraint.activate(chartMinMaxAvgHiddenConstraints)
         }
+    }
+
+    func updateLatestAlertState(isHighlighted: Bool) {
+        latestValueIsHighlighted = isHighlighted
+        latestValueLabel.textColor = isHighlighted ? RuuviColor.orangeColor.color : .white
+        latestValueUnitLabel.textColor = .white
     }
 
     /// The lowest y-index (value on the y-axis) that is still visible on he chart.
@@ -309,21 +390,41 @@ extension CardsGraphView {
             measurementService: measurementService
         )
 
-        var latestVal = ""
-        if let latest = latestValue {
-            latestVal = formattedMeasurementString(
-                for: type,
-                value: latest.y,
-                measurementService: measurementService
-            )
-        }
-
-        return RuuviLocalization.chartLatestMinMaxAvg(
+        return RuuviLocalization.chartMinMaxAvg(
             minValue,
             maxValue,
-            avgValue,
-            latestVal
+            avgValue
         )
+    }
+
+    private func updateLatestValueLabel(
+        type: MeasurementType,
+        measurementService: RuuviServiceMeasurement
+    ) {
+        let formattedValue = formattedMeasurementString(
+            for: type,
+            value: latestValue?.y,
+            measurementService: measurementService
+        )
+        latestValueLabel.text = formattedValue
+        latestValueUnitLabel.text = latestValueSuffix(
+            for: type,
+            hasValue: !formattedValue.isEmpty
+        )
+        updateLatestAlertState(isHighlighted: latestValueIsHighlighted)
+    }
+
+    private func latestValueSuffix(
+        for type: MeasurementType,
+        hasValue: Bool
+    ) -> String {
+        guard hasValue else { return "" }
+        if type == .aqi {
+            let maxValue = Int(RuuviAlertConstants.AQI.upperBound)
+            return "/\(maxValue)"
+        }
+        guard !latestValueUnit.isEmpty else { return "" }
+        return " \(latestValueUnit)"
     }
 
     // swiftlint:disable:next cyclomatic_complexity

@@ -37,8 +37,10 @@ protocol CardsGraphViewInput: ViewInput {
 
     func updateLatestMeasurement(
         _ entries: [MeasurementDisplayVariant: ChartDataEntry?],
+        alertStates: [MeasurementDisplayVariant: Bool],
         settings: RuuviLocalSettings
     )
+    func updateLatestAlertStates(_ alertStates: [MeasurementDisplayVariant: Bool])
     func setHasChartData(_ hasData: Bool)
     func setChartLoading(hideCharts: Bool)
     func showClearConfirmationDialog(for snapshot: RuuviTagCardSnapshot)

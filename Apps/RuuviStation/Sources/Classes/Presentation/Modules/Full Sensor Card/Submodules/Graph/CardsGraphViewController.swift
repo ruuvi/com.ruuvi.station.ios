@@ -782,6 +782,7 @@ extension CardsGraphViewController: CardsGraphViewInput {
 
     func updateLatestMeasurement(
         _ entries: [MeasurementDisplayVariant: ChartDataEntry?],
+        alertStates: [MeasurementDisplayVariant: Bool],
         settings: RuuviLocalSettings
     ) {
         self.settings = settings
@@ -789,9 +790,17 @@ extension CardsGraphViewController: CardsGraphViewInput {
             let view = chartView(for: variant)
             view.updateLatest(
                 with: entry,
+                isHighlighted: alertStates[variant] ?? false,
                 type: variant.type,
                 measurementService: measurementService
             )
+        }
+    }
+
+    func updateLatestAlertStates(_ alertStates: [MeasurementDisplayVariant: Bool]) {
+        alertStates.forEach { variant, isHighlighted in
+            chartView(for: variant)
+                .updateLatestAlertState(isHighlighted: isHighlighted)
         }
     }
 

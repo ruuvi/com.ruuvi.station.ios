@@ -1,5 +1,6 @@
 // swiftlint:disable file_length
 
+import Combine
 import RuuviOntology
 import Foundation
 import RuuviLocal
@@ -52,6 +53,7 @@ class CardsGraphPresenter: NSObject {
     private var chartShowStatsStateDidChangeToken: NSObjectProtocol?
     private var sensorSettingsToken: RuuviReactorToken?
     private var syncNotificationToken: NSObjectProtocol?
+    private var alertDataCancellable: AnyCancellable?
 
     // MARK: Helper Properties
     private var shouldSyncFromCloud: Bool = true
@@ -158,6 +160,7 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
         self.snapshot = snapshot
         self.sensor = sensor
         self.sensorSettings = settings
+        observeAlertData(from: snapshot)
         handleSnapshotChangeIfNeeded(previousSnapshotId: previousId, newSnapshot: snapshot)
         applyVisibilityChangeIfNeeded()
         refreshSyncUIForCurrentSnapshot()
@@ -483,6 +486,15 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
 // MARK: - Private
 
 extension CardsGraphPresenter {
+    private func observeAlertData(from snapshot: RuuviTagCardSnapshot) {
+        alertDataCancellable?.cancel()
+        alertDataCancellable = snapshot.$alertData
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.updateLatestAlertStates()
+            }
+    }
+
     private func handleSnapshotChangeIfNeeded(
         previousSnapshotId: String?,
         newSnapshot: RuuviTagCardSnapshot
@@ -570,6 +582,17 @@ extension CardsGraphPresenter {
 
     private func invalidatePendingChartComputation() {
         chartDataGeneration &+= 1
+    }
+
+    private func alertStatesForChartModules() -> [MeasurementDisplayVariant: Bool] {
+        guard let snapshot else { return [:] }
+        return chartModules.reduce(into: [MeasurementDisplayVariant: Bool]()) { result, variant in
+            guard let alertType = variant.toAlertType() else {
+                result[variant] = false
+                return
+            }
+            result[variant] = snapshot.getAlertConfig(for: alertType)?.isHighlighted == true
+        }
     }
 
     private struct MeasurementFingerprint: Equatable {
@@ -1079,8 +1102,13 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
 
         view?.updateLatestMeasurement(
             latestEntries,
+            alertStates: alertStatesForChartModules(),
             settings: settings
         )
+    }
+
+    private func updateLatestAlertStates() {
+        view?.updateLatestAlertStates(alertStatesForChartModules())
     }
 
     private func createChartData() {
