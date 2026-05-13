@@ -88,7 +88,7 @@ enum RuuviGraphDataSetFactory {
             upperAlertValue: upperAlertValue,
             lowerAlertValue: lowerAlertValue,
             showAlertRangeInGraph: showAlertRangeInGraph,
-            style: .popup
+            style: .full
         )
     }
 

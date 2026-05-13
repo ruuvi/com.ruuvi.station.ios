@@ -859,7 +859,7 @@ extension MeasurementDetailsViewController: MeasurementDetailsViewInput {
             with: entries,
             isFirstEntry: entries.count == 1,
             firstEntry: nil,
-            showAlertRangeInGraph: false
+            showAlertRangeInGraph: settings.showAlertsRangeInGraph
         )
     }
 

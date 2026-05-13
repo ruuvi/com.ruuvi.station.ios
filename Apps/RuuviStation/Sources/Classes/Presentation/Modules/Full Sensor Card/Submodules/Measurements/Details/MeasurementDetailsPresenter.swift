@@ -452,7 +452,7 @@ private extension MeasurementDetailsPresenter {
             upperAlertValue: upperAlert,
             entries: entries,
             lowerAlertValue: lowerAlert,
-            showAlertRangeInGraph: false
+            showAlertRangeInGraph: settings.showAlertsRangeInGraph
         )
 
         return RuuviGraphViewDataModel(
