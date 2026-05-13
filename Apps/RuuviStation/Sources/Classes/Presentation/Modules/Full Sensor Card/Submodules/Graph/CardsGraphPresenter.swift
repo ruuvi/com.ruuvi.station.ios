@@ -886,6 +886,49 @@ extension CardsGraphPresenter {
                     // TODO: Add this implemention when draw dots is back.
                 }
             )
+        alertDidChangeToken?.invalidate()
+        alertDidChangeToken = NotificationCenter
+            .default
+            .addObserver(
+                forName: .RuuviServiceAlertDidChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] notification in
+                    self?.handleAlertDidChange(notification)
+                }
+            )
+    }
+
+    private func handleAlertDidChange(_ notification: Notification) {
+        guard settings.showAlertsRangeInGraph,
+              !chartModules.isEmpty,
+              let physicalSensor = notification
+                  .userInfo?[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
+              alertChangeBelongsToCurrentSensor(physicalSensor)
+        else {
+            return
+        }
+
+        view?.showAlertRangeInGraph = settings.showAlertsRangeInGraph
+        rebuildChartData(updateView: true)
+    }
+
+    private func alertChangeBelongsToCurrentSensor(_ physicalSensor: PhysicalSensor) -> Bool {
+        guard let sensor else { return false }
+
+        if let sensorMac = sensor.macId?.any,
+           let alertMac = physicalSensor.macId?.any,
+           sensorMac == alertMac {
+            return true
+        }
+
+        if let sensorLuid = sensor.luid?.any,
+           let alertLuid = physicalSensor.luid?.any,
+           sensorLuid == alertLuid {
+            return true
+        }
+
+        return sensor.id == physicalSensor.id
     }
 
     private func startObservingSensorSettingsChanges() {

@@ -314,12 +314,22 @@ final class MeasurementDetailsViewController: UIViewController {
         setupUI()
         applyVisibilityStates()
         setupLinkTapGesture()
+        startObservingAppState()
         output?.viewDidLoad()
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         updatePreferredContentSize()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        restartAlertAnimations()
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     // MARK: - Public Configuration
@@ -640,6 +650,8 @@ private extension MeasurementDetailsViewController {
         if isViewLoaded {
             applyVisibilityStates()
         }
+
+        updateAlertStates()
     }
 
     func applyVisibilityStates() {
@@ -707,6 +719,8 @@ private extension MeasurementDetailsViewController {
         beaverAdviceTopConstraint.constant = Layout.beaverAdviceTopPadding
         beaverAdviceHeightConstraint.isActive = false
         beaverAdviceView.isHidden = false
+
+        updateAlertStates()
     }
 
     func hideAQIContent() {
@@ -806,6 +820,16 @@ extension MeasurementDetailsViewController: MeasurementDetailsViewInput {
         if currentMeasurementType == .aqi {
             updateAQIContent(from: indicatorData)
         }
+
+        updateAlertStates()
+    }
+
+    func updateAlertStates() {
+        updateHeaderAlertState()
+
+        let measurements = tagSnapshot.displayData.indicatorGrid?.indicators
+            .filter { $0.type == .co2 || $0.type == .pm25 }
+        updateAQIMeasurementAlertStates(from: measurements)
     }
 
     func setChartData(
@@ -950,9 +974,66 @@ private extension MeasurementDetailsViewController {
     }
 }
 
+// MARK: - Alert State
+
+private extension MeasurementDetailsViewController {
+    func updateHeaderAlertState() {
+        guard let currentIndicator = tagSnapshot.displayData.indicatorGrid?.indicators
+            .first(where: { indicatorMatchesCurrentSelection($0) })
+        else {
+            valueLabel.textColor = RuuviColor.dashboardIndicatorBig.color
+            return
+        }
+
+        let alertConfig = tagSnapshot.getIndicatorAlertConfig(for: currentIndicator)
+        let isHighlighted = alertConfig.isHighlighted && tagSnapshot.metadata.isAlertAvailable
+
+        valueLabel.textColor = isHighlighted
+            ? RuuviColor.orangeColor.color
+            : RuuviColor.dashboardIndicatorBig.color
+    }
+
+    func updateAQIMeasurementAlertStates(
+        from measurements: [RuuviTagCardSnapshotIndicatorData]?
+    ) {
+        for measurement in measurements ?? [] {
+            let alertConfig = tagSnapshot.getIndicatorAlertConfig(for: measurement)
+            let isHighlighted = alertConfig.isHighlighted && tagSnapshot.metadata.isAlertAvailable
+
+            switch measurement.type {
+            case .co2:
+                co2Card?.updateAlertState(isHighlighted: isHighlighted)
+            case .pm25:
+                pm25Card?.updateAlertState(isHighlighted: isHighlighted)
+            default:
+                break
+            }
+        }
+    }
+
+    func restartAlertAnimations() {
+        guard tagSnapshot.metadata.isAlertAvailable else { return }
+        co2Card?.restartAlertAnimationIfNeeded(force: true)
+        pm25Card?.restartAlertAnimationIfNeeded(force: true)
+    }
+}
+
 // MARK: - Link Handling
 
 private extension MeasurementDetailsViewController {
+    func startObservingAppState() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleAppWillMoveToForeground),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
+    }
+
+    @objc func handleAppWillMoveToForeground() {
+        restartAlertAnimations()
+    }
+
     func setupLinkTapGesture() {
         descriptionTapGesture = UITapGestureRecognizer(
             target: self,

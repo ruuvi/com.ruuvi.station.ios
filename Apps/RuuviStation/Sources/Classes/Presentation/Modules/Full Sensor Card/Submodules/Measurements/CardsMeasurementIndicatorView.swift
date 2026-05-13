@@ -228,6 +228,12 @@ class CardsMeasurementIndicatorView: UIView {
             return
         }
 
+        if isHighlighted {
+            valueLabel.textColor = RuuviColor.orangeColor.color
+        } else {
+            valueLabel.textColor = viewSource == .cards ? .white : RuuviColor.dashboardIndicatorBig.color
+        }
+
         let wasAlertFiring = currentAlertState
         currentAlertState = isHighlighted
 
@@ -269,9 +275,13 @@ class CardsMeasurementIndicatorView: UIView {
         }
     }
 
-    func restartAlertAnimationIfNeeded() {
-        // Only restart if we should be alerting but aren't currently animating
-        if currentAlertState && alertBorderLayer.animation(forKey: "pulseAnimation") == nil {
+    func restartAlertAnimationIfNeeded(force: Bool = false) {
+        if currentAlertState && force {
+            alertBorderLayer.removeAnimation(forKey: "pulseAnimation")
+        }
+
+        if currentAlertState &&
+            alertBorderLayer.animation(forKey: "pulseAnimation") == nil {
             startAlertBorderAnimation()
         }
     }

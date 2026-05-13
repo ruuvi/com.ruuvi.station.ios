@@ -6,6 +6,7 @@ import RuuviService
 
 protocol MeasurementDetailsViewInput: ViewInput {
     func updateMeasurements(with indicatorData: RuuviTagCardSnapshotDisplayData?)
+    func updateAlertStates()
     func setChartData(
         _ data: RuuviGraphViewDataModel,
         settings: RuuviLocalSettings,

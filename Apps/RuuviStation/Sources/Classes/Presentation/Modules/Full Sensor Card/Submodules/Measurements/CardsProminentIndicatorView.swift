@@ -186,6 +186,10 @@ final class CardsProminentIndicatorView: UIView {
     func updateAlertState(isHighlighted: Bool) {
         guard currentAlertState != isHighlighted else { return }
 
+        measurementValueLabel.textColor =
+            isHighlighted ? RuuviColor.orangeColor.color : .white
+        aqiIndicatorView.updateAlertState(isHighlighted: isHighlighted)
+
         let wasAlertFiring = currentAlertState
         currentAlertState = isHighlighted
 
@@ -525,7 +529,8 @@ final class AirQualityCircularView: UIView {
         return label
     }()
 
-    var animateProgress: Bool = false
+    private var animateProgress: Bool = false
+    private var currentAlertState: Bool = false
 
     // MARK: - Initialization
     override init(frame: CGRect) {
@@ -562,6 +567,13 @@ final class AirQualityCircularView: UIView {
                 state: state,
                 animated: animated
             )
+    }
+
+    func updateAlertState(isHighlighted: Bool) {
+        guard currentAlertState != isHighlighted else { return }
+        currentAlertState = isHighlighted
+        currentValueLabel.textColor =
+            isHighlighted ? RuuviColor.orangeColor.color : .white
     }
 }
 

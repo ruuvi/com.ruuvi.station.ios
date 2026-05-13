@@ -483,6 +483,21 @@ private extension MeasurementDetailsPresenter {
             .store(
                 in: &cancellables
             )
+
+        snapshot.$alertData
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.view?.updateAlertStates()
+                self?.updateChartAlertRangeIfNeeded()
+            }
+            .store(in: &cancellables)
+
+        snapshot.$metadata
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.view?.updateAlertStates()
+            }
+            .store(in: &cancellables)
     }
 
     func setupUnitChangeObservers() {
@@ -543,6 +558,11 @@ private extension MeasurementDetailsPresenter {
             indicators: visibleIndicators
         )
         return copy
+    }
+
+    func updateChartAlertRangeIfNeeded() {
+        guard settings.showAlertsRangeInGraph else { return }
+        updateChart()
     }
 }
 
