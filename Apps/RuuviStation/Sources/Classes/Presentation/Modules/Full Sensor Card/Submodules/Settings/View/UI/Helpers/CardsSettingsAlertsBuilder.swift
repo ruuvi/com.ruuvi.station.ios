@@ -105,6 +105,7 @@ private extension CardsSettingsAlertsBuilder {
         )
 
         let title = alertTitle(for: type, measurementService: measurementService)
+        let modernTitle = modernAlertTitle(for: type)
 
         let (configuration, isInteractionEnabled) = configurationForAlert(
             type: type,
@@ -117,6 +118,7 @@ private extension CardsSettingsAlertsBuilder {
         return CardsSettingsAlertSectionModel(
             id: "alert.\(type.rawValue)",
             title: title,
+            modernTitle: modernTitle,
             alertType: type,
             headerState: headerState,
             configuration: configuration,
@@ -211,6 +213,10 @@ private extension CardsSettingsAlertsBuilder {
                 snapshot: snapshot
             )
         case .aqi:
+            let latestAQI = latestAQIDisplay(
+                snapshot: snapshot,
+                measurementService: measurementService
+            )
             return adjustedInteraction(
                 simpleRangeConfiguration(
                     snapshot: snapshot,
@@ -219,7 +225,8 @@ private extension CardsSettingsAlertsBuilder {
                     range: RuuviAlertConstants.AQI.lowerBound...RuuviAlertConstants.AQI.upperBound,
                     unit: "",
                     format: Constants.configFormat,
-                    latestMeasurement: latestAQI(snapshot: snapshot, measurementService: measurementService)
+                    latestMeasurement: latestAQI?.text,
+                    latestMeasurementDisplay: latestAQI
                 ),
                 snapshot: snapshot
             )
@@ -712,6 +719,7 @@ private extension CardsSettingsAlertsBuilder {
         unit: String,
         format: String,
         latestMeasurement: String?,
+        latestMeasurementDisplay: CardsSettingsAlertLatestMeasurement? = nil,
         notice: String? = nil
     ) -> (CardsSettingsAlertUIConfiguration, Bool) {
         let lower = config.lowerBound ?? range.lowerBound
@@ -738,7 +746,8 @@ private extension CardsSettingsAlertsBuilder {
             showsLimitEditIcon: true,
             sliderConfiguration: slider,
             additionalInfo: nil,
-            latestMeasurement: latestMeasurement
+            latestMeasurement: latestMeasurement,
+            latestMeasurementDisplay: latestMeasurementDisplay
         )
 
         return (configuration, hasMeasurement)
@@ -817,13 +826,15 @@ private extension CardsSettingsAlertsBuilder {
             .normalizedUnseenDuration(config.unseenDuration)
         let delayMinutes = Int(delaySeconds / 60)
         let description = RuuviLocalization.alertCloudConnectionDescription(delayMinutes)
+        let delaySummary = RuuviLocalization.alertCloudConnectionDelaySummary(delayMinutes)
 
         return (
             CardsSettingsAlertUIConfiguration(
                 isEnabled: config.isActive,
                 customDescriptionText: config.description,
                 limitDescription: .staticText(description),
-                showsLimitEditIcon: true
+                showsLimitEditIcon: true,
+                headerSummaryText: delaySummary
             ),
             true
         )
@@ -887,6 +898,52 @@ private extension CardsSettingsAlertsBuilder {
             return AlertType
                 .batteryVoltage(lower: 0, upper: 0)
                 .title(with: RuuviLocalization.v)
+        default:
+            return alertType.title()
+        }
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity
+    static func modernAlertTitle(for alertType: AlertType) -> String {
+        switch alertType {
+        case .temperature:
+            return RuuviLocalization.temperature
+        case .relativeHumidity:
+            return RuuviLocalization.relHumidity
+        case .humidity:
+            return RuuviLocalization.absoluteHumidity
+        case .dewPoint:
+            return RuuviLocalization.dewpoint
+        case .pressure:
+            return RuuviLocalization.airPressure
+        case .signal:
+            return RuuviLocalization.signalStrength
+        case .batteryVoltage:
+            return RuuviLocalization.batteryVoltage
+        case .aqi:
+            return RuuviLocalization.airQuality
+        case .carbonDioxide:
+            return RuuviLocalization.co2
+        case .pMatter1:
+            return RuuviLocalization.pm10
+        case .pMatter25:
+            return RuuviLocalization.pm25
+        case .pMatter4:
+            return RuuviLocalization.pm40
+        case .pMatter10:
+            return RuuviLocalization.pm100
+        case .voc:
+            return RuuviLocalization.voc
+        case .nox:
+            return RuuviLocalization.nox
+        case .soundInstant:
+            return RuuviLocalization.soundInstant
+        case .soundPeak:
+            return RuuviLocalization.soundPeak
+        case .soundAverage:
+            return RuuviLocalization.soundAvg
+        case .luminosity:
+            return RuuviLocalization.luminosity
         default:
             return alertType.title()
         }
@@ -1107,20 +1164,24 @@ private extension CardsSettingsAlertsBuilder {
         return "\(value) \(RuuviLocalization.dBm)"
     }
 
-    static func latestAQI(
+    static func latestAQIDisplay(
         snapshot: RuuviTagCardSnapshot,
         measurementService: RuuviServiceMeasurement?
-    ) -> String? {
+    ) -> CardsSettingsAlertLatestMeasurement? {
         guard let measurementService,
               let record = snapshot.latestRawRecord else {
             return nil
         }
 
-        let (aqi, _, _) = measurementService.aqi(
+        let (aqi, maxScore, _) = measurementService.aqi(
             for: record.co2,
             pm25: record.pm25
         )
-        return "\(aqi)"
+        return CardsSettingsAlertLatestMeasurement(
+            value: "\(aqi)",
+            suffix: "/\(maxScore)",
+            separator: ""
+        )
     }
 
     static func latestCO2(

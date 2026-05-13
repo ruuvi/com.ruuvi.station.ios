@@ -11,6 +11,7 @@ struct CardsSettingsAlertSectionModel: Identifiable, Equatable {
 
     let id: String
     let title: String
+    let modernTitle: String
     let alertType: AlertType
     let headerState: HeaderState
     let configuration: CardsSettingsAlertUIConfiguration

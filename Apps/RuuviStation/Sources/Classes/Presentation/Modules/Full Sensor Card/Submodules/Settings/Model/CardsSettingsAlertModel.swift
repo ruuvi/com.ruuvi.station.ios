@@ -14,6 +14,56 @@ struct CardsSettingsAlertRangeChange {
     let isFinal: Bool
 }
 
+struct CardsSettingsAlertLatestMeasurement: Equatable {
+    let value: String
+    let suffix: String?
+    let separator: String
+
+    init(
+        value: String,
+        suffix: String? = nil,
+        separator: String = String.nbsp
+    ) {
+        self.value = value
+        self.suffix = suffix
+        self.separator = suffix == nil ? "" : separator
+    }
+
+    init?(text: String?) {
+        guard let text else { return nil }
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+
+        guard let separatorIndex = trimmed.lastIndex(where: { character in
+            Self.isWhitespace(character)
+        }) else {
+            value = trimmed
+            suffix = nil
+            separator = ""
+            return
+        }
+
+        let valuePart = String(trimmed[..<separatorIndex])
+        let suffixStartIndex = trimmed.index(after: separatorIndex)
+        let suffixPart = String(trimmed[suffixStartIndex...])
+
+        value = valuePart
+        suffix = suffixPart.isEmpty ? nil : suffixPart
+        separator = suffixPart.isEmpty ? "" : String(trimmed[separatorIndex])
+    }
+
+    var text: String {
+        guard let suffix else { return value }
+        return value + separator + suffix
+    }
+
+    private static func isWhitespace(_ character: Character) -> Bool {
+        String(character).unicodeScalars.allSatisfy {
+            CharacterSet.whitespacesAndNewlines.contains($0) || $0.value == 0x00A0
+        }
+    }
+}
+
 struct CardsSettingsAlertUIConfiguration: Equatable {
     init(
         isEnabled: Bool,
@@ -23,7 +73,9 @@ struct CardsSettingsAlertUIConfiguration: Equatable {
         showsLimitEditIcon: Bool,
         sliderConfiguration: CardsSettingsAlertSliderConfiguration? = nil,
         additionalInfo: String? = nil,
-        latestMeasurement: String? = nil
+        latestMeasurement: String? = nil,
+        latestMeasurementDisplay: CardsSettingsAlertLatestMeasurement? = nil,
+        headerSummaryText: String? = nil
     ) {
         self.isEnabled = isEnabled
         self.noticeText = noticeText
@@ -33,6 +85,9 @@ struct CardsSettingsAlertUIConfiguration: Equatable {
         self.sliderConfiguration = sliderConfiguration
         self.additionalInfo = additionalInfo
         self.latestMeasurement = latestMeasurement
+        self.latestMeasurementDisplay = latestMeasurementDisplay ??
+            CardsSettingsAlertLatestMeasurement(text: latestMeasurement)
+        self.headerSummaryText = headerSummaryText
     }
 
     let isEnabled: Bool
@@ -43,6 +98,8 @@ struct CardsSettingsAlertUIConfiguration: Equatable {
     var sliderConfiguration: CardsSettingsAlertSliderConfiguration?
     let additionalInfo: String?
     let latestMeasurement: String?
+    let latestMeasurementDisplay: CardsSettingsAlertLatestMeasurement?
+    let headerSummaryText: String?
 }
 
 struct CardsSettingsAlertSliderConfiguration: Equatable {
@@ -88,6 +145,10 @@ struct CardsSettingsAlertSliderConfiguration: Equatable {
             return "\(lower) - \(upper)"
         }
         return "\(lower) - \(upper) \(unit)"
+    }
+
+    var selectedBoundsSummary: String {
+        "\(selectedLowerDisplay) | \(selectedUpperDisplay)"
     }
 
     var selectedLowerDisplay: String {

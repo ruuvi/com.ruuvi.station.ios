@@ -6,16 +6,43 @@ import UIKit
 import RuuviLocalization
 import RuuviOntology
 
+enum CardsSettingsAlertDisplayMode {
+    case settings
+    case modernAlerts
+
+    var showsAlertIcon: Bool {
+        self == .settings
+    }
+}
+
+private enum CardsSettingsAlertModernLayout {
+    static let horizontalPadding: CGFloat = 12
+    static let headerLeadingPadding: CGFloat = 16
+    static let headerTrailingPadding: CGFloat = 4
+    static let headerVerticalPadding: CGFloat = 8
+    static let headerContentSpacing: CGFloat = 8
+    static let rowSpacing: CGFloat = 8
+    static let sliderLeadingPadding: CGFloat = 4
+    static let actionSize: CGFloat = 32
+    static let headerActionSize: CGFloat = 32
+}
+
 // MARK: CardsSettingsAlertSectionsGroupView
 struct CardsSettingsAlertSectionsGroupView: View {
     @EnvironmentObject private var state: CardsSettingsState
     @EnvironmentObject private var actions: CardsSettingsActions
     let showsHeader: Bool
     let showsToggleInHeader: Bool
+    let displayMode: CardsSettingsAlertDisplayMode
 
-    init(showsHeader: Bool = true, showsToggleInHeader: Bool = false) {
+    init(
+        showsHeader: Bool = true,
+        showsToggleInHeader: Bool = false,
+        displayMode: CardsSettingsAlertDisplayMode = .settings
+    ) {
         self.showsHeader = showsHeader
         self.showsToggleInHeader = showsToggleInHeader
+        self.displayMode = displayMode
     }
 
     private struct Constants {
@@ -37,6 +64,7 @@ struct CardsSettingsAlertSectionsGroupView: View {
                     model: section,
                     isExpanded: state.isAlertSectionExpanded(sectionID),
                     showsToggleInHeader: showsToggleInHeader,
+                    displayMode: displayMode,
                     onToggleSection: {
                         withAnimation(
                             .easeInOut(duration: Constants.animationDuration)
@@ -134,6 +162,7 @@ struct CardsSettingsAlertSectionRow: View {
     let model: CardsSettingsAlertSectionModel
     let isExpanded: Bool
     let showsToggleInHeader: Bool
+    let displayMode: CardsSettingsAlertDisplayMode
     let onToggleSection: () -> Void
     let onToggleAlert: (Bool) -> Void
     let onRangeChange: (ClosedRange<Double>, Bool) -> Void
@@ -149,6 +178,7 @@ struct CardsSettingsAlertSectionRow: View {
         model: CardsSettingsAlertSectionModel,
         isExpanded: Bool,
         showsToggleInHeader: Bool,
+        displayMode: CardsSettingsAlertDisplayMode,
         onToggleSection: @escaping () -> Void,
         onToggleAlert: @escaping (Bool) -> Void,
         onRangeChange: @escaping (ClosedRange<Double>, Bool) -> Void,
@@ -159,6 +189,7 @@ struct CardsSettingsAlertSectionRow: View {
         self.model = model
         self.isExpanded = isExpanded
         self.showsToggleInHeader = showsToggleInHeader
+        self.displayMode = displayMode
         self.onToggleSection = onToggleSection
         self.onToggleAlert = onToggleAlert
         self.onRangeChange = onRangeChange
@@ -182,6 +213,7 @@ struct CardsSettingsAlertSectionRow: View {
                 CardsSettingsAlertSectionContentView(
                     model: model,
                     showsToggleInHeader: showsToggleInHeader,
+                    displayMode: displayMode,
                     toggleValue: $toggleValue,
                     sliderRange: $sliderRange,
                     onToggleAlert: onToggleAlert,
@@ -210,18 +242,36 @@ struct CardsSettingsAlertSectionRow: View {
         CardsSettingsAlertSectionRowHeader(
             model: model,
             isExpanded: isExpanded,
-            alertIconImage: alertIconImage,
+            alertIconImage: displayMode.showsAlertIcon ? alertIconImage : nil,
             alertIconColor: alertIconColor,
             alertIconAccessibilityLabel: alertIconAccessibilityLabel,
             alertIconOpacity: alertIconOpacity,
+            rangeSummary: headerRangeSummary,
             mutedText: mutedText,
             showsToggleInHeader: showsToggleInHeader,
+            displayMode: displayMode,
+            latestMeasurementIsHighlighted: isAlertFiring,
             toggleValue: $toggleValue,
             isToggleEnabled: model.isInteractionEnabled,
             showsStatusLabel: model.headerState.showStatusLabel,
             onToggleAlert: onToggleAlert,
             onToggleSection: onToggleSection
         )
+    }
+
+    private var headerRangeSummary: String? {
+        guard displayMode == .modernAlerts else {
+            return nil
+        }
+        if let headerSummaryText = model.configuration.headerSummaryText {
+            return headerSummaryText
+        }
+        guard let sliderConfiguration = model.configuration.sliderConfiguration else {
+            return nil
+        }
+        let displayConfiguration = sliderRange
+            .map { sliderConfiguration.withSelectedRange($0) } ?? sliderConfiguration
+        return displayConfiguration.selectedBoundsSummary
     }
 
     private var mutedText: String? {
@@ -285,6 +335,7 @@ struct CardsSettingsAlertSectionRow: View {
 private struct CardsSettingsAlertSectionContentView: View {
     let model: CardsSettingsAlertSectionModel
     let showsToggleInHeader: Bool
+    let displayMode: CardsSettingsAlertDisplayMode
     @Binding var toggleValue: Bool
     @Binding var sliderRange: ClosedRange<Double>?
 
@@ -297,6 +348,15 @@ private struct CardsSettingsAlertSectionContentView: View {
     private let disabledOpacity: Double = 0.4
 
     var body: some View {
+        switch displayMode {
+        case .settings:
+            settingsContent
+        case .modernAlerts:
+            modernAlertsContent
+        }
+    }
+
+    private var settingsContent: some View {
         VStack(spacing: 0) {
             if let notice = model.configuration.noticeText {
                 CardsSettingsAlertNoticeRow(text: notice)
@@ -373,6 +433,89 @@ private struct CardsSettingsAlertSectionContentView: View {
         .background(RuuviColor.primary.swiftUIColor)
     }
 
+    private var modernAlertsContent: some View {
+        VStack(spacing: 0) {
+            if let rangeNotice = modernRangeNoticeText {
+                CardsSettingsModernAlertNoticeRow(text: rangeNotice)
+            }
+
+            if let notice = model.configuration.noticeText {
+                CardsSettingsModernAlertNoticeRow(text: notice)
+            }
+
+            if let sliderConfig = model.configuration.sliderConfiguration {
+                let displayConfig = sliderRange
+                    .map { sliderConfig.withSelectedRange($0) } ?? sliderConfig
+                HStack(alignment: .center, spacing: CardsSettingsAlertModernLayout.rowSpacing) {
+                    CardsSettingsAlertRangeSliderView(
+                        configuration: displayConfig,
+                        onRangeChange: { min, max in
+                            self.sliderRange = min...max
+                            onRangeChange(min...max, false)
+                        },
+                        onRangeChangeEnd: { min, max in
+                            self.sliderRange = min...max
+                            onRangeChange(min...max, true)
+                        }
+                    )
+                    .frame(maxWidth: .infinity)
+
+                    if model.configuration.showsLimitEditIcon {
+                        Button(action: onTapLimitAction) {
+                            RuuviAsset.editPen.swiftUIImage
+                                .foregroundColor(RuuviColor.tintColor.swiftUIColor)
+                                .frame(width: CardsSettingsAlertModernLayout.actionSize)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.leading, CardsSettingsAlertModernLayout.sliderLeadingPadding)
+                .padding(.trailing, CardsSettingsAlertModernLayout.headerTrailingPadding)
+                .background(RuuviColor.primary.swiftUIColor)
+                .disabled(!model.isInteractionEnabled)
+                .opacity(editableOpacity)
+            } else if let limitText = limitDescriptionTitle {
+                SettingsDivider()
+                if model.configuration.showsLimitEditIcon {
+                    Button(action: onTapLimitAction) {
+                        CardsSettingsModernAlertActionRow(
+                            title: limitText,
+                            icon: RuuviAsset.editPen.swiftUIImage
+                        )
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(!model.isInteractionEnabled)
+                    .opacity(editableOpacity)
+                } else {
+                    CardsSettingsModernAlertActionRow(
+                        title: limitText,
+                        icon: nil
+                    )
+                }
+            }
+
+            if let info = model.configuration.additionalInfo {
+                SettingsDivider()
+                CardsSettingsModernAlertAdditionalInfoRow(text: info)
+            }
+
+            if let descriptionTitle = customDescriptionTitle {
+                SettingsDivider()
+                Button(action: onEditDescription) {
+                    CardsSettingsModernAlertCustomMessageRow(
+                        title: "Custom message",
+                        message: descriptionTitle,
+                        icon: RuuviAsset.editPen.swiftUIImage
+                    )
+                }
+                .buttonStyle(.plain)
+                .disabled(!model.isInteractionEnabled)
+                .opacity(editableOpacity)
+            }
+        }
+        .background(RuuviColor.primary.swiftUIColor)
+    }
+
     private var customDescriptionTitle: String? {
         if let customDescription = model.configuration.customDescriptionText,
            !customDescription.isEmpty {
@@ -398,6 +541,20 @@ private struct CardsSettingsAlertSectionContentView: View {
         }
     }
 
+    private var modernRangeNoticeText: String? {
+        guard case .sliderLocalized? = model.configuration.limitDescription,
+              let sliderConfig = model.configuration.sliderConfiguration else {
+            return nil
+        }
+        let range = sliderRange ?? sliderConfig.selectedRange
+        let displayConfig = sliderConfig.withSelectedRange(range)
+        let text = RuuviLocalization.TagSettings.Alerts.description(
+            displayConfig.selectedLowerDisplay,
+            displayConfig.selectedUpperDisplay
+        )
+        return text.hasSuffix(".") ? text : "\(text)."
+    }
+
     private var onTapLimitAction: () -> Void {
         switch model.alertType {
         case .cloudConnection:
@@ -420,8 +577,11 @@ private struct CardsSettingsAlertSectionRowHeader: View {
     let alertIconColor: Color
     let alertIconAccessibilityLabel: String
     let alertIconOpacity: Double
+    let rangeSummary: String?
     let mutedText: String?
     let showsToggleInHeader: Bool
+    let displayMode: CardsSettingsAlertDisplayMode
+    let latestMeasurementIsHighlighted: Bool
     @Binding var toggleValue: Bool
     let isToggleEnabled: Bool
     let showsStatusLabel: Bool
@@ -442,13 +602,15 @@ private struct CardsSettingsAlertSectionRowHeader: View {
                 regularHeader
             }
         }
-        .padding(Constants.spacing)
+        .padding(.leading, headerLeadingPadding)
+        .padding(.trailing, headerTrailingPadding)
+        .padding(.vertical, headerVerticalPadding)
         .background(RuuviColor.tagSettingsItemHeaderColor.swiftUIColor)
     }
 
     private var regularHeader: some View {
-        HStack(spacing: Constants.spacing) {
-            HStack(spacing: Constants.spacing) {
+        HStack(spacing: headerControlSpacing) {
+            HStack(spacing: headerControlSpacing) {
                 Text(model.title)
                     .ruuviHeadline()
                     .foregroundStyle(RuuviColor.dashboardIndicator.swiftUIColor)
@@ -476,22 +638,15 @@ private struct CardsSettingsAlertSectionRowHeader: View {
             .contentShape(Rectangle())
             .onTapGesture(perform: onToggleSection)
 
-            RuuviAsset.arrowDropDown.swiftUIImage
-                .foregroundColor(RuuviColor.tintColor.swiftUIColor)
-                .rotationEffect(
-                    .degrees(isExpanded ? Constants.rotatedArrowAngle : 0)
-                )
-                .onTapGesture(perform: onToggleSection)
+            dropdownArrow
         }
     }
 
     private var compactHeader: some View {
-        VStack(alignment: .leading, spacing: Constants.spacing) {
-            HStack(spacing: Constants.spacing) {
-                HStack(spacing: Constants.spacing) {
-                    Text(model.title)
-                        .ruuviHeadline()
-                        .foregroundStyle(RuuviColor.dashboardIndicator.swiftUIColor)
+        VStack(alignment: .leading, spacing: headerContentSpacing) {
+            HStack(spacing: headerControlSpacing) {
+                HStack(spacing: headerControlSpacing) {
+                    compactHeaderTitle
                         .multilineTextAlignment(.leading)
 
                     Spacer()
@@ -516,11 +671,15 @@ private struct CardsSettingsAlertSectionRowHeader: View {
                     isCompact: true
                 )
 
-                RuuviAsset.arrowDropDown.swiftUIImage
-                    .foregroundColor(RuuviColor.tintColor.swiftUIColor)
-                    .rotationEffect(
-                        .degrees(isExpanded ? Constants.rotatedArrowAngle : 0)
+                dropdownArrow
+            }
+            if let rangeSummary {
+                Text(rangeSummary)
+                    .font(.ruuviFootnote())
+                    .foregroundColor(
+                        RuuviColor.textColor.swiftUIColor.opacity(Constants.muteTextOpacity)
                     )
+                    .contentShape(Rectangle())
                     .onTapGesture(perform: onToggleSection)
             }
             if let muted = mutedText {
@@ -531,6 +690,111 @@ private struct CardsSettingsAlertSectionRowHeader: View {
                     )
             }
         }
+    }
+
+    private var headerLeadingPadding: CGFloat {
+        switch displayMode {
+        case .settings:
+            return Constants.spacing
+        case .modernAlerts:
+            return CardsSettingsAlertModernLayout.headerLeadingPadding
+        }
+    }
+
+    private var headerTrailingPadding: CGFloat {
+        switch displayMode {
+        case .settings:
+            return Constants.spacing
+        case .modernAlerts:
+            return CardsSettingsAlertModernLayout.headerTrailingPadding
+        }
+    }
+
+    private var headerVerticalPadding: CGFloat {
+        switch displayMode {
+        case .settings:
+            return Constants.spacing
+        case .modernAlerts:
+            return CardsSettingsAlertModernLayout.headerVerticalPadding
+        }
+    }
+
+    private var headerContentSpacing: CGFloat {
+        switch displayMode {
+        case .settings:
+            return Constants.spacing
+        case .modernAlerts:
+            return CardsSettingsAlertModernLayout.headerContentSpacing
+        }
+    }
+
+    private var headerControlSpacing: CGFloat {
+        switch displayMode {
+        case .settings:
+            return Constants.spacing
+        case .modernAlerts:
+            return CardsSettingsAlertModernLayout.rowSpacing
+        }
+    }
+
+    @ViewBuilder
+    private var compactHeaderTitle: some View {
+        switch displayMode {
+        case .settings:
+            Text(model.title)
+                .ruuviHeadline()
+                .foregroundStyle(RuuviColor.dashboardIndicator.swiftUIColor)
+        case .modernAlerts:
+            compactTitleText
+        }
+    }
+
+    @ViewBuilder
+    private var dropdownArrow: some View {
+        switch displayMode {
+        case .settings:
+            RuuviAsset.arrowDropDown.swiftUIImage
+                .foregroundColor(RuuviColor.tintColor.swiftUIColor)
+                .rotationEffect(
+                    .degrees(isExpanded ? Constants.rotatedArrowAngle : 0)
+                )
+                .onTapGesture(perform: onToggleSection)
+        case .modernAlerts:
+            RuuviAsset.arrowDropDown.swiftUIImage
+                .foregroundColor(RuuviColor.tintColor.swiftUIColor)
+                .rotationEffect(
+                    .degrees(isExpanded ? Constants.rotatedArrowAngle : 0)
+                )
+                .frame(width: CardsSettingsAlertModernLayout.headerActionSize)
+                .contentShape(Rectangle())
+                .onTapGesture(perform: onToggleSection)
+        }
+    }
+
+    private var compactTitleText: Text {
+        guard displayMode == .modernAlerts,
+              let latest = model.configuration.latestMeasurementDisplay else {
+            return Text(model.title)
+                .ruuviHeadline()
+                .foregroundColor(RuuviColor.dashboardIndicator.swiftUIColor)
+        }
+
+        let latestColor = latestMeasurementIsHighlighted
+            ? RuuviColor.orangeColor.color
+            : RuuviColor.dashboardIndicator.color
+        let suffixText = latest.suffix.map {
+            "\(latest.separator)\($0))"
+        } ?? ")"
+
+        return Text("\(model.modernTitle) (")
+            .ruuviHeadline()
+            .foregroundColor(RuuviColor.dashboardIndicator.swiftUIColor)
+            + Text(latest.value)
+            .ruuviHeadline()
+            .foregroundColor(Color(latestColor))
+            + Text(suffixText)
+            .ruuviHeadline()
+            .foregroundColor(RuuviColor.dashboardIndicator.swiftUIColor)
     }
 }
 

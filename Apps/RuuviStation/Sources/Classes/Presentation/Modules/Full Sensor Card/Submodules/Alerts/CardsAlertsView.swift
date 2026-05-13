@@ -22,7 +22,8 @@ struct CardsAlertsView: View {
                     if !state.alertSections.isEmpty {
                         CardsSettingsAlertSectionsGroupView(
                             showsHeader: false,
-                            showsToggleInHeader: true
+                            showsToggleInHeader: true,
+                            displayMode: .modernAlerts
                         )
                     }
 
