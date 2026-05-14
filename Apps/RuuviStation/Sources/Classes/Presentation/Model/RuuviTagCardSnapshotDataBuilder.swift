@@ -93,7 +93,7 @@ private enum MeasurementVariantFormatter {
             }
             let targetUnit = variant.temperatureUnit?.unitTemperature ?? measurementService.units.temperatureUnit
             let converted = dewPoint.converted(to: targetUnit)
-            let value = measurementService.stringWithoutSign(temperature: converted.value)
+            let value = measurementService.stringWithoutSign(humidity: converted.value)
             let unit = variant.temperatureUnit?.symbol ?? targetUnit.symbol
             return (value, unit)
         }

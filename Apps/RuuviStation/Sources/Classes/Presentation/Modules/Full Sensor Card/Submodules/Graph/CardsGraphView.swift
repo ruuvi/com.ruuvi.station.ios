@@ -443,7 +443,7 @@ extension CardsGraphView {
             let resolvedUnit = variant.humidityUnit ?? .percent
             switch resolvedUnit {
             case .dew:
-                let decimals = settings?.temperatureAccuracy.value ?? 2
+                let decimals = settings?.humidityAccuracy.value ?? 2
                 return formattedNumber(value, decimals: decimals)
             default:
                 let decimals = settings?.humidityAccuracy.value ?? 2
