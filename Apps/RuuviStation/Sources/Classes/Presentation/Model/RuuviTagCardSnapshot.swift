@@ -727,15 +727,15 @@ extension RuuviTagCardSnapshot {
                 temperature: finalRecord.temperature,
                 voltage: finalRecord.voltage
             )
-
-            updatedDisplayData.indicatorGrid = RuuviTagCardSnapshotDataBuilder.createIndicatorGrid(
-                from: finalRecord,
-                sensor: sensor,
-                measurementService: measurementService,
-                flags: flags,
-                snapshot: self
-            )
         }
+
+        updatedDisplayData.indicatorGrid = RuuviTagCardSnapshotDataBuilder.createIndicatorGrid(
+            from: finalRecord,
+            sensor: sensor,
+            measurementService: measurementService,
+            flags: flags,
+            snapshot: self
+        )
 
         if updatedDisplayData.name != sensor.name || updatedDisplayData.version != sensor.version {
             updatedDisplayData.name = sensor.name
