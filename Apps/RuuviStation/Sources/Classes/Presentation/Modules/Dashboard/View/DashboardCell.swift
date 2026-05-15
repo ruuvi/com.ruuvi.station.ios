@@ -29,6 +29,14 @@ struct DashboardCellLayoutConstants {
         width: 36,
         height: 36
     )
+    static let alertBellIconSize = CGSize(
+        width: 30,
+        height: 30
+    )
+    static let alertBellIconCenterOffset = CGPoint(
+        x: 3,
+        y: -5.5
+    )
     static let moreIconTopPadding: CGFloat = 16
     static let moreIconSize: CGFloat = 36
 
@@ -151,6 +159,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
     private static let alertAnimationKey = "DashboardCell.alertBlink"
     private static let alertAnimationFadeDuration: CFTimeInterval = 0.5
     private var dashboardType: DashboardType = .simple
+    private var showsAlertBadge = false
 
     // MARK: - UI Components
     private lazy var containerView: UIView = {
@@ -231,6 +240,21 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         iv.tintColor = RuuviColor.dashboardIndicatorBig.color
         iv.alpha = 0
         return iv
+    }()
+
+    private lazy var alertBadgeView: AlertBellButton = {
+        let button = AlertBellButton(
+            iconSize: DashboardCellLayoutConstants.alertBellIconSize,
+            iconCenterOffset: DashboardCellLayoutConstants.alertBellIconCenterOffset
+        )
+        button.configureBell(
+            image: nil,
+            tintColor: RuuviColor.dashboardIndicatorBig.color,
+            alpha: 0
+        )
+        button.isHidden = true
+        button.isUserInteractionEnabled = false
+        return button
     }()
 
     private lazy var alertButton: UIButton = {
@@ -384,6 +408,8 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
             .removeAll()
         alertIcon.layer
             .removeAllAnimations()
+        alertBadgeView
+            .removeBellAnimations()
 
         // Clear and reset all indicator views
         rowsStackView.arrangedSubviews
@@ -405,7 +431,19 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
 
         noDataView.isHidden = true
         batteryLevelView.isHidden = true
+        alertIcon.alpha = 0
+        alertIcon.image = nil
+        alertIcon.tintColor = RuuviColor.dashboardIndicatorBig.color
+        alertIconView.isHidden = false
+        alertBadgeView.configureBell(
+            image: nil,
+            tintColor: RuuviColor.dashboardIndicatorBig.color,
+            alpha: 0
+        )
+        alertBadgeView.hideBadge()
+        alertBadgeView.isHidden = true
         alertButton.isUserInteractionEnabled = false
+        showsAlertBadge = false
         dataSourceIconViewWidthConstraint.constant = DashboardCellLayoutConstants.sourceIconCompactWidth
         TimestampUpdateService.shared
             .removeSubscriber(
@@ -425,10 +463,13 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
     // swiftlint:disable:next function_body_length
     func configure(
         with snapshot: RuuviTagCardSnapshot,
-        dashboardType: DashboardType
+        dashboardType: DashboardType,
+        showsAlertBadge: Bool = false
     ) {
         let dashboardTypeChanged = self.dashboardType != dashboardType
         let snapshotChanged = currentSnapshot != snapshot
+        let alertBadgeModeChanged = self.showsAlertBadge != showsAlertBadge
+        self.showsAlertBadge = showsAlertBadge
 
         // Set dashboard type and update layout if changed
         if dashboardTypeChanged {
@@ -507,11 +548,19 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                 snapshot.alertData
             )
             updateTimestampLabel()
-        } else if dashboardTypeChanged {
-            // If only dashboard type changed, rebuild the indicator grid
-            if let configuration = currentSnapshot?.displayData.indicatorGrid {
-                buildIndicatorGrid(
-                    with: configuration
+        } else {
+            if dashboardTypeChanged {
+                // If only dashboard type changed, rebuild the indicator grid
+                if let configuration = currentSnapshot?.displayData.indicatorGrid {
+                    buildIndicatorGrid(
+                        with: configuration
+                    )
+                }
+            }
+
+            if alertBadgeModeChanged {
+                updateAlertData(
+                    snapshot.alertData
                 )
             }
         }
@@ -1026,6 +1075,23 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
     private func updateAlertIcon(
         for alertState: AlertState?
     ) {
+        if showsAlertBadge {
+            updateBadgeAlertIcon(
+                for: alertState
+            )
+        } else {
+            updateLegacyAlertIcon(
+                for: alertState
+            )
+        }
+    }
+
+    private func updateLegacyAlertIcon(
+        for alertState: AlertState?
+    ) {
+        resetBadgeAlertView()
+        alertBadgeView.isHidden = true
+        alertIconView.isHidden = false
         alertIcon.layer
             .removeAllAnimations()
 
@@ -1067,6 +1133,104 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
             }
             startAlertAnimation()
         }
+    }
+
+    private func updateBadgeAlertIcon(
+        for alertState: AlertState?
+    ) {
+        alertIcon.layer
+            .removeAllAnimations()
+        alertIcon.alpha = 0
+        alertIcon.image = nil
+        alertIconView.isHidden = true
+        alertBadgeView.isHidden = false
+        alertBadgeView
+            .removeBellAnimations()
+
+        guard let alertState = alertState,
+              let currentSnapshot = currentSnapshot,
+        currentSnapshot.metadata.isAlertAvailable else {
+            resetBadgeAlertView()
+            alertBadgeView.isHidden = false
+            alertButton.isUserInteractionEnabled = false
+            return
+        }
+
+        switch alertState {
+        case .empty:
+            if alertBadgeView.bellImage != nil {
+                alertBadgeView.configureBell(
+                    image: nil,
+                    tintColor: alertBadgeView.bellTintColor,
+                    alpha: 0
+                )
+            }
+            alertBadgeView.hideBadge()
+            alertButton.isUserInteractionEnabled = false
+
+        case .registered:
+            configureRegisteredBadgeAlertIcon(
+                for: currentSnapshot
+            )
+
+        case .firing:
+            configureFiringBadgeAlertIcon(
+                for: currentSnapshot
+            )
+        }
+    }
+
+    private func configureRegisteredBadgeAlertIcon(
+        for snapshot: RuuviTagCardSnapshot
+    ) {
+        let bellImage = RuuviAsset.CardsMenu.iconAlerts.image
+        alertButton.isUserInteractionEnabled = true
+        alertBadgeView.configureBell(
+            image: bellImage,
+            tintColor: RuuviColor.dashboardIndicatorBig.color,
+            alpha: 1
+        )
+        updateAlertBadge(for: snapshot)
+    }
+
+    private func configureFiringBadgeAlertIcon(
+        for snapshot: RuuviTagCardSnapshot
+    ) {
+        alertButton.isUserInteractionEnabled = true
+        alertBadgeView.bellAlpha = 1.0
+        alertBadgeView.configureBell(
+            image: RuuviAsset.CardsMenu.iconAlerts.image,
+            tintColor: RuuviColor.dashboardIndicatorBig.color,
+            alpha: 1
+        )
+        updateAlertBadge(for: snapshot)
+    }
+
+    private func updateAlertBadge(
+        for snapshot: RuuviTagCardSnapshot
+    ) {
+        guard showsAlertBadge,
+              let badgeData = snapshot.alertBadgeData() else {
+            alertBadgeView.hideBadge()
+            return
+        }
+
+        alertBadgeView.configureBadge(
+            count: badgeData.count,
+            isTriggered: badgeData.isTriggered,
+            normalTextColor: alertBadgeView.bellTintColor
+        )
+    }
+
+    private func resetBadgeAlertView() {
+        alertBadgeView
+            .removeBellAnimations()
+        alertBadgeView.configureBell(
+            image: nil,
+            tintColor: RuuviColor.dashboardIndicatorBig.color,
+            alpha: 0
+        )
+        alertBadgeView.hideBadge()
     }
 
     private func startAlertAnimation() {
@@ -1200,6 +1364,15 @@ extension DashboardCell {
                     right: 0
                 ),
                 size: DashboardCellLayoutConstants.alertIconSize
+            )
+
+        containerView
+            .addSubview(
+                alertBadgeView
+            )
+        alertBadgeView
+            .match(
+                view: alertIconView
             )
 
         containerView

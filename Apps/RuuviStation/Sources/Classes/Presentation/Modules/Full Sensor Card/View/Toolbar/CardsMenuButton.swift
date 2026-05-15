@@ -7,6 +7,7 @@ final class CardsMenuButton: UIButton {
     // MARK: - Properties
     let menuType: CardsMenuType
     private let iconImageView = UIImageView()
+    private let alertBellButton = AlertBellButton()
 
     // MARK: - Constants
     private enum Constants {
@@ -32,6 +33,17 @@ final class CardsMenuButton: UIButton {
     }
 
     private func setupIconImageView() {
+        guard menuType != .alerts else {
+            alertBellButton.configureBell(
+                image: menuType.icon,
+                tintColor: .white,
+                alpha: 1
+            )
+            alertBellButton.isUserInteractionEnabled = false
+            addSubview(alertBellButton)
+            return
+        }
+
         iconImageView.image = menuType.icon
         iconImageView.tintColor = .white
         iconImageView.contentMode = .scaleAspectFit
@@ -44,20 +56,31 @@ final class CardsMenuButton: UIButton {
     }
 
     private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            iconImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            iconImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            iconImageView.widthAnchor.constraint(equalToConstant: Constants.iconSize),
-            iconImageView.heightAnchor.constraint(equalToConstant: Constants.iconSize),
-        ])
+        if menuType == .alerts {
+            alertBellButton.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                alertBellButton.topAnchor.constraint(equalTo: topAnchor),
+                alertBellButton.leadingAnchor.constraint(equalTo: leadingAnchor),
+                alertBellButton.bottomAnchor.constraint(equalTo: bottomAnchor),
+                alertBellButton.trailingAnchor.constraint(equalTo: trailingAnchor),
+            ])
+        } else {
+            NSLayoutConstraint.activate([
+                iconImageView.centerXAnchor.constraint(equalTo: centerXAnchor),
+                iconImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
+                iconImageView.widthAnchor.constraint(equalToConstant: Constants.iconSize),
+                iconImageView.heightAnchor.constraint(equalToConstant: Constants.iconSize),
+            ])
+        }
     }
 
     // MARK: - Alert State Management
     func updateAlertState(for snapshot: RuuviTagCardSnapshot?) {
-        iconImageView.layer.removeAllAnimations()
+        alertBellButton.removeBellAnimations()
 
         guard let snapshot = snapshot,
               snapshot.metadata.isAlertAvailable else {
+            alertBellButton.hideBadge()
             isUserInteractionEnabled = false
             return
         }
@@ -70,27 +93,51 @@ final class CardsMenuButton: UIButton {
         case .firing:
             configureForFiringState()
         }
+        updateAlertBadge(for: snapshot)
     }
 
     private func configureForEmptyState(isAlertAvailable: Bool) {
-        iconImageView.tintColor = .white
+        alertBellButton.configureBell(
+            image: menuType.icon,
+            tintColor: .white,
+            alpha: isAlertAvailable ? 1 : 0.5
+        )
         if isAlertAvailable {
             isUserInteractionEnabled = true
-            iconImageView.alpha = 1
         } else {
-            iconImageView.alpha = 0.5
+            isUserInteractionEnabled = false
         }
     }
 
     private func configureForRegisteredState() {
         isUserInteractionEnabled = true
-        iconImageView.tintColor = .white
-        iconImageView.alpha = 1.0
+        alertBellButton.configureBell(
+            image: menuType.icon,
+            tintColor: .white,
+            alpha: 1
+        )
     }
 
     private func configureForFiringState() {
         isUserInteractionEnabled = true
-        iconImageView.tintColor = RuuviColor.orangeColor.color
-        iconImageView.alpha = 1.0
+        alertBellButton.configureBell(
+            image: menuType.icon,
+            tintColor: .white,
+            alpha: 1
+        )
+    }
+
+    private func updateAlertBadge(for snapshot: RuuviTagCardSnapshot) {
+        guard menuType == .alerts,
+              let badgeData = snapshot.alertBadgeData() else {
+            alertBellButton.hideBadge()
+            return
+        }
+
+        alertBellButton.configureBadge(
+            count: badgeData.count,
+            isTriggered: badgeData.isTriggered,
+            normalTextColor: .white
+        )
     }
 }

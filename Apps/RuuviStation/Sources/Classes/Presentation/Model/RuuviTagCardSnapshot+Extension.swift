@@ -233,6 +233,20 @@ extension RuuviTagCardSnapshot {
         return getAllFiringAlerts().count
     }
 
+    func alertBadgeData() -> (count: Int, isTriggered: Bool)? {
+        let firingCount = getFiringAlertsCount()
+        if firingCount > 0 {
+            return (firingCount, true)
+        }
+
+        let activeCount = getActiveAlertsCount()
+        if activeCount > 0 {
+            return (activeCount, false)
+        }
+
+        return nil
+    }
+
     func getMutedAlertsCount() -> Int {
         let currentDate = Date()
         let measurementMutedCount = alertData.alertConfigurations.values.filter { config in

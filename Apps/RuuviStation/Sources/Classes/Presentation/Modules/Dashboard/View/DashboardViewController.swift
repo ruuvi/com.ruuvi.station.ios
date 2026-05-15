@@ -636,7 +636,8 @@ private extension DashboardViewController {
         cell
             .configure(
                 with: snapshot,
-                dashboardType: dashboardType
+                dashboardType: dashboardType,
+                showsAlertBadge: flags.showNewCardsMenu
             )
         cell.delegate = self
         cell.setMenu(cardContextMenuOption(for: indexPath))

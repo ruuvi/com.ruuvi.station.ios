@@ -532,15 +532,19 @@ extension CardsBasePresenter: RuuviTagServiceCoordinatorObserver {
             } else {
                 viewDidTapBackButton()
             }
-        case .snapshotUpdated(let snapshot, _):
+        case .snapshotUpdated(let snapshot, _),
+             .alertSnapshotUpdated(let snapshot):
             if let snapshotIndex = snapshots.firstIndex(where: {
                 $0.id == snapshot.id ||
                 $0.identifierData == snapshot.identifierData
             }) {
                 snapshots[snapshotIndex] = snapshot
                 self.ruuviTagSensors = coordinator.getAllSensors()
-                if self.snapshot.id == snapshot.id {
+                view?.setSnapshots(snapshots)
+                if self.snapshot.id == snapshot.id ||
+                    self.snapshot.identifierData == snapshot.identifierData {
                     self.snapshot = snapshot
+                    view?.updateSnapshot(snapshot)
                 }
                 measurementPresenter?
                     .configure(

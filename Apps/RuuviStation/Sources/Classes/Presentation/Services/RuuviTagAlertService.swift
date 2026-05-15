@@ -319,6 +319,7 @@ class RuuviTagAlertService {
 
             snapshot.updateAlertConfig(for: alertType, config: updatedConfig)
             processAlerts(for: snapshot)
+            delegate?.alertService(self, didUpdateSnapshot: snapshot)
             addToPendingUpdates(snapshotId: snapshot.id)
         }
     }
