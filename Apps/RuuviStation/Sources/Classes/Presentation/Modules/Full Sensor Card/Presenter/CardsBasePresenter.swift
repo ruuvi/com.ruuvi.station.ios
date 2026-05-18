@@ -271,6 +271,7 @@ extension CardsBasePresenter: CardsBaseViewOutput {
             graphPresenter?.scroll(to: currentSnapshotIndex(), animated: true)
         case .alerts, .settings:
             guard flags.showNewCardsMenu else { return }
+            measurementPresenter?.scroll(to: currentSnapshotIndex(), animated: false)
             if activeMenu == .alerts {
                 alertsPresenter?.start()
             } else {
