@@ -151,8 +151,8 @@ extension CardsGraphView {
                 right: 20
             )
         )
-        measurementIconView.widthAnchor.constraint(equalToConstant: 16).isActive = true
-        measurementIconView.heightAnchor.constraint(equalToConstant: 16).isActive = true
+        measurementIconView.widthAnchor.constraint(equalToConstant: 22).isActive = true
+        measurementIconView.heightAnchor.constraint(equalToConstant: 22).isActive = true
 
         addSubview(chartMinMaxAvgLabel)
         chartMinMaxAvgLabel.anchor(
