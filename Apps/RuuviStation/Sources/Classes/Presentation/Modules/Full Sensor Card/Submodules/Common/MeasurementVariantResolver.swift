@@ -156,108 +156,146 @@ struct MeasurementVariantResolver {
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func alertBounds(
         for variant: MeasurementDisplayVariant,
-        sensor: AnyRuuviTagSensor?
+        sensor: AnyRuuviTagSensor?,
+        alertConfig: RuuviTagCardSnapshotAlertConfig? = nil
     ) -> (lower: Double?, upper: Double?) {
         guard
             let sensor,
-            let alertType = variant.type.toAlertType(),
-            alertService.isOn(type: alertType, for: sensor)
+            let alertType = variant.toAlertType(),
+            alertConfig?.isActive ?? alertService.isOn(type: alertType, for: sensor)
         else {
             return (nil, nil)
         }
+        let particulateMatterRange = ClosedRange(
+            uncheckedBounds: (
+                lower: RuuviAlertConstants.ParticulateMatter.lowerBound,
+                upper: RuuviAlertConstants.ParticulateMatter.upperBound
+            )
+        )
 
         switch measurementType(for: variant) {
         case .temperature:
             let unit = variant.resolvedTemperatureUnit(
                 default: settings.temperatureUnit.unitTemperature
             )
-            let upper = alertService.upperCelsius(for: sensor)
+            let upper = (alertConfig?.upperBound ?? alertService.upperCelsius(for: sensor))
                 .flatMap { Temperature($0, unit: .celsius) }
                 .map { $0.converted(to: unit).value }
-            let lower = alertService.lowerCelsius(for: sensor)
+            let lower = (alertConfig?.lowerBound ?? alertService.lowerCelsius(for: sensor))
                 .flatMap { Temperature($0, unit: .celsius) }
                 .map { $0.converted(to: unit).value }
-            return (lower, upper)
+            let alertRange = temperatureAlertRange(for: sensor, unit: unit)
+            return visibleAlertBounds(
+                lower: lower,
+                upper: upper,
+                minimum: alertRange.lower,
+                maximum: alertRange.upper
+            )
         case .humidity:
             guard variant.resolvedHumidityUnit(default: settings.humidityUnit) == .percent else {
                 return (nil, nil)
             }
-            let upper = alertService.upperRelativeHumidity(for: sensor).map { $0 * 100 }
-            let lower = alertService.lowerRelativeHumidity(for: sensor).map { $0 * 100 }
-            return (lower, upper)
+            let upper = alertConfig?.upperBound ??
+                alertService.upperRelativeHumidity(for: sensor).map { $0 * 100 }
+            let lower = alertConfig?.lowerBound ??
+                alertService.lowerRelativeHumidity(for: sensor).map { $0 * 100 }
+            return visibleAlertBounds(
+                lower: lower,
+                upper: upper,
+                minimum: RuuviAlertConstants.RelativeHumidity.lowerBound,
+                maximum: RuuviAlertConstants.RelativeHumidity.upperBound
+            )
         case .pressure:
             let unit = variant.resolvedPressureUnit(default: settings.pressureUnit)
-            let upper = alertService.upperPressure(for: sensor)
+            let upper = (alertConfig?.upperBound ?? alertService.upperPressure(for: sensor))
                 .flatMap { Pressure($0, unit: .hectopascals) }
                 .map { $0.converted(to: unit).value }
-            let lower = alertService.lowerPressure(for: sensor)
+            let lower = (alertConfig?.lowerBound ?? alertService.lowerPressure(for: sensor))
                 .flatMap { Pressure($0, unit: .hectopascals) }
                 .map { $0.converted(to: unit).value }
-            return (lower, upper)
+            return visibleAlertBounds(
+                lower: lower,
+                upper: upper,
+                minimum: pressureValue(RuuviAlertConstants.Pressure.lowerBound, unit: unit),
+                maximum: pressureValue(RuuviAlertConstants.Pressure.upperBound, unit: unit)
+            )
         case .aqi:
-            return (
-                alertService.lowerAQI(for: sensor),
-                alertService.upperAQI(for: sensor)
+            return visibleAlertBounds(
+                lower: alertConfig?.lowerBound ?? alertService.lowerAQI(for: sensor),
+                upper: alertConfig?.upperBound ?? alertService.upperAQI(for: sensor),
+                range: RuuviAlertConstants.AQI.lowerBound...RuuviAlertConstants.AQI.upperBound
             )
         case .co2:
-            return (
-                alertService.lowerCarbonDioxide(for: sensor),
-                alertService.upperCarbonDioxide(for: sensor)
+            return visibleAlertBounds(
+                lower: alertConfig?.lowerBound ?? alertService.lowerCarbonDioxide(for: sensor),
+                upper: alertConfig?.upperBound ?? alertService.upperCarbonDioxide(for: sensor),
+                range: RuuviAlertConstants.CarbonDioxide.lowerBound...RuuviAlertConstants.CarbonDioxide.upperBound
             )
         case .pm10:
-            return (
-                alertService.lowerPM1(for: sensor),
-                alertService.upperPM1(for: sensor)
+            return visibleAlertBounds(
+                lower: alertConfig?.lowerBound ?? alertService.lowerPM1(for: sensor),
+                upper: alertConfig?.upperBound ?? alertService.upperPM1(for: sensor),
+                range: particulateMatterRange
             )
         case .pm25:
-            return (
-                alertService.lowerPM25(for: sensor),
-                alertService.upperPM25(for: sensor)
+            return visibleAlertBounds(
+                lower: alertConfig?.lowerBound ?? alertService.lowerPM25(for: sensor),
+                upper: alertConfig?.upperBound ?? alertService.upperPM25(for: sensor),
+                range: particulateMatterRange
             )
         case .pm40:
-            return (
-                alertService.lowerPM4(for: sensor),
-                alertService.upperPM4(for: sensor)
+            return visibleAlertBounds(
+                lower: alertConfig?.lowerBound ?? alertService.lowerPM4(for: sensor),
+                upper: alertConfig?.upperBound ?? alertService.upperPM4(for: sensor),
+                range: particulateMatterRange
             )
         case .pm100:
-            return (
-                alertService.lowerPM10(for: sensor),
-                alertService.upperPM10(for: sensor)
+            return visibleAlertBounds(
+                lower: alertConfig?.lowerBound ?? alertService.lowerPM10(for: sensor),
+                upper: alertConfig?.upperBound ?? alertService.upperPM10(for: sensor),
+                range: particulateMatterRange
             )
         case .voc:
-            return (
-                alertService.lowerVOC(for: sensor),
-                alertService.upperVOC(for: sensor)
+            return visibleAlertBounds(
+                lower: alertConfig?.lowerBound ?? alertService.lowerVOC(for: sensor),
+                upper: alertConfig?.upperBound ?? alertService.upperVOC(for: sensor),
+                range: RuuviAlertConstants.VOC.lowerBound...RuuviAlertConstants.VOC.upperBound
             )
         case .nox:
-            return (
-                alertService.lowerNOX(for: sensor),
-                alertService.upperNOX(for: sensor)
+            return visibleAlertBounds(
+                lower: alertConfig?.lowerBound ?? alertService.lowerNOX(for: sensor),
+                upper: alertConfig?.upperBound ?? alertService.upperNOX(for: sensor),
+                range: RuuviAlertConstants.NOX.lowerBound...RuuviAlertConstants.NOX.upperBound
             )
         case .luminosity:
-            return (
-                alertService.lowerLuminosity(for: sensor),
-                alertService.upperLuminosity(for: sensor)
+            return visibleAlertBounds(
+                lower: alertConfig?.lowerBound ?? alertService.lowerLuminosity(for: sensor),
+                upper: alertConfig?.upperBound ?? alertService.upperLuminosity(for: sensor),
+                range: RuuviAlertConstants.Luminosity.lowerBound...RuuviAlertConstants.Luminosity.upperBound
             )
         case .soundInstant:
-            return (
-                alertService.lowerSoundInstant(for: sensor),
-                alertService.upperSoundInstant(for: sensor)
+            return visibleAlertBounds(
+                lower: alertConfig?.lowerBound ?? alertService.lowerSoundInstant(for: sensor),
+                upper: alertConfig?.upperBound ?? alertService.upperSoundInstant(for: sensor),
+                range: RuuviAlertConstants.Sound.lowerBound...RuuviAlertConstants.Sound.upperBound
             )
         case .soundAverage:
-            return (
-                alertService.lowerSoundAverage(for: sensor),
-                alertService.upperSoundAverage(for: sensor)
+            return visibleAlertBounds(
+                lower: alertConfig?.lowerBound ?? alertService.lowerSoundAverage(for: sensor),
+                upper: alertConfig?.upperBound ?? alertService.upperSoundAverage(for: sensor),
+                range: RuuviAlertConstants.Sound.lowerBound...RuuviAlertConstants.Sound.upperBound
             )
         case .soundPeak:
-            return (
-                alertService.lowerSoundPeak(for: sensor),
-                alertService.upperSoundPeak(for: sensor)
+            return visibleAlertBounds(
+                lower: alertConfig?.lowerBound ?? alertService.lowerSoundPeak(for: sensor),
+                upper: alertConfig?.upperBound ?? alertService.upperSoundPeak(for: sensor),
+                range: RuuviAlertConstants.Sound.lowerBound...RuuviAlertConstants.Sound.upperBound
             )
         case .rssi:
-            return (
-                alertService.lowerSignal(for: sensor),
-                alertService.upperSignal(for: sensor)
+            return visibleAlertBounds(
+                lower: alertConfig?.lowerBound ?? alertService.lowerSignal(for: sensor),
+                upper: alertConfig?.upperBound ?? alertService.upperSignal(for: sensor),
+                range: RuuviAlertConstants.Signal.lowerBound...RuuviAlertConstants.Signal.upperBound
             )
         default:
             return (nil, nil)
@@ -283,5 +321,59 @@ struct MeasurementVariantResolver {
         } else {
             return measurement.temperature
         }
+    }
+
+    private func visibleAlertBounds(
+        lower: Double?,
+        upper: Double?,
+        range: ClosedRange<Double>
+    ) -> (lower: Double?, upper: Double?) {
+        visibleAlertBounds(
+            lower: lower,
+            upper: upper,
+            minimum: range.lowerBound,
+            maximum: range.upperBound
+        )
+    }
+
+    private func visibleAlertBounds(
+        lower: Double?,
+        upper: Double?,
+        minimum: Double,
+        maximum: Double
+    ) -> (lower: Double?, upper: Double?) {
+        let visibleLower = lower.flatMap {
+            isSameAlertBoundary($0, minimum) ? nil : $0
+        }
+        let visibleUpper = upper.flatMap {
+            isSameAlertBoundary($0, maximum) ? nil : $0
+        }
+        return (visibleLower, visibleUpper)
+    }
+
+    private func isSameAlertBoundary(_ value: Double, _ boundary: Double) -> Bool {
+        abs(value - boundary) <= 0.000_001
+    }
+
+    private func pressureValue(_ value: Double, unit: UnitPressure) -> Double {
+        Pressure(value, unit: .hectopascals)?.converted(to: unit).value ?? value
+    }
+
+    private func temperatureAlertRange(
+        for sensor: AnyRuuviTagSensor,
+        unit: UnitTemperature
+    ) -> (lower: Double, upper: Double) {
+        let usesCustomRange = settings.showCustomTempAlertBound(for: sensor.id)
+        let lower = usesCustomRange
+            ? RuuviAlertConstants.Temperature.customLowerBound
+            : RuuviAlertConstants.Temperature.lowerBound
+        let upper = usesCustomRange
+            ? RuuviAlertConstants.Temperature.customUpperBound
+            : RuuviAlertConstants.Temperature.upperBound
+
+        return (
+            Temperature(value: lower, unit: .celsius).converted(to: unit).value,
+            Temperature(value: upper, unit: .celsius).converted(to: unit).value
+        )
     }
 }

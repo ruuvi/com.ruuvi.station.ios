@@ -41,6 +41,14 @@ class MeasurementDetailsPresenter: NSObject {
         }
         return defaultVariant(for: measurementType)
     }
+    private struct AlertRangeFingerprint: Equatable {
+        let showAlertRange: Bool
+        let variant: MeasurementDisplayVariant
+        let isActive: Bool
+        let lower: Double?
+        let upper: Double?
+    }
+    private var currentAlertRangeFingerprint: AlertRangeFingerprint?
     private weak var output: MeasurementDetailsPresenterOutput?
 
     // Thread-safe data management
@@ -155,6 +163,7 @@ extension MeasurementDetailsPresenter: MeasurementDetailsPresenterInput {
         isDataLoaded = false
         ruuviTagData = []
         lastMeasurementDate = nil
+        currentAlertRangeFingerprint = nil
     }
 }
 
@@ -428,7 +437,10 @@ private extension MeasurementDetailsPresenter {
         }
 
         if !entries.isEmpty {
-            view?.updateChartData(entries, settings: settings)
+            view?.updateChartData(
+                entries,
+                showAlertRangeInGraph: shouldShowAlertRangeInGraph(for: variant)
+            )
         }
     }
 
@@ -444,15 +456,20 @@ private extension MeasurementDetailsPresenter {
             )
         }
 
-        let bounds = variantResolver.alertBounds(for: variant, sensor: sensor.any)
+        let bounds = alertRangeBounds(for: variant, sensor: sensor)
         let upperAlert = bounds.upper
         let lowerAlert = bounds.lower
+        let shouldShowAlertRange = shouldShowAlertRangeInGraph(for: variant)
+        currentAlertRangeFingerprint = alertRangeFingerprint(
+            for: variant,
+            bounds: bounds
+        )
 
         let dataSet = RuuviGraphDataSetFactory.simpleGraphDataSet(
             upperAlertValue: upperAlert,
             entries: entries,
             lowerAlertValue: lowerAlert,
-            showAlertRangeInGraph: settings.showAlertsRangeInGraph
+            showAlertRangeInGraph: shouldShowAlertRange
         )
 
         return RuuviGraphViewDataModel(
@@ -561,8 +578,53 @@ private extension MeasurementDetailsPresenter {
     }
 
     func updateChartAlertRangeIfNeeded() {
-        guard settings.showAlertsRangeInGraph else { return }
+        let variant = resolvedVariant
+        let bounds = alertRangeBounds(for: variant, sensor: ruuviTag)
+        let fingerprint = alertRangeFingerprint(
+            for: variant,
+            bounds: bounds
+        )
+        guard fingerprint != currentAlertRangeFingerprint else { return }
         updateChart()
+    }
+
+    func shouldShowAlertRangeInGraph(for variant: MeasurementDisplayVariant) -> Bool {
+        guard settings.showAlertsRangeInGraph,
+              let alertType = variant.toAlertType() else {
+            return false
+        }
+        if let config = snapshot.getAlertConfig(for: alertType) {
+            return config.isActive
+        }
+        return alertService.isOn(type: alertType, for: ruuviTag.any)
+    }
+
+    func alertRangeBounds(
+        for variant: MeasurementDisplayVariant,
+        sensor: RuuviTagSensor
+    ) -> (lower: Double?, upper: Double?) {
+        let alertConfig = variant.toAlertType().flatMap {
+            snapshot.getAlertConfig(for: $0)
+        }
+        return variantResolver.alertBounds(
+            for: variant,
+            sensor: sensor.any,
+            alertConfig: alertConfig
+        )
+    }
+
+    private func alertRangeFingerprint(
+        for variant: MeasurementDisplayVariant,
+        bounds: (lower: Double?, upper: Double?)
+    ) -> AlertRangeFingerprint {
+        let isRangeVisible = shouldShowAlertRangeInGraph(for: variant)
+        return AlertRangeFingerprint(
+            showAlertRange: settings.showAlertsRangeInGraph,
+            variant: variant,
+            isActive: isRangeVisible,
+            lower: isRangeVisible ? bounds.lower : nil,
+            upper: isRangeVisible ? bounds.upper : nil
+        )
     }
 }
 

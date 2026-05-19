@@ -172,13 +172,15 @@ private extension RuuviGraphDataSetFactory {
         let alertColor = RuuviColor.graphAlertColor.color
         dataSet.alertColor = alertColor
         dataSet.hasAlertRange = true
+        dataSet.upperAlertLimit = .nan
+        dataSet.lowerAlertLimit = .nan
 
         if let upperLimit = upperLimit {
-            dataSet.upperAlertLimit = upperLimit
+            dataSet.upperAlertLimit = CGFloat(upperLimit)
         }
 
         if let lowerLimit = lowerLimit {
-            dataSet.lowerAlertLimit = lowerLimit
+            dataSet.lowerAlertLimit = CGFloat(lowerLimit)
         }
     }
 }

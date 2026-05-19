@@ -1365,24 +1365,24 @@ extension CardsGraphViewController {
 
     private func calculateAlertFillIfNeeded(for view: CardsGraphView) {
         guard let data = view.underlyingView.data,
-              let dataSet = data.dataSets.first as? LineChartDataSet,
-              let upperAlertValue = view.underlyingView.upperAlertValue,
-              let lowerAlertValue = view.underlyingView.lowerAlertValue else {
-            // Ensure alert range is disabled if thresholds aren't available
-            if let dataSet = view.underlyingView.data?.dataSets.first as? LineChartDataSet {
-                dataSet.hasAlertRange = false
-            }
+              let dataSet = data.dataSets.first as? LineChartDataSet else {
             return
         }
 
-        // Always reset alert state first
-        dataSet.hasAlertRange = false
+        let upperAlertValue = view.underlyingView.upperAlertValue
+        let lowerAlertValue = view.underlyingView.lowerAlertValue
+        guard upperAlertValue != nil || lowerAlertValue != nil else {
+            dataSet.hasAlertRange = false
+            return
+        }
 
-        // Set the alert range if the thresholds are valid
-        dataSet.lowerAlertLimit = lowerAlertValue
-        dataSet.upperAlertLimit = upperAlertValue
+        let shouldKeepAlertRangeVisible = dataSet.hasAlertRange
+
+        // Update limits without changing whether the current alert range is visible.
+        dataSet.lowerAlertLimit = lowerAlertValue.map { CGFloat($0) } ?? .nan
+        dataSet.upperAlertLimit = upperAlertValue.map { CGFloat($0) } ?? .nan
         dataSet.alertColor = RuuviColor.graphAlertColor.color
-        dataSet.hasAlertRange = true
+        dataSet.hasAlertRange = shouldKeepAlertRangeVisible
     }
 
     private func calculateMinMaxForChart(for view: CardsGraphView) {

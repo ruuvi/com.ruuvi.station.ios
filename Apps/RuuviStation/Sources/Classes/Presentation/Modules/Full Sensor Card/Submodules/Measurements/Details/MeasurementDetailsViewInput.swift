@@ -14,6 +14,9 @@ protocol MeasurementDetailsViewInput: ViewInput {
         unit: String,
         measurementService: RuuviServiceMeasurement
     )
-    func updateChartData(_ entries: [ChartDataEntry], settings: RuuviLocalSettings)
+    func updateChartData(
+        _ entries: [ChartDataEntry],
+        showAlertRangeInGraph: Bool
+    )
     func setNoDataLabelVisibility(show: Bool)
 }

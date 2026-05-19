@@ -872,7 +872,7 @@ extension MeasurementDetailsViewController: MeasurementDetailsViewInput {
 
     func updateChartData(
         _ entries: [ChartDataEntry],
-        settings: RuuviLocalSettings
+        showAlertRangeInGraph: Bool
     ) {
         let isWithin36Hours = RuuviGraphDataSetFactory.isFirstDataPointWithin36Hours(
             from: entries
@@ -883,7 +883,7 @@ extension MeasurementDetailsViewController: MeasurementDetailsViewInput {
             with: entries,
             isFirstEntry: entries.count == 1,
             firstEntry: nil,
-            showAlertRangeInGraph: settings.showAlertsRangeInGraph
+            showAlertRangeInGraph: showAlertRangeInGraph
         )
     }
 

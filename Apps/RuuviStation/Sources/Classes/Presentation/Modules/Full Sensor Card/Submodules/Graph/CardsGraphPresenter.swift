@@ -87,6 +87,25 @@ class CardsGraphPresenter: NSObject {
         let measurements: [RuuviMeasurement]
         let entries: [MeasurementDisplayVariant: [ChartDataEntrySnapshot]]
     }
+    private struct AlertRangeBounds {
+        let lower: Double?
+        let upper: Double?
+    }
+    private struct AlertRangeModuleFingerprint: Equatable {
+        let variant: MeasurementDisplayVariant
+        let isActive: Bool
+        let lower: Double?
+        let upper: Double?
+    }
+    private struct AlertRangeFingerprint: Equatable {
+        let showAlertRange: Bool
+        let modules: [AlertRangeModuleFingerprint]
+    }
+    private struct AlertRangeChartContext {
+        let states: [MeasurementDisplayVariant: Bool]
+        let bounds: [MeasurementDisplayVariant: AlertRangeBounds]
+        let fingerprint: AlertRangeFingerprint
+    }
     private var chartCache: [String: CachedChartData] = [:]
     private var chartCacheOrder: [String] = []
     private let chartCacheLimit = 5
@@ -96,6 +115,7 @@ class CardsGraphPresenter: NSObject {
     )
     private var chartDataGeneration: Int = 0
     private var currentFingerprint: MeasurementFingerprint?
+    private var currentAlertRangeFingerprint: AlertRangeFingerprint?
     private lazy var variantResolver = MeasurementVariantResolver(
         settings: settings,
         measurementService: measurementService,
@@ -163,6 +183,8 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
         observeAlertData(from: snapshot)
         handleSnapshotChangeIfNeeded(previousSnapshotId: previousId, newSnapshot: snapshot)
         applyVisibilityChangeIfNeeded()
+        updateLatestAlertStates()
+        rebuildChartDataIfAlertRangeChanged()
         refreshSyncUIForCurrentSnapshot()
     }
 
@@ -489,10 +511,16 @@ extension CardsGraphPresenter {
     private func observeAlertData(from snapshot: RuuviTagCardSnapshot) {
         alertDataCancellable?.cancel()
         alertDataCancellable = snapshot.$alertData
+            .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                self?.updateLatestAlertStates()
+                self?.handleAlertDataChange()
             }
+    }
+
+    private func handleAlertDataChange() {
+        updateLatestAlertStates()
+        rebuildChartDataIfAlertRangeChanged()
     }
 
     private func handleSnapshotChangeIfNeeded(
@@ -523,10 +551,15 @@ extension CardsGraphPresenter {
         chartModules = cached.modules
         ruuviTagData = cached.measurements
         let restoredEntries = cached.entries.mapValues { $0.map { $0.toEntry() } }
+        let alertRangeContext = alertRangeChartContext(
+            for: chartModules,
+            sensor: sensor
+        )
         let models = buildChartModels(
             for: chartModules,
             entries: restoredEntries,
-            sensor: sensor
+            alertRangeStates: alertRangeContext.states,
+            alertRangeBounds: alertRangeContext.bounds
         )
         datasource = models
         view?.createChartViews(from: chartModules)
@@ -537,6 +570,7 @@ extension CardsGraphPresenter {
             updateLatestMeasurement(lastMeasurement)
         }
         currentFingerprint = MeasurementFingerprint(measurements: ruuviTagData)
+        currentAlertRangeFingerprint = alertRangeContext.fingerprint
         return true
     }
 
@@ -547,6 +581,7 @@ extension CardsGraphPresenter {
         view?.clearChartHistory()
         invalidatePendingChartComputation()
         currentFingerprint = nil
+        currentAlertRangeFingerprint = nil
     }
 
     private func cacheCurrentChartData(
@@ -593,6 +628,124 @@ extension CardsGraphPresenter {
             }
             result[variant] = snapshot.getAlertConfig(for: alertType)?.isHighlighted == true
         }
+    }
+
+    private func alertRangeStatesForChartModules(
+        variants: [MeasurementDisplayVariant]? = nil,
+        sensor: AnyRuuviTagSensor? = nil
+    ) -> [MeasurementDisplayVariant: Bool] {
+        let variants = variants ?? chartModules
+        let sensor = sensor ?? self.sensor
+
+        return variants.reduce(into: [MeasurementDisplayVariant: Bool]()) { result, variant in
+            result[variant] = isAlertRangeActive(for: variant, sensor: sensor)
+        }
+    }
+
+    private func isAlertRangeActive(
+        for variant: MeasurementDisplayVariant,
+        sensor: AnyRuuviTagSensor? = nil
+    ) -> Bool {
+        guard let alertType = variant.toAlertType() else { return false }
+
+        if let config = snapshot?.getAlertConfig(for: alertType) {
+            return config.isActive
+        }
+
+        guard let sensor = sensor ?? self.sensor else { return false }
+        return alertService.isOn(type: alertType, for: sensor)
+    }
+
+    private func alertRangeBoundsForChartModules(
+        variants: [MeasurementDisplayVariant]? = nil,
+        sensor: AnyRuuviTagSensor? = nil
+    ) -> [MeasurementDisplayVariant: AlertRangeBounds] {
+        let variants = variants ?? chartModules
+        let sensor = sensor ?? self.sensor
+
+        return variants.reduce(into: [MeasurementDisplayVariant: AlertRangeBounds]()) { result, variant in
+            let bounds = variantResolver.alertBounds(
+                for: variant,
+                sensor: sensor,
+                alertConfig: alertConfig(for: variant)
+            )
+            result[variant] = AlertRangeBounds(
+                lower: bounds.lower,
+                upper: bounds.upper
+            )
+        }
+    }
+
+    private func alertConfig(
+        for variant: MeasurementDisplayVariant
+    ) -> RuuviTagCardSnapshotAlertConfig? {
+        guard let alertType = variant.toAlertType() else { return nil }
+        return snapshot?.getAlertConfig(for: alertType)
+    }
+
+    private func alertRangeFingerprint(
+        for variants: [MeasurementDisplayVariant],
+        alertRangeStates: [MeasurementDisplayVariant: Bool],
+        alertRangeBounds: [MeasurementDisplayVariant: AlertRangeBounds]
+    ) -> AlertRangeFingerprint {
+        let moduleFingerprints = variants.map { variant in
+            let bounds = alertRangeBounds[variant]
+            let isRangeVisible = settings.showAlertsRangeInGraph &&
+                (alertRangeStates[variant] == true)
+            return AlertRangeModuleFingerprint(
+                variant: variant,
+                isActive: isRangeVisible,
+                lower: isRangeVisible ? bounds?.lower : nil,
+                upper: isRangeVisible ? bounds?.upper : nil
+            )
+        }
+        return AlertRangeFingerprint(
+            showAlertRange: settings.showAlertsRangeInGraph,
+            modules: moduleFingerprints
+        )
+    }
+
+    private func alertRangeChartContext(
+        for variants: [MeasurementDisplayVariant],
+        sensor: AnyRuuviTagSensor?
+    ) -> AlertRangeChartContext {
+        let states = alertRangeStatesForChartModules(
+            variants: variants,
+            sensor: sensor
+        )
+        let bounds = alertRangeBoundsForChartModules(
+            variants: variants,
+            sensor: sensor
+        )
+        let fingerprint = alertRangeFingerprint(
+            for: variants,
+            alertRangeStates: states,
+            alertRangeBounds: bounds
+        )
+        return AlertRangeChartContext(
+            states: states,
+            bounds: bounds,
+            fingerprint: fingerprint
+        )
+    }
+
+    @discardableResult
+    private func rebuildChartDataIfAlertRangeChanged() -> Bool {
+        guard !chartModules.isEmpty else { return false }
+
+        let alertRangeContext = alertRangeChartContext(
+            for: chartModules,
+            sensor: sensor
+        )
+
+        guard alertRangeContext.fingerprint != currentAlertRangeFingerprint else {
+            return false
+        }
+
+        currentAlertRangeFingerprint = alertRangeContext.fingerprint
+        view?.showAlertRangeInGraph = settings.showAlertsRangeInGraph
+        rebuildChartData(updateView: true)
+        return true
     }
 
     private struct MeasurementFingerprint: Equatable {
@@ -932,8 +1085,8 @@ extension CardsGraphPresenter {
             return
         }
 
-        view?.showAlertRangeInGraph = settings.showAlertsRangeInGraph
-        rebuildChartData(updateView: true)
+        updateLatestAlertStates()
+        rebuildChartDataIfAlertRangeChanged()
     }
 
     private func alertChangeBelongsToCurrentSensor(_ physicalSensor: PhysicalSensor) -> Bool {
@@ -1044,6 +1197,10 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         let newFingerprint = MeasurementFingerprint(measurements: newMeasurements)
         ruuviTagData = newMeasurements
         if newFingerprint == currentFingerprint {
+            if rebuildChartDataIfAlertRangeChanged() {
+                shouldRefreshEmptyStateAfterLoad = false
+                return
+            }
             if shouldRefreshEmptyStateAfterLoad {
                 let hasData = !datasource.isEmpty
                 view?.setHasChartData(hasData)
@@ -1119,14 +1276,14 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         guard view != nil else { return }
         let variants = chartModules
         let measurements = ruuviTagData
-        let sensorSnapshot = sensor
+        let alertRangeContext = alertRangeChartContext(for: variants, sensor: sensor)
 
-        if variants.isEmpty {
-            if updateView {
-                view?.setChartViewData(from: [], settings: settings)
-            }
-            view?.setHasChartData(false)
-            cacheCurrentChartData(entries: [:], measurements: measurements)
+        if handleEmptyChartDataIfNeeded(
+            variants: variants,
+            measurements: measurements,
+            alertRangeContext: alertRangeContext,
+            updateView: updateView
+        ) {
             return
         }
 
@@ -1140,7 +1297,8 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
             let models = self.buildChartModels(
                 for: variants,
                 entries: chartEntries,
-                sensor: sensorSnapshot
+                alertRangeStates: alertRangeContext.states,
+                alertRangeBounds: alertRangeContext.bounds
             )
 
             DispatchQueue.main.async { [weak self] in
@@ -1161,14 +1319,35 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
                     entries: chartEntries,
                     measurements: measurements
                 )
+                if updateView {
+                    self.currentAlertRangeFingerprint = alertRangeContext.fingerprint
+                }
             }
         }
+    }
+
+    private func handleEmptyChartDataIfNeeded(
+        variants: [MeasurementDisplayVariant],
+        measurements: [RuuviMeasurement],
+        alertRangeContext: AlertRangeChartContext,
+        updateView: Bool
+    ) -> Bool {
+        guard variants.isEmpty else { return false }
+
+        if updateView {
+            view?.setChartViewData(from: [], settings: settings)
+            currentAlertRangeFingerprint = alertRangeContext.fingerprint
+        }
+        view?.setHasChartData(false)
+        cacheCurrentChartData(entries: [:], measurements: measurements)
+        return true
     }
 
     private func buildChartModels(
         for variants: [MeasurementDisplayVariant],
         entries: [MeasurementDisplayVariant: [ChartDataEntry]],
-        sensor: AnyRuuviTagSensor?
+        alertRangeStates: [MeasurementDisplayVariant: Bool],
+        alertRangeBounds: [MeasurementDisplayVariant: AlertRangeBounds]
     ) -> [RuuviGraphViewDataModel] {
         var models: [RuuviGraphViewDataModel] = []
 
@@ -1177,12 +1356,17 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
                 continue
             }
 
-            let bounds = variantResolver.alertBounds(for: variant, sensor: sensor)
+            let bounds = alertRangeBounds[variant] ?? AlertRangeBounds(
+                lower: nil,
+                upper: nil
+            )
+            let shouldShowAlertRange = settings.showAlertsRangeInGraph &&
+                (alertRangeStates[variant] == true)
             let dataSet = RuuviGraphDataSetFactory.newDataSet(
                 upperAlertValue: bounds.upper,
                 entries: variantEntries,
                 lowerAlertValue: bounds.lower,
-                showAlertRangeInGraph: settings.showAlertsRangeInGraph
+                showAlertRangeInGraph: shouldShowAlertRange
             )
             let model = RuuviGraphViewDataModel(
                 upperAlertValue: bounds.upper,
