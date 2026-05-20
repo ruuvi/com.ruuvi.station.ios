@@ -205,23 +205,6 @@ extension DashboardPresenter: DashboardViewOutput {
         }
     }
 
-    func viewDidTriggerChangeBackground(for snapshot: RuuviTagCardSnapshot) {
-        guard let sensor = serviceCoordinatorManager.getSensor(for: snapshot.id) else { return }
-        router.openBackgroundSelectionView(ruuviTag: sensor)
-    }
-
-    func viewDidTriggerRename(for snapshot: RuuviTagCardSnapshot) {
-        view?.showSensorNameRenameDialog(
-            for: snapshot,
-            sortingType: settingsService.getCurrentDashboardSortingType()
-        )
-    }
-
-    func viewDidTriggerShare(for snapshot: RuuviTagCardSnapshot) {
-        guard let sensor = serviceCoordinatorManager.getSensor(for: snapshot.id) else { return }
-        router.openShare(for: sensor)
-    }
-
     func viewDidTriggerRemove(for snapshot: RuuviTagCardSnapshot) {
         guard let sensor = serviceCoordinatorManager.getSensor(for: snapshot.id) else { return }
         router.openRemove(for: sensor, output: self)
@@ -281,10 +264,6 @@ extension DashboardPresenter: DashboardViewOutput {
 
     func viewDidTriggerPullToRefresh() {
         serviceCoordinatorManager.triggerCloudSync()
-    }
-
-    func viewDidRenameTag(to name: String, snapshot: RuuviTagCardSnapshot) {
-        serviceCoordinatorManager.updateSensorName(name, for: snapshot)
     }
 
     func viewDidReorderSensors(with type: DashboardSortingType, orderedIds: [String]) {

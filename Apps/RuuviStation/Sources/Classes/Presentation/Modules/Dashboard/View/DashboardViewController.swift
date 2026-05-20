@@ -239,10 +239,6 @@ final class DashboardViewController: UIViewController {
     private var showSignInBannerConstraint: NSLayoutConstraint!
     private var hideSignInBannerConstraint: NSLayoutConstraint!
 
-    // MARK: - Text Field Properties
-    private var tagNameTextField = UITextField()
-    private let tagNameCharacterLimit: Int = 32
-
     // MARK: - Refresh Control Properties
     private var isListRefreshable: Bool = true
     private var isPulling: Bool = false
@@ -989,139 +985,112 @@ private extension DashboardViewController {
 // MARK: - Context Menu Configuration
 private extension DashboardViewController {
     func cardContextMenuOption(for indexPath: IndexPath) -> UIMenu {
-        let basicActions = createBasicContextMenuActions(for: indexPath)
-        var contextMenuActions = basicActions
+        var actions = [
+            createMainViewAction(for: indexPath),
+            createHistoryViewAction(for: indexPath),
+            createAlertsAction(for: indexPath),
+            createSettingsAction(for: indexPath),
+        ]
 
-        // Add reorder actions if multiple sensors exist
-        if dataSource.snapshot().numberOfItems > 1 {
-            let reorderActions = createReorderActions(for: indexPath)
-            contextMenuActions.append(contentsOf: reorderActions)
+        if moveUpIsAvailable(at: indexPath) {
+            actions.append(createMoveUpAction(for: indexPath))
         }
 
-        // Add share action if applicable
-        if let snapshot = dataSource.itemIdentifier(for: indexPath),
-           snapshot.metadata.canShareTag {
-            let shareAction = createShareAction(for: indexPath)
-            contextMenuActions.append(shareAction)
+        if moveDownIsAvailable(at: indexPath) {
+            actions.append(createMoveDownAction(for: indexPath))
         }
 
-        // Add remove action
-        let removeAction = createRemoveAction(for: indexPath)
-        contextMenuActions.append(removeAction)
+        actions.append(createRemoveAction(for: indexPath))
 
-        return UIMenu(title: "", children: contextMenuActions)
+        return UIMenu(title: "", children: actions)
     }
 
-    func createBasicContextMenuActions(for indexPath: IndexPath) -> [UIAction] {
-        let fullImageViewAction = UIAction(title: RuuviLocalization.fullImageView) { [weak self] _ in
+    func createMainViewAction(for indexPath: IndexPath) -> UIAction {
+        return UIAction(
+            title: RuuviLocalization.mainView,
+            image: dashboardMenuIcon(RuuviAsset.CardsMenu.dashboardMenuMainView)
+        ) { [weak self] _ in
             self?.handleContextMenuAction(at: indexPath) { snapshot in
                 self?.output.viewDidTriggerOpenCardImageView(for: snapshot)
             }
         }
+    }
 
-        let historyViewAction = UIAction(title: RuuviLocalization.historyView) { [weak self] _ in
+    func createHistoryViewAction(for indexPath: IndexPath) -> UIAction {
+        return UIAction(
+            title: RuuviLocalization.historyView,
+            image: dashboardMenuIcon(RuuviAsset.CardsMenu.dashboardMenuHistoryView)
+        ) { [weak self] _ in
             self?.handleContextMenuAction(at: indexPath) { snapshot in
                 self?.output.viewDidTriggerChart(for: snapshot)
             }
         }
-
-        let changeBackgroundAction = UIAction(title: RuuviLocalization.changeBackground) { [weak self] _ in
-            self?.handleContextMenuAction(at: indexPath) { snapshot in
-                self?.output.viewDidTriggerChangeBackground(for: snapshot)
-            }
-        }
-
-        let renameAction = UIAction(title: RuuviLocalization.rename) { [weak self] _ in
-            self?.handleContextMenuAction(at: indexPath) { snapshot in
-                self?.output.viewDidTriggerRename(for: snapshot)
-            }
-        }
-
-        let settingsActions = createSettingsContextMenuActions(for: indexPath)
-
-        return [
-            fullImageViewAction,
-            historyViewAction,
-        ] + settingsActions + [
-            changeBackgroundAction,
-            renameAction,
-        ]
     }
 
-    func createSettingsContextMenuActions(for indexPath: IndexPath) -> [UIAction] {
-        if flags.showNewCardsMenu {
-            let settingsAction = UIAction(
-                title: RuuviLocalization.Settings.NavigationItem.title
-            ) { [weak self] _ in
-                self?.handleContextMenuAction(at: indexPath) { snapshot in
-                    self?.output.viewDidTriggerSettings(for: snapshot)
-                }
+    func createAlertsAction(for indexPath: IndexPath) -> UIAction {
+        return UIAction(
+            title: RuuviLocalization.TagSettings.Label.Alerts.text,
+            image: dashboardMenuIcon(RuuviAsset.CardsMenu.dashboardMenuAlerts)
+        ) { [weak self] _ in
+            self?.handleContextMenuAction(at: indexPath) { snapshot in
+                self?.output.viewDidTriggerAlerts(for: snapshot)
             }
-
-            let alertsAction = UIAction(
-                title: RuuviLocalization.TagSettings.Label.Alerts.text
-            ) { [weak self] _ in
-                self?.handleContextMenuAction(at: indexPath) { snapshot in
-                    self?.output.viewDidTriggerAlerts(for: snapshot)
-                }
-            }
-
-            return [
-                alertsAction,
-                settingsAction,
-            ]
-        } else {
-            let settingsAndAlertsAction = UIAction(
-                title: RuuviLocalization.settingsAndAlerts
-            ) { [weak self] _ in
-                self?.handleContextMenuAction(at: indexPath) { snapshot in
-                    self?.output.viewDidTriggerSettings(for: snapshot)
-                }
-            }
-
-            return [settingsAndAlertsAction]
         }
     }
 
-    func createReorderActions(for indexPath: IndexPath) -> [UIAction] {
-        let totalItems = dataSource.snapshot().numberOfItems
-        var actions: [UIAction] = []
-
-        // Add move up action (not for first item)
-        if indexPath.item > 0 {
-            let moveUpAction = UIAction(title: RuuviLocalization.moveUp) { [weak self] _ in
-                self?.isContextMenuPresented = false
-                self?.handleMoveUp(at: indexPath)
+    func createSettingsAction(for indexPath: IndexPath) -> UIAction {
+        return UIAction(
+            title: RuuviLocalization.Settings.NavigationItem.title,
+            image: dashboardMenuIcon(RuuviAsset.CardsMenu.dashboardMenuSettings)
+        ) { [weak self] _ in
+            self?.handleContextMenuAction(at: indexPath) { snapshot in
+                self?.output.viewDidTriggerSettings(for: snapshot)
             }
-            actions.append(moveUpAction)
         }
-
-        // Add move down action (not for last item)
-        if indexPath.item < totalItems - 1 {
-            let moveDownAction = UIAction(title: RuuviLocalization.moveDown) { [weak self] _ in
-                self?.isContextMenuPresented = false
-                self?.handleMoveDown(at: indexPath)
-            }
-            actions.append(moveDownAction)
-        }
-
-        return actions
     }
 
-    func createShareAction(for indexPath: IndexPath) -> UIAction {
-        return UIAction(title: RuuviLocalization.TagSettings.shareButton) { [weak self] _ in
-            self?.handleContextMenuAction(at: indexPath) { snapshot in
-                self?.output.viewDidTriggerShare(for: snapshot)
-            }
+    func createMoveUpAction(for indexPath: IndexPath) -> UIAction {
+        return UIAction(
+            title: RuuviLocalization.moveUp,
+            image: dashboardMenuIcon(RuuviAsset.CardsMenu.dashboardMenuMoveUp)
+        ) { [weak self] _ in
+            self?.isContextMenuPresented = false
+            self?.handleMoveUp(at: indexPath)
         }
+    }
+
+    func createMoveDownAction(for indexPath: IndexPath) -> UIAction {
+        return UIAction(
+            title: RuuviLocalization.moveDown,
+            image: dashboardMenuIcon(RuuviAsset.CardsMenu.dashboardMenuMoveDown)
+        ) { [weak self] _ in
+            self?.isContextMenuPresented = false
+            self?.handleMoveDown(at: indexPath)
+        }
+    }
+
+    func moveUpIsAvailable(at indexPath: IndexPath) -> Bool {
+        return dataSource.snapshot().numberOfItems > 1 && indexPath.item > 0
+    }
+
+    func moveDownIsAvailable(at indexPath: IndexPath) -> Bool {
+        return dataSource.snapshot().numberOfItems > 1 &&
+            indexPath.item < dataSource.snapshot().numberOfItems - 1
     }
 
     func createRemoveAction(for indexPath: IndexPath) -> UIAction {
-        return UIAction(title: RuuviLocalization.remove) { [weak self] _ in
+        return UIAction(
+            title: RuuviLocalization.remove,
+            image: dashboardMenuIcon(RuuviAsset.CardsMenu.dashboardMenuRemove)
+        ) { [weak self] _ in
             self?.handleContextMenuAction(at: indexPath) { snapshot in
                 self?.output.viewDidTriggerRemove(for: snapshot)
             }
         }
+    }
+
+    func dashboardMenuIcon(_ asset: ImageAsset) -> UIImage {
+        return asset.image.withRenderingMode(.alwaysOriginal)
     }
 
     func handleContextMenuAction(at indexPath: IndexPath, action: (RuuviTagCardSnapshot) -> Void) {
@@ -1493,44 +1462,6 @@ extension DashboardViewController: NewDashboardViewInput {
         present(alert, animated: true)
     }
 
-    func showSensorNameRenameDialog(
-        for snapshot: RuuviTagCardSnapshot,
-        sortingType: DashboardSortingType
-    ) {
-        let defaultName = GlobalHelpers.ruuviDeviceDefaultName(
-            from: snapshot.identifierData.mac?.mac,
-            luid: snapshot.identifierData.luid?.value,
-            dataFormat: snapshot.displayData.version
-        )
-
-        let alert = UIAlertController(
-            title: RuuviLocalization.TagSettings.TagNameTitleLabel.text,
-            message: sortingType == .alphabetical ?
-                RuuviLocalization.TagSettings.TagNameTitleLabel.Rename.text : nil,
-            preferredStyle: .alert
-        )
-
-        alert.addTextField { [weak self] alertTextField in
-            guard let self = self else { return }
-            alertTextField.delegate = self
-            alertTextField.text = (defaultName == snapshot.displayData.name) ? nil : snapshot.displayData.name
-            alertTextField.placeholder = defaultName
-            self.tagNameTextField = alertTextField
-        }
-
-        let okAction = UIAlertAction(title: RuuviLocalization.ok, style: .default) { [weak self] _ in
-            guard let self = self else { return }
-            let name = self.tagNameTextField.text?.isEmpty == false ?
-                self.tagNameTextField.text! : defaultName
-            self.output.viewDidRenameTag(to: name, snapshot: snapshot)
-        }
-
-        let cancelAction = UIAlertAction(title: RuuviLocalization.cancel, style: .cancel)
-        alert.addAction(okAction)
-        alert.addAction(cancelAction)
-        present(alert, animated: true)
-    }
-
     func showSensorSortingResetConfirmationDialog() {
         let message = RuuviLocalization.resetOrderConfirmation
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
@@ -1582,17 +1513,6 @@ extension DashboardViewController: NoSensorViewDelegate {
 
 // MARK: - UITextFieldDelegate
 extension DashboardViewController: UITextFieldDelegate {
-    func textField(
-        _ textField: UITextField,
-        shouldChangeCharactersIn range: NSRange,
-        replacementString string: String
-    ) -> Bool {
-        guard let text = textField.text, textField == tagNameTextField else { return true }
-
-        let limit = text.utf16.count + string.utf16.count - range.length
-        return limit <= tagNameCharacterLimit
-    }
-
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == searchTextField {
             textField.resignFirstResponder()

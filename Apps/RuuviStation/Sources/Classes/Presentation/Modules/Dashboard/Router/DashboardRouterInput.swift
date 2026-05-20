@@ -26,9 +26,7 @@ protocol DashboardRouterInput {
         sensorSettings: SensorSettings?
     )
     func openUpdateFirmware(ruuviTag: RuuviTagSensor)
-    func openBackgroundSelectionView(ruuviTag: RuuviTagSensor)
     func openMyRuuviAccount()
-    func openShare(for sensor: RuuviTagSensor)
     func openRemove(
       for sensor: RuuviTagSensor,
       output: SensorRemovalModuleOutput

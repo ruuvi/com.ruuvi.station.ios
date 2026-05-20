@@ -25,10 +25,6 @@ protocol NewDashboardViewInput: ViewInput {
         newlyAddedSensor: Bool
     )
     func showAlreadyLoggedInAlert(with email: String)
-    func showSensorNameRenameDialog(
-        for snapshot: RuuviTagCardSnapshot,
-        sortingType: DashboardSortingType
-    )
     func showSensorSortingResetConfirmationDialog()
 }
 
