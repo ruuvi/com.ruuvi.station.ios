@@ -84,6 +84,7 @@ extension AppRouter: OnboardRouterDelegate {
 
         let navigationController = UINavigationController(
             rootViewController: module)
+        navigationController.makeTransparentForDarkBackground()
         viewController.present(navigationController, animated: true)
 
         if let presenter = module.output as? SignInBenefitsModuleInput {

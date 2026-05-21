@@ -26,7 +26,9 @@ class SignInViewController: UIViewController {
             target: self,
             action: #selector(handleBackButtonTap)
         )
-        button.tintColor = .white
+        if #unavailable(iOS 26.0) {
+            button.tintColor = .white
+        }
         return button
     }()
 
@@ -80,7 +82,7 @@ extension SignInViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.makeTransparent()
+        navigationController?.makeTransparentForDarkBackground()
     }
 
     override func viewWillDisappear(_ animated: Bool) {

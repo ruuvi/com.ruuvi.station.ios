@@ -88,6 +88,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
 
         let navigationController = UINavigationController(
             rootViewController: module)
+        navigationController.makeTransparentForDarkBackground()
         transitionHandler.present(navigationController, animated: true)
 
         if let presenter = module.output as? SignInBenefitsModuleInput {

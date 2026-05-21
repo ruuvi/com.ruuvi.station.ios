@@ -8,6 +8,7 @@ class UniversalLinkRouterImpl: UniversalLinkRouter {
         let module = factory.create()
         let navigationController = UINavigationController(
             rootViewController: module)
+        navigationController.makeTransparentForDarkBackground()
         if let viewController = transitionHandler as? UIViewController {
             viewController.present(navigationController, animated: true)
         }

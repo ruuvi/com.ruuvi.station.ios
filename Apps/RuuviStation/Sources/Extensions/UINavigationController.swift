@@ -14,9 +14,18 @@ extension UINavigationController {
         navigationBar.isTranslucent = true
     }
 
+    func makeTransparentForDarkBackground() {
+        makeTransparent()
+        navigationBar.barStyle = .black
+        navigationBar.tintColor = .white
+        navigationBar.overrideUserInterfaceStyle = .dark
+    }
+
     func resetStyleToDefault() {
         navigationBar.setBackgroundImage(nil, for: .default)
         navigationBar.shadowImage = nil
+        navigationBar.barStyle = .default
+        navigationBar.overrideUserInterfaceStyle = .unspecified
     }
 
     /// Given the kind of a (UIViewController subclass),

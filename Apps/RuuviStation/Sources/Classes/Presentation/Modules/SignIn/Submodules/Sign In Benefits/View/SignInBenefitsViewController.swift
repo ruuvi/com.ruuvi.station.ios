@@ -14,7 +14,9 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
             target: self,
             action: #selector(handleCloseButtonTap)
         )
-        button.tintColor = .white
+        if #unavailable(iOS 26.0) {
+            button.tintColor = .white
+        }
         return button
     }()
 
@@ -114,7 +116,7 @@ extension SignInBenefitsViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.makeTransparent()
+        navigationController?.makeTransparentForDarkBackground()
     }
 }
 
