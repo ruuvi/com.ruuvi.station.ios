@@ -10,6 +10,7 @@ struct CardsSettingsAlertSectionModel: Identifiable, Equatable {
     }
 
     let id: String
+    let legacyTitle: String
     let title: String
     let alertType: AlertType
     let headerState: HeaderState

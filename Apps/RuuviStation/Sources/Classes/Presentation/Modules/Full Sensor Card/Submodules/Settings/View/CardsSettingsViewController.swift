@@ -559,7 +559,7 @@ private extension CardsSettingsViewController {
             return
         }
         let alert = UIAlertController(
-            title: section.title,
+            title: section.legacyTitle,
             message: nil,
             preferredStyle: .alert
         )
