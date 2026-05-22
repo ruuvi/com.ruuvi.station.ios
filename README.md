@@ -69,9 +69,9 @@ Setup your [Firebase](https://firebase.google.com) project and replace ```statio
 
 ## Get in touch
 
-Join our [Slack](https://slack.ruuvi.com) community. Feel free to ask ``@rinat`` about iOS code.  
+Join our [Slack](https://slack.ruuvi.com) community. Feel free to ask ``@muzibur`` about iOS code.  
 
-Join our [Telegram](https://t.me/ruuvicom) community. Feel free to ask ``@rinatru`` about iOS code. 
+Join our [Telegram](https://t.me/ruuvicom) community. Feel free to ask ``@ipriyo`` about iOS code. 
 
 ## How to buy
 
