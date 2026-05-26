@@ -1,3 +1,5 @@
+// swiftlint:disable file_length
+
 import UIKit
 import SwiftUI
 import Combine
@@ -10,6 +12,7 @@ final class CardsAlertsViewController: UIViewController {
     private var cancellables = Set<AnyCancellable>()
     private let state: CardsSettingsState
     private let shouldExpandFirstAlertByDefault: Bool
+    private let alertSettingsDisplayMode: CardsSettingsAlertDisplayMode
     private var configuredSnapshotID: String
     private var actions = CardsSettingsActions()
     private var hasAppliedDefaultAlertExpansion = false
@@ -31,10 +34,12 @@ final class CardsAlertsViewController: UIViewController {
 
     init(
         snapshot: RuuviTagCardSnapshot,
-        shouldExpandFirstAlertByDefault: Bool = false
+        shouldExpandFirstAlertByDefault: Bool = false,
+        alertSettingsDisplayMode: CardsSettingsAlertDisplayMode = .legacySettings
     ) {
         self.state = CardsSettingsState(snapshot: snapshot)
         self.shouldExpandFirstAlertByDefault = shouldExpandFirstAlertByDefault
+        self.alertSettingsDisplayMode = alertSettingsDisplayMode
         self.configuredSnapshotID = snapshot.id
         super.init(nibName: nil, bundle: nil)
     }
@@ -194,7 +199,10 @@ private extension CardsAlertsViewController {
     }
 
     func makeContentViewController() -> UIViewController {
-        let contentView = CardsAlertsView(state: state)
+        let contentView = CardsAlertsView(
+            state: state,
+            displayMode: alertSettingsDisplayMode
+        )
             .environmentObject(actions)
         let hostingController = UIHostingController(rootView: contentView)
         hostingController.view.backgroundColor = .clear

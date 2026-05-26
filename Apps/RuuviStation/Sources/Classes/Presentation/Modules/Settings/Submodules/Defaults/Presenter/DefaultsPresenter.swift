@@ -75,6 +75,7 @@ extension DefaultsPresenter {
             buildDoIndividualHistorySync(),
             buildIncludeDataSourceInHistoryExport(),
             buildShowRedesignedCardsUIWithMenu(),
+            buildShowNewSettings(),
             buildDownloadBetaFirmware(),
             buildDownloadAlphaFirmware(),
             buildAutoSyncGattHistoryForRuuviAir(),
@@ -523,6 +524,21 @@ extension DefaultsPresenter {
 
         bind(viewModel.boolean, fire: false) { observer, bool in
             observer.flags.showNewCardsMenu = GlobalHelpers
+                .getBool(from: bool)
+        }
+
+        return viewModel
+    }
+
+    private func buildShowNewSettings() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Show new Cards Settings"
+        viewModel.boolean.value = flags.showNewSettings
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, bool in
+            observer.flags.showNewSettings = GlobalHelpers
                 .getBool(from: bool)
         }
 

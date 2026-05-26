@@ -270,7 +270,8 @@ private extension CardsCoordinator {
         let flags = r.resolve(RuuviLocalFlags.self)!
         let viewController = CardsAlertsViewController(
             snapshot: snapshot,
-            shouldExpandFirstAlertByDefault: flags.showNewCardsMenu
+            shouldExpandFirstAlertByDefault: flags.showNewCardsMenu,
+            alertSettingsDisplayMode: flags.showNewSettings ? .alerts : .legacySettings
         )
         let presenter = CardsAlertsPresenter(
             measurementService: r.resolve(RuuviServiceMeasurement.self)!,

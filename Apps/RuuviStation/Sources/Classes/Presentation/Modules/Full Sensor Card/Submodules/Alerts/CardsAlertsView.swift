@@ -2,6 +2,7 @@ import SwiftUI
 
 struct CardsAlertsView: View {
     @ObservedObject var state: CardsSettingsState
+    let displayMode: CardsSettingsAlertDisplayMode
     @State private var pendingAnchorID: String?
 
     private struct Constants {
@@ -22,8 +23,8 @@ struct CardsAlertsView: View {
                     if !state.alertSections.isEmpty {
                         CardsSettingsAlertSectionsGroupView(
                             showsHeader: false,
-                            showsToggleInHeader: true,
-                            displayMode: .alerts
+                            showsToggleInHeader: displayMode == .alerts,
+                            displayMode: displayMode
                         )
                     }
 

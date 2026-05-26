@@ -9,6 +9,9 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     @UserDefault("RuuviFeatureFlags.showNewCardsMenu", defaultValue: false)
     var showNewCardsMenu: Bool
 
+    @UserDefault("RuuviFeatureFlags.showNewSettings", defaultValue: false)
+    var showNewSettings: Bool
+
     @UserDefault("RuuviFeatureFlags.downloadBetaFirmware", defaultValue: false)
     var downloadBetaFirmware: Bool
 
