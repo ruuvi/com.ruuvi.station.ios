@@ -9,6 +9,9 @@ before_all do
   ENV["GSP_PATH"] = "./fastlane/com.ruuvi.station.ios.keystore/GoogleService-Info.plist"
   ENV["GOOGLE_APP_ID"] = get_info_plist_value(path: ENV["GSP_PATH"], key: "GOOGLE_APP_ID")
   ENV["FIREBASE_REFRESH_TOKEN"] = get_info_plist_value(path: "./fastlane/com.ruuvi.station.ios.keystore/CI.plist", key: "FIREBASE_REFRESH_TOKEN")
+  if ENV["CI"].to_s == "true"
+    ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] ||= "30"
+  end
 end
 
 def remove_artifacts
