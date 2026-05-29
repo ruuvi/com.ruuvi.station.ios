@@ -353,7 +353,9 @@ private extension RuuviTagDataService {
 
             switch change {
             case let .initial(ruuviTags):
-                let reorderedTags = ruuviTags.reordered()
+                let reorderedTags = ruuviTags.reordered(
+                    useImprovedAlphabeticalSorting: self.flags.useImprovedAlphabeticalSorting
+                )
                 self.ruuviTags = reorderedTags
                 self.buildInitialSnapshots()
                 self.observeSensorSettings()
@@ -649,12 +651,41 @@ private extension RuuviTagDataService {
             let invalidateLayout = previousName != snapshot.displayData.name
 
             if didUpdate && !self.settings.syncExtensiveChangesInProgress {
-                self.delegate?
-                    .sensorDataService(
-                        self,
-                        didUpdateSnapshot: snapshot,
-                        invalidateLayout: invalidateLayout
+                if invalidateLayout && self.settings.dashboardSensorOrder.isEmpty {
+                    let previousOrder = self.snapshots.map(\.id)
+                    let reorderedSnapshots = self.reorderSnapshots(
+                        self.snapshots,
+                        with: self.settings.dashboardSensorOrder
                     )
+                    let reorderedOrder = reorderedSnapshots.map(\.id)
+
+                    if previousOrder != reorderedOrder {
+                        self.snapshots = reorderedSnapshots
+                        self.ruuviTags = reorderedSnapshots.compactMap { snapshot in
+                            self.ruuviTags.first { $0.id == snapshot.id }
+                        }
+                        self.delegate?
+                            .sensorDataService(
+                                self,
+                                didUpdateSnapshots: self.snapshots,
+                                withAnimation: true
+                            )
+                    } else {
+                        self.delegate?
+                            .sensorDataService(
+                                self,
+                                didUpdateSnapshot: snapshot,
+                                invalidateLayout: invalidateLayout
+                            )
+                    }
+                } else {
+                    self.delegate?
+                        .sensorDataService(
+                            self,
+                            didUpdateSnapshot: snapshot,
+                            invalidateLayout: invalidateLayout
+                        )
+                }
             }
         }
     }
@@ -866,7 +897,14 @@ private extension RuuviTagDataService {
         guard !orderedIds.isEmpty else {
             // Alphabetical sorting
             return snapshots.sorted { first, second in
-                first.displayData.name.lowercased() < second.displayData.name.lowercased()
+                if flags.useImprovedAlphabeticalSorting {
+                    return first.displayData.name.localizedStandardCompare(
+                        second.displayData.name
+                    ) == .orderedAscending
+                } else {
+                    return first.displayData.name.lowercased()
+                        < second.displayData.name.lowercased()
+                }
             }
         }
 

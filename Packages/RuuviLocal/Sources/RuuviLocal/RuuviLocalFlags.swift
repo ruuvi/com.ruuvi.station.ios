@@ -41,6 +41,10 @@ public protocol RuuviLocalFlags {
     /// When enabled, shows the notes row and preview in Cards Settings.
     var showCardsSettingsNotesSection: Bool { get set }
 
+    /// When enabled, alphabetical sensor ordering uses localized numeric
+    /// comparison so numbers in names sort by numeric value.
+    var useImprovedAlphabeticalSorting: Bool { get set }
+
     /// Maximum number of points used for graph downsampling.
     /// Defaults to 3000.
     var graphDownsampleMaximumPoints: Int { get set }

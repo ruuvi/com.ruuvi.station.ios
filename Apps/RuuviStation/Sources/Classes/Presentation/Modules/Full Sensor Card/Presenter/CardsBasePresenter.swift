@@ -521,7 +521,7 @@ extension CardsBasePresenter: RuuviTagServiceCoordinatorObserver {
                     )
 
                 switch reason {
-                case .reorder, .delete:
+                case .reorder, .delete, .mixed(_, _, _, true):
                     // If snapshots were reordered or deleted, we need to rebuild the presenters
                     measurementPresenter?.start()
                     measurementPresenter?

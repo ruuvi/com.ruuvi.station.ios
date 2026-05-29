@@ -84,6 +84,7 @@ extension DefaultsPresenter {
             buildShowMarketingPreference(),
             buildShowDashboardSensorSearch(),
             buildShowCardsSettingsNotesSection(),
+            buildUseImprovedAlphabeticalSorting(),
         ]
     }
 
@@ -659,6 +660,24 @@ extension DefaultsPresenter {
         bind(viewModel.boolean, fire: false) { observer, bool in
             observer.flags.showCardsSettingsNotesSection = GlobalHelpers
                 .getBool(from: bool)
+        }
+
+        return viewModel
+    }
+
+    private func buildUseImprovedAlphabeticalSorting() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Use improved alphabetical sorting"
+        viewModel.boolean.value = flags.useImprovedAlphabeticalSorting
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, bool in
+            observer.flags.useImprovedAlphabeticalSorting = GlobalHelpers
+                .getBool(from: bool)
+            RuuviTagServiceCoordinatorManager.shared.reorderSnapshots(
+                with: observer.settings.dashboardSensorOrder
+            )
         }
 
         return viewModel

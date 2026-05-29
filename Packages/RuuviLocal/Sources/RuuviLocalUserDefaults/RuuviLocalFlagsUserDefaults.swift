@@ -2,6 +2,12 @@ import Foundation
 
 final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
 
+    #if DEBUG || ALPHA
+        private static let useImprovedAlphabeticalSortingDefault = true
+    #else
+        private static let useImprovedAlphabeticalSortingDefault = false
+    #endif
+
     // MARK: Legacy flags
     // TODO: Move legacy feature flags here
     // MARK: End Legacy flags
@@ -36,6 +42,12 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
 
     @UserDefault("RuuviFeatureFlags.showCardsSettingsNotesSection", defaultValue: true)
     var showCardsSettingsNotesSection: Bool
+
+    @UserDefault(
+        "RuuviFeatureFlags.useImprovedAlphabeticalSorting",
+        defaultValue: RuuviLocalFlagsUserDefaults.useImprovedAlphabeticalSortingDefault
+    )
+    var useImprovedAlphabeticalSorting: Bool
 
     @UserDefault("RuuviFeatureFlags.graphDownsampleMaximumPoints", defaultValue: 3000)
     var graphDownsampleMaximumPoints: Int
