@@ -6,7 +6,7 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     // TODO: Move legacy feature flags here
     // MARK: End Legacy flags
 
-    @UserDefault("RuuviFeatureFlags.showNewCardsMenu", defaultValue: false)
+    @UserDefault("RuuviFeatureFlags.showNewCardsMenu", defaultValue: true)
     var showNewCardsMenu: Bool
 
     @UserDefault("RuuviFeatureFlags.showNewSettings", defaultValue: false)
