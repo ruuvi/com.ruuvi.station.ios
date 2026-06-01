@@ -1,0 +1,7 @@
+Verbesserte Auslesung von Sensordaten der Longlife-Firmware über NFC
+Verbesserte Darstellung der einfachen Kartenansicht im Dashboard
+Verbesserte Unterstützung für Cloud-Verbindungen
+Verbesserte Synchronisierung von Cloud-Daten nach dem Aufwecken der App aus dem Ruhezustand
+Fehler behoben, bei dem Firmware-Updates die Versionsnummer in den Einstellungen nicht aktualisierten
+Fehler behoben, bei dem die Auswahl der Taupunktauflösung in der App nicht übernommen wurde
+Weitere kleinere Fehlerbehebungen und Verbesserungen

@@ -2,6 +2,30 @@ name: Upload to Testflight
 
 on:
   workflow_dispatch:
+    inputs:
+      release_notes:
+        description: 'Optional TestFlight release notes'
+        required: false
+        default: ''
+      testflight_groups:
+        description: 'Optional TestFlight group names, comma-separated'
+        required: false
+        default: ''
+      distribute_external:
+        description: 'Distribute to external TestFlight groups'
+        required: true
+        default: false
+        type: boolean
+      notify_external_testers:
+        description: 'Notify external testers'
+        required: true
+        default: false
+        type: boolean
+      skip_waiting_for_build_processing:
+        description: 'Skip waiting for TestFlight processing'
+        required: true
+        default: false
+        type: boolean
   pull_request:
     types:
       - closed
@@ -11,8 +35,12 @@ on:
     branches:
       - 'release/*'
 
+permissions:
+  contents: read
+
 jobs:
   build:
+    if: (github.event_name != 'pull_request' || github.event.pull_request.merged == true)
     runs-on: macos-15
 
     steps:
@@ -24,46 +52,58 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          submodules: recursive
-          ssh-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.8.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-
-      - name: Install the Apple certificate and provisioning profiles
+      - name: Validate CI secrets
         env:
-          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
-          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
-          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          RUUVI_GITHUB_APP_CLIENT_ID: ${{ secrets.RUUVI_GITHUB_APP_CLIENT_ID }}
+          RUUVI_GITHUB_APP_PRIVATE_KEY: ${{ secrets.RUUVI_GITHUB_APP_PRIVATE_KEY }}
+          APP_STORE_CONNECT_API_KEY_JSON_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_JSON_BASE64 }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_CERTIFICATE_PASSWORD: ${{ secrets.MATCH_CERTIFICATE_PASSWORD }}
         run: |
-          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
-          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+          bash .github/scripts/validate_ci_secrets.sh \
+            RUUVI_GITHUB_APP_CLIENT_ID \
+            RUUVI_GITHUB_APP_PRIVATE_KEY \
+            APP_STORE_CONNECT_API_KEY_JSON_BASE64 \
+            MATCH_PASSWORD \
+            MATCH_CERTIFICATE_PASSWORD
 
-          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode > $CERTIFICATE_PATH
+      - name: Create GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ secrets.RUUVI_GITHUB_APP_CLIENT_ID }}
+          private-key: ${{ secrets.RUUVI_GITHUB_APP_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            com.ruuvi.station.ios.certificates
+            com.ruuvi.station.ios.keystore
 
-          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
-          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+      - name: Configure private repository access
+        run: |
+          git config --global url."https://x-access-token:${{ steps.app-token.outputs.token }}@github.com/ruuvi/".insteadOf "git@github.com:ruuvi/"
 
-          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
-          security list-keychain -d user -s $KEYCHAIN_PATH
+      - name: Create App Store Connect API key file
+        env:
+          APP_STORE_CONNECT_API_KEY_JSON_BASE64: ${{ secrets.APP_STORE_CONNECT_API_KEY_JSON_BASE64 }}
+        run: |
+          ASC_API_KEY_PATH="$RUNNER_TEMP/asc_api_key.json"
+          printf "%s" "$APP_STORE_CONNECT_API_KEY_JSON_BASE64" | base64 --decode > "$ASC_API_KEY_PATH"
+          echo "APP_STORE_CONNECT_API_KEY_PATH=$ASC_API_KEY_PATH" >> "$GITHUB_ENV"
 
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo -n "${{ secrets.MAIN_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.mobileprovision
-          echo -n "${{ secrets.WIDGETS_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.widgets.mobileprovision
-          echo -n "${{ secrets.INTENTS_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.intents.mobileprovision
-          echo -n "${{ secrets.PNSERVICE_APP_ADHOC_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AdHoc_com.ruuvi.station.pnservice.mobileprovision
+      - name: Remove existing localisation directory
+        run: rm -rf ${{ github.workspace }}/station.localization
 
-          echo -n "${{ secrets.MAIN_APP_APPSTORE_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AppStore_com.ruuvi.station.mobileprovision
-          echo -n "${{ secrets.WIDGETS_APP_APPSTORE_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AppStore_com.ruuvi.station.widgets.mobileprovision
-          echo -n "${{ secrets.INTENTS_APP_APPSTORE_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AppStore_com.ruuvi.station.intents.mobileprovision
-          echo -n "${{ secrets.PNSERVICE_APP_APPSTORE_PROVISION_PROFILE_BASE64 }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/match_AppStore_com.ruuvi.station.pnservice.mobileprovision
+      - name: Clone localisation submodule
+        run: git clone -b dev https://github.com/ruuvi/station.localization.git ${{ github.workspace }}/station.localization
 
       - name: Increment build number
         run: |
           make set_build_number
+
+      - name: Install Ruby dependencies
+        run: |
+          bundle install
 
       - name: Tools cache
         uses: actions/cache@v4
@@ -95,37 +135,78 @@ jobs:
             -scheme station \
             -clonedSourcePackagesDirPath ${{ runner.temp }}/spm
 
-      - name: Build app
+      - name: Read app metadata
         run: |
-          xcodebuild \
-              -project Ruuvi.xcodeproj \
-              -scheme station \
-              -configuration Release \
-              -archivePath ./Build/Station.xcarchive \
-              -sdk iphoneos \
-              -destination 'generic/platform=iOS' \
-              -clonedSourcePackagesDirPath ${{ runner.temp }}/spm \
-              -disableAutomaticPackageResolution \
-              archive \
-              -allowProvisioningUpdates \
-              -quiet
+          APP_VERSION=$(sed -n 's/^APP_VERSION: &APP_VERSION //p' project.yml)
+          BUILD_NUMBER=$(sed -n 's/^BUILD_NUMBER: &BUILD_NUMBER //p' project.yml)
+          echo "RUUVI_APP_VERSION=$APP_VERSION" >> "$GITHUB_ENV"
+          echo "RUUVI_BUILD_NUMBER=$BUILD_NUMBER" >> "$GITHUB_ENV"
 
-      - name: Export IPA
+      - name: Build and upload to TestFlight
         env:
-          EXPORT_PLIST: ${{ secrets.APPSTORE_EXPORT_OPTIONS }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          MATCH_CERTIFICATE_PASSWORD: ${{ secrets.MATCH_CERTIFICATE_PASSWORD }}
+          GITHUB_TOKEN: ${{ github.token }}
+          TESTFLIGHT_RELEASE_NOTES: ${{ github.event.inputs.release_notes }}
+          TESTFLIGHT_GROUPS: ${{ github.event.inputs.testflight_groups }}
+          TESTFLIGHT_DISTRIBUTE_EXTERNAL: ${{ github.event.inputs.distribute_external }}
+          TESTFLIGHT_NOTIFY_EXTERNAL_TESTERS: ${{ github.event.inputs.notify_external_testers }}
+          TESTFLIGHT_SKIP_WAITING_FOR_BUILD_PROCESSING: ${{ github.event.inputs.skip_waiting_for_build_processing }}
+          FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 60
+          FASTLANE_XCODEBUILD_SETTINGS_RETRIES: 5
         run: |
-          EXPORT_PLIST_PATH=${{ runner.temp }}/ExportOptions.plist
-          echo -n "$EXPORT_PLIST" | base64 --decode > $EXPORT_PLIST_PATH
-          xcodebuild -exportArchive -archivePath ./Build/Station.xcarchive -exportOptionsPlist $EXPORT_PLIST_PATH -exportPath ${{ runner.temp }}/export
+          bundle exec fastlane ios submit_to_testflight build_number:"$RUUVI_BUILD_NUMBER"
 
-      - name: Upload to testflight
-        run: |
-          IPA_PATH=$RUNNER_TEMP/export/station.ipa
-          xcrun altool --validate-app -f $IPA_PATH -t ios --username ${{ secrets.APPLE_USER }} --password ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-          xcrun altool --upload-app -f $IPA_PATH -t ios --username ${{ secrets.APPLE_USER }} --password ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
-
-      - name: Clean up keychain and provisioning profiles
+      - name: Clean up provisioning profiles
         if: ${{ always() }}
         run: |
-          security delete-keychain $RUNNER_TEMP/app-signing.keychain-db
           rm -rf ~/Library/MobileDevice/Provisioning\ Profiles/*
+
+      - name: Collect CI logs
+        if: ${{ always() }}
+        run: |
+          mkdir -p ci-logs/gym
+          cp -R "$HOME/Library/Logs/gym/." ci-logs/gym/ 2>/dev/null || true
+          cp -f report.xml ci-logs/ 2>/dev/null || true
+
+      - name: Upload CI logs
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: testflight-ci-logs-${{ github.run_id }}
+          path: ci-logs/**
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Write workflow summary
+        if: ${{ always() }}
+        env:
+          DISTRIBUTION_CHANNEL: TestFlight
+          JOB_STATUS: ${{ job.status }}
+          WORKFLOW_NAME: ${{ github.workflow }}
+          REPOSITORY: ${{ github.repository }}
+          BRANCH_NAME: ${{ github.ref_name }}
+          COMMIT_SHA: ${{ github.sha }}
+          ACTOR: ${{ github.actor }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: bash .github/scripts/write_ci_summary.sh
+
+      - name: Notify Telegram
+        if: ${{ success() }}
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_THREAD_ID: ${{ secrets.TELEGRAM_THREAD_ID }}
+          TELEGRAM_SUCCESS_MENTION: ${{ secrets.TELEGRAM_SUCCESS_MENTION }}
+          TELEGRAM_SUCCESS_TITLE: TestFlight build uploaded
+          TELEGRAM_SUCCESS_VERSION: ${{ env.RUUVI_APP_VERSION }}
+          TELEGRAM_SUCCESS_BUILD: ${{ env.RUUVI_BUILD_NUMBER }}
+          DISTRIBUTION_CHANNEL: TestFlight
+          JOB_STATUS: ${{ job.status }}
+          WORKFLOW_NAME: ${{ github.workflow }}
+          REPOSITORY: ${{ github.repository }}
+          BRANCH_NAME: ${{ github.ref_name }}
+          COMMIT_SHA: ${{ github.sha }}
+          ACTOR: ${{ github.actor }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: bash .github/scripts/notify_telegram.sh

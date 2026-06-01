@@ -1,0 +1,7 @@
+Förbättrad läsning av sensordata med longlife-firmware via NFC
+Förbättrad layout för den enkla kortvyn på instrumentpanelen
+Förbättrat stöd för molnanslutningar
+Förbättrad synkronisering av molndata efter att appen väckts från viloläge
+Åtgärdade ett problem där firmwareuppdateringar inte uppdaterade versionsnumret i inställningarna
+Åtgärdade ett problem där val av daggpunktsupplösning inte tillämpades i appen
+Andra mindre buggfixar och förbättringar

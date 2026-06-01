@@ -1,0 +1,18 @@
+Ruuvi Station är en lättanvänd applikation som gör det möjligt för dig att övervaka mätdata från Ruuvis sensorer.
+
+Ruuvi Station samlar in och visualiserar Ruuvi-sensordata, såsom temperatur, relativ luftfuktighet, lufttryck och rörelse, från lokala Bluetooth-baserade Ruuvi-sensorer och från Ruuvi Cloud. Dessutom låter Ruuvi Station dig hantera dina Ruuvi-enheter, ställa in larm, ändra bakgrundsbilder och visualisera den insamlade sensorinformationen med hjälp av grafer.
+
+
+Hur fungerar det?
+
+Ruuvi-sensorer skickar små meddelanden via Bluetooth, som sedan kan fångas upp av närliggande mobiltelefoner eller specialiserade Ruuvi Gateway-routrar. Mobilappen Ruuvi Station gör det möjligt för dig att samla in och visualisera denna data på din mobila enhet. Ruuvi Gateway, å andra sidan, vidarebefordrar datan via internet inte bara till mobilapplikationen utan även till webbapplikationen.
+
+Ruuvi Gateway skickar sensorns mätdata direkt till Ruuvi Cloud-molntjänsten, vilket gör det möjligt för dig att bygga en komplett lösning för fjärrövervakning inklusive fjärrlarm, delning av sensorer och historik i Ruuvi Cloud – allt tillgängligt i Ruuvi Station-appen! Användare av Ruuvi Cloud kan se längre mäthistorik via webbapplikationen.
+
+Använd våra anpassningsbara Ruuvi-mobilwidgets tillsammans med Ruuvi Station-appen när data hämtas från Ruuvi Cloud för att se utvald sensordata med en snabb överblick.
+
+Ovanstående funktioner är tillgängliga för dig om du är ägare av en Ruuvi Gateway eller har fått en delad sensor till ditt kostnadsfria Ruuvi Cloud-konto.
+
+För att använda appen, skaffa Ruuvi-sensorer från vår officiella webbplats: ruuvi.com
+
+Finns på engelska, finska, svenska, franska och tyska.

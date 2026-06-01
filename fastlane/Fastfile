@@ -3,20 +3,184 @@ fastlane_require 'fileutils'
 
 default_platform(:ios)
 
-before_all do
-  sh("rm", "-rf", "com.ruuvi.station.ios.keystore")
-  sh("git", "clone", "git@github.com:ruuvi/com.ruuvi.station.ios.keystore.git")
-  ENV["GSP_PATH"] = "./fastlane/com.ruuvi.station.ios.keystore/GoogleService-Info.plist"
-  ENV["GOOGLE_APP_ID"] = get_info_plist_value(path: ENV["GSP_PATH"], key: "GOOGLE_APP_ID")
-  ENV["FIREBASE_REFRESH_TOKEN"] = get_info_plist_value(path: "./fastlane/com.ruuvi.station.ios.keystore/CI.plist", key: "FIREBASE_REFRESH_TOKEN")
+APP_IDENTIFIERS = [
+  "com.ruuvi.station",
+  "com.ruuvi.station.widgets",
+  "com.ruuvi.station.intents",
+  "com.ruuvi.station.pnservice"
+]
+
+ADHOC_PROVISIONING_PROFILES = {
+  "com.ruuvi.station" => "match AdHoc com.ruuvi.station",
+  "com.ruuvi.station.widgets" => "match AdHoc com.ruuvi.station.widgets",
+  "com.ruuvi.station.intents" => "match AdHoc com.ruuvi.station.intents",
+  "com.ruuvi.station.pnservice" => "match AdHoc com.ruuvi.station.pnservice"
+}
+
+APPSTORE_PROVISIONING_PROFILES = {
+  "com.ruuvi.station" => "match AppStore com.ruuvi.station",
+  "com.ruuvi.station.widgets" => "match AppStore com.ruuvi.station.widgets",
+  "com.ruuvi.station.intents" => "match AppStore com.ruuvi.station.intents",
+  "com.ruuvi.station.pnservice" => "match AppStore com.ruuvi.station.pnservice"
+}
+
+FASTLANE_DIR = __dir__
+PROJECT_ROOT = File.expand_path("..", FASTLANE_DIR)
+BUILD_OUTPUT_DIR = File.join(PROJECT_ROOT, "Build")
+
+CI_SIGNING_LANES = [
+  :upload_to_firebase,
+  :submit_to_testflight,
+  :reg
+]
+
+KEYSTORE_LANES = [
+  :upload_to_firebase,
+  :submit_to_testflight
+]
+
+before_all do |lane|
+  lane_name = lane.to_sym
+  setup_ci if ENV["CI"].to_s == "true" && CI_SIGNING_LANES.include?(lane_name)
+  use_match_certificate_password_for_p12_imports if ENV["CI"].to_s == "true" && CI_SIGNING_LANES.include?(lane_name)
+  prepare_keystore if KEYSTORE_LANES.include?(lane_name)
+end
+
+def project_path(*parts)
+  File.join(PROJECT_ROOT, *parts)
+end
+
+def fastlane_path(*parts)
+  project_path("fastlane", *parts)
+end
+
+def prepare_keystore
+  keystore_path = fastlane_path("com.ruuvi.station.ios.keystore")
+  FileUtils.rm_rf(keystore_path)
+  sh("git", "clone", "--branch", "main", "--single-branch", "git@github.com:ruuvi/com.ruuvi.station.ios.keystore.git", keystore_path)
+  ENV["GSP_PATH"] = File.join(keystore_path, "GoogleService-Info.plist")
+  ENV["GOOGLE_APP_ID"] ||= get_info_plist_value(path: ENV["GSP_PATH"], key: "GOOGLE_APP_ID")
+end
+
+def required_env(name)
+  value = ENV[name].to_s.strip
+  UI.user_error!("#{name} environment variable is required") if value.empty?
+  value
+end
+
+def use_match_certificate_password_for_p12_imports
+  required_env("MATCH_CERTIFICATE_PASSWORD")
+  require 'fastlane_core/keychain_importer'
+
+  importer = FastlaneCore::KeychainImporter.singleton_class
+  return if importer.method_defined?(:ruuvi_import_file_without_certificate_password)
+
+  importer.class_eval do
+    alias_method :ruuvi_import_file_without_certificate_password, :import_file
+
+    define_method(:import_file) do |path, keychain_path, keychain_password: nil, certificate_password: "", certificate_format: nil, skip_set_partition_list: false, output: FastlaneCore::Globals.verbose?|
+      import_password = certificate_password
+      import_password = ENV["MATCH_CERTIFICATE_PASSWORD"].to_s if File.extname(path).casecmp(".p12").zero? && import_password.to_s.empty?
+
+      ruuvi_import_file_without_certificate_password(
+        path,
+        keychain_path,
+        keychain_password: keychain_password,
+        certificate_password: import_password,
+        certificate_format: certificate_format,
+        skip_set_partition_list: skip_set_partition_list,
+        output: output
+      )
+    end
+  end
+end
+
+def with_app_store_connect_api_key(options)
+  api_key_path = ENV["APP_STORE_CONNECT_API_KEY_PATH"].to_s.strip
+  options[:api_key_path] = api_key_path unless api_key_path.empty?
+  options
+end
+
+def match_with_ci_auth(options)
+  match(with_app_store_connect_api_key(options))
+end
+
+def install_match_profiles(type:)
+  APP_IDENTIFIERS.each do |app_identifier|
+    match_with_ci_auth(type: type, app_identifier: app_identifier, readonly: true)
+  end
+end
+
+def build_app_with_spm_cache(options)
+  runner_temp = ENV["RUNNER_TEMP"].to_s.strip
+  options[:xcargs] = "-clonedSourcePackagesDirPath #{runner_temp}/spm -disableAutomaticPackageResolution" unless runner_temp.empty?
+  build_app(options)
+end
+
+def distribution_release_notes(options, env_name:)
+  release_notes = options[:release_notes].to_s.strip
+  release_notes = ENV[env_name].to_s.strip if release_notes.empty?
+  return release_notes unless release_notes.empty?
+
+  changelog = changelog_from_git_commits(
+    commits_count: 1,
+    pretty: "%s"
+  ).lines.first.to_s.strip
+  changelog = "No changelog found" if changelog.empty?
+
+  last_pr_number = changelog[/\d+/]
+  return changelog if last_pr_number.nil?
+
+  github_api_options = {
+    server_url: "https://api.github.com",
+    http_method: "GET",
+    path: "/repos/ruuvi/com.ruuvi.station.ios/pulls/" + last_pr_number
+  }
+  github_api_options[:api_token] = ENV["GITHUB_TOKEN"] unless ENV["GITHUB_TOKEN"].to_s.strip.empty?
+  result = github_api(github_api_options)
+  last_pr_title = result[:json]['title']
+  last_pr_body = result[:json]['body']
+  last_pr_title = "No PR title found" if last_pr_title.nil?
+  last_pr_body = "No PR body found" if last_pr_body.nil?
+  last_pr_title + "\n\n" + last_pr_body
+end
+
+IGNORED_STORE_TEMPLATE_FILES = [
+  ".DS_Store",
+  ".gitkeep",
+  "README.md",
+  "README.txt"
+]
+
+def directory_has_files?(path)
+  return false unless Dir.exist?(path)
+
+  Dir.glob(File.join(path, "**", "*")).any? do |entry|
+    File.file?(entry) && !IGNORED_STORE_TEMPLATE_FILES.include?(File.basename(entry))
+  end
+end
+
+def truthy?(value)
+  ["1", "true", "yes", "y"].include?(value.to_s.strip.downcase)
+end
+
+def write_release_notes_artifact(release_notes)
+  return unless ENV["CI"].to_s == "true"
+
+  workspace = ENV["GITHUB_WORKSPACE"].to_s.strip
+  artifact_dir = workspace.empty? ? "ci-logs" : File.join(workspace, "ci-logs")
+  artifact_path = File.join(artifact_dir, "release_notes.txt")
+  FileUtils.mkdir_p(artifact_dir)
+  File.write(artifact_path, release_notes.to_s)
+  UI.message("Wrote release notes artifact to #{artifact_path}")
 end
 
 def remove_artifacts
   clean_build_artifacts()
   begin
-      sh("rm", "-rf", "com.ruuvi.station.ios.keystore")
-      sh("rm", "report.xml")
-      sh("rm", "README.md")
+      FileUtils.rm_rf(fastlane_path("com.ruuvi.station.ios.keystore"))
+      FileUtils.rm_rf(project_path("com.ruuvi.station.ios.keystore"))
+      sh("rm", "-f", "report.xml") unless ENV["CI"].to_s == "true"
    rescue => ex
      UI.error(ex)
    end
@@ -34,8 +198,8 @@ platform :ios do
 
   desc "Register devices"
   lane :reg do
-    match(type: "development", force_for_new_devices: true)
-    match(type: "adhoc", force_for_new_devices: true)
+    match_with_ci_auth(type: "development", force_for_new_devices: true)
+    match_with_ci_auth(type: "adhoc", force_for_new_devices: true)
   end
 
   desc """
@@ -51,68 +215,33 @@ platform :ios do
     UI.crash!('build_number parameter is required') unless BUILD_NUMBER
     SCHEME = options[:scheme]
     UI.crash!('scheme parameter is required') unless SCHEME
-    SRC_ROOT = File.expand_path("#{ENV['PWD']}")
 
-    if SCHEME == "station"
-      PATH_TO_INFO_PLIST = "#{SRC_ROOT}/station/Resources/Plists/Info.plist"
-    else
-      PATH_TO_INFO_PLIST = "#{SRC_ROOT}/station/Resources/Plists/DevInfo.plist"
-    end
-
-    set_info_plist_value(path: PATH_TO_INFO_PLIST, key: 'CFBundleVersion', value: BUILD_NUMBER)
-
-    configuration = SCHEME == "station" ? "Release" : "Debug"
-    match(type: "adhoc", app_identifier: "com.ruuvi.station", readonly: true)
-    match(type: "adhoc", app_identifier: "com.ruuvi.station.widgets", readonly: true)
-    match(type: "adhoc", app_identifier: "com.ruuvi.station.intents", readonly: true)
-    match(type: "adhoc", app_identifier: "com.ruuvi.station.pnservice", readonly: true)
-    build_app(
+    configuration = options[:configuration] || "Alpha"
+    install_match_profiles(type: "adhoc")
+    build_app_with_spm_cache(
       scheme: SCHEME,
       export_xcargs: "-allowProvisioningUpdates",
       configuration: configuration,
-      output_directory: "./Build",
+      output_directory: BUILD_OUTPUT_DIR,
       export_options: {
         method: "ad-hoc",
-        provisioningProfiles: {
-          "com.ruuvi.station" => "match AdHoc com.ruuvi.station",
-          "com.ruuvi.station.widgets" => "match AdHoc com.ruuvi.station.widgets",
-          "com.ruuvi.station.intents" => "match AdHoc com.ruuvi.station.intents",
-          "com.ruuvi.station.pnservice" => "match AdHoc com.ruuvi.station.pnservice"
-        }
+        provisioningProfiles: ADHOC_PROVISIONING_PROFILES
       }
     )
 
-    changelog = changelog_from_git_commits(
-      commits_count: 1,
-      pretty: "%s",
-      merge_commit_filtering: "only_include_merges"
-    )
-    last_pr_number = changelog[/\d+/]
-    result = github_api(
-      server_url: "https://api.github.com",
-      http_method: "GET",
-      path: "/repos/ruuvi/com.ruuvi.station.ios/pulls/" + last_pr_number
-    )
-    last_pr_title = result[:json]['title']
-    last_pr_body = result[:json]['body']
-    if last_pr_title.nil?
-        last_pr_title = "No PR title found"
-    end
-    if last_pr_body.nil?
-        last_pr_body = "No PR body found"
-    end
-    release_notes = last_pr_title + "\n\n" + last_pr_body
+    release_notes = distribution_release_notes(options, env_name: "FIREBASE_RELEASE_NOTES")
+    write_release_notes_artifact(release_notes)
+    firebase_groups = options[:group].to_s.strip
+    firebase_groups = ENV["FIREBASE_TESTERS_GROUP"].to_s.strip if firebase_groups.empty?
+    firebase_groups = ENV["ALPHA_TESTERS_GROUP"].to_s.strip if firebase_groups.empty?
+    UI.user_error!("Firebase tester group is required. Pass group:<alias> or set ALPHA_TESTERS_GROUP.") if firebase_groups.to_s.strip.empty?
 
     firebase_app_distribution(
-      app: ENV["GOOGLE_APP_ID"],
-      firebase_cli_token: ENV["FIREBASE_REFRESH_TOKEN"],
+      app: required_env("GOOGLE_APP_ID"),
+      firebase_cli_token: required_env("FIREBASE_REFRESH_TOKEN"),
       release_notes: release_notes,
-      ipa_path: "./Build/" + SCHEME + ".ipa",
-      groups: options[:group]
-    )
-    upload_symbols_to_crashlytics(
-      dsym_path: "./Build/" + SCHEME + ".app.dSYM.zip",
-      gsp_path: ENV["GSP_PATH"]
+      ipa_path: File.join(BUILD_OUTPUT_DIR, SCHEME + ".ipa"),
+      groups: firebase_groups
     )
     skip_docs
   end
@@ -128,50 +257,129 @@ platform :ios do
 
     BUILD_NUMBER = options[:build_number]
     UI.crash!('build_number parameter is required') unless BUILD_NUMBER
-    SRC_ROOT = File.expand_path("#{ENV['PWD']}")
-    PATH_TO_INFO_PLIST = "#{SRC_ROOT}/station/Resources/Plists/Info.plist"
-    set_info_plist_value(path: PATH_TO_INFO_PLIST, key: 'CFBundleVersion', value: BUILD_NUMBER)
 
-    match(type: "appstore", app_identifier: "com.ruuvi.station", readonly: true)
-    match(type: "appstore", app_identifier: "com.ruuvi.station.widgets", readonly: true)
-    match(type: "appstore", app_identifier: "com.ruuvi.station.intents", readonly: true)
-    match(type: "appstore", app_identifier: "com.ruuvi.station.pnservice", readonly: true)
-    build_app(
+    install_match_profiles(type: "adhoc")
+    install_match_profiles(type: "appstore")
+    build_app_with_spm_cache(
       scheme: SCHEME,
       export_xcargs: "-allowProvisioningUpdates",
       configuration: configuration,
-      output_directory: "./Build",
+      output_directory: BUILD_OUTPUT_DIR,
       export_options: {
-        method: "appstore",
-        provisioningProfiles: {
-          "com.ruuvi.station" => "match AppStore com.ruuvi.station",
-          "com.ruuvi.station.widgets" => "match AppStore com.ruuvi.station.widgets",
-          "com.ruuvi.station.intents" => "match AppStore com.ruuvi.station.intents",
-          "com.ruuvi.station.pnservice" => "match AppStore com.ruuvi.station.pnservice"
-        }
+        method: "app-store",
+        provisioningProfiles: APPSTORE_PROVISIONING_PROFILES
       }
     )
 
-    changelog = changelog_from_git_commits(
-      commits_count: 1,
-      pretty: "%s",
-      merge_commit_filtering: "only_include_merges"
-    )
+    release_notes = distribution_release_notes(options, env_name: "TESTFLIGHT_RELEASE_NOTES")
+    write_release_notes_artifact(release_notes)
 
-    last_pr_number = changelog[/\d+/]
-    result = github_api(
-      server_url: "https://api.github.com",
-      http_method: "GET",
-      path: "/repos/ruuvi/com.ruuvi.station.ios/pulls/" + last_pr_number
-    )
+    testflight_groups = options[:groups].to_s.strip
+    testflight_groups = ENV["TESTFLIGHT_GROUPS"].to_s.strip if testflight_groups.empty?
+    distribute_external = truthy?(options[:distribute_external]) || truthy?(ENV["TESTFLIGHT_DISTRIBUTE_EXTERNAL"])
+    notify_external_testers = truthy?(options[:notify_external_testers]) || truthy?(ENV["TESTFLIGHT_NOTIFY_EXTERNAL_TESTERS"])
+    skip_waiting_for_build_processing = truthy?(options[:skip_waiting_for_build_processing]) || truthy?(ENV["TESTFLIGHT_SKIP_WAITING_FOR_BUILD_PROCESSING"])
 
-    last_pr_body = result[:json]['body']
-    release_notes = last_pr_body
+    UI.user_error!("External TestFlight distribution requires testflight groups") if distribute_external && testflight_groups.empty?
+    UI.user_error!("TestFlight cannot distribute to testers when skip_waiting_for_build_processing is enabled") if skip_waiting_for_build_processing && (!testflight_groups.empty? || distribute_external)
 
-    upload_to_testflight(
-      ipa: "./Build/" + SCHEME + ".ipa",
-      changelog: release_notes
-    )
+    upload_to_testflight_options = {
+      ipa: File.join(BUILD_OUTPUT_DIR, SCHEME + ".ipa"),
+      changelog: release_notes,
+      skip_waiting_for_build_processing: skip_waiting_for_build_processing
+    }
+    unless testflight_groups.empty?
+      upload_to_testflight_options[:groups] = testflight_groups.split(",").map(&:strip).reject(&:empty?)
+      upload_to_testflight_options[:distribute_external] = distribute_external
+      upload_to_testflight_options[:notify_external_testers] = notify_external_testers if distribute_external
+    end
+    upload_to_testflight(with_app_store_connect_api_key(upload_to_testflight_options))
+
+    skip_docs
+  end
+
+  desc """
+  Upload App Store metadata and screenshots from fastlane/metadata and fastlane/screenshots
+
+  fastlane sync_app_store_metadata sync_mode:metadata
+  fastlane sync_app_store_metadata sync_mode:screenshots overwrite_screenshots:true
+  fastlane sync_app_store_metadata sync_mode:all
+  """
+  lane :sync_app_store_metadata do |options|
+    sync_mode = (options[:sync_mode] || ENV["APP_STORE_METADATA_SYNC_MODE"] || "metadata").to_s.strip
+    UI.user_error!("sync_mode must be metadata, screenshots, or all") unless ["metadata", "screenshots", "all"].include?(sync_mode)
+
+    metadata_path = options[:metadata_path] || fastlane_path("metadata")
+    screenshots_path = options[:screenshots_path] || fastlane_path("screenshots")
+    skip_metadata = sync_mode == "screenshots"
+    skip_screenshots = sync_mode == "metadata"
+
+    UI.user_error!("No App Store metadata files found at #{metadata_path}") if !skip_metadata && !directory_has_files?(metadata_path)
+    UI.user_error!("No App Store screenshot files found at #{screenshots_path}") if !skip_screenshots && !directory_has_files?(screenshots_path)
+
+    overwrite_screenshots = options[:overwrite_screenshots].to_s == "true" || ENV["APP_STORE_OVERWRITE_SCREENSHOTS"].to_s == "true"
+    app_version = (options[:app_version] || ENV["APP_STORE_METADATA_APP_VERSION"]).to_s.strip
+    deliver_options = {
+      app_identifier: APP_IDENTIFIERS.first,
+      metadata_path: metadata_path,
+      screenshots_path: screenshots_path,
+      skip_binary_upload: true,
+      skip_metadata: skip_metadata,
+      skip_screenshots: skip_screenshots,
+      skip_app_version_update: app_version.empty?,
+      submit_for_review: false,
+      run_precheck_before_submit: false,
+      precheck_include_in_app_purchases: false,
+      overwrite_screenshots: overwrite_screenshots,
+      force: true
+    }
+    deliver_options[:app_version] = app_version unless app_version.empty?
+    deliver(with_app_store_connect_api_key(deliver_options))
+
+    skip_docs
+  end
+
+  desc "Run fastlane precheck against App Store metadata"
+  lane :precheck_app_store_metadata do
+    precheck_options = {
+      app_identifier: APP_IDENTIFIERS.first,
+      default_rule_level: :error,
+      include_in_app_purchases: false
+    }
+    precheck(with_app_store_connect_api_key(precheck_options))
+
+    skip_docs
+  end
+
+  desc "Submit an already uploaded App Store build for review"
+  lane :submit_app_store_review do |options|
+    confirmation = (options[:confirmation] || ENV["APP_STORE_REVIEW_CONFIRMATION"]).to_s.strip
+    UI.user_error!("Set confirmation to SUBMIT to submit this build for App Review") unless confirmation == "SUBMIT"
+
+    build_number = (options[:build_number] || ENV["APP_STORE_REVIEW_BUILD_NUMBER"]).to_s.strip
+    UI.user_error!("build_number is required for App Review submission") if build_number.empty?
+
+    app_version = (options[:app_version] || ENV["APP_STORE_REVIEW_APP_VERSION"]).to_s.strip
+    automatic_release = truthy?(options[:automatic_release]) || truthy?(ENV["APP_STORE_AUTOMATIC_RELEASE"])
+    phased_release = truthy?(options[:phased_release]) || truthy?(ENV["APP_STORE_PHASED_RELEASE"])
+    UI.user_error!("automatic_release and phased_release cannot both be enabled") if automatic_release && phased_release
+
+    deliver_options = {
+      app_identifier: APP_IDENTIFIERS.first,
+      build_number: build_number,
+      skip_binary_upload: true,
+      skip_metadata: true,
+      skip_screenshots: true,
+      submit_for_review: true,
+      run_precheck_before_submit: true,
+      precheck_default_rule_level: :error,
+      precheck_include_in_app_purchases: false,
+      automatic_release: automatic_release,
+      phased_release: phased_release,
+      force: true
+    }
+    deliver_options[:app_version] = app_version unless app_version.empty?
+    deliver(with_app_store_connect_api_key(deliver_options))
 
     skip_docs
   end

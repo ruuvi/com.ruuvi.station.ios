@@ -1,0 +1,7 @@
+Improved reading longlife firmware sensor data with NFC
+Improved simple view layout on dashboard
+Improved support for Cloud connection
+Improved Cloud data sync process after waking the app from sleep
+Fixed an issue where firmware update did not refresh the version number in settings
+Fixed bug where dew point resolution selection didn’t get applied in app
+Other minor bug fixes and improvements

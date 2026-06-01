@@ -5,6 +5,26 @@ on:
     types: [opened, synchronize]
 
 jobs:
+  release-automation:
+    runs-on: ubuntu-latest
+    name: Release automation
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate workflow YAML
+        run: |
+          ruby -e 'require "yaml"; Dir[".github/workflows/*.yml"].each { |path| YAML.load_file(path) }'
+
+      - name: Validate fastlane files
+        run: |
+          ruby -c fastlane/Fastfile
+          ruby -c fastlane/Matchfile
+
+      - name: Validate shell scripts
+        run: |
+          bash -n .github/scripts/*.sh
+
   swiftlint:
     runs-on: ubuntu-latest
     name: SwiftLint

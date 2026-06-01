@@ -1,0 +1,1 @@
+ruuvi,ruuvitag,bluetooth,sensor,temperature,humidity,pressure,movement

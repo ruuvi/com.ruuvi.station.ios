@@ -1,0 +1,17 @@
+Ruuvi Station est une application facile à utiliser qui vous permet de surveiller les données de mesure des capteurs Ruuvi.
+
+Ruuvi Station collecte et visualise les données des capteurs Ruuvi, telles que la température, l’humidité relative de l’air, la pression atmosphérique et le mouvement, provenant de capteurs Ruuvi Bluetooth locaux et de Ruuvi Cloud. De plus, Ruuvi Station vous permet de gérer vos appareils Ruuvi, de définir des alertes, de changer les photos d’arrière-plan et de visualiser les informations de capteurs collectées à l’aide de graphiques.
+
+Comment ça fonctionne ?
+
+Les capteurs Ruuvi envoient de minuscules messages via Bluetooth, qui peuvent ensuite être captés par des téléphones mobiles à proximité ou par des routeurs spécialisés Ruuvi Gateway. L’application mobile Ruuvi Station vous permet de collecter et de visualiser ces données sur votre appareil mobile. Ruuvi Gateway, quant à lui, achemine les données via Internet non seulement vers l’application mobile, mais aussi vers l’application navigateur.
+
+Ruuvi Gateway achemine les données de mesure des capteurs directement vers le service cloud Ruuvi Cloud, ce qui vous permet de construire une solution complète de surveillance à distance incluant des alertes à distance, le partage de capteurs et l’historique dans Ruuvi Cloud – le tout disponible dans l’application Ruuvi Station ! Les utilisateurs de Ruuvi Cloud peuvent consulter un historique de mesures plus long en utilisant l’application navigateur.
+
+Utilisez nos widgets mobiles Ruuvi personnalisables en complément de l’application Ruuvi Station lorsque les données sont récupérées depuis Ruuvi Cloud afin de consulter en un coup d’œil les données de capteurs sélectionnées.
+
+Les fonctionnalités ci-dessus sont disponibles si vous êtes propriétaire d’un Ruuvi Gateway ou si vous avez reçu un capteur partagé sur votre compte gratuit Ruuvi Cloud.
+
+Pour utiliser l’application, procurez-vous des capteurs Ruuvi sur notre site officiel : ruuvi.com
+
+Disponible en anglais, finnois, suédois, français et allemand.

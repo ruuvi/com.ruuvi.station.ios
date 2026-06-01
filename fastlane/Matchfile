@@ -1,7 +1,12 @@
 git_url("git@github.com:ruuvi/com.ruuvi.station.ios.certificates.git")
+git_branch("main")
 storage_mode("git")
-app_identifier("com.ruuvi.station")
-type("development") # The default type, can be: appstore, adhoc, enterprise or development
+app_identifier([
+  "com.ruuvi.station",
+  "com.ruuvi.station.widgets",
+  "com.ruuvi.station.intents",
+  "com.ruuvi.station.pnservice"
+])
 
 # username("user@fastlane.tools") # Your Apple Developer Portal username
 
