@@ -16,6 +16,7 @@ class UnitSettingsPresenter {
     private var humidityAccuracyToken: NSObjectProtocol?
     private var pressureUnitToken: NSObjectProtocol?
     private var pressureAccuracyToken: NSObjectProtocol?
+    private var pendingSelectionMeasurementType: MeasurementType?
 
     private var viewModel: UnitSettingsViewModel? {
         didSet {
@@ -52,21 +53,29 @@ extension UnitSettingsPresenter: UnitSettingsViewOutput {
         observeUnitChanges()
     }
 
-    func viewDidSelect(type: UnitSettingsType) {
-        switch type {
-        case .unit:
-            guard let viewModel = unitViewModel()
-            else {
-                return
-            }
-            router.openSelection(with: viewModel, output: self)
+    func viewDidSelect(row: Int) {
+        guard let viewModel else {
+            return
+        }
 
-        case .accuracy:
-            guard let viewModel = accuracyViewModel()
-            else {
+        switch viewModel.mode {
+        case .measurement:
+            let type: UnitSettingsType = row == 0 ? .unit : .accuracy
+            openSelection(type: type, measurementType: viewModel.measurementType)
+        case .globalUnits:
+            guard let measurementType = groupedMeasurementType(at: row) else {
                 return
             }
-            router.openSelection(with: viewModel, output: self)
+            openSelection(type: .unit, measurementType: measurementType)
+        case .resolution:
+            guard let measurementType = resolutionMeasurementType(at: row) else {
+                return
+            }
+            guard measurementType != .pressure
+                || view.pressureUnit.supportsResolutionSelection else {
+                return
+            }
+            openSelection(type: .accuracy, measurementType: measurementType)
         }
     }
 }
@@ -90,17 +99,23 @@ extension UnitSettingsPresenter: SelectionModuleOutput {
                 break
             }
         case .accuracy:
-            guard let viewModel,
-                  let item = item as? MeasurementAccuracyType
+            guard let item = item as? MeasurementAccuracyType
             else {
                 return
             }
 
-            if viewModel.measurementType == .pressure,
-               !view.pressureUnit.supportsResolutionSelection {
+            guard let measurementType = pendingSelectionMeasurementType
+                ?? viewModel?.measurementType
+            else {
+                pendingSelectionMeasurementType = nil
                 return
             }
-            switch viewModel.measurementType {
+            if measurementType == .pressure,
+               !view.pressureUnit.supportsResolutionSelection {
+                pendingSelectionMeasurementType = nil
+                return
+            }
+            switch measurementType {
             case .temperature:
                 ruuviAppSettingsService.set(temperatureAccuracy: item)
                 view.temperatureAccuracy = item
@@ -114,45 +129,85 @@ extension UnitSettingsPresenter: SelectionModuleOutput {
                 return
             }
         }
+        pendingSelectionMeasurementType = nil
         module.dismiss()
     }
 }
 
 extension UnitSettingsPresenter {
-    private func unitViewModel() -> SelectionViewModel? {
-        guard let viewModel
-        else {
+    private var groupedMeasurementTypes: [MeasurementType] {
+        [.temperature, .humidity, .pressure]
+    }
+
+    private var resolutionMeasurementTypes: [MeasurementType] {
+        groupedMeasurementTypes
+    }
+
+    private func groupedMeasurementType(at row: Int) -> MeasurementType? {
+        guard groupedMeasurementTypes.indices.contains(row) else {
             return nil
         }
+        return groupedMeasurementTypes[row]
+    }
 
-        switch viewModel.measurementType {
+    private func resolutionMeasurementType(at row: Int) -> MeasurementType? {
+        guard resolutionMeasurementTypes.indices.contains(row) else {
+            return nil
+        }
+        return resolutionMeasurementTypes[row]
+    }
+
+    private func openSelection(
+        type: UnitSettingsType,
+        measurementType: MeasurementType
+    ) {
+        let selectionViewModel: SelectionViewModel?
+        switch type {
+        case .unit:
+            selectionViewModel = unitViewModel(for: measurementType)
+        case .accuracy:
+            selectionViewModel = accuracyViewModel(for: measurementType)
+        }
+
+        guard let selectionViewModel else {
+            return
+        }
+
+        pendingSelectionMeasurementType = measurementType
+        router.openSelection(with: selectionViewModel, output: self)
+    }
+
+    private func unitViewModel(
+        for measurementType: MeasurementType
+    ) -> SelectionViewModel? {
+        switch measurementType {
         case .temperature:
             return SelectionViewModel(
                 title: RuuviLocalization.Settings.Label.TemperatureUnit.text,
-                items: viewModel.items,
+                items: unitItems(for: measurementType),
                 description: RuuviLocalization.Settings.ChooseTemperatureUnit.text,
                 selection: settings.temperatureUnit.title(""),
-                measurementType: viewModel.measurementType,
+                measurementType: measurementType,
                 unitSettingsType: .unit
             )
 
         case .humidity:
             return SelectionViewModel(
                 title: RuuviLocalization.Settings.Label.HumidityUnit.text,
-                items: viewModel.items,
+                items: unitItems(for: measurementType),
                 description: RuuviLocalization.Settings.ChooseHumidityUnit.text,
                 selection: settings.humidityUnit.title(""),
-                measurementType: viewModel.measurementType,
+                measurementType: measurementType,
                 unitSettingsType: .unit
             )
 
         case .pressure:
             return SelectionViewModel(
                 title: RuuviLocalization.Settings.Label.PressureUnit.text,
-                items: viewModel.items,
+                items: unitItems(for: measurementType),
                 description: RuuviLocalization.Settings.ChoosePressureUnit.text,
                 selection: settings.pressureUnit.title(""),
-                measurementType: viewModel.measurementType,
+                measurementType: measurementType,
                 unitSettingsType: .unit
             )
 
@@ -161,13 +216,42 @@ extension UnitSettingsPresenter {
         }
     }
 
-    private func accuracyViewModel() -> SelectionViewModel? {
+    private func unitItems(
+        for measurementType: MeasurementType
+    ) -> [SelectionItemProtocol] {
+        if viewModel?.mode == .measurement {
+            return viewModel?.items ?? []
+        }
+
+        switch measurementType {
+        case .temperature:
+            return [
+                TemperatureUnit.celsius,
+                TemperatureUnit.fahrenheit,
+                TemperatureUnit.kelvin,
+            ]
+        case .humidity:
+            return [
+                HumidityUnit.percent,
+                HumidityUnit.gm3,
+            ]
+        case .pressure:
+            return [
+                UnitPressure.newtonsPerMetersSquared,
+                UnitPressure.hectopascals,
+                UnitPressure.millimetersOfMercury,
+                UnitPressure.inchesOfMercury,
+            ]
+        default:
+            return []
+        }
+    }
+
+    private func accuracyViewModel(
+        for measurementType: MeasurementType
+    ) -> SelectionViewModel? {
         var accuracyTitle: String
         var selection: String
-        guard let measurementType = viewModel?.measurementType
-        else {
-            return nil
-        }
         let titleProvider = MeasurementAccuracyTitles()
         switch measurementType {
         case .temperature:

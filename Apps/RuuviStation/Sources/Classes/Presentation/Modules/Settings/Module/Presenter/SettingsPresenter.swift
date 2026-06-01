@@ -14,6 +14,7 @@ class SettingsPresenter: SettingsModuleInput {
     weak var view: SettingsViewInput!
     var router: SettingsRouterInput!
     var settings: RuuviLocalSettings!
+    var flags: RuuviLocalFlags!
     var errorPresenter: ErrorPresenter!
     var ruuviReactor: RuuviReactor!
     var alertService: RuuviServiceAlert!
@@ -33,6 +34,7 @@ class SettingsPresenter: SettingsModuleInput {
 extension SettingsPresenter: SettingsViewOutput {
     func viewDidLoad() {
         view.language = settings.language
+        view.globalUnitsSettingsEnabled = flags.showGlobalUnitsSettings
 
         languageToken = NotificationCenter
             .default
@@ -93,6 +95,26 @@ extension SettingsPresenter: SettingsViewOutput {
             title: RuuviLocalization.pressure,
             items: selectionItems,
             measurementType: .pressure
+        )
+        router.openUnitSettings(with: viewModel, output: nil)
+    }
+
+    func viewDidTapGlobalUnits() {
+        let viewModel = UnitSettingsViewModel(
+            title: RuuviLocalization.Settings.Label.globalUnits,
+            items: [],
+            measurementType: .temperature,
+            mode: .globalUnits
+        )
+        router.openUnitSettings(with: viewModel, output: nil)
+    }
+
+    func viewDidTapResolution() {
+        let viewModel = UnitSettingsViewModel(
+            title: RuuviLocalization.Settings.Measurement.Resolution.title,
+            items: [],
+            measurementType: .temperature,
+            mode: .resolution
         )
         router.openUnitSettings(with: viewModel, output: nil)
     }

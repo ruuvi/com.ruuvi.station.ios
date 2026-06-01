@@ -771,6 +771,16 @@ private extension RuuviTagDataService {
         for sensor: AnyRuuviTagSensor,
         settings: SensorSettings?
     ) {
+        guard Thread.isMainThread else {
+            DispatchQueue.main.async { [weak self] in
+                self?.updateMeasurementDisplayPreference(
+                    for: sensor,
+                    settings: settings
+                )
+            }
+            return
+        }
+
         guard let codes = settings?.displayOrder, !codes.isEmpty else {
             RuuviTagDataService.clearMeasurementDisplayPreference(for: sensor.id)
             if let snapshot = snapshots.first(where: { $0.id == sensor.id }) {

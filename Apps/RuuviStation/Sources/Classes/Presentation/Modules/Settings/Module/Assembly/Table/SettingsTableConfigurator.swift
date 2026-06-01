@@ -18,6 +18,7 @@ class SettingsTableConfigurator {
         presenter.view = view
         presenter.router = router
         presenter.settings = r.resolve(RuuviLocalSettings.self)
+        presenter.flags = r.resolve(RuuviLocalFlags.self)
         presenter.ruuviReactor = r.resolve(RuuviReactor.self)
         presenter.errorPresenter = r.resolve(ErrorPresenter.self)
         presenter.alertService = r.resolve(RuuviServiceAlert.self)

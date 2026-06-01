@@ -5,6 +5,8 @@ protocol SettingsViewOutput {
     func viewDidTapTemperatureUnit()
     func viewDidTapHumidityUnit()
     func viewDidTapOnPressure()
+    func viewDidTapGlobalUnits()
+    func viewDidTapResolution()
     func viewDidTriggerClose()
     func viewDidTapOnLanguage()
     func viewDidTapOnDefaults()

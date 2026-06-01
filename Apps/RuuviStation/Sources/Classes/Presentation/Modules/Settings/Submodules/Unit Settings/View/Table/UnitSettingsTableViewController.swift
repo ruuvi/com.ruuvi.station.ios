@@ -85,11 +85,18 @@ extension UnitSettingsTableViewController {
             return 2
         }
 
-        if measurementType == .pressure,
-           !pressureUnit.supportsResolutionSelection {
-            return 1
+        switch viewModel?.mode {
+        case .globalUnits:
+            return groupedMeasurementTypes.count
+        case .resolution:
+            return groupedMeasurementTypes.count
+        default:
+            if measurementType == .pressure,
+               !pressureUnit.supportsResolutionSelection {
+                return 1
+            }
+            return 2
         }
-        return 2
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
@@ -104,8 +111,40 @@ extension UnitSettingsTableViewController {
 
         cell.titleLbl.font = .ruuviHeadline()
         cell.valueLbl.font = .ruuviBody()
+        cell.selectionStyle = .default
+        cell.isUserInteractionEnabled = true
 
-        if indexPath.row == 0 {
+        switch viewModel?.mode {
+        case .globalUnits:
+            configureGroupedUnitsCell(cell, at: indexPath.row)
+        case .resolution:
+            configureResolutionCell(cell, at: indexPath.row)
+        default:
+            configureMeasurementCell(cell, at: indexPath.row)
+        }
+
+        let enabled = isRowEnabled(at: indexPath)
+        let textColor = RuuviColor.menuTextColor.color.withAlphaComponent(enabled ? 1 : 0.4)
+        cell.titleLbl.textColor = textColor
+        cell.valueLbl.textColor = textColor
+        cell.selectionStyle = enabled ? .default : .none
+        cell.isUserInteractionEnabled = enabled
+        return cell
+    }
+}
+
+// MARK: - Cell configuration
+
+private extension UnitSettingsTableViewController {
+    var groupedMeasurementTypes: [MeasurementType] {
+        [.temperature, .humidity, .pressure]
+    }
+
+    func configureMeasurementCell(
+        _ cell: UnitSettingsTableViewCell,
+        at row: Int
+    ) {
+        if row == 0 {
             cell.titleLbl.text = RuuviLocalization.Settings.Measurement.Unit.title
             switch viewModel?.measurementType {
             case .temperature:
@@ -151,9 +190,103 @@ extension UnitSettingsTableViewController {
                 cell.valueLbl.text = RuuviLocalization.na
             }
         }
-        cell.titleLbl.textColor = RuuviColor.menuTextColor.color
-        cell.valueLbl.textColor = RuuviColor.menuTextColor.color
-        return cell
+    }
+
+    func configureGroupedUnitsCell(
+        _ cell: UnitSettingsTableViewCell,
+        at row: Int
+    ) {
+        guard groupedMeasurementTypes.indices.contains(row) else {
+            cell.titleLbl.text = RuuviLocalization.na
+            cell.valueLbl.text = nil
+            return
+        }
+
+        let measurementType = groupedMeasurementTypes[row]
+        cell.titleLbl.text = title(for: measurementType)
+        cell.valueLbl.text = unitValue(for: measurementType)
+    }
+
+    func configureResolutionCell(
+        _ cell: UnitSettingsTableViewCell,
+        at row: Int
+    ) {
+        guard groupedMeasurementTypes.indices.contains(row) else {
+            cell.titleLbl.text = RuuviLocalization.na
+            cell.valueLbl.text = nil
+            return
+        }
+
+        let measurementType = groupedMeasurementTypes[row]
+        cell.titleLbl.text = title(for: measurementType)
+        cell.valueLbl.text = resolutionValue(for: measurementType)
+    }
+
+    func title(for measurementType: MeasurementType) -> String {
+        switch measurementType {
+        case .temperature:
+            return RuuviLocalization.temperature
+        case .humidity:
+            return RuuviLocalization.humidity
+        case .pressure:
+            return RuuviLocalization.pressure
+        default:
+            return RuuviLocalization.na
+        }
+    }
+
+    func unitValue(for measurementType: MeasurementType) -> String {
+        switch measurementType {
+        case .temperature:
+            return temperatureUnit.title("")
+        case .humidity:
+            return humidityUnit == .dew
+                ? humidityUnit.title(temperatureUnit.symbol)
+                : humidityUnit.title("")
+        case .pressure:
+            return pressureUnit.title("")
+        default:
+            return RuuviLocalization.na
+        }
+    }
+
+    func resolutionValue(for measurementType: MeasurementType) -> String {
+        let titleProvider = MeasurementAccuracyTitles()
+        switch measurementType {
+        case .temperature:
+            return titleProvider.formattedTitle(
+                type: temperatureAccuracy,
+                settings: settings
+            ) + " \(temperatureUnit.symbol)"
+        case .humidity:
+            let unitSymbol = humidityUnit == .dew
+                ? temperatureUnit.symbol
+                : humidityUnit.symbol
+            return titleProvider.formattedTitle(
+                type: humidityAccuracy,
+                settings: settings
+            ) + " \(unitSymbol)"
+        case .pressure:
+            let accuracy: MeasurementAccuracyType = pressureUnit.supportsResolutionSelection
+                ? pressureAccuracy
+                : .zero
+            return titleProvider.formattedTitle(
+                type: accuracy,
+                settings: settings
+            ) + " \(pressureUnit.ruuviSymbol)"
+        default:
+            return RuuviLocalization.na
+        }
+    }
+
+    func isRowEnabled(at indexPath: IndexPath) -> Bool {
+        guard viewModel?.mode == .resolution,
+              groupedMeasurementTypes.indices.contains(indexPath.row),
+              groupedMeasurementTypes[indexPath.row] == .pressure
+        else {
+            return true
+        }
+        return pressureUnit.supportsResolutionSelection
     }
 }
 
@@ -162,12 +295,20 @@ extension UnitSettingsTableViewController {
 extension UnitSettingsTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        guard isRowEnabled(at: indexPath) else {
+            return
+        }
         if indexPath.row == 1,
            viewModel?.measurementType == .pressure,
+           viewModel?.mode == .measurement,
            !pressureUnit.supportsResolutionSelection {
             return
         }
-        output.viewDidSelect(type: indexPath.row == 0 ? .unit : .accuracy)
+        output.viewDidSelect(row: indexPath.row)
+    }
+
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        isRowEnabled(at: indexPath) ? indexPath : nil
     }
 
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
