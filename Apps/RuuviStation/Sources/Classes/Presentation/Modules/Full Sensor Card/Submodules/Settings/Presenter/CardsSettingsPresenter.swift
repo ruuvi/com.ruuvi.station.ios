@@ -826,11 +826,54 @@ private extension CardsSettingsPresenter {
             self?.refreshNotesSummary()
             completion(.success(()))
         }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-            completion(.failure(error))
+            guard let self else { return }
+            if self.isCloudOnlyNotesSaveFailure(error) {
+                self.handleCloudOnlyNotesSaveFailure(
+                    for: sensor,
+                    completion: completion
+                )
+            } else {
+                self.errorPresenter.present(error: error)
+                completion(.failure(error))
+            }
         }, completion: { [weak self] in
             self?.activityPresenter.dismiss()
         })
+    }
+
+    private func isCloudOnlyNotesSaveFailure(_ error: RuuviServiceError) -> Bool {
+        if case .ruuviCloud = error {
+            return true
+        }
+        return false
+    }
+
+    private func handleCloudOnlyNotesSaveFailure(
+        for sensor: RuuviTagSensor,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) {
+        guard let ruuviPool else {
+            activityPresenter.update(
+                with: .failed(
+                    message: RuuviLocalization.activitySavingFail
+                )
+            )
+            completion(.success(()))
+            return
+        }
+
+        ruuviPool.readSensorSettings(sensor)
+            .on(success: { [weak self] settings in
+                self?.sensorSettings = settings
+                self?.refreshNotesSummary()
+            }, completion: { [weak self] in
+                self?.activityPresenter.update(
+                    with: .failed(
+                        message: RuuviLocalization.activitySavingFail
+                    )
+                )
+                completion(.success(()))
+            })
     }
 
     func withAlertService(
