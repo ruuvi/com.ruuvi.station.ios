@@ -128,7 +128,7 @@ def distribution_release_notes(options, env_name:)
   ).lines.first.to_s.strip
   changelog = "No changelog found" if changelog.empty?
 
-  last_pr_number = changelog[/\d+/]
+  last_pr_number = changelog[/#(\d+)/, 1]
   return changelog if last_pr_number.nil?
 
   github_api_options = {
@@ -137,12 +137,16 @@ def distribution_release_notes(options, env_name:)
     path: "/repos/ruuvi/com.ruuvi.station.ios/pulls/" + last_pr_number
   }
   github_api_options[:api_token] = ENV["GITHUB_TOKEN"] unless ENV["GITHUB_TOKEN"].to_s.strip.empty?
-  result = github_api(github_api_options)
-  last_pr_title = result[:json]['title']
-  last_pr_body = result[:json]['body']
-  last_pr_title = "No PR title found" if last_pr_title.nil?
-  last_pr_body = "No PR body found" if last_pr_body.nil?
-  last_pr_title + "\n\n" + last_pr_body
+  begin
+    result = github_api(github_api_options)
+    last_pr_title = result[:json]["title"].to_s.strip
+    last_pr_body = result[:json]["body"].to_s.strip
+    pr_release_notes = [last_pr_title, last_pr_body].reject(&:empty?).join("\n\n")
+    pr_release_notes.empty? ? changelog : pr_release_notes
+  rescue => error
+    UI.important("Could not fetch GitHub pull request ##{last_pr_number}; using commit changelog instead. #{error.message}")
+    changelog
+  end
 end
 
 IGNORED_STORE_TEMPLATE_FILES = [
