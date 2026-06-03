@@ -7,19 +7,16 @@ struct CardsSettingsView: View {
     @EnvironmentObject var actions: CardsSettingsActions
     let showsAlertSections: Bool
     let showsAlertShortcutSection: Bool
-    let showsNotesSection: Bool
     @State private var pendingAnchorID: String?
 
     init(
         state: CardsSettingsState,
         showsAlertSections: Bool = true,
-        showsAlertShortcutSection: Bool = false,
-        showsNotesSection: Bool = false
+        showsAlertShortcutSection: Bool = false
     ) {
         self.state = state
         self.showsAlertSections = showsAlertSections
         self.showsAlertShortcutSection = showsAlertShortcutSection
-        self.showsNotesSection = showsNotesSection
     }
 
     private func sectionAnchorID(for id: String) -> String {
@@ -81,8 +78,7 @@ struct CardsSettingsView: View {
                         showsVisibleMeasurementsRow: state.showVisibleMeasurementsRow,
                         showsLedBrightnessRow: state.showLedBrightnessRow,
                         notes: state.notes,
-                        isNotesEditable: state.isNotesEditable,
-                        showsNotesSection: showsNotesSection
+                        isNotesEditable: state.isNotesEditable
                     )
 
                     if state.showBluetoothSection {

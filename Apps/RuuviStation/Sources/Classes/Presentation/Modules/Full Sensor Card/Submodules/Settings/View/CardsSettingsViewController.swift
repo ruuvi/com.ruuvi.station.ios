@@ -44,18 +44,15 @@ final class CardsSettingsViewController: UIViewController {
     }()
     private let showsAlertSections: Bool
     private let showsAlertShortcutSection: Bool
-    private let showsNotesSection: Bool
 
     init(
         snapshot: RuuviTagCardSnapshot,
         showsAlertSections: Bool = true,
-        showsAlertShortcutSection: Bool = false,
-        showsNotesSection: Bool = false
+        showsAlertShortcutSection: Bool = false
     ) {
         self.state = CardsSettingsState(snapshot: snapshot)
         self.showsAlertSections = showsAlertSections
         self.showsAlertShortcutSection = showsAlertShortcutSection
-        self.showsNotesSection = showsNotesSection
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -463,8 +460,7 @@ extension CardsSettingsViewController {
         let contentView = CardsSettingsView(
             state: state,
             showsAlertSections: showsAlertSections,
-            showsAlertShortcutSection: showsAlertShortcutSection,
-            showsNotesSection: showsNotesSection
+            showsAlertShortcutSection: showsAlertShortcutSection
         )
             .environmentObject(actions)
         let hostingController = UIHostingController(rootView: contentView)

@@ -302,8 +302,7 @@ private extension CardsCoordinator {
         let viewController = CardsSettingsViewController(
             snapshot: snapshot,
             showsAlertSections: !flags.showNewCardsMenu,
-            showsAlertShortcutSection: flags.showNewCardsMenu,
-            showsNotesSection: flags.showCardsSettingsNotesSection
+            showsAlertShortcutSection: flags.showNewCardsMenu
         )
         viewController.output = presenter
         if flags.showNewCardsMenu {

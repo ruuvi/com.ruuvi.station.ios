@@ -42,9 +42,6 @@ public protocol RuuviLocalFlags {
     /// expands into a search bar to filter sensors by name.
     var showDashboardSensorSearch: Bool { get set }
 
-    /// When enabled, shows the notes row and preview in Cards Settings.
-    var showCardsSettingsNotesSection: Bool { get set }
-
     /// When enabled, alphabetical sensor ordering uses localized numeric
     /// comparison so numbers in names sort by numeric value.
     var useImprovedAlphabeticalSorting: Bool { get set }

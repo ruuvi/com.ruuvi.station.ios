@@ -43,9 +43,6 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     @UserDefault("RuuviFeatureFlags.showDashboardSensorSearch", defaultValue: false)
     var showDashboardSensorSearch: Bool
 
-    @UserDefault("RuuviFeatureFlags.showCardsSettingsNotesSection", defaultValue: true)
-    var showCardsSettingsNotesSection: Bool
-
     @UserDefault(
         "RuuviFeatureFlags.useImprovedAlphabeticalSorting",
         defaultValue: RuuviLocalFlagsUserDefaults.useImprovedAlphabeticalSortingDefault
