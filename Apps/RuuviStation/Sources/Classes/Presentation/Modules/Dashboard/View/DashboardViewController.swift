@@ -1132,7 +1132,7 @@ private extension DashboardViewController {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
 
-            let updates = {
+            let applyConstraints = {
                 self.dashboardSignInBannerView.alpha = self.shouldShowSignInBanner ? 1 : 0
 
                 if self.shouldShowSignInBanner {
@@ -1142,14 +1142,15 @@ private extension DashboardViewController {
                     NSLayoutConstraint.deactivate([self.showSignInBannerConstraint])
                     NSLayoutConstraint.activate([self.hideSignInBannerConstraint])
                 }
-
-                self.view.layoutIfNeeded()
             }
 
             if self.shouldAnimate(true) {
-                UIView.animate(withDuration: 0.3, animations: updates)
+                UIView.animate(withDuration: 0.3) {
+                    applyConstraints()
+                    self.view.layoutIfNeeded()
+                }
             } else {
-                UIView.performWithoutAnimation(updates)
+                UIView.performWithoutAnimation(applyConstraints)
             }
         }
     }
