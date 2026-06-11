@@ -83,7 +83,6 @@ extension DefaultsPresenter {
             buildAllowConcurrentGattSyncForMultipleSensors(),
             buildShowMarketingPreference(),
             buildShowDashboardSensorSearch(),
-            buildUseImprovedAlphabeticalSorting(),
             buildShowGlobalUnitsSettings(),
         ]
     }
@@ -665,23 +664,6 @@ extension DefaultsPresenter {
         return viewModel
     }
 
-    private func buildUseImprovedAlphabeticalSorting() -> DefaultsViewModel {
-        let viewModel = DefaultsViewModel()
-        viewModel.title = "Use improved alphabetical sorting"
-        viewModel.boolean.value = flags.useImprovedAlphabeticalSorting
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
-        viewModel.type.value = .switcher
-
-        bind(viewModel.boolean, fire: false) { observer, bool in
-            observer.flags.useImprovedAlphabeticalSorting = GlobalHelpers
-                .getBool(from: bool)
-            RuuviTagServiceCoordinatorManager.shared.reorderSnapshots(
-                with: observer.settings.dashboardSensorOrder
-            )
-        }
-
-        return viewModel
-    }
 }
 
 extension DefaultsPresenter {

@@ -42,10 +42,6 @@ public protocol RuuviLocalFlags {
     /// expands into a search bar to filter sensors by name.
     var showDashboardSensorSearch: Bool { get set }
 
-    /// When enabled, alphabetical sensor ordering uses localized numeric
-    /// comparison so numbers in names sort by numeric value.
-    var useImprovedAlphabeticalSorting: Bool { get set }
-
     /// Maximum number of points used for graph downsampling.
     /// Defaults to 3000.
     var graphDownsampleMaximumPoints: Int { get set }

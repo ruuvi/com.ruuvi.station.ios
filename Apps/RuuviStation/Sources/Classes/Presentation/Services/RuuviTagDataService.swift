@@ -353,9 +353,7 @@ private extension RuuviTagDataService {
 
             switch change {
             case let .initial(ruuviTags):
-                let reorderedTags = ruuviTags.reordered(
-                    useImprovedAlphabeticalSorting: self.flags.useImprovedAlphabeticalSorting
-                )
+                let reorderedTags = ruuviTags.reordered()
                 self.ruuviTags = reorderedTags
                 self.buildInitialSnapshots()
                 self.observeSensorSettings()
@@ -907,14 +905,9 @@ private extension RuuviTagDataService {
         guard !orderedIds.isEmpty else {
             // Alphabetical sorting
             return snapshots.sorted { first, second in
-                if flags.useImprovedAlphabeticalSorting {
-                    return first.displayData.name.localizedStandardCompare(
-                        second.displayData.name
-                    ) == .orderedAscending
-                } else {
-                    return first.displayData.name.lowercased()
-                        < second.displayData.name.lowercased()
-                }
+                first.displayData.name.localizedStandardCompare(
+                    second.displayData.name
+                ) == .orderedAscending
             }
         }
 
