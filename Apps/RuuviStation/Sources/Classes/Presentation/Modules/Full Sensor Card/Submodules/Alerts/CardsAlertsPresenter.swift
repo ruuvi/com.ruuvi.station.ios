@@ -158,6 +158,10 @@ extension CardsAlertsPresenter: CardsAlertsViewOutput {
             )
         }
     }
+
+    func viewDidTapNoCloudDataBanner() {
+        output?.cardsAlertsDidRequestOpenSettings(module: self)
+    }
 }
 
 // MARK: - Snapshot Observing

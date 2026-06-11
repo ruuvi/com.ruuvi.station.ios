@@ -201,7 +201,10 @@ private extension CardsAlertsViewController {
     func makeContentViewController() -> UIViewController {
         let contentView = CardsAlertsView(
             state: state,
-            displayMode: alertSettingsDisplayMode
+            displayMode: alertSettingsDisplayMode,
+            onNoCloudDataBannerTap: { [weak self] in
+                self?.output?.viewDidTapNoCloudDataBanner()
+            }
         )
             .environmentObject(actions)
         let hostingController = UIHostingController(rootView: contentView)

@@ -8,4 +8,5 @@ protocol CardsAlertsViewOutput: AnyObject {
     func viewDidChangeAlertUpperBound(for type: AlertType, upper: CGFloat)
     func viewDidChangeCloudConnectionAlertUnseenDuration(duration: Int)
     func viewDidChangeAlertDescription(for type: AlertType, description: String?)
+    func viewDidTapNoCloudDataBanner()
 }

@@ -270,7 +270,7 @@ private extension CardsCoordinator {
         let flags = r.resolve(RuuviLocalFlags.self)!
         let viewController = CardsAlertsViewController(
             snapshot: snapshot,
-            shouldExpandFirstAlertByDefault: flags.showNewCardsMenu,
+            shouldExpandFirstAlertByDefault: flags.showNewSettings,
             alertSettingsDisplayMode: flags.showNewSettings ? .alerts : .legacySettings
         )
         let presenter = CardsAlertsPresenter(
@@ -278,6 +278,7 @@ private extension CardsCoordinator {
             activityPresenter: r.resolve(ActivityPresenter.self)!
         )
         presenter.view = viewController
+        presenter.output = self
         viewController.output = presenter
         cardsAlertsViewPresenter = presenter
         return viewController
@@ -338,6 +339,12 @@ extension CardsCoordinator: CardsBasePresenterOutput {
             self.baseViewController.navigationController?.popViewController(animated: true)
             self.delegate?.cardsCoordinatorDidDismiss(self)
         })
+    }
+}
+
+extension CardsCoordinator: CardsAlertsPresenterOutput {
+    func cardsAlertsDidRequestOpenSettings(module _: CardsAlertsPresenterInput) {
+        cardsBaseViewPresenter.viewDidChangeTab(.settings)
     }
 }
 
