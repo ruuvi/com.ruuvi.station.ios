@@ -118,7 +118,8 @@ let package = Package(
         .target(
             name: "RuuviServiceAppSettings",
             dependencies: [
-                "RuuviService"
+                "RuuviService",
+                "RuuviStorage",
             ]
         ),
         .target(

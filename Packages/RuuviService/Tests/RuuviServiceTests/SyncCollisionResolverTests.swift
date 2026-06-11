@@ -3,57 +3,48 @@ import RuuviOntology
 import XCTest
 
 final class SyncCollisionResolverTests: XCTestCase {
+    func testPreferCloudWhenBothTimestampsAreMissingIsOptIn() {
+        XCTAssertEqual(
+            SyncCollisionResolver.resolve(
+                localTimestamp: nil,
+                cloudTimestamp: nil
+            ),
+            .noAction
+        )
+
+        XCTAssertEqual(
+            SyncCollisionResolver.resolve(
+                localTimestamp: nil,
+                cloudTimestamp: nil,
+                preferCloudWhenBothTimestampsMissing: true
+            ),
+            .updateLocal
+        )
+    }
+
     func testNoActionDoesNotForceRefreshForNameOrTimestampDrift() {
         let cloudTimestamp = Date(timeIntervalSince1970: 1_000)
         let localTimestamp = Date(timeIntervalSince1970: 1_000.9)
 
         XCTAssertEqual(
             SyncCollisionResolver.resolve(
-                isOwner: true,
                 localTimestamp: localTimestamp,
-                cloudTimestamp: cloudTimestamp
+                cloudTimestamp: cloudTimestamp,
+                preferCloudWhenBothTimestampsMissing: true
             ),
             .noAction
         )
 
-        let localSensor = RuuviTagSensorStruct(
-            version: 5,
-            firmwareVersion: nil,
-            luid: nil,
-            macId: "AA:BB:CC:DD:EE:FF".mac,
-            serviceUUID: nil,
-            isConnectable: true,
+        let localSensor = makeLocalSensor(
             name: "Local name",
-            isClaimed: true,
-            isOwner: true,
-            owner: "owner@example.com",
-            ownersPlan: "free",
-            isCloudSensor: true,
-            canShare: true,
             sharedTo: ["shared@example.com"],
-            sharedToPending: [],
-            maxHistoryDays: 30,
             lastUpdated: localTimestamp
-        ).any
-        let cloudSensor = CloudSensorStruct(
-            id: "AA:BB:CC:DD:EE:FF",
-            serviceUUID: nil,
+        )
+        let cloudSensor = makeCloudSensor(
             name: "Cloud name",
-            isClaimed: true,
-            isOwner: true,
-            owner: "owner@example.com",
-            ownersPlan: "free",
-            picture: nil,
-            offsetTemperature: nil,
-            offsetHumidity: nil,
-            offsetPressure: nil,
-            isCloudSensor: true,
-            canShare: true,
             sharedTo: ["shared@example.com"],
-            sharedToPending: [],
-            maxHistoryDays: 30,
             lastUpdated: cloudTimestamp
-        ).any
+        )
 
         XCTAssertFalse(
             SyncCollisionResolver.shouldRefreshCloudAuthoritativeFields(
@@ -69,51 +60,26 @@ final class SyncCollisionResolverTests: XCTestCase {
 
         XCTAssertEqual(
             SyncCollisionResolver.resolve(
-                isOwner: true,
                 localTimestamp: localTimestamp,
-                cloudTimestamp: cloudTimestamp
+                cloudTimestamp: cloudTimestamp,
+                preferCloudWhenBothTimestampsMissing: true
             ),
             .noAction
         )
 
-        let localSensor = RuuviTagSensorStruct(
-            version: 5,
-            firmwareVersion: nil,
-            luid: nil,
-            macId: "AA:BB:CC:DD:EE:FF".mac,
-            serviceUUID: nil,
-            isConnectable: true,
-            name: "Sensor",
-            isClaimed: true,
-            isOwner: true,
-            owner: "owner@example.com",
-            ownersPlan: "free",
-            isCloudSensor: true,
+        let localSensor = makeLocalSensor(
             canShare: false,
             sharedTo: [],
-            sharedToPending: [],
-            maxHistoryDays: 30,
             lastUpdated: localTimestamp
-        ).any
-        let cloudSensor = CloudSensorStruct(
-            id: "AA:BB:CC:DD:EE:FF",
-            serviceUUID: nil,
-            name: "Sensor",
-            isClaimed: true,
-            isOwner: true,
-            owner: "owner@example.com",
+        )
+        let cloudSensor = makeCloudSensor(
             ownersPlan: "pro",
-            picture: nil,
-            offsetTemperature: nil,
-            offsetHumidity: nil,
-            offsetPressure: nil,
-            isCloudSensor: true,
             canShare: true,
             sharedTo: ["shared@example.com"],
             sharedToPending: ["pending@example.com"],
             maxHistoryDays: 365,
             lastUpdated: cloudTimestamp
-        ).any
+        )
 
         XCTAssertTrue(
             SyncCollisionResolver.shouldRefreshCloudAuthoritativeFields(
@@ -121,5 +87,65 @@ final class SyncCollisionResolverTests: XCTestCase {
                 cloudSensor: cloudSensor
             )
         )
+    }
+
+    private func makeLocalSensor(
+        name: String = "Sensor",
+        ownersPlan: String = "free",
+        canShare: Bool = true,
+        sharedTo: [String] = [],
+        sharedToPending: [String] = [],
+        maxHistoryDays: Int = 30,
+        lastUpdated: Date?
+    ) -> AnyRuuviTagSensor {
+        RuuviTagSensorStruct(
+            version: 5,
+            firmwareVersion: nil,
+            luid: nil,
+            macId: "AA:BB:CC:DD:EE:FF".mac,
+            serviceUUID: nil,
+            isConnectable: true,
+            name: name,
+            isClaimed: true,
+            isOwner: true,
+            owner: "owner@example.com",
+            ownersPlan: ownersPlan,
+            isCloudSensor: true,
+            canShare: canShare,
+            sharedTo: sharedTo,
+            sharedToPending: sharedToPending,
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
+        ).any
+    }
+
+    private func makeCloudSensor(
+        name: String = "Sensor",
+        ownersPlan: String = "free",
+        canShare: Bool = true,
+        sharedTo: [String] = [],
+        sharedToPending: [String] = [],
+        maxHistoryDays: Int = 30,
+        lastUpdated: Date?
+    ) -> AnyCloudSensor {
+        CloudSensorStruct(
+            id: "AA:BB:CC:DD:EE:FF",
+            serviceUUID: nil,
+            name: name,
+            isClaimed: true,
+            isOwner: true,
+            owner: "owner@example.com",
+            ownersPlan: ownersPlan,
+            picture: nil,
+            offsetTemperature: nil,
+            offsetHumidity: nil,
+            offsetPressure: nil,
+            isCloudSensor: true,
+            canShare: canShare,
+            sharedTo: sharedTo,
+            sharedToPending: sharedToPending,
+            maxHistoryDays: maxHistoryDays,
+            lastUpdated: lastUpdated
+        ).any
     }
 }

@@ -237,3 +237,53 @@ final class RuuviStorageCoordinator: RuuviStorage {
         return promise.future
     }
 }
+
+// MARK: - User settings
+
+extension RuuviStorageCoordinator {
+    func readUserSettings() -> Future<[RuuviUserSetting], RuuviStorageError> {
+        let promise = Promise<[RuuviUserSetting], RuuviStorageError>()
+        sqlite.readUserSettings().on(success: { settings in
+            promise.succeed(value: settings)
+        }, failure: { error in
+            promise.fail(error: .ruuviPersistence(error))
+        })
+        return promise.future
+    }
+
+    func readUserSetting(
+        for key: String
+    ) -> Future<RuuviUserSetting?, RuuviStorageError> {
+        let promise = Promise<RuuviUserSetting?, RuuviStorageError>()
+        sqlite.readUserSetting(for: key).on(success: { setting in
+            promise.succeed(value: setting)
+        }, failure: { error in
+            promise.fail(error: .ruuviPersistence(error))
+        })
+        return promise.future
+    }
+
+    func save(
+        userSetting: RuuviUserSetting
+    ) -> Future<RuuviUserSetting, RuuviStorageError> {
+        let promise = Promise<RuuviUserSetting, RuuviStorageError>()
+        sqlite.save(userSetting: userSetting).on(success: { setting in
+            promise.succeed(value: setting)
+        }, failure: { error in
+            promise.fail(error: .ruuviPersistence(error))
+        })
+        return promise.future
+    }
+
+    func save(
+        userSettings: [RuuviUserSetting]
+    ) -> Future<[RuuviUserSetting], RuuviStorageError> {
+        let promise = Promise<[RuuviUserSetting], RuuviStorageError>()
+        sqlite.save(userSettings: userSettings).on(success: { settings in
+            promise.succeed(value: settings)
+        }, failure: { error in
+            promise.fail(error: .ruuviPersistence(error))
+        })
+        return promise.future
+    }
+}

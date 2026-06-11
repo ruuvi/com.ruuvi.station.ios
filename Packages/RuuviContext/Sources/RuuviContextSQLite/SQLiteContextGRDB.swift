@@ -374,6 +374,12 @@ extension SQLiteGRDBDatabase {
             }
         }
 
+        // v21
+        migrator.registerMigration("Create RuuviUserSettingSQLite table") { db in
+            guard try db.tableExists(RuuviUserSettingSQLite.databaseTableName) == false else { return }
+            try RuuviUserSettingSQLite.createTable(in: db)
+        }
+
         try migrator.migrate(dbPool)
     }
 }

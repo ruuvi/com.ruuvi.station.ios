@@ -1,5 +1,4 @@
 import Foundation
-import Humidity
 import RuuviOntology
 
 public struct RuuviCloudApiGetSettingsResponse: Decodable {
@@ -7,121 +6,93 @@ public struct RuuviCloudApiGetSettingsResponse: Decodable {
 }
 
 public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
-    public var unitTemperature: TemperatureUnit? {
-        unitTemperatureString?.ruuviCloudApiSettingUnitTemperature
+    private static let lastUpdatedSuffix = "_lastUpdated"
+
+    public let userSettings: [RuuviUserSetting]
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: DynamicCodingKey.self)
+        var values = [RuuviCloudApiSetting: String]()
+        var lastUpdatedDates = [RuuviCloudApiSetting: Date]()
+
+        for key in container.allKeys {
+            let keyString = key.stringValue
+            if keyString.hasSuffix(Self.lastUpdatedSuffix) {
+                let settingKey = String(keyString.dropLast(Self.lastUpdatedSuffix.count))
+                guard let setting = RuuviCloudApiSetting(rawValue: settingKey),
+                      let date = Self.date(from: container, forKey: key)
+                else { continue }
+                lastUpdatedDates[setting] = date
+            } else {
+                guard let setting = RuuviCloudApiSetting(rawValue: keyString),
+                      let value = Self.stringValue(from: container, forKey: key)
+                else { continue }
+                values[setting] = value
+            }
+        }
+
+        userSettings = RuuviCloudApiSetting.userSettingKeys.compactMap { setting in
+            guard let value = values[setting] else {
+                return nil
+            }
+            return RuuviUserSettingStruct(
+                key: setting.rawValue,
+                value: value,
+                lastUpdated: lastUpdatedDates[setting]
+            )
+        }
     }
 
-    public var accuracyTemperature: MeasurementAccuracyType? {
-        accuracyTemperatureString?.ruuviCloudApiSettingsMeasurementAccuracyUnit
+    private static func stringValue(
+        from container: KeyedDecodingContainer<DynamicCodingKey>,
+        forKey key: DynamicCodingKey
+    ) -> String? {
+        if (try? container.decodeNil(forKey: key)) == true {
+            return nil
+        }
+        if let value = try? container.decode(String.self, forKey: key) {
+            return value
+        }
+        if let value = try? container.decode(Int.self, forKey: key) {
+            return String(value)
+        }
+        if let value = try? container.decode(Double.self, forKey: key) {
+            return value.rounded() == value ? String(Int(value)) : String(value)
+        }
+        if let value = try? container.decode(Bool.self, forKey: key) {
+            return value.chartBoolSettingString
+        }
+        return nil
     }
 
-    public var unitHumidity: HumidityUnit? {
-        unitHumidityString?.ruuviCloudApiSettingUnitHumidity
+    private static func date(
+        from container: KeyedDecodingContainer<DynamicCodingKey>,
+        forKey key: DynamicCodingKey
+    ) -> Date? {
+        if let value = try? container.decode(Double.self, forKey: key) {
+            return Date(timeIntervalSince1970: value)
+        }
+        if let value = try? container.decode(Int.self, forKey: key) {
+            return Date(timeIntervalSince1970: TimeInterval(value))
+        }
+        if let value = try? container.decode(String.self, forKey: key),
+           let timestamp = Double(value) {
+            return Date(timeIntervalSince1970: timestamp)
+        }
+        return nil
+    }
+}
+
+private struct DynamicCodingKey: CodingKey {
+    var stringValue: String
+    var intValue: Int?
+
+    init?(stringValue: String) {
+        self.stringValue = stringValue
     }
 
-    public var accuracyHumidity: MeasurementAccuracyType? {
-        accuracyHumidityString?.ruuviCloudApiSettingsMeasurementAccuracyUnit
-    }
-
-    public var unitPressure: UnitPressure? {
-        unitPressureString?.ruuviCloudApiSettingUnitPressure
-    }
-
-    public var accuracyPressure: MeasurementAccuracyType? {
-        accuracyPressureString?.ruuviCloudApiSettingsMeasurementAccuracyUnit
-    }
-
-    public var chartShowAllPoints: Bool? {
-        chartShowAllPointsString?.ruuviCloudApiSettingBoolean
-    }
-
-    public var chartDrawDots: Bool? {
-        chartDrawDotsString?.ruuviCloudApiSettingBoolean
-    }
-
-    public var chartViewPeriod: Int? {
-        chartViewPeriodString?.ruuviCloudApiSettingChartViewPeriod
-    }
-
-    public var chartShowMinMaxAvg: Bool? {
-        chartShowMinMaxAverageString?.ruuviCloudApiSettingBoolean
-    }
-
-    public var cloudModeEnabled: Bool? {
-        cloudModeEnabledString?.ruuviCloudApiSettingBoolean
-    }
-
-    public var dashboardEnabled: Bool? {
-        dashboardEnabledString?.ruuviCloudApiSettingBoolean
-    }
-
-    public var dashboardType: DashboardType? {
-        dashboardTypeString?.ruuviCloudApiSettingsDashboardType
-    }
-
-    public var dashboardTapActionType: DashboardTapActionType? {
-        dashboardTapActionTypeString?.ruuviCloudApiSettingsDashboardTapActionType
-    }
-
-    public var pushAlertDisabled: Bool? {
-        pushAlertDisabledString?.ruuviCloudApiSettingBoolean
-    }
-
-    public var emailAlertDisabled: Bool? {
-        emailAlertDisabledString?.ruuviCloudApiSettingBoolean
-    }
-
-    public var marketingPreference: Bool? {
-        marketingPreferenceString?.ruuviCloudApiSettingBoolean
-    }
-
-    public var profileLanguageCode: String? {
-        profileLanguageCodeString
-    }
-
-    public var dashboardSensorOrder: String? {
-        dashboardSensorOrderString
-    }
-
-    var unitTemperatureString: String?
-    var accuracyTemperatureString: String?
-    var unitHumidityString: String?
-    var accuracyHumidityString: String?
-    var unitPressureString: String?
-    var accuracyPressureString: String?
-    var chartShowAllPointsString: String?
-    var chartDrawDotsString: String?
-    var chartViewPeriodString: String?
-    var chartShowMinMaxAverageString: String?
-    var cloudModeEnabledString: String?
-    var dashboardEnabledString: String?
-    var dashboardTypeString: String?
-    var dashboardTapActionTypeString: String?
-    var emailAlertDisabledString: String?
-    var pushAlertDisabledString: String?
-    var marketingPreferenceString: String?
-    var profileLanguageCodeString: String?
-    var dashboardSensorOrderString: String?
-
-    enum CodingKeys: String, CodingKey {
-        case unitTemperatureString = "UNIT_TEMPERATURE"
-        case accuracyTemperatureString = "ACCURACY_TEMPERATURE"
-        case unitHumidityString = "UNIT_HUMIDITY"
-        case accuracyHumidityString = "ACCURACY_HUMIDITY"
-        case unitPressureString = "UNIT_PRESSURE"
-        case accuracyPressureString = "ACCURACY_PRESSURE"
-        case chartShowAllPointsString = "CHART_SHOW_ALL_POINTS"
-        case chartDrawDotsString = "CHART_DRAW_DOTS"
-        case chartViewPeriodString = "CHART_VIEW_PERIOD"
-        case chartShowMinMaxAverageString = "CHART_SHOW_MIN_MAX_AVG"
-        case cloudModeEnabledString = "CLOUD_MODE_ENABLED"
-        case dashboardEnabledString = "DASHBOARD_ENABLED"
-        case dashboardTypeString = "DASHBOARD_TYPE"
-        case dashboardTapActionTypeString = "DASHBOARD_TAP_ACTION"
-        case emailAlertDisabledString = "DISABLE_EMAIL_NOTIFICATIONS"
-        case pushAlertDisabledString = "DISABLE_PUSH_NOTIFICATIONS"
-        case marketingPreferenceString = "MARKETING_PREFERENCE"
-        case profileLanguageCodeString = "PROFILE_LANGUAGE_CODE"
-        case dashboardSensorOrderString = "SENSOR_ORDER"
+    init?(intValue: Int) {
+        self.stringValue = String(intValue)
+        self.intValue = intValue
     }
 }

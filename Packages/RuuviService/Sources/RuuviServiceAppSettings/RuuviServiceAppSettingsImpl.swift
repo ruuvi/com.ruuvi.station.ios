@@ -3,23 +3,32 @@ import Future
 import RuuviCloud
 import RuuviLocal
 import RuuviOntology
+import RuuviStorage
 
 public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     private let cloud: RuuviCloud
     private var localSettings: RuuviLocalSettings
+    private let storage: RuuviStorage
 
     public init(
         cloud: RuuviCloud,
-        localSettings: RuuviLocalSettings
+        localSettings: RuuviLocalSettings,
+        storage: RuuviStorage
     ) {
         self.cloud = cloud
         self.localSettings = localSettings
+        self.storage = storage
     }
 
     @discardableResult
     public func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviServiceError> {
         let promise = Promise<TemperatureUnit, RuuviServiceError>()
         localSettings.temperatureUnit = temperatureUnit
+        saveUserSetting(
+            name: .unitTemperature,
+            value: temperatureUnit.ruuviCloudApiSettingString,
+            lastUpdated: UserSettingTimestamp.current()
+        )
         cloud.set(temperatureUnit: temperatureUnit)
             .on(success: { temperatureUnit in
                 promise.succeed(value: temperatureUnit)
@@ -35,6 +44,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     ) -> Future<MeasurementAccuracyType, RuuviServiceError> {
         let promise = Promise<MeasurementAccuracyType, RuuviServiceError>()
         localSettings.temperatureAccuracy = temperatureAccuracy
+        saveUserSetting(
+            name: .accuracyTemperature,
+            value: temperatureAccuracy.value.ruuviCloudApiSettingString,
+            lastUpdated: UserSettingTimestamp.current()
+        )
         cloud.set(temperatureAccuracy: temperatureAccuracy)
             .on(success: { accuracy in
                 promise.succeed(value: accuracy)
@@ -48,6 +62,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     public func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviServiceError> {
         let promise = Promise<HumidityUnit, RuuviServiceError>()
         localSettings.humidityUnit = humidityUnit
+        saveUserSetting(
+            name: .unitHumidity,
+            value: humidityUnit.ruuviCloudApiSettingString,
+            lastUpdated: UserSettingTimestamp.current()
+        )
         cloud.set(humidityUnit: humidityUnit)
             .on(success: { humidityUnit in
                 promise.succeed(value: humidityUnit)
@@ -63,6 +82,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     ) -> Future<MeasurementAccuracyType, RuuviServiceError> {
         let promise = Promise<MeasurementAccuracyType, RuuviServiceError>()
         localSettings.humidityAccuracy = humidityAccuracy
+        saveUserSetting(
+            name: .accuracyHumidity,
+            value: humidityAccuracy.value.ruuviCloudApiSettingString,
+            lastUpdated: UserSettingTimestamp.current()
+        )
         cloud.set(humidityAccuracy: humidityAccuracy)
             .on(success: { accuracy in
                 promise.succeed(value: accuracy)
@@ -76,6 +100,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     public func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviServiceError> {
         let promise = Promise<UnitPressure, RuuviServiceError>()
         localSettings.pressureUnit = pressureUnit
+        saveUserSetting(
+            name: .unitPressure,
+            value: pressureUnit.ruuviCloudApiSettingString,
+            lastUpdated: UserSettingTimestamp.current()
+        )
         cloud.set(pressureUnit: pressureUnit)
             .on(success: { pressureUnit in
                 promise.succeed(value: pressureUnit)
@@ -91,6 +120,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     ) -> Future<MeasurementAccuracyType, RuuviServiceError> {
         let promise = Promise<MeasurementAccuracyType, RuuviServiceError>()
         localSettings.pressureAccuracy = pressureAccuracy
+        saveUserSetting(
+            name: .accuracyPressure,
+            value: pressureAccuracy.value.ruuviCloudApiSettingString,
+            lastUpdated: UserSettingTimestamp.current()
+        )
         cloud.set(pressureAccuracy: pressureAccuracy)
             .on(success: { accuracy in
                 promise.succeed(value: accuracy)
@@ -103,6 +137,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     @discardableResult
     public func set(showAllData: Bool) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
+        saveUserSetting(
+            name: .chartShowAllPoints,
+            value: showAllData.chartBoolSettingString,
+            lastUpdated: UserSettingTimestamp.current()
+        )
         cloud.set(showAllData: showAllData)
             .on(success: { showAllData in
                 promise.succeed(value: showAllData)
@@ -115,6 +154,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     @discardableResult
     public func set(drawDots: Bool) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
+        saveUserSetting(
+            name: .chartDrawDots,
+            value: drawDots.chartBoolSettingString,
+            lastUpdated: UserSettingTimestamp.current()
+        )
         cloud.set(drawDots: drawDots)
             .on(success: { drawDots in
                 promise.succeed(value: drawDots)
@@ -139,6 +183,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     @discardableResult
     public func set(showMinMaxAvg: Bool) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
+        saveUserSetting(
+            name: .chartShowMinMaxAverage,
+            value: showMinMaxAvg.chartBoolSettingString,
+            lastUpdated: UserSettingTimestamp.current()
+        )
         cloud.set(showMinMaxAvg: showMinMaxAvg)
             .on(success: { show in
                 promise.succeed(value: show)
@@ -151,6 +200,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     @discardableResult
     public func set(cloudMode: Bool) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
+        saveUserSetting(
+            name: .cloudModeEnabled,
+            value: cloudMode.chartBoolSettingString,
+            lastUpdated: UserSettingTimestamp.current()
+        )
         cloud.set(cloudMode: cloudMode)
             .on(success: { cloudMode in
                 promise.succeed(value: cloudMode)
@@ -163,6 +217,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     @discardableResult
     public func set(dashboard: Bool) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
+        saveUserSetting(
+            name: .dashboardEnabled,
+            value: dashboard.chartBoolSettingString,
+            lastUpdated: UserSettingTimestamp.current()
+        )
         cloud.set(dashboard: dashboard)
             .on(success: { enabled in
                 promise.succeed(value: enabled)
@@ -175,6 +234,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     @discardableResult
     public func set(dashboardType: DashboardType) -> Future<DashboardType, RuuviServiceError> {
         let promise = Promise<DashboardType, RuuviServiceError>()
+        saveUserSetting(
+            name: .dashboardType,
+            value: dashboardType.rawValue,
+            lastUpdated: UserSettingTimestamp.current()
+        )
         cloud.set(dashboardType: dashboardType)
             .on(success: { type in
                 promise.succeed(value: type)
@@ -188,6 +252,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     public func set(dashboardTapActionType: DashboardTapActionType) ->
     Future<DashboardTapActionType, RuuviServiceError> {
         let promise = Promise<DashboardTapActionType, RuuviServiceError>()
+        saveUserSetting(
+            name: .dashboardTapActionType,
+            value: dashboardTapActionType.rawValue,
+            lastUpdated: UserSettingTimestamp.current()
+        )
         cloud.set(dashboardTapActionType: dashboardTapActionType)
             .on(success: { type in
                 promise.succeed(value: type)
@@ -200,6 +269,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     @discardableResult
     public func set(disableEmailAlert: Bool) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
+        saveUserSetting(
+            name: .emailAlertDisabled,
+            value: disableEmailAlert.chartBoolSettingString,
+            lastUpdated: UserSettingTimestamp.current()
+        )
         cloud.set(disableEmailAlert: disableEmailAlert)
             .on(success: { disabled in
                 promise.succeed(value: disabled)
@@ -212,6 +286,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     @discardableResult
     public func set(disablePushAlert: Bool) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
+        saveUserSetting(
+            name: .pushAlertDisabled,
+            value: disablePushAlert.chartBoolSettingString,
+            lastUpdated: UserSettingTimestamp.current()
+        )
         cloud.set(disablePushAlert: disablePushAlert)
             .on(success: { disabled in
                 promise.succeed(value: disabled)
@@ -225,6 +304,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     public func set(marketingPreference: Bool) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
         localSettings.marketingPreference = marketingPreference
+        saveUserSetting(
+            name: .marketingPreference,
+            value: marketingPreference.chartBoolSettingString,
+            lastUpdated: UserSettingTimestamp.current()
+        )
         cloud.set(marketingPreference: marketingPreference)
             .on(success: { marketingPreference in
                 promise.succeed(value: marketingPreference)
@@ -237,6 +321,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     @discardableResult
     public func set(profileLanguageCode: String) -> Future<String, RuuviServiceError> {
         let promise = Promise<String, RuuviServiceError>()
+        saveUserSetting(
+            name: .profileLanguageCode,
+            value: profileLanguageCode,
+            lastUpdated: UserSettingTimestamp.current()
+        )
         cloud.set(profileLanguageCode: profileLanguageCode)
             .on(success: { profileLanguageCode in
                 promise.succeed(value: profileLanguageCode)
@@ -249,6 +338,11 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     @discardableResult
     public func set(dashboardSensorOrder: [String]) -> Future<[String], RuuviServiceError> {
         let promise = Promise<[String], RuuviServiceError>()
+        saveUserSetting(
+            name: .dashboardSensorOrder,
+            value: RuuviCloudApiHelper.jsonStringFromArray(dashboardSensorOrder),
+            lastUpdated: UserSettingTimestamp.current()
+        )
         cloud.set(dashboardSensorOrder: dashboardSensorOrder)
             .on(success: { dashboardSensorOrder in
                 promise.succeed(value: dashboardSensorOrder)
@@ -257,4 +351,23 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
             })
         return promise.future
     }
+
+    private func saveUserSetting(
+        name: RuuviCloudApiSetting,
+        value: String?,
+        lastUpdated: Date
+    ) {
+        guard let value else {
+            return
+        }
+        let userSetting = RuuviUserSettingStruct(
+            key: name.rawValue,
+            value: value,
+            lastUpdated: lastUpdated
+        )
+        storage.save(userSetting: userSetting)
+            .observe(on: .global(qos: .utility))
+            .on()
+    }
+
 }

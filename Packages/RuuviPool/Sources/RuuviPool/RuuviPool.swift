@@ -61,6 +61,8 @@ public protocol RuuviPool {
     func deleteQueuedRequest(_ request: RuuviCloudQueuedRequest) -> Future<Bool, RuuviPoolError>
     @discardableResult
     func deleteQueuedRequests() -> Future<Bool, RuuviPoolError>
+    @discardableResult
+    func deleteUserSettings() -> Future<Bool, RuuviPoolError>
 
     // MARK: - Subscription
     func save(

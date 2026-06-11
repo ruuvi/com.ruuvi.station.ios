@@ -331,6 +331,17 @@ final class RuuviPoolCoordinator: RuuviPool {
         return promise.future
     }
 
+    func deleteUserSettings() -> Future<Bool, RuuviPoolError> {
+        let promise = Promise<Bool, RuuviPoolError>()
+        sqlite.deleteUserSettings()
+            .on(success: { success in
+                promise.succeed(value: success)
+            }, failure: { error in
+                promise.fail(error: .ruuviPersistence(error))
+            })
+        return promise.future
+    }
+
     // MARK: - Subscription
     func save(
         subscription: CloudSensorSubscription

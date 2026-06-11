@@ -29,6 +29,19 @@ public protocol RuuviStorage {
     func getStoredMeasurementsCount() -> Future<Int, RuuviStorageError>
     func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RuuviStorageError>
 
+    // MARK: - User settings
+
+    func readUserSettings() -> Future<[RuuviUserSetting], RuuviStorageError>
+    func readUserSetting(
+        for key: String
+    ) -> Future<RuuviUserSetting?, RuuviStorageError>
+    func save(
+        userSetting: RuuviUserSetting
+    ) -> Future<RuuviUserSetting, RuuviStorageError>
+    func save(
+        userSettings: [RuuviUserSetting]
+    ) -> Future<[RuuviUserSetting], RuuviStorageError>
+
     // MARK: - Queued cloud requests
 
     func readQueuedRequests() -> Future<[RuuviCloudQueuedRequest], RuuviStorageError>

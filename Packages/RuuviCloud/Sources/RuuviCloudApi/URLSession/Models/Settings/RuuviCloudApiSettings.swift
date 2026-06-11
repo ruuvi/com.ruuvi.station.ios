@@ -26,6 +26,123 @@ public enum RuuviCloudApiSetting: String, CaseIterable, Codable {
     case sensorDescription = "description"
 }
 
+public extension RuuviCloudApiSetting {
+    /// Global `/settings` keys. Per-sensor setting keys are intentionally excluded.
+    static let userSettingKeys: [RuuviCloudApiSetting] = [
+        .unitTemperature,
+        .accuracyTemperature,
+        .unitHumidity,
+        .accuracyHumidity,
+        .unitPressure,
+        .accuracyPressure,
+        .chartViewPeriod,
+        .chartShowAllPoints,
+        .chartDrawDots,
+        .chartShowMinMaxAverage,
+        .cloudModeEnabled,
+        .dashboardEnabled,
+        .dashboardType,
+        .dashboardTapActionType,
+        .emailAlertDisabled,
+        .pushAlertDisabled,
+        .marketingPreference,
+        .profileLanguageCode,
+        .dashboardSensorOrder,
+    ]
+
+    /// Settings participating in timestamp-based local/cloud conflict resolution.
+    /// `CHART_VIEW_PERIOD` remains API-known, but current app behavior keeps it local-only.
+    static let cloudSyncedUserSettings: [RuuviCloudApiSetting] = userSettingKeys.filter {
+        $0 != .chartViewPeriod
+    }
+
+    var isCloudSyncedUserSetting: Bool {
+        Self.cloudSyncedUserSettings.contains(self)
+    }
+}
+
+public extension RuuviCloudSettings {
+    func userSettingValue(for setting: RuuviCloudApiSetting) -> String? {
+        userSettings.first { $0.key == setting.rawValue }?.value
+    }
+
+    var unitTemperature: TemperatureUnit? {
+        userSettingValue(for: .unitTemperature)?.ruuviCloudApiSettingUnitTemperature
+    }
+
+    var accuracyTemperature: MeasurementAccuracyType? {
+        userSettingValue(for: .accuracyTemperature)?.ruuviCloudApiSettingsMeasurementAccuracyUnitOptional
+    }
+
+    var unitHumidity: HumidityUnit? {
+        userSettingValue(for: .unitHumidity)?.ruuviCloudApiSettingUnitHumidity
+    }
+
+    var accuracyHumidity: MeasurementAccuracyType? {
+        userSettingValue(for: .accuracyHumidity)?.ruuviCloudApiSettingsMeasurementAccuracyUnitOptional
+    }
+
+    var unitPressure: UnitPressure? {
+        userSettingValue(for: .unitPressure)?.ruuviCloudApiSettingUnitPressure
+    }
+
+    var accuracyPressure: MeasurementAccuracyType? {
+        userSettingValue(for: .accuracyPressure)?.ruuviCloudApiSettingsMeasurementAccuracyUnitOptional
+    }
+
+    var chartShowAllPoints: Bool? {
+        userSettingValue(for: .chartShowAllPoints)?.ruuviCloudApiSettingBoolean
+    }
+
+    var chartDrawDots: Bool? {
+        userSettingValue(for: .chartDrawDots)?.ruuviCloudApiSettingBoolean
+    }
+
+    var chartViewPeriod: Int? {
+        userSettingValue(for: .chartViewPeriod)?.ruuviCloudApiSettingChartViewPeriod
+    }
+
+    var chartShowMinMaxAvg: Bool? {
+        userSettingValue(for: .chartShowMinMaxAverage)?.ruuviCloudApiSettingBoolean
+    }
+
+    var cloudModeEnabled: Bool? {
+        userSettingValue(for: .cloudModeEnabled)?.ruuviCloudApiSettingBoolean
+    }
+
+    var dashboardEnabled: Bool? {
+        userSettingValue(for: .dashboardEnabled)?.ruuviCloudApiSettingBoolean
+    }
+
+    var dashboardType: DashboardType? {
+        userSettingValue(for: .dashboardType)?.ruuviCloudApiSettingsDashboardTypeOptional
+    }
+
+    var dashboardTapActionType: DashboardTapActionType? {
+        userSettingValue(for: .dashboardTapActionType)?.ruuviCloudApiSettingsDashboardTapActionTypeOptional
+    }
+
+    var pushAlertDisabled: Bool? {
+        userSettingValue(for: .pushAlertDisabled)?.ruuviCloudApiSettingBoolean
+    }
+
+    var emailAlertDisabled: Bool? {
+        userSettingValue(for: .emailAlertDisabled)?.ruuviCloudApiSettingBoolean
+    }
+
+    var marketingPreference: Bool? {
+        userSettingValue(for: .marketingPreference)?.ruuviCloudApiSettingBoolean
+    }
+
+    var profileLanguageCode: String? {
+        userSettingValue(for: .profileLanguageCode)
+    }
+
+    var dashboardSensorOrder: String? {
+        userSettingValue(for: .dashboardSensorOrder)
+    }
+}
+
 public extension TemperatureUnit {
     var ruuviCloudApiSettingString: String {
         switch self {
@@ -139,7 +256,7 @@ public extension String {
         Int(self)
     }
 
-    var ruuviCloudApiSettingsMeasurementAccuracyUnit: MeasurementAccuracyType {
+    var ruuviCloudApiSettingsMeasurementAccuracyUnitOptional: MeasurementAccuracyType? {
         switch self {
         case "0":
             .zero
@@ -148,29 +265,41 @@ public extension String {
         case "2":
             .two
         default:
-            .two
+            nil
         }
     }
 
-    var ruuviCloudApiSettingsDashboardType: DashboardType {
+    var ruuviCloudApiSettingsMeasurementAccuracyUnit: MeasurementAccuracyType {
+        ruuviCloudApiSettingsMeasurementAccuracyUnitOptional ?? .two
+    }
+
+    var ruuviCloudApiSettingsDashboardTypeOptional: DashboardType? {
         switch self {
         case "image":
             .image
         case "simple":
             .simple
         default:
-            .image
+            nil
         }
     }
 
-    var ruuviCloudApiSettingsDashboardTapActionType: DashboardTapActionType {
+    var ruuviCloudApiSettingsDashboardType: DashboardType {
+        ruuviCloudApiSettingsDashboardTypeOptional ?? .image
+    }
+
+    var ruuviCloudApiSettingsDashboardTapActionTypeOptional: DashboardTapActionType? {
         switch self {
         case "card":
             .card
         case "chart":
             .chart
         default:
-            .card
+            nil
         }
+    }
+
+    var ruuviCloudApiSettingsDashboardTapActionType: DashboardTapActionType {
+        ruuviCloudApiSettingsDashboardTapActionTypeOptional ?? .card
     }
 }

@@ -77,6 +77,24 @@ public protocol RuuviPersistence {
         sensorSettings: SensorSettings
     ) -> Future<SensorSettings, RuuviPersistenceError>
 
+    // MARK: - User settings
+
+    func readUserSettings() -> Future<[RuuviUserSetting], RuuviPersistenceError>
+
+    func readUserSetting(
+        for key: String
+    ) -> Future<RuuviUserSetting?, RuuviPersistenceError>
+
+    func save(
+        userSetting: RuuviUserSetting
+    ) -> Future<RuuviUserSetting, RuuviPersistenceError>
+
+    func save(
+        userSettings: [RuuviUserSetting]
+    ) -> Future<[RuuviUserSetting], RuuviPersistenceError>
+
+    func deleteUserSettings() -> Future<Bool, RuuviPersistenceError>
+
     func cleanupDBSpace() -> Future<Bool, RuuviPersistenceError>
 
     // MARK: - Queued cloud requests

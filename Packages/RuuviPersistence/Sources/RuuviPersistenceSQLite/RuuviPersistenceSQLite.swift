@@ -14,6 +14,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     typealias Settings = SensorSettingsSQLite
     typealias QueuedRequest = RuuviCloudQueuedRequestSQLite
     typealias SensorSubscription = RuuviCloudSensorSubscriptionSQLite
+    typealias UserSetting = RuuviUserSettingSQLite
 
     public var database: GRDBDatabase {
         context.database
@@ -23,6 +24,11 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     private let readQueue: DispatchQueue =
         .init(
             label: "RuuviTagPersistenceSQLite.readQueue",
+            qos: .default
+        )
+    private let writeQueue: DispatchQueue =
+        .init(
+            label: "RuuviTagPersistenceSQLite.writeQueue",
             qos: .default
         )
     public init(context: SQLiteContext) {
@@ -603,6 +609,99 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             promise.succeed(value: sensorSettings)
         } catch {
             promise.fail(error: .grdb(error))
+        }
+        return promise.future
+    }
+
+    // MARK: - User settings
+
+    public func readUserSettings() -> Future<[RuuviUserSetting], RuuviPersistenceError> {
+        let promise = Promise<[RuuviUserSetting], RuuviPersistenceError>()
+        readQueue.async { [weak self] in
+            var sqliteSettings = [UserSetting]()
+            do {
+                try self?.database.dbPool.read { db in
+                    let request = UserSetting.order(UserSetting.keyColumn)
+                    sqliteSettings = try request.fetchAll(db)
+                }
+                promise.succeed(value: sqliteSettings)
+            } catch {
+                promise.fail(error: .grdb(error))
+            }
+        }
+        return promise.future
+    }
+
+    public func readUserSetting(
+        for key: String
+    ) -> Future<RuuviUserSetting?, RuuviPersistenceError> {
+        let promise = Promise<RuuviUserSetting?, RuuviPersistenceError>()
+        readQueue.async { [weak self] in
+            var sqliteSetting: UserSetting?
+            do {
+                try self?.database.dbPool.read { db in
+                    let request = UserSetting.filter(UserSetting.keyColumn == key)
+                    sqliteSetting = try request.fetchOne(db)
+                }
+                promise.succeed(value: sqliteSetting)
+            } catch {
+                promise.fail(error: .grdb(error))
+            }
+        }
+        return promise.future
+    }
+
+    public func save(
+        userSetting: RuuviUserSetting
+    ) -> Future<RuuviUserSetting, RuuviPersistenceError> {
+        let promise = Promise<RuuviUserSetting, RuuviPersistenceError>()
+        let database = database
+        writeQueue.async {
+            do {
+                try database.dbPool.write { db in
+                    try userSetting.sqlite.save(db)
+                }
+                promise.succeed(value: userSetting)
+            } catch {
+                promise.fail(error: .grdb(error))
+            }
+        }
+        return promise.future
+    }
+
+    public func save(
+        userSettings: [RuuviUserSetting]
+    ) -> Future<[RuuviUserSetting], RuuviPersistenceError> {
+        let promise = Promise<[RuuviUserSetting], RuuviPersistenceError>()
+        let database = database
+        writeQueue.async {
+            do {
+                try database.dbPool.write { db in
+                    for setting in userSettings {
+                        try setting.sqlite.save(db)
+                    }
+                }
+                promise.succeed(value: userSettings)
+            } catch {
+                promise.fail(error: .grdb(error))
+            }
+        }
+        return promise.future
+    }
+
+    public func deleteUserSettings() -> Future<Bool, RuuviPersistenceError> {
+        let promise = Promise<Bool, RuuviPersistenceError>()
+        let database = database
+        writeQueue.async {
+            do {
+                var deletedCount = 0
+                try database.dbPool.write { db in
+                    deletedCount = try UserSetting.deleteAll(db)
+                }
+                promise.succeed(value: deletedCount > 0)
+            } catch {
+                promise.fail(error: .grdb(error))
+            }
         }
         return promise.future
     }

@@ -18,8 +18,7 @@ public protocol RuuviServiceFactory {
         ruuviLocalImages: RuuviLocalImages,
         ruuviRepository: RuuviRepository,
         ruuviLocalIDs: RuuviLocalIDs,
-        ruuviAlertService: RuuviServiceAlert,
-        ruuviAppSettingsService: RuuviServiceAppSettings
+        ruuviAlertService: RuuviServiceAlert
     ) -> RuuviServiceCloudSync
 
     // swiftlint:disable:next function_parameter_count
@@ -50,7 +49,8 @@ public protocol RuuviServiceFactory {
 
     func createAppSettings(
         ruuviCloud: RuuviCloud,
-        ruuviLocalSettings: RuuviLocalSettings
+        ruuviLocalSettings: RuuviLocalSettings,
+        ruuviStorage: RuuviStorage
     ) -> RuuviServiceAppSettings
 
     func createOffsetCalibration(
@@ -98,8 +98,7 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         ruuviLocalImages: RuuviLocalImages,
         ruuviRepository: RuuviRepository,
         ruuviLocalIDs: RuuviLocalIDs,
-        ruuviAlertService: RuuviServiceAlert,
-        ruuviAppSettingsService: RuuviServiceAppSettings
+        ruuviAlertService: RuuviServiceAlert
     ) -> RuuviServiceCloudSync {
         RuuviServiceCloudSyncImpl(
             ruuviStorage: ruuviStorage,
@@ -110,8 +109,7 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
             ruuviLocalImages: ruuviLocalImages,
             ruuviRepository: ruuviRepository,
             ruuviLocalIDs: ruuviLocalIDs,
-            ruuviAlertService: ruuviAlertService,
-            ruuviAppSettingsService: ruuviAppSettingsService
+            ruuviAlertService: ruuviAlertService
         )
     }
 
@@ -168,11 +166,13 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
 
     public func createAppSettings(
         ruuviCloud: RuuviCloud,
-        ruuviLocalSettings: RuuviLocalSettings
+        ruuviLocalSettings: RuuviLocalSettings,
+        ruuviStorage: RuuviStorage
     ) -> RuuviServiceAppSettings {
         RuuviServiceAppSettingsImpl(
             cloud: ruuviCloud,
-            localSettings: ruuviLocalSettings
+            localSettings: ruuviLocalSettings,
+            storage: ruuviStorage
         )
     }
 

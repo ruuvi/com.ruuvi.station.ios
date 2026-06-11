@@ -51,11 +51,17 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
 
                 let sensorsToDelete = localSensors.filter { $0.isClaimed || $0.isCloud }
                 guard !sensorsToDelete.isEmpty else {
-                    // Clear global settings even if no sensors to delete
-                    sSelf.clearGlobalSettings()
-                    promise.succeed(value: true)
-                    sSelf.postLogoutCompletion(success: true)
-                    sSelf.postNotification()
+                    sSelf.pool.deleteUserSettings()
+                        .on(success: { _ in
+                            // Clear global settings even if no sensors to delete
+                            sSelf.clearGlobalSettings()
+                            promise.succeed(value: true)
+                            sSelf.postLogoutCompletion(success: true)
+                            sSelf.postNotification()
+                        }, failure: { error in
+                            sSelf.postLogoutCompletion(success: false)
+                            promise.fail(error: .ruuviPool(error))
+                        })
                     return
                 }
 
@@ -77,6 +83,7 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
 
                 // Add the global deleteQueuedRequests operation
                 allOperations.append(sSelf.pool.deleteQueuedRequests())
+                allOperations.append(sSelf.pool.deleteUserSettings())
 
                 // Wait for all operations to complete
                 Future.zip(allOperations)

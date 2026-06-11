@@ -10,6 +10,12 @@ public enum SyncAction {
     case noAction
 }
 
+enum UserSettingTimestamp {
+    static func current() -> Date {
+        Date(timeIntervalSince1970: TimeInterval(Int(Date().timeIntervalSince1970)))
+    }
+}
+
 public struct SyncCollisionResolver {
     /// Tolerance for clock skew (1 second)
     private static let tolerance: TimeInterval = 1.0
@@ -23,6 +29,32 @@ public struct SyncCollisionResolver {
         localTimestamp: Date?,
         cloudTimestamp: Date?
     ) -> SyncAction {
+        resolve(
+            localTimestamp: localTimestamp,
+            cloudTimestamp: cloudTimestamp,
+            preferCloudWhenBothTimestampsMissing: false
+        )
+    }
+
+    /// Resolves sync collision based on timestamps, with optional backward compatibility
+    /// for data that used to be cloud-authoritative before per-field timestamps existed.
+    /// - Parameters:
+    ///   - localTimestamp: The local database timestamp
+    ///   - cloudTimestamp: The cloud API timestamp
+    ///   - preferCloudWhenBothTimestampsMissing: Whether cloud should win when neither
+    ///     side has a timestamp.
+    /// - Returns: The action to take based on timestamp comparison
+    public static func resolve(
+        localTimestamp: Date?,
+        cloudTimestamp: Date?,
+        preferCloudWhenBothTimestampsMissing: Bool
+    ) -> SyncAction {
+        if preferCloudWhenBothTimestampsMissing,
+           localTimestamp == nil,
+           cloudTimestamp == nil {
+            return .updateLocal
+        }
+
         // If cloud timestamp is nil
         guard let cloudTs = cloudTimestamp else {
             // If local has timestamp, keep local and queue
@@ -51,30 +83,6 @@ public struct SyncCollisionResolver {
 
         // Local is newer
         return .keepLocalAndQueue
-    }
-
-    /// Resolves sync collision with cloudMode and backward compatibility handling.
-    /// This is a convenience method that handles common sync patterns:
-    /// - Both timestamps nil: accept cloud data for backward compatibility
-    /// - Otherwise: use standard timestamp comparison with ownership check
-    /// - Parameters:
-    ///   - isOwner: Whether the current user owns the sensor
-    ///   - localTimestamp: The local database timestamp
-    ///   - cloudTimestamp: The cloud API timestamp
-    /// - Returns: The action to take
-    public static func resolve(
-        isOwner: Bool,
-        localTimestamp: Date?,
-        cloudTimestamp: Date?
-    ) -> SyncAction {
-
-        // Both timestamps nil: accept cloud for backward compatibility (fresh data)
-        if localTimestamp == nil && cloudTimestamp == nil {
-            return .updateLocal
-        }
-
-        // For owned sensors, use standard timestamp comparison
-        return resolve(localTimestamp: localTimestamp, cloudTimestamp: cloudTimestamp)
     }
 
     /// Some sensor fields are cloud-authoritative and can change without being tracked by the
