@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import RuuviLocal
 import RuuviLocalization
 import RuuviOntology
@@ -50,6 +51,8 @@ class UnitSettingsTableViewController: UITableViewController {
     }
 
     private let unitSettingsCellReuseIdentifier = "unitSettingsCellReuseIdentifier"
+    private var configuredHeaderMode: UnitSettingsMode?
+    private var configuredHeaderWidth: CGFloat = 0
 }
 
 // MARK: - SelectionViewInput
@@ -59,8 +62,11 @@ extension UnitSettingsTableViewController: UnitSettingsViewInput {
         tableView.reloadData()
     }
 
+    func reloadSettings() {
+        tableView.reloadData()
+    }
+
     private func styleViews() {
-        tableView.tableHeaderView = UIView()
         view.backgroundColor = RuuviColor.primary.color
     }
 }
@@ -74,6 +80,11 @@ extension UnitSettingsTableViewController {
         styleViews()
         output.viewDidLoad()
         updateUI()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        configureHeaderIfNeeded()
     }
 }
 
@@ -89,7 +100,7 @@ extension UnitSettingsTableViewController {
         case .globalUnits:
             return groupedMeasurementTypes.count
         case .resolution:
-            return groupedMeasurementTypes.count
+            return resolutionTargets.count
         default:
             if measurementType == .pressure,
                !pressureUnit.supportsResolutionSelection {
@@ -99,7 +110,6 @@ extension UnitSettingsTableViewController {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
             withIdentifier: unitSettingsCellReuseIdentifier,
@@ -140,6 +150,11 @@ private extension UnitSettingsTableViewController {
         [.temperature, .humidity, .pressure]
     }
 
+    var resolutionTargets: [ResolutionSettingsTarget] {
+        viewModel?.items.compactMap { $0 as? ResolutionSettingsTarget } ?? []
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity
     func configureMeasurementCell(
         _ cell: UnitSettingsTableViewCell,
         at row: Int
@@ -211,15 +226,15 @@ private extension UnitSettingsTableViewController {
         _ cell: UnitSettingsTableViewCell,
         at row: Int
     ) {
-        guard groupedMeasurementTypes.indices.contains(row) else {
+        guard resolutionTargets.indices.contains(row) else {
             cell.titleLbl.text = RuuviLocalization.na
             cell.valueLbl.text = nil
             return
         }
 
-        let measurementType = groupedMeasurementTypes[row]
-        cell.titleLbl.text = title(for: measurementType)
-        cell.valueLbl.text = resolutionValue(for: measurementType)
+        let target = resolutionTargets[row]
+        cell.titleLbl.text = target.title("")
+        cell.valueLbl.text = resolutionValue(for: target)
     }
 
     func title(for measurementType: MeasurementType) -> String {
@@ -279,11 +294,35 @@ private extension UnitSettingsTableViewController {
         }
     }
 
+    func resolutionValue(for target: ResolutionSettingsTarget) -> String {
+        let titleProvider = MeasurementAccuracyTitles()
+        return titleProvider.formattedTitle(
+            type: accuracy(for: target),
+            settings: settings
+        ) + " \(unit(for: target))"
+    }
+
+    func accuracy(for target: ResolutionSettingsTarget) -> MeasurementAccuracyType {
+        target.accuracy(
+            settings: settings,
+            pressureUnit: pressureUnit
+        )
+    }
+
+    func unit(for target: ResolutionSettingsTarget) -> String {
+        target.unitSymbol(
+            temperatureUnit: temperatureUnit,
+            pressureUnit: pressureUnit
+        )
+    }
+
     func isRowEnabled(at indexPath: IndexPath) -> Bool {
-        guard viewModel?.mode == .resolution,
-              groupedMeasurementTypes.indices.contains(indexPath.row),
-              groupedMeasurementTypes[indexPath.row] == .pressure
+        guard viewModel?.mode == .resolution
         else {
+            return true
+        }
+        guard resolutionTargets.indices.contains(indexPath.row),
+              resolutionTargets[indexPath.row] == .pressure else {
             return true
         }
         return pressureUnit.supportsResolutionSelection
@@ -321,5 +360,59 @@ extension UnitSettingsTableViewController {
 extension UnitSettingsTableViewController {
     private func updateUI() {
         title = viewModel?.title
+        if isViewLoaded {
+            configureHeaderIfNeeded(force: true)
+            tableView.reloadData()
+        }
+    }
+
+    private func configureHeaderIfNeeded(force: Bool = false) {
+        let mode = viewModel?.mode
+        let width = tableView.bounds.width
+        guard force
+            || configuredHeaderMode != mode
+            || configuredHeaderWidth != width else {
+            return
+        }
+
+        configuredHeaderMode = mode
+        configuredHeaderWidth = width
+        configureHeader()
+    }
+
+    private func configureHeader() {
+        guard viewModel?.mode == .resolution else {
+            tableView.tableHeaderView = UIView()
+            return
+        }
+
+        let horizontalPadding: CGFloat = 20
+        let verticalPadding: CGFloat = 16
+        let label = UILabel()
+        label.font = UIFont.ruuviFootnote()
+        label.textColor = RuuviColor.textColor.color.withAlphaComponent(0.6)
+        label.numberOfLines = 0
+        label.text = RuuviLocalization.Settings.Measurement.Resolution.description
+
+        let width = tableView.bounds.width - horizontalPadding * 2
+        let size = label.sizeThatFits(
+            CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
+        )
+        let container = UIView(
+            frame: CGRect(
+                x: 0,
+                y: 0,
+                width: tableView.bounds.width,
+                height: size.height + verticalPadding * 2
+            )
+        )
+        label.frame = CGRect(
+            x: horizontalPadding,
+            y: verticalPadding,
+            width: width,
+            height: size.height
+        )
+        container.addSubview(label)
+        tableView.tableHeaderView = container
     }
 }

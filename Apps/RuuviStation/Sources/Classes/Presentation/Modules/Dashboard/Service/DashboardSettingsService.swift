@@ -53,6 +53,7 @@ class DashboardSettingsService {
     private var temperatureAccuracyToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var humidityAccuracyToken: NSObjectProtocol?
+    private var measurementAccuracyToken: NSObjectProtocol?
     private var pressureUnitToken: NSObjectProtocol?
     private var pressureAccuracyToken: NSObjectProtocol?
     private var languageToken: NSObjectProtocol?
@@ -88,7 +89,7 @@ class DashboardSettingsService {
     func stopObservingSettings() {
         let tokens = [
             temperatureUnitToken, temperatureAccuracyToken,
-            humidityUnitToken, humidityAccuracyToken,
+            humidityUnitToken, humidityAccuracyToken, measurementAccuracyToken,
             pressureUnitToken, pressureAccuracyToken,
             languageToken, widgetRefreshIntervalToken,
             systemLanguageChangeToken, calibrationSettingsToken,
@@ -102,6 +103,7 @@ class DashboardSettingsService {
         temperatureAccuracyToken = nil
         humidityUnitToken = nil
         humidityAccuracyToken = nil
+        measurementAccuracyToken = nil
         pressureUnitToken = nil
         pressureAccuracyToken = nil
         languageToken = nil
@@ -191,6 +193,7 @@ class DashboardSettingsService {
 // MARK: - Private Implementation
 private extension DashboardSettingsService {
 
+    // swiftlint:disable:next function_body_length
     func observeMeasurementUnitSettings() {
         temperatureUnitToken = NotificationCenter.default.addObserver(
             forName: .TemperatureUnitDidChange,
@@ -218,6 +221,14 @@ private extension DashboardSettingsService {
 
         humidityAccuracyToken = NotificationCenter.default.addObserver(
             forName: .HumidityAccuracyDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.handleMeasurementUnitChange()
+        }
+
+        measurementAccuracyToken = NotificationCenter.default.addObserver(
+            forName: .MeasurementAccuracyDidChange,
             object: nil,
             queue: .main
         ) { [weak self] _ in
@@ -341,6 +352,7 @@ private extension DashboardSettingsService {
         syncTemperatureUnit()
         syncHumidityUnit()
         syncPressureUnit()
+        syncAdditionalMeasurementAccuracies()
     }
 
     func syncTemperatureUnit() {
@@ -374,11 +386,29 @@ private extension DashboardSettingsService {
             settings.humidityAccuracy.value,
             forKey: AppGroupConstants.humidityAccuracyKey
         )
+        appGroupDefaults?.set(
+            settings.relativeHumidityAccuracy.value,
+            forKey: AppGroupConstants.relativeHumidityAccuracyKey
+        )
+        appGroupDefaults?.set(
+            settings.absoluteHumidityAccuracy.value,
+            forKey: AppGroupConstants.absoluteHumidityAccuracyKey
+        )
+        appGroupDefaults?.set(
+            settings.dewPointAccuracy.value,
+            forKey: AppGroupConstants.dewPointAccuracyKey
+        )
     }
 
     func syncPressureUnit() {
         appGroupDefaults?.set(settings.pressureUnit.hashValue, forKey: AppGroupConstants.pressureUnitKey)
         appGroupDefaults?.set(settings.pressureAccuracy.value, forKey: AppGroupConstants.pressureAccuracyKey)
+    }
+
+    func syncAdditionalMeasurementAccuracies() {
+        appGroupDefaults?.set(settings.pmAccuracy.value, forKey: AppGroupConstants.pmAccuracyKey)
+        appGroupDefaults?.set(settings.accelerationAccuracy.value, forKey: AppGroupConstants.accelerationAccuracyKey)
+        appGroupDefaults?.set(settings.voltageAccuracy.value, forKey: AppGroupConstants.voltageAccuracyKey)
     }
 
     func syncWidgetSettings() {

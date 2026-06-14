@@ -178,6 +178,11 @@ extension SettingsTableViewController {
         becomeFirstResponder()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        output.viewWillAppear()
+    }
+
     override func motionEnded(_ motion: UIEvent.EventSubtype, with _: UIEvent?) {
         if motion == .motionShake, !experimentalFunctionsEnabled {
             output.viewDidTriggerShake()

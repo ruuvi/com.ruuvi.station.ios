@@ -12,7 +12,7 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     @UserDefault("RuuviFeatureFlags.showNewSettings", defaultValue: false)
     var showNewSettings: Bool
 
-    @UserDefault("RuuviFeatureFlags.showGlobalUnitsSettings", defaultValue: false)
+    @UserDefault("RuuviFeatureFlags.showGlobalUnitsSettings", defaultValue: true)
     var showGlobalUnitsSettings: Bool
 
     @UserDefault("RuuviFeatureFlags.downloadBetaFirmware", defaultValue: false)

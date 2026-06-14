@@ -792,10 +792,15 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 guard let localSetting else {
                     return
                 }
-                setting.apply(
-                    userSetting: localSetting,
-                    to: ruuviLocalSettings
-                )
+                // Earlier keys in this sync pass can mutate shared UserDefaults.
+                // Re-apply the local winner so timestamp conflict resolution is
+                // reflected in the active settings, not only in SQL.
+                if setting.isAppliedFromCloud {
+                    setting.apply(
+                        userSetting: localSetting,
+                        to: ruuviLocalSettings
+                    )
+                }
                 if shouldUploadLocalSetting(localSetting, over: cloudSetting) {
                     setting.upload(
                         userSetting: localSetting,

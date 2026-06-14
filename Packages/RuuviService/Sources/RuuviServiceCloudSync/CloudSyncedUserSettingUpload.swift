@@ -22,9 +22,11 @@ extension RuuviCloudApiSetting {
         switch self {
         case .unitTemperature, .unitHumidity, .unitPressure:
             uploadMeasurementUnitValue(value, using: cloud)
-        case .accuracyTemperature, .accuracyHumidity, .accuracyPressure:
+        case .accuracyTemperature, .accuracyHumidity, .accuracyHumidityRelative,
+             .accuracyHumidityAbsolute, .accuracyHumidityDewPoint,
+             .accuracyPressure, .accuracyPM, .accuracyAcceleration, .accuracyVoltage:
             uploadMeasurementAccuracyValue(value, using: cloud)
-        case .chartShowAllPoints, .chartDrawDots, .chartShowMinMaxAverage:
+        case .chartShowAllPoints, .chartDrawDots, .chartViewPeriod, .chartShowMinMaxAverage:
             uploadChartValue(value, using: cloud)
         case .cloudModeEnabled, .dashboardEnabled, .dashboardType, .dashboardTapActionType:
             uploadDashboardValue(value, using: cloud)
@@ -68,8 +70,12 @@ extension RuuviCloudApiSetting {
             cloud.set(temperatureAccuracy: value).on()
         case .accuracyHumidity:
             cloud.set(humidityAccuracy: value).on()
+        case .accuracyHumidityRelative, .accuracyHumidityAbsolute, .accuracyHumidityDewPoint:
+            cloud.set(userSetting: self, value: value.value.ruuviCloudApiSettingString).on()
         case .accuracyPressure:
             cloud.set(pressureAccuracy: value).on()
+        case .accuracyPM, .accuracyAcceleration, .accuracyVoltage:
+            cloud.set(userSetting: self, value: value.value.ruuviCloudApiSettingString).on()
         default:
             preconditionFailure("Unexpected measurement accuracy setting")
         }
@@ -87,6 +93,9 @@ extension RuuviCloudApiSetting {
         case .chartDrawDots:
             guard let value = value.ruuviCloudApiSettingBoolean else { return false }
             cloud.set(drawDots: value).on()
+        case .chartViewPeriod:
+            guard let value = value.ruuviCloudApiSettingChartViewPeriod else { return false }
+            cloud.set(chartDuration: value).on()
         case .chartShowMinMaxAverage:
             guard let value = value.ruuviCloudApiSettingBoolean else { return false }
             cloud.set(showMinMaxAvg: value).on()

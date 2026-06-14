@@ -275,6 +275,10 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         cloud.set(humidityAccuracy: humidityAccuracy)
     }
 
+    public func set(userSetting: RuuviCloudApiSetting, value: String) -> Future<String, RuuviCloudError> {
+        cloud.set(userSetting: userSetting, value: value)
+    }
+
     public func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviCloudError> {
         cloud.set(pressureUnit: pressureUnit)
     }

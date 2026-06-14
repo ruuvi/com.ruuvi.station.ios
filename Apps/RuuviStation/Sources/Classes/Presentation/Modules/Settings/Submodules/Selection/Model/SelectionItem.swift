@@ -12,4 +12,23 @@ struct SelectionViewModel {
     let selection: String
     let measurementType: MeasurementType
     let unitSettingsType: UnitSettingsType
+    let resolutionTarget: ResolutionSettingsTarget?
+
+    init(
+        title: String,
+        items: [SelectionItemProtocol],
+        description: String,
+        selection: String,
+        measurementType: MeasurementType,
+        unitSettingsType: UnitSettingsType,
+        resolutionTarget: ResolutionSettingsTarget? = nil
+    ) {
+        self.title = title
+        self.items = items
+        self.description = description
+        self.selection = selection
+        self.measurementType = measurementType
+        self.unitSettingsType = unitSettingsType
+        self.resolutionTarget = resolutionTarget
+    }
 }

@@ -81,11 +81,17 @@ private enum MeasurementVariantFormatter {
         switch resolvedUnit {
         case .percent:
             let percentValue = base.value * 100
-            let value = measurementService.stringWithoutSign(humidity: percentValue)
+            let value = measurementService.stringWithoutSign(
+                humidity: percentValue,
+                unit: .percent
+            )
             return (value, resolvedUnit.symbol)
         case .gm3:
             let absoluteValue = base.converted(to: .absolute).value
-            let value = measurementService.stringWithoutSign(humidity: absoluteValue)
+            let value = measurementService.stringWithoutSign(
+                humidity: absoluteValue,
+                unit: .gm3
+            )
             return (value, resolvedUnit.symbol)
         case .dew:
             guard let dewPoint = try? base.dewPoint(temperature: temperature) else {
@@ -93,7 +99,10 @@ private enum MeasurementVariantFormatter {
             }
             let targetUnit = variant.temperatureUnit?.unitTemperature ?? measurementService.units.temperatureUnit
             let converted = dewPoint.converted(to: targetUnit)
-            let value = measurementService.stringWithoutSign(humidity: converted.value)
+            let value = measurementService.stringWithoutSign(
+                humidity: converted.value,
+                unit: .dew
+            )
             let unit = variant.temperatureUnit?.symbol ?? targetUnit.symbol
             return (value, unit)
         }
@@ -488,9 +497,10 @@ struct VoltageMeasurementExtractor: MeasurementExtractor {
         variant: MeasurementDisplayVariant,
         snapshot: RuuviTagCardSnapshot
     ) -> MeasurementResult? {
-        guard let voltage = measurementService?.double(for: record.voltage),
-              voltage != 0,
-              let value = measurementService?.string(for: voltage) else {
+        guard let voltage = record.voltage,
+              let voltageValue = measurementService?.double(for: voltage),
+              voltageValue != 0,
+              let value = measurementService?.stringWithoutSign(for: voltage) else {
             return nil
         }
 
@@ -566,7 +576,7 @@ struct AccelerationAxisMeasurementExtractor: MeasurementExtractor {
         case .z: measurement = acceleration.z
         }
 
-        guard let value = measurementService?.string(for: measurement.value) else {
+        guard let value = measurementService?.accelerationString(for: measurement.value) else {
             return nil
         }
 

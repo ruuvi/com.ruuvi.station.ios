@@ -146,6 +146,9 @@ public protocol RuuviCloud {
     func set(humidityAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError>
 
     @discardableResult
+    func set(userSetting: RuuviCloudApiSetting, value: String) -> Future<String, RuuviCloudError>
+
+    @discardableResult
     func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviCloudError>
 
     @discardableResult

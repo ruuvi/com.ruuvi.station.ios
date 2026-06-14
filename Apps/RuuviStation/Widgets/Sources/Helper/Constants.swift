@@ -18,8 +18,14 @@ public enum Constants: String {
     case temperatureAccuracyKey
     case humidityUnitKey
     case humidityAccuracyKey
+    case relativeHumidityAccuracyKey
+    case absoluteHumidityAccuracyKey
+    case dewPointAccuracyKey
     case pressureUnitKey
     case pressureAccuracyKey
+    case pmAccuracyKey
+    case accelerationAccuracyKey
+    case voltageAccuracyKey
     case useDevServerKey
     case widgetRefreshIntervalKey
     case forceRefreshWidgetKey

@@ -362,15 +362,47 @@ public extension WidgetViewModel {
         let temperatureAccuracy = temperatureAccuracy(from: appGroupDefaults)
         let humidityUnit = humidityUnit(from: appGroupDefaults)
         let humidityAccuracy = humidityAccuracy(from: appGroupDefaults)
+        let relativeHumidityAccuracy = measurementAccuracy(
+            from: appGroupDefaults,
+            key: .relativeHumidityAccuracyKey,
+            fallback: humidityAccuracy
+        )
+        let absoluteHumidityAccuracy = measurementAccuracy(
+            from: appGroupDefaults,
+            key: .absoluteHumidityAccuracyKey,
+            fallback: humidityAccuracy
+        )
+        let dewPointAccuracy = measurementAccuracy(
+            from: appGroupDefaults,
+            key: .dewPointAccuracyKey,
+            fallback: humidityAccuracy
+        )
         let pressureUnit = pressureUnit(from: appGroupDefaults)
         let pressureAccuracy = pressureAccuracy(from: appGroupDefaults)
+        let pmAccuracy = measurementAccuracy(from: appGroupDefaults, key: .pmAccuracyKey, fallback: .one)
+        let accelerationAccuracy = measurementAccuracy(
+            from: appGroupDefaults,
+            key: .accelerationAccuracyKey,
+            fallback: .two
+        )
+        let voltageAccuracy = measurementAccuracy(
+            from: appGroupDefaults,
+            key: .voltageAccuracyKey,
+            fallback: .two
+        )
         return MeasurementServiceSettings(
             temperatureUnit: temperatureUnit,
             temperatureAccuracy: temperatureAccuracy,
             humidityUnit: humidityUnit,
             humidityAccuracy: humidityAccuracy,
+            relativeHumidityAccuracy: relativeHumidityAccuracy,
+            absoluteHumidityAccuracy: absoluteHumidityAccuracy,
+            dewPointAccuracy: dewPointAccuracy,
             pressureUnit: pressureUnit,
             pressureAccuracy: pressureAccuracy,
+            pmAccuracy: pmAccuracy,
+            accelerationAccuracy: accelerationAccuracy,
+            voltageAccuracy: voltageAccuracy,
             language: getLanguage()
         )
     }
@@ -673,13 +705,13 @@ extension WidgetViewModel {
         case .voc:
             return measurementService.string(for: record.voc)
         case .pm10:
-            return measurementService.string(for: record.pm1)
+            return measurementService.pm(for: record.pm1)
         case .pm25:
-            return measurementService.string(for: record.pm25)
+            return measurementService.pm(for: record.pm25)
         case .pm40:
-            return measurementService.string(for: record.pm4)
+            return measurementService.pm(for: record.pm4)
         case .pm100:
-            return measurementService.string(for: record.pm10)
+            return measurementService.pm(for: record.pm10)
         case .luminosity:
             return measurementService.string(for: record.luminance)
         case .soundInstant:
@@ -714,8 +746,14 @@ extension WidgetViewModel {
             temperatureAccuracy: appSettings.temperatureAccuracy,
             humidityUnit: humidityUnit,
             humidityAccuracy: appSettings.humidityAccuracy,
+            relativeHumidityAccuracy: appSettings.relativeHumidityAccuracy,
+            absoluteHumidityAccuracy: appSettings.absoluteHumidityAccuracy,
+            dewPointAccuracy: appSettings.dewPointAccuracy,
             pressureUnit: pressureUnit,
             pressureAccuracy: appSettings.pressureAccuracy,
+            pmAccuracy: appSettings.pmAccuracy,
+            accelerationAccuracy: appSettings.accelerationAccuracy,
+            voltageAccuracy: appSettings.voltageAccuracy,
             language: appSettings.language
         )
     }
@@ -1130,6 +1168,26 @@ extension WidgetViewModel {
     private func humidityAccuracy(from defaults: UserDefaults?) -> MeasurementAccuracyType {
         let humidityAccuracyKeyId = defaults?.integer(forKey: Constants.humidityAccuracyKey.rawValue)
         switch humidityAccuracyKeyId {
+        case 0:
+            return .zero
+        case 1:
+            return .one
+        case 2:
+            return .two
+        default:
+            return .two
+        }
+    }
+
+    private func measurementAccuracy(
+        from defaults: UserDefaults?,
+        key: Constants,
+        fallback: MeasurementAccuracyType
+    ) -> MeasurementAccuracyType {
+        guard let value = defaults?.object(forKey: key.rawValue) as? Int else {
+            return fallback
+        }
+        switch value {
         case 0:
             return .zero
         case 1:

@@ -82,20 +82,7 @@ extension SelectionTableViewController {
            let item = item as? MeasurementAccuracyType {
             let titleProvider = MeasurementAccuracyTitles()
             let title = titleProvider.formattedTitle(type: item, settings: settings)
-            switch viewModel?.measurementType {
-            case .temperature:
-                cell.nameLabel.text = title + " " + temperatureUnit.symbol
-            case .humidity:
-                if humidityUnit == .dew {
-                    cell.nameLabel.text = title + " " + temperatureUnit.symbol
-                } else {
-                    cell.nameLabel.text = title + " " + humidityUnit.symbol
-                }
-            case .pressure:
-                cell.nameLabel.text = title + " " + pressureUnit.ruuviSymbol
-            default:
-                cell.nameLabel.text = RuuviLocalization.na
-            }
+            cell.nameLabel.text = title + " " + unitSymbol()
             updateCellStyle(with: title, cell: cell)
         } else {
             if let humidityUnit = item as? HumidityUnit, humidityUnit == .dew {
@@ -152,6 +139,28 @@ extension SelectionTableViewController {
             cell.accessoryType = .none
             cell.nameLabel.textColor = RuuviColor.textColor.color
             cell.nameLabel.font = UIFont.ruuviBody()
+        }
+    }
+
+    private func unitSymbol() -> String {
+        if let target = viewModel?.resolutionTarget {
+            return target.unitSymbol(
+                temperatureUnit: temperatureUnit,
+                pressureUnit: pressureUnit
+            )
+        }
+
+        switch viewModel?.measurementType {
+        case .temperature:
+            return temperatureUnit.symbol
+        case .humidity:
+            return humidityUnit == .dew
+                ? temperatureUnit.symbol
+                : humidityUnit.symbol
+        case .pressure:
+            return pressureUnit.ruuviSymbol
+        default:
+            return RuuviLocalization.na
         }
     }
 }

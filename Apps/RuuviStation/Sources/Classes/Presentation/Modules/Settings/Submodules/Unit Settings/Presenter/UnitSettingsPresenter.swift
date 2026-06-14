@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Foundation
 import RuuviLocal
 import RuuviLocalization
@@ -14,9 +15,11 @@ class UnitSettingsPresenter {
     private var temperatureAccuracyToken: NSObjectProtocol?
     private var humidityUnitToken: NSObjectProtocol?
     private var humidityAccuracyToken: NSObjectProtocol?
+    private var measurementAccuracyToken: NSObjectProtocol?
     private var pressureUnitToken: NSObjectProtocol?
     private var pressureAccuracyToken: NSObjectProtocol?
     private var pendingSelectionMeasurementType: MeasurementType?
+    private var pendingResolutionTarget: ResolutionSettingsTarget?
 
     private var viewModel: UnitSettingsViewModel? {
         didSet {
@@ -31,6 +34,7 @@ class UnitSettingsPresenter {
         temperatureAccuracyToken?.invalidate()
         humidityUnitToken?.invalidate()
         humidityAccuracyToken?.invalidate()
+        measurementAccuracyToken?.invalidate()
         pressureUnitToken?.invalidate()
         pressureAccuracyToken?.invalidate()
     }
@@ -68,21 +72,27 @@ extension UnitSettingsPresenter: UnitSettingsViewOutput {
             }
             openSelection(type: .unit, measurementType: measurementType)
         case .resolution:
-            guard let measurementType = resolutionMeasurementType(at: row) else {
+            guard let target = resolutionTarget(at: row) else {
                 return
             }
-            guard measurementType != .pressure
+            guard target != .pressure
                 || view.pressureUnit.supportsResolutionSelection else {
                 return
             }
-            openSelection(type: .accuracy, measurementType: measurementType)
+            openSelection(type: .accuracy, measurementType: target.measurementType, resolutionTarget: target)
         }
     }
 }
 
 extension UnitSettingsPresenter: SelectionModuleOutput {
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     func selection(module: SelectionModuleInput, didSelectItem item: SelectionItemProtocol, type: UnitSettingsType) {
+        defer {
+            pendingSelectionMeasurementType = nil
+            pendingResolutionTarget = nil
+            module.dismiss()
+        }
+
         switch type {
         case .unit:
             switch item {
@@ -104,33 +114,35 @@ extension UnitSettingsPresenter: SelectionModuleOutput {
                 return
             }
 
-            guard let measurementType = pendingSelectionMeasurementType
-                ?? viewModel?.measurementType
-            else {
-                pendingSelectionMeasurementType = nil
-                return
-            }
-            if measurementType == .pressure,
-               !view.pressureUnit.supportsResolutionSelection {
-                pendingSelectionMeasurementType = nil
-                return
-            }
-            switch measurementType {
-            case .temperature:
-                ruuviAppSettingsService.set(temperatureAccuracy: item)
-                view.temperatureAccuracy = item
-            case .humidity:
-                ruuviAppSettingsService.set(humidityAccuracy: item)
-                view.humidityAccuracy = item
-            case .pressure:
-                ruuviAppSettingsService.set(pressureAccuracy: item)
-                view.pressureAccuracy = item
-            default:
+            if let target = pendingResolutionTarget {
+                guard target != .pressure
+                    || view.pressureUnit.supportsResolutionSelection else {
+                    return
+                }
+                setAccuracy(item, for: target)
+            } else if let measurementType = pendingSelectionMeasurementType
+                ?? viewModel?.measurementType {
+                if measurementType == .pressure,
+                   !view.pressureUnit.supportsResolutionSelection {
+                    return
+                }
+                switch measurementType {
+                case .temperature:
+                    ruuviAppSettingsService.set(temperatureAccuracy: item)
+                    view.temperatureAccuracy = item
+                case .humidity:
+                    ruuviAppSettingsService.set(humidityAccuracy: item)
+                    view.humidityAccuracy = item
+                case .pressure:
+                    ruuviAppSettingsService.set(pressureAccuracy: item)
+                    view.pressureAccuracy = item
+                default:
+                    return
+                }
+            } else {
                 return
             }
         }
-        pendingSelectionMeasurementType = nil
-        module.dismiss()
     }
 }
 
@@ -139,8 +151,8 @@ extension UnitSettingsPresenter {
         [.temperature, .humidity, .pressure]
     }
 
-    private var resolutionMeasurementTypes: [MeasurementType] {
-        groupedMeasurementTypes
+    private var resolutionTargets: [ResolutionSettingsTarget] {
+        viewModel?.items.compactMap { $0 as? ResolutionSettingsTarget } ?? []
     }
 
     private func groupedMeasurementType(at row: Int) -> MeasurementType? {
@@ -150,23 +162,27 @@ extension UnitSettingsPresenter {
         return groupedMeasurementTypes[row]
     }
 
-    private func resolutionMeasurementType(at row: Int) -> MeasurementType? {
-        guard resolutionMeasurementTypes.indices.contains(row) else {
+    private func resolutionTarget(at row: Int) -> ResolutionSettingsTarget? {
+        guard resolutionTargets.indices.contains(row) else {
             return nil
         }
-        return resolutionMeasurementTypes[row]
+        return resolutionTargets[row]
     }
 
     private func openSelection(
         type: UnitSettingsType,
-        measurementType: MeasurementType
+        measurementType: MeasurementType,
+        resolutionTarget: ResolutionSettingsTarget? = nil
     ) {
         let selectionViewModel: SelectionViewModel?
         switch type {
         case .unit:
             selectionViewModel = unitViewModel(for: measurementType)
         case .accuracy:
-            selectionViewModel = accuracyViewModel(for: measurementType)
+            selectionViewModel = accuracyViewModel(
+                for: measurementType,
+                resolutionTarget: resolutionTarget
+            )
         }
 
         guard let selectionViewModel else {
@@ -174,6 +190,7 @@ extension UnitSettingsPresenter {
         }
 
         pendingSelectionMeasurementType = measurementType
+        pendingResolutionTarget = resolutionTarget
         router.openSelection(with: selectionViewModel, output: self)
     }
 
@@ -248,26 +265,39 @@ extension UnitSettingsPresenter {
     }
 
     private func accuracyViewModel(
-        for measurementType: MeasurementType
+        for measurementType: MeasurementType,
+        resolutionTarget: ResolutionSettingsTarget? = nil
     ) -> SelectionViewModel? {
         var accuracyTitle: String
         var selection: String
         let titleProvider = MeasurementAccuracyTitles()
-        switch measurementType {
-        case .temperature:
-            accuracyTitle = RuuviLocalization.Settings.Temperature.Resolution.title
-            selection = titleProvider.formattedTitle(type: settings.temperatureAccuracy, settings: settings)
-        case .humidity:
-            accuracyTitle = RuuviLocalization.Settings.Humidity.Resolution.title
-            selection = titleProvider.formattedTitle(type: settings.humidityAccuracy, settings: settings)
-        case .pressure:
-            guard view.pressureUnit.supportsResolutionSelection else {
+        if let resolutionTarget {
+            guard resolutionTarget != .pressure
+                || view.pressureUnit.supportsResolutionSelection else {
                 return nil
             }
-            accuracyTitle = RuuviLocalization.Settings.Pressure.Resolution.title
-            selection = titleProvider.formattedTitle(type: settings.pressureAccuracy, settings: settings)
-        default:
-            return nil
+            accuracyTitle = resolutionTarget.title("")
+            selection = titleProvider.formattedTitle(
+                type: accuracy(for: resolutionTarget),
+                settings: settings
+            )
+        } else {
+            switch measurementType {
+            case .temperature:
+                accuracyTitle = RuuviLocalization.Settings.Temperature.Resolution.title
+                selection = titleProvider.formattedTitle(type: settings.temperatureAccuracy, settings: settings)
+            case .humidity:
+                accuracyTitle = RuuviLocalization.Settings.Humidity.Resolution.title
+                selection = titleProvider.formattedTitle(type: settings.humidityAccuracy, settings: settings)
+            case .pressure:
+                guard view.pressureUnit.supportsResolutionSelection else {
+                    return nil
+                }
+                accuracyTitle = RuuviLocalization.Settings.Pressure.Resolution.title
+                selection = titleProvider.formattedTitle(type: settings.pressureAccuracy, settings: settings)
+            default:
+                return nil
+            }
         }
 
         let selectionItems: [MeasurementAccuracyType] = [
@@ -282,8 +312,43 @@ extension UnitSettingsPresenter {
             description: RuuviLocalization.Settings.Measurement.Resolution.description,
             selection: selection,
             measurementType: measurementType,
-            unitSettingsType: .accuracy
+            unitSettingsType: .accuracy,
+            resolutionTarget: resolutionTarget
         )
+    }
+
+    private func accuracy(for target: ResolutionSettingsTarget) -> MeasurementAccuracyType {
+        target.accuracy(
+            settings: settings,
+            pressureUnit: view.pressureUnit
+        )
+    }
+
+    private func setAccuracy(
+        _ accuracy: MeasurementAccuracyType,
+        for target: ResolutionSettingsTarget
+    ) {
+        switch target {
+        case .temperature:
+            ruuviAppSettingsService.set(temperatureAccuracy: accuracy)
+            view.temperatureAccuracy = accuracy
+        case .relativeHumidity:
+            ruuviAppSettingsService.set(relativeHumidityAccuracy: accuracy)
+        case .absoluteHumidity:
+            ruuviAppSettingsService.set(absoluteHumidityAccuracy: accuracy)
+        case .dewPoint:
+            ruuviAppSettingsService.set(dewPointAccuracy: accuracy)
+        case .pressure:
+            ruuviAppSettingsService.set(pressureAccuracy: accuracy)
+            view.pressureAccuracy = accuracy
+        case .particulateMatter:
+            ruuviAppSettingsService.set(pmAccuracy: accuracy)
+        case .acceleration:
+            ruuviAppSettingsService.set(accelerationAccuracy: accuracy)
+        case .voltage:
+            ruuviAppSettingsService.set(voltageAccuracy: accuracy)
+        }
+        view.reloadSettings()
     }
 
     // swiftlint:disable:next function_body_length
@@ -328,6 +393,17 @@ extension UnitSettingsPresenter {
                 using: { [weak self] _ in
                     guard let sSelf = self else { return }
                     sSelf.view.humidityAccuracy = sSelf.settings.humidityAccuracy
+                }
+            )
+        measurementAccuracyToken = NotificationCenter
+            .default
+            .addObserver(
+                forName: .MeasurementAccuracyDidChange,
+                object: nil,
+                queue: .main,
+                using: { [weak self] _ in
+                    guard let sSelf = self else { return }
+                    sSelf.view.reloadSettings()
                 }
             )
         pressureUnitToken = NotificationCenter

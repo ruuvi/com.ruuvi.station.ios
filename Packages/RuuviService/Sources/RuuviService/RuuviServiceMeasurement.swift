@@ -56,6 +56,7 @@ public protocol RuuviServiceMeasurement {
         temperature: Temperature?
     ) -> String
     func stringWithoutSign(humidity: Double?) -> String
+    func stringWithoutSign(humidity: Double?, unit: HumidityUnit) -> String
 
     // Pressure
     func double(for pressure: Pressure) -> Double
@@ -66,6 +67,7 @@ public protocol RuuviServiceMeasurement {
     // Voltage
     func double(for voltage: Voltage) -> Double
     func string(for voltage: Voltage?) -> String
+    func stringWithoutSign(for voltage: Voltage?) -> String
 
     // Offset correction
     func temperatureOffsetCorrection(for temperature: Double) -> Double
@@ -121,6 +123,7 @@ public protocol RuuviServiceMeasurement {
     func noxString(for nox: Double?) -> String
     func soundString(for sound: Double?) -> String
     func luminosityString(for luminosity: Double?) -> String
+    func accelerationString(for acceleration: Double?) -> String
 
     // Common
     func double(for value: Double?) -> Double

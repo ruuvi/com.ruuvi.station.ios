@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import DGCharts
 import RuuviLocal
 import RuuviLocalization
@@ -427,7 +428,7 @@ extension CardsGraphView {
         return " \(latestValueUnit)"
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func formattedMeasurementString(
         for type: MeasurementType,
         value: Double?,
@@ -442,11 +443,14 @@ extension CardsGraphView {
         case .humidity:
             let resolvedUnit = variant.humidityUnit ?? .percent
             switch resolvedUnit {
-            case .dew:
-                let decimals = settings?.humidityAccuracy.value ?? 2
+            case .percent:
+                let decimals = settings?.relativeHumidityAccuracy.value ?? 2
                 return formattedNumber(value, decimals: decimals)
-            default:
-                let decimals = settings?.humidityAccuracy.value ?? 2
+            case .gm3:
+                let decimals = settings?.absoluteHumidityAccuracy.value ?? 2
+                return formattedNumber(value, decimals: decimals)
+            case .dew:
+                let decimals = settings?.dewPointAccuracy.value ?? 2
                 return formattedNumber(value, decimals: decimals)
             }
         case .pressure:
@@ -467,6 +471,12 @@ extension CardsGraphView {
             return measurementService.pm40String(for: value)
         case .pm100:
             return measurementService.pm100String(for: value)
+        case .voltage:
+            let decimals = settings?.voltageAccuracy.value ?? 2
+            return formattedNumber(value, decimals: decimals)
+        case .accelerationX, .accelerationY, .accelerationZ:
+            let decimals = settings?.accelerationAccuracy.value ?? 2
+            return formattedNumber(value, decimals: decimals)
         case .voc:
             return measurementService.vocString(for: value)
         case .nox:

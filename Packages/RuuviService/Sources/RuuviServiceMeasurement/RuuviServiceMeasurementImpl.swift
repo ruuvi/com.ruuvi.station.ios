@@ -2,6 +2,7 @@
 import Foundation
 import Humidity
 import RuuviLocal
+import RuuviLocalization
 import RuuviOntology
 // TODO: - @priyonto - Improve the number formatter instances.
 public final class RuuviServiceMeasurementImpl: NSObject {
@@ -46,6 +47,7 @@ public final class RuuviServiceMeasurementImpl: NSObject {
         .TemperatureAccuracyDidChange,
         .HumidityUnitDidChange,
         .HumidityAccuracyDidChange,
+        .MeasurementAccuracyDidChange,
         .PressureUnitDidChange,
         .PressureUnitAccuracyChange,
     ]
@@ -101,20 +103,50 @@ public final class RuuviServiceMeasurementImpl: NSObject {
 
     // Humidity
     private var humidityNumberFormatter: NumberFormatter {
+        humidityNumberFormatter(for: units.humidityUnit)
+    }
+
+    private func humidityNumberFormatter(for unit: HumidityUnit) -> NumberFormatter {
         let formatter = NumberFormatter()
         formatter.locale = Locale.current
         formatter.numberStyle = .decimal
-        formatter.minimumFractionDigits = settings.humidityAccuracy.value
-        formatter.maximumFractionDigits = settings.humidityAccuracy.value
+        let digits = humidityAccuracy(for: unit).value
+        formatter.minimumFractionDigits = digits
+        formatter.maximumFractionDigits = digits
         formatter.roundingMode = NumberFormatter.RoundingMode.halfUp
         return formatter
     }
 
     private var humidityFormatter: HumidityFormatter {
+        humidityFormatter(for: units.humidityUnit)
+    }
+
+    private func humidityFormatter(for unit: HumidityUnit) -> HumidityFormatter {
         let humidityFormatter = HumidityFormatter()
-        humidityFormatter.numberFormatter = humidityNumberFormatter
+        humidityFormatter.numberFormatter = humidityNumberFormatter(for: unit)
         HumiditySettings.setLanguage(settings.language.humidityLanguage)
         return humidityFormatter
+    }
+
+    private func humidityAccuracy(for unit: HumidityUnit) -> MeasurementAccuracyType {
+        switch unit {
+        case .percent:
+            settings.relativeHumidityAccuracy
+        case .gm3:
+            settings.absoluteHumidityAccuracy
+        case .dew:
+            settings.dewPointAccuracy
+        }
+    }
+
+    private func numberFormatter(fractionDigits: Int) -> NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale.current
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = fractionDigits
+        formatter.maximumFractionDigits = fractionDigits
+        formatter.roundingMode = NumberFormatter.RoundingMode.halfUp
+        return formatter
     }
 
     // Pressure
@@ -272,7 +304,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         voltage
             .converted(to: .volts)
             .value
-            .round(to: commonNumberFormatter.maximumFractionDigits)
+            .round(to: settings.voltageAccuracy.value)
     }
 
     public func string(for voltage: Voltage?) -> String {
@@ -280,7 +312,21 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         else {
             return emptyValueString
         }
-        return commonFormatter.string(from: voltage.converted(to: .volts))
+        let value = voltage.converted(to: .volts).value
+        let formatter = numberFormatter(fractionDigits: settings.voltageAccuracy.value)
+        guard let valueString = formatter.string(from: NSNumber(value: value)) else {
+            return emptyValueString
+        }
+        return valueString + String.nbsp + RuuviLocalization.v
+    }
+
+    public func stringWithoutSign(for voltage: Voltage?) -> String {
+        guard let voltage else {
+            return emptyValueString
+        }
+        let value = voltage.converted(to: .volts).value
+        let formatter = numberFormatter(fractionDigits: settings.voltageAccuracy.value)
+        return formatter.string(from: NSNumber(value: value)) ?? emptyValueString
     }
 
     public func double(
@@ -342,7 +388,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             unit: .relative(temperature: temperature)
         )
         if allowSettings {
-            humidityFormatter.numberFormatter = humidityNumberFormatter
+            humidityFormatter.numberFormatter = humidityNumberFormatter(for: unit)
         } else {
             humidityFormatter.numberFormatter = commonNumberFormatter
         }
@@ -357,7 +403,10 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
                 return emptyValueString
             }
             let value = dp.converted(to: settings.temperatureUnit.unitTemperature).value
-            guard let value = humidityNumberFormatter.string(from: NSNumber(value: value))
+            let formatter = allowSettings
+                ? humidityNumberFormatter(for: .dew)
+                : commonNumberFormatter
+            guard let value = formatter.string(from: NSNumber(value: value))
             else {
                 return emptyValueString
             }
@@ -383,15 +432,15 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         switch units.humidityUnit {
         case .percent:
             let value = NSNumber(value: humidityWithTemperature.value * 100)
-            return humidityNumberFormatter.string(from: value) ?? emptyValueString
+            return humidityNumberFormatter(for: .percent).string(from: value) ?? emptyValueString
         case .gm3:
             let value = humidityWithTemperature.converted(to: .absolute)
                 .value
-            return humidityNumberFormatter.string(from: NSNumber(value: value)) ?? emptyValueString
+            return humidityNumberFormatter(for: .gm3).string(from: NSNumber(value: value)) ?? emptyValueString
         case .dew:
             if let dp = try? humidityWithTemperature.dewPoint(temperature: temperature) {
                 let value = dp.converted(to: settings.temperatureUnit.unitTemperature).value
-                return humidityNumberFormatter.string(from: NSNumber(value: value)) ?? emptyValueString
+                return humidityNumberFormatter(for: .dew).string(from: NSNumber(value: value)) ?? emptyValueString
             } else {
                 return emptyValueString
             }
@@ -399,12 +448,16 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     }
 
     public func stringWithoutSign(humidity: Double?) -> String {
+        stringWithoutSign(humidity: humidity, unit: units.humidityUnit)
+    }
+
+    public func stringWithoutSign(humidity: Double?, unit: HumidityUnit) -> String {
         guard let humidity
         else {
             return emptyValueString
         }
         let number = NSNumber(value: humidity)
-        return humidityNumberFormatter.string(from: number) ?? emptyValueString
+        return humidityNumberFormatter(for: unit).string(from: number) ?? emptyValueString
     }
 
     public func string(for measurement: Double?) -> String {
@@ -532,7 +585,9 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return emptyValueString
         }
         let number = NSNumber(value: pm10)
-        return commonNumberFormatter.string(from: number) ?? emptyValueString
+        return numberFormatter(
+            fractionDigits: settings.pmAccuracy.value
+        ).string(from: number) ?? emptyValueString
     }
 
     public func pm25String(for pm25: Double?) -> String {
@@ -541,7 +596,9 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return emptyValueString
         }
         let number = NSNumber(value: pm25)
-        return commonNumberFormatter.string(from: number) ?? emptyValueString
+        return numberFormatter(
+            fractionDigits: settings.pmAccuracy.value
+        ).string(from: number) ?? emptyValueString
     }
 
     public func pm40String(for pm40: Double?) -> String {
@@ -550,7 +607,9 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return emptyValueString
         }
         let number = NSNumber(value: pm40)
-        return commonNumberFormatter.string(from: number) ?? emptyValueString
+        return numberFormatter(
+            fractionDigits: settings.pmAccuracy.value
+        ).string(from: number) ?? emptyValueString
     }
 
     public func pm100String(for pm100: Double?) -> String {
@@ -559,7 +618,9 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return emptyValueString
         }
         let number = NSNumber(value: pm100)
-        return commonNumberFormatter.string(from: number) ?? emptyValueString
+        return numberFormatter(
+            fractionDigits: settings.pmAccuracy.value
+        ).string(from: number) ?? emptyValueString
     }
 
     public func vocString(for voc: Double?) -> String {
@@ -596,6 +657,17 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         }
         let number = NSNumber(value: Int(luminosity))
         return commonNumberFormatter.string(from: number) ?? emptyValueString
+    }
+
+    public func accelerationString(for acceleration: Double?) -> String {
+        guard let acceleration
+        else {
+            return emptyValueString
+        }
+        let number = NSNumber(value: acceleration)
+        return numberFormatter(
+            fractionDigits: settings.accelerationAccuracy.value
+        ).string(from: number) ?? emptyValueString
     }
 
     public func double(for value: Double?) -> Double {

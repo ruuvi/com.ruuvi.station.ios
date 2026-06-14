@@ -6,8 +6,14 @@ public enum RuuviCloudApiSetting: String, CaseIterable, Codable {
     case accuracyTemperature = "ACCURACY_TEMPERATURE"
     case unitHumidity = "UNIT_HUMIDITY"
     case accuracyHumidity = "ACCURACY_HUMIDITY"
+    case accuracyHumidityRelative = "ACCURACY_HUMIDITY_RELATIVE"
+    case accuracyHumidityAbsolute = "ACCURACY_HUMIDITY_ABSOLUTE"
+    case accuracyHumidityDewPoint = "ACCURACY_HUMIDITY_DEW_POINT"
     case unitPressure = "UNIT_PRESSURE"
     case accuracyPressure = "ACCURACY_PRESSURE"
+    case accuracyPM = "ACCURACY_PM"
+    case accuracyAcceleration = "ACCURACY_ACCELERATION"
+    case accuracyVoltage = "ACCURACY_VOLTAGE"
     case chartViewPeriod = "CHART_VIEW_PERIOD"
     case chartShowAllPoints = "CHART_SHOW_ALL_POINTS"
     case chartDrawDots = "CHART_DRAW_DOTS"
@@ -33,8 +39,14 @@ public extension RuuviCloudApiSetting {
         .accuracyTemperature,
         .unitHumidity,
         .accuracyHumidity,
+        .accuracyHumidityRelative,
+        .accuracyHumidityAbsolute,
+        .accuracyHumidityDewPoint,
         .unitPressure,
         .accuracyPressure,
+        .accuracyPM,
+        .accuracyAcceleration,
+        .accuracyVoltage,
         .chartViewPeriod,
         .chartShowAllPoints,
         .chartDrawDots,

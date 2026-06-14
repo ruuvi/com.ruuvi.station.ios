@@ -1,4 +1,5 @@
 import Foundation
+import Future
 import RuuviContext
 import RuuviLocal
 import RuuviLocalization
@@ -25,7 +26,7 @@ class SettingsPresenter: SettingsModuleInput {
 
     private var languageToken: NSObjectProtocol?
 
-    private var sensors: [AnyRuuviTagSensor] = []
+    private var latestRecords: [RuuviTagSensorRecord] = []
     deinit {
         languageToken?.invalidate()
     }
@@ -34,7 +35,6 @@ class SettingsPresenter: SettingsModuleInput {
 extension SettingsPresenter: SettingsViewOutput {
     func viewDidLoad() {
         view.language = settings.language
-        view.globalUnitsSettingsEnabled = flags.showGlobalUnitsSettings
 
         languageToken = NotificationCenter
             .default
@@ -48,11 +48,30 @@ extension SettingsPresenter: SettingsViewOutput {
             )
 
         view.experimentalFunctionsEnabled = settings.experimentalFeaturesEnabled
+        refreshSettingsRows()
+    }
+
+    func viewWillAppear() {
+        refreshGlobalUnitsSettingRow()
+    }
+
+    private func refreshSettingsRows() {
+        refreshGlobalUnitsSettingRow()
+        refreshCloudModeVisibility()
+    }
+
+    private func refreshGlobalUnitsSettingRow() {
+        view.globalUnitsSettingsEnabled = flags.showGlobalUnitsSettings
+    }
+
+    private func refreshCloudModeVisibility() {
         ruuviStorage.readAll().on(success: { [weak self] tags in
-            guard let sSelf = self else { return }
-            let cloudTagsCount = tags.filter { $0.isOwner || $0.isCloud }.count
-            let cloudModeVisible = sSelf.ruuviUser.isAuthorized && cloudTagsCount > 0
-            sSelf.view.cloudModeVisible = cloudModeVisible
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                let cloudTagsCount = tags.filter { $0.isOwner || $0.isCloud }.count
+                let cloudModeVisible = ruuviUser.isAuthorized && cloudTagsCount > 0
+                view.cloudModeVisible = cloudModeVisible
+            }
         })
     }
 
@@ -110,9 +129,50 @@ extension SettingsPresenter: SettingsViewOutput {
     }
 
     func viewDidTapResolution() {
+        loadLatestRecords { [weak self] in
+            self?.openResolutionSettings()
+        }
+    }
+
+    private func loadLatestRecords(completion: @escaping () -> Void) {
+        ruuviStorage.readAll().on(success: { [weak self] tags in
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+
+                let operations = tags.map { self.ruuviStorage.readLatest($0) }
+                guard !operations.isEmpty else {
+                    latestRecords = []
+                    completion()
+                    return
+                }
+
+                Future.zip(operations).on(
+                    success: { [weak self] records in
+                        DispatchQueue.main.async {
+                            self?.latestRecords = records.compactMap { $0 }
+                            completion()
+                        }
+                    },
+                    failure: { [weak self] _ in
+                        DispatchQueue.main.async {
+                            self?.latestRecords = []
+                            completion()
+                        }
+                    }
+                )
+            }
+        }, failure: { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.latestRecords = []
+                completion()
+            }
+        })
+    }
+
+    private func openResolutionSettings() {
         let viewModel = UnitSettingsViewModel(
             title: RuuviLocalization.Settings.Measurement.Resolution.title,
-            items: [],
+            items: resolutionTargets(),
             measurementType: .temperature,
             mode: .resolution
         )
@@ -174,6 +234,57 @@ extension SettingsPresenter: SettingsViewOutput {
 
     func viewDidTapAlertNotifications() {
         router.openAlertNotificationsSettings()
+    }
+}
+
+private extension SettingsPresenter {
+    func resolutionTargets() -> [ResolutionSettingsTarget] {
+        guard !latestRecords.isEmpty else {
+            // Some storage states have sensors before latest records are readable.
+            // Without capability metadata here, use the full supported list rather
+            // than opening an empty resolution settings screen.
+            return ResolutionSettingsTarget.allCases
+        }
+
+        var targets = [ResolutionSettingsTarget]()
+
+        if latestRecords.contains(where: { $0.hasMeasurement(for: .temperature) }) {
+            targets.append(.temperature)
+        }
+        if latestRecords.contains(where: { $0.hasMeasurement(for: .humidity) }) {
+            targets.append(.relativeHumidity)
+        }
+        if latestRecords.contains(where: { $0.hasHumidityAndTemperature }) {
+            targets.append(.absoluteHumidity)
+            targets.append(.dewPoint)
+        }
+        if latestRecords.contains(where: { $0.hasMeasurement(for: .pressure) }) {
+            targets.append(.pressure)
+        }
+        if latestRecords.contains(where: { $0.hasParticulateMatter }) {
+            targets.append(.particulateMatter)
+        }
+        if latestRecords.contains(where: { $0.hasMeasurement(for: .accelerationX) }) {
+            targets.append(.acceleration)
+        }
+        if latestRecords.contains(where: { $0.hasMeasurement(for: .voltage) }) {
+            targets.append(.voltage)
+        }
+
+        return targets
+    }
+}
+
+private extension RuuviTagSensorRecord {
+    var hasHumidityAndTemperature: Bool {
+        hasMeasurement(for: .humidity) && hasMeasurement(for: .temperature)
+    }
+
+    var hasParticulateMatter: Bool {
+        hasMeasurement(for: .pm10)
+            || hasMeasurement(for: .pm25)
+            || hasMeasurement(for: .pm40)
+            || hasMeasurement(for: .pm100)
     }
 }
 

@@ -106,6 +106,13 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDefaults.humidityAccuracyInt", defaultValue: 2)
     private var humidityAccuracyInt: Int
 
+    private let relativeHumidityAccuracyIntKey = "SettingsUserDefaults.relativeHumidityAccuracyInt"
+    private let absoluteHumidityAccuracyIntKey = "SettingsUserDefaults.absoluteHumidityAccuracyInt"
+    private let dewPointAccuracyIntKey = "SettingsUserDefaults.dewPointAccuracyInt"
+    private let pmAccuracyIntKey = "SettingsUserDefaults.pmAccuracyInt"
+    private let accelerationAccuracyIntKey = "SettingsUserDefaults.accelerationAccuracyInt"
+    private let voltageAccuracyIntKey = "SettingsUserDefaults.voltageAccuracyInt"
+
     var humidityAccuracy: MeasurementAccuracyType {
         get {
             switch humidityAccuracyInt {
@@ -121,6 +128,9 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         }
         set {
             humidityAccuracyInt = newValue.value
+            UserDefaults.standard.set(newValue.value, forKey: relativeHumidityAccuracyIntKey)
+            UserDefaults.standard.set(newValue.value, forKey: absoluteHumidityAccuracyIntKey)
+            UserDefaults.standard.set(newValue.value, forKey: dewPointAccuracyIntKey)
             NotificationCenter
                 .default
                 .post(
@@ -128,6 +138,47 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
                     object: self,
                     userInfo: nil
                 )
+            NotificationCenter.default.post(
+                name: .MeasurementAccuracyDidChange,
+                object: self,
+                userInfo: nil
+            )
+        }
+    }
+
+    var relativeHumidityAccuracy: MeasurementAccuracyType {
+        get {
+            measurementAccuracy(
+                forKey: relativeHumidityAccuracyIntKey,
+                fallback: humidityAccuracy
+            )
+        }
+        set {
+            setMeasurementAccuracy(newValue, forKey: relativeHumidityAccuracyIntKey)
+        }
+    }
+
+    var absoluteHumidityAccuracy: MeasurementAccuracyType {
+        get {
+            measurementAccuracy(
+                forKey: absoluteHumidityAccuracyIntKey,
+                fallback: humidityAccuracy
+            )
+        }
+        set {
+            setMeasurementAccuracy(newValue, forKey: absoluteHumidityAccuracyIntKey)
+        }
+    }
+
+    var dewPointAccuracy: MeasurementAccuracyType {
+        get {
+            measurementAccuracy(
+                forKey: dewPointAccuracyIntKey,
+                fallback: humidityAccuracy
+            )
+        }
+        set {
+            setMeasurementAccuracy(newValue, forKey: dewPointAccuracyIntKey)
         }
     }
 
@@ -244,6 +295,42 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
                     object: self,
                     userInfo: nil
                 )
+        }
+    }
+
+    var pmAccuracy: MeasurementAccuracyType {
+        get {
+            measurementAccuracy(
+                forKey: pmAccuracyIntKey,
+                fallback: .one
+            )
+        }
+        set {
+            setMeasurementAccuracy(newValue, forKey: pmAccuracyIntKey)
+        }
+    }
+
+    var accelerationAccuracy: MeasurementAccuracyType {
+        get {
+            measurementAccuracy(
+                forKey: accelerationAccuracyIntKey,
+                fallback: .two
+            )
+        }
+        set {
+            setMeasurementAccuracy(newValue, forKey: accelerationAccuracyIntKey)
+        }
+    }
+
+    var voltageAccuracy: MeasurementAccuracyType {
+        get {
+            measurementAccuracy(
+                forKey: voltageAccuracyIntKey,
+                fallback: .two
+            )
+        }
+        set {
+            setMeasurementAccuracy(newValue, forKey: voltageAccuracyIntKey)
         }
     }
 
@@ -894,6 +981,53 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             forKey: dashboardSignInBannerHiddenUDKey + version
         )
     }
+
+    private func measurementAccuracy(
+        forKey key: String,
+        fallback: MeasurementAccuracyType
+    ) -> MeasurementAccuracyType {
+        guard let value = UserDefaults.standard.object(forKey: key) as? Int else {
+            return fallback
+        }
+        return MeasurementAccuracyType(userDefaultsValue: value)
+    }
+
+    private func setMeasurementAccuracy(
+        _ accuracy: MeasurementAccuracyType,
+        forKey key: String,
+        notification: Notification.Name? = nil
+    ) {
+        UserDefaults.standard.set(accuracy.value, forKey: key)
+        if let notification {
+            NotificationCenter.default.post(
+                name: notification,
+                object: self,
+                userInfo: nil
+            )
+        }
+        NotificationCenter.default.post(
+            name: .MeasurementAccuracyDidChange,
+            object: self,
+            userInfo: nil
+        )
+    }
 }
 
-// swiftlint:enable type_body_length file_length
+// swiftlint:enable type_body_length
+
+private extension MeasurementAccuracyType {
+    init(userDefaultsValue value: Int) {
+        switch value {
+        case 0:
+            self = .zero
+        case 1:
+            self = .one
+        case 2:
+            self = .two
+        default:
+            self = .two
+        }
+    }
+}
+
+// swiftlint:enable file_length

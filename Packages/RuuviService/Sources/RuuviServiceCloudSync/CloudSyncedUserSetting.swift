@@ -8,6 +8,15 @@ extension RuuviCloudApiSetting {
         rawValue
     }
 
+    var isAppliedFromCloud: Bool {
+        switch self {
+        case .chartViewPeriod:
+            false
+        default:
+            isCloudSyncedUserSetting
+        }
+    }
+
     func userSetting(
         from localSettings: RuuviLocalSettings,
         lastUpdated: Date? = nil
@@ -39,7 +48,8 @@ extension RuuviCloudApiSetting {
     func localValue(from settings: RuuviLocalSettings) -> String? {
         switch self {
         case .unitTemperature, .accuracyTemperature, .unitHumidity, .accuracyHumidity,
-             .unitPressure, .accuracyPressure:
+             .accuracyHumidityRelative, .accuracyHumidityAbsolute, .accuracyHumidityDewPoint,
+             .unitPressure, .accuracyPressure, .accuracyPM, .accuracyAcceleration, .accuracyVoltage:
             measurementLocalValue(from: settings)
         case .chartShowAllPoints, .chartDrawDots, .chartShowMinMaxAverage:
             chartLocalValue(from: settings)
@@ -68,7 +78,8 @@ extension RuuviCloudApiSetting {
     func apply(value: String, to settings: RuuviLocalSettings) -> Bool {
         switch self {
         case .unitTemperature, .accuracyTemperature, .unitHumidity, .accuracyHumidity,
-             .unitPressure, .accuracyPressure:
+             .accuracyHumidityRelative, .accuracyHumidityAbsolute, .accuracyHumidityDewPoint,
+             .unitPressure, .accuracyPressure, .accuracyPM, .accuracyAcceleration, .accuracyVoltage:
             return applyMeasurementValue(value, to: settings)
         case .chartShowAllPoints, .chartDrawDots, .chartShowMinMaxAverage:
             return applyChartValue(value, to: settings)
@@ -99,6 +110,7 @@ extension RuuviCloudApiSetting {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity
     private func measurementLocalValue(from settings: RuuviLocalSettings) -> String {
         switch self {
         case .unitTemperature:
@@ -109,10 +121,22 @@ extension RuuviCloudApiSetting {
             settings.humidityUnit.ruuviCloudApiSettingString
         case .accuracyHumidity:
             settings.humidityAccuracy.value.ruuviCloudApiSettingString
+        case .accuracyHumidityRelative:
+            settings.relativeHumidityAccuracy.value.ruuviCloudApiSettingString
+        case .accuracyHumidityAbsolute:
+            settings.absoluteHumidityAccuracy.value.ruuviCloudApiSettingString
+        case .accuracyHumidityDewPoint:
+            settings.dewPointAccuracy.value.ruuviCloudApiSettingString
         case .unitPressure:
             settings.pressureUnit.ruuviCloudApiSettingString
         case .accuracyPressure:
             settings.pressureAccuracy.value.ruuviCloudApiSettingString
+        case .accuracyPM:
+            settings.pmAccuracy.value.ruuviCloudApiSettingString
+        case .accuracyAcceleration:
+            settings.accelerationAccuracy.value.ruuviCloudApiSettingString
+        case .accuracyVoltage:
+            settings.voltageAccuracy.value.ruuviCloudApiSettingString
         default:
             preconditionFailure("Unexpected measurement setting")
         }
@@ -163,6 +187,7 @@ extension RuuviCloudApiSetting {
         }
     }
 
+    // swiftlint:disable:next cyclomatic_complexity function_body_length
     private func applyMeasurementValue(
         _ value: String,
         to settings: RuuviLocalSettings
@@ -185,8 +210,27 @@ extension RuuviCloudApiSetting {
             }
         case .accuracyHumidity:
             guard let value = value.ruuviCloudApiSettingsMeasurementAccuracyUnitOptional else { return false }
+            guard settings.relativeHumidityAccuracy == settings.absoluteHumidityAccuracy,
+                  settings.absoluteHumidityAccuracy == settings.dewPointAccuracy else {
+                return false
+            }
             return update(settings.humidityAccuracy, value) {
                 settings.humidityAccuracy = $0
+            }
+        case .accuracyHumidityRelative:
+            guard let value = value.ruuviCloudApiSettingsMeasurementAccuracyUnitOptional else { return false }
+            return update(settings.relativeHumidityAccuracy, value) {
+                settings.relativeHumidityAccuracy = $0
+            }
+        case .accuracyHumidityAbsolute:
+            guard let value = value.ruuviCloudApiSettingsMeasurementAccuracyUnitOptional else { return false }
+            return update(settings.absoluteHumidityAccuracy, value) {
+                settings.absoluteHumidityAccuracy = $0
+            }
+        case .accuracyHumidityDewPoint:
+            guard let value = value.ruuviCloudApiSettingsMeasurementAccuracyUnitOptional else { return false }
+            return update(settings.dewPointAccuracy, value) {
+                settings.dewPointAccuracy = $0
             }
         case .unitPressure:
             guard let value = value.ruuviCloudApiSettingUnitPressure else { return false }
@@ -197,6 +241,21 @@ extension RuuviCloudApiSetting {
             guard let value = value.ruuviCloudApiSettingsMeasurementAccuracyUnitOptional else { return false }
             return update(settings.pressureAccuracy, value) {
                 settings.pressureAccuracy = $0
+            }
+        case .accuracyPM:
+            guard let value = value.ruuviCloudApiSettingsMeasurementAccuracyUnitOptional else { return false }
+            return update(settings.pmAccuracy, value) {
+                settings.pmAccuracy = $0
+            }
+        case .accuracyAcceleration:
+            guard let value = value.ruuviCloudApiSettingsMeasurementAccuracyUnitOptional else { return false }
+            return update(settings.accelerationAccuracy, value) {
+                settings.accelerationAccuracy = $0
+            }
+        case .accuracyVoltage:
+            guard let value = value.ruuviCloudApiSettingsMeasurementAccuracyUnitOptional else { return false }
+            return update(settings.voltageAccuracy, value) {
+                settings.voltageAccuracy = $0
             }
         default:
             preconditionFailure("Unexpected measurement setting")

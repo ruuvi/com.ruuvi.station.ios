@@ -6,26 +6,53 @@ public struct MeasurementServiceSettings {
     public let temperatureUnit: UnitTemperature
     public let temperatureAccuracy: MeasurementAccuracyType
     public let humidityUnit: HumidityUnit
-    public let humidityAccuracy: MeasurementAccuracyType
+    public let relativeHumidityAccuracy: MeasurementAccuracyType
+    public let absoluteHumidityAccuracy: MeasurementAccuracyType
+    public let dewPointAccuracy: MeasurementAccuracyType
     public let pressureUnit: UnitPressure
     public let pressureAccuracy: MeasurementAccuracyType
+    public let pmAccuracy: MeasurementAccuracyType
+    public let accelerationAccuracy: MeasurementAccuracyType
+    public let voltageAccuracy: MeasurementAccuracyType
     public let language: Language
+
+    public var humidityAccuracy: MeasurementAccuracyType {
+        switch humidityUnit {
+        case .percent:
+            relativeHumidityAccuracy
+        case .gm3:
+            absoluteHumidityAccuracy
+        case .dew:
+            dewPointAccuracy
+        }
+    }
 
     public init(
         temperatureUnit: UnitTemperature,
         temperatureAccuracy: MeasurementAccuracyType,
         humidityUnit: HumidityUnit,
         humidityAccuracy: MeasurementAccuracyType,
+        relativeHumidityAccuracy: MeasurementAccuracyType? = nil,
+        absoluteHumidityAccuracy: MeasurementAccuracyType? = nil,
+        dewPointAccuracy: MeasurementAccuracyType? = nil,
         pressureUnit: UnitPressure,
         pressureAccuracy: MeasurementAccuracyType,
+        pmAccuracy: MeasurementAccuracyType = .one,
+        accelerationAccuracy: MeasurementAccuracyType = .two,
+        voltageAccuracy: MeasurementAccuracyType = .two,
         language: Language
     ) {
         self.temperatureUnit = temperatureUnit
         self.temperatureAccuracy = temperatureAccuracy
         self.humidityUnit = humidityUnit
-        self.humidityAccuracy = humidityAccuracy
+        self.relativeHumidityAccuracy = relativeHumidityAccuracy ?? humidityAccuracy
+        self.absoluteHumidityAccuracy = absoluteHumidityAccuracy ?? humidityAccuracy
+        self.dewPointAccuracy = dewPointAccuracy ?? humidityAccuracy
         self.pressureAccuracy = pressureAccuracy
         self.pressureUnit = pressureUnit
+        self.pmAccuracy = pmAccuracy
+        self.accelerationAccuracy = accelerationAccuracy
+        self.voltageAccuracy = voltageAccuracy
         self.language = language
     }
 }
@@ -114,8 +141,9 @@ extension MeasurementService {
         let value = voltage
             .converted(to: .volts)
             .value
-            .round(to: commonFormatter.maximumFractionDigits)
-        return formattedValue(from: value, formatter: commonFormatter)
+            .round(to: settings.voltageAccuracy.value)
+        let formatter = numberFormatter(fractionDigits: settings.voltageAccuracy.value)
+        return formattedValue(from: value, formatter: formatter)
     }
 
     public func humidity(
@@ -163,8 +191,9 @@ extension MeasurementService {
         else {
             return emptyValueString
         }
-        let value = acceleration.round(to: commonFormatter.maximumFractionDigits)
-        return formattedValue(from: value, formatter: commonFormatter)
+        let value = acceleration.round(to: settings.accelerationAccuracy.value)
+        let formatter = numberFormatter(fractionDigits: settings.accelerationAccuracy.value)
+        return formattedValue(from: value, formatter: formatter)
     }
 
     public func movements(for movements: Int?) -> String {
@@ -192,6 +221,16 @@ extension MeasurementService {
         }
         return formattedValue(from: double, formatter: commonFormatter)
     }
+
+    public func pm(for value: Double?) -> String {
+        guard let value
+        else {
+            return emptyValueString
+        }
+        let roundedValue = value.round(to: settings.pmAccuracy.value)
+        let formatter = numberFormatter(fractionDigits: settings.pmAccuracy.value)
+        return formattedValue(from: roundedValue, formatter: formatter)
+    }
 }
 
 // MARK: - MeasurementService Helper methods
@@ -207,6 +246,15 @@ extension MeasurementService {
             return emptyValueString
         }
         return formattedValue
+    }
+
+    private func numberFormatter(fractionDigits: Int) -> NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale.autoupdatingCurrent
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = fractionDigits
+        formatter.maximumFractionDigits = fractionDigits
+        return formatter
     }
 
     // Important: This function should be in sync with `calculateAQI` function in RuuviServiceMeasurementImpl.

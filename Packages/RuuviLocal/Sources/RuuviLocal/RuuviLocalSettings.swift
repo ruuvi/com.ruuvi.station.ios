@@ -6,6 +6,7 @@ public extension Notification.Name {
     static let TemperatureAccuracyDidChange = Notification.Name("Settings.TemperatureAccuracyDidChange")
     static let HumidityUnitDidChange = Notification.Name("Settings.HumidityUnitDidChange")
     static let HumidityAccuracyDidChange = Notification.Name("Settings.HumidityAccuracyDidChange")
+    static let MeasurementAccuracyDidChange = Notification.Name("Settings.MeasurementAccuracyDidChange")
     static let PressureUnitDidChange = Notification.Name("Settings.PressureUnitDidChange")
     static let PressureUnitAccuracyChange = Notification.Name("Settings.PressureUnitAccuracyChange")
     static let LanguageDidChange = Notification.Name("LanguageDidChange")
@@ -54,8 +55,14 @@ public protocol RuuviLocalSettings: AnyObject {
     var temperatureAccuracy: MeasurementAccuracyType { get set }
     var humidityUnit: HumidityUnit { get set }
     var humidityAccuracy: MeasurementAccuracyType { get set }
+    var relativeHumidityAccuracy: MeasurementAccuracyType { get set }
+    var absoluteHumidityAccuracy: MeasurementAccuracyType { get set }
+    var dewPointAccuracy: MeasurementAccuracyType { get set }
     var pressureUnit: UnitPressure { get set }
     var pressureAccuracy: MeasurementAccuracyType { get set }
+    var pmAccuracy: MeasurementAccuracyType { get set }
+    var accelerationAccuracy: MeasurementAccuracyType { get set }
+    var voltageAccuracy: MeasurementAccuracyType { get set }
     var welcomeShown: Bool { get set }
     var showGraphLongPressTutorial: Bool { get set }
     var tosAccepted: Bool { get set }

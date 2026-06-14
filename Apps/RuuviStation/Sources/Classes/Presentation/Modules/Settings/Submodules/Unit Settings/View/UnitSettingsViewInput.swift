@@ -9,4 +9,5 @@ protocol UnitSettingsViewInput: ViewInput {
     var humidityAccuracy: MeasurementAccuracyType { get set }
     var pressureUnit: UnitPressure { get set }
     var pressureAccuracy: MeasurementAccuracyType { get set }
+    func reloadSettings()
 }

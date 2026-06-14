@@ -1,3 +1,5 @@
+// swiftlint:disable type_body_length file_length
+
 import Foundation
 import Future
 import RuuviCloud
@@ -92,8 +94,44 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
                 promise.succeed(value: accuracy)
             }, failure: { error in
                 promise.fail(error: .ruuviCloud(error))
-            })
+        })
         return promise.future
+    }
+
+    @discardableResult
+    public func set(
+        relativeHumidityAccuracy: MeasurementAccuracyType
+    ) -> Future<MeasurementAccuracyType, RuuviServiceError> {
+        return setSyncedAccuracy(
+            relativeHumidityAccuracy,
+            name: .accuracyHumidityRelative
+        ) { [localSettings] in
+            localSettings.relativeHumidityAccuracy = $0
+        }
+    }
+
+    @discardableResult
+    public func set(
+        absoluteHumidityAccuracy: MeasurementAccuracyType
+    ) -> Future<MeasurementAccuracyType, RuuviServiceError> {
+        return setSyncedAccuracy(
+            absoluteHumidityAccuracy,
+            name: .accuracyHumidityAbsolute
+        ) { [localSettings] in
+            localSettings.absoluteHumidityAccuracy = $0
+        }
+    }
+
+    @discardableResult
+    public func set(
+        dewPointAccuracy: MeasurementAccuracyType
+    ) -> Future<MeasurementAccuracyType, RuuviServiceError> {
+        return setSyncedAccuracy(
+            dewPointAccuracy,
+            name: .accuracyHumidityDewPoint
+        ) { [localSettings] in
+            localSettings.dewPointAccuracy = $0
+        }
     }
 
     @discardableResult
@@ -130,8 +168,44 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
                 promise.succeed(value: accuracy)
             }, failure: { error in
                 promise.fail(error: .ruuviCloud(error))
-            })
+        })
         return promise.future
+    }
+
+    @discardableResult
+    public func set(
+        pmAccuracy: MeasurementAccuracyType
+    ) -> Future<MeasurementAccuracyType, RuuviServiceError> {
+        return setSyncedAccuracy(
+            pmAccuracy,
+            name: .accuracyPM
+        ) { [localSettings] in
+            localSettings.pmAccuracy = $0
+        }
+    }
+
+    @discardableResult
+    public func set(
+        accelerationAccuracy: MeasurementAccuracyType
+    ) -> Future<MeasurementAccuracyType, RuuviServiceError> {
+        return setSyncedAccuracy(
+            accelerationAccuracy,
+            name: .accuracyAcceleration
+        ) { [localSettings] in
+            localSettings.accelerationAccuracy = $0
+        }
+    }
+
+    @discardableResult
+    public func set(
+        voltageAccuracy: MeasurementAccuracyType
+    ) -> Future<MeasurementAccuracyType, RuuviServiceError> {
+        return setSyncedAccuracy(
+            voltageAccuracy,
+            name: .accuracyVoltage
+        ) { [localSettings] in
+            localSettings.voltageAccuracy = $0
+        }
     }
 
     @discardableResult
@@ -370,4 +444,27 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
             .on()
     }
 
+    private func setSyncedAccuracy(
+        _ accuracy: MeasurementAccuracyType,
+        name: RuuviCloudApiSetting,
+        persist: (MeasurementAccuracyType) -> Void
+    ) -> Future<MeasurementAccuracyType, RuuviServiceError> {
+        let promise = Promise<MeasurementAccuracyType, RuuviServiceError>()
+        persist(accuracy)
+        let value = accuracy.value.ruuviCloudApiSettingString
+        saveUserSetting(
+            name: name,
+            value: value,
+            lastUpdated: UserSettingTimestamp.current()
+        )
+        cloud.set(userSetting: name, value: value)
+            .on(success: { _ in
+                promise.succeed(value: accuracy)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
 }
+
+// swiftlint:enable type_body_length
