@@ -5,6 +5,7 @@ import SwiftUI
 import Combine
 import RuuviLocalization
 import RuuviOntology
+import RuuviService
 
 final class CardsAlertsViewController: UIViewController {
     weak var output: CardsAlertsViewOutput?
@@ -34,10 +35,14 @@ final class CardsAlertsViewController: UIViewController {
 
     init(
         snapshot: RuuviTagCardSnapshot,
+        measurementService: RuuviServiceMeasurement?,
         shouldExpandFirstAlertByDefault: Bool = false,
         alertSettingsDisplayMode: CardsSettingsAlertDisplayMode = .legacySettings
     ) {
-        self.state = CardsSettingsState(snapshot: snapshot)
+        self.state = CardsSettingsState(
+            snapshot: snapshot,
+            measurementService: measurementService
+        )
         self.shouldExpandFirstAlertByDefault = shouldExpandFirstAlertByDefault
         self.alertSettingsDisplayMode = alertSettingsDisplayMode
         self.configuredSnapshotID = snapshot.id

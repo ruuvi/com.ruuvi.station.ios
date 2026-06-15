@@ -268,13 +268,15 @@ private extension CardsCoordinator {
     ) -> CardsAlertsViewController {
         let r = AppAssembly.shared.assembler.resolver
         let flags = r.resolve(RuuviLocalFlags.self)!
+        let measurementService = r.resolve(RuuviServiceMeasurement.self)!
         let viewController = CardsAlertsViewController(
             snapshot: snapshot,
+            measurementService: measurementService,
             shouldExpandFirstAlertByDefault: flags.showNewSettings,
             alertSettingsDisplayMode: flags.showNewSettings ? .alerts : .legacySettings
         )
         let presenter = CardsAlertsPresenter(
-            measurementService: r.resolve(RuuviServiceMeasurement.self)!,
+            measurementService: measurementService,
             activityPresenter: r.resolve(ActivityPresenter.self)!
         )
         presenter.view = viewController
@@ -293,15 +295,17 @@ private extension CardsCoordinator {
         cardsSettingsRouter = CardsSettingsRouter()
         let r = AppAssembly.shared.assembler.resolver
         let flags = r.resolve(RuuviLocalFlags.self)!
+        let measurementService = r.resolve(RuuviServiceMeasurement.self)!
         let presenter = CardsSettingsPresenter(
             ruuviSensorPropertiesService: r.resolve(RuuviServiceSensorProperties.self)!,
-            measurementService: r.resolve(RuuviServiceMeasurement.self)!,
+            measurementService: measurementService,
             settings: r.resolve(RuuviLocalSettings.self)!,
             errorPresenter: r.resolve(ErrorPresenter.self)!,
             activityPresenter: r.resolve(ActivityPresenter.self)!
         )
         let viewController = CardsSettingsViewController(
             snapshot: snapshot,
+            measurementService: measurementService,
             showsAlertSections: !flags.showNewCardsMenu,
             showsAlertShortcutSection: flags.showNewCardsMenu
         )

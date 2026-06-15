@@ -4,6 +4,7 @@ import SwiftUI
 import Combine
 import RuuviLocalization
 import RuuviOntology
+import RuuviService
 
 @MainActor
 final class CardsSettingsState: ObservableObject {
@@ -51,6 +52,7 @@ final class CardsSettingsState: ObservableObject {
 
     // MARK: - Snapshot reference
     private(set) var snapshot: RuuviTagCardSnapshot
+    private let measurementService: RuuviServiceMeasurement?
     private var cancellables = Set<AnyCancellable>()
     private var connectionDisplayFrozen = false
 
@@ -58,8 +60,12 @@ final class CardsSettingsState: ObservableObject {
         static let toggleDuration: TimeInterval = 0.25
     }
 
-    init(snapshot: RuuviTagCardSnapshot) {
+    init(
+        snapshot: RuuviTagCardSnapshot,
+        measurementService: RuuviServiceMeasurement?
+    ) {
         self.snapshot = snapshot
+        self.measurementService = measurementService
         self.name = ""
         self.ownerName = ""
         self.showOwner = false
@@ -97,7 +103,10 @@ final class CardsSettingsState: ObservableObject {
         shareSummary = Self.calculateShareSummary(from: snapshot)
         isNotesEditable = snapshot.metadata.isOwner
         backgroundImage = snapshot.displayData.background.map { Image(uiImage: $0) }
-        moreInfoRows = CardsSettingsMoreInfoRowBuilder.buildMoreInfoRows(from: snapshot)
+        moreInfoRows = CardsSettingsMoreInfoRowBuilder.buildMoreInfoRows(
+            from: snapshot,
+            measurementService: measurementService
+        )
         firmwareVersion = snapshot.displayData.firmwareVersion.unwrapped
         applyConnectionData(snapshot.connectionData)
         showKeepConnectionStatusLabel = !snapshot.capabilities.hideSwitchStatusLabel
@@ -396,6 +405,13 @@ private extension CardsSettingsState {
                 self?.refreshMoreInfoRows()
             }
             .store(in: &cancellables)
+
+        NotificationCenter.default
+            .publisher(for: .MeasurementAccuracyDidChange)
+            .sink { [weak self] _ in
+                self?.refreshMoreInfoRows()
+            }
+            .store(in: &cancellables)
     }
 
     private func bindConnection(_ snapshot: RuuviTagCardSnapshot) {
@@ -524,7 +540,10 @@ private extension CardsSettingsState {
 
     // MARK: - More Info Rows
     func refreshMoreInfoRows() {
-        moreInfoRows = CardsSettingsMoreInfoRowBuilder.buildMoreInfoRows(from: snapshot)
+        moreInfoRows = CardsSettingsMoreInfoRowBuilder.buildMoreInfoRows(
+            from: snapshot,
+            measurementService: measurementService
+        )
     }
 
     // MARK: - Connection Display

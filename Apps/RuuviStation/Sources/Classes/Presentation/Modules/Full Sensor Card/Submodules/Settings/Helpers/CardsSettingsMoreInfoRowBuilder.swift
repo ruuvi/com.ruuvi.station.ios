@@ -1,17 +1,20 @@
 import Foundation
 import RuuviLocalization
 import RuuviOntology
+import RuuviService
 import SwiftUI
 
 struct CardsSettingsMoreInfoRowBuilder {
 
     // swiftlint:disable:next function_body_length
     static func buildMoreInfoRows(
-        from snapshot: RuuviTagCardSnapshot
+        from snapshot: RuuviTagCardSnapshot,
+        measurementService: RuuviServiceMeasurement?
     ) -> [CardsSettingsMoreInfoRowModel] {
         var rows: [CardsSettingsMoreInfoRowModel] = []
         let emptyValue = RuuviLocalization.na
         let display = snapshot.displayData
+        let latestRawRecord = snapshot.latestRawRecord
 
         let macValue = snapshot.identifierData.mac?.value ??
             snapshot.identifierData.luid?.value ??
@@ -54,8 +57,10 @@ struct CardsSettingsMoreInfoRowBuilder {
         if snapshot.capabilities.showBatteryStatus {
             let (batteryValue, batteryNote, batteryColor) = formattedBatteryInfo(
                 voltage: display.voltage,
+                rawVoltage: latestRawRecord?.voltage,
                 needsReplacement: display.batteryNeedsReplacement,
-                firmwareVersion: display.version
+                firmwareVersion: display.version,
+                measurementService: measurementService
             )
             rows.append(
                 CardsSettingsMoreInfoRowModel(
@@ -69,12 +74,15 @@ struct CardsSettingsMoreInfoRowBuilder {
             )
         }
 
-        if let accX = display.accelerationX {
+        if let accX = latestRawRecord?.acceleration?.x.value ?? display.accelerationX {
             rows.append(
                 CardsSettingsMoreInfoRowModel(
                     id: CardsSettingsMoreInfoRowID.accX.rawValue,
                     title: RuuviLocalization.TagSettings.AccelerationXTitleLabel.text,
-                    value: formattedAcceleration(from: accX),
+                    value: formattedAcceleration(
+                        from: accX,
+                        measurementService: measurementService
+                    ),
                     note: nil,
                     noteColor: nil,
                     action: .none
@@ -82,12 +90,15 @@ struct CardsSettingsMoreInfoRowBuilder {
             )
         }
 
-        if let accY = display.accelerationY {
+        if let accY = latestRawRecord?.acceleration?.y.value ?? display.accelerationY {
             rows.append(
                 CardsSettingsMoreInfoRowModel(
                     id: CardsSettingsMoreInfoRowID.accY.rawValue,
                     title: RuuviLocalization.TagSettings.AccelerationYTitleLabel.text,
-                    value: formattedAcceleration(from: accY),
+                    value: formattedAcceleration(
+                        from: accY,
+                        measurementService: measurementService
+                    ),
                     note: nil,
                     noteColor: nil,
                     action: .none
@@ -95,12 +106,15 @@ struct CardsSettingsMoreInfoRowBuilder {
             )
         }
 
-        if let accZ = display.accelerationZ {
+        if let accZ = latestRawRecord?.acceleration?.z.value ?? display.accelerationZ {
             rows.append(
                 CardsSettingsMoreInfoRowModel(
                     id: CardsSettingsMoreInfoRowID.accZ.rawValue,
                     title: RuuviLocalization.TagSettings.AccelerationZTitleLabel.text,
-                    value: formattedAcceleration(from: accZ),
+                    value: formattedAcceleration(
+                        from: accZ,
+                        measurementService: measurementService
+                    ),
                     note: nil,
                     noteColor: nil,
                     action: .none
@@ -182,12 +196,16 @@ extension CardsSettingsMoreInfoRowBuilder {
 
     static func formattedBatteryInfo(
         voltage: Double?,
+        rawVoltage: Voltage?,
         needsReplacement: Bool,
-        firmwareVersion: Int?
+        firmwareVersion: Int?,
+        measurementService: RuuviServiceMeasurement?
         // swiftlint:disable:next large_tuple
     ) -> (String, String?, Color?) {
         let value: String
-        if let voltage {
+        if let measurementService, let rawVoltage {
+            value = measurementService.string(for: rawVoltage)
+        } else if let voltage {
             value = String.localizedStringWithFormat("%.3f", voltage) + " " + RuuviLocalization.v
         } else {
             value = RuuviLocalization.na
@@ -207,8 +225,14 @@ extension CardsSettingsMoreInfoRowBuilder {
         return (value, status, color)
     }
 
-    static func formattedAcceleration(from value: Double) -> String {
-        String.localizedStringWithFormat("%.3f", value) + " " + RuuviLocalization.g
+    static func formattedAcceleration(
+        from value: Double,
+        measurementService: RuuviServiceMeasurement?
+    ) -> String {
+        if let measurementService {
+            return measurementService.accelerationString(for: value) + " " + RuuviLocalization.g
+        }
+        return String.localizedStringWithFormat("%.3f", value) + " " + RuuviLocalization.g
     }
 
     static func formattedTxPower(from value: Int) -> String {
