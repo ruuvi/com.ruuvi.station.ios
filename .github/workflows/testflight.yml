@@ -31,9 +31,15 @@ on:
       - closed
     branches:
       - 'release/*'
+    paths-ignore:
+      - 'fastlane/metadata/**'
+      - 'fastlane/screenshots/**'
   push:
     branches:
       - 'release/*'
+    paths-ignore:
+      - 'fastlane/metadata/**'
+      - 'fastlane/screenshots/**'
 
 permissions:
   contents: read

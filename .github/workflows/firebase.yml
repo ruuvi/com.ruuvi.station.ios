@@ -5,6 +5,9 @@ on:
     types:
       - closed
     branches: [main]
+    paths-ignore:
+      - 'fastlane/metadata/**'
+      - 'fastlane/screenshots/**'
 
   workflow_dispatch:
     inputs:
