@@ -1,7 +1,8 @@
-Förbättrad läsning av sensordata med longlife-firmware via NFC
-Förbättrad layout för den enkla kortvyn på instrumentpanelen
-Förbättrat stöd för molnanslutningar
-Förbättrad synkronisering av molndata efter att appen väckts från viloläge
-Åtgärdade ett problem där firmwareuppdateringar inte uppdaterade versionsnumret i inställningarna
-Åtgärdade ett problem där val av daggpunktsupplösning inte tillämpades i appen
-Andra mindre buggfixar och förbättringar
+* Larminställningar har flyttats till en ny sida
+* Ny förbättrad sensormeny
+* Förbättrad layout för historikvyn
+* Nya statusindikatorer för larm i hela appen
+* Möjlighet att bläddra mellan kort i sensormenyns vyer
+* Ny trepunktsmeny på instrumentpanelen
+* Väntande delningar visas på sensorns delningssida i inställningarna
+* Andra mindre buggfixar och förbättringar

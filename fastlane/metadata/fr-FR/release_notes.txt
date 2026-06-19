@@ -1,7 +1,8 @@
-Amélioration de la lecture des données capteur du firmware longlife via NFC
-Amélioration de la disposition de la vue simplifiée des cartes sur le tableau de bord
-Amélioration de la prise en charge des connexions Cloud
-Amélioration de la synchronisation des données Cloud après la réactivation de l’application
-Correction d’un problème où les mises à jour du firmware ne rafraîchissaient pas le numéro de version dans les paramètres
-Correction d’un problème où la sélection de la résolution du point de rosée n’était pas appliquée dans l’application
-Autres corrections de bugs mineurs et améliorations
+* Les paramètres d’alerte ont été déplacés vers une nouvelle page
+* Nouveau menu capteur amélioré
+* Mise en page améliorée de la vue historique
+* Nouveaux indicateurs d’état des alertes dans toute l’application
+* Possibilité de parcourir les cartes dans les vues du menu capteur
+* Nouveau menu à trois points sur le tableau de bord
+* Les partages en attente sont listés sur la page de partage des paramètres du capteur
+* Autres corrections de bugs mineurs et améliorations

@@ -1,7 +1,8 @@
-Parannettu longlife-laiteohjelmiston sensoridatan lukua NFC:llä
-Parannettu yksinkertaisen korttinäkymän asettelua koontinäytöllä
-Parannettu pilvipalveluyhteyksien tukea
-Parannettu pilvidatan synkronointia sovelluksen herätessä lepotilasta
-Korjattu ongelma, jossa laiteohjelmistopäivitys ei päivittänyt versionumeroa asetuksissa
-Korjattu ongelma, jossa kastepisteen resoluution valinta ei tullut käyttöön sovelluksessa
-Muita pienempiä parannuksia ja bugikorjauksia
+* Hälytysasetukset siirretty uudelle sivulle
+* Uusi parannettu anturivalikko
+* Parannettu historianäkymän asettelua
+* Uudet tilailmaisimet hälytyksille koko sovelluksessa
+* Mahdollisuus selata kortteja anturivalikon näkymissä
+* Uusi kolmen pisteen valikko koontinäytöllä
+* Odottavat jaot näkyvät anturiasetusten jakosivulla
+* Muita pieniä bugikorjauksia ja parannuksia
