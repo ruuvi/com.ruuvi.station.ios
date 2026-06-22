@@ -4,29 +4,12 @@ import UIKit
 
 class CardsRouter: NSObject, CardsRouterInput {
     weak var transitionHandler: UIViewController?
-    var cardsSettingsCoordinator: CardsSettingsCoordinator!
     private weak var dfuModule: DFUModuleInput?
 
     func dismiss() {
         transitionHandler?
             .navigationController?
             .popToRootViewController(animated: true)
-    }
-
-    func openTagSettings(
-        snapshot: RuuviTagCardSnapshot,
-        ruuviTag: RuuviTagSensor,
-        sensorSettings: SensorSettings?
-    ) {
-        guard let transitionHandler else { return }
-        cardsSettingsCoordinator = CardsSettingsCoordinator(
-            baseViewController: transitionHandler,
-            for: snapshot,
-            ruuviTagSensor: ruuviTag,
-            sensorSettings: sensorSettings,
-            delegate: self
-        )
-        cardsSettingsCoordinator.start()
     }
 
     func openUpdateFirmware(ruuviTag: RuuviTagSensor) {
@@ -67,14 +50,5 @@ extension CardsRouter: UIAdaptivePresentationControllerDelegate {
 extension CardsRouter: DFUModuleOutput {
     func dfuModuleSuccessfullyUpgraded(_ dfuModule: DFUModuleInput) {
         dfuModule.viewController.dismiss(animated: true)
-    }
-}
-
-extension CardsRouter: CardsSettingsCoordinatorDelegate {
-    func cardsSettingsCoordinatorDidDismiss(
-        _ coordinator: CardsSettingsCoordinator
-    ) {
-        cardsSettingsCoordinator.stop()
-        cardsSettingsCoordinator = nil
     }
 }

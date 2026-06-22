@@ -16,16 +16,3 @@ extension CardsMenuType {
         }
     }
 }
-
-extension CardsLegacyMenuType {
-    var icon: UIImage {
-        switch self {
-        case .alerts:
-            return RuuviAsset.CardsMenu.iconAlerts.image
-        case .measurementGraph:
-            return RuuviAsset.CardsMenu.iconGraph.image
-        case .settings:
-            return RuuviAsset.CardsMenu.iconSettings.image
-        }
-    }
-}

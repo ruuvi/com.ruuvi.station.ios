@@ -16,14 +16,7 @@ protocol DashboardRouterInput {
         snapshots: [RuuviTagCardSnapshot],
         ruuviTagSensors: [AnyRuuviTagSensor],
         sensorSettings: [SensorSettings],
-        activeMenu: CardsMenuType,
-        openSettings: Bool // Legacy flow support, we can remove this with new menu.
-    )
-    // Opens sensor settings.
-    func openTagSettings(
-        snapshot: RuuviTagCardSnapshot,
-        ruuviTag: RuuviTagSensor,
-        sensorSettings: SensorSettings?
+        activeMenu: CardsMenuType
     )
     func openUpdateFirmware(ruuviTag: RuuviTagSensor)
     func openMyRuuviAccount()

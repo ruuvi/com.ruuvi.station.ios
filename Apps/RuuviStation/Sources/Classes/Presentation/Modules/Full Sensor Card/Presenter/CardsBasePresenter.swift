@@ -198,7 +198,7 @@ extension CardsBasePresenter: CardsBaseViewOutput {
     }
 
     func viewDidChangeTab(_ tab: CardsMenuType) {
-        if flags.showNewCardsMenu, tab == .alerts || tab == .settings {
+        if tab == .alerts || tab == .settings {
             activeMenu = tab
             view?.showContentsForTab(tab)
             if tab == .alerts {
@@ -215,7 +215,7 @@ extension CardsBasePresenter: CardsBaseViewOutput {
         case .graph:
             viewDidRequestToShowGraph(for: snapshot, tab: tab)
         case .alerts, .settings:
-            viewDidRequestToShowSettings(for: snapshot, tab: tab)
+            break
         }
     }
 
@@ -270,7 +270,6 @@ extension CardsBasePresenter: CardsBaseViewOutput {
             measurementPresenter?.scroll(to: currentSnapshotIndex(), animated: false)
             graphPresenter?.scroll(to: currentSnapshotIndex(), animated: true)
         case .alerts, .settings:
-            guard flags.showNewCardsMenu else { return }
             measurementPresenter?.scroll(to: currentSnapshotIndex(), animated: false)
             if activeMenu == .alerts {
                 alertsPresenter?.start()
@@ -319,7 +318,7 @@ extension CardsBasePresenter: CardsBaseViewOutput {
         if let luid = snapshot.identifierData.luid {
             connectionPersistence.setKeepConnection(true, for: luid)
             settings.setKeepConnectionDialogWasShown(true, for: luid)
-            showTagSettings(for: snapshot)
+            viewDidChangeTab(.settings)
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
@@ -328,7 +327,7 @@ extension CardsBasePresenter: CardsBaseViewOutput {
     func viewDidDismissKeepConnectionDialogSettings(for snapshot: RuuviTagCardSnapshot) {
         if let luid = snapshot.identifierData.luid {
             settings.setKeepConnectionDialogWasShown(true, for: luid)
-            showTagSettings(for: snapshot)
+            viewDidChangeTab(.settings)
         } else {
             errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
         }
@@ -427,7 +426,6 @@ extension CardsBasePresenter: CardsSettingsPresenterOutput {
     }
 
     func cardSettingsDidRequestOpenAlerts(module _: any CardsSettingsPresenterInput) {
-        guard flags.showNewCardsMenu else { return }
         viewDidChangeTab(.alerts)
     }
 
@@ -762,56 +760,6 @@ private extension CardsBasePresenter {
             view?.showContentsForTab(tab)
             // Stop graph
             graphPresenter?.stop()
-        }
-    }
-
-    func viewDidRequestToShowSettings(
-        for snapshot: RuuviTagCardSnapshot,
-        tab: CardsMenuType
-    ) {
-        if let luid = snapshot.identifierData.luid {
-            let skipDialogShown   = settings.keepConnectionDialogWasShown(for: luid)
-            let isConnected       = snapshot.connectionData.isConnected
-            let isNotConnectable  = !snapshot.connectionData.isConnectable
-            let isNotOwner        = !snapshot.metadata.isOwner
-            let cloudModeBypass   = settings.cloudModeEnabled && snapshot.metadata.isCloud
-            let firmwareType      = RuuviDataFormat.dataFormat(
-                from: snapshot.displayData.version.bound
-            )
-            let isAir             = firmwareType == .e1 || firmwareType == .v6
-
-            if skipDialogShown
-                || isConnected
-                || isNotConnectable
-                || isNotOwner
-                || cloudModeBypass
-                || isAir {
-                showTagSettings(for: snapshot)
-            } else {
-                view?.showKeepConnectionDialogSettings(for: snapshot)
-            }
-        } else if snapshot.identifierData.mac != nil {
-            showTagSettings(for: snapshot)
-        } else {
-            errorPresenter.present(error: UnexpectedError.viewModelUUIDIsNil)
-        }
-    }
-
-    func showTagSettings(for snapshot: RuuviTagCardSnapshot) {
-        if let sensor = ruuviTagSensors.first(where: {
-            $0.id == snapshot.id ||
-            ($0.luid?.any != nil && ($0.luid?.any == snapshot.identifierData.luid?.any)) ||
-            ($0.macId?.any != nil && ($0.macId?.any == snapshot.identifierData.mac?.any))
-        }) {
-            let settings = sensorSettings.first(where: {
-                ($0.luid?.any != nil && ($0.luid?.any == sensor.luid?.any)) ||
-                ($0.macId?.any != nil && ($0.macId?.any == sensor.macId?.any))
-            })
-            router?.openTagSettings(
-                snapshot: snapshot,
-                ruuviTag: sensor,
-                sensorSettings: settings
-            )
         }
     }
 

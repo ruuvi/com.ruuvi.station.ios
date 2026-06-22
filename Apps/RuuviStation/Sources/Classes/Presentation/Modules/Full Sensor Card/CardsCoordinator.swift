@@ -38,7 +38,6 @@ class CardsCoordinator: RuuviCoordinator {
     private var ruuviTagSensors: [AnyRuuviTagSensor] = []
     private var sensorSettings: [SensorSettings] = []
     private var activeMenu: CardsMenuType = .measurement
-    private var showSettings: Bool = false // Legacy
     private var tabs: [CardsMenuType: UIViewController] = [:]
 
     private weak var delegate: CardsCoordinatorDelegate?
@@ -50,8 +49,7 @@ class CardsCoordinator: RuuviCoordinator {
         ruuviTagSensors: [AnyRuuviTagSensor],
         sensorSettings: [SensorSettings],
         activeMenu: CardsMenuType,
-        delegate: CardsCoordinatorDelegate?,
-        showSettings: Bool
+        delegate: CardsCoordinatorDelegate?
     ) {
         super.init(baseViewController: baseViewController)
         self.snapshot = snapshot
@@ -59,7 +57,6 @@ class CardsCoordinator: RuuviCoordinator {
         self.ruuviTagSensors = ruuviTagSensors
         self.sensorSettings = sensorSettings
         self.activeMenu = activeMenu
-        self.showSettings = showSettings
         self.delegate = delegate
     }
 
@@ -73,29 +70,10 @@ class CardsCoordinator: RuuviCoordinator {
             return
         }
 
-        if showSettings {
-            navigationController.pushViewController(
-                cardsBaseViewController,
-                animated: false
-            )
-
-            if let ruuviTag = resolveSensor(for: snapshot) {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self,
-                          let cardsRouter = self.cardsRouter else { return }
-                    cardsRouter.openTagSettings(
-                        snapshot: self.snapshot,
-                        ruuviTag: ruuviTag,
-                        sensorSettings: self.resolveSensorSettings(for: ruuviTag)
-                    )
-                }
-            }
-        } else {
-            navigationController.pushViewController(
-                cardsBaseViewController,
-                animated: true
-            )
-        }
+        navigationController.pushViewController(
+            cardsBaseViewController,
+            animated: true
+        )
     }
 
     override func stop() {
@@ -294,7 +272,6 @@ private extension CardsCoordinator {
     ) -> CardsSettingsViewController {
         cardsSettingsRouter = CardsSettingsRouter()
         let r = AppAssembly.shared.assembler.resolver
-        let flags = r.resolve(RuuviLocalFlags.self)!
         let measurementService = r.resolve(RuuviServiceMeasurement.self)!
         let presenter = CardsSettingsPresenter(
             ruuviSensorPropertiesService: r.resolve(RuuviServiceSensorProperties.self)!,
@@ -306,32 +283,16 @@ private extension CardsCoordinator {
         let viewController = CardsSettingsViewController(
             snapshot: snapshot,
             measurementService: measurementService,
-            showsAlertSections: !flags.showNewCardsMenu,
-            showsAlertShortcutSection: flags.showNewCardsMenu
+            showsAlertSections: false,
+            showsAlertShortcutSection: true
         )
         viewController.output = presenter
-        if flags.showNewCardsMenu {
-            presenter.view = viewController
-            presenter.router = cardsSettingsRouter
-            presenter.output = self
-            cardsSettingsRouter.transitionHandler = viewController
-        }
+        presenter.view = viewController
+        presenter.router = cardsSettingsRouter
+        presenter.output = self
+        cardsSettingsRouter.transitionHandler = viewController
         cardsSettingsViewPresenter = presenter
         return viewController
-    }
-
-    func resolveSensor(for snapshot: RuuviTagCardSnapshot) -> AnyRuuviTagSensor? {
-        ruuviTagSensors.first { sensor in
-            sensor.luid?.any == snapshot.identifierData.luid?.any ||
-                sensor.macId?.any == snapshot.identifierData.mac?.any
-        }
-    }
-
-    func resolveSensorSettings(for sensor: AnyRuuviTagSensor) -> SensorSettings? {
-        sensorSettings.first { settings in
-            settings.luid?.any == sensor.luid?.any ||
-                settings.macId?.any == sensor.macId?.any
-        }
     }
 
 }

@@ -129,21 +129,11 @@ extension DashboardPresenter: DashboardViewOutput {
     }
 
     func viewDidTriggerSettings(for snapshot: RuuviTagCardSnapshot) {
-        if flags.showNewCardsMenu {
-            openCardView(for: snapshot, activeMenu: .settings)
-            return
-        }
-
-        viewDidAskToOpenSensorSettings(for: snapshot, isNewlyAdded: false)
+        openCardView(for: snapshot, activeMenu: .settings)
     }
 
     func viewDidTriggerAlerts(for snapshot: RuuviTagCardSnapshot) {
-        if flags.showNewCardsMenu {
-            openCardView(for: snapshot, activeMenu: .alerts)
-            return
-        }
-
-        viewDidAskToOpenSensorSettings(for: snapshot, isNewlyAdded: false)
+        openCardView(for: snapshot, activeMenu: .alerts)
     }
 
     func viewDidTriggerChart(for snapshot: RuuviTagCardSnapshot) {
@@ -225,29 +215,21 @@ extension DashboardPresenter: DashboardViewOutput {
 
     func viewDidDismissKeepConnectionDialogSettings(
         for snapshot: RuuviTagCardSnapshot,
-        newlyAddedSensor: Bool
+        newlyAddedSensor _: Bool
     ) {
         markKeepConnectionDialogShown(for: snapshot)
-        guard let sensor = serviceCoordinatorManager.getSensor(for: snapshot.id) else { return }
-        openTagSettings(
-            for: snapshot,
-            sensor: sensor,
-            isNewlyAdded: newlyAddedSensor
-        )
+        guard serviceCoordinatorManager.getSensor(for: snapshot.id) != nil else { return }
+        openCardSettings(for: snapshot)
     }
 
     func viewDidConfirmToKeepConnectionSettings(
         to snapshot: RuuviTagCardSnapshot,
-        newlyAddedSensor: Bool
+        newlyAddedSensor _: Bool
     ) {
         serviceCoordinatorManager.setKeepConnection(true, for: snapshot)
         markKeepConnectionDialogShown(for: snapshot)
-        guard let sensor = serviceCoordinatorManager.getSensor(for: snapshot.id) else { return }
-        openTagSettings(
-            for: snapshot,
-            sensor: sensor,
-            isNewlyAdded: newlyAddedSensor
-        )
+        guard serviceCoordinatorManager.getSensor(for: snapshot.id) != nil else { return }
+        openCardSettings(for: snapshot)
     }
 
     func viewDidChangeDashboardType(dashboardType: DashboardType) {
@@ -382,15 +364,13 @@ private extension DashboardPresenter {
         }
     }
 
-    // When newSensor is True, sensor settings page is open as a child
-    // view controller with full sensor card injected before the settings
-    // so that user can come back to full sensor card using back button from
-    // settings
+    // Newly added sensors may pass through the keep-connection prompt first,
+    // then continue to the full sensor card with Settings selected.
     func viewDidAskToOpenSensorSettings(
         for snapshot: RuuviTagCardSnapshot,
         isNewlyAdded: Bool
     ) {
-        guard let sensor = coordinatorSensor(for: snapshot) else { return }
+        guard coordinatorSensor(for: snapshot) != nil else { return }
 
         let (isConnected, _ ) = serviceCoordinatorManager.getConnectionStatus(for: snapshot)
         let firmwareType = RuuviDataFormat.dataFormat(
@@ -406,10 +386,8 @@ private extension DashboardPresenter {
                 || !snapshot.connectionData.isConnectable
                 || !snapshot.metadata.isOwner
                 || cloudModeBypass {
-                openTagSettings(
-                    for: snapshot,
-                    sensor: sensor,
-                    isNewlyAdded: isNewlyAdded
+                openCardSettings(
+                    for: snapshot
                 )
             } else {
                 view?
@@ -419,55 +397,26 @@ private extension DashboardPresenter {
                     )
             }
         } else {
-            openTagSettings(
-                for: snapshot,
-                sensor: sensor,
-                isNewlyAdded: isNewlyAdded
+            openCardSettings(
+                for: snapshot
             )
         }
     }
 
-    func openTagSettings(
-        for snapshot: RuuviTagCardSnapshot,
-        sensor: AnyRuuviTagSensor,
-        isNewlyAdded: Bool = false
+    func openCardSettings(
+        for snapshot: RuuviTagCardSnapshot
     ) {
         let sensorSettings = coordinatorSensorSettings()
-        let relevantSetting = sensorSettings.first { setting in
-            (setting.luid?.any != nil && setting.luid?.any == snapshot.identifierData.luid?.any) ||
-            (setting.macId?.any != nil && setting.macId?.any == snapshot.identifierData.mac?.any)
-        }
+        let allSnapshots = coordinatorSnapshots()
+        let allSensors = coordinatorSensors()
 
-        if isNewlyAdded {
-            let allSnapshots = coordinatorSnapshots()
-            let allSensors = coordinatorSensors()
-
-            if flags.showNewCardsMenu {
-                router.openFullSensorCard(
-                    for: snapshot,
-                    snapshots: allSnapshots,
-                    ruuviTagSensors: allSensors,
-                    sensorSettings: sensorSettings,
-                    activeMenu: .settings,
-                    openSettings: false
-                )
-            } else {
-                router.openFullSensorCard(
-                    for: snapshot,
-                    snapshots: allSnapshots,
-                    ruuviTagSensors: allSensors,
-                    sensorSettings: sensorSettings,
-                    activeMenu: .measurement,
-                    openSettings: true
-                )
-            }
-        } else {
-            router.openTagSettings(
-                snapshot: snapshot,
-                ruuviTag: sensor,
-                sensorSettings: relevantSetting
-            )
-        }
+        router.openFullSensorCard(
+            for: snapshot,
+            snapshots: allSnapshots,
+            ruuviTagSensors: allSensors,
+            sensorSettings: sensorSettings,
+            activeMenu: .settings
+        )
     }
 
     func openCardView(
@@ -509,8 +458,7 @@ private extension DashboardPresenter {
             snapshots: allSnapshots,
             ruuviTagSensors: allSensors,
             sensorSettings: sensorSettings,
-            activeMenu: activeMenu,
-            openSettings: false
+            activeMenu: activeMenu
         )
     }
 }

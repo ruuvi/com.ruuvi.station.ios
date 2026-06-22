@@ -11,7 +11,6 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     private weak var dfuModule: DFUModuleInput?
     var settings: RuuviLocalSettings!
     var cardsCoordinator: CardsCoordinator!
-    var cardsSettingsCoordinator: CardsSettingsCoordinator!
 
     // swiftlint:disable weak_delegate
     var menuTableInteractiveTransition: MenuTableTransitioningDelegate!
@@ -97,30 +96,13 @@ class DashboardRouter: NSObject, DashboardRouterInput {
 
     }
 
-    func openTagSettings(
-        snapshot: RuuviTagCardSnapshot,
-        ruuviTag: RuuviTagSensor,
-        sensorSettings: SensorSettings?
-    ) {
-        guard let transitionHandler else { return }
-        cardsSettingsCoordinator = CardsSettingsCoordinator(
-            baseViewController: transitionHandler,
-            for: snapshot,
-            ruuviTagSensor: ruuviTag,
-            sensorSettings: sensorSettings,
-            delegate: self
-        )
-        cardsSettingsCoordinator.start()
-    }
-
     // swiftlint:disable:next function_parameter_count
     func openFullSensorCard(
         for snapshot: RuuviTagCardSnapshot,
         snapshots: [RuuviTagCardSnapshot],
         ruuviTagSensors: [AnyRuuviTagSensor],
         sensorSettings: [SensorSettings],
-        activeMenu: CardsMenuType,
-        openSettings: Bool
+        activeMenu: CardsMenuType
     ) {
         cardsCoordinator = CardsCoordinator(
             baseViewController: transitionHandler,
@@ -129,8 +111,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
             ruuviTagSensors: ruuviTagSensors,
             sensorSettings: sensorSettings,
             activeMenu: activeMenu,
-            delegate: self,
-            showSettings: openSettings
+            delegate: self
         )
         cardsCoordinator.start()
     }
@@ -191,15 +172,6 @@ extension DashboardRouter: CardsCoordinatorDelegate {
     func cardsCoordinatorDidDismiss(_ coordinator: CardsCoordinator) {
         cardsCoordinator.stop()
         cardsCoordinator = nil
-    }
-}
-
-extension DashboardRouter: CardsSettingsCoordinatorDelegate {
-    func cardsSettingsCoordinatorDidDismiss(
-        _ coordinator: CardsSettingsCoordinator
-    ) {
-        cardsSettingsCoordinator.stop()
-        cardsSettingsCoordinator = nil
     }
 }
 

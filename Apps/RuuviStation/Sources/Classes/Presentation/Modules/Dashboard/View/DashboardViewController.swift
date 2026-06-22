@@ -633,7 +633,7 @@ private extension DashboardViewController {
             .configure(
                 with: snapshot,
                 dashboardType: dashboardType,
-                showsAlertBadge: flags.showNewCardsMenu
+                showsAlertBadge: flags.showNewSettings
             )
         cell.delegate = self
         cell.setMenu(cardContextMenuOption(for: indexPath))
@@ -1482,11 +1482,7 @@ extension DashboardViewController: NewDashboardViewInput {
 // MARK: - RuuviTagDashboardCellDelegate
 extension DashboardViewController: DashboardCellDelegate {
     func didTapAlertButton(for snapshot: RuuviTagCardSnapshot) {
-        if flags.showNewCardsMenu {
-            output.viewDidTriggerAlerts(for: snapshot)
-        } else {
-            output.viewDidTriggerSettings(for: snapshot)
-        }
+        output.viewDidTriggerAlerts(for: snapshot)
     }
 
     func didChangeMoreButtonMenuPresentationState(

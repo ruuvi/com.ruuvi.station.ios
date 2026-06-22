@@ -7,7 +7,7 @@ import RuuviLocalization
 import RuuviOntology
 
 enum CardsSettingsAlertDisplayMode {
-    // TODO: Remove legacy alert settings display mode once the new cards menu goes to production.
+    // TODO: Remove legacy alert settings display mode when showNewSettings is fully rolled out.
     case legacySettings
     case alerts
 
@@ -283,7 +283,7 @@ struct CardsSettingsAlertSectionRow: View {
         return AppDateFormatter.shared.shortTimeString(from: date)
     }
 
-    // TODO: Remove legacy alert icon helpers once the new cards menu goes to production.
+    // TODO: Remove legacy alert icon helpers when showNewSettings is fully rolled out.
     private var legacyAlertIconImage: Image? {
         if let muted = model.headerState.mutedTill,
            muted > Date() {
@@ -358,7 +358,7 @@ private struct CardsSettingsAlertSectionContentView: View {
         }
     }
 
-    // TODO: Remove legacy settings content once the new cards menu goes to production.
+    // TODO: Remove legacy settings content when showNewSettings is fully rolled out.
     private var legacySettingsContent: some View {
         VStack(spacing: 0) {
             if let notice = model.configuration.noticeText {
@@ -611,7 +611,7 @@ private struct CardsSettingsAlertSectionRowHeader: View {
         .background(RuuviColor.tagSettingsItemHeaderColor.swiftUIColor)
     }
 
-    // TODO: Remove legacy regular header once the new cards menu goes to production.
+    // TODO: Remove legacy regular header when showNewSettings is fully rolled out.
     private var legacyRegularHeader: some View {
         HStack(spacing: headerControlSpacing) {
             HStack(spacing: headerControlSpacing) {
@@ -771,7 +771,7 @@ private struct CardsSettingsAlertSectionRowHeader: View {
         }
     }
 
-    // TODO: Remove legacy header metrics once the new cards menu goes to production.
+    // TODO: Remove legacy header metrics when showNewSettings is fully rolled out.
     private var legacyHeaderLeadingPadding: CGFloat {
         Constants.spacing
     }
@@ -819,14 +819,14 @@ private struct CardsSettingsAlertSectionRowHeader: View {
         }
     }
 
-    // TODO: Remove legacy compact header title once the new cards menu goes to production.
+    // TODO: Remove legacy compact header title when showNewSettings is fully rolled out.
     private var legacyCompactHeaderTitle: some View {
         Text(model.legacyTitle)
             .ruuviHeadline()
             .foregroundStyle(RuuviColor.dashboardIndicator.swiftUIColor)
     }
 
-    // TODO: Remove legacy dropdown arrow once the new cards menu goes to production.
+    // TODO: Remove legacy dropdown arrow when showNewSettings is fully rolled out.
     private var legacyDropdownArrow: some View {
         RuuviAsset.arrowDropDown.swiftUIImage
             .foregroundColor(RuuviColor.tintColor.swiftUIColor)

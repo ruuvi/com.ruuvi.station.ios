@@ -5,9 +5,6 @@ public protocol RuuviLocalFlags {
     // TODO: Move legacy feature flags here
     // MARK: End Legacy flags
 
-    /// When enabled show Sensor Card UI with New Menu
-    var showNewCardsMenu: Bool { get set }
-
     /// When enabled show Sensor Card Settings UI with New Settings
     var showNewSettings: Bool { get set }
 

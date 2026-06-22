@@ -6,6 +6,7 @@ final class CardsMenuButton: UIButton {
 
     // MARK: - Properties
     let menuType: CardsMenuType
+    private let showsAlertBadge: Bool
     private let iconImageView = UIImageView()
     private let alertBellButton = AlertBellButton()
 
@@ -15,8 +16,12 @@ final class CardsMenuButton: UIButton {
     }
 
     // MARK: - Initialization
-    init(menuType: CardsMenuType) {
+    init(
+        menuType: CardsMenuType,
+        showsAlertBadge: Bool
+    ) {
         self.menuType = menuType
+        self.showsAlertBadge = showsAlertBadge
         super.init(frame: .zero)
         setupUI()
     }
@@ -129,6 +134,7 @@ final class CardsMenuButton: UIButton {
 
     private func updateAlertBadge(for snapshot: RuuviTagCardSnapshot) {
         guard menuType == .alerts,
+              showsAlertBadge,
               let badgeData = snapshot.alertBadgeData() else {
             alertBellButton.hideBadge()
             return

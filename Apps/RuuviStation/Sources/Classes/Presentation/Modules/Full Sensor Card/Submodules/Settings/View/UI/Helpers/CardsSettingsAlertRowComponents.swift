@@ -7,7 +7,7 @@ enum CardsSettingsAlertActionRowTitle {
 }
 
 // MARK: CardsSettingsLegacyActionRow
-// TODO: Remove legacy alert action row once the new cards menu goes to production.
+// TODO: Remove legacy alert action row when showNewSettings is fully rolled out.
 struct CardsSettingsLegacyActionRow: View {
     let title: CardsSettingsAlertActionRowTitle
     let icon: Image?
@@ -147,7 +147,7 @@ struct CardsSettingsAlertCustomMessageRow: View {
 }
 
 // MARK: CardsSettingsLegacyNoticeRow
-// TODO: Remove legacy alert notice row once the new cards menu goes to production.
+// TODO: Remove legacy alert notice row when showNewSettings is fully rolled out.
 struct CardsSettingsLegacyNoticeRow: View {
     let text: String
 
@@ -208,7 +208,7 @@ struct CardsSettingsAlertNoticeRow: View {
 }
 
 // MARK: CardsSettingsLegacyInfoRow
-// TODO: Remove legacy alert additional info row once the new cards menu goes to production.
+// TODO: Remove legacy alert additional info row when showNewSettings is fully rolled out.
 struct CardsSettingsLegacyInfoRow: View {
     let text: String
 
@@ -259,7 +259,7 @@ struct CardsSettingsAlertInfoRow: View {
 }
 
 // MARK: CardsSettingsLegacyLatestRow
-// TODO: Remove legacy latest measurement row once the new cards menu goes to production.
+// TODO: Remove legacy latest measurement row when showNewSettings is fully rolled out.
 struct CardsSettingsLegacyLatestRow: View {
     let text: String
 

@@ -69,12 +69,10 @@ final class CardsBaseViewController: UIViewController {
             Constants.Layout.spaceUntilSecondaryToolbarExtraMargin
     }
 
-    // MARK: Depenencies
-    private let flags: RuuviLocalFlags
-
     // MARK: Properties
     /// Mapping of tab identifier to its view controller
     private let tabs: [CardsMenuType: UIViewController]
+    private let flags: RuuviLocalFlags
 
     /// Currently visible tab
     private var activeTab: CardsMenuType
@@ -136,7 +134,7 @@ final class CardsBaseViewController: UIViewController {
 
     private lazy var menuBarView: CardsMenuBarView = {
         let view = CardsMenuBarView(
-            menuMode: flags.showNewCardsMenu ? .modern : .legacy
+            showsAlertBadge: flags.showNewSettings
         )
         view.setSelectedTab(activeTab, notify: false)
         view.backgroundColor = .clear
@@ -550,29 +548,17 @@ private extension CardsBaseViewController {
     }
 
     private func embedChildViewControllers() {
-        if flags.showNewCardsMenu {
-            for (tab, vc) in tabs {
-                addChild(vc)
-                vc.view.overrideUserInterfaceStyle = .dark
-                tabContainerView.addSubview(vc.view)
-                if tab == .measurement || tab == .graph {
-                    vc.view.fillSuperviewToSafeArea()
-                } else if tab == .alerts || tab == .settings {
-                    vc.view.fillSuperview()
-                }
-                vc.didMove(toParent: self)
-                vc.view.isHidden = tab != activeTab
-            }
-        } else {
-            for (tab, vc) in tabs {
-                if tab == .settings { continue }
-                addChild(vc)
-                vc.view.overrideUserInterfaceStyle = .unspecified
-                tabContainerView.addSubview(vc.view)
+        for (tab, vc) in tabs {
+            addChild(vc)
+            vc.view.overrideUserInterfaceStyle = .dark
+            tabContainerView.addSubview(vc.view)
+            if tab == .measurement || tab == .graph {
                 vc.view.fillSuperviewToSafeArea()
-                vc.didMove(toParent: self)
-                vc.view.isHidden = tab != activeTab
+            } else if tab == .alerts || tab == .settings {
+                vc.view.fillSuperview()
             }
+            vc.didMove(toParent: self)
+            vc.view.isHidden = tab != activeTab
         }
     }
 }
@@ -642,15 +628,6 @@ private extension CardsBaseViewController {
     }
 
     func updateHeaderSubtitle(for tab: CardsMenuType, animated: Bool = false) {
-        guard flags.showNewCardsMenu else {
-            UIView.performWithoutAnimation {
-                self.pageTitleLabel.text = nil
-                self.pageTitleLabel.alpha = 0
-                self.pageTitleLabel.isHidden = true
-            }
-            return
-        }
-
         let subtitle = headerSubtitle(for: tab)
         let shouldShowSubtitle = subtitle != nil
 
@@ -687,10 +664,6 @@ private extension CardsBaseViewController {
     }
 
     func headerSubtitle(for tab: CardsMenuType) -> String? {
-        guard flags.showNewCardsMenu else {
-            return nil
-        }
-
         switch tab {
         case .alerts:
             return RuuviLocalization.TagSettings.Label.Alerts.text
@@ -772,15 +745,6 @@ private extension CardsBaseViewController {
             return
         }
         let hasSnapshot = currentSnapshotIndex < currentSnapshots.count
-        guard flags.showNewCardsMenu else {
-            footerView.isHidden = !hasSnapshot
-            footerView.alpha = 1
-            footerStackHeightConstraint.constant = Constants.Layout.footerStackHeight
-            applyFooterBottomLayout(extendToBottom: false)
-            applyFooterLayoutIfNeeded()
-            return
-        }
-
         let shouldExtendToBottom = tab == .alerts || tab == .settings
         applyFooterBottomLayout(extendToBottom: shouldExtendToBottom)
 
@@ -934,23 +898,12 @@ extension CardsBaseViewController: CardsBaseViewInput {
     }
 
     func showContentsForTab(_ tab: CardsMenuType) {
-        if flags.showNewCardsMenu {
-            updateTabBackground(for: tab, animated: true)
-            showTabViewController(for: tab)
-            activeTab = tab
-            updateHeaderSubtitle(for: tab, animated: true)
-            menuBarView.setSelectedTab(tab, animated: true)
-            updateFooterVisibility(for: tab, animated: true)
-        } else {
-            switch tab {
-            case .measurement, .graph:
-                updateTabBackground(for: tab, animated: true)
-                showTabViewController(for: tab)
-                activeTab = tab
-            default:
-                break
-            }
-        }
+        updateTabBackground(for: tab, animated: true)
+        showTabViewController(for: tab)
+        activeTab = tab
+        updateHeaderSubtitle(for: tab, animated: true)
+        menuBarView.setSelectedTab(tab, animated: true)
+        updateFooterVisibility(for: tab, animated: true)
     }
 
     func setSnapshots(_ snapshots: [RuuviTagCardSnapshot]) {

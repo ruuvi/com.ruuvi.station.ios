@@ -6,12 +6,11 @@ final class CardsMenuBarView: UIView {
     // MARK: - Properties
     private let stackView = UIStackView()
     private let underlineView = UIView()
-    private var modernButtons: [CardsMenuButton] = []
-    private var legacyButtons: [CardsLegacyMenuButton] = []
+    private var buttons: [CardsMenuButton] = []
     private var underlineLeadingConstraint: NSLayoutConstraint!
     private var selectedMenu: CardsMenuType = .measurement
-    private let mode: CardsMenuMode
     private var hasAppeared = false
+    private let showsAlertBadge: Bool
 
     // MARK: - Constants
     private enum Constants {
@@ -31,8 +30,8 @@ final class CardsMenuBarView: UIView {
     var onTabChanged: ((CardsMenuType) -> Void)?
 
     // MARK: - Initialization
-    init(menuMode: CardsMenuMode) {
-        self.mode = menuMode
+    init(showsAlertBadge: Bool) {
+        self.showsAlertBadge = showsAlertBadge
         super.init(frame: .zero)
         setupUI()
     }
@@ -50,11 +49,7 @@ final class CardsMenuBarView: UIView {
         guard tab != selectedMenu else { return }
         selectedMenu = tab
 
-        if mode == .modern {
-            updateSelection(animated: animated)
-        } else {
-            updateLegacySelection()
-        }
+        updateSelection(animated: animated)
 
         if notify {
             onTabChanged?(tab)
@@ -66,18 +61,14 @@ final class CardsMenuBarView: UIView {
     }
 
     func updateAlertState(for snapshot: RuuviTagCardSnapshot?) {
-        if mode == .modern {
-            modernButtons.first(where: { $0.menuType == .alerts })?.updateAlertState(for: snapshot)
-        } else {
-            legacyButtons.first(where: { $0.menuType == .alerts })?.updateAlertState(for: snapshot)
-        }
+        buttons.first(where: { $0.menuType == .alerts })?.updateAlertState(for: snapshot)
     }
 
     // MARK: - Layout
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        guard mode == .modern && bounds.width > 0 else { return }
+        guard bounds.width > 0 else { return }
 
         if !hasAppeared {
             hasAppeared = true
@@ -91,42 +82,26 @@ final class CardsMenuBarView: UIView {
     private func setupUI() {
         backgroundColor = .clear
 
-        if mode == .modern {
-            setupModernUI()
-        } else {
-            setupLegacyUI()
-        }
+        setupUIContent()
 
         setupStackView()
         setupConstraints()
     }
 
-    private func setupModernUI() {
-        createModernButtons()
+    private func setupUIContent() {
+        createButtons()
         setupUnderlineView()
         addSubview(stackView)
         addSubview(underlineView)
     }
 
-    private func setupLegacyUI() {
-        createLegacyButtons()
-        addSubview(stackView)
-    }
-
-    private func createModernButtons() {
-        modernButtons = CardsMenuType.allCases.map { menuType in
-            let button = CardsMenuButton(menuType: menuType)
-            button.addTarget(self, action: #selector(modernButtonTapped(_:)), for: .touchUpInside)
-            stackView.addArrangedSubview(button)
-            button.size(width: Constants.buttonSize, height: Constants.buttonSize)
-            return button
-        }
-    }
-
-    private func createLegacyButtons() {
-        legacyButtons = CardsLegacyMenuType.allCases.map { menuType in
-            let button = CardsLegacyMenuButton(menuType: menuType)
-            button.addTarget(self, action: #selector(legacyButtonTapped(_:)), for: .touchUpInside)
+    private func createButtons() {
+        buttons = CardsMenuType.allCases.map { menuType in
+            let button = CardsMenuButton(
+                menuType: menuType,
+                showsAlertBadge: showsAlertBadge
+            )
+            button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
             stackView.addArrangedSubview(button)
             button.size(width: Constants.buttonSize, height: Constants.buttonSize)
             return button
@@ -148,14 +123,6 @@ final class CardsMenuBarView: UIView {
     }
 
     private func setupConstraints() {
-        if mode == .modern {
-            setupModernConstraints()
-        } else {
-            setupLegacyConstraints()
-        }
-    }
-
-    private func setupModernConstraints() {
         underlineLeadingConstraint = underlineView.leadingAnchor.constraint(equalTo: leadingAnchor)
 
         NSLayoutConstraint.activate([
@@ -171,59 +138,23 @@ final class CardsMenuBarView: UIView {
         ])
     }
 
-    private func setupLegacyConstraints() {
-        stackView.fillSuperview()
-    }
-
     // MARK: - Button Actions
-    @objc private func modernButtonTapped(_ sender: CardsMenuButton) {
+    @objc private func buttonTapped(_ sender: CardsMenuButton) {
         guard sender.menuType != selectedMenu else { return }
         selectedMenu = sender.menuType
         updateSelection(animated: true)
         onTabChanged?(selectedMenu)
     }
 
-    @objc private func legacyButtonTapped(_ sender: CardsLegacyMenuButton) {
-        handleLegacyButtonTap(for: sender.menuType)
-        updateLegacySelection()
-    }
-
-    private func handleLegacyButtonTap(for menuType: CardsLegacyMenuType) {
-        switch menuType {
-        case .measurementGraph:
-            toggleMeasurementGraph()
-        case .alerts:
-            onTabChanged?(.alerts)
-        case .settings:
-            onTabChanged?(.settings)
-        }
-    }
-
-    private func toggleMeasurementGraph() {
-        selectedMenu = selectedMenu == .measurement ? .graph : .measurement
-        onTabChanged?(selectedMenu)
-    }
-
     // MARK: - Selection Updates
-    private func updateLegacySelection() {
-        guard let measurementGraphButton = legacyButtons.first(where: {
-            $0.menuType == .measurementGraph
-        }) else { return }
-
-        if selectedMenu == .measurement || selectedMenu == .graph {
-            measurementGraphButton.setCurrentSubType(selectedMenu)
-        }
-    }
-
     private func updateSelection(animated: Bool) {
-        guard mode == .modern,
-              let selectedButtonIndex = modernButtons.firstIndex(where: {
+        guard let selectedButtonIndex = buttons.firstIndex(where: {
                   $0.menuType == selectedMenu
               }) else { return }
 
         layoutIfNeeded()
         stackView.layoutIfNeeded()
-        let selectedButton = modernButtons[selectedButtonIndex]
+        let selectedButton = buttons[selectedButtonIndex]
 
         let buttonCenterX = selectedButton.frame.midX
         let newConstant = buttonCenterX - (Constants.underlineWidth / 2)
@@ -251,10 +182,10 @@ final class CardsMenuBarView: UIView {
     }
 
     private func updateUnderlinePosition() {
-        guard let selectedButtonIndex = modernButtons.firstIndex(where: { $0.menuType == selectedMenu }) else { return }
+        guard let selectedButtonIndex = buttons.firstIndex(where: { $0.menuType == selectedMenu }) else { return }
 
         stackView.layoutIfNeeded()
-        let selectedButton = modernButtons[selectedButtonIndex]
+        let selectedButton = buttons[selectedButtonIndex]
         let buttonCenterX = selectedButton.frame.midX
         underlineLeadingConstraint.constant = buttonCenterX - (Constants.underlineWidth / 2)
     }
