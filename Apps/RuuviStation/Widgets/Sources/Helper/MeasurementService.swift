@@ -208,10 +208,31 @@ extension MeasurementService {
         for co2: Double?,
         and pm25: Double?,
     ) -> String {
+        let display = aqiDisplay(for: co2, and: pm25)
+        return "\(display.currentScore)"
+    }
+
+    public func aqiDisplay(
+        for co2: Double?,
+        and pm25: Double?
+        // swiftlint:disable:next large_tuple
+    ) -> (
+        currentScore: Int,
+        maxScore: Int,
+        state: MeasurementQualityState
+    ) {
+        guard co2 != nil, pm25 != nil else {
+            return (0, 100, .undefined(0))
+        }
+
         let currentScore = calculateAQI(co2: co2, pm25: pm25)
             .rounded(.toNearestOrAwayFromZero)
-        let intScrore = Int(exactly: currentScore) ?? 0
-        return "\(intScrore)"
+        let intScore = Int(exactly: currentScore) ?? 0
+        return (
+            currentScore: intScore,
+            maxScore: 100,
+            state: airQualityState(for: currentScore)
+        )
     }
 
     public func string(for double: Double?) -> String {
@@ -291,5 +312,22 @@ extension MeasurementService {
         let distance = hypot(dx, dy)
 
         return clamped((AQIConstants.maxValue - distance), to: 0...AQIConstants.maxValue)
+    }
+
+    // This must mirror the RuuviServiceMeasurementImpl.
+    // TODO: Find a way to share the logic between main app and extension target.
+    private func airQualityState(for score: Double) -> MeasurementQualityState {
+        switch score {
+        case 89.5...:
+            return .excellent(score)
+        case 79.5..<89.5:
+            return .good(score)
+        case 49.5..<79.5:
+            return .fair(score)
+        case 9.5..<49.5:
+            return .poor(score)
+        default:
+            return .veryPoor(score)
+        }
     }
 }

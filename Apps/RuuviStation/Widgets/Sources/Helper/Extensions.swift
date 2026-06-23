@@ -7,7 +7,6 @@ import RuuviLocalization
 
 // Necessary colors used on the widgets
 extension Color {
-    static let logoColor = Color("LogoColor")
     static let backgroundColor = Color("BackgroundColor")
     static let dashboardBackgroundColor = RuuviColor.dashboardBG.swiftUIColor
     static let dashboardCardBackgroundColor = RuuviColor.dashboardCardBG.swiftUIColor

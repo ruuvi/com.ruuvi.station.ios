@@ -24,6 +24,19 @@ struct WidgetIndicatorDisplayItem: Identifiable, Hashable {
     }
 }
 
+struct WidgetAirQualityDisplay {
+    let currentScore: Int
+    let maxScore: Int
+    let state: MeasurementQualityState
+
+    var progress: CGFloat {
+        guard maxScore > 0 else {
+            return 0
+        }
+        return CGFloat(min(max(Double(currentScore) / Double(maxScore), 0), 1))
+    }
+}
+
 public final class WidgetViewModel {
     private let widgetAssembly = WidgetAssembly.shared.assembler.resolver
     private let appGroupDefaults = UserDefaults(suiteName: Constants.appGroupBundleId.rawValue)
@@ -178,6 +191,39 @@ public extension WidgetViewModel {
         return unit(
             for: variant,
             appSettings: appSettings
+        )
+    }
+
+    internal func isAirQualitySelection(_ config: SingleSensorWidgetConfiguration) -> Bool {
+        let appSettings = getAppSettings()
+        return selectedVariant(
+            from: config,
+            appSettings: appSettings
+        )?.type == .aqi
+    }
+
+    internal func airQualityDisplay(
+        from record: RuuviTagSensorRecord?,
+        config: SingleSensorWidgetConfiguration
+    ) -> WidgetAirQualityDisplay {
+        guard isAirQualitySelection(config),
+              let record else {
+            return WidgetAirQualityDisplay(
+                currentScore: 0,
+                maxScore: 100,
+                state: .undefined(0)
+            )
+        }
+
+        let measurementService = MeasurementService(settings: getAppSettings())
+        let display = measurementService.aqiDisplay(
+            for: record.co2,
+            and: record.pm25
+        )
+        return WidgetAirQualityDisplay(
+            currentScore: display.currentScore,
+            maxScore: display.maxScore,
+            state: display.state
         )
     }
 
