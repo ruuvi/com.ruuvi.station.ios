@@ -78,8 +78,7 @@ final class CardsMenuButton: UIButton {
     func updateAlertState(for snapshot: RuuviTagCardSnapshot?) {
         alertBellButton.removeBellAnimations()
 
-        guard let snapshot = snapshot,
-              snapshot.metadata.isAlertAvailable else {
+        guard let snapshot = snapshot else {
             alertBellButton.hideBadge()
             isUserInteractionEnabled = false
             return
@@ -102,11 +101,7 @@ final class CardsMenuButton: UIButton {
             tintColor: .white,
             alpha: isAlertAvailable ? 1 : 0.5
         )
-        if isAlertAvailable {
-            isUserInteractionEnabled = true
-        } else {
-            isUserInteractionEnabled = false
-        }
+        isUserInteractionEnabled = true
     }
 
     private func configureForRegisteredState() {
