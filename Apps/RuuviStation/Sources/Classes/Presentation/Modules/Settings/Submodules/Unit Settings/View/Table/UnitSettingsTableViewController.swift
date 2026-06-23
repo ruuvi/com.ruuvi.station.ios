@@ -381,7 +381,7 @@ extension UnitSettingsTableViewController {
     }
 
     private func configureHeader() {
-        guard viewModel?.mode == .resolution else {
+        guard let description = headerDescription() else {
             tableView.tableHeaderView = UIView()
             return
         }
@@ -392,7 +392,7 @@ extension UnitSettingsTableViewController {
         label.font = UIFont.ruuviFootnote()
         label.textColor = RuuviColor.textColor.color.withAlphaComponent(0.6)
         label.numberOfLines = 0
-        label.text = RuuviLocalization.Settings.Measurement.Resolution.description
+        label.text = description
 
         let width = tableView.bounds.width - horizontalPadding * 2
         let size = label.sizeThatFits(
@@ -414,5 +414,16 @@ extension UnitSettingsTableViewController {
         )
         container.addSubview(label)
         tableView.tableHeaderView = container
+    }
+
+    private func headerDescription() -> String? {
+        switch viewModel?.mode {
+        case .globalUnits:
+            return RuuviLocalization.Settings.GlobalUnits.description
+        case .resolution:
+            return RuuviLocalization.Settings.Measurement.Resolution.description
+        default:
+            return nil
+        }
     }
 }
