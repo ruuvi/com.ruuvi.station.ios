@@ -9,6 +9,8 @@ excluded:
   - Pods
   - build
   - "**/build"
+  - Build
+  - "**/Build"
   - .build
   - "**/.build"
 disabled_rules:
