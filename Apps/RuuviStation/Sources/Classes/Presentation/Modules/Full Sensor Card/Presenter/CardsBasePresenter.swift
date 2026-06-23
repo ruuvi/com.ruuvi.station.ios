@@ -198,24 +198,20 @@ extension CardsBasePresenter: CardsBaseViewOutput {
     }
 
     func viewDidChangeTab(_ tab: CardsMenuType) {
-        if tab == .alerts || tab == .settings {
-            activeMenu = tab
-            view?.showContentsForTab(tab)
-            if tab == .alerts {
-                alertsPresenter?.start()
-            } else {
-                settingsPresenter?.start()
-            }
-            return
-        }
 
         switch tab {
         case .measurement:
             viewDidRequestToShowMeasurement(for: snapshot, tab: tab)
         case .graph:
             viewDidRequestToShowGraph(for: snapshot, tab: tab)
-        case .alerts, .settings:
-            break
+        case .alerts:
+            activeMenu = tab
+            view?.showContentsForTab(tab)
+            alertsPresenter?.start()
+        case .settings:
+            activeMenu = tab
+            view?.showContentsForTab(tab)
+            settingsPresenter?.start()
         }
     }
 
