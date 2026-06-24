@@ -61,7 +61,10 @@ TestFlight:
 2. Click `Run workflow`.
 3. Select the branch.
 4. Optionally set release notes.
-5. Optionally set TestFlight groups and external notification settings.
+5. Leave TestFlight groups empty to use the configured default groups, or enter comma-separated
+   group names for this run.
+6. Enable external distribution only when the build should go to external TestFlight testers.
+7. Enable external tester notification only when testers should get Apple's email.
 
 App Store metadata:
 

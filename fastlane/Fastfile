@@ -280,20 +280,23 @@ platform :ios do
 
     testflight_groups = options[:groups].to_s.strip
     testflight_groups = ENV["TESTFLIGHT_GROUPS"].to_s.strip if testflight_groups.empty?
+    testflight_group_names = testflight_groups.split(",").map(&:strip).reject(&:empty?)
     distribute_external = truthy?(options[:distribute_external]) || truthy?(ENV["TESTFLIGHT_DISTRIBUTE_EXTERNAL"])
     notify_external_testers = truthy?(options[:notify_external_testers]) || truthy?(ENV["TESTFLIGHT_NOTIFY_EXTERNAL_TESTERS"])
     skip_waiting_for_build_processing = truthy?(options[:skip_waiting_for_build_processing]) || truthy?(ENV["TESTFLIGHT_SKIP_WAITING_FOR_BUILD_PROCESSING"])
 
-    UI.user_error!("External TestFlight distribution requires testflight groups") if distribute_external && testflight_groups.empty?
-    UI.user_error!("TestFlight cannot distribute to testers when skip_waiting_for_build_processing is enabled") if skip_waiting_for_build_processing && (!testflight_groups.empty? || distribute_external)
+    if distribute_external && testflight_group_names.empty?
+      UI.user_error!("External TestFlight distribution requires TestFlight groups. Enter groups in the workflow input or configure default groups in GitHub Actions.")
+    end
+    UI.user_error!("TestFlight cannot distribute to testers when skip_waiting_for_build_processing is enabled") if skip_waiting_for_build_processing && (!testflight_group_names.empty? || distribute_external)
 
     upload_to_testflight_options = {
       ipa: File.join(BUILD_OUTPUT_DIR, SCHEME + ".ipa"),
       changelog: release_notes,
       skip_waiting_for_build_processing: skip_waiting_for_build_processing
     }
-    unless testflight_groups.empty?
-      upload_to_testflight_options[:groups] = testflight_groups.split(",").map(&:strip).reject(&:empty?)
+    unless testflight_group_names.empty?
+      upload_to_testflight_options[:groups] = testflight_group_names
       upload_to_testflight_options[:distribute_external] = distribute_external
       upload_to_testflight_options[:notify_external_testers] = notify_external_testers if distribute_external
     end

@@ -8,7 +8,7 @@ on:
         required: false
         default: ''
       testflight_groups:
-        description: 'Optional TestFlight group names, comma-separated'
+        description: 'Optional TestFlight group names, comma-separated. Empty uses the configured default groups.'
         required: false
         default: ''
       distribute_external:
@@ -154,7 +154,7 @@ jobs:
           MATCH_CERTIFICATE_PASSWORD: ${{ secrets.MATCH_CERTIFICATE_PASSWORD }}
           GITHUB_TOKEN: ${{ github.token }}
           TESTFLIGHT_RELEASE_NOTES: ${{ github.event.inputs.release_notes }}
-          TESTFLIGHT_GROUPS: ${{ github.event.inputs.testflight_groups }}
+          TESTFLIGHT_GROUPS: ${{ github.event.inputs.testflight_groups || vars.TESTFLIGHT_GROUPS }}
           TESTFLIGHT_DISTRIBUTE_EXTERNAL: ${{ github.event.inputs.distribute_external }}
           TESTFLIGHT_NOTIFY_EXTERNAL_TESTERS: ${{ github.event.inputs.notify_external_testers }}
           TESTFLIGHT_SKIP_WAITING_FOR_BUILD_PROCESSING: ${{ github.event.inputs.skip_waiting_for_build_processing }}
