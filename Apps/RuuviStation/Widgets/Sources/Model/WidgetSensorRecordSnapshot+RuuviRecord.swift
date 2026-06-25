@@ -4,6 +4,40 @@ import RuuviLocal
 import RuuviOntology
 
 extension WidgetSensorRecordSnapshot {
+    init(from record: RuuviTagSensorRecord) {
+        self.init(
+            date: record.date,
+            source: record.source.rawValue,
+            macId: record.macId?.value,
+            luid: record.luid?.value,
+            rssi: record.rssi,
+            version: record.version,
+            temperature: record.temperature?.value,
+            humidity: record.humidity?.value,
+            pressure: record.pressure?.value,
+            accelerationX: record.acceleration?.x.value,
+            accelerationY: record.acceleration?.y.value,
+            accelerationZ: record.acceleration?.z.value,
+            voltage: record.voltage?.value,
+            movementCounter: record.movementCounter,
+            measurementSequenceNumber: record.measurementSequenceNumber,
+            txPower: record.txPower,
+            pm1: record.pm1,
+            pm25: record.pm25,
+            pm4: record.pm4,
+            pm10: record.pm10,
+            co2: record.co2,
+            voc: record.voc,
+            nox: record.nox,
+            luminance: record.luminance,
+            dbaInstant: record.dbaInstant,
+            dbaAvg: record.dbaAvg,
+            dbaPeak: record.dbaPeak,
+            temperatureOffset: record.temperatureOffset,
+            humidityOffset: record.humidityOffset,
+            pressureOffset: record.pressureOffset
+        )
+    }
 
     // swiftlint:disable:next function_body_length
     func toRecord() -> RuuviTagSensorRecordStruct {

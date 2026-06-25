@@ -10,6 +10,7 @@ struct MultiSensorWidgetProvider: IntentTimelineProvider {
     typealias Entry = MultiSensorWidgetEntry
 
     private let viewModel = WidgetViewModel()
+    private let cloudCache = WidgetCloudCache()
 
     func placeholder(in context: Context) -> Entry {
         .placeholder(for: context.family)
@@ -25,9 +26,39 @@ struct MultiSensorWidgetProvider: IntentTimelineProvider {
             return
         }
 
-        Task {
-            completion(await makeEntry(for: configuration))
+        // Always instant — build from local cache with no network calls
+        let localSnapshots = WidgetSensorCache().loadAll()
+        let selectedIds = selectedSensors(from: configuration)
+
+        if !selectedIds.isEmpty, !localSnapshots.isEmpty {
+            let items: [MultiSensorWidgetSensorItem] = selectedIds.enumerated().compactMap { index, sensorId in
+                guard let snap = localSnapshots.first(where: { $0.matches(identifier: sensorId) }) else { return nil }
+                let settings = sensorSettings(from: snap)
+                let record = snap.record?.toRecord()
+                let deviceType = viewModel.deviceType(from: record)
+                return MultiSensorWidgetSensorItem(
+                    id: "\(index + 1)-\(sensorId)",
+                    sensorId: sensorId,
+                    name: snap.name,
+                    record: record,
+                    settings: settings,
+                    cloudSettings: nil,
+                    deviceType: deviceType,
+                    selectedCodes: []
+                )
+            }
+            if !items.isEmpty {
+                completion(MultiSensorWidgetEntry(
+                    date: Date(),
+                    isAuthorized: viewModel.isAuthorized(),
+                    isPreview: true,
+                    sensors: items
+                ))
+                return
+            }
         }
+
+        completion(.placeholder(for: context.family))
     }
 
     func getTimeline(
@@ -74,26 +105,65 @@ private extension MultiSensorWidgetProvider {
             return .empty()
         }
 
-        let cloudSensors = await viewModel.fetchRuuviTagsAsync()
-        let cloudMap = Dictionary(uniqueKeysWithValues: cloudSensors.map { ($0.sensor.id, $0) })
         let localSnapshots = WidgetSensorCache().loadAll()
 
-        let items: [MultiSensorWidgetSensorItem] = selectedSensorIds.enumerated().compactMap {
-            index,
-            sensorId in
+        // Cache-first: serve from disk if cloud data is still fresh
+        if cloudCache.isFresh(intervalMinutes: viewModel.refreshIntervalMins()),
+           !viewModel.shouldForceRefresh(),
+           !localSnapshots.isEmpty {
+            let items = buildItems(from: selectedSensorIds, localSnapshots: localSnapshots)
+            if !items.isEmpty {
+                return MultiSensorWidgetEntry(
+                    date: Date(),
+                    isAuthorized: viewModel.isAuthorized(),
+                    isPreview: false,
+                    sensors: items
+                )
+            }
+        }
+
+        // Fetch fresh cloud data
+        let cloudSensors = await viewModel.fetchRuuviTagsAsync()
+        if !cloudSensors.isEmpty {
+            persistCloudData(cloudSensors)
+            cloudCache.markFresh()
+        }
+
+        // Rebuild items merging cloud + local (cloud has priority)
+        let refreshedSnapshots = cloudSensors.isEmpty ? localSnapshots : WidgetSensorCache().loadAll()
+        let items = buildItems(
+            from: selectedSensorIds,
+            localSnapshots: refreshedSnapshots,
+            cloudSensors: cloudSensors
+        )
+
+        if items.isEmpty {
+            return .empty()
+        }
+
+        return MultiSensorWidgetEntry(
+            date: Date(),
+            isAuthorized: viewModel.isAuthorized(),
+            isPreview: false,
+            sensors: items
+        )
+    }
+
+    func buildItems(
+        from selectedSensorIds: [String],
+        localSnapshots: [WidgetSensorSnapshot],
+        cloudSensors: [RuuviCloudSensorDense] = []
+    ) -> [MultiSensorWidgetSensorItem] {
+        let cloudMap = Dictionary(uniqueKeysWithValues: cloudSensors.map { ($0.sensor.id, $0) })
+
+        return selectedSensorIds.enumerated().compactMap { index, sensorId in
             let localSnapshot = localSnapshots.first(where: { $0.matches(identifier: sensorId) })
 
-            if let sensor = cloudMap[sensorId] ?? cloudSensors.first(
-                where: {
-                    sensorIdentifiers(
-                        for: $0
-                    ).contains(
-                        sensorId
-                    )
-                }) {
-                let localSettings = localSnapshot.flatMap { snapshot in
-                    sensorSettings(from: snapshot)
-                }
+            // Cloud path: cloud sensor found for this ID
+            if let sensor = cloudMap[sensorId] ?? cloudSensors.first(where: {
+                sensorIdentifiers(for: $0).contains(sensorId)
+            }) {
+                let localSettings = localSnapshot.flatMap { sensorSettings(from: $0) }
                 let settings = localSettings ?? SensorSettingsStruct.settings(from: sensor.sensor.any)
                 let shouldPreferLocalVisibility = localSettings != nil
                 let deviceType = viewModel.deviceType(from: sensor.record)
@@ -109,6 +179,7 @@ private extension MultiSensorWidgetProvider {
                 )
             }
 
+            // Local-only path
             if let snap = localSnapshot {
                 let settings = sensorSettings(from: snap)
                 let record = snap.record?.toRecord()
@@ -127,17 +198,30 @@ private extension MultiSensorWidgetProvider {
 
             return nil
         }
+    }
 
-        if items.isEmpty {
-            return .empty()
+    func persistCloudData(_ tags: [RuuviCloudSensorDense]) {
+        let cache = WidgetSensorCache()
+        for tag in tags {
+            guard let record = tag.record else { continue }
+            let recordSnapshot = WidgetSensorRecordSnapshot(from: record)
+            let sensor = tag.sensor.any
+            let settingsSnapshot = WidgetSensorSettingsSnapshot(
+                temperatureOffset: sensor.offsetTemperature,
+                humidityOffset: sensor.offsetHumidity.map { $0 / 100 },
+                pressureOffset: sensor.offsetPressure.map { $0 / 100 },
+                displayOrder: tag.settings?.displayOrderCodes,
+                defaultDisplayOrder: tag.settings?.defaultDisplayOrder
+            )
+            cache.upsert(
+                sensorId: tag.sensor.id,
+                name: tag.sensor.name,
+                macId: record.macId?.value,
+                luid: record.luid?.value,
+                record: recordSnapshot,
+                settings: settingsSnapshot
+            )
         }
-
-        return MultiSensorWidgetEntry(
-            date: Date(),
-            isAuthorized: viewModel.isAuthorized(),
-            isPreview: false,
-            sensors: items
-        )
     }
 
     func selectedSensors(

@@ -6,18 +6,35 @@ import WidgetKit
 final class WidgetProvider: IntentTimelineProvider {
     private let viewModel = WidgetViewModel()
     private let localCache = WidgetSensorCache()
-    private var cachedTags: [RuuviCloudSensorDense] = []
-    private var cacheTimestamp: Date?
+    private let cloudCache = WidgetCloudCache()
 
     func placeholder(in _: Context) -> WidgetEntry {
         WidgetEntry.placeholder()
     }
 
     func getSnapshot(
-        for _: RuuviTagSelectionIntent,
+        for configuration: RuuviTagSelectionIntent,
         in _: Context,
         completion: @escaping (WidgetEntry) -> Void
     ) {
+        let resolvedConfiguration = SingleSensorWidgetConfiguration(intent: configuration)
+        if let sensorId = resolvedConfiguration.sensorId,
+           let snap = localCache.snapshot(matching: sensorId) {
+            let record = snap.record?.toRecord()
+            let tag = RuuviWidgetTag(identifier: snap.id, display: snap.name)
+            let entry = WidgetEntry(
+                date: Date(),
+                isAuthorized: viewModel.isAuthorized(),
+                isPreview: true,
+                tag: tag,
+                record: record,
+                settings: settings(from: snap),
+                cloudSettings: nil,
+                config: resolvedConfiguration
+            )
+            completion(entry)
+            return
+        }
         completion(.placeholder())
     }
 
@@ -44,13 +61,9 @@ final class WidgetProvider: IntentTimelineProvider {
                 completion: completion
             )
         }
-        let cacheIsRecent = {
-            guard let cacheTimestamp else { return false }
-            let refreshSeconds = Double(viewModel.refreshIntervalMins() * 60)
-            return Date().timeIntervalSince(cacheTimestamp) < refreshSeconds
-        }()
 
-        if cacheIsRecent, !cachedTags.isEmpty, !viewModel.shouldForceRefresh() {
+        let cacheIsRecent = cloudCache.isFresh(intervalMinutes: viewModel.refreshIntervalMins())
+        if cacheIsRecent, localSnapshot != nil, !viewModel.shouldForceRefresh() {
             return useCachedData(
                 for: resolvedConfiguration,
                 localSnapshot: localSnapshot,
@@ -73,18 +86,11 @@ final class WidgetProvider: IntentTimelineProvider {
         viewModel.fetchRuuviTags(completion: { [weak self] tags in
             guard let sSelf = self else { return }
             if !tags.isEmpty {
-                sSelf.cachedTags = tags
-                sSelf.cacheTimestamp = Date()
+                sSelf.persistCloudData(tags)
+                sSelf.cloudCache.markFresh()
                 sSelf.buildTimeline(
                     configuration: configuration,
                     cloudTags: tags,
-                    localSnapshot: localSnapshot,
-                    completion: completion
-                )
-            } else if !sSelf.cachedTags.isEmpty {
-                sSelf.buildTimeline(
-                    configuration: configuration,
-                    cloudTags: sSelf.cachedTags,
                     localSnapshot: localSnapshot,
                     completion: completion
                 )
@@ -111,10 +117,33 @@ final class WidgetProvider: IntentTimelineProvider {
     ) {
         buildTimeline(
             configuration: configuration,
-            cloudTags: cachedTags,
+            cloudTags: nil,
             localSnapshot: localSnapshot,
             completion: completion
         )
+    }
+
+    private func persistCloudData(_ tags: [RuuviCloudSensorDense]) {
+        for tag in tags {
+            guard let record = tag.record else { continue }
+            let recordSnapshot = WidgetSensorRecordSnapshot(from: record)
+            let sensor = tag.sensor.any
+            let settingsSnapshot = WidgetSensorSettingsSnapshot(
+                temperatureOffset: sensor.offsetTemperature,
+                humidityOffset: sensor.offsetHumidity.map { $0 / 100 },
+                pressureOffset: sensor.offsetPressure.map { $0 / 100 },
+                displayOrder: tag.settings?.displayOrderCodes,
+                defaultDisplayOrder: tag.settings?.defaultDisplayOrder
+            )
+            localCache.upsert(
+                sensorId: tag.sensor.id,
+                name: tag.sensor.name,
+                macId: record.macId?.value,
+                luid: record.luid?.value,
+                record: recordSnapshot,
+                settings: settingsSnapshot
+            )
+        }
     }
 }
 
@@ -215,7 +244,9 @@ extension WidgetProvider {
             macId: snapshot.macId?.mac,
             temperatureOffset: settings.temperatureOffset,
             humidityOffset: settings.humidityOffset,
-            pressureOffset: settings.pressureOffset
+            pressureOffset: settings.pressureOffset,
+            displayOrder: settings.displayOrder,
+            defaultDisplayOrder: settings.defaultDisplayOrder
         )
     }
 

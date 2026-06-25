@@ -5,6 +5,7 @@ import RuuviOntology
 class IntentHandler: INExtension, RuuviTagSelectionIntentHandling, RuuviMultiSensorSelectionIntentHandling {
     private let viewModel = WidgetViewModel()
     private let localCache = WidgetSensorCache()
+    private let cloudCache = WidgetCloudCache()
 
     func provideRuuviWidgetTagOptionsCollection(
         for _: RuuviTagSelectionIntent,
@@ -95,6 +96,20 @@ class IntentHandler: INExtension, RuuviTagSelectionIntentHandling, RuuviMultiSen
             return
         }
 
+        // Serve from local cache when cloud data is still fresh — no network round-trip
+        if cloudCache.isFresh(intervalMinutes: viewModel.refreshIntervalMins()),
+           !localSnapshots.isEmpty {
+            completion(
+                INObjectCollection(
+                    items: widgetTagOptions(
+                        from: localTags(from: localSnapshots)
+                    )
+                ),
+                nil
+            )
+            return
+        }
+
         viewModel.fetchRuuviTags(completion: { response in
             var tags: [RuuviWidgetTag] = []
             tags.reserveCapacity(response.count + localSnapshots.count)
@@ -147,7 +162,11 @@ class IntentHandler: INExtension, RuuviTagSelectionIntentHandling, RuuviMultiSen
         ) -> Void
     ) {
         let type = intent.ruuviWidgetTag?.deviceType ?? .unknown
-        let options = viewModel.measurementOptions(for: type)
+        let record: RuuviTagSensorRecord? = {
+            guard let identifier = intent.ruuviWidgetTag?.identifier else { return nil }
+            return localCache.snapshot(matching: identifier)?.record?.toRecord()
+        }()
+        let options = viewModel.measurementOptions(for: type, using: record)
         let items = options.map {
             RuuviWidgetTagSensor(
                 identifier: $0.code.rawValue,

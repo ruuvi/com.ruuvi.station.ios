@@ -243,8 +243,15 @@ public extension WidgetViewModel {
     }
 
     internal func measurementOptions(for deviceType: RuuviDeviceType) -> [WidgetMeasurementOption] {
+        measurementOptions(for: deviceType, using: nil)
+    }
+
+    internal func measurementOptions(
+        for deviceType: RuuviDeviceType,
+        using record: RuuviTagSensorRecord?
+    ) -> [WidgetMeasurementOption] {
         let appSettings = getAppSettings()
-        return availableVariants(for: deviceType)
+        return availableVariants(for: deviceType, using: record)
             .compactMap { variant in
                 guard let code = variant.cloudVisibilityCode else {
                     return nil
@@ -280,7 +287,13 @@ public extension WidgetViewModel {
         }
 
         let appSettings = getAppSettings()
-        let availableVariants = availableVariants(for: deviceType)
+        // Device variants (unfiltered): all measurements possible for this device type.
+        // Used for selectedVariants so a user-chosen measurement is honoured even when the
+        // current record has nil for it (hasValue() below handles the nil case consistently).
+        let deviceVariants = availableVariants(for: deviceType)
+        // Record variants (filtered): measurements that actually have data in this record.
+        // Used as the base for resolvedVisibleVariants so defaults only offer real data.
+        let recordVariants = availableVariants(for: deviceType, using: record)
 
         let selectedVariants = uniqueOrderedVariants(
             selectedCodes.map { code in
@@ -291,7 +304,7 @@ public extension WidgetViewModel {
             }
         )
         .filter { variant in
-            availableVariants.contains(variant)
+            deviceVariants.contains(variant)
         }
 
         let visibleVariants: [MeasurementDisplayVariant]
@@ -299,7 +312,7 @@ public extension WidgetViewModel {
             visibleVariants = selectedVariants
         } else {
             visibleVariants = resolvedVisibleVariants(
-                availableVariants: availableVariants,
+                availableVariants: recordVariants,
                 cloudSettings: cloudSettings,
                 localSettings: settings,
                 appSettings: appSettings
@@ -997,6 +1010,46 @@ extension WidgetViewModel {
         orderedMeasurementTypes(for: deviceType).flatMap { type in
             variants(for: type)
         }
+    }
+
+    private func availableVariants(
+        for deviceType: RuuviDeviceType,
+        using record: RuuviTagSensorRecord?
+    ) -> [MeasurementDisplayVariant] {
+        let all = availableVariants(for: deviceType)
+        guard let record else { return all }
+        let present = availableMeasurements(from: record)
+        return all.filter { present.contains($0.type) }
+    }
+
+    // swiftlint:disable:next cyclomatic_complexity
+    private func availableMeasurements(from record: RuuviTagSensorRecord) -> Set<MeasurementType> {
+        var types = Set<MeasurementType>()
+        if record.temperature != nil { types.insert(.temperature) }
+        if record.humidity != nil { types.insert(.humidity) }
+        if record.pressure != nil { types.insert(.pressure) }
+        if record.acceleration != nil {
+            types.insert(.accelerationX)
+            types.insert(.accelerationY)
+            types.insert(.accelerationZ)
+        }
+        if record.voltage != nil { types.insert(.voltage) }
+        if record.movementCounter != nil { types.insert(.movementCounter) }
+        if record.measurementSequenceNumber != nil { types.insert(.measurementSequenceNumber) }
+        if record.rssi != nil { types.insert(.rssi) }
+        if record.co2 != nil, record.pm25 != nil { types.insert(.aqi) }
+        if record.co2 != nil { types.insert(.co2) }
+        if record.voc != nil { types.insert(.voc) }
+        if record.nox != nil { types.insert(.nox) }
+        if record.pm1 != nil { types.insert(.pm10) }   // .pm10 variant renders record.pm1
+        if record.pm25 != nil { types.insert(.pm25) }
+        if record.pm4 != nil { types.insert(.pm40) }   // .pm40 variant renders record.pm4
+        if record.pm10 != nil { types.insert(.pm100) } // .pm100 variant renders record.pm10
+        if record.luminance != nil { types.insert(.luminosity) }
+        if record.dbaInstant != nil { types.insert(.soundInstant) }
+        if record.dbaAvg != nil { types.insert(.soundAverage) }
+        if record.dbaPeak != nil { types.insert(.soundPeak) }
+        return types
     }
 
     private func orderedMeasurementTypes(for deviceType: RuuviDeviceType) -> [MeasurementType] {

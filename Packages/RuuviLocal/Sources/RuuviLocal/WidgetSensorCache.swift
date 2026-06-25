@@ -291,6 +291,55 @@ public final class WidgetSensorCache {
         }
     }
 
+    public func upsert(
+        sensorId: String,
+        name: String,
+        macId: String?,
+        luid: String?,
+        record: WidgetSensorRecordSnapshot?,
+        settings: WidgetSensorSettingsSnapshot?
+    ) {
+        Self.queue.sync {
+            var snapshots = loadAllInternal()
+            if let index = snapshots.firstIndex(where: { $0.matches(identifier: sensorId) }) {
+                var snapshot = snapshots[index]
+                snapshot.id = sensorId
+                snapshot.name = name.isEmpty ? sensorId : name
+                if let macId { snapshot.macId = macId }
+                if let luid { snapshot.luid = luid }
+                if let record { snapshot.record = record }
+                if let settings {
+                    if var existing = snapshot.settings {
+                        // Offsets: cloud is source of truth, always update
+                        existing.temperatureOffset = settings.temperatureOffset
+                        existing.humidityOffset = settings.humidityOffset
+                        existing.pressureOffset = settings.pressureOffset
+                        // Display order: only update when cloud provides a value so the
+                        // main app's locally-written visibility order is not erased
+                        if let order = settings.displayOrder { existing.displayOrder = order }
+                        if let def = settings.defaultDisplayOrder { existing.defaultDisplayOrder = def }
+                        snapshot.settings = existing
+                    } else {
+                        snapshot.settings = settings
+                    }
+                }
+                snapshot.updatedAt = Date()
+                snapshots[index] = snapshot
+            } else {
+                let snapshot = WidgetSensorSnapshot(
+                    id: sensorId,
+                    name: name.isEmpty ? sensorId : name,
+                    macId: macId,
+                    luid: luid,
+                    record: record,
+                    settings: settings
+                )
+                snapshots.append(snapshot)
+            }
+            saveInternal(snapshots)
+        }
+    }
+
     private func loadAllInternal() -> [WidgetSensorSnapshot] {
         guard let userDefaults else { return [] }
         guard let data = userDefaults.data(forKey: Self.storageKey) else { return [] }
@@ -301,5 +350,39 @@ public final class WidgetSensorCache {
         guard let userDefaults else { return }
         guard let data = try? encoder.encode(snapshots) else { return }
         userDefaults.set(data, forKey: Self.storageKey)
+    }
+}
+
+// MARK: - WidgetCloudCache
+
+public final class WidgetCloudCache {
+    private static let timestampKey = "RuuviWidgetCloudFetchTimestamp"
+    private static let queue = DispatchQueue(label: "Ruuvi.WidgetCloudCache")
+
+    private let userDefaults: UserDefaults?
+
+    public init(
+        userDefaults: UserDefaults? = UserDefaults(suiteName: WidgetSensorCache.appGroupSuiteIdentifier)
+    ) {
+        self.userDefaults = userDefaults
+    }
+
+    public func isFresh(intervalMinutes: Int) -> Bool {
+        Self.queue.sync {
+            guard let ts = userDefaults?.object(forKey: Self.timestampKey) as? Date else { return false }
+            return Date().timeIntervalSince(ts) < Double(intervalMinutes * 60)
+        }
+    }
+
+    public func markFresh() {
+        Self.queue.sync {
+            userDefaults?.set(Date(), forKey: Self.timestampKey)
+        }
+    }
+
+    public func invalidate() {
+        Self.queue.sync {
+            userDefaults?.removeObject(forKey: Self.timestampKey)
+        }
     }
 }
