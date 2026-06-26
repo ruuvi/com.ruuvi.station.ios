@@ -20,26 +20,24 @@ struct SimpleWidgetView: View {
 
             Spacer(minLength: 8)
 
-            HStack {
-                measurementContent
-                Spacer()
-            }
-            .overlay(alignment: .bottomTrailing) {
-                if #available(iOS 17.0, *) {
-                    if !entry.isPreview {
-                        Button(intent: WidgetRefresher(target: .simple)
-                        ) {
-                            Image(systemName: "arrow.clockwise")
-                                .foregroundColor(Color.sensorNameColor1)
+            measurementContent
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .overlay(alignment: .bottomTrailing) {
+                    if #available(iOS 17.0, *) {
+                        if !entry.isPreview {
+                            Button(intent: WidgetRefresher(target: .simple)
+                            ) {
+                                Image(systemName: "arrow.clockwise")
+                                    .foregroundColor(Color.sensorNameColor1)
+                            }
+                            .clipShape(Circle())
+                            .tint(.clear)
+                            .frame(width: 12, height: 12)
+                            .padding(.bottom, 6)
+                            .padding(.trailing, 6)
                         }
-                        .clipShape(Circle())
-                        .tint(.clear)
-                        .frame(width: 12, height: 12)
-                        .padding(.bottom, 6)
-                        .padding(.trailing, 6)
                     }
                 }
-            }
         }
         .padding(EdgeInsets(top: 12, leading: 12, bottom: 12, trailing: 12))
         .widgetURL(
@@ -60,7 +58,7 @@ struct SimpleWidgetView: View {
     }
 
     private var defaultMeasurementContent: some View {
-        VStack(spacing: 2) {
+        VStack(alignment: .leading, spacing: 2) {
             HStack(spacing: 2) {
                 Text(viewModel.getValue(
                     from: entry.record,
