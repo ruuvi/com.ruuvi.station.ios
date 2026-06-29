@@ -135,7 +135,7 @@ struct SimpleWidgetView: View {
             )
             .frame(height: 16)
             .offset(x: -5.5)
-            .padding(.top, -8)
+            .padding(.top, 0)
             .padding(.trailing, 12)
 
             measurementTimeView(for: entry)
@@ -178,7 +178,7 @@ private struct SimpleWidgetAQIProminentView: View {
                     .font(
                         .oswald(
                             .extraLight,
-                            size: canShowBackground ? 15 : 22,
+                            size: canShowBackground ? 14 : 22,
                             relativeTo: .title3
                         )
                     )
@@ -190,7 +190,7 @@ private struct SimpleWidgetAQIProminentView: View {
                     .font(
                         .mulish(
                             .regular,
-                            size: canShowBackground ? 13 : 16,
+                            size: canShowBackground ? 12 : 16,
                             relativeTo: .body
                         )
                     )
