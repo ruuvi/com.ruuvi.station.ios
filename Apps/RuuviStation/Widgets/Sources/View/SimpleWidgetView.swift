@@ -69,7 +69,7 @@ struct SimpleWidgetView: View {
                 .foregroundColor(.bodyTextColor)
                 .font(.oswald(.bold, size: canShowBackground ? 40 : 76, relativeTo: .largeTitle))
                 .frame(alignment: .bottomLeading)
-                .minimumScaleFactor(0.8)
+                .minimumScaleFactor(0.6)
                 Text(
                     viewModel.getUnit(from: entry.config)
                 )
@@ -83,7 +83,7 @@ struct SimpleWidgetView: View {
                 )
                 .baselineOffset(10)
                 .frame(alignment: .topLeading)
-                .minimumScaleFactor(0.8)
+                .minimumScaleFactor(0.6)
 
                 Spacer(minLength: 0)
             }
@@ -100,7 +100,7 @@ struct SimpleWidgetView: View {
                         )
                     )
                     .frame(maxWidth: .infinity, alignment: .bottomLeading)
-                    .minimumScaleFactor(0.8)
+                    .minimumScaleFactor(0.6)
             }
 
             measurementTimeView(for: entry)
@@ -153,7 +153,7 @@ struct SimpleWidgetView: View {
                     relativeTo: .body
                 )
             )
-            .minimumScaleFactor(0.8)
+            .minimumScaleFactor(0.6)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
 }
@@ -170,7 +170,7 @@ private struct SimpleWidgetAQIProminentView: View {
                 .foregroundColor(.bodyTextColor)
                 .font(.oswald(.bold, size: canShowBackground ? 40 : 76, relativeTo: .largeTitle))
                 .lineLimit(1)
-                .minimumScaleFactor(0.8)
+                .minimumScaleFactor(0.6)
 
             VStack(alignment: .leading, spacing: 0) {
                 Text(superscriptValue)
@@ -183,7 +183,7 @@ private struct SimpleWidgetAQIProminentView: View {
                         )
                     )
                     .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                    .minimumScaleFactor(0.6)
 
                 Text(subscriptValue)
                     .foregroundColor(.sensorNameColor1)
@@ -195,7 +195,7 @@ private struct SimpleWidgetAQIProminentView: View {
                         )
                     )
                     .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                    .minimumScaleFactor(0.6)
             }
             .padding(.top, 2)
 
