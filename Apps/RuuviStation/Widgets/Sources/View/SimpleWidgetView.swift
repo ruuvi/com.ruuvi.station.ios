@@ -85,7 +85,7 @@ struct SimpleWidgetView: View {
                 .frame(alignment: .topLeading)
                 .minimumScaleFactor(0.8)
 
-                Spacer()
+                Spacer(minLength: 0)
             }
 
             let measurementShortName = viewModel.measurementShortName(from: entry.config)
