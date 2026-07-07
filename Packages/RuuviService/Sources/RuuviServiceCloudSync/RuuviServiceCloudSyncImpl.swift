@@ -955,25 +955,27 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                                 return nil
                             }
                         } else {
-                            let unclaimed = localSensor.unclaimed()
-                            // If there is a local sensor which is unclaimed insert it to the list
-                            if unclaimed.any != localSensor {
-                                updatedSensors.insert(localSensor)
-                                return self.ruuviPool.update(unclaimed)
-                            } else {
-                                // If there is a local sensor which is claimed and deleted from the cloud,
-                                // delete it from local storage
-                                // Otherwise keep it stored
-                                if localSensor.isCloud {
-                                    self.ruuviLocalSyncState.setDownloadFullHistory(
-                                        for: localSensor.macId,
-                                        downloadFull: nil
-                                    )
-                                    return self.ruuviPool.delete(localSensor)
-                                } else {
-                                    return nil
-                                }
+                            // If there is a local sensor which is claimed and deleted from the cloud,
+                            // delete it from local storage
+                            // Otherwise keep it stored
+                            if localSensor.isCloud {
+                                self.ruuviLocalSyncState.setDownloadFullHistory(
+                                    for: localSensor.macId,
+                                    downloadFull: nil
+                                )
+                                return self.ruuviPool.delete(localSensor)
                             }
+
+                            guard localSensor.isClaimed ||
+                                    !localSensor.isOwner ||
+                                    localSensor.owner != nil ||
+                                    localSensor.ownersPlan != nil else {
+                                return nil
+                            }
+
+                            let unclaimed = localSensor.unclaimed()
+                            updatedSensors.insert(unclaimed.any)
+                            return self.ruuviPool.update(unclaimed)
                         }
                     }
                 let createSensors: [Future<Bool, RuuviPoolError>] = cloudSensors
