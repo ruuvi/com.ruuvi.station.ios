@@ -91,7 +91,7 @@ final class CardsMenuButton: UIButton {
 
         switch snapshot.alertData.alertState {
         case .empty, .none:
-            configureForEmptyState(isAlertAvailable: snapshot.metadata.isAlertAvailable)
+            configureForEmptyState()
         case .registered:
             configureForRegisteredState()
         case .firing:
@@ -100,11 +100,11 @@ final class CardsMenuButton: UIButton {
         updateAlertBadge(for: snapshot)
     }
 
-    private func configureForEmptyState(isAlertAvailable: Bool) {
+    private func configureForEmptyState() {
         alertBellButton.configureBell(
             image: menuType.icon,
             tintColor: .white,
-            alpha: isAlertAvailable ? 1 : 0.5
+            alpha: 1
         )
         isUserInteractionEnabled = true
     }
