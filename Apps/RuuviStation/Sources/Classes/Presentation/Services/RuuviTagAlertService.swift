@@ -1526,8 +1526,8 @@ private extension RuuviTagAlertService {
         guard pushNotificationStatusLoaded else { return }
         let enabled = pushNotificationsEnabled
         let canDeliverPush = snapshot.metadata.isCloud ||
-            snapshot.connectionData.isConnectable ||
-            isRuuviAir(snapshot)
+            snapshot.connectionData.isConnected ||
+            snapshot.identifierData.serviceUUID != nil
         let available = enabled && canDeliverPush
         if snapshot.capabilities.isPushNotificationsEnabled != enabled ||
             snapshot.capabilities.isPushNotificationsAvailable != available {
@@ -1535,11 +1535,6 @@ private extension RuuviTagAlertService {
             snapshot.capabilities.isPushNotificationsAvailable = available
             addToPendingUpdates(snapshotId: snapshot.id)
         }
-    }
-
-    func isRuuviAir(_ snapshot: RuuviTagCardSnapshot) -> Bool {
-        let format = RuuviDataFormat.dataFormat(from: snapshot.displayData.version.bound)
-        return format == .e1 || format == .v6
     }
 
     func ensureMutedTillRefreshTimer() {
