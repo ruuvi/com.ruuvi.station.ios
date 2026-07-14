@@ -70,13 +70,15 @@ private struct RangeSeekSliderRepresentable: UIViewRepresentable {
             needsRefresh = true
         }
 
-        let selectedMin = CGFloat(configuration.selectedRange.lowerBound)
+        let selectedSliderRange = configuration.sliderSelectedRange
+
+        let selectedMin = CGFloat(selectedSliderRange.lowerBound)
         if slider.selectedMinValue != selectedMin {
             slider.selectedMinValue = selectedMin
             needsRefresh = true
         }
 
-        let selectedMax = CGFloat(configuration.selectedRange.upperBound)
+        let selectedMax = CGFloat(selectedSliderRange.upperBound)
         if slider.selectedMaxValue != selectedMax {
             slider.selectedMaxValue = selectedMax
             needsRefresh = true

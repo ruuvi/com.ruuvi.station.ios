@@ -574,7 +574,7 @@ private extension CardsSettingsViewController {
             )
             textField.text = self.formattedValue(slider.selectedRange.lowerBound)
             alertMinRangeTextField = textField
-            if slider.range.lowerBound < 0 {
+            if slider.manualRange.lowerBound < 0 {
                 textField.addNumericAccessory()
             }
         }
@@ -588,7 +588,7 @@ private extension CardsSettingsViewController {
             )
             textField.text = self.formattedValue(slider.selectedRange.upperBound)
             alertMaxRangeTextField = textField
-            if slider.range.lowerBound < 0 {
+            if slider.manualRange.lowerBound < 0 {
                 textField.addNumericAccessory()
             }
         }
@@ -599,8 +599,8 @@ private extension CardsSettingsViewController {
                 let upperField = alert?.textFields?.last,
                 let lowerValue = self.parseValue(from: lowerField.text),
                 let upperValue = self.parseValue(from: upperField.text),
-                slider.range.contains(lowerValue),
-                slider.range.contains(upperValue),
+                slider.manualRange.contains(lowerValue),
+                slider.manualRange.contains(upperValue),
                 lowerValue < upperValue
             else {
                 return
@@ -711,7 +711,7 @@ private extension CardsSettingsViewController {
         isLower: Bool,
         slider: CardsSettingsAlertSliderConfiguration
     ) -> String {
-        let value = isLower ? slider.range.lowerBound : slider.range.upperBound
+        let value = isLower ? slider.manualRange.lowerBound : slider.manualRange.upperBound
         let hasFractional = value.truncatingRemainder(dividingBy: 1) != 0
         if slider.step < 1 || hasFractional {
             let label = isLower ? RuuviLocalization.chartStatMin : RuuviLocalization.chartStatMax

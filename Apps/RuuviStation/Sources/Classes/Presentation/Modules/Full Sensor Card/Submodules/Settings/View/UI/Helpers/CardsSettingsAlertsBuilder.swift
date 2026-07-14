@@ -237,6 +237,10 @@ private extension CardsSettingsAlertsBuilder {
                     config: config,
                     hasMeasurement: hasMeasurement,
                     range: RuuviAlertConstants.CarbonDioxide.lowerBound...RuuviAlertConstants.CarbonDioxide.upperBound,
+                    manualRange: ClosedRange(uncheckedBounds: (
+                        lower: RuuviAlertConstants.CarbonDioxide.customLowerBound,
+                        upper: RuuviAlertConstants.CarbonDioxide.customUpperBound
+                    )),
                     unit: RuuviLocalization.unitCo2,
                     format: Constants.configFormat,
                     latestMeasurement: latestCO2(
@@ -716,21 +720,24 @@ private extension CardsSettingsAlertsBuilder {
         config: RuuviTagCardSnapshotAlertConfig,
         hasMeasurement: Bool,
         range: ClosedRange<Double>,
+        manualRange: ClosedRange<Double>? = nil,
         unit: String,
         format: String,
         latestMeasurement: String?,
         latestMeasurementDisplay: CardsSettingsAlertLatestMeasurement? = nil,
         notice: String? = nil
     ) -> (CardsSettingsAlertUIConfiguration, Bool) {
+        let manualRange = manualRange ?? range
         let lower = config.lowerBound ?? range.lowerBound
         let upper = config.upperBound ?? range.upperBound
         let selected = clamp(
-            range: range,
-            proposal: normalizedProposalRange(range: range, lower: lower, upper: upper)
+            range: manualRange,
+            proposal: normalizedProposalRange(range: manualRange, lower: lower, upper: upper)
         )
 
         let slider = CardsSettingsAlertSliderConfiguration(
             range: range,
+            manualRange: manualRange,
             selectedRange: selected,
             unit: unit,
             format: format,
@@ -785,6 +792,10 @@ private extension CardsSettingsAlertsBuilder {
             config: config,
             hasMeasurement: hasMeasurement,
             range: range,
+            manualRange: ClosedRange(uncheckedBounds: (
+                lower: RuuviAlertConstants.ParticulateMatter.customLowerBound,
+                upper: RuuviAlertConstants.ParticulateMatter.customUpperBound
+            )),
             unit: unit,
             format: Constants.configFormat,
             latestMeasurement: latestMeasurement

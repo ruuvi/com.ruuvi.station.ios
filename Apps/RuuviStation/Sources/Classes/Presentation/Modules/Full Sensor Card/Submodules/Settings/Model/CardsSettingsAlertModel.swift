@@ -104,6 +104,7 @@ struct CardsSettingsAlertUIConfiguration: Equatable {
 
 struct CardsSettingsAlertSliderConfiguration: Equatable {
     let range: ClosedRange<Double>
+    let manualRange: ClosedRange<Double>
     let selectedRange: ClosedRange<Double>
     let unit: String
     let format: String
@@ -116,6 +117,7 @@ struct CardsSettingsAlertSliderConfiguration: Equatable {
 
     init(
         range: ClosedRange<Double>,
+        manualRange: ClosedRange<Double>? = nil,
         selectedRange: ClosedRange<Double>,
         unit: String,
         format: String,
@@ -127,6 +129,7 @@ struct CardsSettingsAlertSliderConfiguration: Equatable {
         hideLabels: Bool = true
     ) {
         self.range = range
+        self.manualRange = manualRange ?? range
         self.selectedRange = selectedRange
         self.unit = unit
         self.format = format
@@ -167,11 +170,18 @@ struct CardsSettingsAlertSliderConfiguration: Equatable {
         displayValue(range.upperBound)
     }
 
+    var sliderSelectedRange: ClosedRange<Double> {
+        let lower = max(range.lowerBound, min(range.upperBound, selectedRange.lowerBound))
+        let upper = max(lower, min(range.upperBound, selectedRange.upperBound))
+        return lower...upper
+    }
+
     func withSelectedRange(
         _ newRange: ClosedRange<Double>
     ) -> CardsSettingsAlertSliderConfiguration {
         CardsSettingsAlertSliderConfiguration(
             range: range,
+            manualRange: manualRange,
             selectedRange: newRange,
             unit: unit,
             format: format,

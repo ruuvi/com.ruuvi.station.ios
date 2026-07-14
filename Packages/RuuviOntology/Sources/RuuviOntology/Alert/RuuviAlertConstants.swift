@@ -40,11 +40,17 @@ public struct RuuviAlertConstants {
     public struct CarbonDioxide {
         public static let lowerBound = 350.0  // ppm
         public static let upperBound = 2500.0 // ppm
+
+        public static let customLowerBound = 0.0     // ppm
+        public static let customUpperBound = 40000.0 // ppm
     }
 
     public struct ParticulateMatter {
         public static let lowerBound = 0.0   // µg/m³
         public static let upperBound = 250.0 // µg/m³
+
+        public static let customLowerBound = 0.0    // µg/m³
+        public static let customUpperBound = 1000.0 // µg/m³
     }
 
     public struct VOC {
