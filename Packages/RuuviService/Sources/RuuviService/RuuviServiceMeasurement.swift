@@ -177,8 +177,6 @@ public extension Language {
         switch self {
         case .english:
             Locale(identifier: "en_US")
-        case .russian:
-            Locale(identifier: "ru_RU")
         case .finnish:
             Locale(identifier: "fi")
         case .french:
@@ -187,15 +185,15 @@ public extension Language {
             Locale(identifier: "sv")
         case .german:
             Locale(identifier: "de")
+        case .polish:
+            Locale(identifier: "pl")
         }
     }
 
     var humidityLanguage: HumiditySettings.Language {
         switch self {
-        case .german:
+        case .german, .polish:
             .en
-        case .russian:
-            .ru
         case .finnish:
             .fi
         case .french:

@@ -8,8 +8,6 @@ extension Language {
         switch self {
         case .english:
             RuuviLocalization.Language.english
-        case .russian:
-            RuuviLocalization.Language.russian
         case .finnish:
             RuuviLocalization.Language.finnish
         case .french:
@@ -18,6 +16,8 @@ extension Language {
             RuuviLocalization.Language.swedish
         case .german:
             RuuviLocalization.Language.german
+        case .polish:
+            RuuviLocalization.Language.polish
         }
     }
 }

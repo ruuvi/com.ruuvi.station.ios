@@ -49,7 +49,7 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
         case pressureUnit(UnitPressure)
         // Temperature unit (C-Celsius, F-Fahrenheit, K-Kelvin)
         case temperatureUnit(TemperatureUnit)
-        // Selected application language (ru/fi/en/sv)
+        // Selected application language (en/fi/fr/sv/de/pl)
         case language(Language)
         // Users using simple widget
         case useSimpleWidget(Bool)

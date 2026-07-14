@@ -16,8 +16,8 @@ if [ ! -f "Common/RuuviLocalization/Sources/Resources/en.lproj/Localizable.strin
     mkdir -p "./Common/RuuviLocalization/Sources/Resources/fr.lproj"
     touch "./Common/RuuviLocalization/Sources/Resources/fr.lproj/Localizable.strings"
 
-    mkdir -p "./Common/RuuviLocalization/Sources/Resources/ru.lproj"
-    touch "./Common/RuuviLocalization/Sources/Resources/ru.lproj/Localizable.strings"
+    mkdir -p "./Common/RuuviLocalization/Sources/Resources/pl.lproj"
+    touch "./Common/RuuviLocalization/Sources/Resources/pl.lproj/Localizable.strings"
 
     mkdir -p "./Common/RuuviLocalization/Sources/Resources/sv.lproj"
     touch "./Common/RuuviLocalization/Sources/Resources/sv.lproj/Localizable.strings"

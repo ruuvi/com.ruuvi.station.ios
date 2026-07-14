@@ -123,6 +123,9 @@ targets:
         name: Lint
         basedOnDependencyAnalysis: false
     postBuildScripts:
+      - path: ../../scripts/build/remove_unsupported_localizations.sh
+        name: Remove Unsupported Localizations
+        basedOnDependencyAnalysis: false
       - path: ../../scripts/build/load_keystore.sh
         name: Load Keystore
         inputFiles:
