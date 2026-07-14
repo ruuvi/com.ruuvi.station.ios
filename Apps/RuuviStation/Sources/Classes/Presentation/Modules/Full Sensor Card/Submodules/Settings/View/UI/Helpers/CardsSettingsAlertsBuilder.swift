@@ -762,13 +762,9 @@ private extension CardsSettingsAlertsBuilder {
 
     static func adjustedInteraction(
         _ result: (CardsSettingsAlertUIConfiguration, Bool),
-        snapshot: RuuviTagCardSnapshot
+        snapshot _: RuuviTagCardSnapshot
     ) -> (CardsSettingsAlertUIConfiguration, Bool) {
-        let (configuration, baseEnabled) = result
-        let finalEnabled = baseEnabled &&
-            snapshot.capabilities.isAlertsEnabled &&
-            snapshot.capabilities.isPushNotificationsAvailable
-        return (configuration, finalEnabled)
+        result
     }
 
     // swiftlint:disable:next function_parameter_count
