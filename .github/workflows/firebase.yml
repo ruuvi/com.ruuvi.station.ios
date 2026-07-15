@@ -91,7 +91,7 @@ jobs:
         run: rm -rf ${{ github.workspace }}/station.localization
 
       - name: Clone localisation submodule
-        run: git clone -b dev https://github.com/ruuvi/station.localization.git ${{ github.workspace }}/station.localization
+        run: git clone https://github.com/ruuvi/station.localization.git ${{ github.workspace }}/station.localization
 
       - name: Increment build number
         run: |
