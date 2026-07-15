@@ -194,7 +194,7 @@ final class CardsSettingsState: ObservableObject {
         sections.append(
             makeSection(
                 .moreInfo,
-                title: RuuviLocalization.moreInfo,
+                title: RuuviLocalization.moreInfo.localizedCapitalized,
                 content: { AnyView(CardsSettingsMoreInfoSectionView()) }
             )
         )
