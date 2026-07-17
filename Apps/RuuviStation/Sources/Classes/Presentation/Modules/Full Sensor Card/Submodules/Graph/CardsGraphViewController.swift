@@ -1128,7 +1128,7 @@ extension CardsGraphViewController {
             totalHeight
         } else {
             if !compactChartView {
-                totalHeight / 2
+                totalHeight
             } else {
                 if count >= 3 {
                     totalHeight / 3
