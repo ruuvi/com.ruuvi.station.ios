@@ -166,13 +166,6 @@ struct MeasurementVariantResolver {
         else {
             return (nil, nil)
         }
-        let particulateMatterRange = ClosedRange(
-            uncheckedBounds: (
-                lower: RuuviAlertConstants.ParticulateMatter.lowerBound,
-                upper: RuuviAlertConstants.ParticulateMatter.upperBound
-            )
-        )
-
         switch measurementType(for: variant) {
         case .temperature:
             let unit = variant.resolvedTemperatureUnit(
@@ -229,31 +222,31 @@ struct MeasurementVariantResolver {
             return visibleAlertBounds(
                 lower: alertConfig?.lowerBound ?? alertService.lowerCarbonDioxide(for: sensor),
                 upper: alertConfig?.upperBound ?? alertService.upperCarbonDioxide(for: sensor),
-                range: RuuviAlertConstants.CarbonDioxide.lowerBound...RuuviAlertConstants.CarbonDioxide.upperBound
+                range: carbonDioxideAlertRange(for: sensor)
             )
         case .pm10:
             return visibleAlertBounds(
                 lower: alertConfig?.lowerBound ?? alertService.lowerPM1(for: sensor),
                 upper: alertConfig?.upperBound ?? alertService.upperPM1(for: sensor),
-                range: particulateMatterRange
+                range: particulateMatterAlertRange(for: sensor)
             )
         case .pm25:
             return visibleAlertBounds(
                 lower: alertConfig?.lowerBound ?? alertService.lowerPM25(for: sensor),
                 upper: alertConfig?.upperBound ?? alertService.upperPM25(for: sensor),
-                range: particulateMatterRange
+                range: particulateMatterAlertRange(for: sensor)
             )
         case .pm40:
             return visibleAlertBounds(
                 lower: alertConfig?.lowerBound ?? alertService.lowerPM4(for: sensor),
                 upper: alertConfig?.upperBound ?? alertService.upperPM4(for: sensor),
-                range: particulateMatterRange
+                range: particulateMatterAlertRange(for: sensor)
             )
         case .pm100:
             return visibleAlertBounds(
                 lower: alertConfig?.lowerBound ?? alertService.lowerPM10(for: sensor),
                 upper: alertConfig?.upperBound ?? alertService.upperPM10(for: sensor),
-                range: particulateMatterRange
+                range: particulateMatterAlertRange(for: sensor)
             )
         case .voc:
             return visibleAlertBounds(
@@ -375,5 +368,31 @@ struct MeasurementVariantResolver {
             Temperature(value: lower, unit: .celsius).converted(to: unit).value,
             Temperature(value: upper, unit: .celsius).converted(to: unit).value
         )
+    }
+
+    private func carbonDioxideAlertRange(for sensor: AnyRuuviTagSensor) -> ClosedRange<Double> {
+        if settings.showCustomCO2AlertBound(for: sensor.id) {
+            return ClosedRange(uncheckedBounds: (
+                lower: RuuviAlertConstants.CarbonDioxide.customLowerBound,
+                upper: RuuviAlertConstants.CarbonDioxide.customUpperBound
+            ))
+        }
+        return ClosedRange(uncheckedBounds: (
+            lower: RuuviAlertConstants.CarbonDioxide.lowerBound,
+            upper: RuuviAlertConstants.CarbonDioxide.upperBound
+        ))
+    }
+
+    private func particulateMatterAlertRange(for sensor: AnyRuuviTagSensor) -> ClosedRange<Double> {
+        if settings.showCustomPMAlertBound(for: sensor.id) {
+            return ClosedRange(uncheckedBounds: (
+                lower: RuuviAlertConstants.ParticulateMatter.customLowerBound,
+                upper: RuuviAlertConstants.ParticulateMatter.customUpperBound
+            ))
+        }
+        return ClosedRange(uncheckedBounds: (
+            lower: RuuviAlertConstants.ParticulateMatter.lowerBound,
+            upper: RuuviAlertConstants.ParticulateMatter.upperBound
+        ))
     }
 }

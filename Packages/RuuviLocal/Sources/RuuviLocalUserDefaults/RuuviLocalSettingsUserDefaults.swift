@@ -953,6 +953,24 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         UserDefaults.standard.set(show, forKey: showCustomTempAlertBoundUDKey + id)
     }
 
+    private let showCustomCO2AlertBoundUDKey = "SettingsUserDefaults.showCustomCO2AlertBoundUDKey"
+    func showCustomCO2AlertBound(for id: String) -> Bool {
+        UserDefaults.standard.value(forKey: showCustomCO2AlertBoundUDKey + id) as? Bool ?? false
+    }
+
+    func setShowCustomCO2AlertBound(_ show: Bool, for id: String) {
+        UserDefaults.standard.set(show, forKey: showCustomCO2AlertBoundUDKey + id)
+    }
+
+    private let showCustomPMAlertBoundUDKey = "SettingsUserDefaults.showCustomPMAlertBoundUDKey"
+    func showCustomPMAlertBound(for id: String) -> Bool {
+        UserDefaults.standard.value(forKey: showCustomPMAlertBoundUDKey + id) as? Bool ?? false
+    }
+
+    func setShowCustomPMAlertBound(_ show: Bool, for id: String) {
+        UserDefaults.standard.set(show, forKey: showCustomPMAlertBoundUDKey + id)
+    }
+
     @UserDefault("SettingsUserDefaults.showAlertsRangeInGraph", defaultValue: true)
     var showAlertsRangeInGraph: Bool
     @UserDefault("SettingsUserDefaults.useNewGraphRendering", defaultValue: false)

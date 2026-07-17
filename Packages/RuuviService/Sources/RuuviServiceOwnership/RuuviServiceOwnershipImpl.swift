@@ -416,6 +416,8 @@ extension RuuviServiceOwnershipImpl {
 
         // Clean up sensor-specific settings using sensor ID
         settings.setShowCustomTempAlertBound(false, for: sensor.id)
+        settings.setShowCustomCO2AlertBound(false, for: sensor.id)
+        settings.setShowCustomPMAlertBound(false, for: sensor.id)
 
         // Clean up last opened chart if it matches this sensor
         if let lastChart = settings.lastOpenedChart(),

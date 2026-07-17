@@ -162,6 +162,10 @@ public protocol RuuviLocalSettings: AnyObject {
 
     func showCustomTempAlertBound(for id: String) -> Bool
     func setShowCustomTempAlertBound(_ show: Bool, for id: String)
+    func showCustomCO2AlertBound(for id: String) -> Bool
+    func setShowCustomCO2AlertBound(_ show: Bool, for id: String)
+    func showCustomPMAlertBound(for id: String) -> Bool
+    func setShowCustomPMAlertBound(_ show: Bool, for id: String)
 
     func dashboardSignInBannerHidden(for version: String) -> Bool
     func setDashboardSignInBannerHidden(for version: String)

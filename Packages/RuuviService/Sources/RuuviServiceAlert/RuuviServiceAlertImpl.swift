@@ -15,6 +15,28 @@ fileprivate extension RuuviServiceAlertImpl {
                 .normalizedUnseenDuration(unseenDuration)
         )
     }
+
+    func markCustomCarbonDioxideAlertBoundIfNeeded(
+        min: Double,
+        max: Double,
+        for sensor: PhysicalSensor
+    ) {
+        if min < RuuviAlertConstants.CarbonDioxide.lowerBound ||
+            max > RuuviAlertConstants.CarbonDioxide.upperBound {
+            ruuviLocalSettings.setShowCustomCO2AlertBound(true, for: sensor.id)
+        }
+    }
+
+    func markCustomParticulateMatterAlertBoundIfNeeded(
+        min: Double,
+        max: Double,
+        for sensor: PhysicalSensor
+    ) {
+        if min < RuuviAlertConstants.ParticulateMatter.lowerBound ||
+            max > RuuviAlertConstants.ParticulateMatter.upperBound {
+            ruuviLocalSettings.setShowCustomPMAlertBound(true, for: sensor.id)
+        }
+    }
 }
 
 // MARK: - RuuviTag
@@ -1783,7 +1805,13 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         upper: max
                     )
                     applyCloudMetadata = { [weak self] in
-                        self?.setCarbonDioxide(
+                        guard let self else { return }
+                        self.markCustomCarbonDioxideAlertBoundIfNeeded(
+                            min: min,
+                            max: max,
+                            for: physicalSensor
+                        )
+                        self.setCarbonDioxide(
                             description: cloudAlert.description,
                             for: physicalSensor
                         )
@@ -1795,7 +1823,13 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         upper: max
                     )
                     applyCloudMetadata = { [weak self] in
-                        self?.setPM1(
+                        guard let self else { return }
+                        self.markCustomParticulateMatterAlertBoundIfNeeded(
+                            min: min,
+                            max: max,
+                            for: physicalSensor
+                        )
+                        self.setPM1(
                             description: cloudAlert.description,
                             for: physicalSensor
                         )
@@ -1807,7 +1841,13 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         upper: max
                     )
                     applyCloudMetadata = { [weak self] in
-                        self?.setPM25(
+                        guard let self else { return }
+                        self.markCustomParticulateMatterAlertBoundIfNeeded(
+                            min: min,
+                            max: max,
+                            for: physicalSensor
+                        )
+                        self.setPM25(
                             description: cloudAlert.description,
                             for: physicalSensor
                         )
@@ -1819,7 +1859,13 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         upper: max
                     )
                     applyCloudMetadata = { [weak self] in
-                        self?.setPM4(
+                        guard let self else { return }
+                        self.markCustomParticulateMatterAlertBoundIfNeeded(
+                            min: min,
+                            max: max,
+                            for: physicalSensor
+                        )
+                        self.setPM4(
                             description: cloudAlert.description,
                             for: physicalSensor
                         )
@@ -1831,7 +1877,13 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
                         upper: max
                     )
                     applyCloudMetadata = { [weak self] in
-                        self?.setPM10(
+                        guard let self else { return }
+                        self.markCustomParticulateMatterAlertBoundIfNeeded(
+                            min: min,
+                            max: max,
+                            for: physicalSensor
+                        )
+                        self.setPM10(
                             description: cloudAlert.description,
                             for: physicalSensor
                         )

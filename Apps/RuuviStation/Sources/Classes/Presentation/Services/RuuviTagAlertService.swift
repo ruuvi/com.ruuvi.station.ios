@@ -335,6 +335,11 @@ class RuuviTagAlertService {
 
         var updatedConfig = currentConfig
         if let lowerBound = lowerBound {
+            markCustomAlertRangeIfNeeded(
+                type: alertType,
+                value: lowerBound,
+                physicalSensor: physicalSensor
+            )
             updatedConfig = RuuviTagCardSnapshotAlertConfig(
                 type: currentConfig.type,
                 alertType: currentConfig.alertType,
@@ -355,6 +360,11 @@ class RuuviTagAlertService {
         }
 
         if let upperBound = upperBound {
+            markCustomAlertRangeIfNeeded(
+                type: alertType,
+                value: upperBound,
+                physicalSensor: physicalSensor
+            )
             updatedConfig = RuuviTagCardSnapshotAlertConfig(
                 type: updatedConfig.type,
                 alertType: updatedConfig.alertType,
@@ -993,6 +1003,32 @@ private extension RuuviTagAlertService {
         case .signal: alertService.setUpper(signal: value, ruuviTag: physicalSensor)
         case .batteryVoltage: alertService.setUpper(batteryVoltage: value, ruuviTag: physicalSensor)
         default: break
+        }
+    }
+
+    func markCustomAlertRangeIfNeeded(
+        type: AlertType,
+        value: Double,
+        physicalSensor: RuuviTagSensor
+    ) {
+        switch type {
+        case .temperature:
+            if value < RuuviAlertConstants.Temperature.lowerBound ||
+                value > RuuviAlertConstants.Temperature.upperBound {
+                settings.setShowCustomTempAlertBound(true, for: physicalSensor.id)
+            }
+        case .carbonDioxide:
+            if value < RuuviAlertConstants.CarbonDioxide.lowerBound ||
+                value > RuuviAlertConstants.CarbonDioxide.upperBound {
+                settings.setShowCustomCO2AlertBound(true, for: physicalSensor.id)
+            }
+        case .pMatter1, .pMatter25, .pMatter4, .pMatter10:
+            if value < RuuviAlertConstants.ParticulateMatter.lowerBound ||
+                value > RuuviAlertConstants.ParticulateMatter.upperBound {
+                settings.setShowCustomPMAlertBound(true, for: physicalSensor.id)
+            }
+        default:
+            break
         }
     }
 

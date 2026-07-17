@@ -539,9 +539,16 @@ extension CardsSettingsPresenter {
     }
 
     private func updateAlertSections(for snapshot: RuuviTagCardSnapshot) {
+        let sensorId = sensor?.id ?? snapshot.id
+        let customRanges = CardsSettingsAlertsBuilder.CustomRangeSelection(
+            temperature: settings.showCustomTempAlertBound(for: sensorId),
+            carbonDioxide: settings.showCustomCO2AlertBound(for: sensorId),
+            particulateMatter: settings.showCustomPMAlertBound(for: sensorId)
+        )
         let sections = CardsSettingsAlertsBuilder.makeSections(
             snapshot: snapshot,
-            measurementService: measurementService
+            measurementService: measurementService,
+            customRanges: customRanges
         )
         view?.updateAlertSections(sections)
     }

@@ -7,6 +7,18 @@ import RuuviOntology
 import RuuviService
 
 struct CardsSettingsAlertsBuilder {
+    struct CustomRangeSelection {
+        let temperature: Bool
+        let carbonDioxide: Bool
+        let particulateMatter: Bool
+
+        static let standard = CustomRangeSelection(
+            temperature: false,
+            carbonDioxide: false,
+            particulateMatter: false
+        )
+    }
+
     // Alert types that are not related to anyt measurements and not
     // eligible for visibility settings.
     private static let auxiliaryAlertTypes: [AlertType] = [
@@ -21,7 +33,8 @@ struct CardsSettingsAlertsBuilder {
 
     static func makeSections(
         snapshot: RuuviTagCardSnapshot,
-        measurementService: RuuviServiceMeasurement?
+        measurementService: RuuviServiceMeasurement?,
+        customRanges: CustomRangeSelection = .standard
     ) -> [CardsSettingsAlertSectionModel] {
         orderedAlertTypes(
             for: snapshot,
@@ -30,7 +43,8 @@ struct CardsSettingsAlertsBuilder {
             makeSection(
                 for: prototype,
                 snapshot: snapshot,
-                measurementService: measurementService
+                measurementService: measurementService,
+                customRanges: customRanges
             )
         }
     }
@@ -87,7 +101,8 @@ private extension CardsSettingsAlertsBuilder {
     static func makeSection(
         for type: AlertType,
         snapshot: RuuviTagCardSnapshot,
-        measurementService: RuuviServiceMeasurement?
+        measurementService: RuuviServiceMeasurement?,
+        customRanges: CardsSettingsAlertsBuilder.CustomRangeSelection
     ) -> CardsSettingsAlertSectionModel? {
         guard shouldDisplay(type: type, snapshot: snapshot) else {
             return nil
@@ -95,7 +110,6 @@ private extension CardsSettingsAlertsBuilder {
 
         let config = snapshot.getAlertConfig(for: type) ??
             RuuviTagCardSnapshotAlertConfig.defaultConfig(for: type)
-        let hasMeasurement = hasMeasurementData(for: type, snapshot: snapshot)
 
         let headerState = CardsSettingsAlertSectionModel.HeaderState(
             isOn: config.isActive,
@@ -112,7 +126,7 @@ private extension CardsSettingsAlertsBuilder {
             snapshot: snapshot,
             config: config,
             measurementService: measurementService,
-            hasMeasurement: hasMeasurement
+            customRanges: customRanges
         )
 
         return CardsSettingsAlertSectionModel(
@@ -135,8 +149,10 @@ private extension CardsSettingsAlertsBuilder {
         snapshot: RuuviTagCardSnapshot,
         config: RuuviTagCardSnapshotAlertConfig,
         measurementService: RuuviServiceMeasurement?,
-        hasMeasurement: Bool
+        customRanges: CardsSettingsAlertsBuilder.CustomRangeSelection
     ) -> (CardsSettingsAlertUIConfiguration, Bool) {
+        let hasMeasurement = hasMeasurementData(for: type, snapshot: snapshot)
+
         switch type {
         case .temperature:
             return adjustedInteraction(
@@ -144,7 +160,8 @@ private extension CardsSettingsAlertsBuilder {
                     snapshot: snapshot,
                     config: config,
                     measurementService: measurementService,
-                    hasMeasurement: hasMeasurement
+                    hasMeasurement: hasMeasurement,
+                    usesCustomRange: customRanges.temperature
                 ),
                 snapshot: snapshot
             )
@@ -246,7 +263,8 @@ private extension CardsSettingsAlertsBuilder {
                     latestMeasurement: latestCO2(
                         snapshot: snapshot,
                         measurementService: measurementService
-                    )
+                    ),
+                    usesCustomRange: customRanges.carbonDioxide
                 ),
                 snapshot: snapshot
             )
@@ -258,7 +276,8 @@ private extension CardsSettingsAlertsBuilder {
                     hasMeasurement: hasMeasurement,
                     unit: RuuviLocalization.unitPm10,
                     latest: snapshot.latestRawRecord?.pm1,
-                    measurementService: measurementService
+                    measurementService: measurementService,
+                    usesCustomRange: customRanges.particulateMatter
                 ),
                 snapshot: snapshot
             )
@@ -270,7 +289,8 @@ private extension CardsSettingsAlertsBuilder {
                     hasMeasurement: hasMeasurement,
                     unit: RuuviLocalization.unitPm25,
                     latest: snapshot.latestRawRecord?.pm25,
-                    measurementService: measurementService
+                    measurementService: measurementService,
+                    usesCustomRange: customRanges.particulateMatter
                 ),
                 snapshot: snapshot
             )
@@ -282,7 +302,8 @@ private extension CardsSettingsAlertsBuilder {
                     hasMeasurement: hasMeasurement,
                     unit: RuuviLocalization.unitPm40,
                     latest: snapshot.latestRawRecord?.pm4,
-                    measurementService: measurementService
+                    measurementService: measurementService,
+                    usesCustomRange: customRanges.particulateMatter
                 ),
                 snapshot: snapshot
             )
@@ -294,7 +315,8 @@ private extension CardsSettingsAlertsBuilder {
                     hasMeasurement: hasMeasurement,
                     unit: RuuviLocalization.unitPm100,
                     latest: snapshot.latestRawRecord?.pm10,
-                    measurementService: measurementService
+                    measurementService: measurementService,
+                    usesCustomRange: customRanges.particulateMatter
                 ),
                 snapshot: snapshot
             )
@@ -419,11 +441,13 @@ private extension CardsSettingsAlertsBuilder {
         snapshot: RuuviTagCardSnapshot,
         config: RuuviTagCardSnapshotAlertConfig,
         measurementService: RuuviServiceMeasurement?,
-        hasMeasurement: Bool
+        hasMeasurement: Bool,
+        usesCustomRange: Bool
     ) -> (CardsSettingsAlertUIConfiguration, Bool) {
         let temperatureUnit = preferredTemperatureUnit(measurementService: measurementService)
         let rangeValues = temperatureUnit.alertRange
         let sliderRange = ClosedRange(uncheckedBounds: (rangeValues.lowerBound, rangeValues.upperBound))
+        let manualRange = customTemperatureRange(for: temperatureUnit)
 
         let lower = config.lowerBound.map {
             Temperature(value: $0, unit: .celsius).converted(
@@ -438,12 +462,18 @@ private extension CardsSettingsAlertsBuilder {
         } ?? sliderRange.upperBound
 
         let selected = clamp(
-            range: sliderRange,
-            proposal: normalizedProposalRange(range: sliderRange, lower: lower, upper: upper)
+            range: manualRange,
+            proposal: normalizedProposalRange(range: manualRange, lower: lower, upper: upper)
+        )
+        let effectiveSliderRange = usesCustomRange ? manualRange : resolvedSliderRange(
+            standardRange: sliderRange,
+            manualRange: manualRange,
+            selectedRange: selected
         )
 
         let slider = CardsSettingsAlertSliderConfiguration(
-            range: sliderRange,
+            range: effectiveSliderRange,
+            manualRange: manualRange,
             selectedRange: selected,
             unit: temperatureUnit.symbol,
             format: Constants.configFormat,
@@ -725,7 +755,8 @@ private extension CardsSettingsAlertsBuilder {
         format: String,
         latestMeasurement: String?,
         latestMeasurementDisplay: CardsSettingsAlertLatestMeasurement? = nil,
-        notice: String? = nil
+        notice: String? = nil,
+        usesCustomRange: Bool = false
     ) -> (CardsSettingsAlertUIConfiguration, Bool) {
         let manualRange = manualRange ?? range
         let lower = config.lowerBound ?? range.lowerBound
@@ -734,9 +765,14 @@ private extension CardsSettingsAlertsBuilder {
             range: manualRange,
             proposal: normalizedProposalRange(range: manualRange, lower: lower, upper: upper)
         )
+        let effectiveSliderRange = usesCustomRange ? manualRange : resolvedSliderRange(
+            standardRange: range,
+            manualRange: manualRange,
+            selectedRange: selected
+        )
 
         let slider = CardsSettingsAlertSliderConfiguration(
-            range: range,
+            range: effectiveSliderRange,
             manualRange: manualRange,
             selectedRange: selected,
             unit: unit,
@@ -774,7 +810,8 @@ private extension CardsSettingsAlertsBuilder {
         hasMeasurement: Bool,
         unit: String,
         latest: Double?,
-        measurementService: RuuviServiceMeasurement?
+        measurementService: RuuviServiceMeasurement?,
+        usesCustomRange: Bool
     ) -> (CardsSettingsAlertUIConfiguration, Bool) {
         let range = RuuviAlertConstants.ParticulateMatter.lowerBound...RuuviAlertConstants.ParticulateMatter.upperBound
 
@@ -794,7 +831,8 @@ private extension CardsSettingsAlertsBuilder {
             )),
             unit: unit,
             format: Constants.configFormat,
-            latestMeasurement: latestMeasurement
+            latestMeasurement: latestMeasurement,
+            usesCustomRange: usesCustomRange
         )
     }
 
@@ -971,6 +1009,37 @@ private extension CardsSettingsAlertsBuilder {
         default:
             return .celsius
         }
+    }
+
+    static func customTemperatureRange(
+        for temperatureUnit: TemperatureUnit
+    ) -> ClosedRange<Double> {
+        ClosedRange(uncheckedBounds: (
+            lower: Temperature(
+                value: RuuviAlertConstants.Temperature.customLowerBound,
+                unit: .celsius
+            )
+            .converted(to: temperatureUnit.unitTemperature)
+            .value,
+            upper: Temperature(
+                value: RuuviAlertConstants.Temperature.customUpperBound,
+                unit: .celsius
+            )
+            .converted(to: temperatureUnit.unitTemperature)
+            .value
+        ))
+    }
+
+    static func resolvedSliderRange(
+        standardRange: ClosedRange<Double>,
+        manualRange: ClosedRange<Double>,
+        selectedRange: ClosedRange<Double>
+    ) -> ClosedRange<Double> {
+        if selectedRange.lowerBound < standardRange.lowerBound ||
+            selectedRange.upperBound > standardRange.upperBound {
+            return manualRange
+        }
+        return standardRange
     }
 
     static func shouldDisplay(
