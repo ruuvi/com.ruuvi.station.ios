@@ -59,6 +59,7 @@ struct CardsSettingsBluetoothSectionView: View {
                 onToggle: { value in
                     state.setKeepConnectionDisplay(isOn: value)
                     actions.didToggleKeepConnection.send(value)
+                    return true
                 }
             )
         }

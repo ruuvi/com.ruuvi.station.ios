@@ -68,6 +68,7 @@ struct VisibilitySettingsView: View {
                 showsStatusLabel: true,
                 onToggle: { value in
                     onToggleUseDefault(value)
+                    return true
                 }
             )
         }

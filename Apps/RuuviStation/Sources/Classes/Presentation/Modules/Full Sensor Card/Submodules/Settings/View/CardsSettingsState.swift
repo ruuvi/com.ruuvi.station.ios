@@ -6,6 +6,29 @@ import RuuviLocalization
 import RuuviOntology
 import RuuviService
 
+enum CardsSettingsAlertPairingPrompt {
+    static func shouldShow(
+        type: AlertType,
+        isOn: Bool,
+        snapshot: RuuviTagCardSnapshot
+    ) -> Bool {
+        if case .cloudConnection = type {
+            return false
+        }
+
+        guard isOn,
+              snapshot.identifierData.luid != nil else {
+            return false
+        }
+
+        return !snapshot.metadata.isCloud &&
+            snapshot.capabilities.showKeepConnection &&
+            snapshot.connectionData.isConnectable &&
+            !snapshot.connectionData.isConnected &&
+            !snapshot.connectionData.keepConnection
+    }
+}
+
 @MainActor
 final class CardsSettingsState: ObservableObject {
 

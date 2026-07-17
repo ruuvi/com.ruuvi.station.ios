@@ -5,7 +5,7 @@ struct RuuviSwitchRepresentable: UIViewRepresentable {
     @Binding var isOn: Bool
     var isEnabled: Bool
     var showsStatusLabel: Bool
-    var onToggle: (Bool) -> Void
+    var onToggle: (Bool) -> Bool
 
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -47,7 +47,10 @@ struct RuuviSwitchRepresentable: UIViewRepresentable {
         }
 
         func didChangeSwitchState(sender: RuuviSwitchView, didToggle isOn: Bool) {
-            parent.onToggle(isOn)
+            guard parent.onToggle(isOn) else {
+                sender.toggleState(with: parent.isOn, withAnimation: true)
+                return
+            }
         }
     }
 }

@@ -72,6 +72,26 @@ extension CardsAlertsViewController: CardsAlertsViewInput {
         state.setAlertSections(sections)
         expandFirstAlertSectionIfNeeded(with: sections)
     }
+
+    func showEnableAlertPairingDialog(for type: AlertType) {
+        let message = RuuviLocalization.TagSettings.Alerts.NoCloudDataBanner.text
+        let controller = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        controller.addAction(UIAlertAction(
+            title: RuuviLocalization.no,
+            style: .cancel,
+            handler: { [weak self] _ in
+                self?.output?.viewDidConfirmEnableAlert(for: type, shouldPair: false)
+            }
+        ))
+        controller.addAction(UIAlertAction(
+            title: RuuviLocalization.TagSettings.PairAndBackgroundScan.Unpaired.title,
+            style: .default,
+            handler: { [weak self] _ in
+                self?.output?.viewDidConfirmEnableAlert(for: type, shouldPair: true)
+            }
+        ))
+        present(controller, animated: true)
+    }
 }
 
 // MARK: - UITextFieldDelegate

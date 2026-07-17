@@ -1,3 +1,5 @@
+// swiftlint:disable file_length
+
 import Foundation
 import RuuviCloud
 import RuuviLocalization
@@ -81,6 +83,24 @@ extension CardsAlertsPresenter: CardsAlertsViewOutput {
     }
 
     func viewDidChangeAlertState(
+        for type: AlertType,
+        isOn: Bool
+    ) {
+        if shouldPromptForPairingBeforeEnablingAlert(type: type, isOn: isOn) {
+            view?.showEnableAlertPairingDialog(for: type)
+            return
+        }
+        applyAlertStateChange(for: type, isOn: isOn)
+    }
+
+    func viewDidConfirmEnableAlert(for type: AlertType, shouldPair: Bool) {
+        if shouldPair {
+            applyKeepConnection(true)
+        }
+        applyAlertStateChange(for: type, isOn: true)
+    }
+
+    private func applyAlertStateChange(
         for type: AlertType,
         isOn: Bool
     ) {
@@ -299,6 +319,16 @@ private extension CardsAlertsPresenter {
         }
     }
 
+    func applyKeepConnection(_ keep: Bool) {
+        guard let snapshot else { return }
+        RuuviTagServiceCoordinatorManager.shared.withCoordinator { coordinator in
+            coordinator.services.connection.setKeepConnection(
+                keep,
+                for: snapshot
+            )
+        }
+    }
+
     @discardableResult
     func refreshConnectionStateIfNeeded() -> Bool {
         guard let snapshot, snapshot.identifierData.luid != nil else {
@@ -311,6 +341,18 @@ private extension CardsAlertsPresenter {
             isConnected: status.isConnected,
             isConnectable: snapshot.connectionData.isConnectable,
             keepConnection: status.keepConnection
+        )
+    }
+
+    func shouldPromptForPairingBeforeEnablingAlert(
+        type: AlertType,
+        isOn: Bool
+    ) -> Bool {
+        guard let snapshot else { return false }
+        return CardsSettingsAlertPairingPrompt.shouldShow(
+            type: type,
+            isOn: isOn,
+            snapshot: snapshot
         )
     }
 

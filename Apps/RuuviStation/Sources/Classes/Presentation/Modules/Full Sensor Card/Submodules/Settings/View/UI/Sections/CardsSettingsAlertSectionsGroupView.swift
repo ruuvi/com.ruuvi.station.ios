@@ -75,6 +75,11 @@ struct CardsSettingsAlertSectionsGroupView: View {
                     },
                     onToggleAlert: { isOn in
                         actions.didToggleAlert.send((section.alertType, isOn))
+                        return !CardsSettingsAlertPairingPrompt.shouldShow(
+                            type: section.alertType,
+                            isOn: isOn,
+                            snapshot: state.snapshot
+                        )
                     },
                     onRangeChange: { range, isFinal in
                         let change = CardsSettingsAlertRangeChange(
@@ -165,7 +170,7 @@ struct CardsSettingsAlertSectionRow: View {
     let showsToggleInHeader: Bool
     let displayMode: CardsSettingsAlertDisplayMode
     let onToggleSection: () -> Void
-    let onToggleAlert: (Bool) -> Void
+    let onToggleAlert: (Bool) -> Bool
     let onRangeChange: (ClosedRange<Double>, Bool) -> Void
     let onEditDescription: () -> Void
     let onTapLimitEdit: () -> Void
@@ -181,7 +186,7 @@ struct CardsSettingsAlertSectionRow: View {
         showsToggleInHeader: Bool,
         displayMode: CardsSettingsAlertDisplayMode,
         onToggleSection: @escaping () -> Void,
-        onToggleAlert: @escaping (Bool) -> Void,
+        onToggleAlert: @escaping (Bool) -> Bool,
         onRangeChange: @escaping (ClosedRange<Double>, Bool) -> Void,
         onEditDescription: @escaping () -> Void,
         onTapLimitEdit: @escaping () -> Void,
@@ -341,7 +346,7 @@ private struct CardsSettingsAlertSectionContentView: View {
     @Binding var toggleValue: Bool
     @Binding var sliderRange: ClosedRange<Double>?
 
-    let onToggleAlert: (Bool) -> Void
+    let onToggleAlert: (Bool) -> Bool
     let onRangeChange: (ClosedRange<Double>, Bool) -> Void
     let onEditDescription: () -> Void
     let onTapLimitEdit: () -> Void
@@ -588,7 +593,7 @@ private struct CardsSettingsAlertSectionRowHeader: View {
     @Binding var toggleValue: Bool
     let isToggleEnabled: Bool
     let showsStatusLabel: Bool
-    let onToggleAlert: (Bool) -> Void
+    let onToggleAlert: (Bool) -> Bool
     let onToggleSection: () -> Void
 
     private struct Constants {
@@ -868,7 +873,7 @@ private struct CardsSettingsAlertEnableRow: View {
     @Binding var isOn: Bool
     let isEnabled: Bool
     let showsStatusLabel: Bool
-    let onToggle: (Bool) -> Void
+    let onToggle: (Bool) -> Bool
     let isCompact: Bool
 
     private struct Constants {
@@ -886,8 +891,9 @@ private struct CardsSettingsAlertEnableRow: View {
                 isEnabled: isEnabled,
                 showsStatusLabel: showsStatusLabel,
                 onToggle: { value in
+                    guard onToggle(value) else { return false }
                     isOn = value
-                    onToggle(value)
+                    return true
                 }
             )
         }
@@ -898,8 +904,8 @@ private struct CardsSettingsAlertEnableRow: View {
         .onTapGesture {
             guard isEnabled else { return }
             let newValue = !isOn
+            guard onToggle(newValue) else { return }
             isOn = newValue
-            onToggle(newValue)
         }
     }
 }

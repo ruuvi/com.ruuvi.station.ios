@@ -11,6 +11,7 @@ protocol CardsSettingsViewInput: AnyObject {
     func showFirmwareUpdateDialog()
     func showFirmwareDismissConfirmationUpdateDialog()
     func resetKeepConnectionSwitch()
+    func showEnableAlertPairingDialog(for type: AlertType)
     func showKeepConnectionTimeoutDialog()
     func showKeepConnectionCloudModeDialog()
     func stopKeepConnectionAnimatingDots()

@@ -29,6 +29,7 @@ protocol CardsSettingsViewOutput: AnyObject {
     func viewDidChangeAlertUpperBound(for type: AlertType, upper: CGFloat)
     func viewDidChangeCloudConnectionAlertUnseenDuration(duration: Int)
     func viewDidChangeAlertDescription(for type: AlertType, description: String?)
+    func viewDidConfirmEnableAlert(for type: AlertType, shouldPair: Bool)
 
     // Offset Correction
     func viewDidTapTemperatureOffsetCorrection()

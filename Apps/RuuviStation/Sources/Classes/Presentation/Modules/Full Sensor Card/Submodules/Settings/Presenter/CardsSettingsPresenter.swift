@@ -294,6 +294,26 @@ extension CardsSettingsPresenter: CardsSettingsViewOutput {
         for type: AlertType,
         isOn: Bool
     ) {
+        if shouldPromptForPairingBeforeEnablingAlert(type: type, isOn: isOn) {
+            view?.showEnableAlertPairingDialog(for: type)
+            return
+        }
+        applyAlertStateChange(for: type, isOn: isOn)
+    }
+
+    func viewDidConfirmEnableAlert(for type: AlertType, shouldPair: Bool) {
+        if shouldPair {
+            applyKeepConnection(true)
+            view?.startKeepConnectionAnimatingDots()
+            startKeepConnectionTimeoutTimer()
+        }
+        applyAlertStateChange(for: type, isOn: true)
+    }
+
+    private func applyAlertStateChange(
+        for type: AlertType,
+        isOn: Bool
+    ) {
         guard shouldApplyAlertStateChange(for: type, isOn: isOn) else { return }
         if case .movement = type, !isOn, let luid = sensor?.luid {
             alertHandler?.clearMovementHysteresis(for: luid.value)
@@ -949,6 +969,18 @@ private extension CardsSettingsPresenter {
             return current != isOn
         }
         return true
+    }
+
+    func shouldPromptForPairingBeforeEnablingAlert(
+        type: AlertType,
+        isOn: Bool
+    ) -> Bool {
+        guard let snapshot else { return false }
+        return CardsSettingsAlertPairingPrompt.shouldShow(
+            type: type,
+            isOn: isOn,
+            snapshot: snapshot
+        )
     }
 
     func shouldApplyLowerBoundChange(for type: AlertType, candidate: Double) -> Bool {
