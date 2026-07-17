@@ -148,7 +148,12 @@ struct CardsSettingsMoreInfoRowBuilder {
         )
 
         let measurementSequence = display.measurementSequenceNumber
-            .map { "\($0)" } ?? emptyValue
+            .map {
+                formattedMeasurementSequence(
+                    from: $0,
+                    measurementService: measurementService
+                )
+            } ?? emptyValue
         rows.append(
             CardsSettingsMoreInfoRowModel(
                 id: CardsSettingsMoreInfoRowID.measurementSequenceNumber.rawValue,
@@ -242,5 +247,18 @@ extension CardsSettingsMoreInfoRowBuilder {
     static func formattedRSSI(from value: Int?) -> String {
         guard let value else { return RuuviLocalization.na }
         return "\(value) \(RuuviLocalization.dBm)"
+    }
+
+    static func formattedMeasurementSequence(
+        from value: Int,
+        measurementService: RuuviServiceMeasurement?
+    ) -> String {
+        if let measurementService {
+            return measurementService.string(from: Double(value))
+        }
+        return NumberFormatter.localizedString(
+            from: NSNumber(value: value),
+            number: .decimal
+        )
     }
 }

@@ -600,10 +600,23 @@ struct MeasurementSequenceExtractor: MeasurementExtractor {
         guard let sequence = record.measurementSequenceNumber else { return nil }
 
         return MeasurementResult(
-            value: "\(sequence)",
+            value: formattedSequence(sequence, measurementService: measurementService),
             unit: "",
             isProminent: false,
             showSubscript: false
+        )
+    }
+
+    private func formattedSequence(
+        _ sequence: Int,
+        measurementService: RuuviServiceMeasurement?
+    ) -> String {
+        if let measurementService {
+            return measurementService.string(from: Double(sequence))
+        }
+        return NumberFormatter.localizedString(
+            from: NSNumber(value: sequence),
+            number: .decimal
         )
     }
 }

@@ -782,7 +782,9 @@ extension WidgetViewModel {
         case .rssi:
             return record.rssi.map { "\($0)" } ?? "-"
         case .measurementSequenceNumber:
-            return record.measurementSequenceNumber.map { "\($0)" } ?? "-"
+            return measurementService.string(
+                for: record.measurementSequenceNumber.map(Double.init)
+            )
         default:
             return "-"
         }
