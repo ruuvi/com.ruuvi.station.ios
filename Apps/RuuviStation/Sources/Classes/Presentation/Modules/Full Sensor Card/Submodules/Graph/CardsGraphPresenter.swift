@@ -275,7 +275,7 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
 
         view?.historyLengthInHours = settings.chartDurationHours
         view?.showChartStat = settings.chartStatsOn
-        view?.compactChartView = settings.compactChartView
+        view?.chartsPerScreen = settings.chartsPerScreen
         view?.showChartAll = settings.chartShowAll
         view?.showAlertRangeInGraph = settings.showAlertsRangeInGraph
     }
@@ -499,9 +499,9 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
         interactor?.updateChartShowMinMaxAvgSetting(with: show)
     }
 
-    func viewDidSelectTriggerCompactChart(showCompactChartView: Bool) {
-        settings.compactChartView = showCompactChartView
-        view?.compactChartView = showCompactChartView
+    func viewDidSelectChartsPerScreen(_ count: Int) {
+        settings.chartsPerScreen = count
+        view?.chartsPerScreen = count
     }
 }
 

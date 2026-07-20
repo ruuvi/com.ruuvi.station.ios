@@ -978,8 +978,27 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     // On a scale of 10-100, 100 being best quality, and 10 being the worst.
     @UserDefault("SettingsUserDefaults.imageCompressionQuality", defaultValue: 40)
     var imageCompressionQuality: Int
-    @UserDefault("SettingsUserDefaults.compactChatView", defaultValue: true)
-    var compactChartView: Bool
+    @UserDefault("SettingsUserDefaults.chartsPerScreen", defaultValue: 0)
+    private var storedChartsPerScreen: Int
+    private let legacyCompactChartViewKey = "SettingsUserDefaults.compactChatView"
+
+    var chartsPerScreen: Int {
+        get {
+            guard (1 ... 3).contains(storedChartsPerScreen) else {
+                let wasCompact = UserDefaults.standard.object(
+                    forKey: legacyCompactChartViewKey
+                ) as? Bool ?? true
+                storedChartsPerScreen = wasCompact ? 3 : 1
+                UserDefaults.standard.removeObject(forKey: legacyCompactChartViewKey)
+                return storedChartsPerScreen
+            }
+            return storedChartsPerScreen
+        }
+        set {
+            storedChartsPerScreen = min(max(newValue, 1), 3)
+            UserDefaults.standard.removeObject(forKey: legacyCompactChartViewKey)
+        }
+    }
 
     @UserDefault("SettingsUserDefaults.historySyncForEachSensor", defaultValue: true)
     var historySyncForEachSensor: Bool

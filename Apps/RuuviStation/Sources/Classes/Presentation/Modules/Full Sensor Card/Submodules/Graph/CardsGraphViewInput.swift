@@ -12,7 +12,7 @@ enum GraphGattSyncStatus {
 protocol CardsGraphViewInput: ViewInput {
     var historyLengthInHours: Int { get set }
     var showChartStat: Bool { get set }
-    var compactChartView: Bool { get set }
+    var chartsPerScreen: Int { get set }
     var showChartAll: Bool { get set }
     var showAlertRangeInGraph: Bool { get set }
     var viewIsVisible: Bool { get }

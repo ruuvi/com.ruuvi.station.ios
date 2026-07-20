@@ -21,5 +21,5 @@ protocol CardsGraphViewOutput: AnyObject {
     func viewDidSelectAllChartHistory()
     func viewDidSelectLongerHistory()
     func viewDidSelectTriggerChartStat(show: Bool)
-    func viewDidSelectTriggerCompactChart(showCompactChartView: Bool)
+    func viewDidSelectChartsPerScreen(_ count: Int)
 }

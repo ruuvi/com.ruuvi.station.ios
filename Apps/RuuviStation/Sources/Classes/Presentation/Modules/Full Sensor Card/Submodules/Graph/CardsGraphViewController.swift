@@ -29,8 +29,7 @@ class CardsGraphViewController: UIViewController {
             moreButton.updateMenu(
                 with:
                     moreButtonOptions(
-                        showChartStat: showChartStat,
-                        compactChartView: compactChartView
+                        showChartStat: showChartStat
                     )
             )
         }
@@ -65,21 +64,19 @@ class CardsGraphViewController: UIViewController {
             moreButton.updateMenu(
                 with:
                     moreButtonOptions(
-                        showChartStat: showChartStat,
-                        compactChartView: compactChartView
+                        showChartStat: showChartStat
                     )
             )
         }
     }
 
-    var compactChartView: Bool = true {
+    var chartsPerScreen: Int = 3 {
         didSet {
             updateChartsCollectionConstaints(from: self.chartModules)
             moreButton.updateMenu(
                 with:
                     moreButtonOptions(
-                        showChartStat: showChartStat,
-                        compactChartView: compactChartView
+                        showChartStat: showChartStat
                     )
             )
         }
@@ -495,8 +492,7 @@ class CardsGraphViewController: UIViewController {
 
     // swiftlint:disable:next function_body_length
     fileprivate func moreButtonOptions(
-        showChartStat: Bool = true,
-        compactChartView: Bool = true
+        showChartStat: Bool = true
     ) -> UIMenu {
         let exportHistoryCSVAction = UIAction(title: RuuviLocalization.exportHistory) {
             [weak self] _ in
@@ -526,15 +522,15 @@ class CardsGraphViewController: UIViewController {
         }
 
         let chartCompactExpandAction = UIAction(
-            title: compactChartView ?
-            RuuviLocalization.increaseGraphSize :
-                RuuviLocalization.decreaseGraphSize
+            title: chartsPerScreen == 1 ?
+                RuuviLocalization.decreaseGraphSize :
+                RuuviLocalization.increaseGraphSize
         ) {
             [weak self] _ in
             guard let sSelf = self else { return }
-            sSelf.output?.viewDidSelectTriggerCompactChart(
-                showCompactChartView: !compactChartView
-            )
+            let nextCount = sSelf.chartsPerScreen == 1 ?
+                3 : sSelf.chartsPerScreen - 1
+            sSelf.output?.viewDidSelectChartsPerScreen(nextCount)
             sSelf.updateChartsCollectionConstaints(
                 from: sSelf.chartModules,
                 withAnimation: true
@@ -1127,15 +1123,7 @@ extension CardsGraphViewController {
         if isLandscapeLayout {
             totalHeight
         } else {
-            if !compactChartView {
-                totalHeight
-            } else {
-                if count >= 3 {
-                    totalHeight / 3
-                } else {
-                    totalHeight / count
-                }
-            }
+            totalHeight / min(CGFloat(chartsPerScreen), count)
         }
     }
 
@@ -1147,8 +1135,8 @@ extension CardsGraphViewController {
             scrollView.edgeFader?.updateFadeMask()
             return
         }
-        if compactChartView {
-            if isLandscapeLayout || chartModules.count > 3 {
+        if chartsPerScreen > 1 {
+            if isLandscapeLayout || chartModules.count > chartsPerScreen {
                 scrollView.isPagingEnabled = isLandscapeLayout
                 scrollView.isScrollEnabled = true
                 scrollView.showsVerticalScrollIndicator = true

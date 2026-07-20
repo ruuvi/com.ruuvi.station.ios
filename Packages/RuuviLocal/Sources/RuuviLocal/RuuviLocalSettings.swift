@@ -126,7 +126,7 @@ public protocol RuuviLocalSettings: AnyObject {
     var showAlertsRangeInGraph: Bool { get set }
     var useNewGraphRendering: Bool { get set }
     var imageCompressionQuality: Int { get set }
-    var compactChartView: Bool { get set }
+    var chartsPerScreen: Int { get set }
 
     /// Syncs full history for each sensor when associated charts
     /// is presented. Much efficient.
