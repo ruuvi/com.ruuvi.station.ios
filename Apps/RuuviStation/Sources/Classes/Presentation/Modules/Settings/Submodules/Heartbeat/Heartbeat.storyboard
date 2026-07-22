@@ -18,13 +18,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ef3-zd-fTi">
-                                <rect key="frame" x="0.0" y="96" width="414" height="732"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <connections>
-                                    <segue destination="O97-4W-9W0" kind="embed" identifier="EmbedHeartbeatSwiftUIHostingControllerSegueIdentifier" destinationCreationSelector="addSwiftUIView:" id="j1W-7n-11v"/>
-                                </connections>
-                            </containerView>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kjx-Fi-b2F">
                                 <rect key="frame" x="0.0" y="96" width="414" height="732"/>
                                 <connections>
@@ -39,15 +32,9 @@
                             <constraint firstItem="vso-Qy-ULO" firstAttribute="bottom" secondItem="kjx-Fi-b2F" secondAttribute="bottom" id="9BC-dy-bEK"/>
                             <constraint firstItem="kjx-Fi-b2F" firstAttribute="top" secondItem="vso-Qy-ULO" secondAttribute="top" id="Ils-0U-nLJ"/>
                             <constraint firstItem="kjx-Fi-b2F" firstAttribute="leading" secondItem="vso-Qy-ULO" secondAttribute="leading" id="LCr-xy-ihX"/>
-                            <constraint firstItem="vso-Qy-ULO" firstAttribute="bottom" secondItem="Ef3-zd-fTi" secondAttribute="bottom" id="Los-ca-ctG"/>
-                            <constraint firstItem="Ef3-zd-fTi" firstAttribute="trailing" secondItem="vso-Qy-ULO" secondAttribute="trailing" id="auQ-Pq-e2P"/>
-                            <constraint firstItem="Ef3-zd-fTi" firstAttribute="top" secondItem="vso-Qy-ULO" secondAttribute="top" id="kyX-HX-TI8"/>
-                            <constraint firstItem="Ef3-zd-fTi" firstAttribute="leading" secondItem="vso-Qy-ULO" secondAttribute="leading" id="vjt-bw-tPZ"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="listContainer" destination="Ef3-zd-fTi" id="aIE-qB-jMD"/>
-                        <outlet property="tableContainer" destination="kjx-Fi-b2F" id="B7q-vt-ZYO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="855-gI-5vo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -178,14 +165,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aNB-Ak-4Id" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-84.057971014492765" y="505.58035714285711"/>
-        </scene>
-        <!--Hosting Controller-->
-        <scene sceneID="FUu-61-oG2">
-            <objects>
-                <hostingController id="O97-4W-9W0" sceneMemberID="viewController"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="2DX-aI-Glx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-83" y="-145"/>
         </scene>
     </scenes>
     <resources>

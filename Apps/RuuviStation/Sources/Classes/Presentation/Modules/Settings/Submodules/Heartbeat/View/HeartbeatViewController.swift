@@ -1,32 +1,32 @@
 import RuuviLocalization
 import UIKit
-#if canImport(SwiftUI) && canImport(Combine)
-    import SwiftUI
-#endif
 
 class HeartbeatViewController: UIViewController {
     var output: HeartbeatViewOutput!
 
     var viewModel = HeartbeatViewModel() {
         didSet {
-            #if canImport(SwiftUI) && canImport(Combine)
-                if #available(iOS 13, *) {
-                    env.viewModel = viewModel
-                }
-            #endif
             table?.viewModel = viewModel
         }
     }
 
-    @IBOutlet var tableContainer: UIView!
-    @IBOutlet var listContainer: UIView!
-
-    #if canImport(SwiftUI) && canImport(Combine)
-        @available(iOS 13, *)
-        private lazy var env = HeartbeatEnvironmentObject()
-    #endif
-
     private var table: HeartbeatTableViewController?
+
+    private lazy var confirmBackgroundScanningDisable: (@escaping (Bool) -> Void) -> Void = { [weak self] completion in
+        guard let self else { return }
+        let alert = UIAlertController(
+            title: nil,
+            message: RuuviLocalization.Settings.BackgroundScanning.DisableConfirmation.message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel) { _ in
+            completion(false)
+        })
+        alert.addAction(UIAlertAction(title: RuuviLocalization.confirm, style: .default) { _ in
+            completion(true)
+        })
+        present(alert, animated: true)
+    }
 }
 
 extension HeartbeatViewController: HeartbeatViewInput {
@@ -40,7 +40,6 @@ extension HeartbeatViewController: HeartbeatViewInput {
 extension HeartbeatViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureViews()
         localize()
         styleViews()
     }
@@ -49,50 +48,15 @@ extension HeartbeatViewController {
         view.backgroundColor = RuuviColor.primary.color
     }
 
-    override func shouldPerformSegue(withIdentifier identifier: String, sender _: Any?) -> Bool {
-        #if SWIFTUI
-            if #available(iOS 13, *) {
-                return identifier == HeartbeatEmbedSegue.list.rawValue
-            } else {
-                return identifier == HeartbeatEmbedSegue.table.rawValue
-            }
-        #else
-            return identifier == HeartbeatEmbedSegue.table.rawValue
-        #endif
-    }
-
-    #if SWIFTUI && canImport(SwiftUI) && canImport(Combine)
-        @IBSegueAction func addSwiftUIView(_ coder: NSCoder) -> UIViewController? {
-            if #available(iOS 13, *) {
-                env.viewModel = viewModel
-                return UIHostingController(coder: coder, rootView: HeartbeatList().environmentObject(env))
-            } else {
-                return nil
-            }
-        }
-    #else
-        @IBSegueAction func addSwiftUIView(_: NSCoder) -> UIViewController? {
-            nil
-        }
-    #endif
-
     override func prepare(for segue: UIStoryboardSegue, sender _: Any?) {
         switch segue.identifier {
         case HeartbeatEmbedSegue.table.rawValue:
             table = segue.destination as? HeartbeatTableViewController
             table?.output = output
             table?.viewModel = viewModel
+            table?.confirmBackgroundScanningDisable = confirmBackgroundScanningDisable
         default:
             break
         }
-    }
-}
-
-// MARK: - Configure Views
-
-extension HeartbeatViewController {
-    func configureViews() {
-        tableContainer.isHidden = !shouldPerformSegue(withIdentifier: HeartbeatEmbedSegue.table.rawValue, sender: nil)
-        listContainer.isHidden = !shouldPerformSegue(withIdentifier: HeartbeatEmbedSegue.list.rawValue, sender: nil)
     }
 }

@@ -3,6 +3,7 @@ import UIKit
 
 class HeartbeatTableViewController: UITableViewController {
     var output: HeartbeatViewOutput!
+    var confirmBackgroundScanningDisable: ((@escaping (Bool) -> Void) -> Void)!
 
     var viewModel = HeartbeatViewModel() {
         didSet {
@@ -125,6 +126,16 @@ extension HeartbeatTableViewController {
 // MARK: - RuuviSwitchViewDelegate
 extension HeartbeatTableViewController: RuuviSwitchViewDelegate {
     func didChangeSwitchState(sender: RuuviSwitchView, didToggle isOn: Bool) {
-        viewModel.bgScanningState.value = isOn
+        guard !isOn else {
+            viewModel.bgScanningState.value = true
+            return
+        }
+        confirmBackgroundScanningDisable { [weak self, weak sender] confirmed in
+            if confirmed {
+                self?.viewModel.bgScanningState.value = false
+            } else {
+                sender?.toggleState(with: true)
+            }
+        }
     }
 }

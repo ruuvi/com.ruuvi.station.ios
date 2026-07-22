@@ -1,7 +1,6 @@
 import LightRoute
 
 enum HeartbeatEmbedSegue: String {
-    case list = "EmbedHeartbeatSwiftUIHostingControllerSegueIdentifier"
     case table = "EmbedHeartbeatTableViewControllerSegueIdentifier"
 }
 
