@@ -94,7 +94,7 @@ extension AlertType {
         case .luminosity:
             return RuuviLocalization.luminosityWithUnit(unit)
         case .signal:
-            return RuuviLocalization.signalStrengthWithUnit
+            return RuuviLocalization.signalStrengthDbm
         case .batteryVoltage:
             if unit.isEmpty {
                 return RuuviLocalization.batteryVoltage

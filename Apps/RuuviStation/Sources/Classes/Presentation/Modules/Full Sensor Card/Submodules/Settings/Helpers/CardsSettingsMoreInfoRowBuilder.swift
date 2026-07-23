@@ -139,7 +139,7 @@ struct CardsSettingsMoreInfoRowBuilder {
         rows.append(
             CardsSettingsMoreInfoRowModel(
                 id: CardsSettingsMoreInfoRowID.rssi.rawValue,
-                title: RuuviLocalization.signalStrengthWithUnit,
+                title: RuuviLocalization.signalStrengthDbm,
                 value: rssiValue,
                 note: nil,
                 noteColor: nil,

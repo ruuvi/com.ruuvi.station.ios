@@ -977,9 +977,9 @@ extension WidgetViewModel {
         case .pm100:
             return RuuviLocalization.pm100WithUnit(RuuviLocalization.unitPm100)
         case .voc:
-            return RuuviLocalization.vocWithUnit(RuuviLocalization.unitVoc)
+            return RuuviLocalization.voc
         case .nox:
-            return RuuviLocalization.noxWithUnit(RuuviLocalization.unitNox)
+            return RuuviLocalization.nox
         case .soundInstant:
             return RuuviLocalization.soundInstantWithUnit(RuuviLocalization.unitSound)
         case .soundAverage:
@@ -989,7 +989,7 @@ extension WidgetViewModel {
         case .luminosity:
             return RuuviLocalization.luminosityWithUnit(RuuviLocalization.unitLuminosity)
         case .rssi:
-            return RuuviLocalization.signalStrengthWithUnit()
+            return RuuviLocalization.signalStrengthDbm
         default:
             return shortName(for: variant)
         }
