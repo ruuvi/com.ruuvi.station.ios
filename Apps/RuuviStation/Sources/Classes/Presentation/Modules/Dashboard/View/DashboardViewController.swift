@@ -320,7 +320,7 @@ private extension DashboardViewController {
     func setupViewController() {
         setupUI()
         setupDataSource()
-        configureRestartAnimationsOnAppDidBecomeActive()
+        configureAlertRefreshOnAppDidBecomeActive()
         localize()
         output.viewDidLoad()
     }
@@ -632,8 +632,7 @@ private extension DashboardViewController {
         cell
             .configure(
                 with: snapshot,
-                dashboardType: dashboardType,
-                showsAlertBadge: flags.showNewSettings
+                dashboardType: dashboardType
             )
         cell.delegate = self
         cell.setMenu(cardContextMenuOption(for: indexPath))
@@ -660,7 +659,7 @@ private extension DashboardViewController {
         searchDebounceWorkItem?.cancel()
     }
 
-    func configureRestartAnimationsOnAppDidBecomeActive() {
+    func configureAlertRefreshOnAppDidBecomeActive() {
         appDidBecomeActiveToken?.invalidate()
         appDidBecomeActiveToken = nil
         appDidBecomeActiveToken = NotificationCenter
@@ -670,15 +669,15 @@ private extension DashboardViewController {
                     object: nil,
                     queue: .main
                 ) { [weak self] _ in
-                    self?.restartAlertAnimations()
+                    self?.refreshVisibleAlertStates()
                 }
     }
 
-    func restartAlertAnimations() {
+    func refreshVisibleAlertStates() {
         let visibleIndexPaths = collectionView.indexPathsForVisibleItems
         for indexPath in visibleIndexPaths {
             if let cell = collectionView.cellForItem(at: indexPath) as? DashboardCell {
-                cell.restartAlertAnimationIfNeeded()
+                cell.refreshAlertStateIfNeeded()
             }
         }
     }
@@ -1314,7 +1313,7 @@ extension DashboardViewController: UICollectionViewDelegate {
         forItemAt indexPath: IndexPath
     ) {
         if let cell = cell as? DashboardCell {
-            cell.restartAlertAnimationIfNeeded()
+            cell.refreshAlertStateIfNeeded()
         }
     }
 

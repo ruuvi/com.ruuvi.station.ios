@@ -10,7 +10,6 @@ final class CardsMenuBarView: UIView {
     private var underlineLeadingConstraint: NSLayoutConstraint!
     private var selectedMenu: CardsMenuType = .measurement
     private var hasAppeared = false
-    private let showsAlertBadge: Bool
 
     // MARK: - Constants
     private enum Constants {
@@ -30,9 +29,8 @@ final class CardsMenuBarView: UIView {
     var onTabChanged: ((CardsMenuType) -> Void)?
 
     // MARK: - Initialization
-    init(showsAlertBadge: Bool) {
-        self.showsAlertBadge = showsAlertBadge
-        super.init(frame: .zero)
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         setupUI()
     }
 
@@ -97,10 +95,7 @@ final class CardsMenuBarView: UIView {
 
     private func createButtons() {
         buttons = CardsMenuType.allCases.map { menuType in
-            let button = CardsMenuButton(
-                menuType: menuType,
-                showsAlertBadge: showsAlertBadge
-            )
+            let button = CardsMenuButton(menuType: menuType)
             button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
             stackView.addArrangedSubview(button)
             button.size(width: Constants.buttonSize, height: Constants.buttonSize)

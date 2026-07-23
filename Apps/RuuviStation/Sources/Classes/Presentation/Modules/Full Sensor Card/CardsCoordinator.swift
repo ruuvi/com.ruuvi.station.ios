@@ -139,8 +139,7 @@ private extension CardsCoordinator {
 
         let viewController = CardsBaseViewController(
             tabs: tabs,
-            activeTab: activeMenu,
-            flags: r.resolve(RuuviLocalFlags.self)!
+            activeTab: activeMenu
         )
         let presenter = CardsBasePresenter(
             measurementPresenter: cardsMeasurementViewPresenter,

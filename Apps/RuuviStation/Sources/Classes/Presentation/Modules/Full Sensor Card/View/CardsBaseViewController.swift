@@ -2,7 +2,6 @@
 
 import RuuviLocalization
 import UIKit
-import RuuviLocal
 import Combine
 import RuuviOntology
 
@@ -72,7 +71,6 @@ final class CardsBaseViewController: UIViewController {
     // MARK: Properties
     /// Mapping of tab identifier to its view controller
     private let tabs: [CardsMenuType: UIViewController]
-    private let flags: RuuviLocalFlags
 
     /// Currently visible tab
     private var activeTab: CardsMenuType
@@ -133,9 +131,7 @@ final class CardsBaseViewController: UIViewController {
     }()
 
     private lazy var menuBarView: CardsMenuBarView = {
-        let view = CardsMenuBarView(
-            showsAlertBadge: flags.showNewSettings
-        )
+        let view = CardsMenuBarView()
         view.setSelectedTab(activeTab, notify: false)
         view.backgroundColor = .clear
         return view
@@ -247,12 +243,10 @@ final class CardsBaseViewController: UIViewController {
     // MARK: - Init
     init(
         tabs: [CardsMenuType: UIViewController],
-        activeTab: CardsMenuType,
-        flags: RuuviLocalFlags
+        activeTab: CardsMenuType
     ) {
         self.tabs = tabs
         self.activeTab = activeTab
-        self.flags = flags
         super.init(nibName: nil, bundle: nil)
     }
 

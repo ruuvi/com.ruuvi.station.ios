@@ -6,7 +6,6 @@ final class CardsMenuButton: UIButton {
 
     // MARK: - Properties
     let menuType: CardsMenuType
-    private let showsAlertBadge: Bool
     private let iconImageView = UIImageView()
     private let alertBellButton = AlertBellButton()
 
@@ -16,12 +15,8 @@ final class CardsMenuButton: UIButton {
     }
 
     // MARK: - Initialization
-    init(
-        menuType: CardsMenuType,
-        showsAlertBadge: Bool
-    ) {
+    init(menuType: CardsMenuType) {
         self.menuType = menuType
-        self.showsAlertBadge = showsAlertBadge
         super.init(frame: .zero)
         setupUI()
     }
@@ -89,48 +84,21 @@ final class CardsMenuButton: UIButton {
             return
         }
 
-        switch snapshot.alertData.alertState {
-        case .empty, .none:
-            configureForEmptyState()
-        case .registered:
-            configureForRegisteredState()
-        case .firing:
-            configureForFiringState()
-        }
+        configureAlertBell()
         updateAlertBadge(for: snapshot)
     }
 
-    private func configureForEmptyState() {
+    private func configureAlertBell() {
         alertBellButton.configureBell(
             image: menuType.icon,
             tintColor: .white,
             alpha: 1
         )
         isUserInteractionEnabled = true
-    }
-
-    private func configureForRegisteredState() {
-        isUserInteractionEnabled = true
-        alertBellButton.configureBell(
-            image: menuType.icon,
-            tintColor: .white,
-            alpha: 1
-        )
-    }
-
-    private func configureForFiringState() {
-        isUserInteractionEnabled = true
-        alertBellButton.configureBell(
-            image: menuType.icon,
-            tintColor: .white,
-            alpha: 1
-        )
     }
 
     private func updateAlertBadge(for snapshot: RuuviTagCardSnapshot) {
-        guard menuType == .alerts,
-              showsAlertBadge,
-              let badgeData = snapshot.alertBadgeData() else {
+        guard let badgeData = snapshot.alertBadgeData() else {
             alertBellButton.hideBadge()
             return
         }
