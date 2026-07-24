@@ -314,20 +314,29 @@ private extension CardsSettingsState {
             .map(\.name)
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .assign(to: &$name)
+            .sink { [weak self] in
+                self?.name = $0
+            }
+            .store(in: &cancellables)
 
         snapshot.$displayData
             .map(\.background)
             .removeDuplicates { $0 === $1 }
             .map { $0.map { Image(uiImage: $0) } }
             .receive(on: DispatchQueue.main)
-            .assign(to: &$backgroundImage)
+            .sink { [weak self] in
+                self?.backgroundImage = $0
+            }
+            .store(in: &cancellables)
 
         snapshot.$displayData
             .map { $0.firmwareVersion ?? RuuviLocalization.na }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .assign(to: &$firmwareVersion)
+            .sink { [weak self] in
+                self?.firmwareVersion = $0
+            }
+            .store(in: &cancellables)
     }
 
     private func bindOwnership(_ snapshot: RuuviTagCardSnapshot) {
@@ -335,19 +344,28 @@ private extension CardsSettingsState {
             .map { $0.ownerName.unwrapped }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .assign(to: &$ownerName)
+            .sink { [weak self] in
+                self?.ownerName = $0
+            }
+            .store(in: &cancellables)
 
         snapshot.$ownership
             .map(\.isAuthorized)
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .assign(to: &$showOwner)
+            .sink { [weak self] in
+                self?.showOwner = $0
+            }
+            .store(in: &cancellables)
 
         snapshot.$ownership
             .map { $0.ownersPlan.unwrapped }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .assign(to: &$ownersPlan)
+            .sink { [weak self] in
+                self?.ownersPlan = $0
+            }
+            .store(in: &cancellables)
 
         snapshot.$ownership
             .map { ownership in
@@ -359,7 +377,10 @@ private extension CardsSettingsState {
             }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .assign(to: &$shareSummary)
+            .sink { [weak self] in
+                self?.shareSummary = $0
+            }
+            .store(in: &cancellables)
     }
 
     private func bindShareVisibility(_ snapshot: RuuviTagCardSnapshot) {
@@ -373,13 +394,19 @@ private extension CardsSettingsState {
             }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .assign(to: &$showOwnersPlan)
+            .sink { [weak self] in
+                self?.showOwnersPlan = $0
+            }
+            .store(in: &cancellables)
 
         snapshot.$metadata
             .map(\.canShareTag)
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .assign(to: &$showShare)
+            .sink { [weak self] in
+                self?.showShare = $0
+            }
+            .store(in: &cancellables)
     }
 
     private func bindMoreInfoRefresh(for snapshot: RuuviTagCardSnapshot) {
@@ -412,7 +439,10 @@ private extension CardsSettingsState {
             .map { !$0.hideSwitchStatusLabel }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .assign(to: &$showKeepConnectionStatusLabel)
+            .sink { [weak self] in
+                self?.showKeepConnectionStatusLabel = $0
+            }
+            .store(in: &cancellables)
     }
 
     private func bindCalibration(_ snapshot: RuuviTagCardSnapshot) {
@@ -420,31 +450,46 @@ private extension CardsSettingsState {
             .map(\.temperatureOffset.unwrapped)
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .assign(to: &$temperatureOffset)
+            .sink { [weak self] in
+                self?.temperatureOffset = $0
+            }
+            .store(in: &cancellables)
 
         snapshot.$calibration
             .map(\.humidityOffset.unwrapped)
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .assign(to: &$humidityOffset)
+            .sink { [weak self] in
+                self?.humidityOffset = $0
+            }
+            .store(in: &cancellables)
 
         snapshot.$calibration
             .map(\.pressureOffset.unwrapped)
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .assign(to: &$pressureOffset)
+            .sink { [weak self] in
+                self?.pressureOffset = $0
+            }
+            .store(in: &cancellables)
 
         snapshot.$calibration
             .map(\.isHumidityOffsetVisible)
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .assign(to: &$showHumidityOffset)
+            .sink { [weak self] in
+                self?.showHumidityOffset = $0
+            }
+            .store(in: &cancellables)
 
         snapshot.$calibration
             .map(\.isPressureOffsetVisible)
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .assign(to: &$showPressureOffset)
+            .sink { [weak self] in
+                self?.showPressureOffset = $0
+            }
+            .store(in: &cancellables)
     }
 
     private func bindLatestMeasurement(_ snapshot: RuuviTagCardSnapshot) {
@@ -452,7 +497,10 @@ private extension CardsSettingsState {
             .map { $0 != nil }
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .assign(to: &$hasLatestMeasurement)
+            .sink { [weak self] in
+                self?.hasLatestMeasurement = $0
+            }
+            .store(in: &cancellables)
     }
 }
 
