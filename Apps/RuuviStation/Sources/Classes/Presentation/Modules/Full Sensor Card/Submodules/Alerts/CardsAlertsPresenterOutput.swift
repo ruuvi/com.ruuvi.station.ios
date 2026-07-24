@@ -1,3 +1,6 @@
 protocol CardsAlertsPresenterOutput: AnyObject {
-    func cardsAlertsDidRequestOpenSettings(module: CardsAlertsPresenterInput)
+    func cardsAlerts(
+        module: CardsAlertsPresenterInput,
+        didRequest destination: CardsAlertsDeliveryPromptDestination
+    )
 }

@@ -4,7 +4,7 @@ import RuuviLocalization
 struct CardsAlertsView: View {
     @ObservedObject var state: CardsSettingsState
     let displayMode: CardsSettingsAlertDisplayMode
-    let onNoCloudDataBannerTap: () -> Void
+    let onAlertDeliveryPromptTap: (CardsAlertsDeliveryPromptDestination) -> Void
     @State private var pendingAnchorID: String?
 
     private struct Constants {
@@ -22,9 +22,12 @@ struct CardsAlertsView: View {
         ScrollViewReader { proxy in
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing: Constants.sectionSpacing) {
-                    if state.showsAlertSettingsNoCloudDataBanner {
-                        CardsAlertsNoCloudDataBanner(
-                            onTap: onNoCloudDataBannerTap
+                    if let prompt = state.alertDeliveryPrompt {
+                        CardsAlertsDeliveryPromptView(
+                            prompt: prompt,
+                            onTap: {
+                                onAlertDeliveryPromptTap(prompt.destination)
+                            }
                         )
                     }
 
@@ -60,18 +63,22 @@ struct CardsAlertsView: View {
     }
 }
 
-private struct CardsAlertsNoCloudDataBanner: View {
+private struct CardsAlertsDeliveryPromptView: View {
+    let prompt: CardsAlertsDeliveryPrompt
     let onTap: () -> Void
 
     private enum Constants {
         static let horizontalPadding: CGFloat = 16
         static let verticalPadding: CGFloat = 12
         static let textColorOpacity: Double = 0.85
+        static let contentSpacing: CGFloat = 12
+        static let buttonHorizontalPadding: CGFloat = 25
+        static let buttonVerticalPadding: CGFloat = 12
     }
 
     var body: some View {
-        HStack(alignment: .top, spacing: 0) {
-            Text(RuuviLocalization.TagSettings.Alerts.NoCloudDataBanner.text)
+        VStack(alignment: .leading, spacing: Constants.contentSpacing) {
+            Text(prompt.message)
                 .font(.ruuviFootnote())
                 .foregroundStyle(
                     RuuviColor.textColor.swiftUIColor
@@ -80,13 +87,26 @@ private struct CardsAlertsNoCloudDataBanner: View {
                 .fixedSize(horizontal: false, vertical: true)
                 .multilineTextAlignment(.leading)
 
-            Spacer(minLength: 0)
+            Button(action: onTap) {
+                Text(prompt.buttonTitle)
+                    .font(.ruuviButtonMedium())
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
+                    .foregroundStyle(Color.white)
+                    .padding(.horizontal, Constants.buttonHorizontalPadding)
+                    .padding(.vertical, Constants.buttonVerticalPadding)
+                    .background(
+                        Capsule()
+                            .fill(RuuviColor.tintColor.swiftUIColor)
+                    )
+                    .contentShape(Capsule())
+            }
+            .buttonStyle(.plain)
+            .frame(maxWidth: .infinity, alignment: .center)
         }
         .padding(.horizontal, Constants.horizontalPadding)
         .padding(.vertical, Constants.verticalPadding)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(RuuviColor.tagSettingsItemHeaderColor.swiftUIColor)
-        .contentShape(Rectangle())
-        .onTapGesture(perform: onTap)
     }
 }

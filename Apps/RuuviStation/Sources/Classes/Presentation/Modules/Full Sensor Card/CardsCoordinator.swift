@@ -254,7 +254,8 @@ private extension CardsCoordinator {
         )
         let presenter = CardsAlertsPresenter(
             measurementService: measurementService,
-            activityPresenter: r.resolve(ActivityPresenter.self)!
+            activityPresenter: r.resolve(ActivityPresenter.self)!,
+            settings: r.resolve(RuuviLocalSettings.self)!
         )
         presenter.view = viewController
         presenter.output = self
@@ -307,8 +308,18 @@ extension CardsCoordinator: CardsBasePresenterOutput {
 }
 
 extension CardsCoordinator: CardsAlertsPresenterOutput {
-    func cardsAlertsDidRequestOpenSettings(module _: CardsAlertsPresenterInput) {
-        cardsBaseViewPresenter.viewDidChangeTab(.settings)
+    func cardsAlerts(
+        module _: CardsAlertsPresenterInput,
+        didRequest destination: CardsAlertsDeliveryPromptDestination
+    ) {
+        switch destination {
+        case .sensorSettings:
+            cardsBaseViewPresenter.viewDidChangeTab(.settings)
+        case .backgroundScanning:
+            let router = SettingsRouter()
+            router.transitionHandler = cardsBaseViewController
+            router.openHeartbeat()
+        }
     }
 }
 

@@ -33,7 +33,7 @@ final class CardsSettingsState: ObservableObject {
             RuuviLocalization.TagSettings.PairAndBackgroundScan.description
     @Published private(set) var isKeepConnectionToggleEnabled: Bool = true
     @Published private(set) var showKeepConnectionStatusLabel: Bool = true
-    @Published private(set) var showsAlertSettingsNoCloudDataBanner: Bool = false
+    @Published private(set) var alertDeliveryPrompt: CardsAlertsDeliveryPrompt?
 
     // Offset correction reactive properties
     @Published private(set) var temperatureOffset: String = ""
@@ -119,8 +119,6 @@ final class CardsSettingsState: ObservableObject {
         showLedBrightnessRow = CardsSettingsState.shouldShowLedBrightness(
             for: snapshot
         )
-        showsAlertSettingsNoCloudDataBanner = CardsSettingsState
-            .shouldShowAlertSettingsNoCloudDataBanner(for: snapshot)
     }
 
     // MARK: - Public Interface
@@ -293,13 +291,16 @@ final class CardsSettingsState: ObservableObject {
         connectionDisplayFrozen = false
         applyConnectionData(snapshot.connectionData)
     }
+
+    func updateAlertDeliveryPrompt(_ prompt: CardsAlertsDeliveryPrompt?) {
+        alertDeliveryPrompt = prompt
+    }
 }
 
 // MARK: - Binding
 private extension CardsSettingsState {
     private func bind(to snapshot: RuuviTagCardSnapshot) {
         bindDisplayData(snapshot)
-        bindAlertSettingsNoCloudDataBanner(snapshot)
         bindOwnership(snapshot)
         bindShareVisibility(snapshot)
         bindMoreInfoRefresh(for: snapshot)
@@ -327,20 +328,6 @@ private extension CardsSettingsState {
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
             .assign(to: &$firmwareVersion)
-    }
-
-    private func bindAlertSettingsNoCloudDataBanner(_ snapshot: RuuviTagCardSnapshot) {
-        snapshot.$metadata
-            .combineLatest(snapshot.$displayData)
-            .map { metadata, displayData in
-                Self.shouldShowAlertSettingsNoCloudDataBanner(
-                    metadata: metadata,
-                    displayData: displayData
-                )
-            }
-            .removeDuplicates()
-            .receive(on: DispatchQueue.main)
-            .assign(to: &$showsAlertSettingsNoCloudDataBanner)
     }
 
     private func bindOwnership(_ snapshot: RuuviTagCardSnapshot) {
@@ -496,24 +483,6 @@ private extension CardsSettingsState {
         let ruuviDeviceType: RuuviDeviceType =
             format == .e1 || format == .v6 ? .ruuviAir : .ruuviTag
         return ruuviDeviceType == .ruuviAir
-    }
-
-    static func shouldShowAlertSettingsNoCloudDataBanner(
-        for snapshot: RuuviTagCardSnapshot
-    ) -> Bool {
-        shouldShowAlertSettingsNoCloudDataBanner(
-            metadata: snapshot.metadata,
-            displayData: snapshot.displayData
-        )
-    }
-
-    static func shouldShowAlertSettingsNoCloudDataBanner(
-        metadata: RuuviTagCardSnapshotMetadata,
-        displayData: RuuviTagCardSnapshotDisplayData
-    ) -> Bool {
-        guard !metadata.isCloud else { return false }
-        let format = RuuviDataFormat.dataFormat(from: displayData.version.bound)
-        return format != .e1 && format != .v6
     }
 
     static func calculateShareSummary(

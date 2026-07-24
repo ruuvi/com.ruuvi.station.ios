@@ -59,6 +59,11 @@ final class CardsAlertsViewController: UIViewController {
         setupSubscriptions()
         output?.viewDidLoad()
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        output?.viewWillAppear()
+    }
 }
 
 // MARK: - CardsAlertsViewInput
@@ -71,6 +76,10 @@ extension CardsAlertsViewController: CardsAlertsViewInput {
     func updateAlertSections(_ sections: [CardsSettingsAlertSectionModel]) {
         state.setAlertSections(sections)
         expandFirstAlertSectionIfNeeded(with: sections)
+    }
+
+    func updateAlertDeliveryPrompt(_ prompt: CardsAlertsDeliveryPrompt?) {
+        state.updateAlertDeliveryPrompt(prompt)
     }
 }
 
@@ -207,8 +216,10 @@ private extension CardsAlertsViewController {
         let contentView = CardsAlertsView(
             state: state,
             displayMode: alertSettingsDisplayMode,
-            onNoCloudDataBannerTap: { [weak self] in
-                self?.output?.viewDidTapNoCloudDataBanner()
+            onAlertDeliveryPromptTap: { [weak self] destination in
+                self?.output?.viewDidTapAlertDeliveryPrompt(
+                    destination: destination
+                )
             }
         )
             .environmentObject(actions)

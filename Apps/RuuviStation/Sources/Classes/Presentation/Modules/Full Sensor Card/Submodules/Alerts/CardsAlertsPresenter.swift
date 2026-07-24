@@ -1,6 +1,9 @@
+// swiftlint:disable file_length
+
 import Foundation
 import RuuviCloud
 import RuuviLocalization
+import RuuviLocal
 import RuuviNotifier
 import RuuviOntology
 import RuuviPresenters
@@ -12,6 +15,7 @@ final class CardsAlertsPresenter: NSObject {
 
     private let measurementService: RuuviServiceMeasurement
     private let activityPresenter: ActivityPresenter
+    private let settings: RuuviLocalSettings
     private var snapshots: [RuuviTagCardSnapshot] = []
     private var snapshot: RuuviTagCardSnapshot?
     private var sensor: AnyRuuviTagSensor?
@@ -23,10 +27,12 @@ final class CardsAlertsPresenter: NSObject {
 
     init(
         measurementService: RuuviServiceMeasurement,
-        activityPresenter: ActivityPresenter
+        activityPresenter: ActivityPresenter,
+        settings: RuuviLocalSettings
     ) {
         self.measurementService = measurementService
         self.activityPresenter = activityPresenter
+        self.settings = settings
         super.init()
     }
 }
@@ -61,6 +67,7 @@ extension CardsAlertsPresenter: CardsAlertsPresenterInput {
         if let snapshot {
             view?.configure(snapshot: snapshot)
             updateAlertSections(for: snapshot)
+            updateAlertDeliveryPrompt(for: snapshot)
         }
         RuuviTagServiceCoordinatorManager.shared.setAlertMuteRefreshActive(true)
     }
@@ -78,6 +85,11 @@ extension CardsAlertsPresenter: CardsAlertsPresenterInput {
 extension CardsAlertsPresenter: CardsAlertsViewOutput {
     func viewDidLoad() {
         // No op.
+    }
+
+    func viewWillAppear() {
+        guard let snapshot else { return }
+        updateAlertDeliveryPrompt(for: snapshot)
     }
 
     func viewDidChangeAlertState(
@@ -159,8 +171,13 @@ extension CardsAlertsPresenter: CardsAlertsViewOutput {
         }
     }
 
-    func viewDidTapNoCloudDataBanner() {
-        output?.cardsAlertsDidRequestOpenSettings(module: self)
+    func viewDidTapAlertDeliveryPrompt(
+        destination: CardsAlertsDeliveryPromptDestination
+    ) {
+        output?.cardsAlerts(
+            module: self,
+            didRequest: destination
+        )
     }
 }
 
@@ -206,6 +223,7 @@ private extension CardsAlertsPresenter {
             guard let self, let snapshot = self.snapshot else { return }
             self.refreshConnectionStateIfNeeded()
             self.updateAlertSections(for: snapshot)
+            self.updateAlertDeliveryPrompt(for: snapshot)
         }
     }
 
@@ -217,6 +235,15 @@ private extension CardsAlertsPresenter {
         view?.updateAlertSections(sections)
     }
 
+    func updateAlertDeliveryPrompt(for snapshot: RuuviTagCardSnapshot) {
+        view?.updateAlertDeliveryPrompt(
+            CardsAlertsDeliveryPrompt.make(
+                for: snapshot,
+                isBackgroundScanningEnabled: settings.saveHeartbeats
+            )
+        )
+    }
+
     func handleSnapshotUpdate(_ updatedSnapshot: RuuviTagCardSnapshot) {
         snapshot = updatedSnapshot
         sensor = RuuviTagServiceCoordinatorManager.shared.getSensor(for: updatedSnapshot.id)
@@ -225,6 +252,7 @@ private extension CardsAlertsPresenter {
         refreshConnectionStateIfNeeded()
         view?.configure(snapshot: updatedSnapshot)
         updateAlertSections(for: updatedSnapshot)
+        updateAlertDeliveryPrompt(for: updatedSnapshot)
     }
 
     func startObservingCoordinator() {
