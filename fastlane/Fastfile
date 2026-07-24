@@ -234,6 +234,8 @@ platform :ios do
     )
 
     release_notes = distribution_release_notes(options, env_name: "FIREBASE_RELEASE_NOTES")
+    release_notes_prefix = ENV["FIREBASE_RELEASE_NOTES_PREFIX"].to_s.strip
+    release_notes = [release_notes_prefix, release_notes].reject(&:empty?).join("\n\n")
     write_release_notes_artifact(release_notes)
     firebase_groups = options[:group].to_s.strip
     firebase_groups = ENV["FIREBASE_TESTERS_GROUP"].to_s.strip if firebase_groups.empty?

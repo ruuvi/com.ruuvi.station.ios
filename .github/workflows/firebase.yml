@@ -38,6 +38,28 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Require manual branch builds to include current main
+        if: github.event_name == 'workflow_dispatch' && github.ref_name != 'main'
+        run: |
+          git fetch --no-tags origin main
+
+          if ! git merge-base --is-ancestor origin/main HEAD; then
+            echo "::error::Branch '${{ github.ref_name }}' is not rebased on top of the current main branch. Rebase it onto origin/main and run the workflow again."
+            exit 1
+          fi
+
+      - name: Set Firebase release notes branch
+        env:
+          DEPLOYMENT_BRANCH: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.ref || github.ref_name }}
+        run: |
+          if [[ "$DEPLOYMENT_BRANCH" == "main" ]]; then
+            RELEASE_NOTES_BRANCH="Main"
+          else
+            RELEASE_NOTES_BRANCH="$DEPLOYMENT_BRANCH"
+          fi
+
+          echo "FIREBASE_RELEASE_NOTES_PREFIX=(Branch: $RELEASE_NOTES_BRANCH)" >> "$GITHUB_ENV"
+
       - name: Validate CI secrets
         env:
           RUUVI_GITHUB_APP_CLIENT_ID: ${{ secrets.RUUVI_GITHUB_APP_CLIENT_ID }}
