@@ -586,7 +586,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         }
         let number = NSNumber(value: pm10)
         return numberFormatter(
-            fractionDigits: settings.pmAccuracy.value
+            fractionDigits: min(settings.pmAccuracy.value, 1)
         ).string(from: number) ?? emptyValueString
     }
 
@@ -597,7 +597,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         }
         let number = NSNumber(value: pm25)
         return numberFormatter(
-            fractionDigits: settings.pmAccuracy.value
+            fractionDigits: min(settings.pmAccuracy.value, 1)
         ).string(from: number) ?? emptyValueString
     }
 
@@ -608,7 +608,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         }
         let number = NSNumber(value: pm40)
         return numberFormatter(
-            fractionDigits: settings.pmAccuracy.value
+            fractionDigits: min(settings.pmAccuracy.value, 1)
         ).string(from: number) ?? emptyValueString
     }
 
@@ -619,7 +619,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         }
         let number = NSNumber(value: pm100)
         return numberFormatter(
-            fractionDigits: settings.pmAccuracy.value
+            fractionDigits: min(settings.pmAccuracy.value, 1)
         ).string(from: number) ?? emptyValueString
     }
 

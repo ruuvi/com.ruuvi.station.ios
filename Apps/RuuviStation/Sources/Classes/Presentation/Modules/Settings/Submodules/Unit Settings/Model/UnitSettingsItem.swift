@@ -69,11 +69,20 @@ enum ResolutionSettingsTarget: CaseIterable, Equatable, SelectionItemProtocol {
         case .pressure:
             pressureUnit.supportsResolutionSelection ? settings.pressureAccuracy : .zero
         case .particulateMatter:
-            settings.pmAccuracy
+            settings.pmAccuracy == .two ? .one : settings.pmAccuracy
         case .acceleration:
             settings.accelerationAccuracy
         case .voltage:
             settings.voltageAccuracy
+        }
+    }
+
+    var supportedAccuracies: [MeasurementAccuracyType] {
+        switch self {
+        case .particulateMatter:
+            [.zero, .one]
+        default:
+            [.zero, .one, .two]
         }
     }
 

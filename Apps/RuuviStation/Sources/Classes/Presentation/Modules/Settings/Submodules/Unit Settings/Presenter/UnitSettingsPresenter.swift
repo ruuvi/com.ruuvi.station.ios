@@ -300,7 +300,7 @@ extension UnitSettingsPresenter {
             }
         }
 
-        let selectionItems: [MeasurementAccuracyType] = [
+        let selectionItems = resolutionTarget?.supportedAccuracies ?? [
             .zero,
             .one,
             .two,
@@ -342,7 +342,8 @@ extension UnitSettingsPresenter {
             ruuviAppSettingsService.set(pressureAccuracy: accuracy)
             view.pressureAccuracy = accuracy
         case .particulateMatter:
-            ruuviAppSettingsService.set(pmAccuracy: accuracy)
+            let resolvedAccuracy: MeasurementAccuracyType = accuracy == .two ? .one : accuracy
+            ruuviAppSettingsService.set(pmAccuracy: resolvedAccuracy)
         case .acceleration:
             ruuviAppSettingsService.set(accelerationAccuracy: accuracy)
         case .voltage:

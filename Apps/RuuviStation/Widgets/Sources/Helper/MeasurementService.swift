@@ -248,8 +248,9 @@ extension MeasurementService {
         else {
             return emptyValueString
         }
-        let roundedValue = value.round(to: settings.pmAccuracy.value)
-        let formatter = numberFormatter(fractionDigits: settings.pmAccuracy.value)
+        let fractionDigits = min(settings.pmAccuracy.value, 1)
+        let roundedValue = value.round(to: fractionDigits)
+        let formatter = numberFormatter(fractionDigits: fractionDigits)
         return formattedValue(from: roundedValue, formatter: formatter)
     }
 }
