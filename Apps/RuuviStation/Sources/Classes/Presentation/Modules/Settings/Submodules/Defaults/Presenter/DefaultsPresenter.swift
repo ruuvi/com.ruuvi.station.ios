@@ -618,21 +618,6 @@ extension DefaultsPresenter {
         return viewModel
     }
 
-    private func buildShowMarketingPreference() -> DefaultsViewModel {
-        let viewModel = DefaultsViewModel()
-        viewModel.title = "Show marketing preference toggle"
-        viewModel.boolean.value = flags.showMarketingPreference
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
-        viewModel.type.value = .switcher
-
-        bind(viewModel.boolean, fire: false) { observer, bool in
-            observer.flags.showMarketingPreference = GlobalHelpers
-                .getBool(from: bool)
-        }
-
-        return viewModel
-    }
-
     private func buildShowDashboardSensorSearch() -> DefaultsViewModel {
         let viewModel = DefaultsViewModel()
         viewModel.title = "Show dashboard sensor search"
@@ -642,6 +627,21 @@ extension DefaultsPresenter {
 
         bind(viewModel.boolean, fire: false) { observer, bool in
             observer.flags.showDashboardSensorSearch = GlobalHelpers
+                .getBool(from: bool)
+        }
+
+        return viewModel
+    }
+
+    private func buildShowMarketingPreference() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Show marketing preference"
+        viewModel.boolean.value = flags.showMarketingPreference
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+
+        bind(viewModel.boolean, fire: false) { observer, bool in
+            observer.flags.showMarketingPreference = GlobalHelpers
                 .getBool(from: bool)
         }
 

@@ -1,4 +1,5 @@
 import RuuviLocal
+import RuuviLocalization
 import RuuviPresenters
 import RuuviService
 import RuuviUser
@@ -17,6 +18,8 @@ class MenuPresenter: MenuModuleInput {
     var localSyncState: RuuviLocalSyncState!
     var featureToggleService: FeatureToggleService!
     var authService: RuuviServiceAuth!
+    var settings: RuuviLocalSettings!
+    var flags: RuuviLocalFlags!
 
     private weak var output: MenuModuleOutput?
 
@@ -38,6 +41,11 @@ extension MenuPresenter: MenuViewOutput {
 
     var userEmail: String? {
         ruuviUser.email?.lowercased()
+    }
+
+    var shouldShowNewsletter: Bool {
+        flags.showMarketingPreference &&
+            (!userIsAuthorized || !settings.marketingPreference)
     }
 
     func viewDidTapOnDimmingView() {
@@ -73,6 +81,19 @@ extension MenuPresenter: MenuViewOutput {
             output?.menu(module: self, didSelectOpenMyRuuviAccount: nil)
         } else {
             output?.menu(module: self, didSelectSignIn: nil)
+        }
+    }
+
+    func viewDidSelectNewsletter() {
+        if userIsAuthorized {
+            output?.menu(module: self, didSelectOpenMyRuuviAccount: nil)
+        } else {
+            output?.menu(
+                module: self,
+                didSelectNewsletter: URL(
+                    string: RuuviLocalization.newsletterUrl
+                )
+            )
         }
     }
 }

@@ -19,6 +19,8 @@ class MenuTableConfigurator {
         presenter.ruuviUser = r.resolve(RuuviUser.self)
         presenter.featureToggleService = r.resolve(FeatureToggleService.self)
         presenter.authService = r.resolve(RuuviServiceAuth.self)
+        presenter.settings = r.resolve(RuuviLocalSettings.self)
+        presenter.flags = r.resolve(RuuviLocalFlags.self)
         presenter.view = view
         presenter.router = router
 
