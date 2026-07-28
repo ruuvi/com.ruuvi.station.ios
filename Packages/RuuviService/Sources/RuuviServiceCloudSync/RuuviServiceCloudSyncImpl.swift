@@ -971,8 +971,14 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                                 return self.ruuviPool.delete(localSensor)
                             }
 
+                            // The cloud sensor list only contains sensors accessible to the
+                            // signed-in user. A locally discovered sensor owned by somebody else
+                            // is therefore expected to be absent and must retain its owner.
+                            guard localSensor.isOwner else {
+                                return nil
+                            }
+
                             guard localSensor.isClaimed ||
-                                    !localSensor.isOwner ||
                                     localSensor.owner != nil ||
                                     localSensor.ownersPlan != nil else {
                                 return nil
