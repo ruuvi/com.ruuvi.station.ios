@@ -188,6 +188,10 @@ struct RuuviTagCardSnapshotMetadata: Equatable {
     var isOwner: Bool = false
     var canShareTag: Bool = false
 
+    var canEditLocalSettings: Bool {
+        isOwner || !isCloud
+    }
+
     static func == (
         lhs: RuuviTagCardSnapshotMetadata,
         rhs: RuuviTagCardSnapshotMetadata

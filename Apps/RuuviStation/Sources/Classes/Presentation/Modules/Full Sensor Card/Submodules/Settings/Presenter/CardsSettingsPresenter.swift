@@ -218,7 +218,7 @@ extension CardsSettingsPresenter: CardsSettingsViewOutput {
     func viewDidTapVisibleMeasurements() {
         guard let snapshot,
               let sensor = sensor,
-              snapshot.metadata.isOwner else {
+              snapshot.metadata.canEditLocalSettings else {
             return
         }
         router?.openVisibilitySettings(
@@ -256,7 +256,7 @@ extension CardsSettingsPresenter: CardsSettingsViewOutput {
     }
 
     func viewDidTapNotes() {
-        guard let snapshot, snapshot.metadata.isOwner else {
+        guard let snapshot, snapshot.metadata.canEditLocalSettings else {
             return
         }
 
@@ -768,7 +768,7 @@ private extension CardsSettingsPresenter {
             return
         }
 
-        guard snapshot.metadata.isOwner else {
+        guard snapshot.metadata.canEditLocalSettings else {
             view?.updateVisibleMeasurementsSummary(
                 value: nil,
                 isVisible: false
@@ -802,7 +802,7 @@ private extension CardsSettingsPresenter {
     }
 
     func refreshNotesSummary() {
-        let isEditable = snapshot?.metadata.isOwner ?? false
+        let isEditable = snapshot?.metadata.canEditLocalSettings ?? false
         view?.updateNotes(
             value: sensorSettings?.description,
             isEditable: isEditable

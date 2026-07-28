@@ -101,7 +101,7 @@ final class CardsSettingsState: ObservableObject {
         ownersPlan = snapshot.ownership.ownersPlan.unwrapped
         showShare = snapshot.metadata.canShareTag
         shareSummary = Self.calculateShareSummary(from: snapshot)
-        isNotesEditable = snapshot.metadata.isOwner
+        isNotesEditable = snapshot.metadata.canEditLocalSettings
         backgroundImage = snapshot.displayData.background.map { Image(uiImage: $0) }
         moreInfoRows = CardsSettingsMoreInfoRowBuilder.buildMoreInfoRows(
             from: snapshot,
