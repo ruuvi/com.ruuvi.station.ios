@@ -72,7 +72,7 @@ final class VisibilitySettingsPresenter: VisibilitySettingsModuleInput {
 
 extension VisibilitySettingsPresenter: VisibilitySettingsViewOutput {
     func viewDidLoad() {
-        guard let snapshot, snapshot.metadata.isOwner else {
+        guard let snapshot, snapshot.metadata.canEditLocalSettings else {
             closeModule()
             return
         }
