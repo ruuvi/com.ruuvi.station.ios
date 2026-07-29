@@ -1,8 +1,8 @@
-* Les paramètres d’alerte ont été déplacés vers une nouvelle page
-* Nouveau menu capteur amélioré
-* Mise en page améliorée de la vue historique
-* Nouveaux indicateurs d’état des alertes dans toute l’application
-* Possibilité de parcourir les cartes dans les vues du menu capteur
-* Nouveau menu à trois points sur le tableau de bord
-* Les partages en attente sont listés sur la page de partage des paramètres du capteur
-* Autres corrections de bugs mineurs et améliorations
+- Amélioration des paramètres d’alerte et du comportement des notifications pour les capteurs locaux
+- Meilleur chargement des widgets et nouveau style de widget Ruuvi Air
+- Vue historique améliorée avec une plus grande disposition à graphique unique en mode portrait
+- Meilleure synchronisation Cloud des paramètres utilisateur, de la propriété et des détails des capteurs
+- Ajout de la prise en charge du polonais
+- Meilleures vérifications des mises à jour du firmware pour éviter de proposer des versions antérieures
+- Amélioration du tri, du formatage, des libellés d’exportation et des indications sur l’analyse en arrière-plan
+- Autres corrections de bugs mineurs et améliorations

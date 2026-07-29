@@ -1,8 +1,8 @@
-* Alarmeinstellungen wurden auf eine neue Seite verschoben
-* Neues, verbessertes Sensormenü
-* Verbessertes Layout der Verlaufsansicht
-* Neue Statusanzeigen für Alarme in der gesamten App
-* Möglichkeit, in den Ansichten des Sensormenüs zwischen Karten zu wechseln
-* Neues Drei-Punkte-Menü im Dashboard
-* Ausstehende Freigaben werden auf der Freigabeseite der Sensoreinstellungen angezeigt
-* Weitere kleinere Fehlerbehebungen und Verbesserungen
+- Verbesserte Alarmeinstellungen und verbessertes Benachrichtigungsverhalten für lokale Sensoren
+- Verbessertes Laden von Widgets und ein neuer Ruuvi Air-Widgetstil
+- Verbesserte Verlaufsansicht mit größerer Einzel-Diagrammansicht im Hochformat
+- Verbesserte Cloud-Synchronisierung für Benutzereinstellungen, Besitzstatus und Sensordetails
+- Unterstützung für Polnisch hinzugefügt
+- Verbesserte Firmware-Update-Prüfungen, um Downgrades zu vermeiden
+- Verbesserte Sortierung, Formatierung, Exportbezeichnungen und Hinweise zur Hintergrundsuche
+- Weitere kleinere Fehlerbehebungen und Verbesserungen
