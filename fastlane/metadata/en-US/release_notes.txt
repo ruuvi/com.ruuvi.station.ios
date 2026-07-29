@@ -1,8 +1,8 @@
-* Alert settings moved to a new page
-* New improved sensor menu
-* Improved history view layout
-* New status indicators for alerts throughout the app
-* Ability to browse between cards in sensor menu views
-* New dashboard three dots menu
-* Pending shares listed on sensor settings share page
-* Other minor bug fixes and improvements
+- Improved alert settings and notification behavior for local sensors
+- Added better widget loading and a new Ruuvi Air widget style
+- Improved history view with a larger single-chart portrait layout
+- Improved cloud sync handling for user settings, ownership, and sensor details
+- Added Polish language support
+- Improved firmware update checks to avoid offering downgrades
+- Improved sorting, formatting, export labels, and background scanning guidance
+- Other minor bug fixes and improvements

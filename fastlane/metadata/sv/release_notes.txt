@@ -1,8 +1,8 @@
-* Larminställningar har flyttats till en ny sida
-* Ny förbättrad sensormeny
-* Förbättrad layout för historikvyn
-* Nya statusindikatorer för larm i hela appen
-* Möjlighet att bläddra mellan kort i sensormenyns vyer
-* Ny trepunktsmeny på instrumentpanelen
-* Väntande delningar visas på sensorns delningssida i inställningarna
-* Andra mindre buggfixar och förbättringar
+- Förbättrade larminställningar och aviseringsbeteende för lokala sensorer
+- Förbättrad widgetinläsning och en ny Ruuvi Air-widgetstil
+- Förbättrad historikvy med en större enskild diagramvy i stående läge
+- Förbättrad molnsynkronisering för användarinställningar, ägarskap och sensordetaljer
+- Lade till stöd för polska
+- Förbättrade kontroller av firmwareuppdateringar för att undvika att erbjuda nedgraderingar
+- Förbättrad sortering, formatering, exportetiketter och vägledning för bakgrundsskanning
+- Andra mindre buggfixar och förbättringar

@@ -1,8 +1,8 @@
-* Hälytysasetukset siirretty uudelle sivulle
-* Uusi parannettu anturivalikko
-* Parannettu historianäkymän asettelua
-* Uudet tilailmaisimet hälytyksille koko sovelluksessa
-* Mahdollisuus selata kortteja anturivalikon näkymissä
-* Uusi kolmen pisteen valikko koontinäytöllä
-* Odottavat jaot näkyvät anturiasetusten jakosivulla
-* Muita pieniä bugikorjauksia ja parannuksia
+- Parannettu paikallisten antureiden hälytysasetuksia ja ilmoitusten toimintaa
+- Parannettu widgettien latausta ja lisätty uusi Ruuvi Air -widgettityyli
+- Parannettu historianäkymää suuremmalla yhden kaavion pystynäkymällä
+- Parannettu pilvisynkronointia käyttäjäasetusten, omistajuuden ja anturitietojen osalta
+- Lisätty puolan kielen tuki
+- Parannettu laiteohjelmistopäivitysten tarkistusta, jotta vanhempia versioita ei tarjota
+- Parannettu lajittelua, muotoilua, vientitiedostojen otsikoita ja taustaskannauksen ohjeistusta
+- Muita pieniä bugikorjauksia ja parannuksia
