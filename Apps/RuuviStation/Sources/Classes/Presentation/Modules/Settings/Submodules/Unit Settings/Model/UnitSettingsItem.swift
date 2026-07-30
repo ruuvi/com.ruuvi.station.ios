@@ -30,7 +30,7 @@ enum ResolutionSettingsTarget: CaseIterable, Equatable, SelectionItemProtocol {
         case .absoluteHumidity: { _ in RuuviLocalization.absoluteHumidity }
         case .dewPoint: { _ in RuuviLocalization.dewpoint }
         case .pressure: { _ in RuuviLocalization.pressure }
-        case .particulateMatter: { _ in RuuviLocalization.pm25 }
+        case .particulateMatter: { _ in RuuviLocalization.pm }
         case .acceleration: { _ in RuuviLocalization.acceleration }
         case .voltage: { _ in RuuviLocalization.batteryVoltage }
         }
