@@ -421,7 +421,9 @@ extension UnitSettingsTableViewController {
         case .globalUnits:
             return RuuviLocalization.Settings.GlobalUnits.description
         case .resolution:
-            return RuuviLocalization.Settings.Measurement.Resolution.description
+            return resolutionTargets.isEmpty
+                ? RuuviLocalization.Settings.Measurement.Resolution.empty
+                : RuuviLocalization.Settings.Measurement.Resolution.description
         default:
             return nil
         }

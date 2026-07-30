@@ -27,6 +27,7 @@ class SettingsPresenter: SettingsModuleInput {
     private var languageToken: NSObjectProtocol?
 
     private var latestRecords: [RuuviTagSensorRecord] = []
+    private var hasSensors: Bool?
     deinit {
         languageToken?.invalidate()
     }
@@ -139,6 +140,7 @@ extension SettingsPresenter: SettingsViewOutput {
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
 
+                hasSensors = !tags.isEmpty
                 let operations = tags.map { self.ruuviStorage.readLatest($0) }
                 guard !operations.isEmpty else {
                     latestRecords = []
@@ -239,6 +241,10 @@ extension SettingsPresenter: SettingsViewOutput {
 
 private extension SettingsPresenter {
     func resolutionTargets() -> [ResolutionSettingsTarget] {
+        if hasSensors == false {
+            return []
+        }
+
         guard !latestRecords.isEmpty else {
             // Some storage states have sensors before latest records are readable.
             // Without capability metadata here, use the full supported list rather
