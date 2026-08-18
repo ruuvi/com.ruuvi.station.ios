@@ -50,12 +50,12 @@ jobs:
     runs-on: macos-15
 
     steps:
-      - uses: maxim-lobanov/setup-xcode@v1
+      - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1
         with:
           xcode-version: 'latest-stable'
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           fetch-depth: 0
 
@@ -76,7 +76,7 @@ jobs:
 
       - name: Create GitHub App token
         id: app-token
-        uses: actions/create-github-app-token@v3
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3
         with:
           client-id: ${{ secrets.RUUVI_GITHUB_APP_CLIENT_ID }}
           private-key: ${{ secrets.RUUVI_GITHUB_APP_PRIVATE_KEY }}
@@ -112,7 +112,7 @@ jobs:
           bundle install
 
       - name: Tools cache
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: .tools/
           key: ${{ runner.os }}-tools-${{ hashFiles('/.tools/') }}
@@ -124,7 +124,7 @@ jobs:
           make xcodeproj
 
       - name: SPM Cache
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: |
             ${{ runner.temp }}/spm
@@ -177,7 +177,7 @@ jobs:
 
       - name: Upload CI logs
         if: ${{ always() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: testflight-ci-logs-${{ github.run_id }}
           path: ci-logs/**
