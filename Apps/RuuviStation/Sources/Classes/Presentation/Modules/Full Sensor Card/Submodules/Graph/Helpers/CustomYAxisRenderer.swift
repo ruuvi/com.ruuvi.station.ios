@@ -73,6 +73,42 @@ final class CustomYAxisRenderer: YAxisRenderer {
         }
     }
 
+    override func drawYLabels(
+        context: CGContext,
+        fixedPosition: CGFloat,
+        positions: [CGPoint],
+        offset: CGFloat,
+        textAlign: TextAlignment
+    ) {
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: axis.labelFont,
+            .foregroundColor: axis.labelTextColor,
+        ]
+        let entryCount = Swift.min(axis.entryCount, positions.count)
+
+        for index in 0..<entryCount {
+            let text = axis.getFormattedLabel(index)
+            let labelTop = positions[index].y + offset
+            let labelBottom = labelTop + text.size(withAttributes: attributes).height
+
+            guard labelTop >= viewPortHandler.contentTop,
+                  labelBottom <= viewPortHandler.contentBottom
+            else {
+                continue
+            }
+
+            context.drawText(
+                text,
+                at: CGPoint(
+                    x: fixedPosition + axis.labelXOffset,
+                    y: labelTop
+                ),
+                align: textAlign,
+                attributes: attributes
+            )
+        }
+    }
+
     private func selectInterval(
         min: Double,
         max: Double,
