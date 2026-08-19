@@ -352,9 +352,12 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
                 .round(to: commonNumberFormatter.maximumFractionDigits)
         case .dew:
             let dp = try? humidityWithTemperature.dewPoint(temperature: temperature)
-            return dp?.converted(to: settings.temperatureUnit.unitTemperature)
-                .value
-                .round(to: commonNumberFormatter.maximumFractionDigits)
+            guard let value = dp?.converted(to: settings.temperatureUnit.unitTemperature).value,
+                  value.isFinite
+            else {
+                return nil
+            }
+            return value.round(to: commonNumberFormatter.maximumFractionDigits)
         }
     }
 
@@ -403,6 +406,9 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
                 return emptyValueString
             }
             let value = dp.converted(to: settings.temperatureUnit.unitTemperature).value
+            guard value.isFinite else {
+                return emptyValueString
+            }
             let formatter = allowSettings
                 ? humidityNumberFormatter(for: .dew)
                 : commonNumberFormatter
@@ -440,6 +446,9 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         case .dew:
             if let dp = try? humidityWithTemperature.dewPoint(temperature: temperature) {
                 let value = dp.converted(to: settings.temperatureUnit.unitTemperature).value
+                guard value.isFinite else {
+                    return emptyValueString
+                }
                 return humidityNumberFormatter(for: .dew).string(from: NSNumber(value: value)) ?? emptyValueString
             } else {
                 return emptyValueString
@@ -452,7 +461,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     }
 
     public func stringWithoutSign(humidity: Double?, unit: HumidityUnit) -> String {
-        guard let humidity
+        guard let humidity, humidity.isFinite
         else {
             return emptyValueString
         }
@@ -461,9 +470,9 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     }
 
     public func string(for measurement: Double?) -> String {
-        guard let measurement
+        guard let measurement, measurement.isFinite
         else {
-            return ""
+            return emptyValueString
         }
         let number = NSNumber(value: measurement)
         return commonNumberFormatter.string(from: number) ?? ""
@@ -472,9 +481,9 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     public func string(
         from double: Double?
     ) -> String {
-        guard let double
+        guard let double, double.isFinite
         else {
-            return ""
+            return emptyValueString
         }
         let number = NSNumber(value: double)
         return minimalNumberFormatter.string(from: number) ?? ""
@@ -562,7 +571,7 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     }
 
     public func aqiString(for aqi: Double?) -> String {
-        guard let aqi else {
+        guard let aqi, aqi.isFinite else {
             return emptyValueString
         }
         let currentScore = aqi.rounded(.toNearestOrAwayFromZero)

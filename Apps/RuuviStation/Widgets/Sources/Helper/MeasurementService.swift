@@ -263,6 +263,7 @@ extension MeasurementService {
         formatter: NumberFormatter
     ) -> String {
         guard let value,
+              value.isFinite,
               let formattedValue = formatter.string(from: value.nsNumber)
         else {
             return emptyValueString
