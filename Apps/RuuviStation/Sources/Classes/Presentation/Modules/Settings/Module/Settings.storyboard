@@ -118,7 +118,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="383.5" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Temperature" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ECe-Am-wGk">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Units" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ECe-Am-wGk">
                                                     <rect key="frame" x="20" y="12" width="343.5" height="19.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" name="RuuviMenuTextColor"/>
@@ -140,7 +140,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="383.5" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Humidity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Gp-Y6-77m">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Resolution" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9Gp-Y6-77m">
                                                     <rect key="frame" x="20" y="12" width="343.5" height="19.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                     <color key="textColor" name="RuuviMenuTextColor"/>
@@ -151,28 +151,6 @@
                                                 <constraint firstItem="9Gp-Y6-77m" firstAttribute="leading" secondItem="D6Q-cF-tJm" secondAttribute="leading" constant="20" id="Fyu-iW-Emj"/>
                                                 <constraint firstAttribute="trailing" secondItem="9Gp-Y6-77m" secondAttribute="trailing" constant="20" id="fSn-JO-0S8"/>
                                                 <constraint firstItem="9Gp-Y6-77m" firstAttribute="centerY" secondItem="D6Q-cF-tJm" secondAttribute="centerY" id="gBU-lr-DqZ"/>
-                                            </constraints>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" rowHeight="43" id="yyb-LA-bNN">
-                                        <rect key="frame" x="0.0" y="356" width="414" height="43"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yyb-LA-bNN" id="wPp-s7-JyM">
-                                            <rect key="frame" x="0.0" y="0.0" width="383.5" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Pressure" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Miq-Vt-4tx">
-                                                    <rect key="frame" x="20" y="12" width="343.5" height="19.5"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" name="RuuviMenuTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="Miq-Vt-4tx" secondAttribute="trailing" constant="20" id="1Ai-c2-QoE"/>
-                                                <constraint firstItem="Miq-Vt-4tx" firstAttribute="centerY" secondItem="wPp-s7-JyM" secondAttribute="centerY" id="6st-3r-wWL"/>
-                                                <constraint firstItem="Miq-Vt-4tx" firstAttribute="leading" secondItem="wPp-s7-JyM" secondAttribute="leading" constant="20" id="ie3-gH-Zc9"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -316,17 +294,15 @@
                         <outlet property="experimentalFunctionsLabel" destination="BNA-1F-nDb" id="fcL-rG-vgY"/>
                         <outlet property="heartbeatCell" destination="RUN-da-hOO" id="oeS-n4-g22"/>
                         <outlet property="heartbeatTitleLabel" destination="dMV-BV-f9G" id="3Zt-CF-3ze"/>
-                        <outlet property="humidityCell" destination="uMV-2q-Kaj" id="N9I-oU-3oa"/>
-                        <outlet property="humidityTitleLabel" destination="9Gp-Y6-77m" id="YhD-nc-Do7"/>
+                        <outlet property="resolutionCell" destination="uMV-2q-Kaj" id="N9I-oU-3oa"/>
+                        <outlet property="resolutionTitleLabel" destination="9Gp-Y6-77m" id="YhD-nc-Do7"/>
                         <outlet property="languageCell" destination="7Hf-la-egS" id="RhN-Ls-L2H"/>
                         <outlet property="languageTitleLabel" destination="B4i-sU-siT" id="3li-U5-kZZ"/>
                         <outlet property="languageValueLabel" destination="mhK-Ub-ply" id="xdk-hx-RX7"/>
-                        <outlet property="pressureCell" destination="yyb-LA-bNN" id="dLl-rO-0qq"/>
-                        <outlet property="pressureTitleLabel" destination="Miq-Vt-4tx" id="JhT-s2-MaY"/>
                         <outlet property="ruuviCloudCell" destination="mUW-OK-ZJ7" id="Ygl-lD-L9I"/>
                         <outlet property="ruuviCloudTitleLabel" destination="AD2-Ou-Tdi" id="tke-sy-pDh"/>
-                        <outlet property="temperatureCell" destination="De9-cF-dnb" id="KSk-0b-EbF"/>
-                        <outlet property="temperatureTitleLabel" destination="ECe-Am-wGk" id="Wds-Vk-vEU"/>
+                        <outlet property="unitsCell" destination="De9-cF-dnb" id="KSk-0b-EbF"/>
+                        <outlet property="unitsTitleLabel" destination="ECe-Am-wGk" id="Wds-Vk-vEU"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5ur-UI-uvS" userLabel="First Responder" sceneMemberID="firstResponder"/>

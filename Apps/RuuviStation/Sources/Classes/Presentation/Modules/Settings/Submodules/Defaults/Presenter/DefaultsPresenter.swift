@@ -82,7 +82,6 @@ extension DefaultsPresenter {
             buildAllowConcurrentGattSyncForMultipleSensors(),
             buildShowMarketingPreference(),
             buildShowDashboardSensorSearch(),
-            buildShowGlobalUnitsSettings(),
         ]
     }
 
@@ -523,21 +522,6 @@ extension DefaultsPresenter {
 
         bind(viewModel.boolean, fire: false) { observer, bool in
             observer.flags.showNewSettings = GlobalHelpers
-                .getBool(from: bool)
-        }
-
-        return viewModel
-    }
-
-    private func buildShowGlobalUnitsSettings() -> DefaultsViewModel {
-        let viewModel = DefaultsViewModel()
-        viewModel.title = "Show Global Units settings"
-        viewModel.boolean.value = flags.showGlobalUnitsSettings
-        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
-        viewModel.type.value = .switcher
-
-        bind(viewModel.boolean, fire: false) { observer, bool in
-            observer.flags.showGlobalUnitsSettings = GlobalHelpers
                 .getBool(from: bool)
         }
 

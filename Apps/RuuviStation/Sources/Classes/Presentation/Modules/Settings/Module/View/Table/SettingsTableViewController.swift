@@ -11,14 +11,11 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet var appearanceCell: UITableViewCell!
     @IBOutlet var appearanceTitleLabel: UILabel!
 
-    @IBOutlet var temperatureTitleLabel: UILabel!
-    @IBOutlet var temperatureCell: UITableViewCell!
+    @IBOutlet var unitsTitleLabel: UILabel!
+    @IBOutlet var unitsCell: UITableViewCell!
 
-    @IBOutlet var humidityTitleLabel: UILabel!
-    @IBOutlet var humidityCell: UITableViewCell!
-
-    @IBOutlet var pressureTitleLabel: UILabel!
-    @IBOutlet var pressureCell: UITableViewCell!
+    @IBOutlet var resolutionTitleLabel: UILabel!
+    @IBOutlet var resolutionCell: UITableViewCell!
 
     @IBOutlet var heartbeatTitleLabel: UILabel!
     @IBOutlet var heartbeatCell: UITableViewCell!
@@ -70,14 +67,6 @@ class SettingsTableViewController: UITableViewController {
         }
     }
 
-    var globalUnitsSettingsEnabled: Bool = false {
-        didSet {
-            if isViewLoaded {
-                localize()
-                updateTableIfLoaded()
-            }
-        }
-    }
 }
 
 // MARK: - SettingsViewInput
@@ -86,13 +75,8 @@ extension SettingsTableViewController: SettingsViewInput {
     func localize() {
         navigationItem.title = RuuviLocalization.Settings.NavigationItem.title
         navigationItem.leftBarButtonItem?.image = RuuviAsset.dismissModalIcon.image
-        temperatureTitleLabel.text = globalUnitsSettingsEnabled
-            ? RuuviLocalization.Settings.Label.globalUnits
-            : RuuviLocalization.Settings.Label.TemperatureUnit.text
-        humidityTitleLabel.text = globalUnitsSettingsEnabled
-            ? RuuviLocalization.Settings.Measurement.Resolution.title
-            : RuuviLocalization.Settings.Label.HumidityUnit.text
-        pressureTitleLabel.text = RuuviLocalization.Settings.Label.PressureUnit.text
+        unitsTitleLabel.text = RuuviLocalization.Settings.Label.globalUnits
+        resolutionTitleLabel.text = RuuviLocalization.Settings.Measurement.Resolution.title
         languageTitleLabel.text = RuuviLocalization.Settings.Label.Language.text
         defaultsTitleLabel.text = RuuviLocalization.Settings.Label.defaults
         devicesTitleLabel.text = RuuviLocalization.DfuDevicesScanner.Title.text
@@ -106,9 +90,8 @@ extension SettingsTableViewController: SettingsViewInput {
 
     func styleViews() {
         view.backgroundColor = RuuviColor.primary.color
-        temperatureTitleLabel.textColor = RuuviColor.menuTextColor.color
-        humidityTitleLabel.textColor = RuuviColor.menuTextColor.color
-        pressureTitleLabel.textColor = RuuviColor.menuTextColor.color
+        unitsTitleLabel.textColor = RuuviColor.menuTextColor.color
+        resolutionTitleLabel.textColor = RuuviColor.menuTextColor.color
         languageTitleLabel.textColor = RuuviColor.menuTextColor.color
         defaultsTitleLabel.textColor = RuuviColor.menuTextColor.color
         devicesTitleLabel.textColor = RuuviColor.menuTextColor.color
@@ -126,9 +109,8 @@ extension SettingsTableViewController: SettingsViewInput {
             alertNotificationsTitleLabel,
             appearanceTitleLabel,
             heartbeatTitleLabel,
-            temperatureTitleLabel,
-            humidityTitleLabel,
-            pressureTitleLabel,
+            unitsTitleLabel,
+            resolutionTitleLabel,
             ruuviCloudTitleLabel,
             chartTitleLabel,
             experimentalFunctionsLabel,
@@ -200,9 +182,6 @@ extension SettingsTableViewController {
                 ? 44
                 : 0
         }
-        if globalUnitsSettingsEnabled && cell == pressureCell {
-            return 0
-        }
         // Add the logic for the cloud mode cell here
         if !showDefaults && cell == defaultsCell ||
             (!showDevices || !cloudModeVisible) && cell == devicesCell ||
@@ -220,22 +199,10 @@ extension SettingsTableViewController {
     ) {
         guard let cell = tableView.cellForRow(at: indexPath) else { return }
         switch cell {
-        case temperatureCell:
-            if globalUnitsSettingsEnabled {
-                output.viewDidTapGlobalUnits()
-            } else {
-                output.viewDidTapTemperatureUnit()
-            }
-        case humidityCell:
-            if globalUnitsSettingsEnabled {
-                output.viewDidTapResolution()
-            } else {
-                output.viewDidTapHumidityUnit()
-            }
-        case pressureCell:
-            if !globalUnitsSettingsEnabled {
-                output.viewDidTapOnPressure()
-            }
+        case unitsCell:
+            output.viewDidTapGlobalUnits()
+        case resolutionCell:
+            output.viewDidTapResolution()
         case languageCell:
             output.viewDidTapOnLanguage()
         case defaultsCell:

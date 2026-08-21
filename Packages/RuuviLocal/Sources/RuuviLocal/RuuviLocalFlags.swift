@@ -8,10 +8,6 @@ public protocol RuuviLocalFlags {
     /// When enabled show Sensor Card Settings UI with New Settings
     var showNewSettings: Bool { get set }
 
-    /// When enabled, App Settings shows Global Units and Resolution pages
-    /// instead of separate top-level unit rows.
-    var showGlobalUnitsSettings: Bool { get set }
-
     /// When enabled downloads beta version instead of stable
     var downloadBetaFirmware: Bool { get set }
 

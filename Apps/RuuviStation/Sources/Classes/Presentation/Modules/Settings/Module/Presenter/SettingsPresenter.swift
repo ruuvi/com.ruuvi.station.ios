@@ -15,7 +15,6 @@ class SettingsPresenter: SettingsModuleInput {
     weak var view: SettingsViewInput!
     var router: SettingsRouterInput!
     var settings: RuuviLocalSettings!
-    var flags: RuuviLocalFlags!
     var errorPresenter: ErrorPresenter!
     var ruuviReactor: RuuviReactor!
     var alertService: RuuviServiceAlert!
@@ -53,16 +52,11 @@ extension SettingsPresenter: SettingsViewOutput {
     }
 
     func viewWillAppear() {
-        refreshGlobalUnitsSettingRow()
-    }
-
-    private func refreshSettingsRows() {
-        refreshGlobalUnitsSettingRow()
         refreshCloudModeVisibility()
     }
 
-    private func refreshGlobalUnitsSettingRow() {
-        view.globalUnitsSettingsEnabled = flags.showGlobalUnitsSettings
+    private func refreshSettingsRows() {
+        refreshCloudModeVisibility()
     }
 
     private func refreshCloudModeVisibility() {
@@ -74,49 +68,6 @@ extension SettingsPresenter: SettingsViewOutput {
                 view.cloudModeVisible = cloudModeVisible
             }
         })
-    }
-
-    func viewDidTapTemperatureUnit() {
-        let selectionItems: [TemperatureUnit] = [
-            .celsius,
-            .fahrenheit,
-            .kelvin,
-        ]
-        let viewModel = UnitSettingsViewModel(
-            title: RuuviLocalization.TagSettings.OffsetCorrection.temperature,
-            items: selectionItems,
-            measurementType: .temperature
-        )
-        router.openUnitSettings(with: viewModel, output: nil)
-    }
-
-    func viewDidTapHumidityUnit() {
-        let selectionItems: [HumidityUnit] = [
-            .percent,
-            .gm3,
-            .dew,
-        ]
-        let viewModel = UnitSettingsViewModel(
-            title: RuuviLocalization.TagSettings.OffsetCorrection.humidity,
-            items: selectionItems,
-            measurementType: .humidity
-        )
-        router.openUnitSettings(with: viewModel, output: nil)
-    }
-
-    func viewDidTapOnPressure() {
-        let selectionItems: [UnitPressure] = [
-            .newtonsPerMetersSquared,
-            .hectopascals,
-            .inchesOfMercury,
-            .millimetersOfMercury,
-        ]
-        let viewModel = UnitSettingsViewModel(
-            title: RuuviLocalization.pressure,
-            items: selectionItems,
-            measurementType: .pressure
-        )
-        router.openUnitSettings(with: viewModel, output: nil)
     }
 
     func viewDidTapGlobalUnits() {
