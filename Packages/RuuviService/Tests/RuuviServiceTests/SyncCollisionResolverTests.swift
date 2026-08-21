@@ -89,6 +89,50 @@ final class SyncCollisionResolverTests: XCTestCase {
         )
     }
 
+    func testOffsetWithoutPendingUpdateAcceptsCloudDifference() {
+        XCTAssertEqual(
+            SyncCollisionResolver.resolveOffset(
+                localValue: 1,
+                cloudValue: 2,
+                hasPendingLocalUpdate: false
+            ),
+            .updateLocal
+        )
+    }
+
+    func testOffsetWithPendingUpdatePreservesLocalValue() {
+        XCTAssertEqual(
+            SyncCollisionResolver.resolveOffset(
+                localValue: 1,
+                cloudValue: 2,
+                hasPendingLocalUpdate: true
+            ),
+            .noAction
+        )
+    }
+
+    func testMissingCloudOffsetDoesNotClearLocalValue() {
+        XCTAssertEqual(
+            SyncCollisionResolver.resolveOffset(
+                localValue: 1,
+                cloudValue: nil,
+                hasPendingLocalUpdate: false
+            ),
+            .noAction
+        )
+    }
+
+    func testCloudZeroMatchesMissingLocalOffset() {
+        XCTAssertEqual(
+            SyncCollisionResolver.resolveOffset(
+                localValue: nil,
+                cloudValue: 0,
+                hasPendingLocalUpdate: false
+            ),
+            .noAction
+        )
+    }
+
     private func makeLocalSensor(
         name: String = "Sensor",
         ownersPlan: String = "free",

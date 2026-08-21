@@ -85,6 +85,25 @@ public struct SyncCollisionResolver {
         return .keepLocalAndQueue
     }
 
+    /// Offset uploads are owned by the calibration flow and its durable request queue.
+    /// Reconciliation only applies an available cloud value when no local upload remains pending.
+    public static func resolveOffset(
+        localValue: Double?,
+        cloudValue: Double?,
+        hasPendingLocalUpdate: Bool
+    ) -> SyncAction {
+        guard !hasPendingLocalUpdate, let cloudValue else {
+            return .noAction
+        }
+
+        // The cloud API represents an offset reset as zero.
+        guard (localValue ?? 0) != cloudValue else {
+            return .noAction
+        }
+
+        return .updateLocal
+    }
+
     /// Some sensor fields are cloud-authoritative and can change without being tracked by the
     /// sensor metadata `lastUpdated` timestamp. These fields may still need a local refresh when
     /// timestamp-based collision resolution falls into the tolerant `.noAction` branch.

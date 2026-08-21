@@ -138,21 +138,28 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 // Only start syncing AFTER queued requests attempt completes
                 // (regardless of success/failure)
                 let settings = self.syncSettings()
-                let sensors = self.syncSensors()
+                let pendingOffsets = self.pendingOffsetUpdates()
 
-                settings
+                pendingOffsets
                     .observe(on: .global(qos: .utility))
-                    .on(success: { _ in
-                        sensors
+                    .on(success: { pendingOffsets in
+                        let sensors = self.syncSensors(
+                            pendingOffsetUpdates: pendingOffsets
+                        )
+                        settings
                             .observe(on: .global(qos: .utility))
-                            .on(success: { [weak self] updatedSensors in
-                                self?.ruuviLocalSyncState.setSyncDate(Date())
-                                promise.succeed(value: updatedSensors)
+                            .on(success: { _ in
+                                sensors
+                                    .observe(on: .global(qos: .utility))
+                                    .on(success: { [weak self] updatedSensors in
+                                        self?.ruuviLocalSyncState.setSyncDate(Date())
+                                        promise.succeed(value: updatedSensors)
+                                    }, failure: { error in
+                                        promise.fail(error: error)
+                                    })
                             }, failure: { error in
                                 promise.fail(error: error)
                             })
-                    }, failure: { error in
-                        promise.fail(error: error)
                     })
             })
         return promise.future
@@ -162,17 +169,22 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     public func refreshLatestRecord() -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
         ruuviLocalSyncState.setSyncStatus(.syncing)
-        syncSensors()
+        pendingOffsetUpdates()
             .observe(on: .global(qos: .utility))
-            .on(success: { [weak self] _ in
-                self?.ruuviLocalSyncState.setSyncStatus(.complete)
-                self?.ruuviLocalSyncState.setSyncDate(Date())
-                promise.succeed(value: true)
-            }, failure: { [weak self] error in
-                self?.ruuviLocalSyncState.setSyncStatus(.onError)
-                promise.fail(error: error)
-            }, completion: { [weak self] in
-                self?.ruuviLocalSyncState.setSyncStatus(.none)
+            .on(success: { [weak self] pendingOffsets in
+                guard let self else { return }
+                self.syncSensors(pendingOffsetUpdates: pendingOffsets)
+                    .observe(on: .global(qos: .utility))
+                    .on(success: { [weak self] _ in
+                        self?.ruuviLocalSyncState.setSyncStatus(.complete)
+                        self?.ruuviLocalSyncState.setSyncDate(Date())
+                        promise.succeed(value: true)
+                    }, failure: { [weak self] error in
+                        self?.ruuviLocalSyncState.setSyncStatus(.onError)
+                        promise.fail(error: error)
+                    }, completion: { [weak self] in
+                        self?.ruuviLocalSyncState.setSyncStatus(.none)
+                    })
             })
         return promise.future
     }
@@ -215,6 +227,42 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 Future.zip(queuedRequests).on(completion: {
                     promise.succeed(value: true)
                 })
+            }, failure: { _ in
+                // Pending-request storage should not prevent fresh cloud data from syncing.
+                promise.succeed(value: true)
+            })
+        return promise.future
+    }
+
+    private func pendingOffsetUpdates()
+    -> Future<Set<QueuedOffsetUpdate>?, RuuviServiceError> {
+        let promise = Promise<Set<QueuedOffsetUpdate>?, RuuviServiceError>()
+        ruuviStorage.readQueuedRequests(for: .sensor)
+            .observe(on: .global(qos: .utility))
+            .on(success: { requests in
+                let decoder = JSONDecoder()
+                let updates = requests.reduce(into: Set<QueuedOffsetUpdate>()) { result, request in
+                    guard let data = request.requestBodyData,
+                          let update = try? decoder.decode(
+                            QueuedSensorUpdateRequest.self,
+                            from: data
+                          ) else { return }
+
+                    if update.offsetTemperature != nil {
+                        result.insert(QueuedOffsetUpdate(sensorID: update.sensor, type: .temperature))
+                    }
+                    if update.offsetHumidity != nil {
+                        result.insert(QueuedOffsetUpdate(sensorID: update.sensor, type: .humidity))
+                    }
+                    if update.offsetPressure != nil {
+                        result.insert(QueuedOffsetUpdate(sensorID: update.sensor, type: .pressure))
+                    }
+                }
+                promise.succeed(value: updates)
+            }, failure: { _ in
+                // Unknown queue state is not safe for offset reconciliation, but it should not
+                // prevent unrelated sensor data from syncing.
+                promise.succeed(value: nil)
             })
         return promise.future
     }
@@ -223,9 +271,11 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private func offsetSyncs(
         cloudSensors: [CloudSensor],
         localSensors: [AnyRuuviTagSensor],
-        updatedSensors: Set<AnyRuuviTagSensor>
+        updatedSensors: Set<AnyRuuviTagSensor>,
+        pendingOffsetUpdates: Set<QueuedOffsetUpdate>?
     ) -> [Future<SensorSettings, RuuviPoolError>] {
-        cloudSensors.compactMap { [weak self] cloudSensor in
+        guard let pendingOffsetUpdates else { return [] }
+        return cloudSensors.compactMap { [weak self] cloudSensor in
             guard let self else { return nil }
             let matchedSensor = updatedSensors.first(where: {
                 cloudSensor.id.isLast3BytesEqual(to: $0.id)
@@ -249,120 +299,59 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 )
             }
 
-            // swiftlint:disable:next function_body_length cyclomatic_complexity
             func handle(localSettings: SensorSettings?) {
-                let syncAction = SyncCollisionResolver.resolve(
-                    localTimestamp: sensor.lastUpdated,
-                    cloudTimestamp: cloudSensor.lastUpdated,
-                    preferCloudWhenBothTimestampsMissing: true
+                var updates = [Future<SensorSettings, RuuviPoolError>]()
+
+                func reconcile(
+                    type: OffsetCorrectionType,
+                    queuedType: QueuedOffsetType,
+                    localValue: Double?,
+                    cloudValue: Double?
+                ) {
+                    let hasPendingUpdate = pendingOffsetUpdates.contains { update in
+                        update.type == queuedType
+                            && cloudSensor.id.isLast3BytesEqual(to: update.sensorID)
+                    }
+                    guard SyncCollisionResolver.resolveOffset(
+                        localValue: localValue,
+                        cloudValue: cloudValue,
+                        hasPendingLocalUpdate: hasPendingUpdate
+                    ) == .updateLocal else { return }
+
+                    updates.append(
+                        self.ruuviPool.updateOffsetCorrection(
+                            type: type,
+                            with: cloudValue,
+                            of: sensor
+                        )
+                    )
+                }
+
+                reconcile(
+                    type: .temperature,
+                    queuedType: .temperature,
+                    localValue: localSettings?.temperatureOffset,
+                    cloudValue: cloudSensor.offsetTemperature
+                )
+                reconcile(
+                    type: .humidity,
+                    queuedType: .humidity,
+                    localValue: localSettings?.humidityOffset,
+                    cloudValue: cloudSensor.offsetHumidity.map { $0 / 100 }
+                )
+                reconcile(
+                    type: .pressure,
+                    queuedType: .pressure,
+                    localValue: localSettings?.pressureOffset,
+                    cloudValue: cloudSensor.offsetPressure.map { $0 / 100 }
                 )
 
-                switch syncAction {
-                case .updateLocal:
-                    var updates = [Future<SensorSettings, RuuviPoolError>]()
-
-                    // Update temperature offset only if it differs from local settings
-                    if cloudSensor.offsetTemperature != localSettings?.temperatureOffset {
-                        updates.append(
-                            self.ruuviPool.updateOffsetCorrection(
-                                type: .temperature,
-                                with: cloudSensor.offsetTemperature,
-                                of: sensor
-                            )
-                        )
-                    }
-
-                    // Update humidity offset only if cloud value is present and differs (after scaling)
-                    if let offsetHumidity = cloudSensor.offsetHumidity {
-                        let newHumidityOffset = offsetHumidity / 100
-                        if newHumidityOffset != localSettings?.humidityOffset {
-                            updates.append(
-                                self.ruuviPool.updateOffsetCorrection(
-                                    type: .humidity,
-                                    with: newHumidityOffset,
-                                    of: sensor
-                                )
-                            )
-                        }
-                    }
-
-                    // Update pressure offset only if cloud value is present and differs (after scaling)
-                    if let offsetPressure = cloudSensor.offsetPressure {
-                        let newPressureOffset = offsetPressure / 100
-                        if newPressureOffset != localSettings?.pressureOffset {
-                            updates.append(
-                                self.ruuviPool.updateOffsetCorrection(
-                                    type: .pressure,
-                                    with: newPressureOffset,
-                                    of: sensor
-                                )
-                            )
-                        }
-                    }
-
-                    Future.zip(updates)
-                        .on(success: { settings in
-                            if let last = settings.last {
-                                promise.succeed(value: last)
-                            } else {
-                                promise.succeed(value: fallbackSettings(localSettings))
-                            }
-                        }, failure: { error in
-                            promise.fail(error: error)
-                        })
-
-                case .keepLocalAndQueue:
-                    // Only queue offsets that actually differ from cloud values
-                    let baseSettings = fallbackSettings(localSettings)
-
-                    // Determine which offsets actually differ from cloud
-                    var queuedTemperatureOffset: Double? = baseSettings.temperatureOffset
-                    var queuedHumidityOffset: Double? = baseSettings.humidityOffset
-                    var queuedPressureOffset: Double? = baseSettings.pressureOffset
-
-                    // Temperature: compare local offset to cloud offset as-is
-                    if let localTempOffset = baseSettings.temperatureOffset,
-                       let cloudTempOffset = cloudSensor.offsetTemperature,
-                       localTempOffset == cloudTempOffset {
-                        queuedTemperatureOffset = nil
-                    }
-
-                    // Humidity: local offset is in %, cloud offset stored as int * 100
-                    if let localHumidityOffset = baseSettings.humidityOffset,
-                       let cloudHumidityRaw = cloudSensor.offsetHumidity {
-                        let cloudHumidityOffset = cloudHumidityRaw / 100
-                        if localHumidityOffset == cloudHumidityOffset {
-                            queuedHumidityOffset = nil
-                        }
-                    }
-
-                    // Pressure: local offset is in hPa, cloud offset stored as int * 100
-                    if let localPressureOffset = baseSettings.pressureOffset,
-                       let cloudPressureRaw = cloudSensor.offsetPressure {
-                        let cloudPressureOffset = cloudPressureRaw / 100
-                        if localPressureOffset == cloudPressureOffset {
-                            queuedPressureOffset = nil
-                        }
-                    }
-
-                    // Create new settings struct with only the differing offsets
-                    let diffSettings = SensorSettingsStruct(
-                        luid: baseSettings.luid,
-                        macId: baseSettings.macId,
-                        temperatureOffset: queuedTemperatureOffset,
-                        humidityOffset: queuedHumidityOffset,
-                        pressureOffset: queuedPressureOffset
-                    )
-
-                    self.queueOffsetUpdatesToCloud(
-                        sensor: sensor,
-                        settings: diffSettings
-                    )
-                    promise.succeed(value: baseSettings)
-
-                case .noAction:
-                    promise.succeed(value: fallbackSettings(localSettings))
-                }
+                Future.zip(updates)
+                    .on(success: { settings in
+                        promise.succeed(value: settings.last ?? fallbackSettings(localSettings))
+                    }, failure: { error in
+                        promise.fail(error: error)
+                    })
             }
 
             ruuviStorage.readSensorSettings(sensor)
@@ -370,7 +359,9 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 .on(success: { settings in
                     handle(localSettings: settings)
                 }, failure: { _ in
-                    handle(localSettings: nil)
+                    // Preserve possible local intent when settings cannot be read, while allowing
+                    // reconciliation for other sensors to continue.
+                    promise.succeed(value: fallbackSettings(nil))
                 })
 
             return promise.future
@@ -672,7 +663,9 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
     // This method syncs the sensors, latest measurements and alerts.
     // swiftlint:disable:next function_body_length
-    private func syncSensors() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
+    private func syncSensors(
+        pendingOffsetUpdates: Set<QueuedOffsetUpdate>?
+    ) -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
         let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
 
         // Set cloud sensors in syncing state
@@ -711,7 +704,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             }
             let sensors = sSelf.syncSensors(
                 cloudSensors: cloudSensors,
-                denseSensor: denseSensors
+                denseSensor: denseSensors,
+                pendingOffsetUpdates: pendingOffsetUpdates
             )
             sensors
                 .observe(on: .global(qos: .utility))
@@ -881,7 +875,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     // swiftlint:disable:next function_body_length
     private func syncSensors(
         cloudSensors: [AnyCloudSensor],
-        denseSensor: [RuuviCloudSensorDense]
+        denseSensor: [RuuviCloudSensorDense],
+        pendingOffsetUpdates: Set<QueuedOffsetUpdate>?
     ) -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
         let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
         var updatedSensors = Set<AnyRuuviTagSensor>()
@@ -1019,7 +1014,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         let syncOffsets = self.offsetSyncs(
                             cloudSensors: cloudSensors,
                             localSensors: localSensors,
-                            updatedSensors: updatedSensors
+                            updatedSensors: updatedSensors,
+                            pendingOffsetUpdates: pendingOffsetUpdates
                         )
                         let displaySettingsSyncs = self.displaySettingsSyncs(
                             denseSensors: denseSensor
@@ -1293,15 +1289,25 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         ruuviCloud.executeQueuedRequest(from: request)
             .observe(on: .global(qos: .utility))
             .on(success: { [weak self] success in
-                self?.ruuviPool.deleteQueuedRequest(request)
-                promise.succeed(value: success)
+                guard let self else { return }
+                self.ruuviPool.deleteQueuedRequest(request)
+                    .on(success: { _ in
+                        promise.succeed(value: success)
+                    }, failure: { error in
+                        promise.fail(error: .ruuviPool(error))
+                    })
             }, failure: { [weak self] error in
                 switch error {
                 case .api(.api(.erConflict)):
                     // We should delete the request from local db when there's
                     // already new data available on the cloud.
-                    self?.ruuviPool.deleteQueuedRequest(request)
-                    promise.fail(error: .ruuviCloud(error))
+                    guard let self else { return }
+                    self.ruuviPool.deleteQueuedRequest(request)
+                        .on(success: { _ in
+                            promise.fail(error: .ruuviCloud(error))
+                        }, failure: { deleteError in
+                            promise.fail(error: .ruuviPool(deleteError))
+                        })
                 default:
                     promise.fail(error: .ruuviCloud(error))
                 }
@@ -1413,26 +1419,4 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         ).on()
     }
 
-    /// Queue local offset updates to cloud when local data is newer.
-    private func queueOffsetUpdatesToCloud(
-        sensor: RuuviTagSensor,
-        settings: SensorSettings?
-    ) {
-        guard sensor.isCloud else { return }
-
-        let temperatureOffset = settings?.temperatureOffset
-        let humidityOffset = settings?.humidityOffset.map { $0 * 100 }
-        let pressureOffset = settings?.pressureOffset.map { $0 * 100 }
-
-        guard temperatureOffset != nil || humidityOffset != nil || pressureOffset != nil else {
-            return
-        }
-
-        ruuviCloud.update(
-            temperatureOffset: temperatureOffset,
-            humidityOffset: humidityOffset,
-            pressureOffset: pressureOffset,
-            for: sensor
-        ).on()
-    }
 }
