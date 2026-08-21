@@ -101,6 +101,22 @@ public extension String {
             .joined()
     }
 
+    /// Last three MAC bytes formatted for matching colon-separated database values.
+    var macSuffix: String {
+        let cleaned = cleanedHexString()
+        let suffix = cleaned.count >= 6 ? String(cleaned.suffix(6)) : cleaned
+        return stride(from: 0, to: suffix.count, by: 2)
+            .map { index in
+                let start = suffix.index(suffix.startIndex, offsetBy: index)
+                let end = suffix.index(
+                    start,
+                    offsetBy: min(2, suffix.distance(from: start, to: suffix.endIndex))
+                )
+                return String(suffix[start..<end])
+            }
+            .joined(separator: ":")
+    }
+
     func isLast3BytesEqual(to other: String) -> Bool {
         let last3Self = cleanedHexString()
         let last3Other = other.cleanedHexString()

@@ -33,10 +33,15 @@ final class SensorSettingsCombine {
         self.sqlite = sqlite
         self.errorReporter = errorReporter
 
+        let macSuffix = macId?.value.macSuffix
+        let hasCanonicalSuffix = macSuffix?.count == 8
         let request = SensorSettingsSQLite
             .filter(
                 (luid?.value != nil && SensorSettingsSQLite.luidColumn == luid?.value)
-                    || (macId?.value != nil && SensorSettingsSQLite.macIdColumn == macId?.value)
+                    || (hasCanonicalSuffix && SensorSettingsSQLite.macIdColumn.like("%\(macSuffix ?? "")"))
+                    || (!hasCanonicalSuffix
+                        && macId?.value != nil
+                        && SensorSettingsSQLite.macIdColumn == macId?.value)
             )
 
         let observation = ValueObservation.tracking { db in try request.fetchAll(db) }

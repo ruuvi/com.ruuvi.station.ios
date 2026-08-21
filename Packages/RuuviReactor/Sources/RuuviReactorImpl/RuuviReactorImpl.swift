@@ -113,8 +113,9 @@ class RuuviReactorImpl: RuuviReactor {
                 let result = [sqliteRecord].compactMap { $0?.any }.last
                 block(.update(result))
             })
+        let identityKey = ruuviTag.identityKey
         let recordCombine: RuuviTagLastRecordSubjectCombine = synchronized {
-            if let combine = lastRecordCombines[ruuviTag.id] {
+            if let combine = lastRecordCombines[identityKey] {
                 return combine
             }
             let combine = RuuviTagLastRecordSubjectCombine(
@@ -123,7 +124,7 @@ class RuuviReactorImpl: RuuviReactor {
                 sqlite: sqliteContext,
                 errorReporter: errorReporter
             )
-            lastRecordCombines[ruuviTag.id] = combine
+            lastRecordCombines[identityKey] = combine
             return combine
         }
 
@@ -155,8 +156,9 @@ class RuuviReactorImpl: RuuviReactor {
             let result = [sqliteRecord].compactMap { $0?.any }.last
             block(.update(result))
         })
+        let identityKey = ruuviTag.identityKey
         let recordCombine: RuuviTagLatestRecordSubjectCombine = synchronized {
-            if let combine = latestRecordCombines[ruuviTag.id] {
+            if let combine = latestRecordCombines[identityKey] {
                 return combine
             }
             let combine = RuuviTagLatestRecordSubjectCombine(
@@ -165,7 +167,7 @@ class RuuviReactorImpl: RuuviReactor {
                 sqlite: sqliteContext,
                 errorReporter: errorReporter
             )
-            latestRecordCombines[ruuviTag.id] = combine
+            latestRecordCombines[identityKey] = combine
             return combine
         }
 
@@ -197,8 +199,9 @@ class RuuviReactorImpl: RuuviReactor {
                 block(.initial([sensorSettings]))
             }
         }
+        let identityKey = ruuviTag.identityKey
         let sensorSettingsCombine: SensorSettingsCombine = synchronized {
-            if let combine = sensorSettingsCombines[ruuviTag.id] {
+            if let combine = sensorSettingsCombines[identityKey] {
                 return combine
             }
             let combine = SensorSettingsCombine(
@@ -207,7 +210,7 @@ class RuuviReactorImpl: RuuviReactor {
                 sqlite: sqliteContext,
                 errorReporter: errorReporter
             )
-            sensorSettingsCombines[ruuviTag.id] = combine
+            sensorSettingsCombines[identityKey] = combine
             return combine
         }
 

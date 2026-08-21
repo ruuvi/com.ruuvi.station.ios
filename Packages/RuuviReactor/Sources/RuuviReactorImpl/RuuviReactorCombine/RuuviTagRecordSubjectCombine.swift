@@ -35,10 +35,15 @@ final class RuuviTagRecordSubjectCombine {
 
     func start() {
         isServing = true
+        let macSuffix = macId?.value.macSuffix
+        let hasCanonicalSuffix = macSuffix?.count == 8
         let request = RuuviTagDataSQLite.order(RuuviTagDataSQLite.dateColumn)
             .filter(
                 (luid?.value != nil && RuuviTagDataSQLite.luidColumn == luid?.value)
-                    || (macId?.value != nil && RuuviTagDataSQLite.macColumn == macId?.value)
+                    || (hasCanonicalSuffix && RuuviTagDataSQLite.macColumn.like("%\(macSuffix ?? "")"))
+                    || (!hasCanonicalSuffix
+                        && macId?.value != nil
+                        && RuuviTagDataSQLite.macColumn == macId?.value)
             )
 
         let observation = ValueObservation.tracking { db in
