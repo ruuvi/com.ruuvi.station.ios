@@ -668,7 +668,12 @@ public final class RuuviCloudPure: RuuviCloud {
         api.resetImage(request, authorization: apiKey)
             .on(success: { _ in
                 promise.succeed(value: ())
-            }, failure: { error in
+            }, failure: { [weak self] error in
+                self?.createQueuedRequest(
+                    from: request,
+                    type: .uploadImage,
+                    uniqueKey: macId.value + "-uploadImage"
+                )
                 promise.fail(error: .api(error))
             })
         return promise.future
@@ -1398,27 +1403,33 @@ public final class RuuviCloudPure: RuuviCloud {
             }
         case .uploadImage:
             do {
-                guard let imageData = request.additionalData
-                else {
-                    return promise.future
-                }
-
                 let requestModel = try decoder.decode(
                     RuuviCloudApiSensorImageUploadRequest.self,
                     from: requestBody
                 )
 
-                api.uploadImage(
-                    requestModel,
-                    imageData: imageData,
-                    authorization: apiKey,
-                    uploadProgress: nil
-                )
-                .on(success: { _ in
-                    promise.succeed(value: true)
-                }, failure: { error in
-                    promise.fail(error: .api(error))
-                })
+                if requestModel.action == .reset {
+                    api.resetImage(requestModel, authorization: apiKey)
+                        .on(success: { _ in
+                            promise.succeed(value: true)
+                        }, failure: { error in
+                            promise.fail(error: .api(error))
+                        })
+                } else if let imageData = request.additionalData {
+                    api.uploadImage(
+                        requestModel,
+                        imageData: imageData,
+                        authorization: apiKey,
+                        uploadProgress: nil
+                    )
+                    .on(success: { _ in
+                        promise.succeed(value: true)
+                    }, failure: { error in
+                        promise.fail(error: .api(error))
+                    })
+                } else {
+                    promise.fail(error: .api(.badParameters))
+                }
             } catch {
                 promise.fail(error: .api(.parsing(error)))
             }

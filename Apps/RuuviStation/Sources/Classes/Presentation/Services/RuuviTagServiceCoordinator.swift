@@ -143,6 +143,10 @@ class RuuviTagServiceCoordinator {
         dataService.reorderSnapshots()
     }
 
+    func forceRefreshSnapshots() {
+        dataService.refreshSnapshotsFromCurrentSensors()
+    }
+
     func forceLoadBackgrounds() {
         dataService.loadBackgroundsForCurrentSnapshots()
     }
@@ -875,6 +879,10 @@ class RuuviTagServiceCoordinatorManager {
 
     func forceReorderSnapshots() {
         withCoordinator { $0.forceReorderSnapshots() }
+    }
+
+    func forceRefreshSnapshots() {
+        withCoordinator { $0.forceRefreshSnapshots() }
     }
 
     func reorderSnapshots(with orderedIds: [String]) {

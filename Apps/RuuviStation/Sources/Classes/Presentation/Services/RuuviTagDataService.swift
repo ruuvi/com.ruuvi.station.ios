@@ -282,6 +282,10 @@ class RuuviTagDataService {
         }
     }
 
+    func refreshSnapshotsFromCurrentSensors() {
+        ruuviTags.forEach { updateSensorSnapshot(sensor: $0) }
+    }
+
     func loadBackground(for snapshot: RuuviTagCardSnapshot, sensor: AnyRuuviTagSensor) {
         backgroundLoadingQueue.async { [weak self] in
             guard let self = self else { return }
@@ -291,8 +295,9 @@ class RuuviTagDataService {
                     guard let self = self else { return }
 
                     DispatchQueue.main.async {
+                        guard !self.settings.syncExtensiveChangesInProgress else { return }
                         let didUpdate = snapshot.updateBackgroundImage(image)
-                        if didUpdate && !self.settings.syncExtensiveChangesInProgress {
+                        if didUpdate {
                             self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
                         }
                     }
@@ -643,12 +648,13 @@ private extension RuuviTagDataService {
 
         // Ensure we update @Published properties on the main thread
         DispatchQueue.main.async {
+            guard !self.settings.syncExtensiveChangesInProgress else { return }
             let previousName = snapshot.displayData.name
             // Update basic sensor information
             let didUpdate = self.populateSnapshot(snapshot, with: sensor)
             let invalidateLayout = previousName != snapshot.displayData.name
 
-            if didUpdate && !self.settings.syncExtensiveChangesInProgress {
+            if didUpdate {
                 if invalidateLayout && self.settings.dashboardSensorOrder.isEmpty {
                     let previousOrder = self.snapshots.map(\.id)
                     let reorderedSnapshots = self.reorderSnapshots(

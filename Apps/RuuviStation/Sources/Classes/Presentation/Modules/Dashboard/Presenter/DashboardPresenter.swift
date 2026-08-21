@@ -772,6 +772,7 @@ extension DashboardPresenter: SignInBenefitsModuleOutput {
 
     func signIn(module: SignInBenefitsModuleInput, didSuccessfulyLogin: Any?) {
         startAllServices()
+        serviceCoordinatorManager.forceRefreshSnapshots()
         serviceCoordinatorManager.forceReorderSnapshots()
         serviceCoordinatorManager.forceLoadBackgrounds()
         updateAuthorizationState()
