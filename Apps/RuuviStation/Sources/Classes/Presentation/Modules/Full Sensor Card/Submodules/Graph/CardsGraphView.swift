@@ -492,9 +492,11 @@ extension CardsGraphView {
     }
 
     private func formattedNumber(_ value: Double, decimals: Int) -> String {
-        GlobalHelpers().formattedString(
-            from: value,
-            minPlace: 0,
+        let roundingThreshold = 0.5 * pow(10, -Double(decimals))
+        let normalizedValue = abs(value) < roundingThreshold ? 0 : value
+        return GlobalHelpers().formattedString(
+            from: normalizedValue,
+            minPlace: decimals,
             toPlace: decimals
         )
     }
