@@ -53,6 +53,7 @@ class UnitSettingsTableViewController: UITableViewController {
     private let unitSettingsCellReuseIdentifier = "unitSettingsCellReuseIdentifier"
     private var configuredHeaderMode: UnitSettingsMode?
     private var configuredHeaderWidth: CGFloat = 0
+    private var configuredHeaderSafeAreaInsets: UIEdgeInsets = .zero
 }
 
 // MARK: - SelectionViewInput
@@ -369,14 +370,17 @@ extension UnitSettingsTableViewController {
     private func configureHeaderIfNeeded(force: Bool = false) {
         let mode = viewModel?.mode
         let width = tableView.bounds.width
+        let safeAreaInsets = tableView.safeAreaInsets
         guard force
             || configuredHeaderMode != mode
-            || configuredHeaderWidth != width else {
+            || configuredHeaderWidth != width
+            || configuredHeaderSafeAreaInsets != safeAreaInsets else {
             return
         }
 
         configuredHeaderMode = mode
         configuredHeaderWidth = width
+        configuredHeaderSafeAreaInsets = safeAreaInsets
         configureHeader()
     }
 
@@ -394,7 +398,15 @@ extension UnitSettingsTableViewController {
         label.numberOfLines = 0
         label.text = description
 
-        let width = tableView.bounds.width - horizontalPadding * 2
+        let safeAreaInsets = tableView.safeAreaInsets
+        let labelX = safeAreaInsets.left + horizontalPadding
+        let width = max(
+            0,
+            tableView.bounds.width
+                - safeAreaInsets.left
+                - safeAreaInsets.right
+                - horizontalPadding * 2
+        )
         let size = label.sizeThatFits(
             CGSize(width: width, height: CGFloat.greatestFiniteMagnitude)
         )
@@ -407,7 +419,7 @@ extension UnitSettingsTableViewController {
             )
         )
         label.frame = CGRect(
-            x: horizontalPadding,
+            x: labelX,
             y: verticalPadding,
             width: width,
             height: size.height

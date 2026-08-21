@@ -55,6 +55,11 @@ extension SelectionTableViewController {
         output.viewDidLoad()
         updateUI()
     }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        resizeTableFooterToFit()
+    }
 }
 
 // MARK: - UITableViewDataSource
@@ -113,10 +118,33 @@ extension SelectionTableViewController {
 // MARK: - Update UI
 
 extension SelectionTableViewController {
+    private func resizeTableFooterToFit() {
+        guard let footerView = tableView.tableFooterView,
+              tableView.bounds.width > 0 else { return }
+
+        footerView.frame.size.width = tableView.bounds.width
+        footerView.setNeedsLayout()
+        footerView.layoutIfNeeded()
+
+        let fittingSize = footerView.systemLayoutSizeFitting(
+            CGSize(
+                width: tableView.bounds.width,
+                height: UIView.layoutFittingCompressedSize.height
+            ),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        )
+        guard abs(footerView.frame.height - fittingSize.height) > 0.5 else { return }
+
+        footerView.frame.size.height = fittingSize.height
+        tableView.tableFooterView = footerView
+    }
+
     private func updateUI() {
         title = viewModel?.title
         if isViewLoaded {
             descriptionTextView.text = viewModel?.description
+            resizeTableFooterToFit()
         }
         updateUISelections()
     }
