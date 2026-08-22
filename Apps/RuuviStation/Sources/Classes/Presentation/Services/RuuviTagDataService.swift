@@ -291,8 +291,9 @@ class RuuviTagDataService {
                     guard let self = self else { return }
 
                     DispatchQueue.main.async {
+                        guard !self.settings.syncExtensiveChangesInProgress else { return }
                         let didUpdate = snapshot.updateBackgroundImage(image)
-                        if didUpdate && !self.settings.syncExtensiveChangesInProgress {
+                        if didUpdate {
                             self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
                         }
                     }

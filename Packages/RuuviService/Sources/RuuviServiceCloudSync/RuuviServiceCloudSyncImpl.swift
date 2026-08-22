@@ -881,6 +881,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
         var updatedSensors = Set<AnyRuuviTagSensor>()
         var skipCloudImageDownloadForSensorIDs = Set<String>()
+        var metadataSyncs = [Future<Bool, RuuviCloudError>]()
         ruuviStorage.readAll()
             .observe(on: .global(qos: .utility))
             .on(success: {
@@ -906,7 +907,6 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                                 }
                                 return resolvedAction
                             }()
-
                             switch syncAction {
                             case .updateLocal:
                                 updatedSensors.insert(localSensor)
@@ -923,12 +923,16 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                                 // Local is newer - push local editable fields to cloud, but keep
                                 // cloud-authoritative entitlement fields fresh locally.
                                 skipCloudImageDownloadForSensorIDs.insert(cloudSensor.id)
-                                if let macId = localSensor.macId {
-                                    self.queueSensorUpdateToCloud(localSensor, macId: macId)
+                                if localSensor.macId != nil {
+                                    metadataSyncs.append(
+                                        self.queueSensorUpdateToCloud(localSensor)
+                                    )
                                 }
-                                self.queueSensorImageUpdateToCloud(
-                                    localSensor: localSensor,
-                                    cloudSensor: cloudSensor
+                                metadataSyncs.append(contentsOf:
+                                    self.queueSensorImageUpdateToCloud(
+                                        localSensor: localSensor,
+                                        cloudSensor: cloudSensor
+                                    )
                                 )
 
                                 self.handleDownloadFullHistoryAfterSubscriptionChange(
@@ -1022,18 +1026,24 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         )
                         let combinedSettingsSyncs = syncOffsets + displaySettingsSyncs
 
-                        Future.zip(syncSubscriptions)
+                        Future.zip(metadataSyncs)
                             .observe(on: .global(qos: .utility))
                             .on(success: { _ in
-                                Future.zip(combinedSettingsSyncs)
+                                Future.zip(syncSubscriptions)
                                     .observe(on: .global(qos: .utility))
                                     .on(success: { _ in
-                                        promise.succeed(value: updatedSensors)
+                                        Future.zip(combinedSettingsSyncs)
+                                            .observe(on: .global(qos: .utility))
+                                            .on(success: { _ in
+                                                promise.succeed(value: updatedSensors)
+                                            }, failure: { error in
+                                                promise.fail(error: .ruuviPool(error))
+                                            })
                                     }, failure: { error in
                                         promise.fail(error: .ruuviPool(error))
                                     })
                             }, failure: { error in
-                                promise.fail(error: .ruuviPool(error))
+                                promise.fail(error: .ruuviCloud(error))
                             })
 
                     }, failure: { error in
@@ -1156,10 +1166,16 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             return promise.future
         }
 
-        // First update the version number of the tag if there is a difference between
-        // cloud data and local data.
-        if cloudRecord.version > 0 && cloudRecord.version != ruuviTag.version {
-            ruuviPool.update(ruuviTag.with(version: cloudRecord.version))
+        // The dense response may still contain stale editable metadata after a
+        // local-wins collision. Re-read the resolved sensor before changing its
+        // version so a version-only update cannot overwrite its name or timestamp.
+        if cloudRecord.version > 0 {
+            ruuviStorage.readOne(ruuviTag.id)
+                .observe(on: .global(qos: .utility))
+                .on(success: { [weak self] localSensor in
+                    guard cloudRecord.version != localSensor.version else { return }
+                    self?.ruuviPool.update(localSensor.with(version: cloudRecord.version))
+                })
         }
 
         ruuviStorage.readLatest(ruuviTag)
@@ -1327,13 +1343,18 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
     /// Queue local sensor update to cloud when local data is newer.
     /// This pushes local sensor name to cloud, which will handle offline queuing.
-    private func queueSensorUpdateToCloud(_ sensor: RuuviTagSensor, macId: MACIdentifier) {
+    private func queueSensorUpdateToCloud(
+        _ sensor: RuuviTagSensor
+    ) -> Future<Bool, RuuviCloudError> {
+        let promise = Promise<Bool, RuuviCloudError>()
         ruuviCloud.update(name: sensor.name, for: sensor)
             .on(success: { _ in
-                // Successfully pushed local data to cloud
+                promise.succeed(value: true)
             }, failure: { _ in
                 // Failed to push to cloud - RuuviCloudPure will handle queuing
+                promise.succeed(value: true)
             })
+        return promise.future
     }
 
     /// Queue local sensor background image update to cloud when local data is newer.
@@ -1341,28 +1362,39 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private func queueSensorImageUpdateToCloud(
         localSensor: RuuviTagSensor,
         cloudSensor: CloudSensor
-    ) {
-        guard let macId = localSensor.macId else { return }
+    ) -> [Future<Bool, RuuviCloudError>] {
+        guard let macId = localSensor.macId else { return [] }
 
         if let localImage = localCustomBackground(for: localSensor) {
             // Local image already matches cloud cache URL; no action needed.
             if ruuviLocalImages.isPictureCached(for: cloudSensor) {
-                return
+                return []
             }
 
-            guard let imageData = localImage.jpegData(compressionQuality: 1.0) else { return }
+            guard let imageData = localImage.jpegData(compressionQuality: 1.0) else { return [] }
+            let promise = Promise<Bool, RuuviCloudError>()
             ruuviCloud.upload(
                 imageData: imageData,
                 mimeType: .jpg,
                 progress: nil,
                 for: macId
-            ).on()
-            return
+            ).on(success: { _ in
+                promise.succeed(value: true)
+            }, failure: { _ in
+                promise.succeed(value: true)
+            })
+            return [promise.future]
         }
 
         // Local has no custom image; clear custom cloud image if cloud still has one.
-        guard cloudSensor.picture != nil else { return }
-        ruuviCloud.resetImage(for: macId).on()
+        guard cloudSensor.picture != nil else { return [] }
+        let promise = Promise<Bool, RuuviCloudError>()
+        ruuviCloud.resetImage(for: macId).on(success: { _ in
+            promise.succeed(value: true)
+        }, failure: { _ in
+            promise.succeed(value: true)
+        })
+        return [promise.future]
     }
 
     private func localCustomBackground(for sensor: RuuviTagSensor) -> UIImage? {
