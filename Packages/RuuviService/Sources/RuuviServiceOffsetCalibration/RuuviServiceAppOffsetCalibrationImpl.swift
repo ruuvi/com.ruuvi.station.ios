@@ -24,17 +24,17 @@ public final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalib
         lastOriginalRecord record: RuuviTagSensorRecord?
     ) -> Future<SensorSettings, RuuviServiceError> {
         let promise = Promise<SensorSettings, RuuviServiceError>()
-        let updatedSensor = sensor.with(lastUpdated: Date())
+        let timestamp = Date(timeIntervalSince1970: TimeInterval(Int(Date().timeIntervalSince1970)))
         if sensor.isCloud {
-            updateOnCloud(offset: offset, of: type, for: sensor).on()
+            updateOnCloud(offset: offset, of: type, for: sensor, timestamp: timestamp).on()
         }
         pool.updateOffsetCorrection(
             type: type,
             with: offset,
             of: sensor,
-            lastOriginalRecord: record
-        ).on(success: { [weak self] settings in
-            self?.pool.update(updatedSensor).on()
+            lastOriginalRecord: record,
+            lastUpdated: timestamp
+        ).on(success: { settings in
             promise.succeed(value: settings)
         }, failure: { error in
             promise.fail(error: .ruuviPool(error))
@@ -45,31 +45,27 @@ public final class RuuviServiceAppOffsetCalibrationImpl: RuuviServiceOffsetCalib
     private func updateOnCloud(
         offset: Double?,
         of type: OffsetCorrectionType,
-        for sensor: RuuviTagSensor
+        for sensor: RuuviTagSensor,
+        timestamp: Date
     ) -> Future<AnyRuuviTagSensor, RuuviCloudError> {
-        let cloudUpdate: Future<AnyRuuviTagSensor, RuuviCloudError> = switch type {
+        let setting: RuuviCloudApiSetting
+        let value: Double
+        switch type {
         case .temperature:
-            cloud.update(
-                temperatureOffset: offset ?? 0,
-                humidityOffset: nil,
-                pressureOffset: nil,
-                for: sensor
-            )
+            setting = .sensorOffsetTemperature
+            value = offset ?? 0
         case .humidity:
-            cloud.update(
-                temperatureOffset: nil,
-                humidityOffset: (offset ?? 0) * 100, // fraction locally, % on cloud
-                pressureOffset: nil,
-                for: sensor
-            )
+            setting = .sensorOffsetHumidity
+            value = (offset ?? 0) * 100 // fraction locally, % on cloud
         case .pressure:
-            cloud.update(
-                temperatureOffset: nil,
-                humidityOffset: nil,
-                pressureOffset: (offset ?? 0) * 100, // hPA locally, Pa on cloud
-                for: sensor
-            )
+            setting = .sensorOffsetPressure
+            value = (offset ?? 0) * 100 // hPa locally, Pa on cloud
         }
-        return cloudUpdate
+        return cloud.updateSensorSettings(
+            for: sensor,
+            types: [setting.rawValue],
+            values: [String(value)],
+            timestamp: Int(timestamp.timeIntervalSince1970)
+        )
     }
 }

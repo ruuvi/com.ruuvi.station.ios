@@ -711,7 +711,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         type: OffsetCorrectionType,
         with value: Double?,
         of ruuviTag: RuuviTagSensor,
-        lastOriginalRecord record: RuuviTagSensorRecord?
+        lastOriginalRecord record: RuuviTagSensorRecord?,
+        lastUpdated: Date?
     ) -> Future<SensorSettings, RuuviPersistenceError> {
         let promise = Promise<SensorSettings, RuuviPersistenceError>()
         assert(ruuviTag.macId != nil)
@@ -744,15 +745,19 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 switch type {
                 case .humidity:
                     sqliteSensorSettings.humidityOffset = value
+                    sqliteSensorSettings.humidityOffsetLastUpdated = lastUpdated
                 case .pressure:
                     sqliteSensorSettings.pressureOffset = value
+                    sqliteSensorSettings.pressureOffsetLastUpdated = lastUpdated
                 default:
                     sqliteSensorSettings.temperatureOffset = value
+                    sqliteSensorSettings.temperatureOffsetLastUpdated = lastUpdated
                 }
 
                 if isAddNewRecord {
                     try sqliteSensorSettings.insert(db)
                 } else {
+                    
                     try sqliteSensorSettings.update(db)
                 }
 

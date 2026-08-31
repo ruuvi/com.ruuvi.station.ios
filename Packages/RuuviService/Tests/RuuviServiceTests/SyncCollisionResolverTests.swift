@@ -3,6 +3,87 @@ import RuuviOntology
 import XCTest
 
 final class SyncCollisionResolverTests: XCTestCase {
+    func testPendingLegacyOffsetSurvivesCloudTimestampMigration() {
+        XCTAssertEqual(
+            SyncCollisionResolver.resolveOffset(
+                localValue: 1, cloudValue: 2,
+                localTimestamp: nil,
+                cloudTimestamp: Date(timeIntervalSince1970: 200),
+                hasPendingLocalUpdate: true
+            ),
+            .noAction
+        )
+    }
+
+    func testUnreadableLegacyQueuePreservesLocalOffset() {
+        XCTAssertEqual(
+            SyncCollisionResolver.resolveOffset(
+                localValue: 1, cloudValue: 2,
+                localTimestamp: nil,
+                cloudTimestamp: Date(timeIntervalSince1970: 200),
+                hasPendingLocalUpdate: nil
+            ),
+            .noAction
+        )
+    }
+
+    func testCompletedLegacyRequestAllowsCloudReconciliation() {
+        XCTAssertEqual(
+            SyncCollisionResolver.resolveOffset(
+                localValue: 1, cloudValue: 2,
+                localTimestamp: nil,
+                cloudTimestamp: Date(timeIntervalSince1970: 200),
+                hasPendingLocalUpdate: false
+            ),
+            .updateLocal
+        )
+    }
+
+    func testPendingLegacyResetIsPreserved() {
+        XCTAssertEqual(
+            SyncCollisionResolver.resolveOffset(
+                localValue: nil, cloudValue: 2,
+                localTimestamp: nil,
+                cloudTimestamp: Date(timeIntervalSince1970: 200),
+                hasPendingLocalUpdate: true
+            ),
+            .noAction
+        )
+    }
+
+    func testTimestampedOffsetStillUsesTimestampOrder() {
+        XCTAssertEqual(
+            SyncCollisionResolver.resolveOffset(
+                localValue: 1, cloudValue: 2,
+                localTimestamp: Date(timeIntervalSince1970: 201),
+                cloudTimestamp: Date(timeIntervalSince1970: 200),
+                hasPendingLocalUpdate: nil
+            ),
+            .keepLocalAndQueue
+        )
+        XCTAssertEqual(
+            SyncCollisionResolver.resolveOffset(
+                localValue: 1, cloudValue: 2,
+                localTimestamp: Date(timeIntervalSince1970: 199),
+                cloudTimestamp: Date(timeIntervalSince1970: 200),
+                hasPendingLocalUpdate: true
+            ),
+            .updateLocal
+        )
+    }
+
+    func testEqualOffsetTimestampsStillDoNothing() {
+        let timestamp = Date(timeIntervalSince1970: 200)
+        XCTAssertEqual(
+            SyncCollisionResolver.resolveOffset(
+                localValue: 1, cloudValue: 2,
+                localTimestamp: timestamp, cloudTimestamp: timestamp,
+                hasPendingLocalUpdate: false
+            ),
+            .noAction
+        )
+    }
+
     func testPreferCloudWhenBothTimestampsAreMissingIsOptIn() {
         XCTAssertEqual(
             SyncCollisionResolver.resolve(

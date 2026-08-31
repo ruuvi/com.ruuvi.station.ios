@@ -37,7 +37,8 @@ public protocol RuuviPool {
         type: OffsetCorrectionType,
         with value: Double?,
         of ruuviTag: RuuviTagSensor,
-        lastOriginalRecord record: RuuviTagSensorRecord?
+        lastOriginalRecord record: RuuviTagSensorRecord?,
+        lastUpdated: Date?
     ) -> Future<SensorSettings, RuuviPoolError>
     func updateDisplaySettings(
         for ruuviTag: RuuviTagSensor,
@@ -84,7 +85,8 @@ public extension RuuviPool {
             type: type,
             with: value,
             of: ruuviTag,
-            lastOriginalRecord: nil
+            lastOriginalRecord: nil,
+            lastUpdated: Date(timeIntervalSince1970: TimeInterval(Int(Date().timeIntervalSince1970)))
         )
     }
 }

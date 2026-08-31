@@ -277,14 +277,14 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
 
     // swiftlint:disable:next function_body_length
     private func offsetSyncs(
-        cloudSensors: [CloudSensor],
+        denseSensors: [RuuviCloudSensorDense],
         localSensors: [AnyRuuviTagSensor],
         updatedSensors: Set<AnyRuuviTagSensor>,
         pendingOffsetUpdates: Set<QueuedOffsetUpdate>?
     ) -> [Future<SensorSettings, RuuviPoolError>] {
-        guard let pendingOffsetUpdates else { return [] }
-        return cloudSensors.compactMap { [weak self] cloudSensor in
+        denseSensors.compactMap { [weak self] denseSensor in
             guard let self else { return nil }
+            let cloudSensor = denseSensor.sensor.any
             let matchedSensor = updatedSensors.first(where: {
                 cloudSensor.id.isLast3BytesEqual(to: $0.id)
             }) ?? localSensors.first(where: {
@@ -314,23 +314,43 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     type: OffsetCorrectionType,
                     queuedType: QueuedOffsetType,
                     localValue: Double?,
-                    cloudValue: Double?
+                    localTimestamp: Date?,
+                    cloudValue: Double?,
+                    cloudTimestamp: Date?,
+                    setting: RuuviCloudApiSetting,
+                    cloudMultiplier: Double = 1
                 ) {
-                    let hasPendingUpdate = pendingOffsetUpdates.contains { update in
+                    let hasPendingUpdate = pendingOffsetUpdates?.contains { update in
                         update.type == queuedType
                             && cloudSensor.id.isLast3BytesEqual(to: update.sensorID)
                     }
-                    guard SyncCollisionResolver.resolveOffset(
+
+                    let action = SyncCollisionResolver.resolveOffset(
                         localValue: localValue,
                         cloudValue: cloudValue,
+                        localTimestamp: localTimestamp,
+                        cloudTimestamp: cloudTimestamp,
                         hasPendingLocalUpdate: hasPendingUpdate
-                    ) == .updateLocal else { return }
+                    )
+
+                    if action == .keepLocalAndQueue {
+                        self.queueOffsetSettingToCloud(
+                            sensor: sensor,
+                            setting: setting,
+                            value: (localValue ?? 0) * cloudMultiplier,
+                            timestamp: localTimestamp
+                        )
+                    }
+
+                    guard action == .updateLocal else { return }
 
                     updates.append(
                         self.ruuviPool.updateOffsetCorrection(
                             type: type,
                             with: cloudValue,
-                            of: sensor
+                            of: sensor,
+                            lastOriginalRecord: nil,
+                            lastUpdated: cloudTimestamp
                         )
                     )
                 }
@@ -339,19 +359,33 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     type: .temperature,
                     queuedType: .temperature,
                     localValue: localSettings?.temperatureOffset,
-                    cloudValue: cloudSensor.offsetTemperature
+                    localTimestamp: localSettings?.temperatureOffsetLastUpdated,
+                    cloudValue: denseSensor.settings?.temperatureOffset
+                        ?? cloudSensor.offsetTemperature,
+                    cloudTimestamp: denseSensor.settings?.temperatureOffsetLastUpdated,
+                    setting: .sensorOffsetTemperature
                 )
                 reconcile(
                     type: .humidity,
                     queuedType: .humidity,
                     localValue: localSettings?.humidityOffset,
-                    cloudValue: cloudSensor.offsetHumidity.map { $0 / 100 }
+                    localTimestamp: localSettings?.humidityOffsetLastUpdated,
+                    cloudValue: denseSensor.settings?.humidityOffset
+                        ?? cloudSensor.offsetHumidity.map { $0 / 100 },
+                    cloudTimestamp: denseSensor.settings?.humidityOffsetLastUpdated,
+                    setting: .sensorOffsetHumidity,
+                    cloudMultiplier: 100
                 )
                 reconcile(
                     type: .pressure,
                     queuedType: .pressure,
                     localValue: localSettings?.pressureOffset,
-                    cloudValue: cloudSensor.offsetPressure.map { $0 / 100 }
+                    localTimestamp: localSettings?.pressureOffsetLastUpdated,
+                    cloudValue: denseSensor.settings?.pressureOffset
+                        ?? cloudSensor.offsetPressure.map { $0 / 100 },
+                    cloudTimestamp: denseSensor.settings?.pressureOffsetLastUpdated,
+                    setting: .sensorOffsetPressure,
+                    cloudMultiplier: 100
                 )
 
                 Future.zip(updates)
@@ -1024,7 +1058,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                             cloudSensors: denseSensor
                         )
                         let syncOffsets = self.offsetSyncs(
-                            cloudSensors: cloudSensors,
+                            denseSensors: denseSensor,
                             localSensors: localSensors,
                             updatedSensors: updatedSensors,
                             pendingOffsetUpdates: pendingOffsetUpdates
@@ -1456,6 +1490,22 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             types: types,
             values: values,
             timestamp: Int(Date().timeIntervalSince1970)
+        ).on()
+    }
+
+    private func queueOffsetSettingToCloud(
+        sensor: RuuviTagSensor,
+        setting: RuuviCloudApiSetting,
+        value: Double,
+        timestamp: Date?
+    ) {
+        guard sensor.isCloud else { return }
+
+        ruuviCloud.updateSensorSettings(
+            for: sensor,
+            types: [setting.rawValue],
+            values: [String(value)],
+            timestamp: Int((timestamp ?? Date()).timeIntervalSince1970)
         ).on()
     }
 

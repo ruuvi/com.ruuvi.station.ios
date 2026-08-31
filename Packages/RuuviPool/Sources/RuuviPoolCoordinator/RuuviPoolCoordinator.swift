@@ -218,7 +218,8 @@ final class RuuviPoolCoordinator: RuuviPool {
         type: OffsetCorrectionType,
         with value: Double?,
         of ruuviTag: RuuviTagSensor,
-        lastOriginalRecord record: RuuviTagSensorRecord?
+        lastOriginalRecord record: RuuviTagSensorRecord?,
+        lastUpdated: Date?
     ) -> Future<SensorSettings, RuuviPoolError> {
         let promise = Promise<SensorSettings, RuuviPoolError>()
         if ruuviTag.macId != nil {
@@ -226,7 +227,8 @@ final class RuuviPoolCoordinator: RuuviPool {
                 type: type,
                 with: value,
                 of: ruuviTag,
-                lastOriginalRecord: record
+                lastOriginalRecord: record,
+                lastUpdated: lastUpdated
             )
             .on(success: { settings in
                 promise.succeed(value: settings)

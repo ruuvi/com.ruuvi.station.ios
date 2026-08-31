@@ -85,6 +85,33 @@ public struct SyncCollisionResolver {
         return .keepLocalAndQueue
     }
 
+    public static func resolveOffset(
+        localValue: Double?,
+        cloudValue: Double?,
+        localTimestamp: Date?,
+        cloudTimestamp: Date?,
+        hasPendingLocalUpdate: Bool?
+    ) -> SyncAction {
+        // Legacy edits have no local timestamp. Let their queued request finish first.
+        guard localTimestamp != nil || hasPendingLocalUpdate == false else {
+            return .noAction
+        }
+
+        if localTimestamp != nil || cloudTimestamp != nil {
+            return resolve(
+                localTimestamp: localTimestamp,
+                cloudTimestamp: cloudTimestamp,
+                preferCloudWhenBothTimestampsMissing: true
+            )
+        }
+
+        return resolveOffset(
+            localValue: localValue,
+            cloudValue: cloudValue,
+            hasPendingLocalUpdate: hasPendingLocalUpdate ?? true
+        )
+    }
+
     /// Offset uploads are owned by the calibration flow and its durable request queue.
     /// Reconciliation only applies an available cloud value when no local upload remains pending.
     public static func resolveOffset(

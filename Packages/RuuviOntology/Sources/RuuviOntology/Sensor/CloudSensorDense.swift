@@ -29,6 +29,12 @@ public struct RuuviCloudSensorSettings {
     public let defaultDisplayOrderLastUpdated: Date?
     public let description: String?
     public let descriptionLastUpdated: Date?
+    public let temperatureOffset: Double?
+    public let humidityOffset: Double?
+    public let pressureOffset: Double?
+    public let temperatureOffsetLastUpdated: Date?
+    public let humidityOffsetLastUpdated: Date?
+    public let pressureOffsetLastUpdated: Date?
 
     public init(
         displayOrderCodes: [String]?,
@@ -36,7 +42,13 @@ public struct RuuviCloudSensorSettings {
         displayOrderLastUpdated: Date? = nil,
         defaultDisplayOrderLastUpdated: Date? = nil,
         description: String? = nil,
-        descriptionLastUpdated: Date? = nil
+        descriptionLastUpdated: Date? = nil,
+        temperatureOffset: Double? = nil,
+        humidityOffset: Double? = nil,
+        pressureOffset: Double? = nil,
+        temperatureOffsetLastUpdated: Date? = nil,
+        humidityOffsetLastUpdated: Date? = nil,
+        pressureOffsetLastUpdated: Date? = nil
     ) {
         self.displayOrderCodes = displayOrderCodes
         self.defaultDisplayOrder = defaultDisplayOrder
@@ -44,6 +56,12 @@ public struct RuuviCloudSensorSettings {
         self.defaultDisplayOrderLastUpdated = defaultDisplayOrderLastUpdated
         self.description = description
         self.descriptionLastUpdated = descriptionLastUpdated
+        self.temperatureOffset = temperatureOffset
+        self.humidityOffset = humidityOffset
+        self.pressureOffset = pressureOffset
+        self.temperatureOffsetLastUpdated = temperatureOffsetLastUpdated
+        self.humidityOffsetLastUpdated = humidityOffsetLastUpdated
+        self.pressureOffsetLastUpdated = pressureOffsetLastUpdated
     }
 }
 
