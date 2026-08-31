@@ -943,7 +943,13 @@ public final class RuuviCloudPure: RuuviCloud {
                                 displayOrderLastUpdated: $0.displayOrderLastUpdatedDate,
                                 defaultDisplayOrderLastUpdated: $0.defaultDisplayOrderLastUpdatedDate,
                                 description: $0.description,
-                                descriptionLastUpdated: $0.descriptionLastUpdatedDate
+                                descriptionLastUpdated: $0.descriptionLastUpdatedDate,
+                                temperatureOffset: $0.offsetTemperature,
+                                humidityOffset: $0.offsetHumidity.map { $0 / 100 },
+                                pressureOffset: $0.offsetPressure.map { $0 / 100 },
+                                temperatureOffsetLastUpdated: $0.offsetTemperatureLastUpdatedDate,
+                                humidityOffsetLastUpdated: $0.offsetHumidityLastUpdatedDate,
+                                pressureOffsetLastUpdated: $0.offsetPressureLastUpdatedDate
                             )
                         }
                     )

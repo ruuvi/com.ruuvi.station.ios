@@ -7,6 +7,9 @@ public struct SensorSettingsSQLite: SensorSettings, Equatable {
     public var temperatureOffset: Double?
     public var humidityOffset: Double?
     public var pressureOffset: Double?
+    public var temperatureOffsetLastUpdated: Date?
+    public var humidityOffsetLastUpdated: Date?
+    public var pressureOffsetLastUpdated: Date?
     public var description: String?
     public var displayOrder: [String]?
     public var defaultDisplayOrder: Bool?
@@ -20,6 +23,9 @@ public struct SensorSettingsSQLite: SensorSettings, Equatable {
         temperatureOffset: Double?,
         humidityOffset: Double?,
         pressureOffset: Double?,
+        temperatureOffsetLastUpdated: Date? = nil,
+        humidityOffsetLastUpdated: Date? = nil,
+        pressureOffsetLastUpdated: Date? = nil,
         description: String? = nil,
         displayOrder: [String]? = nil,
         defaultDisplayOrder: Bool? = nil,
@@ -32,6 +38,9 @@ public struct SensorSettingsSQLite: SensorSettings, Equatable {
         self.temperatureOffset = temperatureOffset
         self.humidityOffset = humidityOffset
         self.pressureOffset = pressureOffset
+        self.temperatureOffsetLastUpdated = temperatureOffsetLastUpdated
+        self.humidityOffsetLastUpdated = humidityOffsetLastUpdated
+        self.pressureOffsetLastUpdated = pressureOffsetLastUpdated
         self.description = description
         self.displayOrder = displayOrder
         self.defaultDisplayOrder = defaultDisplayOrder
@@ -46,6 +55,9 @@ public struct SensorSettingsSQLite: SensorSettings, Equatable {
         && lhs.temperatureOffset == rhs.temperatureOffset
         && lhs.humidityOffset == rhs.humidityOffset
         && lhs.pressureOffset == rhs.pressureOffset
+        && lhs.temperatureOffsetLastUpdated == rhs.temperatureOffsetLastUpdated
+        && lhs.humidityOffsetLastUpdated == rhs.humidityOffsetLastUpdated
+        && lhs.pressureOffsetLastUpdated == rhs.pressureOffsetLastUpdated
         && lhs.description == rhs.description
         && lhs.displayOrder == rhs.displayOrder
         && lhs.defaultDisplayOrder == rhs.defaultDisplayOrder
@@ -62,6 +74,9 @@ public extension SensorSettingsSQLite {
     static let temperatureOffsetColumn = Column("temperatureOffset")
     static let humidityOffsetColumn = Column("humidityOffset")
     static let pressureOffsetColumn = Column("pressureOffset")
+    static let temperatureOffsetLastUpdatedColumn = Column("temperatureOffsetLastUpdated")
+    static let humidityOffsetLastUpdatedColumn = Column("humidityOffsetLastUpdated")
+    static let pressureOffsetLastUpdatedColumn = Column("pressureOffsetLastUpdated")
     static let descriptionColumn = Column("description")
     static let displayOrderColumn = Column("displayOrder")
     static let defaultDisplayOrderColumn = Column("defaultDisplayOrder")
@@ -81,6 +96,9 @@ extension SensorSettingsSQLite: FetchableRecord {
         temperatureOffset = row[SensorSettingsSQLite.temperatureOffsetColumn]
         humidityOffset = row[SensorSettingsSQLite.humidityOffsetColumn]
         pressureOffset = row[SensorSettingsSQLite.pressureOffsetColumn]
+        temperatureOffsetLastUpdated = row[SensorSettingsSQLite.temperatureOffsetLastUpdatedColumn]
+        humidityOffsetLastUpdated = row[SensorSettingsSQLite.humidityOffsetLastUpdatedColumn]
+        pressureOffsetLastUpdated = row[SensorSettingsSQLite.pressureOffsetLastUpdatedColumn]
         description = row[SensorSettingsSQLite.descriptionColumn]
         if let rawDisplayOrder: String = row[SensorSettingsSQLite.displayOrderColumn] {
             displayOrder = SensorSettingsSQLite.decodeDisplayOrder(rawDisplayOrder)
@@ -106,6 +124,9 @@ extension SensorSettingsSQLite: PersistableRecord {
         container[SensorSettingsSQLite.temperatureOffsetColumn] = temperatureOffset
         container[SensorSettingsSQLite.humidityOffsetColumn] = humidityOffset
         container[SensorSettingsSQLite.pressureOffsetColumn] = pressureOffset
+        container[SensorSettingsSQLite.temperatureOffsetLastUpdatedColumn] = temperatureOffsetLastUpdated
+        container[SensorSettingsSQLite.humidityOffsetLastUpdatedColumn] = humidityOffsetLastUpdated
+        container[SensorSettingsSQLite.pressureOffsetLastUpdatedColumn] = pressureOffsetLastUpdated
         container[SensorSettingsSQLite.descriptionColumn] = description
         container[SensorSettingsSQLite.displayOrderColumn] = SensorSettingsSQLite
             .encodeDisplayOrder(displayOrder)
@@ -125,6 +146,9 @@ public extension SensorSettingsSQLite {
             table.column(SensorSettingsSQLite.temperatureOffsetColumn.name, .double)
             table.column(SensorSettingsSQLite.humidityOffsetColumn.name, .double)
             table.column(SensorSettingsSQLite.pressureOffsetColumn.name, .double)
+            table.column(SensorSettingsSQLite.temperatureOffsetLastUpdatedColumn.name, .datetime)
+            table.column(SensorSettingsSQLite.humidityOffsetLastUpdatedColumn.name, .datetime)
+            table.column(SensorSettingsSQLite.pressureOffsetLastUpdatedColumn.name, .datetime)
             table.column(SensorSettingsSQLite.descriptionColumn.name, .text)
             table.column(SensorSettingsSQLite.displayOrderColumn.name, .text)
             table.column(SensorSettingsSQLite.defaultDisplayOrderColumn.name, .boolean)
@@ -143,6 +167,9 @@ public extension SensorSettingsSQLite {
             temperatureOffset: temperatureOffset,
             humidityOffset: humidityOffset,
             pressureOffset: pressureOffset,
+            temperatureOffsetLastUpdated: temperatureOffsetLastUpdated,
+            humidityOffsetLastUpdated: humidityOffsetLastUpdated,
+            pressureOffsetLastUpdated: pressureOffsetLastUpdated,
             description: description,
             displayOrder: displayOrder,
             defaultDisplayOrder: defaultDisplayOrder,
@@ -161,6 +188,9 @@ public extension SensorSettings {
             temperatureOffset: temperatureOffset,
             humidityOffset: humidityOffset,
             pressureOffset: pressureOffset,
+            temperatureOffsetLastUpdated: temperatureOffsetLastUpdated,
+            humidityOffsetLastUpdated: humidityOffsetLastUpdated,
+            pressureOffsetLastUpdated: pressureOffsetLastUpdated,
             description: description,
             displayOrder: displayOrder,
             defaultDisplayOrder: defaultDisplayOrder,

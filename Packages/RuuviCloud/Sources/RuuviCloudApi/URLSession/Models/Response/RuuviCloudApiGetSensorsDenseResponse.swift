@@ -63,6 +63,12 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
             public let defaultDisplayOrderLastUpdated: Int?
             public let description: String?
             public let descriptionLastUpdated: Int?
+            public let offsetTemperature: Double?
+            public let offsetHumidity: Double?
+            public let offsetPressure: Double?
+            public let offsetTemperatureLastUpdated: Int?
+            public let offsetHumidityLastUpdated: Int?
+            public let offsetPressureLastUpdated: Int?
 
             enum CodingKeys: CodingKey {
                 case displayOrder
@@ -71,6 +77,12 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
                 case defaultDisplayOrderLastUpdated
                 case description
                 case descriptionLastUpdated
+                case offsetTemperature
+                case offsetHumidity
+                case offsetPressure
+                case offsetTemperatureLastUpdated
+                case offsetHumidityLastUpdated
+                case offsetPressureLastUpdated
 
                 var stringValue: String {
                     switch self {
@@ -86,6 +98,18 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
                         return RuuviCloudApiSetting.sensorDescription.rawValue
                     case .descriptionLastUpdated:
                         return RuuviCloudApiSetting.sensorDescription.rawValue + "_lastUpdated"
+                    case .offsetTemperature:
+                        return RuuviCloudApiSetting.sensorOffsetTemperature.rawValue
+                    case .offsetHumidity:
+                        return RuuviCloudApiSetting.sensorOffsetHumidity.rawValue
+                    case .offsetPressure:
+                        return RuuviCloudApiSetting.sensorOffsetPressure.rawValue
+                    case .offsetTemperatureLastUpdated:
+                        return RuuviCloudApiSetting.sensorOffsetTemperature.rawValue + "_lastUpdated"
+                    case .offsetHumidityLastUpdated:
+                        return RuuviCloudApiSetting.sensorOffsetHumidity.rawValue + "_lastUpdated"
+                    case .offsetPressureLastUpdated:
+                        return RuuviCloudApiSetting.sensorOffsetPressure.rawValue + "_lastUpdated"
                     }
                 }
 
@@ -103,6 +127,18 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
                         self = .description
                     case RuuviCloudApiSetting.sensorDescription.rawValue + "_lastUpdated":
                         self = .descriptionLastUpdated
+                    case RuuviCloudApiSetting.sensorOffsetTemperature.rawValue:
+                        self = .offsetTemperature
+                    case RuuviCloudApiSetting.sensorOffsetHumidity.rawValue:
+                        self = .offsetHumidity
+                    case RuuviCloudApiSetting.sensorOffsetPressure.rawValue:
+                        self = .offsetPressure
+                    case RuuviCloudApiSetting.sensorOffsetTemperature.rawValue + "_lastUpdated":
+                        self = .offsetTemperatureLastUpdated
+                    case RuuviCloudApiSetting.sensorOffsetHumidity.rawValue + "_lastUpdated":
+                        self = .offsetHumidityLastUpdated
+                    case RuuviCloudApiSetting.sensorOffsetPressure.rawValue + "_lastUpdated":
+                        self = .offsetPressureLastUpdated
                     default:
                         return nil
                     }
@@ -142,6 +178,12 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
                     )
                 description = try? container.decode(String.self, forKey: .description)
                 descriptionLastUpdated = try? container.decode(Int.self, forKey: .descriptionLastUpdated)
+                offsetTemperature = Self.decodeDouble(container, forKey: .offsetTemperature)
+                offsetHumidity = Self.decodeDouble(container, forKey: .offsetHumidity)
+                offsetPressure = Self.decodeDouble(container, forKey: .offsetPressure)
+                offsetTemperatureLastUpdated = try? container.decode(Int.self, forKey: .offsetTemperatureLastUpdated)
+                offsetHumidityLastUpdated = try? container.decode(Int.self, forKey: .offsetHumidityLastUpdated)
+                offsetPressureLastUpdated = try? container.decode(Int.self, forKey: .offsetPressureLastUpdated)
             }
 
             public var displayOrderLastUpdatedDate: Date? {
@@ -157,6 +199,35 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
             public var descriptionLastUpdatedDate: Date? {
                 guard let descriptionLastUpdated else { return nil }
                 return Date(timeIntervalSince1970: TimeInterval(descriptionLastUpdated))
+            }
+
+            public var offsetTemperatureLastUpdatedDate: Date? {
+                Self.date(from: offsetTemperatureLastUpdated)
+            }
+
+            public var offsetHumidityLastUpdatedDate: Date? {
+                Self.date(from: offsetHumidityLastUpdated)
+            }
+
+            public var offsetPressureLastUpdatedDate: Date? {
+                Self.date(from: offsetPressureLastUpdated)
+            }
+
+            private static func decodeDouble(
+                _ container: KeyedDecodingContainer<CodingKeys>,
+                forKey key: CodingKeys
+            ) -> Double? {
+                if let value = try? container.decode(Double.self, forKey: key) {
+                    return value
+                }
+                if let value = try? container.decode(String.self, forKey: key) {
+                    return Double(value)
+                }
+                return nil
+            }
+
+            private static func date(from timestamp: Int?) -> Date? {
+                timestamp.map { Date(timeIntervalSince1970: TimeInterval($0)) }
             }
 
             private static func parseDisplayOrder(_ raw: String) -> [String]? {

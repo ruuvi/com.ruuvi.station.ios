@@ -380,6 +380,28 @@ extension SQLiteGRDBDatabase {
             try RuuviUserSettingSQLite.createTable(in: db)
         }
 
+        // v22
+        migrator.registerMigration("Add offset lastUpdated columns to SensorSettingsSQLite") { db in
+            let columns = try db.columns(in: SensorSettingsSQLite.databaseTableName)
+            try db.alter(table: SensorSettingsSQLite.databaseTableName, body: { table in
+                if columns.contains(where: {
+                    $0.name == SensorSettingsSQLite.temperatureOffsetLastUpdatedColumn.name
+                }) == false {
+                    table.add(column: SensorSettingsSQLite.temperatureOffsetLastUpdatedColumn.name, .datetime)
+                }
+                if columns.contains(where: {
+                    $0.name == SensorSettingsSQLite.humidityOffsetLastUpdatedColumn.name
+                }) == false {
+                    table.add(column: SensorSettingsSQLite.humidityOffsetLastUpdatedColumn.name, .datetime)
+                }
+                if columns.contains(where: {
+                    $0.name == SensorSettingsSQLite.pressureOffsetLastUpdatedColumn.name
+                }) == false {
+                    table.add(column: SensorSettingsSQLite.pressureOffsetLastUpdatedColumn.name, .datetime)
+                }
+            })
+        }
+
         try migrator.migrate(dbPool)
     }
 }

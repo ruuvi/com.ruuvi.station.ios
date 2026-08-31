@@ -7,6 +7,9 @@ public protocol SensorSettings {
     var temperatureOffset: Double? { get }
     var humidityOffset: Double? { get }
     var pressureOffset: Double? { get }
+    var temperatureOffsetLastUpdated: Date? { get }
+    var humidityOffsetLastUpdated: Date? { get }
+    var pressureOffsetLastUpdated: Date? { get }
     var description: String? { get }
     var displayOrder: [String]? { get }
     var defaultDisplayOrder: Bool? { get }
@@ -33,6 +36,9 @@ public extension SensorSettings {
             temperatureOffset: temperatureOffset,
             humidityOffset: humidityOffset,
             pressureOffset: pressureOffset,
+            temperatureOffsetLastUpdated: temperatureOffsetLastUpdated,
+            humidityOffsetLastUpdated: humidityOffsetLastUpdated,
+            pressureOffsetLastUpdated: pressureOffsetLastUpdated,
             description: description,
             displayOrder: displayOrder,
             defaultDisplayOrder: defaultDisplayOrder,
@@ -55,6 +61,9 @@ public struct SensorSettingsStruct: SensorSettings {
     public var temperatureOffset: Double?
     public var humidityOffset: Double?
     public var pressureOffset: Double?
+    public var temperatureOffsetLastUpdated: Date?
+    public var humidityOffsetLastUpdated: Date?
+    public var pressureOffsetLastUpdated: Date?
     public var description: String?
     public var displayOrder: [String]?
     public var defaultDisplayOrder: Bool?
@@ -68,6 +77,9 @@ public struct SensorSettingsStruct: SensorSettings {
         temperatureOffset: Double?,
         humidityOffset: Double?,
         pressureOffset: Double?,
+        temperatureOffsetLastUpdated: Date? = nil,
+        humidityOffsetLastUpdated: Date? = nil,
+        pressureOffsetLastUpdated: Date? = nil,
         description: String? = nil,
         displayOrder: [String]? = nil,
         defaultDisplayOrder: Bool? = nil,
@@ -80,6 +92,9 @@ public struct SensorSettingsStruct: SensorSettings {
         self.temperatureOffset = temperatureOffset
         self.humidityOffset = humidityOffset
         self.pressureOffset = pressureOffset
+        self.temperatureOffsetLastUpdated = temperatureOffsetLastUpdated
+        self.humidityOffsetLastUpdated = humidityOffsetLastUpdated
+        self.pressureOffsetLastUpdated = pressureOffsetLastUpdated
         self.description = description
         self.displayOrder = displayOrder
         self.defaultDisplayOrder = defaultDisplayOrder

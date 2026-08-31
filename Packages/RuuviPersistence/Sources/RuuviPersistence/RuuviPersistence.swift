@@ -48,7 +48,8 @@ public protocol RuuviPersistence {
         type: OffsetCorrectionType,
         with value: Double?,
         of ruuviTag: RuuviTagSensor,
-        lastOriginalRecord record: RuuviTagSensorRecord?
+        lastOriginalRecord record: RuuviTagSensorRecord?,
+        lastUpdated: Date?
     ) -> Future<SensorSettings, RuuviPersistenceError>
 
     func updateDisplaySettings(
