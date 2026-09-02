@@ -3,6 +3,7 @@ import Foundation
 protocol MenuViewOutput {
     var userIsAuthorized: Bool { get }
     var userEmail: String? { get }
+    var shouldShowNewsletter: Bool { get }
     func viewWillAppear()
     func viewDidTapOnDimmingView()
     func viewDidSelectAddRuuviTag()
@@ -12,4 +13,5 @@ protocol MenuViewOutput {
     func viewDidSelectSettings()
     func viewDidSelectFeedback()
     func viewDidSelectAccountCell()
+    func viewDidSelectNewsletter()
 }

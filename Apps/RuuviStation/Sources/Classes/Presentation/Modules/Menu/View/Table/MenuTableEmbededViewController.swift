@@ -1,4 +1,5 @@
 import RuuviLocalization
+import RuuviLocal
 import UIKit
 
 class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
@@ -18,6 +19,15 @@ class MenuTableEmbededViewController: UITableViewController, MenuViewInput {
     @IBOutlet var whatToMeasureLabel: UILabel!
     @IBOutlet var getMoreSensorsLabel: UILabel!
     @IBOutlet var accountAuthLabel: UILabel!
+
+    private var marketingPreferenceObserver: NSObjectProtocol?
+    private var newsletterView: MenuNewsletterView?
+
+    deinit {
+        if let marketingPreferenceObserver {
+            NotificationCenter.default.removeObserver(marketingPreferenceObserver)
+        }
+    }
 }
 
 // MARK: - MenuViewInput
@@ -63,11 +73,76 @@ extension MenuTableEmbededViewController {
         super.viewDidLoad()
         localize()
         styleViews()
+        observeMarketingPreference()
+        updateNewsletter()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         output.viewWillAppear()
+        updateNewsletter()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateNewsletterFooterHeight()
+    }
+
+    private func observeMarketingPreference() {
+        marketingPreferenceObserver = NotificationCenter.default.addObserver(
+            forName: .MarketingPreferenceDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.updateNewsletter()
+        }
+    }
+
+    private func updateNewsletter() {
+        guard output.shouldShowNewsletter else {
+            newsletterView = nil
+            tableView.tableFooterView = UIView(frame: .zero)
+            return
+        }
+
+        if newsletterView == nil {
+            let newsletterView = MenuNewsletterView(frame: .zero)
+            newsletterView.onSubscribe = { [weak self] in
+                self?.output.viewDidSelectNewsletter()
+            }
+            self.newsletterView = newsletterView
+            tableView.tableFooterView = newsletterView
+        }
+        updateNewsletterFooterHeight()
+    }
+
+    private func updateNewsletterFooterHeight() {
+        guard
+            let newsletterView,
+            tableView.numberOfSections > 0
+        else {
+            return
+        }
+
+        let lastSection = tableView.numberOfSections - 1
+        let rowsBottom = tableView.rect(forSection: lastSection).maxY
+        let visibleBottom = tableView.bounds.height - tableView.adjustedContentInset.bottom
+        let footerHeight = max(320, visibleBottom - rowsBottom)
+
+        guard
+            newsletterView.frame.width != tableView.bounds.width ||
+            newsletterView.frame.height != footerHeight
+        else {
+            return
+        }
+
+        newsletterView.frame = CGRect(
+            x: 0,
+            y: 0,
+            width: tableView.bounds.width,
+            height: footerHeight
+        )
+        tableView.tableFooterView = newsletterView
     }
 }
 

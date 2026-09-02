@@ -1,5 +1,6 @@
 import Foundation
 import Future
+import RuuviCloud
 
 // swiftlint:disable file_length
 
@@ -21,6 +22,7 @@ extension RuuviCloudApiURLSession {
         case update
         case uploadImage = "upload"
         case settings
+        case marketingConsent = "marketing-consent"
         case sensorSettings = "sensor-settings"
         case sensors
         case sensorsDense = "sensors-dense"
@@ -278,6 +280,29 @@ public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
     ) -> Future<RuuviCloudApiPostSettingResponse, RuuviCloudApiError> {
         request(
             endpoint: Routes.settings,
+            with: requestModel,
+            method: .post,
+            authorization: authorization
+        )
+    }
+
+    public func getMarketingConsent(
+        authorization: String
+    ) -> Future<RuuviCloudMarketingConsent, RuuviCloudApiError> {
+        request(
+            endpoint: Routes.marketingConsent,
+            with: RuuviCloudApiGetMarketingConsentRequest(),
+            method: .get,
+            authorization: authorization
+        )
+    }
+
+    public func setMarketingConsent(
+        _ requestModel: RuuviCloudApiSetMarketingConsentRequest,
+        authorization: String
+    ) -> Future<RuuviCloudMarketingConsent, RuuviCloudApiError> {
+        request(
+            endpoint: Routes.marketingConsent,
             with: requestModel,
             method: .post,
             authorization: authorization

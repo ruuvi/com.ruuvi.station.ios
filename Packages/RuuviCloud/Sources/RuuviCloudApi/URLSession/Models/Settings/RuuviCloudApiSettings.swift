@@ -65,7 +65,7 @@ public extension RuuviCloudApiSetting {
     /// Settings participating in timestamp-based local/cloud conflict resolution.
     /// `CHART_VIEW_PERIOD` remains API-known, but current app behavior keeps it local-only.
     static let cloudSyncedUserSettings: [RuuviCloudApiSetting] = userSettingKeys.filter {
-        $0 != .chartViewPeriod
+        $0 != .chartViewPeriod && $0 != .marketingPreference
     }
 
     var isCloudSyncedUserSetting: Bool {

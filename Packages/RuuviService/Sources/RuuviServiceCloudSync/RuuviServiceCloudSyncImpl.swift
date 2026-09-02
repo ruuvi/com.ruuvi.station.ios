@@ -56,11 +56,14 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         let localUserSettings = cloudSyncedUserSettingsStore.readWithFallback()
         let cloudSettings = ruuviCloud.getCloudSettings()
             .mapError { RuuviServiceError.ruuviCloud($0) }
-        Future.zip(localUserSettings, cloudSettings)
+        let marketingConsent = ruuviCloud.getMarketingConsent()
+            .mapError { RuuviServiceError.ruuviCloud($0) }
+        Future.zip(localUserSettings, cloudSettings, marketingConsent)
             .observe(on: .global(qos: .utility))
             .on(success: { [weak self] result in
-                let (localUserSettings, cloudSettings) = result
+                let (localUserSettings, cloudSettings, marketingConsent) = result
                 guard let cloudSettings, let sSelf = self else { return }
+                sSelf.ruuviLocalSettings.marketingPreference = marketingConsent.consent
                 sSelf.syncUserSettings(
                     localUserSettings: localUserSettings,
                     cloudSettings: cloudSettings

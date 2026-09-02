@@ -185,7 +185,10 @@ public protocol RuuviCloud {
     func set(disablePushAlert: Bool) -> Future<Bool, RuuviCloudError>
 
     @discardableResult
-    func set(marketingPreference: Bool) -> Future<Bool, RuuviCloudError>
+    func getMarketingConsent() -> Future<RuuviCloudMarketingConsent, RuuviCloudError>
+
+    @discardableResult
+    func set(marketingPreference: Bool) -> Future<RuuviCloudMarketingConsent, RuuviCloudError>
 
     @discardableResult
     func set(profileLanguageCode: String) -> Future<String, RuuviCloudError>

@@ -25,7 +25,7 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     @UserDefault("RuuviFeatureFlags.allowConcurrentGattSyncForMultipleSensors", defaultValue: true)
     var allowConcurrentGattSyncForMultipleSensors: Bool
 
-    @UserDefault("RuuviFeatureFlags.showMarketingPreference", defaultValue: false)
+    @UserDefault("RuuviFeatureFlags.showMarketingPreference", defaultValue: true)
     var showMarketingPreference: Bool
 
     @UserDefault("RuuviFeatureFlags.showDashboardSensorSearch", defaultValue: false)

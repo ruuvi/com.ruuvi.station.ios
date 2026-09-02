@@ -327,7 +327,11 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         cloud.set(disablePushAlert: disablePushAlert)
     }
 
-    public func set(marketingPreference: Bool) -> Future<Bool, RuuviCloudError> {
+    public func getMarketingConsent() -> Future<RuuviCloudMarketingConsent, RuuviCloudError> {
+        cloud.getMarketingConsent()
+    }
+
+    public func set(marketingPreference: Bool) -> Future<RuuviCloudMarketingConsent, RuuviCloudError> {
         cloud.set(marketingPreference: marketingPreference)
     }
 

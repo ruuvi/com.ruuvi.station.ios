@@ -60,7 +60,7 @@ let package = Package(
         ),
         .testTarget(
             name: "RuuviCloudTests",
-            dependencies: ["RuuviCloud"]
+            dependencies: ["RuuviCloud", "RuuviCloudApi"]
         ),
     ]
 )
