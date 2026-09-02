@@ -27,8 +27,7 @@ public protocol RuuviLocalFlags {
     /// while navigating between sensors in graph.
     var allowConcurrentGattSyncForMultipleSensors: Bool { get set }
 
-    /// When enabled, the marketing/communication preference toggle
-    /// is shown on the My Ruuvi account screen.
+    /// Controls visibility of the newsletter card and marketing preference UI.
     var showMarketingPreference: Bool { get set }
 
     /// When enabled, shows a search button on the dashboard that

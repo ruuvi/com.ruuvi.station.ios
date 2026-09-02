@@ -18,6 +18,10 @@ class DashboardRouter: NSObject, DashboardRouterInput {
 
     private var menuTableTransition: MenuTableTransitioningDelegate!
 
+    func open(url: URL) {
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+
     func openMenu(output: MenuModuleOutput) {
         let factory = StoryboardFactory(storyboardName: "Menu")
         try! transitionHandler

@@ -766,6 +766,12 @@ extension DashboardPresenter: MenuModuleOutput {
         module.dismiss()
         router.openMyRuuviAccount()
     }
+
+    func menu(module: MenuModuleInput, didSelectNewsletter url: URL?) {
+        module.dismiss()
+        guard let url else { return }
+        router.open(url: url)
+    }
 }
 
 extension DashboardPresenter: SignInBenefitsModuleOutput {

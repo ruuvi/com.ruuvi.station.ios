@@ -56,6 +56,14 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         let localUserSettings = cloudSyncedUserSettingsStore.readWithFallback()
         let cloudSettings = ruuviCloud.getCloudSettings()
             .mapError { RuuviServiceError.ruuviCloud($0) }
+
+        // Marketing consent is not required for authentication or cloud sync.
+        ruuviCloud.getMarketingConsent()
+            .observe(on: .global(qos: .utility))
+            .on(success: { [weak self] marketingConsent in
+                self?.ruuviLocalSettings.marketingPreference = marketingConsent.consent
+            })
+
         Future.zip(localUserSettings, cloudSettings)
             .observe(on: .global(qos: .utility))
             .on(success: { [weak self] result in

@@ -14,6 +14,9 @@ import UIKit
 #endif
 
 final class MyRuuviAccountPresenter: MyRuuviAccountModuleInput {
+    private var marketingConsentStatus: RuuviCloudMarketingConsentStatus?
+    private var pendingMarketingPreference: Bool?
+
     weak var view: MyRuuviAccountViewInput!
     var router: MyRuuviAccountRouterInput!
     var ruuviCloud: RuuviCloud!
@@ -35,6 +38,7 @@ final class MyRuuviAccountPresenter: MyRuuviAccountModuleInput {
 extension MyRuuviAccountPresenter: MyRuuviAccountViewOutput {
     func viewDidLoad() {
         syncViewModel()
+        refreshMarketingConsent()
     }
 
     func viewDidTapDeleteButton() {
@@ -65,22 +69,75 @@ extension MyRuuviAccountPresenter: MyRuuviAccountViewOutput {
     }
 
     func viewDidChangeMarketingPreference(isEnabled: Bool) {
-        settings.marketingPreference = isEnabled
+        let previousValue = settings.marketingPreference
+        let previousStatus = marketingConsentStatus
+        pendingMarketingPreference = isEnabled
+        marketingConsentStatus = nil
+        syncViewModel()
+        activityPresenter.show(with: .loading(message: nil))
         ruuviAppSettingsService.set(marketingPreference: isEnabled)
+            .on(success: { [weak self] marketingConsent in
+                self?.settings.marketingPreference = marketingConsent.consent
+                self?.marketingConsentStatus = marketingConsent.status
+                self?.pendingMarketingPreference = nil
+                self?.syncViewModel()
+                self?.activityPresenter.update(with: .success(message: nil))
+                if isEnabled, marketingConsent.status == .unconfirmed {
+                    self?.activityPresenter.dismiss()
+                    self?.view.viewDidReceiveUnconfirmedMarketingConsent()
+                }
+            }, failure: { [weak self] error in
+                self?.settings.marketingPreference = previousValue
+                self?.marketingConsentStatus = previousStatus
+                self?.pendingMarketingPreference = nil
+                self?.syncViewModel()
+                self?.activityPresenter.update(with: .failed(message: nil))
+                self?.errorPresenter.present(error: error)
+            }, completion: { [weak self] in
+                self?.activityPresenter.dismiss(immediately: false)
+            })
     }
 }
 
 // MARK: - Private
 
 extension MyRuuviAccountPresenter {
+    private func refreshMarketingConsent() {
+        guard flags.showMarketingPreference, ruuviUser.isAuthorized else { return }
+        ruuviAppSettingsService.getMarketingConsent()
+            .on(success: { [weak self] marketingConsent in
+                self?.settings.marketingPreference = marketingConsent.consent
+                self?.marketingConsentStatus = marketingConsent.status
+                self?.syncViewModel()
+            })
+    }
+
     private func syncViewModel() {
         let viewModel = MyRuuviAccountViewModel()
         if ruuviUser.isAuthorized {
             viewModel.username.value = ruuviUser.email?.lowercased()
         }
         viewModel.showMarketingPreference.value = flags.showMarketingPreference
-        viewModel.marketingPreference.value = settings.marketingPreference
+        viewModel.marketingPreference.value = pendingMarketingPreference
+            ?? settings.marketingPreference
+        viewModel.marketingPreferenceEnabled.value = isMarketingPreferenceEnabled
+        viewModel.marketingPreferenceStatusMessage.value = marketingPreferenceStatusMessage
         view.viewModel = viewModel
+    }
+
+    private var isMarketingPreferenceEnabled: Bool {
+        switch marketingConsentStatus {
+        case .subscribed, .unsubscribed, .notFound:
+            true
+        default:
+            false
+        }
+    }
+
+    private var marketingPreferenceStatusMessage: String? {
+        marketingConsentStatus == .unconfirmed
+            ? RuuviLocalization.newsletterSubscriptionConfirmation
+            : nil
     }
 }
 

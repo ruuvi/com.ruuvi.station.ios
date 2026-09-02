@@ -20,6 +20,7 @@ protocol DashboardRouterInput {
     )
     func openUpdateFirmware(ruuviTag: RuuviTagSensor)
     func openMyRuuviAccount()
+    func open(url: URL)
     func openRemove(
       for sensor: RuuviTagSensor,
       output: SensorRemovalModuleOutput
