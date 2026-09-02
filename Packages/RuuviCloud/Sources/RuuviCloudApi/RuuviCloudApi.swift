@@ -1,6 +1,7 @@
 import BTKit
 import Foundation
 import Future
+import RuuviCloud
 import RuuviOntology
 
 /// https://docs.ruuvi.com/communication/ruuvi-network/backends/serverless/user-api
@@ -108,6 +109,15 @@ public protocol RuuviCloudApi {
         _ requestModel: RuuviCloudApiPostSettingRequest,
         authorization: String
     ) -> Future<RuuviCloudApiPostSettingResponse, RuuviCloudApiError>
+
+    func getMarketingConsent(
+        authorization: String
+    ) -> Future<RuuviCloudMarketingConsent, RuuviCloudApiError>
+
+    func setMarketingConsent(
+        _ requestModel: RuuviCloudApiSetMarketingConsentRequest,
+        authorization: String
+    ) -> Future<RuuviCloudMarketingConsent, RuuviCloudApiError>
 
     func postSensorSettings(
         _ requestModel: RuuviCloudApiPostSensorSettingsRequest,

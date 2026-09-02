@@ -375,17 +375,25 @@ public final class RuuviServiceAppSettingsImpl: RuuviServiceAppSettings {
     }
 
     @discardableResult
-    public func set(marketingPreference: Bool) -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
-        localSettings.marketingPreference = marketingPreference
-        saveUserSetting(
-            name: .marketingPreference,
-            value: marketingPreference.chartBoolSettingString,
-            lastUpdated: UserSettingTimestamp.current()
-        )
+    public func getMarketingConsent() -> Future<RuuviCloudMarketingConsent, RuuviServiceError> {
+        let promise = Promise<RuuviCloudMarketingConsent, RuuviServiceError>()
+        cloud.getMarketingConsent()
+            .on(success: { [weak self] marketingConsent in
+                self?.localSettings.marketingPreference = marketingConsent.consent
+                promise.succeed(value: marketingConsent)
+            }, failure: { error in
+                promise.fail(error: .ruuviCloud(error))
+            })
+        return promise.future
+    }
+
+    @discardableResult
+    public func set(marketingPreference: Bool) -> Future<RuuviCloudMarketingConsent, RuuviServiceError> {
+        let promise = Promise<RuuviCloudMarketingConsent, RuuviServiceError>()
         cloud.set(marketingPreference: marketingPreference)
-            .on(success: { marketingPreference in
-                promise.succeed(value: marketingPreference)
+            .on(success: { [weak self] marketingConsent in
+                self?.localSettings.marketingPreference = marketingConsent.consent
+                promise.succeed(value: marketingConsent)
             }, failure: { error in
                 promise.fail(error: .ruuviCloud(error))
             })

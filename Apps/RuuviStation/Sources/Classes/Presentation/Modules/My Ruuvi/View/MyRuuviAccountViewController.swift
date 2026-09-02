@@ -5,6 +5,10 @@ import UIKit
 class MyRuuviAccountViewController: UIViewController {
     var output: MyRuuviAccountViewOutput!
 
+    private let contentScrollView = UIScrollView()
+    private weak var accountDetailsStackView: UIStackView?
+    private var supportLinkHeightConstraint: NSLayoutConstraint?
+
     @IBOutlet weak var supportLinkTextView: RuuviLinkTextView!
     @IBOutlet var loggedInLabel: UILabel!
     @IBOutlet var usernameLabel: UILabel!
@@ -17,9 +21,22 @@ class MyRuuviAccountViewController: UIViewController {
         return label
     }()
 
+    private lazy var subscriptionTitleLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 1
+        return label
+    }()
+
     private lazy var communicationSubtitleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
+        return label
+    }()
+
+    private lazy var communicationStatusLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.isHidden = true
         return label
     }()
 
@@ -29,14 +46,14 @@ class MyRuuviAccountViewController: UIViewController {
         return view
     }()
 
-    private lazy var communicationTitleRow: UIStackView = {
-        communicationTitleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        communicationTitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+    private lazy var subscriptionRow: UIStackView = {
+        subscriptionTitleLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        subscriptionTitleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         communicationSwitchView.setContentHuggingPriority(.required, for: .horizontal)
         communicationSwitchView.setContentCompressionResistancePriority(.required, for: .horizontal)
 
         let stackView = UIStackView(arrangedSubviews: [
-            communicationTitleLabel,
+            subscriptionTitleLabel,
             communicationSwitchView,
         ])
         stackView.axis = .horizontal
@@ -47,13 +64,14 @@ class MyRuuviAccountViewController: UIViewController {
 
     private lazy var communicationSectionStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [
-            communicationTitleRow,
+            communicationTitleLabel,
             communicationSubtitleLabel,
+            subscriptionRow,
+            communicationStatusLabel,
         ])
         stackView.axis = .vertical
         stackView.spacing = 8
         stackView.alignment = .fill
-        stackView.isHidden = true
         return stackView
     }()
 
@@ -66,11 +84,17 @@ class MyRuuviAccountViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         styleViews()
-        setUpCommunicationSection()
         setUpSupportLinkView()
+        setUpCommunicationSection()
+        setUpVerticalLayout()
         configureViews()
         localize()
         output.viewDidLoad()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateSupportLinkHeight()
     }
 
     private func styleViews() {
@@ -78,14 +102,18 @@ class MyRuuviAccountViewController: UIViewController {
         loggedInLabel.textColor = RuuviColor.textColor.color
         usernameLabel.textColor = RuuviColor.textColor.color
         communicationTitleLabel.textColor = RuuviColor.textColor.color
+        subscriptionTitleLabel.textColor = RuuviColor.textColor.color
         communicationSubtitleLabel.textColor = RuuviColor.textColor.color
+        communicationStatusLabel.textColor = RuuviColor.orangeColor.color
         deleteAccountButton.backgroundColor = RuuviColor.orangeColor.color
         signoutButton.backgroundColor = RuuviColor.tintColor.color
 
         loggedInLabel.font = .ruuviHeadline()
         usernameLabel.font = .ruuviBody()
         communicationTitleLabel.font = .ruuviHeadline()
+        subscriptionTitleLabel.font = .ruuviHeadline()
         communicationSubtitleLabel.font = .ruuviBody()
+        communicationStatusLabel.font = .ruuviFootnote()
         deleteAccountButton.titleLabel?.font = .ruuviButtonMedium()
         signoutButton.titleLabel?.font = .ruuviButtonMedium()
     }
@@ -95,13 +123,140 @@ class MyRuuviAccountViewController: UIViewController {
         else {
             return
         }
-        accountDetailsStackView.setCustomSpacing(24, after: usernameLabel)
+
+        supportLinkTextView.removeFromSuperview()
+        supportLinkTextView.textContainerInset = .zero
+        supportLinkTextView.textContainer.lineFragmentPadding = 0
+        supportLinkHeightConstraint = supportLinkTextView.constraints
+            .first { $0.firstAttribute == .height }
+        loggedInLabel.constraints
+            .filter { $0.firstAttribute == .height }
+            .forEach { $0.isActive = false }
+
+        let topSeparator = makeSeparatorView()
+        let bottomSeparator = makeSeparatorView()
+
+        accountDetailsStackView.alignment = .fill
+        accountDetailsStackView.spacing = 6
+        accountDetailsStackView.addArrangedSubview(supportLinkTextView)
+        accountDetailsStackView.addArrangedSubview(topSeparator)
         accountDetailsStackView.addArrangedSubview(communicationSectionStackView)
+        accountDetailsStackView.addArrangedSubview(bottomSeparator)
+
+        accountDetailsStackView.setCustomSpacing(8, after: usernameLabel)
+        accountDetailsStackView.setCustomSpacing(12, after: supportLinkTextView)
+        accountDetailsStackView.setCustomSpacing(16, after: topSeparator)
+        accountDetailsStackView.setCustomSpacing(12, after: communicationSectionStackView)
+
+        communicationSectionStackView.spacing = 10
+        communicationSectionStackView.setCustomSpacing(
+            16,
+            after: communicationSubtitleLabel
+        )
 
         communicationSectionStackView.translatesAutoresizingMaskIntoConstraints = false
         communicationSectionStackView.widthAnchor.constraint(
             equalTo: accountDetailsStackView.widthAnchor
         ).isActive = true
+
+        self.accountDetailsStackView = accountDetailsStackView
+    }
+
+    private func makeSeparatorView() -> UIView {
+        let separator = UIView()
+        separator.backgroundColor = RuuviColor.textColor.color.withAlphaComponent(0.25)
+        separator.heightAnchor.constraint(
+            equalToConstant: 1 / UIScreen.main.scale
+        ).isActive = true
+        return separator
+    }
+
+    private func setUpVerticalLayout() {
+        guard
+            let accountDetailsStackView,
+            let buttonsStackView = deleteAccountButton.superview
+        else {
+            return
+        }
+
+        // Keep the actions visible and let all account content above them scroll.
+        view.constraints
+            .filter { constraint in
+                (constraint.firstItem as? UIView) === accountDetailsStackView ||
+                    (constraint.secondItem as? UIView) === accountDetailsStackView ||
+                    (constraint.firstItem as? UIView) === buttonsStackView ||
+                    (constraint.secondItem as? UIView) === buttonsStackView
+            }
+            .forEach { $0.isActive = false }
+
+        accountDetailsStackView.removeFromSuperview()
+        contentScrollView.translatesAutoresizingMaskIntoConstraints = false
+        contentScrollView.alwaysBounceVertical = false
+        view.addSubview(contentScrollView)
+
+        accountDetailsStackView.translatesAutoresizingMaskIntoConstraints = false
+        contentScrollView.addSubview(accountDetailsStackView)
+
+        NSLayoutConstraint.activate([
+            contentScrollView.topAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.topAnchor,
+                constant: 8
+            ),
+            contentScrollView.leadingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                constant: 16
+            ),
+            contentScrollView.trailingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                constant: -16
+            ),
+            contentScrollView.bottomAnchor.constraint(
+                equalTo: buttonsStackView.topAnchor,
+                constant: -16
+            ),
+
+            accountDetailsStackView.topAnchor.constraint(
+                equalTo: contentScrollView.contentLayoutGuide.topAnchor
+            ),
+            accountDetailsStackView.leadingAnchor.constraint(
+                equalTo: contentScrollView.contentLayoutGuide.leadingAnchor
+            ),
+            accountDetailsStackView.trailingAnchor.constraint(
+                equalTo: contentScrollView.contentLayoutGuide.trailingAnchor
+            ),
+            accountDetailsStackView.bottomAnchor.constraint(
+                equalTo: contentScrollView.contentLayoutGuide.bottomAnchor
+            ),
+            accountDetailsStackView.widthAnchor.constraint(
+                equalTo: contentScrollView.frameLayoutGuide.widthAnchor
+            ),
+
+            buttonsStackView.leadingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.leadingAnchor,
+                constant: 16
+            ),
+            buttonsStackView.trailingAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.trailingAnchor,
+                constant: -16
+            ),
+            buttonsStackView.bottomAnchor.constraint(
+                equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+                constant: -24
+            ),
+        ])
+    }
+
+    private func updateSupportLinkHeight() {
+        let width = supportLinkTextView.bounds.width
+        guard width > 0, let supportLinkHeightConstraint else { return }
+        let fittingHeight = ceil(
+            supportLinkTextView.sizeThatFits(
+                CGSize(width: width, height: .greatestFiniteMagnitude)
+            ).height
+        )
+        if abs(supportLinkHeightConstraint.constant - fittingHeight) > 0.5 {
+            supportLinkHeightConstraint.constant = fittingHeight
+        }
     }
 
     private func setUpSupportLinkView() {
@@ -151,6 +306,22 @@ extension MyRuuviAccountViewController: MyRuuviAccountViewInput {
         alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
+
+    func viewDidReceiveUnconfirmedMarketingConsent() {
+        let alertVC = UIAlertController(
+            title: RuuviLocalization.newsletterSubscription,
+            message: RuuviLocalization.newsletterSubscriptionConfirmation,
+            preferredStyle: .alert
+        )
+        alertVC.addAction(
+            UIAlertAction(
+                title: RuuviLocalization.ok,
+                style: .cancel,
+                handler: nil
+            )
+        )
+        present(alertVC, animated: true)
+    }
 }
 
 extension MyRuuviAccountViewController {
@@ -171,6 +342,13 @@ extension MyRuuviAccountViewController {
         communicationSwitchView.bind(viewModel.marketingPreference) { view, isEnabled in
             view.toggleState(with: isEnabled)
         }
+        communicationSwitchView.bind(viewModel.marketingPreferenceEnabled) { view, isEnabled in
+            view.disableEditing(disable: !(isEnabled ?? false))
+        }
+        communicationStatusLabel.bind(viewModel.marketingPreferenceStatusMessage) { label, message in
+            label.text = message
+            label.isHidden = message?.isEmpty != false
+        }
     }
 
     private func configureViews() {
@@ -178,6 +356,7 @@ extension MyRuuviAccountViewController {
         navigationItem.leftBarButtonItem?.image = RuuviAsset.dismissModalIcon.image
         communicationTitleLabel.text = RuuviLocalization.communicationChannels
         communicationSubtitleLabel.text = RuuviLocalization.communicationChannelsDescription
+        subscriptionTitleLabel.text = RuuviLocalization.newsletterSubscription
         deleteAccountButton.setTitle(RuuviLocalization.MyRuuvi.Settings.DeleteAccount.title, for: .normal)
         deleteAccountButton.setTitle(RuuviLocalization.MyRuuvi.Settings.DeleteAccount.title, for: .normal)
         signoutButton.setTitle(RuuviLocalization.Menu.SignOut.text, for: .normal)
