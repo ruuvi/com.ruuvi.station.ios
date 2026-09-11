@@ -273,6 +273,11 @@ class CardsGraphViewController: UIViewController {
                 from: sSelf.chartModules,
                 withAnimation: true
             )
+            sSelf.moreButton.updateMenu(
+                with: sSelf.moreButtonOptions(
+                    showChartStat: sSelf.showChartStat
+                )
+            )
             sSelf.updateScrollInsetsForFade()
             self?.output?.viewDidTransition()
         })
@@ -521,16 +526,28 @@ class CardsGraphViewController: UIViewController {
             }
         }
 
-        let chartCompactExpandAction = UIAction(
-            title: chartsPerScreen == 1 ?
-                RuuviLocalization.decreaseGraphSize :
-                RuuviLocalization.increaseGraphSize
+        let increaseChartSizeAction = UIAction(
+            title: RuuviLocalization.increaseGraphSize
         ) {
             [weak self] _ in
             guard let sSelf = self else { return }
-            let nextCount = sSelf.chartsPerScreen == 1 ?
-                3 : sSelf.chartsPerScreen - 1
-            sSelf.output?.viewDidSelectChartsPerScreen(nextCount)
+            sSelf.output?.viewDidSelectChartsPerScreen(
+                max(sSelf.chartsPerScreen - 1, 1)
+            )
+            sSelf.updateChartsCollectionConstaints(
+                from: sSelf.chartModules,
+                withAnimation: true
+            )
+        }
+
+        let decreaseChartSizeAction = UIAction(
+            title: RuuviLocalization.decreaseGraphSize
+        ) {
+            [weak self] _ in
+            guard let sSelf = self else { return }
+            sSelf.output?.viewDidSelectChartsPerScreen(
+                min(sSelf.chartsPerScreen + 1, 3)
+            )
             sSelf.updateChartsCollectionConstaints(
                 from: sSelf.chartModules,
                 withAnimation: true
@@ -544,8 +561,13 @@ class CardsGraphViewController: UIViewController {
             minMaxAvgAction,
         ]
 
-        if chartModules.count > 2 {
-            actions.append(chartCompactExpandAction)
+        if chartModules.count > 2, !isLandscapeLayout {
+            if chartsPerScreen > 1 {
+                actions.append(increaseChartSizeAction)
+            }
+            if chartsPerScreen < 3 {
+                actions.append(decreaseChartSizeAction)
+            }
         }
 
         return UIMenu(
@@ -1121,9 +1143,10 @@ extension CardsGraphViewController {
         count: CGFloat
     ) -> CGFloat {
         if isLandscapeLayout {
-            totalHeight
+            return totalHeight
         } else {
-            totalHeight / min(CGFloat(chartsPerScreen), count)
+            let effectiveChartsPerScreen = count > 2 ? CGFloat(chartsPerScreen) : count
+            return totalHeight / effectiveChartsPerScreen
         }
     }
 
@@ -1135,24 +1158,17 @@ extension CardsGraphViewController {
             scrollView.edgeFader?.updateFadeMask()
             return
         }
-        if chartsPerScreen > 1 {
-            if isLandscapeLayout || chartModules.count > chartsPerScreen {
-                scrollView.isPagingEnabled = isLandscapeLayout
-                scrollView.isScrollEnabled = true
-                scrollView.showsVerticalScrollIndicator = true
-            } else {
-                scrollView.isPagingEnabled = false
-                scrollView.isScrollEnabled = false
-                scrollView.showsVerticalScrollIndicator = false
-            }
-        } else {
-            if isLandscapeLayout {
-                scrollView.isPagingEnabled = true
-            } else {
-                scrollView.isPagingEnabled = false
-            }
+        if isLandscapeLayout {
+            scrollView.isPagingEnabled = true
             scrollView.isScrollEnabled = true
             scrollView.showsVerticalScrollIndicator = true
+        } else {
+            let effectiveChartsPerScreen = chartModules.count > 2 ?
+                chartsPerScreen : chartModules.count
+            let needsScrolling = chartModules.count > effectiveChartsPerScreen
+            scrollView.isPagingEnabled = false
+            scrollView.isScrollEnabled = needsScrolling
+            scrollView.showsVerticalScrollIndicator = needsScrolling
         }
         updateScrollInsetsForFade()
         scrollView.edgeFader?.updateFadeMask()
