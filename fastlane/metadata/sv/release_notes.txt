@@ -1,8 +1,7 @@
-- Förbättrade larminställningar och aviseringsbeteende för lokala sensorer
-- Förbättrad widgetinläsning och en ny Ruuvi Air-widgetstil
-- Förbättrad historikvy med en större enskild diagramvy i stående läge
-- Förbättrad molnsynkronisering för användarinställningar, ägarskap och sensordetaljer
-- Lade till stöd för polska
-- Förbättrade kontroller av firmwareuppdateringar för att undvika att erbjuda nedgraderingar
-- Förbättrad sortering, formatering, exportetiketter och vägledning för bakgrundsskanning
+- Lade till en större vy med ett enskilt diagram för historik i stående läge
+- Förbättrade diagramlayouter så att axelvärden inte klipps av
+- Åtgärdade hanteringen av sensorernas offsetvärden på iOS
+- Förbättrade kortstorleken på instrumentpanelen efter synkronisering av ändrade synlighetsinställningar
+- Åtgärdade att gamla uppgifter på sensorkorten visades kortvarigt under molnsynkronisering
+- Förbättrade layouten på sidan Globala enheter och upplösning i liggande läge
 - Andra mindre buggfixar och förbättringar

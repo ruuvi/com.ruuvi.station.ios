@@ -1,8 +1,7 @@
-- Amélioration des paramètres d’alerte et du comportement des notifications pour les capteurs locaux
-- Meilleur chargement des widgets et nouveau style de widget Ruuvi Air
-- Vue historique améliorée avec une plus grande disposition à graphique unique en mode portrait
-- Meilleure synchronisation Cloud des paramètres utilisateur, de la propriété et des détails des capteurs
-- Ajout de la prise en charge du polonais
-- Meilleures vérifications des mises à jour du firmware pour éviter de proposer des versions antérieures
-- Amélioration du tri, du formatage, des libellés d’exportation et des indications sur l’analyse en arrière-plan
+- Ajout d’une vue plus grande avec un seul graphique pour l’historique en mode portrait
+- Amélioration de la disposition des graphiques pour éviter que les valeurs des axes soient coupées
+- Correction de la gestion des valeurs d’offset des capteurs sur iOS
+- Amélioration de la taille des cartes du tableau de bord après la synchronisation des modifications des paramètres de visibilité
+- Correction de l’affichage momentané d’anciennes données sur les cartes des capteurs pendant la synchronisation Cloud
+- Amélioration de la mise en page de la page Unités globales et résolution en mode paysage
 - Autres corrections de bugs mineurs et améliorations

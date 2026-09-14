@@ -1,8 +1,7 @@
-- Improved alert settings and notification behavior for local sensors
-- Added better widget loading and a new Ruuvi Air widget style
-- Improved history view with a larger single-chart portrait layout
-- Improved cloud sync handling for user settings, ownership, and sensor details
-- Added Polish language support
-- Improved firmware update checks to avoid offering downgrades
-- Improved sorting, formatting, export labels, and background scanning guidance
+- Added a larger single-chart layout for history in portrait view
+- Improved chart layouts to prevent clipped axis values
+- Fixed sensor offset handling on iOS
+- Improved dashboard card sizing after synced visibility changes
+- Fixed sensor card details flashing during cloud sync
+- Improved Global Units and Resolution page layout in landscape
 - Other minor bug fixes and improvements

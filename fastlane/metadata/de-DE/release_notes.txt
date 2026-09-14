@@ -1,8 +1,7 @@
-- Verbesserte Alarmeinstellungen und verbessertes Benachrichtigungsverhalten für lokale Sensoren
-- Verbessertes Laden von Widgets und ein neuer Ruuvi Air-Widgetstil
-- Verbesserte Verlaufsansicht mit größerer Einzel-Diagrammansicht im Hochformat
-- Verbesserte Cloud-Synchronisierung für Benutzereinstellungen, Besitzstatus und Sensordetails
-- Unterstützung für Polnisch hinzugefügt
-- Verbesserte Firmware-Update-Prüfungen, um Downgrades zu vermeiden
-- Verbesserte Sortierung, Formatierung, Exportbezeichnungen und Hinweise zur Hintergrundsuche
+- Größere Ansicht mit einem einzelnen Diagramm für den Verlauf im Hochformat hinzugefügt
+- Diagrammlayouts verbessert, damit Achsenwerte nicht abgeschnitten werden
+- Verarbeitung von Sensor-Offsets unter iOS korrigiert
+- Kartengröße im Dashboard nach der Synchronisierung geänderter Sichtbarkeitseinstellungen verbessert
+- Kurzzeitige Anzeige alter Daten auf Sensorkarten während der Cloud-Synchronisierung behoben
+- Layout der Seite Globale Einheiten und Auflösung im Querformat verbessert
 - Weitere kleinere Fehlerbehebungen und Verbesserungen
