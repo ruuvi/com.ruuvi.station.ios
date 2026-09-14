@@ -1,8 +1,7 @@
-- Parannettu paikallisten antureiden hälytysasetuksia ja ilmoitusten toimintaa
-- Parannettu widgettien latausta ja lisätty uusi Ruuvi Air -widgettityyli
-- Parannettu historianäkymää suuremmalla yhden kaavion pystynäkymällä
-- Parannettu pilvisynkronointia käyttäjäasetusten, omistajuuden ja anturitietojen osalta
-- Lisätty puolan kielen tuki
-- Parannettu laiteohjelmistopäivitysten tarkistusta, jotta vanhempia versioita ei tarjota
-- Parannettu lajittelua, muotoilua, vientitiedostojen otsikoita ja taustaskannauksen ohjeistusta
+- Lisätty suurempi yhden kaavion näkymä historianäkymään pystytilassa
+- Parannettu kaavioiden asettelua, jotta akselien arvot näkyvät kokonaan
+- Korjattu anturien offset-arvojen käsittelyä iOS:ssä
+- Parannettu koontinäytön korttien kokoa näkyvyysasetusten muutosten synkronoinnin jälkeen
+- Korjattu anturikorttien vanhojen tietojen välähtäminen pilvisynkronoinnin aikana
+- Parannettu Yleiset yksiköt ja resoluutio -sivun asettelua vaakatilassa
 - Muita pieniä bugikorjauksia ja parannuksia
