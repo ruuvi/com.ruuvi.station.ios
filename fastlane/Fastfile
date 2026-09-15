@@ -369,9 +369,6 @@ platform :ios do
     UI.user_error!("build_number is required for App Review submission") if build_number.empty?
 
     app_version = (options[:app_version] || ENV["APP_STORE_REVIEW_APP_VERSION"]).to_s.strip
-    automatic_release = truthy?(options[:automatic_release]) || truthy?(ENV["APP_STORE_AUTOMATIC_RELEASE"])
-    phased_release = truthy?(options[:phased_release]) || truthy?(ENV["APP_STORE_PHASED_RELEASE"])
-    UI.user_error!("automatic_release and phased_release cannot both be enabled") if automatic_release && phased_release
 
     deliver_options = {
       app_identifier: APP_IDENTIFIERS.first,
@@ -383,8 +380,8 @@ platform :ios do
       run_precheck_before_submit: true,
       precheck_default_rule_level: :error,
       precheck_include_in_app_purchases: false,
-      automatic_release: automatic_release,
-      phased_release: phased_release,
+      automatic_release: false,
+      phased_release: false,
       force: true
     }
     deliver_options[:app_version] = app_version unless app_version.empty?

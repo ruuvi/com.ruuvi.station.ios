@@ -10,16 +10,6 @@ on:
         description: 'Optional App Store version'
         required: false
         default: ''
-      automatic_release:
-        description: 'Release automatically after approval'
-        required: true
-        default: false
-        type: boolean
-      phased_release:
-        description: 'Use phased release after approval'
-        required: true
-        default: false
-        type: boolean
       confirmation:
         description: 'Type SUBMIT to submit this build for App Review'
         required: true
@@ -65,8 +55,6 @@ jobs:
         env:
           APP_STORE_REVIEW_BUILD_NUMBER: ${{ github.event.inputs.build_number }}
           APP_STORE_REVIEW_APP_VERSION: ${{ github.event.inputs.app_version }}
-          APP_STORE_AUTOMATIC_RELEASE: ${{ github.event.inputs.automatic_release }}
-          APP_STORE_PHASED_RELEASE: ${{ github.event.inputs.phased_release }}
           APP_STORE_REVIEW_CONFIRMATION: ${{ github.event.inputs.confirmation }}
         run: |
           bundle exec fastlane ios submit_app_store_review
