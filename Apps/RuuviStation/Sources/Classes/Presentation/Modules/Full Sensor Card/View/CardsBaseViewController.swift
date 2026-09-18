@@ -171,19 +171,18 @@ final class CardsBaseViewController: UIViewController {
         return button
     }()
 
-    lazy var ruuviTagNameLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.textAlignment = .center
-        label.numberOfLines = Constants.Typography.tagNameLabelLines
-        label.font = UIFont
-            .mulish(
+    private lazy var sensorNameSwipeView: CardsSensorNameSwipeView = {
+        let view = CardsSensorNameSwipeView(
+            font: UIFont.mulish(
                 .extraBold,
                 size: Constants.Typography.tagNameLabelFontSize
-            )
-        label.setContentHuggingPriority(.required, for: .vertical)
-        label.setContentCompressionResistancePriority(.required, for: .vertical)
-        return label
+            ),
+            numberOfLines: Constants.Typography.tagNameLabelLines
+        )
+        view.onNavigate = { [weak self] direction in
+            self?.navigateFromSensorNameSwipe(direction) ?? false
+        }
+        return view
     }()
 
     private lazy var pageTitleLabel: UILabel = makePageTitleLabel()
@@ -303,9 +302,9 @@ private extension CardsBaseViewController {
     }
 
     func makeTitleStackView() -> UIStackView {
-        let stackView = UIStackView(arrangedSubviews: [ruuviTagNameLabel, pageTitleLabel])
+        let stackView = UIStackView(arrangedSubviews: [sensorNameSwipeView, pageTitleLabel])
         stackView.axis = .vertical
-        stackView.alignment = .center
+        stackView.alignment = .fill
         stackView.spacing = Constants.Layout.titleStackSpacing
         stackView.setContentHuggingPriority(.required, for: .vertical)
         stackView.setContentCompressionResistancePriority(.required, for: .vertical)
@@ -575,6 +574,23 @@ private extension CardsBaseViewController {
         output?.viewDidRequestNavigateToSnapshotIndex(newIndex)
     }
 
+    func navigateFromSensorNameSwipe(
+        _ direction: CardsSensorNameSwipeView.NavigationDirection
+    ) -> Bool {
+        let targetIndex: Int
+        switch direction {
+        case .previous:
+            guard canNavigateLeft() else { return false }
+            targetIndex = currentSnapshotIndex - 1
+        case .next:
+            guard canNavigateRight() else { return false }
+            targetIndex = currentSnapshotIndex + 1
+        }
+
+        output?.viewDidRequestNavigateToSnapshotIndex(targetIndex)
+        return currentSnapshotIndex == targetIndex
+    }
+
     @objc func handleAppWillMoveToForeground() {
         output?.appWillMoveToForeground()
         menuBarView.updateAlertState(for: currentSnapshot)
@@ -698,7 +714,7 @@ private extension CardsBaseViewController {
                 withAnimation: true
             )
 
-        ruuviTagNameLabel.text = currentSnapshot.displayData.name
+        updateSensorNameSwipeView()
         updateHeaderSubtitle(for: activeTab)
 
         updateNavigationButtonsVisibility()
@@ -710,6 +726,20 @@ private extension CardsBaseViewController {
         let showRightArrow = canNavigateRight()
         cardLeftArrowButton.isHidden = !showLeftArrow
         cardRightArrowButton.isHidden = !showRightArrow
+    }
+
+    func updateSensorNameSwipeView() {
+        guard currentSnapshots.indices.contains(currentSnapshotIndex) else { return }
+
+        let previousName = currentSnapshotIndex > 0 ?
+            currentSnapshots[currentSnapshotIndex - 1].displayData.name : nil
+        let nextName = currentSnapshotIndex < currentSnapshots.count - 1 ?
+            currentSnapshots[currentSnapshotIndex + 1].displayData.name : nil
+        sensorNameSwipeView.configure(
+            current: currentSnapshots[currentSnapshotIndex].displayData.name,
+            previous: previousName,
+            next: nextName
+        )
     }
 
     // MARK: - Footer Update Methods
@@ -815,8 +845,8 @@ private extension CardsBaseViewController {
         currentSnapshot.$displayData
             .receive(on: DispatchQueue.main)
             .sink { [weak self] displayData in
-                if displayData.name != self?.ruuviTagNameLabel.text {
-                    self?.ruuviTagNameLabel.text = displayData.name
+                if displayData.name != self?.sensorNameSwipeView.text {
+                    self?.updateSensorNameSwipeView()
                 }
 
                 if displayData.background !=
