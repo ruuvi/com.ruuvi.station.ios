@@ -36,7 +36,7 @@ let package = Package(
         ),
         .testTarget(
             name: "RuuviLocalTests",
-            dependencies: ["RuuviLocal"]
+            dependencies: ["RuuviLocal", "RuuviLocalUserDefaults"]
         ),
     ]
 )

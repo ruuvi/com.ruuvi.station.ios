@@ -1019,6 +1019,42 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         )
     }
 
+    func resetCloudProfileSettings() {
+        // Logout tears down sensors and account-backed services at the same time.
+        // Bypass the public setters so their live UI/daemon notifications cannot
+        // race that teardown. The getters will resolve these missing values to
+        // their normal app defaults for the signed-out state.
+        let keys = [
+            "SettingsUserDegaults.temperatureUnitIntUDKey",
+            "SettingsUserDegaults.useFahrenheit",
+            "SettingsUserDefaults.temperatureAccuracyInt",
+            "SettingsUserDegaults.humidityUnitInt",
+            "SettingsUserDefaults.humidityAccuracyInt",
+            relativeHumidityAccuracyIntKey,
+            absoluteHumidityAccuracyIntKey,
+            dewPointAccuracyIntKey,
+            "SettingsUserDefaults.pressureUnitInt",
+            "SettingsUserDefaults.pressureAccuracyInt",
+            pmAccuracyIntKey,
+            accelerationAccuracyIntKey,
+            voltageAccuracyIntKey,
+            "SettingsUserDefaults.chartDownsamplingOn",
+            "SettingsUserDefaults.chartDrawDotsOn",
+            "SettingsUserDefaults.chartStatsOn",
+            "SettingsUserDefaults.cloudModeEnabled",
+            "SettingsUserDefaults.dashboardEnabled",
+            dashboardTypeIdKey,
+            dashboardTapActionTypeIdKey,
+            dashboardSensorOrderIdKey,
+            "SettingsUserDefaults.emailAlertDisabled",
+            "SettingsUserDefaults.pushAlertDisabled",
+            "SettingsUserDefaults.marketingPreference",
+            "SettingsUserDefaults.cardToOpenFromWidgetKey",
+        ]
+
+        keys.forEach(UserDefaults.standard.removeObject(forKey:))
+    }
+
     private func measurementAccuracy(
         forKey key: String,
         fallback: MeasurementAccuracyType

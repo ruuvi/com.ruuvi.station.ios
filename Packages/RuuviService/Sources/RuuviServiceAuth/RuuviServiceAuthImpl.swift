@@ -50,22 +50,6 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
                 }
 
                 let sensorsToDelete = localSensors.filter { $0.isClaimed || $0.isCloud }
-                guard !sensorsToDelete.isEmpty else {
-                    sSelf.pool.deleteUserSettings()
-                        .on(success: { _ in
-                            // Clear global settings even if no sensors to delete
-                            sSelf.clearGlobalSettings()
-                            promise.succeed(value: true)
-                            sSelf.postLogoutCompletion(success: true)
-                            sSelf.postNotification()
-                        }, failure: { error in
-                            sSelf.postLogoutCompletion(success: false)
-                            promise.fail(error: .ruuviPool(error))
-                        })
-                    return
-                }
-
-                // Collect all individual operations from all sensors
                 var allOperations: [Future<Bool, RuuviPoolError>] = []
 
                 for sensor in sensorsToDelete {
@@ -81,7 +65,8 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
                     sSelf.cleanupSensorData(for: sensor)
                 }
 
-                // Add the global deleteQueuedRequests operation
+                // Account-scoped data must be cleared even when there are no
+                // claimed or cloud sensors stored locally.
                 allOperations.append(sSelf.pool.deleteQueuedRequests())
                 allOperations.append(sSelf.pool.deleteUserSettings())
 
@@ -153,6 +138,10 @@ private extension RuuviServiceAuthImpl {
     func clearGlobalSettings() {
         // Clear global sync state
         localSyncState.setSyncDate(nil)
+
+        // Prevent settings belonging to the previous account from being
+        // inherited by or uploaded to the next account.
+        settings.resetCloudProfileSettings()
 
         // Clear global widget and chart settings
         settings.setCardToOpenFromWidget(for: nil)
