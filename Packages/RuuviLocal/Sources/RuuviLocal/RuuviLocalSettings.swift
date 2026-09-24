@@ -169,4 +169,8 @@ public protocol RuuviLocalSettings: AnyObject {
 
     func dashboardSignInBannerHidden(for version: String) -> Bool
     func setDashboardSignInBannerHidden(for version: String)
+
+    /// Restores settings owned by the signed-in cloud profile to their app defaults.
+    /// Device-only preferences are intentionally left unchanged.
+    func resetCloudProfileSettings()
 }

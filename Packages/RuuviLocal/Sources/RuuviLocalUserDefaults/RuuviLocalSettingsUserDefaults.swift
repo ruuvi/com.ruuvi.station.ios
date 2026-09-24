@@ -1019,6 +1019,36 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         )
     }
 
+    func resetCloudProfileSettings() {
+        temperatureUnit = .celsius
+        temperatureAccuracy = .two
+        humidityUnit = .percent
+        humidityAccuracy = .two
+        relativeHumidityAccuracy = .two
+        absoluteHumidityAccuracy = .two
+        dewPointAccuracy = .two
+        pressureUnit = .hectopascals
+        pressureAccuracy = .two
+        pmAccuracy = .one
+        accelerationAccuracy = .two
+        voltageAccuracy = .two
+
+        chartDownsamplingOn = false
+        chartDrawDotsOn = false
+        chartStatsOn = true
+
+        cloudModeEnabled = false
+        dashboardEnabled = true
+        dashboardType = .image
+        dashboardTapActionType = .card
+        dashboardSensorOrder = []
+
+        emailAlertDisabled = false
+        pushAlertDisabled = false
+        marketingPreference = false
+        cloudProfileLanguageCode = nil
+    }
+
     private func measurementAccuracy(
         forKey key: String,
         fallback: MeasurementAccuracyType
