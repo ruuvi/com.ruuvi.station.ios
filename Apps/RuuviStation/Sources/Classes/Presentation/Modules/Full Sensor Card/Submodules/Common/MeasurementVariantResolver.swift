@@ -185,19 +185,48 @@ struct MeasurementVariantResolver {
                 maximum: alertRange.upper
             )
         case .humidity:
-            guard variant.resolvedHumidityUnit(default: settings.humidityUnit) == .percent else {
-                return (nil, nil)
+            switch variant.resolvedHumidityUnit(default: settings.humidityUnit) {
+            case .percent:
+                let upper = alertConfig?.upperBound ??
+                    alertService.upperRelativeHumidity(for: sensor).map { $0 * 100 }
+                let lower = alertConfig?.lowerBound ??
+                    alertService.lowerRelativeHumidity(for: sensor).map { $0 * 100 }
+                return visibleAlertBounds(
+                    lower: lower,
+                    upper: upper,
+                    minimum: RuuviAlertConstants.RelativeHumidity.lowerBound,
+                    maximum: RuuviAlertConstants.RelativeHumidity.upperBound
+                )
+            case .gm3:
+                let upper = alertConfig?.upperBound ??
+                    alertService.upperHumidity(for: sensor)?.converted(to: .absolute).value
+                let lower = alertConfig?.lowerBound ??
+                    alertService.lowerHumidity(for: sensor)?.converted(to: .absolute).value
+                return visibleAlertBounds(
+                    lower: lower,
+                    upper: upper,
+                    minimum: RuuviAlertConstants.AbsoluteHumidity.lowerBound,
+                    maximum: RuuviAlertConstants.AbsoluteHumidity.upperBound
+                )
+            case .dew:
+                let unit = variant.resolvedTemperatureUnit(
+                    default: settings.temperatureUnit.unitTemperature
+                )
+                let upper = (alertConfig?.upperBound ?? alertService.upperDewPoint(for: sensor))
+                    .map { Temperature(value: $0, unit: .celsius).converted(to: unit).value }
+                let lower = (alertConfig?.lowerBound ?? alertService.lowerDewPoint(for: sensor))
+                    .map { Temperature(value: $0, unit: .celsius).converted(to: unit).value }
+                let minimum = Temperature(value: RuuviAlertConstants.DewPoint.lowerBound, unit: .celsius)
+                    .converted(to: unit).value
+                let maximum = Temperature(value: RuuviAlertConstants.DewPoint.upperBound, unit: .celsius)
+                    .converted(to: unit).value
+                return visibleAlertBounds(
+                    lower: lower,
+                    upper: upper,
+                    minimum: minimum,
+                    maximum: maximum
+                )
             }
-            let upper = alertConfig?.upperBound ??
-                alertService.upperRelativeHumidity(for: sensor).map { $0 * 100 }
-            let lower = alertConfig?.lowerBound ??
-                alertService.lowerRelativeHumidity(for: sensor).map { $0 * 100 }
-            return visibleAlertBounds(
-                lower: lower,
-                upper: upper,
-                minimum: RuuviAlertConstants.RelativeHumidity.lowerBound,
-                maximum: RuuviAlertConstants.RelativeHumidity.upperBound
-            )
         case .pressure:
             let unit = variant.resolvedPressureUnit(default: settings.pressureUnit)
             let upper = (alertConfig?.upperBound ?? alertService.upperPressure(for: sensor))
