@@ -166,12 +166,21 @@ private extension MultiSensorWidgetProvider {
                 let localSettings = localSnapshot.flatMap { sensorSettings(from: $0) }
                 let settings = localSettings ?? SensorSettingsStruct.settings(from: sensor.sensor.any)
                 let shouldPreferLocalVisibility = localSettings != nil
-                let deviceType = viewModel.deviceType(from: sensor.record)
+                let localRecord = localSnapshot?.record?.toRecord()
+                let record: RuuviTagSensorRecord?
+                if let localRecord, let cloudRecord = sensor.record,
+                   localRecord.date > cloudRecord.date ||
+                       (localRecord.date == cloudRecord.date && localRecord.source != .ruuviNetwork) {
+                    record = localRecord
+                } else {
+                    record = sensor.record ?? localRecord
+                }
+                let deviceType = viewModel.deviceType(from: record)
                 return MultiSensorWidgetSensorItem(
                     id: "\(index + 1)-\(sensorId)",
                     sensorId: sensorId,
                     name: localSnapshot?.name ?? sensor.sensor.name,
-                    record: sensor.record,
+                    record: record,
                     settings: settings,
                     cloudSettings: shouldPreferLocalVisibility ? nil : sensor.settings,
                     deviceType: deviceType,

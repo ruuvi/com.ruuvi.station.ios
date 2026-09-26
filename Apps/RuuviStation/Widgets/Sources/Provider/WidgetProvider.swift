@@ -88,17 +88,20 @@ final class WidgetProvider: IntentTimelineProvider {
             if !tags.isEmpty {
                 sSelf.persistCloudData(tags)
                 sSelf.cloudCache.markFresh()
+            }
+            let latestLocalSnapshot = sSelf.localSnapshot(for: configuration) ?? localSnapshot
+            if !tags.isEmpty {
                 sSelf.buildTimeline(
                     configuration: configuration,
                     cloudTags: tags,
-                    localSnapshot: localSnapshot,
+                    localSnapshot: latestLocalSnapshot,
                     completion: completion
                 )
-            } else if localSnapshot != nil {
+            } else if latestLocalSnapshot != nil {
                 sSelf.buildTimeline(
                     configuration: configuration,
                     cloudTags: nil,
-                    localSnapshot: localSnapshot,
+                    localSnapshot: latestLocalSnapshot,
                     completion: completion
                 )
             } else {
@@ -195,7 +198,9 @@ extension WidgetProvider {
         }
 
         if let cloudRecord, let cloudSensor {
-            if let localRecord, let localTag, localRecord.date > cloudRecord.date {
+            if let localRecord, let localTag,
+               localRecord.date > cloudRecord.date ||
+                   (localRecord.date == cloudRecord.date && localRecord.source != .ruuviNetwork) {
                 timeline(
                     tag: localTag,
                     record: localRecord,

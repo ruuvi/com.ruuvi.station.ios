@@ -307,7 +307,14 @@ public final class WidgetSensorCache {
                 snapshot.name = name.isEmpty ? sensorId : name
                 if let macId { snapshot.macId = macId }
                 if let luid { snapshot.luid = luid }
-                if let record { snapshot.record = record }
+                if let record,
+                   snapshot.record.map({ existing in
+                       record.date > existing.date ||
+                           (record.date == existing.date &&
+                               existing.source == RuuviTagSensorRecordSource.ruuviNetwork.rawValue)
+                   }) ?? true {
+                    snapshot.record = record
+                }
                 if let settings {
                     if var existing = snapshot.settings {
                         // Offsets: cloud is source of truth, always update
