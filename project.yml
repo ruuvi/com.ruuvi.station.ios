@@ -91,7 +91,7 @@ targetTemplates:
 packages:
   BTKit:
     url: https://github.com/ruuvi/BTKit
-    version: 0.7.1
+    version: 0.7.2
   DGCharts:
     url: https://github.com/ruuvi/Charts
     from: 5.2.0

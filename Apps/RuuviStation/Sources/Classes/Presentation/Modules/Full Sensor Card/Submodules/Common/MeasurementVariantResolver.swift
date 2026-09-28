@@ -123,9 +123,13 @@ struct MeasurementVariantResolver {
         case .pm100:
             return measurementService.double(for: measurement.pm10)
         case .voc:
-            return measurementService.double(for: measurement.voc)
+            return measurement.voc.flatMap {
+                $0 == 0 ? nil : measurementService.double(for: $0)
+            }
         case .nox:
-            return measurementService.double(for: measurement.nox)
+            return measurement.nox.flatMap {
+                $0 == 0 ? nil : measurementService.double(for: $0)
+            }
         case .luminosity:
             return measurementService.double(for: measurement.luminosity)
         case .soundInstant:

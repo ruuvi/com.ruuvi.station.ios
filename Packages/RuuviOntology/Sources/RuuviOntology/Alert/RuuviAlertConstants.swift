@@ -54,12 +54,12 @@ public struct RuuviAlertConstants {
     }
 
     public struct VOC {
-        public static let lowerBound = 0.0   // VOC Index
+        public static let lowerBound = 1.0   // VOC Index
         public static let upperBound = 500.0 // VOC Index
     }
 
     public struct NOX {
-        public static let lowerBound = 0.0   // NOx Index
+        public static let lowerBound = 1.0   // NOx Index
         public static let upperBound = 500.0 // NOx Index
     }
 
