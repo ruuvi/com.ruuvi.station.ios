@@ -379,16 +379,24 @@ extension RuuviServiceOwnershipImpl {
             })
         }
 
-        if let localBackground = localImages.getCustomBackground(for: macId) {
+        if let localBackground = localCustomBackground(for: sensor) {
             uploadBackground(localBackground)
             return
         }
 
-        propertiesService.getImage(for: sensor).on(success: { image in
-            uploadBackground(image)
-        }, failure: { _ in
-            promise.succeed(value: sensor.any)
-        })
+        promise.succeed(value: sensor.any)
+    }
+
+    private func localCustomBackground(for sensor: RuuviTagSensor) -> UIImage? {
+        if let macId = sensor.macId,
+           let image = localImages.getCustomBackground(for: macId) {
+            return image
+        }
+        if let luid = sensor.luid,
+           let image = localImages.getCustomBackground(for: luid) {
+            return image
+        }
+        return nil
     }
 
     private func cleanupSensorData(for sensor: RuuviTagSensor) {
