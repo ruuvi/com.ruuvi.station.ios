@@ -21,11 +21,6 @@ struct MultiSensorWidgetProvider: IntentTimelineProvider {
         in context: Context,
         completion: @escaping (Entry) -> Void
     ) {
-        if context.isPreview {
-            completion(.placeholder(for: context.family))
-            return
-        }
-
         // Always instant — build from local cache with no network calls
         let localSnapshots = WidgetSensorCache().loadAll()
         let selectedIds = selectedSensors(from: configuration)
@@ -67,12 +62,9 @@ struct MultiSensorWidgetProvider: IntentTimelineProvider {
         completion: @escaping (Timeline<Entry>) -> Void
     ) {
         if context.isPreview {
-            completion(
-                Timeline(
-                    entries: [.placeholder(for: context.family)],
-                    policy: .never
-                )
-            )
+            getSnapshot(for: configuration, in: context) { entry in
+                completion(Timeline(entries: [entry], policy: .never))
+            }
             return
         }
 

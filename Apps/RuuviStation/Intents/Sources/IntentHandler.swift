@@ -110,47 +110,26 @@ class IntentHandler: INExtension, RuuviTagSelectionIntentHandling, RuuviMultiSen
             return
         }
 
+        let delivery = WidgetOptionsDelivery(completion: completion)
+        // Preserve cloud discovery when no local sensor list is available.
+        if !localSnapshots.isEmpty {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+                let latest = self.localCache.loadAll()
+                let fallback = latest.isEmpty ? localSnapshots : latest
+                let items = INObjectCollection(items: self.widgetTagOptions(from: self.localTags(from: fallback)))
+                delivery.finish(items)
+            }
+        }
+
         viewModel.fetchRuuviTags(completion: { response in
-            var tags: [RuuviWidgetTag] = []
-            tags.reserveCapacity(response.count + localSnapshots.count)
-            var seenIdentifiers = Set<String>()
-
-            response.forEach { sensor in
-                let sensorIdentifiers = [
-                    sensor.sensor.id,
-                    sensor.record?.macId?.value,
-                    sensor.record?.luid?.value,
-                ].compactMap { $0 }
-                let localName = localSnapshots.first(where: { snapshot in
-                    sensorIdentifiers.contains { identifier in
-                        snapshot.matches(identifier: identifier)
-                    }
-                })?.name
-
-                let tag = RuuviWidgetTag(
-                    identifier: sensor.sensor.id,
-                    display: localName ?? sensor.sensor.name
-                )
-                tag.deviceType = self.deviceType(from: sensor.record)
-                tags.append(tag)
-                [
-                    sensor.sensor.id,
-                    sensor.record?.macId?.value,
-                    sensor.record?.luid?.value,
-                ].compactMap { $0 }.forEach {
-                    seenIdentifiers.insert($0)
-                }
+            // Keep late results for the next edit session, even if the local list was already delivered.
+            let latest = self.localCache.loadAll()
+            let fallbackSnapshots = latest.isEmpty ? localSnapshots : latest
+            if !response.isEmpty {
+                self.persistCloudData(response)
+                self.cloudCache.markFresh()
             }
-
-            localSnapshots.forEach { snapshot in
-                let identifiers = [snapshot.id, snapshot.macId, snapshot.luid].compactMap { $0 }
-                guard !identifiers.contains(where: { seenIdentifiers.contains($0) }) else { return }
-                tags.append(self.localTag(from: snapshot))
-                identifiers.forEach { seenIdentifiers.insert($0) }
-            }
-
-            let items = INObjectCollection(items: self.widgetTagOptions(from: tags))
-            completion(items, nil)
+            delivery.finish(self.widgetTagOptionsCollection(from: response, localSnapshots: fallbackSnapshots))
         })
     }
 
@@ -178,6 +157,74 @@ class IntentHandler: INExtension, RuuviTagSelectionIntentHandling, RuuviMultiSen
 }
 
 extension IntentHandler {
+    private func widgetTagOptionsCollection(
+        from response: [RuuviCloudSensorDense],
+        localSnapshots: [WidgetSensorSnapshot]
+    ) -> INObjectCollection<RuuviWidgetTag> {
+        var tags: [RuuviWidgetTag] = []
+        tags.reserveCapacity(response.count + localSnapshots.count)
+        var seenIdentifiers = Set<String>()
+
+        response.forEach { sensor in
+            let sensorIdentifiers = [
+                sensor.sensor.id,
+                sensor.record?.macId?.value,
+                sensor.record?.luid?.value,
+            ].compactMap { $0 }
+            let localName = localSnapshots.first(where: { snapshot in
+                sensorIdentifiers.contains { identifier in
+                    snapshot.matches(identifier: identifier)
+                }
+            })?.name
+
+            let tag = RuuviWidgetTag(
+                identifier: sensor.sensor.id,
+                display: localName ?? sensor.sensor.name
+            )
+            tag.deviceType = self.deviceType(from: sensor.record)
+            tags.append(tag)
+            [
+                sensor.sensor.id,
+                sensor.record?.macId?.value,
+                sensor.record?.luid?.value,
+            ].compactMap { $0 }.forEach {
+                seenIdentifiers.insert($0)
+            }
+        }
+
+        localSnapshots.forEach { snapshot in
+            let identifiers = [snapshot.id, snapshot.macId, snapshot.luid].compactMap { $0 }
+            guard !identifiers.contains(where: { seenIdentifiers.contains($0) }) else { return }
+            tags.append(self.localTag(from: snapshot))
+            identifiers.forEach { seenIdentifiers.insert($0) }
+        }
+
+        return INObjectCollection(items: widgetTagOptions(from: tags))
+    }
+
+    private func persistCloudData(_ tags: [RuuviCloudSensorDense]) {
+        for tag in tags {
+            guard let record = tag.record else { continue }
+            let recordSnapshot = WidgetSensorRecordSnapshot(from: record)
+            let sensor = tag.sensor.any
+            let settingsSnapshot = WidgetSensorSettingsSnapshot(
+                temperatureOffset: sensor.offsetTemperature,
+                humidityOffset: sensor.offsetHumidity.map { $0 / 100 },
+                pressureOffset: sensor.offsetPressure.map { $0 / 100 },
+                displayOrder: tag.settings?.displayOrderCodes,
+                defaultDisplayOrder: tag.settings?.defaultDisplayOrder
+            )
+            localCache.upsert(
+                sensorId: tag.sensor.id,
+                name: tag.sensor.name,
+                macId: record.macId?.value,
+                luid: record.luid?.value,
+                record: recordSnapshot,
+                settings: settingsSnapshot
+            )
+        }
+    }
+
     private func localTags(from snapshots: [WidgetSensorSnapshot]) -> [RuuviWidgetTag] {
         snapshots.map(localTag(from:))
     }
@@ -236,5 +283,23 @@ extension IntentHandler {
         }
 
         return [WidgetConfigurationSelection.noneTag()] + tags
+    }
+}
+
+// Intent option requests must complete once, even if the cloud returns after the fallback.
+private final class WidgetOptionsDelivery {
+    private let lock = NSLock()
+    private var completion: ((INObjectCollection<RuuviWidgetTag>?, Error?) -> Void)?
+
+    init(completion: @escaping (INObjectCollection<RuuviWidgetTag>?, Error?) -> Void) {
+        self.completion = completion
+    }
+
+    func finish(_ items: INObjectCollection<RuuviWidgetTag>) {
+        lock.lock()
+        let callback = completion
+        completion = nil
+        lock.unlock()
+        callback?(items, nil)
     }
 }

@@ -40,9 +40,15 @@ final class WidgetProvider: IntentTimelineProvider {
 
     func getTimeline(
         for configuration: RuuviTagSelectionIntent,
-        in _: Context,
+        in context: Context,
         completion: @escaping (Timeline<WidgetEntry>) -> Void
     ) {
+        if context.isPreview {
+            getSnapshot(for: configuration, in: context) { entry in
+                completion(Timeline(entries: [entry], policy: .never))
+            }
+            return
+        }
         let resolvedConfiguration = SingleSensorWidgetConfiguration(intent: configuration)
         let isAuthorized = viewModel.isAuthorized()
         guard resolvedConfiguration.sensorId != nil else {

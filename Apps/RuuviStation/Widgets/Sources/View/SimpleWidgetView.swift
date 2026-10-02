@@ -14,7 +14,8 @@ struct SimpleWidgetView: View {
                     .foregroundColor(.bodyTextColor)
                     .font(.mulish(.bold, size: canShowBackground ? 16 : 22, relativeTo: .headline))
                     .frame(maxWidth: .infinity, alignment: .bottomLeading)
-                    .fixedSize(horizontal: false, vertical: true)
+                    .lineLimit(2)
+                    .truncationMode(.tail)
                     .minimumScaleFactor(0.5)
             }
 
