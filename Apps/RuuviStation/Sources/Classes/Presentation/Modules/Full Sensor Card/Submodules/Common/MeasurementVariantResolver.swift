@@ -317,6 +317,12 @@ struct MeasurementVariantResolver {
                 upper: alertConfig?.upperBound ?? alertService.upperSoundPeak(for: sensor),
                 range: RuuviAlertConstants.Sound.lowerBound...RuuviAlertConstants.Sound.upperBound
             )
+        case .voltage:
+            return visibleAlertBounds(
+                lower: alertConfig?.lowerBound ?? alertService.lowerBatteryVoltage(for: sensor),
+                upper: alertConfig?.upperBound ?? alertService.upperBatteryVoltage(for: sensor),
+                range: RuuviAlertConstants.BatteryVoltage.lowerBound...RuuviAlertConstants.BatteryVoltage.upperBound
+            )
         case .rssi:
             return visibleAlertBounds(
                 lower: alertConfig?.lowerBound ?? alertService.lowerSignal(for: sensor),
