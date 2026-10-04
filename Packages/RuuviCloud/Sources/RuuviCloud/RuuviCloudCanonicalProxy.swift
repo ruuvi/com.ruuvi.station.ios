@@ -18,6 +18,16 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         self.localIDs = localIDs
     }
 
+    public var historyScope: String? { cloud.historyScope }
+
+    public func loadHistoryPage(
+        macId: MACIdentifier,
+        request historyRequest: RuuviHistoryRequest,
+        cancellation: RuuviHistoryCancellation
+    ) -> Future<RuuviCloudHistoryPage, RuuviCloudError> {
+        cloud.loadHistoryPage(macId: canonical(macId), request: historyRequest, cancellation: cancellation)
+    }
+
     public func requestCode(email: String) -> Future<String?, RuuviCloudError> {
         cloud.requestCode(email: email)
     }

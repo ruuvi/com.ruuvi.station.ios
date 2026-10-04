@@ -1,5 +1,6 @@
 import BTKit
 import Foundation
+import RuuviOntology
 import Future
 import RuuviCloud
 import RuuviOntology
@@ -77,6 +78,9 @@ public protocol RuuviCloudApi {
     func user(
         authorization: String
     ) -> Future<RuuviCloudApiUserResponse, RuuviCloudApiError>
+
+    func getSensorData(_ requestModel: RuuviCloudApiGetSensorRequest, authorization: String,
+                       cancellation: RuuviHistoryCancellation) -> Future<RuuviCloudApiGetSensorResponse, RuuviCloudApiError>
 
     func getSensorData(
         _ requestModel: RuuviCloudApiGetSensorRequest,

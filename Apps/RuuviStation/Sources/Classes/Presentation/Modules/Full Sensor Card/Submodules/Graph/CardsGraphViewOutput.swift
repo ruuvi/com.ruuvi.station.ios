@@ -1,6 +1,10 @@
 import Foundation
 
 protocol CardsGraphViewOutput: AnyObject {
+    func viewDidChangeHistoryViewport(start: Double, end: Double)
+    func viewDidSelectHistoryDates(start: Date, end: Date)
+    func viewDidFinishHistoryGesture()
+    func viewDidRetryHistory()
     func viewDidLoad()
     func viewWillAppear()
     func viewDidTransition()

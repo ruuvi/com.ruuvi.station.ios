@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 import Future
 import RuuviCloud
 
@@ -226,6 +227,12 @@ public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
         )
     }
 
+    public func getSensorData(_ requestModel: RuuviCloudApiGetSensorRequest, authorization: String,
+                              cancellation: RuuviHistoryCancellation) -> Future<RuuviCloudApiGetSensorResponse, RuuviCloudApiError> {
+        request(endpoint: Routes.getSensorData, with: requestModel, method: .get,
+                authorization: authorization, cancellation: cancellation)
+    }
+
     public func getSensorData(
         _ requestModel: RuuviCloudApiGetSensorRequest,
         authorization: String
@@ -388,7 +395,8 @@ extension RuuviCloudApiURLSession {
         endpoint: Routes,
         with model: some Encodable,
         method: HttpMethod = .get,
-        authorization: String? = nil
+        authorization: String? = nil,
+        cancellation: RuuviHistoryCancellation? = nil
     ) -> Future<Response, RuuviCloudApiError> {
         let promise = Promise<Response, RuuviCloudApiError>()
         guard Reachability.active
@@ -437,12 +445,16 @@ extension RuuviCloudApiURLSession {
         }
         let task = URLSession(configuration: config).dataTask(with: request) {
             data, response, error in
+            cancellation?.setCancellationHandler(nil)
             if let error {
                 promise.fail(error: .networking(error))
             } else {
                 if let data {
                     #if DEBUG || ALPHA
-                        if let object = try? JSONSerialization.jsonObject(with: data, options: []),
+                        // History responses can contain thousands of readings. Avoid
+                        // parsing/stringifying them again and flooding the debug console.
+                        if cancellation == nil,
+                           let object = try? JSONSerialization.jsonObject(with: data, options: []),
                            let jsonData = try? JSONSerialization.data(
                                withJSONObject: object,
                                options: [.prettyPrinted]
@@ -480,6 +492,7 @@ extension RuuviCloudApiURLSession {
                 }
             }
         }
+        cancellation?.setCancellationHandler { [weak task] in task?.cancel() }
         task.resume()
         return promise.future
     }

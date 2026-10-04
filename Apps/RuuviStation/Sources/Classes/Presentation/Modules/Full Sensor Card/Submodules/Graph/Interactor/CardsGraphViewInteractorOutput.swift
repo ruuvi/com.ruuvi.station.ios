@@ -2,6 +2,8 @@ import Foundation
 import RuuviOntology
 
 protocol CardsGraphViewInteractorOutput: AnyObject {
+    func interactorDidUpdateCloudHistory(failed: Bool)
+    func interactorDidSuspendHistory()
     func insertMeasurements(_ newValues: [RuuviMeasurement])
     func updateLatestRecord(_ record: RuuviTagSensorRecord)
     func interactorDidError(_ error: RUError)

@@ -3,6 +3,15 @@ import RuuviOntology
 
 // swiftlint:disable type_body_length file_length
 final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
+    init() {
+        let defaults = UserDefaults.standard
+        if !defaults.bool(forKey: "SettingsUserDefaults.historyThreeYears") {
+            defaults.set(RuuviHistoryRange.retentionHours, forKey: "SettingsUserDegaults.dataPruningOffsetHours")
+            defaults.set(RuuviHistoryRange.retentionHours, forKey: "SettingsUserDefaults.networkPruningIntervalHours")
+            defaults.set(true, forKey: "SettingsUserDefaults.historyThreeYears")
+        }
+    }
+
     @UserDefault("SettingsUserDefaults.signedInAtleastOnce", defaultValue: false)
     var signedInAtleastOnce: Bool
 
@@ -421,7 +430,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDegaults.webPullIntervalMinutes", defaultValue: 15)
     var webPullIntervalMinutes: Int
 
-    @UserDefault("SettingsUserDegaults.dataPruningOffsetHours", defaultValue: 240)
+    @UserDefault("SettingsUserDegaults.dataPruningOffsetHours", defaultValue: RuuviHistoryRange.retentionHours)
     var dataPruningOffsetHours: Int
 
     @UserDefault("SettingsUserDegaults.chartIntervalSeconds", defaultValue: 300)
@@ -459,7 +468,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     @UserDefault("SettingsUserDefaults.forceRefreshWidget", defaultValue: false)
     var forceRefreshWidget: Bool
 
-    @UserDefault("SettingsUserDefaults.networkPruningIntervalHours", defaultValue: 240)
+    @UserDefault("SettingsUserDefaults.networkPruningIntervalHours", defaultValue: RuuviHistoryRange.retentionHours)
     var networkPruningIntervalHours: Int
 
     // MARK: - Private

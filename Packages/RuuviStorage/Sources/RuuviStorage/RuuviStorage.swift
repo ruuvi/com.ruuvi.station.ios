@@ -4,6 +4,14 @@ import RuuviOntology
 import RuuviPersistence
 
 public protocol RuuviStorage {
+    /// Streams a bounded, ordered interval on the storage queue. The callback must not touch UIKit.
+    func scanHistory(_ id: String, range: RuuviHistoryRange, cancellation: RuuviHistoryCancellation,
+                     consume: @escaping (RuuviTagSensorRecord) -> Void) -> Future<Int, RuuviStorageError>
+    func historyRevision(_ id: String) -> Future<Int, RuuviStorageError>
+    func historyCoverage(_ id: String, scope: String, freshAfter: Date) -> Future<RuuviHistoryCoverage, RuuviStorageError>
+    func saveHistoryPage(_ id: String, records: [AnyRuuviTagSensorRecord], range: RuuviHistoryRange,
+                         scope: String, generation: Int, cancellation: RuuviHistoryCancellation) -> Future<Bool, RuuviStorageError>
+
     func read(
         _ id: String,
         after date: Date,

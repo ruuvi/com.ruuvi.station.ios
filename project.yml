@@ -136,6 +136,7 @@ packages:
     branch: "SPM"
 
 include:
+- Tests/History/target.yml
 - Packages/RuuviAnalytics/target.yml
 - Packages/RuuviCloud/target.yml
 - Packages/RuuviContext/target.yml

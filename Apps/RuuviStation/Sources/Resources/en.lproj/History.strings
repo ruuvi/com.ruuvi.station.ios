@@ -1,0 +1,8 @@
+"history.custom" = "Custom dates…";
+"history.from" = "From";
+"history.through" = "Through";
+"history.error" = "Could not download cloud history. Saved readings are still available.";
+"history.unavailable" = "Cloud history is not available for this sensor. Showing saved readings.";
+"history.limited" = "Cloud history is limited to %d days for this sensor.";
+"history.year" = "%d year";
+"history.years" = "%d years";

@@ -1,14 +1,33 @@
 import BackgroundTasks
 import Foundation
+import UIKit
 import Future
 
 @available(iOS 13, *)
 public final class BackgroundProcessServiceiOS13: BackgroundProcessService {
     private let dataPruningOperationsManager: DataPruningOperationsManager
+    private var foregroundToken: NSObjectProtocol?
+    private let pruningQueue = OperationQueue()
     private let dataPruning = "com.ruuvi.station.BackgroundProcessServiceiOS13.dataPruning"
 
     public init(dataPruningOperationsManager: DataPruningOperationsManager) {
         self.dataPruningOperationsManager = dataPruningOperationsManager
+        pruningQueue.maxConcurrentOperationCount = 1
+        foregroundToken = NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
+            self?.pruneLocalHistory()
+        }
+        pruneLocalHistory()
+    }
+
+    deinit {
+        if let foregroundToken { NotificationCenter.default.removeObserver(foregroundToken) }
+    }
+
+    private func pruneLocalHistory() {
+        guard pruningQueue.operationCount == 0 else { return }
+        dataPruningOperationsManager.ruuviTagPruningOperations().on(success: { [weak self] operations in
+            self?.pruningQueue.addOperations(operations, waitUntilFinished: false)
+        })
     }
 
     public func register() {

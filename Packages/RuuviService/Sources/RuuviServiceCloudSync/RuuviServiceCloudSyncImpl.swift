@@ -10,6 +10,7 @@ import UIKit
 // swiftlint:disable file_length
 // swiftlint:disable:next type_body_length
 public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
+    private let historyProcessingQueue = DispatchQueue(label: "RuuviService.historyProcessing", qos: .utility)
     private let ruuviStorage: RuuviStorage
     private let ruuviCloud: RuuviCloud
     private let ruuviPool: RuuviPool
@@ -48,6 +49,82 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             storage: ruuviStorage,
             localSettings: ruuviLocalSettings
         )
+    }
+
+    public func syncHistory(sensor: RuuviTagSensor, range: RuuviHistoryRange, revalidate: Bool,
+                            cancellation: RuuviHistoryCancellation, pageSaved: @escaping () -> Void) -> Future<Bool, RuuviServiceError> {
+        let promise = Promise<Bool, RuuviServiceError>()
+        guard !cancellation.isCancelled, sensor.isCloud, let mac = sensor.macId,
+              let scope = ruuviCloud.historyScope else { promise.succeed(value: false); return promise.future }
+        if sensor.maxHistoryDays == nil {
+            ruuviStorage.historyCoverage(sensor.id, scope: scope, freshAfter: .distantPast).on(success: { [self] before in
+                ruuviCloud.loadSensorsDense(for: sensor, measurements: false, sharedToOthers: false, sharedToMe: true,
+                                           alerts: false, settings: false).on(success: { [self] sensors in
+                    guard !cancellation.isCancelled, ruuviCloud.historyScope == scope,
+                          let days = sensors.first(where: { $0.sensor.id.isLast3BytesEqual(to: mac.value) })?.subscription?.maxHistoryDays
+                    else { promise.succeed(value: false); return }
+                    ruuviStorage.historyCoverage(sensor.id, scope: scope, freshAfter: .distantPast).on(success: { [self] after in
+                        guard before.generation == after.generation, !cancellation.isCancelled else { promise.succeed(value: false); return }
+                        let updated = sensor.with(maxHistoryDays: days)
+                        ruuviPool.update(updated).on(success: { [self] _ in
+                            syncHistory(sensor: updated, range: range, revalidate: revalidate, cancellation: cancellation,
+                                        pageSaved: pageSaved).on(success: { promise.succeed(value: $0) }, failure: { promise.fail(error: $0) })
+                        }, failure: { promise.fail(error: .ruuviPool($0)) })
+                    }, failure: { promise.fail(error: .ruuviStorage($0)) })
+                }, failure: { promise.fail(error: .ruuviCloud($0)) })
+            }, failure: { promise.fail(error: .ruuviStorage($0)) })
+            return promise.future
+        }
+        let now = Date()
+        let days = min(RuuviHistoryRange.retentionDays, max(0, sensor.maxHistoryDays ?? 0))
+        let allowed = range.intersection(RuuviHistoryRange(start: now.addingTimeInterval(-Double(days) * 86400), end: now))
+        guard !allowed.isEmpty else { promise.succeed(value: true); return promise.future }
+        ruuviLocalSyncState.setSyncStatusHistory(.syncing, for: mac)
+        ruuviStorage.historyCoverage(sensor.id, scope: scope, freshAfter: revalidate ? now.addingTimeInterval(-86400) : .distantPast)
+            .on(success: { [self] coverage in
+                let stableEnd = allowed.end >= now.addingTimeInterval(-60) ? max(allowed.start, allowed.end.addingTimeInterval(-60)) : allowed.end
+                let stable = RuuviHistoryRange(start: allowed.start, end: stableEnd)
+                let missing = allowed.uncovered(by: coverage.ranges.map { $0.intersection(stable) })
+                let requests = RuuviHistoryRequest.plan(missing: missing, selected: range, now: now)
+                downloadHistory(sensor: sensor, mac: mac, requests: requests, scope: scope, generation: coverage.generation,
+                                cancellation: cancellation, pageSaved: pageSaved, promise: promise)
+            }, failure: { promise.fail(error: .ruuviStorage($0)) })
+        promise.future.on(success: { [weak self] _ in
+            if !cancellation.isCancelled { self?.ruuviLocalSyncState.setSyncStatusHistory(.complete, for: mac) }
+        }, failure: { [weak self] _ in
+            if !cancellation.isCancelled { self?.ruuviLocalSyncState.setSyncStatusHistory(.onError, for: mac) }
+        }, completion: { [weak self] in
+            if !cancellation.isCancelled { self?.ruuviLocalSyncState.setSyncStatusHistory(.none, for: mac) }
+        })
+        return promise.future
+    }
+
+    private func downloadHistory(sensor: RuuviTagSensor, mac: MACIdentifier, requests: [RuuviHistoryRequest], scope: String,
+                                 generation: Int, cancellation: RuuviHistoryCancellation, pageSaved: @escaping () -> Void,
+                                 promise: Promise<Bool, RuuviServiceError>) {
+        guard !cancellation.isCancelled, ruuviCloud.historyScope == scope else { promise.succeed(value: false); return }
+        guard let request = requests.first else { promise.succeed(value: true); return }
+        let range = request.range
+        ruuviCloud.loadHistoryPage(macId: mac, request: request, cancellation: cancellation)
+            .observe(on: historyProcessingQueue).on(success: { [self] page in
+            dispatchPrecondition(condition: .notOnQueue(.main))
+            guard !cancellation.isCancelled, ruuviCloud.historyScope == scope else { promise.succeed(value: false); return }
+            let checked = RuuviHistoryRange(start: range.start, end: page.next)
+            let records = page.records.map { record -> AnyRuuviTagSensorRecord in
+                let localRecord = record.with(macId: mac)
+                if let luid = sensor.luid { return localRecord.with(luid: luid).any }
+                return localRecord.any
+            }
+            ruuviStorage.saveHistoryPage(sensor.id, records: records, range: checked, scope: scope,
+                                         generation: generation, cancellation: cancellation).on(success: { [self] saved in
+                guard saved, !cancellation.isCancelled else { promise.succeed(value: false); return }
+                pageSaved()
+                var remaining = Array(requests.dropFirst())
+                if let next = request.continuing(from: page.next) { remaining.insert(next, at: 0) }
+                downloadHistory(sensor: sensor, mac: mac, requests: remaining, scope: scope, generation: generation,
+                                cancellation: cancellation, pageSaved: pageSaved, promise: promise)
+            }, failure: { promise.fail(error: .ruuviStorage($0)) })
+        }, failure: { promise.fail(error: .ruuviCloud($0)) })
     }
 
     @discardableResult
@@ -743,7 +820,11 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                             cloudRecord: $0.record
                         )
                     }
-                    let addLatestPointToHistory = denseSensors.map {
+                    // Cloud-backed history is populated only by the selected full graph.
+                    // Keep collecting latest readings for sensors without cloud history.
+                    let addLatestPointToHistory = denseSensors.filter {
+                        ($0.subscription?.maxHistoryDays ?? 0) <= 0
+                    }.map {
                         sSelf.addLatestRecordToHistory(
                             ruuviTag: $0.sensor.ruuviTagSensor,
                             cloudRecord: $0.record

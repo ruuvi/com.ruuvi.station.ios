@@ -2,9 +2,13 @@ import BTKit
 import Foundation
 import Future
 import RuuviOntology
+import RuuviStorage
 
 protocol CardsGraphViewInteractorInput: AnyObject {
-    var ruuviTagData: [RuuviMeasurement] { get }
+    func historyRevision() -> Future<Int, RuuviStorageError>
+    func scanHistory(range: RuuviHistoryRange, cancellation: RuuviHistoryCancellation,
+                     consume: @escaping (RuuviTagSensorRecord) -> Void) -> Future<Int, RuuviStorageError>
+    func changeHistorySelection()
     var lastMeasurement: RuuviMeasurement? { get }
     func configure(
         withTag ruuviTag: AnyRuuviTagSensor,

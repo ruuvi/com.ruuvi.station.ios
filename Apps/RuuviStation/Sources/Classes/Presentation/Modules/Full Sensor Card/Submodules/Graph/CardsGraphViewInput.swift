@@ -17,6 +17,7 @@ protocol CardsGraphViewInput: ViewInput {
     var showAlertRangeInGraph: Bool { get set }
     var viewIsVisible: Bool { get }
     var graphIsVisibleForUser: Bool { get }
+    func setCloudHistoryStatus(message: String?, canRetry: Bool)
     func resetScrollPosition()
     func showBluetoothDisabled(userDeclined: Bool)
     func setActiveSnapshot(_ snapshot: RuuviTagCardSnapshot?)

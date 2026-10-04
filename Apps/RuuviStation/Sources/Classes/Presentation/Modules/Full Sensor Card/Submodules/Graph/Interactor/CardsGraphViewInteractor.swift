@@ -1,6 +1,7 @@
 // swiftlint:disable file_length
 import BTKit
 import Foundation
+import UIKit
 import Future
 import RuuviLocal
 import RuuviOntology
@@ -28,25 +29,26 @@ class CardsGraphViewInteractor {
 
     var lastMeasurement: RuuviMeasurement?
     var lastMeasurementRecord: RuuviTagSensorRecord?
-    var ruuviTagData: [RuuviMeasurement] = []
 
     private var ruuviTagSensorObservationToken: RuuviReactorToken?
     private var timer: Timer?
     private var sensors: [AnyRuuviTagSensor] = []
 
-    private let highDensityIntervalMinutes: Int = 15
-    private let minimumDownsampleThreshold: Int = 1000
-    private var maximumPointsCount: Double {
-        Double(min(5000, max(1000, flags.graphDownsampleMaximumPoints)))
-    }
+    private var historyCancellation = RuuviHistoryCancellation()
+    private lazy var historyRefresh = RuuviGraphHistoryRefresh { [weak self] in self?.reloadCharts() }
+    private var appStateTokens: [NSObjectProtocol] = []
+    private var cloudRequestRunning = false
+    private var active = false
 
     private var gattSyncInterruptedByUser: Bool = false
 
     deinit {
+        historyCancellation.cancel()
+        appStateTokens.forEach(NotificationCenter.default.removeObserver)
         ruuviTagSensorObservationToken?.invalidate()
         ruuviTagSensorObservationToken = nil
-        timer = nil
         timer?.invalidate()
+        timer = nil
     }
 }
 
@@ -59,14 +61,14 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
             switch change {
             case let .initial(sensors):
                 self?.sensors = sensors
-                if let id = self?.ruuviTagSensor.id,
+                if let id = self?.ruuviTagSensor?.id,
                    let sensor = sensors.first(where: { $0.id == id }) {
                     self?.ruuviTagSensor = sensor
                 }
             case let .insert(sensor):
                 self?.sensors.append(sensor)
             case let .update(sensor):
-                if self?.ruuviTagSensor.id == sensor.id,
+                if self?.ruuviTagSensor?.id == sensor.id,
                    let index = self?.sensors.firstIndex(where: { $0.id == sensor.id }) {
                     self?.ruuviTagSensor = sensor
                     self?.sensors[index] = sensor
@@ -88,19 +90,22 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
         andSettings settings: SensorSettings?,
         syncFromCloud: Bool
     ) {
+        historyCancellation.cancel()
+        historyRefresh.cancel()
+        cloudRequestRunning = false
+        historyCancellation = RuuviHistoryCancellation()
+        active = true
+        observeAppState()
         ruuviTagSensor = ruuviTag
         sensorSettings = settings
         lastMeasurement = nil
         lastMeasurementRecord = nil
-        ruuviTagData.removeAll()
         restartScheduler()
         fetchLast()
 
-        if syncFromCloud {
-            syncFullHistory(for: ruuviTag)
-        }
+        syncFullHistory(for: ruuviTag)
 
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+        DispatchQueue.main.async { [weak self] in
             self?.fetchPoints { [weak self] in
                 guard let self else { return }
                 self.presenter.interactorDidFinishLoadingHistory()
@@ -114,7 +119,8 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
     }
 
     func restartObservingData() {
-        ruuviTagData.removeAll()
+        guard active else { return }
+        historyRefresh.cancel()
         fetchPoints { [weak self] in
             guard let self else { return }
             self.presenter.interactorDidFinishLoadingHistory()
@@ -124,6 +130,11 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
     }
 
     func stopObservingRuuviTagsData() {
+        active = false
+        historyCancellation.cancel()
+        historyRefresh.cancel()
+        presenter.interactorDidSuspendHistory()
+        localSyncState.setSyncStatusHistory(.none, for: ruuviTagSensor?.macId)
         timer?.invalidate()
         timer = nil
     }
@@ -148,7 +159,7 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
     }
 
     func isSyncingRecords() -> Bool {
-        guard let luid = ruuviTagSensor.luid
+        guard let luid = ruuviTagSensor?.luid
         else {
             return false
         }
@@ -160,7 +171,7 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
     }
 
     func isSyncingRecordsQueued() -> Bool {
-        guard let luid = ruuviTagSensor.luid
+        guard let luid = ruuviTagSensor?.luid
         else {
             return false
         }
@@ -195,7 +206,7 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
 
     func syncRecords(progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
-        guard let luid = ruuviTagSensor.luid
+        guard let luid = ruuviTagSensor?.luid
         else {
             promise.fail(error: .unexpected(.callbackErrorAndResultAreNil))
             return promise.future
@@ -241,7 +252,8 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
 
     func stopSyncRecords() -> Future<Bool, RUError> {
         let promise = Promise<Bool, RUError>()
-        guard let luid = ruuviTagSensor.luid
+        // The graph can be stopped before configure(withTag:) has supplied a sensor.
+        guard let luid = ruuviTagSensor?.luid
         else {
             promise.fail(error: .unexpected(.callbackErrorAndResultAreNil))
             return promise.future
@@ -259,6 +271,9 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
     }
 
     func deleteAllRecords(for sensor: RuuviTagSensor) -> Future<Void, RUError> {
+        historyCancellation.cancel()
+        historyRefresh.cancel()
+        cloudRequestRunning = false
         let promise = Promise<Void, RUError>()
         ruuviSensorRecords.clear(for: sensor)
             .on(failure: { error in
@@ -282,28 +297,33 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
 // MARK: - Private
 
 extension CardsGraphViewInteractor {
-    private func restartScheduler() {
-        let timerInterval = settings.appIsOnForeground ? 2 : settings.chartIntervalSeconds
-        timer?.invalidate()
-        timer = Timer.scheduledTimer(
-            withTimeInterval: TimeInterval(timerInterval),
-            repeats: true,
-            block: { [weak self] _ in
-                self?.fetchLastFromDate()
-                self?.removeFirst()
-            }
-        )
+    private func observeAppState() {
+        guard appStateTokens.isEmpty else { return }
+        appStateTokens.append(NotificationCenter.default.addObserver(forName: UIApplication.didEnterBackgroundNotification,
+            object: nil, queue: .main) { [weak self] _ in
+            guard let self else { return }
+            self.historyCancellation.cancel()
+            self.historyRefresh.cancel()
+            self.presenter.interactorDidSuspendHistory()
+            self.localSyncState.setSyncStatusHistory(.none, for: self.ruuviTagSensor?.macId)
+            self.timer?.invalidate()
+        })
+        appStateTokens.append(NotificationCenter.default.addObserver(forName: UIApplication.didBecomeActiveNotification,
+            object: nil, queue: .main) { [weak self] _ in
+            guard let self, self.active else { return }
+            self.changeHistorySelection()
+        })
     }
 
-    private func removeFirst() {
-        guard settings.chartShowAllMeasurements else { return }
-        let cropDate = Calendar.autoupdatingCurrent.date(
-            byAdding: .hour,
-            value: -settings.dataPruningOffsetHours,
-            to: Date()
-        ) ?? Date.distantPast
-        let prunedResults = ruuviTagData.filter { $0.date < cropDate }
-        ruuviTagData.removeFirst(prunedResults.count)
+    private func restartScheduler() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
+            guard let self, self.active else { return }
+            self.fetchLast()
+            self.reloadCharts()
+            let range = RuuviGraphHistorySession.selection(settings: self.settings).resolve()
+            if range.end >= Date().addingTimeInterval(-60) { self.syncFullHistory(for: self.ruuviTagSensor, revalidate: false) }
+        }
     }
 
     private func fetchLast() {
@@ -311,62 +331,23 @@ extension CardsGraphViewInteractor {
         else {
             return
         }
+        let sensorID = ruuviTagSensor.id
         let op = ruuviStorage.readLatest(ruuviTagSensor)
         op.on(success: { [weak self] record in
-            guard let sSelf = self else { return }
+            guard let sSelf = self, sSelf.active, sSelf.ruuviTagSensor.id == sensorID else { return }
             guard let record
             else {
-                sSelf.presenter.createChartModules(from: [])
+                sSelf.presenter.createChartModules(from: sSelf.orderedChartMeasurementVariants())
                 return
             }
             sSelf.lastMeasurement = record.measurement
             sSelf.lastMeasurementRecord = record
-            let chartVariants = sSelf.chartVariants(for: record)
+            let chartVariants = sSelf.orderedChartMeasurementVariants()
             sSelf.presenter.createChartModules(from: chartVariants)
             sSelf.presenter.updateLatestRecord(record)
         }, failure: { [weak self] error in
             self?.presenter.interactorDidError(.ruuviStorage(error))
         })
-    }
-
-    private func fetchLastFromDate() {
-        guard let lastMeasurement,
-              let lastMeasurementRecord
-        else {
-            return
-        }
-        let op = ruuviStorage.readLast(
-            ruuviTagSensor.id,
-            from: lastMeasurement.date.timeIntervalSince1970
-        )
-        op.on(success: { [weak self] results in
-            guard results.count > 0,
-                  let last = results.last
-            else {
-                self?.presenter.updateLatestRecord(lastMeasurementRecord)
-                return
-            }
-            guard let sSelf = self else { return }
-            sSelf.lastMeasurement = last.measurement
-            sSelf.lastMeasurementRecord = last
-            sSelf.ruuviTagData.append(last.measurement)
-            sSelf.insertMeasurements([last.measurement])
-            sSelf.presenter.updateLatestRecord(last)
-        }, failure: { [weak self] error in
-            self?.presenter.updateLatestRecord(lastMeasurementRecord)
-            self?.presenter.interactorDidError(.ruuviStorage(error))
-        })
-    }
-
-    private func chartVariants(
-        for record: RuuviTagSensorRecord
-    ) -> [MeasurementDisplayVariant] {
-        return orderedChartMeasurementVariants()
-            .filter {
-                record.hasMeasurement(
-                    for: $0.type
-                )
-        }
     }
 
     private func orderedChartMeasurementVariants() -> [MeasurementDisplayVariant] {
@@ -380,84 +361,45 @@ extension CardsGraphViewInteractor {
         return profile.orderedVisibleVariants(for: .graph)
     }
 
+    func historyRevision() -> Future<Int, RuuviStorageError> { ruuviStorage.historyRevision(ruuviTagSensor.id) }
+
+    func scanHistory(range: RuuviHistoryRange, cancellation: RuuviHistoryCancellation,
+                     consume: @escaping (RuuviTagSensorRecord) -> Void) -> Future<Int, RuuviStorageError> {
+        ruuviStorage.scanHistory(ruuviTagSensor.id, range: range, cancellation: cancellation, consume: consume)
+    }
+
+    func changeHistorySelection() {
+        historyCancellation.cancel()
+        historyRefresh.cancel()
+        historyCancellation = RuuviHistoryCancellation()
+        cloudRequestRunning = false
+        syncFullHistory(for: ruuviTagSensor)
+        restartObservingData()
+    }
+
     private func fetchPoints(_ completion: (() -> Void)? = nil) {
-        if settings.chartShowAllMeasurements {
-            fetchAll(completion)
-        } else {
-            fetchAll { [weak self] in
-                guard let self
-                else {
-                    return
-                }
-                if ruuviTagData.count < minimumDownsampleThreshold {
-                    completion?()
-                } else {
-                    fetchDownSampled(completion)
-                }
+        presenter.createChartModules(from: orderedChartMeasurementVariants())
+        completion?()
+    }
+
+    private func syncFullHistory(for sensor: RuuviTagSensor, revalidate: Bool = true) {
+        guard active, !cloudRequestRunning, settings.appIsOnForeground else { return }
+        cloudRequestRunning = true
+        presenter.interactorDidUpdateCloudHistory(failed: false)
+        let cancellation = historyCancellation
+        let range = RuuviGraphHistorySession.selection(settings: settings).resolve()
+        cloudSyncService.syncHistory(sensor: sensor, range: range, revalidate: revalidate, cancellation: cancellation,
+                                     pageSaved: { [weak self] in
+            DispatchQueue.main.async { if !cancellation.isCancelled { self?.historyRefresh.schedule() } }
+        }).on(failure: { [weak self] error in
+            DispatchQueue.main.async { if !cancellation.isCancelled { self?.presenter.interactorDidUpdateCloudHistory(failed: true) } }
+        }, completion: { [weak self] in
+            DispatchQueue.main.async {
+                guard let self, !cancellation.isCancelled else { return }
+                self.cloudRequestRunning = false
+                self.historyRefresh.flush()
             }
-        }
-    }
-
-    private func fetchAll(_ completion: (() -> Void)? = nil) {
-        guard ruuviTagSensor != nil
-        else {
-            return
-        }
-
-        let date = Calendar.autoupdatingCurrent.date(
-            byAdding: .hour,
-            value: -settings.chartDurationHours,
-            to: Date()
-        ) ?? Date.distantPast
-        let op = ruuviStorage.read(
-            ruuviTagSensor.id,
-            after: date,
-            with: TimeInterval(2)
-        )
-        op.on(success: { [weak self] results in
-            self?.ruuviTagData = results.map(\.measurement)
-        }, failure: { [weak self] error in
-            self?.presenter.interactorDidError(.ruuviStorage(error))
-        }, completion: completion)
-    }
-
-    private func fetchDownSampled(_ competion: (() -> Void)? = nil) {
-        guard ruuviTagSensor != nil
-        else {
-            return
-        }
-
-        let date = Calendar.autoupdatingCurrent.date(
-            byAdding: .hour,
-            value: -settings.chartDurationHours,
-            to: Date()
-        ) ?? Date.distantPast
-        let op = ruuviStorage.readDownsampled(
-            ruuviTagSensor.id,
-            after: date,
-            with: highDensityIntervalMinutes,
-            pick: maximumPointsCount
-        )
-        op.on(success: { [weak self] results in
-            self?.ruuviTagData = results.map(\.measurement)
-        }, failure: { [weak self] error in
-            self?.presenter.interactorDidError(.ruuviStorage(error))
-        }, completion: competion)
-    }
-
-    private func syncFullHistory(for ruuviTag: RuuviTagSensor) {
-        if ruuviTag.isCloud && settings.historySyncForEachSensor {
-            ruuviStorage.readLatest(ruuviTag).on(success: { [weak self] record in
-                if record != nil {
-                    self?.cloudSyncService.sync(
-                        sensor: ruuviTag
-                    ).on(success: {
-                        [weak self] _ in
-                        self?.restartScheduler()
-                    })
-                }
-            })
-        }
+        })
     }
 
     // MARK: - Charts
@@ -467,6 +409,7 @@ extension CardsGraphViewInteractor {
     }
 
     private func reloadCharts() {
+        guard active else { return }
         presenter.interactorDidUpdate(sensor: ruuviTagSensor)
     }
 }

@@ -21,6 +21,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     }
 
     private let context: SQLiteContext
+    private var lastHistoryPrune = Date.distantPast
     private let readQueue: DispatchQueue =
         .init(
             label: "RuuviTagPersistenceSQLite.readQueue",
@@ -75,6 +76,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         assert(record.macId != nil)
         do {
             try database.dbPool.write { db in
+                try pruneHistoryIfNeeded(db)
+                guard record.date >= RuuviHistoryRange.retained().start else { return }
                 let normalizedRecord = try normalizedRecord(record, db: db)
                 assert(normalizedRecord.macId != nil)
                 try normalizedRecord.sqlite.insert(db)
@@ -121,12 +124,18 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     public func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         do {
-            try database.dbPool.write { db in
-                for record in records {
-                    assert(record.macId != nil)
-                    let normalizedRecord = try normalizedRecord(record, db: db)
-                    assert(normalizedRecord.macId != nil)
-                    try normalizedRecord.sqlite.insert(db)
+            let retained = records.filter { $0.date >= RuuviHistoryRange.retained().start }.sorted { $0.date < $1.date }
+            for offset in stride(from: 0, to: retained.count, by: 5000) {
+                try database.dbPool.write { db in
+                    try pruneHistoryIfNeeded(db)
+                    for record in retained[offset..<min(offset + 5000, retained.count)] {
+                        let normalized = try normalizedRecord(record, db: db)
+                        let id = normalized.macId?.value ?? normalized.luid?.value ?? ""
+                        let duplicate = try Record.filter((Record.macColumn == id || Record.luidColumn == id) &&
+                            Record.dateColumn > normalized.date.addingTimeInterval(-1.5) &&
+                            Record.dateColumn < normalized.date.addingTimeInterval(1.5)).fetchCount(db) > 0
+                        if !duplicate { try normalized.sqlite.insert(db) }
+                    }
                 }
             }
             promise.succeed(value: true)
@@ -134,6 +143,145 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             promise.fail(error: .grdb(error))
         }
         return promise.future
+    }
+
+    // UNION ALL lets SQLite merge two ordered index scans without sorting the entire history.
+    // The second arm also finds older records whose MAC changed when the device was canonicalized.
+    static let boundedHistorySQL = """
+        SELECT * FROM ruuvi_tag_sensor_records WHERE mac = ? AND date >= ? AND date < ?
+        UNION ALL
+        SELECT * FROM ruuvi_tag_sensor_records WHERE luid = ? AND (mac IS NULL OR mac != ?) AND date >= ? AND date < ?
+        ORDER BY date
+        """
+
+    public func scanHistory(_ id: String, range: RuuviHistoryRange, cancellation: RuuviHistoryCancellation,
+                            consume: @escaping (RuuviTagSensorRecord) -> Void) -> Future<Int, RuuviPersistenceError> {
+        let promise = Promise<Int, RuuviPersistenceError>()
+        readQueue.async { [self] in
+            do {
+                let revision = try database.dbPool.read { db -> Int in
+                    let sensor = try Entity.filter(Entity.macColumn == id || Entity.luidColumn == id).fetchOne(db)
+                    let mac = sensor?.macId?.value ?? id
+                    let luid = sensor?.luid?.value ?? id
+                    let cursor = try Record.fetchCursor(db, sql: Self.boundedHistorySQL,
+                                                       arguments: [mac, range.start, range.end, luid, mac, range.start, range.end])
+                    while !cancellation.isCancelled, let record = try cursor.next() { consume(record.any) }
+                    return try historyRevision(id, db: db)
+                }
+                promise.succeed(value: cancellation.isCancelled ? -1 : revision)
+            } catch { promise.fail(error: .grdb(error)) }
+        }
+        return promise.future
+    }
+
+    public func historyRevision(_ id: String) -> Future<Int, RuuviPersistenceError> {
+        let promise = Promise<Int, RuuviPersistenceError>()
+        readQueue.async { [self] in
+            do { promise.succeed(value: try database.dbPool.read { try historyRevision(id, db: $0) }) }
+            catch { promise.fail(error: .grdb(error)) }
+        }
+        return promise.future
+    }
+
+    private func historyRevision(_ id: String, db: Database) throws -> Int {
+        let sensor = try Entity.filter(Entity.macColumn == id || Entity.luidColumn == id).fetchOne(db)
+        return try Int.fetchOne(db, sql: "SELECT SUM(revision) FROM history_revision WHERE sensor = ? OR sensor = ?",
+                               arguments: [sensor?.macId?.value ?? id, sensor?.luid?.value ?? id]) ?? 0
+    }
+
+    private func pruneHistoryIfNeeded(_ db: Database) throws {
+        let now = Date()
+        guard now.timeIntervalSince(lastHistoryPrune) >= 600 else { return }
+        let cutoff = RuuviHistoryRange.retained(now: now).start
+        try db.execute(sql: "DELETE FROM ruuvi_tag_sensor_records WHERE date < ?", arguments: [cutoff])
+        try db.execute(sql: "DELETE FROM history_coverage WHERE end <= ?", arguments: [cutoff.timeIntervalSince1970])
+        try db.execute(sql: "UPDATE history_coverage SET start = ? WHERE start < ?", arguments: [cutoff.timeIntervalSince1970, cutoff.timeIntervalSince1970])
+        lastHistoryPrune = now
+    }
+
+    public func historyCoverage(_ id: String, scope: String, freshAfter: Date) -> Future<RuuviHistoryCoverage, RuuviPersistenceError> {
+        let promise = Promise<RuuviHistoryCoverage, RuuviPersistenceError>()
+        readQueue.async { [self] in
+            do {
+                let coverage = try database.dbPool.read { db -> RuuviHistoryCoverage in
+                    let generation = try Int.fetchOne(db, sql: "SELECT generation FROM history_generation WHERE sensor = ?", arguments: [id]) ?? 0
+                    let rows = try Row.fetchAll(db, sql: "SELECT start, end FROM history_coverage WHERE sensor = ? AND scope = ? AND fetched >= ?",
+                                               arguments: [id, scope, freshAfter.timeIntervalSince1970])
+                    return RuuviHistoryCoverage(ranges: rows.map {
+                        RuuviHistoryRange(start: Date(timeIntervalSince1970: $0["start"]), end: Date(timeIntervalSince1970: $0["end"]))
+                    }, generation: generation)
+                }
+                promise.succeed(value: coverage)
+            } catch { promise.fail(error: .grdb(error)) }
+        }
+        return promise.future
+    }
+
+    public func saveHistoryPage(_ id: String, records: [AnyRuuviTagSensorRecord], range: RuuviHistoryRange,
+                                scope: String, generation: Int, cancellation: RuuviHistoryCancellation) -> Future<Bool, RuuviPersistenceError> {
+        let promise = Promise<Bool, RuuviPersistenceError>()
+        writeQueue.async { [self] in
+            do {
+                let saved = try database.dbPool.write { db -> Bool in
+                    guard !cancellation.isCancelled else { return false }
+                    try pruneHistoryIfNeeded(db)
+                    let currentGeneration = try Int.fetchOne(db, sql: "SELECT generation FROM history_generation WHERE sensor = ?", arguments: [id]) ?? 0
+                    guard generation == currentGeneration,
+                          try Entity.filter(Entity.macColumn == id || Entity.luidColumn == id).fetchCount(db) > 0 else { return false }
+                    let retained = range.intersection(.retained())
+                    guard !retained.isEmpty else { return true }
+                    // Timestamp lookup uses the sensor/date indexes and never materializes existing history.
+                    for record in records where retained.contains(record.date) {
+                        if cancellation.isCancelled { throw HistoryWriteError.cancelled }
+                        guard record.macId?.value == id || record.luid?.value == id else { continue }
+                        let exists = try Record.filter((Record.macColumn == id || Record.luidColumn == id) &&
+                            Record.dateColumn > record.date.addingTimeInterval(-1.5) &&
+                            Record.dateColumn < record.date.addingTimeInterval(1.5)).fetchCount(db) > 0
+                        if !exists { try normalizedRecord(record, db: db).sqlite.insert(db) }
+                    }
+                    let now = Date().timeIntervalSince1970
+                    var start = retained.start.timeIntervalSince1970
+                    var end = retained.end.timeIntervalSince1970
+                    var fetched = now
+                    let rows = try Row.fetchAll(db, sql: "SELECT rowid, start, end, fetched FROM history_coverage WHERE sensor = ? AND scope = ? ORDER BY start", arguments: [id, scope])
+                    var merged = Set<Int64>()
+                    var expanded = true
+                    while expanded {
+                        expanded = false
+                        for row in rows {
+                            let key: Int64 = row["rowid"]
+                            let a: Double = row["start"], b: Double = row["end"], age: Double = row["fetched"]
+                            guard !merged.contains(key), age >= now - 86400, a <= end, b >= start else { continue }
+                            start = min(start, a); end = max(end, b); fetched = min(fetched, age)
+                            merged.insert(key); expanded = true
+                        }
+                    }
+                    for row in rows {
+                        let key: Int64 = row["rowid"]
+                        let a: Double = row["start"], b: Double = row["end"], age: Double = row["fetched"]
+                        guard merged.contains(key) || (a < end && b > start) else { continue }
+                        try db.execute(sql: "DELETE FROM history_coverage WHERE rowid = ?", arguments: [key])
+                        if a < start { try db.execute(sql: "INSERT INTO history_coverage VALUES (?, ?, ?, ?, ?)", arguments: [id, scope, a, start, age]) }
+                        if b > end { try db.execute(sql: "INSERT INTO history_coverage VALUES (?, ?, ?, ?, ?)", arguments: [id, scope, end, b, age]) }
+                    }
+                    try db.execute(sql: "INSERT INTO history_coverage VALUES (?, ?, ?, ?, ?)", arguments: [id, scope, start, end, fetched])
+                    if cancellation.isCancelled { throw HistoryWriteError.cancelled }
+                    return true
+                }
+                promise.succeed(value: saved)
+            } catch HistoryWriteError.cancelled {
+                promise.succeed(value: false)
+            } catch { promise.fail(error: .grdb(error)) }
+        }
+        return promise.future
+    }
+
+    private enum HistoryWriteError: Error { case cancelled }
+
+    private func invalidateHistory(_ id: String, db: Database) throws {
+        try db.execute(sql: "DELETE FROM history_coverage WHERE sensor = ?", arguments: [id])
+        try db.execute(sql: "INSERT OR IGNORE INTO history_generation(sensor, generation) VALUES (?, 0)", arguments: [id])
+        try db.execute(sql: "UPDATE history_generation SET generation = generation + 1 WHERE sensor = ?", arguments: [id])
     }
 
     public func readAll() -> Future<[AnyRuuviTagSensor], RuuviPersistenceError> {
@@ -205,7 +353,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     let request = """
                     SELECT *
                     FROM ruuvi_tag_sensor_records rtsr
-                    WHERE rtsr.luid = ? OR rtsr.mac LIKE ?
+                    WHERE (rtsr.luid = ? OR rtsr.mac LIKE ?)
                     AND rtsr.date > ?
                     ORDER BY date
                     """
@@ -498,6 +646,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     sharedToPending: normalizedTag.sharedToPending,
                     maxHistoryDays: normalizedTag.maxHistoryDays
                 )
+                try invalidateHistory(ruuviTag.id, db: db)
                 let success = try entity.delete(db)
                 promise.succeed(value: success)
             }
@@ -515,6 +664,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 Record.luidColumn == ruuviTagId || Record.macColumn.like("%\(ruuviTagId.lastThreeBytes)")
             )
             try database.dbPool.write { db in
+                try invalidateHistory(ruuviTagId, db: db)
                 deletedCount = try request.deleteAll(db)
             }
             promise.succeed(value: deletedCount > 0)
@@ -533,6 +683,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             ).filter(Record.dateColumn < date)
             try database.dbPool.write { db in
                 deletedCount = try request.deleteAll(db)
+                try db.execute(sql: "DELETE FROM history_coverage WHERE sensor = ? AND end <= ?", arguments: [ruuviTagId, date.timeIntervalSince1970])
+                try db.execute(sql: "UPDATE history_coverage SET start = ? WHERE sensor = ? AND start < ?", arguments: [date.timeIntervalSince1970, ruuviTagId, date.timeIntervalSince1970])
             }
             promise.succeed(value: deletedCount > 0)
         } catch {

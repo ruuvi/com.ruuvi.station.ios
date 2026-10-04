@@ -8,6 +8,8 @@ import RuuviUser
 
 // swiftlint:disable:next type_body_length
 public final class RuuviCloudPure: RuuviCloud {
+    private let historyProcessingQueue = DispatchQueue(label: "RuuviCloud.historyProcessing", qos: .utility)
+    private let historyBackend: String
     private let user: RuuviUser
     private let api: RuuviCloudApi
     private let pool: RuuviPool?
@@ -15,11 +17,52 @@ public final class RuuviCloudPure: RuuviCloud {
     public init(
         api: RuuviCloudApi,
         user: RuuviUser,
-        pool: RuuviPool?
+        pool: RuuviPool?,
+        historyBackend: String = "production"
     ) {
+        self.historyBackend = historyBackend
         self.api = api
         self.user = user
         self.pool = pool
+    }
+
+    public var historyScope: String? {
+        guard user.isAuthorized, let email = user.email else { return nil }
+        return "history-v2|" + historyBackend + "|" + email.lowercased()
+    }
+
+    public func loadHistoryPage(
+        macId: MACIdentifier,
+        request historyRequest: RuuviHistoryRequest,
+        cancellation: RuuviHistoryCancellation
+    ) -> Future<RuuviCloudHistoryPage, RuuviCloudError> {
+        let promise = Promise<RuuviCloudHistoryPage, RuuviCloudError>()
+        guard let apiKey = user.apiKey else {
+            promise.fail(error: .notAuthorized)
+            return promise.future
+        }
+        let range = historyRequest.range
+        let (since, until) = range.cloudBounds
+        let request = RuuviCloudApiGetSensorRequest(
+            sensor: macId.value, until: until, since: since,
+            limit: historyRequest.limit, sort: .asc, mode: historyRequest.mode.rawValue
+        )
+        api.getSensorData(request, authorization: apiKey, cancellation: cancellation)
+            .observe(on: historyProcessingQueue).on(success: { [self] response in
+            dispatchPrecondition(condition: .notOnQueue(.main))
+            guard !cancellation.isCancelled else { promise.fail(error: .api(.badParameters)); return }
+            guard user.apiKey == apiKey else { promise.fail(error: .notAuthorized); return }
+            guard response.sensor?.caseInsensitiveCompare(macId.value) == .orderedSame,
+                  let measurements = response.measurements else {
+                promise.fail(error: .api(.badParameters)); return
+            }
+            guard let next = try? range.nextCloudCursor(timestamps: measurements.compactMap(\.timestamp), responseIsEmpty: measurements.isEmpty) else {
+                promise.fail(error: .api(.badParameters)); return
+            }
+            let records = decodeSensorRecords(macId: macId, response: response).filter { range.contains($0.date) }
+            promise.succeed(value: RuuviCloudHistoryPage(records: records, next: next))
+        }, failure: { promise.fail(error: .api($0)) })
+        return promise.future
     }
 
     @discardableResult

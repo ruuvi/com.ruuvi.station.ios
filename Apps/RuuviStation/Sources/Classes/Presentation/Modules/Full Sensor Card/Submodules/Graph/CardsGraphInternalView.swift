@@ -13,6 +13,7 @@ enum CardsGraphSource {
 }
 
 protocol CardsGraphInternalViewDelegate: NSObjectProtocol {
+    func chartHistoryGestureDidEnd(_ chartView: CardsGraphInternalView)
     func chartDidTranslate(_ chartView: CardsGraphInternalView)
     func chartValueDidSelect(
         _ chartView: CardsGraphInternalView,
@@ -26,6 +27,8 @@ protocol CardsGraphInternalViewDelegate: NSObjectProtocol {
 }
 
 class CardsGraphInternalView: LineChartView {
+    private var lastReportedHistoryViewport: RuuviHistoryRange?
+
     weak var chartDelegate: CardsGraphInternalViewDelegate?
 
     var lowerAlertValue: Double?
@@ -80,6 +83,9 @@ class CardsGraphInternalView: LineChartView {
     // MARK: - Private
 
     private func configure() {
+        gestureRecognizers?.filter { $0 is UIPinchGestureRecognizer }.forEach {
+            $0.addTarget(self, action: #selector(historyPinchChanged(_:)))
+        }
         chartDescription.enabled = false
         dragEnabled = true
         setScaleEnabled(true)
@@ -160,6 +166,10 @@ class CardsGraphInternalView: LineChartView {
         default:
             break
         }
+    }
+
+    @objc private func historyPinchChanged(_ gesture: UIPinchGestureRecognizer) {
+        if gesture.state == .ended || gesture.state == .cancelled { chartDelegate?.chartHistoryGestureDidEnd(self) }
     }
 
     @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
@@ -256,6 +266,10 @@ class CardsGraphInternalView: LineChartView {
 }
 
 extension CardsGraphInternalView: ChartViewDelegate {
+    func chartViewDidEndPanning(_ chartView: ChartViewBase) {
+        chartDelegate?.chartHistoryGestureDidEnd(self)
+    }
+
     func chartTranslated(
         _: ChartViewBase,
         dX _: CGFloat,
@@ -300,6 +314,19 @@ extension CardsGraphInternalView: ChartViewDelegate {
 }
 
 extension CardsGraphInternalView {
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        let visible = RuuviHistoryRange(start: Date(timeIntervalSince1970: floor(lowestVisibleX)), end: Date(timeIntervalSince1970: ceil(highestVisibleX)))
+        if data is RuuviHistoryChartData, visible != lastReportedHistoryViewport {
+            lastReportedHistoryViewport = visible
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                self.chartDelegate?.chartDidTranslate(self)
+            }
+        }
+
+    }
+
     func localize() {
         xAxis.valueFormatter = XAxisValueFormatter()
         leftAxis.valueFormatter = YAxisValueFormatter()
@@ -314,6 +341,8 @@ extension CardsGraphInternalView {
     }
 
     func setYAxisLimit(min: Double, max: Double) {
+        let min = (data?.entryCount ?? 0) > 0 && min.isFinite ? min : 0
+        let max = (data?.entryCount ?? 0) > 0 && max.isFinite ? max : 1
         if source == .mesurementDetails && graphType == .aqi {
             leftAxis.axisMinimum = 0
             leftAxis.axisMaximum = 100
@@ -355,6 +384,13 @@ extension CardsGraphInternalView {
             transformer: getTransformer(forAxis: .left)
         )
         xAxisRenderer = axisRenderer
+
+        if let history = data as? RuuviHistoryChartData {
+            applyXAxisRange(min: history.selectedRange.start.timeIntervalSince1970,
+                            max: history.selectedRange.end.timeIntervalSince1970)
+            notifyDataSetChanged()
+            return
+        }
 
         if showAll {
             if let timelineRange {
@@ -491,9 +527,11 @@ extension CardsGraphInternalView {
             return
         }
 
-        let resolvedIndex = min(max(0, dataSetIndex), dataSetCount - 1)
-        let dataSet = data.dataSets[resolvedIndex]
-        guard let entry = dataSet.entryForXValue(xValue, closestToY: yValue) else {
+        let candidates = data.dataSets.enumerated().compactMap { index, set -> (Int, ChartDataEntry)? in
+            guard let entry = set.entryForXValue(xValue, closestToY: yValue) else { return nil }
+            return (index, entry)
+        }
+        guard let (resolvedIndex, entry) = candidates.min(by: { abs($0.1.x - xValue) < abs($1.1.x - xValue) }) else {
             clearHighlight(notifyDelegate: false)
             return
         }

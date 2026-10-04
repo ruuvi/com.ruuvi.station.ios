@@ -3,6 +3,9 @@ import Future
 import RuuviOntology
 
 public protocol RuuviServiceCloudSync {
+    func syncHistory(sensor: RuuviTagSensor, range: RuuviHistoryRange, revalidate: Bool,
+                     cancellation: RuuviHistoryCancellation, pageSaved: @escaping () -> Void) -> Future<Bool, RuuviServiceError>
+
     @discardableResult
     func syncAll() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError>
 

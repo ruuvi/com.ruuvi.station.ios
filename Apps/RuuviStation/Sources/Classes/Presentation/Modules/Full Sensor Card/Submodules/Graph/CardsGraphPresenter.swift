@@ -80,13 +80,23 @@ class CardsGraphPresenter: NSObject {
     private var datasource: [RuuviGraphViewDataModel] = []
     private var newpoints: [RuuviGraphViewDataModel] = []
     private var chartModules: [MeasurementDisplayVariant] = []
-    private var ruuviTagData: [RuuviMeasurement] = []
+    private var historyCancellation = RuuviHistoryCancellation()
+    private var viewportWork: DispatchWorkItem?
+    private var historyViewport: RuuviHistoryRange?
+    private var historySelectedRange: RuuviHistoryRange?
+    private var historyActive = false
+    private var cloudHistoryFailed = false
     private let serviceCoordinatorManager: RuuviTagServiceCoordinatorManager
-    private struct CachedChartData {
-        let modules: [MeasurementDisplayVariant]
-        let measurements: [RuuviMeasurement]
-        let entries: [MeasurementDisplayVariant: [ChartDataEntrySnapshot]]
+    private struct HistoryCacheKey: Hashable {
+        let sensorID: String
+        let range: RuuviHistoryRange
+        let variants: [MeasurementDisplayVariant]
+        let configuration: String
+        let revision: Int
     }
+    private var historyCache: [HistoryCacheKey: [MeasurementDisplayVariant: RuuviHistorySeries]] = [:]
+    private var knownHistoryVariants = Set<MeasurementDisplayVariant>()
+    private var historyCacheOrder: [HistoryCacheKey] = []
     private struct AlertRangeBounds {
         let lower: Double?
         let upper: Double?
@@ -106,15 +116,6 @@ class CardsGraphPresenter: NSObject {
         let bounds: [MeasurementDisplayVariant: AlertRangeBounds]
         let fingerprint: AlertRangeFingerprint
     }
-    private var chartCache: [String: CachedChartData] = [:]
-    private var chartCacheOrder: [String] = []
-    private let chartCacheLimit = 5
-    private let chartComputationQueue = DispatchQueue(
-        label: "com.ruuvi.cardsgraph.chartbuilder",
-        qos: .userInitiated
-    )
-    private var chartDataGeneration: Int = 0
-    private var currentFingerprint: MeasurementFingerprint?
     private var currentAlertRangeFingerprint: AlertRangeFingerprint?
     private lazy var variantResolver = MeasurementVariantResolver(
         settings: settings,
@@ -193,13 +194,11 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
     }
 
     func start() {
-        // Use the one with `shouldSyncFromCloud` since we want to
-        // avoid calling cloud sync on demand. For example when graph view is
-        // presented from popup we should not call cloud sync as the sync already
-        // called once when popup is presented.
+        // The full history screen owns cloud history downloads. Popups stay local.
     }
 
     func start(shouldSyncFromCloud: Bool) {
+        historyActive = true
         self.shouldSyncFromCloud = shouldSyncFromCloud
         cancelScheduledAutoGattSync()
         view?.resetScrollPosition()
@@ -212,6 +211,10 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
     }
 
     func stop() {
+        historyActive = false
+        historyCancellation.cancel()
+        viewportWork?.cancel()
+        stopRunningProcesses()
         cancelScheduledAutoGattSync()
     }
 
@@ -249,6 +252,9 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
     }
 
     func reloadChartsData(shouldSyncFromCloud: Bool) {
+        historyActive = true
+        historyViewport = nil
+        historySelectedRange = nil
         isLoadingHistory = true
         view?.setChartLoading(hideCharts: false)
         if let sensor {
@@ -477,16 +483,24 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
     }
 
     func viewDidSelectChartHistoryLength(hours: Int) {
+        RuuviGraphHistorySession.customSelection = nil
+        historyViewport = nil
+        historySelectedRange = nil
         settings.chartShowAll = false
         settings.chartDurationHours = hours
         view?.showChartAll = false
         view?.historyLengthInHours = settings.chartDurationHours
+        interactor?.changeHistorySelection()
     }
 
     func viewDidSelectAllChartHistory() {
         settings.chartShowAll = true
-        settings.chartDurationHours = 240
+        RuuviGraphHistorySession.customSelection = nil
+        historyViewport = nil
+        historySelectedRange = nil
+        settings.chartDurationHours = RuuviHistoryRange.retentionHours
         view?.showChartAll = settings.chartShowAll
+        interactor?.changeHistorySelection()
     }
 
     func viewDidSelectLongerHistory() {
@@ -532,91 +546,23 @@ extension CardsGraphPresenter {
         pendingMeasurements.removeAll()
         newpoints.removeAll()
 
-        if !applyCachedChartIfAvailable(for: newSnapshot) {
-            clearChartStateForNewSensor()
-            view?.setChartLoading(hideCharts: true)
-        }
-    }
-
-    private func applyCachedChartIfAvailable(
-        for snapshot: RuuviTagCardSnapshot
-    ) -> Bool {
-        guard
-            let cached = chartCache[snapshot.id],
-            !cached.modules.isEmpty
-        else {
-            return false
-        }
-
-        chartModules = cached.modules
-        ruuviTagData = cached.measurements
-        let restoredEntries = cached.entries.mapValues { $0.map { $0.toEntry() } }
-        let alertRangeContext = alertRangeChartContext(
-            for: chartModules,
-            sensor: sensor
-        )
-        let models = buildChartModels(
-            for: chartModules,
-            entries: restoredEntries,
-            alertRangeStates: alertRangeContext.states,
-            alertRangeBounds: alertRangeContext.bounds
-        )
-        datasource = models
-        view?.createChartViews(from: chartModules)
-        let hasData = restoredEntries.contains(where: { !$0.value.isEmpty })
-        view?.setHasChartData(hasData)
-        view?.setChartViewData(from: models, settings: settings)
-        if let lastMeasurement = ruuviTagData.last {
-            updateLatestMeasurement(lastMeasurement)
-        }
-        currentFingerprint = MeasurementFingerprint(measurements: ruuviTagData)
-        currentAlertRangeFingerprint = alertRangeContext.fingerprint
-        return true
+        clearChartStateForNewSensor()
+        view?.setChartLoading(hideCharts: true)
     }
 
     private func clearChartStateForNewSensor() {
+        knownHistoryVariants.removeAll()
+        cloudHistoryFailed = false
         chartModules.removeAll()
-        ruuviTagData.removeAll()
         datasource.removeAll()
         view?.clearChartHistory()
         invalidatePendingChartComputation()
-        currentFingerprint = nil
         currentAlertRangeFingerprint = nil
     }
 
-    private func cacheCurrentChartData(
-        entries: [MeasurementDisplayVariant: [ChartDataEntry]],
-        measurements: [RuuviMeasurement]
-    ) {
-        guard let key = snapshot?.id else { return }
-        let snapshots = entries.mapValues { $0.map { ChartDataEntrySnapshot(entry: $0) } }
-        let cached = CachedChartData(
-            modules: chartModules,
-            measurements: measurements,
-            entries: snapshots
-        )
-        chartCache[key] = cached
-        updateCacheOrder(for: key)
-        currentFingerprint = MeasurementFingerprint(measurements: measurements)
-    }
-
-    private func updateCacheOrder(for key: String) {
-        chartCacheOrder.removeAll { $0 == key }
-        chartCacheOrder.append(key)
-        if chartCacheOrder.count > chartCacheLimit,
-           let removed = chartCacheOrder.first {
-            chartCacheOrder.removeFirst()
-            chartCache.removeValue(forKey: removed)
-        }
-    }
-
-    private func nextChartDataGeneration() -> Int {
-        chartDataGeneration &+= 1
-        return chartDataGeneration
-    }
-
     private func invalidatePendingChartComputation() {
-        chartDataGeneration &+= 1
+        historyCancellation.cancel()
+        viewportWork?.cancel()
     }
 
     private func alertStatesForChartModules() -> [MeasurementDisplayVariant: Bool] {
@@ -1165,6 +1111,36 @@ extension CardsGraphPresenter {
 }
 
 extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
+    func interactorDidUpdateCloudHistory(failed: Bool) {
+        cloudHistoryFailed = failed
+        updateHistoryStatus()
+    }
+
+    private func updateHistoryStatus() {
+        var messages: [String] = []
+        if cloudHistoryFailed {
+            messages.append(NSLocalizedString("history.error", tableName: "History", value: "Could not download cloud history. Saved readings are still available.", comment: "Cloud history error"))
+        }
+        if let sensor, sensor.isCloud, let days = sensor.maxHistoryDays {
+            let selected = RuuviGraphHistorySession.selection(settings: settings).resolve()
+            if days <= 0 {
+                messages.append(NSLocalizedString(
+                    "history.unavailable", tableName: "History",
+                    value: "Cloud history is not available for this sensor. Showing saved readings.", comment: "No cloud history"
+                ))
+            } else if selected.start < Date().addingTimeInterval(-Double(days) * 86400 - 60) {
+                let format = NSLocalizedString("history.limited", tableName: "History", value: "Cloud history is limited to %d days for this sensor.", comment: "Subscription history limit")
+                messages.append(String(format: format, days))
+            }
+        }
+        view?.setCloudHistoryStatus(message: messages.isEmpty ? nil : messages.joined(separator: "\n"), canRetry: cloudHistoryFailed)
+    }
+
+    func interactorDidSuspendHistory() {
+        historyCancellation.cancel()
+        viewportWork?.cancel()
+    }
+
     func interactorDidFinishLoadingHistory() {
         isLoadingHistory = false
         shouldRefreshEmptyStateAfterLoad = true
@@ -1193,79 +1169,63 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
 
     func interactorDidUpdate(sensor: AnyRuuviTagSensor) {
         self.sensor = sensor
-        let newMeasurements = interactor?.ruuviTagData ?? []
-        let newFingerprint = MeasurementFingerprint(measurements: newMeasurements)
-        ruuviTagData = newMeasurements
-        if newFingerprint == currentFingerprint {
-            if rebuildChartDataIfAlertRangeChanged() {
-                shouldRefreshEmptyStateAfterLoad = false
-                return
-            }
-            if shouldRefreshEmptyStateAfterLoad {
-                let hasData = !datasource.isEmpty
-                view?.setHasChartData(hasData)
-                shouldRefreshEmptyStateAfterLoad = false
-            }
-            return
-        }
-        shouldRefreshEmptyStateAfterLoad = false
+        updateHistoryStatus()
         rebuildChartData(updateView: true)
     }
 
     func insertMeasurements(_ newValues: [RuuviMeasurement]) {
-        guard view != nil else { return }
-
-        // If user is scrolling, queue the measurements instead of updating immediately
-        if isUserScrolling {
-            pendingMeasurements.append(contentsOf: newValues)
-            return
-        }
-
-        ruuviTagData = interactor?.ruuviTagData ?? []
-
-        let entries = collectChartEntries(
-            from: newValues,
-            variants: chartModules
-        )
-
-        view?.updateChartViewData(
-            entries,
-            isFirstEntry: ruuviTagData.count == 1,
-            firstEntry: ruuviTagData.first,
-            settings: settings
-        )
-        if !newValues.isEmpty {
-            view?.setHasChartData(true)
-        }
-
-        // Update the latest measurement label.
-        if let lastMeasurement = newValues.last {
-            updateLatestMeasurement(lastMeasurement)
-        }
-        rebuildChartData(updateView: false)
+        rebuildChartData(updateView: true)
     }
 
-    private func updateLatestMeasurement(_ measurement: RuuviMeasurement) {
-        let latestEntries = chartModules.reduce(
-            into: [MeasurementDisplayVariant: ChartDataEntry?]()
-        ) {
-            result,
-            variant in
-            result[variant] = chartEntry(
-                for: measurement,
-                variant: variant
-            )
+    func viewDidChangeHistoryViewport(start: Double, end: Double) {
+        guard historyActive, start.isFinite, end.isFinite, start < end else { return }
+        let selected = historySelectedRange ?? RuuviGraphHistorySession.selection(settings: settings).resolve()
+        let range = RuuviHistoryRange(start: Date(timeIntervalSince1970: floor(start)), end: Date(timeIntervalSince1970: ceil(end))).intersection(selected)
+        let overview = range.end.timeIntervalSince(range.start) >= selected.end.timeIntervalSince(selected.start) * 0.995
+        let viewport: RuuviHistoryRange? = overview ? nil : range
+        guard viewport != historyViewport else { return }
+        historyViewport = viewport
+        viewportWork?.cancel()
+        historyCancellation.cancel()
+        let work = DispatchWorkItem { [weak self] in
+            self?.viewportWork = nil
+            self?.rebuildChartData(updateView: true)
         }
+        viewportWork = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: work)
+    }
 
-        view?.updateLatestMeasurement(
-            latestEntries,
-            alertStates: alertStatesForChartModules(),
-            settings: settings
-        )
+    func viewDidFinishHistoryGesture() {
+        guard viewportWork != nil else { return }
+        viewportWork?.cancel()
+        viewportWork = nil
+        rebuildChartData(updateView: true)
+    }
+
+    func viewDidRetryHistory() { interactor?.changeHistorySelection() }
+
+    func viewDidSelectHistoryDates(start: Date, end: Date) {
+        RuuviGraphHistorySession.customSelection = .custom(start: start, end: end)
+        historyViewport = nil
+        historySelectedRange = nil
+        interactor?.changeHistorySelection()
     }
 
     private func updateLatestAlertStates() {
-        view?.updateLatestAlertStates(alertStatesForChartModules())
+        let context = alertRangeChartContext(for: chartModules, sensor: sensor)
+        var entries: [MeasurementDisplayVariant: ChartDataEntry?] = [:]
+        var alerts: [MeasurementDisplayVariant: Bool] = [:]
+        for model in datasource {
+            guard let data = model.chartData as? RuuviHistoryChartData else { continue }
+            let last = data.dataSets.compactMap { $0.entryForIndex($0.entryCount - 1) }.max { $0.x < $1.x }
+            entries[model.variant] = .some(last)
+            let bounds = context.bounds[model.variant]
+            let outside = data.statistics.map { stats in
+                (bounds?.lower.map { stats.latest < $0 } ?? false) || (bounds?.upper.map { stats.latest > $0 } ?? false)
+            } ?? false
+            alerts[model.variant] = context.states[model.variant] == true && outside
+        }
+        view?.updateLatestMeasurement(entries, alertStates: alerts, settings: settings)
     }
 
     private func createChartData() {
@@ -1273,170 +1233,78 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
     }
 
     private func rebuildChartData(updateView: Bool) {
-        guard view != nil else { return }
+        guard historyActive, view != nil, let interactor, let sensor else { return }
+        historyCancellation.cancel()
+        let cancellation = RuuviHistoryCancellation()
+        historyCancellation = cancellation
         let variants = chartModules
-        let measurements = ruuviTagData
-        let alertRangeContext = alertRangeChartContext(for: variants, sensor: sensor)
-
-        if handleEmptyChartDataIfNeeded(
-            variants: variants,
-            measurements: measurements,
-            alertRangeContext: alertRangeContext,
-            updateView: updateView
-        ) {
-            return
+        // Keep the overview stable for a minute, including duplicate-only cloud pages.
+        let now = Date(timeIntervalSince1970: floor(Date().timeIntervalSince1970 / 60) * 60)
+        let selected = historyViewport == nil ? RuuviGraphHistorySession.selection(settings: settings).resolve(now: now) :
+            (historySelectedRange ?? RuuviGraphHistorySession.selection(settings: settings).resolve(now: now))
+        historySelectedRange = selected
+        let range = historyViewport?.intersection(selected) ?? selected
+        let resolver = variantResolver
+        let sensorSettings = sensorSettings
+        let context = alertRangeChartContext(for: variants, sensor: sensor)
+        let configuration = "\(settings.temperatureUnit)|\(settings.humidityUnit)|\(settings.pressureUnit.symbol)|" +
+            "\(String(describing: sensorSettings?.temperatureOffset))|\(String(describing: sensorSettings?.humidityOffset))|\(String(describing: sensorSettings?.pressureOffset))"
+        let apply: ([MeasurementDisplayVariant: RuuviHistorySeries]) -> Void = { [weak self] series in
+            guard let self, !cancellation.isCancelled, self.historyActive else { return }
+            let models = variants.compactMap { variant -> RuuviGraphViewDataModel? in
+                guard let sampled = series[variant] else { return nil }
+                if !sampled.points.isEmpty { self.knownHistoryVariants.insert(variant) }
+                guard self.knownHistoryVariants.contains(variant) else { return nil }
+                let bounds = context.bounds[variant]
+                let data = RuuviHistoryChartData(series: sampled, selectedRange: selected, sampledRange: range,
+                    upper: bounds?.upper, lower: bounds?.lower,
+                    showAlerts: self.settings.showAlertsRangeInGraph && context.states[variant] == true,
+                    drawDots: self.settings.chartDrawDotsOn)
+                return RuuviGraphViewDataModel(upperAlertValue: bounds?.upper, variant: variant,
+                                              chartData: data, lowerAlertValue: bounds?.lower)
+            }
+            self.datasource = models
+            self.isLoadingHistory = false
+            self.currentAlertRangeFingerprint = context.fingerprint
+            self.view?.createChartViews(from: models.map(\.variant))
+            self.view?.setChartViewData(from: models, settings: self.settings)
+            self.view?.setHasChartData(models.contains { ($0.chartData?.entryCount ?? 0) > 0 } || self.historyViewport != nil)
+            self.updateLatestAlertStates()
         }
-
-        let generation = nextChartDataGeneration()
-        chartComputationQueue.async { [weak self] in
-            guard let self else { return }
-            let chartEntries = self.collectChartEntries(
-                from: measurements,
-                variants: variants
-            )
-            let models = self.buildChartModels(
-                for: variants,
-                entries: chartEntries,
-                alertRangeStates: alertRangeContext.states,
-                alertRangeBounds: alertRangeContext.bounds
-            )
-
-            DispatchQueue.main.async { [weak self] in
-                guard let self,
-                      generation == self.chartDataGeneration else { return }
-                self.datasource = models
-                let hasData = chartEntries.contains(where: { !$0.value.isEmpty })
-                if !self.isLoadingHistory || hasData {
-                    self.view?.setHasChartData(hasData)
+        interactor.historyRevision().on(success: { [weak self] revision in
+            DispatchQueue.main.async {
+                guard let self, !cancellation.isCancelled else { return }
+                let key = HistoryCacheKey(sensorID: sensor.id, range: range, variants: variants, configuration: configuration, revision: revision)
+                if let cached = self.historyCache[key] {
+                    self.historyCacheOrder.removeAll { $0 == key }
+                    self.historyCacheOrder.append(key)
+                    apply(cached)
+                    return
                 }
-                if updateView, !self.isLoadingHistory || !models.isEmpty {
-                    self.view?.setChartViewData(from: models, settings: self.settings)
-                    if let lastMeasurement = measurements.last {
-                        self.updateLatestMeasurement(lastMeasurement)
+                let samplers = Dictionary(uniqueKeysWithValues: variants.map { ($0, RuuviHistorySampler(range: range)) })
+                interactor.scanHistory(range: range, cancellation: cancellation) { record in
+                    for variant in variants {
+                        samplers[variant]?.add(date: record.date, value: resolver.value(for: record.measurement, variant: variant,
+                            sensorSettings: sensorSettings, configuration: .cardsGraph))
                     }
-                }
-                self.cacheCurrentChartData(
-                    entries: chartEntries,
-                    measurements: measurements
-                )
-                if updateView {
-                    self.currentAlertRangeFingerprint = alertRangeContext.fingerprint
-                }
+                }.on(success: { revision in
+                    DispatchQueue.main.async {
+                        guard revision >= 0, !cancellation.isCancelled else { return }
+                        let series = samplers.mapValues { $0.finish() }
+                        let savedKey = HistoryCacheKey(sensorID: sensor.id, range: range, variants: variants, configuration: configuration, revision: revision)
+                        self.historyCache[savedKey] = series
+                        self.historyCacheOrder.removeAll { $0 == savedKey }
+                        self.historyCacheOrder.append(savedKey)
+                        while self.historyCacheOrder.count > 5 { self.historyCache.removeValue(forKey: self.historyCacheOrder.removeFirst()) }
+                        apply(series)
+                    }
+                }, failure: { [weak self] error in
+                    DispatchQueue.main.async { if !cancellation.isCancelled { self?.interactorDidError(.ruuviStorage(error)) } }
+                })
             }
-        }
-    }
-
-    private func handleEmptyChartDataIfNeeded(
-        variants: [MeasurementDisplayVariant],
-        measurements: [RuuviMeasurement],
-        alertRangeContext: AlertRangeChartContext,
-        updateView: Bool
-    ) -> Bool {
-        guard variants.isEmpty else { return false }
-
-        if updateView {
-            view?.setChartViewData(from: [], settings: settings)
-            currentAlertRangeFingerprint = alertRangeContext.fingerprint
-        }
-        view?.setHasChartData(false)
-        cacheCurrentChartData(entries: [:], measurements: measurements)
-        return true
-    }
-
-    private func buildChartModels(
-        for variants: [MeasurementDisplayVariant],
-        entries: [MeasurementDisplayVariant: [ChartDataEntry]],
-        alertRangeStates: [MeasurementDisplayVariant: Bool],
-        alertRangeBounds: [MeasurementDisplayVariant: AlertRangeBounds]
-    ) -> [RuuviGraphViewDataModel] {
-        var models: [RuuviGraphViewDataModel] = []
-
-        for variant in variants {
-            guard let variantEntries = entries[variant], !variantEntries.isEmpty else {
-                continue
-            }
-
-            let bounds = alertRangeBounds[variant] ?? AlertRangeBounds(
-                lower: nil,
-                upper: nil
-            )
-            let shouldShowAlertRange = settings.showAlertsRangeInGraph &&
-                (alertRangeStates[variant] == true)
-            let dataSet = RuuviGraphDataSetFactory.newDataSet(
-                upperAlertValue: bounds.upper,
-                entries: variantEntries,
-                lowerAlertValue: bounds.lower,
-                showAlertRangeInGraph: shouldShowAlertRange
-            )
-            let model = RuuviGraphViewDataModel(
-                upperAlertValue: bounds.upper,
-                variant: variant,
-                chartData: LineChartData(dataSet: dataSet),
-                lowerAlertValue: bounds.lower
-            )
-            models.append(model)
-        }
-
-        return models
-    }
-
-    // Draw dots is disabled for v1.3.0 onwards until further notice.
-    private func drawCirclesIfNeeded(for chartData: LineChartData?, entriesCount: Int? = nil) {
-        if let dataSet = chartData?.dataSets.first as? LineChartDataSet {
-            let count: Int = if let entriesCount {
-                entriesCount
-            } else {
-                dataSet.entries.count
-            }
-            switch count {
-            case 1:
-                dataSet.circleRadius = 6
-                dataSet.drawCirclesEnabled = true
-            default:
-                dataSet.circleRadius = 0.8
-                dataSet.drawCirclesEnabled = settings.chartDrawDotsOn
-            }
-        }
-    }
-
-    private func chartEntry(for data: RuuviMeasurement, variant: MeasurementDisplayVariant) -> ChartDataEntry? {
-        guard
-            let y = variantResolver.value(
-                for: data,
-                variant: variant,
-                sensorSettings: sensorSettings,
-                configuration: .cardsGraph
-            ),
-            y.isFinite
-        else {
-            return nil
-        }
-
-        let x = data.date.timeIntervalSince1970
-        guard x.isFinite else { return nil }
-
-        return ChartDataEntry(x: x, y: y)
-    }
-
-    private func collectChartEntries(
-        from measurements: [RuuviMeasurement],
-        variants: [MeasurementDisplayVariant]
-    ) -> [MeasurementDisplayVariant: [ChartDataEntry]] {
-        var result: [MeasurementDisplayVariant: [ChartDataEntry]] = [:]
-
-        for measurement in measurements {
-            for variant in variants {
-                guard let entry = chartEntry(
-                    for: measurement,
-                    variant: variant
-                ) else {
-                    continue
-                }
-                result[variant, default: []].append(entry)
-            }
-        }
-
-        return result
+        }, failure: { [weak self] error in
+            DispatchQueue.main.async { if !cancellation.isCancelled { self?.interactorDidError(.ruuviStorage(error)) } }
+        })
     }
 
     private func resolveVariant(

@@ -380,6 +380,10 @@ extension SQLiteGRDBDatabase {
             try RuuviUserSettingSQLite.createTable(in: db)
         }
 
+        migrator.registerMigration("Add bounded history cache") { db in
+            try RuuviHistorySchema.create(in: db)
+        }
+
         try migrator.migrate(dbPool)
     }
 }

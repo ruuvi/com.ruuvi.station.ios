@@ -7,6 +7,7 @@ import RuuviService
 import UIKit
 
 protocol CardsGraphViewDelegate: NSObjectProtocol {
+    func chartHistoryGestureDidEnd(_ chartView: CardsGraphView)
     func chartDidTranslate(_ chartView: CardsGraphView)
     func chartValueDidSelect(
         _ chartView: CardsGraphView,
@@ -190,6 +191,10 @@ extension CardsGraphView {
 }
 
 extension CardsGraphView: CardsGraphInternalViewDelegate {
+    func chartHistoryGestureDidEnd(_ chartView: CardsGraphInternalView) {
+        chartDelegate?.chartHistoryGestureDidEnd(self)
+    }
+
 
     func chartDidTranslate(_ chartView: CardsGraphInternalView) {
         chartDelegate?.chartDidTranslate(self)

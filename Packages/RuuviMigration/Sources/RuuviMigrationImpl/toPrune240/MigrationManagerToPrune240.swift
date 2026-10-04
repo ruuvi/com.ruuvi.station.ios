@@ -1,4 +1,5 @@
 import Foundation
+import RuuviOntology
 import RuuviLocal
 
 final class MigrationManagerToPrune240: RuuviMigration {
@@ -10,7 +11,7 @@ final class MigrationManagerToPrune240: RuuviMigration {
 
     func migrateIfNeeded() {
         guard !UserDefaults.standard.bool(forKey: migratedUdKey) else { return }
-        settings.dataPruningOffsetHours = 240
+        settings.dataPruningOffsetHours = RuuviHistoryRange.retentionHours
         UserDefaults.standard.set(true, forKey: migratedUdKey)
     }
 

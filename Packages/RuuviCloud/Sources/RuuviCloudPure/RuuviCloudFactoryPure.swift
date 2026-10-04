@@ -10,7 +10,7 @@ public final class RuuviCloudFactoryPure: RuuviCloudFactory {
         pool: RuuviPool?
     ) -> RuuviCloud {
         let api = RuuviCloudApiURLSession(baseUrl: baseUrl)
-        let cloud = RuuviCloudPure(api: api, user: user, pool: pool)
+        let cloud = RuuviCloudPure(api: api, user: user, pool: pool, historyBackend: baseUrl.absoluteString)
         return cloud
     }
 }

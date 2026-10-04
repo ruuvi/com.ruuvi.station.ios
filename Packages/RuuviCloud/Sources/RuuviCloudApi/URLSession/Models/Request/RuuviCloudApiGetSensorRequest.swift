@@ -6,6 +6,7 @@ public struct RuuviCloudApiGetSensorRequest: Encodable {
         case desc
     }
 
+    let mode: String?
     let sensor: String
     let until: TimeInterval?
     let since: TimeInterval?
@@ -17,8 +18,10 @@ public struct RuuviCloudApiGetSensorRequest: Encodable {
         until: TimeInterval?,
         since: TimeInterval?,
         limit: Int?,
-        sort: Sort?
+        sort: Sort?,
+        mode: String? = nil
     ) {
+        self.mode = mode
         self.sensor = sensor
         self.until = until
         self.since = since

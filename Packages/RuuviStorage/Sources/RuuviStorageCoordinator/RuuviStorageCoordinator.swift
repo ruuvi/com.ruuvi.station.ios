@@ -10,6 +10,26 @@ final class RuuviStorageCoordinator: RuuviStorage {
         self.sqlite = sqlite
     }
 
+    func scanHistory(_ id: String, range: RuuviHistoryRange, cancellation: RuuviHistoryCancellation,
+                     consume: @escaping (RuuviTagSensorRecord) -> Void) -> Future<Int, RuuviStorageError> {
+        sqlite.scanHistory(id, range: range, cancellation: cancellation, consume: consume)
+            .mapError { .ruuviPersistence($0) }
+    }
+
+    func historyRevision(_ id: String) -> Future<Int, RuuviStorageError> {
+        sqlite.historyRevision(id).mapError { .ruuviPersistence($0) }
+    }
+
+    func historyCoverage(_ id: String, scope: String, freshAfter: Date) -> Future<RuuviHistoryCoverage, RuuviStorageError> {
+        sqlite.historyCoverage(id, scope: scope, freshAfter: freshAfter).mapError { .ruuviPersistence($0) }
+    }
+
+    func saveHistoryPage(_ id: String, records: [AnyRuuviTagSensorRecord], range: RuuviHistoryRange,
+                         scope: String, generation: Int, cancellation: RuuviHistoryCancellation) -> Future<Bool, RuuviStorageError> {
+        sqlite.saveHistoryPage(id, records: records, range: range, scope: scope,
+                              generation: generation, cancellation: cancellation).mapError { .ruuviPersistence($0) }
+    }
+
     func readOne(_ ruuviTagId: String) -> Future<AnyRuuviTagSensor, RuuviStorageError> {
         let promise = Promise<AnyRuuviTagSensor, RuuviStorageError>()
         sqlite.readOne(ruuviTagId).on(success: { sensor in

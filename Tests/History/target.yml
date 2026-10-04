@@ -1,0 +1,36 @@
+targets:
+  HistoryTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: .
+        excludes: [target.yml]
+      - path: ../../Packages/RuuviOntology/Tests/RuuviOntologyTests/RuuviHistoryTests.swift
+      - path: ../../Apps/RuuviStation/Sources/Classes/Presentation/Modules/Full Sensor Card/Submodules/Graph/Helpers/RuuviGraphHistory.swift
+      - path: ../../Apps/RuuviStation/Sources/Classes/Presentation/Modules/Full Sensor Card/Submodules/Graph/Helpers/RuuviGraphDataSetFactory.swift
+      - path: ../../Apps/RuuviStation/Sources/Classes/Presentation/Modules/Full Sensor Card/Submodules/Graph/Helpers/CustomXAxisRenderer.swift
+      - path: ../../Apps/RuuviStation/Sources/Classes/Presentation/Modules/Full Sensor Card/Submodules/Graph/Helpers/XAxisValueFormatter.swift
+      - path: ../../Apps/RuuviStation/Sources/Extensions/Classess/AppDateFormatter.swift
+      - path: ../../Apps/RuuviStation/Sources/Extensions/Date+Ruuvi.swift
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.ruuvi.station.HistoryTests
+    dependencies:
+      - target: RuuviPersistence
+      - target: RuuviContext
+      - target: RuuviOntology
+      - package: GRDB
+      - package: Future
+      - package: Humidity
+      - package: DGCharts
+      - target: RuuviLocal
+      - target: RuuviLocalization
+schemes:
+  history-tests:
+    build:
+      targets:
+        HistoryTests: all
+    test:
+      targets:
+        - HistoryTests

@@ -24,7 +24,23 @@ public struct ShareSensorResponse {
     }
 }
 
+public struct RuuviCloudHistoryPage {
+    public let records: [AnyRuuviTagSensorRecord]
+    public let next: Date
+    public init(records: [AnyRuuviTagSensorRecord], next: Date) {
+        self.records = records
+        self.next = next
+    }
+}
+
 public protocol RuuviCloud {
+    var historyScope: String? { get }
+    func loadHistoryPage(
+        macId: MACIdentifier,
+        request historyRequest: RuuviHistoryRequest,
+        cancellation: RuuviHistoryCancellation
+    ) -> Future<RuuviCloudHistoryPage, RuuviCloudError>
+
     @discardableResult
     func requestCode(email: String) -> Future<String?, RuuviCloudError>
 

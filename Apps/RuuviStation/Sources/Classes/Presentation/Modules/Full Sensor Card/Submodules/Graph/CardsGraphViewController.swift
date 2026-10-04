@@ -41,7 +41,7 @@ class CardsGraphViewController: UIViewController {
 
     var historyLengthInDay: Int = 1 {
         didSet {
-            historySelectionButton.updateTitle(with: historyLengthInDay.days)
+            historySelectionButton.updateTitle(with: historyDurationTitle(days: historyLengthInDay))
         }
     }
 
@@ -131,6 +131,10 @@ class CardsGraphViewController: UIViewController {
             leadingPadding: 0,
             trailingPadding: 12
         )
+
+    private let historyStatusStack = UIStackView()
+    private let historyStatusLabel = UILabel()
+    private let historyRetryButton = UIButton(type: .system)
 
     // Charts
     lazy var scrollView: UIScrollView = {
@@ -223,8 +227,6 @@ class CardsGraphViewController: UIViewController {
     // UI END
 
     private let historyHoursOptions: [Int] = [1, 2, 3, 6, 12]
-    private let minimumHistoryLimit: Int = 1 // Day
-    private let maximumHistoryLimit: Int = 10 // Days
     private let highlightAnimationDelay: TimeInterval = 0.3
 
     private var settings: RuuviLocalSettings!
@@ -381,9 +383,26 @@ class CardsGraphViewController: UIViewController {
         syncButton.centerYInSuperview()
         syncButton.alpha = 1
 
+        historyStatusStack.axis = .vertical
+        historyStatusStack.alignment = .leading
+        historyStatusStack.spacing = 4
+        historyStatusLabel.numberOfLines = 0
+        historyStatusLabel.font = .preferredFont(forTextStyle: .footnote)
+        historyStatusLabel.textColor = .white
+        historyRetryButton.setTitle(RuuviLocalization.TagCharts.TryAgain.title, for: .normal)
+        historyRetryButton.tintColor = .white
+        historyRetryButton.addTarget(self, action: #selector(retryCloudHistory), for: .touchUpInside)
+        historyStatusStack.addArrangedSubview(historyStatusLabel)
+        historyStatusStack.addArrangedSubview(historyRetryButton)
+        historyStatusLabel.isHidden = true
+        historyRetryButton.isHidden = true
+        view.addSubview(historyStatusStack)
+        historyStatusStack.anchor(top: chartToolbarView.bottomAnchor, leading: view.safeLeftAnchor, bottom: nil,
+                                  trailing: view.safeRightAnchor, padding: .init(top: 0, left: 12, bottom: 0, right: 12))
+
         view.addSubview(scrollView)
         scrollView.anchor(
-            top: chartToolbarView.bottomAnchor,
+            top: historyStatusStack.bottomAnchor,
             leading: view.safeLeftAnchor,
             bottom: view.safeBottomAnchor,
             trailing: view.safeRightAnchor,
@@ -423,6 +442,15 @@ class CardsGraphViewController: UIViewController {
         output?.viewDidTriggerStopSync(for: snapshot)
     }
 
+    private func historyDurationTitle(days: Int) -> String {
+        guard days >= 365, days % 365 == 0 else { return days.days }
+        let years = days / 365
+        let format = years == 1
+            ? NSLocalizedString("history.year", tableName: "History", value: "%d year", comment: "History duration")
+            : NSLocalizedString("history.years", tableName: "History", value: "%d years", comment: "History duration")
+        return String(format: format, years)
+    }
+
     fileprivate func historyLengthOptions() -> UIMenu {
         var actions: [UIAction] = []
 
@@ -430,7 +458,7 @@ class CardsGraphViewController: UIViewController {
         let all_action = UIAction(title: RuuviLocalization.all) { [weak self] _ in
             self?.handleHistorySelectionAll()
         }
-        all_action.state = showChartAll ? .on : .off
+        all_action.state = showChartAll && RuuviGraphHistorySession.customSelection == nil ? .on : .off
         actions.append(all_action)
 
         for hour in historyHoursOptions {
@@ -439,7 +467,7 @@ class CardsGraphViewController: UIViewController {
             ) { [weak self] _ in
                 self?.handleHistoryLengthSelection(hours: hour)
             }
-            if hour == historyLengthInHours, !showChartAll {
+            if hour == historyLengthInHours, !showChartAll, RuuviGraphHistorySession.customSelection == nil {
                 action.state = .on
             } else {
                 action.state = .off
@@ -447,12 +475,12 @@ class CardsGraphViewController: UIViewController {
             actions.append(action)
         }
 
-        for day in minimumHistoryLimit ... maximumHistoryLimit {
-            let action = UIAction(title: day.days) {
+        for day in Array(1...10) + [30, 60, 90, 100, 180, 365, 730, RuuviHistoryRange.retentionDays] {
+            let action = UIAction(title: historyDurationTitle(days: day)) {
                 [weak self] _ in
                 self?.handleHistoryLengthSelection(hours: day * 24)
             }
-            if day == historyLengthInHours / 24, !showChartAll {
+            if day == historyLengthInHours / 24, !showChartAll, RuuviGraphHistorySession.customSelection == nil {
                 action.state = .on
             } else {
                 action.state = .off
@@ -460,11 +488,19 @@ class CardsGraphViewController: UIViewController {
             actions.append(action)
         }
 
-        // Add more at the bottom
-        let more_action = UIAction(title: RuuviLocalization.more) { [weak self] _ in
-            self?.handleHistoryLengthSelection(hours: nil)
+        let custom = UIAction(title: NSLocalizedString("history.custom", tableName: "History", value: "Custom dates…", comment: "History date selection")) { [weak self] _ in
+            guard let self else { return }
+            let picker = RuuviHistoryDatePicker(selection: RuuviGraphHistorySession.selection(settings: self.settings)) { [weak self] start, end in
+                self?.output?.viewDidSelectHistoryDates(start: start, end: end)
+                self?.updateCustomHistoryTitle()
+            }
+            self.present(UINavigationController(rootViewController: picker), animated: true)
         }
-        actions.append(more_action)
+        custom.state = RuuviGraphHistorySession.customSelection == nil ? .off : .on
+        actions.append(custom)
+        actions.append(UIAction(title: RuuviLocalization.TagCharts.TryAgain.title) { [weak self] _ in
+            self?.output?.viewDidRetryHistory()
+        })
 
         return UIMenu(
             title: "",
@@ -472,10 +508,19 @@ class CardsGraphViewController: UIViewController {
         )
     }
 
+    private func updateCustomHistoryTitle() {
+        guard case let .custom(start, end) = RuuviGraphHistorySession.customSelection else { return }
+        let formatter = DateIntervalFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .none
+        historySelectionButton.updateTitle(with: formatter.string(from: start, to: end))
+        historySelectionButton.updateMenu(with: historyLengthOptions())
+    }
+
     fileprivate func handleHistoryLengthSelection(hours: Int?) {
         if let hours {
             if hours >= 24 {
-                historySelectionButton.updateTitle(with: "\((hours / 24).days)")
+                historySelectionButton.updateTitle(with: historyDurationTitle(days: hours / 24))
                 historySelectionButton.updateMenu(with: historyLengthOptions())
             } else {
                 let unit = hours == 1 ? RuuviLocalization.hour : RuuviLocalization.hours
@@ -578,7 +623,14 @@ class CardsGraphViewController: UIViewController {
 }
 
 extension CardsGraphViewController: CardsGraphViewDelegate {
+    func chartHistoryGestureDidEnd(_ chartView: CardsGraphView) {
+        chartDidTranslate(chartView)
+        output?.viewDidFinishHistoryGesture()
+    }
+
     func chartDidTranslate(_ chartView: CardsGraphView) {
+        output?.viewDidChangeHistoryViewport(start: chartView.underlyingView.lowestVisibleX,
+                                            end: chartView.underlyingView.highestVisibleX)
         guard chartViews.count > 1
         else {
             calculateMinMaxForChart(for: chartView)
@@ -685,9 +737,18 @@ extension CardsGraphViewController: CardsGraphViewInput {
     }
 
     func createChartViews(from variants: [MeasurementDisplayVariant]) {
+        guard chartModules != variants || needsDeferredLayoutUpdate else { return }
         chartModules = variants
         updateChartsCollectionConstaints(from: variants)
     }
+
+    func setCloudHistoryStatus(message: String?, canRetry: Bool) {
+        historyStatusLabel.text = message
+        historyStatusLabel.isHidden = message == nil
+        historyRetryButton.isHidden = !canRetry
+    }
+
+    @objc private func retryCloudHistory() { output?.viewDidRetryHistory() }
 
     func resetScrollPosition() {
         scrollView.setContentOffset(.zero, animated: false)
@@ -734,8 +795,17 @@ extension CardsGraphViewController: CardsGraphViewInput {
             return
         }
 
-        clearChartData()
+        let matrices = Dictionary(uniqueKeysWithValues: chartViewData.compactMap { model -> (MeasurementDisplayVariant, CGAffineTransform)? in
+            let chart = chartView(for: model.variant).underlyingView
+            guard let old = chart.data as? RuuviHistoryChartData,
+                  let new = model.chartData as? RuuviHistoryChartData else { return nil }
+            let sameRange = old.selectedRange == new.selectedRange
+            let rolling = abs(old.selectedRange.end.timeIntervalSince(old.selectedRange.start) - new.selectedRange.end.timeIntervalSince(new.selectedRange.start)) < 1 &&
+                old.selectedRange.end > Date().addingTimeInterval(-120) && new.selectedRange.end > Date().addingTimeInterval(-120)
+            return sameRange || rolling ? (model.variant, chart.viewPortHandler.touchMatrix) : nil
+        })
         showChartViews()
+        updateCustomHistoryTitle()
         let timelineRange = resolveGlobalTimelineRange(from: chartViewData)
 
         for data in chartViewData {
@@ -747,14 +817,12 @@ extension CardsGraphViewController: CardsGraphViewInput {
                 settings: settings,
                 view: view
             )
-        }
-
-        chartViews.forEach {
-            $0.setSettings(settings: settings)
-            $0.setXAxisRenderer(
-                showAll: settings.chartShowAll,
-                timelineRange: timelineRange
-            )
+            view.setXAxisRenderer(showAll: settings.chartShowAll, timelineRange: timelineRange)
+            if let matrix = matrices[data.variant] {
+                view.underlyingView.viewPortHandler.refresh(newMatrix: matrix, chart: view.underlyingView, invalidate: true)
+            } else {
+                view.underlyingView.fitScreen()
+            }
         }
 
         DispatchQueue.main.async { [weak self] in
@@ -1237,6 +1305,7 @@ extension CardsGraphViewController {
             measurementService: measurementService,
             unit: unit
         )
+        view.underlyingView.clearMarker()
         view.underlyingView.data = data.chartData
         view.underlyingView.lowerAlertValue = data.lowerAlertValue
         view.underlyingView.upperAlertValue = data.upperAlertValue
@@ -1368,28 +1437,22 @@ extension CardsGraphViewController {
     }
 
     private func calculateAlertFillIfNeeded(for view: CardsGraphView) {
-        guard let data = view.underlyingView.data,
-              let dataSet = data.dataSets.first as? LineChartDataSet else {
-            return
+        for case let dataSet as LineChartDataSet in view.underlyingView.data?.dataSets ?? [] {
+            dataSet.lowerAlertLimit = view.underlyingView.lowerAlertValue.map { CGFloat($0) } ?? .nan
+            dataSet.upperAlertLimit = view.underlyingView.upperAlertValue.map { CGFloat($0) } ?? .nan
+            dataSet.alertColor = RuuviColor.graphAlertColor.color
         }
-
-        let upperAlertValue = view.underlyingView.upperAlertValue
-        let lowerAlertValue = view.underlyingView.lowerAlertValue
-        guard upperAlertValue != nil || lowerAlertValue != nil else {
-            dataSet.hasAlertRange = false
-            return
-        }
-
-        let shouldKeepAlertRangeVisible = dataSet.hasAlertRange
-
-        // Update limits without changing whether the current alert range is visible.
-        dataSet.lowerAlertLimit = lowerAlertValue.map { CGFloat($0) } ?? .nan
-        dataSet.upperAlertLimit = upperAlertValue.map { CGFloat($0) } ?? .nan
-        dataSet.alertColor = RuuviColor.graphAlertColor.color
-        dataSet.hasAlertRange = shouldKeepAlertRangeVisible
     }
 
     private func calculateMinMaxForChart(for view: CardsGraphView) {
+        if let history = view.underlyingView.data as? RuuviHistoryChartData {
+            view.setChartStatVisible(show: showChartStat && history.statistics != nil)
+            if let stats = history.statistics {
+                view.setChartStat(min: stats.minimum, max: stats.maximum, avg: stats.average,
+                                  type: variant(for: view)?.type ?? view.measurementType, measurementService: measurementService)
+            }
+            return
+        }
         guard let data = view.underlyingView.data,
               let dataSet = data.dataSets.first as? LineChartDataSet else {
             return
