@@ -97,6 +97,7 @@ class CardsGraphPresenter: NSObject {
     private var historyCache: [HistoryCacheKey: [MeasurementDisplayVariant: RuuviHistorySeries]] = [:]
     private var knownHistoryVariants = Set<MeasurementDisplayVariant>()
     private var historyCacheOrder: [HistoryCacheKey] = []
+    private let historyScan = RuuviGraphHistoryScan<HistoryCacheKey>()
     private struct AlertRangeBounds {
         let lower: Double?
         let upper: Double?
@@ -1234,9 +1235,6 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
 
     private func rebuildChartData(updateView: Bool) {
         guard historyActive, view != nil, let interactor, let sensor else { return }
-        historyCancellation.cancel()
-        let cancellation = RuuviHistoryCancellation()
-        historyCancellation = cancellation
         let variants = chartModules
         // Keep the overview stable for a minute, including duplicate-only cloud pages.
         let now = Date(timeIntervalSince1970: floor(Date().timeIntervalSince1970 / 60) * 60)
@@ -1249,6 +1247,15 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         let context = alertRangeChartContext(for: variants, sensor: sensor)
         let configuration = "\(settings.temperatureUnit)|\(settings.humidityUnit)|\(settings.pressureUnit.symbol)|" +
             "\(String(describing: sensorSettings?.temperatureOffset))|\(String(describing: sensorSettings?.humidityOffset))|\(String(describing: sensorSettings?.pressureOffset))"
+        // Revision changes during a download must not repeatedly cancel a long scan.
+        let requestKey = HistoryCacheKey(sensorID: sensor.id, range: range, variants: variants,
+                                         configuration: configuration, revision: 0)
+        guard let cancellation = historyScan.begin(requestKey) else { return }
+        historyCancellation = cancellation
+        let finished: () -> Void = { [weak self] in
+            guard let self, self.historyScan.finish(cancellation) else { return }
+            DispatchQueue.main.async { [weak self] in self?.rebuildChartData(updateView: true) }
+        }
         let apply: ([MeasurementDisplayVariant: RuuviHistorySeries]) -> Void = { [weak self] series in
             guard let self, !cancellation.isCancelled, self.historyActive else { return }
             let models = variants.compactMap { variant -> RuuviGraphViewDataModel? in
@@ -1279,12 +1286,14 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
                     self.historyCacheOrder.removeAll { $0 == key }
                     self.historyCacheOrder.append(key)
                     apply(cached)
+                    finished()
                     return
                 }
                 let samplers = Dictionary(uniqueKeysWithValues: variants.map { ($0, RuuviHistorySampler(range: range)) })
                 interactor.scanHistory(range: range, cancellation: cancellation) { record in
+                    let measurement = record.measurement
                     for variant in variants {
-                        samplers[variant]?.add(date: record.date, value: resolver.value(for: record.measurement, variant: variant,
+                        samplers[variant]?.add(date: record.date, value: resolver.value(for: measurement, variant: variant,
                             sensorSettings: sensorSettings, configuration: .cardsGraph))
                     }
                 }.on(success: { revision in
@@ -1297,13 +1306,22 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
                         self.historyCacheOrder.append(savedKey)
                         while self.historyCacheOrder.count > 5 { self.historyCache.removeValue(forKey: self.historyCacheOrder.removeFirst()) }
                         apply(series)
+                        finished()
                     }
                 }, failure: { [weak self] error in
-                    DispatchQueue.main.async { if !cancellation.isCancelled { self?.interactorDidError(.ruuviStorage(error)) } }
+                    DispatchQueue.main.async {
+                        guard !cancellation.isCancelled else { return }
+                        self?.interactorDidError(.ruuviStorage(error))
+                        finished()
+                    }
                 })
             }
         }, failure: { [weak self] error in
-            DispatchQueue.main.async { if !cancellation.isCancelled { self?.interactorDidError(.ruuviStorage(error)) } }
+            DispatchQueue.main.async {
+                guard !cancellation.isCancelled else { return }
+                self?.interactorDidError(.ruuviStorage(error))
+                finished()
+            }
         })
     }
 

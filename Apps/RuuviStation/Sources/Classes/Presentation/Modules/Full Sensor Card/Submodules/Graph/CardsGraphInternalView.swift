@@ -32,6 +32,9 @@ class CardsGraphInternalView: LineChartView {
     weak var chartDelegate: CardsGraphInternalViewDelegate?
 
     var lowerAlertValue: Double?
+    // Only the graph being manipulated reports draw-time viewport changes.
+    // Synchronized follower redraws must not start new history queries.
+    var reportsHistoryViewportChanges = false
     var upperAlertValue: Double?
     var graphType: MeasurementType = .temperature
 
@@ -317,10 +320,10 @@ extension CardsGraphInternalView {
     override func draw(_ rect: CGRect) {
         super.draw(rect)
         let visible = RuuviHistoryRange(start: Date(timeIntervalSince1970: floor(lowestVisibleX)), end: Date(timeIntervalSince1970: ceil(highestVisibleX)))
-        if data is RuuviHistoryChartData, visible != lastReportedHistoryViewport {
+        if reportsHistoryViewportChanges, data is RuuviHistoryChartData, visible != lastReportedHistoryViewport {
             lastReportedHistoryViewport = visible
             DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
+                guard let self, self.reportsHistoryViewportChanges else { return }
                 self.chartDelegate?.chartDidTranslate(self)
             }
         }
@@ -333,6 +336,8 @@ extension CardsGraphInternalView {
     }
 
     func clearChartData() {
+        reportsHistoryViewportChanges = false
+        lastReportedHistoryViewport = nil
         clearValues()
         resetCustomAxisMinMax()
         resetZoom()

@@ -80,11 +80,9 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         let allowed = range.intersection(RuuviHistoryRange(start: now.addingTimeInterval(-Double(days) * 86400), end: now))
         guard !allowed.isEmpty else { promise.succeed(value: true); return promise.future }
         ruuviLocalSyncState.setSyncStatusHistory(.syncing, for: mac)
-        ruuviStorage.historyCoverage(sensor.id, scope: scope, freshAfter: revalidate ? now.addingTimeInterval(-86400) : .distantPast)
+        ruuviStorage.historyCoverage(sensor.id, scope: scope, freshAfter: .distantPast)
             .on(success: { [self] coverage in
-                let stableEnd = allowed.end >= now.addingTimeInterval(-60) ? max(allowed.start, allowed.end.addingTimeInterval(-60)) : allowed.end
-                let stable = RuuviHistoryRange(start: allowed.start, end: stableEnd)
-                let missing = allowed.uncovered(by: coverage.ranges.map { $0.intersection(stable) })
+                let missing = allowed.historyToFetch(coverage: coverage.ranges, revalidate: revalidate, now: now)
                 let requests = RuuviHistoryRequest.plan(missing: missing, selected: range, now: now)
                 downloadHistory(sensor: sensor, mac: mac, requests: requests, scope: scope, generation: coverage.generation,
                                 cancellation: cancellation, pageSaved: pageSaved, promise: promise)

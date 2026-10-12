@@ -629,6 +629,7 @@ extension CardsGraphViewController: CardsGraphViewDelegate {
     }
 
     func chartDidTranslate(_ chartView: CardsGraphView) {
+        chartViews.forEach { $0.underlyingView.reportsHistoryViewportChanges = ($0 === chartView) }
         output?.viewDidChangeHistoryViewport(start: chartView.underlyingView.lowestVisibleX,
                                             end: chartView.underlyingView.highestVisibleX)
         guard chartViews.count > 1
@@ -639,16 +640,8 @@ extension CardsGraphViewController: CardsGraphViewDelegate {
             }
             return
         }
-        let sourceMatrix = chartView.underlyingView.viewPortHandler.touchMatrix
-        chartViews.filter { $0 != chartView }.forEach { otherChart in
-            var targetMatrix = otherChart.underlyingView.viewPortHandler.touchMatrix
-            targetMatrix.a = sourceMatrix.a
-            targetMatrix.tx = sourceMatrix.tx
-            otherChart.underlyingView.viewPortHandler.refresh(
-                newMatrix: targetMatrix,
-                chart: otherChart.underlyingView,
-                invalidate: true
-            )
+        chartViews.filter { $0 !== chartView }.forEach { otherChart in
+            RuuviGraphHistoryViewport.synchronize(from: chartView.underlyingView, to: otherChart.underlyingView)
         }
 
         for view in chartViews {

@@ -26,6 +26,14 @@ public struct RuuviHistoryRange: Hashable, Codable {
         Self(start: now.addingTimeInterval(-Double(retentionHours) * 3600), end: now)
     }
 
+    /// Old downloaded intervals remain reusable. Only the recent tail is
+    /// revalidated on opening; live polling overlaps the newest minute.
+    public func historyToFetch(coverage: [Self], revalidate: Bool, now: Date = Date()) -> [Self] {
+        let cutoff = now.addingTimeInterval(revalidate ? -48 * 3600 : -60)
+        let reusable = Self(start: start, end: min(end, cutoff))
+        return uncovered(by: coverage.map { $0.intersection(reusable) })
+    }
+
     public func uncovered(by coverage: [Self]) -> [Self] {
         var cursor = start
         var missing: [Self] = []

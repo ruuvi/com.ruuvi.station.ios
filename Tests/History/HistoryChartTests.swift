@@ -4,6 +4,30 @@ import UIKit
 import XCTest
 
 final class HistoryChartTests: XCTestCase {
+    func testSynchronizedGraphsKeepSameTimeRangeWithDifferentPlotWidths() {
+        let charts = [390.0, 280.0].map { width -> LineChartView in
+            let chart = LineChartView(frame: CGRect(x: 0, y: 0, width: width, height: 260))
+            chart.data = LineChartData(dataSet: LineChartDataSet(entries: [
+                ChartDataEntry(x: 0, y: 0), ChartDataEntry(x: 100, y: 10),
+            ]))
+            chart.xAxis.axisMinimum = 0
+            chart.xAxis.axisMaximum = 100
+            chart.notifyDataSetChanged()
+            chart.layoutIfNeeded()
+            return chart
+        }
+        let source = charts[0], follower = charts[1]
+        XCTAssertNotEqual(source.viewPortHandler.contentWidth, follower.viewPortHandler.contentWidth)
+        source.viewPortHandler.refresh(
+            newMatrix: CGAffineTransform(a: 4, b: 0, c: 0, d: 1, tx: -200, ty: 0),
+            chart: source,
+            invalidate: false
+        )
+        RuuviGraphHistoryViewport.synchronize(from: source, to: follower)
+        XCTAssertEqual(source.lowestVisibleX, follower.lowestVisibleX, accuracy: 0.000001)
+        XCTAssertEqual(source.highestVisibleX, follower.highestVisibleX, accuracy: 0.000001)
+    }
+
     func testContinuousOverviewUsesOneDatasetDespiteWideSampleSpacing() throws {
         let start = Date(timeIntervalSince1970: 1_700_000_000)
         let range = RuuviHistoryRange(start: start, end: start.addingTimeInterval(1095 * 86400))
@@ -117,5 +141,40 @@ final class HistoryRefreshTests: XCTestCase {
         scheduler?.schedule()
         scheduler = nil
         wait(for: [refreshed], timeout: 0.1)
+    }
+}
+
+final class HistoryScanTests: XCTestCase {
+    func testPageUpdatesDoNotCancelActiveScanAndRequestOneFollowup() throws {
+        let scan = RuuviGraphHistoryScan<String>()
+        let first = try XCTUnwrap(scan.begin("three-year-overview"))
+        for _ in 0 ..< 100 {
+            XCTAssertNil(scan.begin("three-year-overview"))
+        }
+        XCTAssertFalse(first.isCancelled)
+        XCTAssertTrue(scan.finish(first))
+        let followup = try XCTUnwrap(scan.begin("three-year-overview"))
+        XCTAssertFalse(scan.finish(followup))
+    }
+
+    func testZoomCancelsOverviewAndIgnoresItsLateCompletion() throws {
+        let scan = RuuviGraphHistoryScan<String>()
+        let overview = try XCTUnwrap(scan.begin("overview"))
+        let zoom = try XCTUnwrap(scan.begin("visible-hour"))
+        XCTAssertTrue(overview.isCancelled)
+        XCTAssertFalse(zoom.isCancelled)
+        XCTAssertFalse(scan.finish(overview))
+        XCTAssertNil(scan.begin("visible-hour"))
+        XCTAssertTrue(scan.finish(zoom))
+    }
+
+    func testSuspendedScanCanRestartSameViewport() throws {
+        let scan = RuuviGraphHistoryScan<String>()
+        let beforeBackground = try XCTUnwrap(scan.begin("visible-hour"))
+        beforeBackground.cancel()
+        let afterForeground = try XCTUnwrap(scan.begin("visible-hour"))
+        XCTAssertFalse(afterForeground.isCancelled)
+        XCTAssertFalse(scan.finish(beforeBackground))
+        XCTAssertFalse(scan.finish(afterForeground))
     }
 }

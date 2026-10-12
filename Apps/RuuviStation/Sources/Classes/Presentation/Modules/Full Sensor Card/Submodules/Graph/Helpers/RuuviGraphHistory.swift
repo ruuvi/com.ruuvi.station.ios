@@ -105,3 +105,47 @@ final class RuuviGraphHistoryRefresh {
         pending = nil
     }
 }
+
+/// Lets a scan finish despite repeated data notifications. A changed viewport,
+/// sensor or unit configuration still cancels obsolete work immediately.
+final class RuuviGraphHistoryScan<Key: Equatable> {
+    private var key: Key?
+    private var cancellation: RuuviHistoryCancellation?
+    private var refreshPending = false
+
+    func begin(_ key: Key) -> RuuviHistoryCancellation? {
+        if self.key == key, cancellation?.isCancelled == false {
+            refreshPending = true
+            return nil
+        }
+        cancellation?.cancel()
+        let next = RuuviHistoryCancellation()
+        self.key = key
+        cancellation = next
+        refreshPending = false
+        return next
+    }
+
+    /// A late completion from an obsolete scan cannot finish its replacement.
+    func finish(_ token: RuuviHistoryCancellation) -> Bool {
+        guard cancellation === token else { return false }
+        let pending = refreshPending && !token.isCancelled
+        key = nil
+        cancellation = nil
+        refreshPending = false
+        return pending
+    }
+}
+
+/// Synchronize time ranges even when axis labels leave different plot widths.
+enum RuuviGraphHistoryViewport {
+    static func synchronize(from source: LineChartView, to target: LineChartView) {
+        let sourceMatrix = source.viewPortHandler.touchMatrix
+        var targetMatrix = target.viewPortHandler.touchMatrix
+        targetMatrix.a = sourceMatrix.a
+        let sourceWidth = source.viewPortHandler.contentWidth
+        let targetWidth = target.viewPortHandler.contentWidth
+        targetMatrix.tx = sourceWidth > 0 ? sourceMatrix.tx * targetWidth / sourceWidth : sourceMatrix.tx
+        target.viewPortHandler.refresh(newMatrix: targetMatrix, chart: target, invalidate: true)
+    }
+}

@@ -305,4 +305,34 @@ final class HistoryPersistenceTests: XCTestCase {
         _ = try awaitResult(persistence.create(records))
         XCTAssertEqual(try awaitResult(persistence.readAll(sensorID)).count, 5001)
     }
+
+    func testLongScanDoesNotBlockViewportScanOrOrdinaryReads() throws {
+        let start = Date().addingTimeInterval(-3600)
+        _ = try awaitResult(persistence.create(record(start)))
+        let range = RuuviHistoryRange(start: start.addingTimeInterval(-1), end: Date())
+        let entered = expectation(description: "Overview is scanning")
+        let release = DispatchSemaphore(value: 0)
+        defer { release.signal() }
+        let overview = persistence.scanHistory(sensorID, range: range, cancellation: RuuviHistoryCancellation()) { _ in
+            XCTAssertFalse(Thread.isMainThread)
+            entered.fulfill()
+            _ = release.wait(timeout: .now() + 5)
+        }
+        wait(for: [entered], timeout: 2)
+        let zoomed = expectation(description: "Viewport scan bypasses overview")
+        let read = expectation(description: "Ordinary sensor read bypasses overview")
+        persistence.scanHistory(sensorID, range: range, cancellation: RuuviHistoryCancellation()) { _ in
+            XCTAssertFalse(Thread.isMainThread)
+        }.on(success: { revision in
+            XCTAssertGreaterThan(revision, 0)
+            zoomed.fulfill()
+        })
+        persistence.historyRevision(sensorID).on(success: { revision in
+            XCTAssertGreaterThan(revision, 0)
+            read.fulfill()
+        })
+        wait(for: [zoomed, read], timeout: 2)
+        release.signal()
+        XCTAssertGreaterThan(try awaitResult(overview), 0)
+    }
 }

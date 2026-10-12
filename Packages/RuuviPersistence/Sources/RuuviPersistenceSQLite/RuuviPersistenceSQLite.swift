@@ -22,6 +22,10 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
 
     private let context: SQLiteContext
     private var lastHistoryPrune = Date.distantPast
+    // Long scans must not hold up latest-value reads or other graph viewports.
+    private let historyReadQueue = DispatchQueue(
+        label: "RuuviTagPersistenceSQLite.historyReadQueue", qos: .userInitiated, attributes: .concurrent
+    )
     private let readQueue: DispatchQueue =
         .init(
             label: "RuuviTagPersistenceSQLite.readQueue",
@@ -157,7 +161,8 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     public func scanHistory(_ id: String, range: RuuviHistoryRange, cancellation: RuuviHistoryCancellation,
                             consume: @escaping (RuuviTagSensorRecord) -> Void) -> Future<Int, RuuviPersistenceError> {
         let promise = Promise<Int, RuuviPersistenceError>()
-        readQueue.async { [self] in
+        historyReadQueue.async { [self] in
+            guard !cancellation.isCancelled else { promise.succeed(value: -1); return }
             do {
                 let revision = try database.dbPool.read { db -> Int in
                     let sensor = try Entity.filter(Entity.macColumn == id || Entity.luidColumn == id).fetchOne(db)

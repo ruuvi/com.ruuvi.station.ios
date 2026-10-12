@@ -205,4 +205,25 @@ final class RuuviHistoryTests: XCTestCase {
         XCTAssertEqual(emptyCursor, requests[1].range.start)
         XCTAssertNil(next.continuing(from: emptyCursor))
     }
+
+    func testReopeningThreeYearsReusesArchiveAndOnlyRevalidatesRecentTail() {
+        let now = date(200_000_000)
+        let selected = RuuviHistoryRange.retained(now: now)
+        let missing = selected.historyToFetch(coverage: [selected], revalidate: true, now: now)
+        XCTAssertEqual(missing, [RuuviHistoryRange(start: now.addingTimeInterval(-48 * 3600), end: now)])
+        let historical = RuuviHistoryRange(start: selected.start, end: now.addingTimeInterval(-90 * 86400))
+        XCTAssertTrue(historical.historyToFetch(coverage: [historical], revalidate: true, now: now).isEmpty)
+    }
+
+    func testArchiveReuseStillFetchesHolesAndLivePollingOverlapsOneMinute() {
+        let selected = range(0, 1_000_000)
+        XCTAssertEqual(
+            selected.historyToFetch(
+                coverage: [range(0, 100), range(200, 1_000_000)],
+                revalidate: false,
+                now: date(1_000_000)
+            ),
+            [range(100, 200), range(999_940, 1_000_000)]
+        )
+    }
 }
