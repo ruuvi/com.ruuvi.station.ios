@@ -131,6 +131,8 @@ private extension CardsSensorNameSwipeView {
     }
 
     func setUpUI() {
+        setContentHuggingPriority(.required, for: .vertical)
+        setContentCompressionResistancePriority(.required, for: .vertical)
         clipsToBounds = true
         isAccessibilityElement = true
         accessibilityTraits = .header
