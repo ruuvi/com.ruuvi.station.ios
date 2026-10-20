@@ -14,8 +14,8 @@ public protocol RuuviLocalFlags {
     /// When enabled downloads alpha version
     var downloadAlphaFirmware: Bool { get set }
 
-    /// When enabled, opening graph auto-starts GATT history sync
-    /// for local (non-cloud) Ruuvi Air sensors.
+    /// When enabled, nearby local (non-cloud) Ruuvi Air sensors automatically
+    /// sync GATT history while the app is in the foreground or when opening graph.
     var autoSyncGattHistoryForRuuviAir: Bool { get set }
 
     /// Minimum age (in minutes) of the last GATT sync date before

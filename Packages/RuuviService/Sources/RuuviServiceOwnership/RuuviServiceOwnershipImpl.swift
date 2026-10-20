@@ -30,6 +30,7 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     private let ruuviUser: RuuviUser
     private let localSyncState: RuuviLocalSyncState
     private let settings: RuuviLocalSettings
+    private let gattService: GATTService
 
     public init(
         cloud: RuuviCloud,
@@ -41,7 +42,8 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         alertService: RuuviServiceAlert,
         ruuviUser: RuuviUser,
         localSyncState: RuuviLocalSyncState,
-        settings: RuuviLocalSettings
+        settings: RuuviLocalSettings,
+        gattService: GATTService
     ) {
         self.cloud = cloud
         self.pool = pool
@@ -53,6 +55,7 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         self.ruuviUser = ruuviUser
         self.localSyncState = localSyncState
         self.settings = settings
+        self.gattService = gattService
     }
 
     @discardableResult
@@ -230,6 +233,38 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
 
     @discardableResult
     public func remove(
+        sensor: RuuviTagSensor,
+        removeCloudHistory: Bool
+    ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
+        let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
+        // Serialize with advertisement eligibility checks so removal cannot start a new download.
+        DispatchQueue.main.async {
+            let wasSuppressed = self.localSyncState.isAutoGattSyncSuppressed(for: sensor.macId)
+            self.localSyncState.setAutoGattSyncSuppressed(true, for: sensor.macId)
+            let stop = sensor.luid.map { self.gattService.stopGattSync(for: $0.value) } ??
+                Future<Bool, RuuviServiceError>(value: false)
+            let fail: (RuuviServiceError) -> Void = { error in
+                self.localSyncState.setAutoGattSyncSuppressed(wasSuppressed, for: sensor.macId)
+                promise.fail(error: error)
+            }
+            let removeStoppedSensor = {
+                self.removeStoppedSensor(sensor: sensor, removeCloudHistory: removeCloudHistory)
+                    .on(success: { promise.succeed(value: $0) }, failure: fail)
+            }
+            // Cancellation waits for in-progress writes. Delete in the same main-queue turn
+            // when stop completes synchronously, so another graph action cannot start a sync in between.
+            stop.on(success: { _ in
+                if Thread.isMainThread {
+                    removeStoppedSensor()
+                } else {
+                    DispatchQueue.main.async(execute: removeStoppedSensor)
+                }
+            }, failure: fail)
+        }
+        return promise.future
+    }
+
+    private func removeStoppedSensor(
         sensor: RuuviTagSensor,
         removeCloudHistory: Bool
     ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {

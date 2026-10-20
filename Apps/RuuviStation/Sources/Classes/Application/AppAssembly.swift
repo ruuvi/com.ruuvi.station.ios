@@ -245,7 +245,10 @@ private final class DaemonAssembly: Assembly {
                 ruuviStorage: ruuviStorage,
                 ruuviReactor: ruuviReactor,
                 foreground: foreground,
-                settings: settings
+                settings: settings,
+                flags: r.resolve(RuuviLocalFlags.self)!,
+                localSyncState: r.resolve(RuuviLocalSyncState.self)!,
+                gattService: r.resolve(GATTService.self)!
             )
             return daemon
         }.inObjectScope(.container)
@@ -318,6 +321,7 @@ private final class BusinessAssembly: Assembly {
         container.register(AppStateService.self) { r in
             let service = AppStateServiceImpl()
             service.settings = r.resolve(RuuviLocalSettings.self)
+            service.localSyncState = r.resolve(RuuviLocalSyncState.self)
             service.advertisementDaemon = r.resolve(RuuviTagAdvertisementDaemon.self)
             service.propertiesDaemon = r.resolve(RuuviTagPropertiesDaemon.self)
             service.cloudSyncDaemon = r.resolve(RuuviDaemonCloudSync.self)
@@ -517,7 +521,8 @@ private final class BusinessAssembly: Assembly {
                 alertService: alertService,
                 ruuviUser: user,
                 localSyncState: localSyncState,
-                settings: settings
+                settings: settings,
+                gattService: r.resolve(GATTService.self)!
             )
         }
 

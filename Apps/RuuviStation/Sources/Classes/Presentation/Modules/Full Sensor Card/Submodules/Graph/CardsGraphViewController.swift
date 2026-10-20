@@ -911,6 +911,16 @@ extension CardsGraphViewController: CardsGraphViewInput {
         showSyncStatusLabel(show: false)
     }
 
+    func showSyncInProgressDialog() {
+        let alertVC = UIAlertController(
+            title: RuuviLocalization.synchronisation,
+            message: RuuviLocalization.TagCharts.Dismiss.Alert.message,
+            preferredStyle: .alert
+        )
+        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
+        present(alertVC, animated: true)
+    }
+
     func showFailedToSyncIn() {
         let title = RuuviLocalization.TagCharts.FailedToSyncDialog.title
         let message = RuuviLocalization.TagCharts.FailedToSyncDialog.message

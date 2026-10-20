@@ -32,7 +32,8 @@ public protocol RuuviServiceFactory {
         alertService: RuuviServiceAlert,
         ruuviUser: RuuviUser,
         localSyncState: RuuviLocalSyncState,
-        settings: RuuviLocalSettings
+        settings: RuuviLocalSettings,
+        gattService: GATTService
     ) -> RuuviServiceOwnership
 
     func createSensorProperties(
@@ -124,7 +125,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
         alertService: RuuviServiceAlert,
         ruuviUser: RuuviUser,
         localSyncState: RuuviLocalSyncState,
-        settings: RuuviLocalSettings
+        settings: RuuviLocalSettings,
+        gattService: GATTService
     ) -> RuuviServiceOwnership {
         RuuviServiceOwnershipImpl(
             cloud: ruuviCloud,
@@ -136,7 +138,8 @@ public final class RuuviServiceFactoryImpl: RuuviServiceFactory {
             alertService: alertService,
             ruuviUser: ruuviUser,
             localSyncState: localSyncState,
-            settings: settings
+            settings: settings,
+            gattService: gattService
         )
     }
 

@@ -16,6 +16,15 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
     private var connectionTimeout: TimeInterval?
     private var serviceTimeout: TimeInterval?
     private var from: Date
+    private let resultLock = NSRecursiveLock()
+    private let progressLock = NSLock()
+    private var latestProgress: BTServiceProgress?
+
+    var currentProgress: BTServiceProgress? {
+        progressLock.lock()
+        defer { progressLock.unlock() }
+        return latestProgress
+    }
 
     init(
         uuid: String,
@@ -42,6 +51,14 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
     }
 
     override func main() {
+        // Cancellation can arrive after start transitions to executing but before main runs.
+        resultLock.lock()
+        defer { resultLock.unlock() }
+        guard !isCancelled else { return }
+        readLogs()
+    }
+
+    private func readLogs() {
         post(started: from, with: uuid)
         let firmwareVersion = RuuviDataFormat.dataFormat(from: firmware)
         background.services.ruuvi.nus.log(
@@ -54,13 +71,17 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
                 .connectionTimeout(connectionTimeout ?? 0),
                 .serviceTimeout(serviceTimeout ?? 0),
             ],
-            progress: progress
+            progress: { [weak self] in self?.handle(progress: $0) }
         ) { observer, result in
+            // Finish any persistence already in progress before cancellation returns.
+            observer.resultLock.lock()
+            defer { observer.resultLock.unlock() }
+            guard !observer.isCancelled else { return }
             switch result {
             case let .success(logResult):
                 switch logResult {
                 case let .points(points):
-                    observer.post(points: points, with: observer.uuid)
+                    observer.post(progress: .reading(points), with: observer.uuid)
                 case let .logs(logs):
                     let records = logs.compactMap {
                         $0.ruuviSensorRecord(
@@ -72,9 +93,11 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
                     }
                     let opLogs = observer.ruuviPool.create(records)
                     opLogs.on(success: { _ in
+                        guard !observer.isCancelled else { return }
                         observer.post(logs: logs, with: observer.uuid)
                         observer.state = .finished
                     }, failure: { error in
+                        guard !observer.isCancelled else { return }
                         observer.post(error: error, with: observer.uuid)
                         observer.error = .ruuviPool(error)
                         observer.state = .finished
@@ -88,6 +111,12 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
         }
     }
 
+    override func cancel() {
+        resultLock.lock()
+        defer { resultLock.unlock() }
+        super.cancel()
+    }
+
     public func stopSync() {
         background.services.ruuvi.nus.disconnect(
             for: self,
@@ -95,6 +124,12 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
             options: [],
             result: { _, _ in }
         )
+    }
+
+    private func handle(progress: BTServiceProgress) {
+        guard !isCancelled else { return }
+        post(progress: progress, with: uuid)
+        self.progress?(progress)
     }
 
     private func post(started date: Date, with uuid: String) {
@@ -111,16 +146,23 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
         }
     }
 
-    private func post(points: Int, with uuid: String) {
-        DispatchQueue.main.async {
+    private func post(progress: BTServiceProgress, with uuid: String) {
+        progressLock.lock()
+        latestProgress = progress
+        progressLock.unlock()
+        DispatchQueue.main.async { [weak self] in
+            guard self?.isCancelled == false else { return }
+            var userInfo: [RuuviTagReadLogsOperationProgressKey: Any] = [
+                .uuid: uuid,
+                .serviceProgress: progress,
+            ]
+            if case let .reading(points) = progress {
+                userInfo[.progress] = points
+            }
             NotificationCenter.default.post(
                 name: .RuuviTagReadLogsOperationProgress,
                 object: nil,
-                userInfo:
-                [
-                    RuuviTagReadLogsOperationProgressKey.uuid: uuid,
-                    RuuviTagReadLogsOperationProgressKey.progress: points,
-                ]
+                userInfo: userInfo
             )
         }
     }

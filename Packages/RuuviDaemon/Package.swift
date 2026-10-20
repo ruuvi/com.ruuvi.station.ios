@@ -84,11 +84,12 @@ let package = Package(
                 "RuuviDaemonOperation",
                 "RuuviNotification",
                 "RuuviLocal",
+                "RuuviService",
             ]
         ),
         .testTarget(
             name: "RuuviDaemonTests",
-            dependencies: ["RuuviDaemon"]
+            dependencies: ["RuuviDaemon", "RuuviDaemonRuuviTag"]
         ),
     ]
 )

@@ -11,6 +11,8 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     private let autoGattSyncAttemptDatePrefix = "RuuviLocalSyncStateUserDefaults.autoGattSyncAttemptDate."
     private let firstAutoGattSyncLogPrefix = "RuuviLocalSyncStateUserDefaults.firstAutoGattSyncLog."
     private var syncingEnqueue: [AnyMACIdentifier] = []
+    private let autoGattSyncSuppressionLock = NSLock()
+    private var autoGattSyncSuppressedSensors = Set<String>()
 
     func setSyncStatus(_ status: NetworkSyncStatus) {
         DispatchQueue.main.async { [weak self] in
@@ -76,6 +78,30 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
     func getAutoGattSyncAttemptDate(for macId: MACIdentifier?) -> Date? {
         guard let macId else { assertionFailure(); return nil }
         return UserDefaults.standard.value(forKey: autoGattSyncAttemptDatePrefix + macId.mac) as? Date
+    }
+
+    func setAutoGattSyncSuppressed(_ suppressed: Bool, for macId: MACIdentifier?) {
+        guard let macId else { return }
+        autoGattSyncSuppressionLock.lock()
+        defer { autoGattSyncSuppressionLock.unlock() }
+        if suppressed {
+            autoGattSyncSuppressedSensors.insert(macId.mac)
+        } else {
+            autoGattSyncSuppressedSensors.remove(macId.mac)
+        }
+    }
+
+    func isAutoGattSyncSuppressed(for macId: MACIdentifier?) -> Bool {
+        guard let macId else { return false }
+        autoGattSyncSuppressionLock.lock()
+        defer { autoGattSyncSuppressionLock.unlock() }
+        return autoGattSyncSuppressedSensors.contains(macId.mac)
+    }
+
+    func resetAutoGattSyncSuppression() {
+        autoGattSyncSuppressionLock.lock()
+        defer { autoGattSyncSuppressionLock.unlock() }
+        autoGattSyncSuppressedSensors.removeAll()
     }
 
     func setHasLoggedFirstAutoSyncGattHistoryForRuuviAir(_ logged: Bool, for macId: MACIdentifier?) {

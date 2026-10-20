@@ -46,6 +46,7 @@ protocol CardsGraphViewInput: ViewInput {
     func showClearConfirmationDialog(for snapshot: RuuviTagCardSnapshot)
     func setSync(status: GraphGattSyncStatus?, for snapshot: RuuviTagCardSnapshot)
     func setSyncProgressViewHidden()
+    func showSyncInProgressDialog()
     func showFailedToSyncIn()
     func showSwipeUpInstruction()
     func showSyncConfirmationDialog(for snapshot: RuuviTagCardSnapshot)

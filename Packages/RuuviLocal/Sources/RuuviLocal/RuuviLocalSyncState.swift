@@ -35,6 +35,11 @@ public protocol RuuviLocalSyncState {
     func getGattSyncDate(for macId: MACIdentifier?) -> Date?
     func setAutoGattSyncAttemptDate(_ date: Date?, for macId: MACIdentifier?)
     func getAutoGattSyncAttemptDate(for macId: MACIdentifier?) -> Date?
+    /// In-memory suppression after clearing history; manual sync remains available.
+    func setAutoGattSyncSuppressed(_ suppressed: Bool, for macId: MACIdentifier?)
+    func isAutoGattSyncSuppressed(for macId: MACIdentifier?) -> Bool
+    /// Called when a new foreground session begins.
+    func resetAutoGattSyncSuppression()
     func setHasLoggedFirstAutoSyncGattHistoryForRuuviAir(_ logged: Bool, for macId: MACIdentifier?)
     func hasLoggedFirstAutoSyncGattHistoryForRuuviAir(for macId: MACIdentifier?) -> Bool
     func setSyncDate(_ date: Date?)
