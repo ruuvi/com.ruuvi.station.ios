@@ -83,6 +83,7 @@ public protocol RuuviLocalSettings: AnyObject {
     var saveHeartbeatsIntervalMinutes: Int { get set }
     var saveHeartbeatsForegroundIntervalSeconds: Int { get set }
     var webPullIntervalMinutes: Int { get set }
+    /// Maximum history window presented by graphs and exports. Does not delete database records.
     var dataPruningOffsetHours: Int { get set }
     var chartIntervalSeconds: Int { get set }
     var chartDurationHours: Int { get set }

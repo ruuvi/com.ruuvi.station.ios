@@ -21,19 +21,8 @@ public final class DataPruningOperationsManager {
 
     public func ruuviTagPruningOperations() -> Future<[Operation], RuuviDaemonError> {
         let promise = Promise<[Operation], RuuviDaemonError>()
-        ruuviStorage.readAll().on(success: { [weak self] ruuviTags in
-            guard let sSelf = self else { return }
-            let ops = ruuviTags.map {
-                RuuviTagDataPruningOperation(
-                    id: $0.id,
-                    ruuviPool: sSelf.ruuviPool,
-                    settings: sSelf.settings
-                )
-            }
-            promise.succeed(value: ops)
-        }, failure: { error in
-            promise.fail(error: .ruuviStorage(error))
-        })
+        // Keep archived history in the database. Visibility limits belong to readers.
+        promise.succeed(value: [])
         return promise.future
     }
 }

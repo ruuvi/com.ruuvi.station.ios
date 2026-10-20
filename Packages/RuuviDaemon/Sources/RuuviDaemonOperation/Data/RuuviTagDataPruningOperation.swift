@@ -14,16 +14,7 @@ class RuuviTagDataPruningOperation: AsyncOperation {
     }
 
     override func main() {
-        let offset = settings.dataPruningOffsetHours
-        let date = Calendar.current.date(
-            byAdding: .hour,
-            value: -offset,
-            to: Date()
-        ) ?? Date()
-        ruuviPool.deleteAllRecords(id, before: date).on(failure: { error in
-            print(error.localizedDescription)
-        }, completion: {
-            self.state = .finished
-        })
+        // Also protect against an operation created before pruning was disabled.
+        state = .finished
     }
 }

@@ -277,7 +277,7 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
         view?.setActiveSnapshot(snapshot)
         refreshSyncUIForCurrentSnapshot()
 
-        view?.historyLengthInHours = settings.chartDurationHours
+        view?.historyLengthInHours = min(max(1, settings.dataPruningOffsetHours), settings.chartDurationHours)
         view?.showChartStat = settings.chartStatsOn
         view?.chartsPerScreen = settings.chartsPerScreen
         view?.showChartAll = settings.chartShowAll
@@ -500,14 +500,14 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
 
     func viewDidSelectChartHistoryLength(hours: Int) {
         settings.chartShowAll = false
-        settings.chartDurationHours = hours
+        settings.chartDurationHours = min(max(1, settings.dataPruningOffsetHours), max(1, hours))
         view?.showChartAll = false
-        view?.historyLengthInHours = settings.chartDurationHours
+        view?.historyLengthInHours = min(max(1, settings.dataPruningOffsetHours), settings.chartDurationHours)
     }
 
     func viewDidSelectAllChartHistory() {
         settings.chartShowAll = true
-        settings.chartDurationHours = 240
+        settings.chartDurationHours = max(1, settings.dataPruningOffsetHours)
         view?.showChartAll = settings.chartShowAll
     }
 
@@ -571,6 +571,11 @@ extension CardsGraphPresenter {
         }
 
         chartModules = cached.modules
+        let cutoff = RuuviHistoryWindow.start(
+            limitHours: settings.dataPruningOffsetHours,
+            requestedHours: settings.chartShowAll ? nil : settings.chartDurationHours
+        )
+        guard cached.measurements.allSatisfy({ $0.date >= cutoff }) else { return false }
         ruuviTagData = cached.measurements
         let restoredEntries = cached.entries.mapValues { $0.map { $0.toEntry() } }
         let alertRangeContext = alertRangeChartContext(
@@ -1527,8 +1532,12 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         variants: [MeasurementDisplayVariant]
     ) -> [MeasurementDisplayVariant: [ChartDataEntry]] {
         var result: [MeasurementDisplayVariant: [ChartDataEntry]] = [:]
+        let cutoff = RuuviHistoryWindow.start(
+            limitHours: settings.dataPruningOffsetHours,
+            requestedHours: settings.chartShowAll ? nil : settings.chartDurationHours
+        )
 
-        for measurement in measurements {
+        for measurement in measurements where measurement.date >= cutoff {
             for variant in variants {
                 guard let entry = chartEntry(
                     for: measurement,

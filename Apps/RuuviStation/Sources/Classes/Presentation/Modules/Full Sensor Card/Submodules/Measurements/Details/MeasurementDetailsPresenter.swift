@@ -202,11 +202,10 @@ private extension MeasurementDetailsPresenter {
     }
 
     func loadHistoricalData(completion: (() -> Void)? = nil) {
-        let fromDate = Calendar.current.date(
-            byAdding: .hour,
-            value: -defaultDurationHours,
-            to: Date()
-        ) ?? Date.distantPast
+        let fromDate = RuuviHistoryWindow.start(
+            limitHours: settings.dataPruningOffsetHours,
+            requestedHours: defaultDurationHours
+        )
 
         let shouldDownsample = !settings.chartShowAllMeasurements
 
@@ -329,28 +328,31 @@ private extension MeasurementDetailsPresenter {
         dataQueue.async(flags: .barrier) { [weak self] in
             guard let self = self else { return }
 
-            // Append new measurements
-            self._ruuviTagData.append(contentsOf: newMeasurements)
+            let cutoffDate = RuuviHistoryWindow.start(
+                limitHours: self.settings.dataPruningOffsetHours,
+                requestedHours: self.defaultDurationHours
+            )
+            let visibleMeasurements = newMeasurements.filter { $0.date >= cutoffDate }
+            self._ruuviTagData.append(contentsOf: visibleMeasurements)
 
             // Update last measurement date
             if let lastNew = newMeasurements.last {
                 self._lastMeasurementDate = lastNew.date
             }
 
-            // Prune old data if needed
-            if self.settings.chartShowAllMeasurements {
-                let cutoffDate = Calendar.current.date(
-                    byAdding: .hour,
-                    value: -self.settings.dataPruningOffsetHours,
-                    to: Date()
-                ) ?? Date.distantPast
-
-                self._ruuviTagData.removeAll { $0.date < cutoffDate }
-            }
+            // Crop the in-memory presentation only; keep database history intact.
+            let previousCount = self._ruuviTagData.count
+            self._ruuviTagData.removeAll { $0.date < cutoffDate }
+            let retainedMeasurements = self._ruuviTagData
+            let removedExpiredMeasurements = retainedMeasurements.count != previousCount
 
             // Update chart on main thread
             DispatchQueue.main.async { [weak self] in
-                self?.appendDataToChart(newMeasurements)
+                if removedExpiredMeasurements {
+                    self?.updateChart(with: retainedMeasurements)
+                } else {
+                    self?.appendDataToChart(visibleMeasurements)
+                }
             }
         }
     }
@@ -360,10 +362,10 @@ private extension MeasurementDetailsPresenter {
 
 private extension MeasurementDetailsPresenter {
 
-    func updateChart() {
+    func updateChart(with measurements: [RuuviMeasurement]? = nil) {
         guard isDataLoaded, isViewActive else { return }
 
-        let measurements = ruuviTagData
+        let measurements = measurements ?? ruuviTagData
 
         // Check if we have valid data for this measurement type
         let variant = resolvedVariant

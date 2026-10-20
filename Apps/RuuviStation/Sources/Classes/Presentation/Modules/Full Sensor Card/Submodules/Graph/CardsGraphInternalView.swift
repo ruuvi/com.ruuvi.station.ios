@@ -372,11 +372,10 @@ extension CardsGraphInternalView {
             }
             return
         } else {
-            let from = Calendar.autoupdatingCurrent.date(
-                byAdding: .hour,
-                value: -settings.chartDurationHours,
-                to: Date()
-            ) ?? Date.distantFuture
+            let from = RuuviHistoryWindow.start(
+                limitHours: settings.dataPruningOffsetHours,
+                requestedHours: settings.chartShowAll ? nil : settings.chartDurationHours
+            )
             xAxis.axisMinimum = from.timeIntervalSince1970
             xAxis.axisMaximum = Date().timeIntervalSince1970
         }
@@ -447,11 +446,10 @@ extension CardsGraphInternalView {
             }
 
             if !settings.chartShowAll {
-                let from = Calendar.autoupdatingCurrent.date(
-                    byAdding: .hour,
-                    value: -settings.chartDurationHours,
-                    to: Date()
-                ) ?? Date.distantFuture
+                let from = RuuviHistoryWindow.start(
+                    limitHours: settings.dataPruningOffsetHours,
+                    requestedHours: settings.chartShowAll ? nil : settings.chartDurationHours
+                )
                 xAxis.axisMinimum = from.timeIntervalSince1970
                 xAxis.axisMaximum = Date().timeIntervalSince1970
             }

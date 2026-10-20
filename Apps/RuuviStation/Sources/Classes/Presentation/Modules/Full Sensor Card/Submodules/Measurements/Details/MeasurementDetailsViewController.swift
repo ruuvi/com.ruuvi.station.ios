@@ -881,7 +881,7 @@ extension MeasurementDetailsViewController: MeasurementDetailsViewInput {
 
         graphView.updateDataSet(
             with: entries,
-            isFirstEntry: entries.count == 1,
+            isFirstEntry: (graphView.data?.entryCount ?? 0) == 0,
             firstEntry: nil,
             showAlertRangeInGraph: showAlertRangeInGraph
         )

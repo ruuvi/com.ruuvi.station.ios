@@ -304,14 +304,15 @@ extension CardsGraphViewInteractor {
     }
 
     private func removeFirst() {
-        guard settings.chartShowAllMeasurements else { return }
-        let cropDate = Calendar.autoupdatingCurrent.date(
-            byAdding: .hour,
-            value: -settings.dataPruningOffsetHours,
-            to: Date()
-        ) ?? Date.distantPast
-        let prunedResults = ruuviTagData.filter { $0.date < cropDate }
-        ruuviTagData.removeFirst(prunedResults.count)
+        let cutoff = RuuviHistoryWindow.start(
+            limitHours: settings.dataPruningOffsetHours,
+            requestedHours: settings.chartShowAll ? nil : settings.chartDurationHours
+        )
+        let previousCount = ruuviTagData.count
+        ruuviTagData.removeAll { $0.date < cutoff }
+        if ruuviTagData.count != previousCount, let sensor = ruuviTagSensor {
+            presenter.interactorDidUpdate(sensor: sensor)
+        }
     }
 
     private func fetchLast() {
@@ -357,8 +358,14 @@ extension CardsGraphViewInteractor {
             guard let sSelf = self else { return }
             sSelf.lastMeasurement = last.measurement
             sSelf.lastMeasurementRecord = last
-            sSelf.ruuviTagData.append(last.measurement)
-            sSelf.insertMeasurements([last.measurement])
+            let cutoff = RuuviHistoryWindow.start(
+                limitHours: sSelf.settings.dataPruningOffsetHours,
+                requestedHours: sSelf.settings.chartShowAll ? nil : sSelf.settings.chartDurationHours
+            )
+            if last.date >= cutoff {
+                sSelf.ruuviTagData.append(last.measurement)
+                sSelf.insertMeasurements([last.measurement])
+            }
             sSelf.presenter.updateLatestRecord(last)
         }, failure: { [weak self] error in
             self?.presenter.updateLatestRecord(lastMeasurementRecord)
@@ -412,18 +419,17 @@ extension CardsGraphViewInteractor {
             return
         }
 
-        let date = Calendar.autoupdatingCurrent.date(
-            byAdding: .hour,
-            value: -settings.chartDurationHours,
-            to: Date()
-        ) ?? Date.distantPast
+        let date = RuuviHistoryWindow.start(
+            limitHours: settings.dataPruningOffsetHours,
+            requestedHours: settings.chartShowAll ? nil : settings.chartDurationHours
+        )
         let op = ruuviStorage.read(
             ruuviTagSensor.id,
             after: date,
             with: TimeInterval(2)
         )
         op.on(success: { [weak self] results in
-            self?.ruuviTagData = results.map(\.measurement)
+            self?.ruuviTagData = results.map(\.measurement).filter { $0.date >= date }
         }, failure: { [weak self] error in
             self?.presenter.interactorDidError(.ruuviStorage(error))
         }, completion: completion)
@@ -435,11 +441,10 @@ extension CardsGraphViewInteractor {
             return
         }
 
-        let date = Calendar.autoupdatingCurrent.date(
-            byAdding: .hour,
-            value: -settings.chartDurationHours,
-            to: Date()
-        ) ?? Date.distantPast
+        let date = RuuviHistoryWindow.start(
+            limitHours: settings.dataPruningOffsetHours,
+            requestedHours: settings.chartShowAll ? nil : settings.chartDurationHours
+        )
         let op = ruuviStorage.readDownsampled(
             ruuviTagSensor.id,
             after: date,
@@ -447,7 +452,7 @@ extension CardsGraphViewInteractor {
             pick: maximumPointsCount
         )
         op.on(success: { [weak self] results in
-            self?.ruuviTagData = results.map(\.measurement)
+            self?.ruuviTagData = results.map(\.measurement).filter { $0.date >= date }
         }, failure: { [weak self] error in
             self?.presenter.interactorDidError(.ruuviStorage(error))
         }, completion: competion)

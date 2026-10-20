@@ -224,7 +224,7 @@ class CardsGraphViewController: UIViewController {
 
     private let historyHoursOptions: [Int] = [1, 2, 3, 6, 12]
     private let minimumHistoryLimit: Int = 1 // Day
-    private let maximumHistoryLimit: Int = 10 // Days
+    private var maximumHistoryLimit: Int { max(0, (settings?.dataPruningOffsetHours ?? 0) / 24) }
     private let highlightAnimationDelay: TimeInterval = 0.3
 
     private var settings: RuuviLocalSettings!
@@ -433,7 +433,7 @@ class CardsGraphViewController: UIViewController {
         all_action.state = showChartAll ? .on : .off
         actions.append(all_action)
 
-        for hour in historyHoursOptions {
+        for hour in historyHoursOptions where hour <= max(0, settings?.dataPruningOffsetHours ?? 0) {
             let action = UIAction(
                 title: "\(hour) \(hour == 1 ? RuuviLocalization.hour : RuuviLocalization.hours)".lowercased()
             ) { [weak self] _ in
@@ -447,7 +447,7 @@ class CardsGraphViewController: UIViewController {
             actions.append(action)
         }
 
-        for day in minimumHistoryLimit ... maximumHistoryLimit {
+        for day in 0 ... maximumHistoryLimit where day >= minimumHistoryLimit {
             let action = UIAction(title: day.days) {
                 [weak self] _ in
                 self?.handleHistoryLengthSelection(hours: day * 24)
