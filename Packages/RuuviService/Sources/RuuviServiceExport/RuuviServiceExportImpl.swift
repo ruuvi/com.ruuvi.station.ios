@@ -64,11 +64,10 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
         RuuviServiceError
     > {
         let promise = Promise<URL, RuuviServiceError>()
-        let networkPruningOffset = -TimeInterval(ruuviLocalSettings.networkPruningIntervalHours * 60 * 60)
-        let networkPuningDate = Date(timeIntervalSinceNow: networkPruningOffset)
+        let historyStart = RuuviHistoryWindow.start(limitHours: ruuviLocalSettings.dataPruningOffsetHours)
         let ruuviTag = ruuviStorage.readOne(uuid)
         ruuviTag.on(success: { [weak self] ruuviTag in
-            let recordsOperation = self?.ruuviStorage.readAll(uuid, after: networkPuningDate)
+            let recordsOperation = self?.ruuviStorage.readAll(uuid, after: historyStart)
             recordsOperation?.on(success: { [weak self] records in
                 let offsetedLogs = records.compactMap { $0.with(sensorSettings: settings) }
                 self?.csvLog(for: ruuviTag, version: version, with: offsetedLogs)
@@ -94,13 +93,12 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
     ) -> Future<URL, RuuviServiceError> {
         let promise = Promise<URL, RuuviServiceError>()
 
-        let networkPruningOffset = -TimeInterval(ruuviLocalSettings.networkPruningIntervalHours * 60 * 60)
-        let networkPuningDate = Date(timeIntervalSinceNow: networkPruningOffset)
+        let historyStart = RuuviHistoryWindow.start(limitHours: ruuviLocalSettings.dataPruningOffsetHours)
         let ruuviTag = ruuviStorage.readOne(uuid)
 
         ruuviTag.on(success: { [weak self] ruuviTag in
             guard let self = self else { return }
-            let recordsOperation = self.ruuviStorage.readAll(uuid, after: networkPuningDate)
+            let recordsOperation = self.ruuviStorage.readAll(uuid, after: historyStart)
 
             recordsOperation.on(success: { [weak self] records in
                 guard let self = self else { return }

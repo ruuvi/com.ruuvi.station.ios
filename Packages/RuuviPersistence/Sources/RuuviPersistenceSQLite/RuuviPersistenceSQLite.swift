@@ -205,7 +205,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     let request = """
                     SELECT *
                     FROM ruuvi_tag_sensor_records rtsr
-                    WHERE rtsr.luid = ? OR rtsr.mac LIKE ?
+                    WHERE (rtsr.luid = ? OR rtsr.mac LIKE ?)
                     AND rtsr.date > ?
                     ORDER BY date
                     """

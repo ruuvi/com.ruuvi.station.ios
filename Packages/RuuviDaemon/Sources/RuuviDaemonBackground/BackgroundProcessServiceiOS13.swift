@@ -22,14 +22,8 @@ public final class BackgroundProcessServiceiOS13: BackgroundProcessService {
     }
 
     public func schedule() {
-        do {
-            let request = BGProcessingTaskRequest(identifier: dataPruning)
-            request.requiresExternalPower = false
-            request.requiresNetworkConnectivity = false
-            try BGTaskScheduler.shared.submit(request)
-        } catch {
-            print(error)
-        }
+        // History is retained indefinitely. Previously scheduled tasks are still
+        // registered above so iOS can complete them safely without deleting data.
     }
 
     private func handleDataPruning(task: BGProcessingTask) {
