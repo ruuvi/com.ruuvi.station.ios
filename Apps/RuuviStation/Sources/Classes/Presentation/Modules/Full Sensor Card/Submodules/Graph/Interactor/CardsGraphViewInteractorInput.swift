@@ -19,8 +19,11 @@ protocol CardsGraphViewInteractorInput: AnyObject {
     func export() -> Future<URL, RUError>
     func syncRecords(progress: ((BTServiceProgress) -> Void)?) -> Future<Void, RUError>
     func stopSyncRecords() -> Future<Bool, RUError>
-    func isSyncingRecords() -> Bool
-    func isSyncingRecordsQueued() -> Bool
+    func isSyncingAnyRecords() -> Bool
+    func isSyncingRecords(for luid: LocalIdentifier?) -> Bool
+    func isSyncingRecordsQueued(for luid: LocalIdentifier?) -> Bool
+    func currentSyncProgress(for luid: LocalIdentifier?) -> BTServiceProgress?
+    func isAutoGattSyncSuppressed() -> Bool
     func getLastGattSyncDate() -> Date?
     func getAutoGattSyncAttemptDate() -> Date?
     func setAutoGattSyncAttemptDate(_ date: Date?)

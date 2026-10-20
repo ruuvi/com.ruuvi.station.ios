@@ -17,6 +17,7 @@ class AppStateServiceImpl: AppStateService {
     var propertiesDaemon: RuuviTagPropertiesDaemon!
     var cloudSyncDaemon: RuuviDaemonCloudSync!
     var settings: RuuviLocalSettings!
+    var localSyncState: RuuviLocalSyncState!
     var userPropertiesService: RuuviAnalytics!
     var universalLinkCoordinator: UniversalLinkCoordinator!
 
@@ -38,9 +39,10 @@ class AppStateServiceImpl: AppStateService {
     }
 
     func application(
-        _: UIApplication,
+        _ application: UIApplication,
         didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?
     ) {
+        settings.appIsOnForeground = application.applicationState != .background
         if settings.isAdvertisementDaemonOn {
             advertisementDaemon.start()
         }
@@ -54,7 +56,6 @@ class AppStateServiceImpl: AppStateService {
         heartbeatDaemon.start()
         propertiesDaemon.start()
         backgroundProcessService.register()
-        settings.appIsOnForeground = true
         observeWidgetKind()
         DispatchQueue.main.async {
             self.userPropertiesService.update()
@@ -85,6 +86,7 @@ class AppStateServiceImpl: AppStateService {
     }
 
     func applicationDidEnterBackground(_: UIApplication) {
+        settings.appIsOnForeground = false
         if settings.isAdvertisementDaemonOn {
             advertisementDaemon.stop()
         }
@@ -107,15 +109,15 @@ class AppStateServiceImpl: AppStateService {
         }
         propertiesDaemon.stop()
         backgroundProcessService.schedule()
-        settings.appIsOnForeground = false
     }
 
     func applicationWillEnterForeground(_: UIApplication) {
+        settings.appIsOnForeground = true
+        localSyncState.resetAutoGattSyncSuppression()
         if settings.isAdvertisementDaemonOn {
             advertisementDaemon.start()
         }
         propertiesDaemon.start()
-        settings.appIsOnForeground = true
     }
 
     func applicationDidOpenWithUniversalLink(_: UIApplication, url: URL) {

@@ -68,11 +68,10 @@ class CardsGraphPresenter: NSObject {
         var isQueued: Bool
         var progress: BTServiceProgress?
     }
+    private var externalSyncSnapshotIds = Set<String>()
+    private var externalGattObservationTokens: [NSObjectProtocol] = []
     private var syncStateBySnapshotId: [String: SnapshotGATTSyncState] = [:]
     private var syncSessionIdBySnapshotId: [String: UUID] = [:]
-    private var hasAnySyncInProgress: Bool {
-        syncStateBySnapshotId.values.contains(where: { $0.isSyncing })
-    }
     private var isLoadingHistory: Bool = false
     private var shouldRefreshEmptyStateAfterLoad: Bool = false
     private var lastSyncSnapshotDate = Date()
@@ -155,6 +154,11 @@ class CardsGraphPresenter: NSObject {
         self.flags = flags
         self.serviceCoordinatorManager = serviceCoordinatorManager
         super.init()
+        observeExternalGattSync()
+    }
+
+    deinit {
+        externalGattObservationTokens.forEach(NotificationCenter.default.removeObserver)
     }
 }
 
@@ -300,7 +304,7 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
     }
 
     func viewDidTriggerSync(for snapshot: RuuviTagCardSnapshot?) {
-        viewDidStartSync(for: snapshot)
+        guard startSync(for: snapshot, source: .manual) else { return }
 
         guard let luid = sensor?.luid, let snapshot = snapshot else { return }
         if !settings.syncDialogHidden(for: luid) {
@@ -326,22 +330,34 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
         startSync(for: snapshot, source: .manual)
     }
 
+    @discardableResult
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func startSync(
         for snapshot: RuuviTagCardSnapshot?,
         source: GATTSyncStartSource
-    ) {
-        guard let snapshot = snapshot else { return }
+    ) -> Bool {
+        guard let snapshot = snapshot else { return false }
+        if source == .automatic, !isRuuviAir(snapshot) { return false }
         cancelScheduledAutoGattSync()
         // Check bluetooth
         let resolvedState = serviceCoordinatorManager.getCurrentBluetoothState()
         guard resolvedState.isEnabled && !resolvedState.userDeclined else {
             view?.showBluetoothDisabled(userDeclined: resolvedState.userDeclined)
-            return
+            return false
+        }
+        // A foreground advertisement may already have queued this sensor's history.
+        if isRuuviAir(snapshot), interactor?.isSyncingRecords(for: snapshot.identifierData.luid) == true {
+            refreshSyncUIForCurrentSnapshot()
+            return false
         }
         guard syncStateBySnapshotId[snapshot.id]?.isSyncing != true else {
             refreshSyncUIForCurrentSnapshot()
-            return
+            return false
+        }
+        if !flags.allowConcurrentGattSyncForMultipleSensors,
+           interactor?.isSyncingAnyRecords() == true {
+            if source == .manual { view?.showSyncInProgressDialog() }
+            return false
         }
         let syncSessionId = UUID()
         syncSessionIdBySnapshotId[snapshot.id] = syncSessionId
@@ -357,7 +373,7 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
                 self?.updateSyncProgress(progress, for: snapshot)
             }
         }
-        let isQueued = interactor?.isSyncingRecordsQueued() == true
+        let isQueued = interactor?.isSyncingRecordsQueued(for: snapshot.identifierData.luid) == true
         if isQueued {
             setSyncState(
                 isSyncing: true,
@@ -373,7 +389,7 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
                 progress: nil,
                 for: snapshot
             )
-            return
+            return false
         }
         if source == .automatic {
             interactor?.setHasLoggedFirstAutoSyncGattHistoryForRuuviAir(true)
@@ -403,6 +419,7 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
                 )
             }
         })
+        return true
     }
 
     func viewDidTriggerStopSync(for snapshot: RuuviTagCardSnapshot?) {
@@ -415,10 +432,15 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
     }
 
     func viewDidConfirmToClear(for snapshot: RuuviTagCardSnapshot?) {
+        cancelScheduledAutoGattSync()
         activityPresenter.show(with: .loading(message: nil))
         if let sensor = sensor {
             interactor?.deleteAllRecords(for: sensor)
-                .on(failure: { [weak self] error in
+                .on(success: { [weak self] in
+                    if let snapshot {
+                        self?.clearSyncState(for: snapshot.id)
+                    }
+                }, failure: { [weak self] error in
                     self?.errorPresenter.present(error: error)
                 }, completion: { [weak self] in
                     self?.activityPresenter.dismiss(immediately: true)
@@ -427,7 +449,7 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
     }
 
     func viewDidConfirmAbortSync(source: GraphHistoryAbortSyncSource) {
-        stopGattSync()
+        stopGattSync(allowExternal: true)
         if let snapshot = snapshot {
             setSyncState(
                 isSyncing: false,
@@ -859,7 +881,12 @@ extension CardsGraphPresenter {
         }
     }
 
-    private func stopGattSync() {
+    private func stopGattSync(allowExternal: Bool = false) {
+        // Lifecycle changes leave external downloads running; an explicit cancel may stop them.
+        if let snapshot, isRuuviAir(snapshot) {
+            guard syncStateBySnapshotId[snapshot.id]?.isSyncing == true else { return }
+            guard allowExternal || !externalSyncSnapshotIds.contains(snapshot.id) else { return }
+        }
         interactor?.stopSyncRecords()
             .on(success: { [weak self] _ in
                 guard self?.view != nil else { return }
@@ -875,10 +902,6 @@ extension CardsGraphPresenter {
             guard let self else { return }
             guard self.shouldAutoStartGattSyncOnGraphOpen() else { return }
             guard self.view?.graphIsVisibleForUser == true else { return }
-            if !self.flags.allowConcurrentGattSyncForMultipleSensors {
-                guard !self.hasAnySyncInProgress else { return }
-            }
-            guard self.interactor?.isSyncingRecords() != true else { return }
             self.startSync(for: self.snapshot, source: .automatic)
         }
         autoGattSyncWorkItem = workItem
@@ -926,7 +949,83 @@ extension CardsGraphPresenter {
         }
     }
 
+    private func observeExternalGattSync() {
+        let names: [Notification.Name] = [
+            .RuuviTagReadLogsOperationDidStart,
+            .RuuviTagReadLogsOperationProgress,
+            .RuuviTagReadLogsOperationDidFinish,
+            .RuuviTagReadLogsOperationDidFail,
+        ]
+        externalGattObservationTokens = names.map { name in
+            NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { [weak self] note in
+                self?.handleExternalGattSync(note)
+            }
+        }
+    }
+
+    private func adoptExternalSyncForCurrentSnapshot() {
+        guard let snapshot, isRuuviAir(snapshot) else { return }
+        let luid = snapshot.identifierData.luid
+        let isActive = interactor?.isSyncingRecords(for: luid) == true
+        if externalSyncSnapshotIds.contains(snapshot.id), !isActive {
+            externalSyncSnapshotIds.remove(snapshot.id)
+            syncStateBySnapshotId.removeValue(forKey: snapshot.id)
+        } else if isActive, syncStateBySnapshotId[snapshot.id]?.isSyncing != true {
+            externalSyncSnapshotIds.insert(snapshot.id)
+            syncStateBySnapshotId[snapshot.id] = SnapshotGATTSyncState(
+                isSyncing: true,
+                isQueued: interactor?.isSyncingRecordsQueued(for: luid) == true,
+                progress: interactor?.currentSyncProgress(for: luid) ?? .connecting
+            )
+        }
+    }
+
+    private func handleExternalGattSync(_ notification: Notification) {
+        let uuid: String?
+        switch notification.name {
+        case .RuuviTagReadLogsOperationDidStart:
+            uuid = notification.userInfo?[RuuviTagReadLogsOperationDidStartKey.uuid] as? String
+        case .RuuviTagReadLogsOperationProgress:
+            uuid = notification.userInfo?[RuuviTagReadLogsOperationProgressKey.uuid] as? String
+        case .RuuviTagReadLogsOperationDidFinish:
+            uuid = notification.userInfo?[RuuviTagReadLogsOperationDidFinishKey.uuid] as? String
+        default:
+            uuid = notification.userInfo?[RuuviTagReadLogsOperationDidFailKey.uuid] as? String
+        }
+        guard let uuid,
+              let target = snapshots.first(where: { $0.identifierData.luid?.value == uuid }) ??
+                snapshot.flatMap({ $0.identifierData.luid?.value == uuid ? $0 : nil }),
+              isRuuviAir(target),
+              syncSessionIdBySnapshotId[target.id] == nil
+        else { return }
+        if notification.name == .RuuviTagReadLogsOperationDidFinish ||
+            notification.name == .RuuviTagReadLogsOperationDidFail {
+            externalSyncSnapshotIds.remove(target.id)
+            syncStateBySnapshotId.removeValue(forKey: target.id)
+            // Notifications are posted just before the operation leaves its queue.
+            DispatchQueue.main.async { [weak self] in
+                self?.refreshSyncUIForCurrentSnapshot()
+                if self?.snapshot?.id == target.id {
+                    self?.interactor?.restartObservingData()
+                }
+            }
+        } else {
+            externalSyncSnapshotIds.insert(target.id)
+            let progress = notification.userInfo?[
+                RuuviTagReadLogsOperationProgressKey.serviceProgress
+            ] as? BTServiceProgress
+            let points = notification.userInfo?[RuuviTagReadLogsOperationProgressKey.progress] as? Int
+            syncStateBySnapshotId[target.id] = SnapshotGATTSyncState(
+                isSyncing: true,
+                isQueued: false,
+                progress: progress ?? points.map { .reading($0) } ?? .connecting
+            )
+            if snapshot?.id == target.id { refreshSyncUIForCurrentSnapshot() }
+        }
+    }
+
     private func refreshSyncUIForCurrentSnapshot() {
+        adoptExternalSyncForCurrentSnapshot()
         guard let snapshot else {
             output?.setGraphGattSyncInProgress(false)
             return
@@ -948,13 +1047,17 @@ extension CardsGraphPresenter {
         }
     }
 
+    private func isRuuviAir(_ snapshot: RuuviTagCardSnapshot) -> Bool {
+        let firmwareVersion = self.snapshot?.id == snapshot.id ?
+            sensor?.version ?? snapshot.displayData.version.bound : snapshot.displayData.version.bound
+        let firmwareType = RuuviDataFormat.dataFormat(from: firmwareVersion)
+        return firmwareType == .e1 || firmwareType == .v6
+    }
+
     private func shouldAutoStartGattSyncOnGraphOpen() -> Bool {
         guard flags.autoSyncGattHistoryForRuuviAir else { return false }
-        guard let snapshot else { return false }
-        let firmwareVersion = sensor?.version ?? snapshot.displayData.version.bound
-        let firmwareType = RuuviDataFormat.dataFormat(from: firmwareVersion)
-        let isRuuviAir = firmwareType == .e1 || firmwareType == .v6
-        guard isRuuviAir else { return false }
+        guard interactor?.isAutoGattSyncSuppressed() != true else { return false }
+        guard let snapshot, isRuuviAir(snapshot) else { return false }
         let isCloudSensor = sensor?.isCloud ?? snapshot.metadata.isCloud
         guard !isCloudSensor else { return false }
         if interactor?.hasLoggedFirstAutoSyncGattHistoryForRuuviAir() != true {
@@ -980,6 +1083,7 @@ extension CardsGraphPresenter {
     }
 
     private func clearSyncState(for snapshotId: String) {
+        externalSyncSnapshotIds.remove(snapshotId)
         syncStateBySnapshotId.removeValue(forKey: snapshotId)
         syncSessionIdBySnapshotId.removeValue(forKey: snapshotId)
         if self.snapshot?.id == snapshotId {

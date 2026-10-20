@@ -40,8 +40,6 @@ class CardsGraphViewInteractor {
         Double(min(5000, max(1000, flags.graphDownsampleMaximumPoints)))
     }
 
-    private var gattSyncInterruptedByUser: Bool = false
-
     deinit {
         ruuviTagSensorObservationToken?.invalidate()
         ruuviTagSensorObservationToken = nil
@@ -147,29 +145,33 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
         return promise.future
     }
 
-    func isSyncingRecords() -> Bool {
-        guard let luid = ruuviTagSensor.luid
-        else {
-            return false
-        }
-        if gattService.isSyncingLogs(with: luid.value) {
-            return true
-        } else {
-            return false
-        }
+    func isSyncingAnyRecords() -> Bool {
+        gattService.isSyncingLogs()
     }
 
-    func isSyncingRecordsQueued() -> Bool {
-        guard let luid = ruuviTagSensor.luid
-        else {
-            return false
-        }
+    func isSyncingRecords(for luid: LocalIdentifier?) -> Bool {
+        guard let luid else { return false }
+        return gattService.isSyncingLogs(with: luid.value)
+    }
+
+    func isSyncingRecordsQueued(for luid: LocalIdentifier?) -> Bool {
+        guard let luid else { return false }
         return gattService.isSyncingLogsQueued(with: luid.value)
+    }
+
+    func currentSyncProgress(for luid: LocalIdentifier?) -> BTServiceProgress? {
+        guard let luid else { return nil }
+        return gattService.syncProgress(with: luid.value)
     }
 
     func getLastGattSyncDate() -> Date? {
         guard let ruuviTagSensor = ruuviTagSensor else { return nil }
         return localSyncState.getGattSyncDate(for: ruuviTagSensor.macId)
+    }
+
+    func isAutoGattSyncSuppressed() -> Bool {
+        guard let ruuviTagSensor else { return false }
+        return localSyncState.isAutoGattSyncSuppressed(for: ruuviTagSensor.macId)
     }
 
     func getAutoGattSyncAttemptDate() -> Date? {
@@ -224,14 +226,12 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
             from: syncFrom ?? Date.distantPast,
             settings: sensorSettings,
             progress: progress,
-            connectionTimeout: connectionTimeout,
-            serviceTimeout: serviceTimeout
+            timeouts: GATTServiceTimeouts(connection: connectionTimeout, service: serviceTimeout)
         )
-        op.on(success: { [weak self] _ in
-            if let isInterrupted = self?.gattSyncInterruptedByUser, !isInterrupted {
+        op.on(success: { [weak self] completed in
+            if completed {
                 self?.localSyncState.setGattSyncDate(Date(), for: sensorMacId)
             }
-            self?.gattSyncInterruptedByUser = false
             promise.succeed(value: ())
         }, failure: { error in
             promise.fail(error: .ruuviService(error))
@@ -247,10 +247,7 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
             return promise.future
         }
         let op = gattService.stopGattSync(for: luid.value)
-        op.on(success: { [weak self] response in
-            if response {
-                self?.gattSyncInterruptedByUser = true
-            }
+        op.on(success: { response in
             promise.succeed(value: response)
         }, failure: { error in
             promise.fail(error: .ruuviService(error))
@@ -260,17 +257,28 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
 
     func deleteAllRecords(for sensor: RuuviTagSensor) -> Future<Void, RUError> {
         let promise = Promise<Void, RUError>()
-        ruuviSensorRecords.clear(for: sensor)
-            .on(failure: { error in
-                promise.fail(error: .ruuviService(error))
-            }, completion: { [weak self] in
-                self?.localSyncState.setSyncDate(nil, for: self?.ruuviTagSensor.macId)
-                self?.localSyncState.setSyncDate(nil)
-                self?.localSyncState.setGattSyncDate(nil, for: self?.ruuviTagSensor.macId)
-                self?.localSyncState.setAutoGattSyncAttemptDate(nil, for: self?.ruuviTagSensor.macId)
+        let syncState = localSyncState!
+        let recordsService = ruuviSensorRecords!
+        let wasSuppressed = syncState.isAutoGattSyncSuppressed(for: sensor.macId)
+        let format = RuuviDataFormat.dataFormat(from: sensor.version)
+        if format == .e1 || format == .v6 {
+            syncState.setAutoGattSyncSuppressed(true, for: sensor.macId)
+        }
+        let stop = sensor.luid.map { gattService.stopGattSync(for: $0.value) } ??
+            Future<Bool, RuuviServiceError>(value: false)
+        stop.flatMap { _ in
+            recordsService.clear(for: sensor)
+        }.on(success: { [weak self] in
+            if self?.ruuviTagSensor?.id == sensor.id {
                 self?.restartObservingData()
-                promise.succeed(value: ())
-            })
+            }
+            promise.succeed(value: ())
+        }, failure: { error in
+            if !wasSuppressed {
+                syncState.setAutoGattSyncSuppressed(false, for: sensor.macId)
+            }
+            promise.fail(error: .ruuviService(error))
+        })
         return promise.future
     }
 

@@ -31,8 +31,7 @@ public final class GATTServiceQueue: GATTService {
         from: Date,
         settings: SensorSettings?,
         progress: ((BTServiceProgress) -> Void)?,
-        connectionTimeout: TimeInterval?,
-        serviceTimeout: TimeInterval?
+        timeouts: GATTServiceTimeouts
     ) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
         if isSyncingLogs(with: uuid) {
@@ -47,14 +46,14 @@ public final class GATTServiceQueue: GATTService {
                 ruuviPool: ruuviPool,
                 background: background,
                 progress: progress,
-                connectionTimeout: connectionTimeout,
-                serviceTimeout: serviceTimeout
+                connectionTimeout: timeouts.connection,
+                serviceTimeout: timeouts.service
             )
             operation.completionBlock = { [unowned operation] in
                 if let error = operation.error {
                     promise.fail(error: error)
                 } else {
-                    promise.succeed(value: true)
+                    promise.succeed(value: !operation.isCancelled)
                 }
             }
             queue.addOperation(operation)
@@ -64,8 +63,18 @@ public final class GATTServiceQueue: GATTService {
 
     // swiftlint:enable function_parameter_count
 
+    public func isSyncingLogs() -> Bool {
+        queue.operations.contains(where: {
+            $0 is RuuviTagReadLogsOperation &&
+                !$0.isFinished && (!$0.isCancelled || $0.isExecuting)
+        })
+    }
+
     public func isSyncingLogs(with uuid: String) -> Bool {
-        queue.operations.contains(where: { ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid })
+        queue.operations.contains(where: {
+            ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid &&
+                !$0.isFinished && (!$0.isCancelled || $0.isExecuting)
+        })
     }
 
     public func isSyncingLogsQueued(with uuid: String) -> Bool {
@@ -81,19 +90,23 @@ public final class GATTServiceQueue: GATTService {
         })
     }
 
+    public func syncProgress(with uuid: String) -> BTServiceProgress? {
+        queue.operations.compactMap { $0 as? RuuviTagReadLogsOperation }
+            .first(where: { $0.uuid == uuid && !$0.isFinished && !$0.isCancelled })?
+            .currentProgress
+    }
+
     @discardableResult
     public func stopGattSync(for uuid: String) -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
-        if let operation = queue.operations
-            .first(where: { ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid }) {
-            if let queueOperation = operation as? RuuviTagReadLogsOperation {
-                queueOperation.stopSync()
-            }
+        let operations = queue.operations.compactMap { $0 as? RuuviTagReadLogsOperation }
+            .filter { $0.uuid == uuid && !$0.isFinished }
+        for operation in operations {
+            // Disconnect can trigger a completion callback, so mark cancellation first.
             operation.cancel()
-            promise.succeed(value: operation.isCancelled)
-        } else {
-            promise.succeed(value: false)
+            operation.stopSync()
         }
+        promise.succeed(value: !operations.isEmpty)
         return promise.future
     }
 }

@@ -9,15 +9,43 @@ open class AsyncOperation: Operation {
         }
     }
 
-    open var state = State.ready {
-        willSet {
+    private let stateLock = NSRecursiveLock()
+    private var storedState = State.ready
+
+    open var state: State {
+        get {
+            stateLock.lock()
+            defer { stateLock.unlock() }
+            return storedState
+        }
+        set {
+            stateLock.lock()
+            defer { stateLock.unlock() }
+            let oldValue = storedState
+            guard oldValue != newValue else { return }
             willChangeValue(forKey: newValue.keyPath)
-            willChangeValue(forKey: state.keyPath)
-        }
-        didSet {
+            willChangeValue(forKey: oldValue.keyPath)
+            storedState = newValue
             didChangeValue(forKey: oldValue.keyPath)
-            didChangeValue(forKey: state.keyPath)
+            didChangeValue(forKey: newValue.keyPath)
         }
+    }
+
+    private func beginExecution() -> Bool {
+        stateLock.lock()
+        defer { stateLock.unlock() }
+        guard state == .ready else { return false }
+        guard !isCancelled else {
+            state = .finished
+            return false
+        }
+        state = .executing
+        // KVO observers can cancel reentrantly during the state transition.
+        guard !isCancelled else {
+            state = .finished
+            return false
+        }
+        return true
     }
 }
 
@@ -39,17 +67,18 @@ extension AsyncOperation {
     }
 
     override open func start() {
-        if isCancelled {
-            state = .finished
-            return
-        }
-        // Mark as executing before `main()` to avoid finishing-state races
-        // when async APIs can invoke callbacks immediately.
-        state = .executing
+        guard beginExecution() else { return }
+        // Do not hold the state lock while calling subclass code.
         main()
     }
 
     override open func cancel() {
-        state = .finished
+        stateLock.lock()
+        defer { stateLock.unlock() }
+        // Set the cancellation flag before finishing can invoke completionBlock.
+        super.cancel()
+        if isExecuting {
+            state = .finished
+        }
     }
 }

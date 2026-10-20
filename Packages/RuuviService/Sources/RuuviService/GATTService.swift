@@ -23,6 +23,7 @@ public enum RuuviTagReadLogsOperationDidFailKey: String {
 public enum RuuviTagReadLogsOperationProgressKey: String {
     case uuid
     case progress
+    case serviceProgress
 }
 
 public enum RuuviTagReadLogsOperationDidFinishKey: String {
@@ -30,9 +31,21 @@ public enum RuuviTagReadLogsOperationDidFinishKey: String {
     case logs
 }
 
+public struct GATTServiceTimeouts {
+    public let connection: TimeInterval?
+    public let service: TimeInterval?
+
+    public init(connection: TimeInterval? = nil, service: TimeInterval? = nil) {
+        self.connection = connection
+        self.service = service
+    }
+}
+
 public protocol GATTService {
+    func isSyncingLogs() -> Bool
     func isSyncingLogs(with uuid: String) -> Bool
     func isSyncingLogsQueued(with uuid: String) -> Bool
+    func syncProgress(with uuid: String) -> BTServiceProgress?
 
     @discardableResult
     // swiftlint:disable:next function_parameter_count
@@ -43,8 +56,7 @@ public protocol GATTService {
         from: Date,
         settings: SensorSettings?,
         progress: ((BTServiceProgress) -> Void)?,
-        connectionTimeout: TimeInterval?,
-        serviceTimeout: TimeInterval?
+        timeouts: GATTServiceTimeouts
     ) -> Future<Bool, RuuviServiceError>
 
     @discardableResult
@@ -52,8 +64,12 @@ public protocol GATTService {
 }
 
 public extension GATTService {
-    func isSyncingLogsQueued(with uuid: String) -> Bool {
+    func isSyncingLogsQueued(with _: String) -> Bool {
         false
+    }
+
+    func syncProgress(with _: String) -> BTServiceProgress? {
+        nil
     }
 
     @discardableResult
@@ -71,8 +87,7 @@ public extension GATTService {
             from: from,
             settings: settings,
             progress: nil,
-            connectionTimeout: nil,
-            serviceTimeout: nil
+            timeouts: GATTServiceTimeouts()
         )
     }
 
