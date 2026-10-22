@@ -211,24 +211,11 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPro
                 return
             }
             sSelf.processingUUIDs.insert(tag.uuid)
-            let ruuviSensor = RuuviTagSensorStruct(
-                version: tag.version,
-                firmwareVersion: ruuviTag.firmwareVersion,
-                luid: device.uuid.luid,
-                macId: mac,
-                serviceUUID: device.serviceUUID,
-                isConnectable: device.isConnectable,
-                name: ruuviTag.name,
-                isClaimed: ruuviTag.isClaimed,
-                isOwner: ruuviTag.isOwner,
-                owner: ruuviTag.owner,
-                ownersPlan: ruuviTag.ownersPlan,
-                isCloudSensor: ruuviTag.isCloudSensor,
-                canShare: ruuviTag.canShare,
-                sharedTo: ruuviTag.sharedTo,
-                sharedToPending: ruuviTag.sharedToPending,
-                maxHistoryDays: ruuviTag.maxHistoryDays
-            )
+            var ruuviSensor = ruuviTag.struct
+            ruuviSensor.version = tag.version
+            ruuviSensor.luid = device.uuid.luid
+            ruuviSensor.serviceUUID = device.serviceUUID
+            ruuviSensor.isConnectable = device.isConnectable
             sSelf.idPersistence.set(mac: mac, for: device.uuid.luid)
             sSelf.idPersistence.set(luid: device.uuid.luid, for: mac)
             sSelf.ruuviPool.update(ruuviSensor)

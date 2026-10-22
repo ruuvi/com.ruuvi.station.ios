@@ -602,13 +602,14 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         }
     }
 
-    // swiftlint:disable:next function_body_length
+    // swiftlint:disable:next cyclomatic_complexity
     public func userNotificationCenter(
         _: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
         let userInfo = response.notification.request.content.userInfo
+        var alertToDisable: (type: AlertType, uuid: String)?
         alertNotificationDebugLog(
             "AlertNotification",
             "didReceive action=\(response.actionIdentifier) notificationId=\(response.notification.request.identifier)"
@@ -622,26 +623,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
             )
             switch response.actionIdentifier {
             case lowHigh.disable:
-                // TODO: @rinat go with sensors instead of pure uuid
-                let ruuviTag = RuuviTagSensorStruct(
-                    version: 5,
-                    firmwareVersion: nil,
-                    luid: uuid.luid,
-                    macId: uuid.mac,
-                    serviceUUID: nil,
-                    isConnectable: true,
-                    name: "",
-                    isClaimed: false,
-                    isOwner: false,
-                    owner: nil,
-                    ownersPlan: nil,
-                    isCloudSensor: false,
-                    canShare: false,
-                    sharedTo: [],
-                    sharedToPending: [],
-                    maxHistoryDays: nil
-                )
-                ruuviAlertService.unregister(type: type, ruuviTag: ruuviTag)
+                alertToDisable = (type, uuid)
             case lowHigh.mute:
                 mute(type: type, uuid: uuid)
             default:
@@ -656,26 +638,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
             )
             switch response.actionIdentifier {
             case blast.disable:
-                // TODO: @rinat go with sensors instead of pure uuid
-                let ruuviTag = RuuviTagSensorStruct(
-                    version: 5,
-                    firmwareVersion: nil,
-                    luid: uuid.luid,
-                    macId: uuid.mac,
-                    serviceUUID: nil,
-                    isConnectable: true,
-                    name: "",
-                    isClaimed: false,
-                    isOwner: false,
-                    owner: nil,
-                    ownersPlan: nil,
-                    isCloudSensor: false,
-                    canShare: false,
-                    sharedTo: [],
-                    sharedToPending: [],
-                    maxHistoryDays: nil
-                )
-                ruuviAlertService.unregister(type: Self.alertType(from: type), ruuviTag: ruuviTag)
+                alertToDisable = (Self.alertType(from: type), uuid)
             case blast.mute:
                 mute(type: type, uuid: uuid)
             default:
@@ -694,7 +657,25 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
             output?.notificationDidTap(for: macId)
         }
 
-        completionHandler()
+        if let alertToDisable {
+            disable(type: alertToDisable.type, uuid: alertToDisable.uuid, completion: completionHandler)
+        } else {
+            completionHandler()
+        }
+    }
+
+    private func disable(type: AlertType, uuid: String, completion: @escaping () -> Void) {
+        let storageId = id(for: uuid)
+        ruuviStorage.readOne(storageId).on(success: { [self] ruuviTag in
+            // Use the stored sensor's identifiers and cloud status, and keep its configured bounds.
+            guard let configuredType = ruuviAlertService.alert(for: ruuviTag, of: type) else { return }
+            ruuviAlertService.unregister(type: configuredType, ruuviTag: ruuviTag)
+        }, failure: { error in
+            alertNotificationDebugLog(
+                "AlertNotification",
+                "disable read failed uuid=\(uuid) storageId=\(storageId) type=\(type.rawValue) error=\(error)"
+            )
+        }, completion: completion)
     }
 
     private func cancel(_ type: AlertType, for uuid: String) {
