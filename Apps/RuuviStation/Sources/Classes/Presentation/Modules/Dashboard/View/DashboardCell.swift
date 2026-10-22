@@ -46,6 +46,7 @@ struct DashboardCellLayoutConstants {
     static let gridRowHeightPhone: CGFloat = 20
     static let gridRowHeightTablet: CGFloat = 24
     static let gridRowSpacing: CGFloat = 0
+    static let gridColumnSpacing: CGFloat = 8
 
     static let gridRowHeightPhoneWithIndicatorTitle: CGFloat = 30
     static let gridRowHeightTabletWithIndicatorTitle: CGFloat = 36
@@ -945,7 +946,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                 // Create a horizontal stack view for each row
                 let rowStackView = UIStackView()
                 rowStackView.axis = .horizontal
-                rowStackView.spacing = 0
+                rowStackView.spacing = DashboardCellLayoutConstants.gridColumnSpacing
                 rowStackView.distribution = .fillEqually
 
                 // Set fixed height for the row
