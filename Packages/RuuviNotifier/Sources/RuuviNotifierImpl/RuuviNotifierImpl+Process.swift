@@ -364,7 +364,7 @@ public extension RuuviNotifierImpl {
                 let isAQI = process(
                     aqi: currentAQI,
                     alertType: type,
-                    identifier: record.luid,
+                    identifier: identifier,
                     trigger: trigger
                 )
                 isTriggered = isTriggered || isAQI
@@ -377,7 +377,7 @@ public extension RuuviNotifierImpl {
                 let isCarbonDioxide = process(
                     carbonDioxide: record.co2,
                     alertType: type,
-                    identifier: record.luid,
+                    identifier: identifier,
                     trigger: trigger
                 )
                 isTriggered = isTriggered || isCarbonDioxide
@@ -390,7 +390,7 @@ public extension RuuviNotifierImpl {
                 let isPM1 = process(
                     pMatter1: record.pm1,
                     alertType: type,
-                    identifier: record.luid,
+                    identifier: identifier,
                     trigger: trigger
                 )
                 isTriggered = isTriggered || isPM1
@@ -403,7 +403,7 @@ public extension RuuviNotifierImpl {
                 let isPM25 = process(
                     pMatter25: record.pm25,
                     alertType: type,
-                    identifier: record.luid,
+                    identifier: identifier,
                     trigger: trigger
                 )
                 isTriggered = isTriggered || isPM25
@@ -416,7 +416,7 @@ public extension RuuviNotifierImpl {
                 let isPM4 = process(
                     pMatter4: record.pm4,
                     alertType: type,
-                    identifier: record.luid,
+                    identifier: identifier,
                     trigger: trigger
                 )
                 isTriggered = isTriggered || isPM4
@@ -429,7 +429,7 @@ public extension RuuviNotifierImpl {
                 let isPM10 = process(
                     pMatter10: record.pm10,
                     alertType: type,
-                    identifier: record.luid,
+                    identifier: identifier,
                     trigger: trigger
                 )
                 isTriggered = isTriggered || isPM10
@@ -442,7 +442,7 @@ public extension RuuviNotifierImpl {
                 let isVOC = process(
                     voc: record.voc,
                     alertType: type,
-                    identifier: record.luid,
+                    identifier: identifier,
                     trigger: trigger
                 )
                 isTriggered = isTriggered || isVOC
@@ -455,7 +455,7 @@ public extension RuuviNotifierImpl {
                 let isNOX = process(
                     nox: record.nox,
                     alertType: type,
-                    identifier: record.luid,
+                    identifier: identifier,
                     trigger: trigger
                 )
                 isTriggered = isTriggered || isNOX
@@ -468,7 +468,7 @@ public extension RuuviNotifierImpl {
                 let isSoundInstant = process(
                     soundInstant: record.dbaInstant,
                     alertType: type,
-                    identifier: record.luid,
+                    identifier: identifier,
                     trigger: trigger
                 )
                 isTriggered = isTriggered || isSoundInstant
@@ -481,7 +481,7 @@ public extension RuuviNotifierImpl {
                 let isSoundAverage = process(
                     soundAverage: record.dbaAvg,
                     alertType: type,
-                    identifier: record.luid,
+                    identifier: identifier,
                     trigger: trigger
                 )
                 isTriggered = isTriggered || isSoundAverage
@@ -494,7 +494,7 @@ public extension RuuviNotifierImpl {
                 let isSoundPeak = process(
                     soundPeak: record.dbaPeak,
                     alertType: type,
-                    identifier: record.luid,
+                    identifier: identifier,
                     trigger: trigger
                 )
                 isTriggered = isTriggered || isSoundPeak
@@ -507,7 +507,7 @@ public extension RuuviNotifierImpl {
                 let isLuminosity = process(
                     luminosity: record.luminance,
                     alertType: type,
-                    identifier: record.luid,
+                    identifier: identifier,
                     trigger: trigger
                 )
                 isTriggered = isTriggered || isLuminosity
@@ -1501,7 +1501,7 @@ extension RuuviNotifierImpl {
         trigger: Bool = true
     ) -> Bool {
         guard let identifier else { return false }
-        if case let .soundInstant(lower, upper) = ruuviAlertService
+        if case let .soundPeak(lower, upper) = ruuviAlertService
             .alert(
                 for: identifier.value,
                 of: alertType

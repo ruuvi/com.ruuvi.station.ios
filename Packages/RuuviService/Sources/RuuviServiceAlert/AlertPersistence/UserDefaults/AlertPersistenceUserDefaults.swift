@@ -492,7 +492,7 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             if prefs.bool(forKey: soundAverageAlertIsOnUDKeyPrefix + uuid),
                let lower = prefs.optionalDouble(forKey: soundAverageLowerBoundUDKeyPrefix + uuid),
                let upper = prefs.optionalDouble(forKey: soundAverageUpperBoundUDKeyPrefix + uuid) {
-                return .soundInstant(lower: lower, upper: upper)
+                return .soundAverage(lower: lower, upper: upper)
             } else {
                 return nil
             }
