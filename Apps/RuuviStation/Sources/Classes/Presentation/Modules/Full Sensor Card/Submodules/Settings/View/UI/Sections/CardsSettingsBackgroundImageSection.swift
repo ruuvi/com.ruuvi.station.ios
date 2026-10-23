@@ -13,11 +13,17 @@ struct CardsSettingsBackgroundImageSection: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            image?
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(height: Constants.imageHeight)
-                .clipped()
+            if let image {
+                // Keep the photo's aspect ratio from widening the settings content.
+                Color.clear
+                    .frame(height: Constants.imageHeight)
+                    .overlay {
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                    }
+                    .clipped()
+            }
 
             HStack {
                 Text(RuuviLocalization.TagSettings.BackgroundImageLabel.text)
