@@ -782,8 +782,9 @@ extension DashboardPresenter: SignInBenefitsModuleOutput {
         serviceCoordinatorManager.forceLoadBackgrounds()
         updateAuthorizationState()
 
-        module.dismiss {
+        module.dismiss { [weak self] in
             AppUtility.lockOrientation(.all)
+            self?.view?.showMarketingConsentPromptIfNeeded()
         }
     }
 

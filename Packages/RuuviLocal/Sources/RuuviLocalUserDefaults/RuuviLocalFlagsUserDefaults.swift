@@ -28,6 +28,15 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     @UserDefault("RuuviFeatureFlags.showMarketingPreference", defaultValue: true)
     var showMarketingPreference: Bool
 
+    @UserDefault("RuuviFeatureFlags.marketingConsentPromptIntervalMinutes",
+                 defaultValue: RuuviMarketingConsentPromptInterval.defaultMinutes)
+    private var storedMarketingConsentPromptIntervalMinutes: Int
+
+    var marketingConsentPromptIntervalMinutes: Int {
+        get { RuuviMarketingConsentPromptInterval.normalized(storedMarketingConsentPromptIntervalMinutes) }
+        set { storedMarketingConsentPromptIntervalMinutes = RuuviMarketingConsentPromptInterval.normalized(newValue) }
+    }
+
     @UserDefault("RuuviFeatureFlags.showDashboardSensorSearch", defaultValue: false)
     var showDashboardSensorSearch: Bool
 

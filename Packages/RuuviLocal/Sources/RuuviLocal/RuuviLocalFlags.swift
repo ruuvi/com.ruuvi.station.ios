@@ -30,6 +30,10 @@ public protocol RuuviLocalFlags {
     /// Controls visibility of the newsletter card and marketing preference UI.
     var showMarketingPreference: Bool { get set }
 
+    /// Minimum time between marketing consent prompts, in minutes.
+    /// Defaults and supported bounds are defined by `RuuviMarketingConsentPromptInterval`.
+    var marketingConsentPromptIntervalMinutes: Int { get set }
+
     /// When enabled, shows a search button on the dashboard that
     /// expands into a search bar to filter sensors by name.
     var showDashboardSensorSearch: Bool { get set }

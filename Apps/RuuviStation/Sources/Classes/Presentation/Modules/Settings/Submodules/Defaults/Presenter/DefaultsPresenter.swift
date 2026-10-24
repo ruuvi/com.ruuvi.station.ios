@@ -81,6 +81,7 @@ extension DefaultsPresenter {
             buildAutoSyncGattHistoryForRuuviAirMinimumLastSyncDateAgeMinutes(),
             buildAllowConcurrentGattSyncForMultipleSensors(),
             buildShowMarketingPreference(),
+            buildMarketingConsentPromptInterval(),
             buildShowDashboardSensorSearch(),
         ]
     }
@@ -612,6 +613,36 @@ extension DefaultsPresenter {
         bind(viewModel.boolean, fire: false) { observer, bool in
             observer.flags.showDashboardSensorSearch = GlobalHelpers
                 .getBool(from: bool)
+        }
+
+        return viewModel
+    }
+
+    private func buildMarketingConsentPromptInterval() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Marketing consent prompt interval"
+        viewModel.integer.value = RuuviMarketingConsentPromptInterval.normalized(
+            flags.marketingConsentPromptIntervalMinutes
+        )
+        viewModel.unit = .minutes
+        viewModel.type.value = .stepper
+        let defaultMinutes = RuuviMarketingConsentPromptInterval.defaultMinutes
+        viewModel.integerEditor = DefaultsIntegerEditorConfiguration(
+            range: RuuviMarketingConsentPromptInterval.allowedMinutes,
+            message: "Choose a preset or enter an interval in minutes (minimum 1).",
+            presets: [
+                .init(title: "1 minute (testing)",
+                      value: RuuviMarketingConsentPromptInterval.allowedMinutes.lowerBound),
+                .init(title: "\(DefaultsIntegerEditorConfiguration.formatMinutes(defaultMinutes)) (default)",
+                      value: defaultMinutes),
+            ],
+            formatValue: DefaultsIntegerEditorConfiguration.formatMinutes
+        )
+
+        bind(viewModel.integer, fire: false) { observer, value in
+            observer.flags.marketingConsentPromptIntervalMinutes = RuuviMarketingConsentPromptInterval.normalized(
+                value.bound
+            )
         }
 
         return viewModel

@@ -26,6 +26,7 @@ protocol NewDashboardViewInput: ViewInput {
     )
     func showAlreadyLoggedInAlert(with email: String)
     func showSensorSortingResetConfirmationDialog()
+    func showMarketingConsentPromptIfNeeded()
 }
 
 extension NewDashboardViewInput {

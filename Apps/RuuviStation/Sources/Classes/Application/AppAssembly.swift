@@ -318,6 +318,10 @@ private final class BusinessAssembly: Assembly {
             return service
         }.inObjectScope(.container)
 
+        container.register(MarketingConsentPromptHistory.self) { _ in
+            MarketingConsentPromptHistory()
+        }.inObjectScope(.container)
+
         container.register(AppStateService.self) { r in
             let service = AppStateServiceImpl()
             service.settings = r.resolve(RuuviLocalSettings.self)

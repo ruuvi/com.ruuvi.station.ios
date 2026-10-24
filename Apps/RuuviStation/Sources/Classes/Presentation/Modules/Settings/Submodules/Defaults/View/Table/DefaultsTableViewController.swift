@@ -48,7 +48,6 @@ extension DefaultsTableViewController {
         viewModels.count
     }
 
-    // swiftlint:disable:next function_body_length cyclomatic_complexity
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let viewModel = viewModels[indexPath.row]
         switch viewModel.type.value {
@@ -90,61 +89,31 @@ extension DefaultsTableViewController {
                     for: indexPath
                 ) as! DefaultsStepperTableViewCell
             // swiftlint:enable force_cast
-            let title = viewModel.title ?? ""
-
-            cell.unit = viewModel.unit
-            cell.item = viewModel.item.value
-            let result = viewModel.integer.value.bound
-            switch viewModel.item.value {
-            case .imageCompressionQuality:
-                cell.titleLabel.text = title + " " + "(" + "\(result)" + "%)"
-                cell.stepper.stepValue = 10
-                cell.stepper.minimumValue = 10
-                cell.stepper.maximumValue = 100
-                cell.stepper.value = Double(viewModel.integer.value.bound)
-            case .graphDownsampleMaximumPoints:
-                cell.titleLabel.text = title + " " + "(" + "\(result)" + ")"
-                cell.stepper.stepValue = 100
-                cell.stepper.minimumValue = 1000
-                cell.stepper.maximumValue = 5000
-                cell.stepper.value = Double(viewModel.integer.value.bound)
-            default:
-                let unitString: String
-                switch viewModel.unit {
-                case .hours:
-                    unitString = RuuviLocalization.Defaults.Interval.Hour.string
-                    cell.stepper.stepValue = 1
-                case .minutes:
-                    unitString = RuuviLocalization.Defaults.Interval.Min.string
-                    cell.stepper.stepValue = 5
-                case .seconds:
-                    unitString = RuuviLocalization.Defaults.Interval.Sec.string
-                    cell.stepper.stepValue = 30
-                case .decimal:
-                    unitString = ""
-                    cell.stepper.stepValue = 5
-                    cell.stepper.minimumValue = 5
-                }
-                switch viewModel.unit {
-                case .hours, .minutes, .seconds:
-                    cell.titleLabel.text = title + " "
-                        + "(" + "\(result)" + " "
-                        + unitString + ")"
-                case .decimal:
-                    cell.titleLabel.text = title + " " + "(" + "\(result)" + ")"
-                }
-                cell.stepper.value = Double(viewModel.integer.value.bound)
-            }
-
-            cell.titleLabel.textColor = RuuviColor.menuTextColor.color
-            cell.titleLabel.font = UIFont.ruuviHeadline()
-            cell.stepper.backgroundColor = RuuviColor.tintColor.color
-            cell.prefix = title
+            cell.configure(with: viewModel)
             cell.delegate = self
             return cell
         default:
             // Should never be here
             return UITableViewCell()
+        }
+    }
+}
+
+// MARK: - Interval presets and direct entry
+
+extension DefaultsTableViewController {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let viewModel = viewModels[indexPath.row]
+        guard let configuration = viewModel.integerEditor else { return }
+        DefaultsIntegerEditor.present(
+            from: self,
+            title: viewModel.title,
+            value: viewModel.integer.value.bound,
+            configuration: configuration
+        ) { [weak self] value in
+            viewModel.integer.value = value
+            self?.tableView.reloadData()
         }
     }
 }
