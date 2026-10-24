@@ -649,6 +649,14 @@ private extension CardsMeasurementPageViewController {
         // Configure the card with initial data
         card.configure(with: measurement)
 
+        // Rebuilt cards need the current alert state before another snapshot update arrives.
+        if let snapshot {
+            let alertConfig = snapshot.getIndicatorAlertConfig(for: measurement)
+            card.updateAlertState(
+                isHighlighted: alertConfig.isHighlighted && snapshot.metadata.isAlertAvailable
+            )
+        }
+
         // Set up tap handler
         card.onTap = { [weak self] in
             guard let self = self else { return }
