@@ -3,7 +3,7 @@ import Future
 import RuuviCloud
 import RuuviOntology
 
-public protocol RuuviServiceAppSettings {
+public protocol RuuviServiceAppSettings: RuuviServiceMarketingConsent {
     @discardableResult
     func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviServiceError>
 
@@ -69,12 +69,6 @@ public protocol RuuviServiceAppSettings {
 
     @discardableResult
     func set(disablePushAlert: Bool) -> Future<Bool, RuuviServiceError>
-
-    @discardableResult
-    func getMarketingConsent() -> Future<RuuviCloudMarketingConsent, RuuviServiceError>
-
-    @discardableResult
-    func set(marketingPreference: Bool) -> Future<RuuviCloudMarketingConsent, RuuviServiceError>
 
     @discardableResult
     func set(profileLanguageCode: String) -> Future<String, RuuviServiceError>

@@ -16,6 +16,7 @@ final class DashboardViewController: UIViewController {
     var menuDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
     var measurementService: RuuviServiceMeasurement!
     var flags: RuuviLocalFlags!
+    var marketingConsentPromptCoordinator: MarketingConsentPromptCoordinator?
 
     // MARK: - Data Properties
     var isAuthorized: Bool = false {
@@ -260,6 +261,7 @@ final class DashboardViewController: UIViewController {
 
     // MARK: - Observers
     private var appDidBecomeActiveToken: NSObjectProtocol?
+    private var marketingPromptActiveToken: NSObjectProtocol?
 
     // MARK: - Lifecycle
     deinit {
@@ -289,6 +291,11 @@ extension DashboardViewController {
         super.viewDidAppear(animated)
         isReadyForAnimations = true
         AppUtility.lockOrientation(.all)
+        showMarketingConsentPromptIfNeeded()
+    }
+
+    func showMarketingConsentPromptIfNeeded() {
+        marketingConsentPromptCoordinator?.presentIfNeeded(from: self)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -321,6 +328,7 @@ private extension DashboardViewController {
         setupUI()
         setupDataSource()
         configureAlertRefreshOnAppDidBecomeActive()
+        configureMarketingPromptOnAppDidBecomeActive()
         localize()
         output.viewDidLoad()
     }
@@ -656,7 +664,17 @@ private extension DashboardViewController {
 private extension DashboardViewController {
     func cleanup() {
         appDidBecomeActiveToken?.invalidate()
+        marketingPromptActiveToken?.invalidate()
         searchDebounceWorkItem?.cancel()
+    }
+
+    func configureMarketingPromptOnAppDidBecomeActive() {
+        marketingPromptActiveToken?.invalidate()
+        marketingPromptActiveToken = NotificationCenter.default.addObserver(
+            forName: UIApplication.didBecomeActiveNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in self?.showMarketingConsentPromptIfNeeded() }
     }
 
     func configureAlertRefreshOnAppDidBecomeActive() {

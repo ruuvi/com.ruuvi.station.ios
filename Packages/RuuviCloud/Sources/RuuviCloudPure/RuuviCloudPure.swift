@@ -561,7 +561,11 @@ public final class RuuviCloudPure: RuuviCloud {
             return promise.future
         }
         api.getMarketingConsent(authorization: apiKey)
-            .on(success: { response in
+            .on(success: { [weak self] response in
+                guard self?.user.apiKey == apiKey else {
+                    promise.fail(error: .notAuthorized)
+                    return
+                }
                 promise.succeed(value: response)
             }, failure: { error in
                 promise.fail(error: .api(error))
@@ -583,7 +587,11 @@ public final class RuuviCloudPure: RuuviCloud {
             language: Bundle.main.preferredLocalizations.first ?? "en"
         )
         api.setMarketingConsent(request, authorization: apiKey)
-            .on(success: { response in
+            .on(success: { [weak self] response in
+                guard self?.user.apiKey == apiKey else {
+                    promise.fail(error: .notAuthorized)
+                    return
+                }
                 promise.succeed(value: response)
             }, failure: { error in
                 promise.fail(error: .api(error))

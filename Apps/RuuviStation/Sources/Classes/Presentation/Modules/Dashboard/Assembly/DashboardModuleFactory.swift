@@ -23,6 +23,7 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
         let r = AppAssembly.shared.assembler.resolver
 
         let view = DashboardViewController()
+        view.marketingConsentPromptCoordinator = makeMarketingConsentPromptCoordinator(resolver: r)
         let router = DashboardRouter()
         router.transitionHandler = view
         router.settings = r.resolve(RuuviLocalSettings.self)
@@ -71,6 +72,15 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
     }
 
     // MARK: - Private Helper Methods
+    private func makeMarketingConsentPromptCoordinator(resolver: Resolver) -> MarketingConsentPromptCoordinator {
+        MarketingConsentPromptCoordinator(
+            history: resolver.resolve(MarketingConsentPromptHistory.self)!,
+            user: resolver.resolve(RuuviUser.self)!,
+            service: resolver.resolve(RuuviServiceAppSettings.self)!,
+            flags: resolver.resolve(RuuviLocalFlags.self)!
+        )
+    }
+
     private func setupMenuModule(
         for view: DashboardViewController,
         presenter: DashboardPresenter,
@@ -111,6 +121,7 @@ extension DashboardModuleFactoryImpl {
         let r = AppAssembly.shared.assembler.resolver
 
         let view = DashboardViewController()
+        view.marketingConsentPromptCoordinator = makeMarketingConsentPromptCoordinator(resolver: r)
         let router = DashboardRouter()
         router.transitionHandler = view
         router.settings = r.resolve(RuuviLocalSettings.self)

@@ -23,6 +23,7 @@ class DefaultsViewModel: Identifiable {
     var hideStatusLabel: Observable<Bool?> = .init(false)
     // Value for stepper type
     var integer: Observable<Int?> = .init()
+    var integerEditor: DefaultsIntegerEditorConfiguration?
     // Value for plain type
     var value: Observable<String?> = .init()
     var unit: DefaultsIntegerUnit = .seconds

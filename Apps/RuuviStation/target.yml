@@ -143,8 +143,34 @@ targets:
           - $(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)
         runOnlyWhenInstalling: true
         basedOnDependencyAnalysis: false
+  station.marketingConsentTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests/Unit/MarketingConsent
+    dependencies:
+      - target: station
+      - package: Future
+      - target: RuuviCloud
+        embed: false
+      - target: RuuviLocal
+        embed: false
+      - target: RuuviPresenters
+        embed: false
+      - target: RuuviService
+        embed: false
+      - target: RuuviUser
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/station.app/station"
+        BUNDLE_LOADER: "$(TEST_HOST)"
 schemes:
   station:
     build:
       targets:
         station: all
+    test:
+      targets:
+        - station.marketingConsentTests
