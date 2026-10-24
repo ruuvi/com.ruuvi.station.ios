@@ -393,7 +393,7 @@ private extension CardsProminentIndicatorView {
         updateViewHeight(for: .measurement)
 
         measurementValueLabel.text = indicatorData.value
-        measurementUnitLabel.text = indicatorData.unit
+        measurementUnitLabel.text = MeasurementType.hideUnit(for: indicatorData.type) ? nil : indicatorData.unit
     }
 
     func updateViewHeight(for mode: ViewMode) {

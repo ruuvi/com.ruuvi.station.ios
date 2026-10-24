@@ -101,10 +101,13 @@ extension DashboardIndicatorProminentView {
     func setValue(
         with value: String?,
         superscriptValue: String? = nil,
-        subscriptValue: String? = nil
+        subscriptValue: String? = nil,
+        hideSuperscript: Bool = false
     ) {
         indicatorValueLabel.text = value
         indicatorSuperscriptLabel.text = superscriptValue
+        indicatorSuperscriptLabel.alpha = hideSuperscript ? 0 : 1
+        indicatorSuperscriptLabel.isAccessibilityElement = !hideSuperscript
         indicatorSubscriptLabel.text = subscriptValue
     }
 
@@ -114,9 +117,7 @@ extension DashboardIndicatorProminentView {
     }
 
     func clearValues() {
-        indicatorValueLabel.text = nil
-        indicatorSuperscriptLabel.text = nil
-        indicatorSubscriptLabel.text = nil
+        setValue(with: nil)
         indicatorValueLabel.textColor = RuuviColor.dashboardIndicatorBig.color
     }
 }

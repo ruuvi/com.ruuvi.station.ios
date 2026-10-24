@@ -784,7 +784,8 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                 .setValue(
                     with: indicator.value,
                     superscriptValue: indicator.unit,
-                    subscriptValue: subscriptValue
+                    subscriptValue: subscriptValue,
+                    hideSuperscript: MeasurementType.hideUnit(for: indicator.type)
                 )
             progressViewContainer.isHidden = true
             updateGridPosition(
