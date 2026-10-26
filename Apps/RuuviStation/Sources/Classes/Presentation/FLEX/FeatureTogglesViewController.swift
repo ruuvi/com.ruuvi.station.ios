@@ -120,6 +120,8 @@ extension FeatureTogglesViewController {
         switch feature {
         case .legacyFirmwareUpdatePopup:
             "Legacy Firmware Update Alert"
+        case .dashboardHalloweenEffects:
+            "Halloween"
         }
     }
 }

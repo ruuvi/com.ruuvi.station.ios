@@ -16,6 +16,7 @@ final class DashboardViewController: UIViewController {
     var menuDismissInteractiveTransition: UIViewControllerInteractiveTransitioning!
     var measurementService: RuuviServiceMeasurement!
     var flags: RuuviLocalFlags!
+    var featureToggleService: FeatureToggleService!
 
     // MARK: - Data Properties
     var isAuthorized: Bool = false {
@@ -260,6 +261,11 @@ final class DashboardViewController: UIViewController {
 
     // MARK: - Observers
     private var appDidBecomeActiveToken: NSObjectProtocol?
+    private var halloweenObservationTokens: [NSObjectProtocol] = []
+    private var halloweenEffectsView: DashboardHalloweenEffectsView?
+    // Temporary preview override: set to false to restore Firebase control before release.
+    private let forceHalloweenEffectsForTesting = true
+    private var isDashboardVisible = false
 
     // MARK: - Lifecycle
     deinit {
@@ -288,11 +294,15 @@ extension DashboardViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         isReadyForAnimations = true
+        isDashboardVisible = true
+        updateHalloweenEffects()
         AppUtility.lockOrientation(.all)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        isDashboardVisible = false
+        updateHalloweenEffects()
         let shouldAnimateTransition = shouldAnimate(animated)
         if #available(iOS 26.0, *) {
             navigationController?.setNavigationBarHidden(false, animated: shouldAnimateTransition)
@@ -321,6 +331,7 @@ private extension DashboardViewController {
         setupUI()
         setupDataSource()
         configureAlertRefreshOnAppDidBecomeActive()
+        observeHalloweenEffectsChanges()
         localize()
         output.viewDidLoad()
     }
@@ -655,8 +666,64 @@ private extension DashboardViewController {
 // MARK: - Observer Management
 private extension DashboardViewController {
     func cleanup() {
+        halloweenObservationTokens.forEach(NotificationCenter.default.removeObserver)
         appDidBecomeActiveToken?.invalidate()
         searchDebounceWorkItem?.cancel()
+    }
+
+    func observeHalloweenEffectsChanges() {
+        let notifications: [Notification.Name] = [
+            .featureTogglesDidChange,
+            UIApplication.didBecomeActiveNotification,
+            UIApplication.didEnterBackgroundNotification,
+            UIApplication.willResignActiveNotification,
+            UIAccessibility.reduceMotionStatusDidChangeNotification,
+            .NSProcessInfoPowerStateDidChange,
+        ]
+        halloweenObservationTokens = notifications.map { name in
+            NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { [weak self] note in
+                if note.name == UIApplication.willResignActiveNotification {
+                    self?.halloweenEffectsView?.removeFromSuperview()
+                    self?.halloweenEffectsView = nil
+                } else {
+                    self?.updateHalloweenEffects()
+                }
+            }
+        }
+    }
+
+    func updateHalloweenEffects() {
+        let effectsEnabled = forceHalloweenEffectsForTesting ||
+            featureToggleService?.isEnabled(.dashboardHalloweenEffects) == true
+        guard isDashboardVisible,
+              UIApplication.shared.applicationState == .active,
+              effectsEnabled else {
+            halloweenEffectsView?.removeFromSuperview()
+            halloweenEffectsView = nil
+            return
+        }
+        if halloweenEffectsView == nil {
+            let effects = DashboardHalloweenEffectsView(frame: .zero)
+            effects.translatesAutoresizingMaskIntoConstraints = false
+            view.insertSubview(effects, aboveSubview: collectionView)
+            effects.cardFramesProvider = { [weak self, weak effects] in
+                guard let self, let effects,
+                      !self.collectionView.isDragging, !self.collectionView.isDecelerating,
+                      !self.isDragSessionInProgress, !self.isContextMenuPresented,
+                      !self.isSearchActive, !self.isPulling else { return [] }
+                return self.collectionView.visibleCells.map { $0.convert($0.bounds, to: effects) }
+            }
+            NSLayoutConstraint.activate([
+                effects.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                effects.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+                effects.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                effects.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            ])
+            halloweenEffectsView = effects
+        }
+        halloweenEffectsView?.setAnimationEnabled(
+            !UIAccessibility.isReduceMotionEnabled && !ProcessInfo.processInfo.isLowPowerModeEnabled
+        )
     }
 
     func configureAlertRefreshOnAppDidBecomeActive() {
@@ -1323,6 +1390,7 @@ extension DashboardViewController: UICollectionViewDelegate {
     }
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        halloweenEffectsView?.pauseForInteraction()
         NSObject.cancelPreviousPerformRequests(withTarget: self)
         perform(
             #selector(UIScrollViewDelegate.scrollViewDidEndScrollingAnimation),

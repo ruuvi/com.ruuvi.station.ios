@@ -1,0 +1,38 @@
+{
+  "canvas": {
+    "width": 640,
+    "height": 720
+  },
+  "frames": [
+    {
+      "file": "01_peek_happy.png",
+      "duration_ms": 220,
+      "note": "start visible peek behind card"
+    },
+    {
+      "file": "02_happy_full.png",
+      "duration_ms": 280,
+      "note": "rise up fully and smile"
+    },
+    {
+      "file": "03_huu_transition.png",
+      "duration_ms": 140,
+      "note": "begin lifting arms, small O mouth"
+    },
+    {
+      "file": "04_huu_arms_up.png",
+      "duration_ms": 450,
+      "note": "full HUU pose, hold for emphasis"
+    },
+    {
+      "file": "05_happy_full_return.png",
+      "duration_ms": 250,
+      "note": "return to happy face"
+    },
+    {
+      "file": "06_peek_happy_return.png",
+      "duration_ms": 300,
+      "note": "lower back behind the card / end state"
+    }
+  ]
+}

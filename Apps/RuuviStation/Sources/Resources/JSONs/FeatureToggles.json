@@ -1,8 +1,14 @@
 {
-   "featureToggles":[
+   "featureToggles": [
       {
-         "feature":"ios_legacy_fw_update_dialog",
-         "enabled":false
+         "feature": "ios_legacy_fw_update_dialog",
+         "enabled": false,
+         "source": "remote"
+      },
+      {
+         "feature": "ios_dashboard_halloween_effects",
+         "enabled": false,
+         "source": "remote"
       }
    ]
 }

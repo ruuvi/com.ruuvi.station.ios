@@ -1,0 +1,27 @@
+Ruuvi Ghost Beaver PNG Sequence
+
+Canvas: 640 x 720 px
+Background: transparent
+Recommended anchor: align the BOTTOM CENTER of each PNG to the same point.
+Recommended placement: position the sprite so the lower part sits behind the temperature card edge.
+
+Suggested timing (one-shot):
+1) 01_peek_happy.png — 220 ms
+2) 02_happy_full.png — 280 ms
+3) 03_huu_transition.png — 140 ms
+4) 04_huu_arms_up.png — 450 ms
+5) 05_happy_full_return.png — 250 ms
+6) 06_peek_happy_return.png — 300 ms
+Total: 1,640 ms
+
+Recommended easing:
+- Enter / rise: easeOut
+- Arm raise to HUU: easeInOut
+- Exit / hide: easeIn
+
+Optional micro-bounce:
+- After frame 02 and after frame 05, add a subtle 8-12 px upward bounce if desired.
+
+If your implementation uses UIImage/Android drawable frame animation:
+- Play once on trigger.
+- Keep the final hidden/peek frame at rest, or reset to frame 01 before the next trigger.

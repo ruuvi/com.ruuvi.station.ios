@@ -1,6 +1,7 @@
 import Foundation
 
 public enum Feature: String, CaseIterable, Codable {
+    case dashboardHalloweenEffects = "ios_dashboard_halloween_effects"
     case legacyFirmwareUpdatePopup = "ios_legacy_fw_update_dialog"
 }
 

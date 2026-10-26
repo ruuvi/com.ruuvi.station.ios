@@ -1,5 +1,9 @@
 import Foundation
 
+extension Notification.Name {
+    static let featureTogglesDidChange = Notification.Name("FeatureToggleService.didChange")
+}
+
 public final class FeatureToggleService {
     public var source: FeatureSource {
         get {
@@ -11,6 +15,7 @@ public final class FeatureToggleService {
         }
         set {
             UserDefaults.standard.set(newValue.rawValue, forKey: sourceUDKey)
+            notifyFeatureTogglesChanged()
         }
     }
 
@@ -31,11 +36,14 @@ public final class FeatureToggleService {
             let encoder = JSONEncoder()
             if let encoded = try? encoder.encode(newValue) {
                 UserDefaults.standard.set(encoded, forKey: remoteTogglesUDKey)
+                notifyFeatureTogglesChanged()
             }
         }
     }
 
-    private var localToggles: [FeatureToggle] = []
+    private var localToggles: [FeatureToggle] = [] {
+        didSet { notifyFeatureTogglesChanged() }
+    }
     private let sourceUDKey = "FeatureToggleService.sourceUDKey"
     private let remoteTogglesUDKey = "FeatureToggleService.remoteTogglesUDKey"
 
@@ -85,6 +93,12 @@ public final class FeatureToggleService {
             localToggles[toggleIndex] = FeatureToggle(feature: toggle.feature, enabled: false, source: toggle.source)
         } else {
             assertionFailure()
+        }
+    }
+
+    private func notifyFeatureTogglesChanged() {
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .featureTogglesDidChange, object: nil)
         }
     }
 

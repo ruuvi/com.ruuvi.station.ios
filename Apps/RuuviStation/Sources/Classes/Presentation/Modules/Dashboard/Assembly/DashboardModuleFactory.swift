@@ -65,6 +65,7 @@ final class DashboardModuleFactoryImpl: DashboardModuleFactory {
         // MARK: - VIEW
         view.measurementService = r.resolve(RuuviServiceMeasurement.self)
         view.flags = r.resolve(RuuviLocalFlags.self)!
+        view.featureToggleService = r.resolve(FeatureToggleService.self)!
         view.output = presenter
 
         return view
