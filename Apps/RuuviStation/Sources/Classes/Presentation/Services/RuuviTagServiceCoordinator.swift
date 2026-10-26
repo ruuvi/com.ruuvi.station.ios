@@ -243,7 +243,7 @@ class RuuviTagServiceCoordinator {
         previousSnapshots = snapshots
         updateSnapshotIdMap(snapshots)
 
-        alertService.subscribeToAlerts(for: snapshots)
+        alertService.updateSnapshots(snapshots)
         connectionService.updateConnectionData(for: snapshots)
 
         notifySnapshotChange(snapshots, reason: .initial, withAnimation: false)
@@ -521,7 +521,6 @@ extension RuuviTagServiceCoordinator: RuuviTagDataServiceDelegate {
             initialSetupCompleted = true
             previousSnapshots = snapshots
             updateSnapshotIdMap(snapshots)
-            alertService.subscribeToAlerts(for: snapshots)
             alertService.triggerAlertsIfNeeded(for: snapshots)
         }
 
@@ -557,7 +556,7 @@ extension RuuviTagServiceCoordinator: RuuviTagDataServiceDelegate {
         // Update other services when new sensor is added
         let snapshots = dataService.getAllSnapshots()
         applyAuthorizationState(to: snapshots)
-        alertService.subscribeToAlerts(for: snapshots)
+        alertService.updateSnapshots(snapshots)
         connectionService.updateConnectionData(for: snapshots)
 
         // Update tracking
@@ -928,9 +927,12 @@ class RuuviTagServiceCoordinatorManager {
 class RuuviTagCoordinatorFactory {
 
     // MARK: - Factory Method
-    static func createCoordinator() -> RuuviTagServiceCoordinator {
+    static func createCoordinator(
+        pushNotificationsManager: RuuviCorePN? = nil
+    ) -> RuuviTagServiceCoordinator {
 
         let r = AppAssembly.shared.assembler.resolver
+        let pnManager = pushNotificationsManager ?? r.resolve(RuuviCorePN.self)!
 
         let dataService = RuuviTagDataService(
             ruuviReactor: r.resolve(RuuviReactor.self)!,
@@ -946,7 +948,7 @@ class RuuviTagCoordinatorFactory {
             alertService: r.resolve(RuuviServiceAlert.self)!,
             alertHandler: r.resolve(RuuviNotifier.self)!,
             settings: r.resolve(RuuviLocalSettings.self)!,
-            pushNotificationsManager: r.resolve(RuuviCorePN.self)!
+            pushNotificationsManager: pnManager
         )
 
         let connectionService = RuuviTagConnectionService(
@@ -962,7 +964,7 @@ class RuuviTagCoordinatorFactory {
             authService: r.resolve(RuuviServiceAuth.self)!,
             ruuviUser: r.resolve(RuuviUser.self)!,
             settings: r.resolve(RuuviLocalSettings.self)!,
-            pnManager: r.resolve(RuuviCorePN.self)!
+            pnManager: pnManager
         )
 
         // Create and return coordinator

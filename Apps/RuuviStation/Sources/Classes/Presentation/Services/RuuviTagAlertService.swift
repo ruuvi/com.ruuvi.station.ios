@@ -115,6 +115,7 @@ class RuuviTagAlertService {
             self.schedulePushCapabilityUpdate(for: snapshot)
             self.ensureMutedTillRefreshTimer()
         }
+        updateAlertSubscriptions(for: [snapshot])
     }
 
     func updateSnapshots(_ snapshots: [RuuviTagCardSnapshot]) {
@@ -131,6 +132,7 @@ class RuuviTagAlertService {
                 self.ensureMutedTillRefreshTimer()
             }
         }
+        updateAlertSubscriptions(for: snapshots)
     }
 
     func disableHiddenMeasurementAlerts(
@@ -194,26 +196,23 @@ class RuuviTagAlertService {
     }
 
     // MARK: - Alert Subscription Management
-    func subscribeToAlerts(for snapshots: [RuuviTagCardSnapshot]) {
-        updateSnapshots(snapshots)
-
+    private func updateAlertSubscriptions(for snapshots: [RuuviTagCardSnapshot]) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
 
             for snapshot in snapshots {
-                if snapshot.metadata.isCloud {
-                    if let macId = snapshot.identifierData.mac?.value {
-                        self.alertHandler.subscribe(self, to: macId)
-                    }
-                } else {
-                    if let luid = snapshot.identifierData.luid?.value {
-                        self.alertHandler.subscribe(self, to: luid)
-                    } else if let macId = snapshot.identifierData.mac?.value {
-                        self.alertHandler.subscribe(self, to: macId)
-                    }
-                }
+                guard let identifier = self.alertIdentifier(for: snapshot) else { continue }
+                // The notifier deduplicates subscriptions, including when switching back to an earlier identity.
+                self.alertHandler.subscribe(self, to: identifier)
             }
         }
+    }
+
+    private func alertIdentifier(for snapshot: RuuviTagCardSnapshot) -> String? {
+        if snapshot.metadata.isCloud {
+            return snapshot.identifierData.mac?.value
+        }
+        return snapshot.identifierData.luid?.value ?? snapshot.identifierData.mac?.value
     }
 
     // MARK: - Alert Syncing
@@ -1423,77 +1422,74 @@ extension RuuviTagAlertService: RuuviNotifierObserver {
         isTriggered: Bool,
         for uuid: String
     ) {
-        snapshotsQueue.sync { [weak self] in
-            guard let self = self,
-                  let snapshot = self.findSnapshotByIdentifier(uuid) else { return }
+        DispatchQueue.main.async { [weak self] in
+            guard let self,
+                  let snapshot = self.snapshotsQueue.sync(execute: { self.findSnapshotByIdentifier(uuid) }),
+                  self.alertIdentifier(for: snapshot) == uuid else { return }
 
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-
-                self.processingLock.lock()
-                guard !self.isProcessingAlertChange else {
-                    self.processingLock.unlock()
-                    return
-                }
-                self.isProcessingAlertChange = true
+            self.processingLock.lock()
+            guard !self.isProcessingAlertChange else {
                 self.processingLock.unlock()
-
-                let isFireable = snapshot.metadata.isCloud ||
-                                snapshot.connectionData.isConnected ||
-                                snapshot.identifierData.serviceUUID != nil
-
-                let isTriggeredAndFireable = isTriggered && isFireable
-                let isFiring = isTriggeredAndFireable
-
-                let isOn = self.alertService.isOn(type: alertType, for: uuid)
-                let mutedTill = self.alertService.mutedTill(type: alertType, for: uuid)
-
-                if let currentConfig = snapshot.getAlertConfig(for: alertType) {
-                    // Check if any values actually changed
-                    let hasChanges = currentConfig.isActive != isOn ||
-                                   currentConfig.isFiring != isFiring ||
-                                   currentConfig.mutedTill != mutedTill
-
-                    if hasChanges {
-                        let updatedConfig = RuuviTagCardSnapshotAlertConfig(
-                            type: currentConfig.type,
-                            alertType: currentConfig.alertType,
-                            isActive: isOn,
-                            isFiring: isFiring,
-                            mutedTill: mutedTill,
-                            lowerBound: currentConfig.lowerBound,
-                            upperBound: currentConfig.upperBound,
-                            description: currentConfig.description,
-                            unseenDuration: currentConfig.unseenDuration
-                        )
-                        snapshot.updateAlertConfig(for: alertType, config: updatedConfig)
-                        self.addToPendingUpdates(snapshotId: snapshot.id)
-                    }
-                } else {
-                    if let measurementType = alertType.toMeasurementType() {
-                        let newConfig = RuuviTagCardSnapshotAlertConfig(
-                            type: measurementType,
-                            alertType: alertType,
-                            isActive: isOn,
-                            isFiring: isFiring,
-                            mutedTill: mutedTill,
-                            lowerBound: nil,
-                            upperBound: nil,
-                            description: nil,
-                            unseenDuration: nil
-                        )
-                        snapshot
-                            .updateAlertConfig(
-                                for: alertType,
-                                config: newConfig
-                            )
-                        self.addToPendingUpdates(snapshotId: snapshot.id)
-                    }
-                }
-                self.processingLock.lock()
-                self.isProcessingAlertChange = false
-                self.processingLock.unlock()
+                return
             }
+            self.isProcessingAlertChange = true
+            self.processingLock.unlock()
+
+            let isFireable = snapshot.metadata.isCloud ||
+                            snapshot.connectionData.isConnected ||
+                            snapshot.identifierData.serviceUUID != nil
+
+            let isTriggeredAndFireable = isTriggered && isFireable
+            let isFiring = isTriggeredAndFireable
+
+            let isOn = self.alertService.isOn(type: alertType, for: uuid)
+            let mutedTill = self.alertService.mutedTill(type: alertType, for: uuid)
+
+            if let currentConfig = snapshot.getAlertConfig(for: alertType) {
+                // Check if any values actually changed
+                let hasChanges = currentConfig.isActive != isOn ||
+                               currentConfig.isFiring != isFiring ||
+                               currentConfig.mutedTill != mutedTill
+
+                if hasChanges {
+                    let updatedConfig = RuuviTagCardSnapshotAlertConfig(
+                        type: currentConfig.type,
+                        alertType: currentConfig.alertType,
+                        isActive: isOn,
+                        isFiring: isFiring,
+                        mutedTill: mutedTill,
+                        lowerBound: currentConfig.lowerBound,
+                        upperBound: currentConfig.upperBound,
+                        description: currentConfig.description,
+                        unseenDuration: currentConfig.unseenDuration
+                    )
+                    snapshot.updateAlertConfig(for: alertType, config: updatedConfig)
+                    self.addToPendingUpdates(snapshotId: snapshot.id)
+                }
+            } else {
+                if let measurementType = alertType.toMeasurementType() {
+                    let newConfig = RuuviTagCardSnapshotAlertConfig(
+                        type: measurementType,
+                        alertType: alertType,
+                        isActive: isOn,
+                        isFiring: isFiring,
+                        mutedTill: mutedTill,
+                        lowerBound: nil,
+                        upperBound: nil,
+                        description: nil,
+                        unseenDuration: nil
+                    )
+                    snapshot
+                        .updateAlertConfig(
+                            for: alertType,
+                            config: newConfig
+                        )
+                    self.addToPendingUpdates(snapshotId: snapshot.id)
+                }
+            }
+            self.processingLock.lock()
+            self.isProcessingAlertChange = false
+            self.processingLock.unlock()
         }
     }
 }

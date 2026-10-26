@@ -143,6 +143,28 @@ targets:
           - $(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)
         runOnlyWhenInstalling: true
         basedOnDependencyAnalysis: false
+  station.alertTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests/Unit/Alerts
+    dependencies:
+      - target: station
+      - package: Humidity
+      - package: Swinject
+      - target: RuuviCore
+        embed: false
+      - target: RuuviNotifier
+        embed: false
+      - target: RuuviOntology
+        embed: false
+      - target: RuuviService
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/station.app/station"
+        BUNDLE_LOADER: "$(TEST_HOST)"
   station.marketingConsentTests:
     type: bundle.unit-test
     platform: iOS
@@ -173,4 +195,5 @@ schemes:
         station: all
     test:
       targets:
+        - station.alertTests
         - station.marketingConsentTests
