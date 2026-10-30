@@ -15,8 +15,9 @@ import UIKit
 class CardsGraphViewController: UIViewController {
     weak var output: CardsGraphViewOutput?
 
-    init(output: CardsGraphViewOutput) {
+    init(output: CardsGraphViewOutput, settings: RuuviLocalSettings) {
         self.output = output
+        self.settings = settings
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -224,10 +225,10 @@ class CardsGraphViewController: UIViewController {
 
     private let historyHoursOptions: [Int] = [1, 2, 3, 6, 12]
     private let minimumHistoryLimit: Int = 1 // Day
-    private var maximumHistoryLimit: Int { max(0, (settings?.dataPruningOffsetHours ?? 0) / 24) }
+    private var maximumHistoryLimit: Int { max(0, settings.dataPruningOffsetHours / 24) }
     private let highlightAnimationDelay: TimeInterval = 0.3
 
-    private var settings: RuuviLocalSettings!
+    private var settings: RuuviLocalSettings
     private var shouldHighlightOnScroll = false
     private var hasChartData: Bool?
     private var shouldHideChartsForLoading = false
@@ -433,7 +434,7 @@ class CardsGraphViewController: UIViewController {
         all_action.state = showChartAll ? .on : .off
         actions.append(all_action)
 
-        for hour in historyHoursOptions where hour <= max(0, settings?.dataPruningOffsetHours ?? 0) {
+        for hour in historyHoursOptions where hour <= max(0, settings.dataPruningOffsetHours) {
             let action = UIAction(
                 title: "\(hour) \(hour == 1 ? RuuviLocalization.hour : RuuviLocalization.hours)".lowercased()
             ) { [weak self] _ in
