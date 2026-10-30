@@ -193,12 +193,13 @@ private extension CardsCoordinator {
 private extension CardsCoordinator {
     func createGraphViewController() -> CardsGraphViewController {
         let r = AppAssembly.shared.assembler.resolver
+        let settings = r.resolve(RuuviLocalSettings.self)!
 
         let interactor = CardsGraphViewInteractor()
         graphInteractor = interactor
         let presenter = CardsGraphPresenter(
             errorPresenter: r.resolve(ErrorPresenter.self)!,
-            settings: r.resolve(RuuviLocalSettings.self)!,
+            settings: settings,
             foreground: r.resolve(BTForeground.self)!,
             ruuviReactor: r.resolve(RuuviReactor.self)!,
             activityPresenter: r.resolve(ActivityPresenter.self)!,
@@ -212,7 +213,7 @@ private extension CardsCoordinator {
         presenter.interactor = interactor
 
         interactor.gattService = r.resolve(GATTService.self)
-        interactor.settings = r.resolve(RuuviLocalSettings.self)
+        interactor.settings = settings
         interactor.flags = r.resolve(RuuviLocalFlags.self)
         interactor.exportService = r.resolve(RuuviServiceExport.self)
         interactor.ruuviReactor = r.resolve(RuuviReactor.self)
@@ -226,7 +227,8 @@ private extension CardsCoordinator {
         interactor.presenter = presenter
 
         let viewController = CardsGraphViewController(
-            output: presenter
+            output: presenter,
+            settings: settings
         )
         viewController.view.backgroundColor = .clear
         viewController.output = presenter
