@@ -18,147 +18,173 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gvZ-Yz-kax">
-                                <rect key="frame" x="16" y="106" width="382" height="482"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <color key="tintColor" name="RuuviTintColor"/>
-                                <attributedString key="attributedText">
-                                    <fragment>
-                                        <string key="content">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                        <attributes>
-                                            <color key="NSColor" systemColor="labelColor"/>
-                                            <font key="NSFont" metaFont="system" size="14"/>
-                                        </attributes>
-                                    </fragment>
-                                </attributedString>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
-                            </textView>
-                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="FcC-2E-zgW">
-                                <rect key="frame" x="64" y="764" width="286" height="44"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" contentInsetAdjustmentBehavior="never" translatesAutoresizingMaskIntoConstraints="NO" id="sCr-Of-fSt">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I2d-ql-qUs">
-                                        <rect key="frame" x="0.0" y="0.0" width="133" height="44"/>
-                                        <color key="backgroundColor" name="RuuviTintColor"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                        <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
-                                        <state key="normal" title="CALIBRATE"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="22"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="calibrateButtonAction:" destination="KfP-FV-34v" eventType="touchUpInside" id="oAj-gF-Pqs"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="30C-Ra-WkM">
-                                        <rect key="frame" x="153" y="0.0" width="133" height="44"/>
-                                        <color key="backgroundColor" name="RuuviTintColor"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                        <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
-                                        <state key="normal" title="CLEAR"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                <integer key="value" value="22"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="clearButtonAction:" destination="KfP-FV-34v" eventType="touchUpInside" id="YeC-zO-0Qt"/>
-                                        </connections>
-                                    </button>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cVw-Of-fSt" userLabel="Scroll Content View">
+                                        <rect key="frame" x="0.0" y="0.0" width="414" height="818"/>
+                                        <subviews>
+                                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="249" scrollEnabled="NO" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gvZ-Yz-kax">
+                                                <rect key="frame" x="16" y="106" width="382" height="482"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="tintColor" name="RuuviTintColor"/>
+                                                <attributedString key="attributedText">
+                                                    <fragment>
+                                                        <string key="content">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                                        <attributes>
+                                                            <color key="NSColor" systemColor="labelColor"/>
+                                                            <font key="NSFont" metaFont="system" size="14"/>
+                                                        </attributes>
+                                                    </fragment>
+                                                </attributedString>
+                                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                <dataDetectorType key="dataDetectorTypes" link="YES"/>
+                                            </textView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="FcC-2E-zgW">
+                                                <rect key="frame" x="64" y="764" width="286" height="44"/>
+                                                <subviews>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="I2d-ql-qUs">
+                                                        <rect key="frame" x="0.0" y="0.0" width="133" height="44"/>
+                                                        <color key="backgroundColor" name="RuuviTintColor"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                        <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
+                                                        <state key="normal" title="CALIBRATE"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                <integer key="value" value="22"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="calibrateButtonAction:" destination="KfP-FV-34v" eventType="touchUpInside" id="oAj-gF-Pqs"/>
+                                                        </connections>
+                                                    </button>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="30C-Ra-WkM">
+                                                        <rect key="frame" x="153" y="0.0" width="133" height="44"/>
+                                                        <color key="backgroundColor" name="RuuviTintColor"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                        <inset key="contentEdgeInsets" minX="25" minY="12" maxX="25" maxY="12"/>
+                                                        <state key="normal" title="CLEAR"/>
+                                                        <userDefinedRuntimeAttributes>
+                                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                                <integer key="value" value="22"/>
+                                                            </userDefinedRuntimeAttribute>
+                                                        </userDefinedRuntimeAttributes>
+                                                        <connections>
+                                                            <action selector="clearButtonAction:" destination="KfP-FV-34v" eventType="touchUpInside" id="YeC-zO-0Qt"/>
+                                                        </connections>
+                                                    </button>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="30C-Ra-WkM" firstAttribute="width" secondItem="I2d-ql-qUs" secondAttribute="width" id="USc-bH-08t"/>
+                                                </constraints>
+                                            </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="jzm-U7-UUX">
+                                                <rect key="frame" x="20" y="608" width="374" height="140"/>
+                                                <subviews>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ELD-Lr-MOF">
+                                                        <rect key="frame" x="0.0" y="0.0" width="374" height="69.5"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Original measured value" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0gG-zY-0LU">
+                                                                <rect key="frame" x="0.0" y="0.0" width="374" height="21.5"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                                <color key="textColor" name="RuuviTextColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="24.79ºC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uUo-hF-EOG">
+                                                                <rect key="frame" x="0.0" y="31.5" width="71.5" height="33"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                                <color key="textColor" name="RuuviTextColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(0 s ago)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2De-5r-q5T">
+                                                                <rect key="frame" x="79.5" y="43.5" width="61.5" height="18"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                                <color key="textColor" name="RuuviTextColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstItem="uUo-hF-EOG" firstAttribute="leading" secondItem="ELD-Lr-MOF" secondAttribute="leading" id="6PX-cx-c5O"/>
+                                                            <constraint firstAttribute="bottom" secondItem="uUo-hF-EOG" secondAttribute="bottom" constant="5" id="Up8-xA-dhG"/>
+                                                            <constraint firstItem="0gG-zY-0LU" firstAttribute="top" secondItem="ELD-Lr-MOF" secondAttribute="top" id="d5t-jL-SUD"/>
+                                                            <constraint firstAttribute="trailing" secondItem="0gG-zY-0LU" secondAttribute="trailing" id="k39-NM-a3G"/>
+                                                            <constraint firstItem="2De-5r-q5T" firstAttribute="leading" secondItem="uUo-hF-EOG" secondAttribute="trailing" constant="8" symbolic="YES" id="lD4-gH-qB3"/>
+                                                            <constraint firstItem="2De-5r-q5T" firstAttribute="bottom" secondItem="uUo-hF-EOG" secondAttribute="bottom" constant="-3" id="me3-Lv-1O1"/>
+                                                            <constraint firstItem="uUo-hF-EOG" firstAttribute="top" secondItem="0gG-zY-0LU" secondAttribute="bottom" constant="10" id="sBn-FD-e4z"/>
+                                                            <constraint firstItem="0gG-zY-0LU" firstAttribute="leading" secondItem="ELD-Lr-MOF" secondAttribute="leading" id="y4U-Wz-Oih"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H3r-Yk-l6h">
+                                                        <rect key="frame" x="0.0" y="70.5" width="374" height="69.5"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Corrected value" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rq3-OO-vf6">
+                                                                <rect key="frame" x="0.0" y="5" width="374" height="21.5"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                                <color key="textColor" name="RuuviTextColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="24.79ºC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vpt-LL-XXT">
+                                                                <rect key="frame" x="0.0" y="36.5" width="71.5" height="33"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                                <color key="textColor" name="RuuviTextColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(Offset 24.79ºC)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XeT-G6-sH9">
+                                                                <rect key="frame" x="79.5" y="48.5" width="113" height="18"/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                                <color key="textColor" name="RuuviTextColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="trailing" secondItem="Rq3-OO-vf6" secondAttribute="trailing" id="Aef-Vy-SRm"/>
+                                                            <constraint firstItem="XeT-G6-sH9" firstAttribute="bottom" secondItem="Vpt-LL-XXT" secondAttribute="bottom" constant="-3" id="GF5-ax-plD"/>
+                                                            <constraint firstItem="XeT-G6-sH9" firstAttribute="leading" secondItem="Vpt-LL-XXT" secondAttribute="trailing" constant="8" symbolic="YES" id="OnQ-0K-bMq"/>
+                                                            <constraint firstItem="Rq3-OO-vf6" firstAttribute="top" secondItem="H3r-Yk-l6h" secondAttribute="top" constant="5" id="V13-gb-XNp"/>
+                                                            <constraint firstItem="Vpt-LL-XXT" firstAttribute="leading" secondItem="H3r-Yk-l6h" secondAttribute="leading" id="cxQ-0W-Fj1"/>
+                                                            <constraint firstItem="Rq3-OO-vf6" firstAttribute="leading" secondItem="H3r-Yk-l6h" secondAttribute="leading" id="msy-YC-WY2"/>
+                                                            <constraint firstAttribute="bottom" secondItem="Vpt-LL-XXT" secondAttribute="bottom" id="xjM-UA-adN"/>
+                                                            <constraint firstItem="Vpt-LL-XXT" firstAttribute="top" secondItem="Rq3-OO-vf6" secondAttribute="bottom" constant="10" id="yIq-Ji-XTP"/>
+                                                        </constraints>
+                                                    </view>
+                                                </subviews>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </stackView>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="FcC-2E-zgW" firstAttribute="top" secondItem="jzm-U7-UUX" secondAttribute="bottom" constant="20" id="IgB-PN-isX"/>
+                                            <constraint firstItem="FcC-2E-zgW" firstAttribute="centerX" secondItem="cVw-Of-fSt" secondAttribute="centerX" id="UNv-pZ-3B0"/>
+                                            <constraint firstItem="gvZ-Yz-kax" firstAttribute="leading" secondItem="cVw-Of-fSt" secondAttribute="leading" constant="16" id="fa7-p5-cSd"/>
+                                            <constraint firstItem="cVw-Of-fSt" firstAttribute="trailing" secondItem="jzm-U7-UUX" secondAttribute="trailing" constant="20" id="gAi-aQ-kHN"/>
+                                            <constraint firstItem="jzm-U7-UUX" firstAttribute="top" secondItem="gvZ-Yz-kax" secondAttribute="bottom" constant="20" id="hGR-LN-WPN"/>
+                                            <constraint firstItem="cVw-Of-fSt" firstAttribute="trailing" secondItem="gvZ-Yz-kax" secondAttribute="trailing" constant="16" id="kab-Jz-vuu"/>
+                                            <constraint firstItem="cVw-Of-fSt" firstAttribute="bottom" secondItem="FcC-2E-zgW" secondAttribute="bottom" constant="20" id="l6i-pi-6VR"/>
+                                            <constraint firstItem="gvZ-Yz-kax" firstAttribute="top" secondItem="cVw-Of-fSt" secondAttribute="top" constant="10" id="nKd-JY-3aQ"/>
+                                            <constraint firstItem="jzm-U7-UUX" firstAttribute="leading" secondItem="cVw-Of-fSt" secondAttribute="leading" constant="20" id="yqJ-3X-7Ye"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="30C-Ra-WkM" firstAttribute="width" secondItem="I2d-ql-qUs" secondAttribute="width" id="USc-bH-08t"/>
+                                    <constraint firstItem="cVw-Of-fSt" firstAttribute="top" secondItem="cLg-Of-fSt" secondAttribute="top" id="sTp-Of-fSt"/>
+                                    <constraint firstItem="cVw-Of-fSt" firstAttribute="leading" secondItem="cLg-Of-fSt" secondAttribute="leading" id="sLd-Of-fSt"/>
+                                    <constraint firstItem="cVw-Of-fSt" firstAttribute="trailing" secondItem="cLg-Of-fSt" secondAttribute="trailing" id="sTr-Of-fSt"/>
+                                    <constraint firstItem="cVw-Of-fSt" firstAttribute="bottom" secondItem="cLg-Of-fSt" secondAttribute="bottom" id="sBt-Of-fSt"/>
+                                    <constraint firstItem="cVw-Of-fSt" firstAttribute="width" secondItem="fLg-Of-fSt" secondAttribute="width" id="sWd-Of-fSt"/>
+                                    <constraint firstItem="cVw-Of-fSt" firstAttribute="height" relation="greaterThanOrEqual" secondItem="fLg-Of-fSt" secondAttribute="height" id="sHt-Of-fSt"/>
                                 </constraints>
-                            </stackView>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="1" translatesAutoresizingMaskIntoConstraints="NO" id="jzm-U7-UUX">
-                                <rect key="frame" x="20" y="608" width="374" height="140"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ELD-Lr-MOF">
-                                        <rect key="frame" x="0.0" y="0.0" width="374" height="69.5"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Original measured value" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0gG-zY-0LU">
-                                                <rect key="frame" x="0.0" y="0.0" width="374" height="21.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                <color key="textColor" name="RuuviTextColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="24.79ºC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uUo-hF-EOG">
-                                                <rect key="frame" x="0.0" y="31.5" width="71.5" height="33"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                                <color key="textColor" name="RuuviTextColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(0 s ago)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2De-5r-q5T">
-                                                <rect key="frame" x="79.5" y="43.5" width="61.5" height="18"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <color key="textColor" name="RuuviTextColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstItem="uUo-hF-EOG" firstAttribute="leading" secondItem="ELD-Lr-MOF" secondAttribute="leading" id="6PX-cx-c5O"/>
-                                            <constraint firstAttribute="bottom" secondItem="uUo-hF-EOG" secondAttribute="bottom" constant="5" id="Up8-xA-dhG"/>
-                                            <constraint firstItem="0gG-zY-0LU" firstAttribute="top" secondItem="ELD-Lr-MOF" secondAttribute="top" id="d5t-jL-SUD"/>
-                                            <constraint firstAttribute="trailing" secondItem="0gG-zY-0LU" secondAttribute="trailing" id="k39-NM-a3G"/>
-                                            <constraint firstItem="2De-5r-q5T" firstAttribute="leading" secondItem="uUo-hF-EOG" secondAttribute="trailing" constant="8" symbolic="YES" id="lD4-gH-qB3"/>
-                                            <constraint firstItem="2De-5r-q5T" firstAttribute="bottom" secondItem="uUo-hF-EOG" secondAttribute="bottom" constant="-3" id="me3-Lv-1O1"/>
-                                            <constraint firstItem="uUo-hF-EOG" firstAttribute="top" secondItem="0gG-zY-0LU" secondAttribute="bottom" constant="10" id="sBn-FD-e4z"/>
-                                            <constraint firstItem="0gG-zY-0LU" firstAttribute="leading" secondItem="ELD-Lr-MOF" secondAttribute="leading" id="y4U-Wz-Oih"/>
-                                        </constraints>
-                                    </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H3r-Yk-l6h">
-                                        <rect key="frame" x="0.0" y="70.5" width="374" height="69.5"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Corrected value" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rq3-OO-vf6">
-                                                <rect key="frame" x="0.0" y="5" width="374" height="21.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                <color key="textColor" name="RuuviTextColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="24.79ºC" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vpt-LL-XXT">
-                                                <rect key="frame" x="0.0" y="36.5" width="71.5" height="33"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
-                                                <color key="textColor" name="RuuviTextColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(Offset 24.79ºC)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XeT-G6-sH9">
-                                                <rect key="frame" x="79.5" y="48.5" width="113" height="18"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                                <color key="textColor" name="RuuviTextColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="Rq3-OO-vf6" secondAttribute="trailing" id="Aef-Vy-SRm"/>
-                                            <constraint firstItem="XeT-G6-sH9" firstAttribute="bottom" secondItem="Vpt-LL-XXT" secondAttribute="bottom" constant="-3" id="GF5-ax-plD"/>
-                                            <constraint firstItem="XeT-G6-sH9" firstAttribute="leading" secondItem="Vpt-LL-XXT" secondAttribute="trailing" constant="8" symbolic="YES" id="OnQ-0K-bMq"/>
-                                            <constraint firstItem="Rq3-OO-vf6" firstAttribute="top" secondItem="H3r-Yk-l6h" secondAttribute="top" constant="5" id="V13-gb-XNp"/>
-                                            <constraint firstItem="Vpt-LL-XXT" firstAttribute="leading" secondItem="H3r-Yk-l6h" secondAttribute="leading" id="cxQ-0W-Fj1"/>
-                                            <constraint firstItem="Rq3-OO-vf6" firstAttribute="leading" secondItem="H3r-Yk-l6h" secondAttribute="leading" id="msy-YC-WY2"/>
-                                            <constraint firstAttribute="bottom" secondItem="Vpt-LL-XXT" secondAttribute="bottom" id="xjM-UA-adN"/>
-                                            <constraint firstItem="Vpt-LL-XXT" firstAttribute="top" secondItem="Rq3-OO-vf6" secondAttribute="bottom" constant="10" id="yIq-Ji-XTP"/>
-                                        </constraints>
-                                    </view>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </stackView>
+                                <viewLayoutGuide key="contentLayoutGuide" id="cLg-Of-fSt"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="fLg-Of-fSt"/>
+                            </scrollView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Z0U-sh-7he"/>
                         <color key="backgroundColor" name="RuuviPrimary"/>
                         <constraints>
-                            <constraint firstItem="Z0U-sh-7he" firstAttribute="bottom" secondItem="jzm-U7-UUX" secondAttribute="top" constant="220" id="IgB-PN-isX"/>
-                            <constraint firstItem="FcC-2E-zgW" firstAttribute="centerX" secondItem="Z0U-sh-7he" secondAttribute="centerX" id="UNv-pZ-3B0"/>
-                            <constraint firstItem="gvZ-Yz-kax" firstAttribute="leading" secondItem="Z0U-sh-7he" secondAttribute="leading" constant="16" id="fa7-p5-cSd"/>
-                            <constraint firstItem="Z0U-sh-7he" firstAttribute="trailing" secondItem="jzm-U7-UUX" secondAttribute="trailing" constant="20" id="gAi-aQ-kHN"/>
-                            <constraint firstItem="jzm-U7-UUX" firstAttribute="top" secondItem="gvZ-Yz-kax" secondAttribute="bottom" constant="20" id="hGR-LN-WPN"/>
-                            <constraint firstItem="Z0U-sh-7he" firstAttribute="trailing" secondItem="gvZ-Yz-kax" secondAttribute="trailing" constant="16" id="kab-Jz-vuu"/>
-                            <constraint firstItem="Z0U-sh-7he" firstAttribute="bottom" secondItem="FcC-2E-zgW" secondAttribute="bottom" constant="20" id="l6i-pi-6VR"/>
-                            <constraint firstItem="gvZ-Yz-kax" firstAttribute="top" secondItem="Z0U-sh-7he" secondAttribute="top" constant="10" id="nKd-JY-3aQ"/>
-                            <constraint firstItem="jzm-U7-UUX" firstAttribute="leading" secondItem="Z0U-sh-7he" secondAttribute="leading" constant="20" id="yqJ-3X-7Ye"/>
+                            <constraint firstItem="sCr-Of-fSt" firstAttribute="top" secondItem="Z0U-sh-7he" secondAttribute="top" id="vTp-Of-fSt"/>
+                            <constraint firstItem="sCr-Of-fSt" firstAttribute="leading" secondItem="Z0U-sh-7he" secondAttribute="leading" id="vLd-Of-fSt"/>
+                            <constraint firstItem="sCr-Of-fSt" firstAttribute="trailing" secondItem="Z0U-sh-7he" secondAttribute="trailing" id="vTr-Of-fSt"/>
+                            <constraint firstItem="sCr-Of-fSt" firstAttribute="bottom" secondItem="Z0U-sh-7he" secondAttribute="bottom" id="vBt-Of-fSt"/>
                         </constraints>
                     </view>
                     <connections>
