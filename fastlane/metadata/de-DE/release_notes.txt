@@ -1,7 +1,8 @@
-- Größere Ansicht mit einem einzelnen Diagramm für den Verlauf im Hochformat hinzugefügt
-- Diagrammlayouts verbessert, damit Achsenwerte nicht abgeschnitten werden
-- Verarbeitung von Sensor-Offsets unter iOS korrigiert
-- Kartengröße im Dashboard nach der Synchronisierung geänderter Sichtbarkeitseinstellungen verbessert
-- Kurzzeitige Anzeige alter Daten auf Sensorkarten während der Cloud-Synchronisierung behoben
-- Layout der Seite Globale Einheiten und Auflösung im Querformat verbessert
+- Navigation durch Wischen zwischen den vollständigen Sensorkartenansichten hinzugefügt
+- Automatische Synchronisierung der Verlaufsdaten von Ruuvi Air-Sensoren in der Nähe beim Öffnen der App hinzugefügt
+- Alarmanzeigen, Alarmbereiche in Diagrammen und Aktionen in Benachrichtigungen verbessert
+- VOC- und NOx-Messwerte von Ruuvi Air korrigiert
+- Cloud-Synchronisierung von Sensor-Offsets und Maßeinheiteneinstellungen verbessert
+- Veraltete Widget-Messwerte und falsche Angaben zur letzten Aktualisierung korrigiert
+- Layout der Sensorkarten sowie Darstellung von Sensornamen und Messwertbezeichnungen verbessert
 - Weitere kleinere Fehlerbehebungen und Verbesserungen

@@ -1,7 +1,8 @@
-- Ajout d’une vue plus grande avec un seul graphique pour l’historique en mode portrait
-- Amélioration de la disposition des graphiques pour éviter que les valeurs des axes soient coupées
-- Correction de la gestion des valeurs d’offset des capteurs sur iOS
-- Amélioration de la taille des cartes du tableau de bord après la synchronisation des modifications des paramètres de visibilité
-- Correction de l’affichage momentané d’anciennes données sur les cartes des capteurs pendant la synchronisation Cloud
-- Amélioration de la mise en page de la page Unités globales et résolution en mode paysage
+- Ajout de la navigation par balayage entre les vues complètes des cartes des capteurs
+- Ajout de la synchronisation automatique de l’historique des capteurs Ruuvi Air à proximité à l’ouverture de l’application
+- Amélioration des indicateurs d’alerte, des plages d’alerte dans les graphiques et des actions des notifications
+- Correction des valeurs de VOC et de NOx de Ruuvi Air
+- Amélioration de la synchronisation Cloud des valeurs d’offset des capteurs et des paramètres d’unités
+- Correction des valeurs obsolètes des widgets et des informations incorrectes sur la dernière mise à jour
+- Amélioration de la disposition des cartes des capteurs et de l’affichage des noms des capteurs et des libellés des mesures
 - Autres corrections de bugs mineurs et améliorations
