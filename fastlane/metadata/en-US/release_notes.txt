@@ -1,7 +1,8 @@
-- Added a larger single-chart layout for history in portrait view
-- Improved chart layouts to prevent clipped axis values
-- Fixed sensor offset handling on iOS
-- Improved dashboard card sizing after synced visibility changes
-- Fixed sensor card details flashing during cloud sync
-- Improved Global Units and Resolution page layout in landscape
+- Added swipe navigation between full sensor cards
+- Added automatic history sync for nearby Ruuvi Air sensors when opening the app
+- Improved alert indicators, chart alert ranges, and notification actions
+- Fixed Ruuvi Air VOC and NOx readings
+- Improved cloud sync for sensor offsets and unit settings
+- Fixed outdated widget readings and incorrect last-updated information
+- Improved sensor card layouts, names, and measurement labels
 - Other minor bug fixes and improvements

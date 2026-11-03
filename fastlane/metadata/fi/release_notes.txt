@@ -1,7 +1,8 @@
-- Lisätty suurempi yhden kaavion näkymä historianäkymään pystytilassa
-- Parannettu kaavioiden asettelua, jotta akselien arvot näkyvät kokonaan
-- Korjattu anturien offset-arvojen käsittelyä iOS:ssä
-- Parannettu koontinäytön korttien kokoa näkyvyysasetusten muutosten synkronoinnin jälkeen
-- Korjattu anturikorttien vanhojen tietojen välähtäminen pilvisynkronoinnin aikana
-- Parannettu Yleiset yksiköt ja resoluutio -sivun asettelua vaakatilassa
-- Muita pieniä bugikorjauksia ja parannuksia
+- Anturikorttien näkymien välillä voi nyt siirtyä pyyhkäisemällä
+- Lähellä olevien Ruuvi Air -anturien historiatiedot synkronoituvat nyt automaattisesti sovelluksen avautuessa
+- Parannettu hälytysilmaisimia, kaavioiden hälytysalueita ja ilmoitusten toimintoja
+- Korjattu Ruuvi Airin VOC- ja NOx-lukemia
+- Parannettu anturien offset-arvojen ja yksikköasetusten pilvisynkronointia
+- Korjattu widgettien vanhentuneita lukemia ja virheellisiä viimeisimmän päivityksen tietoja
+- Parannettu anturikorttien asettelua sekä anturien ja mittausten nimien esitystapaa
+- Muita pienempiä bugikorjauksia ja parannuksia

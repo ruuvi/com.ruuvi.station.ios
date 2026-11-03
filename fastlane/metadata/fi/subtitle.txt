@@ -1,1 +1,1 @@
-An easy way to use RuuviTags
+Easy way to use Ruuvi sensors
