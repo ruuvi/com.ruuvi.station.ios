@@ -12,9 +12,23 @@ targets:
     sources:
     - path: Sources
       name: Notification
+      excludes:
+      - RuuviNotificationRemote
     dependencies:
     - package: Humidity
     - target: RuuviOntology
     - target: RuuviLocal
     - target: RuuviStorage
     - target: RuuviService
+  RuuviNotificationRemote:
+    templates:
+    - Framework
+    info:
+      path: RemoteInfo.plist
+    settings:
+      base:
+        APPLICATION_EXTENSION_API_ONLY: true
+    sources:
+    - path: Sources/RuuviNotificationRemote
+    dependencies:
+    - target: RuuviLocalization

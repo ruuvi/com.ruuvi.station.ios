@@ -23,7 +23,7 @@ final class DFUViewModel: ObservableObject {
     @Published var flashProgress: Double = 0
     @Published var isMigrationFailed: Bool = false
 
-    var output: DFUViewModelOutput?
+    weak var output: DFUViewModelOutput?
 
     private var bag = Set<AnyCancellable>()
     private let input = PassthroughSubject<Event, Never>()
@@ -85,7 +85,7 @@ final class DFUViewModel: ObservableObject {
                 userInput(input: input.eraseToAnyPublisher()),
             ]
         )
-        .assign(to: \.state, on: self)
+        .sink { [weak self] in self?.state = $0 }
         .store(in: &bag)
     }
 

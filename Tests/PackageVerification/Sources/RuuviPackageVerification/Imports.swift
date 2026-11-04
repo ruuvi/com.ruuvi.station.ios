@@ -27,6 +27,7 @@ import RuuviMigration
 import RuuviMigrationImpl
 import RuuviNotification
 import RuuviNotificationLocal
+import RuuviNotificationRemote
 import RuuviNotifier
 import RuuviNotifierImpl
 import RuuviOnboard

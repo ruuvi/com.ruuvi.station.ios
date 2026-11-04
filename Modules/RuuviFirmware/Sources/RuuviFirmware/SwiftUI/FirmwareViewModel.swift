@@ -16,18 +16,20 @@ final class FirmwareViewModel: ObservableObject {
     @Published var flashProgress: Double = 0
     @Published var isBatteryLow: Bool = false
 
-    var output: FirmwareViewModelOutput?
+    weak var output: FirmwareViewModelOutput?
     private let input = PassthroughSubject<Event, Never>()
     private let uuid: String
     private var currentFirmware: String?
-    private let interactor: FirmwareInteractor
+    private let interactor: FirmwareInteracting
     private var bag = Set<AnyCancellable>()
 
     init(
         uuid: String,
         currentFirmware: String?,
-        interactor: FirmwareInteractor
+        interactor: FirmwareInteracting,
+        initialState: State = .idle
     ) {
+        state = initialState
         self.uuid = uuid
         self.currentFirmware = currentFirmware.ruuviFirmwareDisplayValue ?? currentFirmware
         self.interactor = interactor
@@ -45,7 +47,7 @@ final class FirmwareViewModel: ObservableObject {
                 userInput(input: input.eraseToAnyPublisher()),
             ]
         )
-        .assign(to: \.state, on: self)
+        .sink { [weak self] in self?.state = $0 }
         .store(in: &bag)
 
         interactor.batteryIsLow.assign(to: &$isBatteryLow)

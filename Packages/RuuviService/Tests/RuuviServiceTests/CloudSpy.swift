@@ -16,6 +16,11 @@ import RuuviOntology
         let description: String?
         let mac: String
     }
+    var onDense: (() async throws(RuuviCloudError) -> [RuuviCloudSensorDense])?
+    var onHistory: ((MACIdentifier, Date) async throws(RuuviCloudError) -> [AnyRuuviTagSensorRecord])?
+    var onSettings: (() async throws(RuuviCloudError) -> RuuviCloudSettings?)?
+    var onQueuedRequest: ((RuuviCloudQueuedRequest) async throws(RuuviCloudError) -> Bool)?
+    var sensorSettingWrites: [([String], [String])] = []
     var alerts = [AlertRequest]()
     var onAlert: (() -> Void)?
     var onName: ((String) async -> Void)?
@@ -67,6 +72,7 @@ import RuuviOntology
         alerts: Bool?,
         settings: Bool?
     ) async throws(RuuviCloudError) -> [RuuviCloudSensorDense] {
+        if let onDense { return try await onDense() }
         throw .notAuthorized
     }
 
@@ -75,6 +81,7 @@ import RuuviOntology
         since: Date,
         until: Date?
     ) async throws(RuuviCloudError) -> [AnyRuuviTagSensorRecord] {
+        if let onHistory { return try await onHistory(macId, since) }
         throw .notAuthorized
     }
 
@@ -146,6 +153,7 @@ import RuuviOntology
     }
 
     func getCloudSettings() async throws(RuuviCloudError) -> RuuviCloudSettings? {
+        if let onSettings { return try await onSettings() }
         throw .notAuthorized
     }
 
@@ -239,7 +247,8 @@ import RuuviOntology
         values: [String],
         timestamp: Int?
     ) async throws(RuuviCloudError) -> AnyRuuviTagSensor {
-        throw .notAuthorized
+        sensorSettingWrites.append((types, values))
+        return sensor.any
     }
 
     func update(
@@ -277,6 +286,7 @@ import RuuviOntology
     func executeQueuedRequest(from request: RuuviCloudQueuedRequest)
         async throws(RuuviCloudError) -> Bool
     {
+        if let onQueuedRequest { return try await onQueuedRequest(request) }
         throw .notAuthorized
     }
 }

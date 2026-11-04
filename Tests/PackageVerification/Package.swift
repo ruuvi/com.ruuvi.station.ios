@@ -65,6 +65,7 @@ let package = Package(
                 .product(name: "RuuviMigrationImpl", package: "RuuviMigration"),
                 .product(name: "RuuviNotification", package: "RuuviNotification"),
                 .product(name: "RuuviNotificationLocal", package: "RuuviNotification"),
+                .product(name: "RuuviNotificationRemote", package: "RuuviNotification"),
                 .product(name: "RuuviNotifier", package: "RuuviNotifier"),
                 .product(name: "RuuviNotifierImpl", package: "RuuviNotifier"),
                 .product(name: "RuuviOntology", package: "RuuviOntology"),

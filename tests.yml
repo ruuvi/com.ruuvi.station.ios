@@ -131,6 +131,19 @@ targets:
     dependencies:
       - target: RuuviNotification
         embed: false
+      - target: RuuviNotificationRemote
+        embed: false
+      - target: RuuviLocalization
+        embed: false
+      - target: RuuviCloud
+        embed: false
+      - target: RuuviLocal
+        embed: false
+      - target: RuuviService
+        embed: false
+      - target: RuuviOntology
+        embed: false
+      - package: Humidity
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
@@ -239,6 +252,9 @@ targets:
     sources:
       - path: Packages/RuuviService/Tests
     dependencies:
+      - package: GRDB
+      - target: RuuviRepository
+        embed: false
       - package: BTKit
       - target: RuuviUser
         embed: false
@@ -309,6 +325,8 @@ targets:
     sources:
       - path: Modules/RuuviFirmware/Tests
     dependencies:
+      - target: RuuviDFU
+        embed: false
       - target: RuuviFirmware
         embed: false
     settings:
@@ -359,6 +377,7 @@ targets:
     sources:
       - path: Apps/RuuviStation/Tests/Unit/CardsGraphViewInteractorTests.swift
       - path: Apps/RuuviStation/Tests/Unit/FirmwareDownloadTests.swift
+      - path: Apps/RuuviStation/Tests/Unit/FirmwareLifetimeTests.swift
     dependencies:
       - target: station
       - target: RuuviService
@@ -366,6 +385,22 @@ targets:
       - target: RuuviOntology
         embed: false
       - package: BTKit
+      - target: RuuviDaemon
+        embed: false
+      - target: RuuviDFU
+        embed: false
+      - target: RuuviLocal
+        embed: false
+      - target: RuuviPersistence
+        embed: false
+      - target: RuuviPool
+        embed: false
+      - target: RuuviPresenters
+        embed: false
+      - target: RuuviStorage
+        embed: false
+      - package: Swinject
+      - package: Humidity
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
@@ -472,6 +507,7 @@ schemes:
       gatherCoverageData: true
       coverageTargets:
         - RuuviNotification
+        - RuuviNotificationRemote
       targets:
         - RuuviNotificationTests
   RuuviNotifierTests:
@@ -634,6 +670,7 @@ schemes:
         - RuuviLocal
         - RuuviMigration
         - RuuviNotification
+        - RuuviNotificationRemote
         - RuuviNotifier
         - RuuviOntology
         - RuuviPersistence

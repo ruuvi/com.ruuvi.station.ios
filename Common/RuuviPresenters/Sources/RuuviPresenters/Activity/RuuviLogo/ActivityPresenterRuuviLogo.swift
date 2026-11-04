@@ -11,6 +11,7 @@ public final class ActivityPresenterRuuviLogo: NSObject {
     private let activityPresenterViewProvider: ActivityPresenterViewProvider
     private let activityPresenterViewController: UIViewController
     private let stateHolder = ActivityPresenterStateHolder()
+    private let topViewController: () -> UIViewController?
 
     private var activityPresenterPosition: ActivityPresenterPosition = .bottom
     private var stateStartTime: CFTimeInterval?
@@ -27,7 +28,12 @@ public final class ActivityPresenterRuuviLogo: NSObject {
         return recognizer
     }()
 
-    public override init() {
+    public override convenience init() {
+        self.init(topViewController: RuuviPresenterHelper.topViewController)
+    }
+
+    init(topViewController: @escaping () -> UIViewController?) {
+        self.topViewController = topViewController
         activityPresenterViewProvider = ActivityPresenterViewProvider(stateHolder: stateHolder)
         activityPresenterViewController = activityPresenterViewProvider.makeViewController()
         super.init()
@@ -45,8 +51,9 @@ extension ActivityPresenterRuuviLogo: ActivityPresenter {
         activityPresenterViewProvider.updatePosition(position)
         stateStartTime = CFAbsoluteTimeGetCurrent()
         currentState = state
-        guard let topController = RuuviPresenterHelper.topViewController(),
-              let toastView = activityPresenterViewController.view else {
+        guard let topController = topViewController(),
+            let toastView = activityPresenterViewController.view
+        else {
             return
         }
 
@@ -83,8 +90,9 @@ extension ActivityPresenterRuuviLogo: ActivityPresenter {
         let generation = dismissalGeneration
         let workItem = DispatchWorkItem { [weak self, weak toastView] in
             guard let self,
-                  self.dismissalGeneration == generation,
-                  let toastView else {
+                self.dismissalGeneration == generation,
+                let toastView
+            else {
                 return
             }
             self.animateActivityViewDismissal(
@@ -112,8 +120,9 @@ extension ActivityPresenterRuuviLogo {
         if case .success = state {
             activityPresenterViewController.view.isUserInteractionEnabled = false
             if activityPresenterViewController.view.superview != nil,
-               let hostView,
-               successTouchRecognizer.view !== hostView {
+                let hostView,
+                successTouchRecognizer.view !== hostView
+            {
                 removeSuccessTouchRecognizer()
                 hostView.addGestureRecognizer(successTouchRecognizer)
             }
@@ -212,7 +221,8 @@ extension ActivityPresenterRuuviLogo {
             }
         } completion: { [weak self] _ in
             guard let self,
-                  self.dismissalGeneration == generation else {
+                self.dismissalGeneration == generation
+            else {
                 return
             }
             self.pendingDismissWorkItem = nil
@@ -225,7 +235,7 @@ extension ActivityPresenterRuuviLogo {
     }
 
     private func safeAreaInsets() -> UIEdgeInsets {
-        RuuviPresenterHelper.topViewController()?.view.safeAreaInsets ?? .zero
+        topViewController()?.view.safeAreaInsets ?? .zero
     }
 }
 

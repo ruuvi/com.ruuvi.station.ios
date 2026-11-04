@@ -19,7 +19,22 @@ enum FirmwareError: Error {
     case failedToConstructFirmwareFromFile
 }
 
-final class FirmwareInteractor {
+protocol FirmwareInteracting {
+    var batteryIsLow: CurrentValueSubject<Bool, Never> { get }
+    func restartPropertiesDaemon()
+    func ensureBatteryHasEnoughPower(uuid: String)
+    func loadLatestGitHubRelease() -> AnyPublisher<GitHubRelease, Error>
+    func serveCurrentRelease(uuid: String) -> Future<CurrentRelease, Error>
+    func download(release: GitHubRelease) -> AnyPublisher<FirmwareDownloadResponse, Error>
+    func listen() -> Future<String, Never>
+    func observeLost(uuid: String) -> Future<String, Never>
+    func flash(
+        uuid: String, latestRelease: GitHubRelease, currentRelease: CurrentRelease?,
+        appUrl: URL, fullUrl: URL
+    ) -> AnyPublisher<FlashResponse, Error>
+}
+
+final class FirmwareInteractor: FirmwareInteracting {
     var batteryIsLow = CurrentValueSubject<Bool, Never>(false)
     private let background: BTBackground
     private let foreground: BTForeground
@@ -63,7 +78,8 @@ final class FirmwareInteractor {
         ruuviTag: RuuviTag
     ) -> Bool {
         if let temperature = ruuviTag.celsius,
-            let voltage = ruuviTag.volts {
+            let voltage = ruuviTag.volts
+        {
             if temperature < 0, temperature >= -20 {
                 voltage < 2.3
             } else if temperature < -20 {
@@ -116,19 +132,20 @@ final class FirmwareInteractor {
 
     func download(release: GitHubRelease) -> AnyPublisher<FirmwareDownloadResponse, Error> {
         guard let fullName = release.defaultFullZipName,
-              let fullUrl = release.defaultFullZipUrl
+            let fullUrl = release.defaultFullZipUrl
         else {
             return Fail<FirmwareDownloadResponse, Error>(error: URLError(.badURL)).eraseToAnyPublisher()
         }
         guard let appName = release.defaultAppZipName,
-              let appUrl = release.defaultAppZipUrl
+            let appUrl = release.defaultAppZipUrl
         else {
             return Fail<FirmwareDownloadResponse, Error>(error: URLError(.badURL)).eraseToAnyPublisher()
         }
         let progress = Progress(totalUnitCount: 2)
         let full = download(url: fullUrl, name: fullName, progress: progress)
         let app = download(url: appUrl, name: appName, progress: progress)
-        return app
+        return
+            app
             .combineLatest(full)
             .map { app, full in
                 switch (app, full) {
@@ -180,11 +197,13 @@ final class FirmwareInteractor {
     func observeLost(uuid: String) -> Future<String, Never> {
         Future { [weak self] promise in
             guard let self else { return }
-            ruuviDFU.lost(self, closure: { _, device in
-                if device.uuid == uuid {
-                    promise(.success(uuid))
-                }
-            })
+            ruuviDFU.lost(
+                self,
+                closure: { _, device in
+                    if device.uuid == uuid {
+                        promise(.success(uuid))
+                    }
+                })
         }
     }
 

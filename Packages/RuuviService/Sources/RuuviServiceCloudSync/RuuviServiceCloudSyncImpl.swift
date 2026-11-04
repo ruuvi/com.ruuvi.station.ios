@@ -398,24 +398,25 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     @MainActor
     public func sync(sensor: RuuviTagSensor) async throws(RuuviServiceError) -> [AnyRuuviTagSensorRecord] {
         guard let days = sensor.maxHistoryDays, days > 0 else { return [] }
+        guard let mac = sensor.macId else { throw .macIdIsNil }
         let admitted = historyLock.withLock { ongoingHistorySyncs.insert(sensor.any).inserted }
         guard admitted else { return [] }
         defer {
             historyLock.withLock { _ = ongoingHistorySyncs.remove(sensor.any) }
-            ruuviLocalSyncState.setSyncStatusHistory(.none, for: sensor.macId)
+            ruuviLocalSyncState.setSyncStatusHistory(.none, for: mac)
         }
         let start = Date(timeIntervalSinceNow: -TimeInterval(ruuviLocalSettings.networkPruningIntervalHours * 3600))
-        let full = ruuviLocalSyncState.downloadFullHistory(for: sensor.macId) == true
-        let since = full ? start : (ruuviLocalSyncState.getSyncDate(for: sensor.macId) ?? start)
-        ruuviLocalSyncState.setSyncStatusHistory(.syncing, for: sensor.macId)
+        let full = ruuviLocalSyncState.downloadFullHistory(for: mac) == true
+        let since = full ? start : (ruuviLocalSyncState.getSyncDate(for: mac) ?? start)
+        ruuviLocalSyncState.setSyncStatusHistory(.syncing, for: mac)
         do {
             let records = try await syncRecordsOperation(for: sensor, since: since)
-            ruuviLocalSyncState.setSyncStatusHistory(.complete, for: sensor.macId)
-            ruuviLocalSyncState.setDownloadFullHistory(for: sensor.macId, downloadFull: false)
-            if let date = records.map(\.date).max() { ruuviLocalSyncState.setSyncDate(date, for: sensor.macId) }
+            ruuviLocalSyncState.setSyncStatusHistory(.complete, for: mac)
+            ruuviLocalSyncState.setDownloadFullHistory(for: mac, downloadFull: false)
+            if let date = records.map(\.date).max() { ruuviLocalSyncState.setSyncDate(date, for: mac) }
             return records
         } catch {
-            ruuviLocalSyncState.setSyncStatusHistory(.onError, for: sensor.macId)
+            ruuviLocalSyncState.setSyncStatusHistory(.onError, for: mac)
             throw error
         }
     }
@@ -466,9 +467,17 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     private func syncSensors(
         pendingOffsetUpdates: Set<QueuedOffsetUpdate>?
     ) async throws(RuuviServiceError) -> Set<AnyRuuviTagSensor> {
-        if let locals = try? await ruuviStorage.readAll() {
-            for sensor in locals where sensor.isCloud {
-                if let mac = sensor.macId { ruuviLocalSyncState.setSyncStatusLatestRecord(.syncing, for: mac) }
+        let syncingSensors = ((try? await ruuviStorage.readAll()) ?? []).filter(\.isCloud)
+        for sensor in syncingSensors {
+            if let mac = sensor.macId { ruuviLocalSyncState.setSyncStatusLatestRecord(.syncing, for: mac) }
+        }
+        var completed = false
+        defer {
+            // A failed snapshot or a deleted sensor must not remain stuck in the syncing state.
+            for sensor in syncingSensors {
+                if let mac = sensor.macId, ruuviLocalSyncState.getSyncStatusLatestRecord(for: mac) == .syncing {
+                    ruuviLocalSyncState.setSyncStatusLatestRecord(completed ? .none : .onError, for: mac)
+                }
             }
         }
         let dense: [RuuviCloudSensorDense]
@@ -491,6 +500,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
             _ = try await updateLatestRecord(ruuviTag: item.sensor.ruuviTagSensor, cloudRecord: item.record)
             _ = try await addLatestRecordToHistory(ruuviTag: item.sensor.ruuviTagSensor, cloudRecord: item.record)
         }
+        completed = true
         return updated
     }
 
@@ -695,6 +705,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                             downloadFull: nil
                         )
                         _ = try await self.ruuviPool.delete(localSensor)
+                        // The row is gone; updating its ownership below would fail the entire sync.
+                        continue
                     }
 
                     // The cloud sensor list only contains sensors accessible to the

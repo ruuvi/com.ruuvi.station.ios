@@ -14,8 +14,20 @@ def main():
     parser.add_argument("--minimum", type=float, help="Required percentage for every executable target")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
-    expected = {p.parent.name + ".framework" for p in root.glob("*/Ruuvi*/Package.swift")}
-    expected.update({"station.app", "station.widgets.appex", "station.intents.appex", "station.pnservice.appex"})
+    project = json.loads(subprocess.check_output([
+        "plutil", "-convert", "json", "-o", "-", str(root / "Ruuvi.xcodeproj/project.pbxproj")
+    ]))
+    objects = project["objects"]
+    production_types = {
+        "com.apple.product-type.framework", "com.apple.product-type.application",
+        "com.apple.product-type.app-extension",
+    }
+    # Derive the denominator from the project, independently of the coverage scheme.
+    # Omitting a production target from AllTests must fail verification, not hide that target.
+    expected = {objects[target["productReference"]]["path"] for target in objects.values()
+                if target.get("isa") == "PBXNativeTarget" and target.get("productType") in production_types}
+    if not expected:
+        raise SystemExit("The generated project must contain production coverage targets.")
     report = json.loads(subprocess.check_output([
         "xcrun", "xccov", "view", "--report", "--json", str(args.result)
     ]))

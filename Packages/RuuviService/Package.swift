@@ -65,6 +65,7 @@ let package = Package(
         ),
     ],
     dependencies: [
+        .package(url: "https://github.com/groue/GRDB.swift", from: "7.12.0"),
         .package(path: "../RuuviUser"),
         .package(url: "https://github.com/rinat-enikeev/Humidity", from: "0.1.5"),
         .package(url: "https://github.com/ruuvi/BTKit", branch: "master"),
@@ -255,6 +256,8 @@ let package = Package(
         .testTarget(
             name: "RuuviServiceTests",
             dependencies: [
+                .product(name: "GRDB", package: "GRDB.swift"),
+                .product(name: "RuuviRepositoryCoordinator", package: "RuuviRepository"),
                 "RuuviServiceExport", "RuuviServiceMeasurement",
                 "RuuviServiceOwnership",
                 "RuuviServiceSensorProperties",

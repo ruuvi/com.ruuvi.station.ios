@@ -6,1023 +6,300 @@ import RuuviLocal
 import RuuviOntology
 import RuuviService
 import RuuviStorage
-import UIKit
-// swiftlint:disable file_length
 import UserNotifications
 
-struct LocalAlertCategory {
-    var id: String
-    var disable: String
-    var mute: String
-    var uuidKey: String
-    var typeKey: String
-}
+private struct LocalAlertCategory {
+    let id: String
+    let disable: String
+    let mute: String
+    let uuidKey: String
+    let typeKey: String
 
-enum BlastNotificationType: String {
-    case connection
-    case movement
-}
-
-#if DEBUG || ALPHA
-    private func alertNotificationDebugLog(
-        _ category: String,
-        _ message: @autoclosure () -> String
-    ) {
-        RuuviAlertDebugLog.append(category, message())
+    init(_ suffix: String) {
+        id = "com.ruuvi.station.alerts." + suffix
+        disable = id + ".disable"
+        mute = id + ".mute"
+        uuidKey = id + ".uuid"
+        typeKey = id + ".type"
     }
-#else
-    @inline(__always)
-    private func alertNotificationDebugLog(_: String, _: @autoclosure () -> String) {}
-#endif
+}
 
 public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal {
-    private let ruuviStorage: RuuviStorage
+    private let readSensor: (String) async throws -> AnyRuuviTagSensor
     private let idPersistence: RuuviLocalIDs
     private let settings: RuuviLocalSettings
     private let ruuviAlertService: RuuviServiceAlert
-
+    private let center: LocalNotificationCenter
+    private let now: () -> Date
     private weak var output: RuuviNotificationLocalOutput?
+    private let lowHigh = LocalAlertCategory("lh")
+    private let blast = LocalAlertCategory("blast")
+    private var alertDidChangeToken: NSObjectProtocol?
+    @MainActor private var deliveryTask: Task<Void, Never>?
 
-    public init(
+    public convenience init(
         ruuviStorage: RuuviStorage,
         idPersistence: RuuviLocalIDs,
         settings: RuuviLocalSettings,
         ruuviAlertService: RuuviServiceAlert
     ) {
-        self.ruuviStorage = ruuviStorage
+        self.init(
+            readSensor: { try await ruuviStorage.readOne($0) }, idPersistence: idPersistence,
+            settings: settings, ruuviAlertService: ruuviAlertService,
+            center: SystemLocalNotificationCenter(), now: Date.init)
+    }
+
+    init(
+        readSensor: @escaping (String) async throws -> AnyRuuviTagSensor,
+        idPersistence: RuuviLocalIDs, settings: RuuviLocalSettings,
+        ruuviAlertService: RuuviServiceAlert, center: LocalNotificationCenter,
+        now: @escaping () -> Date
+    ) {
+        self.readSensor = readSensor
         self.idPersistence = idPersistence
         self.settings = settings
         self.ruuviAlertService = ruuviAlertService
-    }
-
-    private let lowHigh = LocalAlertCategory(
-        id: "com.ruuvi.station.alerts.lh",
-        disable: "com.ruuvi.station.alerts.lh.disable",
-        mute: "com.ruuvi.station.alerts.lh.mute",
-        uuidKey: "com.ruuvi.station.alerts.lh.uuid",
-        typeKey: "com.ruuvi.station.alerts.lh.type"
-    )
-    private let blast = LocalAlertCategory(
-        id: "com.ruuvi.station.alerts.blast",
-        disable: "com.ruuvi.station.alerts.blast.disable",
-        mute: "com.ruuvi.station.alerts.blast.mute",
-        uuidKey: "com.ruuvi.station.alerts.blast.uuid",
-        typeKey: "com.ruuvi.station.alerts.blast.type"
-    )
-
-    private let dateFormatter: DateFormatter = {
-        let df = DateFormatter()
-        df.locale = Locale.autoupdatingCurrent
-        df.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-        return df
-    }()
-
-    private var alertDidChangeToken: NSObjectProtocol?
-
-    public func setup(
-        disableTitle: String,
-        muteTitle: String,
-        output: RuuviNotificationLocalOutput?
-    ) {
-        alertNotificationDebugLog(
-            "AlertNotification",
-            "setup limitEnabled=\(settings.limitAlertNotificationsEnabled) "
-                + "muteIntervalMin=\(settings.alertsMuteIntervalMinutes)"
-        )
-        setupButtons(disableTitle: disableTitle, muteTitle: muteTitle)
-        startObserving()
-        self.output = output
+        self.center = center
+        self.now = now
     }
 
     deinit {
-        alertDidChangeToken?.invalidate()
+        if let alertDidChangeToken { NotificationCenter.default.removeObserver(alertDidChangeToken) }
     }
 
-    private func id(for uuid: String) -> String {
-        idPersistence.mac(for: uuid.luid)?.value ?? uuid
+    public func setup(disableTitle: String, muteTitle: String, output: RuuviNotificationLocalOutput?) {
+        self.output = output
+        center.delegate = self
+        let categories = [lowHigh, blast].map { category in
+            UNNotificationCategory(
+                identifier: category.id,
+                actions: [
+                    UNNotificationAction(identifier: category.mute, title: muteTitle, options: []),
+                    UNNotificationAction(identifier: category.disable, title: disableTitle, options: []),
+                ], intentIdentifiers: [], options: .customDismissAction)
+        }
+        center.setNotificationCategories(Set(categories))
+        if let alertDidChangeToken { NotificationCenter.default.removeObserver(alertDidChangeToken) }
+        alertDidChangeToken = NotificationCenter.default.addObserver(
+            forName: .RuuviServiceAlertDidChange, object: nil, queue: .main
+        ) { [weak self] notification in
+            guard let self, let info = notification.userInfo,
+                let type = info[RuuviServiceAlertDidChangeKey.type] as? AlertType,
+                let sensor = info[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
+                let uuid = sensor.luid?.value ?? sensor.macId?.value,
+                !ruuviAlertService.isOn(type: type, for: sensor)
+            else { return }
+            switch type {
+            case .connection, .cloudConnection, .movement: break
+            default:
+                let identifiers = [uuid + type.rawValue]
+                center.removePendingNotificationRequests(withIdentifiers: identifiers)
+                center.removeDeliveredNotifications(withIdentifiers: identifiers)
+            }
+        }
     }
 
-    // swiftlint:disable:next function_body_length
     public func showDidConnect(uuid: String, title: String) {
-        alertNotificationDebugLog(
-            "AlertNotification",
-            "showDidConnect requested uuid=\(uuid) storageId=\(id(for: uuid)) title=\(title)"
-        )
-        isMuted(for: .connection, uuid: uuid) { [weak self] muted in
-            guard !muted else {
-                alertNotificationDebugLog(
-                    "AlertNotification",
-                    "showDidConnect skipped muted uuid=\(uuid)"
-                )
-                return
-            }
-            guard let sSelf = self else { return }
-
-            let content = UNMutableNotificationContent()
-            content.title = title
-            switch sSelf.settings.alertSound {
-            case .systemDefault:
-                content.sound = .default
-            default:
-                content.sound = UNNotificationSound(
-                    named: UNNotificationSoundName(
-                        rawValue: sSelf.settings.alertSound.rawValue
-                    )
-                )
-            }
-            content.userInfo = [
-                sSelf.blast.uuidKey: uuid,
-                sSelf.blast.typeKey: BlastNotificationType.connection.rawValue,
-            ]
-            content.categoryIdentifier = sSelf.blast.id
-            sSelf.setAlertBadge(for: content)
-
-            let readOperation = Task { try await sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)) }
-            Task { @MainActor [self] in
-                do {
-                    let value = try await readOperation.value
-                    ({ [weak self] ruuviTag in
-                        guard let sSelf = self else { return }
-                        content.subtitle = ruuviTag.name
-                        content.body = sSelf.ruuviAlertService.connectionDescription(for: uuid) ?? ""
-                        let trigger = UNTimeIntervalNotificationTrigger(
-                            timeInterval: 0.1,
-                            repeats: false
-                        )
-                        let request = UNNotificationRequest(
-                            identifier: UUID().uuidString,
-                            content: content,
-                            trigger: trigger
-                        )
-                        sSelf.addNotificationRequest(
-                            request,
-                            uuid: uuid,
-                            type: Self.alertType(from: .connection).rawValue,
-                            kind: "connection"
-                        )
-                        sSelf.setTriggered(for: Self.alertType(from: .connection), uuid: uuid)
-                    })(value)
-                } catch {
-                }
-            }
-            Task { @MainActor [self] in
-                do {
-                    _ = try await readOperation.value
-                } catch {
-                    ({ error in
-                        alertNotificationDebugLog(
-                            "AlertNotification",
-                            "showDidConnect read failed uuid=\(uuid) storageId=\(sSelf.id(for: uuid)) error=\(error)"
-                        )
-                    })(error)
-                }
-            }
-        }
+        enqueue(type: .connection, uuid: uuid, title: title, isBlast: true)
     }
 
-    // swiftlint:disable:next function_body_length
     public func showDidDisconnect(uuid: String, title: String) {
-        alertNotificationDebugLog(
-            "AlertNotification",
-            "showDidDisconnect requested uuid=\(uuid) storageId=\(id(for: uuid)) title=\(title)"
-        )
-        isMuted(for: .connection, uuid: uuid) { [weak self] muted in
-            guard !muted else {
-                alertNotificationDebugLog(
-                    "AlertNotification",
-                    "showDidDisconnect skipped muted uuid=\(uuid)"
-                )
-                return
-            }
+        enqueue(type: .connection, uuid: uuid, title: title, isBlast: true)
+    }
 
-            guard let sSelf = self else { return }
+    public func notifyDidMove(for uuid: String, counter: Int, title: String) {
+        enqueue(type: .movement(last: counter), uuid: uuid, title: title, isBlast: true)
+    }
+
+    public func notify(_ reason: LowHighNotificationReason, _ type: AlertType, for uuid: String, title: String) {
+        enqueue(type: type, uuid: uuid, title: title, isBlast: false)
+    }
+
+    private func enqueue(type: AlertType, uuid: String, title: String, isBlast: Bool) {
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            let previous = deliveryTask
+            deliveryTask = Task { @MainActor [weak self] in
+                await previous?.value
+                await self?.deliver(type: type, uuid: uuid, title: title, isBlast: isBlast)
+            }
+        }
+    }
+
+    /// A single queue keeps throttle state and badge numbers consistent when several readings arrive together.
+    @MainActor private func deliver(type: AlertType, uuid: String, title: String, isBlast: Bool) async {
+        do {
+            let storageID = idPersistence.mac(for: uuid.luid)?.value ?? uuid
+            let sensor = try await readSensor(storageID)
+            guard !isMuted(type: type, sensor: sensor, uuid: uuid) else { return }
             let content = UNMutableNotificationContent()
-            switch sSelf.settings.alertSound {
-            case .systemDefault:
-                content.sound = .default
-            default:
-                content.sound = UNNotificationSound(
-                    named: UNNotificationSoundName(
-                        rawValue: sSelf.settings.alertSound.rawValue
-                    )
-                )
-            }
-            content.userInfo = [
-                sSelf.blast.uuidKey: uuid,
-                sSelf.blast.typeKey: BlastNotificationType.connection.rawValue,
-            ]
-            content.categoryIdentifier = sSelf.blast.id
             content.title = title
-            sSelf.setAlertBadge(for: content)
-
-            let readOperation = Task { try await sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)) }
-            Task { @MainActor [self] in
-                do {
-                    let value = try await readOperation.value
-                    ({ [weak self] ruuviTag in
-                        guard let sSelf = self else { return }
-                        content.subtitle = ruuviTag.name
-                        content.body = sSelf.ruuviAlertService.connectionDescription(for: uuid) ?? ""
-                        let trigger = UNTimeIntervalNotificationTrigger(
-                            timeInterval: 0.1,
-                            repeats: false
-                        )
-                        let request = UNNotificationRequest(
-                            identifier: UUID().uuidString,
-                            content: content,
-                            trigger: trigger
-                        )
-                        sSelf.addNotificationRequest(
-                            request,
-                            uuid: uuid,
-                            type: Self.alertType(from: .connection).rawValue,
-                            kind: "connection"
-                        )
-                        sSelf.setTriggered(for: Self.alertType(from: .connection), uuid: uuid)
-                    })(value)
-                } catch {
-                }
-            }
-            Task { @MainActor [self] in
-                do {
-                    _ = try await readOperation.value
-                } catch {
-                    ({ error in
-                        alertNotificationDebugLog(
-                            "AlertNotification",
-                            "showDidDisconnect read failed uuid=\(uuid) storageId=\(sSelf.id(for: uuid)) error=\(error)"
-                        )
-                    })(error)
-                }
-            }
+            content.subtitle = sensor.name
+            content.body = description(for: type, uuid: uuid)
+            content.sound =
+                settings.alertSound == .systemDefault
+                ? .default : UNNotificationSound(named: UNNotificationSoundName(rawValue: settings.alertSound.rawValue))
+            let category = isBlast ? blast : lowHigh
+            content.categoryIdentifier = category.id
+            content.userInfo = [category.uuidKey: uuid, category.typeKey: type.rawValue]
+            let previousBadge = max(0, settings.notificationsBadgeCount())
+            let nextBadge = previousBadge == Int.max ? Int.max : previousBadge + 1
+            content.badge = NSNumber(value: nextBadge)
+            let request = UNNotificationRequest(
+                identifier: isBlast ? UUID().uuidString : uuid + type.rawValue,
+                content: content, trigger: UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false))
+            try await center.add(request)
+            // Failed delivery must not consume a badge or suppress the next attempt.
+            settings.setNotificationsBadgeCount(value: nextBadge)
+            center.setBadgeCount(nextBadge)
+            ruuviAlertService.trigger(
+                type: type, trigerred: true,
+                trigerredAt: Self.timestamp(now()), for: sensor)
+            debugLog("Scheduled \(type.rawValue) for \(uuid)")
+        } catch {
+            debugLog("Notification failed for \(uuid): \(error)")
         }
     }
 
-    // swiftlint:disable:next function_body_length
-    public func notifyDidMove(for uuid: String, counter _: Int, title: String) {
-        alertNotificationDebugLog(
-            "AlertNotification",
-            "notifyDidMove requested uuid=\(uuid) storageId=\(id(for: uuid)) title=\(title)"
-        )
-        isMuted(for: .movement(last: 0), uuid: uuid) { [weak self] muted in
-            guard !muted else {
-                alertNotificationDebugLog(
-                    "AlertNotification",
-                    "notifyDidMove skipped muted uuid=\(uuid)"
-                )
-                return
-            }
-
-            guard let sSelf = self else { return }
-
-            let content = UNMutableNotificationContent()
-            switch sSelf.settings.alertSound {
-            case .systemDefault:
-                content.sound = .default
-            default:
-                content.sound = UNNotificationSound(
-                    named: UNNotificationSoundName(rawValue: sSelf.settings.alertSound.rawValue)
-                )
-            }
-            content.userInfo = [
-                sSelf.blast.uuidKey: uuid,
-                sSelf.blast.typeKey: BlastNotificationType.movement.rawValue,
-            ]
-            content.categoryIdentifier = sSelf.blast.id
-            sSelf.setAlertBadge(for: content)
-
-            content.title = title
-
-            let readOperation = Task { try await sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)) }
-            Task { @MainActor [self] in
-                do {
-                    let value = try await readOperation.value
-                    ({ [weak self] ruuviTag in
-                        guard let sSelf = self else { return }
-                        content.subtitle = ruuviTag.name
-                        content.body = sSelf.ruuviAlertService.movementDescription(for: uuid) ?? ""
-                        let trigger = UNTimeIntervalNotificationTrigger(
-                            timeInterval: 0.1,
-                            repeats: false
-                        )
-                        let request = UNNotificationRequest(
-                            identifier: UUID().uuidString,
-                            content: content,
-                            trigger: trigger
-                        )
-                        sSelf.addNotificationRequest(
-                            request,
-                            uuid: uuid,
-                            type: Self.alertType(from: .movement).rawValue,
-                            kind: "movement"
-                        )
-                        sSelf.setTriggered(for: Self.alertType(from: .movement), uuid: uuid)
-                    })(value)
-                } catch {
-                }
-            }
-            Task { @MainActor [self] in
-                do {
-                    _ = try await readOperation.value
-                } catch {
-                    ({ error in
-                        alertNotificationDebugLog(
-                            "AlertNotification",
-                            "notifyDidMove read failed uuid=\(uuid) storageId=\(sSelf.id(for: uuid)) error=\(error)"
-                        )
-                    })(error)
-                }
-            }
+    private func isMuted(type: AlertType, sensor: AnyRuuviTagSensor, uuid: String) -> Bool {
+        let current = now()
+        if let mutedUntil = ruuviAlertService.mutedTill(type: type, for: uuid), mutedUntil > current {
+            return true
         }
-    }
-}
-
-// MARK: - Notify
-
-public extension RuuviNotificationLocalImpl {
-
-    // swiftlint:disable:next function_body_length cyclomatic_complexity
-    func notify(
-        _ reason: LowHighNotificationReason,
-        _ type: AlertType,
-        for uuid: String,
-        title: String
-    ) {
-        alertNotificationDebugLog(
-            "AlertNotification",
-            "notify requested uuid=\(uuid) storageId=\(self.id(for: uuid)) "
-                + "type=\(type.rawValue) reason=\(reason) title=\(title)"
-        )
-        isMuted(for: type, uuid: uuid) { [weak self] muted in
-            guard !muted else {
-                alertNotificationDebugLog(
-                    "AlertNotification",
-                    "notify skipped muted uuid=\(uuid) type=\(type.rawValue) reason=\(reason)"
-                )
-                return
-            }
-            guard let sSelf = self else { return }
-
-            let content = UNMutableNotificationContent()
-            switch sSelf.settings.alertSound {
-            case .systemDefault:
-                content.sound = .default
-            default:
-                content.sound = UNNotificationSound(
-                    named: UNNotificationSoundName(
-                        rawValue: sSelf.settings.alertSound.rawValue
-                    )
-                )
-            }
-            content.title = title
-            content.userInfo = [
-                sSelf.lowHigh.uuidKey: uuid,
-                sSelf.lowHigh.typeKey: type.rawValue,
-            ]
-            content.categoryIdentifier = sSelf.lowHigh.id
-            sSelf.setAlertBadge(for: content)
-
-            let body: String =
-                switch type {
-                case .temperature:
-                    sSelf.ruuviAlertService.temperatureDescription(for: uuid) ?? ""
-                case .relativeHumidity:
-                    sSelf.ruuviAlertService.relativeHumidityDescription(for: uuid) ?? ""
-                case .humidity:
-                    sSelf.ruuviAlertService.humidityDescription(for: uuid) ?? ""
-                case .dewPoint:
-                    sSelf.ruuviAlertService.dewPointDescription(for: uuid) ?? ""
-                case .pressure:
-                    sSelf.ruuviAlertService.pressureDescription(for: uuid) ?? ""
-                case .signal:
-                    sSelf.ruuviAlertService.signalDescription(for: uuid) ?? ""
-                case .batteryVoltage:
-                    sSelf.ruuviAlertService.batteryVoltageDescription(for: uuid) ?? ""
-                case .aqi:
-                    sSelf.ruuviAlertService.aqiDescription(for: uuid) ?? ""
-                case .carbonDioxide:
-                    sSelf.ruuviAlertService.carbonDioxideDescription(for: uuid) ?? ""
-                case .pMatter1:
-                    sSelf.ruuviAlertService.pm1Description(for: uuid) ?? ""
-                case .pMatter25:
-                    sSelf.ruuviAlertService.pm25Description(for: uuid) ?? ""
-                case .pMatter4:
-                    sSelf.ruuviAlertService.pm4Description(for: uuid) ?? ""
-                case .pMatter10:
-                    sSelf.ruuviAlertService.pm10Description(for: uuid) ?? ""
-                case .voc:
-                    sSelf.ruuviAlertService.vocDescription(for: uuid) ?? ""
-                case .nox:
-                    sSelf.ruuviAlertService.noxDescription(for: uuid) ?? ""
-                case .soundInstant:
-                    sSelf.ruuviAlertService.soundInstantDescription(for: uuid) ?? ""
-                case .soundAverage:
-                    sSelf.ruuviAlertService.soundAverageDescription(for: uuid) ?? ""
-                case .soundPeak:
-                    sSelf.ruuviAlertService.soundPeakDescription(for: uuid) ?? ""
-                case .luminosity:
-                    sSelf.ruuviAlertService.luminosityDescription(for: uuid) ?? ""
-                default:
-                    ""
-                }
-            content.body = body
-
-            let readOperation = Task { try await sSelf.ruuviStorage.readOne(sSelf.id(for: uuid)) }
-            Task { @MainActor [self] in
-                do {
-                    let value = try await readOperation.value
-                    ({ [weak self] ruuviTag in
-                        content.subtitle = ruuviTag.name
-                        let trigger = UNTimeIntervalNotificationTrigger(
-                            timeInterval: 0.1,
-                            repeats: false
-                        )
-                        let request = UNNotificationRequest(
-                            identifier: uuid + type.rawValue,
-                            content: content,
-                            trigger: trigger
-                        )
-                        sSelf.addNotificationRequest(
-                            request,
-                            uuid: uuid,
-                            type: type.rawValue,
-                            kind: "threshold"
-                        )
-                        self?.setTriggered(for: type, uuid: uuid)
-                    })(value)
-                } catch {
-                }
-            }
-            Task { @MainActor [self] in
-                do {
-                    _ = try await readOperation.value
-                } catch {
-                    ({ error in
-                        alertNotificationDebugLog(
-                            "AlertNotification",
-                            "notify read failed uuid=\(uuid) storageId=\(sSelf.id(for: uuid)) "
-                                + "type=\(type.rawValue) error=\(error)"
-                        )
-                    })(error)
-                }
-            }
-        }
-    }
-}
-
-// MARK: - Private
-
-extension RuuviNotificationLocalImpl {
-
-    private static func alertType(from type: BlastNotificationType) -> AlertType {
-        switch type {
-        case .connection:
-            .connection
-        case .movement:
-            .movement(last: 0)
-        }
+        guard settings.limitAlertNotificationsEnabled,
+            let timestamp = ruuviAlertService.triggeredAt(for: sensor, of: type),
+            let lastTriggered = Self.date(from: timestamp)
+        else { return false }
+        return current < lastTriggered.addingTimeInterval(Double(settings.alertsMuteIntervalMinutes) * 60)
     }
 
-    private func addNotificationRequest(
-        _ request: UNNotificationRequest,
-        uuid: String,
-        type: String,
-        kind: String
-    ) {
-        alertNotificationDebugLog(
-            "AlertNotification",
-            "schedule kind=\(kind) uuid=\(uuid) type=\(type) " + "notificationId=\(request.identifier)"
-        )
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error {
-                alertNotificationDebugLog(
-                    "AlertNotification",
-                    "schedule failed kind=\(kind) uuid=\(uuid) type=\(type) "
-                        + "notificationId=\(request.identifier) error=\(error)"
-                )
-            } else {
-                alertNotificationDebugLog(
-                    "AlertNotification",
-                    "schedule succeeded kind=\(kind) uuid=\(uuid) type=\(type) "
-                        + "notificationId=\(request.identifier)"
-                )
-            }
-        }
+    private static func timestamp(_ date: Date) -> String {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter.string(from: date)
     }
 
-    private func debugSummary(for ruuviTag: AnyRuuviTagSensor) -> String {
-        let luid = ruuviTag.luid?.value ?? "nil"
-        let mac = ruuviTag.macId?.value ?? "nil"
-        return "tagId=\(ruuviTag.id) tagLuid=\(luid) tagMac=\(mac) "
-            + "isClaimed=\(ruuviTag.isClaimed) isOwner=\(ruuviTag.isOwner) " + "isCloud=\(ruuviTag.isCloud)"
-    }
-
-    // swiftlint:disable:next cyclomatic_complexity function_body_length
-    private func startObserving() {
-        alertDidChangeToken = NotificationCenter
-            .default
-            .addObserver(
-                forName: .RuuviServiceAlertDidChange,
-                object: nil,
-                queue: .main
-            ) { [weak self] notification in
-                guard
-                    let userInfo = notification.userInfo,
-                    let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType,
-                    let physicalSensor = userInfo[RuuviServiceAlertDidChangeKey.physicalSensor] as? PhysicalSensor,
-                    let uuid = physicalSensor.luid?.value ?? physicalSensor.macId?.value
-                else {
-                    return
-                }
-
-                let isOn = self?.ruuviAlertService.isOn(type: type, for: physicalSensor) ?? false
-                guard !isOn else { return }
-
-                switch type {
-                case .temperature:
-                    self?.cancel(.temperature(lower: 0, upper: 0), for: uuid)
-                case .relativeHumidity:
-                    self?.cancel(.relativeHumidity(lower: 0, upper: 0), for: uuid)
-                case .humidity:
-                    self?.cancel(
-                        .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute),
-                        for: uuid
-                    )
-                case .dewPoint:
-                    self?.cancel(.dewPoint(lower: 0, upper: 0), for: uuid)
-                case .pressure:
-                    self?.cancel(.pressure(lower: 0, upper: 0), for: uuid)
-                case .signal:
-                    self?.cancel(.signal(lower: 0, upper: 0), for: uuid)
-                case .batteryVoltage:
-                    self?.cancel(.batteryVoltage(lower: 0, upper: 0), for: uuid)
-                case .carbonDioxide:
-                    self?.cancel(.carbonDioxide(lower: 0, upper: 0), for: uuid)
-                case .aqi:
-                    self?.cancel(.aqi(lower: 0, upper: 0), for: uuid)
-                case .pMatter1:
-                    self?.cancel(.pMatter1(lower: 0, upper: 0), for: uuid)
-                case .pMatter25:
-                    self?.cancel(.pMatter25(lower: 0, upper: 0), for: uuid)
-                case .pMatter4:
-                    self?.cancel(.pMatter4(lower: 0, upper: 0), for: uuid)
-                case .pMatter10:
-                    self?.cancel(.pMatter10(lower: 0, upper: 0), for: uuid)
-                case .voc:
-                    self?.cancel(.voc(lower: 0, upper: 0), for: uuid)
-                case .nox:
-                    self?.cancel(.nox(lower: 0, upper: 0), for: uuid)
-                case .soundInstant:
-                    self?.cancel(.soundInstant(lower: 0, upper: 0), for: uuid)
-                case .soundAverage:
-                    self?.cancel(.soundAverage(lower: 0, upper: 0), for: uuid)
-                case .soundPeak:
-                    self?.cancel(.soundPeak(lower: 0, upper: 0), for: uuid)
-                case .luminosity:
-                    self?.cancel(.luminosity(lower: 0, upper: 0), for: uuid)
-                case .connection, .cloudConnection, .movement:
-                    break
-                }
-            }
-    }
-}
-
-// MARK: - UNUserNotificationCenterDelegate
-
-extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
-    private func setupButtons(disableTitle: String, muteTitle: String) {
-        let nc = UNUserNotificationCenter.current()
-        nc.delegate = self
-
-        // alerts actions and categories
-        let disableLowHighAction = UNNotificationAction(
-            identifier: lowHigh.disable,
-            title: disableTitle,
-            options: UNNotificationActionOptions(rawValue: 0)
-        )
-        let muteLowHighAction = UNNotificationAction(
-            identifier: lowHigh.mute,
-            title: muteTitle,
-            options: UNNotificationActionOptions(rawValue: 0)
-        )
-        let lowHighCategory = UNNotificationCategory(
-            identifier: lowHigh.id,
-            actions: [muteLowHighAction, disableLowHighAction],
-            intentIdentifiers: [],
-            options: .customDismissAction
-        )
-
-        let disableBlastAction = UNNotificationAction(
-            identifier: blast.disable,
-            title: disableTitle,
-            options: UNNotificationActionOptions(rawValue: 0)
-        )
-        let muteBlastAction = UNNotificationAction(
-            identifier: blast.mute,
-            title: muteTitle,
-            options: UNNotificationActionOptions(rawValue: 0)
-        )
-        let blastCategory = UNNotificationCategory(
-            identifier: blast.id,
-            actions: [muteBlastAction, disableBlastAction],
-            intentIdentifiers: [],
-            options: .customDismissAction
-        )
-
-        nc.setNotificationCategories([lowHighCategory, blastCategory])
-    }
-
-    public func userNotificationCenter(
-        _: UNUserNotificationCenter,
-        willPresent notification: UNNotification,
-        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
-    ) {
-        let category = notification.request.content.categoryIdentifier
-        let isAlertCategory = category == lowHigh.id || category == blast.id
-        alertNotificationDebugLog(
-            "AlertNotification",
-            "willPresent notificationId=\(notification.request.identifier) "
-                + "category=\(category) isAlertCategory=\(isAlertCategory) "
-                + "limitEnabled=\(self.settings.limitAlertNotificationsEnabled)"
-        )
-        if !settings.limitAlertNotificationsEnabled, isAlertCategory {
-            completionHandler([.list, .badge])
-        } else {
-            completionHandler([.banner, .list, .badge, .sound])
-        }
+    private static func date(from timestamp: String) -> Date? {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        if let date = formatter.date(from: timestamp) { return date }
+        formatter.formatOptions = [.withInternetDateTime]
+        return formatter.date(from: timestamp)
     }
 
     // swiftlint:disable:next cyclomatic_complexity
+    private func description(for type: AlertType, uuid: String) -> String {
+        switch type {
+        case .temperature:
+            ruuviAlertService.temperatureDescription(for: uuid) ?? ""
+        case .relativeHumidity:
+            ruuviAlertService.relativeHumidityDescription(for: uuid) ?? ""
+        case .humidity:
+            ruuviAlertService.humidityDescription(for: uuid) ?? ""
+        case .dewPoint:
+            ruuviAlertService.dewPointDescription(for: uuid) ?? ""
+        case .pressure:
+            ruuviAlertService.pressureDescription(for: uuid) ?? ""
+        case .signal:
+            ruuviAlertService.signalDescription(for: uuid) ?? ""
+        case .batteryVoltage:
+            ruuviAlertService.batteryVoltageDescription(for: uuid) ?? ""
+        case .aqi:
+            ruuviAlertService.aqiDescription(for: uuid) ?? ""
+        case .carbonDioxide:
+            ruuviAlertService.carbonDioxideDescription(for: uuid) ?? ""
+        case .pMatter1:
+            ruuviAlertService.pm1Description(for: uuid) ?? ""
+        case .pMatter25:
+            ruuviAlertService.pm25Description(for: uuid) ?? ""
+        case .pMatter4:
+            ruuviAlertService.pm4Description(for: uuid) ?? ""
+        case .pMatter10:
+            ruuviAlertService.pm10Description(for: uuid) ?? ""
+        case .voc:
+            ruuviAlertService.vocDescription(for: uuid) ?? ""
+        case .nox:
+            ruuviAlertService.noxDescription(for: uuid) ?? ""
+        case .soundInstant:
+            ruuviAlertService.soundInstantDescription(for: uuid) ?? ""
+        case .soundAverage:
+            ruuviAlertService.soundAverageDescription(for: uuid) ?? ""
+        case .soundPeak:
+            ruuviAlertService.soundPeakDescription(for: uuid) ?? ""
+        case .luminosity:
+            ruuviAlertService.luminosityDescription(for: uuid) ?? ""
+        case .connection:
+            ruuviAlertService.connectionDescription(for: uuid) ?? ""
+        case .movement:
+            ruuviAlertService.movementDescription(for: uuid) ?? ""
+        case .cloudConnection:
+            ""
+        }
+    }
+
+    private func debugLog(_ message: String) {
+        #if DEBUG || ALPHA
+            RuuviAlertDebugLog.append("AlertNotification", message)
+        #endif
+    }
+}
+
+extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
     public func userNotificationCenter(
-        _: UNUserNotificationCenter,
-        didReceive response: UNNotificationResponse,
+        _: UNUserNotificationCenter, willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler(presentationOptions(for: notification.request.content.categoryIdentifier))
+    }
+
+    func presentationOptions(for category: String) -> UNNotificationPresentationOptions {
+        if !settings.limitAlertNotificationsEnabled, category == lowHigh.id || category == blast.id {
+            return [.list, .badge]
+        }
+        return [.banner, .list, .badge, .sound]
+    }
+
+    public func userNotificationCenter(
+        _: UNUserNotificationCenter, didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
-        let userInfo = response.notification.request.content.userInfo
-        var alertToDisable: (type: AlertType, uuid: String)?
-        alertNotificationDebugLog(
-            "AlertNotification",
-            "didReceive action=\(response.actionIdentifier) notificationId=\(response.notification.request.identifier)"
-        )
-        if let uuid = userInfo[lowHigh.uuidKey] as? String,
-            let typeString = userInfo[lowHigh.typeKey] as? String,
-            let type = AlertType.alertType(from: typeString)
-        {
-            alertNotificationDebugLog(
-                "AlertNotification",
-                "didReceive threshold action=\(response.actionIdentifier) uuid=\(uuid) type=\(type.rawValue)"
-            )
-            switch response.actionIdentifier {
-            case lowHigh.disable:
-                alertToDisable = (type, uuid)
-            case lowHigh.mute:
-                mute(type: type, uuid: uuid)
-            default:
-                break
-            }
-        } else if let uuid = userInfo[blast.uuidKey] as? String,
-            let typeString = userInfo[blast.typeKey] as? String,
-            let type = BlastNotificationType(rawValue: typeString)
-        {
-            alertNotificationDebugLog(
-                "AlertNotification",
-                "didReceive blast action=\(response.actionIdentifier) uuid=\(uuid) type=\(type.rawValue)"
-            )
-            switch response.actionIdentifier {
-            case blast.disable:
-                alertToDisable = (Self.alertType(from: type), uuid)
-            case blast.mute:
-                mute(type: type, uuid: uuid)
-            default:
-                break
-            }
-        }
+        handle(
+            action: response.actionIdentifier, userInfo: response.notification.request.content.userInfo,
+            completion: completionHandler)
+    }
 
-        if let uuid = userInfo[lowHigh.uuidKey] as? String
-            ?? userInfo[blast.uuidKey] as? String
-        {
+    func handle(action: String, userInfo: [AnyHashable: Any], completion: @escaping () -> Void) {
+        var alert: (type: AlertType, uuid: String, disable: Bool)?
+        for category in [lowHigh, blast] {
+            guard let uuid = userInfo[category.uuidKey] as? String else { continue }
+            if let rawType = userInfo[category.typeKey] as? String,
+                let type = AlertType.alertType(from: rawType),
+                action == category.disable || action == category.mute
+            {
+                alert = (type, uuid, action == category.disable)
+            }
             NotificationCenter.default.post(name: .LNMDidReceive, object: nil, userInfo: [LNMDidReceiveKey.uuid: uuid])
             output?.notificationDidTap(for: uuid)
         }
-
-        // Handle push notification tap
-        if let macId = userInfo["id"] as? String {
-            output?.notificationDidTap(for: macId)
-        }
-
-        if let alertToDisable {
-            disable(type: alertToDisable.type, uuid: alertToDisable.uuid, completion: completionHandler)
-        } else {
-            completionHandler()
-        }
-    }
-
-    private func disable(type: AlertType, uuid: String, completion: @escaping () -> Void) {
-        let storageId = id(for: uuid)
+        if let mac = userInfo["id"] as? String { output?.notificationDidTap(for: mac) }
+        guard let alert else { completion(); return }
         Task { @MainActor [self] in
-            defer { (completion)() }
-            do throws(RuuviStorageError) {
-                let value = try await ruuviStorage.readOne(storageId)
-                ({ [self] ruuviTag in
-                    // Use the stored sensor's identifiers and cloud status, and keep its configured bounds.
-                    guard let configuredType = ruuviAlertService.alert(for: ruuviTag, of: type) else { return }
-                    ruuviAlertService.unregister(type: configuredType, ruuviTag: ruuviTag)
-                })(value)
-            } catch {
-                ({ error in
-                    alertNotificationDebugLog(
-                        "AlertNotification",
-                        "disable read failed uuid=\(uuid) storageId=\(storageId) type=\(type.rawValue) error=\(error)"
-                    )
-                })(error)
-            }
-        }
-    }
-
-    private func cancel(_ type: AlertType, for uuid: String) {
-        alertNotificationDebugLog(
-            "AlertNotification",
-            "cancel notification uuid=\(uuid) type=\(type.rawValue) notificationId=\(uuid + type.rawValue)"
-        )
-        let nc = UNUserNotificationCenter.current()
-        nc.removePendingNotificationRequests(withIdentifiers: [uuid + type.rawValue])
-        nc.removeDeliveredNotifications(withIdentifiers: [uuid + type.rawValue])
-    }
-
-    private func mute(type: AlertType, uuid: String) {
-        guard let date = muteOffset()
-        else {
-            assertionFailure(); return
-        }
-        alertNotificationDebugLog(
-            "AlertNotification",
-            "mute threshold start uuid=\(uuid) type=\(type.rawValue) mutedTill=\(date)"
-        )
-        let readOperation = Task { try await ruuviStorage.readOne(uuid) }
-        Task { @MainActor [self] in
+            defer { completion() }
             do {
-                let value = try await readOperation.value
-                ({ [weak self] ruuviTag in
-                    let summary = self?.debugSummary(for: ruuviTag) ?? "tag=nil"
-                    alertNotificationDebugLog(
-                        "AlertNotification",
-                        "mute threshold save uuid=\(uuid) type=\(type.rawValue) " + "\(summary) mutedTill=\(date)"
-                    )
-                    self?.ruuviAlertService.mute(
-                        type: type,
-                        for: ruuviTag,
-                        till: date
-                    )
-                })(value)
-            } catch {
-            }
-        }
-        Task { @MainActor [self] in
-            do {
-                _ = try await readOperation.value
-            } catch {
-                ({ error in
-                    alertNotificationDebugLog(
-                        "AlertNotification",
-                        "mute threshold read failed uuid=\(uuid) type=\(type.rawValue) error=\(error)"
-                    )
-                })(error)
-            }
-        }
-    }
-
-    private func mute(type: BlastNotificationType, uuid: String) {
-        guard let date = muteOffset()
-        else {
-            assertionFailure(); return
-        }
-        alertNotificationDebugLog(
-            "AlertNotification",
-            "mute blast start uuid=\(uuid) type=\(type.rawValue) mutedTill=\(date)"
-        )
-        let readOperation = Task { try await ruuviStorage.readOne(uuid) }
-        Task { @MainActor [self] in
-            do {
-                let value = try await readOperation.value
-                ({ [weak self] ruuviTag in
-                    let summary = self?.debugSummary(for: ruuviTag) ?? "tag=nil"
-                    alertNotificationDebugLog(
-                        "AlertNotification",
-                        "mute blast save uuid=\(uuid) type=\(type.rawValue) " + "\(summary) mutedTill=\(date)"
-                    )
-                    self?.ruuviAlertService.mute(
-                        type: Self.alertType(from: type),
-                        for: ruuviTag,
-                        till: date
-                    )
-                })(value)
-            } catch {
-            }
-        }
-        Task { @MainActor [self] in
-            do {
-                _ = try await readOperation.value
-            } catch {
-                ({ error in
-                    alertNotificationDebugLog(
-                        "AlertNotification",
-                        "mute blast read failed uuid=\(uuid) type=\(type.rawValue) error=\(error)"
-                    )
-                })(error)
-            }
-        }
-    }
-
-    private func muteOffset() -> Date? {
-        Calendar.current.date(
-            byAdding: .minute,
-            value: settings.alertsMuteIntervalMinutes,
-            to: Date()
-        )
-    }
-
-    private func isMuted(
-        for type: AlertType,
-        uuid: String,
-        completion: @escaping (Bool) -> Void
-    ) {
-        alertNotificationDebugLog(
-            "AlertNotification",
-            "isMuted start uuid=\(uuid) type=\(type.rawValue) "
-                + "limitEnabled=\(self.settings.limitAlertNotificationsEnabled) "
-                + "muteIntervalMin=\(self.settings.alertsMuteIntervalMinutes)"
-        )
-        let readOperation = Task { try await ruuviStorage.readOne(uuid) }
-        Task { @MainActor [self] in
-            do {
-                let value = try await readOperation.value
-                ({ [weak self] ruuviTag in
-                    guard let self = self else { return }
-                    let summary = self.debugSummary(for: ruuviTag)
-                    if let triggeredAt = self.ruuviAlertService.triggeredAt(for: ruuviTag, of: type),
-                        let date = self.dateFormatter.date(from: triggeredAt)
-                    {
-                        let intervalPassed =
-                            !self.settings.limitAlertNotificationsEnabled
-                            || Date() > self.muteOffset(from: date)
-                        let nextAllowed = self.muteOffset(from: date)
-                        alertNotificationDebugLog(
-                            "AlertNotification",
-                            "isMuted state uuid=\(uuid) type=\(type.rawValue) "
-                                + "\(summary) triggeredAt=\(triggeredAt) "
-                                + "nextAllowed=\(nextAllowed) intervalPassed=\(intervalPassed)"
-                        )
-                        self.evaluateMutedState(
-                            for: type,
-                            uuid: uuid,
-                            intervalPassed: intervalPassed,
-                            completion: completion
-                        )
-                    } else {
-                        alertNotificationDebugLog(
-                            "AlertNotification",
-                            "isMuted state uuid=\(uuid) type=\(type.rawValue) "
-                                + "\(summary) triggeredAt=nil intervalPassed=true"
-                        )
-                        self.evaluateMutedState(
-                            for: type,
-                            uuid: uuid,
-                            intervalPassed: true,
-                            completion: completion
-                        )
+                let storageID = idPersistence.mac(for: alert.uuid.luid)?.value ?? alert.uuid
+                let sensor = try await readSensor(storageID)
+                if alert.disable {
+                    if let configured = ruuviAlertService.alert(for: sensor, of: alert.type) {
+                        ruuviAlertService.unregister(type: configured, ruuviTag: sensor)
                     }
-                })(value)
+                } else {
+                    ruuviAlertService.mute(
+                        type: alert.type, for: sensor,
+                        till: now().addingTimeInterval(Double(settings.alertsMuteIntervalMinutes) * 60))
+                }
             } catch {
-            }
-        }
-        Task { @MainActor [self] in
-            do {
-                _ = try await readOperation.value
-            } catch {
-                ({ error in
-                    alertNotificationDebugLog(
-                        "AlertNotification",
-                        "isMuted read failed uuid=\(uuid) type=\(type.rawValue) error=\(error)"
-                    )
-                })(error)
-            }
-        }
-    }
-
-    private func evaluateMutedState(
-        for type: AlertType, uuid: String,
-        intervalPassed: Bool,
-        completion: @escaping (Bool) -> Void
-    ) {
-        if let mutedTill = ruuviAlertService.mutedTill(type: type, for: uuid) {
-            let isMuted = !(intervalPassed && mutedTill > Date())
-            alertNotificationDebugLog(
-                "AlertNotification",
-                "isMuted result uuid=\(uuid) type=\(type.rawValue) "
-                    + "intervalPassed=\(intervalPassed) mutedTill=\(mutedTill) "
-                    + "mutedTillActive=\(mutedTill > Date()) isMuted=\(isMuted)"
-            )
-            completion(isMuted)
-        } else {
-            let isMuted = !intervalPassed
-            alertNotificationDebugLog(
-                "AlertNotification",
-                "isMuted result uuid=\(uuid) type=\(type.rawValue) "
-                    + "intervalPassed=\(intervalPassed) mutedTill=nil isMuted=\(isMuted)"
-            )
-            completion(isMuted)
-        }
-    }
-
-    private func setTriggered(
-        for type: AlertType,
-        uuid: String
-    ) {
-        alertNotificationDebugLog(
-            "AlertNotification",
-            "setTriggered start uuid=\(uuid) type=\(type.rawValue)"
-        )
-        let readOperation = Task { try await ruuviStorage.readOne(uuid) }
-        Task { @MainActor [self] in
-            do {
-                let value = try await readOperation.value
-                ({ [weak self] ruuviTag in
-                    guard let sSelf = self else { return }
-                    let triggeredAt = sSelf.dateFormatter.string(from: Date())
-                    let summary = sSelf.debugSummary(for: ruuviTag)
-                    alertNotificationDebugLog(
-                        "AlertNotification",
-                        "setTriggered save uuid=\(uuid) type=\(type.rawValue) "
-                            + "\(summary) triggeredAt=\(triggeredAt)"
-                    )
-                    sSelf.ruuviAlertService.trigger(
-                        type: type,
-                        trigerred: true,
-                        trigerredAt: triggeredAt,
-                        for: ruuviTag
-                    )
-                })(value)
-            } catch {
-            }
-        }
-        Task { @MainActor [self] in
-            do {
-                _ = try await readOperation.value
-            } catch {
-                ({ error in
-                    alertNotificationDebugLog(
-                        "AlertNotification",
-                        "setTriggered read failed uuid=\(uuid) type=\(type.rawValue) error=\(error)"
-                    )
-                })(error)
-            }
-        }
-    }
-
-    /// Limit alert notification settings prevents new alerts within one hour
-    /// of last one. When the setting is off, alerts are not time-throttled here.
-    private func muteOffset(from shown: Date) -> Date {
-        Calendar.current.date(
-            byAdding: .minute,
-            value: settings.alertsMuteIntervalMinutes,
-            to: shown
-        ) ?? Date()
-    }
-
-    private func setAlertBadge(for content: UNMutableNotificationContent) {
-        let currentCount = settings.notificationsBadgeCount()
-        let newBadgeCount = currentCount + 1
-        content.badge = newBadgeCount as NSNumber
-        settings.setNotificationsBadgeCount(value: newBadgeCount)
-
-        if #available(iOS 16.0, *) {
-            UNUserNotificationCenter.current().setBadgeCount(newBadgeCount)
-        } else {
-            UIApplication.shared.applicationIconBadgeNumber = newBadgeCount
-        }
-    }
-
-    private func ruuviTag(
-        for uuid: String,
-        completion: @escaping (AnyRuuviTagSensor) -> Void
-    ) {
-        Task { @MainActor [self] in
-            do throws(RuuviStorageError) {
-                let value = try await ruuviStorage.readOne(uuid)
-                (completion)(value)
-            } catch {
+                debugLog("Notification action failed for \(alert.uuid): \(error)")
             }
         }
     }
 }
-
-extension NSObjectProtocol {
-    func invalidate() {
-        // swiftlint:disable:next notification_center_detachment
-        NotificationCenter
-            .default
-            .removeObserver(self)
-    }
-}
-
-// swiftlint:enable file_length

@@ -20,7 +20,7 @@ let package = Package(
                 .product(name: "RuuviCoreDiff", package: "RuuviCore"),
                 "RuuviOntology", "RuuviDaemon", "RuuviDFU", "RuuviCore", "RuuviLocalization", "BTKit",
             ]),
-        .testTarget(name: "RuuviFirmwareTests", dependencies: ["RuuviFirmware"]),
+        .testTarget(name: "RuuviFirmwareTests", dependencies: ["RuuviFirmware", "RuuviDFU"]),
     ],
     swiftLanguageModes: [.v5]
 )
