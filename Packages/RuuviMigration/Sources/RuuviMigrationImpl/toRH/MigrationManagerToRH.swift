@@ -1,111 +1,65 @@
 #if SWIFT_PACKAGE
     import RuuviMigration
 #endif
-#if SWIFT_PACKAGE
-    import RuuviLocal
-    import RuuviPool
-    import RuuviContext
-#endif
 import Foundation
 import RuuviOntology
 import RuuviService
 import RuuviStorage
 
+enum HumidityMigrationError: Error {
+    case missingTemperature(String)
+}
+
 final class MigrationManagerToRH: RuuviMigration {
-    private let ruuviStorage: RuuviStorage
-    private let ruuviAlertService: RuuviServiceAlert
+    private let storage: RuuviStorage
+    private let alerts: RuuviServiceAlert
+    private let defaults: UserDefaults
+    private let migratedKey = "MigrationManagerToRH.migrated"
+    @MainActor private var isRunning = false
 
-    init(
-        ruuviStorage: RuuviStorage,
-        ruuviAlertService: RuuviServiceAlert
-    ) {
-        self.ruuviStorage = ruuviStorage
-        self.ruuviAlertService = ruuviAlertService
+    init(ruuviStorage: RuuviStorage, ruuviAlertService: RuuviServiceAlert, defaults: UserDefaults = .standard) {
+        storage = ruuviStorage
+        alerts = ruuviAlertService
+        self.defaults = defaults
     }
 
-    private let queue: DispatchQueue = .init(label: "MigrationManagerToRH", qos: .utility)
-    private let migratedUdKey = "MigrationManagerToRH.migrated"
-
-    func migrateIfNeeded() {
-        guard !UserDefaults.standard.bool(forKey: migratedUdKey) else { return }
-
-        fetchRuuviSensors { tuples in
-            self.queue.async {
-                tuples.forEach { tuple in
-                    let sensor = tuple.0
-                    let temperature = tuple.1
-                    if let lower = self.ruuviAlertService.lowerHumidity(for: sensor),
-                        let upper = self.ruuviAlertService.upperHumidity(for: sensor),
-                        let temperature
-                    {
-                        let humidityType: AlertType = .humidity(lower: lower, upper: upper)
-                        if self.ruuviAlertService.isOn(type: humidityType, for: sensor) {
-                            self.ruuviAlertService.register(
-                                type: .relativeHumidity(
-                                    lower: lower.converted(to: .relative(temperature: temperature)).value,
-                                    upper: upper.converted(to: .relative(temperature: temperature)).value
-                                ),
-                                ruuviTag: sensor
-                            )
-                        }
-                    }
-                    if let description = self.ruuviAlertService.humidityDescription(for: sensor) {
-                        self.ruuviAlertService.setRelativeHumidity(description: description, ruuviTag: sensor)
-                    }
-                }
+    @MainActor func migrate() async throws {
+        guard !defaults.bool(forKey: migratedKey), !isRunning else { return }
+        isRunning = true
+        defer { isRunning = false }
+        try Task.checkCancellation()
+        let sensors = try await storage.readAll()
+        var converted: [(RuuviTagSensor, AlertType)] = []
+        // Finish reads before modifying settings, so a transient read failure remains retryable.
+        for sensor in sensors {
+            try Task.checkCancellation()
+            guard let lower = alerts.lowerHumidity(for: sensor), let upper = alerts.upperHumidity(for: sensor),
+                alerts.isOn(type: .humidity(lower: lower, upper: upper), for: sensor)
+            else { continue }
+            guard let temperature = try await migrationTemperature(for: sensor, storage: storage) else {
+                throw HumidityMigrationError.missingTemperature(sensor.id)
+            }
+            converted.append(
+                (
+                    sensor,
+                    .relativeHumidity(
+                        lower: lower.converted(to: .relative(temperature: temperature)).value,
+                        upper: upper.converted(to: .relative(temperature: temperature)).value)
+                ))
+        }
+        try Task.checkCancellation()
+        for (sensor, type) in converted { alerts.register(type: type, ruuviTag: sensor) }
+        for sensor in sensors {
+            if let description = alerts.humidityDescription(for: sensor) {
+                alerts.setRelativeHumidity(description: description, ruuviTag: sensor)
             }
         }
-
-        UserDefaults.standard.set(true, forKey: migratedUdKey)
+        defaults.set(true, forKey: migratedKey)
     }
+}
 
-    private func fetchRuuviSensors(completion: @escaping ([(RuuviTagSensor, Temperature?)]) -> Void) {
-        queue.async {
-            let group = DispatchGroup()
-            group.enter()
-            var result = [(RuuviTagSensor, Temperature?)]()
-            Task { @MainActor [self] in
-                do throws(RuuviStorageError) {
-                    let value = try await self.ruuviStorage.readAll()
-                    ({ sensors in
-                        sensors.forEach { sensor in
-                            group.enter()
-                            self.fetchRecord(for: sensor) {
-                                result.append($0)
-                                group.leave()
-                            }
-                        }
-                        group.leave()
-                    })(value)
-                } catch {
-                    ({ _ in
-                        group.leave()
-                    })(error)
-                }
-            }
-            group.notify(
-                queue: .main,
-                execute: {
-                    completion(result)
-                })
-        }
-    }
-
-    private func fetchRecord(
-        for sensor: RuuviTagSensor,
-        complete: @escaping (((RuuviTagSensor, Temperature?)) -> Void)
-    ) {
-        Task { @MainActor [self] in
-            do throws(RuuviStorageError) {
-                let value = try await ruuviStorage.readLatest(sensor)
-                ({ record in
-                    complete((sensor, record?.temperature))
-                })(value)
-            } catch {
-                ({ _ in
-                    complete((sensor, nil))
-                })(error)
-            }
-        }
-    }
+/// Older installations may have history before the latest-record cache was introduced.
+func migrationTemperature(for sensor: RuuviTagSensor, storage: RuuviStorage) async throws -> Temperature? {
+    if let temperature = try await storage.readLatest(sensor)?.temperature { return temperature }
+    return try await storage.readLast(sensor)?.temperature
 }

@@ -1,154 +1,60 @@
 #if SWIFT_PACKAGE
     import RuuviMigration
 #endif
-#if SWIFT_PACKAGE
-    import RuuviContext
-#endif
 import Foundation
 import RuuviLocal
 import RuuviOntology
-import RuuviPool
 import RuuviService
 import RuuviStorage
 
 final class MigrationManagerSignalVisibility: RuuviMigration {
-    private let ruuviStorage: RuuviStorage
-    private let ruuviAlertService: RuuviServiceAlert
-    private let ruuviSensorProperties: RuuviServiceSensorProperties
-    private var ruuviLocalSettings: RuuviLocalSettings
+    private let storage: RuuviStorage
+    private let alerts: RuuviServiceAlert
+    private let properties: RuuviServiceSensorProperties
+    private var settings: RuuviLocalSettings
+    private let defaults: UserDefaults
+    private let migratedKey = "MigrationManagerSignalVisibility.didMigrate"
+    @MainActor private var isRunning = false
 
     init(
-        ruuviStorage: RuuviStorage,
-        ruuviAlertService: RuuviServiceAlert,
-        ruuviSensorProperties: RuuviServiceSensorProperties,
-        ruuviLocalSettings: RuuviLocalSettings
+        ruuviStorage: RuuviStorage, ruuviAlertService: RuuviServiceAlert,
+        ruuviSensorProperties: RuuviServiceSensorProperties, ruuviLocalSettings: RuuviLocalSettings,
+        defaults: UserDefaults = .standard
     ) {
-        self.ruuviStorage = ruuviStorage
-        self.ruuviAlertService = ruuviAlertService
-        self.ruuviSensorProperties = ruuviSensorProperties
-        self.ruuviLocalSettings = ruuviLocalSettings
+        storage = ruuviStorage
+        alerts = ruuviAlertService
+        properties = ruuviSensorProperties
+        settings = ruuviLocalSettings
+        self.defaults = defaults
     }
 
-    @UserDefault("MigrationManagerSignalVisibility.didMigrate", defaultValue: false)
-    private var didMigrateSignalVisibility: Bool
-
-    func migrateIfNeeded() {
-        if didMigrateSignalVisibility {
-            ruuviLocalSettings.signalVisibilityMigrationInProgress = false
+    @MainActor func migrate() async throws {
+        guard !defaults.bool(forKey: migratedKey) else {
+            settings.signalVisibilityMigrationInProgress = false
             return
         }
-        guard !ruuviLocalSettings.signalVisibilityMigrationInProgress else { return }
-
-        ruuviLocalSettings.signalVisibilityMigrationInProgress = true
-
-        Task { @MainActor [self] in
-            do throws(RuuviStorageError) {
-                let value = try await ruuviStorage.readAll()
-                ({ sensors in
-                    guard !sensors.isEmpty else {
-                        self.ruuviLocalSettings.signalVisibilityMigrationInProgress = false
-                        return
-                    }
-
-                    let group = DispatchGroup()
-                    sensors.forEach { sensor in
-                        group.enter()
-                        self.process(sensor: sensor) {
-                            group.leave()
-                        }
-                    }
-
-                    group.notify(queue: .global(qos: .utility)) {
-                        self.didMigrateSignalVisibility = true
-                        self.ruuviLocalSettings.signalVisibilityMigrationInProgress = false
-                    }
-                })(value)
-            } catch {
-                ({ _ in
-                    self.ruuviLocalSettings.signalVisibilityMigrationInProgress = false
-                })(error)
-            }
+        guard !isRunning else { return }
+        isRunning = true
+        settings.signalVisibilityMigrationInProgress = true
+        defer {
+            isRunning = false
+            settings.signalVisibilityMigrationInProgress = false
         }
-    }
-}
-
-private extension MigrationManagerSignalVisibility {
-    func process(sensor: AnyRuuviTagSensor, completion: @escaping () -> Void) {
-        guard sensor.isOwner else { completion(); return }
-        let signalAlertProbe = AlertType.signal(lower: 0, upper: 0)
-        guard ruuviAlertService.isOn(type: signalAlertProbe, for: sensor) else {
-            completion()
-            return
+        try Task.checkCancellation()
+        let sensors = try await storage.readAll()
+        guard !sensors.isEmpty else { return }
+        for sensor in sensors where sensor.isOwner {
+            try Task.checkCancellation()
+            guard alerts.isOn(type: .signal(lower: 0, upper: 0), for: sensor) else { continue }
+            let stored = try await storage.readSensorSettings(sensor)
+            var order = stored?.displayOrder ?? []
+            guard !order.contains(MeasurementDisplayCode.signal) else { continue }
+            if order.isEmpty { order = Self.defaultVisibleCodes(for: sensor) }
+            guard !order.isEmpty else { continue }
+            order.append(MeasurementDisplayCode.signal)
+            _ = try await properties.updateDisplaySettings(for: sensor, displayOrder: order, defaultDisplayOrder: false)
         }
-
-        Task { @MainActor [self] in
-            do throws(RuuviStorageError) {
-                let value = try await ruuviStorage.readSensorSettings(sensor)
-                ({ settings in
-                    self.ensureSignalMeasurementVisible(
-                        sensor: sensor,
-                        settings: settings,
-                        completion: completion
-                    )
-                })(value)
-            } catch {
-                ({ _ in
-                    self.ensureSignalMeasurementVisible(
-                        sensor: sensor,
-                        settings: nil,
-                        completion: completion
-                    )
-                })(error)
-            }
-        }
-    }
-
-    func ensureSignalMeasurementVisible(
-        sensor: AnyRuuviTagSensor,
-        settings: SensorSettings?,
-        completion: @escaping () -> Void
-    ) {
-        let signalCode = MeasurementDisplayCode.signal
-        var displayOrder = settings?.displayOrder ?? []
-
-        if displayOrder.contains(signalCode) {
-            completion()
-            return
-        }
-
-        if displayOrder.isEmpty {
-            let defaults = Self.defaultVisibleCodes(for: sensor)
-            guard !defaults.isEmpty else {
-                completion()
-                return
-            }
-            displayOrder = defaults
-        }
-
-        guard !displayOrder.contains(signalCode) else {
-            completion()
-            return
-        }
-        displayOrder.append(signalCode)
-
-        Task { @MainActor [self] in
-            do throws(RuuviServiceError) {
-                let value =
-                    try await ruuviSensorProperties
-                    .updateDisplaySettings(
-                        for: sensor,
-                        displayOrder: displayOrder,
-                        defaultDisplayOrder: false
-                    )
-                ({ _ in
-                    completion()
-                })(value)
-            } catch {
-                ({ _ in
-                    completion()
-                })(error)
-            }
-        }
+        defaults.set(true, forKey: migratedKey)
     }
 }
 

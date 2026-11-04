@@ -18,21 +18,11 @@ final class MigrationManagerIsExcludedFromBackup: RuuviMigration {
         self.sqliteContext = sqliteContext
     }
 
-    func migrateIfNeeded() {
-        let databaseUrl = NSURL(fileURLWithPath: sqliteContext.database.dbPath)
-        do {
-            let resourceValues = try databaseUrl.resourceValues(forKeys: [.isExcludedFromBackupKey])
-            guard
-                resourceValues[.isExcludedFromBackupKey] == nil
-                    || resourceValues[.isExcludedFromBackupKey] as? Bool == false
-            else {
-                return
-            }
-            try databaseUrl.setResourceValue(true, forKey: .isExcludedFromBackupKey)
-        } catch let error as NSError {
-            print("Error excluding \(databaseUrl.lastPathComponent ?? "") from backup \(error)")
-        }
+    @MainActor func migrate() async throws {
+        try Task.checkCancellation()
+        let databaseURL = NSURL(fileURLWithPath: sqliteContext.database.dbPath)
+        let values = try databaseURL.resourceValues(forKeys: [.isExcludedFromBackupKey])
+        guard values[.isExcludedFromBackupKey] as? Bool != true else { return }
+        try databaseURL.setResourceValue(true, forKey: .isExcludedFromBackupKey)
     }
-
-    private let migratedUdKey = "MigrationManagerIsExcludedFromBackup.migrated"
 }

@@ -80,9 +80,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             NSLog("Database migration failed: %@", error.localizedDescription)
             return true
         }
-        r.resolve(RuuviMigrationFactory.self)?
-            .createAllOrdered()
-            .forEach { $0.migrateIfNeeded() }
+        let migrations = r.resolve(RuuviMigrationFactory.self)?.createAllOrdered() ?? []
+        Task { @MainActor in
+            do {
+                try await RuuviMigrationRunner.migrate(migrations)
+            } catch {
+                // Failed migrations remain incomplete and retry on the next launch.
+                NSLog("Settings migration failed: %@", error.localizedDescription)
+            }
+        }
 
         appStateService = r.resolve(AppStateService.self)
         appStateService.application(application, didFinishLaunchingWithOptions: launchOptions)

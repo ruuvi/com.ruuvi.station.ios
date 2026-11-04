@@ -92,6 +92,7 @@ final class RuuviMigrationTests: XCTestCase {
     }
     func close() {
         defaults.removePersistentDomain(forName: suite)
+        try? persistence.database.dbPool.close()
         try? FileManager.default.removeItem(at: directory)
     }
 }

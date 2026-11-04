@@ -13,15 +13,18 @@ import RuuviLocal
 
 final class MigrationManagerToNetworkPull60: RuuviMigration {
     private var settings: RuuviLocalSettings
+    private let defaults: UserDefaults
 
-    init(settings: RuuviLocalSettings) {
+    init(settings: RuuviLocalSettings, defaults: UserDefaults = .standard) {
         self.settings = settings
+        self.defaults = defaults
     }
 
-    func migrateIfNeeded() {
-        guard !UserDefaults.standard.bool(forKey: migratedUdKey) else { return }
+    @MainActor func migrate() async throws {
+        try Task.checkCancellation()
+        guard !defaults.bool(forKey: migratedUdKey) else { return }
         settings.networkPullIntervalSeconds = 60
-        UserDefaults.standard.set(true, forKey: migratedUdKey)
+        defaults.set(true, forKey: migratedUdKey)
     }
 
     private let migratedUdKey = "MigrationManagerToNetworkPull60.migrated"

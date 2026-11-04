@@ -1,55 +1,81 @@
 #if SWIFT_PACKAGE
     import RuuviMigration
 #endif
-#if SWIFT_PACKAGE
-    import RuuviLocal
-    import RuuviPool
-#endif
-import AVKit
 import Foundation
-import RuuviContext
 import RuuviOntology
 import RuuviService
 import RuuviStorage
 
 final class MigrationManagerAlertService: RuuviMigration {
-    private let ruuviStorage: RuuviStorage
-    private let ruuviAlertService: RuuviServiceAlert
+    private let storage: RuuviStorage
+    private let alerts: RuuviServiceAlert
+    private let defaults: UserDefaults
+    private let versionKey = "MigrationManagerAlertService.persistanceVersion"
+    @MainActor private var isRunning = false
 
-    init(
-        ruuviStorage: RuuviStorage,
-        ruuviAlertService: RuuviServiceAlert
-    ) {
-        self.ruuviStorage = ruuviStorage
-        self.ruuviAlertService = ruuviAlertService
+    init(ruuviStorage: RuuviStorage, ruuviAlertService: RuuviServiceAlert, defaults: UserDefaults = .standard) {
+        storage = ruuviStorage
+        alerts = ruuviAlertService
+        self.defaults = defaults
     }
 
-    private let prefs = UserDefaults.standard
-    @UserDefault("MigrationManagerAlertService.persistanceVersion", defaultValue: 0)
-    private var persistanceVersion: UInt
-    private let actualServiceVersion: UInt = 1
-    private let queue: DispatchQueue = .init(label: "MigrationManagerAlertService", qos: .utility)
+    private struct Conversion {
+        let sensor: RuuviTagSensor
+        let type: AlertType
+        let legacyKey: String
+    }
 
-    func migrateIfNeeded() {
-        guard persistanceVersion < actualServiceVersion else { return }
-        for version in persistanceVersion..<actualServiceVersion {
-            let nextVersion = version + 1
-            migrate(to: nextVersion) { result in
-                if result {
-                    self.persistanceVersion = nextVersion
+    @MainActor func migrate() async throws {
+        guard defaults.integer(forKey: versionKey) < 1, !isRunning else { return }
+        isRunning = true
+        defer { isRunning = false }
+        try Task.checkCancellation()
+        let sensors = try await storage.readAll()
+        var conversions: [Conversion] = []
+        for sensor in sensors {
+            try Task.checkCancellation()
+            let id = sensor.id
+            if defaults.bool(forKey: Keys.Ver1.relativeHumidityAlertIsOnUDKeyPrefix + id),
+                let lower = defaults.optionalDouble(forKey: Keys.Ver1.relativeHumidityLowerBoundUDKeyPrefix + id),
+                let upper = defaults.optionalDouble(forKey: Keys.Ver1.relativeHumidityUpperBoundUDKeyPrefix + id)
+            {
+                guard let temperature = try await migrationTemperature(for: sensor, storage: storage) else {
+                    throw HumidityMigrationError.missingTemperature(id)
                 }
+                conversions.append(
+                    Conversion(
+                        sensor: sensor,
+                        type: .humidity(
+                            lower: Humidity(value: lower / 100, unit: .relative(temperature: temperature)),
+                            upper: Humidity(value: upper / 100, unit: .relative(temperature: temperature))),
+                        legacyKey: Keys.Ver1.relativeHumidityAlertIsOnUDKeyPrefix + id))
+            } else if defaults.bool(forKey: Keys.Ver1.absoluteHumidityAlertIsOnUDKeyPrefix + id),
+                let lower = defaults.optionalDouble(forKey: Keys.Ver1.absoluteHumidityLowerBoundUDKeyPrefix + id),
+                let upper = defaults.optionalDouble(forKey: Keys.Ver1.absoluteHumidityUpperBoundUDKeyPrefix + id)
+            {
+                conversions.append(
+                    Conversion(
+                        sensor: sensor,
+                        type: .humidity(
+                            lower: Humidity(value: lower, unit: .absolute),
+                            upper: Humidity(value: upper, unit: .absolute)),
+                        legacyKey: Keys.Ver1.absoluteHumidityAlertIsOnUDKeyPrefix + id))
             }
         }
-    }
-
-    private func migrate(to version: UInt, completion: @escaping ((Bool) -> Void)) {
-        switch version {
-        case 1:
-            migrateTo1Version(completion: completion)
-        default:
-            assertionFailure("⛔️ Need implement v\(version) migration before")
-            completion(true)
+        try Task.checkCancellation()
+        for conversion in conversions {
+            alerts.register(type: conversion.type, ruuviTag: conversion.sensor)
+            defaults.set(false, forKey: conversion.legacyKey)
         }
+        for sensor in sensors {
+            if let description = defaults.string(
+                forKey: Keys.Ver1.relativeHumidityAlertDescriptionUDKeyPrefix + sensor.id)
+                ?? defaults.string(forKey: Keys.Ver1.absoluteHumidityAlertDescriptionUDKeyPrefix + sensor.id)
+            {
+                alerts.setHumidity(description: description, for: sensor)
+            }
+        }
+        defaults.set(1, forKey: versionKey)
     }
 
     private enum Keys {
@@ -72,135 +98,6 @@ final class MigrationManagerAlertService: RuuviMigration {
                 "AlertPersistenceUserDefaults.absoluteHumidityAlertIsOnUDKeyPrefix."
             static let absoluteHumidityAlertDescriptionUDKeyPrefix =
                 "AlertPersistenceUserDefaults.absoluteHumidityAlertDescriptionUDKeyPrefix."
-        }
-    }
-}
-
-// MARK: - V1 migration
-
-extension MigrationManagerAlertService {
-    private func migrateTo1Version(completion: @escaping ((Bool) -> Void)) {
-        let group = DispatchGroup()
-        group.enter()
-        fetchRuuviSensors { ruuviTagSensors in
-            self.queue.async {
-                ruuviTagSensors.forEach { element in
-                    group.enter()
-                    self.migrateTo1Version(
-                        element: element,
-                        completion: {
-                            group.leave()
-                        })
-                }
-                group.leave()
-            }
-        }
-        queue.async {
-            group.notify(
-                queue: .main,
-                execute: {
-                    completion(true)
-                })
-        }
-    }
-
-    private func migrateTo1Version(element: (RuuviTagSensor, Temperature?), completion: @escaping (() -> Void)) {
-        let id = element.0.id
-        if prefs.bool(forKey: Keys.Ver1.relativeHumidityAlertIsOnUDKeyPrefix + id),
-            let lower = prefs.optionalDouble(forKey: Keys.Ver1.relativeHumidityLowerBoundUDKeyPrefix + id),
-            let upper = prefs.optionalDouble(forKey: Keys.Ver1.relativeHumidityUpperBoundUDKeyPrefix + id),
-            let temperature = element.1
-        {
-            prefs.set(false, forKey: Keys.Ver1.relativeHumidityAlertIsOnUDKeyPrefix + id)
-            let lowerHumidity = Humidity(
-                value: lower / 100,
-                unit: .relative(temperature: temperature)
-            )
-            let upperHumidity = Humidity(
-                value: upper / 100,
-                unit: .relative(temperature: temperature)
-            )
-            ruuviAlertService.register(
-                type: .humidity(lower: lowerHumidity, upper: upperHumidity),
-                ruuviTag: element.0
-            )
-        } else if prefs.bool(forKey: Keys.Ver1.absoluteHumidityAlertIsOnUDKeyPrefix + id),
-            let lower = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityLowerBoundUDKeyPrefix + id),
-            let upper = prefs.optionalDouble(forKey: Keys.Ver1.absoluteHumidityUpperBoundUDKeyPrefix + id)
-        {
-            prefs.set(false, forKey: Keys.Ver1.absoluteHumidityAlertIsOnUDKeyPrefix + id)
-            let lowerHumidity = Humidity(
-                value: lower,
-                unit: .absolute
-            )
-            let upperHumidity = Humidity(
-                value: upper,
-                unit: .absolute
-            )
-            ruuviAlertService.register(
-                type: .humidity(lower: lowerHumidity, upper: upperHumidity),
-                ruuviTag: element.0
-            )
-        } else {
-            debugPrint("do nothing")
-        }
-
-        // pick one description, relative preffered
-        let humidityDescription =
-            prefs.string(forKey: Keys.Ver1.relativeHumidityAlertDescriptionUDKeyPrefix + id)
-            ?? prefs.string(forKey: Keys.Ver1.absoluteHumidityAlertDescriptionUDKeyPrefix + id)
-        ruuviAlertService.setHumidity(description: humidityDescription, for: element.0)
-
-        completion()
-    }
-
-    private func fetchRuuviSensors(completion: @escaping ([(RuuviTagSensor, Temperature?)]) -> Void) {
-        queue.async {
-            let group = DispatchGroup()
-            group.enter()
-            var result = [(RuuviTagSensor, Temperature?)]()
-            Task { @MainActor [self] in
-                do throws(RuuviStorageError) {
-                    let value = try await self.ruuviStorage.readAll()
-                    ({ sensors in
-                        sensors.forEach { sensor in
-                            group.enter()
-                            self.fetchRecord(for: sensor) {
-                                result.append($0)
-                                group.leave()
-                            }
-                        }
-                        group.leave()
-                    })(value)
-                } catch {
-                    ({ _ in
-                        group.leave()
-                    })(error)
-                }
-            }
-            group.notify(
-                queue: .main,
-                execute: {
-                    completion(result)
-                })
-        }
-    }
-
-    private func fetchRecord(
-        for sensor: RuuviTagSensor,
-        complete: @escaping (((RuuviTagSensor, Temperature?)) -> Void)
-    ) {
-        Task { @MainActor [self] in
-            do throws(RuuviStorageError) {
-                let value = try await ruuviStorage.readLatest(sensor)
-                ({ record in
-                    complete((sensor, record?.temperature))
-                })(value)
-            } catch {
-                ({ _ in
-                    complete((sensor, nil))
-                })(error)
-            }
         }
     }
 }

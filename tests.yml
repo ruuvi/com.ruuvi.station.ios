@@ -107,6 +107,8 @@ targets:
     sources:
       - path: Packages/RuuviMigration/Tests
     dependencies:
+      - package: GRDB
+      - package: Humidity
       - target: RuuviContext
         embed: false
       - target: RuuviPersistence
@@ -118,6 +120,12 @@ targets:
       - target: RuuviService
         embed: false
       - target: RuuviMigration
+        embed: false
+      - target: RuuviLocal
+        embed: false
+      - target: RuuviCloud
+        embed: false
+      - target: RuuviPool
         embed: false
     settings:
       base:

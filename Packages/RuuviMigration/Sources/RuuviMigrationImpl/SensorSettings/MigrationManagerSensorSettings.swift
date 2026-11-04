@@ -28,10 +28,6 @@ final class MigrationManagerSensorSettings: RuuviMigration {
     @UserDefault("MigrationManagerSensorSettings.didMigrateSensorSettings", defaultValue: false)
     private var didMigrateSensorSettings: Bool
 
-    func migrateIfNeeded() {
-        Task { @MainActor [self] in try? await migrate() }
-    }
-
     /// Keep the legacy values until every write succeeds, allowing an interrupted migration to retry.
     @MainActor func migrate() async throws {
         guard !didMigrateSensorSettings, !isRunning else { return }

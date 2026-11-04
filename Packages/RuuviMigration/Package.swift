@@ -17,7 +17,9 @@ let package = Package(
         ),
     ],
     dependencies: [
+        .package(name: "GRDB", url: "https://github.com/groue/GRDB.swift", .upToNextMajor(from: "7.12.0")),
         .package(path: "../RuuviPersistence"),
+        .package(path: "../RuuviCloud"),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviLocal"),
         .package(path: "../RuuviPool"),
@@ -46,6 +48,11 @@ let package = Package(
             name: "RuuviMigrationTests",
             dependencies: [
                 "RuuviMigration", "RuuviMigrationImpl",
+                .product(name: "GRDB", package: "GRDB"),
+                .product(name: "RuuviCloud", package: "RuuviCloud"),
+                .product(name: "RuuviLocalUserDefaults", package: "RuuviLocal"),
+                .product(name: "RuuviServiceAlert", package: "RuuviService"),
+                .product(name: "RuuviPoolCoordinator", package: "RuuviPool"),
                 .product(name: "RuuviContextSQLite", package: "RuuviContext"),
                 .product(name: "RuuviPersistenceSQLite", package: "RuuviPersistence"),
                 .product(name: "RuuviStorageCoordinator", package: "RuuviStorage"),
