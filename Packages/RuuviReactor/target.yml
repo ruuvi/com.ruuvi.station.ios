@@ -12,7 +12,6 @@ targets:
       name: Reactor
     dependencies:
     - package: Humidity
-    - package: Future
     - package: GRDB
     - target: RuuviAnalytics
     - target: RuuviOntology

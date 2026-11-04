@@ -1,8 +1,10 @@
+#if SWIFT_PACKAGE
+    import RuuviService
+#endif
 // swiftlint:disable file_length
 
 import Foundation
 import UIKit
-import Future
 import RuuviCloud
 import RuuviLocal
 import RuuviOntology
@@ -31,6 +33,7 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
     private let localSyncState: RuuviLocalSyncState
     private let settings: RuuviLocalSettings
     private let gattService: GATTService
+    private let backgroundTasks = RuuviTaskStore()
 
     public init(
         cloud: RuuviCloud,
@@ -58,377 +61,177 @@ public final class RuuviServiceOwnershipImpl: RuuviServiceOwnership {
         self.gattService = gattService
     }
 
-    @discardableResult
-    public func loadShared(for sensor: RuuviTagSensor) -> Future<Set<AnyShareableSensor>, RuuviServiceError> {
-        let promise = Promise<Set<AnyShareableSensor>, RuuviServiceError>()
-        cloud.loadShared(for: sensor)
-            .on(success: { shareableSensors in
-                promise.succeed(value: shareableSensors)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+    @MainActor
+    public func loadShared(for sensor: RuuviTagSensor) async throws(RuuviServiceError) -> Set<AnyShareableSensor> {
+        do { return try await cloud.loadShared(for: sensor) } catch { throw .ruuviCloud(error) }
     }
 
-    @discardableResult
-    public func share(
-        macId: MACIdentifier,
-        with email: String
-    ) -> Future<ShareSensorResponse, RuuviServiceError> {
-        let promise = Promise<ShareSensorResponse, RuuviServiceError>()
-        cloud.share(macId: macId, with: email)
-            .on(success: { result in
-                promise.succeed(value: result)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+    @MainActor
+    public func share(macId: MACIdentifier, with email: String) async throws(RuuviServiceError) -> ShareSensorResponse {
+        do { return try await cloud.share(macId: macId, with: email) } catch { throw .ruuviCloud(error) }
     }
 
-    @discardableResult
-    public func unshare(macId: MACIdentifier, with email: String?) -> Future<MACIdentifier, RuuviServiceError> {
-        let promise = Promise<MACIdentifier, RuuviServiceError>()
-        cloud.unshare(macId: macId, with: email)
-            .on(success: { macId in
-                promise.succeed(value: macId)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+    @MainActor
+    public func unshare(macId: MACIdentifier, with email: String?) async throws(RuuviServiceError) -> MACIdentifier {
+        do { return try await cloud.unshare(macId: macId, with: email) } catch { throw .ruuviCloud(error) }
     }
 
-    @discardableResult
-    public func claim(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
-        let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
-        guard let macId = sensor.macId
-        else {
-            promise.fail(error: .macIdIsNil)
-            return promise.future
+    @MainActor
+    public func claim(sensor: RuuviTagSensor) async throws(RuuviServiceError) -> AnyRuuviTagSensor {
+        guard let mac = sensor.macId else { throw .macIdIsNil }
+        guard let owner = ruuviUser.email else { throw .ruuviCloud(.notAuthorized) }
+        let canonical = try await ensureFullMac(for: sensor)
+        do { _ = try await cloud.claim(name: sensor.name, macId: canonical) } catch { throw .ruuviCloud(error) }
+        return try await handleSensorClaimed(sensor: sensor, owner: owner, macId: mac)
+    }
+
+    @MainActor
+    public func contest(sensor: RuuviTagSensor, secret: String) async throws(RuuviServiceError) -> AnyRuuviTagSensor {
+        guard let mac = sensor.macId else { throw .macIdIsNil }
+        guard let owner = ruuviUser.email else { throw .ruuviCloud(.notAuthorized) }
+        let canonical = try await ensureFullMac(for: sensor)
+        do { _ = try await cloud.contest(macId: canonical, secret: secret) } catch { throw .ruuviCloud(error) }
+        return try await handleSensorClaimed(sensor: sensor, owner: owner, macId: mac)
+    }
+
+    @MainActor
+    public func unclaim(sensor: RuuviTagSensor, removeCloudHistory: Bool) async throws(RuuviServiceError)
+        -> AnyRuuviTagSensor
+    {
+        let mac = try await ensureFullMac(for: sensor)
+        do { _ = try await cloud.unclaim(macId: mac, removeCloudHistory: removeCloudHistory) } catch {
+            throw .ruuviCloud(error)
         }
-        guard let owner = ruuviUser.email
-        else {
-            promise.fail(error: .ruuviCloud(.notAuthorized))
-            return promise.future
-        }
-        ensureFullMac(for: sensor)
-            .on(success: { [weak self] canonicalMac in
-                guard let self else { return }
-                self.cloud.claim(name: sensor.name, macId: canonicalMac)
-                    .on(success: { [weak self] _ in
-                        guard let self else { return }
-                        self.handleSensorClaimed(
-                            sensor: sensor,
-                            owner: owner,
-                            macId: macId,
-                            promise: promise
-                        )
-                    }, failure: { error in
-                        promise.fail(error: .ruuviCloud(error))
-                    })
-            }, failure: { error in
-                promise.fail(error: error)
-            })
-        return promise.future
+        let updated = sensor.with(isClaimed: false).with(canShare: false).with(sharedTo: [])
+            .with(sharedToPending: []).with(isCloudSensor: false).withoutOwner()
+        do { _ = try await pool.update(updated) } catch { throw .ruuviPool(error) }
+        return updated.any
     }
 
-    @discardableResult
-    public func contest(
-        sensor: RuuviTagSensor,
-        secret: String
-    ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
-        let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
-        guard let macId = sensor.macId
-        else {
-            promise.fail(error: .macIdIsNil)
-            return promise.future
-        }
-
-        guard let owner = ruuviUser.email
-        else {
-            promise.fail(error: .ruuviCloud(.notAuthorized))
-            return promise.future
-        }
-
-        ensureFullMac(for: sensor)
-            .on(success: { [weak self] canonicalMac in
-                guard let self else { return }
-                self.cloud.contest(macId: canonicalMac, secret: secret)
-                    .on(success: { [weak self] _ in
-                        guard let self else { return }
-                        self.handleSensorClaimed(
-                            sensor: sensor,
-                            owner: owner,
-                            macId: macId,
-                            promise: promise
-                        )
-                    }, failure: { error in
-                        promise.fail(error: .ruuviCloud(error))
-                    })
-            }, failure: { error in
-                promise.fail(error: error)
-            })
-        return promise.future
-    }
-
-    @discardableResult
-    public func unclaim(
-        sensor: RuuviTagSensor,
-        removeCloudHistory: Bool
-    ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
-        let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
-        ensureFullMac(for: sensor)
-            .on(success: { [weak self] canonicalMac in
-                guard let self else { return }
-                self.cloud.unclaim(
-                    macId: canonicalMac,
-                    removeCloudHistory: removeCloudHistory
-                )
-                .on(success: { [weak self] _ in
-                    guard let self else { return }
-                    let unclaimedSensor = sensor
-                        .with(isClaimed: false)
-                        .with(canShare: false)
-                        .with(sharedTo: [])
-                        .with(sharedToPending: [])
-                        .with(isCloudSensor: false)
-                        .withoutOwner()
-                    self.pool
-                        .update(unclaimedSensor)
-                        .on(success: { _ in
-                            promise.succeed(value: unclaimedSensor.any)
-                        }, failure: { error in
-                            promise.fail(error: .ruuviPool(error))
-                        })
-                }, failure: { error in
-                    promise.fail(error: .ruuviCloud(error))
-                })
-            }, failure: { error in
-                promise.fail(error: error)
-            })
-        return promise.future
-    }
-
-    @discardableResult
-    public func add(
-        sensor: RuuviTagSensor,
-        record: RuuviTagSensorRecord?
-    ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
-        let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
-        let updatedSensor = sensor.with(lastUpdated: Date())
-        var operations: [Future<Bool, RuuviPoolError>] = [pool.create(updatedSensor)]
-        if let record {
-            // NFC-only adds persist the sensor immediately and attach records later,
-            // once the first BT measurement is actually available.
-            operations.append(pool.create(record.with(source: .advertisement)))
-            operations
-                .append(pool.createLast(record.with(source: .advertisement)))
-        }
-        Future.zip(operations).on(success: { _ in
-            promise.succeed(value: updatedSensor.any)
-        }, failure: { error in
-            promise.fail(error: .ruuviPool(error))
-        })
-        return promise.future
-    }
-
-    @discardableResult
-    public func remove(
-        sensor: RuuviTagSensor,
-        removeCloudHistory: Bool
-    ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
-        let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
-        // Serialize with advertisement eligibility checks so removal cannot start a new download.
-        DispatchQueue.main.async {
-            let wasSuppressed = self.localSyncState.isAutoGattSyncSuppressed(for: sensor.macId)
-            self.localSyncState.setAutoGattSyncSuppressed(true, for: sensor.macId)
-            let stop = sensor.luid.map { self.gattService.stopGattSync(for: $0.value) } ??
-                Future<Bool, RuuviServiceError>(value: false)
-            let fail: (RuuviServiceError) -> Void = { error in
-                self.localSyncState.setAutoGattSyncSuppressed(wasSuppressed, for: sensor.macId)
-                promise.fail(error: error)
+    @MainActor
+    public func add(sensor: RuuviTagSensor, record: RuuviTagSensorRecord?) async throws(RuuviServiceError)
+        -> AnyRuuviTagSensor
+    {
+        let updated = sensor.with(lastUpdated: Date())
+        do {
+            _ = try await pool.create(updated)
+            if let record {
+                _ = try await pool.create(record.with(source: .advertisement))
+                _ = try await pool.createLast(record.with(source: .advertisement))
             }
-            let removeStoppedSensor = {
-                self.removeStoppedSensor(sensor: sensor, removeCloudHistory: removeCloudHistory)
-                    .on(success: { promise.succeed(value: $0) }, failure: fail)
-            }
-            // Cancellation waits for in-progress writes. Delete in the same main-queue turn
-            // when stop completes synchronously, so another graph action cannot start a sync in between.
-            stop.on(success: { _ in
-                if Thread.isMainThread {
-                    removeStoppedSensor()
+        } catch { throw .ruuviPool(error) }
+        return updated.any
+    }
+
+    @MainActor
+    public func remove(sensor: RuuviTagSensor, removeCloudHistory: Bool) async throws(RuuviServiceError)
+        -> AnyRuuviTagSensor
+    {
+        let wasSuppressed = await MainActor.run {
+            let previous = localSyncState.isAutoGattSyncSuppressed(for: sensor.macId)
+            localSyncState.setAutoGattSyncSuppressed(true, for: sensor.macId)
+            return previous
+        }
+        do {
+            if let luid = sensor.luid { _ = try await gattService.stopGattSync(for: luid.value) }
+            return try await removeStoppedSensor(sensor: sensor, removeCloudHistory: removeCloudHistory)
+        } catch {
+            await MainActor.run { localSyncState.setAutoGattSyncSuppressed(wasSuppressed, for: sensor.macId) }
+            throw error
+        }
+    }
+
+    @MainActor
+    private func removeStoppedSensor(sensor: RuuviTagSensor, removeCloudHistory: Bool) async throws(RuuviServiceError)
+        -> AnyRuuviTagSensor
+    {
+        do {
+            _ = try await pool.delete(sensor)
+            _ = try await pool.deleteAllRecords(sensor.id)
+            _ = try await pool.deleteLast(sensor.id)
+            _ = try await pool.deleteSensorSettings(sensor)
+        } catch { throw .ruuviPool(error) }
+        if let mac = sensor.macId, sensor.isCloud {
+            // Preserve local completion while the cloud API handles retries independently.
+            backgroundTasks.run(seriallyFor: "remove:" + sensor.id) { @MainActor [self] in
+                let canonical = (try? await ensureFullMac(for: sensor)) ?? localIDs.fullMac(for: mac) ?? mac
+                if sensor.isOwner {
+                    _ = try? await cloud.unclaim(macId: canonical, removeCloudHistory: removeCloudHistory)
                 } else {
-                    DispatchQueue.main.async(execute: removeStoppedSensor)
+                    _ = try? await cloud.unshare(macId: canonical, with: nil)
                 }
-            }, failure: fail)
-        }
-        return promise.future
-    }
-
-    private func removeStoppedSensor(
-        sensor: RuuviTagSensor,
-        removeCloudHistory: Bool
-    ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
-        let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
-        let deleteTagOperation = pool.delete(sensor)
-        let deleteRecordsOperation = pool.deleteAllRecords(sensor.id)
-        let deleteLastRecordOperation = pool.deleteLast(sensor.id)
-        let deleteSensorSettingsOperation = pool.deleteSensorSettings(sensor)
-        var unshareOperation: Future<MACIdentifier, RuuviServiceError>?
-        var unclaimOperation: Future<AnyRuuviTagSensor, RuuviServiceError>?
-
-        if let macId = sensor.macId,
-           sensor.isCloud {
-            if sensor.isOwner {
-                unclaimOperation = unclaim(
-                    sensor: sensor,
-                    removeCloudHistory: removeCloudHistory
-                )
-            } else {
-                unshareOperation = unshare(macId: macId, with: nil)
             }
         }
-
-        // Remove custom image
         propertiesService.removeImage(for: sensor)
-
-        // Clean up all sensor-related local prefs data
         cleanupSensorData(for: sensor)
-
-        Future.zip([
-            deleteTagOperation,
-            deleteRecordsOperation,
-            deleteLastRecordOperation,
-            deleteSensorSettingsOperation,
-        ])
-        .on(success: { [weak self] _ in
-            // Check if we should clear global settings after deletion
-            self?.checkAndClearGlobalSettings()
-
-            if let unclaimOperation {
-                unclaimOperation.on()
-                promise.succeed(value: sensor.any)
-            } else if let unshareOperation {
-                unshareOperation.on()
-                promise.succeed(value: sensor.any)
-            } else {
-                promise.succeed(value: sensor.any)
-            }
-        }, failure: { error in
-            promise.fail(error: .ruuviPool(error))
-        })
-
-        return promise.future
+        if let sensors = try? await storage.readAll(), sensors.isEmpty { localSyncState.setSyncDate(nil) }
+        return sensor.any
     }
 
-    @discardableResult
-    public func checkOwner(macId: MACIdentifier) -> Future<(String?, String?), RuuviServiceError> {
-        let promise = Promise<(String?, String?), RuuviServiceError>()
-        cloud.checkOwner(macId: macId)
-            .on(success: { [weak self] result in
-                if let self,
-                   let sensorString = result.1 {
-                    let fullMac = sensorString.lowercased().mac
-                    let original = self.localIDs.originalMac(for: fullMac) ?? macId
-                    self.localIDs.set(fullMac: fullMac, for: original)
-                }
-                promise.succeed(value: result)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
-    }
-
-    @discardableResult
-    public func updateShareable(for sensor: RuuviTagSensor) -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
-        pool.update(sensor).on(success: { _ in
-            promise.succeed(value: true)
-        }, failure: { error in
-            promise.fail(error: .ruuviPool(error))
-        })
-        return promise.future
-    }
-}
-
-extension RuuviServiceOwnershipImpl {
-    private func handleSensorClaimed(
-        sensor: RuuviTagSensor,
-        owner: String,
-        macId: MACIdentifier,
-        promise: Promise<AnyRuuviTagSensor, RuuviServiceError>
-    ) {
-        let claimedSensor = sensor
-            .with(owner: owner)
-            .with(isClaimed: true)
-            .with(isCloudSensor: true)
-            .with(isOwner: true)
-        pool
-            .update(claimedSensor)
-            .on(success: { [weak self] _ in
-                self?.handleUpdatedSensor(
-                    sensor: claimedSensor,
-                    promise: promise,
-                    macId: macId
-                )
-            }, failure: { error in
-                promise.fail(error: .ruuviPool(error))
-            })
-    }
-
-    private func handleUpdatedSensor(
-        sensor: RuuviTagSensor,
-        promise: Promise<AnyRuuviTagSensor, RuuviServiceError>,
-        macId: MACIdentifier
-    ) {
-        storage.readSensorSettings(sensor).on { [weak self] settings in
-            guard let self else { return }
-            self.cloud.update(
-                temperatureOffset: settings?.temperatureOffset ?? 0,
-                humidityOffset: (settings?.humidityOffset ?? 0) * 100, // fraction local, % on cloud
-                pressureOffset: (settings?.pressureOffset ?? 0) * 100, // hPa local, Pa on cloud
-                for: sensor
-            ).on()
+    @MainActor
+    public func checkOwner(macId: MACIdentifier) async throws(RuuviServiceError) -> (String?, String?) {
+        let result: (String?, String?)
+        do { result = try await cloud.checkOwner(macId: macId) } catch { throw .ruuviCloud(error) }
+        if let sensorString = result.1 {
+            let full = sensorString.lowercased().mac
+            localIDs.set(fullMac: full, for: localIDs.originalMac(for: full) ?? macId)
         }
+        return result
+    }
 
-        AlertType.allCases.forEach { type in
-            if let alert = alertService.alert(for: sensor, of: type) {
-                alertService.register(type: alert, ruuviTag: sensor)
-            }
-        }
+    @MainActor
+    public func updateShareable(for sensor: RuuviTagSensor) async throws(RuuviServiceError) -> Bool {
+        do { _ = try await pool.update(sensor); return true } catch { throw .ruuviPool(error) }
+    }
 
-        func uploadBackground(_ image: UIImage) {
-            guard let jpegData = image.jpegData(compressionQuality: 1.0) else {
-                promise.fail(error: .failedToGetJpegRepresentation)
-                return
-            }
-            let remote = self.cloud.upload(
-                imageData: jpegData,
-                mimeType: .jpg,
-                progress: nil,
-                for: macId
+    @MainActor
+    private func handleSensorClaimed(sensor: RuuviTagSensor, owner: String, macId: MACIdentifier)
+        async throws(RuuviServiceError) -> AnyRuuviTagSensor
+    {
+        let claimed = sensor.with(owner: owner).with(isClaimed: true).with(isCloudSensor: true).with(isOwner: true)
+        do { _ = try await pool.update(claimed) } catch { throw .ruuviPool(error) }
+        if let settings = try? await storage.readSensorSettings(claimed) {
+            _ = try? await cloud.update(
+                temperatureOffset: settings.temperatureOffset ?? 0,
+                humidityOffset: (settings.humidityOffset ?? 0) * 100,
+                pressureOffset: (settings.pressureOffset ?? 0) * 100,
+                for: claimed
             )
-            remote.on(success: { _ in
-                promise.succeed(value: sensor.any)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
         }
-
-        if let localBackground = localCustomBackground(for: sensor) {
-            uploadBackground(localBackground)
-            return
+        for type in AlertType.allCases {
+            if let alert = alertService.alert(for: claimed, of: type) {
+                alertService.register(type: alert, ruuviTag: claimed)
+            }
         }
+        if let background = localCustomBackground(for: claimed) {
+            guard let data = background.jpegData(compressionQuality: 1) else { throw .failedToGetJpegRepresentation }
+            do { _ = try await cloud.upload(imageData: data, mimeType: .jpg, progress: nil, for: macId) } catch {
+                throw .ruuviCloud(error)
+            }
+        }
+        return claimed.any
+    }
 
-        promise.succeed(value: sensor.any)
+    @MainActor
+    private func ensureFullMac(for sensor: RuuviTagSensor) async throws(RuuviServiceError) -> MACIdentifier {
+        guard let mac = sensor.macId else { throw .macIdIsNil }
+        let stored = localIDs.fullMac(for: mac)
+        if RuuviDataFormat.dataFormat(from: sensor.version) == .v6, mac.value.needsFullMacLookup, stored == nil {
+            let result = try await checkOwner(macId: mac)
+            if let value = result.1 { return value.lowercased().mac }
+        }
+        return stored ?? mac
     }
 
     private func localCustomBackground(for sensor: RuuviTagSensor) -> UIImage? {
         if let macId = sensor.macId,
-           let image = localImages.getCustomBackground(for: macId) {
+            let image = localImages.getCustomBackground(for: macId)
+        {
             return image
         }
         if let luid = sensor.luid,
-           let image = localImages.getCustomBackground(for: luid) {
+            let image = localImages.getCustomBackground(for: luid)
+        {
             return image
         }
         return nil
@@ -445,7 +248,8 @@ extension RuuviServiceOwnershipImpl {
 
             // Clean up widget card reference if it matches this sensor
             if let currentCardMacId = settings.cardToOpenFromWidget(),
-               currentCardMacId == macId.value {
+                currentCardMacId == macId.value
+            {
                 settings.setCardToOpenFromWidget(for: nil)
             }
         }
@@ -464,7 +268,8 @@ extension RuuviServiceOwnershipImpl {
 
         // Clean up last opened chart if it matches this sensor
         if let lastChart = settings.lastOpenedChart(),
-           lastChart == sensor.id {
+            lastChart == sensor.id
+        {
             settings.setLastOpenedChart(with: nil)
         }
 
@@ -474,49 +279,6 @@ extension RuuviServiceOwnershipImpl {
         }
     }
 
-    private func checkAndClearGlobalSettings() {
-        storage.readAll()
-            .on(success: { [weak self] sensors in
-                if sensors.isEmpty {
-                    self?.localSyncState.setSyncDate(nil)
-                }
-            })
-    }
-}
-
-private extension RuuviServiceOwnershipImpl {
-    func ensureFullMac(for sensor: RuuviTagSensor) -> Future<MACIdentifier, RuuviServiceError> {
-        let promise = Promise<MACIdentifier, RuuviServiceError>()
-        guard let macId = sensor.macId else {
-            promise.fail(error: .macIdIsNil)
-            return promise.future
-        }
-
-        let storedFull = localIDs.fullMac(for: macId)
-        let dataFormat = RuuviDataFormat.dataFormat(from: sensor.version)
-        if dataFormat == .v6,
-           macId.value.needsFullMacLookup,
-           storedFull == nil {
-            checkOwner(macId: macId)
-                .on(success: { [weak self] result in
-                    guard let self else { return }
-                    if let sensorString = result.1 {
-                        let fullMac = sensorString.lowercased().mac
-                        let original = self.localIDs.originalMac(for: fullMac) ?? macId
-                        self.localIDs.set(fullMac: fullMac, for: original)
-                        promise.succeed(value: fullMac)
-                    } else {
-                        promise.succeed(value: macId)
-                    }
-                }, failure: { error in
-                    promise.fail(error: error)
-                })
-        } else {
-            promise.succeed(value: storedFull ?? macId)
-        }
-
-        return promise.future
-    }
 }
 
 private extension String {

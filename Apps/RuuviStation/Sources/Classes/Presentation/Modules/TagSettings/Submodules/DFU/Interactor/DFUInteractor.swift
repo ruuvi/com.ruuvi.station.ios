@@ -73,9 +73,11 @@ extension DFUInteractor: DFUInteractorInput {
             } else {
                 firmwareUrl = fullUrl
             }
-            guard let firmware = ruuviDFU.firmwareFromUrl(
-                url: firmwareUrl
-            ) else {
+            guard
+                let firmware = ruuviDFU.firmwareFromUrl(
+                    url: firmwareUrl
+                )
+            else {
                 return Fail<
                     FlashResponse,
                     Error
@@ -84,7 +86,8 @@ extension DFUInteractor: DFUInteractorInput {
                 )
                 .eraseToAnyPublisher()
             }
-            return ruuviDFU
+            return
+                ruuviDFU
                 .flashFirmware(
                     uuid: dfuDevice.uuid,
                     with: firmware
@@ -108,9 +111,10 @@ extension DFUInteractor: DFUInteractorInput {
         switch deviceType {
         case .ruuviTag:
             guard let fullName = release.defaultFullZipName,
-                  let fullUrl = release.defaultFullZipUrl,
-                  let appName = release.defaultAppZipName,
-                  let appUrl = release.defaultAppZipUrl else {
+                let fullUrl = release.defaultFullZipUrl,
+                let appName = release.defaultAppZipName,
+                let appUrl = release.defaultAppZipUrl
+            else {
                 return Fail<FirmwareDownloadResponse, Error>(error: URLError(.badURL)).eraseToAnyPublisher()
             }
             let progress = Progress(totalUnitCount: 2)
@@ -125,25 +129,28 @@ extension DFUInteractor: DFUInteractorInput {
                         appProgress
                     ),
                     .progress
-                ): .progress(
-                    appProgress
-                )
+                ):
+                    .progress(
+                        appProgress
+                    )
                 case let (
                     .progress(
                         appProgress
                     ),
                     .response
-                ): .progress(
-                    appProgress
-                )
+                ):
+                    .progress(
+                        appProgress
+                    )
                 case let (
                     .response,
                     .progress(
                         fullProgress
                     )
-                ): .progress(
-                    fullProgress
-                )
+                ):
+                    .progress(
+                        fullProgress
+                    )
                 case let (
                     .response(
                         appUrl
@@ -151,11 +158,12 @@ extension DFUInteractor: DFUInteractorInput {
                     .response(
                         fullUrl
                     )
-                ): .response(
-                    appUrl: appUrl,
-                    fullUrl: fullUrl,
-                    additionalFiles: []
-                )
+                ):
+                    .response(
+                        appUrl: appUrl,
+                        fullUrl: fullUrl,
+                        additionalFiles: []
+                    )
                 }
             }.eraseToAnyPublisher()
 
@@ -358,7 +366,8 @@ extension DFUInteractor: DFUInteractorInput {
             sSelf.ruuviDFU.scan(
                 sSelf,
                 includeScanServices: !skipScanServices
-            ) { _,
+            ) {
+                _,
                 device in
                 if skipScanServices {
                     if device.uuid == ruuviTag.luid?.value {
@@ -434,11 +443,13 @@ extension DFUInteractor: DFUInteractorInput {
     func observeLost(uuid: String) -> Future<String, Never> {
         Future { [weak self] promise in
             guard let sSelf = self else { return }
-            sSelf.ruuviDFU.lost(sSelf, closure: { _, device in
-                if device.uuid == uuid {
-                    promise(.success(uuid))
-                }
-            })
+            sSelf.ruuviDFU.lost(
+                sSelf,
+                closure: { _, device in
+                    if device.uuid == uuid {
+                        promise(.success(uuid))
+                    }
+                })
         }
     }
 }
@@ -500,12 +511,14 @@ extension DFUInteractor {
             let storedVersion = latestTag.firmwareVersion
             let latestVersion = version
 
-            guard !self.areStoredFirmwareDisplayValuesEquivalent(
-                storedVersion,
-                latestVersion
-            ) else { return }
+            guard
+                !self.areStoredFirmwareDisplayValuesEquivalent(
+                    storedVersion,
+                    latestVersion
+                )
+            else { return }
 
-            ruuviPool.update(latestTag.with(firmwareVersion: version))
+            Task { @MainActor [self] in _ = try? await ruuviPool.update(latestTag.with(firmwareVersion: version)) }
         }
     }
 
@@ -529,11 +542,14 @@ extension DFUInteractor {
         }
 
         let sensorId = ruuviTag.macId?.value ?? ruuviTag.id
-        ruuviStorage.readOne(sensorId)
-            .on(
-                success: { completion($0) },
-                failure: { _ in completion(ruuviTag) }
-            )
+        Task { @MainActor [self] in
+            do throws(RuuviStorageError) {
+                let value = try await ruuviStorage.readOne(sensorId)
+                ({ completion($0) })(value)
+            } catch {
+                ({ _ in completion(ruuviTag) })(error)
+            }
+        }
     }
 
     private func firmwareDownloadURL(for deviceType: RuuviDeviceType) -> String {
@@ -544,11 +560,12 @@ extension DFUInteractor {
             let appGroupDefaults = UserDefaults(
                 suiteName: AppGroupConstants.appGroupSuiteIdentifier
             )
-            let useDevServer = appGroupDefaults?.bool(
-                forKey: AppGroupConstants.useDevServerKey
-            ) ?? false
-            let baseUrlString: String = useDevServer ?
-                AppAssemblyConstants.ruuviCloudUrlDev : AppAssemblyConstants.ruuviCloudUrl
+            let useDevServer =
+                appGroupDefaults?.bool(
+                    forKey: AppGroupConstants.useDevServerKey
+                ) ?? false
+            let baseUrlString: String =
+                useDevServer ? AppAssemblyConstants.ruuviCloudUrlDev : AppAssemblyConstants.ruuviCloudUrl
             return "\(baseUrlString)/air_firmwareupdate"
         }
     }

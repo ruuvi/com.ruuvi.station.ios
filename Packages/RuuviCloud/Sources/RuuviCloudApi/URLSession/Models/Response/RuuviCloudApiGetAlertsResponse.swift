@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviCloud
+#endif
 import Foundation
 import RuuviOntology
 
@@ -40,7 +43,8 @@ public struct RuuviCloudApiGetAlert: Decodable, RuuviCloudAlert {
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
         if let typeString = try? container.decode(String.self, forKey: .type),
-           let type = RuuviCloudAlertType(rawValue: typeString) {
+            let type = RuuviCloudAlertType(rawValue: typeString)
+        {
             self.type = type
         } else {
             type = nil

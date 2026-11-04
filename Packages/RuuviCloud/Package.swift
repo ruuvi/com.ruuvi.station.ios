@@ -1,11 +1,11 @@
-// swift-tools-version:5.9
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "RuuviCloud",
-    platforms: [.macOS(.v10_15), .iOS(.v14)],
+    platforms: [.iOS(.v16)],
     products: [
         .library(
             name: "RuuviCloud",
@@ -21,7 +21,10 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
+        .package(name: "GRDB", url: "https://github.com/groue/GRDB.swift", .upToNextMajor(from: "7.12.0")),
+        .package(path: "../RuuviContext"),
+        .package(path: "../RuuviPersistence"),
+        .package(path: "../RuuviStorage"),
         .package(url: "https://github.com/ruuvi/BTKit", branch: "master"),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviUser"),
@@ -32,7 +35,7 @@ let package = Package(
         .target(
             name: "RuuviCloud",
             dependencies: [
-                "Future",
+
                 "RuuviOntology",
                 "RuuviPool",
                 "RuuviLocal",
@@ -44,23 +47,34 @@ let package = Package(
             dependencies: [
                 "RuuviCloud",
                 "RuuviOntology",
-                "Future",
+
                 "BTKit",
             ]
         ),
         .target(
             name: "RuuviCloudPure",
             dependencies: [
+                .product(name: "RuuviPool", package: "RuuviPool"),
                 "RuuviCloud",
                 "RuuviCloudApi",
                 "RuuviOntology",
                 "RuuviUser",
-                "Future",
+
             ]
         ),
         .testTarget(
             name: "RuuviCloudTests",
-            dependencies: ["RuuviCloud", "RuuviCloudApi"]
+            dependencies: [
+                "RuuviCloud", "RuuviCloudApi", "RuuviCloudPure",
+                .product(name: "GRDB", package: "GRDB"),
+                .product(name: "RuuviContextSQLite", package: "RuuviContext"),
+                .product(name: "RuuviPersistenceSQLite", package: "RuuviPersistence"),
+                .product(name: "RuuviPoolCoordinator", package: "RuuviPool"),
+                .product(name: "RuuviStorageCoordinator", package: "RuuviStorage"),
+                .product(name: "RuuviLocalUserDefaults", package: "RuuviLocal"),
+                .product(name: "RuuviUser", package: "RuuviUser"),
+            ]
         ),
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )

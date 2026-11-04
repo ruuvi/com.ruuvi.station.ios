@@ -1,11 +1,11 @@
-// swift-tools-version:5.9
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "RuuviStorage",
-    platforms: [.macOS(.v10_15), .iOS(.v14)],
+    platforms: [.iOS(.v16)],
     products: [
         .library(
             name: "RuuviStorage",
@@ -17,7 +17,6 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviPersistence"),
     ],
@@ -25,7 +24,7 @@ let package = Package(
         .target(
             name: "RuuviStorage",
             dependencies: [
-                "Future",
+
                 "RuuviOntology",
                 "RuuviPersistence",
             ]
@@ -34,7 +33,7 @@ let package = Package(
             name: "RuuviStorageCoordinator",
             dependencies: [
                 "RuuviStorage",
-                "Future",
+
                 "RuuviOntology",
                 "RuuviPersistence",
             ]
@@ -43,5 +42,6 @@ let package = Package(
             name: "RuuviStorageTests",
             dependencies: ["RuuviStorage"]
         ),
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )

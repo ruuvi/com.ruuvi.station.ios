@@ -1,3 +1,10 @@
+#if SWIFT_PACKAGE
+    import RuuviContext
+    import RuuviReactor
+    import RuuviLocal
+    import RuuviService
+    import RuuviPresenters
+#endif
 import Foundation
 import RuuviLocalization
 import RuuviOntology

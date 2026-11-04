@@ -12,10 +12,10 @@ public protocol RuuviCorePermission {
     #else
         var cameraAuthorizationStatus: AVAuthorizationStatus { get }
     #endif
-    var isLocationPermissionGranted: Bool { get }
-    var locationAuthorizationStatus: CLAuthorizationStatus { get }
+    @MainActor var isLocationPermissionGranted: Bool { get }
+    @MainActor var locationAuthorizationStatus: CLAuthorizationStatus { get }
 
     func requestPhotoLibraryPermission(completion: ((Bool) -> Void)?)
     func requestCameraPermission(completion: ((Bool) -> Void)?)
-    func requestLocationPermission(completion: ((Bool) -> Void)?)
+    @MainActor func requestLocationPermission(completion: ((Bool) -> Void)?)
 }

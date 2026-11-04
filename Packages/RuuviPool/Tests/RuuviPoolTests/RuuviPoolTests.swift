@@ -2,5 +2,4 @@
 import XCTest
 
 final class RuuviPoolTests: XCTestCase {
-    func testExample() {}
 }

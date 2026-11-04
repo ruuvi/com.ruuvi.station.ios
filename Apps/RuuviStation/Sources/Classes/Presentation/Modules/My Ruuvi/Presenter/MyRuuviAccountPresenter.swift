@@ -1,5 +1,4 @@
 import Foundation
-import Future
 import RuuviCloud
 import RuuviCore
 import RuuviLocal
@@ -44,16 +43,26 @@ extension MyRuuviAccountPresenter: MyRuuviAccountViewOutput {
     func viewDidTapDeleteButton() {
         guard let email = ruuviUser.email?.lowercased() else { return }
         activityPresenter.show(with: .loading(message: nil))
-        ruuviCloud.deleteAccount(email: email).on(success: {
-            [weak self] _ in
-            self?.activityPresenter.update(with: .success(message: nil))
-            self?.view.viewDidShowAccountDeletionConfirmation()
-        }, failure: { [weak self] error in
-            self?.activityPresenter.update(with: .failed(message: nil))
-            self?.errorPresenter.present(error: error)
-        }, completion: { [weak self] in
-            self?.activityPresenter.dismiss(immediately: false)
-        })
+        Task { @MainActor [weak self, ruuviCloud = ruuviCloud!] in
+            defer {
+                ({ [weak self] in
+                    self?.activityPresenter.dismiss(immediately: false)
+                })()
+            }
+            do {
+                let value = try await ruuviCloud.deleteAccount(email: email)
+                ({
+                    [weak self] _ in
+                    self?.activityPresenter.update(with: .success(message: nil))
+                    self?.view.viewDidShowAccountDeletionConfirmation()
+                })(value)
+            } catch {
+                ({ [weak self] error in
+                    self?.activityPresenter.update(with: .failed(message: nil))
+                    self?.errorPresenter.present(error: error)
+                })(error)
+            }
+        }
     }
 
     func viewDidTapSignoutButton() {
@@ -75,27 +84,36 @@ extension MyRuuviAccountPresenter: MyRuuviAccountViewOutput {
         marketingConsentStatus = nil
         syncViewModel()
         activityPresenter.show(with: .loading(message: nil))
-        ruuviAppSettingsService.set(marketingPreference: isEnabled)
-            .on(success: { [weak self] marketingConsent in
-                self?.settings.marketingPreference = marketingConsent.consent
-                self?.marketingConsentStatus = marketingConsent.status
-                self?.pendingMarketingPreference = nil
-                self?.syncViewModel()
-                self?.activityPresenter.update(with: .success(message: nil))
-                if isEnabled, marketingConsent.status == .unconfirmed {
-                    self?.activityPresenter.dismiss()
-                    self?.view.viewDidReceiveUnconfirmedMarketingConsent()
-                }
-            }, failure: { [weak self] error in
-                self?.settings.marketingPreference = previousValue
-                self?.marketingConsentStatus = previousStatus
-                self?.pendingMarketingPreference = nil
-                self?.syncViewModel()
-                self?.activityPresenter.update(with: .failed(message: nil))
-                self?.errorPresenter.present(error: error)
-            }, completion: { [weak self] in
-                self?.activityPresenter.dismiss(immediately: false)
-            })
+        Task { @MainActor [weak self, ruuviAppSettingsService = ruuviAppSettingsService!] in
+            defer {
+                ({ [weak self] in
+                    self?.activityPresenter.dismiss(immediately: false)
+                })()
+            }
+            do throws(RuuviServiceError) {
+                let value = try await ruuviAppSettingsService.set(marketingPreference: isEnabled)
+                ({ [weak self] marketingConsent in
+                    self?.settings.marketingPreference = marketingConsent.consent
+                    self?.marketingConsentStatus = marketingConsent.status
+                    self?.pendingMarketingPreference = nil
+                    self?.syncViewModel()
+                    self?.activityPresenter.update(with: .success(message: nil))
+                    if isEnabled, marketingConsent.status == .unconfirmed {
+                        self?.activityPresenter.dismiss()
+                        self?.view.viewDidReceiveUnconfirmedMarketingConsent()
+                    }
+                })(value)
+            } catch {
+                ({ [weak self] error in
+                    self?.settings.marketingPreference = previousValue
+                    self?.marketingConsentStatus = previousStatus
+                    self?.pendingMarketingPreference = nil
+                    self?.syncViewModel()
+                    self?.activityPresenter.update(with: .failed(message: nil))
+                    self?.errorPresenter.present(error: error)
+                })(error)
+            }
+        }
     }
 }
 
@@ -104,12 +122,17 @@ extension MyRuuviAccountPresenter: MyRuuviAccountViewOutput {
 extension MyRuuviAccountPresenter {
     private func refreshMarketingConsent() {
         guard flags.showMarketingPreference, ruuviUser.isAuthorized else { return }
-        ruuviAppSettingsService.getMarketingConsent()
-            .on(success: { [weak self] marketingConsent in
-                self?.settings.marketingPreference = marketingConsent.consent
-                self?.marketingConsentStatus = marketingConsent.status
-                self?.syncViewModel()
-            })
+        Task { @MainActor [weak self, ruuviAppSettingsService = ruuviAppSettingsService!] in
+            do throws(RuuviServiceError) {
+                let value = try await ruuviAppSettingsService.getMarketingConsent()
+                ({ [weak self] marketingConsent in
+                    self?.settings.marketingPreference = marketingConsent.consent
+                    self?.marketingConsentStatus = marketingConsent.status
+                    self?.syncViewModel()
+                })(value)
+            } catch {
+            }
+        }
     }
 
     private func syncViewModel() {
@@ -118,7 +141,8 @@ extension MyRuuviAccountPresenter {
             viewModel.username.value = ruuviUser.email?.lowercased()
         }
         viewModel.showMarketingPreference.value = flags.showMarketingPreference
-        viewModel.marketingPreference.value = pendingMarketingPreference
+        viewModel.marketingPreference.value =
+            pendingMarketingPreference
             ?? settings.marketingPreference
         viewModel.marketingPreferenceEnabled.value = isMarketingPreferenceEnabled
         viewModel.marketingPreferenceStatusMessage.value = marketingPreferenceStatusMessage
@@ -154,25 +178,39 @@ extension MyRuuviAccountPresenter {
             guard let sSelf = self else { return }
             sSelf.activityPresenter.show(with: .loading(message: nil))
             if let token = sSelf.pnManager.fcmToken, !token.isEmpty {
-                sSelf.cloudNotificationService.unregister(
-                    token: token,
-                    tokenId: nil
-                ).on(success: { _ in
-                    sSelf.pnManager.fcmToken = nil
-                    sSelf.pnManager.fcmTokenLastRefreshed = nil
-                    sSelf.activityPresenter.update(with: .success(message: nil))
-                })
+                Task { @MainActor [self] in
+                    do throws(RuuviServiceError) {
+                        let value = try await sSelf.cloudNotificationService.unregister(
+                            token: token,
+                            tokenId: nil
+                        )
+                        ({ _ in
+                            sSelf.pnManager.fcmToken = nil
+                            sSelf.pnManager.fcmTokenLastRefreshed = nil
+                            sSelf.activityPresenter.update(with: .success(message: nil))
+                        })(value)
+                    } catch {
+                    }
+                }
             }
 
-            sSelf.authService.logout()
-                .on(success: { _ in
-                    sSelf.settings.cloudModeEnabled = false
-                    sSelf.viewDidTriggerClose()
-                    sSelf.syncViewModel()
-                    sSelf.reloadWidgets()
-                }, completion: { [weak self] in
-                    self?.activityPresenter.dismiss()
-                })
+            Task { @MainActor [self] in
+                defer {
+                    ({ [weak self] in
+                        self?.activityPresenter.dismiss()
+                    })()
+                }
+                do throws(RuuviServiceError) {
+                    let value = try await sSelf.authService.logout()
+                    ({ _ in
+                        sSelf.settings.cloudModeEnabled = false
+                        sSelf.viewDidTriggerClose()
+                        sSelf.syncViewModel()
+                        sSelf.reloadWidgets()
+                    })(value)
+                } catch {
+                }
+            }
         }
         let cancleAction = UIAlertAction(
             title: cancelActionTitle,

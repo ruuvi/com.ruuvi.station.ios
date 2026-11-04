@@ -1,5 +1,13 @@
+#if SWIFT_PACKAGE
+    import RuuviLocal
+    import RuuviService
+    import RuuviStorage
+    import RuuviReactor
+    import RuuviPool
+    import RuuviPersistence
+    import RuuviNotifier
+#endif
 import Foundation
-import Future
 
 public extension Notification.Name {
     static let RuuviTagHeartbeatDaemonDidFail = Notification.Name("RuuviTagHeartbeatDaemonDidFail")
@@ -7,7 +15,7 @@ public extension Notification.Name {
 }
 
 public enum RuuviTagHeartbeatDaemonDidFailKey: String {
-    case error = "RuuviDaemonError" // RuuviDaemonError
+    case error = "RuuviDaemonError"  // RuuviDaemonError
 }
 
 public protocol RuuviTagHeartbeatDaemon {

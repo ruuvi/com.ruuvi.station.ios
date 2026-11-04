@@ -1,3 +1,7 @@
+#if SWIFT_PACKAGE
+    import RuuviRepository
+    import RuuviOntology
+#endif
 import Foundation
 import RuuviPool
 import RuuviStorage

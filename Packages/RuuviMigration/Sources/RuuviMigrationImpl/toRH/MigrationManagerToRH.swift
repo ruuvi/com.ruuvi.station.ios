@@ -1,3 +1,11 @@
+#if SWIFT_PACKAGE
+    import RuuviMigration
+#endif
+#if SWIFT_PACKAGE
+    import RuuviLocal
+    import RuuviPool
+    import RuuviContext
+#endif
 import Foundation
 import RuuviOntology
 import RuuviService
@@ -27,8 +35,9 @@ final class MigrationManagerToRH: RuuviMigration {
                     let sensor = tuple.0
                     let temperature = tuple.1
                     if let lower = self.ruuviAlertService.lowerHumidity(for: sensor),
-                       let upper = self.ruuviAlertService.upperHumidity(for: sensor),
-                       let temperature {
+                        let upper = self.ruuviAlertService.upperHumidity(for: sensor),
+                        let temperature
+                    {
                         let humidityType: AlertType = .humidity(lower: lower, upper: upper)
                         if self.ruuviAlertService.isOn(type: humidityType, for: sensor) {
                             self.ruuviAlertService.register(
@@ -55,21 +64,30 @@ final class MigrationManagerToRH: RuuviMigration {
             let group = DispatchGroup()
             group.enter()
             var result = [(RuuviTagSensor, Temperature?)]()
-            self.ruuviStorage.readAll().on(success: { sensors in
-                sensors.forEach { sensor in
-                    group.enter()
-                    self.fetchRecord(for: sensor) {
-                        result.append($0)
+            Task { @MainActor [self] in
+                do throws(RuuviStorageError) {
+                    let value = try await self.ruuviStorage.readAll()
+                    ({ sensors in
+                        sensors.forEach { sensor in
+                            group.enter()
+                            self.fetchRecord(for: sensor) {
+                                result.append($0)
+                                group.leave()
+                            }
+                        }
                         group.leave()
-                    }
+                    })(value)
+                } catch {
+                    ({ _ in
+                        group.leave()
+                    })(error)
                 }
-                group.leave()
-            }, failure: { _ in
-                group.leave()
-            })
-            group.notify(queue: .main, execute: {
-                completion(result)
-            })
+            }
+            group.notify(
+                queue: .main,
+                execute: {
+                    completion(result)
+                })
         }
     }
 
@@ -77,11 +95,17 @@ final class MigrationManagerToRH: RuuviMigration {
         for sensor: RuuviTagSensor,
         complete: @escaping (((RuuviTagSensor, Temperature?)) -> Void)
     ) {
-        ruuviStorage.readLatest(sensor)
-            .on(success: { record in
-                complete((sensor, record?.temperature))
-            }, failure: { _ in
-                complete((sensor, nil))
-            })
+        Task { @MainActor [self] in
+            do throws(RuuviStorageError) {
+                let value = try await ruuviStorage.readLatest(sensor)
+                ({ record in
+                    complete((sensor, record?.temperature))
+                })(value)
+            } catch {
+                ({ _ in
+                    complete((sensor, nil))
+                })(error)
+            }
+        }
     }
 }

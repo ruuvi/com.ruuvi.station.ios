@@ -1,5 +1,12 @@
+#if SWIFT_PACKAGE
+    import RuuviStorage
+    import RuuviCloud
+    import RuuviPool
+    import RuuviLocal
+    import RuuviRepository
+    import RuuviCore
+#endif
 import Foundation
-import Future
 import RuuviOntology
 import UIKit
 
@@ -8,7 +15,7 @@ public protocol RuuviServiceSensorProperties {
     func set(
         name: String,
         for sensor: RuuviTagSensor
-    ) -> Future<AnyRuuviTagSensor, RuuviServiceError>
+    ) async throws(RuuviServiceError) -> AnyRuuviTagSensor
 
     @discardableResult
     func set(
@@ -17,12 +24,12 @@ public protocol RuuviServiceSensorProperties {
         progress: ((MACIdentifier, Double) -> Void)?,
         maxSize: CGSize,
         compressionQuality: CGFloat
-    ) -> Future<URL, RuuviServiceError>
+    ) async throws(RuuviServiceError) -> URL
 
     @discardableResult
-    func setNextDefaultBackground(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError>
+    func setNextDefaultBackground(for sensor: RuuviTagSensor) async throws(RuuviServiceError) -> UIImage
 
-    func getImage(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError>
+    func getImage(for sensor: RuuviTagSensor) async throws(RuuviServiceError) -> UIImage
 
     func removeImage(for sensor: RuuviTagSensor)
 
@@ -31,13 +38,13 @@ public protocol RuuviServiceSensorProperties {
         for sensor: RuuviTagSensor,
         displayOrder: [String]?,
         defaultDisplayOrder: Bool
-    ) -> Future<SensorSettings, RuuviServiceError>
+    ) async throws(RuuviServiceError) -> SensorSettings
 
     @discardableResult
     func updateDescription(
         for sensor: RuuviTagSensor,
         description: String?
-    ) -> Future<SensorSettings, RuuviServiceError>
+    ) async throws(RuuviServiceError) -> SensorSettings
 }
 
 public extension RuuviServiceSensorProperties {
@@ -46,8 +53,8 @@ public extension RuuviServiceSensorProperties {
         for sensor: RuuviTagSensor,
         maxSize: CGSize,
         compressionQuality: CGFloat
-    ) -> Future<URL, RuuviServiceError> {
-        set(
+    ) async throws(RuuviServiceError) -> URL {
+        try await set(
             image: image,
             for: sensor,
             progress: nil,

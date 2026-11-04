@@ -1,11 +1,11 @@
-// swift-tools-version:5.9
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "RuuviDaemon",
-    platforms: [.macOS(.v10_15), .iOS(.v14)],
+    platforms: [.iOS(.v16)],
     products: [
         .library(
             name: "RuuviDaemon",
@@ -65,6 +65,9 @@ let package = Package(
         .target(
             name: "RuuviDaemonOperation",
             dependencies: [
+                .product(name: "RuuviLocal", package: "RuuviLocal"),
+                .product(name: "RuuviPool", package: "RuuviPool"),
+                .product(name: "RuuviStorage", package: "RuuviStorage"),
                 "RuuviDaemon",
                 "RuuviNotifier",
                 "RuuviOntology",
@@ -80,6 +83,12 @@ let package = Package(
         .target(
             name: "RuuviDaemonRuuviTag",
             dependencies: [
+                .product(name: "RuuviNotifier", package: "RuuviNotifier"),
+                .product(name: "RuuviOntology", package: "RuuviOntology"),
+                .product(name: "RuuviPersistence", package: "RuuviPersistence"),
+                .product(name: "RuuviPool", package: "RuuviPool"),
+                .product(name: "RuuviReactor", package: "RuuviReactor"),
+                .product(name: "RuuviStorage", package: "RuuviStorage"),
                 "RuuviDaemon",
                 "RuuviDaemonOperation",
                 "RuuviNotification",
@@ -91,5 +100,6 @@ let package = Package(
             name: "RuuviDaemonTests",
             dependencies: ["RuuviDaemon", "RuuviDaemonRuuviTag"]
         ),
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )

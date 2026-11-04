@@ -1,11 +1,14 @@
+#if SWIFT_PACKAGE
+    import RuuviDFU
+#endif
 import Combine
 import Foundation
 import iOSMcuManagerLibrary
 #if canImport(NordicDFU)
-import NordicDFU
+    import NordicDFU
 #endif
 #if canImport(iOSDFULibrary)
-import iOSDFULibrary
+    import iOSDFULibrary
 #endif
 
 class DfuFlasher: NSObject {
@@ -71,7 +74,8 @@ class DfuFlasher: NSObject {
         dfuServiceInitiator.delegate = self
         dfuServiceInitiator.progressDelegate = self
         dfuServiceInitiator.logger = self
-        dfuServiceController = dfuServiceInitiator
+        dfuServiceController =
+            dfuServiceInitiator
             .with(firmware: firmware)
             .start(targetWithIdentifier: uuid)
         return subject.eraseToAnyPublisher()

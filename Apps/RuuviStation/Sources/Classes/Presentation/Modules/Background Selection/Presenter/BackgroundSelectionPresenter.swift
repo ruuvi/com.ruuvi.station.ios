@@ -97,7 +97,8 @@ extension BackgroundSelectionPresenter {
                     let luid = userInfo[BPDidUpdateBackgroundUploadProgressKey.luid] as? LocalIdentifier
                     let macId = userInfo[BPDidUpdateBackgroundUploadProgressKey.macId] as? MACIdentifier
                     if (ruuviTag.luid?.value != nil && ruuviTag.luid?.value == luid?.value)
-                        || (ruuviTag.macId?.any != nil && ruuviTag.macId?.any == macId?.any) {
+                        || (ruuviTag.macId?.any != nil && ruuviTag.macId?.any == macId?.any)
+                    {
                         if let percentage = userInfo[BPDidUpdateBackgroundUploadProgressKey.progress] as? Double {
                             sSelf.viewModel.uploadingBackgroundPercentage.value = percentage
                             sSelf.viewModel.isUploadingBackground.value = percentage < 1.0
@@ -126,25 +127,32 @@ extension BackgroundSelectionPresenter {
                     let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
                     let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
                     if (ruuviTag.luid?.any != nil && ruuviTag.luid?.any == luid?.any)
-                        || (ruuviTag.macId?.any != nil && ruuviTag.macId?.any == macId?.any) {
-                        sSelf.ruuviSensorPropertiesService.getImage(for: ruuviTag)
-                            .on(success: { [weak sSelf] image in
-                                guard let sSelf else { return }
-                                sSelf.viewModel.background.value = image
-                                var isLocalSensor: Bool = true
-                                if let isCloudSensor = sSelf.ruuviTag?.isCloudSensor {
-                                    isLocalSensor = !isCloudSensor
-                                }
-
-                                if isLocalSensor, !sSelf.didUploadBackground {
-                                    sSelf.didUploadBackground = true
-                                    if let weakView = sSelf.weakView as? BackgroundSelectionViewController {
-                                        weakView.viewShouldDismiss()
+                        || (ruuviTag.macId?.any != nil && ruuviTag.macId?.any == macId?.any)
+                    {
+                        Task { @MainActor [self] in
+                            do throws(RuuviServiceError) {
+                                let value = try await sSelf.ruuviSensorPropertiesService.getImage(for: ruuviTag)
+                                ({ [weak sSelf] image in
+                                    guard let sSelf else { return }
+                                    sSelf.viewModel.background.value = image
+                                    var isLocalSensor: Bool = true
+                                    if let isCloudSensor = sSelf.ruuviTag?.isCloudSensor {
+                                        isLocalSensor = !isCloudSensor
                                     }
-                                }
-                            }, failure: { [weak sSelf] error in
-                                sSelf?.errorPresenter.present(error: error)
-                            })
+
+                                    if isLocalSensor, !sSelf.didUploadBackground {
+                                        sSelf.didUploadBackground = true
+                                        if let weakView = sSelf.weakView as? BackgroundSelectionViewController {
+                                            weakView.viewShouldDismiss()
+                                        }
+                                    }
+                                })(value)
+                            } catch {
+                                ({ [weak sSelf] error in
+                                    sSelf?.errorPresenter.present(error: error)
+                                })(error)
+                            }
+                        }
                     }
                 }
             }
@@ -152,7 +160,7 @@ extension BackgroundSelectionPresenter {
 
     private func prepareDefaultImages() {
         var defaultImages: [DefaultBackgroundModel] = []
-        for i in (1 ... 17).reversed() {
+        for i in (1...17).reversed() {
             let image = UIImage(named: "bg\(i)")
             if let image {
                 let model = DefaultBackgroundModel(
@@ -176,17 +184,28 @@ extension BackgroundSelectionPresenter: PhotoPickerPresenterDelegate {
 
     private func performPhotoUpload(with photo: UIImage, ruuviTag: RuuviTagSensor) {
         viewModel.isUploadingBackground.value = true
-        ruuviSensorPropertiesService.set(
-            image: photo,
-            for: ruuviTag,
-            maxSize: maxSize,
-            compressionQuality: CGFloat(settings.imageCompressionQuality)/100
-        ).on(success: { [weak self] _ in
-            self?.viewModel.isUploadingBackground.value = false
-            self?.viewModel.background.value = photo
-        }, failure: { [weak self] error in
-            self?.viewModel.isUploadingBackground.value = false
-            self?.errorPresenter.present(error: error)
-        })
+        Task {
+            @MainActor [
+                weak self, ruuviTag = ruuviTag, maxSize = maxSize,
+                ruuviSensorPropertiesService = ruuviSensorPropertiesService!, settings = settings!
+            ] in
+            do throws(RuuviServiceError) {
+                let value = try await ruuviSensorPropertiesService.set(
+                    image: photo,
+                    for: ruuviTag,
+                    maxSize: maxSize,
+                    compressionQuality: CGFloat(settings.imageCompressionQuality) / 100
+                )
+                ({ [weak self] _ in
+                    self?.viewModel.isUploadingBackground.value = false
+                    self?.viewModel.background.value = photo
+                })(value)
+            } catch {
+                ({ [weak self] error in
+                    self?.viewModel.isUploadingBackground.value = false
+                    self?.errorPresenter.present(error: error)
+                })(error)
+            }
+        }
     }
 }

@@ -75,8 +75,10 @@ extension UnitSettingsPresenter: UnitSettingsViewOutput {
             guard let target = resolutionTarget(at: row) else {
                 return
             }
-            guard target != .pressure
-                || view.pressureUnit.supportsResolutionSelection else {
+            guard
+                target != .pressure
+                    || view.pressureUnit.supportsResolutionSelection
+            else {
                 return
             }
             openSelection(type: .accuracy, measurementType: target.measurementType, resolutionTarget: target)
@@ -97,13 +99,14 @@ extension UnitSettingsPresenter: SelectionModuleOutput {
         case .unit:
             switch item {
             case let temperatureUnit as TemperatureUnit:
-                ruuviAppSettingsService.set(temperatureUnit: temperatureUnit)
+                Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(temperatureUnit: temperatureUnit)
+                }
                 view.temperatureUnit = temperatureUnit
             case let humidityUnit as HumidityUnit:
-                ruuviAppSettingsService.set(humidityUnit: humidityUnit)
+                Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(humidityUnit: humidityUnit) }
                 view.humidityUnit = humidityUnit
             case let pressureUnit as UnitPressure:
-                ruuviAppSettingsService.set(pressureUnit: pressureUnit)
+                Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(pressureUnit: pressureUnit) }
                 view.pressureUnit = pressureUnit
             default:
                 break
@@ -115,26 +118,30 @@ extension UnitSettingsPresenter: SelectionModuleOutput {
             }
 
             if let target = pendingResolutionTarget {
-                guard target != .pressure
-                    || view.pressureUnit.supportsResolutionSelection else {
+                guard
+                    target != .pressure
+                        || view.pressureUnit.supportsResolutionSelection
+                else {
                     return
                 }
                 setAccuracy(item, for: target)
             } else if let measurementType = pendingSelectionMeasurementType
-                ?? viewModel?.measurementType {
+                ?? viewModel?.measurementType
+            {
                 if measurementType == .pressure,
-                   !view.pressureUnit.supportsResolutionSelection {
+                    !view.pressureUnit.supportsResolutionSelection
+                {
                     return
                 }
                 switch measurementType {
                 case .temperature:
-                    ruuviAppSettingsService.set(temperatureAccuracy: item)
+                    Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(temperatureAccuracy: item) }
                     view.temperatureAccuracy = item
                 case .humidity:
-                    ruuviAppSettingsService.set(humidityAccuracy: item)
+                    Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(humidityAccuracy: item) }
                     view.humidityAccuracy = item
                 case .pressure:
-                    ruuviAppSettingsService.set(pressureAccuracy: item)
+                    Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(pressureAccuracy: item) }
                     view.pressureAccuracy = item
                 default:
                     return
@@ -272,8 +279,10 @@ extension UnitSettingsPresenter {
         var selection: String
         let titleProvider = MeasurementAccuracyTitles()
         if let resolutionTarget {
-            guard resolutionTarget != .pressure
-                || view.pressureUnit.supportsResolutionSelection else {
+            guard
+                resolutionTarget != .pressure
+                    || view.pressureUnit.supportsResolutionSelection
+            else {
                 return nil
             }
             accuracyTitle = resolutionTarget.title("")
@@ -300,11 +309,12 @@ extension UnitSettingsPresenter {
             }
         }
 
-        let selectionItems = resolutionTarget?.supportedAccuracies ?? [
-            .zero,
-            .one,
-            .two,
-        ]
+        let selectionItems =
+            resolutionTarget?.supportedAccuracies ?? [
+                .zero,
+                .one,
+                .two,
+            ]
 
         return SelectionViewModel(
             title: accuracyTitle,
@@ -330,24 +340,24 @@ extension UnitSettingsPresenter {
     ) {
         switch target {
         case .temperature:
-            ruuviAppSettingsService.set(temperatureAccuracy: accuracy)
+            Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(temperatureAccuracy: accuracy) }
             view.temperatureAccuracy = accuracy
         case .relativeHumidity:
-            ruuviAppSettingsService.set(relativeHumidityAccuracy: accuracy)
+            Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(relativeHumidityAccuracy: accuracy) }
         case .absoluteHumidity:
-            ruuviAppSettingsService.set(absoluteHumidityAccuracy: accuracy)
+            Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(absoluteHumidityAccuracy: accuracy) }
         case .dewPoint:
-            ruuviAppSettingsService.set(dewPointAccuracy: accuracy)
+            Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(dewPointAccuracy: accuracy) }
         case .pressure:
-            ruuviAppSettingsService.set(pressureAccuracy: accuracy)
+            Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(pressureAccuracy: accuracy) }
             view.pressureAccuracy = accuracy
         case .particulateMatter:
             let resolvedAccuracy: MeasurementAccuracyType = accuracy == .two ? .one : accuracy
-            ruuviAppSettingsService.set(pmAccuracy: resolvedAccuracy)
+            Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(pmAccuracy: resolvedAccuracy) }
         case .acceleration:
-            ruuviAppSettingsService.set(accelerationAccuracy: accuracy)
+            Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(accelerationAccuracy: accuracy) }
         case .voltage:
-            ruuviAppSettingsService.set(voltageAccuracy: accuracy)
+            Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(voltageAccuracy: accuracy) }
         }
         view.reloadSettings()
     }

@@ -29,25 +29,34 @@ final class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
 
     func configure(type: OffsetCorrectionType, ruuviTag: RuuviTagSensor, sensorSettings: SensorSettings?) {
         self.ruuviTag = ruuviTag
-        self.sensorSettings = sensorSettings ?? SensorSettingsStruct(
-            luid: ruuviTag.luid,
-            macId: ruuviTag.macId,
-            temperatureOffset: nil,
-            humidityOffset: nil,
-            pressureOffset: nil
-        )
+        self.sensorSettings =
+            sensorSettings
+            ?? SensorSettingsStruct(
+                luid: ruuviTag.luid,
+                macId: ruuviTag.macId,
+                temperatureOffset: nil,
+                humidityOffset: nil,
+                pressureOffset: nil
+            )
         view.viewModel = {
             let vm = OffsetCorrectionViewModel(
                 type: type,
                 sensorSettings: self.sensorSettings
             )
-            ruuviStorage.readLatest(ruuviTag).on { [weak self] record in
-                if let record {
-                    self?.lastSensorRecord = record
-                    vm.update(
-                        ruuviTagRecord: record
-                            .with(sensorSettings: sensorSettings)
-                    )
+            Task { @MainActor [weak self, ruuviStorage = ruuviStorage!, ruuviTag = ruuviTag] in
+                do throws(RuuviStorageError) {
+                    let value = try await ruuviStorage.readLatest(ruuviTag)
+                    ({ [weak self] record in
+                        if let record {
+                            self?.lastSensorRecord = record
+                            vm.update(
+                                ruuviTagRecord:
+                                    record
+                                    .with(sensorSettings: sensorSettings)
+                            )
+                        }
+                    })(value)
+                } catch {
                 }
             }
             vm.temperatureUnit.value = self.settings.temperatureUnit
@@ -103,46 +112,69 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
                 offset = correctValue - view.viewModel.originalValue.value.bound
             }
         }
-        ruuviOffsetCalibrationService.set(
-            offset: offset,
-            of: view.viewModel.type,
-            for: ruuviTag,
-            lastOriginalRecord: lastSensorRecord
-        )
-        .on(success: { [weak self] settings in
-            self?.sensorSettings = settings
-            self?.view.viewModel.update(sensorSettings: settings)
-            if let lastRecord = self?.lastSensorRecord {
-                self?.view.viewModel.update(
-                    ruuviTagRecord: lastRecord.with(sensorSettings: settings)
+        let correctionType = view.viewModel.type
+        Task {
+            @MainActor [
+                weak self, ruuviOffsetCalibrationService = ruuviOffsetCalibrationService!, ruuviTag = ruuviTag!,
+                lastSensorRecord = lastSensorRecord
+            ] in
+            do throws(RuuviServiceError) {
+                let value = try await ruuviOffsetCalibrationService.set(
+                    offset: offset,
+                    of: correctionType,
+                    for: ruuviTag,
+                    lastOriginalRecord: lastSensorRecord
                 )
+                ({ [weak self] settings in
+                    self?.sensorSettings = settings
+                    self?.view.viewModel.update(sensorSettings: settings)
+                    if let lastRecord = self?.lastSensorRecord {
+                        self?.view.viewModel.update(
+                            ruuviTagRecord: lastRecord.with(sensorSettings: settings)
+                        )
+                    }
+                    self?.notifyCalibrationSettingsUpdate()
+                })(value)
+            } catch {
+                ({ [weak self] error in
+                    self?.errorPresenter.present(error: error)
+                })(error)
             }
-            self?.notifyCalibrationSettingsUpdate()
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        }
     }
 
     func viewDidClearOffsetValue() {
-        ruuviOffsetCalibrationService.set(
-            offset: nil,
-            of: view.viewModel.type,
-            for: ruuviTag,
-            lastOriginalRecord: lastSensorRecord
-        )
-        .on(success: { [weak self] sensorSettings in
-            self?.sensorSettings = sensorSettings
-            self?.view.viewModel.update(sensorSettings: sensorSettings)
-            if let lastRecord = self?.lastSensorRecord {
-                self?.view.viewModel.update(
-                    ruuviTagRecord: lastRecord
-                        .with(sensorSettings: sensorSettings)
+        let correctionType = view.viewModel.type
+        Task {
+            @MainActor [
+                weak self, ruuviOffsetCalibrationService = ruuviOffsetCalibrationService!, ruuviTag = ruuviTag!,
+                lastSensorRecord = lastSensorRecord
+            ] in
+            do throws(RuuviServiceError) {
+                let value = try await ruuviOffsetCalibrationService.set(
+                    offset: nil,
+                    of: correctionType,
+                    for: ruuviTag,
+                    lastOriginalRecord: lastSensorRecord
                 )
+                ({ [weak self] sensorSettings in
+                    self?.sensorSettings = sensorSettings
+                    self?.view.viewModel.update(sensorSettings: sensorSettings)
+                    if let lastRecord = self?.lastSensorRecord {
+                        self?.view.viewModel.update(
+                            ruuviTagRecord:
+                                lastRecord
+                                .with(sensorSettings: sensorSettings)
+                        )
+                    }
+                    self?.notifyCalibrationSettingsUpdate()
+                })(value)
+            } catch {
+                ({ [weak self] error in
+                    self?.errorPresenter.present(error: error)
+                })(error)
             }
-            self?.notifyCalibrationSettingsUpdate()
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        }
     }
 
     private func notifyCalibrationSettingsUpdate() {
@@ -157,7 +189,8 @@ extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
         ruuviTagObserveLastRecordToken?.invalidate()
         ruuviTagObserveLastRecordToken = ruuviReactor.observeLatest(ruuviTag) { [weak self] changes in
             if case let .update(anyRecord) = changes,
-               let record = anyRecord {
+                let record = anyRecord
+            {
                 self?.lastSensorRecord = record
                 self?.view.viewModel.update(
                     ruuviTagRecord: record.with(sensorSettings: self?.sensorSettings)

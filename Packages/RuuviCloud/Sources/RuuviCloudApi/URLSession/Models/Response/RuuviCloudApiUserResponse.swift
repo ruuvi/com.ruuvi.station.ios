@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviCloud
+#endif
 import Foundation
 import RuuviOntology
 
@@ -13,9 +16,9 @@ public struct RuuviCloudApiSensor: Decodable {
     public let name: String
     public let isPublic: Bool
     public var isOwner: Bool = false
-    public let temperatureOffset: Double? // in degrees
-    public let humidityOffset: Double? // in percents
-    public let pressureOffset: Double? // in Pa
+    public let temperatureOffset: Double?  // in degrees
+    public let humidityOffset: Double?  // in percents
+    public let pressureOffset: Double?  // in Pa
 
     enum CodingKeys: String, CodingKey {
         case sensorId = "sensor"

@@ -9,11 +9,18 @@ class DevicesInteractor {
 
 extension DevicesInteractor: DevicesInteractorInput {
     func fetchDevices() {
-        ruuviServiceCloudNotification.listTokens().on(success: {
-            [weak self] tokens in
-            self?.presenter.interactorDidUpdate(tokens: tokens)
-        }, failure: { [weak self] error in
-            self?.presenter.interactorDidError(.networking(error))
-        })
+        Task { @MainActor [weak self, ruuviServiceCloudNotification = ruuviServiceCloudNotification!] in
+            do {
+                let value = try await ruuviServiceCloudNotification.listTokens()
+                ({
+                    [weak self] tokens in
+                    self?.presenter.interactorDidUpdate(tokens: tokens)
+                })(value)
+            } catch {
+                ({ [weak self] error in
+                    self?.presenter.interactorDidError(.networking(error))
+                })(error)
+            }
+        }
     }
 }

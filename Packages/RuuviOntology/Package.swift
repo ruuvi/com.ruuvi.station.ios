@@ -1,11 +1,11 @@
-// swift-tools-version:5.9
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "RuuviOntology",
-    platforms: [.macOS(.v10_15), .iOS(.v14)],
+    platforms: [.iOS(.v16)],
     products: [
         .library(
             name: "RuuviOntology",
@@ -19,7 +19,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/rinat-enikeev/Humidity", from: "0.1.5"),
         .package(url: "https://github.com/ruuvi/BTKit", branch: "master"),
-        .package(name: "GRDB", url: "https://github.com/groue/GRDB.swift", .upToNextMajor(from: "4.14.0")),
+        .package(name: "GRDB", url: "https://github.com/groue/GRDB.swift", .upToNextMajor(from: "7.12.0")),
     ],
     targets: [
         .target(
@@ -40,5 +40,6 @@ let package = Package(
             name: "RuuviOntologyTests",
             dependencies: ["RuuviOntology"]
         ),
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )

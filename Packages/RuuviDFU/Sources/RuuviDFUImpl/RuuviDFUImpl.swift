@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviDFU
+#endif
 import Combine
 import Foundation
 #if canImport(NordicDFU)

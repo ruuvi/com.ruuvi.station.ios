@@ -7,7 +7,7 @@ import RuuviOntology
 import RuuviLocal
 import RuuviService
 #if canImport(WidgetKit)
-import WidgetKit
+    import WidgetKit
 #endif
 
 final class VisibilitySettingsPresenter: VisibilitySettingsModuleInput {
@@ -162,8 +162,9 @@ extension VisibilitySettingsPresenter: VisibilitySettingsViewOutput {
 
     func viewDidMoveVisibleItem(from sourceIndex: Int, to destinationIndex: Int) {
         guard visibleVariants.indices.contains(sourceIndex),
-              visibleVariants.indices.contains(destinationIndex),
-              sourceIndex != destinationIndex else {
+            visibleVariants.indices.contains(destinationIndex),
+            sourceIndex != destinationIndex
+        else {
             presentCurrentState()
             return
         }
@@ -315,7 +316,8 @@ private extension VisibilitySettingsPresenter {
             usesDefaultOrder = true
         }
 
-        let available = currentVisibility?.availableVariants
+        let available =
+            currentVisibility?.availableVariants
             ?? defaultAvailableVariants(for: snapshot)
         availableVariants = available
 
@@ -456,18 +458,21 @@ private extension VisibilitySettingsPresenter {
         }
 
         let existingIndicators = snapshot.displayData.indicatorGrid?.indicators ?? []
-        let indicatorLookup = Dictionary(uniqueKeysWithValues: existingIndicators.map {
-            ($0.variant, $0)
-        })
+        let indicatorLookup = Dictionary(
+            uniqueKeysWithValues: existingIndicators.map {
+                ($0.variant, $0)
+            })
 
         let previewIndicators: [RuuviTagCardSnapshotIndicatorData] = visibleVariants.compactMap { variant in
             indicatorData(for: variant, existing: indicatorLookup)
         }
 
-        guard let grid = IndicatorDataManager.createGridConfiguration(
-            indicators: previewIndicators,
-            orderedVariants: visibleVariants
-        ) else {
+        guard
+            let grid = IndicatorDataManager.createGridConfiguration(
+                indicators: previewIndicators,
+                orderedVariants: visibleVariants
+            )
+        else {
             return nil
         }
 
@@ -633,20 +638,31 @@ private extension VisibilitySettingsPresenter {
         isSaving = true
         view?.setSaving(true)
 
-        sensorPropertiesService
-            .updateDisplaySettings(
-                for: sensor,
-                displayOrder: displayOrderCodes,
-                defaultDisplayOrder: usesDefaultOrder
-            )
-            .on(success: { [weak self] settings in
-                self?.handlePersistSuccess(
-                    settings: settings,
-                    displayOrderCodes: displayOrderCodes
-                )
-            }, failure: { [weak self] error in
-                self?.handlePersistFailure(error: error)
-            })
+        Task {
+            @MainActor [
+                weak self, sensorPropertiesService = sensorPropertiesService, sensor = sensor,
+                usesDefaultOrder = usesDefaultOrder
+            ] in
+            do {
+                let value =
+                    try await sensorPropertiesService
+                    .updateDisplaySettings(
+                        for: sensor,
+                        displayOrder: displayOrderCodes,
+                        defaultDisplayOrder: usesDefaultOrder
+                    )
+                ({ [weak self] settings in
+                    self?.handlePersistSuccess(
+                        settings: settings,
+                        displayOrderCodes: displayOrderCodes
+                    )
+                })(value)
+            } catch {
+                ({ [weak self] error in
+                    self?.handlePersistFailure(error: error)
+                })(error)
+            }
+        }
     }
 
     private func applySelectionToSnapshot() {
@@ -812,13 +828,13 @@ private extension VisibilitySettingsPresenter {
             if !self.hasPendingPersistRequest && !self.isPersistScheduled {
                 self.hasUnsavedChanges = false
             }
-#if canImport(WidgetKit)
-            UserDefaults(suiteName: AppGroupConstants.appGroupSuiteIdentifier)?.set(
-                true,
-                forKey: AppGroupConstants.forceRefreshWidgetKey
-            )
-            WidgetCenter.shared.reloadAllTimelines()
-#endif
+            #if canImport(WidgetKit)
+                UserDefaults(suiteName: AppGroupConstants.appGroupSuiteIdentifier)?.set(
+                    true,
+                    forKey: AppGroupConstants.forceRefreshWidgetKey
+                )
+                WidgetCenter.shared.reloadAllTimelines()
+            #endif
             self.inFlightPersistSignature = nil
             self.finishPersist()
         }

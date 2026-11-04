@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviService
+#endif
 import Foundation
 import RuuviCloud
 import RuuviLocal
@@ -48,15 +51,15 @@ extension RuuviCloudApiSetting {
     func localValue(from settings: RuuviLocalSettings) -> String? {
         switch self {
         case .unitTemperature, .accuracyTemperature, .unitHumidity, .accuracyHumidity,
-             .accuracyHumidityRelative, .accuracyHumidityAbsolute, .accuracyHumidityDewPoint,
-             .unitPressure, .accuracyPressure, .accuracyPM, .accuracyAcceleration, .accuracyVoltage:
+            .accuracyHumidityRelative, .accuracyHumidityAbsolute, .accuracyHumidityDewPoint,
+            .unitPressure, .accuracyPressure, .accuracyPM, .accuracyAcceleration, .accuracyVoltage:
             measurementLocalValue(from: settings)
         case .chartShowAllPoints, .chartDrawDots, .chartShowMinMaxAverage:
             chartLocalValue(from: settings)
         case .cloudModeEnabled, .dashboardEnabled, .dashboardType, .dashboardTapActionType:
             dashboardLocalValue(from: settings)
         case .emailAlertDisabled, .pushAlertDisabled, .marketingPreference,
-             .profileLanguageCode, .dashboardSensorOrder:
+            .profileLanguageCode, .dashboardSensorOrder:
             accountLocalValue(from: settings)
         default:
             nil
@@ -78,15 +81,15 @@ extension RuuviCloudApiSetting {
     func apply(value: String, to settings: RuuviLocalSettings) -> Bool {
         switch self {
         case .unitTemperature, .accuracyTemperature, .unitHumidity, .accuracyHumidity,
-             .accuracyHumidityRelative, .accuracyHumidityAbsolute, .accuracyHumidityDewPoint,
-             .unitPressure, .accuracyPressure, .accuracyPM, .accuracyAcceleration, .accuracyVoltage:
+            .accuracyHumidityRelative, .accuracyHumidityAbsolute, .accuracyHumidityDewPoint,
+            .unitPressure, .accuracyPressure, .accuracyPM, .accuracyAcceleration, .accuracyVoltage:
             return applyMeasurementValue(value, to: settings)
         case .chartShowAllPoints, .chartDrawDots, .chartShowMinMaxAverage:
             return applyChartValue(value, to: settings)
         case .cloudModeEnabled, .dashboardEnabled, .dashboardType, .dashboardTapActionType:
             return applyDashboardValue(value, to: settings)
         case .emailAlertDisabled, .pushAlertDisabled, .marketingPreference,
-             .profileLanguageCode, .dashboardSensorOrder:
+            .profileLanguageCode, .dashboardSensorOrder:
             return applyAccountValue(value, to: settings)
         default:
             return false
@@ -211,7 +214,8 @@ extension RuuviCloudApiSetting {
         case .accuracyHumidity:
             guard let value = value.ruuviCloudApiSettingsMeasurementAccuracyUnitOptional else { return false }
             guard settings.relativeHumidityAccuracy == settings.absoluteHumidityAccuracy,
-                  settings.absoluteHumidityAccuracy == settings.dewPointAccuracy else {
+                settings.absoluteHumidityAccuracy == settings.dewPointAccuracy
+            else {
                 return false
             }
             return update(settings.humidityAccuracy, value) {

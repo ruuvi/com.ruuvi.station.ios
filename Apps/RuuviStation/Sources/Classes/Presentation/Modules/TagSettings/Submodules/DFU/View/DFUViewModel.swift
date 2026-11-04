@@ -134,18 +134,26 @@ final class DFUViewModel: ObservableObject {
 
     func checkBatteryState(completion: @escaping (Bool) -> Void) {
         let batteryStatusProvider = RuuviTagBatteryStatusProvider()
-        ruuviStorage
-            .readLatest(ruuviTag)
-            .on(success: { record in
-                let batteryNeedsReplacement = batteryStatusProvider
-                    .batteryNeedsReplacement(
-                        temperature: record?.temperature,
-                        voltage: record?.voltage
-                    )
-                completion(batteryNeedsReplacement)
-            }, failure: { _ in
-                completion(false)
-            })
+        Task { @MainActor [self] in
+            do throws(RuuviStorageError) {
+                let value =
+                    try await ruuviStorage
+                    .readLatest(ruuviTag)
+                ({ record in
+                    let batteryNeedsReplacement =
+                        batteryStatusProvider
+                        .batteryNeedsReplacement(
+                            temperature: record?.temperature,
+                            voltage: record?.voltage
+                        )
+                    completion(batteryNeedsReplacement)
+                })(value)
+            } catch {
+                ({ _ in
+                    completion(false)
+                })(error)
+            }
+        }
     }
 
     func isRuuviAir() -> Bool {
@@ -287,6 +295,8 @@ extension DFUViewModel {
             .downloading(latestRelease, currentRelease)
         case .downloading:
             switch event {
+            case let .onDidFailDownloading(error):
+                .error(error)
             case let .onDownloaded(
                 latestRelease,
                 currentRelease,
@@ -414,8 +424,9 @@ extension DFUViewModel {
         }
 
         if comparison == .orderedSame,
-           currentRelease.isDevBuild,
-           !Self.isDevVersion(latestRelease.version) {
+            currentRelease.isDevBuild,
+            !Self.isDevVersion(latestRelease.version)
+        {
             return true
         }
 
@@ -428,25 +439,27 @@ extension DFUViewModel {
     }
 
     private func areVersionsEqual(expected: String, actual: String) -> Bool {
-        let normalizedExpected = expected.normalizedFirmwareVersionIdentifier ??
-            expected.trimmingCharacters(in: .whitespacesAndNewlines)
-        let normalizedActual = actual.normalizedFirmwareVersionIdentifier ??
-            actual.trimmingCharacters(in: .whitespacesAndNewlines)
+        let normalizedExpected =
+            expected.normalizedFirmwareVersionIdentifier ?? expected.trimmingCharacters(in: .whitespacesAndNewlines)
+        let normalizedActual =
+            actual.normalizedFirmwareVersionIdentifier ?? actual.trimmingCharacters(in: .whitespacesAndNewlines)
 
         return normalizedExpected == normalizedActual
     }
 
     func whenFlashing() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case let .flashing(
-                latestRelease,
-                currentRelease,
-                dfuDevice,
-                appUrl,
-                fullUrl,
-                additionalFiles
-            ) = state,
-                  let sSelf = self else {
+            guard
+                case let .flashing(
+                    latestRelease,
+                    currentRelease,
+                    dfuDevice,
+                    appUrl,
+                    fullUrl,
+                    additionalFiles
+                ) = state,
+                let sSelf = self
+            else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.flash(
@@ -505,12 +518,18 @@ extension DFUViewModel {
                 updatedTag = connectableTag.withoutFirmwareVersion()
             }
 
-            ruuviPool.update(updatedTag)
-                .on(success: { [weak self] _ in
-                    self?.setLoading(false, if: showLoading)
-                }, failure: { [weak self] _ in
-                    self?.setLoading(false, if: showLoading)
-                })
+            Task { @MainActor [weak self, ruuviPool = ruuviPool] in
+                do throws(RuuviPoolError) {
+                    let value = try await ruuviPool.update(updatedTag)
+                    ({ [weak self] _ in
+                        self?.setLoading(false, if: showLoading)
+                    })(value)
+                } catch {
+                    ({ [weak self] _ in
+                        self?.setLoading(false, if: showLoading)
+                    })(error)
+                }
+            }
         }
     }
 
@@ -520,12 +539,14 @@ extension DFUViewModel {
         completion: @escaping (RuuviTagSensor) -> Void
     ) {
         let sensorId = ruuviTag.macId?.value ?? ruuviTag.id
-        ruuviStorage.readOne(sensorId)
-            .observe(on: .global(qos: .utility))
-            .on(
-                success: { completion($0) },
-                failure: { _ in completion(ruuviTag) }
-            )
+        Task { @MainActor [self] in
+            do throws(RuuviStorageError) {
+                let value = try await ruuviStorage.readOne(sensorId)
+                ({ completion($0) })(value)
+            } catch {
+                ({ _ in completion(ruuviTag) })(error)
+            }
+        }
     }
 
     private func setLoading(_ value: Bool, if condition: Bool = true) {
@@ -538,15 +559,17 @@ extension DFUViewModel {
 
     func whenReadyToUpdate() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case let .readyToUpdate(
-                latestRelease,
-                currentRelease,
-                dfuDevice,
-                appUrl,
-                fullUrl,
-                additionalFiles
-            ) = state,
-                  let sSelf = self else {
+            guard
+                case let .readyToUpdate(
+                    latestRelease,
+                    currentRelease,
+                    dfuDevice,
+                    appUrl,
+                    fullUrl,
+                    additionalFiles
+                ) = state,
+                let sSelf = self
+            else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.observeLost(uuid: dfuDevice.uuid)
@@ -567,14 +590,16 @@ extension DFUViewModel {
 
     func whenListening() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case let .listening(
-                latestRelease,
-                currentRelease,
-                appUrl,
-                fullUrl,
-                additionalFiles
-            ) = state,
-                  let sSelf = self else {
+            guard
+                case let .listening(
+                    latestRelease,
+                    currentRelease,
+                    appUrl,
+                    fullUrl,
+                    additionalFiles
+                ) = state,
+                let sSelf = self
+            else {
                 return Empty().eraseToAnyPublisher()
             }
             return sSelf.interactor.listen(ruuviTag: sSelf.ruuviTag)
@@ -734,7 +759,8 @@ extension DFUViewModel {
                     }
                     .catch { error -> AnyPublisher<Event, Never> in
                         if let dfuError = error as? DFUError,
-                           dfuError == .airDeviceTimeout {
+                            dfuError == .airDeviceTimeout
+                        {
                             return Just(
                                 Event.onDidFailFlashingFirmware(dfuError)
                             )

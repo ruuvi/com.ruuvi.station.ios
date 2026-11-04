@@ -1,3 +1,7 @@
+#if SWIFT_PACKAGE
+    import RuuviService
+    import RuuviLocalization
+#endif
 import Foundation
 
 enum KeyedArchiver {

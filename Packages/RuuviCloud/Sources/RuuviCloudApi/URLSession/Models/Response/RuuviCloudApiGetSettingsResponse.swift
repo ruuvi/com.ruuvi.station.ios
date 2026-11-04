@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviCloud
+#endif
 import Foundation
 import RuuviOntology
 
@@ -20,12 +23,12 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
             if keyString.hasSuffix(Self.lastUpdatedSuffix) {
                 let settingKey = String(keyString.dropLast(Self.lastUpdatedSuffix.count))
                 guard let setting = RuuviCloudApiSetting(rawValue: settingKey),
-                      let date = Self.date(from: container, forKey: key)
+                    let date = Self.date(from: container, forKey: key)
                 else { continue }
                 lastUpdatedDates[setting] = date
             } else {
                 guard let setting = RuuviCloudApiSetting(rawValue: keyString),
-                      let value = Self.stringValue(from: container, forKey: key)
+                    let value = Self.stringValue(from: container, forKey: key)
                 else { continue }
                 values[setting] = value
             }
@@ -76,7 +79,8 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
             return Date(timeIntervalSince1970: TimeInterval(value))
         }
         if let value = try? container.decode(String.self, forKey: key),
-           let timestamp = Double(value) {
+            let timestamp = Double(value)
+        {
             return Date(timeIntervalSince1970: timestamp)
         }
         return nil

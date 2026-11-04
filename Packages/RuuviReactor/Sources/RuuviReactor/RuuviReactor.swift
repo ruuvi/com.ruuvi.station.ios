@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviPersistence
+#endif
 import Foundation
 import RuuviOntology
 

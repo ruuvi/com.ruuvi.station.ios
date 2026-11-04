@@ -1,5 +1,11 @@
+#if SWIFT_PACKAGE
+    import RuuviStorage
+    import RuuviCloud
+    import RuuviPool
+    import RuuviRepository
+    import RuuviCore
+#endif
 import Foundation
-import Future
 import RuuviLocal
 import RuuviOntology
 
@@ -8,10 +14,10 @@ public protocol RuuviServiceExport {
         for uuid: String,
         version: Int,
         settings: SensorSettings?
-    ) -> Future<URL, RuuviServiceError>
+    ) async throws(RuuviServiceError) -> URL
     func xlsxLog(
         for uuid: String,
         version: Int,
         settings: SensorSettings?
-    ) -> Future<URL, RuuviServiceError>
+    ) async throws(RuuviServiceError) -> URL
 }

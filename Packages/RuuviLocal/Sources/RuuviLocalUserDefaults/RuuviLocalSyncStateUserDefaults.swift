@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviLocal
+#endif
 import Foundation
 import RuuviOntology
 
@@ -25,10 +28,12 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
         DispatchQueue.main.async {
             NotificationCenter
                 .default
-                .post(name: .NetworkSyncLatestDataDidChangeStatus, object: nil, userInfo: [
-                    NetworkSyncStatusKey.status: status,
-                    NetworkSyncStatusKey.mac: macId,
-                ])
+                .post(
+                    name: .NetworkSyncLatestDataDidChangeStatus, object: nil,
+                    userInfo: [
+                        NetworkSyncStatusKey.status: status,
+                        NetworkSyncStatusKey.mac: macId,
+                    ])
         }
     }
 
@@ -43,10 +48,12 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
         DispatchQueue.main.async {
             NotificationCenter
                 .default
-                .post(name: .NetworkSyncHistoryDidChangeStatus, object: nil, userInfo: [
-                    NetworkSyncStatusKey.status: status,
-                    NetworkSyncStatusKey.mac: macId,
-                ])
+                .post(
+                    name: .NetworkSyncHistoryDidChangeStatus, object: nil,
+                    userInfo: [
+                        NetworkSyncStatusKey.status: status,
+                        NetworkSyncStatusKey.mac: macId,
+                    ])
         }
     }
 
@@ -148,9 +155,11 @@ final class RuuviLocalSyncStateUserDefaults: RuuviLocalSyncState {
             syncStatusInt = newValue.rawValue
             NotificationCenter
                 .default
-                .post(name: .NetworkSyncDidChangeCommonStatus, object: self, userInfo: [
-                    NetworkSyncStatusKey.status: newValue
-                ])
+                .post(
+                    name: .NetworkSyncDidChangeCommonStatus, object: self,
+                    userInfo: [
+                        NetworkSyncStatusKey.status: newValue
+                    ])
         }
     }
 }

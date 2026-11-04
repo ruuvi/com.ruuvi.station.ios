@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviService
+#endif
 import Foundation
 
 enum QueuedOffsetType: Hashable {

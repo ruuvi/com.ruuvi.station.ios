@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviUser
+#endif
 import Foundation
 
 protocol KeychainService {

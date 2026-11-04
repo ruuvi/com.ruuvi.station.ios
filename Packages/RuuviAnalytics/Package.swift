@@ -1,49 +1,14 @@
-// swift-tools-version:5.9
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
+// swift-tools-version: 6.2
 import PackageDescription
 
+// Analytics implementations live in the application, which owns its Firebase dependency.
 let package = Package(
     name: "RuuviAnalytics",
-    platforms: [.macOS(.v10_15), .iOS(.v14)],
-    products: [
-        .library(
-            name: "RuuviAnalytics",
-            targets: ["RuuviAnalytics"]
-        ),
-        .library(
-            name: "RuuviAnalyticsImpl",
-            targets: ["RuuviAnalyticsImpl"]
-        ),
-    ],
-    dependencies: [
-        .package(name: "Firebase", url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "11.6.0")),
-        .package(path: "../RuuviStorage"),
-        .package(path: "../RuuviLocal"),
-        .package(path: "../RuuviOntology"),
-        .package(path: "../RuuviUser"),
-        .package(path: "../RuuviService"),
-    ],
+    platforms: [.iOS(.v16)],
+    products: [.library(name: "RuuviAnalytics", targets: ["RuuviAnalytics"])],
     targets: [
-        .target(
-            name: "RuuviAnalytics",
-            dependencies: []
-        ),
-        .target(
-            name: "RuuviAnalyticsImpl",
-            dependencies: [
-                "RuuviAnalytics",
-                .product(name: "FirebaseAnalytics", package: "Firebase"),
-                "RuuviLocal",
-                "RuuviStorage",
-                "RuuviOntology",
-                "RuuviUser",
-                "RuuviService",
-            ]
-        ),
-        .testTarget(
-            name: "RuuviAnalyticsTests",
-            dependencies: ["RuuviAnalytics"]
-        ),
-    ]
+        .target(name: "RuuviAnalytics"),
+        .testTarget(name: "RuuviAnalyticsTests", dependencies: ["RuuviAnalytics"]),
+    ],
+    swiftLanguageModes: [.v5]
 )

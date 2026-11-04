@@ -1,3 +1,7 @@
+#if SWIFT_PACKAGE
+    import RuuviCloud
+    import RuuviOntology
+#endif
 import Foundation
 
 public struct RuuviCloudApiGetMarketingConsentRequest: Encodable {
@@ -18,10 +22,11 @@ public struct RuuviCloudApiSetMarketingConsentRequest: Encodable {
     }
 
     private static func sendyLanguageCode(from language: String) -> String {
-        let code = language
+        let code =
+            language
             .trimmingCharacters(in: .whitespacesAndNewlines)
             .split(
-            whereSeparator: { $0 == "-" || $0 == "_" }
+                whereSeparator: { $0 == "-" || $0 == "_" }
             )
             .first?
             .uppercased() ?? ""
@@ -29,7 +34,7 @@ public struct RuuviCloudApiSetMarketingConsentRequest: Encodable {
             charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         )
         guard code.count == 2,
-              code.unicodeScalars.allSatisfy(letters.contains)
+            code.unicodeScalars.allSatisfy(letters.contains)
         else {
             return "EN"
         }

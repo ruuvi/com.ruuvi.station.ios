@@ -1,3 +1,11 @@
+#if SWIFT_PACKAGE
+    import RuuviStorage
+    import RuuviCloud
+    import RuuviPool
+    import RuuviLocal
+    import RuuviRepository
+    import RuuviCore
+#endif
 import Foundation
 import RuuviOntology
 
@@ -10,8 +18,8 @@ public enum SyncAction {
     case noAction
 }
 
-enum UserSettingTimestamp {
-    static func current() -> Date {
+public enum UserSettingTimestamp {
+    public static func current() -> Date {
         Date(timeIntervalSince1970: TimeInterval(Int(Date().timeIntervalSince1970)))
     }
 }
@@ -50,8 +58,9 @@ public struct SyncCollisionResolver {
         preferCloudWhenBothTimestampsMissing: Bool
     ) -> SyncAction {
         if preferCloudWhenBothTimestampsMissing,
-           localTimestamp == nil,
-           cloudTimestamp == nil {
+            localTimestamp == nil,
+            cloudTimestamp == nil
+        {
             return .updateLocal
         }
 

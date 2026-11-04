@@ -1,29 +1,27 @@
+#if SWIFT_PACKAGE
+    import RuuviService
+#endif
 import BTKit
 import Foundation
-import Future
 import RuuviOntology
 import RuuviPool
 
 public final class GATTServiceQueue: GATTService {
     private let ruuviPool: RuuviPool
     private let background: BTBackground
-
-    public init(
-        ruuviPool: RuuviPool,
-        background: BTBackground
-    ) {
-        self.ruuviPool = ruuviPool
-        self.background = background
-    }
-
-    lazy var queue: OperationQueue = {
-        var queue = OperationQueue()
+    private let lock = NSLock()
+    private var operations = [String: RuuviTagReadLogsOperation]()
+    private let queue: OperationQueue = {
+        let queue = OperationQueue()
         queue.maxConcurrentOperationCount = 3
         return queue
     }()
 
-    @discardableResult
-    // swiftlint:disable function_parameter_count
+    public init(ruuviPool: RuuviPool, background: BTBackground) {
+        self.ruuviPool = ruuviPool
+        self.background = background
+    }
+
     public func syncLogs(
         uuid: String,
         mac: String?,
@@ -32,81 +30,61 @@ public final class GATTServiceQueue: GATTService {
         settings: SensorSettings?,
         progress: ((BTServiceProgress) -> Void)?,
         timeouts: GATTServiceTimeouts
-    ) -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
-        if isSyncingLogs(with: uuid) {
-            promise.fail(error: .isAlreadySyncingLogsWithThisTag)
-        } else {
-            let operation = RuuviTagReadLogsOperation(
-                uuid: uuid,
-                mac: mac,
-                firmware: firmware,
-                from: from,
-                settings: settings,
-                ruuviPool: ruuviPool,
-                background: background,
-                progress: progress,
-                connectionTimeout: timeouts.connection,
-                serviceTimeout: timeouts.service
-            )
-            operation.completionBlock = { [unowned operation] in
-                if let error = operation.error {
-                    promise.fail(error: error)
-                } else {
-                    promise.succeed(value: !operation.isCancelled)
-                }
-            }
-            queue.addOperation(operation)
+    ) async throws(RuuviServiceError) -> Bool {
+        let operation = RuuviTagReadLogsOperation(
+            uuid: uuid, mac: mac, firmware: firmware, from: from, settings: settings,
+            ruuviPool: ruuviPool, background: background, progress: progress,
+            connectionTimeout: timeouts.connection, serviceTimeout: timeouts.service
+        )
+        let registered = lock.withLock {
+            guard operations[uuid] == nil else { return false }
+            operations[uuid] = operation
+            return true
         }
-        return promise.future
-    }
-
-    // swiftlint:enable function_parameter_count
-
-    public func isSyncingLogs() -> Bool {
-        queue.operations.contains(where: {
-            $0 is RuuviTagReadLogsOperation &&
-                !$0.isFinished && (!$0.isCancelled || $0.isExecuting)
-        })
-    }
-
-    public func isSyncingLogs(with uuid: String) -> Bool {
-        queue.operations.contains(where: {
-            ($0 as? RuuviTagReadLogsOperation)?.uuid == uuid &&
-                !$0.isFinished && (!$0.isCancelled || $0.isExecuting)
-        })
-    }
-
-    public func isSyncingLogsQueued(with uuid: String) -> Bool {
-        queue.operations.contains(where: { operation in
-            guard let readLogsOperation = operation as? RuuviTagReadLogsOperation,
-                  readLogsOperation.uuid == uuid
-            else {
-                return false
+        guard registered else { throw .isAlreadySyncingLogsWithThisTag }
+        defer { lock.withLock { _ = operations.removeValue(forKey: uuid) } }
+        let result: Result<Bool, RuuviServiceError> = await withTaskCancellationHandler {
+            await withCheckedContinuation { continuation in
+                operation.completionBlock = { [weak operation] in
+                    guard let operation else {
+                        continuation.resume(returning: .success(false))
+                        return
+                    }
+                    if let error = operation.error {
+                        continuation.resume(returning: .failure(error))
+                    } else {
+                        continuation.resume(returning: .success(!operation.isCancelled))
+                    }
+                }
+                if Task.isCancelled { operation.cancel() }
+                queue.addOperation(operation)
             }
-            return !readLogsOperation.isExecuting &&
-                !readLogsOperation.isFinished &&
-                !readLogsOperation.isCancelled
-        })
-    }
-
-    public func syncProgress(with uuid: String) -> BTServiceProgress? {
-        queue.operations.compactMap { $0 as? RuuviTagReadLogsOperation }
-            .first(where: { $0.uuid == uuid && !$0.isFinished && !$0.isCancelled })?
-            .currentProgress
-    }
-
-    @discardableResult
-    public func stopGattSync(for uuid: String) -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
-        let operations = queue.operations.compactMap { $0 as? RuuviTagReadLogsOperation }
-            .filter { $0.uuid == uuid && !$0.isFinished }
-        for operation in operations {
-            // Disconnect can trigger a completion callback, so mark cancellation first.
+        } onCancel: {
             operation.cancel()
             operation.stopSync()
         }
-        promise.succeed(value: !operations.isEmpty)
-        return promise.future
+        // Cancellation cannot expose completion before an already-started write has drained.
+        await operation.waitForPersistence()
+        return try result.get()
+    }
+
+    public func isSyncingLogs() -> Bool { lock.withLock { !operations.isEmpty } }
+    public func isSyncingLogs(with uuid: String) -> Bool { lock.withLock { operations[uuid] != nil } }
+    public func isSyncingLogsQueued(with uuid: String) -> Bool {
+        lock.withLock {
+            guard let operation = operations[uuid] else { return false }
+            return !operation.isExecuting && !operation.isFinished && !operation.isCancelled
+        }
+    }
+    public func syncProgress(with uuid: String) -> BTServiceProgress? {
+        lock.withLock { operations[uuid]?.currentProgress }
+    }
+
+    public func stopGattSync(for uuid: String) async throws(RuuviServiceError) -> Bool {
+        guard let operation = lock.withLock({ operations[uuid] }) else { return false }
+        operation.cancel()
+        operation.stopSync()
+        await operation.waitForPersistence()
+        return true
     }
 }

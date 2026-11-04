@@ -1,5 +1,8 @@
+#if SWIFT_PACKAGE
+    import RuuviService
+    import RuuviCloudApi
+#endif
 import Foundation
-import Future
 import RuuviCloud
 import RuuviCore
 import RuuviLocal
@@ -30,140 +33,141 @@ public final class RuuviServiceCloudNotificationImpl: RuuviServiceCloudNotificat
     }
 
     @discardableResult
+    @MainActor
     public func set(
         token: String?,
         name: String?,
         data: String?,
         language: Language,
         sound: RuuviAlertSound
-    ) -> Future<Int, RuuviServiceError> {
-        let promise = Promise<Int, RuuviServiceError>()
-        guard ruuviUser.isAuthorized, let token
-        else {
-            return promise.future
-        }
+    ) async throws(RuuviServiceError) -> Int {
+        var outcome: Result<Int, RuuviServiceError>
+        guard ruuviUser.isAuthorized else { throw .ruuviCloud(.notAuthorized) }
+        guard let token else { throw .ruuviCloud(.api(.badParameters)) }
 
         var refreshable = false
         if let lastRefreshed = pnManager.fcmTokenLastRefreshed {
             if let daysFromNow = lastRefreshed.numberOfDaysFromNow(),
-               daysFromNow > 7 {
+                daysFromNow > 7
+            {
                 refreshable = true
             }
         } else {
             refreshable = true
         }
 
-        guard refreshable
-        else {
-            return promise.future
+        if !refreshable, pnManager.fcmToken == token, let tokenId = pnManager.fcmTokenId {
+            return tokenId
         }
 
-        register(
-            token: token,
-            type: "ios",
-            name: name,
-            data: data,
-            params: [
-                RuuviCloudPNTokenRegisterRequestParamsKey.sound.rawValue: sound.rawValue,
-                RuuviCloudPNTokenRegisterRequestParamsKey.language.rawValue: language.rawValue,
-            ]
-        )
-        .on(success: { [weak self] tokenId in
-            self?.pnManager.fcmTokenId = tokenId
-            self?.pnManager.fcmToken = token
-            self?.pnManager.fcmTokenLastRefreshed = Date()
-            promise.succeed(value: tokenId)
-        }, failure: { error in
-            promise.fail(error: error)
-        })
-        return promise.future
+        do {
+            let tokenId = try await register(
+                token: token,
+                type: "ios",
+                name: name,
+                data: data,
+                params: [
+                    RuuviCloudPNTokenRegisterRequestParamsKey.sound.rawValue: sound.rawValue,
+                    RuuviCloudPNTokenRegisterRequestParamsKey.language.rawValue: language.rawValue,
+                ]
+            )
+            self.pnManager.fcmTokenId = tokenId
+            self.pnManager.fcmToken = token
+            self.pnManager.fcmTokenLastRefreshed = Date()
+            outcome = .success(tokenId)
+        } catch let error {
+            outcome = .failure(error)
+        }
+        return try outcome.get()
     }
 
     @discardableResult
+    @MainActor
     public func set(
         sound: RuuviAlertSound,
         language: Language,
         deviceName: String?
-    ) -> Future<Int, RuuviServiceError> {
-        let promise = Promise<Int, RuuviServiceError>()
-        guard ruuviUser.isAuthorized, let token = pnManager.fcmToken
-        else {
-            return promise.future
-        }
+    ) async throws(RuuviServiceError) -> Int {
+        var outcome: Result<Int, RuuviServiceError>
+        guard ruuviUser.isAuthorized else { throw .ruuviCloud(.notAuthorized) }
+        guard let token = pnManager.fcmToken else { throw .ruuviCloud(.api(.badParameters)) }
 
-        register(
-            token: token,
-            type: "ios",
-            name: deviceName,
-            data: nil,
-            params: [
-                RuuviCloudPNTokenRegisterRequestParamsKey.sound.rawValue: sound.rawValue,
-                RuuviCloudPNTokenRegisterRequestParamsKey.language.rawValue: language.rawValue,
-            ]
-        )
-        .on(success: { [weak self] tokenId in
-            self?.pnManager.fcmTokenId = tokenId
-            self?.pnManager.fcmToken = token
-            self?.pnManager.fcmTokenLastRefreshed = Date()
-            promise.succeed(value: tokenId)
-        }, failure: { error in
-            promise.fail(error: error)
-        })
-        return promise.future
+        do {
+            let tokenId = try await register(
+                token: token,
+                type: "ios",
+                name: deviceName,
+                data: nil,
+                params: [
+                    RuuviCloudPNTokenRegisterRequestParamsKey.sound.rawValue: sound.rawValue,
+                    RuuviCloudPNTokenRegisterRequestParamsKey.language.rawValue: language.rawValue,
+                ]
+            )
+            self.pnManager.fcmTokenId = tokenId
+            self.pnManager.fcmToken = token
+            self.pnManager.fcmTokenLastRefreshed = Date()
+            outcome = .success(tokenId)
+        } catch let error {
+            outcome = .failure(error)
+        }
+        return try outcome.get()
     }
 
     @discardableResult
+    @MainActor
     public func register(
         token: String,
         type: String,
         name: String?,
         data: String?,
         params: [String: String]?
-    ) -> Future<Int, RuuviServiceError> {
-        let promise = Promise<Int, RuuviServiceError>()
-        cloud.registerPNToken(
-            token: token,
-            type: type,
-            name: name,
-            data: data,
-            params: params
-        )
-        .on(success: { tokenId in
-            promise.succeed(value: tokenId)
-        }, failure: { error in
-            promise.fail(error: .ruuviCloud(error))
-        })
-        return promise.future
+    ) async throws(RuuviServiceError) -> Int {
+        var outcome: Result<Int, RuuviServiceError>
+        do {
+            let tokenId = try await cloud.registerPNToken(
+                token: token,
+                type: type,
+                name: name,
+                data: data,
+                params: params
+            )
+            outcome = .success(tokenId)
+        } catch let error {
+            outcome = .failure(.ruuviCloud(error))
+        }
+        return try outcome.get()
     }
 
     @discardableResult
+    @MainActor
     public func unregister(
         token: String?,
         tokenId: Int?
-    ) -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
-        cloud.unregisterPNToken(
-            token: token,
-            tokenId: tokenId
-        )
-        .on(success: { success in
-            promise.succeed(value: success)
-        }, failure: { error in
-            promise.fail(error: .ruuviCloud(error))
-        })
-        return promise.future
+    ) async throws(RuuviServiceError) -> Bool {
+        var outcome: Result<Bool, RuuviServiceError>
+        do {
+            let success = try await cloud.unregisterPNToken(
+                token: token,
+                tokenId: tokenId
+            )
+            outcome = .success(success)
+        } catch let error {
+            outcome = .failure(.ruuviCloud(error))
+        }
+        return try outcome.get()
     }
 
     @discardableResult
-    public func listTokens() -> Future<[RuuviCloudPNToken], RuuviServiceError> {
-        let promise = Promise<[RuuviCloudPNToken], RuuviServiceError>()
-        cloud.listPNTokens()
-            .on(success: { tokens in
-                promise.succeed(value: tokens)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+    @MainActor
+    public func listTokens() async throws(RuuviServiceError) -> [RuuviCloudPNToken] {
+        var outcome: Result<[RuuviCloudPNToken], RuuviServiceError>
+        do {
+            let tokens = try await cloud.listPNTokens()
+            outcome = .success(tokens)
+        } catch let error {
+            outcome = .failure(.ruuviCloud(error))
+        }
+        return try outcome.get()
     }
 }
 

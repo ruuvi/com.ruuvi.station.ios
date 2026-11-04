@@ -13,5 +13,5 @@ public protocol GRDBDatabase {
     var dbPool: DatabasePool { get }
     var dbPath: String { get }
 
-    func migrateIfNeeded()
+    func migrateIfNeeded() throws
 }

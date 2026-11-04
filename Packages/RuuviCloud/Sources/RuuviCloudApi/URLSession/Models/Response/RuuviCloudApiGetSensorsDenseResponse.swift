@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviCloud
+#endif
 import Foundation
 import RuuviOntology
 
@@ -135,7 +138,8 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
                 }
 
                 displayOrderLastUpdated = try? container.decode(Int.self, forKey: .displayOrderLastUpdated)
-                defaultDisplayOrderLastUpdated = try? container
+                defaultDisplayOrderLastUpdated =
+                    try? container
                     .decode(
                         Int.self,
                         forKey: .defaultDisplayOrderLastUpdated
@@ -167,7 +171,8 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
                     return decoded
                 }
                 if let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []),
-                   let decoded = jsonObject as? [String] {
+                    let decoded = jsonObject as? [String]
+                {
                     return decoded
                 }
                 return nil

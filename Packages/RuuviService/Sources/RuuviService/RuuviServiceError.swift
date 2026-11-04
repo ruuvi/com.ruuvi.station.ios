@@ -1,3 +1,7 @@
+#if SWIFT_PACKAGE
+    import RuuviOntology
+    import RuuviCore
+#endif
 import BTKit
 import Foundation
 import RuuviCloud

@@ -116,7 +116,7 @@ extension SettingsTableViewController: SettingsViewInput {
             experimentalFunctionsLabel,
             defaultsTitleLabel,
             devicesTitleLabel,
-        ] .forEach {
+        ].forEach {
             $0?.font = UIFont.ruuviHeadline()
         }
     }
@@ -128,9 +128,12 @@ extension SettingsTableViewController: SettingsViewInput {
         let cancelTitle = RuuviLocalization.cancel
         alert.addAction(UIAlertAction(title: cancelTitle, style: .cancel, handler: nil))
         let settingsTitle = RuuviLocalization.PermissionPresenter.settings
-        alert.addAction(UIAlertAction(title: settingsTitle, style: .default, handler: { [weak self] _ in
-            self?.output.viewDidSelectChangeLanguage()
-        }))
+        alert.addAction(
+            UIAlertAction(
+                title: settingsTitle, style: .default,
+                handler: { [weak self] _ in
+                    self?.output.viewDidSelectChangeLanguage()
+                }))
         present(alert, animated: true)
     }
 }
@@ -152,6 +155,13 @@ extension SettingsTableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.accessibilityIdentifier = "settings.list"
+        closeBarButtonItem.accessibilityIdentifier = "settings.close"
+        unitsCell.accessibilityIdentifier = "settings.units"
+        resolutionCell.accessibilityIdentifier = "settings.resolution"
+        chartCell.accessibilityIdentifier = "settings.chart"
+        appearanceCell.accessibilityIdentifier = "settings.appearance"
+        alertNotificationsCell.accessibilityIdentifier = "settings.notifications"
         updateNavBarTitleFont()
         updateUI()
         localize()
@@ -183,9 +193,9 @@ extension SettingsTableViewController {
                 : 0
         }
         // Add the logic for the cloud mode cell here
-        if !showDefaults && cell == defaultsCell ||
-            (!showDevices || !cloudModeVisible) && cell == devicesCell ||
-            !cloudModeVisible && cell == ruuviCloudCell {
+        if !showDefaults && cell == defaultsCell || (!showDevices || !cloudModeVisible) && cell == devicesCell
+            || !cloudModeVisible && cell == ruuviCloudCell
+        {
             return 0
         } else {
             return 44

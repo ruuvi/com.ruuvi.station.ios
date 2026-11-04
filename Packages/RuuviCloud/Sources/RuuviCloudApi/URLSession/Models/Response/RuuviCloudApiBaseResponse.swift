@@ -1,3 +1,7 @@
+#if SWIFT_PACKAGE
+    import RuuviCloud
+    import RuuviOntology
+#endif
 import Foundation
 
 public struct RuuviCloudApiBaseResponse<T: Any>: Decodable where T: Decodable {
@@ -53,7 +57,8 @@ public extension Decodable {
     static var emptyModel: Self? {
         let emptyString = "{}"
         if let emptyData = emptyString.data(using: .utf8),
-           let emptyModel = try? JSONDecoder().decode(self, from: emptyData) {
+            let emptyModel = try? JSONDecoder().decode(self, from: emptyData)
+        {
             return emptyModel
         } else {
             return nil

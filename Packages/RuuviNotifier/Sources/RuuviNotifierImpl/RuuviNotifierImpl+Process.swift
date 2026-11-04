@@ -1,22 +1,25 @@
+#if SWIFT_PACKAGE
+    import RuuviNotifier
+#endif
 // swiftlint:disable file_length
 import Foundation
 import RuuviOntology
 import RuuviLocalization
 #if DEBUG || ALPHA
-import RuuviNotification
+    import RuuviNotification
 #endif
 import RuuviService
 
 #if DEBUG || ALPHA
-private func alertProcessDebugLog(
-    _ category: String,
-    _ message: @autoclosure () -> String
-) {
-    RuuviAlertDebugLog.append(category, message())
-}
+    private func alertProcessDebugLog(
+        _ category: String,
+        _ message: @autoclosure () -> String
+    ) {
+        RuuviAlertDebugLog.append(category, message())
+    }
 #else
-@inline(__always)
-private func alertProcessDebugLog(_: String, _: @autoclosure () -> String) {}
+    @inline(__always)
+    private func alertProcessDebugLog(_: String, _: @autoclosure () -> String) {}
 #endif
 
 // MARK: - Process Physical Sensors
@@ -25,16 +28,15 @@ public extension RuuviNotifierImpl {
     // swiftlint:disable:next function_body_length cyclomatic_complexity
     func process(record: RuuviTagSensorRecord, trigger: Bool) {
         guard let luid = record.luid,
-              ruuviAlertService.hasRegistrations(for: record)
+            ruuviAlertService.hasRegistrations(for: record)
         else {
             return
         }
         alertProcessDebugLog(
             "AlertProcess",
-            "local process trigger=\(trigger) luid=\(luid.value) " +
-                "mac=\(record.macId?.value ?? "nil") " +
-                "source=\(record.source.rawValue) date=\(record.date) " +
-                "temp=\(String(describing: record.temperature?.value))"
+            "local process trigger=\(trigger) luid=\(luid.value) " + "mac=\(record.macId?.value ?? "nil") "
+                + "source=\(record.source.rawValue) date=\(record.date) "
+                + "temp=\(String(describing: record.temperature?.value))"
         )
         var isTriggered = false
         AlertType.allCases.forEach { type in
@@ -253,10 +255,9 @@ public extension RuuviNotifierImpl {
         }
         alertProcessDebugLog(
             "AlertProcess",
-            "network process trigger=\(trigger) mac=\(identifier.value) " +
-                "recordLuid=\(record.luid?.value ?? "nil") " +
-                "source=\(record.source.rawValue) date=\(record.date) " +
-                "temp=\(String(describing: record.temperature?.value))"
+            "network process trigger=\(trigger) mac=\(identifier.value) " + "recordLuid=\(record.luid?.value ?? "nil") "
+                + "source=\(record.source.rawValue) date=\(record.date) "
+                + "temp=\(String(describing: record.temperature?.value))"
         )
 
         var isTriggered = false
@@ -544,10 +545,11 @@ extension RuuviNotifierImpl {
         DispatchQueue.main.async { [weak self] in
             guard let sSelf = self else { return }
             if let observers = sSelf.observations[uuid] {
-                for i in 0 ..< observers.count {
+                for i in 0..<observers.count {
                     if let pointer = observers.pointer(at: i),
-                       let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
-                       as? RuuviNotifierObserver {
+                        let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
+                            as? RuuviNotifierObserver
+                    {
                         observer.ruuvi(
                             notifier: sSelf,
                             isTriggered: isTriggered,
@@ -563,10 +565,11 @@ extension RuuviNotifierImpl {
         DispatchQueue.main.async { [weak self] in
             guard let sSelf = self else { return }
             if let observers = sSelf.observations[uuid] {
-                for i in 0 ..< observers.count {
+                for i in 0..<observers.count {
                     if let pointer = observers.pointer(at: i),
-                       let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
-                       as? RuuviNotifierObserver {
+                        let observer = Unmanaged<AnyObject>.fromOpaque(pointer).takeUnretainedValue()
+                            as? RuuviNotifierObserver
+                    {
                         observer.ruuvi(
                             notifier: sSelf,
                             alertType: alertType,
@@ -591,16 +594,16 @@ extension RuuviNotifierImpl {
     ) -> Bool {
         guard let identifier else { return false }
         if case let .temperature(lower, upper) = ruuviAlertService.alert(for: identifier.value, of: alertType),
-           let l = Temperature(lower),
-           let u = Temperature(upper),
-           let t = temperature {
+            let l = Temperature(lower),
+            let u = Temperature(upper),
+            let t = temperature
+        {
             let isLower = t < l
             let isUpper = t > u
             alertProcessDebugLog(
                 "AlertProcess",
-                "temperature eval id=\(identifier.value) trigger=\(trigger) " +
-                    "temp=\(t.value) lower=\(lower) upper=\(upper) " +
-                    "isLower=\(isLower) isUpper=\(isUpper)"
+                "temperature eval id=\(identifier.value) trigger=\(trigger) "
+                    + "temp=\(t.value) lower=\(lower) upper=\(upper) " + "isLower=\(isLower) isUpper=\(isUpper)"
             )
             if trigger {
                 if isLower {
@@ -648,14 +651,15 @@ extension RuuviNotifierImpl {
     ) -> Bool {
         guard let identifier else { return false }
         if case let .relativeHumidity(lower, upper) = ruuviAlertService.alert(for: identifier.value, of: alertType),
-           let t = temperature,
-           let rh = relativeHumidity?.converted(to: .relative(temperature: t)) {
+            let t = temperature,
+            let rh = relativeHumidity?.converted(to: .relative(temperature: t))
+        {
             let isLower = rh.value < lower
             let isUpper = rh.value > upper
             if trigger {
                 if isLower {
                     let lowerString = measurementService.stringWithoutSign(
-                        humidity: lower*100
+                        humidity: lower * 100
                     )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
@@ -670,7 +674,7 @@ extension RuuviNotifierImpl {
                     }
                 } else if isUpper {
                     let upperString = measurementService.stringWithoutSign(
-                        humidity: upper*100
+                        humidity: upper * 100
                     )
                     DispatchQueue.main.async { [weak self] in
                         guard let sSelf = self else { return }
@@ -699,14 +703,15 @@ extension RuuviNotifierImpl {
         trigger: Bool = true
     ) -> Bool {
         guard let identifier,
-              let temperature,
-              let absoluteHumidity
+            let temperature,
+            let absoluteHumidity
         else {
             return false
         }
 
         if case let .humidity(lower, upper) = ruuviAlertService.alert(for: identifier.value, of: alertType) {
-            let humidityWithTemperature = absoluteHumidity
+            let humidityWithTemperature =
+                absoluteHumidity
                 .converted(to: .relative(temperature: temperature))
             let current = humidityWithTemperature.converted(to: .absolute)
             let lowerValue = lower.converted(to: .absolute).value
@@ -755,18 +760,20 @@ extension RuuviNotifierImpl {
         trigger: Bool = true
     ) -> Bool {
         guard let identifier,
-              let temperature,
-              let dewPoint
+            let temperature,
+            let dewPoint
         else {
             return false
         }
 
         if case let .dewPoint(lower, upper) = ruuviAlertService.alert(for: identifier.value, of: alertType),
-           let lowerTemperature = Temperature(lower),
-           let upperTemperature = Temperature(upper),
-           let dewPointTemperature = try? dewPoint
+            let lowerTemperature = Temperature(lower),
+            let upperTemperature = Temperature(upper),
+            let dewPointTemperature =
+                try? dewPoint
                 .converted(to: .relative(temperature: temperature))
-                .dewPoint(temperature: temperature) {
+                .dewPoint(temperature: temperature)
+        {
             let isLower = dewPointTemperature < lowerTemperature
             let isUpper = dewPointTemperature > upperTemperature
             if trigger {
@@ -814,9 +821,10 @@ extension RuuviNotifierImpl {
     ) -> Bool {
         guard let identifier else { return false }
         if case let .pressure(lower, upper) = ruuviAlertService.alert(for: identifier.value, of: alertType),
-           let l = Pressure(lower),
-           let u = Pressure(upper),
-           let pressure {
+            let l = Pressure(lower),
+            let u = Pressure(upper),
+            let pressure
+        {
             let isLower = pressure < l
             let isUpper = pressure > u
             if trigger {
@@ -861,12 +869,14 @@ extension RuuviNotifierImpl {
         trigger: Bool = true
     ) -> Bool {
         guard let identifier else { return false }
-        if case let .signal(lower, upper) = ruuviAlertService
+        if case let .signal(lower, upper) =
+            ruuviAlertService
             .alert(
                 for: identifier.value,
                 of: alertType
             ),
-            let signal {
+            let signal
+        {
             let isLower = Double(signal) < lower
             let isUpper = Double(signal) > upper
             if trigger {
@@ -916,7 +926,8 @@ extension RuuviNotifierImpl {
     ) -> Bool {
         guard let identifier else { return false }
         if case let .batteryVoltage(lower, upper) = ruuviAlertService.alert(for: identifier.value, of: alertType),
-           let voltage = batteryVoltage {
+            let voltage = batteryVoltage
+        {
             let l = Voltage(value: lower, unit: .volts)
             let u = Voltage(value: upper, unit: .volts)
             let isLower = voltage < l
@@ -959,12 +970,14 @@ extension RuuviNotifierImpl {
         trigger: Bool = true
     ) -> Bool {
         guard let identifier else { return false }
-        if case let .aqi(lower, upper) = ruuviAlertService
+        if case let .aqi(lower, upper) =
+            ruuviAlertService
             .alert(
                 for: identifier.value,
                 of: alertType
             ),
-           let aqi {
+            let aqi
+        {
             let isLower = aqi < lower
             let isUpper = aqi > upper
             if trigger {
@@ -1015,12 +1028,14 @@ extension RuuviNotifierImpl {
         trigger: Bool = true
     ) -> Bool {
         guard let identifier else { return false }
-        if case let .carbonDioxide(lower, upper) = ruuviAlertService
+        if case let .carbonDioxide(lower, upper) =
+            ruuviAlertService
             .alert(
                 for: identifier.value,
                 of: alertType
             ),
-           let carbonDioxide {
+            let carbonDioxide
+        {
             let isLower = carbonDioxide < lower
             let isUpper = carbonDioxide > upper
             if trigger {
@@ -1069,12 +1084,14 @@ extension RuuviNotifierImpl {
         trigger: Bool = true
     ) -> Bool {
         guard let identifier else { return false }
-        if case let .pMatter1(lower, upper) = ruuviAlertService
+        if case let .pMatter1(lower, upper) =
+            ruuviAlertService
             .alert(
                 for: identifier.value,
                 of: alertType
             ),
-           let pMatter1 {
+            let pMatter1
+        {
             let isLower = pMatter1 < lower
             let isUpper = pMatter1 > upper
             if trigger {
@@ -1123,12 +1140,14 @@ extension RuuviNotifierImpl {
         trigger: Bool = true
     ) -> Bool {
         guard let identifier else { return false }
-        if case let .pMatter25(lower, upper) = ruuviAlertService
+        if case let .pMatter25(lower, upper) =
+            ruuviAlertService
             .alert(
                 for: identifier.value,
                 of: alertType
             ),
-           let pMatter25 {
+            let pMatter25
+        {
             let isLower = pMatter25 < lower
             let isUpper = pMatter25 > upper
             if trigger {
@@ -1177,12 +1196,14 @@ extension RuuviNotifierImpl {
         trigger: Bool = true
     ) -> Bool {
         guard let identifier else { return false }
-        if case let .pMatter4(lower, upper) = ruuviAlertService
+        if case let .pMatter4(lower, upper) =
+            ruuviAlertService
             .alert(
                 for: identifier.value,
                 of: alertType
             ),
-           let pMatter4 {
+            let pMatter4
+        {
             let isLower = pMatter4 < lower
             let isUpper = pMatter4 > upper
             if trigger {
@@ -1231,12 +1252,14 @@ extension RuuviNotifierImpl {
         trigger: Bool = true
     ) -> Bool {
         guard let identifier else { return false }
-        if case let .pMatter10(lower, upper) = ruuviAlertService
+        if case let .pMatter10(lower, upper) =
+            ruuviAlertService
             .alert(
                 for: identifier.value,
                 of: alertType
             ),
-           let pMatter10 {
+            let pMatter10
+        {
             let isLower = pMatter10 < lower
             let isUpper = pMatter10 > upper
             if trigger {
@@ -1285,12 +1308,14 @@ extension RuuviNotifierImpl {
         trigger: Bool = true
     ) -> Bool {
         guard let identifier else { return false }
-        if case let .voc(lower, upper) = ruuviAlertService
+        if case let .voc(lower, upper) =
+            ruuviAlertService
             .alert(
                 for: identifier.value,
                 of: alertType
             ),
-           let voc {
+            let voc
+        {
             let isLower = voc < lower
             let isUpper = voc > upper
             if trigger {
@@ -1339,12 +1364,14 @@ extension RuuviNotifierImpl {
         trigger: Bool = true
     ) -> Bool {
         guard let identifier else { return false }
-        if case let .nox(lower, upper) = ruuviAlertService
+        if case let .nox(lower, upper) =
+            ruuviAlertService
             .alert(
                 for: identifier.value,
                 of: alertType
             ),
-           let nox {
+            let nox
+        {
             let isLower = nox < lower
             let isUpper = nox > upper
             if trigger {
@@ -1393,12 +1420,14 @@ extension RuuviNotifierImpl {
         trigger: Bool = true
     ) -> Bool {
         guard let identifier else { return false }
-        if case let .soundInstant(lower, upper) = ruuviAlertService
+        if case let .soundInstant(lower, upper) =
+            ruuviAlertService
             .alert(
                 for: identifier.value,
                 of: alertType
             ),
-           let soundInstant {
+            let soundInstant
+        {
             let isLower = soundInstant < lower
             let isUpper = soundInstant > upper
             if trigger {
@@ -1447,12 +1476,14 @@ extension RuuviNotifierImpl {
         trigger: Bool = true
     ) -> Bool {
         guard let identifier else { return false }
-        if case let .soundAverage(lower, upper) = ruuviAlertService
+        if case let .soundAverage(lower, upper) =
+            ruuviAlertService
             .alert(
                 for: identifier.value,
                 of: alertType
             ),
-           let soundAverage {
+            let soundAverage
+        {
             let isLower = soundAverage < lower
             let isUpper = soundAverage > upper
             if trigger {
@@ -1501,12 +1532,14 @@ extension RuuviNotifierImpl {
         trigger: Bool = true
     ) -> Bool {
         guard let identifier else { return false }
-        if case let .soundPeak(lower, upper) = ruuviAlertService
+        if case let .soundPeak(lower, upper) =
+            ruuviAlertService
             .alert(
                 for: identifier.value,
                 of: alertType
             ),
-           let soundPeak {
+            let soundPeak
+        {
             let isLower = soundPeak < lower
             let isUpper = soundPeak > upper
             if trigger {
@@ -1555,12 +1588,14 @@ extension RuuviNotifierImpl {
         trigger: Bool = true
     ) -> Bool {
         guard let identifier else { return false }
-        if case let .luminosity(lower, upper) = ruuviAlertService
+        if case let .luminosity(lower, upper) =
+            ruuviAlertService
             .alert(
                 for: identifier.value,
                 of: alertType
             ),
-           let luminosity {
+            let luminosity
+        {
             let isLower = luminosity < lower
             let isUpper = luminosity > upper
             if trigger {
@@ -1701,7 +1736,8 @@ extension RuuviNotifierImpl {
         }
         let safeDate = min(eventDate, Date())
         if let existingDate = movementAlertHysteresisLastEventByUUID[uuid],
-           existingDate > safeDate {
+            existingDate > safeDate
+        {
             movementAlertHysteresisLock.unlock()
             return
         }
@@ -1844,15 +1880,18 @@ extension RuuviNotifierImpl {
     ) -> Bool {
         guard let identifier else { return false }
 
-        if case let .cloudConnection(unseenDuration) = ruuviAlertService
+        if case let .cloudConnection(unseenDuration) =
+            ruuviAlertService
             .alert(
                 for: identifier.value,
                 of: alertType
-            ) {
+            )
+        {
             let calendar = Calendar.current
-            let thresholdDateTime = calendar.date(
-                byAdding: .second, value: -Int(unseenDuration), to: Date()
-            ) ?? Date()
+            let thresholdDateTime =
+                calendar.date(
+                    byAdding: .second, value: -Int(unseenDuration), to: Date()
+                ) ?? Date()
 
             // Check the last successful system sync with the cloud
             if let lastSystemCloudSyncDate = localSyncState.getSyncDate() {

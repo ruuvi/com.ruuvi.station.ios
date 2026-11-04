@@ -1,5 +1,12 @@
+#if SWIFT_PACKAGE
+    import RuuviStorage
+    import RuuviCloud
+    import RuuviPool
+    import RuuviLocal
+    import RuuviRepository
+    import RuuviCore
+#endif
 import Foundation
-import Future
 import RuuviOntology
 
 public extension Notification.Name {
@@ -16,7 +23,8 @@ public enum RuuviServiceAlertDidChangeKey: String {
 public protocol RuuviServiceAlert: RuuviServiceAlertRuuviTag,
     RuuviServiceAlertPhysicalSensor,
     RuuviServiceAlertCloud,
-    RuuviServiceAlertDeprecated {}
+    RuuviServiceAlertDeprecated
+{}
 
 public protocol RuuviServiceAlertRuuviTag {
     func register(type: AlertType, ruuviTag: RuuviTagSensor)

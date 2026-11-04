@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviDFU
+#endif
 import CoreBluetooth
 import Foundation
 import UIKit
@@ -159,16 +162,17 @@ class DfuScanner: NSObject {
     func lost<T: AnyObject>(_ observer: T, closure: @escaping (T, DFUDevice) -> Void) -> RuuviDFUToken {
         let id = UUID()
         queue.async { [weak self] in
-            self?.observations.lost[id] = LostObservation(block: { [weak self, weak observer] device in
-                guard let observer
-                else {
-                    self?.observations.lost.removeValue(forKey: id)
-                    self?.stopIfNeeded()
-                    return
-                }
+            self?.observations.lost[id] = LostObservation(
+                block: { [weak self, weak observer] device in
+                    guard let observer
+                    else {
+                        self?.observations.lost.removeValue(forKey: id)
+                        self?.stopIfNeeded()
+                        return
+                    }
 
-                closure(observer, device)
-            }, lostDeviceDelay: 5)
+                    closure(observer, device)
+                }, lostDeviceDelay: 5)
 
             self?.startIfNeeded()
         }

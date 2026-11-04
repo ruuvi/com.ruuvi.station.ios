@@ -1,3 +1,8 @@
+#if SWIFT_PACKAGE
+    import RuuviDaemon
+    import RuuviDaemonOperation
+    import RuuviNotification
+#endif
 // swiftlint:disable file_length
 
 import BTKit
@@ -31,7 +36,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     private var ruuviTags = [AnyRuuviTagSensor]()
     private var ruuviTagsByLuid = [AnyLocalIdentifier: AnyRuuviTagSensor]()
     private var sensorSettingsList = [SensorSettings]()
-    private var savedDate = [String: Date]() // uuid:date
+    private var savedDate = [String: Date]()  // uuid:date
     private let stateQueue = DispatchQueue(label: "RuuviTagAdvertisementDaemonBTKit.stateQueue")
     private var isOnToken: NSObjectProtocol?
     private var cloudModeOnToken: NSObjectProtocol?
@@ -40,7 +45,7 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         TimeInterval(settings.advertisementDaemonIntervalMinutes * 60)
     }
 
-    private var advertisementSequence = [String: Int]() // uuid: int
+    private var advertisementSequence = [String: Int]()  // uuid: int
 
     @objc private class RuuviTagWrapper: NSObject {
         let device: RuuviTag
@@ -196,16 +201,22 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
 
     private func reloadSensors() {
         guard let observationID else { return }
-        ruuviStorage.readAll().on(success: { [weak self] sensors in
-            DispatchQueue.main.async { [weak self] in
-                guard let self, self.observationID == observationID else { return }
-                sensors.forEach { self.persistenceGate.invalidate(sensorID: $0.id) }
-                self.ruuviTags = sensors
-                self.rebuildRuuviTagIndex()
-                self.pruneCachedState(keeping: self.tagIdentifierValues())
-                self.restartObserving()
+        Task { @MainActor [self] in
+            do throws(RuuviStorageError) {
+                let value = try await ruuviStorage.readAll()
+                ({ [weak self] sensors in
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self, self.observationID == observationID else { return }
+                        sensors.forEach { self.persistenceGate.invalidate(sensorID: $0.id) }
+                        self.ruuviTags = sensors
+                        self.rebuildRuuviTagIndex()
+                        self.pruneCachedState(keeping: self.tagIdentifierValues())
+                        self.restartObserving()
+                    }
+                })(value)
+            } catch {
             }
-        })
+        }
     }
 
     private func stopDaemon() {
@@ -265,13 +276,19 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         ruuviTags.forEach { persistenceGate.invalidate(sensorID: $0.id) }
         sensorSettingsList.removeAll()
         for ruuviTag in ruuviTags {
-            ruuviStorage.readSensorSettings(ruuviTag).on { [weak self] sensorSettings in
-                DispatchQueue.main.async { [weak self] in
-                    guard self?.observationID == observationID else { return }
-                    if let sensorSettings {
-                        self?.persistenceGate.invalidate(sensorID: ruuviTag.id)
-                        self?.sensorSettingsList.append(sensorSettings)
-                    }
+            Task { @MainActor [self] in
+                do throws(RuuviStorageError) {
+                    let value = try await ruuviStorage.readSensorSettings(ruuviTag)
+                    ({ [weak self] sensorSettings in
+                        DispatchQueue.main.async { [weak self] in
+                            guard self?.observationID == observationID else { return }
+                            if let sensorSettings {
+                                self?.persistenceGate.invalidate(sensorID: ruuviTag.id)
+                                self?.sensorSettingsList.append(sensorSettings)
+                            }
+                        }
+                    })(value)
+                } catch {
                 }
             }
         }
@@ -307,11 +324,13 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
                     guard let tag = device.ruuvi?.tag else { return }
                     DispatchQueue.main.async { [weak self] in
                         guard let self, self.observationID == observationID,
-                              let thread = self.thread, !thread.isCancelled else { return }
+                            let thread = self.thread, !thread.isCancelled
+                        else { return }
                         self.syncHistoryIfEligible(for: tag)
                         guard !tag.isConnected,
-                              let sensor = self.ruuviTagsByLuid[luid.any],
-                              let generation = self.persistenceGate.generation(for: sensor.id) else { return }
+                            let sensor = self.ruuviTagsByLuid[luid.any],
+                            let generation = self.persistenceGate.generation(for: sensor.id)
+                        else { return }
                         // Resolve collection state on main before handing immutable values to the worker.
                         let wrapper = RuuviTagWrapper(
                             device: tag,
@@ -368,30 +387,33 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
     // Keep eligibility and enqueueing on the main queue, shared with graph actions.
     private func syncHistoryIfEligible(for record: RuuviTag) {
         guard settings.appIsOnForeground, settings.isAdvertisementDaemonOn,
-              flags.autoSyncGattHistoryForRuuviAir,
-              let luid = record.luid,
-              let sensor = ruuviTags.first(where: { $0.luid?.value == luid.value }),
-              !sensor.isCloud,
-              let macId = sensor.macId,
-              !localSyncState.isAutoGattSyncSuppressed(for: macId),
-              !gattService.isSyncingLogs(with: luid.value)
+            flags.autoSyncGattHistoryForRuuviAir,
+            let luid = record.luid,
+            let sensor = ruuviTags.first(where: { $0.luid?.value == luid.value }),
+            !sensor.isCloud,
+            let macId = sensor.macId,
+            !localSyncState.isAutoGattSyncSuppressed(for: macId),
+            !gattService.isSyncingLogs(with: luid.value)
         else { return }
         let format = RuuviDataFormat.dataFormat(from: record.version)
         guard format == .e1 || format == .v6 else { return }
         if !flags.allowConcurrentGattSyncForMultipleSensors,
-           gattService.isSyncingLogs() {
+            gattService.isSyncingLogs()
+        {
             return
         }
 
         let now = Date()
         let lastSync = localSyncState.getGattSyncDate(for: macId)
         let lastAttempt = localSyncState.getAutoGattSyncAttemptDate(for: macId)
-        guard AutomaticGattSyncPolicy.isEligible(
-            now: now,
-            lastSync: lastSync,
-            lastAttempt: lastAttempt,
-            cooldownMinutes: flags.autoSyncGattHistoryForRuuviAirMinimumLastSyncDateAgeMinutes
-        ) else { return }
+        guard
+            AutomaticGattSyncPolicy.isEligible(
+                now: now,
+                lastSync: lastSync,
+                lastAttempt: lastAttempt,
+                cooldownMinutes: flags.autoSyncGattHistoryForRuuviAirMinimumLastSyncDateAgeMinutes
+            )
+        else { return }
         let from = AutomaticGattSyncPolicy.syncFrom(
             now: now,
             lastSync: lastSync,
@@ -399,24 +421,30 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
         )
         localSyncState.setAutoGattSyncAttemptDate(now, for: macId)
         localSyncState.setHasLoggedFirstAutoSyncGattHistoryForRuuviAir(true, for: macId)
-        gattService.syncLogs(
-            uuid: luid.value,
-            mac: macId.value,
-            firmware: record.version,
-            from: from,
-            settings: sensorSettings(for: sensor),
-            progress: nil,
-            timeouts: GATTServiceTimeouts(
-                connection: settings.connectionTimeout,
-                service: settings.serviceTimeout
-            )
-        ).on(success: { [weak self] completed in
-            guard completed else { return }
-            DispatchQueue.main.async {
-                guard self?.localSyncState.isAutoGattSyncSuppressed(for: macId) == false else { return }
-                self?.localSyncState.setGattSyncDate(now, for: macId)
+        Task { @MainActor [self] in
+            do throws(RuuviServiceError) {
+                let value = try await gattService.syncLogs(
+                    uuid: luid.value,
+                    mac: macId.value,
+                    firmware: record.version,
+                    from: from,
+                    settings: sensorSettings(for: sensor),
+                    progress: nil,
+                    timeouts: GATTServiceTimeouts(
+                        connection: settings.connectionTimeout,
+                        service: settings.serviceTimeout
+                    )
+                )
+                ({ [weak self] completed in
+                    guard completed else { return }
+                    DispatchQueue.main.async {
+                        guard self?.localSyncState.isAutoGattSyncSuppressed(for: macId) == false else { return }
+                        self?.localSyncState.setGattSyncDate(now, for: macId)
+                    }
+                })(value)
+            } catch {
             }
-        })
+        }
     }
 
     private func updateSensorSettings(_ sensorSettings: SensorSettings, _ luid: LocalIdentifier) {
@@ -503,7 +531,8 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
             let shouldPersist: Bool
             shouldPersist = stateQueue.sync {
                 if let previous = advertisementSequence[uuid],
-                   let next = wrapper.device.measurementSequenceNumber {
+                    let next = wrapper.device.measurementSequenceNumber
+                {
                     // Persist only if sequence number changes, handling wrap-around
                     return next != previous
                 }
@@ -570,21 +599,29 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
 
     private func createRecord(with wrapper: RuuviTagWrapper) {
         let record = wrapper.device
-        ruuviPool.create(
-            record
-                .with(source: .advertisement)
-        ).on(success: { _ in
-            self.createLatestRecord(with: wrapper)
-        }, failure: { [weak self] error in
-            DispatchQueue.main.async { [weak self] in
-                self?.handlePersistenceFailure(error, for: wrapper)
+        Task { @MainActor [self] in
+            do throws(RuuviPoolError) {
+                let value = try await ruuviPool.create(
+                    record
+                        .with(source: .advertisement)
+                )
+                ({ _ in
+                    self.createLatestRecord(with: wrapper)
+                })(value)
+            } catch {
+                ({ [weak self] error in
+                    DispatchQueue.main.async { [weak self] in
+                        self?.handlePersistenceFailure(error, for: wrapper)
+                    }
+                })(error)
             }
-        })
+        }
     }
 
     private func handlePersistenceFailure(_ error: RuuviPoolError, for wrapper: RuuviTagWrapper) {
         guard observationID == wrapper.observationID,
-              persistenceGate.generation(for: wrapper.sensor.id) == wrapper.generation else { return }
+            persistenceGate.generation(for: wrapper.sensor.id) == wrapper.generation
+        else { return }
         if case let RuuviPoolError.ruuviPersistence(persistenceError) = error {
             switch persistenceError {
             case .failedToFindRuuviTag:
@@ -601,20 +638,27 @@ public final class RuuviTagAdvertisementDaemonBTKit: RuuviDaemonWorker, RuuviTag
 
     private func createLatestRecord(with wrapper: RuuviTagWrapper) {
         persistenceGate.performIfValid(sensorID: wrapper.sensor.id, generation: wrapper.generation) {
-            ruuviStorage.readLatest(wrapper.sensor).on(success: { [weak self] localRecord in
-                guard let self else { return }
-                self.persistenceGate.performIfValid(sensorID: wrapper.sensor.id, generation: wrapper.generation) {
-                    guard localRecord != nil else {
-                        self.ruuviPool.createLast(wrapper.device)
-                        return
-                    }
-                    var advertisement: RuuviTagSensorRecord = wrapper.device.with(source: .advertisement)
-                    if let macId = wrapper.sensor.macId {
-                        advertisement = advertisement.with(macId: macId)
-                    }
-                    self.ruuviPool.updateLast(advertisement)
+            Task { @MainActor [self] in
+                do throws(RuuviStorageError) {
+                    let value = try await ruuviStorage.readLatest(wrapper.sensor)
+                    ({ [weak self] localRecord in
+                        guard let self else { return }
+                        self.persistenceGate.performIfValid(sensorID: wrapper.sensor.id, generation: wrapper.generation)
+                        {
+                            guard localRecord != nil else {
+                                Task { @MainActor [self] in _ = try? await self.ruuviPool.createLast(wrapper.device) }
+                                return
+                            }
+                            var advertisement: RuuviTagSensorRecord = wrapper.device.with(source: .advertisement)
+                            if let macId = wrapper.sensor.macId {
+                                advertisement = advertisement.with(macId: macId)
+                            }
+                            Task { @MainActor [self] in _ = try? await self.ruuviPool.updateLast(advertisement) }
+                        }
+                    })(value)
+                } catch {
                 }
-            })
+            }
         }
     }
 }

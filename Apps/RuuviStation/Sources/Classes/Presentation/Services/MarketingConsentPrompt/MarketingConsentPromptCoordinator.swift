@@ -48,29 +48,41 @@ final class MarketingConsentPromptCoordinator {
             return
         }
         guard dialog == nil, canPresent(from: presenter), isEligible(account: session.account),
-              activeCheck?.session != session else { return }
+            activeCheck?.session != session
+        else { return }
 
         let requestID = UUID()
         activeCheck = (requestID, session)
-        service.getMarketingConsent().observe(on: .main).on(success: { [weak self, weak presenter] consent in
-            guard let self, self.activeCheck?.id == requestID else { return }
-            self.activeCheck = nil
-            guard self.currentSession == session, self.flags.showMarketingPreference else { return }
-            // Pending confirmations and blocked addresses cannot opt in again.
-            guard !consent.consent, consent.status == .unsubscribed || consent.status == .notFound else { return }
-            guard let presenter, self.canPresent(from: presenter),
-                  self.isEligible(account: session.account) else { return }
-            self.presentDialog(from: presenter, session: session)
-        }, failure: { [weak self] _ in
-            guard self?.activeCheck?.id == requestID else { return }
-            // Failed or stale checks must not start the cooldown or block the next account.
-            self?.activeCheck = nil
-        })
+        Task { @MainActor [weak self, weak presenter, service = service] in
+            do throws(RuuviServiceError) {
+                let value = try await service.getMarketingConsent()
+                ({ [weak self, weak presenter] consent in
+                    guard let self, self.activeCheck?.id == requestID else { return }
+                    self.activeCheck = nil
+                    guard self.currentSession == session, self.flags.showMarketingPreference else { return }
+                    // Pending confirmations and blocked addresses cannot opt in again.
+                    guard !consent.consent, consent.status == .unsubscribed || consent.status == .notFound else {
+                        return
+                    }
+                    guard let presenter, self.canPresent(from: presenter),
+                        self.isEligible(account: session.account)
+                    else { return }
+                    self.presentDialog(from: presenter, session: session)
+                })(value)
+            } catch {
+                ({ [weak self] _ in
+                    guard self?.activeCheck?.id == requestID else { return }
+                    // Failed or stale checks must not start the cooldown or block the next account.
+                    self?.activeCheck = nil
+                })(error)
+            }
+        }
     }
 
     private var currentSession: Session? {
         guard user.isAuthorized, let account = user.email, !account.isEmpty,
-              let apiKey = user.apiKey, !apiKey.isEmpty else { return nil }
+            let apiKey = user.apiKey, !apiKey.isEmpty
+        else { return nil }
         return Session(account: account.lowercased(), apiKey: apiKey)
     }
 
@@ -79,23 +91,23 @@ final class MarketingConsentPromptCoordinator {
     }
 
     private func canPresent(from presenter: UIViewController) -> Bool {
-        UIApplication.shared.applicationState == .active &&
-            presenter.viewIfLoaded?.window != nil &&
-            presenter.presentedViewController == nil &&
-            presenter.navigationController?.presentedViewController == nil &&
-            (presenter.navigationController == nil ||
-                presenter.navigationController?.topViewController === presenter) &&
-            !presenter.isBeingDismissed && !presenter.isMovingFromParent
+        UIApplication.shared.applicationState == .active && presenter.viewIfLoaded?.window != nil
+            && presenter.presentedViewController == nil
+            && presenter.navigationController?.presentedViewController == nil
+            && (presenter.navigationController == nil
+                || presenter.navigationController?.topViewController === presenter)
+            && !presenter.isBeingDismissed && !presenter.isMovingFromParent
     }
 
     private func presentDialog(from presenter: UIViewController, session: Session) {
-        let dialog = RuuviDialogViewController(configuration: RuuviDialogConfiguration(
-            title: RuuviLocalization.marketingConsentPromptTitle,
-            message: RuuviLocalization.marketingConsentPromptMessage,
-            image: RuuviAsset.marketingConsentMail.image,
-            primaryActionTitle: RuuviLocalization.ok,
-            secondaryActionTitle: RuuviLocalization.marketingConsentPromptDecline
-        ))
+        let dialog = RuuviDialogViewController(
+            configuration: RuuviDialogConfiguration(
+                title: RuuviLocalization.marketingConsentPromptTitle,
+                message: RuuviLocalization.marketingConsentPromptMessage,
+                image: RuuviAsset.marketingConsentMail.image,
+                primaryActionTitle: RuuviLocalization.ok,
+                secondaryActionTitle: RuuviLocalization.marketingConsentPromptDecline
+            ))
         self.dialog = dialog
         dialogSession = session
         dialog.onDismiss = { [weak self, weak dialog] in
@@ -129,11 +141,18 @@ final class MarketingConsentPromptCoordinator {
         dialog.showError(nil)
         savingDialog = dialog
         dialog.setLoading(true)
-        service.set(marketingPreference: true).observe(on: .main).on(success: { [weak self, weak dialog] consent in
-            self?.completeSave(.success(consent), dialog: dialog, session: session)
-        }, failure: { [weak self, weak dialog] error in
-            self?.completeSave(.failure(error), dialog: dialog, session: session)
-        })
+        Task { @MainActor [weak self, weak dialog, service = service] in
+            do throws(RuuviServiceError) {
+                let value = try await service.set(marketingPreference: true)
+                ({ [weak self, weak dialog] consent in
+                    self?.completeSave(.success(consent), dialog: dialog, session: session)
+                })(value)
+            } catch {
+                ({ [weak self, weak dialog] error in
+                    self?.completeSave(.failure(error), dialog: dialog, session: session)
+                })(error)
+            }
+        }
     }
 
     private func completeSave(
@@ -156,11 +175,13 @@ final class MarketingConsentPromptCoordinator {
                 dialog.showError(RuuviLocalization.activitySavingFail)
                 return
             }
-            dialog.configure(RuuviDialogConfiguration(
-                title: RuuviLocalization.marketingConsentPromptSaved,
-                message: consent.status == .unconfirmed ? RuuviLocalization.newsletterSubscriptionConfirmation : nil,
-                primaryActionTitle: RuuviLocalization.ok
-            ))
+            dialog.configure(
+                RuuviDialogConfiguration(
+                    title: RuuviLocalization.marketingConsentPromptSaved,
+                    message: consent.status == .unconfirmed
+                        ? RuuviLocalization.newsletterSubscriptionConfirmation : nil,
+                    primaryActionTitle: RuuviLocalization.ok
+                ))
             dialog.onPrimaryAction = { [weak dialog] in dialog?.dismiss(animated: true) }
             dialog.onSecondaryAction = nil
         }

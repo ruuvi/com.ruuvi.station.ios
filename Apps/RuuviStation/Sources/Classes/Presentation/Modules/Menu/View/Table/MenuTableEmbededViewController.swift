@@ -71,6 +71,10 @@ extension MenuTableEmbededViewController {
 extension MenuTableEmbededViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        settingsCell.accessibilityIdentifier = "menu.settings"
+        aboutCell.accessibilityIdentifier = "menu.about"
+        accountCell.accessibilityIdentifier = "menu.account"
+        addRuuviTagCell.accessibilityIdentifier = "menu.addSensor"
         localize()
         styleViews()
         observeMarketingPreference()
@@ -130,8 +134,7 @@ extension MenuTableEmbededViewController {
         let footerHeight = max(320, visibleBottom - rowsBottom)
 
         guard
-            newsletterView.frame.width != tableView.bounds.width ||
-            newsletterView.frame.height != footerHeight
+            newsletterView.frame.width != tableView.bounds.width || newsletterView.frame.height != footerHeight
         else {
             return
         }
@@ -159,7 +162,8 @@ extension MenuTableEmbededViewController {
         forRowAt _: IndexPath
     ) {
         if cell == accountCell {
-            accountAuthLabel.text = output.userIsAuthorized
+            accountAuthLabel.text =
+                output.userIsAuthorized
                 ? RuuviLocalization.Menu.Label.MyRuuviAccount.text
                 : RuuviLocalization.SignIn.Title.text
         }

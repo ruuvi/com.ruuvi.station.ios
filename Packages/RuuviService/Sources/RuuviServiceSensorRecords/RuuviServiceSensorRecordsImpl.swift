@@ -1,5 +1,7 @@
+#if SWIFT_PACKAGE
+    import RuuviService
+#endif
 import Foundation
-import Future
 import RuuviLocal
 import RuuviOntology
 import RuuviPool
@@ -17,19 +19,20 @@ public final class RuuviServiceSensorRecordsImpl: RuuviServiceSensorRecords {
     }
 
     @discardableResult
-    public func clear(for sensor: RuuviTagSensor) -> Future<Void, RuuviServiceError> {
-        let promise = Promise<Void, RuuviServiceError>()
-        pool.deleteAllRecords(sensor.id)
-            .on(success: { [weak self] _ in
-                guard let sSelf = self else { return }
-                sSelf.localSyncState.setSyncDate(nil, for: sensor.macId)
-                sSelf.localSyncState.setSyncDate(nil)
-                sSelf.localSyncState.setGattSyncDate(nil, for: sensor.macId)
-                sSelf.localSyncState.setAutoGattSyncAttemptDate(nil, for: sensor.macId)
-                promise.succeed(value: ())
-            }, failure: { error in
-                promise.fail(error: .ruuviPool(error))
-            })
-        return promise.future
+    @MainActor
+    public func clear(for sensor: RuuviTagSensor) async throws(RuuviServiceError) -> Void {
+        var outcome: Result<Void, RuuviServiceError>
+        do {
+            let _ = try await pool.deleteAllRecords(sensor.id)
+            let sSelf = self
+            sSelf.localSyncState.setSyncDate(nil, for: sensor.macId)
+            sSelf.localSyncState.setSyncDate(nil)
+            sSelf.localSyncState.setGattSyncDate(nil, for: sensor.macId)
+            sSelf.localSyncState.setAutoGattSyncAttemptDate(nil, for: sensor.macId)
+            outcome = .success(())
+        } catch let error {
+            outcome = .failure(.ruuviPool(error))
+        }
+        return try outcome.get()
     }
 }

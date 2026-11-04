@@ -1,3 +1,12 @@
+#if SWIFT_PACKAGE
+    import RuuviLocal
+    import RuuviService
+    import RuuviStorage
+    import RuuviReactor
+    import RuuviPool
+    import RuuviPersistence
+    import RuuviNotifier
+#endif
 import CoreFoundation
 import Foundation
 
@@ -108,7 +117,8 @@ open class RuuviDaemonWorker: NSObject {
 
     private func requestStop(on target: Thread) {
         guard !target.isCancelled, !target.isFinished,
-              stoppingThreads.insert(ObjectIdentifier(target)).inserted else { return }
+            stoppingThreads.insert(ObjectIdentifier(target)).inserted
+        else { return }
         if target == Thread.current {
             stopThread()
             return

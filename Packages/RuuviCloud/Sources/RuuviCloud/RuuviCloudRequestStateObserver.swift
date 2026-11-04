@@ -1,3 +1,9 @@
+#if SWIFT_PACKAGE
+    import RuuviOntology
+    import RuuviPool
+    import RuuviLocal
+    import RuuviUser
+#endif
 import Foundation
 
 public class RuuviCloudRequestStateObserverManager {
@@ -20,11 +26,12 @@ public class RuuviCloudRequestStateObserverManager {
             queue: .main,
             using: { notification in
                 guard let userInfo = notification.userInfo,
-                      let observedMacId = userInfo[RuuviCloudRequestStateKey.macId] as? String,
-                      observedMacId == macId,
-                      let state = userInfo[RuuviCloudRequestStateKey.state] as? RuuviCloudRequestStateType else {
-                          return
-                      }
+                    let observedMacId = userInfo[RuuviCloudRequestStateKey.macId] as? String,
+                    observedMacId == macId,
+                    let state = userInfo[RuuviCloudRequestStateKey.state] as? RuuviCloudRequestStateType
+                else {
+                    return
+                }
                 callback(state)
             }
         )

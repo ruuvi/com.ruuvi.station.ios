@@ -1,3 +1,11 @@
+#if SWIFT_PACKAGE
+    import RuuviStorage
+    import RuuviCloud
+    import RuuviPool
+    import RuuviLocal
+    import RuuviRepository
+    import RuuviCore
+#endif
 import Foundation
 import Humidity
 import RuuviOntology
@@ -89,7 +97,7 @@ public protocol RuuviServiceMeasurement {
     func aqi(
         for co2: Double?,
         pm25: Double?
-    ) -> ( // swiftlint:disable:this large_tuple
+    ) -> (  // swiftlint:disable:this large_tuple
         currentScore: Int,
         maxScore: Int,
         state: MeasurementQualityState
@@ -144,7 +152,7 @@ public extension RuuviServiceMeasurement {
         isDecimal: Bool
     ) -> Double? {
         guard let temperature,
-              let humidity
+            let humidity
         else {
             return nil
         }

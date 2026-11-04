@@ -1,3 +1,7 @@
+#if SWIFT_PACKAGE
+    import RuuviDaemon
+    import RuuviDaemonOperation
+#endif
 // swiftlint:disable file_length
 
 import BTKit
@@ -34,8 +38,8 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
     private var disconnectTokens = [String: ObservationToken]()
     private var connectionAddedToken: NSObjectProtocol?
     private var connectionRemovedToken: NSObjectProtocol?
-    private var savedDate = [String: Date]() // [luid: date]
-    private var lastSavedSequenceNumbers = [String: Int]() // [uuid: sequenceNumber]
+    private var savedDate = [String: Date]()  // [luid: date]
+    private var lastSavedSequenceNumbers = [String: Int]()  // [uuid: sequenceNumber]
     private var ruuviTagsToken: RuuviReactorToken?
     private var sensorSettingsTokens = [String: RuuviReactorToken]()
     private var cloudModeOnToken: NSObjectProtocol?
@@ -80,7 +84,8 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
                 using: { [weak self] notification in
                     guard let sSelf = self, sSelf.thread != nil else { return }
                     if let userInfo = notification.userInfo,
-                       let uuid = userInfo[CPDidStartToKeepConnectionKey.uuid] as? String {
+                        let uuid = userInfo[CPDidStartToKeepConnectionKey.uuid] as? String
+                    {
                         sSelf.perform(
                             #selector(RuuviTagHeartbeatDaemonBTKit.connect(uuid:)),
                             on: sSelf.thread,
@@ -101,7 +106,8 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
                 using: { [weak self] notification in
                     guard let sSelf = self else { return }
                     if let userInfo = notification.userInfo,
-                       let uuid = userInfo[CPDidStopToKeepConnectionKey.uuid] as? String {
+                        let uuid = userInfo[CPDidStopToKeepConnectionKey.uuid] as? String
+                    {
                         sSelf.perform(
                             #selector(RuuviTagHeartbeatDaemonBTKit.disconnect(uuid:)),
                             on: sSelf.thread,
@@ -142,7 +148,7 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
             ) { [weak self] _ in
                 guard let sSelf = self else { return }
                 sSelf.restartObserving()
-        }
+            }
 
         // Also observe when app enters background
         appDidEnterBackgroundToken = NotificationCenter.default
@@ -216,11 +222,17 @@ public final class RuuviTagHeartbeatDaemonBTKit: RuuviDaemonWorker, RuuviTagHear
     }
 
     public func restart() {
-        ruuviStorage.readAll().on(success: { [weak self] sensors in
-            self?.ruuviTags = sensors
-            self?.handleRuuviTagsChange()
-            self?.restartObserving()
-        })
+        Task { @MainActor [self] in
+            do throws(RuuviStorageError) {
+                let value = try await ruuviStorage.readAll()
+                ({ [weak self] sensors in
+                    self?.ruuviTags = sensors
+                    self?.handleRuuviTagsChange()
+                    self?.restartObserving()
+                })(value)
+            } catch {
+            }
+        }
     }
 
     @objc private func stopDaemon() {
@@ -237,7 +249,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
         { observer, result in
             switch result {
             case .already:
-                break // already connected, do nothing
+                break  // already connected, do nothing
             case .just:
                 if observer.alertService.isOn(type: .connection, for: uuid) {
                     observer.notifyDidConnect(uuid: uuid)
@@ -267,9 +279,9 @@ extension RuuviTagHeartbeatDaemonBTKit {
         { observer, result in
             switch result {
             case .stillConnected:
-                break // do nothing
+                break  // do nothing
             case .already:
-                break // do nothing
+                break  // do nothing
             case .bluetoothWasPoweredOff:
                 if observer.alertService.isOn(type: .connection, for: uuid) {
                     observer.notifyDidDisconnect(uuid: uuid)
@@ -311,12 +323,12 @@ extension RuuviTagHeartbeatDaemonBTKit {
         }
         let record = ruuviTag.with(sensorSettings: sensorSettings).with(source: source)
         #if DEBUG || ALPHA
-        logAlertHeartbeatIfNeeded(
-            record: record,
-            ruuviTag: ruuviTag,
-            ruuviTagSensor: ruuviTagSensor,
-            source: source
-        )
+            logAlertHeartbeatIfNeeded(
+                record: record,
+                ruuviTag: ruuviTag,
+                ruuviTagSensor: ruuviTagSensor,
+                source: source
+            )
         #endif
         alertHandler.process(
             record: record,
@@ -325,9 +337,9 @@ extension RuuviTagHeartbeatDaemonBTKit {
         if settings.saveHeartbeats {
             let uuid = ruuviTag.uuid
             guard !uuid.isEmpty, ruuviTag.luid != nil else { return }
-            let interval = settings.appIsOnForeground ?
-                settings.saveHeartbeatsForegroundIntervalSeconds :
-                settings.saveHeartbeatsIntervalMinutes * 60
+            let interval =
+                settings.appIsOnForeground
+                ? settings.saveHeartbeatsForegroundIntervalSeconds : settings.saveHeartbeatsIntervalMinutes * 60
             savedDateQueue.async { [weak self] in
                 guard let self = self else { return }
                 if let date = self.savedDate[uuid] {
@@ -352,36 +364,31 @@ extension RuuviTagHeartbeatDaemonBTKit {
     }
 
     #if DEBUG || ALPHA
-    private func logAlertHeartbeatIfNeeded(
-        record: PhysicalSensor,
-        ruuviTag: RuuviTag,
-        ruuviTagSensor: AnyRuuviTagSensor?,
-        source: RuuviTagSensorRecordSource
-    ) {
-        guard alertService.hasRegistrations(for: record) else { return }
+        private func logAlertHeartbeatIfNeeded(
+            record: PhysicalSensor,
+            ruuviTag: RuuviTag,
+            ruuviTagSensor: AnyRuuviTagSensor?,
+            source: RuuviTagSensorRecordSource
+        ) {
+            guard alertService.hasRegistrations(for: record) else { return }
 
-        let matchedSensor: String
-        if let sensor = ruuviTagSensor {
-            let sensorLuid = sensor.luid?.value ?? "nil"
-            let sensorMac = sensor.macId?.value ?? "nil"
-            matchedSensor = "sensorId=\(sensor.id) " +
-                "sensorLuid=\(sensorLuid) " +
-                "sensorMac=\(sensorMac) " +
-                "isClaimed=\(sensor.isClaimed) " +
-                "isOwner=\(sensor.isOwner) " +
-                "isCloud=\(sensor.isCloud)"
-        } else {
-            matchedSensor = "sensor=nil"
+            let matchedSensor: String
+            if let sensor = ruuviTagSensor {
+                let sensorLuid = sensor.luid?.value ?? "nil"
+                let sensorMac = sensor.macId?.value ?? "nil"
+                matchedSensor =
+                    "sensorId=\(sensor.id) " + "sensorLuid=\(sensorLuid) " + "sensorMac=\(sensorMac) "
+                    + "isClaimed=\(sensor.isClaimed) " + "isOwner=\(sensor.isOwner) " + "isCloud=\(sensor.isCloud)"
+            } else {
+                matchedSensor = "sensor=nil"
+            }
+            RuuviAlertDebugLog.append(
+                "AlertHeartbeat",
+                "ble process trigger=true source=\(source.rawValue) " + "tagUuid=\(ruuviTag.uuid) "
+                    + "tagLuid=\(ruuviTag.luid?.value ?? "nil") " + "tagMac=\(ruuviTag.macId?.value ?? "nil") "
+                    + matchedSensor
+            )
         }
-        RuuviAlertDebugLog.append(
-            "AlertHeartbeat",
-            "ble process trigger=true source=\(source.rawValue) " +
-                "tagUuid=\(ruuviTag.uuid) " +
-                "tagLuid=\(ruuviTag.luid?.value ?? "nil") " +
-                "tagMac=\(ruuviTag.macId?.value ?? "nil") " +
-                matchedSensor
-        )
-    }
     #endif
 
     /// Creates records for a RuuviTag and updates the saved date.
@@ -448,10 +455,15 @@ extension RuuviTagHeartbeatDaemonBTKit {
         if ruuviTag.version == 0x06 {
             createLastRecord(observer: observer, ruuviTag: ruuviTag, uuid: uuid, source: source)
         } else {
-            observer.ruuviPool.create(ruuviTag.with(source: source)).on(
-                success: { [weak self] _ in
-                    self?.createLastRecord(observer: observer, ruuviTag: ruuviTag, uuid: uuid, source: source)
-                })
+            Task { @MainActor [self] in
+                do throws(RuuviPoolError) {
+                    let value = try await observer.ruuviPool.create(ruuviTag.with(source: source))
+                    ({ [weak self] _ in
+                        self?.createLastRecord(observer: observer, ruuviTag: ruuviTag, uuid: uuid, source: source)
+                    })(value)
+                } catch {
+                }
+            }
         }
     }
 
@@ -463,7 +475,7 @@ extension RuuviTagHeartbeatDaemonBTKit {
         source: RuuviTagSensorRecordSource
     ) {
         let record = ruuviTag.with(source: source)
-        observer.ruuviPool.createLast(record)
+        Task { @MainActor [self] in _ = try? await observer.ruuviPool.createLast(record) }
     }
 }
 
@@ -517,12 +529,18 @@ extension RuuviTagHeartbeatDaemonBTKit {
         sensorSettingsList.removeAll()
         sensorSettingsByLuid.removeAll()
         ruuviTags.forEach { ruuviTag in
-            ruuviStorage.readSensorSettings(ruuviTag).on { [weak self] sensorSettings in
-                if let sensorSettings {
-                    self?.sensorSettingsList.append(sensorSettings)
-                    if let luid = sensorSettings.luid?.any {
-                        self?.sensorSettingsByLuid[luid] = sensorSettings
-                    }
+            Task { @MainActor [self] in
+                do throws(RuuviStorageError) {
+                    let value = try await ruuviStorage.readSensorSettings(ruuviTag)
+                    ({ [weak self] sensorSettings in
+                        if let sensorSettings {
+                            self?.sensorSettingsList.append(sensorSettings)
+                            if let luid = sensorSettings.luid?.any {
+                                self?.sensorSettingsByLuid[luid] = sensorSettings
+                            }
+                        }
+                    })(value)
+                } catch {
                 }
             }
         }
@@ -685,8 +703,9 @@ extension RuuviTagHeartbeatDaemonBTKit {
                 continue
             }
             guard let serviceUUID = ruuviTag.serviceUUID,
-                  let luid = ruuviTag.luid,
-                  !background.isConnected(uuid: luid.value) else {
+                let luid = ruuviTag.luid,
+                !background.isConnected(uuid: luid.value)
+            else {
                 continue
             }
             observeTokens.append(
@@ -698,7 +717,8 @@ extension RuuviTagHeartbeatDaemonBTKit {
                     guard let sSelf = self else { return }
                     if let ruuviTag = device.ruuvi?.tag,
                         ruuviTag.vC5?.serviceUUID != nil || ruuviTag.vE1_V6?.serviceUUID != nil,
-                       !ruuviTag.isConnected, !sSelf.settings.appIsOnForeground {
+                        !ruuviTag.isConnected, !sSelf.settings.appIsOnForeground
+                    {
                         sSelf.processRuuviTag(ruuviTag, source: .bgAdvertisement)
                     }
                 }
@@ -712,7 +732,8 @@ extension RuuviTagHeartbeatDaemonBTKit {
 
         ruuviTags.forEach { ruuviTagSensor in
             sensorSettingsTokens[ruuviTagSensor.id] = ruuviReactor.observe(
-                ruuviTagSensor, { [weak self] change in
+                ruuviTagSensor,
+                { [weak self] change in
                     guard let self else { return }
                     switch change {
                     case let .initial(initialSensorSettings):

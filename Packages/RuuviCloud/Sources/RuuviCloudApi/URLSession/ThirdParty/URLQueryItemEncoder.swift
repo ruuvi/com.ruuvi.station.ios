@@ -1,3 +1,7 @@
+#if SWIFT_PACKAGE
+    import RuuviCloud
+    import RuuviOntology
+#endif
 //
 //  URLQueryItemEncoder.swift
 //  URLQueryItemEncoder
@@ -153,7 +157,7 @@ extension URLQueryItemEncoder {
 
     private func push(_ value: DateComponents, forKey codingPath: [CodingKey]) throws {
         guard (value.calendar?.identifier ?? Calendar.current.identifier) == .gregorian,
-              let year = value.year, let month = value.month, let day = value.day
+            let year = value.year, let month = value.month, let day = value.day
         else {
             throw DecodingError.dataCorrupted(
                 DecodingError.Context(codingPath: codingPath, debugDescription: "Invalid date components")
@@ -172,12 +176,13 @@ extension URLQueryItemEncoder {
     }
 
     private func push(_ value: Bool, forKey codingPath: [CodingKey]) throws {
-        let boolValue = switch value {
-        case true:
-            "true"
-        case false:
-            "false"
-        }
+        let boolValue =
+            switch value {
+            case true:
+                "true"
+            case false:
+                "false"
+            }
         items.append(URLQueryItem(name: codingPath.queryItemKey, value: boolValue))
     }
 

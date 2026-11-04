@@ -1,13 +1,15 @@
+#if SWIFT_PACKAGE
+    import RuuviService
+#endif
 // swiftlint:disable file_length
 
 import Foundation
 import RuuviLocalization
-import Future
 import Humidity
 import RuuviLocal
 import RuuviOntology
 import RuuviStorage
-import xlsxwriter
+import libxlsxwriter
 
 public final class RuuviServiceExportImpl: RuuviServiceExport {
 
@@ -59,64 +61,34 @@ public final class RuuviServiceExportImpl: RuuviServiceExport {
         for uuid: String,
         version: Int,
         settings: SensorSettings?
-    ) -> Future<
-        URL,
-        RuuviServiceError
-    > {
-        let promise = Promise<URL, RuuviServiceError>()
+    ) async throws(RuuviServiceError) -> URL {
+        guard !Task.isCancelled else { throw .writeToDisk(CancellationError()) }
         let historyStart = RuuviHistoryWindow.start(limitHours: ruuviLocalSettings.dataPruningOffsetHours)
-        let ruuviTag = ruuviStorage.readOne(uuid)
-        ruuviTag.on(success: { [weak self] ruuviTag in
-            let recordsOperation = self?.ruuviStorage.readAll(uuid, after: historyStart)
-            recordsOperation?.on(success: { [weak self] records in
-                let offsetedLogs = records.compactMap { $0.with(sensorSettings: settings) }
-                self?.csvLog(for: ruuviTag, version: version, with: offsetedLogs)
-                    .on(success: { url in
-                    promise.succeed(value: url)
-                }, failure: { error in
-                    promise.fail(error: error)
-                })
-            }, failure: { error in
-                promise.fail(error: .ruuviStorage(error))
-            })
-        }, failure: { error in
-            promise.fail(error: .ruuviStorage(error))
-        })
-
-        return promise.future
+        let sensor: AnyRuuviTagSensor
+        let records: [RuuviTagSensorRecord]
+        do {
+            sensor = try await ruuviStorage.readOne(uuid)
+            records = try await ruuviStorage.readAll(uuid, after: historyStart)
+        } catch { throw .ruuviStorage(error) }
+        let corrected = records.compactMap { $0.with(sensorSettings: settings) }
+        return try await csvLog(for: sensor, version: version, with: corrected)
     }
 
     public func xlsxLog(
         for uuid: String,
         version: Int,
         settings: SensorSettings?
-    ) -> Future<URL, RuuviServiceError> {
-        let promise = Promise<URL, RuuviServiceError>()
-
+    ) async throws(RuuviServiceError) -> URL {
+        guard !Task.isCancelled else { throw .writeToDisk(CancellationError()) }
         let historyStart = RuuviHistoryWindow.start(limitHours: ruuviLocalSettings.dataPruningOffsetHours)
-        let ruuviTag = ruuviStorage.readOne(uuid)
-
-        ruuviTag.on(success: { [weak self] ruuviTag in
-            guard let self = self else { return }
-            let recordsOperation = self.ruuviStorage.readAll(uuid, after: historyStart)
-
-            recordsOperation.on(success: { [weak self] records in
-                guard let self = self else { return }
-                let offsetedLogs = records.compactMap { $0.with(sensorSettings: settings) }
-                self.exportToXlsx(for: ruuviTag, version: version, with: offsetedLogs)
-                    .on(success: { url in
-                    promise.succeed(value: url)
-                }, failure: { error in
-                    promise.fail(error: error)
-                })
-            }, failure: { error in
-                promise.fail(error: .ruuviStorage(error))
-            })
-        }, failure: { error in
-            promise.fail(error: .ruuviStorage(error))
-        })
-
-        return promise.future
+        let sensor: AnyRuuviTagSensor
+        let records: [RuuviTagSensorRecord]
+        do {
+            sensor = try await ruuviStorage.readOne(uuid)
+            records = try await ruuviStorage.readAll(uuid, after: historyStart)
+        } catch { throw .ruuviStorage(error) }
+        let corrected = records.compactMap { $0.with(sensorSettings: settings) }
+        return try await exportToXlsx(for: sensor, version: version, with: corrected)
     }
 }
 
@@ -319,7 +291,8 @@ extension RuuviServiceExportImpl {
             for record: RuuviTagSensorRecord
         ) -> String {
             guard let humidity = record.humidity,
-                  let temperature = record.temperature else {
+                let temperature = record.temperature
+            else {
                 return emptyValueString
             }
             let base = Humidity(value: humidity.value, unit: .relative(temperature: temperature))
@@ -331,7 +304,8 @@ extension RuuviServiceExportImpl {
             for record: RuuviTagSensorRecord
         ) -> String {
             guard let humidity = record.humidity,
-                  let temperature = record.temperature else {
+                let temperature = record.temperature
+            else {
                 return emptyValueString
             }
             let base = Humidity(value: humidity.value, unit: .relative(temperature: temperature))
@@ -344,7 +318,8 @@ extension RuuviServiceExportImpl {
             unit: UnitTemperature
         ) -> String {
             guard let humidity = record.humidity,
-                  let temperature = record.temperature else {
+                let temperature = record.temperature
+            else {
                 return emptyValueString
             }
             let base = Humidity(value: humidity.value, unit: .relative(temperature: temperature))
@@ -413,7 +388,7 @@ extension RuuviServiceExportImpl {
                 cellExtractor: { record in
                     Self.dataDateFormatter.string(from: record.date)
                 }
-            ),
+            )
         ]
 
         if includeAirMeasurements {
@@ -784,122 +759,140 @@ extension RuuviServiceExportImpl {
 
         // Possibly data source
         if settings.includeDataSourceInHistoryExport {
-            columns.append(ColumnDefinition(
-                header: RuuviLocalization.ExportService.dataSource,
-                cellExtractor: { record in
-                    record.source.rawValue
-                }
-            ))
+            columns.append(
+                ColumnDefinition(
+                    header: RuuviLocalization.ExportService.dataSource,
+                    cellExtractor: { record in
+                        record.source.rawValue
+                    }
+                ))
         }
 
         return columns
     }
 
-    // CSV export method
+    static func csvCell(_ value: String) -> String {
+        guard value.contains(",") || value.contains("\"") || value.contains("\n") || value.contains("\r") else {
+            return value
+        }
+        return "\"" + value.replacingOccurrences(of: "\"", with: "\"\"") + "\""
+    }
+
+    private func exportPath(for sensor: RuuviTagSensor, extension suffix: String) -> URL {
+        let date = Self.fileNameDateFormatter.string(from: Date())
+        let name = (sensor.name + "_" + date + "_" + UUID().uuidString + "." + suffix)
+            .replacingOccurrences(of: "/", with: "_")
+        return URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(name)
+    }
+
+    private func export(
+        _ work: @escaping (ExportCancellation) throws -> URL
+    ) async throws(RuuviServiceError) -> URL {
+        let cancellation = ExportCancellation()
+        let result: Result<URL, RuuviServiceError> = await withTaskCancellationHandler {
+            await withCheckedContinuation { continuation in
+                if Task.isCancelled { cancellation.cancel() }
+                queue.async {
+                    let result: Result<URL, RuuviServiceError> = autoreleasepool {
+                        do {
+                            try cancellation.check()
+                            let url = try work(cancellation)
+                            do { try cancellation.check() } catch {
+                                try? FileManager.default.removeItem(at: url); throw error
+                            }
+                            return .success(url)
+                        } catch {
+                            return .failure(.writeToDisk(error))
+                        }
+                    }
+                    continuation.resume(returning: result)
+                }
+            }
+        } onCancel: {
+            cancellation.cancel()
+        }
+        return try result.get()
+    }
+
     private func csvLog(
         for ruuviTag: RuuviTagSensor,
         version: Int,
         with records: [RuuviTagSensorRecord]
-    ) -> Future<URL, RuuviServiceError> {
-        let promise = Promise<URL, RuuviServiceError>()
-        let date = Self.fileNameDateFormatter.string(from: Date())
-        let fileName = ruuviTag.name + "_" + date + ".csv"
-        let escapedFileName = fileName.replacingOccurrences(of: "/", with: "_")
-        let path = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(escapedFileName)
-
-        queue.async {
-            autoreleasepool {
-                let firmware = RuuviDataFormat.dataFormat(from: version)
-                let columns = self.buildColumnDefinitions(
-                    firmware: firmware,
-                    settings: self.ruuviLocalSettings,
-                    records: records
-                )
-
-                let headerLine = columns.map { $0.header }.joined(separator: ",")
-                var csvText = headerLine + "\n"
-
-                for record in records {
-                    let rowValues = columns.map { $0.cellExtractor(record) }
-                    csvText.append(rowValues.joined(separator: ","))
-                    csvText.append("\n")
-                }
-
-                do {
-                    try csvText.write(to: path, atomically: true, encoding: .utf8)
-                    DispatchQueue.main.async {
-                        promise.succeed(value: path)
-                    }
-                } catch {
-                    DispatchQueue.main.async {
-                        promise.fail(error: .writeToDisk(error))
-                    }
-                }
+    ) async throws(RuuviServiceError) -> URL {
+        try await export { cancellation in
+            let path = self.exportPath(for: ruuviTag, extension: "csv")
+            let columns = self.buildColumnDefinitions(
+                firmware: RuuviDataFormat.dataFormat(from: version),
+                settings: self.ruuviLocalSettings, records: records)
+            var csvText = columns.map { Self.csvCell($0.header) }.joined(separator: ",") + "\n"
+            for record in records {
+                try cancellation.check()
+                csvText.append(columns.map { Self.csvCell($0.cellExtractor(record)) }.joined(separator: ",") + "\n")
             }
+            try cancellation.check()
+            try csvText.write(to: path, atomically: true, encoding: .utf8)
+            return path
         }
-
-        return promise.future
     }
 
-    // XLSX export method
     private func exportToXlsx(
         for ruuviTag: RuuviTagSensor,
         version: Int,
         with records: [RuuviTagSensorRecord]
-    ) -> Future<URL, RuuviServiceError> {
-        let promise = Promise<URL, RuuviServiceError>()
-        let date = Self.fileNameDateFormatter.string(from: Date())
-        let fileName = ruuviTag.name + "_" + date + ".xlsx"
-        let escapedFileName = fileName.replacingOccurrences(of: "/", with: "_")
-        let pathURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(escapedFileName)
-
-        queue.async {
-            autoreleasepool {
-
-                let firmwareType = RuuviDataFormat.dataFormat(
-                    from: version
-                )
-
-                let columns = self.buildColumnDefinitions(
-                    firmware: firmwareType,
-                    settings: self.ruuviLocalSettings,
-                    records: records
-                )
-
-                let wb = Workbook(name: pathURL.path)
-                defer { wb.close() }
-                let ws = wb.addWorksheet()
-
-                for (colIndex, colDef) in columns.enumerated() {
-                    ws.write(.string(colDef.header), [0, colIndex])
-                }
-
-                for (rowIndex, record) in records.enumerated() {
-                    for (colIndex, column) in columns.enumerated() {
-                        let value = column.cellExtractor(record)
-                        ws.write(.string(value), [rowIndex + 1, colIndex])
-                    }
-                }
-
-                DispatchQueue.main.async {
-                    promise.succeed(value: pathURL)
-                }
+    ) async throws(RuuviServiceError) -> URL {
+        try await export { cancellation in
+            let path = self.exportPath(for: ruuviTag, extension: "xlsx")
+            do {
+                try self.writeWorkbook(to: path, version: version, records: records, cancellation: cancellation)
+                return path
+            } catch {
+                try? FileManager.default.removeItem(at: path)
+                throw error
             }
         }
+    }
 
-        return promise.future
+    private func writeWorkbook(
+        to path: URL, version: Int, records: [RuuviTagSensorRecord],
+        cancellation: ExportCancellation
+    ) throws {
+        let columns = buildColumnDefinitions(
+            firmware: RuuviDataFormat.dataFormat(from: version),
+            settings: ruuviLocalSettings, records: records)
+        guard let workbook = workbook_new(path.path) else { throw CocoaError(.fileWriteUnknown) }
+        var closed = false
+        defer { if !closed { workbook_close(workbook) } }
+        guard let worksheet = workbook_add_worksheet(workbook, nil) else { throw CocoaError(.fileWriteUnknown) }
+        func check(_ error: lxw_error) throws {
+            guard error != LXW_NO_ERROR else { return }
+            throw NSError(
+                domain: "RuuviExport", code: Int(error.rawValue),
+                userInfo: [NSLocalizedDescriptionKey: String(cString: lxw_strerror(error))])
+        }
+        for (index, column) in columns.enumerated() {
+            try check(worksheet_write_string(worksheet, 0, UInt16(index), column.header, nil))
+        }
+        for (row, record) in records.enumerated() {
+            try cancellation.check()
+            for (column, definition) in columns.enumerated() {
+                try check(
+                    worksheet_write_string(
+                        worksheet, UInt32(row + 1), UInt16(column),
+                        definition.cellExtractor(record), nil))
+            }
+        }
+        // Closing finalizes the ZIP archive. Only expose the URL after all bytes are on disk.
+        let error = workbook_close(workbook)
+        closed = true
+        try check(error)
     }
 }
 
-extension UnitPressure {
-    var ruuviSymbol: String {
-        switch self {
-        case .newtonsPerMetersSquared:
-            return RuuviLocalization.pressurePaUnit
-        default:
-            return symbol
-        }
-    }
+private final class ExportCancellation: @unchecked Sendable {
+    private let lock = NSLock()
+    private var cancelled = false
+    func cancel() { lock.withLock { cancelled = true } }
+    func check() throws { if lock.withLock({ cancelled }) { throw CancellationError() } }
 }
 
 // swiftlint:enable file_length

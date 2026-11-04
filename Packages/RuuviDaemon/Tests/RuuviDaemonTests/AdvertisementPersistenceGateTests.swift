@@ -1,4 +1,8 @@
-@testable import RuuviDaemonRuuviTag
+#if SWIFT_PACKAGE
+    @testable import RuuviDaemonRuuviTag
+#else
+    @testable import RuuviDaemon
+#endif
 import XCTest
 
 final class AdvertisementPersistenceGateTests: XCTestCase {

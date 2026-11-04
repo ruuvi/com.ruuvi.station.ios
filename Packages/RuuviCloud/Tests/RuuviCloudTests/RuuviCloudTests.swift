@@ -1,5 +1,9 @@
 @testable import RuuviCloud
-@testable import RuuviCloudApi
+#if SWIFT_PACKAGE
+    @testable import RuuviCloudApi
+#else
+    @testable import RuuviCloud
+#endif
 import XCTest
 
 final class RuuviCloudTests: XCTestCase {
@@ -35,9 +39,10 @@ final class RuuviCloudTests: XCTestCase {
             silent: false,
             language: "DE"
         )
-        let object = try JSONSerialization.jsonObject(
-            with: JSONEncoder().encode(request)
-        ) as? [String: Any]
+        let object =
+            try JSONSerialization.jsonObject(
+                with: JSONEncoder().encode(request)
+            ) as? [String: Any]
 
         XCTAssertEqual(object?["consent"] as? Bool, true)
         XCTAssertEqual(object?["silent"] as? Bool, false)
@@ -51,9 +56,10 @@ final class RuuviCloudTests: XCTestCase {
             silent: true,
             language: "en-GB"
         )
-        let object = try JSONSerialization.jsonObject(
-            with: JSONEncoder().encode(request)
-        ) as? [String: Any]
+        let object =
+            try JSONSerialization.jsonObject(
+                with: JSONEncoder().encode(request)
+            ) as? [String: Any]
 
         XCTAssertEqual(object?["language"] as? String, "EN")
     }
@@ -64,9 +70,10 @@ final class RuuviCloudTests: XCTestCase {
             silent: true,
             language: "Base"
         )
-        let object = try JSONSerialization.jsonObject(
-            with: JSONEncoder().encode(request)
-        ) as? [String: Any]
+        let object =
+            try JSONSerialization.jsonObject(
+                with: JSONEncoder().encode(request)
+            ) as? [String: Any]
 
         XCTAssertEqual(object?["language"] as? String, "EN")
     }

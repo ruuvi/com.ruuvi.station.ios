@@ -1,6 +1,9 @@
+#if SWIFT_PACKAGE
+    import RuuviDaemon
+    import RuuviDaemonOperation
+#endif
 import BackgroundTasks
 import Foundation
-import Future
 
 @available(iOS 13, *)
 public final class BackgroundProcessServiceiOS13: BackgroundProcessService {
@@ -27,30 +30,7 @@ public final class BackgroundProcessServiceiOS13: BackgroundProcessService {
     }
 
     private func handleDataPruning(task: BGProcessingTask) {
-        schedule()
-
-        let ruuviTags = dataPruningOperationsManager.ruuviTagPruningOperations()
-        ruuviTags.on(success: { ruuviTagOperations in
-            let operations = ruuviTagOperations
-            if operations.count > 0 {
-                let queue = OperationQueue()
-                queue.maxConcurrentOperationCount = 1
-                let lastOperation = operations.last!
-
-                lastOperation.completionBlock = {
-                    task.setTaskCompleted(success: !lastOperation.isCancelled)
-                }
-
-                queue.addOperations(operations, waitUntilFinished: false)
-
-                task.expirationHandler = {
-                    queue.cancelAllOperations()
-                }
-            } else {
-                task.setTaskCompleted(success: true)
-            }
-        }, failure: { _ in
-            task.setTaskCompleted(success: false)
-        })
+        // History retention has no pruning work. Complete legacy scheduled tasks exactly once.
+        task.setTaskCompleted(success: true)
     }
 }

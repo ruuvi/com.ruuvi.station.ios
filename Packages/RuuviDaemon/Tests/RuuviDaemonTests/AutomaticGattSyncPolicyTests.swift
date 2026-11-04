@@ -1,4 +1,8 @@
-@testable import RuuviDaemonRuuviTag
+#if SWIFT_PACKAGE
+    @testable import RuuviDaemonRuuviTag
+#else
+    @testable import RuuviDaemon
+#endif
 import XCTest
 
 final class AutomaticGattSyncPolicyTests: XCTestCase {
@@ -26,29 +30,33 @@ final class AutomaticGattSyncPolicyTests: XCTestCase {
     }
 
     func testZeroCooldownAllowsImmediateRetry() {
-        XCTAssertTrue(AutomaticGattSyncPolicy.isEligible(
-            now: now, lastSync: now, lastAttempt: now, cooldownMinutes: 0
-        ))
+        XCTAssertTrue(
+            AutomaticGattSyncPolicy.isEligible(
+                now: now, lastSync: now, lastAttempt: now, cooldownMinutes: 0
+            ))
     }
 
     func testDisabledCooldownIgnoresFutureTimestamps() {
         let future = now.addingTimeInterval(3600)
         for cooldown in [0, -5] {
-            XCTAssertTrue(AutomaticGattSyncPolicy.isEligible(
-                now: now, lastSync: future, lastAttempt: nil, cooldownMinutes: cooldown
-            ))
-            XCTAssertTrue(AutomaticGattSyncPolicy.isEligible(
-                now: now, lastSync: nil, lastAttempt: future, cooldownMinutes: cooldown
-            ))
+            XCTAssertTrue(
+                AutomaticGattSyncPolicy.isEligible(
+                    now: now, lastSync: future, lastAttempt: nil, cooldownMinutes: cooldown
+                ))
+            XCTAssertTrue(
+                AutomaticGattSyncPolicy.isEligible(
+                    now: now, lastSync: nil, lastAttempt: future, cooldownMinutes: cooldown
+                ))
         }
     }
 
     func testHistoryIsClampedToRetentionWindow() {
         let earliest = now.addingTimeInterval(-24 * 60 * 60)
         XCTAssertEqual(AutomaticGattSyncPolicy.syncFrom(now: now, lastSync: nil, historyHours: 24), earliest)
-        XCTAssertEqual(AutomaticGattSyncPolicy.syncFrom(
-            now: now, lastSync: earliest.addingTimeInterval(-60), historyHours: 24
-        ), earliest)
+        XCTAssertEqual(
+            AutomaticGattSyncPolicy.syncFrom(
+                now: now, lastSync: earliest.addingTimeInterval(-60), historyHours: 24
+            ), earliest)
         let recent = now.addingTimeInterval(-600)
         XCTAssertEqual(AutomaticGattSyncPolicy.syncFrom(now: now, lastSync: recent, historyHours: 24), recent)
     }

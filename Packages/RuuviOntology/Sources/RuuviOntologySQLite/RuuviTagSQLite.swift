@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviOntology
+#endif
 import Foundation
 import GRDB
 
@@ -62,22 +65,26 @@ public struct RuuviTagSQLite: RuuviTagSensor, Equatable {
     }
 
     public static func == (lhs: RuuviTagSQLite, rhs: RuuviTagSQLite) -> Bool {
-        let identifiersEqual = lhs.id == rhs.id
+        let identifiersEqual =
+            lhs.id == rhs.id
             && lhs.macId?.any == rhs.macId?.any
             && lhs.luid?.any == rhs.luid?.any
             && lhs.serviceUUID == rhs.serviceUUID
 
-        let metadataEqual = lhs.name == rhs.name
+        let metadataEqual =
+            lhs.name == rhs.name
             && lhs.version == rhs.version
             && lhs.firmwareVersion == rhs.firmwareVersion
             && lhs.isConnectable == rhs.isConnectable
 
-        let ownershipEqual = lhs.isClaimed == rhs.isClaimed
+        let ownershipEqual =
+            lhs.isClaimed == rhs.isClaimed
             && lhs.isOwner == rhs.isOwner
             && lhs.owner == rhs.owner
             && lhs.ownersPlan == rhs.ownersPlan
 
-        let cloudEqual = lhs.isCloudSensor == rhs.isCloudSensor
+        let cloudEqual =
+            lhs.isCloudSensor == rhs.isCloudSensor
             && lhs.canShare == rhs.canShare
             && lhs.sharedTo == rhs.sharedTo
             && lhs.sharedToPending == rhs.sharedToPending
@@ -180,29 +187,31 @@ public extension RuuviTagSQLite {
     }
 
     static func createTable(in db: Database) throws {
-        try db.create(table: RuuviTagSQLite.databaseTableName, body: { table in
-            table.column(RuuviTagSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
-            table.column(RuuviTagSQLite.macColumn.name, .text)
-            table.column(RuuviTagSQLite.luidColumn.name, .text)
-            table.column(RuuviTagSQLite.serviceUUIDColumn.name, .text)
-            table.column(RuuviTagSQLite.nameColumn.name, .text).notNull()
-            table.column(RuuviTagSQLite.versionColumn.name, .integer).notNull()
-            table.column(RuuviTagSQLite.firmwareVersionColumn.name, .text)
-            table.column(RuuviTagSQLite.isConnectableColumn.name, .boolean).notNull()
-            table.column(RuuviTagSQLite.isClaimedColumn.name, .boolean)
-                .notNull()
-                .defaults(to: false)
-            table.column(RuuviTagSQLite.isOwnerColumn.name, .boolean)
-                .notNull()
-                .defaults(to: true)
-            table.column(RuuviTagSQLite.owner.name, .text)
-            table.column(RuuviTagSQLite.ownersPlan.name, .text)
-            table.column(RuuviTagSQLite.isCloudSensor.name, .boolean)
-            table.column(RuuviTagSQLite.canShareColumn.name, .boolean)
-            table.column(RuuviTagSQLite.sharedToColumn.name, .text)
-            table.column(RuuviTagSQLite.sharedToPendingColumn.name, .text)
-            table.column(RuuviTagSQLite.maxHistoryDaysColumn.name, .integer)
-            table.column(RuuviTagSQLite.lastUpdatedColumn.name, .datetime)
-        })
+        try db.create(
+            table: RuuviTagSQLite.databaseTableName,
+            body: { table in
+                table.column(RuuviTagSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
+                table.column(RuuviTagSQLite.macColumn.name, .text)
+                table.column(RuuviTagSQLite.luidColumn.name, .text)
+                table.column(RuuviTagSQLite.serviceUUIDColumn.name, .text)
+                table.column(RuuviTagSQLite.nameColumn.name, .text).notNull()
+                table.column(RuuviTagSQLite.versionColumn.name, .integer).notNull()
+                table.column(RuuviTagSQLite.firmwareVersionColumn.name, .text)
+                table.column(RuuviTagSQLite.isConnectableColumn.name, .boolean).notNull()
+                table.column(RuuviTagSQLite.isClaimedColumn.name, .boolean)
+                    .notNull()
+                    .defaults(to: false)
+                table.column(RuuviTagSQLite.isOwnerColumn.name, .boolean)
+                    .notNull()
+                    .defaults(to: true)
+                table.column(RuuviTagSQLite.owner.name, .text)
+                table.column(RuuviTagSQLite.ownersPlan.name, .text)
+                table.column(RuuviTagSQLite.isCloudSensor.name, .boolean)
+                table.column(RuuviTagSQLite.canShareColumn.name, .boolean)
+                table.column(RuuviTagSQLite.sharedToColumn.name, .text)
+                table.column(RuuviTagSQLite.sharedToPendingColumn.name, .text)
+                table.column(RuuviTagSQLite.maxHistoryDaysColumn.name, .integer)
+                table.column(RuuviTagSQLite.lastUpdatedColumn.name, .datetime)
+            })
     }
 }

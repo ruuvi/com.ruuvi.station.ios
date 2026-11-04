@@ -85,7 +85,7 @@ extension ChartSettingsPresenter {
         bind(cell.boolean, fire: false) { [weak self] observer, value in
             guard let value else { return }
             observer.settings.chartDrawDotsOn = value
-            self?.ruuviAppSettingsService.set(drawDots: value)
+            Task { @MainActor [self] in _ = try? await self?.ruuviAppSettingsService.set(drawDots: value) }
         }
         return cell
     }

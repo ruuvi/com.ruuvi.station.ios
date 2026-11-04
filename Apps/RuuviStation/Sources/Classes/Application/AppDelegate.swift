@@ -4,7 +4,7 @@ import FirebaseCrashlytics
 import FirebaseMessaging
 import UIKit
 #if (DEBUG || ALPHA) && canImport(FLEX)
-import FLEX
+    import FLEX
 #endif
 import RuuviAnalytics
 import RuuviContext
@@ -19,6 +19,7 @@ import UserNotifications
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    var startupErrorController: UIViewController?
     var appStateService: AppStateService!
     var localNotificationsManager: RuuviNotificationLocal!
     var featureToggleService: FeatureToggleService!
@@ -37,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         FirebaseApp.configure()
         #if DEBUG || ALPHA
-        Analytics.setAnalyticsCollectionEnabled(false)
+            Analytics.setAnalyticsCollectionEnabled(false)
         #endif
 
         Messaging.messaging().delegate = self
@@ -57,9 +58,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #endif
 
         // the order is important
-        r.resolve(SQLiteContext.self)?
-            .database
-            .migrateIfNeeded()
+        do {
+            try r.resolve(SQLiteContext.self)?.database.migrateIfNeeded()
+        } catch {
+            let controller = UIViewController()
+            controller.view.backgroundColor = .systemBackground
+            let label = UILabel()
+            label.text = "Unable to open your saved sensor data. Please restart the app. Your data has been preserved."
+            label.numberOfLines = 0
+            label.textAlignment = .center
+            label.translatesAutoresizingMaskIntoConstraints = false
+            controller.view.addSubview(label)
+            NSLayoutConstraint.activate([
+                label.leadingAnchor.constraint(
+                    equalTo: controller.view.safeAreaLayoutGuide.leadingAnchor, constant: 24),
+                label.trailingAnchor.constraint(
+                    equalTo: controller.view.safeAreaLayoutGuide.trailingAnchor, constant: -24),
+                label.centerYAnchor.constraint(equalTo: controller.view.centerYAnchor),
+            ])
+            startupErrorController = controller
+            NSLog("Database migration failed: %@", error.localizedDescription)
+            return true
+        }
         r.resolve(RuuviMigrationFactory.self)?
             .createAllOrdered()
             .forEach { $0.migrateIfNeeded() }
@@ -80,7 +100,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #if (DEBUG || ALPHA) && canImport(FLEX)
             FLEXManager.shared.registerGlobalEntry(
                 withName: "Feature Toggles",
-                viewControllerFutureBlock: { r.resolve(FeatureTogglesViewController.self) ?? UIViewController()
+                viewControllerFutureBlock: {
+                    r.resolve(FeatureTogglesViewController.self) ?? UIViewController()
                 }
             )
             FLEXManager.shared.registerGlobalEntry(
@@ -140,24 +161,27 @@ extension AppDelegate: MessagingDelegate {
 
     private func register(with fcmToken: String?) {
         guard !UIDevice.isSimulator,
-              let fcmToken,
-              cloudNotificationService != nil
+            let fcmToken,
+            cloudNotificationService != nil
         else {
             return
         }
 
-        cloudNotificationService.set(
-            token: fcmToken,
-            name: UIDevice.modelName,
-            data: nil,
-            language: settings.language,
-            sound: settings.alertSound
-        )
+        Task { @MainActor [self] in
+            _ = try? await cloudNotificationService.set(
+                token: fcmToken,
+                name: UIDevice.modelName,
+                data: nil,
+                language: settings.language,
+                sound: settings.alertSound
+            )
+        }
     }
 
     fileprivate func setPreferrerdLanguage() {
         if let languageCode = Bundle.main.preferredLocalizations.first,
-           let language = Language(rawValue: languageCode) {
+            let language = Language(rawValue: languageCode)
+        {
             if settings.language != language {
                 settings.language = language
             }
@@ -179,14 +203,16 @@ extension AppDelegate: RuuviNotificationLocalOutput {
 extension AppDelegate {
     func widgetSensorIdentifier(from url: URL) -> String {
         if let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
-           let sensorId = components.queryItems?.first(where: { $0.name == "sensorId" })?.value,
-           !sensorId.isEmpty {
+            let sensorId = components.queryItems?.first(where: { $0.name == "sensorId" })?.value,
+            !sensorId.isEmpty
+        {
             return sensorId
         }
 
         if let scheme = url.scheme,
-           url.host == nil,
-           !url.path.isEmpty {
+            url.host == nil,
+            !url.path.isEmpty
+        {
             return "\(scheme):\(url.path)"
         }
 
@@ -198,7 +224,7 @@ extension AppDelegate {
         application: UIApplication? = nil
     ) {
         settings.setCardToOpenFromWidget(for: uuid)
-        appStateService
+        appStateService?
             .applicationDidOpenWithWidgetDeepLink(
                 application,
                 macId: uuid

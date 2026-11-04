@@ -3,7 +3,6 @@ import BTKit
 import CoreBluetooth
 import CoreNFC
 import Foundation
-import Future
 import RuuviContext
 import RuuviCore
 import RuuviDaemon
@@ -195,10 +194,12 @@ extension DiscoverPresenter: DiscoverViewOutput {
         // Stop NFC session
         view?.stopNFCSession()
 
-        guard let message = self.message(
-            for: nfcSensor,
-            displayName: displayName(for: nfcSensor)
-        ) else { return }
+        guard
+            let message = self.message(
+                for: nfcSensor,
+                displayName: displayName(for: nfcSensor)
+            )
+        else { return }
 
         // If tag is already added show the name from RuuviStation alongside
         // other info.
@@ -257,8 +258,8 @@ extension DiscoverPresenter: DiscoverViewOutput {
 
     func viewDidAddDeviceWithNFC(with tag: NFCSensor?) {
         guard let tag,
-              canAddSensorFromNFC(tag),
-              let displayName = displayName(for: tag)
+            canAddSensorFromNFC(tag),
+            let displayName = displayName(for: tag)
         else {
             return
         }
@@ -371,11 +372,13 @@ extension DiscoverPresenter {
     }
 
     private func startObservingLost() {
-        lostToken = foreground.lost(self, options: [.lostDeviceDelay(10)], closure: { observer, device in
-            if let ruuviTag = device.ruuvi?.tag {
-                observer.ruuviTags.remove(ruuviTag)
-            }
-        })
+        lostToken = foreground.lost(
+            self, options: [.lostDeviceDelay(10)],
+            closure: { observer, device in
+                if let ruuviTag = device.ruuvi?.tag {
+                    observer.ruuviTags.remove(ruuviTag)
+                }
+            })
     }
 
     private func stopObservingLost() {
@@ -383,15 +386,17 @@ extension DiscoverPresenter {
     }
 
     private func startObservingBluetoothState() {
-        stateToken = foreground.state(self, closure: { observer, state in
-            let resolvedState = observer.resolvedBluetoothState(for: state)
-            observer.view?.isBluetoothEnabled = resolvedState.isEnabled
-            if !resolvedState.isEnabled || resolvedState.userDeclined {
-                observer.ruuviTags.removeAll()
-                observer.view?.ruuviTags = []
-                observer.view?.showBluetoothDisabled(userDeclined: resolvedState.userDeclined)
-            }
-        })
+        stateToken = foreground.state(
+            self,
+            closure: { observer, state in
+                let resolvedState = observer.resolvedBluetoothState(for: state)
+                observer.view?.isBluetoothEnabled = resolvedState.isEnabled
+                if !resolvedState.isEnabled || resolvedState.userDeclined {
+                    observer.ruuviTags.removeAll()
+                    observer.view?.ruuviTags = []
+                    observer.view?.showBluetoothDisabled(userDeclined: resolvedState.userDeclined)
+                }
+            })
     }
 
     private func stopObservingBluetoothState() {
@@ -408,7 +413,7 @@ extension DiscoverPresenter {
 
         switch state {
         case .poweredOff,
-             .unsupported:
+            .unsupported:
             return (false, false)
         default:
             return (true, false)
@@ -420,8 +425,10 @@ extension DiscoverPresenter {
             if let ruuviTag = device.ruuvi?.tag {
                 // when mode is changed, the device should be replaced
                 if let sameUUID = observer.ruuviTags.first(
-                    where: { $0.uuid == ruuviTag.uuid || $0.mac?.mac.any == ruuviTag.macId?.any
-                }), sameUUID != ruuviTag {
+                    where: {
+                        $0.uuid == ruuviTag.uuid || $0.mac?.mac.any == ruuviTag.macId?.any
+                    }), sameUUID != ruuviTag
+                {
                     observer.ruuviTags.remove(sameUUID)
                 }
                 observer.ruuviTags.update(with: ruuviTag)
@@ -470,10 +477,12 @@ extension DiscoverPresenter {
         let filtered = ruuviTags.filter { tag in
             !persistedSensors.contains(where: { persistedTag in
                 if let tagLuid = tag.luid?.value,
-                   let persistedTagLuid = persistedTag.luid?.value {
+                    let persistedTagLuid = persistedTag.luid?.value
+                {
                     tagLuid == persistedTagLuid
                 } else if let tagMacId = tag.mac,
-                          let persistedTagMacId = persistedTag.macId?.value {
+                    let persistedTagMacId = persistedTag.macId?.value
+                {
                     tagMacId == persistedTagMacId
                 } else {
                     false
@@ -498,9 +507,11 @@ extension DiscoverPresenter {
 
         switch prefix {
         case .init([0x02]):
-            guard let restString = String(
-                data: rest, encoding: .utf8
-            ) else { return nil }
+            guard
+                let restString = String(
+                    data: rest, encoding: .utf8
+                )
+            else { return nil }
 
             let components = restString.components(separatedBy: ": ")
             if components.count == 2 {
@@ -524,7 +535,8 @@ extension DiscoverPresenter {
             return Helpers.ruuviAirDefaultName(from: tag.macId)
         }
 
-        return Helpers
+        return
+            Helpers
             .ruuviDeviceDefaultName(
                 from: tag.macId,
                 luid: nil,
@@ -534,7 +546,7 @@ extension DiscoverPresenter {
 
     private func message(for tag: NFCSensor?, displayName: String?) -> String? {
         guard let tag,
-              let displayName
+            let displayName
         else {
             return nil
         }
@@ -598,17 +610,23 @@ extension DiscoverPresenter {
     ) {
         let sanitizedFirmware = firmwareVersion?.ruuviFirmwareDisplayValue ?? firmwareVersion ?? ""
 
-        ruuviOwnershipService.add(
-            sensor: sensor.with(name: displayName)
-                .with(firmwareVersion: sanitizedFirmware),
-            record: record
-        )
-        .on(success: { [weak self] anyRuuviTagSensor in
-            guard let sSelf = self else { return }
-            sSelf.output?.ruuvi(discover: sSelf, didAdd: anyRuuviTagSensor)
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        Task { @MainActor [self] in
+            do throws(RuuviServiceError) {
+                let value = try await ruuviOwnershipService.add(
+                    sensor: sensor.with(name: displayName)
+                        .with(firmwareVersion: sanitizedFirmware),
+                    record: record
+                )
+                ({ [weak self] anyRuuviTagSensor in
+                    guard let sSelf = self else { return }
+                    sSelf.output?.ruuvi(discover: sSelf, didAdd: anyRuuviTagSensor)
+                })(value)
+            } catch {
+                ({ [weak self] error in
+                    self?.errorPresenter.present(error: error)
+                })(error)
+            }
+        }
     }
 
     private func trimNulls(from string: String) -> String {

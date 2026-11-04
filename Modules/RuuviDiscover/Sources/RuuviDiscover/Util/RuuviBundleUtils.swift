@@ -1,3 +1,12 @@
+#if SWIFT_PACKAGE
+    import RuuviOntology
+    import RuuviContext
+    import RuuviReactor
+    import RuuviLocal
+    import RuuviService
+    import RuuviPresenters
+    import RuuviLocalization
+#endif
 import Foundation
 import UIKit
 
@@ -8,9 +17,11 @@ public extension Bundle {
                 for: clazz
             ).resourceURL?.appendingPathComponent(
                 "\(module).bundle"
-            ), let bundle = Bundle(
-                url: bundleURL
-            ) {
+            ),
+                let bundle = Bundle(
+                    url: bundleURL
+                )
+            {
                 return bundle
             } else if let bundleURL = Bundle(for: clazz).resourceURL, let bundle = Bundle(url: bundleURL) {
                 return bundle
@@ -27,12 +38,6 @@ public extension Bundle {
 
 public extension UIStoryboard {
     static func named(_ name: String, for clazz: AnyClass) -> UIStoryboard {
-        let bundle: Bundle
-        #if SWIFT_PACKAGE
-            bundle = Bundle.module
-        #else
-            bundle = Bundle.pod(clazz)
-        #endif
-        return UIStoryboard(name: name, bundle: bundle)
+        return UIStoryboard(name: name, bundle: Bundle.pod(clazz))
     }
 }

@@ -94,9 +94,10 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
         syncAlertsIfNeeded()
         startObservingCloudRequestState()
         if let snapshot {
-            ledBrightnessSelection = settings.ledBrightnessSelection(
-                for: ledBrightnessMacId()
-            ) ?? .defaultSelection
+            ledBrightnessSelection =
+                settings.ledBrightnessSelection(
+                    for: ledBrightnessMacId()
+                ) ?? .defaultSelection
             view?.configure(
                 snapshot: snapshot,
                 dashboardSortingType: settings.dashboardSensorOrder.count == 0 ? .alphabetical : .manual
@@ -217,8 +218,9 @@ extension CardsSettingsPresenter: CardsSettingsViewOutput {
 
     func viewDidTapVisibleMeasurements() {
         guard let snapshot,
-              let sensor = sensor,
-              snapshot.metadata.canEditLocalSettings else {
+            let sensor = sensor,
+            snapshot.metadata.canEditLocalSettings
+        else {
             return
         }
         router?.openVisibilitySettings(
@@ -229,9 +231,10 @@ extension CardsSettingsPresenter: CardsSettingsViewOutput {
     }
 
     func viewDidTapLedBrightness() {
-        let currentSelection = settings.ledBrightnessSelection(
-            for: ledBrightnessMacId()
-        ) ?? ledBrightnessSelection
+        let currentSelection =
+            settings.ledBrightnessSelection(
+                for: ledBrightnessMacId()
+            ) ?? ledBrightnessSelection
         ledBrightnessSelection = currentSelection
         router?.openLedBrightnessSettings(
             selection: currentSelection,
@@ -477,9 +480,9 @@ extension CardsSettingsPresenter {
                 queue: .main,
                 using: { [weak self] notification in
                     guard let sSelf = self,
-                          let userInfo = notification.userInfo,
-                          let hasOwner = userInfo[RuuviTagOwnershipCheckResultKey.hasOwner] as? Bool,
-                          !hasOwner
+                        let userInfo = notification.userInfo,
+                        let hasOwner = userInfo[RuuviTagOwnershipCheckResultKey.hasOwner] as? Bool,
+                        !hasOwner
                     else {
                         return
                     }
@@ -502,10 +505,12 @@ extension CardsSettingsPresenter {
 
     private func matchesCurrentSnapshot(_ candidate: RuuviTagCardSnapshot) -> Bool {
         guard let snapshot else { return false }
-        let sameLuid = candidate.identifierData.luid?.any != nil &&
-            (candidate.identifierData.luid?.any == snapshot.identifierData.luid?.any)
-        let sameMac = candidate.identifierData.mac?.any != nil &&
-            (candidate.identifierData.mac?.any == snapshot.identifierData.mac?.any)
+        let sameLuid =
+            candidate.identifierData.luid?.any != nil
+            && (candidate.identifierData.luid?.any == snapshot.identifierData.luid?.any)
+        let sameMac =
+            candidate.identifierData.mac?.any != nil
+            && (candidate.identifierData.mac?.any == snapshot.identifierData.mac?.any)
         return sameMac || sameLuid || candidate.id == snapshot.id
     }
 
@@ -516,8 +521,7 @@ extension CardsSettingsPresenter {
             .getSensorSettings(for: updatedSnapshot.id)
         refreshConnectionStateIfNeeded()
 
-        if updatedSnapshot.connectionData.isConnected ||
-            !updatedSnapshot.connectionData.keepConnection {
+        if updatedSnapshot.connectionData.isConnected || !updatedSnapshot.connectionData.keepConnection {
             invalidateKeepConnectionTimer()
             view?.stopKeepConnectionAnimatingDots()
         }
@@ -635,14 +639,16 @@ extension CardsSettingsPresenter {
 
     private func refreshFirmwareVersionIfNeeded() {
         guard let snapshot,
-              snapshot.displayData.firmwareVersion == nil else { return }
+            snapshot.displayData.firmwareVersion == nil
+        else { return }
         fetchFirmwareVersion()
     }
 
     private func fetchFirmwareVersion() {
         guard !firmwareVersionCheckInProgress,
-              let sensor = sensor,
-              let luid = sensor.luid else { return }
+            let sensor = sensor,
+            let luid = sensor.luid
+        else { return }
 
         firmwareVersionCheckInProgress = true
 
@@ -666,7 +672,7 @@ extension CardsSettingsPresenter {
 
             if case let .success(version) = result {
                 let updatedTag = currentSensor.with(firmwareVersion: version)
-                self.ruuviPool?.update(updatedTag)
+                Task { @MainActor [self] in _ = try? await self.ruuviPool?.update(updatedTag) }
                 self.sensor = updatedTag.any
             }
 
@@ -825,27 +831,37 @@ private extension CardsSettingsPresenter {
         }()
 
         activityPresenter.show(with: .loading(message: nil))
-        ruuviSensorPropertiesService.updateDescription(
-            for: sensor,
-            description: value
-        ).on(success: { [weak self] settings in
-            self?.sensorSettings = settings
-            self?.refreshNotesSummary()
-            completion(.success(()))
-        }, failure: { [weak self] error in
-            guard let self else { return }
-            if self.isCloudOnlyNotesSaveFailure(error) {
-                self.handleCloudOnlyNotesSaveFailure(
-                    for: sensor,
-                    completion: completion
-                )
-            } else {
-                self.errorPresenter.present(error: error)
-                completion(.failure(error))
+        Task { @MainActor [weak self, ruuviSensorPropertiesService = ruuviSensorPropertiesService, sensor = sensor] in
+            defer {
+                ({ [weak self] in
+                    self?.activityPresenter.dismiss()
+                })()
             }
-        }, completion: { [weak self] in
-            self?.activityPresenter.dismiss()
-        })
+            do throws(RuuviServiceError) {
+                let value = try await ruuviSensorPropertiesService.updateDescription(
+                    for: sensor,
+                    description: value
+                )
+                ({ [weak self] settings in
+                    self?.sensorSettings = settings
+                    self?.refreshNotesSummary()
+                    completion(.success(()))
+                })(value)
+            } catch {
+                ({ [weak self] error in
+                    guard let self else { return }
+                    if self.isCloudOnlyNotesSaveFailure(error) {
+                        self.handleCloudOnlyNotesSaveFailure(
+                            for: sensor,
+                            completion: completion
+                        )
+                    } else {
+                        self.errorPresenter.present(error: error)
+                        completion(.failure(error))
+                    }
+                })(error)
+            }
+        }
     }
 
     private func isCloudOnlyNotesSaveFailure(_ error: RuuviServiceError) -> Bool {
@@ -869,18 +885,26 @@ private extension CardsSettingsPresenter {
             return
         }
 
-        ruuviPool.readSensorSettings(sensor)
-            .on(success: { [weak self] settings in
-                self?.sensorSettings = settings
-                self?.refreshNotesSummary()
-            }, completion: { [weak self] in
-                self?.activityPresenter.update(
-                    with: .failed(
-                        message: RuuviLocalization.activitySavingFail
+        Task { @MainActor [weak self, sensor = sensor, ruuviPool = ruuviPool] in
+            defer {
+                ({ [weak self] in
+                    self?.activityPresenter.update(
+                        with: .failed(
+                            message: RuuviLocalization.activitySavingFail
+                        )
                     )
-                )
-                completion(.success(()))
-            })
+                    completion(.success(()))
+                })()
+            }
+            do throws(RuuviPoolError) {
+                let value = try await ruuviPool.readSensorSettings(sensor)
+                ({ [weak self] settings in
+                    self?.sensorSettings = settings
+                    self?.refreshNotesSummary()
+                })(value)
+            } catch {
+            }
+        }
     }
 
     func withAlertService(
@@ -1000,15 +1024,15 @@ extension CardsSettingsPresenter: RuuviTagServiceCoordinatorObserver {
             else { return }
             processSnapshotUpdate(updatedSnapshot)
         case let .snapshotUpdated(updatedSnapshot, _),
-             let .connectionSnapshotUpdated(updatedSnapshot),
-             let .alertSnapshotUpdated(updatedSnapshot):
+            let .connectionSnapshotUpdated(updatedSnapshot),
+            let .alertSnapshotUpdated(updatedSnapshot):
             processSnapshotUpdate(updatedSnapshot)
         case .bluetoothStateChanged,
-             .cloudModeChanged,
-             .cloudSyncCompleted,
-             .userLoginStateChanged,
-             .userLogoutStateChanged,
-             .alertsChanged:
+            .cloudModeChanged,
+            .cloudSyncCompleted,
+            .userLoginStateChanged,
+            .userLogoutStateChanged,
+            .alertsChanged:
             refreshCurrentSnapshot()
         default:
             break

@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviLocal
+#endif
 import Foundation
 
 public final class RuuviLocalFactoryUserDefaults: RuuviLocalFactory {

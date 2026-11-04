@@ -1,5 +1,7 @@
+#if SWIFT_PACKAGE
+    import RuuviRepository
+#endif
 import Foundation
-import Future
 import RuuviOntology
 import RuuviPool
 import RuuviStorage
@@ -19,29 +21,29 @@ final class RuuviRepositoryCoordinator: RuuviRepository {
     func create(
         record: RuuviTagSensorRecord,
         for _: RuuviTagSensor
-    ) -> Future<AnyRuuviTagSensorRecord, RuuviRepositoryError> {
-        let promise = Promise<AnyRuuviTagSensorRecord, RuuviRepositoryError>()
-        pool.create(record)
-            .on(success: { _ in
-                promise.succeed(value: record.any)
-            }, failure: { error in
-                promise.fail(error: .ruuviPool(error))
-            })
-        return promise.future
+    ) async throws(RuuviRepositoryError) -> AnyRuuviTagSensorRecord {
+        var outcome: Result<AnyRuuviTagSensorRecord, RuuviRepositoryError>
+        do {
+            let _ = try await pool.create(record)
+            outcome = .success(record.any)
+        } catch let error {
+            outcome = .failure(.ruuviPool(error))
+        }
+        return try outcome.get()
     }
 
     func create(
         records: [RuuviTagSensorRecord],
         for _: RuuviTagSensor
-    ) -> Future<[AnyRuuviTagSensorRecord], RuuviRepositoryError> {
-        let promise = Promise<[AnyRuuviTagSensorRecord], RuuviRepositoryError>()
+    ) async throws(RuuviRepositoryError) -> [AnyRuuviTagSensorRecord] {
+        var outcome: Result<[AnyRuuviTagSensorRecord], RuuviRepositoryError>
         let mappedRecords = records.map(\.any)
-        pool.create(mappedRecords)
-            .on(success: { _ in
-                promise.succeed(value: mappedRecords)
-            }, failure: { error in
-                promise.fail(error: .ruuviPool(error))
-            })
-        return promise.future
+        do {
+            let _ = try await pool.create(mappedRecords)
+            outcome = .success(mappedRecords)
+        } catch let error {
+            outcome = .failure(.ruuviPool(error))
+        }
+        return try outcome.get()
     }
 }

@@ -1,3 +1,13 @@
+#if SWIFT_PACKAGE
+    import RuuviMigration
+#endif
+#if SWIFT_PACKAGE
+    import RuuviOntology
+    import RuuviPool
+    import RuuviContext
+    import RuuviStorage
+    import RuuviService
+#endif
 import Foundation
 import RuuviLocal
 

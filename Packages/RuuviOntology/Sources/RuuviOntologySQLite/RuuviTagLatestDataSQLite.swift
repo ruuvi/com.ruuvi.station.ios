@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviOntology
+#endif
 import Foundation
 import GRDB
 import Humidity
@@ -160,9 +163,10 @@ extension RuuviTagLatestDataSQLite: FetchableRecord {
         version = row[RuuviTagLatestDataSQLite.versionColumn] ?? 5
         if let celsius = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.celsiusColumn]) {
             temperature = Temperature(value: celsius, unit: .celsius)
-            if let relativeHumidity
-                = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.relativeHumidityInPercentColumn]),
-                let temperature {
+            if let relativeHumidity = Double.fromDatabaseValue(
+                row[RuuviTagLatestDataSQLite.relativeHumidityInPercentColumn]),
+                let temperature
+            {
                 humidity = Humidity(
                     value: relativeHumidity,
                     unit: .relative(temperature: temperature)
@@ -173,8 +177,9 @@ extension RuuviTagLatestDataSQLite: FetchableRecord {
             pressure = Pressure(value: hectopascals, unit: .hectopascals)
         }
         if let accelerationX = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.accelerationXColumn]),
-           let accelerationY = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.accelerationYColumn]),
-           let accelerationZ = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.accelerationZColumn]) {
+            let accelerationY = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.accelerationYColumn]),
+            let accelerationZ = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.accelerationZColumn])
+        {
             acceleration = Acceleration(
                 x: AccelerationMeasurement(value: accelerationX, unit: .metersPerSecondSquared),
                 y: AccelerationMeasurement(value: accelerationY, unit: .metersPerSecondSquared),
@@ -221,11 +226,14 @@ extension RuuviTagLatestDataSQLite: PersistableRecord {
         container[RuuviTagLatestDataSQLite.celsiusColumn] = temperature?.converted(to: .celsius).value
         container[RuuviTagLatestDataSQLite.relativeHumidityInPercentColumn] = humidity?.value
         container[RuuviTagLatestDataSQLite.hectopascalsColumn] = pressure?.converted(to: .hectopascals).value
-        container[RuuviTagLatestDataSQLite.accelerationXColumn] = acceleration?.x
+        container[RuuviTagLatestDataSQLite.accelerationXColumn] =
+            acceleration?.x
             .converted(to: .metersPerSecondSquared).value
-        container[RuuviTagLatestDataSQLite.accelerationYColumn] = acceleration?.y
+        container[RuuviTagLatestDataSQLite.accelerationYColumn] =
+            acceleration?.y
             .converted(to: .metersPerSecondSquared).value
-        container[RuuviTagLatestDataSQLite.accelerationZColumn] = acceleration?.z
+        container[RuuviTagLatestDataSQLite.accelerationZColumn] =
+            acceleration?.z
             .converted(to: .metersPerSecondSquared).value
         container[RuuviTagLatestDataSQLite.voltsColumn] = voltage?.converted(to: .volts).value
         container[RuuviTagLatestDataSQLite.movementCounterColumn] = movementCounter
@@ -250,40 +258,42 @@ extension RuuviTagLatestDataSQLite: PersistableRecord {
 
 public extension RuuviTagLatestDataSQLite {
     static func createTable(in db: Database) throws {
-        try db.create(table: RuuviTagLatestDataSQLite.databaseTableName, body: { table in
-            table.column(RuuviTagLatestDataSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
-            table.column(RuuviTagLatestDataSQLite.ruuviTagIdColumn.name, .text).notNull()
-            table.column(RuuviTagLatestDataSQLite.luidColumn.name, .text)
-            table.column(RuuviTagLatestDataSQLite.dateColumn.name, .datetime).notNull()
-            table.column(RuuviTagLatestDataSQLite.sourceColumn.name, .text).notNull()
-            table.column(RuuviTagLatestDataSQLite.macColumn.name, .text)
-            table.column(RuuviTagLatestDataSQLite.rssiColumn.name, .integer)
-            table.column(RuuviTagLatestDataSQLite.versionColumn.name, .integer).notNull()
-            table.column(RuuviTagLatestDataSQLite.celsiusColumn.name, .double)
-            table.column(RuuviTagLatestDataSQLite.relativeHumidityInPercentColumn.name, .double)
-            table.column(RuuviTagLatestDataSQLite.hectopascalsColumn.name, .double)
-            table.column(RuuviTagLatestDataSQLite.accelerationXColumn.name, .double)
-            table.column(RuuviTagLatestDataSQLite.accelerationYColumn.name, .double)
-            table.column(RuuviTagLatestDataSQLite.accelerationZColumn.name, .double)
-            table.column(RuuviTagLatestDataSQLite.voltsColumn.name, .double)
-            table.column(RuuviTagLatestDataSQLite.movementCounterColumn.name, .integer)
-            table.column(RuuviTagLatestDataSQLite.measurementSequenceNumberColumn.name, .integer)
-            table.column(RuuviTagLatestDataSQLite.txPowerColumn.name, .integer)
-            table.column(RuuviTagLatestDataSQLite.pm1Column.name, .double)
-            table.column(RuuviTagLatestDataSQLite.pm25Column.name, .double)
-            table.column(RuuviTagLatestDataSQLite.pm4Column.name, .double)
-            table.column(RuuviTagLatestDataSQLite.pm10Column.name, .double)
-            table.column(RuuviTagLatestDataSQLite.co2Column.name, .double)
-            table.column(RuuviTagLatestDataSQLite.vocColumn.name, .double)
-            table.column(RuuviTagLatestDataSQLite.noxColumn.name, .double)
-            table.column(RuuviTagLatestDataSQLite.luminanceColumn.name, .double)
-            table
-                .column(RuuviTagLatestDataSQLite.dbaInstantColumn.name, .double)
-            table.column(RuuviTagLatestDataSQLite.dbaAvgColumn.name, .double)
-            table.column(RuuviTagLatestDataSQLite.dbaPeakColumn.name, .double)
-            table.column(RuuviTagLatestDataSQLite.temperatureOffsetColumn.name, .double).notNull()
-            table.column(RuuviTagLatestDataSQLite.humidityOffsetColumn.name, .double).notNull()
-            table.column(RuuviTagLatestDataSQLite.pressureOffsetColumn.name, .double).notNull()
-        })
+        try db.create(
+            table: RuuviTagLatestDataSQLite.databaseTableName,
+            body: { table in
+                table.column(RuuviTagLatestDataSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
+                table.column(RuuviTagLatestDataSQLite.ruuviTagIdColumn.name, .text).notNull()
+                table.column(RuuviTagLatestDataSQLite.luidColumn.name, .text)
+                table.column(RuuviTagLatestDataSQLite.dateColumn.name, .datetime).notNull()
+                table.column(RuuviTagLatestDataSQLite.sourceColumn.name, .text).notNull()
+                table.column(RuuviTagLatestDataSQLite.macColumn.name, .text)
+                table.column(RuuviTagLatestDataSQLite.rssiColumn.name, .integer)
+                table.column(RuuviTagLatestDataSQLite.versionColumn.name, .integer).notNull()
+                table.column(RuuviTagLatestDataSQLite.celsiusColumn.name, .double)
+                table.column(RuuviTagLatestDataSQLite.relativeHumidityInPercentColumn.name, .double)
+                table.column(RuuviTagLatestDataSQLite.hectopascalsColumn.name, .double)
+                table.column(RuuviTagLatestDataSQLite.accelerationXColumn.name, .double)
+                table.column(RuuviTagLatestDataSQLite.accelerationYColumn.name, .double)
+                table.column(RuuviTagLatestDataSQLite.accelerationZColumn.name, .double)
+                table.column(RuuviTagLatestDataSQLite.voltsColumn.name, .double)
+                table.column(RuuviTagLatestDataSQLite.movementCounterColumn.name, .integer)
+                table.column(RuuviTagLatestDataSQLite.measurementSequenceNumberColumn.name, .integer)
+                table.column(RuuviTagLatestDataSQLite.txPowerColumn.name, .integer)
+                table.column(RuuviTagLatestDataSQLite.pm1Column.name, .double)
+                table.column(RuuviTagLatestDataSQLite.pm25Column.name, .double)
+                table.column(RuuviTagLatestDataSQLite.pm4Column.name, .double)
+                table.column(RuuviTagLatestDataSQLite.pm10Column.name, .double)
+                table.column(RuuviTagLatestDataSQLite.co2Column.name, .double)
+                table.column(RuuviTagLatestDataSQLite.vocColumn.name, .double)
+                table.column(RuuviTagLatestDataSQLite.noxColumn.name, .double)
+                table.column(RuuviTagLatestDataSQLite.luminanceColumn.name, .double)
+                table
+                    .column(RuuviTagLatestDataSQLite.dbaInstantColumn.name, .double)
+                table.column(RuuviTagLatestDataSQLite.dbaAvgColumn.name, .double)
+                table.column(RuuviTagLatestDataSQLite.dbaPeakColumn.name, .double)
+                table.column(RuuviTagLatestDataSQLite.temperatureOffsetColumn.name, .double).notNull()
+                table.column(RuuviTagLatestDataSQLite.humidityOffsetColumn.name, .double).notNull()
+                table.column(RuuviTagLatestDataSQLite.pressureOffsetColumn.name, .double).notNull()
+            })
     }
 }

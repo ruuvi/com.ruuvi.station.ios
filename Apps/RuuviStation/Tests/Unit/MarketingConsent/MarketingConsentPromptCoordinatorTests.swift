@@ -1,5 +1,4 @@
 @testable import station
-import Future
 import RuuviCloud
 import RuuviLocal
 import RuuviPresenters
@@ -9,19 +8,52 @@ import UIKit
 import XCTest
 
 final class MarketingConsentPromptCoordinatorTests: XCTestCase {
-    @MainActor func testNewSessionDoesNotWaitForOrUseOldConsentCheck() async {
+    @MainActor func testPendingConsentCheckDoesNotRetainCoordinator() async {
         let fixture = Fixture()
-        fixture.check()
-        fixture.user.apiKey = "second-session"
-        fixture.user.email = "second@example.com"
-        fixture.check()
-        XCTAssertEqual(fixture.service.reads.count, 2)
-        fixture.service.reads[0].succeed(value: .init(consent: false, status: .notFound))
+        var coordinator: MarketingConsentPromptCoordinator? = MarketingConsentPromptCoordinator(
+            history: fixture.history, user: fixture.user, service: fixture.service, flags: fixture.flags)
+        weak var releasedCoordinator = coordinator
+        coordinator?.presentIfNeeded(from: fixture.presenter)
+        await fixture.settle()
+        XCTAssertEqual(fixture.service.reads.count, 1)
+        coordinator = nil
+        XCTAssertNil(releasedCoordinator, "A pending request must not keep the screen coordinator alive")
+        fixture.service.reads[0].resume(returning: .success(.init(consent: false, status: .notFound)))
         await fixture.settle()
         XCTAssertNil(fixture.dialog)
-        fixture.check()
+    }
+
+    @MainActor func testPendingConsentCheckDoesNotRetainPresentingScreen() async {
+        let fixture = Fixture()
+        var presenter: UIViewController? = UIViewController()
+        weak var releasedPresenter = presenter
+        fixture.window.rootViewController = presenter
+        presenter?.view.layoutIfNeeded()
+        fixture.coordinator.presentIfNeeded(from: presenter!)
+        await fixture.settle()
+        XCTAssertEqual(fixture.service.reads.count, 1)
+        fixture.window.rootViewController = fixture.presenter
+        presenter = nil
+        await fixture.settle()
+        XCTAssertNil(releasedPresenter, "A pending request must not retain a dismissed screen")
+        fixture.service.reads[0].resume(returning: .success(.init(consent: false, status: .notFound)))
+        await fixture.settle()
+        XCTAssertNil(fixture.dialog)
+    }
+
+    @MainActor func testNewSessionDoesNotWaitForOrUseOldConsentCheck() async {
+        let fixture = Fixture()
+        await fixture.check()
+        fixture.user.apiKey = "second-session"
+        fixture.user.email = "second@example.com"
+        await fixture.check()
+        XCTAssertEqual(fixture.service.reads.count, 2)
+        fixture.service.reads[0].resume(returning: .success(.init(consent: false, status: .notFound)))
+        await fixture.settle()
+        XCTAssertNil(fixture.dialog)
+        await fixture.check()
         XCTAssertEqual(fixture.service.reads.count, 2, "Old response must not clear the newer request")
-        fixture.service.reads[1].succeed(value: .init(consent: false, status: .unsubscribed))
+        fixture.service.reads[1].resume(returning: .success(.init(consent: false, status: .unsubscribed)))
         await fixture.settle()
         XCTAssertNotNil(fixture.dialog)
         XCTAssertTrue(fixture.history.isEligible(account: "first@example.com"))
@@ -35,6 +67,7 @@ final class MarketingConsentPromptCoordinatorTests: XCTestCase {
         let first = fixture.dialog
         first?.onPrimaryAction?()
         first?.onPrimaryAction?()
+        await fixture.settle()
         XCTAssertEqual(fixture.service.writes.count, 1, "Duplicate taps must not issue another save")
         await fixture.dismiss()
         fixture.history.markPresented(account: "first@example.com", now: Date().addingTimeInterval(-61))
@@ -43,12 +76,13 @@ final class MarketingConsentPromptCoordinatorTests: XCTestCase {
         XCTAssertNotNil(second)
         XCTAssertFalse(first === second)
         second?.onPrimaryAction?()
+        await fixture.settle()
         XCTAssertEqual(fixture.service.writes.count, 2)
         guard fixture.service.writes.count == 2 else { return }
-        fixture.service.writes[0].succeed(value: .init(consent: true, status: .subscribed))
+        fixture.service.writes[0].resume(returning: .success(.init(consent: true, status: .subscribed)))
         await fixture.settle()
         XCTAssertTrue(fixture.buttons(in: second).allSatisfy { !$0.isEnabled })
-        fixture.service.writes[1].fail(error: .failedToParseNetworkResponse)
+        fixture.service.writes[1].resume(returning: .failure(.failedToParseNetworkResponse))
         await fixture.settle()
         XCTAssertTrue(fixture.buttons(in: second).allSatisfy(\.isEnabled))
         await fixture.dismiss()
@@ -57,23 +91,23 @@ final class MarketingConsentPromptCoordinatorTests: XCTestCase {
     @MainActor func testSubscribedAndUnavailableStatusesNeverPresent() async {
         for status in [RuuviCloudMarketingConsentStatus.subscribed, .unconfirmed, .bounced, .softBounced, .complained] {
             let fixture = Fixture()
-            fixture.check()
-            fixture.service.reads[0].succeed(value: .init(consent: false, status: status))
+            await fixture.check()
+            fixture.service.reads[0].resume(returning: .success(.init(consent: false, status: status)))
             await fixture.settle()
             XCTAssertNil(fixture.dialog, status.rawValue)
             XCTAssertTrue(fixture.history.isEligible(account: "first@example.com"))
         }
         let fixture = Fixture()
-        fixture.check()
-        fixture.service.reads[0].succeed(value: .init(consent: true, status: .unsubscribed))
+        await fixture.check()
+        fixture.service.reads[0].resume(returning: .success(.init(consent: true, status: .unsubscribed)))
         await fixture.settle()
         XCTAssertNil(fixture.dialog)
     }
 
     @MainActor func testFailureCanRetryWithoutStartingCooldown() async {
         let fixture = Fixture()
-        fixture.check()
-        fixture.service.reads[0].fail(error: .failedToParseNetworkResponse)
+        await fixture.check()
+        fixture.service.reads[0].resume(returning: .failure(.failedToParseNetworkResponse))
         await fixture.settle()
         XCTAssertTrue(fixture.history.isEligible(account: "first@example.com"))
         await fixture.showDialog()
@@ -103,19 +137,18 @@ final class MarketingConsentPromptCoordinatorTests: XCTestCase {
     }
 }
 
-private final class ConsentService: RuuviServiceMarketingConsent {
-    var reads = [Promise<RuuviCloudMarketingConsent, RuuviServiceError>]()
-    var writes = [Promise<RuuviCloudMarketingConsent, RuuviServiceError>]()
-    func getMarketingConsent() -> Future<RuuviCloudMarketingConsent, RuuviServiceError> {
-        let promise = Promise<RuuviCloudMarketingConsent, RuuviServiceError>()
-        reads.append(promise)
-        return promise.future
+@MainActor private final class ConsentService: RuuviServiceMarketingConsent {
+    typealias Response = CheckedContinuation<Result<RuuviCloudMarketingConsent, RuuviServiceError>, Never>
+    var reads = [Response]()
+    var writes = [Response]()
+    func getMarketingConsent() async throws(RuuviServiceError) -> RuuviCloudMarketingConsent {
+        let result = await withCheckedContinuation { reads.append($0) }
+        return try result.get()
     }
-    func set(marketingPreference: Bool) -> Future<RuuviCloudMarketingConsent, RuuviServiceError> {
+    func set(marketingPreference: Bool) async throws(RuuviServiceError) -> RuuviCloudMarketingConsent {
         XCTAssertTrue(marketingPreference)
-        let promise = Promise<RuuviCloudMarketingConsent, RuuviServiceError>()
-        writes.append(promise)
-        return promise.future
+        let result = await withCheckedContinuation { writes.append($0) }
+        return try result.get()
     }
 }
 
@@ -170,11 +203,11 @@ private final class ConsentFlags: RuuviLocalFlags {
     }
 
     var dialog: RuuviDialogViewController? { presenter.presentedViewController as? RuuviDialogViewController }
-    func check() { coordinator.presentIfNeeded(from: presenter) }
+    func check() async { coordinator.presentIfNeeded(from: presenter); await settle() }
     func settle() async { try? await Task.sleep(nanoseconds: 150_000_000) }
     func showDialog() async {
-        check()
-        service.reads.last?.succeed(value: .init(consent: false, status: .notFound))
+        await check()
+        service.reads.last?.resume(returning: .success(.init(consent: false, status: .notFound)))
         await settle()
     }
     func dismiss() async {

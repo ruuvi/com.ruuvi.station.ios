@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviOntology
+#endif
 import Foundation
 import GRDB
 
@@ -23,21 +26,13 @@ public struct RuuviCloudSensorSubscriptionSQLite: CloudSensorSubscription, Equat
         lhs: RuuviCloudSensorSubscriptionSQLite,
         rhs: RuuviCloudSensorSubscriptionSQLite
     ) -> Bool {
-        return lhs.macId == rhs.macId &&
-            lhs.subscriptionName == rhs.subscriptionName &&
-            lhs.isActive == rhs.isActive &&
-            lhs.maxClaims == rhs.maxClaims &&
-            lhs.maxHistoryDays == rhs.maxHistoryDays &&
-            lhs.maxResolutionMinutes == rhs.maxResolutionMinutes &&
-            lhs.maxShares == rhs.maxShares &&
-            lhs.maxSharesPerSensor == rhs.maxSharesPerSensor &&
-            lhs.delayedAlertAllowed == rhs.delayedAlertAllowed &&
-            lhs.emailAlertAllowed == rhs.emailAlertAllowed &&
-            lhs.offlineAlertAllowed == rhs.offlineAlertAllowed &&
-            lhs.pdfExportAllowed == rhs.pdfExportAllowed &&
-            lhs.pushAlertAllowed == rhs.pushAlertAllowed &&
-            lhs.telegramAlertAllowed == rhs.telegramAlertAllowed &&
-            lhs.endAt == rhs.endAt
+        return lhs.macId == rhs.macId && lhs.subscriptionName == rhs.subscriptionName && lhs.isActive == rhs.isActive
+            && lhs.maxClaims == rhs.maxClaims && lhs.maxHistoryDays == rhs.maxHistoryDays
+            && lhs.maxResolutionMinutes == rhs.maxResolutionMinutes && lhs.maxShares == rhs.maxShares
+            && lhs.maxSharesPerSensor == rhs.maxSharesPerSensor && lhs.delayedAlertAllowed == rhs.delayedAlertAllowed
+            && lhs.emailAlertAllowed == rhs.emailAlertAllowed && lhs.offlineAlertAllowed == rhs.offlineAlertAllowed
+            && lhs.pdfExportAllowed == rhs.pdfExportAllowed && lhs.pushAlertAllowed == rhs.pushAlertAllowed
+            && lhs.telegramAlertAllowed == rhs.telegramAlertAllowed && lhs.endAt == rhs.endAt
     }
 }
 

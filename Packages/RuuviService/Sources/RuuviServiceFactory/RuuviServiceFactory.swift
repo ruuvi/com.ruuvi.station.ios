@@ -1,3 +1,15 @@
+#if SWIFT_PACKAGE
+    import RuuviService
+    import RuuviServiceAuth
+    import RuuviServiceAlert
+    import RuuviServiceAppSettings
+    import RuuviServiceCloudSync
+    import RuuviServiceOffsetCalibration
+    import RuuviServiceOwnership
+    import RuuviServiceSensorProperties
+    import RuuviServiceSensorRecords
+    import RuuviServiceCloudNotification
+#endif
 import Foundation
 import RuuviCloud
 import RuuviCore

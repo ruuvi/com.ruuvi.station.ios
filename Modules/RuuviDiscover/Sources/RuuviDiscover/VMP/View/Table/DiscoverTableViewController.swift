@@ -1,3 +1,10 @@
+#if SWIFT_PACKAGE
+    import RuuviContext
+    import RuuviReactor
+    import RuuviLocal
+    import RuuviService
+    import RuuviPresenters
+#endif
 // swiftlint:disable file_length
 import BTKit
 import CoreNFC
@@ -33,6 +40,7 @@ class DiscoverTableViewController: UIViewController {
 
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
+        tableView.accessibilityIdentifier = "discover.sensors"
         tableView.backgroundColor = .clear
         tableView.rowHeight = 44
         tableView.delegate = self
@@ -58,6 +66,7 @@ class DiscoverTableViewController: UIViewController {
             target: self,
             action: #selector(closeBarButtonItemAction)
         )
+        button.accessibilityIdentifier = "discover.close"
         button.tintColor = .label
         return button
     }()
@@ -117,7 +126,8 @@ extension DiscoverTableViewController: DiscoverViewInput {
     }
 
     func localize() {
-        navigationItem.title = RuuviLocalization
+        navigationItem.title =
+            RuuviLocalization
             .DiscoverTable.NavigationItem.title
         actionButton.setTitle(
             RuuviLocalization.DiscoverTable.GetMoreSensors
@@ -402,7 +412,8 @@ extension DiscoverTableViewController: UITableViewDataSource {
                 with: DiscoverNoDevicesTableViewCell.self,
                 for: indexPath
             )
-            cell.descriptionLabel.text = isBluetoothEnabled
+            cell.descriptionLabel.text =
+                isBluetoothEnabled
                 ? RuuviLocalization.DiscoverTable
                     .NoDevicesSection.NotFound.text
                 : RuuviLocalization.DiscoverTable
@@ -575,11 +586,12 @@ extension DiscoverTableViewController {
     }
 
     private func takeUserToBTSettings(userDeclined: Bool) {
-        guard let url = URL(
-            string: userDeclined
-                ? UIApplication.openSettingsURLString
-                : "App-prefs:Bluetooth"
-        ),
+        guard
+            let url = URL(
+                string: userDeclined
+                    ? UIApplication.openSettingsURLString
+                    : "App-prefs:Bluetooth"
+            ),
             UIApplication.shared.canOpenURL(url)
         else {
             return

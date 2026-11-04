@@ -1,11 +1,12 @@
-import Future
+#if SWIFT_PACKAGE
+    import RuuviLocal
+#endif
 import RuuviOntology
 import UIKit
 
 class ImagePersistenceDocuments: ImagePersistence {
     private let ext = ".png"
     private let bgDir = "bg"
-    private var isBgDirCreated = false
 
     func fetchBg(for identifier: Identifier) -> UIImage? {
         let uuid = identifier.value
@@ -19,27 +20,22 @@ class ImagePersistenceDocuments: ImagePersistence {
         try? FileManager.default.removeItem(at: url)
     }
 
+    @concurrent
     func persistBg(
         image: UIImage,
         compressionQuality: CGFloat,
         for identifier: Identifier
-    ) -> Future<URL, RuuviLocalError> {
-        let uuid = identifier.value
-        let promise = Promise<URL, RuuviLocalError>()
-        DispatchQueue.global().async {
-            if let data = image.jpegData(compressionQuality: compressionQuality) {
-                do {
-                    let url = try self.getBgDirectory().appendingPathComponent(uuid + self.ext)
-                    try data.write(to: url)
-                    promise.succeed(value: url)
-                } catch {
-                    promise.fail(error: .disk(error))
-                }
-            } else {
-                promise.fail(error: .failedToGetJpegRepresentation)
-            }
+    ) async throws(RuuviLocalError) -> URL {
+        guard !Task.isCancelled else { throw .disk(CancellationError()) }
+        guard let data = image.jpegData(compressionQuality: compressionQuality) else {
+            throw .failedToGetJpegRepresentation
         }
-        return promise.future
+        do {
+            let url = try getBgDirectory().appendingPathComponent(identifier.value + ext)
+            try Task.checkCancellation()
+            try data.write(to: url, options: .atomic)
+            return url
+        } catch { throw .disk(error) }
     }
 
     private func getBgDirectory() throws -> URL {
@@ -48,10 +44,7 @@ class ImagePersistenceDocuments: ImagePersistence {
             throw RuuviLocalError.failedToGetDocumentsDirectory
         }
         let dir = docDir.appendingPathComponent(bgDir, isDirectory: true)
-        if !isBgDirCreated {
-            try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-            isBgDirCreated = true
-        }
+        try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         return dir
     }
 }

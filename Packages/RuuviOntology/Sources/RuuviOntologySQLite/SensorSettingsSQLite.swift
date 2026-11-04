@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviOntology
+#endif
 import Foundation
 import GRDB
 
@@ -42,16 +45,16 @@ public struct SensorSettingsSQLite: SensorSettings, Equatable {
 
     public static func == (lhs: SensorSettingsSQLite, rhs: SensorSettingsSQLite) -> Bool {
         lhs.luid?.any == rhs.luid?.any
-        && lhs.macId?.any == rhs.macId?.any
-        && lhs.temperatureOffset == rhs.temperatureOffset
-        && lhs.humidityOffset == rhs.humidityOffset
-        && lhs.pressureOffset == rhs.pressureOffset
-        && lhs.description == rhs.description
-        && lhs.displayOrder == rhs.displayOrder
-        && lhs.defaultDisplayOrder == rhs.defaultDisplayOrder
-        && lhs.displayOrderLastUpdated == rhs.displayOrderLastUpdated
-        && lhs.defaultDisplayOrderLastUpdated == rhs.defaultDisplayOrderLastUpdated
-        && lhs.descriptionLastUpdated == rhs.descriptionLastUpdated
+            && lhs.macId?.any == rhs.macId?.any
+            && lhs.temperatureOffset == rhs.temperatureOffset
+            && lhs.humidityOffset == rhs.humidityOffset
+            && lhs.pressureOffset == rhs.pressureOffset
+            && lhs.description == rhs.description
+            && lhs.displayOrder == rhs.displayOrder
+            && lhs.defaultDisplayOrder == rhs.defaultDisplayOrder
+            && lhs.displayOrderLastUpdated == rhs.displayOrderLastUpdated
+            && lhs.defaultDisplayOrderLastUpdated == rhs.defaultDisplayOrderLastUpdated
+            && lhs.descriptionLastUpdated == rhs.descriptionLastUpdated
     }
 }
 
@@ -107,7 +110,8 @@ extension SensorSettingsSQLite: PersistableRecord {
         container[SensorSettingsSQLite.humidityOffsetColumn] = humidityOffset
         container[SensorSettingsSQLite.pressureOffsetColumn] = pressureOffset
         container[SensorSettingsSQLite.descriptionColumn] = description
-        container[SensorSettingsSQLite.displayOrderColumn] = SensorSettingsSQLite
+        container[SensorSettingsSQLite.displayOrderColumn] =
+            SensorSettingsSQLite
             .encodeDisplayOrder(displayOrder)
         container[SensorSettingsSQLite.defaultDisplayOrderColumn] = defaultDisplayOrder
         container[SensorSettingsSQLite.displayOrderLastUpdatedColumn] = displayOrderLastUpdated
@@ -118,20 +122,22 @@ extension SensorSettingsSQLite: PersistableRecord {
 
 public extension SensorSettingsSQLite {
     static func createTable(in db: Database) throws {
-        try db.create(table: SensorSettingsSQLite.databaseTableName, body: { table in
-            table.column(SensorSettingsSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
-            table.column(SensorSettingsSQLite.luidColumn.name, .text)
-            table.column(SensorSettingsSQLite.macIdColumn.name, .text)
-            table.column(SensorSettingsSQLite.temperatureOffsetColumn.name, .double)
-            table.column(SensorSettingsSQLite.humidityOffsetColumn.name, .double)
-            table.column(SensorSettingsSQLite.pressureOffsetColumn.name, .double)
-            table.column(SensorSettingsSQLite.descriptionColumn.name, .text)
-            table.column(SensorSettingsSQLite.displayOrderColumn.name, .text)
-            table.column(SensorSettingsSQLite.defaultDisplayOrderColumn.name, .boolean)
-            table.column(SensorSettingsSQLite.displayOrderLastUpdatedColumn.name, .datetime)
-            table.column(SensorSettingsSQLite.defaultDisplayOrderLastUpdatedColumn.name, .datetime)
-            table.column(SensorSettingsSQLite.descriptionLastUpdatedColumn.name, .datetime)
-        })
+        try db.create(
+            table: SensorSettingsSQLite.databaseTableName,
+            body: { table in
+                table.column(SensorSettingsSQLite.idColumn.name, .text).notNull().primaryKey(onConflict: .replace)
+                table.column(SensorSettingsSQLite.luidColumn.name, .text)
+                table.column(SensorSettingsSQLite.macIdColumn.name, .text)
+                table.column(SensorSettingsSQLite.temperatureOffsetColumn.name, .double)
+                table.column(SensorSettingsSQLite.humidityOffsetColumn.name, .double)
+                table.column(SensorSettingsSQLite.pressureOffsetColumn.name, .double)
+                table.column(SensorSettingsSQLite.descriptionColumn.name, .text)
+                table.column(SensorSettingsSQLite.displayOrderColumn.name, .text)
+                table.column(SensorSettingsSQLite.defaultDisplayOrderColumn.name, .boolean)
+                table.column(SensorSettingsSQLite.displayOrderLastUpdatedColumn.name, .datetime)
+                table.column(SensorSettingsSQLite.defaultDisplayOrderLastUpdatedColumn.name, .datetime)
+                table.column(SensorSettingsSQLite.descriptionLastUpdatedColumn.name, .datetime)
+            })
     }
 }
 
@@ -180,7 +186,8 @@ public extension SensorSettingsSQLite {
             return decoded
         }
         if let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []),
-           let decoded = jsonObject as? [String] {
+            let decoded = jsonObject as? [String]
+        {
             return decoded
         }
         return nil
@@ -194,7 +201,8 @@ public extension SensorSettingsSQLite {
             return String(data: data, encoding: .utf8)
         }
         if let data = try? JSONSerialization.data(withJSONObject: codes, options: []),
-           let string = String(data: data, encoding: .utf8) {
+            let string = String(data: data, encoding: .utf8)
+        {
             return string
         }
         return nil

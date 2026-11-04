@@ -1,5 +1,11 @@
+#if SWIFT_PACKAGE
+    import RuuviStorage
+    import RuuviPool
+    import RuuviLocal
+    import RuuviRepository
+    import RuuviCore
+#endif
 import Foundation
-import Future
 import RuuviCloud
 import RuuviOntology
 
@@ -8,38 +14,38 @@ public protocol RuuviServiceOwnership {
     func add(
         sensor: RuuviTagSensor,
         record: RuuviTagSensorRecord?
-    ) -> Future<AnyRuuviTagSensor, RuuviServiceError>
+    ) async throws(RuuviServiceError) -> AnyRuuviTagSensor
 
     @discardableResult
     func remove(
         sensor: RuuviTagSensor,
         removeCloudHistory: Bool
-    ) -> Future<AnyRuuviTagSensor, RuuviServiceError>
+    ) async throws(RuuviServiceError) -> AnyRuuviTagSensor
 
     @discardableResult
-    func claim(sensor: RuuviTagSensor) -> Future<AnyRuuviTagSensor, RuuviServiceError>
+    func claim(sensor: RuuviTagSensor) async throws(RuuviServiceError) -> AnyRuuviTagSensor
 
     @discardableResult
-    func contest(sensor: RuuviTagSensor, secret: String) -> Future<AnyRuuviTagSensor, RuuviServiceError>
+    func contest(sensor: RuuviTagSensor, secret: String) async throws(RuuviServiceError) -> AnyRuuviTagSensor
 
     @discardableResult
     func unclaim(
         sensor: RuuviTagSensor,
         removeCloudHistory: Bool
-    ) -> Future<AnyRuuviTagSensor, RuuviServiceError>
+    ) async throws(RuuviServiceError) -> AnyRuuviTagSensor
 
     @discardableResult
-    func share(macId: MACIdentifier, with email: String) -> Future<ShareSensorResponse, RuuviServiceError>
+    func share(macId: MACIdentifier, with email: String) async throws(RuuviServiceError) -> ShareSensorResponse
 
     @discardableResult
-    func unshare(macId: MACIdentifier, with email: String?) -> Future<MACIdentifier, RuuviServiceError>
+    func unshare(macId: MACIdentifier, with email: String?) async throws(RuuviServiceError) -> MACIdentifier
 
     @discardableResult
-    func loadShared(for sensor: RuuviTagSensor) -> Future<Set<AnyShareableSensor>, RuuviServiceError>
+    func loadShared(for sensor: RuuviTagSensor) async throws(RuuviServiceError) -> Set<AnyShareableSensor>
 
     @discardableResult
-    func checkOwner(macId: MACIdentifier) -> Future<(String?, String?), RuuviServiceError>
+    func checkOwner(macId: MACIdentifier) async throws(RuuviServiceError) -> (String?, String?)
 
     @discardableResult
-    func updateShareable(for sensor: RuuviTagSensor) -> Future<Bool, RuuviServiceError>
+    func updateShareable(for sensor: RuuviTagSensor) async throws(RuuviServiceError) -> Bool
 }

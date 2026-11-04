@@ -7,7 +7,6 @@ targets:
     - path: Sources
       name: Repository
     dependencies:
-    - package: Future
     - target: RuuviOntology
     - target: RuuviPool
     - target: RuuviStorage

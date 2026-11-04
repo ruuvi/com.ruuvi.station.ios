@@ -1,6 +1,5 @@
 import BTKit
 import Foundation
-import Future
 import RuuviLocal
 import RuuviOntology
 import RuuviPool
@@ -29,40 +28,49 @@ extension DashboardInteractor: DashboardInteractorInput {
         resolveLatestSensor(for: ruuviTag) { [weak self] currentTag in
             guard let self else { return }
             guard let macId = currentTag.macId,
-                  currentTag.owner == nil else {
+                currentTag.owner == nil
+            else {
                 return
             }
 
             // Check in every 15 days if the tag doesn't have any owner.
             if let checkedDate = self.settings.ownerCheckDate(for: macId),
-               let days = checkedDate.numberOfDaysFromNow(), days < 15 {
+                let days = checkedDate.numberOfDaysFromNow(), days < 15
+            {
                 return
             }
 
-            self.ruuviOwnershipService.checkOwner(macId: macId)
-                .on(success: { [weak self] result in
-                    guard let self else { return }
-                    let owner = result.0
-                    guard let owner, !owner.isEmpty else {
-                        NotificationCenter.default.post(
-                            name: .RuuviTagOwnershipCheckDidEnd,
-                            object: nil,
-                            userInfo: [RuuviTagOwnershipCheckResultKey.hasOwner: false]
-                        )
-                        self.settings.setOwnerCheckDate(for: macId, value: Date())
-                        return
-                    }
-
-                    self.resolveLatestSensor(for: currentTag) { [weak self] latestTag in
+            Task { @MainActor [weak self, ruuviOwnershipService = ruuviOwnershipService!] in
+                do throws(RuuviServiceError) {
+                    let value = try await ruuviOwnershipService.checkOwner(macId: macId)
+                    ({ [weak self] result in
                         guard let self else { return }
-                        let normalizedOwner = owner.lowercased()
-                        self.ruuviPool.update(
-                            latestTag
-                                .with(owner: normalizedOwner)
-                                .with(isOwner: normalizedOwner == self.ruuviUser.email)
-                        )
-                    }
-                })
+                        let owner = result.0
+                        guard let owner, !owner.isEmpty else {
+                            NotificationCenter.default.post(
+                                name: .RuuviTagOwnershipCheckDidEnd,
+                                object: nil,
+                                userInfo: [RuuviTagOwnershipCheckResultKey.hasOwner: false]
+                            )
+                            self.settings.setOwnerCheckDate(for: macId, value: Date())
+                            return
+                        }
+
+                        self.resolveLatestSensor(for: currentTag) { [weak self] latestTag in
+                            guard let self else { return }
+                            let normalizedOwner = owner.lowercased()
+                            Task { @MainActor [self] in
+                                _ = try? await self.ruuviPool.update(
+                                    latestTag
+                                        .with(owner: normalizedOwner)
+                                        .with(isOwner: normalizedOwner == self.ruuviUser.email)
+                                )
+                            }
+                        }
+                    })(value)
+                } catch {
+                }
+            }
         }
     }
 
@@ -102,7 +110,7 @@ extension DashboardInteractor: DashboardInteractorInput {
         resolveLatestSensor(for: ruuviTag) { [weak self] latestTag in
             guard let self else { return }
             let updatedTag = latestTag.with(firmwareVersion: version)
-            self.ruuviPool.update(updatedTag)
+            Task { @MainActor [self] in _ = try? await self.ruuviPool.update(updatedTag) }
             self.checkOwner(for: updatedTag)
         }
     }
@@ -117,10 +125,13 @@ extension DashboardInteractor: DashboardInteractorInput {
         }
 
         let sensorId = ruuviTag.macId?.value ?? ruuviTag.id
-        ruuviStorage.readOne(sensorId)
-            .on(
-                success: { completion($0) },
-                failure: { _ in completion(ruuviTag) }
-            )
+        Task { @MainActor [self] in
+            do throws(RuuviStorageError) {
+                let value = try await ruuviStorage.readOne(sensorId)
+                ({ completion($0) })(value)
+            } catch {
+                ({ _ in completion(ruuviTag) })(error)
+            }
+        }
     }
 }

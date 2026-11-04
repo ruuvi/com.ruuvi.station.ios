@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviCore
+#endif
 import Foundation
 
 extension Array where Element: Hashable {
@@ -37,14 +40,15 @@ public extension Array where Element: Equatable {
 
 extension String {
     subscript(safe range: NSRange) -> String? {
-        guard count > range.location
-        else {
+        let length = utf16.count
+        guard range.location >= 0, range.length >= 0, range.location <= length else { return nil }
+        let bounded = NSRange(location: range.location, length: Swift.min(range.length, length - range.location))
+        let start = utf16.index(utf16.startIndex, offsetBy: bounded.location)
+        let end = utf16.index(start, offsetBy: bounded.length)
+        guard start.samePosition(in: unicodeScalars) != nil, end.samePosition(in: unicodeScalars) != nil else {
             return nil
         }
-        let length = count > range.location + range.length ? range.location + range.length : count
-        let startIndex = index(startIndex, offsetBy: range.location)
-        let endIndex = index(self.startIndex, offsetBy: length)
-        return String(self[startIndex ..< endIndex])
+        return String(decoding: utf16[start..<end], as: UTF16.self)
     }
 }
 

@@ -52,6 +52,7 @@ final class CardsMenuButton: UIButton {
     }
 
     private func setupButton() {
+        accessibilityIdentifier = "sensor.tab." + menuType.rawValue
         backgroundColor = .clear
     }
 

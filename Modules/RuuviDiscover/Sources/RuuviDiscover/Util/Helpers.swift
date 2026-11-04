@@ -1,3 +1,10 @@
+#if SWIFT_PACKAGE
+    import RuuviContext
+    import RuuviReactor
+    import RuuviLocal
+    import RuuviService
+    import RuuviPresenters
+#endif
 import RuuviLocalization
 import UIKit
 import RuuviOntology
@@ -30,7 +37,6 @@ struct Helpers {
     static func ruuviAirDefaultName(
         from macId: String
     ) -> String {
-        return RuuviLocalization.ruuviAir + " " +
-            macId.replacingOccurrences(of: ":", with: "").suffix(4)
+        return RuuviLocalization.ruuviAir + " " + macId.replacingOccurrences(of: ":", with: "").suffix(4)
     }
 }

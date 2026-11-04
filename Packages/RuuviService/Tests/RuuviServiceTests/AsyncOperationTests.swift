@@ -1,4 +1,7 @@
 @testable import RuuviService
+#if SWIFT_PACKAGE
+    @testable import RuuviServiceGATT
+#endif
 import XCTest
 
 final class AsyncOperationTests: XCTestCase {

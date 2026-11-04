@@ -143,37 +143,55 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
 
     public func update() {
         guard let bundleName = Bundle.main.infoDictionary?["CFBundleName"] as? String,
-              bundleName != "station_dev"
+            bundleName != "station_dev"
         else {
             return
         }
         set(.loggedIn(ruuviUser.isAuthorized))
-        ruuviStorage.readAll().on(success: { tags in
-            // Version 2/3/4 tags isOwner property was set 'false' in iOS app until version v1.1.0
-            // So we log them first before filtering
-            let df2_tags_count = tags.filter { $0.version == 2 }.count
-            let df3_tags_count = tags.filter { $0.version == 3 }.count
-            let df4_tags_count = tags.filter { $0.version == 4 }.count
-            let df5_tags_count = tags.filter { $0.version == 5 }.count
-            self.set(.df2_tags(df2_tags_count))
-            self.set(.df3_tags(df3_tags_count))
-            self.set(.df4_tags(df4_tags_count))
-            self.set(.df5_tags(df5_tags_count))
-            self.set(.addedTags(tags.count))
+        Task { @MainActor [self] in
+            do throws(RuuviStorageError) {
+                let value = try await ruuviStorage.readAll()
+                ({ tags in
+                    // Version 2/3/4 tags isOwner property was set 'false' in iOS app until version v1.1.0
+                    // So we log them first before filtering
+                    let df2_tags_count = tags.filter { $0.version == 2 }.count
+                    let df3_tags_count = tags.filter { $0.version == 3 }.count
+                    let df4_tags_count = tags.filter { $0.version == 4 }.count
+                    let df5_tags_count = tags.filter { $0.version == 5 }.count
+                    self.set(.df2_tags(df2_tags_count))
+                    self.set(.df3_tags(df3_tags_count))
+                    self.set(.df4_tags(df4_tags_count))
+                    self.set(.df5_tags(df5_tags_count))
+                    self.set(.addedTags(tags.count))
 
-            // Alerts
-            let (temperature, humidity, pressure, movement) = self.calculateAlerts(from: tags)
-            self.set(.alertTemperature(temperature))
-            self.set(.alertHumidity(humidity))
-            self.set(.alertPressure(pressure))
-            self.set(.alertMovement(movement))
-        })
-        ruuviStorage.getClaimedTagsCount().on(success: { count in
-            self.set(.claimedTags(count))
-        })
-        ruuviStorage.getOfflineTagsCount().on(success: { count in
-            self.set(.offlineTags(count))
-        })
+                    // Alerts
+                    let (temperature, humidity, pressure, movement) = self.calculateAlerts(from: tags)
+                    self.set(.alertTemperature(temperature))
+                    self.set(.alertHumidity(humidity))
+                    self.set(.alertPressure(pressure))
+                    self.set(.alertMovement(movement))
+                })(value)
+            } catch {
+            }
+        }
+        Task { @MainActor [self] in
+            do throws(RuuviStorageError) {
+                let value = try await ruuviStorage.getClaimedTagsCount()
+                ({ count in
+                    self.set(.claimedTags(count))
+                })(value)
+            } catch {
+            }
+        }
+        Task { @MainActor [self] in
+            do throws(RuuviStorageError) {
+                let value = try await ruuviStorage.getOfflineTagsCount()
+                ({ count in
+                    self.set(.offlineTags(count))
+                })(value)
+            } catch {
+            }
+        }
         set(.backgroundScanEnabled(settings.saveHeartbeats))
         set(.backgroundScanInterval(settings.saveHeartbeatsIntervalMinutes * 60))
         set(.dashboardEnabled(false))
@@ -195,48 +213,49 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
     }
 
     private func set(_ property: Properties) {
-        let value: String = switch property {
-        case let .loggedIn(isLoggedIn):
-            isLoggedIn.description
-        case let .addedTags(count),
-             let .claimedTags(count),
-             let .offlineTags(count),
-             let .df2_tags(count),
-             let .df3_tags(count),
-             let .df4_tags(count),
-             let .df5_tags(count),
-             let .dfC5_tags(count),
-             let .alertTemperature(count),
-             let .alertHumidity(count),
-             let .alertPressure(count),
-             let .alertMovement(count),
-             let .alertRSSI(count):
-            count > 10 ? "10+" : String(count)
-        case let .backgroundScanEnabled(isEnabled),
-             let .dashboardEnabled(isEnabled),
-             let .gatewayEnabled(isEnabled),
-             let .graphDrawDots(isEnabled),
-             let .graphShowAllPoints(isEnabled):
-            isEnabled.description
-        case let .backgroundScanInterval(intValue),
-             let .graphPointInterval(intValue),
-             let .graphViewPeriod(intValue):
-            String(intValue)
-        case let .humidityUnit(unit):
-            unit.analyticsValue
-        case let .pressureUnit(unit):
-            unit.analyticsValue
-        case let .temperatureUnit(unit):
-            unit.analyticsValue
-        case let .language(language):
-            language.rawValue
-        case let .useSimpleWidget(isUsing):
-            isUsing.description
-        }
+        let value: String =
+            switch property {
+            case let .loggedIn(isLoggedIn):
+                isLoggedIn.description
+            case let .addedTags(count),
+                let .claimedTags(count),
+                let .offlineTags(count),
+                let .df2_tags(count),
+                let .df3_tags(count),
+                let .df4_tags(count),
+                let .df5_tags(count),
+                let .dfC5_tags(count),
+                let .alertTemperature(count),
+                let .alertHumidity(count),
+                let .alertPressure(count),
+                let .alertMovement(count),
+                let .alertRSSI(count):
+                count > 10 ? "10+" : String(count)
+            case let .backgroundScanEnabled(isEnabled),
+                let .dashboardEnabled(isEnabled),
+                let .gatewayEnabled(isEnabled),
+                let .graphDrawDots(isEnabled),
+                let .graphShowAllPoints(isEnabled):
+                isEnabled.description
+            case let .backgroundScanInterval(intValue),
+                let .graphPointInterval(intValue),
+                let .graphViewPeriod(intValue):
+                String(intValue)
+            case let .humidityUnit(unit):
+                unit.analyticsValue
+            case let .pressureUnit(unit):
+                unit.analyticsValue
+            case let .temperatureUnit(unit):
+                unit.analyticsValue
+            case let .language(language):
+                language.rawValue
+            case let .useSimpleWidget(isUsing):
+                isUsing.description
+            }
         #if DEBUG || ALPHA
-        // skip using analytics
+            // skip using analytics
         #else
-        Analytics.setUserProperty(value, forName: property.name)
+            Analytics.setUserProperty(value, forName: property.name)
         #endif
     }
 
@@ -292,9 +311,9 @@ public final class RuuviAnalyticsImpl: RuuviAnalytics {
             .analyticsStorage: allowed ? .granted : .denied,
         ]
         #if DEBUG || ALPHA
-        // skip using analytics
+            // skip using analytics
         #else
-        Analytics.setConsent(consentSettings)
+            Analytics.setConsent(consentSettings)
         #endif
     }
 }

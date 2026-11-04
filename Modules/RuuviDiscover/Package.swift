@@ -1,4 +1,4 @@
-// swift-tools-version:5.9
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -6,14 +6,18 @@ import PackageDescription
 let package = Package(
     name: "RuuviDiscover",
     defaultLocalization: "en",
-    platforms: [.macOS(.v10_15), .iOS(.v16)],
+    platforms: [.iOS(.v16)],
     products: [
         .library(
             name: "RuuviDiscover",
             targets: ["RuuviDiscover"]
-        ),
+        )
     ],
     dependencies: [
+        .package(path: "../../Packages/RuuviDaemon"),
+        .package(path: "../../Packages/RuuviDFU"),
+        .package(path: "../../Packages/RuuviCore"),
+        .package(path: "../RuuviFirmware"),
         .package(path: "../../Packages/RuuviOntology"),
         .package(path: "../../Packages/RuuviContext"),
         .package(path: "../../Packages/RuuviReactor"),
@@ -27,6 +31,10 @@ let package = Package(
         .target(
             name: "RuuviDiscover",
             dependencies: [
+                .product(name: "RuuviCore", package: "RuuviCore"),
+                .product(name: "RuuviDFU", package: "RuuviDFU"),
+                .product(name: "RuuviDaemon", package: "RuuviDaemon"),
+                .product(name: "RuuviFirmware", package: "RuuviFirmware"),
                 "RuuviOntology",
                 "RuuviContext",
                 "RuuviReactor",
@@ -38,7 +46,9 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "RuuviDiscoverTests"
+            name: "RuuviDiscoverTests",
+            dependencies: ["RuuviDiscover", "RuuviOntology"]
         ),
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )

@@ -1,3 +1,8 @@
+#if SWIFT_PACKAGE
+    import RuuviDaemon
+    import RuuviNotifier
+    import RuuviOntology
+#endif
 import Foundation
 import RuuviLocal
 import RuuviPool

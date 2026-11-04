@@ -1,5 +1,12 @@
+#if SWIFT_PACKAGE
+    import RuuviStorage
+    import RuuviCloud
+    import RuuviPool
+    import RuuviLocal
+    import RuuviRepository
+    import RuuviCore
+#endif
 import Foundation
-import Future
 import RuuviOntology
 
 public protocol RuuviServiceOffsetCalibration {
@@ -9,7 +16,7 @@ public protocol RuuviServiceOffsetCalibration {
         of type: OffsetCorrectionType,
         for sensor: RuuviTagSensor,
         lastOriginalRecord record: RuuviTagSensorRecord?
-    ) -> Future<SensorSettings, RuuviServiceError>
+    ) async throws(RuuviServiceError) -> SensorSettings
 }
 
 public extension RuuviServiceOffsetCalibration {
@@ -18,8 +25,8 @@ public extension RuuviServiceOffsetCalibration {
         offset: Double?,
         of type: OffsetCorrectionType,
         for sensor: RuuviTagSensor
-    ) -> Future<SensorSettings, RuuviServiceError> {
-        set(
+    ) async throws(RuuviServiceError) -> SensorSettings {
+        try await set(
             offset: offset,
             of: type,
             for: sensor,

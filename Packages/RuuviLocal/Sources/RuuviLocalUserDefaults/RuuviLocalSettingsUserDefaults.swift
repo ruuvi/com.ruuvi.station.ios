@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviLocal
+#endif
 import Foundation
 import RuuviOntology
 
@@ -386,9 +389,10 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         "SettingsUserDefaults.movementAlertHysteresisLastEvents"
 
     func movementAlertHysteresisLastEvents() -> [String: Date] {
-        let stored = UserDefaults.standard.dictionary(
-            forKey: movementAlertHysteresisLastEventsUDKey
-        ) ?? [:]
+        let stored =
+            UserDefaults.standard.dictionary(
+                forKey: movementAlertHysteresisLastEventsUDKey
+            ) ?? [:]
         var result = [String: Date]()
         result.reserveCapacity(stored.count)
         for (uuid, value) in stored {
@@ -475,16 +479,19 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
                 return int
             }
 
-            let hasLegacyPreference = defaults.object(
-                forKey: "SettingsUserDegaults.useFahrenheit"
-            ) != nil
+            let hasLegacyPreference =
+                defaults.object(
+                    forKey: "SettingsUserDegaults.useFahrenheit"
+                ) != nil
             // Keep pre-existing users on historical Celsius default when no explicit
             // temperature unit was stored yet; only fresh installs should use
             // region/system-derived defaults.
-            let isExistingInstall = defaults.object(
-                forKey: appOpenedCountUDKey
-            ) != nil
-            let resolvedDefaultUnit: TemperatureUnit = hasLegacyPreference
+            let isExistingInstall =
+                defaults.object(
+                    forKey: appOpenedCountUDKey
+                ) != nil
+            let resolvedDefaultUnit: TemperatureUnit =
+                hasLegacyPreference
                 ? (useFahrenheit ? .fahrenheit : .celsius)
                 : (isExistingInstall ? .celsius : .defaultFromSystemPreferences())
             let resolvedInt = temperatureUnitInt(for: resolvedDefaultUnit)
@@ -640,9 +647,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
     private let ledBrightnessSelectionKey = "SettingsUserDefaults.ledBrightnessSelection."
     func ledBrightnessSelection(for macId: MACIdentifier?) -> RuuviLedBrightnessLevel? {
         guard let macId else { return nil }
-        guard let storedValue = UserDefaults.standard.value(
-            forKey: ledBrightnessSelectionKey + macId.mac
-        ) as? Int else {
+        guard
+            let storedValue = UserDefaults.standard.value(
+                forKey: ledBrightnessSelectionKey + macId.mac
+            ) as? Int
+        else {
             return nil
         }
         switch storedValue {
@@ -984,10 +993,11 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     var chartsPerScreen: Int {
         get {
-            guard (1 ... 3).contains(storedChartsPerScreen) else {
-                let wasCompact = UserDefaults.standard.object(
-                    forKey: legacyCompactChartViewKey
-                ) as? Bool ?? true
+            guard (1...3).contains(storedChartsPerScreen) else {
+                let wasCompact =
+                    UserDefaults.standard.object(
+                        forKey: legacyCompactChartViewKey
+                    ) as? Bool ?? true
                 storedChartsPerScreen = wasCompact ? 3 : 1
                 UserDefaults.standard.removeObject(forKey: legacyCompactChartViewKey)
                 return storedChartsPerScreen

@@ -82,7 +82,8 @@ extension SensorForceClaimPresenter: SensorForceClaimViewOutput {
             }
         }
         if let nfcMacId = macId, let tagMacId = ruuviTag?.macId?.mac,
-           nfcMacId != tagMacId {
+            nfcMacId != tagMacId
+        {
             view?.showWrongTagScanDialog()
             return
         }
@@ -124,11 +125,11 @@ extension SensorForceClaimPresenter {
         background.services.gatt.serialRevision(
             for: self,
             uuid: luid.value,
-            options: [.connectionTimeout(gattTimeoutSeconds)] // Doesn't work now.
+            options: [.connectionTimeout(gattTimeoutSeconds)]  // Doesn't work now.
         ) { [weak self] _, result in
             switch result {
             case let .success(secret):
-                if  secret != "XX:XX:XX:XX:XX:XX:XX:XX" {
+                if secret != "XX:XX:XX:XX:XX:XX:XX:XX" {
                     self?.contestSensor(with: secret)
                 }
             case let .failure(error):
@@ -141,18 +142,31 @@ extension SensorForceClaimPresenter {
     /// Contest sensor with tag secret.
     private func contestSensor(with secret: String?) {
         guard let ruuviTag,
-              let secret else { return }
+            let secret
+        else { return }
 
         activityPresenter.show(with: .loading(message: nil))
-        ruuviOwnershipService
-            .contest(sensor: ruuviTag, secret: secret)
-            .on(success: { [weak self] _ in
-                self?.router?.dismiss()
-            }, failure: { [weak self] error in
-                self?.errorPresenter.present(error: error)
-            }, completion: { [weak self] in
-                self?.activityPresenter.dismiss()
-            })
+        Task {
+            @MainActor [weak self, ruuviOwnershipService = ruuviOwnershipService!, ruuviTag = ruuviTag, secret = secret]
+            in
+            defer {
+                ({ [weak self] in
+                    self?.activityPresenter.dismiss()
+                })()
+            }
+            do throws(RuuviServiceError) {
+                let value =
+                    try await ruuviOwnershipService
+                    .contest(sensor: ruuviTag, secret: secret)
+                ({ [weak self] _ in
+                    self?.router?.dismiss()
+                })(value)
+            } catch {
+                ({ [weak self] error in
+                    self?.errorPresenter.present(error: error)
+                })(error)
+            }
+        }
     }
 
     /// Parse the NFC payload
@@ -163,9 +177,11 @@ extension SensorForceClaimPresenter {
 
         switch prefix {
         case .init([0x02]):
-            guard let restString = String(
-                data: rest, encoding: .utf8
-            ) else { return nil }
+            guard
+                let restString = String(
+                    data: rest, encoding: .utf8
+                )
+            else { return nil }
 
             let components = restString.components(separatedBy: ": ")
             if components.count == 2 {

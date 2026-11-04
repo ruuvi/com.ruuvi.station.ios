@@ -1,11 +1,11 @@
-// swift-tools-version:5.9
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "RuuviService",
-    platforms: [.macOS(.v10_15), .iOS(.v14)],
+    platforms: [.iOS(.v16)],
     products: [
         .library(
             name: "RuuviService",
@@ -65,24 +65,27 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
+        .package(path: "../RuuviUser"),
         .package(url: "https://github.com/rinat-enikeev/Humidity", from: "0.1.5"),
         .package(url: "https://github.com/ruuvi/BTKit", branch: "master"),
-        .package(url: "https://github.com/ruuvi/xlsxwriter.swift", branch: "SPM"),
+        .package(url: "https://github.com/jmcnamara/libxlsxwriter", exact: "1.2.4"),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviStorage"),
-        .package(path: "../RuuviLocalization"),
+        .package(path: "../../Common/RuuviLocalization"),
         .package(path: "../RuuviCloud"),
         .package(path: "../RuuviPool"),
         .package(path: "../RuuviLocal"),
         .package(path: "../RuuviRepository"),
         .package(path: "../RuuviCore"),
+        .package(path: "../RuuviContext"),
+        .package(path: "../RuuviPersistence"),
     ],
     targets: [
         .target(
             name: "RuuviService",
             dependencies: [
-                "Future",
+                "RuuviLocalization",
+
                 "RuuviOntology",
                 "RuuviStorage",
                 "RuuviCloud",
@@ -95,6 +98,9 @@ let package = Package(
         .target(
             name: "RuuviServiceAlert",
             dependencies: [
+                .product(name: "RuuviCloud", package: "RuuviCloud"),
+                .product(name: "RuuviLocal", package: "RuuviLocal"),
+                .product(name: "RuuviOntology", package: "RuuviOntology"),
                 "RuuviService",
                 "RuuviLocalization",
             ]
@@ -102,12 +108,24 @@ let package = Package(
         .target(
             name: "RuuviServiceAuth",
             dependencies: [
-                "RuuviService"
+                .product(name: "RuuviLocal", package: "RuuviLocal"),
+                .product(name: "RuuviOntology", package: "RuuviOntology"),
+                .product(name: "RuuviPool", package: "RuuviPool"),
+                .product(name: "RuuviStorage", package: "RuuviStorage"),
+                .product(name: "RuuviUser", package: "RuuviUser"),
+                "RuuviService",
             ]
         ),
         .target(
             name: "RuuviServiceCloudNotification",
             dependencies: [
+                .product(name: "RuuviCloud", package: "RuuviCloud"),
+                .product(name: "RuuviCore", package: "RuuviCore"),
+                .product(name: "RuuviLocal", package: "RuuviLocal"),
+                .product(name: "RuuviOntology", package: "RuuviOntology"),
+                .product(name: "RuuviPool", package: "RuuviPool"),
+                .product(name: "RuuviStorage", package: "RuuviStorage"),
+                .product(name: "RuuviUser", package: "RuuviUser"),
                 "RuuviService",
                 .product(
                     name: "RuuviCloudApi",
@@ -118,6 +136,9 @@ let package = Package(
         .target(
             name: "RuuviServiceAppSettings",
             dependencies: [
+                .product(name: "RuuviCloud", package: "RuuviCloud"),
+                .product(name: "RuuviLocal", package: "RuuviLocal"),
+                .product(name: "RuuviOntology", package: "RuuviOntology"),
                 "RuuviService",
                 "RuuviStorage",
             ]
@@ -125,24 +146,44 @@ let package = Package(
         .target(
             name: "RuuviServiceCloudSync",
             dependencies: [
-                "RuuviService"
+                .product(name: "RuuviCloud", package: "RuuviCloud"),
+                .product(name: "RuuviLocal", package: "RuuviLocal"),
+                .product(name: "RuuviOntology", package: "RuuviOntology"),
+                .product(name: "RuuviPool", package: "RuuviPool"),
+                .product(name: "RuuviRepository", package: "RuuviRepository"),
+                .product(name: "RuuviStorage", package: "RuuviStorage"),
+                "RuuviService",
             ]
         ),
         .target(
             name: "RuuviServiceOffsetCalibration",
             dependencies: [
-                "RuuviService"
+                .product(name: "RuuviCloud", package: "RuuviCloud"),
+                .product(name: "RuuviOntology", package: "RuuviOntology"),
+                .product(name: "RuuviPool", package: "RuuviPool"),
+                "RuuviService",
             ]
         ),
         .target(
             name: "RuuviServiceOwnership",
             dependencies: [
-                "RuuviService"
+                .product(name: "RuuviCloud", package: "RuuviCloud"),
+                .product(name: "RuuviLocal", package: "RuuviLocal"),
+                .product(name: "RuuviOntology", package: "RuuviOntology"),
+                .product(name: "RuuviPool", package: "RuuviPool"),
+                .product(name: "RuuviStorage", package: "RuuviStorage"),
+                .product(name: "RuuviUser", package: "RuuviUser"),
+                "RuuviService",
             ]
         ),
         .target(
             name: "RuuviServiceSensorProperties",
             dependencies: [
+                .product(name: "RuuviCloud", package: "RuuviCloud"),
+                .product(name: "RuuviCore", package: "RuuviCore"),
+                .product(name: "RuuviLocal", package: "RuuviLocal"),
+                .product(name: "RuuviOntology", package: "RuuviOntology"),
+                .product(name: "RuuviPool", package: "RuuviPool"),
                 "RuuviService",
                 .product(
                     name: "RuuviCloudApi",
@@ -153,18 +194,28 @@ let package = Package(
         .target(
             name: "RuuviServiceSensorRecords",
             dependencies: [
-                "RuuviService"
+                .product(name: "RuuviLocal", package: "RuuviLocal"),
+                .product(name: "RuuviOntology", package: "RuuviOntology"),
+                .product(name: "RuuviPool", package: "RuuviPool"),
+                "RuuviService",
             ]
         ),
         .target(
             name: "RuuviServiceExport",
             dependencies: [
-                "RuuviService"
+                .product(name: "RuuviLocal", package: "RuuviLocal"),
+                .product(name: "RuuviLocalization", package: "RuuviLocalization"),
+                .product(name: "RuuviOntology", package: "RuuviOntology"),
+                .product(name: "RuuviStorage", package: "RuuviStorage"),
+                .product(name: "libxlsxwriter", package: "libxlsxwriter"),
+                "RuuviService",
             ]
         ),
         .target(
             name: "RuuviServiceGATT",
             dependencies: [
+                .product(name: "RuuviOntology", package: "RuuviOntology"),
+                .product(name: "RuuviPool", package: "RuuviPool"),
                 "RuuviService",
                 "BTKit",
             ]
@@ -172,6 +223,7 @@ let package = Package(
         .target(
             name: "RuuviServiceMeasurement",
             dependencies: [
+                .product(name: "RuuviLocalization", package: "RuuviLocalization"),
                 "RuuviService",
                 "RuuviLocal",
                 "RuuviOntology",
@@ -181,6 +233,13 @@ let package = Package(
         .target(
             name: "RuuviServiceFactory",
             dependencies: [
+                .product(name: "RuuviCloud", package: "RuuviCloud"),
+                .product(name: "RuuviCore", package: "RuuviCore"),
+                .product(name: "RuuviLocal", package: "RuuviLocal"),
+                .product(name: "RuuviPool", package: "RuuviPool"),
+                .product(name: "RuuviRepository", package: "RuuviRepository"),
+                .product(name: "RuuviStorage", package: "RuuviStorage"),
+                .product(name: "RuuviUser", package: "RuuviUser"),
                 "RuuviService",
                 "RuuviServiceAuth",
                 "RuuviServiceAlert",
@@ -196,9 +255,23 @@ let package = Package(
         .testTarget(
             name: "RuuviServiceTests",
             dependencies: [
+                "RuuviServiceExport", "RuuviServiceMeasurement",
+                "RuuviServiceOwnership",
+                "RuuviServiceSensorProperties",
+                .product(name: "RuuviPoolCoordinator", package: "RuuviPool"),
+                .product(name: "RuuviCloud", package: "RuuviCloud"),
+                "RuuviServiceAppSettings",
+                "RuuviServiceGATT",
+                "RuuviServiceCloudSync",
+                "RuuviServiceAlert",
+                .product(name: "RuuviContextSQLite", package: "RuuviContext"),
+                .product(name: "RuuviPersistenceSQLite", package: "RuuviPersistence"),
+                .product(name: "RuuviLocalUserDefaults", package: "RuuviLocal"),
+                .product(name: "RuuviStorageCoordinator", package: "RuuviStorage"),
                 "RuuviService",
                 "RuuviOntology",
             ]
         ),
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )

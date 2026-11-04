@@ -1,5 +1,8 @@
+#if SWIFT_PACKAGE
+    import RuuviPool
+    import RuuviStorage
+#endif
 import Foundation
-import Future
 import RuuviOntology
 
 public protocol RuuviRepository {
@@ -7,11 +10,11 @@ public protocol RuuviRepository {
     func create(
         record: RuuviTagSensorRecord,
         for sensor: RuuviTagSensor
-    ) -> Future<AnyRuuviTagSensorRecord, RuuviRepositoryError>
+    ) async throws(RuuviRepositoryError) -> AnyRuuviTagSensorRecord
 
     @discardableResult
     func create(
         records: [RuuviTagSensorRecord],
         for sensor: RuuviTagSensor
-    ) -> Future<[AnyRuuviTagSensorRecord], RuuviRepositoryError>
+    ) async throws(RuuviRepositoryError) -> [AnyRuuviTagSensorRecord]
 }

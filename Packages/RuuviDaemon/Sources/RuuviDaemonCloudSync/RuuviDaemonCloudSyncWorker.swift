@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviDaemon
+#endif
 import Foundation
 import RuuviLocal
 import RuuviService
@@ -69,7 +72,7 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
                 return
             }
 
-            self.cloudSyncService.syncAllRecords()
+            Task { @MainActor [self] in _ = try? await self.cloudSyncService.syncAllRecords() }
         }
     }
 
@@ -77,7 +80,7 @@ class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
         DispatchQueue.global(qos: .default).async { [weak self] in
             guard let self else { return }
             guard !self.localSettings.signalVisibilityMigrationInProgress else { return }
-            self.cloudSyncService.refreshLatestRecord()
+            Task { @MainActor [self] in _ = try? await self.cloudSyncService.refreshLatestRecord() }
         }
     }
 

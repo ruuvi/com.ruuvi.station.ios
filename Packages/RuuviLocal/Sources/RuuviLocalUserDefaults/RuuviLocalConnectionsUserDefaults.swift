@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviLocal
+#endif
 import Foundation
 import RuuviOntology
 
@@ -6,9 +9,10 @@ final class RuuviLocalConnectionsUserDefaults: RuuviLocalConnections {
     private let keepConnectionArrayUDKey = "ConnectionPersistenceUserDefaults.keepConnection.array"
 
     var keepConnectionUUIDs: [AnyLocalIdentifier] {
-        let strings = prefs.array(
-            forKey: keepConnectionArrayUDKey
-        ) as? [String]
+        let strings =
+            prefs.array(
+                forKey: keepConnectionArrayUDKey
+            ) as? [String]
         return strings?.map(
             \.luid.any
         ) ?? []
@@ -47,7 +51,8 @@ final class RuuviLocalConnectionsUserDefaults: RuuviLocalConnections {
             ) as? [String],
                 !array.contains(
                     uuid
-                ) {
+                )
+            {
                 array.append(
                     uuid
                 )

@@ -1,0 +1,678 @@
+targets:
+  RuuviAnalyticsTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Packages/RuuviAnalytics/Tests
+    dependencies:
+      - target: RuuviAnalytics
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviCloudTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Packages/RuuviCloud/Tests
+    dependencies:
+      - target: RuuviContext
+        embed: false
+      - target: RuuviLocal
+        embed: false
+      - target: RuuviPersistence
+        embed: false
+      - target: RuuviPool
+        embed: false
+      - target: RuuviStorage
+        embed: false
+      - target: RuuviOntology
+        embed: false
+      - target: RuuviUser
+        embed: false
+      - target: RuuviCloud
+        embed: false
+      - package: GRDB
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviContextTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Packages/RuuviContext/Tests
+    dependencies:
+      - target: RuuviContext
+        embed: false
+      - package: GRDB
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviCoreTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Packages/RuuviCore/Tests
+    dependencies:
+      - target: RuuviCore
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviDFUTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Packages/RuuviDFU/Tests
+    dependencies:
+      - target: RuuviDFU
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviDaemonTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Packages/RuuviDaemon/Tests
+    dependencies:
+      - target: RuuviDaemon
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviLocalTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Packages/RuuviLocal/Tests
+    dependencies:
+      - target: RuuviLocal
+        embed: false
+      - target: RuuviOntology
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviMigrationTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Packages/RuuviMigration/Tests
+    dependencies:
+      - target: RuuviContext
+        embed: false
+      - target: RuuviPersistence
+        embed: false
+      - target: RuuviStorage
+        embed: false
+      - target: RuuviOntology
+        embed: false
+      - target: RuuviService
+        embed: false
+      - target: RuuviMigration
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviNotificationTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Packages/RuuviNotification/Tests
+    dependencies:
+      - target: RuuviNotification
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviNotifierTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Packages/RuuviNotifier/Tests
+    dependencies:
+      - target: RuuviNotifier
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviOntologyTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Packages/RuuviOntology/Tests
+    dependencies:
+      - target: RuuviOntology
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviPersistenceTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Packages/RuuviPersistence/Tests
+    dependencies:
+      - target: RuuviPersistence
+        embed: false
+      - target: RuuviContext
+        embed: false
+      - target: RuuviOntology
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviPoolTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Packages/RuuviPool/Tests
+    dependencies:
+      - target: RuuviPool
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviReactorTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Packages/RuuviReactor/Tests
+    dependencies:
+      - target: RuuviReactor
+        embed: false
+      - target: RuuviAnalytics
+        embed: false
+      - target: RuuviContext
+        embed: false
+      - target: RuuviOntology
+        embed: false
+      - target: RuuviPersistence
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviRepositoryTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Packages/RuuviRepository/Tests
+    dependencies:
+      - target: RuuviRepository
+        embed: false
+      - target: RuuviOntology
+        embed: false
+      - target: RuuviContext
+        embed: false
+      - target: RuuviPersistence
+        embed: false
+      - target: RuuviLocal
+        embed: false
+      - target: RuuviPool
+        embed: false
+      - target: RuuviStorage
+        embed: false
+      - package: GRDB
+      - package: Humidity
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviServiceTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Packages/RuuviService/Tests
+    dependencies:
+      - package: BTKit
+      - target: RuuviUser
+        embed: false
+      - target: RuuviPool
+        embed: false
+      - target: RuuviCore
+        embed: false
+      - target: RuuviService
+        embed: false
+      - target: RuuviOntology
+        embed: false
+      - target: RuuviCloud
+        embed: false
+      - target: RuuviContext
+        embed: false
+      - target: RuuviLocal
+        embed: false
+      - target: RuuviPersistence
+        embed: false
+      - target: RuuviStorage
+        embed: false
+      - package: Humidity
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviStorageTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Packages/RuuviStorage/Tests
+    dependencies:
+      - target: RuuviStorage
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviUserTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Packages/RuuviUser/Tests
+    dependencies:
+      - target: RuuviUser
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviDiscoverTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Modules/RuuviDiscover/Tests
+    dependencies:
+      - target: RuuviDiscover
+        embed: false
+      - target: RuuviOntology
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviFirmwareTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Modules/RuuviFirmware/Tests
+    dependencies:
+      - target: RuuviFirmware
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviOnboardTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Modules/RuuviOnboard/Tests
+    dependencies:
+      - target: RuuviUser
+        embed: false
+      - target: RuuviOnboard
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviLocalizationTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Common/RuuviLocalization/Tests
+    dependencies:
+      - target: RuuviLocalization
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  RuuviPresentersTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Common/RuuviPresenters/Tests
+    dependencies:
+      - target: RuuviPresenters
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+  station.concurrencyTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Apps/RuuviStation/Tests/Unit/CardsGraphViewInteractorTests.swift
+      - path: Apps/RuuviStation/Tests/Unit/FirmwareDownloadTests.swift
+    dependencies:
+      - target: station
+      - target: RuuviService
+        embed: false
+      - target: RuuviOntology
+        embed: false
+      - package: BTKit
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/station.app/station"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+  station.uiTests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: Apps/RuuviStation/Tests/UI
+    dependencies:
+      - target: station
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_TARGET_NAME: station
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+schemes:
+  RuuviAnalyticsTests:
+    build:
+      targets:
+        RuuviAnalyticsTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviAnalytics
+      targets:
+        - RuuviAnalyticsTests
+  RuuviCloudTests:
+    build:
+      targets:
+        RuuviCloudTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviCloud
+      targets:
+        - RuuviCloudTests
+  RuuviContextTests:
+    build:
+      targets:
+        RuuviContextTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviContext
+      targets:
+        - RuuviContextTests
+  RuuviCoreTests:
+    build:
+      targets:
+        RuuviCoreTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviCore
+      targets:
+        - RuuviCoreTests
+  RuuviDFUTests:
+    build:
+      targets:
+        RuuviDFUTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviDFU
+      targets:
+        - RuuviDFUTests
+  RuuviDaemonTests:
+    build:
+      targets:
+        RuuviDaemonTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviDaemon
+      targets:
+        - RuuviDaemonTests
+  RuuviLocalTests:
+    build:
+      targets:
+        RuuviLocalTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviLocal
+      targets:
+        - RuuviLocalTests
+  RuuviMigrationTests:
+    build:
+      targets:
+        RuuviMigrationTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviMigration
+      targets:
+        - RuuviMigrationTests
+  RuuviNotificationTests:
+    build:
+      targets:
+        RuuviNotificationTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviNotification
+      targets:
+        - RuuviNotificationTests
+  RuuviNotifierTests:
+    build:
+      targets:
+        RuuviNotifierTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviNotifier
+      targets:
+        - RuuviNotifierTests
+  RuuviOntologyTests:
+    build:
+      targets:
+        RuuviOntologyTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviOntology
+      targets:
+        - RuuviOntologyTests
+  RuuviPersistenceTests:
+    build:
+      targets:
+        RuuviPersistenceTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviPersistence
+      targets:
+        - RuuviPersistenceTests
+  RuuviPoolTests:
+    build:
+      targets:
+        RuuviPoolTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviPool
+      targets:
+        - RuuviPoolTests
+  RuuviReactorTests:
+    build:
+      targets:
+        RuuviReactorTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviReactor
+      targets:
+        - RuuviReactorTests
+  RuuviRepositoryTests:
+    build:
+      targets:
+        RuuviRepositoryTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviRepository
+      targets:
+        - RuuviRepositoryTests
+  RuuviServiceTests:
+    build:
+      targets:
+        RuuviServiceTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviService
+      targets:
+        - RuuviServiceTests
+  RuuviStorageTests:
+    build:
+      targets:
+        RuuviStorageTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviStorage
+      targets:
+        - RuuviStorageTests
+  RuuviUserTests:
+    build:
+      targets:
+        RuuviUserTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviUser
+      targets:
+        - RuuviUserTests
+  RuuviDiscoverTests:
+    build:
+      targets:
+        RuuviDiscoverTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviDiscover
+      targets:
+        - RuuviDiscoverTests
+  RuuviFirmwareTests:
+    build:
+      targets:
+        RuuviFirmwareTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviFirmware
+      targets:
+        - RuuviFirmwareTests
+  RuuviOnboardTests:
+    build:
+      targets:
+        RuuviOnboardTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviOnboard
+      targets:
+        - RuuviOnboardTests
+  RuuviLocalizationTests:
+    build:
+      targets:
+        RuuviLocalizationTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviLocalization
+      targets:
+        - RuuviLocalizationTests
+  RuuviPresentersTests:
+    build:
+      targets:
+        RuuviPresentersTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviPresenters
+      targets:
+        - RuuviPresentersTests
+  AllTests:
+    build:
+      targets:
+        station: all
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - station
+        - station.widgets
+        - station.intents
+        - station.pnservice
+        - RuuviAnalytics
+        - RuuviCloud
+        - RuuviContext
+        - RuuviCore
+        - RuuviDFU
+        - RuuviDaemon
+        - RuuviLocal
+        - RuuviMigration
+        - RuuviNotification
+        - RuuviNotifier
+        - RuuviOntology
+        - RuuviPersistence
+        - RuuviPool
+        - RuuviReactor
+        - RuuviRepository
+        - RuuviService
+        - RuuviStorage
+        - RuuviUser
+        - RuuviDiscover
+        - RuuviFirmware
+        - RuuviOnboard
+        - RuuviLocalization
+        - RuuviPresenters
+      targets:
+        - RuuviAnalyticsTests
+        - RuuviCloudTests
+        - RuuviContextTests
+        - RuuviCoreTests
+        - RuuviDFUTests
+        - RuuviDaemonTests
+        - RuuviLocalTests
+        - RuuviMigrationTests
+        - RuuviNotificationTests
+        - RuuviNotifierTests
+        - RuuviOntologyTests
+        - RuuviPersistenceTests
+        - RuuviPoolTests
+        - RuuviReactorTests
+        - RuuviRepositoryTests
+        - RuuviServiceTests
+        - RuuviStorageTests
+        - RuuviUserTests
+        - RuuviDiscoverTests
+        - RuuviFirmwareTests
+        - RuuviOnboardTests
+        - RuuviLocalizationTests
+        - RuuviPresentersTests
+        - station.alertTests
+        - station.marketingConsentTests
+        - station.concurrencyTests
+        - station.uiTests

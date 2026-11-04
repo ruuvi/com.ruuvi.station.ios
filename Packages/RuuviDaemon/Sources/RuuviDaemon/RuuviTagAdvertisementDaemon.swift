@@ -1,3 +1,12 @@
+#if SWIFT_PACKAGE
+    import RuuviLocal
+    import RuuviService
+    import RuuviStorage
+    import RuuviReactor
+    import RuuviPool
+    import RuuviPersistence
+    import RuuviNotifier
+#endif
 import Foundation
 
 public extension Notification.Name {
@@ -10,7 +19,7 @@ public extension Notification.Name {
 }
 
 public enum RuuviTagAdvertisementDaemonDidFailKey: String {
-    case error = "RuuviDaemonError" // RuuviDaemonError
+    case error = "RuuviDaemonError"  // RuuviDaemonError
 }
 
 public protocol RuuviTagAdvertisementDaemon {

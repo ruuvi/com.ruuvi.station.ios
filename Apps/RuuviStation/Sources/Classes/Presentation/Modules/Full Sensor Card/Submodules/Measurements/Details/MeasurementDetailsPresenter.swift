@@ -217,62 +217,89 @@ private extension MeasurementDetailsPresenter {
     }
 
     func loadAllData(from date: Date, completion: (() -> Void)? = nil) {
-        let op = ruuviStorage.read(
-            ruuviTag.id,
-            after: date,
-            with: TimeInterval(2)
-        )
 
-        op.on(success: { [weak self] results in
-            self?.handleDataLoaded(results.map(\.measurement))
-        }, failure: { [weak self] _ in
-            self?.handleDataLoadError()
-        }, completion: {
-            completion?()
-        })
+        Task { @MainActor [weak self, ruuviStorage = ruuviStorage, ruuviTag = ruuviTag!] in
+            defer {
+                ({
+                    completion?()
+                })()
+            }
+            do throws(RuuviStorageError) {
+                let value = try await ruuviStorage.read(
+                    ruuviTag.id,
+                    after: date,
+                    with: TimeInterval(2)
+                )
+                ({ [weak self] results in
+                    self?.handleDataLoaded(results.map(\.measurement))
+                })(value)
+            } catch {
+                ({ [weak self] _ in
+                    self?.handleDataLoadError()
+                })(error)
+            }
+        }
     }
 
     func loadWithDownsamplingCheck(from date: Date, completion: (() -> Void)? = nil) {
 
-        let checkOp = ruuviStorage.read(
-            ruuviTag.id,
-            after: date,
-            with: TimeInterval(2)
-        )
+        Task { @MainActor [weak self, ruuviStorage = ruuviStorage, ruuviTag = ruuviTag!] in
+            do throws(RuuviStorageError) {
+                let value = try await ruuviStorage.read(
+                    ruuviTag.id,
+                    after: date,
+                    with: TimeInterval(2)
+                )
+                ({ [weak self] results in
+                    guard let self = self else {
+                        completion?()
+                        return
+                    }
 
-        checkOp.on(success: { [weak self] results in
-            guard let self = self else {
-                completion?()
-                return
+                    if results.count < self.minimumDownsampleThreshold {
+                        self.handleDataLoaded(results.map(\.measurement))
+                        completion?()
+                    } else {
+                        self.loadDownsampledData(from: date, completion: completion)
+                    }
+                })(value)
+            } catch {
+                ({ [weak self] _ in
+                    self?.handleDataLoadError()
+                    completion?()
+                })(error)
             }
-
-            if results.count < self.minimumDownsampleThreshold {
-                self.handleDataLoaded(results.map(\.measurement))
-                completion?()
-            } else {
-                self.loadDownsampledData(from: date, completion: completion)
-            }
-        }, failure: { [weak self] _ in
-            self?.handleDataLoadError()
-            completion?()
-        })
+        }
     }
 
     func loadDownsampledData(from date: Date, completion: (() -> Void)? = nil) {
-        let op = ruuviStorage.readDownsampled(
-            ruuviTag.id,
-            after: date,
-            with: highDensityIntervalMinutes,
-            pick: maximumPointsCount
-        )
 
-        op.on(success: { [weak self] results in
-            self?.handleDataLoaded(results.map(\.measurement))
-        }, failure: { [weak self] _ in
-            self?.handleDataLoadError()
-        }, completion: {
-            completion?()
-        })
+        Task {
+            @MainActor [
+                weak self, ruuviStorage = ruuviStorage, ruuviTag = ruuviTag!,
+                highDensityIntervalMinutes = highDensityIntervalMinutes, maximumPointsCount = maximumPointsCount
+            ] in
+            defer {
+                ({
+                    completion?()
+                })()
+            }
+            do throws(RuuviStorageError) {
+                let value = try await ruuviStorage.readDownsampled(
+                    ruuviTag.id,
+                    after: date,
+                    with: highDensityIntervalMinutes,
+                    pick: maximumPointsCount
+                )
+                ({ [weak self] results in
+                    self?.handleDataLoaded(results.map(\.measurement))
+                })(value)
+            } catch {
+                ({ [weak self] _ in
+                    self?.handleDataLoadError()
+                })(error)
+            }
+        }
     }
 
     func handleDataLoaded(_ measurements: [RuuviMeasurement]) {
@@ -299,29 +326,35 @@ private extension MeasurementDetailsPresenter {
 
     func loadLatestMeasurements() {
         guard let ruuviTag = ruuviTag,
-              let lastDate = lastMeasurementDate,
-              isDataLoaded else { return }
+            let lastDate = lastMeasurementDate,
+            isDataLoaded
+        else { return }
 
-        let op = ruuviStorage.readLast(
-            ruuviTag.id,
-            from: lastDate.timeIntervalSince1970
-        )
+        Task { @MainActor [weak self, ruuviStorage = ruuviStorage, ruuviTag = ruuviTag] in
+            do throws(RuuviStorageError) {
+                let value = try await ruuviStorage.readLast(
+                    ruuviTag.id,
+                    from: lastDate.timeIntervalSince1970
+                )
+                ({ [weak self] results in
+                    guard let self = self else { return }
 
-        op.on(success: { [weak self] results in
-            guard let self = self else { return }
+                    // Filter out duplicates and only add truly new measurements
+                    let newMeasurements =
+                        results
+                        .map(\.measurement)
+                        .filter { measurement in
+                            measurement.date > lastDate
+                        }
+                        .sorted { $0.date < $1.date }
 
-            // Filter out duplicates and only add truly new measurements
-            let newMeasurements = results
-                .map(\.measurement)
-                .filter { measurement in
-                    measurement.date > lastDate
-                }
-                .sorted { $0.date < $1.date }
+                    guard !newMeasurements.isEmpty else { return }
 
-            guard !newMeasurements.isEmpty else { return }
-
-            self.appendNewMeasurements(newMeasurements)
-        })
+                    self.appendNewMeasurements(newMeasurements)
+                })(value)
+            } catch {
+            }
+        }
     }
 
     func appendNewMeasurements(_ newMeasurements: [RuuviMeasurement]) {
@@ -369,13 +402,15 @@ private extension MeasurementDetailsPresenter {
 
         // Check if we have valid data for this measurement type
         let variant = resolvedVariant
-        let hasValidData = !measurements.isEmpty && measurements.contains { measurement in
-            variantResolver.value(
-                for: measurement,
-                variant: variant,
-                sensorSettings: sensorSettings
-            ) != nil
-        }
+        let hasValidData =
+            !measurements.isEmpty
+            && measurements.contains { measurement in
+                variantResolver.value(
+                    for: measurement,
+                    variant: variant,
+                    sensorSettings: sensorSettings
+                ) != nil
+            }
 
         guard hasValidData else {
             view?.setNoDataLabelVisibility(show: true)
@@ -560,7 +595,8 @@ private extension MeasurementDetailsPresenter {
         from data: RuuviTagCardSnapshotDisplayData
     ) -> RuuviTagCardSnapshotDisplayData {
         guard let visibility = snapshot?.displayData.measurementVisibility,
-              let grid = data.indicatorGrid else {
+            let grid = data.indicatorGrid
+        else {
             return data
         }
 
@@ -592,7 +628,8 @@ private extension MeasurementDetailsPresenter {
 
     func shouldShowAlertRangeInGraph(for variant: MeasurementDisplayVariant) -> Bool {
         guard settings.showAlertsRangeInGraph,
-              let alertType = variant.toAlertType() else {
+            let alertType = variant.toAlertType()
+        else {
             return false
         }
         if let config = snapshot.getAlertConfig(for: alertType) {
@@ -636,13 +673,20 @@ private extension MeasurementDetailsPresenter {
 
     func syncCloudDataIfNeeded() {
         guard ruuviTag.isCloud,
-              isViewActive else { return }
-        let op = cloudSyncService.sync(sensor: ruuviTag)
-        op.on(success: { [weak self] _ in
-            guard self?.isViewActive == true else { return }
-            // Reload data after sync completes
-            self?.loadHistoricalData()
-        })
+            isViewActive
+        else { return }
+
+        Task { @MainActor [weak self, cloudSyncService = cloudSyncService, ruuviTag = ruuviTag!] in
+            do throws(RuuviServiceError) {
+                let value = try await cloudSyncService.sync(sensor: ruuviTag)
+                ({ [weak self] _ in
+                    guard self?.isViewActive == true else { return }
+                    // Reload data after sync completes
+                    self?.loadHistoricalData()
+                })(value)
+            } catch {
+            }
+        }
     }
 }
 
@@ -667,7 +711,8 @@ private extension MeasurementDetailsPresenter {
             return preferred ?? defaultVariant(for: type)
         }
         if let preferred,
-           visibility.visibleVariants.contains(where: { $0 == preferred }) {
+            visibility.visibleVariants.contains(where: { $0 == preferred })
+        {
             return preferred
         }
         if let replacement = visibility.visibleVariants.first(where: { $0.type.isSameCase(as: type) }) {

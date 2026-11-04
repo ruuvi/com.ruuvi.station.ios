@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviLocal
+#endif
 import Foundation
 
 @propertyWrapper

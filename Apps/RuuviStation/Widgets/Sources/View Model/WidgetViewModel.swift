@@ -77,19 +77,26 @@ public extension WidgetViewModel {
             return
         }
         forceRefreshWidget(false)
-        ruuviCloud.loadSensorsDense(
-            for: nil,
-            measurements: true,
-            sharedToOthers: nil,
-            sharedToMe: true,
-            alerts: nil,
-            settings: true
-        ).on(success: { sensors in
-            let sensorsWithRecord = sensors.filter { $0.record != nil }
-            completion(sensorsWithRecord)
-        }, failure: { _ in
-            completion([])
-        })
+        Task { @MainActor [self] in
+            do {
+                let value = try await ruuviCloud.loadSensorsDense(
+                    for: nil,
+                    measurements: true,
+                    sharedToOthers: nil,
+                    sharedToMe: true,
+                    alerts: nil,
+                    settings: true
+                )
+                ({ sensors in
+                    let sensorsWithRecord = sensors.filter { $0.record != nil }
+                    completion(sensorsWithRecord)
+                })(value)
+            } catch {
+                ({ _ in
+                    completion([])
+                })(error)
+            }
+        }
     }
 
     internal func fetchRuuviTagsAsync() async -> [RuuviCloudSensorDense] {
@@ -117,7 +124,7 @@ public extension WidgetViewModel {
         components.scheme = "ruuviwidget"
         components.host = "open"
         components.queryItems = [
-            URLQueryItem(name: "sensorId", value: resolvedSensorId),
+            URLQueryItem(name: "sensorId", value: resolvedSensorId)
         ]
         return components.url
     }
@@ -132,14 +139,16 @@ public extension WidgetViewModel {
         config: SingleSensorWidgetConfiguration
     ) -> String {
         guard let record else {
-            return "69.50" // Default value to show on the preview
+            return "69.50"  // Default value to show on the preview
         }
 
         let appSettings = getAppSettings()
-        guard let variant = selectedVariant(
-            from: config,
-            appSettings: appSettings
-        ) else {
+        guard
+            let variant = selectedVariant(
+                from: config,
+                appSettings: appSettings
+            )
+        else {
             return formattedValue(
                 for: defaultVariant(appSettings: appSettings),
                 from: record,
@@ -158,8 +167,9 @@ public extension WidgetViewModel {
 
     func getSensor(from config: SingleSensorWidgetConfiguration) -> WidgetSensorEnum? {
         if let identifier = config.sensorSelectionIdentifier,
-           let rawValue = Int(identifier),
-           let sensor = WidgetSensorEnum(rawValue: rawValue) {
+            let rawValue = Int(identifier),
+            let sensor = WidgetSensorEnum(rawValue: rawValue)
+        {
             return sensor
         } else {
             return config.sensor
@@ -168,10 +178,12 @@ public extension WidgetViewModel {
 
     func measurementShortName(from config: SingleSensorWidgetConfiguration) -> String {
         let appSettings = getAppSettings()
-        guard let variant = selectedVariant(
-            from: config,
-            appSettings: appSettings
-        ) else {
+        guard
+            let variant = selectedVariant(
+                from: config,
+                appSettings: appSettings
+            )
+        else {
             return shortName(for: defaultVariant(appSettings: appSettings))
         }
         return shortName(for: variant)
@@ -179,10 +191,12 @@ public extension WidgetViewModel {
 
     func getUnit(from config: SingleSensorWidgetConfiguration) -> String {
         let appSettings = getAppSettings()
-        guard let variant = selectedVariant(
-            from: config,
-            appSettings: appSettings
-        ) else {
+        guard
+            let variant = selectedVariant(
+                from: config,
+                appSettings: appSettings
+            )
+        else {
             return unit(
                 for: defaultVariant(appSettings: appSettings),
                 appSettings: appSettings
@@ -207,7 +221,8 @@ public extension WidgetViewModel {
         config: SingleSensorWidgetConfiguration
     ) -> WidgetAirQualityDisplay {
         guard isAirQualitySelection(config),
-              let record else {
+            let record
+        else {
             return WidgetAirQualityDisplay(
                 currentScore: 0,
                 maxScore: 100,
@@ -229,7 +244,7 @@ public extension WidgetViewModel {
 
     func getUnit(for sensor: WidgetSensorEnum?) -> String {
         guard let sensor else {
-            return "\u{00B0}C" // Default unit to show on the preview
+            return "\u{00B0}C"  // Default unit to show on the preview
         }
         let appSettings = getAppSettings()
         let variant = legacyVariant(
@@ -319,7 +334,8 @@ public extension WidgetViewModel {
             )
         }
 
-        return visibleVariants
+        return
+            visibleVariants
             .filter { variant in
                 hasValue(
                     for: variant,
@@ -352,12 +368,15 @@ public extension WidgetViewModel {
         let appSettings = getAppSettings()
         let selectedCodes: [RuuviCloudSensorVisibilityCode] = {
             guard let identifier = entry.config.sensorSelectionIdentifier,
-                  let code = RuuviCloudSensorVisibilityCode.parse(identifier) else {
-                guard let variant = selectedVariant(
-                    from: entry.config,
-                    appSettings: appSettings
-                ),
-                let fallbackCode = variant.cloudVisibilityCode else {
+                let code = RuuviCloudSensorVisibilityCode.parse(identifier)
+            else {
+                guard
+                    let variant = selectedVariant(
+                        from: entry.config,
+                        appSettings: appSettings
+                    ),
+                    let fallbackCode = variant.cloudVisibilityCode
+                else {
                     return []
                 }
                 return [fallbackCode]
@@ -393,7 +412,8 @@ public extension WidgetViewModel {
         if let interval = appGroupDefaults?
             .integer(
                 forKey: Constants.widgetRefreshIntervalKey.rawValue
-            ), interval > 0 {
+            ), interval > 0
+        {
             return interval
         }
         return 60
@@ -401,7 +421,8 @@ public extension WidgetViewModel {
 
     func shouldForceRefresh() -> Bool {
         if let forceRefresh = appGroupDefaults?
-            .bool(forKey: Constants.forceRefreshWidgetKey.rawValue) {
+            .bool(forKey: Constants.forceRefreshWidgetKey.rawValue)
+        {
             return forceRefresh
         }
         return false
@@ -486,10 +507,12 @@ public extension WidgetViewModel {
     // swiftlint:disable:next cyclomatic_complexity
     internal func symbol(from entry: WidgetEntry) -> Image {
         let appSettings = getAppSettings()
-        guard let variant = selectedVariant(
-            from: entry.config,
-            appSettings: appSettings
-        ) else {
+        guard
+            let variant = selectedVariant(
+                from: entry.config,
+                appSettings: appSettings
+            )
+        else {
             return Image(systemName: "thermometer.medium.slash")
         }
 
@@ -503,8 +526,8 @@ public extension WidgetViewModel {
         case .movementCounter:
             return Image(systemName: "repeat.circle")
         case .accelerationX,
-             .accelerationY,
-             .accelerationZ:
+            .accelerationY,
+            .accelerationZ:
             return Image(systemName: "move.3d")
         case .voltage:
             return Image(systemName: "bolt.circle.fill")
@@ -517,15 +540,15 @@ public extension WidgetViewModel {
         case .voc:
             return Image(systemName: "wind")
         case .pm10,
-             .pm25,
-             .pm40,
-             .pm100:
+            .pm25,
+            .pm40,
+            .pm100:
             return Image(systemName: "circle.hexagongrid")
         case .luminosity:
             return Image(systemName: "sun.max")
         case .soundInstant,
-             .soundAverage,
-             .soundPeak:
+            .soundAverage,
+            .soundPeak:
             return Image(systemName: "waveform")
         case .rssi:
             return Image(systemName: "antenna.radiowaves.left.and.right")
@@ -604,7 +627,8 @@ extension WidgetViewModel {
             }
 
             if let rawValue = Int(identifier),
-               let sensor = WidgetSensorEnum(rawValue: rawValue) {
+                let sensor = WidgetSensorEnum(rawValue: rawValue)
+            {
                 return legacyVariant(
                     from: sensor,
                     appSettings: appSettings
@@ -843,16 +867,16 @@ extension WidgetViewModel {
             let pressureUnit = variant.pressureUnit ?? appSettings.pressureUnit
             return pressureUnit.ruuviSymbol
         case .movementCounter,
-             .aqi,
-             .voc,
-             .nox,
-             .measurementSequenceNumber:
+            .aqi,
+            .voc,
+            .nox,
+            .measurementSequenceNumber:
             return ""
         case .voltage:
             return RuuviLocalization.v
         case .accelerationX,
-             .accelerationY,
-             .accelerationZ:
+            .accelerationY,
+            .accelerationZ:
             return RuuviLocalization.g
         case .co2:
             return RuuviLocalization.unitCo2
@@ -867,8 +891,8 @@ extension WidgetViewModel {
         case .luminosity:
             return RuuviLocalization.unitLuminosity
         case .soundInstant,
-             .soundAverage,
-             .soundPeak:
+            .soundAverage,
+            .soundPeak:
             return RuuviLocalization.unitSound
         case .rssi:
             return ""
@@ -961,8 +985,8 @@ extension WidgetViewModel {
         case .voltage:
             return RuuviLocalization.battery + " (\(RuuviLocalization.v))"
         case .accelerationX,
-             .accelerationY,
-             .accelerationZ:
+            .accelerationY,
+            .accelerationZ:
             return shortName(for: variant) + " (\(RuuviLocalization.g))"
         case .aqi:
             return RuuviLocalization.airQuality
@@ -1043,10 +1067,10 @@ extension WidgetViewModel {
         if record.co2 != nil { types.insert(.co2) }
         if record.voc != nil { types.insert(.voc) }
         if record.nox != nil { types.insert(.nox) }
-        if record.pm1 != nil { types.insert(.pm10) }   // .pm10 variant renders record.pm1
+        if record.pm1 != nil { types.insert(.pm10) }  // .pm10 variant renders record.pm1
         if record.pm25 != nil { types.insert(.pm25) }
-        if record.pm4 != nil { types.insert(.pm40) }   // .pm40 variant renders record.pm4
-        if record.pm10 != nil { types.insert(.pm100) } // .pm100 variant renders record.pm10
+        if record.pm4 != nil { types.insert(.pm40) }  // .pm40 variant renders record.pm4
+        if record.pm10 != nil { types.insert(.pm100) }  // .pm100 variant renders record.pm10
         if record.luminance != nil { types.insert(.luminosity) }
         if record.dbaInstant != nil { types.insert(.soundInstant) }
         if record.dbaAvg != nil { types.insert(.soundAverage) }

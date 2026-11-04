@@ -1,5 +1,7 @@
+#if SWIFT_PACKAGE
+    import RuuviService
+#endif
 import Foundation
-import Future
 import RuuviLocal
 import RuuviOntology
 import RuuviPool
@@ -36,59 +38,32 @@ public final class RuuviServiceAuthImpl: RuuviServiceAuth {
         self.settings = settings
     }
 
-    public func logout() -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
-        NotificationCenter
-            .default
-            .post(name: .RuuviAuthServiceWillLogout, object: self, userInfo: nil)
+    @MainActor
+    public func logout() async throws(RuuviServiceError) -> Bool {
+        NotificationCenter.default.post(name: .RuuviAuthServiceWillLogout, object: self)
         ruuviUser.logout()
-
-        storage.readAll()
-            .on(success: { [weak self] localSensors in
-                guard let sSelf = self else {
-                    return
-                }
-
-                let sensorsToDelete = localSensors.filter { $0.isClaimed || $0.isCloud }
-                var allOperations: [Future<Bool, RuuviPoolError>] = []
-
-                for sensor in sensorsToDelete {
-                    let deleteSensorOperation = sSelf.pool.delete(sensor)
-                    let deleteRecordsOperation = sSelf.pool.deleteAllRecords(sensor.id)
-                    let deleteLatestRecordOperation = sSelf.pool.deleteLast(sensor.id)
-
-                    allOperations.append(deleteSensorOperation)
-                    allOperations.append(deleteRecordsOperation)
-                    allOperations.append(deleteLatestRecordOperation)
-
-                    // Perform comprehensive synchronous cleanup
-                    sSelf.cleanupSensorData(for: sensor)
-                }
-
-                // Account-scoped data must be cleared even when there are no
-                // claimed or cloud sensors stored locally.
-                allOperations.append(sSelf.pool.deleteQueuedRequests())
-                allOperations.append(sSelf.pool.deleteUserSettings())
-
-                // Wait for all operations to complete
-                Future.zip(allOperations)
-                    .on(success: { _ in
-                        // Clear any remaining global settings
-                        sSelf.clearGlobalSettings()
-                        promise.succeed(value: true)
-                        sSelf.postLogoutCompletion(success: true)
-                        sSelf.postNotification()
-                    }, failure: { error in
-                        sSelf.postLogoutCompletion(success: false)
-                        promise.fail(error: .ruuviPool(error))
-                    })
-
-            }, failure: { [weak self]error in
-                self?.postLogoutCompletion(success: false)
-                promise.fail(error: .ruuviStorage(error))
-            })
-
-        return promise.future
+        let sensors: [AnyRuuviTagSensor]
+        do { sensors = try await storage.readAll() } catch {
+            postLogoutCompletion(success: false)
+            throw .ruuviStorage(error)
+        }
+        do {
+            for sensor in sensors where sensor.isClaimed || sensor.isCloud {
+                _ = try await pool.delete(sensor)
+                _ = try await pool.deleteAllRecords(sensor.id)
+                _ = try await pool.deleteLast(sensor.id)
+                cleanupSensorData(for: sensor)
+            }
+            _ = try await pool.deleteQueuedRequests()
+            _ = try await pool.deleteUserSettings()
+        } catch {
+            postLogoutCompletion(success: false)
+            throw .ruuviPool(error)
+        }
+        clearGlobalSettings()
+        postLogoutCompletion(success: true)
+        postNotification()
+        return true
     }
 }
 
@@ -106,7 +81,8 @@ private extension RuuviServiceAuthImpl {
 
             // Clean up widget card reference if it matches this sensor
             if let currentCardMacId = settings.cardToOpenFromWidget(),
-               currentCardMacId == macId.value {
+                currentCardMacId == macId.value
+            {
                 settings.setCardToOpenFromWidget(for: nil)
             }
         }
@@ -125,7 +101,8 @@ private extension RuuviServiceAuthImpl {
 
         // Clean up last opened chart if it matches this sensor
         if let lastChart = settings.lastOpenedChart(),
-           lastChart == sensor.id {
+            lastChart == sensor.id
+        {
             settings.setLastOpenedChart(with: nil)
         }
 

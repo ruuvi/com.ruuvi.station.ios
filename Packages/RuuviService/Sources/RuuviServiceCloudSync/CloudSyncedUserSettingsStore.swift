@@ -1,5 +1,7 @@
+#if SWIFT_PACKAGE
+    import RuuviService
+#endif
 import Foundation
-import Future
 import RuuviCloud
 import RuuviLocal
 import RuuviOntology
@@ -17,45 +19,25 @@ final class CloudSyncedUserSettingsStore {
         self.localSettings = localSettings
     }
 
-    func readWithFallback() -> Future<[RuuviUserSetting], RuuviServiceError> {
-        let promise = Promise<[RuuviUserSetting], RuuviServiceError>()
-        storage.readUserSettings()
-            .observe(on: .global(qos: .utility))
-            .on(success: { [storage, localSettings] storedSettings in
-                let syncedSettings = storedSettings.filter {
-                    RuuviCloudApiSetting(rawValue: $0.key)?.isCloudSyncedUserSetting == true
-                }
-                let missingSettings = Self.localFallbackSettings(
-                    localSettings: localSettings,
-                    excluding: syncedSettings
-                )
-
-                guard !missingSettings.isEmpty else {
-                    promise.succeed(value: syncedSettings)
-                    return
-                }
-
-                storage.save(userSettings: missingSettings)
-                    .observe(on: .global(qos: .utility))
-                    .on(success: { savedSettings in
-                        promise.succeed(value: syncedSettings + savedSettings)
-                    }, failure: { _ in
-                        promise.succeed(value: syncedSettings + missingSettings)
-                    })
-            }, failure: { [localSettings] _ in
-                promise.succeed(value: Self.localFallbackSettings(
-                    localSettings: localSettings,
-                    excluding: []
-                ))
-            })
-        return promise.future
+    @MainActor
+    func readWithFallback() async throws(RuuviServiceError) -> [RuuviUserSetting] {
+        guard let storedSettings = try? await storage.readUserSettings() else {
+            return Self.localFallbackSettings(localSettings: localSettings, excluding: [])
+        }
+        let syncedSettings = storedSettings.filter {
+            RuuviCloudApiSetting(rawValue: $0.key)?.isCloudSyncedUserSetting == true
+        }
+        let missingSettings = Self.localFallbackSettings(localSettings: localSettings, excluding: syncedSettings)
+        guard !missingSettings.isEmpty else { return syncedSettings }
+        let savedSettings = (try? await storage.save(userSettings: missingSettings)) ?? missingSettings
+        return syncedSettings + savedSettings
     }
 
+    @MainActor
     func saveSyncedSettings(
         _ settings: [RuuviUserSetting]
-    ) -> Future<[RuuviUserSetting], RuuviServiceError> {
-        storage.save(userSettings: settings)
-            .mapError { .ruuviStorage($0) }
+    ) async throws(RuuviServiceError) -> [RuuviUserSetting] {
+        do { return try await storage.save(userSettings: settings) } catch { throw .ruuviStorage(error) }
     }
 
     private static func localFallbackSettings(

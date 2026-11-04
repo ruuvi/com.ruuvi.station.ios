@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviNotifier
+#endif
 import Foundation
 import RuuviLocal
 import RuuviNotification
@@ -59,7 +62,7 @@ public final class RuuviNotifierImpl: RuuviNotifier {
     public func isSubscribed(_ observer: some RuuviNotifierObserver, to uuid: String) -> Bool {
         let observerPointer = Unmanaged.passUnretained(observer).toOpaque()
         if let array = observations[uuid] {
-            for i in 0 ..< array.count {
+            for i in 0..<array.count {
                 let pointer = array.pointer(at: i)
                 if pointer == observerPointer {
                     return true
@@ -81,10 +84,10 @@ public final class RuuviNotifierImpl: RuuviNotifier {
             ) { [weak self] notification in
                 guard let self = self else { return }
                 guard let userInfo = notification.userInfo,
-                      let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType,
-                      let physicalSensor = userInfo[
-                          RuuviServiceAlertDidChangeKey.physicalSensor
-                      ] as? PhysicalSensor
+                    let type = userInfo[RuuviServiceAlertDidChangeKey.type] as? AlertType,
+                    let physicalSensor = userInfo[
+                        RuuviServiceAlertDidChangeKey.physicalSensor
+                    ] as? PhysicalSensor
                 else {
                     return
                 }

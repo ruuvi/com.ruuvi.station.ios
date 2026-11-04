@@ -18,6 +18,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     ) {
         guard let windowScene = scene as? UIWindowScene else { return }
 
+        if let errorController = appDelegate?.startupErrorController {
+            let window = UIWindow(windowScene: windowScene)
+            window.rootViewController = errorController
+            window.makeKeyAndVisible()
+            self.window = window
+            return
+        }
+
         let resolver = AppAssembly.shared.assembler.resolver
         let settings = appDelegate?.settings ?? resolver.resolve(RuuviLocalSettings.self)
 
@@ -37,20 +45,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneWillEnterForeground(_: UIScene) {
-        appDelegate?.appStateService.applicationWillEnterForeground(UIApplication.shared)
+        appDelegate?.appStateService?.applicationWillEnterForeground(UIApplication.shared)
     }
 
     func sceneDidBecomeActive(_: UIScene) {
         appDelegate?.resetNotificationsBadge()
-        appDelegate?.appStateService.applicationDidBecomeActive(UIApplication.shared)
+        appDelegate?.appStateService?.applicationDidBecomeActive(UIApplication.shared)
     }
 
     func sceneWillResignActive(_: UIScene) {
-        appDelegate?.appStateService.applicationWillResignActive(UIApplication.shared)
+        appDelegate?.appStateService?.applicationWillResignActive(UIApplication.shared)
     }
 
     func sceneDidEnterBackground(_: UIScene) {
-        appDelegate?.appStateService.applicationDidEnterBackground(UIApplication.shared)
+        appDelegate?.appStateService?.applicationDidEnterBackground(UIApplication.shared)
     }
 
     func scene(_: UIScene, continue userActivity: NSUserActivity) {
@@ -78,12 +86,12 @@ private extension SceneDelegate {
 
     func handle(userActivity: NSUserActivity) {
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-              let url = userActivity.webpageURL
+            let url = userActivity.webpageURL
         else {
             return
         }
 
-        appDelegate?.appStateService.applicationDidOpenWithUniversalLink(
+        appDelegate?.appStateService?.applicationDidOpenWithUniversalLink(
             UIApplication.shared,
             url: url
         )

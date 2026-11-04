@@ -1,11 +1,11 @@
-// swift-tools-version:5.9
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "RuuviDFU",
-    platforms: [.macOS(.v10_15), .iOS(.v14)],
+    platforms: [.iOS(.v16)],
     products: [
         .library(
             name: "RuuviDFU",
@@ -30,21 +30,22 @@ let package = Package(
         .target(
             name: "RuuviDFU",
             dependencies: [
-                "NordicDFU",
-                "iOSMcuManagerLibrary",
+                .product(name: "NordicDFU", package: "IOS-Pods-DFU-Library"),
+                .product(name: "iOSMcuManagerLibrary", package: "IOS-nRF-Connect-Device-Manager"),
             ]
         ),
         .target(
             name: "RuuviDFUImpl",
             dependencies: [
                 "RuuviDFU",
-                "NordicDFU",
-                "iOSMcuManagerLibrary",
+                .product(name: "NordicDFU", package: "IOS-Pods-DFU-Library"),
+                .product(name: "iOSMcuManagerLibrary", package: "IOS-nRF-Connect-Device-Manager"),
             ]
         ),
         .testTarget(
             name: "RuuviDFUTests",
             dependencies: ["RuuviDFU"]
         ),
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )

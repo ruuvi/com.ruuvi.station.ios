@@ -1,3 +1,8 @@
+#if SWIFT_PACKAGE
+    import RuuviPool
+    import RuuviLocal
+    import RuuviUser
+#endif
 import RuuviOntology
 
 public enum RuuviCloudSensorVisibilityCode: String, CaseIterable, Codable {

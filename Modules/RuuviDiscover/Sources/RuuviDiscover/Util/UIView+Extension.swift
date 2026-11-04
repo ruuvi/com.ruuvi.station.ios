@@ -1,3 +1,12 @@
+#if SWIFT_PACKAGE
+    import RuuviOntology
+    import RuuviContext
+    import RuuviReactor
+    import RuuviLocal
+    import RuuviService
+    import RuuviPresenters
+    import RuuviLocalization
+#endif
 import UIKit
 
 extension UIButton {

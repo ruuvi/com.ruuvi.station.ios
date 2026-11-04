@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviCore
+#endif
 import Foundation
 
 public struct ReloadableSection<N: Equatable>: Equatable {

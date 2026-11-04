@@ -2,5 +2,4 @@
 import XCTest
 
 final class RuuviServiceTests: XCTestCase {
-    func testExample() {}
 }

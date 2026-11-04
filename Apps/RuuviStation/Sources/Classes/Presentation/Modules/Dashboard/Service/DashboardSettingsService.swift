@@ -124,12 +124,12 @@ class DashboardSettingsService {
 
     func updateDashboardType(_ type: DashboardType) {
         settings.dashboardType = type
-        ruuviAppSettingsService.set(dashboardType: type)
+        Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(dashboardType: type) }
     }
 
     func updateDashboardTapAction(_ type: DashboardTapActionType) {
         settings.dashboardTapActionType = type
-        ruuviAppSettingsService.set(dashboardTapActionType: type)
+        Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(dashboardTapActionType: type) }
     }
 
     func updateShowFullSensorCardOnDashboardTap(_ show: Bool) {
@@ -138,12 +138,12 @@ class DashboardSettingsService {
 
     func updateSensorOrder(_ orderedIds: [String]) {
         settings.dashboardSensorOrder = orderedIds
-        ruuviAppSettingsService.set(dashboardSensorOrder: orderedIds)
+        Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(dashboardSensorOrder: orderedIds) }
     }
 
     func resetSensorOrder() {
         settings.dashboardSensorOrder = []
-        ruuviAppSettingsService.set(dashboardSensorOrder: [])
+        Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(dashboardSensorOrder: []) }
     }
 
     func getCurrentDashboardSortingType() -> DashboardSortingType {
@@ -155,11 +155,13 @@ class DashboardSettingsService {
     }
 
     func evaluateAppStoreReviewIfNeeded(with sensorsCount: Int) {
-        guard let dayDifference = Calendar.current.dateComponents(
-            [.day],
-            from: FileManager().appInstalledDate,
-            to: Date()
-        ).day, dayDifference > 7, sensorsCount > 0 else { return }
+        guard
+            let dayDifference = Calendar.current.dateComponents(
+                [.day],
+                from: FileManager().appInstalledDate,
+                to: Date()
+            ).day, dayDifference > 7, sensorsCount > 0
+        else { return }
 
         AppStoreReviewHelper.askForReview(settings: settings)
     }
@@ -269,7 +271,8 @@ private extension DashboardSettingsService {
         ) { [weak self] notification in
             guard let self = self else { return }
             if let userInfo = notification.userInfo,
-               let type = userInfo[DashboardTypeKey.type] as? DashboardType {
+                let type = userInfo[DashboardTypeKey.type] as? DashboardType
+            {
                 self.delegate?.settingsService(self, dashboardTypeDidChange: type)
             }
         }
@@ -281,7 +284,8 @@ private extension DashboardSettingsService {
         ) { [weak self] notification in
             guard let self = self else { return }
             if let userInfo = notification.userInfo,
-               let type = userInfo[DashboardTapActionTypeKey.type] as? DashboardTapActionType {
+                let type = userInfo[DashboardTapActionTypeKey.type] as? DashboardTapActionType
+            {
                 self.delegate?.settingsService(self, dashboardTapActionDidChange: type)
             }
         }
@@ -460,10 +464,8 @@ extension DashboardSettingsService {
     func shouldShowSignInBanner(isAuthorized: Bool, sensorCount: Int) -> Bool {
         guard let currentAppVersion = getCurrentAppVersion() else { return false }
 
-        return settings.signedInAtleastOnce &&
-        !isAuthorized &&
-        sensorCount > 0 &&
-        !settings.dashboardSignInBannerHidden(for: currentAppVersion)
+        return settings.signedInAtleastOnce && !isAuthorized && sensorCount > 0
+            && !settings.dashboardSignInBannerHidden(for: currentAppVersion)
     }
 
     func hideSignInBanner() {

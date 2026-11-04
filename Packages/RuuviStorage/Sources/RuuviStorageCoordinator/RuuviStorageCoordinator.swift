@@ -1,5 +1,7 @@
+#if SWIFT_PACKAGE
+    import RuuviStorage
+#endif
 import Foundation
-import Future
 import RuuviOntology
 import RuuviPersistence
 
@@ -10,64 +12,48 @@ final class RuuviStorageCoordinator: RuuviStorage {
         self.sqlite = sqlite
     }
 
-    func readOne(_ ruuviTagId: String) -> Future<AnyRuuviTagSensor, RuuviStorageError> {
-        let promise = Promise<AnyRuuviTagSensor, RuuviStorageError>()
-        sqlite.readOne(ruuviTagId).on(success: { sensor in
-            promise.succeed(value: sensor)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+    func readOne(_ ruuviTagId: String) async throws(RuuviStorageError) -> AnyRuuviTagSensor {
+        do {
+            return try await sqlite.readOne(ruuviTagId)
+        } catch {
+            throw .ruuviPersistence(error)
+        }
     }
 
-    func readAll(_ ruuviTagId: String) -> Future<[RuuviTagSensorRecord], RuuviStorageError> {
-        let promise = Promise<[RuuviTagSensorRecord], RuuviStorageError>()
-        let sqliteOperation = sqlite.readAll(ruuviTagId)
-        sqliteOperation.on(success: { sqliteEntities in
-            promise.succeed(value: sqliteEntities)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+    func readAll(_ ruuviTagId: String) async throws(RuuviStorageError) -> [RuuviTagSensorRecord] {
+        do {
+            return try await sqlite.readAll(ruuviTagId)
+        } catch {
+            throw .ruuviPersistence(error)
+        }
     }
 
-    func readAll() -> Future<[AnyRuuviTagSensor], RuuviStorageError> {
-        let promise = Promise<[AnyRuuviTagSensor], RuuviStorageError>()
-        let sqliteOperation = sqlite.readAll()
-        sqliteOperation
-            .on(success: { sqliteEntities in
-                let combinedValues = sqliteEntities
-                promise.succeed(value: combinedValues.map(\.any))
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
-        return promise.future
+    func readAll() async throws(RuuviStorageError) -> [AnyRuuviTagSensor] {
+        do {
+            return try await sqlite.readAll()
+        } catch {
+            throw .ruuviPersistence(error)
+        }
     }
 
-    func readAll(_ id: String, after date: Date) -> Future<[RuuviTagSensorRecord], RuuviStorageError> {
-        let promise = Promise<[RuuviTagSensorRecord], RuuviStorageError>()
-        let sqliteOperation = sqlite.readAll(id, after: date)
-        sqliteOperation.on(success: { sqliteEntities in
-            promise.succeed(value: sqliteEntities)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+    func readAll(_ id: String, after date: Date) async throws(RuuviStorageError) -> [RuuviTagSensorRecord] {
+        do {
+            return try await sqlite.readAll(id, after: date)
+        } catch {
+            throw .ruuviPersistence(error)
+        }
     }
 
     func read(
         _ id: String,
         after date: Date,
         with interval: TimeInterval
-    ) -> Future<[RuuviTagSensorRecord], RuuviStorageError> {
-        let promise = Promise<[RuuviTagSensorRecord], RuuviStorageError>()
-        let sqliteOperation = sqlite.read(id, after: date, with: interval)
-        sqliteOperation.on(success: { sqliteEntities in
-            promise.succeed(value: sqliteEntities)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+    ) async throws(RuuviStorageError) -> [RuuviTagSensorRecord] {
+        do {
+            return try await sqlite.read(id, after: date, with: interval)
+        } catch {
+            throw .ruuviPersistence(error)
+        }
     }
 
     func readDownsampled(
@@ -75,215 +61,166 @@ final class RuuviStorageCoordinator: RuuviStorage {
         after date: Date,
         with intervalMinutes: Int,
         pick points: Double
-    ) -> Future<[RuuviTagSensorRecord], RuuviStorageError> {
-        let promise = Promise<[RuuviTagSensorRecord], RuuviStorageError>()
-        let sqliteOperation = sqlite.readDownsampled(
-            id,
-            after: date,
-            with: intervalMinutes,
-            pick: points
-        )
-        sqliteOperation.on(success: { sqliteEntities in
-            promise.succeed(value: sqliteEntities)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+    ) async throws(RuuviStorageError) -> [RuuviTagSensorRecord] {
+        do {
+            return try await sqlite.readDownsampled(
+                id,
+                after: date,
+                with: intervalMinutes,
+                pick: points
+            )
+        } catch {
+            throw .ruuviPersistence(error)
+        }
     }
 
     func readAll(
         _ id: String,
         with interval: TimeInterval
-    ) -> Future<[RuuviTagSensorRecord], RuuviStorageError> {
-        let promise = Promise<[RuuviTagSensorRecord], RuuviStorageError>()
-        let sqliteOperation = sqlite.readAll(id, with: interval)
-        sqliteOperation.on(success: { sqliteEntities in
-            promise.succeed(value: sqliteEntities)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
-    }
-
-    func readLast(_ id: String, from: TimeInterval) -> Future<[RuuviTagSensorRecord], RuuviStorageError> {
-        let promise = Promise<[RuuviTagSensorRecord], RuuviStorageError>()
-        let sqliteOperation = sqlite.readLast(id, from: from)
-        sqliteOperation.on(success: { sqliteEntities in
-            promise.succeed(value: sqliteEntities)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
-    }
-
-    func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviStorageError> {
-        let promise = Promise<RuuviTagSensorRecord?, RuuviStorageError>()
-        if ruuviTag.macId != nil {
-            sqlite.readLast(ruuviTag).on(success: { record in
-                promise.succeed(value: record)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
-        } else {
-            assertionFailure()
+    ) async throws(RuuviStorageError) -> [RuuviTagSensorRecord] {
+        do {
+            return try await sqlite.readAll(id, with: interval)
+        } catch {
+            throw .ruuviPersistence(error)
         }
-        return promise.future
     }
 
-    func readLatest(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviStorageError> {
-        let promise = Promise<RuuviTagSensorRecord?, RuuviStorageError>()
-        if ruuviTag.macId != nil {
-            sqlite.readLatest(ruuviTag).on(success: { record in
-                promise.succeed(value: record)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
-        } else {
-            assertionFailure()
+    func readLast(_ id: String, from: TimeInterval) async throws(RuuviStorageError) -> [RuuviTagSensorRecord] {
+        do {
+            return try await sqlite.readLast(id, from: from)
+        } catch {
+            throw .ruuviPersistence(error)
         }
-        return promise.future
     }
 
-    func getStoredTagsCount() -> Future<Int, RuuviStorageError> {
-        let promise = Promise<Int, RuuviStorageError>()
-        let sqliteOperation = sqlite.getStoredTagsCount()
-        sqliteOperation.on(success: { sqliteEntities in
-            promise.succeed(value: sqliteEntities)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
-    }
-
-    func getClaimedTagsCount() -> Future<Int, RuuviStorageError> {
-        let promise = Promise<Int, RuuviStorageError>()
-        let allTags = readAll()
-        allTags.on(success: { tags in
-            let claimedTags = tags.filter { $0.isClaimed && $0.isOwner }
-            promise.succeed(value: claimedTags.count)
-        })
-        return promise.future
-    }
-
-    func getOfflineTagsCount() -> Future<Int, RuuviStorageError> {
-        let promise = Promise<Int, RuuviStorageError>()
-        let allTags = readAll()
-        allTags.on(success: { tags in
-            let claimedTags = tags.filter { !$0.isCloud }
-            promise.succeed(value: claimedTags.count)
-        })
-        return promise.future
-    }
-
-    func getStoredMeasurementsCount() -> Future<Int, RuuviStorageError> {
-        let promise = Promise<Int, RuuviStorageError>()
-        let sqliteOperation = sqlite.getStoredMeasurementsCount()
-        sqliteOperation.on(success: { sqliteEntities in
-            promise.succeed(value: sqliteEntities)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
-    }
-
-    func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RuuviStorageError> {
-        let promise = Promise<SensorSettings?, RuuviStorageError>()
-        if ruuviTag.macId != nil {
-            sqlite.readSensorSettings(ruuviTag).on(success: { settings in
-                promise.succeed(value: settings)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
-        } else {
-            assertionFailure()
+    func readLast(_ ruuviTag: RuuviTagSensor) async throws(RuuviStorageError) -> RuuviTagSensorRecord? {
+        guard ruuviTag.macId != nil else {
+            throw .ruuviPersistence(.failedToFindRuuviTag)
         }
-        return promise.future
+        do {
+            return try await sqlite.readLast(ruuviTag)
+        } catch {
+            throw .ruuviPersistence(error)
+        }
+    }
+
+    func readLatest(_ ruuviTag: RuuviTagSensor) async throws(RuuviStorageError) -> RuuviTagSensorRecord? {
+        guard ruuviTag.macId != nil else {
+            throw .ruuviPersistence(.failedToFindRuuviTag)
+        }
+        do {
+            return try await sqlite.readLatest(ruuviTag)
+        } catch {
+            throw .ruuviPersistence(error)
+        }
+    }
+
+    func getStoredTagsCount() async throws(RuuviStorageError) -> Int {
+        do {
+            return try await sqlite.getStoredTagsCount()
+        } catch {
+            throw .ruuviPersistence(error)
+        }
+    }
+
+    func getClaimedTagsCount() async throws(RuuviStorageError) -> Int {
+        return try await readAll().filter { $0.isClaimed && $0.isOwner }.count
+    }
+
+    func getOfflineTagsCount() async throws(RuuviStorageError) -> Int {
+        return try await readAll().filter { !$0.isCloud }.count
+    }
+
+    func getStoredMeasurementsCount() async throws(RuuviStorageError) -> Int {
+        do {
+            return try await sqlite.getStoredMeasurementsCount()
+        } catch {
+            throw .ruuviPersistence(error)
+        }
+    }
+
+    func readSensorSettings(_ ruuviTag: RuuviTagSensor) async throws(RuuviStorageError) -> SensorSettings? {
+        guard ruuviTag.macId != nil else {
+            throw .ruuviPersistence(.failedToFindRuuviTag)
+        }
+        do {
+            return try await sqlite.readSensorSettings(ruuviTag)
+        } catch {
+            throw .ruuviPersistence(error)
+        }
     }
 
     // MARK: - Queued cloud requests
 
     func readQueuedRequests()
-    -> Future<[RuuviCloudQueuedRequest], RuuviStorageError> {
-        let promise = Promise<[RuuviCloudQueuedRequest], RuuviStorageError>()
-        sqlite.readQueuedRequests().on(success: { requests in
-            promise.succeed(value: requests)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+        async throws(RuuviStorageError) -> [RuuviCloudQueuedRequest]
+    {
+        do {
+            return try await sqlite.readQueuedRequests()
+        } catch {
+            throw .ruuviPersistence(error)
+        }
     }
 
     func readQueuedRequests(
         for key: String
-    ) -> Future<[RuuviCloudQueuedRequest], RuuviStorageError> {
-        let promise = Promise<[RuuviCloudQueuedRequest], RuuviStorageError>()
-        sqlite.readQueuedRequests(for: key).on(success: { requests in
-            promise.succeed(value: requests)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+    ) async throws(RuuviStorageError) -> [RuuviCloudQueuedRequest] {
+        do {
+            return try await sqlite.readQueuedRequests(for: key)
+        } catch {
+            throw .ruuviPersistence(error)
+        }
     }
 
     func readQueuedRequests(
         for type: RuuviCloudQueuedRequestType
-    ) -> Future<[RuuviCloudQueuedRequest], RuuviStorageError> {
-        let promise = Promise<[RuuviCloudQueuedRequest], RuuviStorageError>()
-        sqlite.readQueuedRequests(for: type).on(success: { requests in
-            promise.succeed(value: requests)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+    ) async throws(RuuviStorageError) -> [RuuviCloudQueuedRequest] {
+        do {
+            return try await sqlite.readQueuedRequests(for: type)
+        } catch {
+            throw .ruuviPersistence(error)
+        }
     }
 }
 
 // MARK: - User settings
 
 extension RuuviStorageCoordinator {
-    func readUserSettings() -> Future<[RuuviUserSetting], RuuviStorageError> {
-        let promise = Promise<[RuuviUserSetting], RuuviStorageError>()
-        sqlite.readUserSettings().on(success: { settings in
-            promise.succeed(value: settings)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+    func readUserSettings() async throws(RuuviStorageError) -> [RuuviUserSetting] {
+        do {
+            return try await sqlite.readUserSettings()
+        } catch {
+            throw .ruuviPersistence(error)
+        }
     }
 
     func readUserSetting(
         for key: String
-    ) -> Future<RuuviUserSetting?, RuuviStorageError> {
-        let promise = Promise<RuuviUserSetting?, RuuviStorageError>()
-        sqlite.readUserSetting(for: key).on(success: { setting in
-            promise.succeed(value: setting)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+    ) async throws(RuuviStorageError) -> RuuviUserSetting? {
+        do {
+            return try await sqlite.readUserSetting(for: key)
+        } catch {
+            throw .ruuviPersistence(error)
+        }
     }
 
     func save(
         userSetting: RuuviUserSetting
-    ) -> Future<RuuviUserSetting, RuuviStorageError> {
-        let promise = Promise<RuuviUserSetting, RuuviStorageError>()
-        sqlite.save(userSetting: userSetting).on(success: { setting in
-            promise.succeed(value: setting)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+    ) async throws(RuuviStorageError) -> RuuviUserSetting {
+        do {
+            return try await sqlite.save(userSetting: userSetting)
+        } catch {
+            throw .ruuviPersistence(error)
+        }
     }
 
     func save(
         userSettings: [RuuviUserSetting]
-    ) -> Future<[RuuviUserSetting], RuuviStorageError> {
-        let promise = Promise<[RuuviUserSetting], RuuviStorageError>()
-        sqlite.save(userSettings: userSettings).on(success: { settings in
-            promise.succeed(value: settings)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+    ) async throws(RuuviStorageError) -> [RuuviUserSetting] {
+        do {
+            return try await sqlite.save(userSettings: userSettings)
+        } catch {
+            throw .ruuviPersistence(error)
+        }
     }
 }

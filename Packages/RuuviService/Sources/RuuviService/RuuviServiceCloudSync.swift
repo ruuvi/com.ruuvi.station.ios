@@ -1,26 +1,33 @@
+#if SWIFT_PACKAGE
+    import RuuviStorage
+    import RuuviCloud
+    import RuuviPool
+    import RuuviLocal
+    import RuuviRepository
+    import RuuviCore
+#endif
 import Foundation
-import Future
 import RuuviOntology
 
 public protocol RuuviServiceCloudSync {
     @discardableResult
-    func syncAll() -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError>
+    func syncAll() async throws(RuuviServiceError) -> Set<AnyRuuviTagSensor>
 
     @discardableResult
-    func sync(sensor: RuuviTagSensor) -> Future<[AnyRuuviTagSensorRecord], RuuviServiceError>
+    func sync(sensor: RuuviTagSensor) async throws(RuuviServiceError) -> [AnyRuuviTagSensorRecord]
 
     @discardableResult
-    func syncAllHistory() -> Future<Bool, RuuviServiceError>
+    func syncAllHistory() async throws(RuuviServiceError) -> Bool
 
     @discardableResult
-    func refreshLatestRecord() -> Future<Bool, RuuviServiceError>
+    func refreshLatestRecord() async throws(RuuviServiceError) -> Bool
 
     @discardableResult
-    func syncAllRecords() -> Future<Bool, RuuviServiceError>
+    func syncAllRecords() async throws(RuuviServiceError) -> Bool
 
     @discardableResult
-    func syncSettings() -> Future<RuuviCloudSettings, RuuviServiceError>
+    func syncSettings() async throws(RuuviServiceError) -> RuuviCloudSettings
 
     @discardableResult
-    func executePendingRequests() -> Future<Bool, RuuviServiceError>
+    func executePendingRequests() async throws(RuuviServiceError) -> Bool
 }

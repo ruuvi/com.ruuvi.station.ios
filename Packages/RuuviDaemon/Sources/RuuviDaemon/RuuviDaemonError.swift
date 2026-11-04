@@ -1,3 +1,8 @@
+#if SWIFT_PACKAGE
+    import RuuviLocal
+    import RuuviService
+    import RuuviNotifier
+#endif
 import BTKit
 import Foundation
 import RuuviPersistence

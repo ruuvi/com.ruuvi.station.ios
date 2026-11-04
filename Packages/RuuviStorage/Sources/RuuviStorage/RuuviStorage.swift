@@ -1,5 +1,4 @@
 import Foundation
-import Future
 import RuuviOntology
 import RuuviPersistence
 
@@ -8,49 +7,49 @@ public protocol RuuviStorage {
         _ id: String,
         after date: Date,
         with interval: TimeInterval
-    ) -> Future<[RuuviTagSensorRecord], RuuviStorageError>
+    ) async throws(RuuviStorageError) -> [RuuviTagSensorRecord]
     func readDownsampled(
         _ id: String,
         after date: Date,
         with intervalMinutes: Int,
         pick points: Double
-    ) -> Future<[RuuviTagSensorRecord], RuuviStorageError>
-    func readOne(_ id: String) -> Future<AnyRuuviTagSensor, RuuviStorageError>
-    func readAll(_ id: String) -> Future<[RuuviTagSensorRecord], RuuviStorageError>
-    func readAll(_ id: String, with interval: TimeInterval) -> Future<[RuuviTagSensorRecord], RuuviStorageError>
-    func readAll(_ id: String, after date: Date) -> Future<[RuuviTagSensorRecord], RuuviStorageError>
-    func readAll() -> Future<[AnyRuuviTagSensor], RuuviStorageError>
-    func readLast(_ id: String, from: TimeInterval) -> Future<[RuuviTagSensorRecord], RuuviStorageError>
-    func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviStorageError>
-    func readLatest(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviStorageError>
-    func getStoredTagsCount() -> Future<Int, RuuviStorageError>
-    func getClaimedTagsCount() -> Future<Int, RuuviStorageError>
-    func getOfflineTagsCount() -> Future<Int, RuuviStorageError>
-    func getStoredMeasurementsCount() -> Future<Int, RuuviStorageError>
-    func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RuuviStorageError>
+    ) async throws(RuuviStorageError) -> [RuuviTagSensorRecord]
+    func readOne(_ id: String) async throws(RuuviStorageError) -> AnyRuuviTagSensor
+    func readAll(_ id: String) async throws(RuuviStorageError) -> [RuuviTagSensorRecord]
+    func readAll(_ id: String, with interval: TimeInterval) async throws(RuuviStorageError) -> [RuuviTagSensorRecord]
+    func readAll(_ id: String, after date: Date) async throws(RuuviStorageError) -> [RuuviTagSensorRecord]
+    func readAll() async throws(RuuviStorageError) -> [AnyRuuviTagSensor]
+    func readLast(_ id: String, from: TimeInterval) async throws(RuuviStorageError) -> [RuuviTagSensorRecord]
+    func readLast(_ ruuviTag: RuuviTagSensor) async throws(RuuviStorageError) -> RuuviTagSensorRecord?
+    func readLatest(_ ruuviTag: RuuviTagSensor) async throws(RuuviStorageError) -> RuuviTagSensorRecord?
+    func getStoredTagsCount() async throws(RuuviStorageError) -> Int
+    func getClaimedTagsCount() async throws(RuuviStorageError) -> Int
+    func getOfflineTagsCount() async throws(RuuviStorageError) -> Int
+    func getStoredMeasurementsCount() async throws(RuuviStorageError) -> Int
+    func readSensorSettings(_ ruuviTag: RuuviTagSensor) async throws(RuuviStorageError) -> SensorSettings?
 
     // MARK: - User settings
 
-    func readUserSettings() -> Future<[RuuviUserSetting], RuuviStorageError>
+    func readUserSettings() async throws(RuuviStorageError) -> [RuuviUserSetting]
     func readUserSetting(
         for key: String
-    ) -> Future<RuuviUserSetting?, RuuviStorageError>
+    ) async throws(RuuviStorageError) -> RuuviUserSetting?
     func save(
         userSetting: RuuviUserSetting
-    ) -> Future<RuuviUserSetting, RuuviStorageError>
+    ) async throws(RuuviStorageError) -> RuuviUserSetting
     func save(
         userSettings: [RuuviUserSetting]
-    ) -> Future<[RuuviUserSetting], RuuviStorageError>
+    ) async throws(RuuviStorageError) -> [RuuviUserSetting]
 
     // MARK: - Queued cloud requests
 
-    func readQueuedRequests() -> Future<[RuuviCloudQueuedRequest], RuuviStorageError>
+    func readQueuedRequests() async throws(RuuviStorageError) -> [RuuviCloudQueuedRequest]
     func readQueuedRequests(
         for key: String
-    ) -> Future<[RuuviCloudQueuedRequest], RuuviStorageError>
+    ) async throws(RuuviStorageError) -> [RuuviCloudQueuedRequest]
     func readQueuedRequests(
         for type: RuuviCloudQueuedRequestType
-    ) -> Future<[RuuviCloudQueuedRequest], RuuviStorageError>
+    ) async throws(RuuviStorageError) -> [RuuviCloudQueuedRequest]
 }
 
 public protocol RuuviStorageFactory {

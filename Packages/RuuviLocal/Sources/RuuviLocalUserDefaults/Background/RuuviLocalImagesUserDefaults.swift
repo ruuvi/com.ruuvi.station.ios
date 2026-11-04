@@ -1,4 +1,6 @@
-import Future
+#if SWIFT_PACKAGE
+    import RuuviLocal
+#endif
 import RuuviOntology
 import UIKit
 
@@ -8,7 +10,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     }
 
     private let imagePersistence: ImagePersistence
-    private let bgMinIndex = 1 // must be > 0, 0 means custom background
+    private let bgMinIndex = 1  // must be > 0, 0 means custom background
     private let bgMaxIndex = 17
     // The images of index 16 will be used for default background for RuuviTag.
     private let bgIndexDefaultRuuviTag = 16
@@ -23,7 +25,8 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
 
     private var usedBackgrounds: [Int] {
         if let ub = UserDefaults.standard.array(forKey: usedBackgroundsUDKey) as? [Int],
-           ub.count == bgMaxIndex {
+            ub.count == bgMaxIndex
+        {
             return ub
         } else {
             let ub = Array(repeating: 0, count: bgMaxIndex - bgMinIndex + 1)
@@ -84,40 +87,20 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
         }
     }
 
+    @MainActor
     func setCustomBackground(
         image: UIImage,
         compressionQuality: CGFloat,
         for identifier: Identifier
-    ) -> Future<URL, RuuviLocalError> {
-        let promise = Promise<URL, RuuviLocalError>()
-        let persist = imagePersistence.persistBg(
+    ) async throws(RuuviLocalError) -> URL {
+        let url = try await imagePersistence.persistBg(
             image: image,
             compressionQuality: compressionQuality,
             for: identifier
         )
-        persist.on(success: { url in
-            self.setBackground(0, for: identifier)
-            let userInfoKey: BPDidChangeBackgroundKey
-            if identifier is LocalIdentifier {
-                userInfoKey = .luid
-            } else if identifier is MACIdentifier {
-                userInfoKey = .macId
-            } else {
-                userInfoKey = .luid
-                assertionFailure()
-            }
-            NotificationCenter
-                .default
-                .post(
-                    name: .BackgroundPersistenceDidChangeBackground,
-                    object: nil,
-                    userInfo: [userInfoKey: identifier]
-                )
-            promise.succeed(value: url)
-        }, failure: { error in
-            promise.fail(error: error)
-        })
-        return promise.future
+        // setBackground publishes the change once, after the file is durable.
+        setBackground(0, for: identifier)
+        return url
     }
 
     func setBackground(_ id: Int, for identifier: Identifier) {
@@ -218,15 +201,16 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
 
     func isPictureCached(for cloudSensor: CloudSensor) -> Bool {
         guard let url = cloudSensor.picture,
-              let cachedUrl = UserDefaults.standard.url(
-                  forKey: cloudSensorPictureUrlPrefix + cloudSensor.id
-              )
+            let cachedUrl = UserDefaults.standard.url(
+                forKey: cloudSensorPictureUrlPrefix + cloudSensor.id
+            )
         else {
             return false
         }
 
         if let fileName = pictureFileName(from: url),
-           let cachedFileName = pictureFileName(from: cachedUrl) {
+            let cachedFileName = pictureFileName(from: cachedUrl)
+        {
             return fileName == cachedFileName
         }
 
@@ -236,7 +220,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     private func pictureFileName(from url: URL) -> String? {
         let fileName = url.lastPathComponent
         guard !fileName.isEmpty,
-              !url.pathExtension.isEmpty
+            !url.pathExtension.isEmpty
         else {
             return nil
         }

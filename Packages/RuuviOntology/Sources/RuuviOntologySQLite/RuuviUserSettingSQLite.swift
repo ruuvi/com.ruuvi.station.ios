@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviOntology
+#endif
 import Foundation
 import GRDB
 
@@ -45,14 +48,16 @@ extension RuuviUserSettingSQLite: PersistableRecord {
 
 public extension RuuviUserSettingSQLite {
     static func createTable(in db: Database) throws {
-        try db.create(table: RuuviUserSettingSQLite.databaseTableName, body: { table in
-            table.column(RuuviUserSettingSQLite.keyColumn.name, .text)
-                .notNull()
-                .primaryKey(onConflict: .replace)
-            table.column(RuuviUserSettingSQLite.valueColumn.name, .text)
-                .notNull()
-            table.column(RuuviUserSettingSQLite.lastUpdatedColumn.name, .datetime)
-        })
+        try db.create(
+            table: RuuviUserSettingSQLite.databaseTableName,
+            body: { table in
+                table.column(RuuviUserSettingSQLite.keyColumn.name, .text)
+                    .notNull()
+                    .primaryKey(onConflict: .replace)
+                table.column(RuuviUserSettingSQLite.valueColumn.name, .text)
+                    .notNull()
+                table.column(RuuviUserSettingSQLite.lastUpdatedColumn.name, .datetime)
+            })
     }
 }
 

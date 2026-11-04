@@ -1,21 +1,19 @@
-import Future
 import RuuviOntology
 import UIKit
 
 public extension Notification.Name {
-    static let BackgroundPersistenceDidChangeBackground
-        = Notification.Name("BackgroundPersistenceDidChangeBackground")
-    static let BackgroundPersistenceDidUpdateBackgroundUploadProgress
-        = Notification.Name("BackgroundPersistenceDidUpdateBackgroundUploadProgress")
+    static let BackgroundPersistenceDidChangeBackground = Notification.Name("BackgroundPersistenceDidChangeBackground")
+    static let BackgroundPersistenceDidUpdateBackgroundUploadProgress = Notification.Name(
+        "BackgroundPersistenceDidUpdateBackgroundUploadProgress")
 }
 
 public enum BPDidChangeBackgroundKey: String {
-    case luid // LocalIdenfitier
+    case luid  // LocalIdenfitier
     case macId
 }
 
 public enum BPDidUpdateBackgroundUploadProgressKey: String {
-    case luid // LocalIdenfitier
+    case luid  // LocalIdenfitier
     case macId
     case progress
 }
@@ -33,10 +31,7 @@ public protocol RuuviLocalImages {
         image: UIImage,
         compressionQuality: CGFloat,
         for identifier: Identifier
-    ) -> Future<
-        URL,
-        RuuviLocalError
-    >
+    ) async throws(RuuviLocalError) -> URL
     func deleteCustomBackground(for uuid: Identifier)
 
     func backgroundUploadProgress(for identifier: Identifier) -> Double?

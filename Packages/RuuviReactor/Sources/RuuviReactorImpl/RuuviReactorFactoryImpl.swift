@@ -1,3 +1,7 @@
+#if SWIFT_PACKAGE
+    import RuuviReactor
+    import RuuviOntologySQLite
+#endif
 import Foundation
 import RuuviAnalytics
 import RuuviContext

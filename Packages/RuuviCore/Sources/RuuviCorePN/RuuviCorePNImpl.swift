@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviCore
+#endif
 import UIKit
 import UserNotifications
 

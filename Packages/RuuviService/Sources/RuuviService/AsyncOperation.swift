@@ -1,3 +1,12 @@
+#if SWIFT_PACKAGE
+    import RuuviOntology
+    import RuuviStorage
+    import RuuviCloud
+    import RuuviPool
+    import RuuviLocal
+    import RuuviRepository
+    import RuuviCore
+#endif
 import Foundation
 
 open class AsyncOperation: Operation {

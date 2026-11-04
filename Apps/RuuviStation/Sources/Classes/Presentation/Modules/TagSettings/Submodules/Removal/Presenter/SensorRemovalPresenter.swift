@@ -39,18 +39,25 @@ extension SensorRemovalPresenter: SensorRemovalViewOutput {
 
     func viewDidConfirmTagRemoval(with removeCloudData: Bool) {
         guard let ruuviTag else { return }
-        ruuviOwnershipService.remove(
-            sensor: ruuviTag,
-            removeCloudHistory: removeCloudData
-        ).on(success: { [weak self] _ in
-            guard let sSelf = self else { return }
-            sSelf.output?.sensorRemovalDidRemoveTag(
-                module: sSelf,
-                ruuviTag: ruuviTag
-            )
-        }, failure: { [weak self] error in
-            self?.errorPresenter.present(error: error)
-        })
+        Task { @MainActor [weak self, ruuviOwnershipService = ruuviOwnershipService!, ruuviTag = ruuviTag] in
+            do throws(RuuviServiceError) {
+                let value = try await ruuviOwnershipService.remove(
+                    sensor: ruuviTag,
+                    removeCloudHistory: removeCloudData
+                )
+                ({ [weak self] _ in
+                    guard let sSelf = self else { return }
+                    sSelf.output?.sensorRemovalDidRemoveTag(
+                        module: sSelf,
+                        ruuviTag: ruuviTag
+                    )
+                })(value)
+            } catch {
+                ({ [weak self] error in
+                    self?.errorPresenter.present(error: error)
+                })(error)
+            }
+        }
     }
 
     func viewDidDismiss() {

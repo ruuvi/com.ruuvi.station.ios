@@ -1,3 +1,9 @@
+#if SWIFT_PACKAGE
+    import RuuviMigration
+#endif
+#if SWIFT_PACKAGE
+    import RuuviContext
+#endif
 import Foundation
 import RuuviLocal
 import RuuviOntology
@@ -35,27 +41,34 @@ final class MigrationManagerSignalVisibility: RuuviMigration {
 
         ruuviLocalSettings.signalVisibilityMigrationInProgress = true
 
-        ruuviStorage.readAll().on(success: { sensors in
-            guard !sensors.isEmpty else {
-                self.ruuviLocalSettings.signalVisibilityMigrationInProgress = false
-                return
-            }
+        Task { @MainActor [self] in
+            do throws(RuuviStorageError) {
+                let value = try await ruuviStorage.readAll()
+                ({ sensors in
+                    guard !sensors.isEmpty else {
+                        self.ruuviLocalSettings.signalVisibilityMigrationInProgress = false
+                        return
+                    }
 
-            let group = DispatchGroup()
-            sensors.forEach { sensor in
-                group.enter()
-                self.process(sensor: sensor) {
-                    group.leave()
-                }
-            }
+                    let group = DispatchGroup()
+                    sensors.forEach { sensor in
+                        group.enter()
+                        self.process(sensor: sensor) {
+                            group.leave()
+                        }
+                    }
 
-            group.notify(queue: .global(qos: .utility)) {
-                self.didMigrateSignalVisibility = true
-                self.ruuviLocalSettings.signalVisibilityMigrationInProgress = false
+                    group.notify(queue: .global(qos: .utility)) {
+                        self.didMigrateSignalVisibility = true
+                        self.ruuviLocalSettings.signalVisibilityMigrationInProgress = false
+                    }
+                })(value)
+            } catch {
+                ({ _ in
+                    self.ruuviLocalSettings.signalVisibilityMigrationInProgress = false
+                })(error)
             }
-        }, failure: { _ in
-            self.ruuviLocalSettings.signalVisibilityMigrationInProgress = false
-        })
+        }
     }
 }
 
@@ -68,19 +81,26 @@ private extension MigrationManagerSignalVisibility {
             return
         }
 
-        ruuviStorage.readSensorSettings(sensor).on(success: { settings in
-            self.ensureSignalMeasurementVisible(
-                sensor: sensor,
-                settings: settings,
-                completion: completion
-            )
-        }, failure: { _ in
-            self.ensureSignalMeasurementVisible(
-                sensor: sensor,
-                settings: nil,
-                completion: completion
-            )
-        })
+        Task { @MainActor [self] in
+            do throws(RuuviStorageError) {
+                let value = try await ruuviStorage.readSensorSettings(sensor)
+                ({ settings in
+                    self.ensureSignalMeasurementVisible(
+                        sensor: sensor,
+                        settings: settings,
+                        completion: completion
+                    )
+                })(value)
+            } catch {
+                ({ _ in
+                    self.ensureSignalMeasurementVisible(
+                        sensor: sensor,
+                        settings: nil,
+                        completion: completion
+                    )
+                })(error)
+            }
+        }
     }
 
     func ensureSignalMeasurementVisible(
@@ -111,17 +131,24 @@ private extension MigrationManagerSignalVisibility {
         }
         displayOrder.append(signalCode)
 
-        ruuviSensorProperties
-            .updateDisplaySettings(
-                for: sensor,
-                displayOrder: displayOrder,
-                defaultDisplayOrder: false
-            )
-            .on(success: { _ in
-                completion()
-            }, failure: { _ in
-                completion()
-            })
+        Task { @MainActor [self] in
+            do throws(RuuviServiceError) {
+                let value =
+                    try await ruuviSensorProperties
+                    .updateDisplaySettings(
+                        for: sensor,
+                        displayOrder: displayOrder,
+                        defaultDisplayOrder: false
+                    )
+                ({ _ in
+                    completion()
+                })(value)
+            } catch {
+                ({ _ in
+                    completion()
+                })(error)
+            }
+        }
     }
 }
 

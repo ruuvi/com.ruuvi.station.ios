@@ -1,7 +1,10 @@
+#if SWIFT_PACKAGE
+    import RuuviPool
+    import RuuviUser
+#endif
 // swiftlint:disable file_length
 
 import Foundation
-import Future
 import RuuviLocal
 import RuuviOntology
 
@@ -18,16 +21,16 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         self.localIDs = localIDs
     }
 
-    public func requestCode(email: String) -> Future<String?, RuuviCloudError> {
-        cloud.requestCode(email: email)
+    public func requestCode(email: String) async throws(RuuviCloudError) -> String? {
+        return try await cloud.requestCode(email: email)
     }
 
-    public func validateCode(code: String) -> Future<ValidateCodeResponse, RuuviCloudError> {
-        cloud.validateCode(code: code)
+    public func validateCode(code: String) async throws(RuuviCloudError) -> ValidateCodeResponse {
+        return try await cloud.validateCode(code: code)
     }
 
-    public func deleteAccount(email: String) -> Future<Bool, RuuviCloudError> {
-        cloud.deleteAccount(email: email)
+    public func deleteAccount(email: String) async throws(RuuviCloudError) -> Bool {
+        return try await cloud.deleteAccount(email: email)
     }
 
     public func registerPNToken(
@@ -36,8 +39,8 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         name: String?,
         data: String?,
         params: [String: String]?
-    ) -> Future<Int, RuuviCloudError> {
-        cloud.registerPNToken(
+    ) async throws(RuuviCloudError) -> Int {
+        return try await cloud.registerPNToken(
             token: token,
             type: type,
             name: name,
@@ -49,16 +52,16 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
     public func unregisterPNToken(
         token: String?,
         tokenId: Int?
-    ) -> Future<Bool, RuuviCloudError> {
-        cloud.unregisterPNToken(token: token, tokenId: tokenId)
+    ) async throws(RuuviCloudError) -> Bool {
+        return try await cloud.unregisterPNToken(token: token, tokenId: tokenId)
     }
 
-    public func listPNTokens() -> Future<[RuuviCloudPNToken], RuuviCloudError> {
-        cloud.listPNTokens()
+    public func listPNTokens() async throws(RuuviCloudError) -> [RuuviCloudPNToken] {
+        return try await cloud.listPNTokens()
     }
 
-    public func loadSensors() -> Future<[AnyCloudSensor], RuuviCloudError> {
-        cloud.loadSensors()
+    public func loadSensors() async throws(RuuviCloudError) -> [AnyCloudSensor] {
+        return try await cloud.loadSensors()
     }
 
     // swiftlint:disable:next function_parameter_count
@@ -69,9 +72,9 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         sharedToMe: Bool?,
         alerts: Bool?,
         settings: Bool?
-    ) -> Future<[RuuviCloudSensorDense], RuuviCloudError> {
+    ) async throws(RuuviCloudError) -> [RuuviCloudSensorDense] {
         let sensorForCloud = sensor.map { canonicalizedSensor($0) }
-        return cloud.loadSensorsDense(
+        return try await cloud.loadSensorsDense(
             for: sensorForCloud,
             measurements: measurements,
             sharedToOthers: sharedToOthers,
@@ -85,8 +88,8 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         macId: MACIdentifier,
         since: Date,
         until: Date?
-    ) -> Future<[AnyRuuviTagSensorRecord], RuuviCloudError> {
-        cloud.loadRecords(
+    ) async throws(RuuviCloudError) -> [AnyRuuviTagSensorRecord] {
+        return try await cloud.loadRecords(
             macId: canonical(macId),
             since: since,
             until: until
@@ -96,129 +99,123 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
     public func claim(
         name: String,
         macId: MACIdentifier
-    ) -> Future<MACIdentifier?, RuuviCloudError> {
-        let promise = Promise<MACIdentifier?, RuuviCloudError>()
-        cloud.claim(
-            name: name,
-            macId: canonical(macId)
-        )
-        .on(success: { [weak self] response in
-            guard let self else { return }
+    ) async throws(RuuviCloudError) -> MACIdentifier? {
+        var outcome: Result<MACIdentifier?, RuuviCloudError>
+        do {
+            let response = try await cloud.claim(
+                name: name,
+                macId: canonical(macId)
+            )
             let restored = response.map { self.original(for: $0, fallback: macId) }
-            promise.succeed(value: restored)
-        }, failure: { error in
-            promise.fail(error: error)
-        })
-        return promise.future
+            outcome = .success(restored)
+        } catch let error {
+            outcome = .failure(error)
+        }
+        return try outcome.get()
     }
 
     public func contest(
         macId: MACIdentifier,
         secret: String
-    ) -> Future<MACIdentifier?, RuuviCloudError> {
-        let promise = Promise<MACIdentifier?, RuuviCloudError>()
-        cloud.contest(
-            macId: canonical(macId),
-            secret: secret
-        )
-        .on(success: { [weak self] response in
-            guard let self else { return }
+    ) async throws(RuuviCloudError) -> MACIdentifier? {
+        var outcome: Result<MACIdentifier?, RuuviCloudError>
+        do {
+            let response = try await cloud.contest(
+                macId: canonical(macId),
+                secret: secret
+            )
             let restored = response.map { self.original(for: $0, fallback: macId) }
-            promise.succeed(value: restored)
-        }, failure: { error in
-            promise.fail(error: error)
-        })
-        return promise.future
+            outcome = .success(restored)
+        } catch let error {
+            outcome = .failure(error)
+        }
+        return try outcome.get()
     }
 
     public func unclaim(
         macId: MACIdentifier,
         removeCloudHistory: Bool
-    ) -> Future<MACIdentifier, RuuviCloudError> {
-        let promise = Promise<MACIdentifier, RuuviCloudError>()
-        cloud.unclaim(
-            macId: canonical(macId),
-            removeCloudHistory: removeCloudHistory
-        )
-        .on(success: { [weak self] response in
-            guard let self else { return }
-            promise.succeed(value: self.original(for: response, fallback: macId))
-        }, failure: { error in
-            promise.fail(error: error)
-        })
-        return promise.future
+    ) async throws(RuuviCloudError) -> MACIdentifier {
+        var outcome: Result<MACIdentifier, RuuviCloudError>
+        do {
+            let response = try await cloud.unclaim(
+                macId: canonical(macId),
+                removeCloudHistory: removeCloudHistory
+            )
+            outcome = .success(self.original(for: response, fallback: macId))
+        } catch let error {
+            outcome = .failure(error)
+        }
+        return try outcome.get()
     }
 
     public func share(
         macId: MACIdentifier,
         with email: String
-    ) -> Future<ShareSensorResponse, RuuviCloudError> {
-        let promise = Promise<ShareSensorResponse, RuuviCloudError>()
-        cloud.share(
-            macId: canonical(macId),
-            with: email
-        )
-        .on(success: { [weak self] response in
-            guard let self else { return }
+    ) async throws(RuuviCloudError) -> ShareSensorResponse {
+        var outcome: Result<ShareSensorResponse, RuuviCloudError>
+        do {
+            let response = try await cloud.share(
+                macId: canonical(macId),
+                with: email
+            )
             var adjusted = response
             if let returnedMac = response.macId {
                 adjusted.macId = self.original(for: returnedMac, fallback: macId)
             } else {
                 adjusted.macId = macId
             }
-            promise.succeed(value: adjusted)
-        }, failure: { error in
-            promise.fail(error: error)
-        })
-        return promise.future
+            outcome = .success(adjusted)
+        } catch let error {
+            outcome = .failure(error)
+        }
+        return try outcome.get()
     }
 
     public func unshare(
         macId: MACIdentifier,
         with email: String?
-    ) -> Future<MACIdentifier, RuuviCloudError> {
-        let promise = Promise<MACIdentifier, RuuviCloudError>()
-        cloud.unshare(
-            macId: canonical(macId),
-            with: email
-        )
-        .on(success: { [weak self] response in
-            guard let self else { return }
-            promise.succeed(value: self.original(for: response, fallback: macId))
-        }, failure: { error in
-            promise.fail(error: error)
-        })
-        return promise.future
+    ) async throws(RuuviCloudError) -> MACIdentifier {
+        var outcome: Result<MACIdentifier, RuuviCloudError>
+        do {
+            let response = try await cloud.unshare(
+                macId: canonical(macId),
+                with: email
+            )
+            outcome = .success(self.original(for: response, fallback: macId))
+        } catch let error {
+            outcome = .failure(error)
+        }
+        return try outcome.get()
     }
 
     public func loadShared(
         for sensor: RuuviTagSensor
-    ) -> Future<Set<AnyShareableSensor>, RuuviCloudError> {
-        cloud.loadShared(for: canonicalizedSensor(sensor))
+    ) async throws(RuuviCloudError) -> Set<AnyShareableSensor> {
+        return try await cloud.loadShared(for: canonicalizedSensor(sensor))
     }
 
-    public func checkOwner(macId: MACIdentifier) -> Future<(String?, String?), RuuviCloudError> {
-        cloud.checkOwner(macId: canonical(macId))
+    public func checkOwner(macId: MACIdentifier) async throws(RuuviCloudError) -> (String?, String?) {
+        return try await cloud.checkOwner(macId: canonical(macId))
     }
 
     public func update(
         name: String,
         for sensor: RuuviTagSensor
-    ) -> Future<AnyRuuviTagSensor, RuuviCloudError> {
-        let promise = Promise<AnyRuuviTagSensor, RuuviCloudError>()
+    ) async throws(RuuviCloudError) -> AnyRuuviTagSensor {
+        var outcome: Result<AnyRuuviTagSensor, RuuviCloudError>
         let originalMacId = sensor.macId
-        cloud.update(
-            name: name,
-            for: canonicalizedSensor(sensor)
-        )
-        .on(success: { [weak self] updated in
-            guard let self else { return }
+        do {
+            let updated = try await cloud.update(
+                name: name,
+                for: canonicalizedSensor(sensor)
+            )
             let restored = self.restore(sensor: updated, originalMac: originalMacId)
-            promise.succeed(value: restored)
-        }, failure: { error in
-            promise.fail(error: error)
-        })
-        return promise.future
+            outcome = .success(restored)
+        } catch let error {
+            outcome = .failure(error)
+        }
+        return try outcome.get()
     }
 
     public func upload(
@@ -226,7 +223,7 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         mimeType: MimeType,
         progress: ((MACIdentifier, Double) -> Void)?,
         for macId: MACIdentifier
-    ) -> Future<URL, RuuviCloudError> {
+    ) async throws(RuuviCloudError) -> URL {
         let canonicalMac = canonical(macId)
         let wrappedProgress: ((MACIdentifier, Double) -> Void)?
         if let progress {
@@ -241,7 +238,7 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         } else {
             wrappedProgress = nil
         }
-        return cloud.upload(
+        return try await cloud.upload(
             imageData: imageData,
             mimeType: mimeType,
             progress: wrappedProgress,
@@ -251,96 +248,102 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
 
     public func resetImage(
         for macId: MACIdentifier
-    ) -> Future<Void, RuuviCloudError> {
-        cloud.resetImage(for: canonical(macId))
+    ) async throws(RuuviCloudError) -> Void {
+        return try await cloud.resetImage(for: canonical(macId))
     }
 
-    public func getCloudSettings() -> Future<RuuviCloudSettings?, RuuviCloudError> {
-        cloud.getCloudSettings()
+    public func getCloudSettings() async throws(RuuviCloudError) -> RuuviCloudSettings? {
+        return try await cloud.getCloudSettings()
     }
 
-    public func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviCloudError> {
-        cloud.set(temperatureUnit: temperatureUnit)
+    public func set(temperatureUnit: TemperatureUnit) async throws(RuuviCloudError) -> TemperatureUnit {
+        return try await cloud.set(temperatureUnit: temperatureUnit)
     }
 
-    public func set(temperatureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError> {
-        cloud.set(temperatureAccuracy: temperatureAccuracy)
+    public func set(temperatureAccuracy: MeasurementAccuracyType) async throws(RuuviCloudError)
+        -> MeasurementAccuracyType
+    {
+        return try await cloud.set(temperatureAccuracy: temperatureAccuracy)
     }
 
-    public func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviCloudError> {
-        cloud.set(humidityUnit: humidityUnit)
+    public func set(humidityUnit: HumidityUnit) async throws(RuuviCloudError) -> HumidityUnit {
+        return try await cloud.set(humidityUnit: humidityUnit)
     }
 
-    public func set(humidityAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError> {
-        cloud.set(humidityAccuracy: humidityAccuracy)
+    public func set(humidityAccuracy: MeasurementAccuracyType) async throws(RuuviCloudError) -> MeasurementAccuracyType
+    {
+        return try await cloud.set(humidityAccuracy: humidityAccuracy)
     }
 
-    public func set(userSetting: RuuviCloudApiSetting, value: String) -> Future<String, RuuviCloudError> {
-        cloud.set(userSetting: userSetting, value: value)
+    public func set(userSetting: RuuviCloudApiSetting, value: String) async throws(RuuviCloudError) -> String {
+        return try await cloud.set(userSetting: userSetting, value: value)
     }
 
-    public func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviCloudError> {
-        cloud.set(pressureUnit: pressureUnit)
+    public func set(pressureUnit: UnitPressure) async throws(RuuviCloudError) -> UnitPressure {
+        return try await cloud.set(pressureUnit: pressureUnit)
     }
 
-    public func set(pressureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviCloudError> {
-        cloud.set(pressureAccuracy: pressureAccuracy)
+    public func set(pressureAccuracy: MeasurementAccuracyType) async throws(RuuviCloudError) -> MeasurementAccuracyType
+    {
+        return try await cloud.set(pressureAccuracy: pressureAccuracy)
     }
 
-    public func set(showAllData: Bool) -> Future<Bool, RuuviCloudError> {
-        cloud.set(showAllData: showAllData)
+    public func set(showAllData: Bool) async throws(RuuviCloudError) -> Bool {
+        return try await cloud.set(showAllData: showAllData)
     }
 
-    public func set(drawDots: Bool) -> Future<Bool, RuuviCloudError> {
-        cloud.set(drawDots: drawDots)
+    public func set(drawDots: Bool) async throws(RuuviCloudError) -> Bool {
+        return try await cloud.set(drawDots: drawDots)
     }
 
-    public func set(chartDuration: Int) -> Future<Int, RuuviCloudError> {
-        cloud.set(chartDuration: chartDuration)
+    public func set(chartDuration: Int) async throws(RuuviCloudError) -> Int {
+        return try await cloud.set(chartDuration: chartDuration)
     }
 
-    public func set(showMinMaxAvg: Bool) -> Future<Bool, RuuviCloudError> {
-        cloud.set(showMinMaxAvg: showMinMaxAvg)
+    public func set(showMinMaxAvg: Bool) async throws(RuuviCloudError) -> Bool {
+        return try await cloud.set(showMinMaxAvg: showMinMaxAvg)
     }
 
-    public func set(cloudMode: Bool) -> Future<Bool, RuuviCloudError> {
-        cloud.set(cloudMode: cloudMode)
+    public func set(cloudMode: Bool) async throws(RuuviCloudError) -> Bool {
+        return try await cloud.set(cloudMode: cloudMode)
     }
 
-    public func set(dashboard: Bool) -> Future<Bool, RuuviCloudError> {
-        cloud.set(dashboard: dashboard)
+    public func set(dashboard: Bool) async throws(RuuviCloudError) -> Bool {
+        return try await cloud.set(dashboard: dashboard)
     }
 
-    public func set(dashboardType: DashboardType) -> Future<DashboardType, RuuviCloudError> {
-        cloud.set(dashboardType: dashboardType)
+    public func set(dashboardType: DashboardType) async throws(RuuviCloudError) -> DashboardType {
+        return try await cloud.set(dashboardType: dashboardType)
     }
 
-    public func set(dashboardTapActionType: DashboardTapActionType) -> Future<DashboardTapActionType, RuuviCloudError> {
-        cloud.set(dashboardTapActionType: dashboardTapActionType)
+    public func set(dashboardTapActionType: DashboardTapActionType) async throws(RuuviCloudError)
+        -> DashboardTapActionType
+    {
+        return try await cloud.set(dashboardTapActionType: dashboardTapActionType)
     }
 
-    public func set(disableEmailAlert: Bool) -> Future<Bool, RuuviCloudError> {
-        cloud.set(disableEmailAlert: disableEmailAlert)
+    public func set(disableEmailAlert: Bool) async throws(RuuviCloudError) -> Bool {
+        return try await cloud.set(disableEmailAlert: disableEmailAlert)
     }
 
-    public func set(disablePushAlert: Bool) -> Future<Bool, RuuviCloudError> {
-        cloud.set(disablePushAlert: disablePushAlert)
+    public func set(disablePushAlert: Bool) async throws(RuuviCloudError) -> Bool {
+        return try await cloud.set(disablePushAlert: disablePushAlert)
     }
 
-    public func getMarketingConsent() -> Future<RuuviCloudMarketingConsent, RuuviCloudError> {
-        cloud.getMarketingConsent()
+    public func getMarketingConsent() async throws(RuuviCloudError) -> RuuviCloudMarketingConsent {
+        return try await cloud.getMarketingConsent()
     }
 
-    public func set(marketingPreference: Bool) -> Future<RuuviCloudMarketingConsent, RuuviCloudError> {
-        cloud.set(marketingPreference: marketingPreference)
+    public func set(marketingPreference: Bool) async throws(RuuviCloudError) -> RuuviCloudMarketingConsent {
+        return try await cloud.set(marketingPreference: marketingPreference)
     }
 
-    public func set(profileLanguageCode: String) -> Future<String, RuuviCloudError> {
-        cloud.set(profileLanguageCode: profileLanguageCode)
+    public func set(profileLanguageCode: String) async throws(RuuviCloudError) -> String {
+        return try await cloud.set(profileLanguageCode: profileLanguageCode)
     }
 
-    public func set(dashboardSensorOrder: [String]) -> Future<[String], RuuviCloudError> {
-        cloud.set(dashboardSensorOrder: dashboardSensorOrder)
+    public func set(dashboardSensorOrder: [String]) async throws(RuuviCloudError) -> [String] {
+        return try await cloud.set(dashboardSensorOrder: dashboardSensorOrder)
     }
 
     public func updateSensorSettings(
@@ -348,48 +351,46 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         types: [String],
         values: [String],
         timestamp: Int?
-    ) -> Future<AnyRuuviTagSensor, RuuviCloudError> {
-        let promise = Promise<AnyRuuviTagSensor, RuuviCloudError>()
+    ) async throws(RuuviCloudError) -> AnyRuuviTagSensor {
+        var outcome: Result<AnyRuuviTagSensor, RuuviCloudError>
         let originalMacId = sensor.macId
-        cloud.updateSensorSettings(
-            for: canonicalizedSensor(
-                sensor
-            ),
-            types: types,
-            values: values,
-            timestamp: timestamp
-        )
-        .on(success: { [weak self] updated in
-            guard let self else { return }
+        do {
+            let updated = try await cloud.updateSensorSettings(
+                for: canonicalizedSensor(
+                    sensor
+                ),
+                types: types,
+                values: values,
+                timestamp: timestamp
+            )
             let restored = self.restore(sensor: updated, originalMac: originalMacId)
-            promise.succeed(value: restored)
-        }, failure: { error in
-            promise.fail(error: error)
-        })
-        return promise.future
+            outcome = .success(restored)
+        } catch let error {
+            outcome = .failure(error)
+        }
+        return try outcome.get()
     }
     public func update(
         temperatureOffset: Double?,
         humidityOffset: Double?,
         pressureOffset: Double?,
         for sensor: RuuviTagSensor
-    ) -> Future<AnyRuuviTagSensor, RuuviCloudError> {
-        let promise = Promise<AnyRuuviTagSensor, RuuviCloudError>()
+    ) async throws(RuuviCloudError) -> AnyRuuviTagSensor {
+        var outcome: Result<AnyRuuviTagSensor, RuuviCloudError>
         let originalMacId = sensor.macId
-        cloud.update(
-            temperatureOffset: temperatureOffset,
-            humidityOffset: humidityOffset,
-            pressureOffset: pressureOffset,
-            for: canonicalizedSensor(sensor)
-        )
-        .on(success: { [weak self] updated in
-            guard let self else { return }
+        do {
+            let updated = try await cloud.update(
+                temperatureOffset: temperatureOffset,
+                humidityOffset: humidityOffset,
+                pressureOffset: pressureOffset,
+                for: canonicalizedSensor(sensor)
+            )
             let restored = self.restore(sensor: updated, originalMac: originalMacId)
-            promise.succeed(value: restored)
-        }, failure: { error in
-            promise.fail(error: error)
-        })
-        return promise.future
+            outcome = .success(restored)
+        } catch let error {
+            outcome = .failure(error)
+        }
+        return try outcome.get()
     }
 
     // swiftlint:disable:next function_parameter_count
@@ -403,8 +404,8 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         delay: Int?,
         description: String?,
         for macId: MACIdentifier
-    ) -> Future<Void, RuuviCloudError> {
-        cloud.setAlert(
+    ) async throws(RuuviCloudError) -> Void {
+        return try await cloud.setAlert(
             type: type,
             settingType: settingType,
             isEnabled: isEnabled,
@@ -417,12 +418,12 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         )
     }
 
-    public func loadAlerts() -> Future<[RuuviCloudSensorAlerts], RuuviCloudError> {
-        cloud.loadAlerts()
+    public func loadAlerts() async throws(RuuviCloudError) -> [RuuviCloudSensorAlerts] {
+        return try await cloud.loadAlerts()
     }
 
-    public func executeQueuedRequest(from request: RuuviCloudQueuedRequest) -> Future<Bool, RuuviCloudError> {
-        cloud.executeQueuedRequest(from: request)
+    public func executeQueuedRequest(from request: RuuviCloudQueuedRequest) async throws(RuuviCloudError) -> Bool {
+        return try await cloud.executeQueuedRequest(from: request)
     }
 }
 

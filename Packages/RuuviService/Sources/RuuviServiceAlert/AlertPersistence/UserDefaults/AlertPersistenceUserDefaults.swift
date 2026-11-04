@@ -1,413 +1,332 @@
+#if SWIFT_PACKAGE
+    import RuuviService
+    import RuuviLocalization
+#endif
 import Foundation
 import RuuviOntology
 
 // swiftlint:disable file_length type_body_length
 class AlertPersistenceUserDefaults: AlertPersistence {
     private let prefs = UserDefaults.standard
-    private let alertUpdatedAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.alertUpdatedAtUDKeyPrefix."
+    private let alertUpdatedAtUDKeyPrefix = "AlertPersistenceUserDefaults.alertUpdatedAtUDKeyPrefix."
 
     // temperature
-    private let temperatureLowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.temperatureLowerBoundUDKeyPrefix."
-    private let temperatureUpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.temperatureUpperBoundUDKeyPrefix."
-    private let temperatureAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.temperatureAlertIsOnUDKeyPrefix."
-    private let temperatureAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.temperatureAlertDescriptionUDKeyPrefix."
-    private let temperatureAlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.temperatureAlertMuteTillDateUDKeyPrefix."
-    private let temperatureAlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.temperatureAlertIsTriggeredUDKeyPrefix."
-    private let temperatureAlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.temperatureAlertTriggeredAtUDKeyPrefix."
+    private let temperatureLowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.temperatureLowerBoundUDKeyPrefix."
+    private let temperatureUpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.temperatureUpperBoundUDKeyPrefix."
+    private let temperatureAlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.temperatureAlertIsOnUDKeyPrefix."
+    private let temperatureAlertDescriptionUDKeyPrefix =
+        "AlertPersistenceUserDefaults.temperatureAlertDescriptionUDKeyPrefix."
+    private let temperatureAlertMuteTillDateUDKeyPrefix =
+        "AlertPersistenceUserDefaults.temperatureAlertMuteTillDateUDKeyPrefix."
+    private let temperatureAlertIsTriggeredUDKeyPrefix =
+        "AlertPersistenceUserDefaults.temperatureAlertIsTriggeredUDKeyPrefix."
+    private let temperatureAlertTriggeredAtUDKeyPrefix =
+        "AlertPersistenceUserDefaults.temperatureAlertTriggeredAtUDKeyPrefix."
 
     // Humidity
-    private let humidityLowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.HumidityLowerBoundUDKeyPrefix."
-    private let humidityUpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.HumidityUpperBoundUDKeyPrefix."
-    private let humidityAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.HumidityAlertIsOnUDKeyPrefix."
-    private let humidityAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.HumidityAlertDescriptionUDKeyPrefix."
-    private let humidityAlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.humidityAlertMuteTillDateUDKeyPrefix."
-    private let humidityAlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.humidityAlertIsTriggeredUDKeyPrefix."
-    private let humidityAlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.humidityAlertTriggeredAtUDKeyPrefix."
+    private let humidityLowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.HumidityLowerBoundUDKeyPrefix."
+    private let humidityUpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.HumidityUpperBoundUDKeyPrefix."
+    private let humidityAlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.HumidityAlertIsOnUDKeyPrefix."
+    private let humidityAlertDescriptionUDKeyPrefix =
+        "AlertPersistenceUserDefaults.HumidityAlertDescriptionUDKeyPrefix."
+    private let humidityAlertMuteTillDateUDKeyPrefix =
+        "AlertPersistenceUserDefaults.humidityAlertMuteTillDateUDKeyPrefix."
+    private let humidityAlertIsTriggeredUDKeyPrefix =
+        "AlertPersistenceUserDefaults.humidityAlertIsTriggeredUDKeyPrefix."
+    private let humidityAlertTriggeredAtUDKeyPrefix =
+        "AlertPersistenceUserDefaults.humidityAlertTriggeredAtUDKeyPrefix."
 
     // Humidity
-    private let relativeHumidityLowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.relativeHumidityLowerBoundUDKeyPrefix."
-    private let relativeHumidityUpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.relativeHumidityUpperBoundUDKeyPrefix."
-    private let relativeHumidityAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.relativeHumidityAlertIsOnUDKeyPrefix."
-    private let relativeHumidityAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.relativeHumidityAlertDescriptionUDKeyPrefix."
-    private let relativeHumidityAlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.relativeHumidityAlertMuteTillDateUDKeyPrefix."
-    private let relativeHumidityAlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.relativeHumidityAlertIsTriggeredUDKeyPrefix."
-    private let relativeHumidityAlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.relativeHumidityAlertTriggeredAtUDKeyPrefix."
+    private let relativeHumidityLowerBoundUDKeyPrefix =
+        "AlertPersistenceUserDefaults.relativeHumidityLowerBoundUDKeyPrefix."
+    private let relativeHumidityUpperBoundUDKeyPrefix =
+        "AlertPersistenceUserDefaults.relativeHumidityUpperBoundUDKeyPrefix."
+    private let relativeHumidityAlertIsOnUDKeyPrefix =
+        "AlertPersistenceUserDefaults.relativeHumidityAlertIsOnUDKeyPrefix."
+    private let relativeHumidityAlertDescriptionUDKeyPrefix =
+        "AlertPersistenceUserDefaults.relativeHumidityAlertDescriptionUDKeyPrefix."
+    private let relativeHumidityAlertMuteTillDateUDKeyPrefix =
+        "AlertPersistenceUserDefaults.relativeHumidityAlertMuteTillDateUDKeyPrefix."
+    private let relativeHumidityAlertIsTriggeredUDKeyPrefix =
+        "AlertPersistenceUserDefaults.relativeHumidityAlertIsTriggeredUDKeyPrefix."
+    private let relativeHumidityAlertTriggeredAtUDKeyPrefix =
+        "AlertPersistenceUserDefaults.relativeHumidityAlertTriggeredAtUDKeyPrefix."
 
     // dew point
-    private let dewPointLowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.dewPointLowerBoundUDKeyPrefix."
-    private let dewPointUpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.dewPointUpperBoundUDKeyPrefix."
-    private let dewPointAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.dewPointAlertIsOnUDKeyPrefix."
-    private let dewPointAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.dewPointAlertDescriptionUDKeyPrefix."
-    private let dewPointAlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.dewPointAlertMuteTillDateUDKeyPrefix."
-    private let dewPointAlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.dewPointAlertIsTriggeredUDKeyPrefix."
-    private let dewPointAlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.dewPointAlertTriggeredAtUDKeyPrefix."
+    private let dewPointLowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.dewPointLowerBoundUDKeyPrefix."
+    private let dewPointUpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.dewPointUpperBoundUDKeyPrefix."
+    private let dewPointAlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.dewPointAlertIsOnUDKeyPrefix."
+    private let dewPointAlertDescriptionUDKeyPrefix =
+        "AlertPersistenceUserDefaults.dewPointAlertDescriptionUDKeyPrefix."
+    private let dewPointAlertMuteTillDateUDKeyPrefix =
+        "AlertPersistenceUserDefaults.dewPointAlertMuteTillDateUDKeyPrefix."
+    private let dewPointAlertIsTriggeredUDKeyPrefix =
+        "AlertPersistenceUserDefaults.dewPointAlertIsTriggeredUDKeyPrefix."
+    private let dewPointAlertTriggeredAtUDKeyPrefix =
+        "AlertPersistenceUserDefaults.dewPointAlertTriggeredAtUDKeyPrefix."
 
     // pressure
-    private let pressureLowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pressureLowerBoundUDKeyPrefix."
-    private let pressureUpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pressureUpperBoundUDKeyPrefix."
-    private let pressureAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pressureAlertIsOnUDKeyPrefix."
-    private let pressureAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pressureAlertDescriptionUDKeyPrefix."
-    private let pressureAlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pressureAlertMuteTillDateUDKeyPrefix."
-    private let pressureAlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pressureAlertIsTriggeredUDKeyPrefix."
-    private let pressureAlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pressureAlertTriggeredAtUDKeyPrefix."
+    private let pressureLowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.pressureLowerBoundUDKeyPrefix."
+    private let pressureUpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.pressureUpperBoundUDKeyPrefix."
+    private let pressureAlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.pressureAlertIsOnUDKeyPrefix."
+    private let pressureAlertDescriptionUDKeyPrefix =
+        "AlertPersistenceUserDefaults.pressureAlertDescriptionUDKeyPrefix."
+    private let pressureAlertMuteTillDateUDKeyPrefix =
+        "AlertPersistenceUserDefaults.pressureAlertMuteTillDateUDKeyPrefix."
+    private let pressureAlertIsTriggeredUDKeyPrefix =
+        "AlertPersistenceUserDefaults.pressureAlertIsTriggeredUDKeyPrefix."
+    private let pressureAlertTriggeredAtUDKeyPrefix =
+        "AlertPersistenceUserDefaults.pressureAlertTriggeredAtUDKeyPrefix."
 
     // signal
-    private let signalLowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.signalLowerBoundUDKeyPrefix."
-    private let signalUpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.signalUpperBoundUDKeyPrefix."
-    private let signalAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.signalAlertIsOnUDKeyPrefix."
-    private let signalAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.signalAlertDescriptionUDKeyPrefix."
-    private let signalAlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.signalAlertMuteTillDateUDKeyPrefix."
-    private let signalAlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.signalAlertIsTriggeredUDKeyPrefix."
-    private let signalAlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.signalAlertTriggeredAtUDKeyPrefix."
+    private let signalLowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.signalLowerBoundUDKeyPrefix."
+    private let signalUpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.signalUpperBoundUDKeyPrefix."
+    private let signalAlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.signalAlertIsOnUDKeyPrefix."
+    private let signalAlertDescriptionUDKeyPrefix = "AlertPersistenceUserDefaults.signalAlertDescriptionUDKeyPrefix."
+    private let signalAlertMuteTillDateUDKeyPrefix = "AlertPersistenceUserDefaults.signalAlertMuteTillDateUDKeyPrefix."
+    private let signalAlertIsTriggeredUDKeyPrefix = "AlertPersistenceUserDefaults.signalAlertIsTriggeredUDKeyPrefix."
+    private let signalAlertTriggeredAtUDKeyPrefix = "AlertPersistenceUserDefaults.signalAlertTriggeredAtUDKeyPrefix."
 
     // battery voltage
-    private let batteryVoltageLowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.batteryVoltageLowerBoundUDKeyPrefix."
-    private let batteryVoltageUpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.batteryVoltageUpperBoundUDKeyPrefix."
-    private let batteryVoltageAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.batteryVoltageAlertIsOnUDKeyPrefix."
-    private let batteryVoltageAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.batteryVoltageAlertDescriptionUDKeyPrefix."
-    private let batteryVoltageAlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.batteryVoltageAlertMuteTillDateUDKeyPrefix."
-    private let batteryVoltageAlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.batteryVoltageAlertIsTriggeredUDKeyPrefix."
-    private let batteryVoltageAlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.batteryVoltageAlertTriggeredAtUDKeyPrefix."
+    private let batteryVoltageLowerBoundUDKeyPrefix =
+        "AlertPersistenceUserDefaults.batteryVoltageLowerBoundUDKeyPrefix."
+    private let batteryVoltageUpperBoundUDKeyPrefix =
+        "AlertPersistenceUserDefaults.batteryVoltageUpperBoundUDKeyPrefix."
+    private let batteryVoltageAlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.batteryVoltageAlertIsOnUDKeyPrefix."
+    private let batteryVoltageAlertDescriptionUDKeyPrefix =
+        "AlertPersistenceUserDefaults.batteryVoltageAlertDescriptionUDKeyPrefix."
+    private let batteryVoltageAlertMuteTillDateUDKeyPrefix =
+        "AlertPersistenceUserDefaults.batteryVoltageAlertMuteTillDateUDKeyPrefix."
+    private let batteryVoltageAlertIsTriggeredUDKeyPrefix =
+        "AlertPersistenceUserDefaults.batteryVoltageAlertIsTriggeredUDKeyPrefix."
+    private let batteryVoltageAlertTriggeredAtUDKeyPrefix =
+        "AlertPersistenceUserDefaults.batteryVoltageAlertTriggeredAtUDKeyPrefix."
 
     // AQI
-    private let aqiLowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.aqiInstantLowerBoundUDKeyPrefix."
-    private let aqiUpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.aqiInstantUpperBoundUDKeyPrefix."
-    private let aqiAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.aqiInstantAlertIsOnUDKeyPrefix."
-    private let aqiAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.aqiInstantAlertDescriptionUDKeyPrefix."
-    private let aqiAlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.aqiInstantAlertMuteTillDateUDKeyPrefix."
-    private let aqiAlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.aqiInstantAlertIsTriggeredUDKeyPrefix."
-    private let aqiAlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.aqiInstantAlertTriggeredAtUDKeyPrefix."
+    private let aqiLowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.aqiInstantLowerBoundUDKeyPrefix."
+    private let aqiUpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.aqiInstantUpperBoundUDKeyPrefix."
+    private let aqiAlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.aqiInstantAlertIsOnUDKeyPrefix."
+    private let aqiAlertDescriptionUDKeyPrefix = "AlertPersistenceUserDefaults.aqiInstantAlertDescriptionUDKeyPrefix."
+    private let aqiAlertMuteTillDateUDKeyPrefix = "AlertPersistenceUserDefaults.aqiInstantAlertMuteTillDateUDKeyPrefix."
+    private let aqiAlertIsTriggeredUDKeyPrefix = "AlertPersistenceUserDefaults.aqiInstantAlertIsTriggeredUDKeyPrefix."
+    private let aqiAlertTriggeredAtUDKeyPrefix = "AlertPersistenceUserDefaults.aqiInstantAlertTriggeredAtUDKeyPrefix."
 
     // carbon dioxide
-    private let co2LowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.co2LowerBoundUDKeyPrefix."
-    private let co2UpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.co2UpperBoundUDKeyPrefix."
-    private let co2AlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.co2AlertIsOnUDKeyPrefix."
-    private let co2AlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.co2AlertDescriptionUDKeyPrefix."
-    private let co2AlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.co2AlertMuteTillDateUDKeyPrefix."
-    private let co2AlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.co2AlertIsTriggeredUDKeyPrefix."
-    private let co2AlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.co2AlertTriggeredAtUDKeyPrefix."
+    private let co2LowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.co2LowerBoundUDKeyPrefix."
+    private let co2UpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.co2UpperBoundUDKeyPrefix."
+    private let co2AlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.co2AlertIsOnUDKeyPrefix."
+    private let co2AlertDescriptionUDKeyPrefix = "AlertPersistenceUserDefaults.co2AlertDescriptionUDKeyPrefix."
+    private let co2AlertMuteTillDateUDKeyPrefix = "AlertPersistenceUserDefaults.co2AlertMuteTillDateUDKeyPrefix."
+    private let co2AlertIsTriggeredUDKeyPrefix = "AlertPersistenceUserDefaults.co2AlertIsTriggeredUDKeyPrefix."
+    private let co2AlertTriggeredAtUDKeyPrefix = "AlertPersistenceUserDefaults.co2AlertTriggeredAtUDKeyPrefix."
 
     // pm1
-    private let pm1LowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm1LowerBoundUDKeyPrefix."
-    private let pm1UpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm1UpperBoundUDKeyPrefix."
-    private let pm1AlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm1AlertIsOnUDKeyPrefix."
-    private let pm1AlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm1AlertDescriptionUDKeyPrefix."
-    private let pm1AlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm1AlertMuteTillDateUDKeyPrefix."
-    private let pm1AlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm1AlertIsTriggeredUDKeyPrefix."
-    private let pm1AlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm1AlertTriggeredAtUDKeyPrefix."
+    private let pm1LowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.pm1LowerBoundUDKeyPrefix."
+    private let pm1UpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.pm1UpperBoundUDKeyPrefix."
+    private let pm1AlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.pm1AlertIsOnUDKeyPrefix."
+    private let pm1AlertDescriptionUDKeyPrefix = "AlertPersistenceUserDefaults.pm1AlertDescriptionUDKeyPrefix."
+    private let pm1AlertMuteTillDateUDKeyPrefix = "AlertPersistenceUserDefaults.pm1AlertMuteTillDateUDKeyPrefix."
+    private let pm1AlertIsTriggeredUDKeyPrefix = "AlertPersistenceUserDefaults.pm1AlertIsTriggeredUDKeyPrefix."
+    private let pm1AlertTriggeredAtUDKeyPrefix = "AlertPersistenceUserDefaults.pm1AlertTriggeredAtUDKeyPrefix."
 
     // pm2.5
-    private let pm25LowerBoundUDKeyPrefix
-        = "AlertPeristenceUserDefaults.pm2_5LowerBoundUDKeyPrefix."
-    private let pm25UpperBoundUDKeyPrefix
-        = "AlertPeristenceUserDefaults.pm2_5UpperBoundUDKeyPrefix."
-    private let pm25AlertIsOnUDKeyPrefix
-        = "AlertPeristenceUserDefaults.pm2_5AlertIsOnUDKeyPrefix."
-    private let pm25AlertDescriptionUDKeyPrefix
-        = "AlertPeristenceUserDefaults.pm2_5AlertDescriptionUDKeyPrefix."
-    private let pm25AlertMuteTillDateUDKeyPrefix
-        = "AlertPeristenceUserDefaults.pm2_5AlertMuteTillDateUDKeyPrefix."
-    private let pm25AlertIsTriggeredUDKeyPrefix
-        = "AlertPeristenceUserDefaults.pm2_5AlertIsTriggeredUDKeyPrefix."
-    private let pm25AlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm2_5AlertTriggeredAtUDKeyPrefix."
+    private let pm25LowerBoundUDKeyPrefix = "AlertPeristenceUserDefaults.pm2_5LowerBoundUDKeyPrefix."
+    private let pm25UpperBoundUDKeyPrefix = "AlertPeristenceUserDefaults.pm2_5UpperBoundUDKeyPrefix."
+    private let pm25AlertIsOnUDKeyPrefix = "AlertPeristenceUserDefaults.pm2_5AlertIsOnUDKeyPrefix."
+    private let pm25AlertDescriptionUDKeyPrefix = "AlertPeristenceUserDefaults.pm2_5AlertDescriptionUDKeyPrefix."
+    private let pm25AlertMuteTillDateUDKeyPrefix = "AlertPeristenceUserDefaults.pm2_5AlertMuteTillDateUDKeyPrefix."
+    private let pm25AlertIsTriggeredUDKeyPrefix = "AlertPeristenceUserDefaults.pm2_5AlertIsTriggeredUDKeyPrefix."
+    private let pm25AlertTriggeredAtUDKeyPrefix = "AlertPersistenceUserDefaults.pm2_5AlertTriggeredAtUDKeyPrefix."
 
     // pm4
-    private let pm4LowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm4LowerBoundUDKeyPrefix."
-    private let pm4UpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm4UpperBoundUDKeyPrefix."
-    private let pm4AlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm4AlertIsOnUDKeyPrefix."
-    private let pm4AlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm4AlertDescriptionUDKeyPrefix."
-    private let pm4AlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm4AlertMuteTillDateUDKeyPrefix."
-    private let pm4AlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm4AlertIsTriggeredUDKeyPrefix."
-    private let pm4AlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm4AlertTriggeredAtUDKeyPrefix."
+    private let pm4LowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.pm4LowerBoundUDKeyPrefix."
+    private let pm4UpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.pm4UpperBoundUDKeyPrefix."
+    private let pm4AlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.pm4AlertIsOnUDKeyPrefix."
+    private let pm4AlertDescriptionUDKeyPrefix = "AlertPersistenceUserDefaults.pm4AlertDescriptionUDKeyPrefix."
+    private let pm4AlertMuteTillDateUDKeyPrefix = "AlertPersistenceUserDefaults.pm4AlertMuteTillDateUDKeyPrefix."
+    private let pm4AlertIsTriggeredUDKeyPrefix = "AlertPersistenceUserDefaults.pm4AlertIsTriggeredUDKeyPrefix."
+    private let pm4AlertTriggeredAtUDKeyPrefix = "AlertPersistenceUserDefaults.pm4AlertTriggeredAtUDKeyPrefix."
 
     // pm10
-    private let pm10LowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm10LowerBoundUDKeyPrefix."
-    private let pm10UpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm10UpperBoundUDKeyPrefix."
-    private let pm10AlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm10AlertIsOnUDKeyPrefix."
-    private let pm10AlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm10AlertDescriptionUDKeyPrefix."
-    private let pm10AlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm10AlertMuteTillDateUDKeyPrefix."
-    private let pm10AlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm10AlertIsTriggeredUDKeyPrefix."
-    private let pm10AlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.pm10AlertTriggeredAtUDKeyPrefix."
+    private let pm10LowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.pm10LowerBoundUDKeyPrefix."
+    private let pm10UpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.pm10UpperBoundUDKeyPrefix."
+    private let pm10AlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.pm10AlertIsOnUDKeyPrefix."
+    private let pm10AlertDescriptionUDKeyPrefix = "AlertPersistenceUserDefaults.pm10AlertDescriptionUDKeyPrefix."
+    private let pm10AlertMuteTillDateUDKeyPrefix = "AlertPersistenceUserDefaults.pm10AlertMuteTillDateUDKeyPrefix."
+    private let pm10AlertIsTriggeredUDKeyPrefix = "AlertPersistenceUserDefaults.pm10AlertIsTriggeredUDKeyPrefix."
+    private let pm10AlertTriggeredAtUDKeyPrefix = "AlertPersistenceUserDefaults.pm10AlertTriggeredAtUDKeyPrefix."
 
     // voc
-    private let vocLowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.vocLowerBoundUDKeyPrefix."
-    private let vocUpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.vocUpperBoundUDKeyPrefix."
-    private let vocAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.vocAlertIsOnUDKeyPrefix."
-    private let vocAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.vocAlertDescriptionUDKeyPrefix."
-    private let vocAlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.vocAlertMuteTillDateUDKeyPrefix."
-    private let vocAlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.vocAlertIsTriggeredUDKeyPrefix."
-    private let vocAlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.vocAlertTriggeredAtUDKeyPrefix."
+    private let vocLowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.vocLowerBoundUDKeyPrefix."
+    private let vocUpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.vocUpperBoundUDKeyPrefix."
+    private let vocAlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.vocAlertIsOnUDKeyPrefix."
+    private let vocAlertDescriptionUDKeyPrefix = "AlertPersistenceUserDefaults.vocAlertDescriptionUDKeyPrefix."
+    private let vocAlertMuteTillDateUDKeyPrefix = "AlertPersistenceUserDefaults.vocAlertMuteTillDateUDKeyPrefix."
+    private let vocAlertIsTriggeredUDKeyPrefix = "AlertPersistenceUserDefaults.vocAlertIsTriggeredUDKeyPrefix."
+    private let vocAlertTriggeredAtUDKeyPrefix = "AlertPersistenceUserDefaults.vocAlertTriggeredAtUDKeyPrefix."
 
     // nox
-    private let noxLowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.noxLowerBoundUDKeyPrefix."
-    private let noxUpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.noxUpperBoundUDKeyPrefix."
-    private let noxAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.noxAlertIsOnUDKeyPrefix."
-    private let noxAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.noxAlertDescriptionUDKeyPrefix."
-    private let noxAlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.noxAlertMuteTillDateUDKeyPrefix."
-    private let noxAlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.noxAlertIsTriggeredUDKeyPrefix."
-    private let noxAlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.noxAlertTriggeredAtUDKeyPrefix."
+    private let noxLowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.noxLowerBoundUDKeyPrefix."
+    private let noxUpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.noxUpperBoundUDKeyPrefix."
+    private let noxAlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.noxAlertIsOnUDKeyPrefix."
+    private let noxAlertDescriptionUDKeyPrefix = "AlertPersistenceUserDefaults.noxAlertDescriptionUDKeyPrefix."
+    private let noxAlertMuteTillDateUDKeyPrefix = "AlertPersistenceUserDefaults.noxAlertMuteTillDateUDKeyPrefix."
+    private let noxAlertIsTriggeredUDKeyPrefix = "AlertPersistenceUserDefaults.noxAlertIsTriggeredUDKeyPrefix."
+    private let noxAlertTriggeredAtUDKeyPrefix = "AlertPersistenceUserDefaults.noxAlertTriggeredAtUDKeyPrefix."
 
     // sound instant
-    private let soundInstantLowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundInstantLowerBoundUDKeyPrefix."
-    private let soundInstantUpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundInstantUpperBoundUDKeyPrefix."
-    private let soundInstantAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundInstantAlertIsOnUDKeyPrefix."
-    private let soundInstantAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundInstantAlertDescriptionUDKeyPrefix."
-    private let soundInstantAlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundInstantAlertMuteTillDateUDKeyPrefix."
-    private let soundInstantAlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundInstantAlertIsTriggeredUDKeyPrefix."
-    private let soundInstantAlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundInstantAlertTriggeredAtUDKeyPrefix."
+    private let soundInstantLowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.soundInstantLowerBoundUDKeyPrefix."
+    private let soundInstantUpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.soundInstantUpperBoundUDKeyPrefix."
+    private let soundInstantAlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.soundInstantAlertIsOnUDKeyPrefix."
+    private let soundInstantAlertDescriptionUDKeyPrefix =
+        "AlertPersistenceUserDefaults.soundInstantAlertDescriptionUDKeyPrefix."
+    private let soundInstantAlertMuteTillDateUDKeyPrefix =
+        "AlertPersistenceUserDefaults.soundInstantAlertMuteTillDateUDKeyPrefix."
+    private let soundInstantAlertIsTriggeredUDKeyPrefix =
+        "AlertPersistenceUserDefaults.soundInstantAlertIsTriggeredUDKeyPrefix."
+    private let soundInstantAlertTriggeredAtUDKeyPrefix =
+        "AlertPersistenceUserDefaults.soundInstantAlertTriggeredAtUDKeyPrefix."
 
     // sound average
-    private let soundAverageLowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundAverageLowerBoundUDKeyPrefix."
-    private let soundAverageUpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundAverageUpperBoundUDKeyPrefix."
-    private let soundAverageAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundAverageAlertIsOnUDKeyPrefix."
-    private let soundAverageAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundAverageAlertDescriptionUDKeyPrefix."
-    private let soundAverageAlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundAverageAlertMuteTillDateUDKeyPrefix."
-    private let soundAverageAlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundAverageAlertIsTriggeredUDKeyPrefix."
-    private let soundAverageAlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundAverageAlertTriggeredAtUDKeyPrefix."
+    private let soundAverageLowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.soundAverageLowerBoundUDKeyPrefix."
+    private let soundAverageUpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.soundAverageUpperBoundUDKeyPrefix."
+    private let soundAverageAlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.soundAverageAlertIsOnUDKeyPrefix."
+    private let soundAverageAlertDescriptionUDKeyPrefix =
+        "AlertPersistenceUserDefaults.soundAverageAlertDescriptionUDKeyPrefix."
+    private let soundAverageAlertMuteTillDateUDKeyPrefix =
+        "AlertPersistenceUserDefaults.soundAverageAlertMuteTillDateUDKeyPrefix."
+    private let soundAverageAlertIsTriggeredUDKeyPrefix =
+        "AlertPersistenceUserDefaults.soundAverageAlertIsTriggeredUDKeyPrefix."
+    private let soundAverageAlertTriggeredAtUDKeyPrefix =
+        "AlertPersistenceUserDefaults.soundAverageAlertTriggeredAtUDKeyPrefix."
 
     // sound peak
-    private let soundPeakLowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundPeakLowerBoundUDKeyPrefix."
-    private let soundPeakUpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundPeakUpperBoundUDKeyPrefix."
-    private let soundPeakAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundPeakAlertIsOnUDKeyPrefix."
-    private let soundPeakAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundPeakAlertDescriptionUDKeyPrefix."
-    private let soundPeakAlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundPeakAlertMuteTillDateUDKeyPrefix."
-    private let soundPeakAlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundPeakAlertIsTriggeredUDKeyPrefix."
-    private let soundPeakAlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.soundPeakAlertTriggeredAtUDKeyPrefix."
+    private let soundPeakLowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.soundPeakLowerBoundUDKeyPrefix."
+    private let soundPeakUpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.soundPeakUpperBoundUDKeyPrefix."
+    private let soundPeakAlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.soundPeakAlertIsOnUDKeyPrefix."
+    private let soundPeakAlertDescriptionUDKeyPrefix =
+        "AlertPersistenceUserDefaults.soundPeakAlertDescriptionUDKeyPrefix."
+    private let soundPeakAlertMuteTillDateUDKeyPrefix =
+        "AlertPersistenceUserDefaults.soundPeakAlertMuteTillDateUDKeyPrefix."
+    private let soundPeakAlertIsTriggeredUDKeyPrefix =
+        "AlertPersistenceUserDefaults.soundPeakAlertIsTriggeredUDKeyPrefix."
+    private let soundPeakAlertTriggeredAtUDKeyPrefix =
+        "AlertPersistenceUserDefaults.soundPeakAlertTriggeredAtUDKeyPrefix."
 
     // luminosity
-    private let luminosityLowerBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.luminosityLowerBoundUDKeyPrefix."
-    private let luminosityUpperBoundUDKeyPrefix
-        = "AlertPersistenceUserDefaults.luminosityUpperBoundUDKeyPrefix."
-    private let luminosityAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.luminosityAlertIsOnUDKeyPrefix."
-    private let luminosityAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.luminosityAlertDescriptionUDKeyPrefix."
-    private let luminosityAlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.luminosityAlertMuteTillDateUDKeyPrefix."
-    private let luminosityAlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.luminosityAlertIsTriggeredUDKeyPrefix."
-    private let luminosityAlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.luminosityAlertTriggeredAtUDKeyPrefix."
+    private let luminosityLowerBoundUDKeyPrefix = "AlertPersistenceUserDefaults.luminosityLowerBoundUDKeyPrefix."
+    private let luminosityUpperBoundUDKeyPrefix = "AlertPersistenceUserDefaults.luminosityUpperBoundUDKeyPrefix."
+    private let luminosityAlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.luminosityAlertIsOnUDKeyPrefix."
+    private let luminosityAlertDescriptionUDKeyPrefix =
+        "AlertPersistenceUserDefaults.luminosityAlertDescriptionUDKeyPrefix."
+    private let luminosityAlertMuteTillDateUDKeyPrefix =
+        "AlertPersistenceUserDefaults.luminosityAlertMuteTillDateUDKeyPrefix."
+    private let luminosityAlertIsTriggeredUDKeyPrefix =
+        "AlertPersistenceUserDefaults.luminosityAlertIsTriggeredUDKeyPrefix."
+    private let luminosityAlertTriggeredAtUDKeyPrefix =
+        "AlertPersistenceUserDefaults.luminosityAlertTriggeredAtUDKeyPrefix."
 
     // connection
-    private let connectionAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.connectionAlertIsOnUDKeyPrefix."
-    private let connectionAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.connectionAlertDescriptionUDKeyPrefix."
-    private let connectionAlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.connectionAlertMuteTillDateUDKeyPrefix."
-    private let connectionAlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.connectionAlertIsTriggeredUDKeyPrefix."
-    private let connectionAlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.connectionAlertTriggeredAtUDKeyPrefix."
+    private let connectionAlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.connectionAlertIsOnUDKeyPrefix."
+    private let connectionAlertDescriptionUDKeyPrefix =
+        "AlertPersistenceUserDefaults.connectionAlertDescriptionUDKeyPrefix."
+    private let connectionAlertMuteTillDateUDKeyPrefix =
+        "AlertPersistenceUserDefaults.connectionAlertMuteTillDateUDKeyPrefix."
+    private let connectionAlertIsTriggeredUDKeyPrefix =
+        "AlertPersistenceUserDefaults.connectionAlertIsTriggeredUDKeyPrefix."
+    private let connectionAlertTriggeredAtUDKeyPrefix =
+        "AlertPersistenceUserDefaults.connectionAlertTriggeredAtUDKeyPrefix."
 
     // cloud connection
-    private let cloudConnectionAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.cloudConnectionAlertIsOnUDKeyPrefix."
-    private let cloudConnectionAlertUnseenDurationUDPrefix
-        = "AlertPersistenceUserDefaults.cloudConnectionAlertUnseenDurationUDPrefix."
-    private let cloudConnectionAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.cloudConnectionAlertDescriptionUDKeyPrefix."
-    private let cloudConnectionAlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.cloudConnectionAlertMuteTillDateUDKeyPrefix."
-    private let cloudConnectionAlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.cloudConnectionAlertIsTriggeredUDKeyPrefix."
-    private let cloudConnectionAlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.cloudConnectionAlertTriggeredAtUDKeyPrefix."
+    private let cloudConnectionAlertIsOnUDKeyPrefix =
+        "AlertPersistenceUserDefaults.cloudConnectionAlertIsOnUDKeyPrefix."
+    private let cloudConnectionAlertUnseenDurationUDPrefix =
+        "AlertPersistenceUserDefaults.cloudConnectionAlertUnseenDurationUDPrefix."
+    private let cloudConnectionAlertDescriptionUDKeyPrefix =
+        "AlertPersistenceUserDefaults.cloudConnectionAlertDescriptionUDKeyPrefix."
+    private let cloudConnectionAlertMuteTillDateUDKeyPrefix =
+        "AlertPersistenceUserDefaults.cloudConnectionAlertMuteTillDateUDKeyPrefix."
+    private let cloudConnectionAlertIsTriggeredUDKeyPrefix =
+        "AlertPersistenceUserDefaults.cloudConnectionAlertIsTriggeredUDKeyPrefix."
+    private let cloudConnectionAlertTriggeredAtUDKeyPrefix =
+        "AlertPersistenceUserDefaults.cloudConnectionAlertTriggeredAtUDKeyPrefix."
 
     // movement
-    private let movementAlertIsOnUDKeyPrefix
-        = "AlertPersistenceUserDefaults.movementAlertIsOnUDKeyPrefix."
-    private let movementAlertCounterUDPrefix
-        = "AlertPersistenceUserDefaults.movementAlertCounterUDPrefix."
-    private let movementAlertDescriptionUDKeyPrefix
-        = "AlertPersistenceUserDefaults.movementAlertDescriptionUDKeyPrefix."
-    private let movementAlertMuteTillDateUDKeyPrefix
-        = "AlertPersistenceUserDefaults.movementAlertMuteTillDateUDKeyPrefix."
-    private let movementAlertIsTriggeredUDKeyPrefix
-        = "AlertPersistenceUserDefaults.movementAlertIsTriggeredUDKeyPrefix."
-    private let movementAlertTriggeredAtUDKeyPrefix
-        = "AlertPersistenceUserDefaults.movementAlertTriggeredAtUDKeyPrefix."
+    private let movementAlertIsOnUDKeyPrefix = "AlertPersistenceUserDefaults.movementAlertIsOnUDKeyPrefix."
+    private let movementAlertCounterUDPrefix = "AlertPersistenceUserDefaults.movementAlertCounterUDPrefix."
+    private let movementAlertDescriptionUDKeyPrefix =
+        "AlertPersistenceUserDefaults.movementAlertDescriptionUDKeyPrefix."
+    private let movementAlertMuteTillDateUDKeyPrefix =
+        "AlertPersistenceUserDefaults.movementAlertMuteTillDateUDKeyPrefix."
+    private let movementAlertIsTriggeredUDKeyPrefix =
+        "AlertPersistenceUserDefaults.movementAlertIsTriggeredUDKeyPrefix."
+    private let movementAlertTriggeredAtUDKeyPrefix =
+        "AlertPersistenceUserDefaults.movementAlertTriggeredAtUDKeyPrefix."
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     func alert(for uuid: String, of type: AlertType) -> AlertType? {
         switch type {
         case .temperature:
             if prefs.bool(forKey: temperatureAlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.optionalDouble(forKey: temperatureLowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: temperatureUpperBoundUDKeyPrefix + uuid) {
+                let lower = prefs.optionalDouble(forKey: temperatureLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: temperatureUpperBoundUDKeyPrefix + uuid)
+            {
                 return .temperature(lower: lower, upper: upper)
             } else {
                 return nil
             }
         case .relativeHumidity:
             if prefs.bool(forKey: relativeHumidityAlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.optionalDouble(forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid) {
+                let lower = prefs.optionalDouble(forKey: relativeHumidityLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: relativeHumidityUpperBoundUDKeyPrefix + uuid)
+            {
                 return .relativeHumidity(lower: lower, upper: upper)
             } else {
                 return nil
             }
         case .humidity:
             if prefs.bool(forKey: humidityAlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.data(forKey: humidityLowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.data(forKey: humidityUpperBoundUDKeyPrefix + uuid),
-               let lowerHumidity = KeyedArchiver.unarchive(lower, with: Humidity.self),
-               let upperHumidity = KeyedArchiver.unarchive(upper, with: Humidity.self) {
+                let lower = prefs.data(forKey: humidityLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.data(forKey: humidityUpperBoundUDKeyPrefix + uuid),
+                let lowerHumidity = KeyedArchiver.unarchive(lower, with: Humidity.self),
+                let upperHumidity = KeyedArchiver.unarchive(upper, with: Humidity.self)
+            {
                 return .humidity(lower: lowerHumidity, upper: upperHumidity)
             } else {
                 return nil
             }
         case .dewPoint:
             if prefs.bool(forKey: dewPointAlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.optionalDouble(forKey: dewPointLowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: dewPointUpperBoundUDKeyPrefix + uuid) {
+                let lower = prefs.optionalDouble(forKey: dewPointLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: dewPointUpperBoundUDKeyPrefix + uuid)
+            {
                 return .dewPoint(lower: lower, upper: upper)
             } else {
                 return nil
             }
         case .pressure:
             if prefs.bool(forKey: pressureAlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.optionalDouble(forKey: pressureLowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: pressureUpperBoundUDKeyPrefix + uuid) {
+                let lower = prefs.optionalDouble(forKey: pressureLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: pressureUpperBoundUDKeyPrefix + uuid)
+            {
                 return .pressure(lower: lower, upper: upper)
             } else {
                 return nil
             }
         case .signal:
             if prefs.bool(forKey: signalAlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.optionalDouble(forKey: signalLowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: signalUpperBoundUDKeyPrefix + uuid) {
+                let lower = prefs.optionalDouble(forKey: signalLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: signalUpperBoundUDKeyPrefix + uuid)
+            {
                 return .signal(lower: lower, upper: upper)
             } else {
                 return nil
             }
         case .batteryVoltage:
             if prefs.bool(forKey: batteryVoltageAlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.optionalDouble(forKey: batteryVoltageLowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: batteryVoltageUpperBoundUDKeyPrefix + uuid) {
+                let lower = prefs.optionalDouble(forKey: batteryVoltageLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: batteryVoltageUpperBoundUDKeyPrefix + uuid)
+            {
                 return .batteryVoltage(lower: lower, upper: upper)
             } else {
                 return nil
@@ -415,7 +334,8 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         case .aqi:
             if prefs.bool(forKey: aqiAlertIsOnUDKeyPrefix + uuid),
                 let lower = prefs.optionalDouble(forKey: aqiLowerBoundUDKeyPrefix + uuid),
-                let upper = prefs.optionalDouble(forKey: aqiUpperBoundUDKeyPrefix + uuid) {
+                let upper = prefs.optionalDouble(forKey: aqiUpperBoundUDKeyPrefix + uuid)
+            {
                 return .aqi(lower: lower, upper: upper)
             } else {
                 return nil
@@ -423,91 +343,102 @@ class AlertPersistenceUserDefaults: AlertPersistence {
         case .carbonDioxide:
             if prefs.bool(forKey: co2AlertIsOnUDKeyPrefix + uuid),
                 let lower = prefs.optionalDouble(forKey: co2LowerBoundUDKeyPrefix + uuid),
-                let upper = prefs.optionalDouble(forKey: co2UpperBoundUDKeyPrefix + uuid) {
+                let upper = prefs.optionalDouble(forKey: co2UpperBoundUDKeyPrefix + uuid)
+            {
                 return .carbonDioxide(lower: lower, upper: upper)
             } else {
                 return nil
             }
         case .pMatter1:
             if prefs.bool(forKey: pm1AlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.optionalDouble(forKey: pm1LowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: pm1UpperBoundUDKeyPrefix + uuid) {
+                let lower = prefs.optionalDouble(forKey: pm1LowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: pm1UpperBoundUDKeyPrefix + uuid)
+            {
                 return .pMatter1(lower: lower, upper: upper)
             } else {
                 return nil
             }
         case .pMatter25:
             if prefs.bool(forKey: pm25AlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.optionalDouble(forKey: pm25LowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: pm25UpperBoundUDKeyPrefix + uuid) {
+                let lower = prefs.optionalDouble(forKey: pm25LowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: pm25UpperBoundUDKeyPrefix + uuid)
+            {
                 return .pMatter25(lower: lower, upper: upper)
             } else {
                 return nil
             }
         case .pMatter4:
             if prefs.bool(forKey: pm4AlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.optionalDouble(forKey: pm4LowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: pm4UpperBoundUDKeyPrefix + uuid) {
+                let lower = prefs.optionalDouble(forKey: pm4LowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: pm4UpperBoundUDKeyPrefix + uuid)
+            {
                 return .pMatter4(lower: lower, upper: upper)
             } else {
                 return nil
             }
         case .pMatter10:
             if prefs.bool(forKey: pm10AlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.optionalDouble(forKey: pm10LowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: pm10UpperBoundUDKeyPrefix + uuid) {
+                let lower = prefs.optionalDouble(forKey: pm10LowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: pm10UpperBoundUDKeyPrefix + uuid)
+            {
                 return .pMatter10(lower: lower, upper: upper)
             } else {
                 return nil
             }
         case .voc:
             if prefs.bool(forKey: vocAlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.optionalDouble(
-                forKey: vocLowerBoundUDKeyPrefix + uuid
-               ),
-               let upper = prefs.optionalDouble(
-                forKey: vocUpperBoundUDKeyPrefix + uuid
-               ) {
+                let lower = prefs.optionalDouble(
+                    forKey: vocLowerBoundUDKeyPrefix + uuid
+                ),
+                let upper = prefs.optionalDouble(
+                    forKey: vocUpperBoundUDKeyPrefix + uuid
+                )
+            {
                 return .voc(lower: lower, upper: upper)
             } else {
                 return nil
             }
         case .nox:
             if prefs.bool(forKey: noxAlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.optionalDouble(forKey: noxLowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: noxUpperBoundUDKeyPrefix + uuid) {
+                let lower = prefs.optionalDouble(forKey: noxLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: noxUpperBoundUDKeyPrefix + uuid)
+            {
                 return .nox(lower: lower, upper: upper)
             } else {
                 return nil
             }
         case .soundInstant:
             if prefs.bool(forKey: soundInstantAlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.optionalDouble(forKey: soundInstantLowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: soundInstantUpperBoundUDKeyPrefix + uuid) {
+                let lower = prefs.optionalDouble(forKey: soundInstantLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: soundInstantUpperBoundUDKeyPrefix + uuid)
+            {
                 return .soundInstant(lower: lower, upper: upper)
             } else {
                 return nil
             }
         case .soundAverage:
             if prefs.bool(forKey: soundAverageAlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.optionalDouble(forKey: soundAverageLowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: soundAverageUpperBoundUDKeyPrefix + uuid) {
+                let lower = prefs.optionalDouble(forKey: soundAverageLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: soundAverageUpperBoundUDKeyPrefix + uuid)
+            {
                 return .soundAverage(lower: lower, upper: upper)
             } else {
                 return nil
             }
         case .soundPeak:
             if prefs.bool(forKey: soundPeakAlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.optionalDouble(forKey: soundPeakLowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: soundPeakUpperBoundUDKeyPrefix + uuid) {
+                let lower = prefs.optionalDouble(forKey: soundPeakLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: soundPeakUpperBoundUDKeyPrefix + uuid)
+            {
                 return .soundPeak(lower: lower, upper: upper)
             } else {
                 return nil
             }
         case .luminosity:
             if prefs.bool(forKey: luminosityAlertIsOnUDKeyPrefix + uuid),
-               let lower = prefs.optionalDouble(forKey: luminosityLowerBoundUDKeyPrefix + uuid),
-               let upper = prefs.optionalDouble(forKey: luminosityUpperBoundUDKeyPrefix + uuid) {
+                let lower = prefs.optionalDouble(forKey: luminosityLowerBoundUDKeyPrefix + uuid),
+                let upper = prefs.optionalDouble(forKey: luminosityUpperBoundUDKeyPrefix + uuid)
+            {
                 return .luminosity(lower: lower, upper: upper)
             } else {
                 return nil
@@ -520,16 +451,18 @@ class AlertPersistenceUserDefaults: AlertPersistence {
             }
         case .cloudConnection:
             if prefs.bool(forKey: cloudConnectionAlertIsOnUDKeyPrefix + uuid),
-               let unseenDuration = prefs.optionalDouble(
-                   forKey: cloudConnectionAlertUnseenDurationUDPrefix + uuid
-               ) {
+                let unseenDuration = prefs.optionalDouble(
+                    forKey: cloudConnectionAlertUnseenDurationUDPrefix + uuid
+                )
+            {
                 return .cloudConnection(unseenDuration: unseenDuration)
             } else {
                 return nil
             }
         case .movement:
             if prefs.bool(forKey: movementAlertIsOnUDKeyPrefix + uuid),
-               let counter = prefs.optionalInt(forKey: movementAlertCounterUDPrefix + uuid) {
+                let counter = prefs.optionalInt(forKey: movementAlertCounterUDPrefix + uuid)
+            {
                 return .movement(last: counter)
             } else {
                 return nil

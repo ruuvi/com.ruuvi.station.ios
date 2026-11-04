@@ -1,3 +1,11 @@
+#if SWIFT_PACKAGE
+    import RuuviOntology
+    import RuuviContext
+    import RuuviReactor
+    import RuuviLocal
+    import RuuviService
+    import RuuviPresenters
+#endif
 import CoreBluetooth
 import CoreNFC
 import RuuviLocalization
@@ -78,8 +86,8 @@ class DiscoverHeaderView: UIView {
         let addSensorString: String = RuuviLocalization.addSensorDescription
         let addSensorViaNFCString = RuuviLocalization.addSensorViaNfc
         let descriptionString =
-            (isBluetoothPermissionGranted && isNFCAvailable) ?
-            (addSensorString + "\n\n" + addSensorViaNFCString) : addSensorString
+            (isBluetoothPermissionGranted && isNFCAvailable)
+            ? (addSensorString + "\n\n" + addSensorViaNFCString) : addSensorString
 
         descriptionLabel.text = descriptionString
         descriptionLabel.textColor = UIColor(named: "ruuvi_text_color")
@@ -179,8 +187,8 @@ extension DiscoverHeaderView {
         let addSensorString: String = RuuviLocalization.addSensorDescription
         let addSensorViaNFCString = RuuviLocalization.addSensorViaNfc
         let descriptionString =
-            (showNFCButton && isBluetoothPermissionGranted) ?
-            (addSensorString + "\n\n" + addSensorViaNFCString) : addSensorString
+            (showNFCButton && isBluetoothPermissionGranted)
+            ? (addSensorString + "\n\n" + addSensorViaNFCString) : addSensorString
         descriptionLabel.text = descriptionString
     }
 }

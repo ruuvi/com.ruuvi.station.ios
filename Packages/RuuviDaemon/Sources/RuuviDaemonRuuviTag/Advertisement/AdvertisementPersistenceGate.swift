@@ -1,3 +1,10 @@
+#if SWIFT_PACKAGE
+    import RuuviDaemon
+    import RuuviDaemonOperation
+    import RuuviNotification
+    import RuuviLocal
+    import RuuviService
+#endif
 import Foundation
 
 // Serialize sensor invalidation with write submission, including asynchronous continuations.

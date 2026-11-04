@@ -38,6 +38,8 @@ extension AboutViewController {
 extension AboutViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        aboutTextView.accessibilityIdentifier = "about.details"
+        navigationItem.leftBarButtonItem?.accessibilityIdentifier = "about.close"
         configureViews()
         setUpChangelogTapGesture()
         localize()

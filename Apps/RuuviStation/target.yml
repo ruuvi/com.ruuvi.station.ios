@@ -34,7 +34,6 @@ targets:
         product: FirebaseInAppMessaging-Beta
       - package: KeychainAccess
       - package: Humidity
-      - package: Future
       - package: FLEX
       - target: RuuviAnalytics
       - target: RuuviCloud
@@ -172,7 +171,6 @@ targets:
       - path: Tests/Unit/MarketingConsent
     dependencies:
       - target: station
-      - package: Future
       - target: RuuviCloud
         embed: false
       - target: RuuviLocal

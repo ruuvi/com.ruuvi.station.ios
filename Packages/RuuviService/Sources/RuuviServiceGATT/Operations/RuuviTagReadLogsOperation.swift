@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviService
+#endif
 import BTKit
 import Foundation
 import RuuviOntology
@@ -19,6 +22,7 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
     private let resultLock = NSRecursiveLock()
     private let progressLock = NSLock()
     private var latestProgress: BTServiceProgress?
+    private var persistenceTask: Task<Void, Never>?
 
     var currentProgress: BTServiceProgress? {
         progressLock.lock()
@@ -91,17 +95,19 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
                         .with(source: .log)
                         .any
                     }
-                    let opLogs = observer.ruuviPool.create(records)
-                    opLogs.on(success: { _ in
+                    observer.persistenceTask = Task {
                         guard !observer.isCancelled else { return }
-                        observer.post(logs: logs, with: observer.uuid)
+                        do throws(RuuviPoolError) {
+                            _ = try await observer.ruuviPool.create(records)
+                            guard !observer.isCancelled else { return }
+                            observer.post(logs: logs, with: observer.uuid)
+                        } catch {
+                            guard !observer.isCancelled else { return }
+                            observer.post(error: error, with: observer.uuid)
+                            observer.error = .ruuviPool(error)
+                        }
                         observer.state = .finished
-                    }, failure: { error in
-                        guard !observer.isCancelled else { return }
-                        observer.post(error: error, with: observer.uuid)
-                        observer.error = .ruuviPool(error)
-                        observer.state = .finished
-                    })
+                    }
                 }
             case let .failure(error):
                 observer.post(error: error, with: observer.uuid)
@@ -115,6 +121,12 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
         resultLock.lock()
         defer { resultLock.unlock() }
         super.cancel()
+        persistenceTask?.cancel()
+    }
+
+    func waitForPersistence() async {
+        let task = resultLock.withLock { persistenceTask }
+        await task?.value
     }
 
     public func stopSync() {
@@ -137,8 +149,7 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
             NotificationCenter.default.post(
                 name: .RuuviTagReadLogsOperationDidStart,
                 object: nil,
-                userInfo:
-                [
+                userInfo: [
                     RuuviTagReadLogsOperationDidStartKey.uuid: uuid,
                     RuuviTagReadLogsOperationDidStartKey.fromDate: date,
                 ]
@@ -172,8 +183,7 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
             NotificationCenter.default.post(
                 name: .RuuviTagReadLogsOperationDidFinish,
                 object: nil,
-                userInfo:
-                [
+                userInfo: [
                     RuuviTagReadLogsOperationDidFinishKey.uuid: uuid,
                     RuuviTagReadLogsOperationDidFinishKey.logs: logs,
                 ]
@@ -186,8 +196,7 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
             NotificationCenter.default.post(
                 name: .RuuviTagReadLogsOperationDidFail,
                 object: nil,
-                userInfo:
-                [
+                userInfo: [
                     RuuviTagReadLogsOperationDidFailKey.uuid: uuid,
                     RuuviTagReadLogsOperationDidFailKey.error: error,
                 ]

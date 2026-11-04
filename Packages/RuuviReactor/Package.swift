@@ -1,11 +1,11 @@
-// swift-tools-version:5.9
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "RuuviReactor",
-    platforms: [.macOS(.v10_15), .iOS(.v14)],
+    platforms: [.iOS(.v16)],
     products: [
         .library(
             name: "RuuviReactor",
@@ -17,6 +17,7 @@ let package = Package(
         ),
     ],
     dependencies: [
+        .package(path: "../RuuviAnalytics"),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviPersistence"),
         .package(path: "../RuuviContext"),
@@ -25,6 +26,8 @@ let package = Package(
         .target(
             name: "RuuviReactor",
             dependencies: [
+                .product(name: "RuuviAnalytics", package: "RuuviAnalytics"),
+                .product(name: "RuuviContext", package: "RuuviContext"),
                 "RuuviOntology",
                 "RuuviPersistence",
             ]
@@ -32,6 +35,8 @@ let package = Package(
         .target(
             name: "RuuviReactorImpl",
             dependencies: [
+                .product(name: "RuuviOntology", package: "RuuviOntology"),
+                .product(name: "RuuviAnalytics", package: "RuuviAnalytics"),
                 "RuuviReactor",
                 "RuuviContext",
                 "RuuviPersistence",
@@ -40,7 +45,16 @@ let package = Package(
         ),
         .testTarget(
             name: "RuuviReactorTests",
-            dependencies: ["RuuviReactor"]
+            dependencies: [
+                .product(name: "RuuviAnalytics", package: "RuuviAnalytics"),
+                .product(name: "RuuviContext", package: "RuuviContext"),
+                .product(name: "RuuviContextSQLite", package: "RuuviContext"),
+                .product(name: "RuuviOntology", package: "RuuviOntology"),
+                .product(name: "RuuviPersistence", package: "RuuviPersistence"),
+                .product(name: "RuuviPersistenceSQLite", package: "RuuviPersistence"),
+                "RuuviReactorImpl", "RuuviReactor",
+            ]
         ),
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )

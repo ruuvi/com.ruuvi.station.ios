@@ -1,3 +1,14 @@
+#if SWIFT_PACKAGE
+    import RuuviMigration
+#endif
+#if SWIFT_PACKAGE
+    import RuuviOntology
+    import RuuviLocal
+    import RuuviPool
+    import RuuviContext
+    import RuuviStorage
+    import RuuviService
+#endif
 import Foundation
 
 extension UserDefaults {

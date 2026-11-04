@@ -1,4 +1,6 @@
-import Future
+#if SWIFT_PACKAGE
+    import RuuviLocal
+#endif
 import RuuviOntology
 import UIKit
 
@@ -9,5 +11,5 @@ protocol ImagePersistence {
         image: UIImage,
         compressionQuality: CGFloat,
         for identifier: Identifier
-    ) -> Future<URL, RuuviLocalError>
+    ) async throws(RuuviLocalError) -> URL
 }

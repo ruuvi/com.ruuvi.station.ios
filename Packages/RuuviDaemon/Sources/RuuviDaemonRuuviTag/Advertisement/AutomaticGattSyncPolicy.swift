@@ -1,3 +1,10 @@
+#if SWIFT_PACKAGE
+    import RuuviDaemon
+    import RuuviDaemonOperation
+    import RuuviNotification
+    import RuuviLocal
+    import RuuviService
+#endif
 import Foundation
 
 // Shared timestamp rules for foreground advertisement-triggered history downloads.

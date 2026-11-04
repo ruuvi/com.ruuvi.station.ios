@@ -1,31 +1,26 @@
-// swift-tools-version: 5.9
-// The swift-tools-version declares the minimum version of Swift required to build this package.
-
+// swift-tools-version: 6.2
 import PackageDescription
 
 let package = Package(
     name: "RuuviFirmware",
+    platforms: [.iOS(.v16)],
+    products: [.library(name: "RuuviFirmware", targets: ["RuuviFirmware"])],
     dependencies: [
-        .package(path: "../RuuviOntology"),
-    ],
-    products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
-            name: "RuuviFirmware",
-            targets: ["RuuviFirmware"]
-        ),
+        .package(path: "../../Packages/RuuviOntology"),
+        .package(path: "../../Packages/RuuviDaemon"),
+        .package(path: "../../Packages/RuuviDFU"),
+        .package(path: "../../Packages/RuuviCore"),
+        .package(path: "../../Common/RuuviLocalization"),
+        .package(url: "https://github.com/ruuvi/BTKit", branch: "master"),
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "RuuviFirmware",
             dependencies: [
-                "RuuviOntology",
+                .product(name: "RuuviCoreDiff", package: "RuuviCore"),
+                "RuuviOntology", "RuuviDaemon", "RuuviDFU", "RuuviCore", "RuuviLocalization", "BTKit",
             ]),
-        .testTarget(
-            name: "RuuviFirmwareTests",
-            dependencies: ["RuuviFirmware"]
-        ),
-    ]
+        .testTarget(name: "RuuviFirmwareTests", dependencies: ["RuuviFirmware"]),
+    ],
+    swiftLanguageModes: [.v5]
 )

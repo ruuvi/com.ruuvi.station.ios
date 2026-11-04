@@ -1,6 +1,9 @@
+#if SWIFT_PACKAGE
+    import RuuviService
+    import RuuviLocalization
+#endif
 // swiftlint:disable file_length
 import Foundation
-import Future
 import RuuviCloud
 import RuuviLocal
 import RuuviOntology
@@ -21,8 +24,7 @@ fileprivate extension RuuviServiceAlertImpl {
         max: Double,
         for sensor: PhysicalSensor
     ) {
-        if min < RuuviAlertConstants.CarbonDioxide.lowerBound ||
-            max > RuuviAlertConstants.CarbonDioxide.upperBound {
+        if min < RuuviAlertConstants.CarbonDioxide.lowerBound || max > RuuviAlertConstants.CarbonDioxide.upperBound {
             ruuviLocalSettings.setShowCustomCO2AlertBound(true, for: sensor.id)
         }
     }
@@ -32,8 +34,9 @@ fileprivate extension RuuviServiceAlertImpl {
         max: Double,
         for sensor: PhysicalSensor
     ) {
-        if min < RuuviAlertConstants.ParticulateMatter.lowerBound ||
-            max > RuuviAlertConstants.ParticulateMatter.upperBound {
+        if min < RuuviAlertConstants.ParticulateMatter.lowerBound
+            || max > RuuviAlertConstants.ParticulateMatter.upperBound
+        {
             ruuviLocalSettings.setShowCustomPMAlertBound(true, for: sensor.id)
         }
     }
@@ -49,263 +52,322 @@ public extension RuuviServiceAlertImpl {
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             switch type {
             case let .temperature(lower, upper):
-                cloud.setAlert(
-                    type: .temperature,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: temperatureDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.temperature.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .temperature,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: temperatureDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .relativeHumidity(lower, upper):
-                cloud.setAlert(
-                    type: .humidity,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lower * 100.0, // in percent on cloud, fraction locally
-                    max: upper * 100.0, // in percent on cloud, fraction locally
-                    counter: nil,
-                    delay: nil,
-                    description: relativeHumidityDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.humidity.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .humidity,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lower * 100.0,  // in percent on cloud, fraction locally
+                        max: upper * 100.0,  // in percent on cloud, fraction locally
+                        counter: nil,
+                        delay: nil,
+                        description: relativeHumidityDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .humidity(lower, upper):
                 let lowerValue = lower.converted(to: .absolute).value
                 let upperValue = upper.converted(to: .absolute).value
-                cloud.setAlert(
-                    type: .humidityAbsolute,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lowerValue,
-                    max: upperValue,
-                    counter: nil,
-                    delay: nil,
-                    description: humidityDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.humidityAbsolute.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .humidityAbsolute,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lowerValue,
+                        max: upperValue,
+                        counter: nil,
+                        delay: nil,
+                        description: humidityDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .dewPoint(lower, upper):
-                cloud.setAlert(
-                    type: .dewPoint,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: dewPointDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.dewPoint.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .dewPoint,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: dewPointDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .pressure(lower, upper):
-                cloud.setAlert(
-                    type: .pressure,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lower * 100, // in Pa on cloud, in hPa locally
-                    max: upper * 100, // in Pa on cloud, in hPa locally
-                    counter: nil,
-                    delay: nil,
-                    description: pressureDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pressure.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .pressure,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lower * 100,  // in Pa on cloud, in hPa locally
+                        max: upper * 100,  // in Pa on cloud, in hPa locally
+                        counter: nil,
+                        delay: nil,
+                        description: pressureDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .signal(lower, upper):
-                cloud.setAlert(
-                    type: .signal,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: signalDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.signal.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .signal,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: signalDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .batteryVoltage(lower, upper):
-                cloud.setAlert(
-                    type: .battery,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: batteryVoltageDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.battery.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .battery,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: batteryVoltageDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .aqi(lower, upper):
-                cloud.setAlert(
-                    type: .aqi,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: aqiDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.aqi.rawValue) { @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .aqi,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: aqiDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .carbonDioxide(lower, upper):
-                cloud.setAlert(
-                    type: .co2,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: carbonDioxideDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.co2.rawValue) { @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .co2,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: carbonDioxideDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .pMatter1(lower, upper):
-                cloud.setAlert(
-                    type: .pm10,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: pm1Description(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm10.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .pm10,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: pm1Description(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .pMatter25(lower, upper):
-                cloud.setAlert(
-                    type: .pm25,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: pm25Description(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm25.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .pm25,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: pm25Description(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .pMatter4(lower, upper):
-                cloud.setAlert(
-                    type: .pm40,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: pm4Description(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm40.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .pm40,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: pm4Description(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .pMatter10(lower, upper):
-                cloud.setAlert(
-                    type: .pm100,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: pm10Description(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm100.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .pm100,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: pm10Description(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .voc(lower, upper):
-                cloud.setAlert(
-                    type: .voc,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: vocDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.voc.rawValue) { @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .voc,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: vocDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .nox(lower, upper):
-                cloud.setAlert(
-                    type: .nox,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: noxDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.nox.rawValue) { @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .nox,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: noxDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .soundInstant(lower, upper):
-                cloud.setAlert(
-                    type: .soundInstant,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: soundInstantDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.soundInstant.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .soundInstant,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: soundInstantDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .soundAverage(lower, upper):
-                cloud.setAlert(
-                    type: .soundAverage,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: soundAverageDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.soundAverage.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .soundAverage,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: soundAverageDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .soundPeak(lower, upper):
-                cloud.setAlert(
-                    type: .soundPeak,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: soundPeakDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.soundPeak.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .soundPeak,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: soundPeakDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .luminosity(lower, upper):
-                cloud.setAlert(
-                    type: .luminosity,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: luminosityDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.luminosity.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .luminosity,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: luminosityDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case .connection:
                 break
             case let .cloudConnection(unseenDuration):
                 let normalizedUnseenDuration = RuuviAlertConstants.CloudConnection
                     .normalizedUnseenDuration(unseenDuration)
-                cloud.setAlert(
-                    type: .offline,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: 0,
-                    max: normalizedUnseenDuration,
-                    counter: nil,
-                    delay: 0,
-                    description: cloudConnectionDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.offline.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .offline,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: 0,
+                        max: normalizedUnseenDuration,
+                        counter: nil,
+                        delay: 0,
+                        description: cloudConnectionDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .movement(last):
-                cloud.setAlert(
-                    type: .movement,
-                    settingType: .state,
-                    isEnabled: true,
-                    min: nil,
-                    max: nil,
-                    counter: last,
-                    delay: nil,
-                    description: movementDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.movement.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .movement,
+                        settingType: .state,
+                        isEnabled: true,
+                        min: nil,
+                        max: nil,
+                        counter: last,
+                        delay: nil,
+                        description: movementDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             }
         }
     }
@@ -317,263 +379,322 @@ public extension RuuviServiceAlertImpl {
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
             switch type {
             case let .temperature(lower, upper):
-                cloud.setAlert(
-                    type: .temperature,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: temperatureDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.temperature.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .temperature,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: temperatureDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .relativeHumidity(lower, upper):
-                cloud.setAlert(
-                    type: .humidity,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lower * 100, // in percent on cloud, fraction locally
-                    max: upper * 100, // in percent on cloud, fraction locally
-                    counter: nil,
-                    delay: nil,
-                    description: relativeHumidityDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.humidity.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .humidity,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lower * 100,  // in percent on cloud, fraction locally
+                        max: upper * 100,  // in percent on cloud, fraction locally
+                        counter: nil,
+                        delay: nil,
+                        description: relativeHumidityDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .humidity(lower, upper):
                 let lowerValue = lower.converted(to: .absolute).value
                 let upperValue = upper.converted(to: .absolute).value
-                cloud.setAlert(
-                    type: .humidityAbsolute,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lowerValue,
-                    max: upperValue,
-                    counter: nil,
-                    delay: nil,
-                    description: humidityDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.humidityAbsolute.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .humidityAbsolute,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lowerValue,
+                        max: upperValue,
+                        counter: nil,
+                        delay: nil,
+                        description: humidityDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .dewPoint(lower, upper):
-                cloud.setAlert(
-                    type: .dewPoint,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: dewPointDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.dewPoint.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .dewPoint,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: dewPointDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .pressure(lower, upper):
-                cloud.setAlert(
-                    type: .pressure,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lower * 100, // in Pa on cloud, in hPa locally
-                    max: upper * 100, // in Pa on cloud, in hPa locally
-                    counter: nil,
-                    delay: nil,
-                    description: pressureDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pressure.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .pressure,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lower * 100,  // in Pa on cloud, in hPa locally
+                        max: upper * 100,  // in Pa on cloud, in hPa locally
+                        counter: nil,
+                        delay: nil,
+                        description: pressureDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .signal(lower, upper):
-                cloud.setAlert(
-                    type: .signal,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: signalDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.signal.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .signal,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: signalDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .batteryVoltage(lower, upper):
-                cloud.setAlert(
-                    type: .battery,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: batteryVoltageDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.battery.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .battery,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: batteryVoltageDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .aqi(lower, upper):
-                cloud.setAlert(
-                    type: .aqi,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: aqiDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.aqi.rawValue) { @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .aqi,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: aqiDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .carbonDioxide(lower, upper):
-                cloud.setAlert(
-                    type: .co2,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: carbonDioxideDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.co2.rawValue) { @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .co2,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: carbonDioxideDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .pMatter1(lower, upper):
-                cloud.setAlert(
-                    type: .pm10,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: pm1Description(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm10.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .pm10,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: pm1Description(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .pMatter25(lower, upper):
-                cloud.setAlert(
-                    type: .pm25,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: pm25Description(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm25.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .pm25,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: pm25Description(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .pMatter4(lower, upper):
-                cloud.setAlert(
-                    type: .pm40,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: pm4Description(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm40.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .pm40,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: pm4Description(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .pMatter10(lower, upper):
-                cloud.setAlert(
-                    type: .pm100,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: pm10Description(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm100.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .pm100,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: pm10Description(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .voc(lower, upper):
-                cloud.setAlert(
-                    type: .voc,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: vocDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.voc.rawValue) { @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .voc,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: vocDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .nox(lower, upper):
-                cloud.setAlert(
-                    type: .nox,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: noxDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.nox.rawValue) { @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .nox,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: noxDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .soundInstant(lower, upper):
-                cloud.setAlert(
-                    type: .soundInstant,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: soundInstantDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.soundInstant.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .soundInstant,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: soundInstantDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .soundAverage(lower, upper):
-                cloud.setAlert(
-                    type: .soundAverage,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: soundAverageDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.soundAverage.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .soundAverage,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: soundAverageDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .soundPeak(lower, upper):
-                cloud.setAlert(
-                    type: .soundPeak,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: soundPeakDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.soundPeak.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .soundPeak,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: soundPeakDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .luminosity(lower, upper):
-                cloud.setAlert(
-                    type: .luminosity,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: lower,
-                    max: upper,
-                    counter: nil,
-                    delay: nil,
-                    description: luminosityDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.luminosity.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .luminosity,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: lower,
+                        max: upper,
+                        counter: nil,
+                        delay: nil,
+                        description: luminosityDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case .connection:
                 break
             case let .cloudConnection(unseenDuration):
                 let normalizedUnseenDuration = RuuviAlertConstants.CloudConnection
                     .normalizedUnseenDuration(unseenDuration)
-                cloud.setAlert(
-                    type: .offline,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: 0,
-                    max: normalizedUnseenDuration,
-                    counter: nil,
-                    delay: 0,
-                    description: cloudConnectionDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.offline.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .offline,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: 0,
+                        max: normalizedUnseenDuration,
+                        counter: nil,
+                        delay: 0,
+                        description: cloudConnectionDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             case let .movement(last):
-                cloud.setAlert(
-                    type: .movement,
-                    settingType: .state,
-                    isEnabled: false,
-                    min: nil,
-                    max: nil,
-                    counter: last,
-                    delay: nil,
-                    description: movementDescription(for: ruuviTag),
-                    for: macId
-                )
+                cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.movement.rawValue) {
+                    @MainActor [self] in
+                    _ = try? await cloud.setAlert(
+                        type: .movement,
+                        settingType: .state,
+                        isEnabled: false,
+                        min: nil,
+                        max: nil,
+                        counter: last,
+                        delay: nil,
+                        description: movementDescription(for: ruuviTag),
+                        for: macId
+                    )
+                }
             }
         }
     }
@@ -582,51 +703,60 @@ public extension RuuviServiceAlertImpl {
     func setLower(celsius: Double?, ruuviTag: RuuviTagSensor) {
         setLower(celsius: celsius, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .temperature,
-                settingType: .lowerBound,
-                isEnabled: isOn(type: .temperature(lower: 0, upper: 0), for: ruuviTag),
-                min: celsius,
-                max: upperCelsius(for: ruuviTag),
-                counter: nil,
-                delay: nil,
-                description: temperatureDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.temperature.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .temperature,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(type: .temperature(lower: 0, upper: 0), for: ruuviTag),
+                    min: celsius,
+                    max: upperCelsius(for: ruuviTag),
+                    counter: nil,
+                    delay: nil,
+                    description: temperatureDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setUpper(celsius: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(celsius: celsius, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .temperature,
-                settingType: .upperBound,
-                isEnabled: isOn(type: .temperature(lower: 0, upper: 0), for: ruuviTag),
-                min: lowerCelsius(for: ruuviTag),
-                max: celsius,
-                counter: nil,
-                delay: nil,
-                description: temperatureDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.temperature.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .temperature,
+                    settingType: .upperBound,
+                    isEnabled: isOn(type: .temperature(lower: 0, upper: 0), for: ruuviTag),
+                    min: lowerCelsius(for: ruuviTag),
+                    max: celsius,
+                    counter: nil,
+                    delay: nil,
+                    description: temperatureDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setTemperature(description: String?, ruuviTag: RuuviTagSensor) {
         setTemperature(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .temperature,
-                settingType: .description,
-                isEnabled: isOn(type: .temperature(lower: 0, upper: 0), for: ruuviTag),
-                min: lowerCelsius(for: ruuviTag),
-                max: upperCelsius(for: ruuviTag),
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.temperature.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .temperature,
+                    settingType: .description,
+                    isEnabled: isOn(type: .temperature(lower: 0, upper: 0), for: ruuviTag),
+                    min: lowerCelsius(for: ruuviTag),
+                    max: upperCelsius(for: ruuviTag),
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -634,51 +764,60 @@ public extension RuuviServiceAlertImpl {
     func setLower(relativeHumidity: Double?, ruuviTag: RuuviTagSensor) {
         setLower(relativeHumidity: relativeHumidity, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .humidity,
-                settingType: .lowerBound,
-                isEnabled: isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag),
-                min: (relativeHumidity ?? 0) * 100.0,
-                max: (upperRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
-                counter: nil,
-                delay: nil,
-                description: relativeHumidityDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.humidity.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .humidity,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag),
+                    min: (relativeHumidity ?? 0) * 100.0,
+                    max: (upperRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
+                    counter: nil,
+                    delay: nil,
+                    description: relativeHumidityDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setUpper(relativeHumidity: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(relativeHumidity: relativeHumidity, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .humidity,
-                settingType: .upperBound,
-                isEnabled: isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag),
-                min: (lowerRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
-                max: (relativeHumidity ?? 0) * 100.0,
-                counter: nil,
-                delay: nil,
-                description: relativeHumidityDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.humidity.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .humidity,
+                    settingType: .upperBound,
+                    isEnabled: isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag),
+                    min: (lowerRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
+                    max: (relativeHumidity ?? 0) * 100.0,
+                    counter: nil,
+                    delay: nil,
+                    description: relativeHumidityDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setRelativeHumidity(description: String?, ruuviTag: RuuviTagSensor) {
         setRelativeHumidity(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .humidity,
-                settingType: .description,
-                isEnabled: isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag),
-                min: (lowerRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
-                max: (upperRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.humidity.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .humidity,
+                    settingType: .description,
+                    isEnabled: isOn(type: .relativeHumidity(lower: 0, upper: 0), for: ruuviTag),
+                    min: (lowerRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
+                    max: (upperRelativeHumidity(for: ruuviTag) ?? 0) * 100.0,
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -686,51 +825,60 @@ public extension RuuviServiceAlertImpl {
     func setLower(dewPoint: Double?, ruuviTag: RuuviTagSensor) {
         setLower(dewPoint: dewPoint, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .dewPoint,
-                settingType: .lowerBound,
-                isEnabled: isOn(type: .dewPoint(lower: 0, upper: 0), for: ruuviTag),
-                min: dewPoint,
-                max: upperDewPoint(for: ruuviTag),
-                counter: nil,
-                delay: nil,
-                description: dewPointDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.dewPoint.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .dewPoint,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(type: .dewPoint(lower: 0, upper: 0), for: ruuviTag),
+                    min: dewPoint,
+                    max: upperDewPoint(for: ruuviTag),
+                    counter: nil,
+                    delay: nil,
+                    description: dewPointDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setUpper(dewPoint: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(dewPoint: dewPoint, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .dewPoint,
-                settingType: .upperBound,
-                isEnabled: isOn(type: .dewPoint(lower: 0, upper: 0), for: ruuviTag),
-                min: lowerDewPoint(for: ruuviTag),
-                max: dewPoint,
-                counter: nil,
-                delay: nil,
-                description: dewPointDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.dewPoint.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .dewPoint,
+                    settingType: .upperBound,
+                    isEnabled: isOn(type: .dewPoint(lower: 0, upper: 0), for: ruuviTag),
+                    min: lowerDewPoint(for: ruuviTag),
+                    max: dewPoint,
+                    counter: nil,
+                    delay: nil,
+                    description: dewPointDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setDewPoint(description: String?, ruuviTag: RuuviTagSensor) {
         setDewPoint(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .dewPoint,
-                settingType: .description,
-                isEnabled: isOn(type: .dewPoint(lower: 0, upper: 0), for: ruuviTag),
-                min: lowerDewPoint(for: ruuviTag),
-                max: upperDewPoint(for: ruuviTag),
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.dewPoint.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .dewPoint,
+                    settingType: .description,
+                    isEnabled: isOn(type: .dewPoint(lower: 0, upper: 0), for: ruuviTag),
+                    min: lowerDewPoint(for: ruuviTag),
+                    max: upperDewPoint(for: ruuviTag),
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -738,51 +886,60 @@ public extension RuuviServiceAlertImpl {
     func setLower(pressure: Double?, ruuviTag: RuuviTagSensor) {
         setLower(pressure: pressure, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .pressure,
-                settingType: .lowerBound,
-                isEnabled: isOn(type: .pressure(lower: 0, upper: 0), for: ruuviTag),
-                min: (pressure ?? 0) * 100.0,
-                max: (upperPressure(for: ruuviTag) ?? 0) * 100.0,
-                counter: nil,
-                delay: nil,
-                description: pressureDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pressure.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pressure,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(type: .pressure(lower: 0, upper: 0), for: ruuviTag),
+                    min: (pressure ?? 0) * 100.0,
+                    max: (upperPressure(for: ruuviTag) ?? 0) * 100.0,
+                    counter: nil,
+                    delay: nil,
+                    description: pressureDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setUpper(pressure: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(pressure: pressure, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .pressure,
-                settingType: .upperBound,
-                isEnabled: isOn(type: .pressure(lower: 0, upper: 0), for: ruuviTag),
-                min: (lowerPressure(for: ruuviTag) ?? 0) * 100.0,
-                max: (pressure ?? 0) * 100.0,
-                counter: nil,
-                delay: nil,
-                description: pressureDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pressure.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pressure,
+                    settingType: .upperBound,
+                    isEnabled: isOn(type: .pressure(lower: 0, upper: 0), for: ruuviTag),
+                    min: (lowerPressure(for: ruuviTag) ?? 0) * 100.0,
+                    max: (pressure ?? 0) * 100.0,
+                    counter: nil,
+                    delay: nil,
+                    description: pressureDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setPressure(description: String?, ruuviTag: RuuviTagSensor) {
         setPressure(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .pressure,
-                settingType: .description,
-                isEnabled: isOn(type: .pressure(lower: 0, upper: 0), for: ruuviTag),
-                min: (lowerPressure(for: ruuviTag) ?? 0) * 100.0,
-                max: (upperPressure(for: ruuviTag) ?? 0) * 100.0,
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pressure.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pressure,
+                    settingType: .description,
+                    isEnabled: isOn(type: .pressure(lower: 0, upper: 0), for: ruuviTag),
+                    min: (lowerPressure(for: ruuviTag) ?? 0) * 100.0,
+                    max: (upperPressure(for: ruuviTag) ?? 0) * 100.0,
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -790,60 +947,66 @@ public extension RuuviServiceAlertImpl {
     func setLower(signal: Double?, ruuviTag: RuuviTagSensor) {
         setLower(signal: signal, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .signal,
-                settingType: .lowerBound,
-                isEnabled: isOn(
-                    type: .signal(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: signal ?? 0,
-                max: upperSignal(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: signalDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.signal.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .signal,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(
+                        type: .signal(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: signal ?? 0,
+                    max: upperSignal(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: signalDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setUpper(signal: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(signal: signal, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .signal,
-                settingType: .upperBound,
-                isEnabled: isOn(
-                    type: .signal(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerSignal(for: ruuviTag) ?? 0,
-                max: signal ?? 0,
-                counter: nil,
-                delay: nil,
-                description: signalDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.signal.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .signal,
+                    settingType: .upperBound,
+                    isEnabled: isOn(
+                        type: .signal(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerSignal(for: ruuviTag) ?? 0,
+                    max: signal ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: signalDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setSignal(description: String?, ruuviTag: RuuviTagSensor) {
         setSignal(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .signal,
-                settingType: .description,
-                isEnabled: isOn(
-                    type: .signal(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerSignal(for: ruuviTag) ?? 0,
-                max: upperSignal(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.signal.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .signal,
+                    settingType: .description,
+                    isEnabled: isOn(
+                        type: .signal(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerSignal(for: ruuviTag) ?? 0,
+                    max: upperSignal(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -851,51 +1014,57 @@ public extension RuuviServiceAlertImpl {
     func setLower(batteryVoltage: Double?, ruuviTag: RuuviTagSensor) {
         setLower(batteryVoltage: batteryVoltage, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .battery,
-                settingType: .lowerBound,
-                isEnabled: isOn(type: .batteryVoltage(lower: 0, upper: 0), for: ruuviTag),
-                min: batteryVoltage,
-                max: upperBatteryVoltage(for: ruuviTag),
-                counter: nil,
-                delay: nil,
-                description: batteryVoltageDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.battery.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .battery,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(type: .batteryVoltage(lower: 0, upper: 0), for: ruuviTag),
+                    min: batteryVoltage,
+                    max: upperBatteryVoltage(for: ruuviTag),
+                    counter: nil,
+                    delay: nil,
+                    description: batteryVoltageDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setUpper(batteryVoltage: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(batteryVoltage: batteryVoltage, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .battery,
-                settingType: .upperBound,
-                isEnabled: isOn(type: .batteryVoltage(lower: 0, upper: 0), for: ruuviTag),
-                min: lowerBatteryVoltage(for: ruuviTag),
-                max: batteryVoltage,
-                counter: nil,
-                delay: nil,
-                description: batteryVoltageDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.battery.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .battery,
+                    settingType: .upperBound,
+                    isEnabled: isOn(type: .batteryVoltage(lower: 0, upper: 0), for: ruuviTag),
+                    min: lowerBatteryVoltage(for: ruuviTag),
+                    max: batteryVoltage,
+                    counter: nil,
+                    delay: nil,
+                    description: batteryVoltageDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setBatteryVoltage(description: String?, ruuviTag: RuuviTagSensor) {
         setBatteryVoltage(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .battery,
-                settingType: .description,
-                isEnabled: isOn(type: .batteryVoltage(lower: 0, upper: 0), for: ruuviTag),
-                min: lowerBatteryVoltage(for: ruuviTag),
-                max: upperBatteryVoltage(for: ruuviTag),
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.battery.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .battery,
+                    settingType: .description,
+                    isEnabled: isOn(type: .batteryVoltage(lower: 0, upper: 0), for: ruuviTag),
+                    min: lowerBatteryVoltage(for: ruuviTag),
+                    max: upperBatteryVoltage(for: ruuviTag),
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -903,60 +1072,66 @@ public extension RuuviServiceAlertImpl {
     func setLower(aqi: Double?, ruuviTag: RuuviTagSensor) {
         setLower(aqi: aqi, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .aqi,
-                settingType: .lowerBound,
-                isEnabled: isOn(
-                    type: .aqi(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: aqi ?? 0,
-                max: upperAQI(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: aqiDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.aqi.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .aqi,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(
+                        type: .aqi(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: aqi ?? 0,
+                    max: upperAQI(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: aqiDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setUpper(aqi: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(aqi: aqi, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .aqi,
-                settingType: .upperBound,
-                isEnabled: isOn(
-                    type: .aqi(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerAQI(for: ruuviTag) ?? 0,
-                max: aqi ?? 0,
-                counter: nil,
-                delay: nil,
-                description: aqiDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.aqi.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .aqi,
+                    settingType: .upperBound,
+                    isEnabled: isOn(
+                        type: .aqi(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerAQI(for: ruuviTag) ?? 0,
+                    max: aqi ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: aqiDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setAQI(description: String?, ruuviTag: RuuviTagSensor) {
         setAQI(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .aqi,
-                settingType: .description,
-                isEnabled: isOn(
-                    type: .aqi(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerAQI(for: ruuviTag) ?? 0,
-                max: upperAQI(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.aqi.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .aqi,
+                    settingType: .description,
+                    isEnabled: isOn(
+                        type: .aqi(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerAQI(for: ruuviTag) ?? 0,
+                    max: upperAQI(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -964,60 +1139,66 @@ public extension RuuviServiceAlertImpl {
     func setLower(carbonDioxide: Double?, ruuviTag: RuuviTagSensor) {
         setLower(carbonDioxide: carbonDioxide, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .co2,
-                settingType: .lowerBound,
-                isEnabled: isOn(
-                    type: .carbonDioxide(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: carbonDioxide ?? 0,
-                max: upperCarbonDioxide(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: carbonDioxideDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.co2.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .co2,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(
+                        type: .carbonDioxide(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: carbonDioxide ?? 0,
+                    max: upperCarbonDioxide(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: carbonDioxideDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setUpper(carbonDioxide: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(carbonDioxide: carbonDioxide, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .co2,
-                settingType: .upperBound,
-                isEnabled: isOn(
-                    type: .carbonDioxide(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerCarbonDioxide(for: ruuviTag) ?? 0,
-                max: carbonDioxide ?? 0,
-                counter: nil,
-                delay: nil,
-                description: carbonDioxideDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.co2.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .co2,
+                    settingType: .upperBound,
+                    isEnabled: isOn(
+                        type: .carbonDioxide(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerCarbonDioxide(for: ruuviTag) ?? 0,
+                    max: carbonDioxide ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: carbonDioxideDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setCarbonDioxide(description: String?, ruuviTag: RuuviTagSensor) {
         setCarbonDioxide(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .co2,
-                settingType: .description,
-                isEnabled: isOn(
-                    type: .carbonDioxide(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerCarbonDioxide(for: ruuviTag) ?? 0,
-                max: upperCarbonDioxide(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.co2.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .co2,
+                    settingType: .description,
+                    isEnabled: isOn(
+                        type: .carbonDioxide(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerCarbonDioxide(for: ruuviTag) ?? 0,
+                    max: upperCarbonDioxide(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -1025,60 +1206,66 @@ public extension RuuviServiceAlertImpl {
     func setLower(pm1: Double?, ruuviTag: RuuviTagSensor) {
         setLower(pm1: pm1, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .pm10,
-                settingType: .lowerBound,
-                isEnabled: isOn(
-                    type: .pMatter1(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: pm1 ?? 0,
-                max: upperPM1(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: pm1Description(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm10.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pm10,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(
+                        type: .pMatter1(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: pm1 ?? 0,
+                    max: upperPM1(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: pm1Description(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setUpper(pm1: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(pm1: pm1, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .pm10,
-                settingType: .upperBound,
-                isEnabled: isOn(
-                    type: .pMatter1(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerPM1(for: ruuviTag) ?? 0,
-                max: pm1 ?? 0,
-                counter: nil,
-                delay: nil,
-                description: pm1Description(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm10.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pm10,
+                    settingType: .upperBound,
+                    isEnabled: isOn(
+                        type: .pMatter1(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerPM1(for: ruuviTag) ?? 0,
+                    max: pm1 ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: pm1Description(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setPM1(description: String?, ruuviTag: RuuviTagSensor) {
         setPM1(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .pm10,
-                settingType: .description,
-                isEnabled: isOn(
-                    type: .pMatter1(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerPM1(for: ruuviTag) ?? 0,
-                max: upperPM1(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm10.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pm10,
+                    settingType: .description,
+                    isEnabled: isOn(
+                        type: .pMatter1(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerPM1(for: ruuviTag) ?? 0,
+                    max: upperPM1(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -1086,60 +1273,66 @@ public extension RuuviServiceAlertImpl {
     func setLower(pm25: Double?, ruuviTag: RuuviTagSensor) {
         setLower(pm25: pm25, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .pm25,
-                settingType: .lowerBound,
-                isEnabled: isOn(
-                    type: .pMatter25(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: pm25 ?? 0,
-                max: upperPM25(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: pm25Description(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm25.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pm25,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(
+                        type: .pMatter25(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: pm25 ?? 0,
+                    max: upperPM25(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: pm25Description(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setUpper(pm25: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(pm25: pm25, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .pm25,
-                settingType: .upperBound,
-                isEnabled: isOn(
-                    type: .pMatter25(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerPM25(for: ruuviTag) ?? 0,
-                max: pm25 ?? 0,
-                counter: nil,
-                delay: nil,
-                description: pm25Description(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm25.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pm25,
+                    settingType: .upperBound,
+                    isEnabled: isOn(
+                        type: .pMatter25(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerPM25(for: ruuviTag) ?? 0,
+                    max: pm25 ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: pm25Description(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setPM25(description: String?, ruuviTag: RuuviTagSensor) {
         setPM25(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .pm25,
-                settingType: .description,
-                isEnabled: isOn(
-                    type: .pMatter25(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerPM25(for: ruuviTag) ?? 0,
-                max: upperPM25(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm25.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pm25,
+                    settingType: .description,
+                    isEnabled: isOn(
+                        type: .pMatter25(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerPM25(for: ruuviTag) ?? 0,
+                    max: upperPM25(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -1147,60 +1340,66 @@ public extension RuuviServiceAlertImpl {
     func setLower(pm4: Double?, ruuviTag: RuuviTagSensor) {
         setLower(pm4: pm4, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .pm40,
-                settingType: .lowerBound,
-                isEnabled: isOn(
-                    type: .pMatter4(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: pm4 ?? 0,
-                max: upperPM4(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: pm4Description(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm40.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pm40,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(
+                        type: .pMatter4(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: pm4 ?? 0,
+                    max: upperPM4(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: pm4Description(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setUpper(pm4: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(pm4: pm4, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .pm40,
-                settingType: .upperBound,
-                isEnabled: isOn(
-                    type: .pMatter4(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerPM4(for: ruuviTag) ?? 0,
-                max: pm4 ?? 0,
-                counter: nil,
-                delay: nil,
-                description: pm4Description(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm40.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pm40,
+                    settingType: .upperBound,
+                    isEnabled: isOn(
+                        type: .pMatter4(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerPM4(for: ruuviTag) ?? 0,
+                    max: pm4 ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: pm4Description(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setPM4(description: String?, ruuviTag: RuuviTagSensor) {
         setPM4(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .pm40,
-                settingType: .description,
-                isEnabled: isOn(
-                    type: .pMatter4(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerPM4(for: ruuviTag) ?? 0,
-                max: upperPM4(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm40.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pm40,
+                    settingType: .description,
+                    isEnabled: isOn(
+                        type: .pMatter4(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerPM4(for: ruuviTag) ?? 0,
+                    max: upperPM4(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -1208,60 +1407,66 @@ public extension RuuviServiceAlertImpl {
     func setLower(pm10: Double?, ruuviTag: RuuviTagSensor) {
         setLower(pm10: pm10, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .pm100,
-                settingType: .lowerBound,
-                isEnabled: isOn(
-                    type: .pMatter10(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: pm10 ?? 0,
-                max: upperPM10(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: pm10Description(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm100.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pm100,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(
+                        type: .pMatter10(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: pm10 ?? 0,
+                    max: upperPM10(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: pm10Description(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setUpper(pm10: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(pm10: pm10, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .pm100,
-                settingType: .upperBound,
-                isEnabled: isOn(
-                    type: .pMatter10(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerPM10(for: ruuviTag) ?? 0,
-                max: pm10 ?? 0,
-                counter: nil,
-                delay: nil,
-                description: pm10Description(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm100.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pm100,
+                    settingType: .upperBound,
+                    isEnabled: isOn(
+                        type: .pMatter10(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerPM10(for: ruuviTag) ?? 0,
+                    max: pm10 ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: pm10Description(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setPM10(description: String?, ruuviTag: RuuviTagSensor) {
         setPM10(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .pm100,
-                settingType: .description,
-                isEnabled: isOn(
-                    type: .pMatter10(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerPM10(for: ruuviTag) ?? 0,
-                max: upperPM10(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm100.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pm100,
+                    settingType: .description,
+                    isEnabled: isOn(
+                        type: .pMatter10(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerPM10(for: ruuviTag) ?? 0,
+                    max: upperPM10(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -1269,60 +1474,66 @@ public extension RuuviServiceAlertImpl {
     func setLower(voc: Double?, ruuviTag: RuuviTagSensor) {
         setLower(voc: voc, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .voc,
-                settingType: .lowerBound,
-                isEnabled: isOn(
-                    type: .voc(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: voc ?? 0,
-                max: upperVOC(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: vocDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.voc.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .voc,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(
+                        type: .voc(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: voc ?? 0,
+                    max: upperVOC(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: vocDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setUpper(voc: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(voc: voc, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .voc,
-                settingType: .upperBound,
-                isEnabled: isOn(
-                    type: .voc(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerVOC(for: ruuviTag) ?? 0,
-                max: voc ?? 0,
-                counter: nil,
-                delay: nil,
-                description: vocDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.voc.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .voc,
+                    settingType: .upperBound,
+                    isEnabled: isOn(
+                        type: .voc(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerVOC(for: ruuviTag) ?? 0,
+                    max: voc ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: vocDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setVOC(description: String?, ruuviTag: RuuviTagSensor) {
         setVOC(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .voc,
-                settingType: .description,
-                isEnabled: isOn(
-                    type: .voc(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerVOC(for: ruuviTag) ?? 0,
-                max: upperVOC(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.voc.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .voc,
+                    settingType: .description,
+                    isEnabled: isOn(
+                        type: .voc(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerVOC(for: ruuviTag) ?? 0,
+                    max: upperVOC(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -1330,60 +1541,66 @@ public extension RuuviServiceAlertImpl {
     func setLower(nox: Double?, ruuviTag: RuuviTagSensor) {
         setLower(nox: nox, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .nox,
-                settingType: .lowerBound,
-                isEnabled: isOn(
-                    type: .nox(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: nox ?? 0,
-                max: upperNOX(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: noxDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.nox.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .nox,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(
+                        type: .nox(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: nox ?? 0,
+                    max: upperNOX(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: noxDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setUpper(nox: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(nox: nox, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .nox,
-                settingType: .upperBound,
-                isEnabled: isOn(
-                    type: .nox(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerNOX(for: ruuviTag) ?? 0,
-                max: nox ?? 0,
-                counter: nil,
-                delay: nil,
-                description: noxDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.nox.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .nox,
+                    settingType: .upperBound,
+                    isEnabled: isOn(
+                        type: .nox(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerNOX(for: ruuviTag) ?? 0,
+                    max: nox ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: noxDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setNOX(description: String?, ruuviTag: RuuviTagSensor) {
         setNOX(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .nox,
-                settingType: .description,
-                isEnabled: isOn(
-                    type: .nox(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerNOX(for: ruuviTag) ?? 0,
-                max: upperNOX(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.nox.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .nox,
+                    settingType: .description,
+                    isEnabled: isOn(
+                        type: .nox(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerNOX(for: ruuviTag) ?? 0,
+                    max: upperNOX(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -1391,60 +1608,69 @@ public extension RuuviServiceAlertImpl {
     func setLower(soundInstant: Double?, ruuviTag: RuuviTagSensor) {
         setLower(soundInstant: soundInstant, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .soundInstant,
-                settingType: .lowerBound,
-                isEnabled: isOn(
-                    type: .soundInstant(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: soundInstant ?? 0,
-                max: upperSoundInstant(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: soundInstantDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.soundInstant.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .soundInstant,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(
+                        type: .soundInstant(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: soundInstant ?? 0,
+                    max: upperSoundInstant(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: soundInstantDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setUpper(soundInstant: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(soundInstant: soundInstant, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .soundInstant,
-                settingType: .upperBound,
-                isEnabled: isOn(
-                    type: .soundInstant(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerSoundInstant(for: ruuviTag) ?? 0,
-                max: soundInstant ?? 0,
-                counter: nil,
-                delay: nil,
-                description: soundInstantDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.soundInstant.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .soundInstant,
+                    settingType: .upperBound,
+                    isEnabled: isOn(
+                        type: .soundInstant(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerSoundInstant(for: ruuviTag) ?? 0,
+                    max: soundInstant ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: soundInstantDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setSoundInstant(description: String?, ruuviTag: RuuviTagSensor) {
         setSoundInstant(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .soundInstant,
-                settingType: .description,
-                isEnabled: isOn(
-                    type: .soundInstant(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerSoundInstant(for: ruuviTag) ?? 0,
-                max: upperSoundInstant(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.soundInstant.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .soundInstant,
+                    settingType: .description,
+                    isEnabled: isOn(
+                        type: .soundInstant(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerSoundInstant(for: ruuviTag) ?? 0,
+                    max: upperSoundInstant(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -1452,60 +1678,69 @@ public extension RuuviServiceAlertImpl {
     func setLower(soundAverage: Double?, ruuviTag: RuuviTagSensor) {
         setLower(soundAverage: soundAverage, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .soundAverage,
-                settingType: .lowerBound,
-                isEnabled: isOn(
-                    type: .soundAverage(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: soundAverage ?? 0,
-                max: upperSoundAverage(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: soundAverageDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.soundAverage.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .soundAverage,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(
+                        type: .soundAverage(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: soundAverage ?? 0,
+                    max: upperSoundAverage(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: soundAverageDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setUpper(soundAverage: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(soundAverage: soundAverage, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .soundAverage,
-                settingType: .upperBound,
-                isEnabled: isOn(
-                    type: .soundAverage(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerSoundAverage(for: ruuviTag) ?? 0,
-                max: soundAverage ?? 0,
-                counter: nil,
-                delay: nil,
-                description: soundAverageDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.soundAverage.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .soundAverage,
+                    settingType: .upperBound,
+                    isEnabled: isOn(
+                        type: .soundAverage(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerSoundAverage(for: ruuviTag) ?? 0,
+                    max: soundAverage ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: soundAverageDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setSoundAverage(description: String?, ruuviTag: RuuviTagSensor) {
         setSoundAverage(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .soundAverage,
-                settingType: .description,
-                isEnabled: isOn(
-                    type: .soundAverage(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerSoundAverage(for: ruuviTag) ?? 0,
-                max: upperSoundAverage(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.soundAverage.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .soundAverage,
+                    settingType: .description,
+                    isEnabled: isOn(
+                        type: .soundAverage(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerSoundAverage(for: ruuviTag) ?? 0,
+                    max: upperSoundAverage(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -1513,60 +1748,69 @@ public extension RuuviServiceAlertImpl {
     func setLower(soundPeak: Double?, ruuviTag: RuuviTagSensor) {
         setLower(soundPeak: soundPeak, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .soundPeak,
-                settingType: .lowerBound,
-                isEnabled: isOn(
-                    type: .soundPeak(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: soundPeak ?? 0,
-                max: upperSoundPeak(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: soundPeakDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.soundPeak.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .soundPeak,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(
+                        type: .soundPeak(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: soundPeak ?? 0,
+                    max: upperSoundPeak(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: soundPeakDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setUpper(soundPeak: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(soundPeak: soundPeak, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .soundPeak,
-                settingType: .upperBound,
-                isEnabled: isOn(
-                    type: .soundPeak(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerSoundPeak(for: ruuviTag) ?? 0,
-                max: soundPeak ?? 0,
-                counter: nil,
-                delay: nil,
-                description: soundPeakDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.soundPeak.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .soundPeak,
+                    settingType: .upperBound,
+                    isEnabled: isOn(
+                        type: .soundPeak(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerSoundPeak(for: ruuviTag) ?? 0,
+                    max: soundPeak ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: soundPeakDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setSoundPeak(description: String?, ruuviTag: RuuviTagSensor) {
         setSoundPeak(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .soundPeak,
-                settingType: .description,
-                isEnabled: isOn(
-                    type: .soundPeak(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerSoundPeak(for: ruuviTag) ?? 0,
-                max: upperSoundPeak(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.soundPeak.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .soundPeak,
+                    settingType: .description,
+                    isEnabled: isOn(
+                        type: .soundPeak(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerSoundPeak(for: ruuviTag) ?? 0,
+                    max: upperSoundPeak(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -1574,60 +1818,69 @@ public extension RuuviServiceAlertImpl {
     func setLower(luminosity: Double?, ruuviTag: RuuviTagSensor) {
         setLower(luminosity: luminosity, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .luminosity,
-                settingType: .lowerBound,
-                isEnabled: isOn(
-                    type: .luminosity(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: luminosity ?? 0,
-                max: upperLuminosity(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: luminosityDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.luminosity.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .luminosity,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(
+                        type: .luminosity(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: luminosity ?? 0,
+                    max: upperLuminosity(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: luminosityDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setUpper(luminosity: Double?, ruuviTag: RuuviTagSensor) {
         setUpper(luminosity: luminosity, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .luminosity,
-                settingType: .upperBound,
-                isEnabled: isOn(
-                    type: .luminosity(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerLuminosity(for: ruuviTag) ?? 0,
-                max: luminosity ?? 0,
-                counter: nil,
-                delay: nil,
-                description: luminosityDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.luminosity.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .luminosity,
+                    settingType: .upperBound,
+                    isEnabled: isOn(
+                        type: .luminosity(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerLuminosity(for: ruuviTag) ?? 0,
+                    max: luminosity ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: luminosityDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setLuminosity(description: String?, ruuviTag: RuuviTagSensor) {
         setLuminosity(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .luminosity,
-                settingType: .description,
-                isEnabled: isOn(
-                    type: .luminosity(lower: 0, upper: 0),
-                    for: ruuviTag
-                ),
-                min: lowerLuminosity(for: ruuviTag) ?? 0,
-                max: upperLuminosity(for: ruuviTag) ?? 0,
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.luminosity.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .luminosity,
+                    settingType: .description,
+                    isEnabled: isOn(
+                        type: .luminosity(lower: 0, upper: 0),
+                        for: ruuviTag
+                    ),
+                    min: lowerLuminosity(for: ruuviTag) ?? 0,
+                    max: upperLuminosity(for: ruuviTag) ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -1635,17 +1888,20 @@ public extension RuuviServiceAlertImpl {
     func setMovement(description: String?, ruuviTag: RuuviTagSensor) {
         setMovement(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .movement,
-                settingType: .description,
-                isEnabled: isOn(type: .movement(last: 0), for: ruuviTag),
-                min: nil,
-                max: nil,
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.movement.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .movement,
+                    settingType: .description,
+                    isEnabled: isOn(type: .movement(last: 0), for: ruuviTag),
+                    min: nil,
+                    max: nil,
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 
@@ -1656,35 +1912,39 @@ public extension RuuviServiceAlertImpl {
         }
         setCloudConnection(unseenDuration: normalizedUnseenDuration, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .offline,
-                settingType: .delay,
-                isEnabled: isOn(type: .cloudConnection(unseenDuration: 0), for: ruuviTag),
-                min: 0,
-                max: normalizedUnseenDuration,
-                counter: nil,
-                delay: 0,
-                description: cloudConnectionDescription(for: ruuviTag),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.offline.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .offline,
+                    settingType: .delay,
+                    isEnabled: isOn(type: .cloudConnection(unseenDuration: 0), for: ruuviTag),
+                    min: 0,
+                    max: normalizedUnseenDuration,
+                    counter: nil,
+                    delay: 0,
+                    description: cloudConnectionDescription(for: ruuviTag),
+                    for: macId
+                )
+            }
         }
     }
 
     func setCloudConnection(description: String?, ruuviTag: RuuviTagSensor) {
         setCloudConnection(description: description, for: ruuviTag)
         if ruuviTag.isCloud, let macId = ruuviTag.macId {
-            cloud.setAlert(
-                type: .offline,
-                settingType: .description,
-                isEnabled: isOn(type: .cloudConnection(unseenDuration: 0), for: ruuviTag),
-                min: 0,
-                max: RuuviAlertConstants.CloudConnection
-                    .normalizedUnseenDuration(cloudConnectionUnseenDuration(for: ruuviTag)),
-                counter: nil,
-                delay: 0,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.offline.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .offline,
+                    settingType: .description,
+                    isEnabled: isOn(type: .cloudConnection(unseenDuration: 0), for: ruuviTag),
+                    min: 0,
+                    max: RuuviAlertConstants.CloudConnection
+                        .normalizedUnseenDuration(cloudConnectionUnseenDuration(for: ruuviTag)),
+                    counter: nil,
+                    delay: 0,
+                    description: description,
+                    for: macId
+                )
+            }
         }
     }
 }
@@ -1692,6 +1952,7 @@ public extension RuuviServiceAlertImpl {
 // swiftlint:disable:next type_body_length
 public final class RuuviServiceAlertImpl: RuuviServiceAlert {
     private let cloud: RuuviCloud
+    private let cloudTasks = RuuviTaskStore()
     private let alertPersistence: AlertPersistence
     private let localIDs: RuuviLocalIDs
     private var ruuviLocalSettings: RuuviLocalSettings
@@ -2026,11 +2287,13 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
     private func alertUpdatedAt(for sensor: PhysicalSensor, type: AlertType) -> Date? {
         var dates = [Date]()
         if let luid = sensor.luid?.value,
-           let date = alertPersistence.updatedAt(for: luid, of: type) {
+            let date = alertPersistence.updatedAt(for: luid, of: type)
+        {
             dates.append(date)
         }
         if let macId = sensor.macId?.value,
-           let date = alertPersistence.updatedAt(for: macId, of: type) {
+            let date = alertPersistence.updatedAt(for: macId, of: type)
+        {
             dates.append(date)
         }
         return dates.max()
@@ -2057,260 +2320,312 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
 
         switch type {
         case .temperature:
-            cloud.setAlert(
-                type: .temperature,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerCelsius(for: sensor),
-                max: upperCelsius(for: sensor),
-                counter: nil,
-                delay: nil,
-                description: temperatureDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.temperature.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .temperature,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerCelsius(for: sensor),
+                    max: upperCelsius(for: sensor),
+                    counter: nil,
+                    delay: nil,
+                    description: temperatureDescription(for: sensor),
+                    for: macId
+                )
+            }
         case .relativeHumidity:
-            cloud.setAlert(
-                type: .humidity,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerRelativeHumidity(for: sensor).map { $0 * 100.0 },
-                max: upperRelativeHumidity(for: sensor).map { $0 * 100.0 },
-                counter: nil,
-                delay: nil,
-                description: relativeHumidityDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.humidity.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .humidity,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerRelativeHumidity(for: sensor).map { $0 * 100.0 },
+                    max: upperRelativeHumidity(for: sensor).map { $0 * 100.0 },
+                    counter: nil,
+                    delay: nil,
+                    description: relativeHumidityDescription(for: sensor),
+                    for: macId
+                )
+            }
         case .humidity:
-            cloud.setAlert(
-                type: .humidityAbsolute,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerHumidity(for: sensor)?.converted(to: .absolute).value,
-                max: upperHumidity(for: sensor)?.converted(to: .absolute).value,
-                counter: nil,
-                delay: nil,
-                description: humidityDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.humidityAbsolute.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .humidityAbsolute,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerHumidity(for: sensor)?.converted(to: .absolute).value,
+                    max: upperHumidity(for: sensor)?.converted(to: .absolute).value,
+                    counter: nil,
+                    delay: nil,
+                    description: humidityDescription(for: sensor),
+                    for: macId
+                )
+            }
         case .dewPoint:
-            cloud.setAlert(
-                type: .dewPoint,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerDewPoint(for: sensor),
-                max: upperDewPoint(for: sensor),
-                counter: nil,
-                delay: nil,
-                description: dewPointDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.dewPoint.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .dewPoint,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerDewPoint(for: sensor),
+                    max: upperDewPoint(for: sensor),
+                    counter: nil,
+                    delay: nil,
+                    description: dewPointDescription(for: sensor),
+                    for: macId
+                )
+            }
         case .pressure:
-            cloud.setAlert(
-                type: .pressure,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerPressure(for: sensor).map { $0 * 100.0 },
-                max: upperPressure(for: sensor).map { $0 * 100.0 },
-                counter: nil,
-                delay: nil,
-                description: pressureDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pressure.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pressure,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerPressure(for: sensor).map { $0 * 100.0 },
+                    max: upperPressure(for: sensor).map { $0 * 100.0 },
+                    counter: nil,
+                    delay: nil,
+                    description: pressureDescription(for: sensor),
+                    for: macId
+                )
+            }
         case .signal:
-            cloud.setAlert(
-                type: .signal,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerSignal(for: sensor),
-                max: upperSignal(for: sensor),
-                counter: nil,
-                delay: nil,
-                description: signalDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.signal.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .signal,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerSignal(for: sensor),
+                    max: upperSignal(for: sensor),
+                    counter: nil,
+                    delay: nil,
+                    description: signalDescription(for: sensor),
+                    for: macId
+                )
+            }
         case .batteryVoltage:
-            cloud.setAlert(
-                type: .battery,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerBatteryVoltage(for: sensor),
-                max: upperBatteryVoltage(for: sensor),
-                counter: nil,
-                delay: nil,
-                description: batteryVoltageDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.battery.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .battery,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerBatteryVoltage(for: sensor),
+                    max: upperBatteryVoltage(for: sensor),
+                    counter: nil,
+                    delay: nil,
+                    description: batteryVoltageDescription(for: sensor),
+                    for: macId
+                )
+            }
         case .aqi:
-            cloud.setAlert(
-                type: .aqi,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerAQI(for: sensor),
-                max: upperAQI(for: sensor),
-                counter: nil,
-                delay: nil,
-                description: aqiDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.aqi.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .aqi,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerAQI(for: sensor),
+                    max: upperAQI(for: sensor),
+                    counter: nil,
+                    delay: nil,
+                    description: aqiDescription(for: sensor),
+                    for: macId
+                )
+            }
         case .carbonDioxide:
-            cloud.setAlert(
-                type: .co2,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerCarbonDioxide(for: sensor),
-                max: upperCarbonDioxide(for: sensor),
-                counter: nil,
-                delay: nil,
-                description: carbonDioxideDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.co2.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .co2,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerCarbonDioxide(for: sensor),
+                    max: upperCarbonDioxide(for: sensor),
+                    counter: nil,
+                    delay: nil,
+                    description: carbonDioxideDescription(for: sensor),
+                    for: macId
+                )
+            }
         case .pMatter1:
-            cloud.setAlert(
-                type: .pm10,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerPM1(for: sensor),
-                max: upperPM1(for: sensor),
-                counter: nil,
-                delay: nil,
-                description: pm1Description(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm10.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pm10,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerPM1(for: sensor),
+                    max: upperPM1(for: sensor),
+                    counter: nil,
+                    delay: nil,
+                    description: pm1Description(for: sensor),
+                    for: macId
+                )
+            }
         case .pMatter25:
-            cloud.setAlert(
-                type: .pm25,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerPM25(for: sensor),
-                max: upperPM25(for: sensor),
-                counter: nil,
-                delay: nil,
-                description: pm25Description(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm25.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pm25,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerPM25(for: sensor),
+                    max: upperPM25(for: sensor),
+                    counter: nil,
+                    delay: nil,
+                    description: pm25Description(for: sensor),
+                    for: macId
+                )
+            }
         case .pMatter4:
-            cloud.setAlert(
-                type: .pm40,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerPM4(for: sensor),
-                max: upperPM4(for: sensor),
-                counter: nil,
-                delay: nil,
-                description: pm4Description(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm40.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pm40,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerPM4(for: sensor),
+                    max: upperPM4(for: sensor),
+                    counter: nil,
+                    delay: nil,
+                    description: pm4Description(for: sensor),
+                    for: macId
+                )
+            }
         case .pMatter10:
-            cloud.setAlert(
-                type: .pm100,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerPM10(for: sensor),
-                max: upperPM10(for: sensor),
-                counter: nil,
-                delay: nil,
-                description: pm10Description(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.pm100.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .pm100,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerPM10(for: sensor),
+                    max: upperPM10(for: sensor),
+                    counter: nil,
+                    delay: nil,
+                    description: pm10Description(for: sensor),
+                    for: macId
+                )
+            }
         case .voc:
-            cloud.setAlert(
-                type: .voc,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerVOC(for: sensor),
-                max: upperVOC(for: sensor),
-                counter: nil,
-                delay: nil,
-                description: vocDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.voc.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .voc,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerVOC(for: sensor),
+                    max: upperVOC(for: sensor),
+                    counter: nil,
+                    delay: nil,
+                    description: vocDescription(for: sensor),
+                    for: macId
+                )
+            }
         case .nox:
-            cloud.setAlert(
-                type: .nox,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerNOX(for: sensor),
-                max: upperNOX(for: sensor),
-                counter: nil,
-                delay: nil,
-                description: noxDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.nox.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .nox,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerNOX(for: sensor),
+                    max: upperNOX(for: sensor),
+                    counter: nil,
+                    delay: nil,
+                    description: noxDescription(for: sensor),
+                    for: macId
+                )
+            }
         case .soundInstant:
-            cloud.setAlert(
-                type: .soundInstant,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerSoundInstant(for: sensor),
-                max: upperSoundInstant(for: sensor),
-                counter: nil,
-                delay: nil,
-                description: soundInstantDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.soundInstant.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .soundInstant,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerSoundInstant(for: sensor),
+                    max: upperSoundInstant(for: sensor),
+                    counter: nil,
+                    delay: nil,
+                    description: soundInstantDescription(for: sensor),
+                    for: macId
+                )
+            }
         case .soundAverage:
-            cloud.setAlert(
-                type: .soundAverage,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerSoundAverage(for: sensor),
-                max: upperSoundAverage(for: sensor),
-                counter: nil,
-                delay: nil,
-                description: soundAverageDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.soundAverage.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .soundAverage,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerSoundAverage(for: sensor),
+                    max: upperSoundAverage(for: sensor),
+                    counter: nil,
+                    delay: nil,
+                    description: soundAverageDescription(for: sensor),
+                    for: macId
+                )
+            }
         case .soundPeak:
-            cloud.setAlert(
-                type: .soundPeak,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerSoundPeak(for: sensor),
-                max: upperSoundPeak(for: sensor),
-                counter: nil,
-                delay: nil,
-                description: soundPeakDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.soundPeak.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .soundPeak,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerSoundPeak(for: sensor),
+                    max: upperSoundPeak(for: sensor),
+                    counter: nil,
+                    delay: nil,
+                    description: soundPeakDescription(for: sensor),
+                    for: macId
+                )
+            }
         case .luminosity:
-            cloud.setAlert(
-                type: .luminosity,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: lowerLuminosity(for: sensor),
-                max: upperLuminosity(for: sensor),
-                counter: nil,
-                delay: nil,
-                description: luminosityDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.luminosity.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .luminosity,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: lowerLuminosity(for: sensor),
+                    max: upperLuminosity(for: sensor),
+                    counter: nil,
+                    delay: nil,
+                    description: luminosityDescription(for: sensor),
+                    for: macId
+                )
+            }
         case .connection:
             break
         case .cloudConnection:
-            cloud.setAlert(
-                type: .offline,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: 0,
-                max: RuuviAlertConstants.CloudConnection
-                    .normalizedUnseenDuration(cloudConnectionUnseenDuration(for: sensor)),
-                counter: nil,
-                delay: 0,
-                description: cloudConnectionDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.offline.rawValue) { @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .offline,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: 0,
+                    max: RuuviAlertConstants.CloudConnection
+                        .normalizedUnseenDuration(cloudConnectionUnseenDuration(for: sensor)),
+                    counter: nil,
+                    delay: 0,
+                    description: cloudConnectionDescription(for: sensor),
+                    for: macId
+                )
+            }
         case .movement:
-            cloud.setAlert(
-                type: .movement,
-                settingType: .state,
-                isEnabled: isEnabled,
-                min: nil,
-                max: nil,
-                counter: movementCounter(for: sensor),
-                delay: nil,
-                description: movementDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.movement.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .movement,
+                    settingType: .state,
+                    isEnabled: isEnabled,
+                    min: nil,
+                    max: nil,
+                    counter: movementCounter(for: sensor),
+                    delay: nil,
+                    description: movementDescription(for: sensor),
+                    for: macId
+                )
+            }
         }
     }
 
@@ -2796,24 +3111,28 @@ public extension RuuviServiceAlertImpl {
         }
         touchAlertUpdatedAt(type: .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute), for: sensor)
         if let ruuviTag = sensor as? RuuviTagSensor,
-           ruuviTag.isCloud,
-           let macId = ruuviTag.macId {
+            ruuviTag.isCloud,
+            let macId = ruuviTag.macId
+        {
             let lowerValue = humidity?.converted(to: .absolute).value
             let upperValue = upperHumidity(for: sensor)?.converted(to: .absolute).value
-            cloud.setAlert(
-                type: .humidityAbsolute,
-                settingType: .lowerBound,
-                isEnabled: isOn(
-                    type: .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute),
-                    for: ruuviTag
-                ),
-                min: lowerValue ?? 0,
-                max: upperValue ?? 0,
-                counter: nil,
-                delay: nil,
-                description: humidityDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.humidityAbsolute.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .humidityAbsolute,
+                    settingType: .lowerBound,
+                    isEnabled: isOn(
+                        type: .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute),
+                        for: ruuviTag
+                    ),
+                    min: lowerValue ?? 0,
+                    max: upperValue ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: humidityDescription(for: sensor),
+                    for: macId
+                )
+            }
         }
         if let l = humidity, let u = upperHumidity(for: sensor) {
             postAlertDidChange(with: sensor, of: .humidity(lower: l, upper: u))
@@ -2847,24 +3166,28 @@ public extension RuuviServiceAlertImpl {
         }
         touchAlertUpdatedAt(type: .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute), for: sensor)
         if let ruuviTag = sensor as? RuuviTagSensor,
-           ruuviTag.isCloud,
-           let macId = ruuviTag.macId {
+            ruuviTag.isCloud,
+            let macId = ruuviTag.macId
+        {
             let lowerValue = lowerHumidity(for: sensor)?.converted(to: .absolute).value
             let upperValue = humidity?.converted(to: .absolute).value
-            cloud.setAlert(
-                type: .humidityAbsolute,
-                settingType: .upperBound,
-                isEnabled: isOn(
-                    type: .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute),
-                    for: ruuviTag
-                ),
-                min: lowerValue ?? 0,
-                max: upperValue ?? 0,
-                counter: nil,
-                delay: nil,
-                description: humidityDescription(for: sensor),
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.humidityAbsolute.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .humidityAbsolute,
+                    settingType: .upperBound,
+                    isEnabled: isOn(
+                        type: .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute),
+                        for: ruuviTag
+                    ),
+                    min: lowerValue ?? 0,
+                    max: upperValue ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: humidityDescription(for: sensor),
+                    for: macId
+                )
+            }
         }
         if let u = humidity, let l = lowerHumidity(for: sensor) {
             postAlertDidChange(with: sensor, of: .humidity(lower: l, upper: u))
@@ -2898,28 +3221,33 @@ public extension RuuviServiceAlertImpl {
         }
         touchAlertUpdatedAt(type: .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute), for: sensor)
         if let ruuviTag = sensor as? RuuviTagSensor,
-           ruuviTag.isCloud,
-           let macId = ruuviTag.macId {
+            ruuviTag.isCloud,
+            let macId = ruuviTag.macId
+        {
             let lowerValue = lowerHumidity(for: sensor)?.converted(to: .absolute).value
             let upperValue = upperHumidity(for: sensor)?.converted(to: .absolute).value
-            cloud.setAlert(
-                type: .humidityAbsolute,
-                settingType: .description,
-                isEnabled: isOn(
-                    type: .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute),
-                    for: ruuviTag
-                ),
-                min: lowerValue ?? 0,
-                max: upperValue ?? 0,
-                counter: nil,
-                delay: nil,
-                description: description,
-                for: macId
-            )
+            cloudTasks.run(seriallyFor: macId.value + ":" + RuuviCloudAlertType.humidityAbsolute.rawValue) {
+                @MainActor [self] in
+                _ = try? await cloud.setAlert(
+                    type: .humidityAbsolute,
+                    settingType: .description,
+                    isEnabled: isOn(
+                        type: .humidity(lower: .zeroAbsolute, upper: .zeroAbsolute),
+                        for: ruuviTag
+                    ),
+                    min: lowerValue ?? 0,
+                    max: upperValue ?? 0,
+                    counter: nil,
+                    delay: nil,
+                    description: description,
+                    for: macId
+                )
+            }
         }
 
         if let l = lowerHumidity(for: sensor),
-           let u = upperHumidity(for: sensor) {
+            let u = upperHumidity(for: sensor)
+        {
             postAlertDidChange(with: sensor, of: .humidity(lower: l, upper: u))
         }
     }
@@ -3043,7 +3371,8 @@ public extension RuuviServiceAlertImpl {
 
         touchAlertUpdatedAt(type: .dewPoint(lower: 0, upper: 0), for: sensor)
         if let l = lowerDewPoint(for: sensor),
-           let u = upperDewPoint(for: sensor) {
+            let u = upperDewPoint(for: sensor)
+        {
             postAlertDidChange(with: sensor, of: .dewPoint(lower: l, upper: u))
         }
     }
@@ -3383,7 +3712,8 @@ public extension RuuviServiceAlertImpl {
 
         touchAlertUpdatedAt(type: .batteryVoltage(lower: 0, upper: 0), for: sensor)
         if let l = lowerBatteryVoltage(for: sensor),
-           let u = upperBatteryVoltage(for: sensor) {
+            let u = upperBatteryVoltage(for: sensor)
+        {
             postAlertDidChange(with: sensor, of: .batteryVoltage(lower: l, upper: u))
         }
     }
@@ -3507,7 +3837,7 @@ public extension RuuviServiceAlertImpl {
     func upperCarbonDioxide(for sensor: PhysicalSensor) -> Double? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.upperCarbonDioxide(for: luid.value)
-            ?? alertPersistence.upperCarbonDioxide(for: macId.value)
+                ?? alertPersistence.upperCarbonDioxide(for: macId.value)
         } else if let luid = sensor.luid {
             return alertPersistence.upperCarbonDioxide(for: luid.value)
         } else if let macId = sensor.macId {
@@ -3520,7 +3850,7 @@ public extension RuuviServiceAlertImpl {
     func carbonDioxideDescription(for sensor: PhysicalSensor) -> String? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.carbonDioxideDescription(for: luid.value)
-            ?? alertPersistence.carbonDioxideDescription(for: macId.value)
+                ?? alertPersistence.carbonDioxideDescription(for: macId.value)
         } else if let luid = sensor.luid {
             return alertPersistence.carbonDioxideDescription(for: luid.value)
         } else if let macId = sensor.macId {
@@ -3804,7 +4134,7 @@ public extension RuuviServiceAlertImpl {
 // MARK: - PM4
 public extension RuuviServiceAlertImpl {
     func lowerPM4(for sensor: PhysicalSensor) -> Double? {
-      if let luid = sensor.luid, let macId = sensor.macId {
+        if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.lowerPM4(for: luid.value)
                 ?? alertPersistence.lowerPM4(for: macId.value)
         } else if let luid = sensor.luid {
@@ -3819,7 +4149,7 @@ public extension RuuviServiceAlertImpl {
     func upperPM4(for sensor: PhysicalSensor) -> Double? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.upperPM4(for: luid.value)
-            ?? alertPersistence.upperPM4(for: macId.value)
+                ?? alertPersistence.upperPM4(for: macId.value)
         } else if let luid = sensor.luid {
             return alertPersistence.upperPM4(for: luid.value)
         } else if let macId = sensor.macId {
@@ -3916,7 +4246,7 @@ public extension RuuviServiceAlertImpl {
     func upperPM10(for sensor: PhysicalSensor) -> Double? {
         if let luid = sensor.luid, let macId = sensor.macId {
             return alertPersistence.upperPM10(for: luid.value)
-            ?? alertPersistence.upperPM10(for: macId.value)
+                ?? alertPersistence.upperPM10(for: macId.value)
         } else if let luid = sensor.luid {
             return alertPersistence.upperPM10(for: luid.value)
         } else if let macId = sensor.macId {

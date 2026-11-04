@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviLocal
+#endif
 import Foundation
 
 final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
@@ -28,8 +31,9 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     @UserDefault("RuuviFeatureFlags.showMarketingPreference", defaultValue: true)
     var showMarketingPreference: Bool
 
-    @UserDefault("RuuviFeatureFlags.marketingConsentPromptIntervalMinutes",
-                 defaultValue: RuuviMarketingConsentPromptInterval.defaultMinutes)
+    @UserDefault(
+        "RuuviFeatureFlags.marketingConsentPromptIntervalMinutes",
+        defaultValue: RuuviMarketingConsentPromptInterval.defaultMinutes)
     private var storedMarketingConsentPromptIntervalMinutes: Int
 
     var marketingConsentPromptIntervalMinutes: Int {

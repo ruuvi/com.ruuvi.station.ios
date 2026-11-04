@@ -43,7 +43,7 @@ extension AboutPresenter {
 
     private var appVersion: NSMutableAttributedString? {
         guard let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
-              let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
+            let buildVersion = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
         else {
             return nil
         }
@@ -87,17 +87,29 @@ extension AboutPresenter {
     }
 
     private func obtainTagsCount() {
-        ruuviStorage.getStoredTagsCount().on(success: { [weak self] count in
-            let tagsCount = RuuviLocalization.About.TagsCount.text(count)
-            self?.viewModel.addedTags.value = tagsCount
-        })
+        Task { @MainActor [weak self, ruuviStorage = ruuviStorage!] in
+            do throws(RuuviStorageError) {
+                let value = try await ruuviStorage.getStoredTagsCount()
+                ({ [weak self] count in
+                    let tagsCount = RuuviLocalization.About.TagsCount.text(count)
+                    self?.viewModel.addedTags.value = tagsCount
+                })(value)
+            } catch {
+            }
+        }
     }
 
     private func obtainMeasurementsCount() {
-        ruuviStorage.getStoredMeasurementsCount().on(success: { [weak self] count in
-            let measurementsCount = RuuviLocalization.About.MeasurementsCount.text(count)
-            self?.viewModel.storedMeasurements.value = measurementsCount
-        })
+        Task { @MainActor [weak self, ruuviStorage = ruuviStorage!] in
+            do throws(RuuviStorageError) {
+                let value = try await ruuviStorage.getStoredMeasurementsCount()
+                ({ [weak self] count in
+                    let measurementsCount = RuuviLocalization.About.MeasurementsCount.text(count)
+                    self?.viewModel.storedMeasurements.value = measurementsCount
+                })(value)
+            } catch {
+            }
+        }
     }
 
     private func obtainDatabaseSize() {
@@ -113,7 +125,7 @@ extension AboutPresenter {
 
     func fileSize(at path: String) -> Int64 {
         guard let attributes = try? FileManager.default.attributesOfItem(atPath: path),
-              let fileSize = attributes[FileAttributeKey.size] as? Int64
+            let fileSize = attributes[FileAttributeKey.size] as? Int64
         else {
             return 0
         }

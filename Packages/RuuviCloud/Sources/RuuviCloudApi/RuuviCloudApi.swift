@@ -1,6 +1,5 @@
 import BTKit
 import Foundation
-import Future
 import RuuviCloud
 import RuuviOntology
 
@@ -8,131 +7,131 @@ import RuuviOntology
 public protocol RuuviCloudApi {
     func register(
         _ requestModel: RuuviCloudApiRegisterRequest
-    ) -> Future<RuuviCloudApiRegisterResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiRegisterResponse
 
     func verify(
         _ requestModel: RuuviCloudApiVerifyRequest
-    ) -> Future<RuuviCloudApiVerifyResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiVerifyResponse
 
     func deleteAccount(
         _ requestModel: RuuviCloudApiAccountDeleteRequest,
         authorization: String
-    ) -> Future<RuuviCloudApiAccountDeleteResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiAccountDeleteResponse
 
     func registerPNToken(
         _ requestModel: RuuviCloudPNTokenRegisterRequest,
         authorization: String
-    ) -> Future<RuuviCloudPNTokenRegisterResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudPNTokenRegisterResponse
 
     func unregisterPNToken(
         _ requestModel: RuuviCloudPNTokenUnregisterRequest,
         authorization: String?
-    ) -> Future<RuuviCloudPNTokenUnregisterResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudPNTokenUnregisterResponse
 
     func listPNTokens(
         _ requestModel: RuuviCloudPNTokenListRequest,
         authorization: String
-    ) -> Future<RuuviCloudPNTokenListResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudPNTokenListResponse
 
     func claim(
         _ requestModel: RuuviCloudApiClaimRequest,
         authorization: String
-    ) -> Future<RuuviCloudApiClaimResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiClaimResponse
 
     func contest(
         _ requestModel: RuuviCloudApiContestRequest,
         authorization: String
-    ) -> Future<RuuviCloudApiContestResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiContestResponse
 
     func unclaim(
         _ requestModel: RuuviCloudApiUnclaimRequest,
         authorization: String
-    ) -> Future<RuuviCloudApiUnclaimResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiUnclaimResponse
 
     func share(
         _ requestModel: RuuviCloudApiShareRequest,
         authorization: String
-    ) -> Future<RuuviCloudApiShareResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiShareResponse
 
     func unshare(
         _ requestModel: RuuviCloudApiShareRequest,
         authorization: String
-    ) -> Future<RuuviCloudApiUnshareResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiUnshareResponse
 
     func sensors(
         _ requestModel: RuuviCloudApiGetSensorsRequest,
         authorization: String
-    ) -> Future<RuuviCloudApiGetSensorsResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiGetSensorsResponse
 
     func owner(
         _ requestModel: RuuviCloudApiGetSensorsRequest,
         authorization: String
-    ) -> Future<RuuviCloudAPICheckOwnerResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudAPICheckOwnerResponse
 
     func sensorsDense(
         _ requestModel: RuuviCloudApiGetSensorsDenseRequest,
         authorization: String
-    ) -> Future<RuuviCloudApiGetSensorsDenseResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiGetSensorsDenseResponse
 
     func user(
         authorization: String
-    ) -> Future<RuuviCloudApiUserResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiUserResponse
 
     func getSensorData(
         _ requestModel: RuuviCloudApiGetSensorRequest,
         authorization: String
-    ) -> Future<RuuviCloudApiGetSensorResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiGetSensorResponse
 
     func update(
         _ requestModel: RuuviCloudApiSensorUpdateRequest,
         authorization: String
-    ) -> Future<RuuviCloudApiSensorUpdateResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiSensorUpdateResponse
 
     func uploadImage(
         _ requestModel: RuuviCloudApiSensorImageUploadRequest,
         imageData: Data,
         authorization: String,
         uploadProgress: ((Double) -> Void)?
-    ) -> Future<RuuviCloudApiSensorImageUploadResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiSensorImageUploadResponse
 
     func resetImage(
         _ requestModel: RuuviCloudApiSensorImageUploadRequest,
         authorization: String
-    ) -> Future<RuuviCloudApiSensorImageResetResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiSensorImageResetResponse
 
     func getSettings(
         _ requestModel: RuuviCloudApiGetSettingsRequest,
         authorization: String
-    ) -> Future<RuuviCloudApiGetSettingsResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiGetSettingsResponse
 
     func postSetting(
         _ requestModel: RuuviCloudApiPostSettingRequest,
         authorization: String
-    ) -> Future<RuuviCloudApiPostSettingResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiPostSettingResponse
 
     func getMarketingConsent(
         authorization: String
-    ) -> Future<RuuviCloudMarketingConsent, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudMarketingConsent
 
     func setMarketingConsent(
         _ requestModel: RuuviCloudApiSetMarketingConsentRequest,
         authorization: String
-    ) -> Future<RuuviCloudMarketingConsent, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudMarketingConsent
 
     func postSensorSettings(
         _ requestModel: RuuviCloudApiPostSensorSettingsRequest,
         authorization: String
-    ) -> Future<RuuviCloudApiPostSensorSettingsResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiPostSensorSettingsResponse
 
     func postAlert(
         _ requestModel: RuuviCloudApiPostAlertRequest,
         authorization: String
-    ) -> Future<RuuviCloudApiPostAlertResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiPostAlertResponse
 
     func getAlerts(
         _ requestModel: RuuviCloudApiGetAlertsRequest,
         authorization: String
-    ) -> Future<RuuviCloudApiGetAlertsResponse, RuuviCloudApiError>
+    ) async throws(RuuviCloudApiError) -> RuuviCloudApiGetAlertsResponse
 }
 
 public protocol RuuviCloudApiFactory {

@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviCoreDiff
+#endif
 import Combine
 import Foundation
 import RuuviCore
@@ -133,7 +136,7 @@ extension FirmwareViewModel {
     func whenListening() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
             guard case let .listening(latestRelease, currentRelease, appUrl, fullUrl) = state,
-                  let sSelf = self
+                let sSelf = self
             else {
                 return Empty().eraseToAnyPublisher()
             }
@@ -155,7 +158,7 @@ extension FirmwareViewModel {
     func whenReadyToUpdate() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
             guard case let .readyToUpdate(latestRelease, currentRelease, uuid, appUrl, fullUrl) = state,
-                  let sSelf = self
+                let sSelf = self
             else {
                 return Empty().eraseToAnyPublisher()
             }
@@ -176,13 +179,14 @@ extension FirmwareViewModel {
 
     func whenFlashing() -> Feedback<State, Event> {
         Feedback { [weak self] (state: State) -> AnyPublisher<Event, Never> in
-            guard case let .flashing(
-                latestRelease,
-                currentRelease,
-                uuid,
-                appUrl,
-                fullUrl
-            ) = state, let sSelf = self
+            guard
+                case let .flashing(
+                    latestRelease,
+                    currentRelease,
+                    uuid,
+                    appUrl,
+                    fullUrl
+                ) = state, let sSelf = self
             else {
                 return Empty().eraseToAnyPublisher()
             }
@@ -332,6 +336,8 @@ extension FirmwareViewModel {
             .downloading(latestRelease, currentRelease)
         case .downloading:
             switch event {
+            case let .onDidFailDownloading(error):
+                .error(error)
             case let .onDownloaded(
                 latestRelease,
                 currentRelease,

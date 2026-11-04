@@ -1,11 +1,11 @@
-// swift-tools-version:5.9
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "RuuviNotifier",
-    platforms: [.macOS(.v10_15), .iOS(.v14)],
+    platforms: [.iOS(.v16)],
     products: [
         .library(
             name: "RuuviNotifier",
@@ -17,6 +17,8 @@ let package = Package(
         ),
     ],
     dependencies: [
+        .package(path: "../RuuviLocal"),
+        .package(path: "../../Common/RuuviLocalization"),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviService"),
         .package(path: "../RuuviNotification"),
@@ -31,6 +33,8 @@ let package = Package(
         .target(
             name: "RuuviNotifierImpl",
             dependencies: [
+                .product(name: "RuuviLocal", package: "RuuviLocal"),
+                .product(name: "RuuviLocalization", package: "RuuviLocalization"),
                 "RuuviNotifier",
                 "RuuviOntology",
                 "RuuviService",
@@ -41,5 +45,6 @@ let package = Package(
             name: "RuuviNotifierTests",
             dependencies: ["RuuviNotifier"]
         ),
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )

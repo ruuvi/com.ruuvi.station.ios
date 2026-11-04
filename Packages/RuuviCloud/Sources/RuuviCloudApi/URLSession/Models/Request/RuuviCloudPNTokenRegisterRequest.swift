@@ -1,3 +1,7 @@
+#if SWIFT_PACKAGE
+    import RuuviCloud
+    import RuuviOntology
+#endif
 import Foundation
 
 // swiftlint:disable:next type_name

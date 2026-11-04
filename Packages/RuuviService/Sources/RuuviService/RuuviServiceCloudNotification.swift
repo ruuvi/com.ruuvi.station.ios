@@ -1,5 +1,12 @@
+#if SWIFT_PACKAGE
+    import RuuviStorage
+    import RuuviCloud
+    import RuuviPool
+    import RuuviLocal
+    import RuuviRepository
+    import RuuviCore
+#endif
 import Foundation
-import Future
 import RuuviOntology
 
 public protocol RuuviServiceCloudNotification {
@@ -10,14 +17,14 @@ public protocol RuuviServiceCloudNotification {
         data: String?,
         language: Language,
         sound: RuuviAlertSound
-    ) -> Future<Int, RuuviServiceError>
+    ) async throws(RuuviServiceError) -> Int
 
     @discardableResult
     func set(
         sound: RuuviAlertSound,
         language: Language,
         deviceName: String?
-    ) -> Future<Int, RuuviServiceError>
+    ) async throws(RuuviServiceError) -> Int
 
     @discardableResult
     func register(
@@ -26,14 +33,14 @@ public protocol RuuviServiceCloudNotification {
         name: String?,
         data: String?,
         params: [String: String]?
-    ) -> Future<Int, RuuviServiceError>
+    ) async throws(RuuviServiceError) -> Int
 
     @discardableResult
     func unregister(
         token: String?,
         tokenId: Int?
-    ) -> Future<Bool, RuuviServiceError>
+    ) async throws(RuuviServiceError) -> Bool
 
     @discardableResult
-    func listTokens() -> Future<[RuuviCloudPNToken], RuuviServiceError>
+    func listTokens() async throws(RuuviServiceError) -> [RuuviCloudPNToken]
 }

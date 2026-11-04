@@ -1,4 +1,8 @@
-@testable import RuuviLocalUserDefaults
+#if SWIFT_PACKAGE
+    @testable import RuuviLocalUserDefaults
+#else
+    @testable import RuuviLocal
+#endif
 import Foundation
 import RuuviLocal
 import XCTest

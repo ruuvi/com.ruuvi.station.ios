@@ -58,8 +58,7 @@ final class DashboardViewController: UIViewController {
 
     // MARK: - Private Properties
     private(set) var snapshots: [RuuviTagCardSnapshot] = []
-    private var dataSource:
-        UICollectionViewDiffableDataSource<MasonrySection, RuuviTagCardSnapshot>!
+    private var dataSource: UICollectionViewDiffableDataSource<MasonrySection, RuuviTagCardSnapshot>!
     private let heightCache = DashboardCardHeightCache()
 
     // MARK: - UI Properties
@@ -90,6 +89,10 @@ final class DashboardViewController: UIViewController {
             leadingPadding: 6,
             trailingPadding: 6
         )
+        button.isAccessibilityElement = true
+        button.accessibilityIdentifier = "dashboard.menu"
+        button.accessibilityTraits = .button
+        button.accessibilityLabel = NSLocalizedString("Menu", comment: "Open the application menu")
         button.addGestureRecognizer(
             UITapGestureRecognizer(target: self, action: #selector(handleMenuButtonTap))
         )
@@ -117,6 +120,7 @@ final class DashboardViewController: UIViewController {
         layout.delegate = self
 
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        cv.accessibilityIdentifier = "dashboard.sensors"
         cv.backgroundColor = .clear
         cv.showsVerticalScrollIndicator = false
         cv.delegate = self
@@ -630,10 +634,12 @@ private extension DashboardViewController {
         indexPath: IndexPath,
         snapshot: RuuviTagCardSnapshot
     ) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: Constants.CellIdentifiers.dashboardCell,
-            for: indexPath
-        ) as? DashboardCell else {
+        guard
+            let cell = collectionView.dequeueReusableCell(
+                withReuseIdentifier: Constants.CellIdentifiers.dashboardCell,
+                for: indexPath
+            ) as? DashboardCell
+        else {
             return UICollectionViewCell()
         }
 
@@ -681,14 +687,14 @@ private extension DashboardViewController {
         appDidBecomeActiveToken?.invalidate()
         appDidBecomeActiveToken = nil
         appDidBecomeActiveToken = NotificationCenter
-                .default
-                .addObserver(
-                    forName: UIApplication.willEnterForegroundNotification,
-                    object: nil,
-                    queue: .main
-                ) { [weak self] _ in
-                    self?.refreshVisibleAlertStates()
-                }
+            .default
+            .addObserver(
+                forName: UIApplication.willEnterForegroundNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                self?.refreshVisibleAlertStates()
+            }
     }
 
     func refreshVisibleAlertStates() {
@@ -735,7 +741,8 @@ private extension DashboardViewController {
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
             guard !self.isDragSessionInProgress,
-            !self.isContextMenuPresented else { return }
+                !self.isContextMenuPresented
+            else { return }
 
             if redrawLayout {
                 self.heightCache.clearCache()
@@ -1091,8 +1098,7 @@ private extension DashboardViewController {
     }
 
     func moveDownIsAvailable(at indexPath: IndexPath) -> Bool {
-        return dataSource.snapshot().numberOfItems > 1 &&
-            indexPath.item < dataSource.snapshot().numberOfItems - 1
+        return dataSource.snapshot().numberOfItems > 1 && indexPath.item < dataSource.snapshot().numberOfItems - 1
     }
 
     func createRemoveAction(for indexPath: IndexPath) -> UIAction {
@@ -1118,7 +1124,8 @@ private extension DashboardViewController {
 
     func handleMoveUp(at indexPath: IndexPath) {
         guard let snapshot = dataSource.itemIdentifier(for: indexPath),
-              let mac = snapshot.identifierData.mac?.mac else { return }
+            let mac = snapshot.identifierData.mac?.mac
+        else { return }
 
         let ids = snapshots.compactMap(\.identifierData.mac?.mac)
         let reordered = ids.movingUp(mac)
@@ -1131,7 +1138,8 @@ private extension DashboardViewController {
 
     func handleMoveDown(at indexPath: IndexPath) {
         guard let snapshot = dataSource.itemIdentifier(for: indexPath),
-              let mac = snapshot.identifierData.mac?.mac else { return }
+            let mac = snapshot.identifierData.mac?.mac
+        else { return }
 
         let ids = snapshots.compactMap(\.identifierData.mac?.mac)
         let reordered = ids.movingDown(mac)
@@ -1194,7 +1202,8 @@ extension DashboardViewController: MasonryReorderableLayoutDelegate {
             inSection: .main
         )
         guard indexPath.item < items.count,
-              dashboardType != .none else {
+            dashboardType != .none
+        else {
             return 200
         }
 
@@ -1209,21 +1218,26 @@ extension DashboardViewController: MasonryReorderableLayoutDelegate {
             in: collectionView
         )
 
-        let totalSpacing = columnSpacing * CGFloat(
-            numberOfColumns - 1
-        )
+        let totalSpacing =
+            columnSpacing
+            * CGFloat(
+                numberOfColumns - 1
+            )
         let availableWidth = collectionView.bounds.width - sectionInsets.left - sectionInsets.right - totalSpacing
-        let itemWidth = availableWidth / CGFloat(
-            numberOfColumns
-        )
+        let itemWidth =
+            availableWidth
+            / CGFloat(
+                numberOfColumns
+            )
 
-        return heightCache
+        return
+            heightCache
             .height(
-            for: cardSnapshot,
-            width: itemWidth,
-            displayType: dashboardType,
-            numberOfColumns: numberOfColumns
-        )
+                for: cardSnapshot,
+                width: itemWidth,
+                displayType: dashboardType,
+                numberOfColumns: numberOfColumns
+            )
     }
 
     func numberOfColumns(in collectionView: UICollectionView) -> Int {
@@ -1390,23 +1404,25 @@ extension DashboardViewController: NewDashboardViewInput {
         let message = RuuviLocalization.Cards.BluetoothDisabledAlert.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
 
-        alertVC.addAction(UIAlertAction(
-            title: RuuviLocalization.PermissionPresenter.settings,
-            style: .default,
-            handler: { _ in
-                let urlString = userDeclined ?
-                    UIApplication.openSettingsURLString : "App-prefs:Bluetooth"
-                guard let url = URL(string: urlString),
-                      UIApplication.shared.canOpenURL(url) else { return }
-                UIApplication.shared.open(url)
-            }
-        ))
+        alertVC.addAction(
+            UIAlertAction(
+                title: RuuviLocalization.PermissionPresenter.settings,
+                style: .default,
+                handler: { _ in
+                    let urlString = userDeclined ? UIApplication.openSettingsURLString : "App-prefs:Bluetooth"
+                    guard let url = URL(string: urlString),
+                        UIApplication.shared.canOpenURL(url)
+                    else { return }
+                    UIApplication.shared.open(url)
+                }
+            ))
 
-        alertVC.addAction(UIAlertAction(
-            title: RuuviLocalization.ok,
-            style: .cancel,
-            handler: nil
-        ))
+        alertVC.addAction(
+            UIAlertAction(
+                title: RuuviLocalization.ok,
+                style: .cancel,
+                handler: nil
+            ))
 
         present(alertVC, animated: true)
     }
@@ -1461,14 +1477,16 @@ extension DashboardViewController: NewDashboardViewInput {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
 
         let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
-        alert.addAction(UIAlertAction(title: dismissTitle, style: .cancel) { _ in
-            onDismiss()
-        })
+        alert.addAction(
+            UIAlertAction(title: dismissTitle, style: .cancel) { _ in
+                onDismiss()
+            })
 
         let keepTitle = RuuviLocalization.Cards.KeepConnectionDialog.KeepConnection.title
-        alert.addAction(UIAlertAction(title: keepTitle, style: .default) { _ in
-            onKeep()
-        })
+        alert.addAction(
+            UIAlertAction(title: keepTitle, style: .default) { _ in
+                onKeep()
+            })
 
         present(alert, animated: true)
     }

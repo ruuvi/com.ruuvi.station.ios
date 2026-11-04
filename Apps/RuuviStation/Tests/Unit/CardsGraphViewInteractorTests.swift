@@ -1,6 +1,5 @@
 @testable import station
 import BTKit
-import Future
 import RuuviOntology
 import RuuviService
 import XCTest
@@ -101,13 +100,13 @@ private final class GraphGATTServiceStub: GATTService {
         settings _: SensorSettings?,
         progress _: ((BTServiceProgress) -> Void)?,
         timeouts _: GATTServiceTimeouts
-    ) -> Future<Bool, RuuviServiceError> {
+    ) async throws(RuuviServiceError) -> Bool {
         XCTFail("Querying sync state must not start a download")
-        return Future(value: false)
+        return false
     }
 
-    func stopGattSync(for _: String) -> Future<Bool, RuuviServiceError> {
+    func stopGattSync(for _: String) async throws(RuuviServiceError) -> Bool {
         XCTFail("Querying sync state must not stop a download")
-        return Future(value: false)
+        return false
     }
 }

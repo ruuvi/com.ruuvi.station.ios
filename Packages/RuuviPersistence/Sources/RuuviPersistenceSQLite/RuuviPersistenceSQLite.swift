@@ -1,7 +1,11 @@
+#if SWIFT_PACKAGE
+    import RuuviContextSQLite
+    import RuuviOntologySQLite
+    import RuuviPersistence
+#endif
 // swiftlint:disable file_length
 import BTKit
 import Foundation
-import Future
 import GRDB
 import RuuviContext
 import RuuviOntology
@@ -21,26 +25,16 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     }
 
     private let context: SQLiteContext
-    private let readQueue: DispatchQueue =
-        .init(
-            label: "RuuviTagPersistenceSQLite.readQueue",
-            qos: .default
-        )
-    private let writeQueue: DispatchQueue =
-        .init(
-            label: "RuuviTagPersistenceSQLite.writeQueue",
-            qos: .default
-        )
     public init(context: SQLiteContext) {
         self.context = context
     }
 
-    public func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
+    public func create(_ ruuviTag: RuuviTagSensor) async throws(RuuviPersistenceError) -> Bool {
+        var outcome: Result<Bool, RuuviPersistenceError>
         assert(ruuviTag.macId != nil)
         do {
-            try database.dbPool.write { db in
-                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+            try await database.dbPool.write { db in
+                let normalizedTag = try self.normalizedSensor(ruuviTag, db: db)
                 let entity = Entity(
                     id: normalizedTag.id,
                     macId: normalizedTag.macId,
@@ -63,196 +57,196 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 )
                 try entity.insert(db)
             }
-            promise.succeed(value: true)
+            outcome = .success(true)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    public func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
+    public func create(_ record: RuuviTagSensorRecord) async throws(RuuviPersistenceError) -> Bool {
+        var outcome: Result<Bool, RuuviPersistenceError>
         assert(record.macId != nil)
         do {
-            try database.dbPool.write { db in
-                let normalizedRecord = try normalizedRecord(record, db: db)
+            try await database.dbPool.write { db in
+                let normalizedRecord = try self.normalizedRecord(record, db: db)
                 assert(normalizedRecord.macId != nil)
                 try normalizedRecord.sqlite.insert(db)
             }
-            promise.succeed(value: true)
+            outcome = .success(true)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    public func createLast(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
+    public func createLast(_ record: RuuviTagSensorRecord) async throws(RuuviPersistenceError) -> Bool {
+        var outcome: Result<Bool, RuuviPersistenceError>
         assert(record.macId != nil)
         do {
-            try database.dbPool.write { db in
-                let normalizedRecord = try normalizedRecord(record, db: db)
+            try await database.dbPool.write { db in
+                let normalizedRecord = try self.normalizedRecord(record, db: db)
                 assert(normalizedRecord.macId != nil)
                 try normalizedRecord.latest.insert(db)
             }
-            promise.succeed(value: true)
+            outcome = .success(true)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    public func updateLast(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
+    public func updateLast(_ record: RuuviTagSensorRecord) async throws(RuuviPersistenceError) -> Bool {
+        var outcome: Result<Bool, RuuviPersistenceError>
         assert(record.macId != nil)
         do {
-            try database.dbPool.write { db in
-                let normalizedRecord = try normalizedRecord(record, db: db)
+            try await database.dbPool.write { db in
+                let normalizedRecord = try self.normalizedRecord(record, db: db)
                 assert(normalizedRecord.macId != nil)
                 try normalizedRecord.latest.update(db)
             }
-            promise.succeed(value: true)
+            outcome = .success(true)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    public func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
+    public func create(_ records: [RuuviTagSensorRecord]) async throws(RuuviPersistenceError) -> Bool {
+        var outcome: Result<Bool, RuuviPersistenceError>
         do {
-            try database.dbPool.write { db in
+            try await database.dbPool.write { db in
                 for record in records {
                     assert(record.macId != nil)
-                    let normalizedRecord = try normalizedRecord(record, db: db)
+                    let normalizedRecord = try self.normalizedRecord(record, db: db)
                     assert(normalizedRecord.macId != nil)
                     try normalizedRecord.sqlite.insert(db)
                 }
             }
-            promise.succeed(value: true)
+            outcome = .success(true)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    public func readAll() -> Future<[AnyRuuviTagSensor], RuuviPersistenceError> {
-        let promise = Promise<[AnyRuuviTagSensor], RuuviPersistenceError>()
+    public func readAll() async throws(RuuviPersistenceError) -> [AnyRuuviTagSensor] {
+        var outcome: Result<[AnyRuuviTagSensor], RuuviPersistenceError>
         var sqliteEntities = [RuuviTagSensor]()
-        readQueue.async { [weak self] in
-            do {
-                try self?.database.dbPool.read { db in
-                    let request = Entity.order(Entity.versionColumn)
-                    sqliteEntities = try request.fetchAll(db)
-                }
-                promise.succeed(value: sqliteEntities.map(\.any))
-            } catch {
-                promise.fail(error: .grdb(error))
+
+        do {
+            try await database.dbPool.read { db in
+                let request = Entity.order(Entity.versionColumn)
+                sqliteEntities = try request.fetchAll(db)
             }
+            outcome = .success(sqliteEntities.map(\.any))
+        } catch {
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 
-    public func readOne(_ ruuviTagId: String) -> Future<AnyRuuviTagSensor, RuuviPersistenceError> {
-        let promise = Promise<AnyRuuviTagSensor, RuuviPersistenceError>()
-        readQueue.async { [weak self] in
-            var entity: Entity?
-            do {
-                try self?.database.dbPool.read { db in
-                    let request = Entity.filter(Entity.luidColumn == ruuviTagId || Entity.macColumn == ruuviTagId)
-                    entity = try request.fetchOne(db)
-                }
-                if let entity {
-                    promise.succeed(value: entity.any)
-                } else {
-                    promise.fail(error: .failedToFindRuuviTag)
-                }
-            } catch {
-                promise.fail(error: .grdb(error))
+    public func readOne(_ ruuviTagId: String) async throws(RuuviPersistenceError) -> AnyRuuviTagSensor {
+        var outcome: Result<AnyRuuviTagSensor, RuuviPersistenceError>
+
+        var entity: Entity?
+        do {
+            try await database.dbPool.read { db in
+                let request = Entity.filter(Entity.luidColumn == ruuviTagId || Entity.macColumn == ruuviTagId)
+                entity = try request.fetchOne(db)
             }
+            if let entity {
+                outcome = .success(entity.any)
+            } else {
+                outcome = .failure(.failedToFindRuuviTag)
+            }
+        } catch {
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 
-    public func readAll(_ ruuviTagId: String) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
-        let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
-        readQueue.async { [weak self] in
-            var sqliteEntities = [RuuviTagSensorRecord]()
-            do {
-                try self?.database.dbPool.read { db in
-                    let request = Record.order(Record.dateColumn)
-                        .filter(Record.luidColumn == ruuviTagId || Record.macColumn == ruuviTagId)
-                    sqliteEntities = try request.fetchAll(db)
-                }
-                promise.succeed(value: sqliteEntities.map(\.any))
-            } catch {
-                promise.fail(error: .grdb(error))
+    public func readAll(_ ruuviTagId: String) async throws(RuuviPersistenceError) -> [RuuviTagSensorRecord] {
+        var outcome: Result<[RuuviTagSensorRecord], RuuviPersistenceError>
+
+        var sqliteEntities = [RuuviTagSensorRecord]()
+        do {
+            try await database.dbPool.read { db in
+                let request = Record.order(Record.dateColumn)
+                    .filter(Record.luidColumn == ruuviTagId || Record.macColumn == ruuviTagId)
+                sqliteEntities = try request.fetchAll(db)
             }
+            outcome = .success(sqliteEntities.map(\.any))
+        } catch {
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 
     public func readAll(
         _ ruuviTagId: String,
         after date: Date
-    ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
-        let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
+    ) async throws(RuuviPersistenceError) -> [RuuviTagSensorRecord] {
+        var outcome: Result<[RuuviTagSensorRecord], RuuviPersistenceError>
         let lastThree = ruuviTagId.lastThreeBytes
-        readQueue.async { [weak self] in
-            var sqliteEntities = [RuuviTagSensorRecord]()
-            do {
-                try self?.database.dbPool.read { db in
-                    let request = """
+
+        var sqliteEntities = [RuuviTagSensorRecord]()
+        do {
+            try await database.dbPool.read { db in
+                let request = """
                     SELECT *
                     FROM ruuvi_tag_sensor_records rtsr
                     WHERE (rtsr.luid = ? OR rtsr.mac LIKE ?)
                     AND rtsr.date > ?
                     ORDER BY date
                     """
-                    sqliteEntities = try Record.fetchAll(
-                        db,
-                        sql: request,
-                        arguments: [ruuviTagId, "%\(lastThree)", date]
-                    )
-                }
-                promise.succeed(value: sqliteEntities.map(\.any))
-            } catch {
-                promise.fail(error: .grdb(error))
+                sqliteEntities = try Record.fetchAll(
+                    db,
+                    sql: request,
+                    arguments: [ruuviTagId, "%\(lastThree)", date]
+                )
             }
+            outcome = .success(sqliteEntities.map(\.any))
+        } catch {
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 
     public func read(
         _ ruuviTagId: String,
         after date: Date,
         with interval: TimeInterval
-    ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
-        let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
+    ) async throws(RuuviPersistenceError) -> [RuuviTagSensorRecord] {
+        var outcome: Result<[RuuviTagSensorRecord], RuuviPersistenceError>
         let lastThree = ruuviTagId.lastThreeBytes
-        readQueue.async { [weak self] in
-            var sqliteEntities = [RuuviTagSensorRecord]()
-            do {
-                try self?.database.dbPool.read { db in
-                    let request = """
+
+        var sqliteEntities = [RuuviTagSensorRecord]()
+        do {
+            try await database.dbPool.read { db in
+                let request = """
                     SELECT *
                     FROM ruuvi_tag_sensor_records rtsr
                     WHERE (rtsr.luid = ? OR rtsr.mac LIKE ?) AND rtsr.date > ?
                     GROUP BY STRFTIME('%s', STRFTIME('%Y-%m-%d %H:%M:%S', rtsr.date)) / ?
                     ORDER BY date
                     """
-                    sqliteEntities = try Record.fetchAll(
-                        db,
-                        sql: request,
-                        arguments: [ruuviTagId, "%\(lastThree)", date, Int(interval)]
-                    )
-                }
-                promise.succeed(value: sqliteEntities.map(\.any))
-            } catch {
-                promise.fail(error: .grdb(error))
+                sqliteEntities = try Record.fetchAll(
+                    db,
+                    sql: request,
+                    arguments: [ruuviTagId, "%\(lastThree)", date, Int(interval)]
+                )
             }
+            outcome = .success(sqliteEntities.map(\.any))
+        } catch {
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 
     public func readDownsampled(
@@ -260,23 +254,23 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         after date: Date,
         with intervalMinutes: Int,
         pick points: Double
-    ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
-        let highDensityDate = Calendar.current.date(
-            byAdding: .minute,
-            value: -intervalMinutes,
-            to: Date()
-        ) ?? Date()
+    ) async throws(RuuviPersistenceError) -> [RuuviTagSensorRecord] {
+        let highDensityDate =
+            Calendar.current.date(
+                byAdding: .minute,
+                value: -intervalMinutes,
+                to: Date()
+            ) ?? Date()
         let pruningInterval =
             (highDensityDate.timeIntervalSince1970 - date.timeIntervalSince1970) / points
 
-        let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
+        var outcome: Result<[RuuviTagSensorRecord], RuuviPersistenceError>
         let lastThree = ruuviTagId.lastThreeBytes
 
-        readQueue.async { [weak self] in
-            var sqliteEntities = [RuuviTagSensorRecord]()
-            do {
-                try self?.database.dbPool.read { db in
-                    let request = """
+        var sqliteEntities = [RuuviTagSensorRecord]()
+        do {
+            try await database.dbPool.read { db in
+                let request = """
                     SELECT *
                     FROM ruuvi_tag_sensor_records rtsr
                     WHERE (rtsr.luid = ? OR rtsr.mac LIKE ?) AND rtsr.date > ? AND rtsr.date < ?
@@ -287,155 +281,151 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     WHERE (rtsr.luid = ? OR rtsr.mac LIKE ?) AND rtsr.date > ?
                     ORDER BY date
                     """
-                    sqliteEntities = try Record.fetchAll(
-                        db,
-                        sql: request,
-                        arguments: [
-                            ruuviTagId, "%\(lastThree)", date, highDensityDate, Int(pruningInterval),
-                            ruuviTagId, "%\(lastThree)", highDensityDate,
-                        ]
-                    )
-                }
-                promise.succeed(value: sqliteEntities.map(\.any))
-            } catch {
-                promise.fail(error: .grdb(error))
+                sqliteEntities = try Record.fetchAll(
+                    db,
+                    sql: request,
+                    arguments: [
+                        ruuviTagId, "%\(lastThree)", date, highDensityDate, Int(pruningInterval),
+                        ruuviTagId, "%\(lastThree)", highDensityDate,
+                    ]
+                )
             }
+            outcome = .success(sqliteEntities.map(\.any))
+        } catch {
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 
     public func readAll(
         _ ruuviTagId: String,
         with interval: TimeInterval
-    ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
-        let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
+    ) async throws(RuuviPersistenceError) -> [RuuviTagSensorRecord] {
+        var outcome: Result<[RuuviTagSensorRecord], RuuviPersistenceError>
         let lastThree = ruuviTagId.lastThreeBytes
-        readQueue.async { [weak self] in
-            var sqliteEntities = [RuuviTagSensorRecord]()
-            do {
-                try self?.database.dbPool.read { db in
-                    let request = """
+
+        var sqliteEntities = [RuuviTagSensorRecord]()
+        do {
+            try await database.dbPool.read { db in
+                let request = """
                     SELECT *
                     FROM ruuvi_tag_sensor_records rtsr
                     WHERE rtsr.luid = ? OR rtsr.mac LIKE ?
                     GROUP BY STRFTIME('%s', STRFTIME('%Y-%m-%d %H:%M:%S', rtsr.date)) / ?
                     ORDER BY date
                     """
-                    sqliteEntities = try Record.fetchAll(
-                        db,
-                        sql: request,
-                        arguments: [ruuviTagId, "%\(lastThree)", Int(interval)]
-                    )
-                }
-                promise.succeed(value: sqliteEntities.map(\.any))
-            } catch {
-                promise.fail(error: .grdb(error))
+                sqliteEntities = try Record.fetchAll(
+                    db,
+                    sql: request,
+                    arguments: [ruuviTagId, "%\(lastThree)", Int(interval)]
+                )
             }
+            outcome = .success(sqliteEntities.map(\.any))
+        } catch {
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 
     public func readLast(
         _ ruuviTagId: String,
         from: TimeInterval
-    ) -> Future<[RuuviTagSensorRecord], RuuviPersistenceError> {
-        let promise = Promise<[RuuviTagSensorRecord], RuuviPersistenceError>()
-        readQueue.async { [weak self] in
-            var sqliteEntities = [RuuviTagSensorRecord]()
-            do {
-                try self?.database.dbPool.read { db in
-                    let request = Record.order(Record.dateColumn)
-                        .filter((Record.luidColumn == ruuviTagId || Record.macColumn == ruuviTagId)
+    ) async throws(RuuviPersistenceError) -> [RuuviTagSensorRecord] {
+        var outcome: Result<[RuuviTagSensorRecord], RuuviPersistenceError>
+
+        var sqliteEntities = [RuuviTagSensorRecord]()
+        do {
+            try await database.dbPool.read { db in
+                let request = Record.order(Record.dateColumn)
+                    .filter(
+                        (Record.luidColumn == ruuviTagId || Record.macColumn == ruuviTagId)
                             && Record.dateColumn > Date(timeIntervalSince1970: from))
-                    sqliteEntities = try request.fetchAll(db)
-                }
-                promise.succeed(value: sqliteEntities.map(\.any))
-            } catch {
-                promise.fail(error: .grdb(error))
+                sqliteEntities = try request.fetchAll(db)
             }
+            outcome = .success(sqliteEntities.map(\.any))
+        } catch {
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 
-    public func readLast(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviPersistenceError> {
-        let promise = Promise<RuuviTagSensorRecord?, RuuviPersistenceError>()
-        readQueue.async { [weak self] in
-            do {
-                var sqliteRecord: Record?
-                try self?.database.dbPool.read { db in
-                    let request = Record.order(
-                        Record.dateColumn.desc
-                    ).filter(
-                            (
-                                ruuviTag.luid?.value != nil && Record.luidColumn == ruuviTag.luid?.value
-                            )
-                            || (
-                                ruuviTag.macId?.value != nil && Record.macColumn
-                                    .like(
+    public func readLast(_ ruuviTag: RuuviTagSensor) async throws(RuuviPersistenceError) -> RuuviTagSensorRecord? {
+        var outcome: Result<RuuviTagSensorRecord?, RuuviPersistenceError>
+
+        do {
+            var sqliteRecord: Record?
+            try await database.dbPool.read { db in
+                let request = Record.order(
+                    Record.dateColumn.desc
+                ).filter(
+                    (ruuviTag.luid?.value != nil && Record.luidColumn == ruuviTag.luid?.value)
+                        || (ruuviTag.macId?.value != nil
+                            && Record.macColumn
+                                .like(
                                     "%\(ruuviTag.macId!.value.lastThreeBytes)"
-                                )
-                            )
-                        )
-                    sqliteRecord = try request.fetchOne(db)
-                }
-                promise.succeed(value: sqliteRecord)
-            } catch {
-                promise.fail(error: .grdb(error))
+                                ))
+                )
+                sqliteRecord = try request.fetchOne(db)
             }
+            outcome = .success(sqliteRecord)
+        } catch {
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 
-    public func readLatest(_ ruuviTag: RuuviTagSensor) -> Future<RuuviTagSensorRecord?, RuuviPersistenceError> {
-        let promise = Promise<RuuviTagSensorRecord?, RuuviPersistenceError>()
-        readQueue.async { [weak self] in
-            do {
-                var sqliteRecord: RecordLatest?
-                try self?.database.dbPool.read { db in
-                    let request = RecordLatest.order(RecordLatest.dateColumn.desc)
-                        .filter(
-                            (
-                                ruuviTag.luid?.value != nil && RecordLatest.luidColumn == ruuviTag.luid?.value
-                            )
-                            || (
-                                ruuviTag.macId?.value != nil && RecordLatest.macColumn.like(
+    public func readLatest(_ ruuviTag: RuuviTagSensor) async throws(RuuviPersistenceError) -> RuuviTagSensorRecord? {
+        var outcome: Result<RuuviTagSensorRecord?, RuuviPersistenceError>
+
+        do {
+            var sqliteRecord: RecordLatest?
+            try await database.dbPool.read { db in
+                let request = RecordLatest.order(RecordLatest.dateColumn.desc)
+                    .filter(
+                        (ruuviTag.luid?.value != nil && RecordLatest.luidColumn == ruuviTag.luid?.value)
+                            || (ruuviTag.macId?.value != nil
+                                && RecordLatest.macColumn.like(
                                     "%\(ruuviTag.macId!.value.lastThreeBytes)"
-                                )
-                            )
-                        )
-                    sqliteRecord = try request.fetchOne(db)
-                }
-                promise.succeed(value: sqliteRecord)
-            } catch {
-                promise.fail(error: .grdb(error))
+                                ))
+                    )
+                sqliteRecord = try request.fetchOne(db)
             }
+            outcome = .success(sqliteRecord)
+        } catch {
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 
-    public func deleteLatest(_ ruuviTagId: String) -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
+    public func deleteLatest(_ ruuviTagId: String) async throws(RuuviPersistenceError) -> Bool {
+        var outcome: Result<Bool, RuuviPersistenceError>
         do {
             var deletedCount = 0
-            let request = RecordLatest
+            let request =
+                RecordLatest
                 .filter(RecordLatest.luidColumn == ruuviTagId || RecordLatest.macColumn == ruuviTagId)
-            try database.dbPool.write { db in
+            try await database.dbPool.write { db in
                 deletedCount = try request.deleteAll(db)
             }
-            promise.succeed(value: deletedCount > 0)
+            outcome = .success(deletedCount > 0)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    public func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
+    public func update(_ ruuviTag: RuuviTagSensor) async throws(RuuviPersistenceError) -> Bool {
+        var outcome: Result<Bool, RuuviPersistenceError>
         assert(ruuviTag.macId != nil)
 
         do {
-            try database.dbPool.write { db in
-                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+            try await database.dbPool.write { db in
+                let normalizedTag = try self.normalizedSensor(ruuviTag, db: db)
                 let entity = Entity(
                     id: normalizedTag.id,
                     macId: normalizedTag.macId,
@@ -458,27 +448,27 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 )
                 try entity.update(db)
             }
-            promise.succeed(value: true)
+            outcome = .success(true)
         } catch let persistenceError as RuuviPersistenceError {
-            promise.fail(error: persistenceError)
+            outcome = .failure(persistenceError)
         } catch let recordError as RecordError {
             if case .recordNotFound = recordError {
-                promise.fail(error: .failedToFindRuuviTag)
+                outcome = .failure(.failedToFindRuuviTag)
             } else {
-                promise.fail(error: .grdb(recordError))
+                outcome = .failure(.grdb(recordError))
             }
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    public func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
+    public func delete(_ ruuviTag: RuuviTagSensor) async throws(RuuviPersistenceError) -> Bool {
+        var outcome: Result<Bool, RuuviPersistenceError>
         assert(ruuviTag.macId != nil)
         do {
-            try database.dbPool.write { db in
-                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+            let success = try await database.dbPool.write { db in
+                let normalizedTag = try self.normalizedSensor(ruuviTag, db: db)
                 let entity = Entity(
                     id: normalizedTag.id,
                     macId: normalizedTag.macId,
@@ -498,212 +488,209 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     sharedToPending: normalizedTag.sharedToPending,
                     maxHistoryDays: normalizedTag.maxHistoryDays
                 )
-                let success = try entity.delete(db)
-                promise.succeed(value: success)
+                return try entity.delete(db)
             }
+            outcome = .success(success)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    public func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
+    public func deleteAllRecords(_ ruuviTagId: String) async throws(RuuviPersistenceError) -> Bool {
+        var outcome: Result<Bool, RuuviPersistenceError>
         do {
             var deletedCount = 0
             let request = Record.filter(
                 Record.luidColumn == ruuviTagId || Record.macColumn.like("%\(ruuviTagId.lastThreeBytes)")
             )
-            try database.dbPool.write { db in
+            try await database.dbPool.write { db in
                 deletedCount = try request.deleteAll(db)
             }
-            promise.succeed(value: deletedCount > 0)
+            outcome = .success(deletedCount > 0)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    public func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
+    public func deleteAllRecords(_ ruuviTagId: String, before date: Date) async throws(RuuviPersistenceError) -> Bool {
+        var outcome: Result<Bool, RuuviPersistenceError>
         do {
             var deletedCount = 0
             let request = Record.filter(
                 Record.luidColumn == ruuviTagId || Record.macColumn.like("%\(ruuviTagId.lastThreeBytes)")
             ).filter(Record.dateColumn < date)
-            try database.dbPool.write { db in
+            try await database.dbPool.write { db in
                 deletedCount = try request.deleteAll(db)
             }
-            promise.succeed(value: deletedCount > 0)
+            outcome = .success(deletedCount > 0)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    public func getStoredTagsCount() -> Future<Int, RuuviPersistenceError> {
-        let promise = Promise<Int, RuuviPersistenceError>()
-        readQueue.async { [weak self] in
-            do {
-                var count = 0
-                try self?.database.dbPool.read { db in
-                    count = try Entity.fetchCount(db)
-                }
-                promise.succeed(value: count)
-            } catch {
-                promise.fail(error: .grdb(error))
+    public func getStoredTagsCount() async throws(RuuviPersistenceError) -> Int {
+        var outcome: Result<Int, RuuviPersistenceError>
+
+        do {
+            var count = 0
+            try await database.dbPool.read { db in
+                count = try Entity.fetchCount(db)
             }
+            outcome = .success(count)
+        } catch {
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 
-    public func getStoredMeasurementsCount() -> Future<Int, RuuviPersistenceError> {
-        let promise = Promise<Int, RuuviPersistenceError>()
-        readQueue.async { [weak self] in
-            do {
-                var count = 0
-                try self?.database.dbPool.read { db in
-                    count = try Record.fetchCount(db)
-                }
-                promise.succeed(value: count)
-            } catch {
-                promise.fail(error: .grdb(error))
+    public func getStoredMeasurementsCount() async throws(RuuviPersistenceError) -> Int {
+        var outcome: Result<Int, RuuviPersistenceError>
+
+        do {
+            var count = 0
+            try await database.dbPool.read { db in
+                count = try Record.fetchCount(db)
             }
+            outcome = .success(count)
+        } catch {
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 
-    public func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RuuviPersistenceError> {
-        let promise = Promise<SensorSettings?, RuuviPersistenceError>()
+    public func readSensorSettings(_ ruuviTag: RuuviTagSensor) async throws(RuuviPersistenceError) -> SensorSettings? {
+        var outcome: Result<SensorSettings?, RuuviPersistenceError>
         do {
             var sqliteSensorSettings: Settings?
-            try database.dbPool.read { db in
-                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+            try await database.dbPool.read { db in
+                let normalizedTag = try self.normalizedSensor(ruuviTag, db: db)
                 let request = Settings.filter(
-                    (
-                        normalizedTag.luid?.value != nil && Settings.luidColumn == normalizedTag.luid?.value
-                    )
-                    || (
-                        normalizedTag.macId?.value != nil && Settings.macIdColumn.like(
-                            "%\(normalizedTag.macId!.value.lastThreeBytes)"
-                        )
-                    )
+                    (normalizedTag.luid?.value != nil && Settings.luidColumn == normalizedTag.luid?.value)
+                        || (normalizedTag.macId?.value != nil
+                            && Settings.macIdColumn.like(
+                                "%\(normalizedTag.macId!.value.lastThreeBytes)"
+                            ))
                 )
                 sqliteSensorSettings = try request.fetchOne(db)
             }
-            promise.succeed(value: sqliteSensorSettings)
+            outcome = .success(sqliteSensorSettings)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
     public func save(
         sensorSettings: SensorSettings
-    ) -> Future<SensorSettings, RuuviPersistenceError> {
-        let promise = Promise<SensorSettings, RuuviPersistenceError>()
+    ) async throws(RuuviPersistenceError) -> SensorSettings {
+        var outcome: Result<SensorSettings, RuuviPersistenceError>
         do {
-            try database.dbPool.write { db in
+            try await database.dbPool.write { db in
                 try sensorSettings.sqlite.save(db)
             }
-            promise.succeed(value: sensorSettings)
+            outcome = .success(sensorSettings)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
     // MARK: - User settings
 
-    public func readUserSettings() -> Future<[RuuviUserSetting], RuuviPersistenceError> {
-        let promise = Promise<[RuuviUserSetting], RuuviPersistenceError>()
-        readQueue.async { [weak self] in
-            var sqliteSettings = [UserSetting]()
-            do {
-                try self?.database.dbPool.read { db in
-                    let request = UserSetting.order(UserSetting.keyColumn)
-                    sqliteSettings = try request.fetchAll(db)
-                }
-                promise.succeed(value: sqliteSettings)
-            } catch {
-                promise.fail(error: .grdb(error))
+    public func readUserSettings() async throws(RuuviPersistenceError) -> [RuuviUserSetting] {
+        var outcome: Result<[RuuviUserSetting], RuuviPersistenceError>
+
+        var sqliteSettings = [UserSetting]()
+        do {
+            try await database.dbPool.read { db in
+                let request = UserSetting.order(UserSetting.keyColumn)
+                sqliteSettings = try request.fetchAll(db)
             }
+            outcome = .success(sqliteSettings)
+        } catch {
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 
     public func readUserSetting(
         for key: String
-    ) -> Future<RuuviUserSetting?, RuuviPersistenceError> {
-        let promise = Promise<RuuviUserSetting?, RuuviPersistenceError>()
-        readQueue.async { [weak self] in
-            var sqliteSetting: UserSetting?
-            do {
-                try self?.database.dbPool.read { db in
-                    let request = UserSetting.filter(UserSetting.keyColumn == key)
-                    sqliteSetting = try request.fetchOne(db)
-                }
-                promise.succeed(value: sqliteSetting)
-            } catch {
-                promise.fail(error: .grdb(error))
+    ) async throws(RuuviPersistenceError) -> RuuviUserSetting? {
+        var outcome: Result<RuuviUserSetting?, RuuviPersistenceError>
+
+        var sqliteSetting: UserSetting?
+        do {
+            try await database.dbPool.read { db in
+                let request = UserSetting.filter(UserSetting.keyColumn == key)
+                sqliteSetting = try request.fetchOne(db)
             }
+            outcome = .success(sqliteSetting)
+        } catch {
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 
     public func save(
         userSetting: RuuviUserSetting
-    ) -> Future<RuuviUserSetting, RuuviPersistenceError> {
-        let promise = Promise<RuuviUserSetting, RuuviPersistenceError>()
+    ) async throws(RuuviPersistenceError) -> RuuviUserSetting {
+        var outcome: Result<RuuviUserSetting, RuuviPersistenceError>
         let database = database
-        writeQueue.async {
-            do {
-                try database.dbPool.write { db in
-                    try userSetting.sqlite.save(db)
-                }
-                promise.succeed(value: userSetting)
-            } catch {
-                promise.fail(error: .grdb(error))
+
+        do {
+            try await database.dbPool.write { db in
+                try userSetting.sqlite.save(db)
             }
+            outcome = .success(userSetting)
+        } catch {
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 
     public func save(
         userSettings: [RuuviUserSetting]
-    ) -> Future<[RuuviUserSetting], RuuviPersistenceError> {
-        let promise = Promise<[RuuviUserSetting], RuuviPersistenceError>()
+    ) async throws(RuuviPersistenceError) -> [RuuviUserSetting] {
+        var outcome: Result<[RuuviUserSetting], RuuviPersistenceError>
         let database = database
-        writeQueue.async {
-            do {
-                try database.dbPool.write { db in
-                    for setting in userSettings {
-                        try setting.sqlite.save(db)
-                    }
+
+        do {
+            try await database.dbPool.write { db in
+                for setting in userSettings {
+                    try setting.sqlite.save(db)
                 }
-                promise.succeed(value: userSettings)
-            } catch {
-                promise.fail(error: .grdb(error))
             }
+            outcome = .success(userSettings)
+        } catch {
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 
-    public func deleteUserSettings() -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
+    public func deleteUserSettings() async throws(RuuviPersistenceError) -> Bool {
+        var outcome: Result<Bool, RuuviPersistenceError>
         let database = database
-        writeQueue.async {
-            do {
-                var deletedCount = 0
-                try database.dbPool.write { db in
-                    deletedCount = try UserSetting.deleteAll(db)
-                }
-                promise.succeed(value: deletedCount > 0)
-            } catch {
-                promise.fail(error: .grdb(error))
+
+        do {
+            var deletedCount = 0
+            try await database.dbPool.write { db in
+                deletedCount = try UserSetting.deleteAll(db)
             }
+            outcome = .success(deletedCount > 0)
+        } catch {
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 
     // swiftlint:disable:next function_body_length
@@ -712,12 +699,12 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         with value: Double?,
         of ruuviTag: RuuviTagSensor,
         lastOriginalRecord record: RuuviTagSensorRecord?
-    ) -> Future<SensorSettings, RuuviPersistenceError> {
-        let promise = Promise<SensorSettings, RuuviPersistenceError>()
+    ) async throws(RuuviPersistenceError) -> SensorSettings {
+        var outcome: Result<SensorSettings, RuuviPersistenceError>
         assert(ruuviTag.macId != nil)
         do {
-            let settings: Settings = try database.dbPool.write { db in
-                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+            let settings: Settings = try await database.dbPool.write { db in
+                let normalizedTag = try self.normalizedSensor(ruuviTag, db: db)
                 var isAddNewRecord = true
                 var sqliteSensorSettings = Settings(
                     luid: normalizedTag.luid,
@@ -727,14 +714,11 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     pressureOffset: nil
                 )
                 let request = Settings.filter(
-                    (
-                        normalizedTag.luid?.value != nil && Settings.luidColumn == normalizedTag.luid?.value
-                    )
-                    || (
-                        normalizedTag.macId?.value != nil && Settings.macIdColumn.like(
-                            "%\(normalizedTag.macId!.value.lastThreeBytes)"
-                        )
-                    )
+                    (normalizedTag.luid?.value != nil && Settings.luidColumn == normalizedTag.luid?.value)
+                        || (normalizedTag.macId?.value != nil
+                            && Settings.macIdColumn.like(
+                                "%\(normalizedTag.macId!.value.lastThreeBytes)"
+                            ))
                 )
                 if let existingSettings = try request.fetchOne(db) {
                     sqliteSensorSettings = existingSettings
@@ -757,19 +741,19 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 }
 
                 if let sqliteSensorRecord = record {
-                    let normalizedRecord = try normalizedRecord(sqliteSensorRecord, db: db)
+                    let normalizedRecord = try self.normalizedRecord(sqliteSensorRecord, db: db)
                     try normalizedRecord.sqlite.insert(db)
                 }
 
                 return sqliteSensorSettings
             }
 
-            promise.succeed(value: settings)
+            outcome = .success(settings)
         } catch let e {
-            promise.fail(error: .grdb(e))
+            outcome = .failure(.grdb(e))
         }
 
-        return promise.future
+        return try outcome.get()
     }
 
     // swiftlint:disable:next function_body_length
@@ -779,11 +763,11 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         defaultDisplayOrder: Bool?,
         displayOrderLastUpdated: Date?,
         defaultDisplayOrderLastUpdated: Date?
-    ) -> Future<SensorSettings, RuuviPersistenceError> {
-        let promise = Promise<SensorSettings, RuuviPersistenceError>()
+    ) async throws(RuuviPersistenceError) -> SensorSettings {
+        var outcome: Result<SensorSettings, RuuviPersistenceError>
         do {
-            let settings: Settings = try database.dbPool.write { db in
-                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+            let settings: Settings = try await database.dbPool.write { db in
+                let normalizedTag = try self.normalizedSensor(ruuviTag, db: db)
                 var seed = Settings(
                     luid: normalizedTag.luid,
                     macId: normalizedTag.macId,
@@ -796,34 +780,36 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 seed.displayOrderLastUpdated = displayOrderLastUpdated
                 seed.defaultDisplayOrderLastUpdated = defaultDisplayOrderLastUpdated
 
-                try db.execute(sql: """
-                INSERT INTO \(Settings.databaseTableName)
-                    (\(Settings.idColumn.name), \(Settings.luidColumn.name), \(Settings.macIdColumn.name),
-                     \(Settings.displayOrderColumn.name), \(Settings.defaultDisplayOrderColumn.name),
-                     \(Settings.displayOrderLastUpdatedColumn.name),
-                     \(Settings.defaultDisplayOrderLastUpdatedColumn.name))
-                VALUES (:id, :luid, :macId, :displayOrder, :defaultDisplayOrder,
-                        :displayOrderLastUpdated, :defaultDisplayOrderLastUpdated)
-                ON CONFLICT(\(Settings.idColumn.name)) DO UPDATE SET
-                    \(Settings.displayOrderColumn.name) = excluded.\(Settings.displayOrderColumn.name),
-                    \(Settings.defaultDisplayOrderColumn.name) = excluded.\(Settings.defaultDisplayOrderColumn.name),
-                    \(Settings.displayOrderLastUpdatedColumn.name)
-                        = excluded.\(Settings.displayOrderLastUpdatedColumn.name),
-                    \(Settings.defaultDisplayOrderLastUpdatedColumn.name)
-                        = excluded.\(Settings.defaultDisplayOrderLastUpdatedColumn.name),
-                    \(Settings.luidColumn.name) = COALESCE(excluded.\(Settings.luidColumn.name),
-                        \(Settings.databaseTableName).\(Settings.luidColumn.name)),
-                    \(Settings.macIdColumn.name) = COALESCE(excluded.\(Settings.macIdColumn.name),
-                        \(Settings.databaseTableName).\(Settings.macIdColumn.name))
-                """, arguments: [
-                    "id": seed.id,
-                    "luid": normalizedTag.luid?.value,
-                    "macId": normalizedTag.macId?.value,
-                    "displayOrder": SensorSettingsSQLite.encodeDisplayOrder(displayOrder),
-                    "defaultDisplayOrder": defaultDisplayOrder,
-                    "displayOrderLastUpdated": displayOrderLastUpdated,
-                    "defaultDisplayOrderLastUpdated": defaultDisplayOrderLastUpdated,
-                ])
+                try db.execute(
+                    sql: """
+                        INSERT INTO \(Settings.databaseTableName)
+                            (\(Settings.idColumn.name), \(Settings.luidColumn.name), \(Settings.macIdColumn.name),
+                             \(Settings.displayOrderColumn.name), \(Settings.defaultDisplayOrderColumn.name),
+                             \(Settings.displayOrderLastUpdatedColumn.name),
+                             \(Settings.defaultDisplayOrderLastUpdatedColumn.name))
+                        VALUES (:id, :luid, :macId, :displayOrder, :defaultDisplayOrder,
+                                :displayOrderLastUpdated, :defaultDisplayOrderLastUpdated)
+                        ON CONFLICT(\(Settings.idColumn.name)) DO UPDATE SET
+                            \(Settings.displayOrderColumn.name) = excluded.\(Settings.displayOrderColumn.name),
+                            \(Settings.defaultDisplayOrderColumn.name) = excluded.\(Settings.defaultDisplayOrderColumn.name),
+                            \(Settings.displayOrderLastUpdatedColumn.name)
+                                = excluded.\(Settings.displayOrderLastUpdatedColumn.name),
+                            \(Settings.defaultDisplayOrderLastUpdatedColumn.name)
+                                = excluded.\(Settings.defaultDisplayOrderLastUpdatedColumn.name),
+                            \(Settings.luidColumn.name) = COALESCE(excluded.\(Settings.luidColumn.name),
+                                \(Settings.databaseTableName).\(Settings.luidColumn.name)),
+                            \(Settings.macIdColumn.name) = COALESCE(excluded.\(Settings.macIdColumn.name),
+                                \(Settings.databaseTableName).\(Settings.macIdColumn.name))
+                        """,
+                    arguments: [
+                        "id": seed.id,
+                        "luid": normalizedTag.luid?.value,
+                        "macId": normalizedTag.macId?.value,
+                        "displayOrder": SensorSettingsSQLite.encodeDisplayOrder(displayOrder),
+                        "defaultDisplayOrder": defaultDisplayOrder,
+                        "displayOrderLastUpdated": displayOrderLastUpdated,
+                        "defaultDisplayOrderLastUpdated": defaultDisplayOrderLastUpdated,
+                    ])
 
                 let request = Settings.filter(Settings.idColumn == seed.id)
                 if let updated = try request.fetchOne(db) {
@@ -832,22 +818,22 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     return seed
                 }
             }
-            promise.succeed(value: settings)
+            outcome = .success(settings)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
     public func updateDescription(
         for ruuviTag: RuuviTagSensor,
         description: String?,
         descriptionLastUpdated: Date?
-    ) -> Future<SensorSettings, RuuviPersistenceError> {
-        let promise = Promise<SensorSettings, RuuviPersistenceError>()
+    ) async throws(RuuviPersistenceError) -> SensorSettings {
+        var outcome: Result<SensorSettings, RuuviPersistenceError>
         do {
-            let settings: Settings = try database.dbPool.write { db in
-                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+            let settings: Settings = try await database.dbPool.write { db in
+                let normalizedTag = try self.normalizedSensor(ruuviTag, db: db)
                 var seed = Settings(
                     luid: normalizedTag.luid,
                     macId: normalizedTag.macId,
@@ -858,26 +844,28 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 seed.description = description
                 seed.descriptionLastUpdated = descriptionLastUpdated
 
-                try db.execute(sql: """
-                INSERT INTO \(Settings.databaseTableName)
-                    (\(Settings.idColumn.name), \(Settings.luidColumn.name), \(Settings.macIdColumn.name),
-                     \(Settings.descriptionColumn.name), \(Settings.descriptionLastUpdatedColumn.name))
-                VALUES (:id, :luid, :macId, :description, :descriptionLastUpdated)
-                ON CONFLICT(\(Settings.idColumn.name)) DO UPDATE SET
-                    \(Settings.descriptionColumn.name) = excluded.\(Settings.descriptionColumn.name),
-                    \(Settings.descriptionLastUpdatedColumn.name)
-                        = excluded.\(Settings.descriptionLastUpdatedColumn.name),
-                    \(Settings.luidColumn.name) = COALESCE(excluded.\(Settings.luidColumn.name),
-                        \(Settings.databaseTableName).\(Settings.luidColumn.name)),
-                    \(Settings.macIdColumn.name) = COALESCE(excluded.\(Settings.macIdColumn.name),
-                        \(Settings.databaseTableName).\(Settings.macIdColumn.name))
-                """, arguments: [
-                    "id": seed.id,
-                    "luid": normalizedTag.luid?.value,
-                    "macId": normalizedTag.macId?.value,
-                    "description": description,
-                    "descriptionLastUpdated": descriptionLastUpdated,
-                ])
+                try db.execute(
+                    sql: """
+                        INSERT INTO \(Settings.databaseTableName)
+                            (\(Settings.idColumn.name), \(Settings.luidColumn.name), \(Settings.macIdColumn.name),
+                             \(Settings.descriptionColumn.name), \(Settings.descriptionLastUpdatedColumn.name))
+                        VALUES (:id, :luid, :macId, :description, :descriptionLastUpdated)
+                        ON CONFLICT(\(Settings.idColumn.name)) DO UPDATE SET
+                            \(Settings.descriptionColumn.name) = excluded.\(Settings.descriptionColumn.name),
+                            \(Settings.descriptionLastUpdatedColumn.name)
+                                = excluded.\(Settings.descriptionLastUpdatedColumn.name),
+                            \(Settings.luidColumn.name) = COALESCE(excluded.\(Settings.luidColumn.name),
+                                \(Settings.databaseTableName).\(Settings.luidColumn.name)),
+                            \(Settings.macIdColumn.name) = COALESCE(excluded.\(Settings.macIdColumn.name),
+                                \(Settings.databaseTableName).\(Settings.macIdColumn.name))
+                        """,
+                    arguments: [
+                        "id": seed.id,
+                        "luid": normalizedTag.luid?.value,
+                        "macId": normalizedTag.macId?.value,
+                        "description": description,
+                        "descriptionLastUpdated": descriptionLastUpdated,
+                    ])
 
                 let request = Settings.filter(Settings.idColumn == seed.id)
                 if let updated = try request.fetchOne(db) {
@@ -886,48 +874,45 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     return seed
                 }
             }
-            promise.succeed(value: settings)
+            outcome = .success(settings)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    public func deleteOffsetCorrection(ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
+    public func deleteOffsetCorrection(ruuviTag: RuuviTagSensor) async throws(RuuviPersistenceError) -> Bool {
+        var outcome: Result<Bool, RuuviPersistenceError>
         assert(ruuviTag.macId != nil)
         do {
             var success = false
-            try database.dbPool.write { db in
-                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+            try await database.dbPool.write { db in
+                let normalizedTag = try self.normalizedSensor(ruuviTag, db: db)
                 let request = Settings.filter(
-                    (
-                        normalizedTag.luid?.value != nil && Settings.luidColumn == normalizedTag.luid?.value
-                    )
-                    || (
-                        normalizedTag.macId?.value != nil && Settings.macIdColumn.like(
-                            "%\(normalizedTag.macId!.value.lastThreeBytes)"
-                        )
-                    )
+                    (normalizedTag.luid?.value != nil && Settings.luidColumn == normalizedTag.luid?.value)
+                        || (normalizedTag.macId?.value != nil
+                            && Settings.macIdColumn.like(
+                                "%\(normalizedTag.macId!.value.lastThreeBytes)"
+                            ))
                 )
                 let sensorSettings: Settings? = try request.fetchOne(db)
                 if let notNullSensorSettings = sensorSettings {
                     success = try notNullSensorSettings.delete(db)
                 }
             }
-            promise.succeed(value: success)
+            outcome = .success(success)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
     public func deleteSensorSettings(
         _ ruuviTag: RuuviTagSensor
-    ) -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
+    ) async throws(RuuviPersistenceError) -> Bool {
+        var outcome: Result<Bool, RuuviPersistenceError>
         do {
-            let deletedCount = try database.dbPool.write { db -> Int in
+            let deletedCount = try await database.dbPool.write { db -> Int in
                 let settingsId = SensorSettingsStruct(
                     luid: ruuviTag.luid,
                     macId: ruuviTag.macId,
@@ -950,112 +935,118 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 let request = Settings.filter(filter)
                 return try request.deleteAll(db)
             }
-            promise.succeed(value: deletedCount > 0)
+            outcome = .success(deletedCount > 0)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    public func cleanupDBSpace() -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
+    public func cleanupDBSpace() async throws(RuuviPersistenceError) -> Bool {
+        var outcome: Result<Bool, RuuviPersistenceError>
         do {
-            try database.dbPool.vacuum()
-            promise.succeed(value: true)
+            try await database.dbPool.vacuum()
+            outcome = .success(true)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
     // MARK: - Queued cloud requests
 
     @discardableResult
     public func readQueuedRequests()
-    -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError> {
-        let promise = Promise<[RuuviCloudQueuedRequest], RuuviPersistenceError>()
-        readQueue.async { [weak self] in
-            var sqliteEntities = [RuuviCloudQueuedRequest]()
-            do {
-                try self?.database.dbPool.read { db in
-                    let request = QueuedRequest.order(QueuedRequest.requestDateColumn)
-                    sqliteEntities = try request.fetchAll(db)
-                }
-                promise.succeed(value: sqliteEntities.map { $0 })
-            } catch {
-                promise.fail(error: .grdb(error))
+        async throws(RuuviPersistenceError) -> [RuuviCloudQueuedRequest]
+    {
+        var outcome: Result<[RuuviCloudQueuedRequest], RuuviPersistenceError>
+
+        var sqliteEntities = [RuuviCloudQueuedRequest]()
+        do {
+            try await database.dbPool.read { db in
+                let request = QueuedRequest.order(QueuedRequest.requestDateColumn)
+                sqliteEntities = try request.fetchAll(db)
             }
+            outcome = .success(sqliteEntities.map { $0 })
+        } catch {
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 
     @discardableResult
     public func readQueuedRequests(
         for key: String
-    ) -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError> {
-        let promise = Promise<[RuuviCloudQueuedRequest], RuuviPersistenceError>()
-        readQueuedRequests().on(success: { reqs in
+    ) async throws(RuuviPersistenceError) -> [RuuviCloudQueuedRequest] {
+        var outcome: Result<[RuuviCloudQueuedRequest], RuuviPersistenceError>
+        do {
+            let reqs = try await readQueuedRequests()
             let requests = reqs.filter { req in
                 req.uniqueKey != nil && req.uniqueKey == key
             }
-            promise.succeed(value: requests)
-        }, failure: { error in
-            promise.fail(error: .grdb(error))
-        })
-        return promise.future
+            outcome = .success(requests)
+        } catch let error {
+            outcome = .failure(.grdb(error))
+        }
+        return try outcome.get()
     }
 
     @discardableResult
     public func readQueuedRequests(
         for type: RuuviCloudQueuedRequestType
-    ) -> Future<[RuuviCloudQueuedRequest], RuuviPersistenceError> {
-        let promise = Promise<[RuuviCloudQueuedRequest], RuuviPersistenceError>()
-        readQueuedRequests().on(success: { reqs in
+    ) async throws(RuuviPersistenceError) -> [RuuviCloudQueuedRequest] {
+        var outcome: Result<[RuuviCloudQueuedRequest], RuuviPersistenceError>
+        do {
+            let reqs = try await readQueuedRequests()
             let requests = reqs.filter { req in
                 req.type != nil && req.type == type
             }
-            promise.succeed(value: requests)
-        }, failure: { error in
-            promise.fail(error: .grdb(error))
-        })
-        return promise.future
+            outcome = .success(requests)
+        } catch let error {
+            outcome = .failure(.grdb(error))
+        }
+        return try outcome.get()
     }
 
     @discardableResult
     public func createQueuedRequest(
         _ request: RuuviCloudQueuedRequest
-    ) -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
-        // Check if there's already a request stored for the key.
-        // If exists update the existing record, otherwise create a new.
-        readQueuedRequests().on(success: { [weak self] requests in
-
-            let existingRequest = requests.first(
-                where: { ($0.uniqueKey != nil && $0.uniqueKey == request.uniqueKey)
-                    && ($0.type != nil && $0.type == request.type)
+    ) async throws(RuuviPersistenceError) -> Bool {
+        do {
+            try await database.dbPool.write { db in
+                let existing = try QueuedRequest.fetchAll(db).first {
+                    $0.uniqueKey != nil && $0.uniqueKey == request.uniqueKey && $0.type != nil
+                        && $0.type == request.type
                 }
-            )
-            let isCreate = (requests.count == 0) || existingRequest == nil
-
-            self?.createQueueRequest(
-                isCreate: isCreate,
-                newRequest: request,
-                existingRequest: existingRequest
-            )
-            .on(success: { _ in
-                promise.succeed(value: true)
-            }, failure: { error in
-                promise.fail(error: .grdb(error))
-            })
-        })
-        return promise.future
+                if let existing {
+                    let entity = QueuedRequest(
+                        id: existing.id,
+                        type: existing.type,
+                        status: request.status,
+                        uniqueKey: request.uniqueKey,
+                        requestDate: request.requestDate,
+                        successDate: request.successDate,
+                        attempts: (existing.attempts ?? 0) + 1,
+                        requestBodyData: request.requestBodyData,
+                        additionalData: request.additionalData
+                    )
+                    try entity.update(db)
+                } else {
+                    try request.sqlite.insert(db)
+                }
+            }
+            return true
+        } catch {
+            throw .grdb(error)
+        }
     }
 
     @discardableResult
     public func deleteQueuedRequest(
         _ request: RuuviCloudQueuedRequest
-    ) -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
+    ) async throws(RuuviPersistenceError) -> Bool {
+        var outcome: Result<Bool, RuuviPersistenceError>
         assert(request.id != nil)
         let entity = QueuedRequest(
             id: request.id,
@@ -1070,119 +1061,72 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         )
         do {
             var success = false
-            try database.dbPool.write { db in
+            try await database.dbPool.write { db in
                 success = try entity.delete(db)
             }
-            promise.succeed(value: success)
+            outcome = .success(success)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
     @discardableResult
-    public func deleteQueuedRequests() -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
+    public func deleteQueuedRequests() async throws(RuuviPersistenceError) -> Bool {
+        var outcome: Result<Bool, RuuviPersistenceError>
         do {
             var deletedCount = 0
-            try database.dbPool.write { db in
+            try await database.dbPool.write { db in
                 deletedCount = try QueuedRequest.deleteAll(db)
             }
-            promise.succeed(value: deletedCount > 0)
+            outcome = .success(deletedCount > 0)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
     // MARK: - Subscription
     public func save(
         subscription: CloudSensorSubscription
-    ) -> Future<CloudSensorSubscription, RuuviPersistenceError> {
-        let promise = Promise<CloudSensorSubscription, RuuviPersistenceError>()
+    ) async throws(RuuviPersistenceError) -> CloudSensorSubscription {
+        var outcome: Result<CloudSensorSubscription, RuuviPersistenceError>
         do {
-            try database.dbPool.write { db in
+            try await database.dbPool.write { db in
                 try subscription.sqlite.save(db)
             }
-            promise.succeed(value: subscription)
+            outcome = .success(subscription)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 
     public func readSensorSubscriptionSettings(
         _ ruuviTag: RuuviTagSensor
-    ) -> Future<CloudSensorSubscription?, RuuviPersistenceError> {
-        let promise = Promise<CloudSensorSubscription?, RuuviPersistenceError>()
+    ) async throws(RuuviPersistenceError) -> CloudSensorSubscription? {
+        var outcome: Result<CloudSensorSubscription?, RuuviPersistenceError>
         do {
             var sqliteSensorSettings: CloudSensorSubscription?
-            try database.dbPool.read { db in
-                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
+            try await database.dbPool.read { db in
+                let normalizedTag = try self.normalizedSensor(ruuviTag, db: db)
                 let request = SensorSubscription.filter(
                     normalizedTag.macId?.value != nil
-                    && SensorSubscription.macIdColumn == normalizedTag.macId?.value
+                        && SensorSubscription.macIdColumn == normalizedTag.macId?.value
                 )
                 sqliteSensorSettings = try request.fetchOne(db)
             }
-            promise.succeed(value: sqliteSensorSettings)
+            outcome = .success(sqliteSensorSettings)
         } catch {
-            promise.fail(error: .grdb(error))
+            outcome = .failure(.grdb(error))
         }
-        return promise.future
+        return try outcome.get()
     }
 }
 
 // MARK: - Private
 
 extension RuuviPersistenceSQLite {
-    /// Create or Update a queued request.
-    private func createQueueRequest(
-        isCreate: Bool,
-        newRequest: RuuviCloudQueuedRequest,
-        existingRequest: RuuviCloudQueuedRequest?
-    )
-    -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
-        if isCreate {
-            do {
-                try database.dbPool.write { db in
-                    assert(newRequest.uniqueKey != nil)
-                    try newRequest.sqlite.insert(db)
-                }
-                promise.succeed(value: true)
-            } catch {
-                promise.fail(error: .grdb(error))
-            }
-        } else {
-            guard let existingRequest
-            else {
-                return promise.future
-            }
-
-            let retryCount = existingRequest.attempts ?? 0 + 1
-            let entity = QueuedRequest(
-                id: existingRequest.id,
-                type: existingRequest.type,
-                status: newRequest.status,
-                uniqueKey: newRequest.uniqueKey,
-                requestDate: newRequest.requestDate,
-                successDate: newRequest.successDate,
-                attempts: retryCount,
-                requestBodyData: newRequest.requestBodyData,
-                additionalData: newRequest.additionalData
-            )
-            do {
-                try database.dbPool.write { db in
-                    try entity.update(db)
-                }
-                promise.succeed(value: true)
-            } catch {
-                promise.fail(error: .grdb(error))
-            }
-        }
-        return promise.future
-    }
 
     private func normalizedSensor(
         _ sensor: RuuviTagSensor,
@@ -1246,15 +1190,17 @@ extension RuuviPersistenceSQLite {
         }
 
         if let luid,
-           let existing = try Entity
-            .filter(Entity.luidColumn == luid.value)
-            .fetchOne(db)?.macId {
+            let existing = try Entity
+                .filter(Entity.luidColumn == luid.value)
+                .fetchOne(db)?.macId
+        {
             return existing
         }
 
         if let existingExact = try Entity
             .filter(Entity.macColumn == macId.value)
-            .fetchOne(db)?.macId {
+            .fetchOne(db)?.macId
+        {
             return existingExact
         }
 
@@ -1274,7 +1220,8 @@ extension RuuviPersistenceSQLite {
         let suffix = macId.value.lastThreeBytes
 
         if !suffix.isEmpty {
-            let likeMatches = try Entity
+            let likeMatches =
+                try Entity
                 .filter(Entity.macColumn.like("%\(suffix)"))
                 .fetchAll(db)
                 .compactMap(\.macId)
@@ -1283,7 +1230,8 @@ extension RuuviPersistenceSQLite {
         }
 
         if matches.isEmpty {
-            let allMatches = try Entity
+            let allMatches =
+                try Entity
                 .fetchAll(db)
                 .compactMap(\.macId)
                 .filter { $0.value.isLast3BytesEqual(to: macId.value) }
@@ -1305,7 +1253,7 @@ private extension String {
 
 private extension Optional where Wrapped == String {
     var lastThreeBytes: String? {
-        self?.lastThreeBytes
+        self.lastThreeBytes
     }
 }
 

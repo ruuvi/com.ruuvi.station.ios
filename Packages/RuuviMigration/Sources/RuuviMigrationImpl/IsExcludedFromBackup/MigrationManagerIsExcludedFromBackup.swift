@@ -1,3 +1,13 @@
+#if SWIFT_PACKAGE
+    import RuuviMigration
+#endif
+#if SWIFT_PACKAGE
+    import RuuviOntology
+    import RuuviLocal
+    import RuuviPool
+    import RuuviStorage
+    import RuuviService
+#endif
 import Foundation
 import RuuviContext
 
@@ -12,8 +22,10 @@ final class MigrationManagerIsExcludedFromBackup: RuuviMigration {
         let databaseUrl = NSURL(fileURLWithPath: sqliteContext.database.dbPath)
         do {
             let resourceValues = try databaseUrl.resourceValues(forKeys: [.isExcludedFromBackupKey])
-            guard resourceValues[.isExcludedFromBackupKey] == nil
-                    || resourceValues[.isExcludedFromBackupKey] as? Bool == false else {
+            guard
+                resourceValues[.isExcludedFromBackupKey] == nil
+                    || resourceValues[.isExcludedFromBackupKey] as? Bool == false
+            else {
                 return
             }
             try databaseUrl.setResourceValue(true, forKey: .isExcludedFromBackupKey)

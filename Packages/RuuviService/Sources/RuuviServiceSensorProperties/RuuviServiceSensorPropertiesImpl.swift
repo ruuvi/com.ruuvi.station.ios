@@ -1,5 +1,8 @@
+#if SWIFT_PACKAGE
+    import RuuviService
+    import RuuviCloudApi
+#endif
 import Foundation
-import Future
 import RuuviCloud
 import RuuviCore
 import RuuviLocal
@@ -13,6 +16,7 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
     private let cloud: RuuviCloud
     private let coreImage: RuuviCoreImage
     private let localImages: RuuviLocalImages
+    private let backgroundTasks = RuuviTaskStore()
 
     public init(
         pool: RuuviPool,
@@ -26,168 +30,93 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         self.localImages = localImages
     }
 
+    @MainActor
     public func set(
         name: String,
         for sensor: RuuviTagSensor
-    ) -> Future<AnyRuuviTagSensor, RuuviServiceError> {
-        let promise = Promise<AnyRuuviTagSensor, RuuviServiceError>()
+    ) async throws(RuuviServiceError) -> AnyRuuviTagSensor {
         let updatedSensor = sensor.with(name: name).with(lastUpdated: Date())
+        do { _ = try await pool.update(updatedSensor) } catch { throw .ruuviPool(error) }
         if sensor.isCloud {
-            pool.update(updatedSensor)
-                .on(success: { [weak self] _ in
-                    self?.cloud.update(name: name, for: sensor)
-                    promise.succeed(value: updatedSensor.any)
-                }, failure: { error in
-                    promise.fail(error: .ruuviPool(error))
-                })
-        } else {
-            pool.update(updatedSensor)
-                .on(success: { _ in
-                    promise.succeed(value: updatedSensor.any)
-                }, failure: { error in
-                    promise.fail(error: .ruuviPool(error))
-                })
+            backgroundTasks.run(seriallyFor: "name:" + sensor.id) { @MainActor [cloud] in
+                _ = try? await cloud.update(name: name, for: sensor)
+            }
         }
-        return promise.future
+        return updatedSensor.any
     }
 
-    public func setNextDefaultBackground(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError> {
-        let luid = sensor.luid
-        let macId = sensor.macId
+    @MainActor
+    public func setNextDefaultBackground(for sensor: RuuviTagSensor) async throws(RuuviServiceError) -> UIImage {
+        let image = try await setNextDefaultBackground(luid: sensor.luid, macId: sensor.macId)
+        await updateSensorTimestamp(for: sensor)
         if sensor.isCloud {
-            resetCloudImage(for: sensor).on()
+            backgroundTasks.run(seriallyFor: "image:" + sensor.id) { @MainActor [self] in
+                _ = try? await resetCloudImage(for: sensor)
+            }
         }
-        let result = setNextDefaultBackground(luid: luid, macId: macId)
-        result.on(success: { [weak self] _ in
-            self?.updateSensorTimestamp(for: sensor)
-        })
-        return result
+        return image
     }
 
+    @MainActor
     public func setNextDefaultBackground(
         luid: LocalIdentifier?,
         macId: MACIdentifier?
-    ) -> Future<UIImage, RuuviServiceError> {
-        let promise = Promise<UIImage, RuuviServiceError>()
+    ) async throws(RuuviServiceError) -> UIImage {
+        var outcome: Result<UIImage, RuuviServiceError>
         let identifier = macId ?? luid
         if let identifier {
             if let image = localImages.setNextDefaultBackground(for: identifier) {
-                promise.succeed(value: image)
+                outcome = .success(image)
             } else {
-                promise.fail(error: .failedToFindOrGenerateBackgroundImage)
+                outcome = .failure(.failedToFindOrGenerateBackgroundImage)
             }
         } else {
-            promise.fail(error: .bothLuidAndMacAreNil)
+            outcome = .failure(.bothLuidAndMacAreNil)
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    // swiftlint:disable:next function_body_length
+    @MainActor
     public func set(
         image: UIImage,
         for sensor: RuuviTagSensor,
         progress: ((MACIdentifier, Double) -> Void)?,
         maxSize: CGSize,
         compressionQuality: CGFloat
-    ) -> Future<URL, RuuviServiceError> {
-        let promise = Promise<URL, RuuviServiceError>()
-        let croppedImage = coreImage.cropped(image: image, to: maxSize)
-        guard let jpegData = croppedImage.jpegData(compressionQuality: compressionQuality)
-        else {
-            promise.fail(error: .failedToGetJpegRepresentation)
-            return promise.future
+    ) async throws(RuuviServiceError) -> URL {
+        let image = coreImage.cropped(image: image, to: maxSize)
+        guard let data = image.jpegData(compressionQuality: compressionQuality) else {
+            throw .failedToGetJpegRepresentation
         }
-        let luid = sensor.luid
-        let macId = sensor.macId
-        assert(luid != nil || macId != nil)
-        var local: Future<URL, RuuviLocalError>?
-        var remote: Future<URL, RuuviCloudError>?
-        if sensor.isCloud {
-            if let mac = macId {
-                remote = cloud.upload(
-                    imageData: jpegData,
-                    mimeType: .jpg,
-                    progress: { macId, percentage in
-                        self.localImages.setBackgroundUploadProgress(
-                            percentage: percentage,
-                            for: macId
-                        )
-                        progress?(macId, percentage)
-                    },
-                    for: mac
-                )
-                local = localImages.setCustomBackground(
-                    image: croppedImage,
-                    compressionQuality: compressionQuality,
-                    for: mac
-                )
-            } else if let luid {
-                local = localImages.setCustomBackground(
-                    image: croppedImage,
-                    compressionQuality: compressionQuality,
-                    for: luid
-                )
-            } else {
-                promise.fail(error: .bothLuidAndMacAreNil)
-                return promise.future
-            }
-        } else {
-            if let mac = macId {
-                local = localImages.setCustomBackground(
-                    image: croppedImage,
-                    compressionQuality: compressionQuality,
-                    for: mac
-                )
-            } else if let luid {
-                local = localImages.setCustomBackground(
-                    image: croppedImage,
-                    compressionQuality: compressionQuality,
-                    for: luid
-                )
-            } else {
-                promise.fail(error: .bothLuidAndMacAreNil)
-                return promise.future
-            }
+        guard let identifier = sensor.macId ?? sensor.luid else { throw .bothLuidAndMacAreNil }
+        let localURL: URL
+        do {
+            localURL = try await localImages.setCustomBackground(
+                image: image, compressionQuality: compressionQuality, for: identifier
+            )
+        } catch { throw .ruuviLocal(error) }
+        await updateSensorTimestamp(for: sensor)
+        if sensor.isCloud, let mac = sensor.macId {
+            localImages.setBackgroundUploadProgress(percentage: 0, for: mac)
+            defer { localImages.deleteBackgroundUploadProgress(for: mac) }
+            do {
+                _ = try await cloud.upload(
+                    imageData: data, mimeType: .jpg,
+                    progress: { [localImages] mac, percentage in
+                        localImages.setBackgroundUploadProgress(percentage: percentage, for: mac)
+                        progress?(mac, percentage)
+                    }, for: mac)
+            } catch { throw .ruuviCloud(error) }
         }
-
-        local?.on(success: { [weak self] _ in
-            self?.updateSensorTimestamp(for: sensor)
-        })
-
-        if let local, let remote {
-            if let mac = macId {
-                localImages.setBackgroundUploadProgress(percentage: 0.0, for: mac)
-            }
-            remote.on(success: { _ in
-                local.on(success: { localUrl in
-                    if let mac = macId {
-                        self.localImages.deleteBackgroundUploadProgress(for: mac)
-                    }
-                    promise.succeed(value: localUrl)
-                }, failure: { error in
-                    promise.fail(error: .ruuviLocal(error))
-                })
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        } else if let local {
-            local.on(success: { url in
-                promise.succeed(value: url)
-            }, failure: { error in
-                promise.fail(error: .ruuviLocal(error))
-            })
-        } else {
-            promise.fail(error: .bothLuidAndMacAreNil)
-            return promise.future
-        }
-        return promise.future
+        return localURL
     }
 
-    public func getImage(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError> {
+    @MainActor
+    public func getImage(for sensor: RuuviTagSensor) async throws(RuuviServiceError) -> UIImage {
         let dataFormat = RuuviDataFormat.dataFormat(from: sensor.version)
         let ruuviDeviceType: RuuviDeviceType =
             dataFormat == .e1 || dataFormat == .v6 ? .ruuviAir : .ruuviTag
-        return getImage(
+        return try await getImage(
             luid: sensor.luid,
             macId: sensor.macId,
             ruuviDeviceType: ruuviDeviceType
@@ -202,199 +131,193 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
             localImages.deleteCustomBackground(for: luid)
         }
         localImages.setPictureRemovedFromCache(for: sensor)
-        updateSensorTimestamp(for: sensor)
-        if sensor.isCloud {
-            resetCloudImage(for: sensor)
+        backgroundTasks.run { @MainActor [self] in
+            await updateSensorTimestamp(for: sensor)
+            if sensor.isCloud { _ = try? await resetCloudImage(for: sensor) }
         }
     }
 
     @discardableResult
+    @MainActor
     // swiftlint:disable:next function_body_length
     public func updateDisplaySettings(
         for sensor: RuuviTagSensor,
         displayOrder: [String]?,
         defaultDisplayOrder: Bool
-    ) -> Future<SensorSettings, RuuviServiceError> {
-        let promise = Promise<SensorSettings, RuuviServiceError>()
+    ) async throws(RuuviServiceError) -> SensorSettings {
+        var outcome: Result<SensorSettings, RuuviServiceError>
         let updatedAt = Date()
 
         // Fetch current settings to determine which timestamps to update
-        pool.readSensorSettings(sensor)
-            .observe(on: .global(qos: .utility))
-            .on(success: { [weak self] currentSettings in
-                guard let self = self else {
-                    promise.fail(
-                        error: .ruuviCloud(.api(.failedToGetDataFromResponse))
-                    )
-                    return
-                }
+        do {
+            let currentSettings = try await pool.readSensorSettings(sensor)
+            // Determine which timestamps to update based on what changed
+            var displayOrderTimestamp: Date?
+            var defaultDisplayOrderTimestamp: Date?
 
-                // Determine which timestamps to update based on what changed
-                var displayOrderTimestamp: Date?
-                var defaultDisplayOrderTimestamp: Date?
-
-                // Update displayOrder timestamp only if the value changed
-                if let currentDisplayOrder = currentSettings?.displayOrder,
-                   let newDisplayOrder = displayOrder {
-                    if currentDisplayOrder != newDisplayOrder {
-                        displayOrderTimestamp = updatedAt
-                    }
-                } else if displayOrder != nil {
-                    // New value being set, no previous value
+            // Update displayOrder timestamp only if the value changed
+            if let currentDisplayOrder = currentSettings?.displayOrder,
+                let newDisplayOrder = displayOrder
+            {
+                if currentDisplayOrder != newDisplayOrder {
                     displayOrderTimestamp = updatedAt
                 }
+            } else if displayOrder != nil {
+                // New value being set, no previous value
+                displayOrderTimestamp = updatedAt
+            }
 
-                // Update defaultDisplayOrder timestamp only if the value changed
-                if let currentDefaultDisplayOrder = currentSettings?.defaultDisplayOrder {
-                    if currentDefaultDisplayOrder != defaultDisplayOrder {
-                        defaultDisplayOrderTimestamp = updatedAt
-                    }
-                } else {
-                    // New value being set, no previous value
+            // Update defaultDisplayOrder timestamp only if the value changed
+            if let currentDefaultDisplayOrder = currentSettings?.defaultDisplayOrder {
+                if currentDefaultDisplayOrder != defaultDisplayOrder {
                     defaultDisplayOrderTimestamp = updatedAt
                 }
+            } else {
+                // New value being set, no previous value
+                defaultDisplayOrderTimestamp = updatedAt
+            }
 
-                self.pool
-                    .updateDisplaySettings(
-                        for: sensor,
-                        displayOrder: displayOrder,
-                        defaultDisplayOrder: defaultDisplayOrder,
-                        displayOrderLastUpdated: displayOrderTimestamp,
-                        defaultDisplayOrderLastUpdated: defaultDisplayOrderTimestamp
-                    )
-                    .on(success: { [weak self] settings in
-                        if sensor.isCloud {
-                            self?.pushDisplaySettingsToCloudIfNeeded(
-                                for: sensor,
-                                displayOrder: displayOrder,
-                                defaultDisplayOrder: defaultDisplayOrder
-                            ).on(success: { _ in
-                                promise.succeed(value: settings)
-                            }, failure: { error in
-                                promise.fail(error: error)
-                            })
-                        } else {
-                            promise.succeed(value: settings)
-                        }
-                    }, failure: { error in
-                        promise.fail(error: .ruuviPool(error))
-                    })
-            }, failure: { error in
-                promise.fail(error: .ruuviPool(error))
-            })
+            do {
+                let settings = try await self.pool.updateDisplaySettings(
+                    for: sensor,
+                    displayOrder: displayOrder,
+                    defaultDisplayOrder: defaultDisplayOrder,
+                    displayOrderLastUpdated: displayOrderTimestamp,
+                    defaultDisplayOrderLastUpdated: defaultDisplayOrderTimestamp
+                )
+                if sensor.isCloud {
+                    do {
+                        let _ = try await self.pushDisplaySettingsToCloudIfNeeded(
+                            for: sensor,
+                            displayOrder: displayOrder,
+                            defaultDisplayOrder: defaultDisplayOrder
+                        )
+                        outcome = .success(settings)
+                    } catch let error {
+                        outcome = .failure(error)
+                    }
+                } else {
+                    outcome = .success(settings)
+                }
+            } catch let error {
+                outcome = .failure(.ruuviPool(error))
+            }
+        } catch let error {
+            outcome = .failure(.ruuviPool(error))
+        }
 
-        return promise.future
+        return try outcome.get()
     }
 
     @discardableResult
+    @MainActor
     public func updateDescription(
         for sensor: RuuviTagSensor,
         description: String?
-    ) -> Future<SensorSettings, RuuviServiceError> {
-        let promise = Promise<SensorSettings, RuuviServiceError>()
+    ) async throws(RuuviServiceError) -> SensorSettings {
+        var outcome: Result<SensorSettings, RuuviServiceError>
         let updatedAt = Date()
 
-        pool.readSensorSettings(sensor)
-            .observe(on: .global(qos: .utility))
-            .on(success: { [weak self] currentSettings in
-                guard let self else {
-                    promise.fail(
-                        error: .ruuviCloud(.api(.failedToGetDataFromResponse))
-                    )
-                    return
-                }
+        do {
+            let currentSettings = try await pool.readSensorSettings(sensor)
+            let descriptionTimestamp: Date? =
+                currentSettings?.description != description ? updatedAt : nil
 
-                let descriptionTimestamp: Date? =
-                    currentSettings?.description != description ? updatedAt : nil
-
-                self.pool.updateDescription(
+            do {
+                let settings = try await self.pool.updateDescription(
                     for: sensor,
                     description: description,
                     descriptionLastUpdated: descriptionTimestamp
-                ).on(success: { [weak self] settings in
-                    if sensor.isCloud {
-                        self?.pushDescriptionToCloudIfNeeded(
+                )
+                if sensor.isCloud {
+                    do {
+                        let _ = try await self.pushDescriptionToCloudIfNeeded(
                             for: sensor,
                             description: description
-                        ).on(success: { _ in
-                            promise.succeed(value: settings)
-                        }, failure: { error in
-                            promise.fail(error: error)
-                        })
-                    } else {
-                        promise.succeed(value: settings)
+                        )
+                        outcome = .success(settings)
+                    } catch let error {
+                        outcome = .failure(error)
                     }
-                }, failure: { error in
-                    promise.fail(error: .ruuviPool(error))
-                })
-            }, failure: { error in
-                promise.fail(error: .ruuviPool(error))
-            })
-        return promise.future
+                } else {
+                    outcome = .success(settings)
+                }
+            } catch let error {
+                outcome = .failure(.ruuviPool(error))
+            }
+        } catch let error {
+            outcome = .failure(.ruuviPool(error))
+        }
+        return try outcome.get()
     }
 
     @discardableResult
-    private func resetCloudImage(for sensor: RuuviTagSensor) -> Future<Void, RuuviServiceError> {
-        let promise = Promise<Void, RuuviServiceError>()
+    @MainActor
+    private func resetCloudImage(for sensor: RuuviTagSensor) async throws(RuuviServiceError) -> Void {
+        var outcome: Result<Void, RuuviServiceError>
         guard let macId = sensor.macId
         else {
-            promise.fail(error: .macIdIsNil)
-            return promise.future
+            outcome = .failure(.macIdIsNil)
+            return try outcome.get()
         }
-        cloud.resetImage(for: macId)
-            .on(success: { _ in
-                promise.succeed(value: ())
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        return promise.future
+        do {
+            let _ = try await cloud.resetImage(for: macId)
+            outcome = .success(())
+        } catch let error {
+            outcome = .failure(.ruuviCloud(error))
+        }
+        return try outcome.get()
     }
 
+    @MainActor
     private func getImage(
         luid: LocalIdentifier?,
         macId: MACIdentifier?,
         ruuviDeviceType: RuuviDeviceType
-    ) -> Future<UIImage, RuuviServiceError> {
-        let promise = Promise<UIImage, RuuviServiceError>()
+    ) async throws(RuuviServiceError) -> UIImage {
+        var outcome: Result<UIImage, RuuviServiceError>
         if let macId {
             if let image = localImages.getBackground(for: macId) {
-                promise.succeed(value: image)
-            } else if let luid, let image = localImages.getOrGenerateBackground(
-                for: luid,
-                ruuviDeviceType: ruuviDeviceType
-            ) {
-                promise.succeed(value: image)
+                outcome = .success(image)
+            } else if let luid,
+                let image = localImages.getOrGenerateBackground(
+                    for: luid,
+                    ruuviDeviceType: ruuviDeviceType
+                )
+            {
+                outcome = .success(image)
             } else if let image = localImages.getOrGenerateBackground(
                 for: macId,
                 ruuviDeviceType: ruuviDeviceType
             ) {
-                promise.succeed(value: image)
+                outcome = .success(image)
             } else {
-                promise.fail(error: .failedToFindOrGenerateBackgroundImage)
+                outcome = .failure(.failedToFindOrGenerateBackgroundImage)
             }
         } else if let luid {
             if let image = localImages.getOrGenerateBackground(
                 for: luid,
                 ruuviDeviceType: ruuviDeviceType
             ) {
-                promise.succeed(value: image)
+                outcome = .success(image)
             } else {
-                promise.fail(error: .failedToFindOrGenerateBackgroundImage)
+                outcome = .failure(.failedToFindOrGenerateBackgroundImage)
             }
         } else {
-            promise.fail(error: .bothLuidAndMacAreNil)
+            outcome = .failure(.bothLuidAndMacAreNil)
         }
-        return promise.future
+        return try outcome.get()
     }
 
+    @MainActor
     private func pushDisplaySettingsToCloudIfNeeded(
         for sensor: RuuviTagSensor,
         displayOrder: [String]?,
         defaultDisplayOrder: Bool
-    ) -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
+    ) async throws(RuuviServiceError) -> Bool {
+        var outcome: Result<Bool, RuuviServiceError>
 
-        guard sensor.isCloud else { return promise.future }
+        guard sensor.isCloud else { return false }
 
         var types: [String] = [RuuviCloudApiSetting.sensorDefaultDisplayOrder.rawValue]
         var values: [String] = [defaultDisplayOrder ? "true" : "false"]
@@ -404,39 +327,42 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
             values.append(encodedOrder)
         }
 
-        cloud.updateSensorSettings(
-            for: sensor,
-            types: types,
-            values: values,
-            timestamp: Int(Date().timeIntervalSince1970)
-        ).on(success: { _ in
-            promise.succeed(value: true)
-        }, failure: { error in
-            promise.fail(error: .ruuviCloud(error))
-        })
+        do {
+            let _ = try await cloud.updateSensorSettings(
+                for: sensor,
+                types: types,
+                values: values,
+                timestamp: Int(Date().timeIntervalSince1970)
+            )
+            outcome = .success(true)
+        } catch let error {
+            outcome = .failure(.ruuviCloud(error))
+        }
 
-        return promise.future
+        return try outcome.get()
     }
 
+    @MainActor
     private func pushDescriptionToCloudIfNeeded(
         for sensor: RuuviTagSensor,
         description: String?
-    ) -> Future<Bool, RuuviServiceError> {
-        let promise = Promise<Bool, RuuviServiceError>()
-        guard sensor.isCloud else { return promise.future }
+    ) async throws(RuuviServiceError) -> Bool {
+        var outcome: Result<Bool, RuuviServiceError>
+        guard sensor.isCloud else { return false }
 
-        cloud.updateSensorSettings(
-            for: sensor,
-            types: [RuuviCloudApiSetting.sensorDescription.rawValue],
-            values: [description ?? ""],
-            timestamp: Int(Date().timeIntervalSince1970)
-        ).on(success: { _ in
-            promise.succeed(value: true)
-        }, failure: { error in
-            promise.fail(error: .ruuviCloud(error))
-        })
+        do {
+            let _ = try await cloud.updateSensorSettings(
+                for: sensor,
+                types: [RuuviCloudApiSetting.sensorDescription.rawValue],
+                values: [description ?? ""],
+                timestamp: Int(Date().timeIntervalSince1970)
+            )
+            outcome = .success(true)
+        } catch let error {
+            outcome = .failure(.ruuviCloud(error))
+        }
 
-        return promise.future
+        return try outcome.get()
     }
 
     private func encodeDisplayOrderForCloud(_ codes: [String]?) -> String? {
@@ -444,18 +370,21 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
             return nil
         }
         if let data = try? JSONEncoder().encode(codes),
-           let string = String(data: data, encoding: .utf8) {
+            let string = String(data: data, encoding: .utf8)
+        {
             return string
         }
         if let data = try? JSONSerialization.data(withJSONObject: codes, options: []),
-           let string = String(data: data, encoding: .utf8) {
+            let string = String(data: data, encoding: .utf8)
+        {
             return string
         }
         return nil
     }
 
-    private func updateSensorTimestamp(for sensor: RuuviTagSensor) {
+    @MainActor
+    private func updateSensorTimestamp(for sensor: RuuviTagSensor) async {
         let updatedSensor = sensor.with(lastUpdated: Date())
-        pool.update(updatedSensor).on()
+        _ = try? await pool.update(updatedSensor)
     }
 }

@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviOntology
+#endif
 import Foundation
 
 /// Shared limits for persisted values, prompt eligibility, and the developer settings editor.

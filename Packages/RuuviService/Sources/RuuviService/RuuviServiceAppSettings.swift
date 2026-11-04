@@ -1,78 +1,86 @@
+#if SWIFT_PACKAGE
+    import RuuviStorage
+    import RuuviPool
+    import RuuviLocal
+    import RuuviRepository
+    import RuuviCore
+#endif
 import Foundation
-import Future
 import RuuviCloud
 import RuuviOntology
 
 public protocol RuuviServiceAppSettings: RuuviServiceMarketingConsent {
     @discardableResult
-    func set(temperatureUnit: TemperatureUnit) -> Future<TemperatureUnit, RuuviServiceError>
+    func set(temperatureUnit: TemperatureUnit) async throws(RuuviServiceError) -> TemperatureUnit
 
     @discardableResult
-    func set(temperatureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviServiceError>
+    func set(temperatureAccuracy: MeasurementAccuracyType) async throws(RuuviServiceError) -> MeasurementAccuracyType
 
     @discardableResult
-    func set(humidityUnit: HumidityUnit) -> Future<HumidityUnit, RuuviServiceError>
+    func set(humidityUnit: HumidityUnit) async throws(RuuviServiceError) -> HumidityUnit
 
     @discardableResult
-    func set(humidityAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviServiceError>
+    func set(humidityAccuracy: MeasurementAccuracyType) async throws(RuuviServiceError) -> MeasurementAccuracyType
 
     @discardableResult
-    func set(relativeHumidityAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviServiceError>
+    func set(relativeHumidityAccuracy: MeasurementAccuracyType) async throws(RuuviServiceError)
+        -> MeasurementAccuracyType
 
     @discardableResult
-    func set(absoluteHumidityAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviServiceError>
+    func set(absoluteHumidityAccuracy: MeasurementAccuracyType) async throws(RuuviServiceError)
+        -> MeasurementAccuracyType
 
     @discardableResult
-    func set(dewPointAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviServiceError>
+    func set(dewPointAccuracy: MeasurementAccuracyType) async throws(RuuviServiceError) -> MeasurementAccuracyType
 
     @discardableResult
-    func set(pressureUnit: UnitPressure) -> Future<UnitPressure, RuuviServiceError>
+    func set(pressureUnit: UnitPressure) async throws(RuuviServiceError) -> UnitPressure
 
     @discardableResult
-    func set(pressureAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviServiceError>
+    func set(pressureAccuracy: MeasurementAccuracyType) async throws(RuuviServiceError) -> MeasurementAccuracyType
 
     @discardableResult
-    func set(pmAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviServiceError>
+    func set(pmAccuracy: MeasurementAccuracyType) async throws(RuuviServiceError) -> MeasurementAccuracyType
 
     @discardableResult
-    func set(accelerationAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviServiceError>
+    func set(accelerationAccuracy: MeasurementAccuracyType) async throws(RuuviServiceError) -> MeasurementAccuracyType
 
     @discardableResult
-    func set(voltageAccuracy: MeasurementAccuracyType) -> Future<MeasurementAccuracyType, RuuviServiceError>
+    func set(voltageAccuracy: MeasurementAccuracyType) async throws(RuuviServiceError) -> MeasurementAccuracyType
 
     @discardableResult
-    func set(showAllData: Bool) -> Future<Bool, RuuviServiceError>
+    func set(showAllData: Bool) async throws(RuuviServiceError) -> Bool
 
     @discardableResult
-    func set(drawDots: Bool) -> Future<Bool, RuuviServiceError>
+    func set(drawDots: Bool) async throws(RuuviServiceError) -> Bool
 
     @discardableResult
-    func set(chartDuration: Int) -> Future<Int, RuuviServiceError>
+    func set(chartDuration: Int) async throws(RuuviServiceError) -> Int
 
     @discardableResult
-    func set(showMinMaxAvg: Bool) -> Future<Bool, RuuviServiceError>
+    func set(showMinMaxAvg: Bool) async throws(RuuviServiceError) -> Bool
 
     @discardableResult
-    func set(cloudMode: Bool) -> Future<Bool, RuuviServiceError>
+    func set(cloudMode: Bool) async throws(RuuviServiceError) -> Bool
 
     @discardableResult
-    func set(dashboard: Bool) -> Future<Bool, RuuviServiceError>
+    func set(dashboard: Bool) async throws(RuuviServiceError) -> Bool
 
     @discardableResult
-    func set(dashboardType: DashboardType) -> Future<DashboardType, RuuviServiceError>
+    func set(dashboardType: DashboardType) async throws(RuuviServiceError) -> DashboardType
 
     @discardableResult
-    func set(dashboardTapActionType: DashboardTapActionType) -> Future<DashboardTapActionType, RuuviServiceError>
+    func set(dashboardTapActionType: DashboardTapActionType) async throws(RuuviServiceError) -> DashboardTapActionType
 
     @discardableResult
-    func set(disableEmailAlert: Bool) -> Future<Bool, RuuviServiceError>
+    func set(disableEmailAlert: Bool) async throws(RuuviServiceError) -> Bool
 
     @discardableResult
-    func set(disablePushAlert: Bool) -> Future<Bool, RuuviServiceError>
+    func set(disablePushAlert: Bool) async throws(RuuviServiceError) -> Bool
 
     @discardableResult
-    func set(profileLanguageCode: String) -> Future<String, RuuviServiceError>
+    func set(profileLanguageCode: String) async throws(RuuviServiceError) -> String
 
     @discardableResult
-    func set(dashboardSensorOrder: [String]) -> Future<[String], RuuviServiceError>
+    func set(dashboardSensorOrder: [String]) async throws(RuuviServiceError) -> [String]
 }

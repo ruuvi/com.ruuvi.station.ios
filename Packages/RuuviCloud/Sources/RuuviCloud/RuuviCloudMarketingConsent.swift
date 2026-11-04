@@ -1,3 +1,9 @@
+#if SWIFT_PACKAGE
+    import RuuviOntology
+    import RuuviPool
+    import RuuviLocal
+    import RuuviUser
+#endif
 import Foundation
 
 public enum RuuviCloudMarketingConsentStatus: String, Codable, Equatable, Sendable {

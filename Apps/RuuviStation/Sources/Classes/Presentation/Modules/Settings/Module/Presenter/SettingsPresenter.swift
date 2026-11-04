@@ -1,5 +1,4 @@
 import Foundation
-import Future
 import RuuviContext
 import RuuviLocal
 import RuuviLocalization
@@ -60,14 +59,20 @@ extension SettingsPresenter: SettingsViewOutput {
     }
 
     private func refreshCloudModeVisibility() {
-        ruuviStorage.readAll().on(success: { [weak self] tags in
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                let cloudTagsCount = tags.filter { $0.isOwner || $0.isCloud }.count
-                let cloudModeVisible = ruuviUser.isAuthorized && cloudTagsCount > 0
-                view.cloudModeVisible = cloudModeVisible
+        Task { @MainActor [weak self, ruuviStorage = ruuviStorage!] in
+            do throws(RuuviStorageError) {
+                let value = try await ruuviStorage.readAll()
+                ({ [weak self] tags in
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self else { return }
+                        let cloudTagsCount = tags.filter { $0.isOwner || $0.isCloud }.count
+                        let cloudModeVisible = ruuviUser.isAuthorized && cloudTagsCount > 0
+                        view.cloudModeVisible = cloudModeVisible
+                    }
+                })(value)
+            } catch {
             }
-        })
+        }
     }
 
     func viewDidTapGlobalUnits() {
@@ -87,39 +92,19 @@ extension SettingsPresenter: SettingsViewOutput {
     }
 
     private func loadLatestRecords(completion: @escaping () -> Void) {
-        ruuviStorage.readAll().on(success: { [weak self] tags in
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            defer { completion() }
+            do {
+                let tags = try await ruuviStorage.readAll()
                 hasSensors = !tags.isEmpty
-                let operations = tags.map { self.ruuviStorage.readLatest($0) }
-                guard !operations.isEmpty else {
-                    latestRecords = []
-                    completion()
-                    return
+                var records = [RuuviTagSensorRecord]()
+                for tag in tags {
+                    if let record = try await ruuviStorage.readLatest(tag) { records.append(record) }
                 }
-
-                Future.zip(operations).on(
-                    success: { [weak self] records in
-                        DispatchQueue.main.async {
-                            self?.latestRecords = records.compactMap { $0 }
-                            completion()
-                        }
-                    },
-                    failure: { [weak self] _ in
-                        DispatchQueue.main.async {
-                            self?.latestRecords = []
-                            completion()
-                        }
-                    }
-                )
-            }
-        }, failure: { [weak self] _ in
-            DispatchQueue.main.async {
-                self?.latestRecords = []
-                completion()
-            }
-        })
+                latestRecords = records
+            } catch { latestRecords = [] }
+        }
     }
 
     private func openResolutionSettings() {

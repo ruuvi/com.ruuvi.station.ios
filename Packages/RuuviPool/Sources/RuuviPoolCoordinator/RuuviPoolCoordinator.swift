@@ -1,5 +1,7 @@
+#if SWIFT_PACKAGE
+    import RuuviPool
+#endif
 import Foundation
-import Future
 import RuuviLocal
 import RuuviOntology
 import RuuviPersistence
@@ -23,352 +25,407 @@ final class RuuviPoolCoordinator: RuuviPool {
         self.connectionPersistence = connectionPersistence
     }
 
-    func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError> {
-        let promise = Promise<Bool, RuuviPoolError>()
+    @MainActor
+    func create(_ ruuviTag: RuuviTagSensor) async throws(RuuviPoolError) -> Bool {
+        var outcome: Result<Bool, RuuviPoolError>
         if let macId = ruuviTag.macId,
-           let luid = ruuviTag.luid {
+            let luid = ruuviTag.luid
+        {
             idPersistence.set(mac: macId, for: luid)
         }
         if ruuviTag.macId != nil,
-           ruuviTag.macId?.value.isEmpty == false {
-            sqlite.create(ruuviTag).on(success: { result in
-                promise.succeed(value: result)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
+            ruuviTag.macId?.value.isEmpty == false
+        {
+            do {
+                let result = try await sqlite.create(ruuviTag)
+                outcome = .success(result)
+            } catch let error {
+                outcome = .failure(.ruuviPersistence(error))
+            }
         } else {
-            assertionFailure()
+            throw .ruuviPersistence(.failedToFindRuuviTag)
         }
         if let macId = ruuviTag.macId, let luid = ruuviTag.luid {
             idPersistence.set(mac: macId, for: luid)
             idPersistence.set(luid: luid, for: macId)
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError> {
-        let promise = Promise<Bool, RuuviPoolError>()
+    @MainActor
+    func update(_ ruuviTag: RuuviTagSensor) async throws(RuuviPoolError) -> Bool {
+        var outcome: Result<Bool, RuuviPoolError>
         if ruuviTag.macId != nil {
-            sqlite.update(ruuviTag).on(success: { success in
-                promise.succeed(value: success)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
+            do {
+                let success = try await sqlite.update(ruuviTag)
+                outcome = .success(success)
+            } catch let error {
+                outcome = .failure(.ruuviPersistence(error))
+            }
         } else {
-            assertionFailure()
+            throw .ruuviPersistence(.failedToFindRuuviTag)
         }
         if let macId = ruuviTag.macId, let luid = ruuviTag.luid {
             idPersistence.set(mac: macId, for: luid)
             idPersistence.set(luid: luid, for: macId)
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError> {
-        let promise = Promise<Bool, RuuviPoolError>()
+    @MainActor
+    func delete(_ ruuviTag: RuuviTagSensor) async throws(RuuviPoolError) -> Bool {
+        var outcome: Result<Bool, RuuviPoolError>
         if ruuviTag.macId != nil {
-            sqlite.deleteOffsetCorrection(ruuviTag: ruuviTag).on(success: { [weak self] success in
-                self?.sqlite.delete(ruuviTag).on(success: { [weak self] success in
+            do {
+                let success = try await sqlite.deleteOffsetCorrection(ruuviTag: ruuviTag)
+                do {
+                    let success = try await self.sqlite.delete(ruuviTag)
                     if let luid = ruuviTag.luid {
-                        self?.connectionPersistence.setKeepConnection(false, for: luid)
+                        self.connectionPersistence.setKeepConnection(false, for: luid)
                     }
-                    promise.succeed(value: success)
-                }, failure: { error in
-                    promise.fail(error: .ruuviPersistence(error))
-                })
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
+                    outcome = .success(success)
+                } catch let error {
+                    outcome = .failure(.ruuviPersistence(error))
+                }
+            } catch let error {
+                outcome = .failure(.ruuviPersistence(error))
+            }
         } else {
-            assertionFailure()
+            throw .ruuviPersistence(.failedToFindRuuviTag)
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    func deleteSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError> {
-        let promise = Promise<Bool, RuuviPoolError>()
-        sqlite.deleteSensorSettings(ruuviTag).on(success: { success in
-            promise.succeed(value: success)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+    @MainActor
+    func deleteSensorSettings(_ ruuviTag: RuuviTagSensor) async throws(RuuviPoolError) -> Bool {
+        var outcome: Result<Bool, RuuviPoolError>
+        do {
+            let success = try await sqlite.deleteSensorSettings(ruuviTag)
+            outcome = .success(success)
+        } catch let error {
+            outcome = .failure(.ruuviPersistence(error))
+        }
+        return try outcome.get()
     }
 
-    func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError> {
-        let promise = Promise<Bool, RuuviPoolError>()
+    @MainActor
+    func create(_ record: RuuviTagSensorRecord) async throws(RuuviPoolError) -> Bool {
+        var outcome: Result<Bool, RuuviPoolError>
         if record.macId != nil {
-            sqlite.create(record).on(success: { success in
-                promise.succeed(value: success)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
+            do {
+                let success = try await sqlite.create(record)
+                outcome = .success(success)
+            } catch let error {
+                outcome = .failure(.ruuviPersistence(error))
+            }
         } else if let luid = record.luid,
-                  let macId = idPersistence.mac(for: luid) {
-            sqlite.create(record.with(macId: macId)).on(success: { success in
-                promise.succeed(value: success)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
+            let macId = idPersistence.mac(for: luid)
+        {
+            do {
+                let success = try await sqlite.create(record.with(macId: macId))
+                outcome = .success(success)
+            } catch let error {
+                outcome = .failure(.ruuviPersistence(error))
+            }
         } else {
-            assertionFailure()
+            throw .ruuviPersistence(.failedToFindRuuviTag)
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    func createLast(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError> {
-        let promise = Promise<Bool, RuuviPoolError>()
+    @MainActor
+    func createLast(_ record: RuuviTagSensorRecord) async throws(RuuviPoolError) -> Bool {
+        var outcome: Result<Bool, RuuviPoolError>
         if record.macId != nil {
-            sqlite.createLast(record).on(success: { success in
-                promise.succeed(value: success)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
+            do {
+                let success = try await sqlite.createLast(record)
+                outcome = .success(success)
+            } catch let error {
+                outcome = .failure(.ruuviPersistence(error))
+            }
         } else if let luid = record.luid,
-                  let macId = idPersistence.mac(for: luid) {
-            sqlite.createLast(record.with(macId: macId)).on(success: { success in
-                promise.succeed(value: success)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
+            let macId = idPersistence.mac(for: luid)
+        {
+            do {
+                let success = try await sqlite.createLast(record.with(macId: macId))
+                outcome = .success(success)
+            } catch let error {
+                outcome = .failure(.ruuviPersistence(error))
+            }
         } else {
-            assertionFailure()
+            throw .ruuviPersistence(.failedToFindRuuviTag)
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    func updateLast(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError> {
-        let promise = Promise<Bool, RuuviPoolError>()
+    @MainActor
+    func updateLast(_ record: RuuviTagSensorRecord) async throws(RuuviPoolError) -> Bool {
+        var outcome: Result<Bool, RuuviPoolError>
         if record.macId != nil {
-            sqlite.updateLast(record).on(success: { success in
-                promise.succeed(value: success)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
+            do {
+                let success = try await sqlite.updateLast(record)
+                outcome = .success(success)
+            } catch let error {
+                outcome = .failure(.ruuviPersistence(error))
+            }
         } else if let luid = record.luid,
-                  let macId = idPersistence.mac(for: luid) {
-            sqlite.updateLast(record.with(macId: macId)).on(success: { success in
-                promise.succeed(value: success)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
+            let macId = idPersistence.mac(for: luid)
+        {
+            do {
+                let success = try await sqlite.updateLast(record.with(macId: macId))
+                outcome = .success(success)
+            } catch let error {
+                outcome = .failure(.ruuviPersistence(error))
+            }
         } else {
-            assertionFailure()
+            throw .ruuviPersistence(.failedToFindRuuviTag)
         }
-        return promise.future
+        return try outcome.get()
     }
 
-    func deleteLast(_ ruuviTagId: String) -> Future<Bool, RuuviPoolError> {
-        let promise = Promise<Bool, RuuviPoolError>()
-        let sqliteOperation = sqlite.deleteLatest(ruuviTagId)
-        sqliteOperation.on(success: { _ in
-            promise.succeed(value: true)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+    @MainActor
+    func deleteLast(_ ruuviTagId: String) async throws(RuuviPoolError) -> Bool {
+        var outcome: Result<Bool, RuuviPoolError>
+
+        do {
+            let _ = try await sqlite.deleteLatest(ruuviTagId)
+            outcome = .success(true)
+        } catch let error {
+            outcome = .failure(.ruuviPersistence(error))
+        }
+        return try outcome.get()
     }
 
-    func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RuuviPoolError> {
-        let promise = Promise<Bool, RuuviPoolError>()
-        let sqliteRecords = records.filter { $0.macId != nil }
-        let sqliteOperation = sqlite.create(sqliteRecords)
-        sqliteOperation.on(success: { _ in
-            promise.succeed(value: true)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+    @MainActor
+    func create(_ records: [RuuviTagSensorRecord]) async throws(RuuviPoolError) -> Bool {
+        var outcome: Result<Bool, RuuviPoolError>
+        var sqliteRecords: [RuuviTagSensorRecord] = []
+        for record in records {
+            if let macId = record.macId, !macId.value.isEmpty {
+                sqliteRecords.append(record)
+            } else if let luid = record.luid,
+                let macId = idPersistence.mac(for: luid), !macId.value.isEmpty
+            {
+                sqliteRecords.append(record.with(macId: macId))
+            } else {
+                // Reject the whole batch before writing; reporting success must never discard measurements.
+                throw .ruuviPersistence(.failedToFindRuuviTag)
+            }
+        }
+
+        do {
+            let _ = try await sqlite.create(sqliteRecords)
+            outcome = .success(true)
+        } catch let error {
+            outcome = .failure(.ruuviPersistence(error))
+        }
+        return try outcome.get()
     }
 
-    func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RuuviPoolError> {
-        let promise = Promise<Bool, RuuviPoolError>()
-        let sqliteOperation = sqlite.deleteAllRecords(ruuviTagId)
-        sqliteOperation.on(success: { _ in
-            promise.succeed(value: true)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+    @MainActor
+    func deleteAllRecords(_ ruuviTagId: String) async throws(RuuviPoolError) -> Bool {
+        var outcome: Result<Bool, RuuviPoolError>
+
+        do {
+            let _ = try await sqlite.deleteAllRecords(ruuviTagId)
+            outcome = .success(true)
+        } catch let error {
+            outcome = .failure(.ruuviPersistence(error))
+        }
+        return try outcome.get()
     }
 
-    func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RuuviPoolError> {
-        let promise = Promise<Bool, RuuviPoolError>()
-        let sqliteOperation = sqlite.deleteAllRecords(ruuviTagId, before: date)
-        sqliteOperation.on(success: { _ in
-            promise.succeed(value: true)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+    @MainActor
+    func deleteAllRecords(_ ruuviTagId: String, before date: Date) async throws(RuuviPoolError) -> Bool {
+        var outcome: Result<Bool, RuuviPoolError>
+
+        do {
+            let _ = try await sqlite.deleteAllRecords(ruuviTagId, before: date)
+            outcome = .success(true)
+        } catch let error {
+            outcome = .failure(.ruuviPersistence(error))
+        }
+        return try outcome.get()
     }
 
     @discardableResult
-    func cleanupDBSpace() -> Future<Bool, RuuviPoolError> {
-        let promise = Promise<Bool, RuuviPoolError>()
-        sqlite.cleanupDBSpace().on(success: { _ in
-            promise.succeed(value: true)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+    @MainActor
+    func cleanupDBSpace() async throws(RuuviPoolError) -> Bool {
+        var outcome: Result<Bool, RuuviPoolError>
+        do {
+            let _ = try await sqlite.cleanupDBSpace()
+            outcome = .success(true)
+        } catch let error {
+            outcome = .failure(.ruuviPersistence(error))
+        }
+        return try outcome.get()
     }
 
+    @MainActor
     func updateOffsetCorrection(
         type: OffsetCorrectionType,
         with value: Double?,
         of ruuviTag: RuuviTagSensor,
         lastOriginalRecord record: RuuviTagSensorRecord?
-    ) -> Future<SensorSettings, RuuviPoolError> {
-        let promise = Promise<SensorSettings, RuuviPoolError>()
+    ) async throws(RuuviPoolError) -> SensorSettings {
+        var outcome: Result<SensorSettings, RuuviPoolError>
         if ruuviTag.macId != nil {
-            sqlite.updateOffsetCorrection(
-                type: type,
-                with: value,
-                of: ruuviTag,
-                lastOriginalRecord: record
-            )
-            .on(success: { settings in
-                promise.succeed(value: settings)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
+            do {
+                let settings = try await sqlite.updateOffsetCorrection(
+                    type: type,
+                    with: value,
+                    of: ruuviTag,
+                    lastOriginalRecord: record
+                )
+                outcome = .success(settings)
+            } catch let error {
+                outcome = .failure(.ruuviPersistence(error))
+            }
         } else {
-            assertionFailure()
+            throw .ruuviPersistence(.failedToFindRuuviTag)
         }
-        return promise.future
+        return try outcome.get()
     }
 
+    @MainActor
     func updateDisplaySettings(
         for ruuviTag: RuuviTagSensor,
         displayOrder: [String]?,
         defaultDisplayOrder: Bool?,
         displayOrderLastUpdated: Date?,
         defaultDisplayOrderLastUpdated: Date?
-    ) -> Future<SensorSettings, RuuviPoolError> {
-        let promise = Promise<SensorSettings, RuuviPoolError>()
-        sqlite.updateDisplaySettings(
-            for: ruuviTag,
-            displayOrder: displayOrder,
-            defaultDisplayOrder: defaultDisplayOrder,
-            displayOrderLastUpdated: displayOrderLastUpdated,
-            defaultDisplayOrderLastUpdated: defaultDisplayOrderLastUpdated
-        )
-        .on(success: { settings in
-            promise.succeed(value: settings)
-        }, failure: { error in
-            promise.fail(error: .ruuviPersistence(error))
-        })
-        return promise.future
+    ) async throws(RuuviPoolError) -> SensorSettings {
+        var outcome: Result<SensorSettings, RuuviPoolError>
+        do {
+            let settings = try await sqlite.updateDisplaySettings(
+                for: ruuviTag,
+                displayOrder: displayOrder,
+                defaultDisplayOrder: defaultDisplayOrder,
+                displayOrderLastUpdated: displayOrderLastUpdated,
+                defaultDisplayOrderLastUpdated: defaultDisplayOrderLastUpdated
+            )
+            outcome = .success(settings)
+        } catch let error {
+            outcome = .failure(.ruuviPersistence(error))
+        }
+        return try outcome.get()
     }
 
+    @MainActor
     func updateDescription(
         for ruuviTag: RuuviTagSensor,
         description: String?,
         descriptionLastUpdated: Date?
-    ) -> Future<SensorSettings, RuuviPoolError> {
-        let promise = Promise<SensorSettings, RuuviPoolError>()
-        sqlite.updateDescription(
-            for: ruuviTag,
-            description: description,
-            descriptionLastUpdated: descriptionLastUpdated
-        )
-            .on(success: { settings in
-                promise.succeed(value: settings)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
-        return promise.future
+    ) async throws(RuuviPoolError) -> SensorSettings {
+        var outcome: Result<SensorSettings, RuuviPoolError>
+        do {
+            let settings = try await sqlite.updateDescription(
+                for: ruuviTag,
+                description: description,
+                descriptionLastUpdated: descriptionLastUpdated
+            )
+            outcome = .success(settings)
+        } catch let error {
+            outcome = .failure(.ruuviPersistence(error))
+        }
+        return try outcome.get()
     }
 
-    func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RuuviPoolError> {
-        let promise = Promise<SensorSettings?, RuuviPoolError>()
-        sqlite.readSensorSettings(ruuviTag)
-            .on(success: { settings in
-                promise.succeed(value: settings)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
-        return promise.future
+    @MainActor
+    func readSensorSettings(_ ruuviTag: RuuviTagSensor) async throws(RuuviPoolError) -> SensorSettings? {
+        var outcome: Result<SensorSettings?, RuuviPoolError>
+        do {
+            let settings = try await sqlite.readSensorSettings(ruuviTag)
+            outcome = .success(settings)
+        } catch let error {
+            outcome = .failure(.ruuviPersistence(error))
+        }
+        return try outcome.get()
     }
 
     // MARK: - Queued cloud requests
 
+    @MainActor
     func createQueuedRequest(
         _ request: RuuviCloudQueuedRequest
-    ) -> Future<Bool, RuuviPoolError> {
-        let promise = Promise<Bool, RuuviPoolError>()
-        sqlite.createQueuedRequest(request)
-            .on(success: { success in
-                promise.succeed(value: success)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
-        return promise.future
+    ) async throws(RuuviPoolError) -> Bool {
+        var outcome: Result<Bool, RuuviPoolError>
+        do {
+            let success = try await sqlite.createQueuedRequest(request)
+            outcome = .success(success)
+        } catch let error {
+            outcome = .failure(.ruuviPersistence(error))
+        }
+        return try outcome.get()
     }
 
+    @MainActor
     func deleteQueuedRequest(
         _ request: RuuviCloudQueuedRequest
-    ) -> Future<Bool, RuuviPoolError> {
-        let promise = Promise<Bool, RuuviPoolError>()
-        sqlite.deleteQueuedRequest(request)
-            .on(success: { success in
-                promise.succeed(value: success)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
-        return promise.future
+    ) async throws(RuuviPoolError) -> Bool {
+        var outcome: Result<Bool, RuuviPoolError>
+        do {
+            let success = try await sqlite.deleteQueuedRequest(request)
+            outcome = .success(success)
+        } catch let error {
+            outcome = .failure(.ruuviPersistence(error))
+        }
+        return try outcome.get()
     }
 
-    func deleteQueuedRequests() -> Future<Bool, RuuviPoolError> {
-        let promise = Promise<Bool, RuuviPoolError>()
-        sqlite.deleteQueuedRequests()
-            .on(success: { success in
-                promise.succeed(value: success)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
-        return promise.future
+    @MainActor
+    func deleteQueuedRequests() async throws(RuuviPoolError) -> Bool {
+        var outcome: Result<Bool, RuuviPoolError>
+        do {
+            let success = try await sqlite.deleteQueuedRequests()
+            outcome = .success(success)
+        } catch let error {
+            outcome = .failure(.ruuviPersistence(error))
+        }
+        return try outcome.get()
     }
 
-    func deleteUserSettings() -> Future<Bool, RuuviPoolError> {
-        let promise = Promise<Bool, RuuviPoolError>()
-        sqlite.deleteUserSettings()
-            .on(success: { success in
-                promise.succeed(value: success)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
-        return promise.future
+    @MainActor
+    func deleteUserSettings() async throws(RuuviPoolError) -> Bool {
+        var outcome: Result<Bool, RuuviPoolError>
+        do {
+            let success = try await sqlite.deleteUserSettings()
+            outcome = .success(success)
+        } catch let error {
+            outcome = .failure(.ruuviPersistence(error))
+        }
+        return try outcome.get()
     }
 
     // MARK: - Subscription
+    @MainActor
     func save(
         subscription: CloudSensorSubscription
-    ) -> Future<CloudSensorSubscription, RuuviPoolError> {
-        let promise = Promise<CloudSensorSubscription, RuuviPoolError>()
-        sqlite.save(subscription: subscription)
-            .on(success: { subscription in
-                promise.succeed(value: subscription)
-            }, failure: { error in
-                promise.fail(error: .ruuviPersistence(error))
-            })
-        return promise.future
+    ) async throws(RuuviPoolError) -> CloudSensorSubscription {
+        var outcome: Result<CloudSensorSubscription, RuuviPoolError>
+        do {
+            let subscription = try await sqlite.save(subscription: subscription)
+            outcome = .success(subscription)
+        } catch let error {
+            outcome = .failure(.ruuviPersistence(error))
+        }
+        return try outcome.get()
     }
 
+    @MainActor
     func readSensorSubscriptionSettings(
         _ ruuviTag: RuuviTagSensor
-    ) -> Future<CloudSensorSubscription?, RuuviPoolError> {
-        let promise = Promise<CloudSensorSubscription?, RuuviPoolError>()
+    ) async throws(RuuviPoolError) -> CloudSensorSubscription? {
+        var outcome: Result<CloudSensorSubscription?, RuuviPoolError>
         let persistence = sqlite
-        DispatchQueue.global(qos: .utility).async {
-            persistence.readSensorSubscriptionSettings(ruuviTag)
-                .on(success: { subscription in
-                    promise.succeed(value: subscription)
-                }, failure: { error in
-                    promise.fail(error: .ruuviPersistence(error))
-                })
+
+        do {
+            let subscription = try await persistence.readSensorSubscriptionSettings(ruuviTag)
+            outcome = .success(subscription)
+        } catch let error {
+            outcome = .failure(.ruuviPersistence(error))
         }
-        return promise.future
+
+        return try outcome.get()
     }
 }

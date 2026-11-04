@@ -1,11 +1,11 @@
-// swift-tools-version:5.9
+// swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
     name: "RuuviCore",
-    platforms: [.macOS(.v10_15), .iOS(.v14)],
+    platforms: [.iOS(.v16)],
     products: [
         .library(
             name: "RuuviCore",
@@ -32,13 +32,11 @@ let package = Package(
             targets: ["RuuviCorePermission"]
         ),
     ],
-    dependencies: [
-        .package(url: "https://github.com/kean/Future", .exact("1.3.0"))
-    ],
+    dependencies: [],
     targets: [
         .target(
             name: "RuuviCore",
-            dependencies: ["Future"]
+            dependencies: []
         ),
         .target(
             name: "RuuviCoreImage",
@@ -58,11 +56,12 @@ let package = Package(
         ),
         .target(
             name: "RuuviCoreLocation",
-            dependencies: ["RuuviCore", "Future"]
+            dependencies: ["RuuviCore"]
         ),
         .testTarget(
             name: "RuuviCoreTests",
-            dependencies: ["RuuviCore"]
+            dependencies: ["RuuviCore", "RuuviCoreDiff", "RuuviCoreImage", "RuuviCoreLocation"]
         ),
-    ]
+    ],
+    swiftLanguageModes: [.v5]
 )

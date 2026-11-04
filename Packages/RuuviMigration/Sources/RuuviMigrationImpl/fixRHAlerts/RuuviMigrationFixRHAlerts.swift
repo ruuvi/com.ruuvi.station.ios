@@ -1,3 +1,9 @@
+#if SWIFT_PACKAGE
+    import RuuviMigration
+#endif
+#if SWIFT_PACKAGE
+    import RuuviOntology
+#endif
 import Foundation
 import RuuviContext
 import RuuviLocal
@@ -23,24 +29,30 @@ final class RuuviMigrationFixRHAlerts: RuuviMigration {
     func migrateIfNeeded() {
         guard !UserDefaults.standard.bool(forKey: migratedUdKey) else { return }
         queue.async {
-            self.ruuviStorage.readAll()
-                .on(success: { sensors in
-                    sensors.forEach { sensor in
-                        if let lower = self.ruuviAlertService.lowerRelativeHumidity(for: sensor),
-                           lower > 1.0 {
-                            self.ruuviAlertService.setLower(
-                                relativeHumidity: lower / 100.0,
-                                ruuviTag: sensor
-                            )
+            Task { @MainActor [self] in
+                do throws(RuuviStorageError) {
+                    let value = try await self.ruuviStorage.readAll()
+                    ({ sensors in
+                        sensors.forEach { sensor in
+                            if let lower = self.ruuviAlertService.lowerRelativeHumidity(for: sensor),
+                                lower > 1.0
+                            {
+                                self.ruuviAlertService.setLower(
+                                    relativeHumidity: lower / 100.0,
+                                    ruuviTag: sensor
+                                )
+                            }
+                            if let upper = self.ruuviAlertService.upperRelativeHumidity(for: sensor), upper > 1.0 {
+                                self.ruuviAlertService.setUpper(
+                                    relativeHumidity: upper / 100.0,
+                                    ruuviTag: sensor
+                                )
+                            }
                         }
-                        if let upper = self.ruuviAlertService.upperRelativeHumidity(for: sensor), upper > 1.0 {
-                            self.ruuviAlertService.setUpper(
-                                relativeHumidity: upper / 100.0,
-                                ruuviTag: sensor
-                            )
-                        }
-                    }
-                })
+                    })(value)
+                } catch {
+                }
+            }
         }
         UserDefaults.standard.set(true, forKey: migratedUdKey)
     }

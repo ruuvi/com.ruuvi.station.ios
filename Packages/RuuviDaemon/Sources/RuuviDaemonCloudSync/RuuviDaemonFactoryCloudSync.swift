@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviDaemon
+#endif
 import Foundation
 import RuuviLocal
 import RuuviService

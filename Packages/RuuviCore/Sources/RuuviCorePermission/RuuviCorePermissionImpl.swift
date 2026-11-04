@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+    import RuuviCore
+#endif
 import Foundation
 import Photos
 
@@ -31,11 +34,11 @@ public final class RuuviCorePermissionImpl: RuuviCorePermission {
         }
     #endif
 
-    public var isLocationPermissionGranted: Bool {
+    @MainActor public var isLocationPermissionGranted: Bool {
         locationManager.isLocationPermissionGranted
     }
 
-    public var locationAuthorizationStatus: CLAuthorizationStatus {
+    @MainActor public var locationAuthorizationStatus: CLAuthorizationStatus {
         locationManager.locationAuthorizationStatus
     }
 
@@ -59,7 +62,7 @@ public final class RuuviCorePermissionImpl: RuuviCorePermission {
         #endif
     }
 
-    public func requestLocationPermission(completion: ((Bool) -> Void)?) {
+    @MainActor public func requestLocationPermission(completion: ((Bool) -> Void)?) {
         locationManager.requestLocationPermission { granted in
             DispatchQueue.main.async {
                 completion?(granted)

@@ -2,5 +2,4 @@
 import XCTest
 
 final class RuuviStorageTests: XCTestCase {
-    func testExample() {}
 }

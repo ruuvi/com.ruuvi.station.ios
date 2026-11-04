@@ -1,5 +1,9 @@
+#if SWIFT_PACKAGE
+    import RuuviDaemon
+    import RuuviNotifier
+    import RuuviOntology
+#endif
 import Foundation
-import Future
 import RuuviLocal
 import RuuviPool
 import RuuviStorage
@@ -19,10 +23,8 @@ public final class DataPruningOperationsManager {
         self.ruuviPool = ruuviPool
     }
 
-    public func ruuviTagPruningOperations() -> Future<[Operation], RuuviDaemonError> {
-        let promise = Promise<[Operation], RuuviDaemonError>()
+    public func ruuviTagPruningOperations() async throws(RuuviDaemonError) -> [Operation] {
         // Keep archived history in the database. Visibility limits belong to readers.
-        promise.succeed(value: [])
-        return promise.future
+        []
     }
 }
