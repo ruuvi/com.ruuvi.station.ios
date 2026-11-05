@@ -409,7 +409,8 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
     private func setUpDisplayLink() {
         guard displayLink == nil else { return }
 
-        displayLink = CADisplayLink(target: self, selector: #selector(continuousScroll))
+        let target = MasonryDisplayLinkTarget { [weak self] in self?.continuousScroll() }
+        displayLink = CADisplayLink(target: target, selector: #selector(MasonryDisplayLinkTarget.tick))
         displayLink?.add(to: RunLoop.main, forMode: RunLoop.Mode.common)
     }
 
@@ -429,6 +430,7 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
     private func getCurrentItems() -> [RuuviTagCardSnapshot] {
         guard let dataSource = diffableDataSource else { return [] }
         let snapshot = dataSource.snapshot()
+        guard snapshot.sectionIdentifiers.contains(.main) else { return [] }
         return snapshot.itemIdentifiers(inSection: .main)
     }
 
@@ -449,7 +451,7 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
 
         var columnHeights = Array(repeating: config.sectionInsets.top, count: config.numberOfColumns)
         let snapshot = dataSource.snapshot()
-        let itemCount = snapshot.numberOfItems(inSection: .main)
+        let itemCount = snapshot.sectionIdentifiers.contains(.main) ? snapshot.numberOfItems(inSection: .main) : 0
 
         guard itemCount > 0 else {
             contentHeight = config.sectionInsets.top + config.sectionInsets.bottom
@@ -586,7 +588,7 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
     }
 
     // MARK: - Gesture Handlers
-    @objc private func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
+    @objc func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
         guard let collectionView = safeCollectionView else { return }
 
         let location = gesture.location(in: collectionView)
@@ -608,7 +610,7 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
         }
     }
 
-    @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+    @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
         guard let collectionView = safeCollectionView,
               let previewView = cellPreviewView,
               let centerPoint = previewCellCenter else { return }
@@ -979,6 +981,7 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
     }
 
     public func cancelDrag() {
+        invalidateDisplayLink()
         endDrag(nil)
     }
 
@@ -1017,11 +1020,21 @@ extension MasonryReorderableLayout: UIGestureRecognizerDelegate {
             return otherGestureRecognizer == longPress
         } else if gestureRecognizer == safeCollectionView?.panGestureRecognizer {
             guard let longPress = longPress else { return false }
-            return longPress.state != .possible || longPress.state != .failed
+            return longPress.state != .possible && longPress.state != .failed
         }
 
         return true
     }
+}
+
+private final class MasonryDisplayLinkTarget: NSObject {
+    private let onFrame: () -> Void
+
+    init(onFrame: @escaping () -> Void) {
+        self.onFrame = onFrame
+    }
+
+    @objc func tick() { onFrame() }
 }
 
 // swiftlint:enable file_length

@@ -52,7 +52,6 @@ class CardsGraphPresenter: NSObject {
     private var chartDrawDotsDidChangeToken: NSObjectProtocol?
     private var chartShowStatsStateDidChangeToken: NSObjectProtocol?
     private var sensorSettingsToken: RuuviReactorToken?
-    private var syncNotificationToken: NSObjectProtocol?
     private var alertDataCancellable: AnyCancellable?
 
     // MARK: Helper Properties
@@ -80,7 +79,8 @@ class CardsGraphPresenter: NSObject {
     private var newpoints: [RuuviGraphViewDataModel] = []
     private var chartModules: [MeasurementDisplayVariant] = []
     private var ruuviTagData: [RuuviMeasurement] = []
-    private let serviceCoordinatorManager: RuuviTagServiceCoordinatorManager
+    private let notificationCenter: NotificationCenter
+    private let bluetoothState: () -> (isEnabled: Bool, userDeclined: Bool)
     private struct CachedChartData {
         let modules: [MeasurementDisplayVariant]
         let measurements: [RuuviMeasurement]
@@ -139,7 +139,9 @@ class CardsGraphPresenter: NSObject {
         alertService: RuuviServiceAlert,
         background: BTBackground,
         flags: RuuviLocalFlags,
-        serviceCoordinatorManager: RuuviTagServiceCoordinatorManager = .shared
+        serviceCoordinatorManager: RuuviTagServiceCoordinatorManager = .shared,
+        notificationCenter: NotificationCenter = .default,
+        bluetoothState: (() -> (isEnabled: Bool, userDeclined: Bool))? = nil
     ) {
         self.errorPresenter = errorPresenter
         self.settings = settings
@@ -152,13 +154,16 @@ class CardsGraphPresenter: NSObject {
         self.alertService = alertService
         self.background = background
         self.flags = flags
-        self.serviceCoordinatorManager = serviceCoordinatorManager
+        self.notificationCenter = notificationCenter
+        self.bluetoothState = bluetoothState ?? serviceCoordinatorManager.getCurrentBluetoothState
         super.init()
         observeExternalGattSync()
     }
 
     deinit {
-        externalGattObservationTokens.forEach(NotificationCenter.default.removeObserver)
+        cancelScheduledAutoGattSync()
+        shutDownModule()
+        externalGattObservationTokens.forEach(notificationCenter.removeObserver)
     }
 }
 
@@ -207,6 +212,9 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
         self.shouldSyncFromCloud = shouldSyncFromCloud
         cancelScheduledAutoGattSync()
         view?.resetScrollPosition()
+        startObservingSensorSettingsChanges()
+        startObservingCloudSyncNotification()
+        if let snapshot { observeAlertData(from: snapshot) }
         observeLastOpenedChart()
         startListeningToSettings()
         tryToShowSwipeUpHint()
@@ -217,6 +225,11 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
 
     func stop() {
         cancelScheduledAutoGattSync()
+        shutDownModule()
+        alertDataCancellable?.cancel()
+        invalidatePendingChartComputation()
+        interactor?.stopObservingTags()
+        interactor?.stopObservingRuuviTagsData()
     }
 
     func scroll(to index: Int, animated: Bool) {
@@ -342,7 +355,7 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
         if source == .automatic, !isRuuviAir(snapshot) { return false }
         cancelScheduledAutoGattSync()
         // Check bluetooth
-        let resolvedState = serviceCoordinatorManager.getCurrentBluetoothState()
+        let resolvedState = bluetoothState()
         guard resolvedState.isEnabled && !resolvedState.userDeclined else {
             view?.showBluetoothDisabled(userDeclined: resolvedState.userDeclined)
             return false
@@ -445,27 +458,16 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
     }
 
     func viewDidConfirmToClear(for snapshot: RuuviTagCardSnapshot?) {
+        guard let snapshot, snapshot.id == self.snapshot?.id, let sensor, let interactor else { return }
         cancelScheduledAutoGattSync()
         activityPresenter.show(with: .loading(message: nil))
-        if let sensor = sensor {
-            Task { @MainActor [weak self, interactor = interactor, sensor = sensor] in
-                defer {
-                    ({ [weak self] in
-                        self?.activityPresenter.dismiss(immediately: true)
-                    })()
-                }
-                do {
-                    try await interactor?.deleteAllRecords(for: sensor)
-                    ({ [weak self] in
-                        if let snapshot {
-                            self?.clearSyncState(for: snapshot.id)
-                        }
-                    })()
-                } catch {
-                    ({ [weak self] error in
-                        self?.errorPresenter.present(error: error)
-                    })(error)
-                }
+        Task { @MainActor [weak self, activityPresenter] in
+            defer { activityPresenter.dismiss(immediately: true) }
+            do {
+                try await interactor.deleteAllRecords(for: sensor)
+                self?.clearSyncState(for: snapshot.id)
+            } catch {
+                self?.errorPresenter.present(error: error)
             }
         }
     }
@@ -852,59 +854,43 @@ extension CardsGraphPresenter {
         startObservingCloudSyncNotification()
         observeLastOpenedChart()
         startListeningToSettings()
-        startObservingNetworkSyncNotification(for: sensor)
         tryToShowSwipeUpHint()
 
         reloadChartsData(shouldSyncFromCloud: shouldSyncFromCloud)
         scheduleAutoGattSyncIfNeeded()
     }
 
-    private func startObservingNetworkSyncNotification(
-        for ruuviTag: RuuviTagSensor?
-    ) {
-        syncNotificationToken?.invalidate()
-        syncNotificationToken = nil
-
-        syncNotificationToken = NotificationCenter
-            .default
-            .addObserver(
-                forName: .NetworkSyncHistoryDidChangeStatus,
-                object: nil,
-                queue: .main,
-                using: { [weak self] notification in
-                    guard let mac = notification.userInfo?[NetworkSyncStatusKey.mac] as? MACIdentifier,
-                        let status = notification.userInfo?[NetworkSyncStatusKey.status] as? NetworkSyncStatus,
-                        mac.any == ruuviTag?.macId?.any
-                    else {
-                        return
-                    }
-                    switch status {
-                    case .complete:
-                        self?.interactor?.restartObservingData()
-                    default:
-                        break
-                    }
-                }
-            )
-    }
-
     private func shutDownModule() {
         advertisementToken?.invalidate()
         heartbeatToken?.invalidate()
-        temperatureUnitToken?.invalidate()
-        humidityUnitToken?.invalidate()
-        pressureUnitToken?.invalidate()
-        backgroundToken?.invalidate()
-        alertDidChangeToken?.invalidate()
-        didConnectToken?.invalidate()
-        didDisconnectToken?.invalidate()
-        lnmDidReceiveToken?.invalidate()
-        historySyncToken?.invalidate()
-        downsampleDidChangeToken?.invalidate()
-        chartDurationHourDidChangeToken?.invalidate()
-        chartShowStatsStateDidChangeToken?.invalidate()
-        chartDrawDotsDidChangeToken?.invalidate()
+        if let temperatureUnitToken { notificationCenter.removeObserver(temperatureUnitToken) }
+        temperatureUnitToken = nil
+        if let humidityUnitToken { notificationCenter.removeObserver(humidityUnitToken) }
+        humidityUnitToken = nil
+        if let pressureUnitToken { notificationCenter.removeObserver(pressureUnitToken) }
+        pressureUnitToken = nil
+        if let backgroundToken { notificationCenter.removeObserver(backgroundToken) }
+        backgroundToken = nil
+        if let alertDidChangeToken { notificationCenter.removeObserver(alertDidChangeToken) }
+        alertDidChangeToken = nil
+        if let didConnectToken { notificationCenter.removeObserver(didConnectToken) }
+        didConnectToken = nil
+        if let didDisconnectToken { notificationCenter.removeObserver(didDisconnectToken) }
+        didDisconnectToken = nil
+        if let lnmDidReceiveToken { notificationCenter.removeObserver(lnmDidReceiveToken) }
+        lnmDidReceiveToken = nil
+        if let historySyncToken { notificationCenter.removeObserver(historySyncToken) }
+        historySyncToken = nil
+        if let downsampleDidChangeToken { notificationCenter.removeObserver(downsampleDidChangeToken) }
+        downsampleDidChangeToken = nil
+        if let chartDurationHourDidChangeToken { notificationCenter.removeObserver(chartDurationHourDidChangeToken) }
+        chartDurationHourDidChangeToken = nil
+        if let chartShowStatsStateDidChangeToken { notificationCenter.removeObserver(chartShowStatsStateDidChangeToken) }
+        chartShowStatsStateDidChangeToken = nil
+        if let chartDrawDotsDidChangeToken { notificationCenter.removeObserver(chartDrawDotsDidChangeToken) }
+        chartDrawDotsDidChangeToken = nil
         sensorSettingsToken?.invalidate()
+        sensorSettingsToken = nil
     }
 
     private func observeLastOpenedChart() {
@@ -1009,7 +995,7 @@ extension CardsGraphPresenter {
             .RuuviTagReadLogsOperationDidFail,
         ]
         externalGattObservationTokens = names.map { name in
-            NotificationCenter.default.addObserver(forName: name, object: nil, queue: .main) { [weak self] note in
+            notificationCenter.addObserver(forName: name, object: nil, queue: .main) { [weak self] note in
                 self?.handleExternalGattSync(note)
             }
         }
@@ -1148,8 +1134,8 @@ extension CardsGraphPresenter {
 
     // swiftlint:disable:next function_body_length
     private func startListeningToSettings() {
-        temperatureUnitToken = NotificationCenter
-            .default
+        guard temperatureUnitToken == nil else { return }
+        temperatureUnitToken = notificationCenter
             .addObserver(
                 forName: .TemperatureUnitDidChange,
                 object: nil,
@@ -1157,8 +1143,7 @@ extension CardsGraphPresenter {
             ) { [weak self] _ in
                 self?.interactor?.restartObservingData()
             }
-        humidityUnitToken = NotificationCenter
-            .default
+        humidityUnitToken = notificationCenter
             .addObserver(
                 forName: .HumidityUnitDidChange,
                 object: nil,
@@ -1167,8 +1152,7 @@ extension CardsGraphPresenter {
                     self?.interactor?.restartObservingData()
                 }
             )
-        pressureUnitToken = NotificationCenter
-            .default
+        pressureUnitToken = notificationCenter
             .addObserver(
                 forName: .PressureUnitDidChange,
                 object: nil,
@@ -1177,8 +1161,7 @@ extension CardsGraphPresenter {
                     self?.interactor?.restartObservingData()
                 }
             )
-        downsampleDidChangeToken = NotificationCenter
-            .default
+        downsampleDidChangeToken = notificationCenter
             .addObserver(
                 forName: .DownsampleOnDidChange,
                 object: nil,
@@ -1187,8 +1170,7 @@ extension CardsGraphPresenter {
                     self?.interactor?.restartObservingData()
                 }
             )
-        chartDurationHourDidChangeToken = NotificationCenter
-            .default
+        chartDurationHourDidChangeToken = notificationCenter
             .addObserver(
                 forName: .ChartDurationHourDidChange,
                 object: nil,
@@ -1198,8 +1180,7 @@ extension CardsGraphPresenter {
                     sSelf.interactor?.restartObservingData()
                 }
             )
-        chartShowStatsStateDidChangeToken = NotificationCenter
-            .default
+        chartShowStatsStateDidChangeToken = notificationCenter
             .addObserver(
                 forName: .ChartStatsOnDidChange,
                 object: nil,
@@ -1211,8 +1192,7 @@ extension CardsGraphPresenter {
                     }
                 }
             )
-        chartDrawDotsDidChangeToken = NotificationCenter
-            .default
+        chartDrawDotsDidChangeToken = notificationCenter
             .addObserver(
                 forName: .ChartDrawDotsOnDidChange,
                 object: nil,
@@ -1221,9 +1201,9 @@ extension CardsGraphPresenter {
                     // TODO: Add this implemention when draw dots is back.
                 }
             )
-        alertDidChangeToken?.invalidate()
-        alertDidChangeToken = NotificationCenter
-            .default
+        if let alertDidChangeToken { notificationCenter.removeObserver(alertDidChangeToken) }
+        alertDidChangeToken = nil
+        alertDidChangeToken = notificationCenter
             .addObserver(
                 forName: .RuuviServiceAlertDidChange,
                 object: nil,
@@ -1269,6 +1249,8 @@ extension CardsGraphPresenter {
     }
 
     private func startObservingSensorSettingsChanges() {
+        sensorSettingsToken?.invalidate()
+        sensorSettingsToken = nil
         if let ruuviTag = sensor {
             sensorSettingsToken = ruuviReactor.observe(ruuviTag) { [weak self] reactorChange in
                 guard let self else { return }
@@ -1292,8 +1274,8 @@ extension CardsGraphPresenter {
     }
 
     private func startObservingCloudSyncNotification() {
-        historySyncToken = NotificationCenter
-            .default
+        if let historySyncToken { notificationCenter.removeObserver(historySyncToken) }
+        historySyncToken = notificationCenter
             .addObserver(
                 forName: .NetworkSyncHistoryDidChangeStatus,
                 object: nil,

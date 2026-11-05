@@ -19,7 +19,7 @@ final class RuuviTagAlertSubscriptionTests: XCTestCase {
         fixture.process()
         await fixture.settle()
 
-        fixture.assertFiring(true)
+        await fixture.assertFiring(true)
     }
 
     @MainActor func testBulkCloudImportUpdatesBellsAfterInitialSetup() async {
@@ -39,7 +39,7 @@ final class RuuviTagAlertSubscriptionTests: XCTestCase {
         fixture.process()
         await fixture.settle()
 
-        fixture.assertFiring(true)
+        await fixture.assertFiring(true)
     }
 
     @MainActor func testAlreadySignedInAtLaunchStillUpdatesBells() async {
@@ -49,7 +49,7 @@ final class RuuviTagAlertSubscriptionTests: XCTestCase {
         fixture.load()
         await fixture.settle()
 
-        fixture.assertFiring(true)
+        await fixture.assertFiring(true)
     }
 
     @MainActor func testLateBluetoothCallbackCannotOverwriteCloudAlerts() async {
@@ -62,12 +62,12 @@ final class RuuviTagAlertSubscriptionTests: XCTestCase {
         fixture.update()
         fixture.process()
         await fixture.settle()
-        fixture.assertFiring(true)
+        await fixture.assertFiring(true)
 
         fixture.deliverUntriggeredCallbacks(for: fixture.luid.value)
         await fixture.settle()
 
-        fixture.assertFiring(true)
+        await fixture.assertFiring(true)
     }
 
     @MainActor func testReturningToLocalModeUsesBluetoothAndIgnoresCloudCallbacks() async {
@@ -81,16 +81,16 @@ final class RuuviTagAlertSubscriptionTests: XCTestCase {
         fixture.update()
         fixture.process()
         await fixture.settle()
-        fixture.assertFiring(true)
+        await fixture.assertFiring(true)
 
         fixture.deliverUntriggeredCallbacks(for: fixture.mac!.value)
         await fixture.settle()
-        fixture.assertFiring(true)
+        await fixture.assertFiring(true)
 
         fixture.snapshot.latestRawRecord = fixture.record(isCloud: false, safe: true)
         fixture.process()
         await fixture.settle()
-        fixture.assertFiring(false)
+        await fixture.assertFiring(false)
     }
 
     @MainActor func testLocalSensorWithoutMACStillTriggersAndClearsAlerts() async {
@@ -99,12 +99,12 @@ final class RuuviTagAlertSubscriptionTests: XCTestCase {
         fixture.snapshot.latestRawRecord = fixture.record(isCloud: false)
         fixture.load()
         await fixture.settle()
-        fixture.assertFiring(true)
+        await fixture.assertFiring(true)
 
         fixture.snapshot.latestRawRecord = fixture.record(isCloud: false, safe: true)
         fixture.process()
         await fixture.settle()
-        fixture.assertFiring(false)
+        await fixture.assertFiring(false)
     }
 
     @MainActor func testRemovedSnapshotIgnoresQueuedAlertCallbacks() async {
@@ -113,13 +113,13 @@ final class RuuviTagAlertSubscriptionTests: XCTestCase {
         fixture.snapshot.latestRawRecord = fixture.record(isCloud: true)
         fixture.load()
         await fixture.settle()
-        fixture.assertFiring(true)
+        await fixture.assertFiring(true)
 
         fixture.deliverUntriggeredCallbacks(for: fixture.mac!.value)
         fixture.load([])
         await fixture.settle()
 
-        fixture.assertFiring(true)
+        await fixture.assertFiring(true)
     }
 }
 
@@ -203,7 +203,13 @@ final class RuuviTagAlertSubscriptionTests: XCTestCase {
         )
     }
 
-    func assertFiring(_ expected: Bool, file: StaticString = #filePath, line: UInt = #line) {
+    func assertFiring(_ expected: Bool, file: StaticString = #filePath, line: UInt = #line) async {
+        // Cold app launch can delay notifier callbacks beyond a fixed sleep.
+        // Wait for the observable contract, and still fail if it never arrives.
+        for _ in 0..<300 {
+            if types.allSatisfy({ snapshot.getAlertConfig(for: $0)?.isFiring == expected }) { break }
+            try? await Task.sleep(nanoseconds: 10_000_000)
+        }
         for type in types {
             XCTAssertEqual(snapshot.getAlertConfig(for: type)?.isFiring, expected,
                            type.rawValue, file: file, line: line)
