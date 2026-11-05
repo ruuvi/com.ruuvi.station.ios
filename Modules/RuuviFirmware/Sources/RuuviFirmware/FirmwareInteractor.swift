@@ -39,7 +39,8 @@ final class FirmwareInteractor: FirmwareInteracting {
     private let background: BTBackground
     private let foreground: BTForeground
     private let propertiesDaemon: RuuviTagPropertiesDaemon
-    private let firmwareRepository: FirmwareRepository
+    private let session: URLSession
+    private let downloader: FirmwareDownloader
     private let ruuviDFU: RuuviDFU
     private var ruuviTagObservationToken: ObservationToken?
 
@@ -48,13 +49,15 @@ final class FirmwareInteractor: FirmwareInteracting {
         foreground: BTForeground,
         propertiesDaemon: RuuviTagPropertiesDaemon,
         ruuviDFU: RuuviDFU,
-        firmwareRepository: FirmwareRepository
+        firmwareRepository: FirmwareRepository,
+        session: URLSession = .shared
     ) {
         self.background = background
         self.foreground = foreground
         self.propertiesDaemon = propertiesDaemon
         self.ruuviDFU = ruuviDFU
-        self.firmwareRepository = firmwareRepository
+        self.session = session
+        downloader = FirmwareDownloader(session: session, repository: firmwareRepository)
     }
 
     deinit {
@@ -69,7 +72,7 @@ final class FirmwareInteractor: FirmwareInteracting {
         ruuviTagObservationToken?.invalidate()
         ruuviTagObservationToken = foreground.observe(self, uuid: uuid) { observer, device in
             if let ruuviTag = device.ruuvi?.tag {
-                self.batteryIsLow.value = observer.batteryNeedsReplacement(ruuviTag: ruuviTag)
+                observer.batteryIsLow.value = observer.batteryNeedsReplacement(ruuviTag: ruuviTag)
             }
         }
     }
@@ -99,8 +102,7 @@ final class FirmwareInteractor: FirmwareInteracting {
             return Fail<GitHubRelease, Error>(error: URLError(.badURL)).eraseToAnyPublisher()
         }
         return
-            URLSession.shared.dataTaskPublisher(for: url)
-            .map(\.data)
+            session.firmwareDataPublisher(for: url)
             .decode(type: GitHubRelease.self, decoder: JSONDecoder())
             .catch { error in Fail<GitHubRelease, Error>(error: error) }
             .receive(on: RunLoop.main)
@@ -141,44 +143,11 @@ final class FirmwareInteractor: FirmwareInteracting {
         else {
             return Fail<FirmwareDownloadResponse, Error>(error: URLError(.badURL)).eraseToAnyPublisher()
         }
-        let progress = Progress(totalUnitCount: 2)
-        let full = download(url: fullUrl, name: fullName, progress: progress)
-        let app = download(url: appUrl, name: appName, progress: progress)
-        return
-            app
-            .combineLatest(full)
-            .map { app, full in
-                switch (app, full) {
-                case let (.progress(appProgress), .progress):
-                    .progress(appProgress)
-                case let (.progress(appProgress), .response):
-                    .progress(appProgress)
-                case let (.response, .progress(fullProgress)):
-                    .progress(fullProgress)
-                case let (.response(appUrl), .response(fullUrl)):
-                    .response(appUrl: appUrl, fullUrl: fullUrl)
-                }
-            }.eraseToAnyPublisher()
-    }
-
-    private func download(url: URL, name: String, progress: Progress) -> AnyPublisher<DownloadResponse, Error> {
-        URLSession.shared
-            .downloadTaskPublisher(for: url, progress: progress)
-            .catch { error in Fail<DownloadResponse, Error>(error: error) }
-            .map { [weak self] response in
-                guard let sSelf = self else { return response }
-                switch response {
-                case let .response(fileUrl):
-                    if let movedUrl = try? sSelf.firmwareRepository.save(
-                        name: name,
-                        fileUrl: fileUrl
-                    ) {
-                        return .response(fileUrl: movedUrl)
-                    } else {
-                        return response
-                    }
-                case .progress:
-                    return response
+        return downloader.download(assets: [.init(name: appName, url: appUrl), .init(name: fullName, url: fullUrl)])
+            .map { event in
+                switch event {
+                case .progress(let progress): return .progress(progress)
+                case .files(let files): return .response(appUrl: files[0], fullUrl: files[1])
                 }
             }
             .receive(on: RunLoop.main)
@@ -216,8 +185,9 @@ final class FirmwareInteractor: FirmwareInteracting {
     ) -> AnyPublisher<FlashResponse, Error> {
         let firmwareUrl: URL
         if let currentMajor = currentRelease?.version.semVar?.first,
-           let latestMajor = latestRelease.version.semVar?.first,
-           currentMajor == latestMajor {
+            let latestMajor = latestRelease.version.semVar?.first,
+            currentMajor == latestMajor
+        {
             firmwareUrl = appUrl
         } else {
             firmwareUrl = fullUrl

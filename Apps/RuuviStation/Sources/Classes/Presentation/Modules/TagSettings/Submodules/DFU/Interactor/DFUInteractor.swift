@@ -18,21 +18,25 @@ final class DFUInteractor {
     private let deviceType: RuuviDeviceType
     private let firmwareType: RuuviDFUFirmwareType
 
-    private let firmwareRepository: FirmwareRepository = FirmwareRepositoryImpl()
+    private let session: URLSession
+    private let downloader: FirmwareDownloader
 
     private var timer: Timer?
     private var timeoutDuration: Double = 15
-    private var downloadCancellables = Set<AnyCancellable>()
     private var ruuviTags = Set<AnyRuuviTagSensor>()
     private var airScanToken: ObservationToken?
     private var airScanTimeoutTimer: Timer?
 
     init(
         deviceType: RuuviDeviceType = .ruuviTag,
-        firmwareType: RuuviDFUFirmwareType
+        firmwareType: RuuviDFUFirmwareType,
+        session: URLSession = .shared,
+        firmwareRepository: FirmwareRepository = FirmwareRepositoryImpl()
     ) {
         self.deviceType = deviceType
         self.firmwareType = firmwareType
+        self.session = session
+        downloader = FirmwareDownloader(session: session, repository: firmwareRepository)
     }
 }
 
@@ -51,8 +55,9 @@ extension DFUInteractor: DFUInteractorInput {
         case .ruuviTag:
             let firmwareUrl: URL
             if let currentMajor = currentRelease?.version.semVar?.first,
-               let latestMajor = latestRelease.version.semVar?.first,
-               currentMajor == latestMajor {
+                let latestMajor = latestRelease.version.semVar?.first,
+                currentMajor == latestMajor
+            {
                 firmwareUrl = appUrl
             } else {
                 firmwareUrl = fullUrl
@@ -87,182 +92,39 @@ extension DFUInteractor: DFUInteractorInput {
         }
     }
 
-    // swiftlint:disable:next function_body_length cyclomatic_complexity
     func download(
         release: LatestRelease,
         currentRelease: CurrentRelease?
     ) -> AnyPublisher<FirmwareDownloadResponse, Error> {
+        let assets: [FirmwareDownloadAsset]
         switch deviceType {
         case .ruuviTag:
             guard let fullName = release.defaultFullZipName,
-                let fullUrl = release.defaultFullZipUrl,
+                let fullURL = release.defaultFullZipUrl,
                 let appName = release.defaultAppZipName,
-                let appUrl = release.defaultAppZipUrl
+                let appURL = release.defaultAppZipUrl
             else {
-                return Fail<FirmwareDownloadResponse, Error>(error: URLError(.badURL)).eraseToAnyPublisher()
+                return Fail(error: URLError(.badURL)).eraseToAnyPublisher()
             }
-            let progress = Progress(totalUnitCount: 2)
-            let full = download(url: fullUrl, name: fullName, progress: progress)
-            let app = download(url: appUrl, name: appName, progress: progress)
-            return app.combineLatest(full).map {
-                app,
-                full in
-                switch (app, full) {
-                case let (
-                    .progress(
-                        appProgress
-                    ),
-                    .progress
-                ):
-                    .progress(
-                        appProgress
-                    )
-                case let (
-                    .progress(
-                        appProgress
-                    ),
-                    .response
-                ):
-                    .progress(
-                        appProgress
-                    )
-                case let (
-                    .response,
-                    .progress(
-                        fullProgress
-                    )
-                ):
-                    .progress(
-                        fullProgress
-                    )
-                case let (
-                    .response(
-                        appUrl
-                    ),
-                    .response(
-                        fullUrl
-                    )
-                ):
-                    .response(
-                        appUrl: appUrl,
-                        fullUrl: fullUrl,
-                        additionalFiles: []
-                    )
-                }
-            }.eraseToAnyPublisher()
-
+            assets = [.init(name: appName, url: appURL), .init(name: fullName, url: fullURL)]
         case .ruuviAir:
-            guard let primaryAsset = release.assets.first else {
-                return Fail<FirmwareDownloadResponse, Error>(error: URLError(.badURL)).eraseToAnyPublisher()
+            let selected = currentRelease?.isDevBuild == true ? release.assets : Array(release.assets.prefix(1))
+            assets = selected.compactMap { asset in
+                URL(string: asset.downloadUrlString).map { .init(name: asset.name, url: $0) }
             }
-
-            let needsAdditionalFiles = currentRelease?.isDevBuild ?? false
-            let assetsToDownload: [LatestReleaseAsset]
-            if needsAdditionalFiles {
-                let additionalAssets = release.assets.dropFirst()
-                assetsToDownload = [primaryAsset] + additionalAssets
-            } else {
-                assetsToDownload = [primaryAsset]
+            guard assets.count == selected.count else {
+                return Fail(error: URLError(.badURL)).eraseToAnyPublisher()
             }
-
-            let assetEntries: [(asset: LatestReleaseAsset, url: URL)] = assetsToDownload.compactMap { asset in
-                guard let url = URL(string: asset.downloadUrlString) else {
-                    return nil
-                }
-                return (asset, url)
-            }
-
-            guard assetEntries.count == assetsToDownload.count, !assetEntries.isEmpty else {
-                return Fail<FirmwareDownloadResponse, Error>(error: URLError(.badURL)).eraseToAnyPublisher()
-            }
-
-            let progress = Progress(totalUnitCount: Int64(assetEntries.count))
-            let subject = PassthroughSubject<FirmwareDownloadResponse, Error>()
-
-            var downloadedFiles = [URL?](repeating: nil, count: assetEntries.count)
-            var hasCompleted = false
-
-            downloadCancellables.forEach { $0.cancel() }
-            downloadCancellables.removeAll()
-
-            for (index, entry) in assetEntries.enumerated() {
-                let cancellable = download(
-                    url: entry.url,
-                    name: entry.asset.name,
-                    progress: progress
-                )
-                .sink(
-                    receiveCompletion: { [weak self] completion in
-                        guard let self else { return }
-                        switch completion {
-                        case let .failure(error):
-                            if !hasCompleted {
-                                hasCompleted = true
-                                subject.send(completion: .failure(error))
-                                self.downloadCancellables.forEach { $0.cancel() }
-                                self.downloadCancellables.removeAll()
-                            }
-                        case .finished:
-                            break
-                        }
-                    },
-                    receiveValue: { [weak self] response in
-                        guard let self else { return }
-                        switch response {
-                        case let .progress(progressValue):
-                            subject.send(.progress(progressValue))
-                        case let .response(fileUrl):
-                            downloadedFiles[index] = fileUrl
-                            if downloadedFiles.allSatisfy({ $0 != nil }), !hasCompleted {
-                                hasCompleted = true
-                                let urls = downloadedFiles.compactMap { $0 }
-                                guard let primaryFileUrl = urls.first else {
-                                    subject.send(completion: .failure(URLError(.cannotCreateFile)))
-                                    self.downloadCancellables.forEach { $0.cancel() }
-                                    self.downloadCancellables.removeAll()
-                                    return
-                                }
-                                let additional = Array(urls.dropFirst())
-                                subject.send(
-                                    .response(
-                                        appUrl: primaryFileUrl,
-                                        fullUrl: primaryFileUrl,
-                                        additionalFiles: additional
-                                    )
-                                )
-                                subject.send(completion: .finished)
-                                self.downloadCancellables.forEach { $0.cancel() }
-                                self.downloadCancellables.removeAll()
-                            }
-                        }
-                    }
-                )
-
-                downloadCancellables.insert(cancellable)
-            }
-
-            return subject.eraseToAnyPublisher()
         }
-    }
-
-    func download(url: URL, name: String, progress: Progress) -> AnyPublisher<DownloadResponse, Error> {
-        URLSession.shared
-            .downloadTaskPublisher(for: url, progress: progress)
-            .catch { error in Fail<DownloadResponse, Error>(error: error) }
-            .map { [weak self] response in
-                guard let sSelf = self else { return response }
-                switch response {
-                case let .response(fileUrl):
-                    if let movedUrl = try? sSelf.firmwareRepository.save(
-                        name: name,
-                        fileUrl: fileUrl
-                    ) {
-                        return .response(fileUrl: movedUrl)
-                    } else {
-                        return response
-                    }
-                case .progress:
-                    return response
+        let isAir = deviceType == .ruuviAir
+        return downloader.download(assets: assets)
+            .map { event in
+                switch event {
+                case .progress(let progress): return .progress(progress)
+                case .files(let files):
+                    return .response(
+                        appUrl: files[0], fullUrl: isAir ? files[0] : files[1],
+                        additionalFiles: isAir ? Array(files.dropFirst()) : [])
                 }
             }
             .receive(on: RunLoop.main)
@@ -276,8 +138,7 @@ extension DFUInteractor: DFUInteractorInput {
             guard let url = URL(string: urlString) else {
                 return Fail<LatestRelease, Error>(error: URLError(.badURL)).eraseToAnyPublisher()
             }
-            return URLSession.shared.dataTaskPublisher(for: url)
-                .map(\.data)
+            return session.firmwareDataPublisher(for: url)
                 .decode(type: LatestRelease.self, decoder: JSONDecoder())
                 .catch { error in Fail<LatestRelease, Error>(error: error) }
                 .receive(on: RunLoop.main)
@@ -288,12 +149,15 @@ extension DFUInteractor: DFUInteractorInput {
             guard let url = URL(string: urlString) else {
                 return Fail<LatestRelease, Error>(error: URLError(.badURL)).eraseToAnyPublisher()
             }
-            return URLSession.shared.dataTaskPublisher(for: url)
-                .map(\.data)
+            return session.firmwareDataPublisher(for: url)
                 .decode(type: RuuviAirFirmwareResponse.self, decoder: JSONDecoder())
-                .compactMap { response in
-                    return response.data
-                        .toLatestRelease(firmwareType: self.firmwareType)
+                .tryMap { [firmwareType] response in
+                    guard response.result == "success",
+                        let release = response.data.toLatestRelease(firmwareType: firmwareType)
+                    else {
+                        throw URLError(.badServerResponse)
+                    }
+                    return release
                 }
                 .catch { error in Fail<LatestRelease, Error>(error: error) }
                 .receive(on: RunLoop.main)

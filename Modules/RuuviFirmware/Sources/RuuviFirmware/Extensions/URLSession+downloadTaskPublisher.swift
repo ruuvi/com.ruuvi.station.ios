@@ -29,9 +29,12 @@ public extension URLSession {
             self.progress = progress
         }
 
-        public func receive<S>(subscriber: S) where S: Subscriber,
+        public func receive<S>(subscriber: S)
+        where
+            S: Subscriber,
             DownloadTaskPublisher.Failure == S.Failure,
-            DownloadTaskPublisher.Output == S.Input {
+            DownloadTaskPublisher.Output == S.Input
+        {
             let subscription = DownloadTaskSubscription(
                 subscriber: subscriber,
                 session: session,
@@ -44,78 +47,125 @@ public extension URLSession {
 }
 
 extension URLSession {
-    final class DownloadTaskSubscription<SubscriberType: Subscriber>: Subscription where
+    final class DownloadTaskSubscription<SubscriberType: Subscriber>: Subscription
+    where
         SubscriberType.Input == DownloadResponse,
-        SubscriberType.Failure == URLError {
+        SubscriberType.Failure == URLError
+    {
+        private let lock = NSRecursiveLock()
         private var subscriber: SubscriberType?
-        private weak var session: URLSession?
-        private var request: URLRequest
-        private var progress: Progress
+        private var session: URLSession?
+        private let request: URLRequest
+        private let progress: Progress
         private var task: URLSessionDownloadTask?
         private var observation: NSKeyValueObservation?
+        private var demand: Subscribers.Demand = .none
+        private var started = false
+        private var pendingFile: URL?
 
-        deinit {
-            observation?.invalidate()
-        }
-
-        init(
-            subscriber: SubscriberType,
-            session: URLSession,
-            request: URLRequest,
-            progress: Progress
-        ) {
+        init(subscriber: SubscriberType, session: URLSession, request: URLRequest, progress: Progress) {
             self.subscriber = subscriber
             self.session = session
             self.request = request
             self.progress = progress
         }
 
-        func request(_ demand: Subscribers.Demand) {
-            guard demand > 0
-            else {
-                return
-            }
-            guard task == nil
-            else {
-                return
-            }
-            self.task = session?.downloadTask(with: request) { [weak self] url, response, error in
-                if let error = error as? URLError {
-                    self?.subscriber?.receive(completion: .failure(error))
-                    return
-                }
-                guard response != nil
-                else {
-                    self?.subscriber?.receive(completion: .failure(URLError(.badServerResponse)))
-                    return
-                }
-                guard let url
-                else {
-                    self?.subscriber?.receive(completion: .failure(URLError(.badURL)))
-                    return
-                }
-                do {
-                    let cacheDir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!
-                    let fileUrl = cacheDir.appendingPathComponent(UUID().uuidString)
-                    try FileManager.default.moveItem(atPath: url.path, toPath: fileUrl.path)
-                    _ = self?.subscriber?.receive(.response(fileUrl: fileUrl))
-                    self?.subscriber?.receive(completion: .finished)
-                } catch {
-                    self?.subscriber?.receive(completion: .failure(URLError(.cannotCreateFile)))
-                }
-            }
-            guard let task else { return }
-            progress.addChild(task.progress, withPendingUnitCount: 1)
+        deinit { cancel() }
 
-            observation = progress.observe(\.fractionCompleted) { [weak self] progress, _ in
-                _ = self?.subscriber?.receive(.progress(progress))
+        func request(_ newDemand: Subscribers.Demand) {
+            lock.lock()
+            defer { lock.unlock() }
+            guard newDemand > .none, subscriber != nil else { return }
+            demand += newDemand
+            if !started {
+                started = true
+                let download = session?.downloadTask(with: request) { [weak self] url, response, error in
+                    self?.complete(url: url, response: response, error: error)
+                }
+                guard let download else { return }
+                task = download
+                progress.addChild(download.progress, withPendingUnitCount: 1)
+                observation = progress.observe(\.fractionCompleted) { [weak self] progress, _ in
+                    self?.sendProgress(progress)
+                }
+                download.resume()
             }
-
-            task.resume()
+            deliverFileIfRequested()
         }
 
         func cancel() {
-            task?.cancel()
+            lock.lock()
+            defer { lock.unlock() }
+            subscriber = nil
+            observation?.invalidate()
+            observation = nil
+            let download = task
+            task = nil
+            session = nil
+            if let pendingFile { try? FileManager.default.removeItem(at: pendingFile) }
+            pendingFile = nil
+            download?.cancel()
+        }
+
+        private func sendProgress(_ progress: Progress) {
+            lock.lock()
+            defer { lock.unlock() }
+            guard let subscriber, demand > .none, pendingFile == nil else { return }
+            demand -= 1
+            demand += subscriber.receive(.progress(progress))
+        }
+
+        private func complete(url: URL?, response: URLResponse?, error: Error?) {
+            lock.lock()
+            defer { lock.unlock() }
+            guard subscriber != nil, pendingFile == nil else { return }
+            if let error {
+                finish(.failure(error as? URLError ?? URLError(.unknown, userInfo: [NSUnderlyingErrorKey: error])))
+                return
+            }
+            guard let response,
+                (response as? HTTPURLResponse).map({ (200..<300).contains($0.statusCode) }) ?? true
+            else {
+                finish(.failure(URLError(.badServerResponse)))
+                return
+            }
+            guard let url else {
+                finish(.failure(URLError(.badURL)))
+                return
+            }
+            do {
+                let cache = try FileManager.default.url(
+                    for: .cachesDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+                let saved = cache.appendingPathComponent(UUID().uuidString)
+                try FileManager.default.moveItem(at: url, to: saved)
+                pendingFile = saved
+                observation?.invalidate()
+                observation = nil
+                task = nil
+                session = nil
+                deliverFileIfRequested()
+            } catch {
+                finish(.failure(URLError(.cannotCreateFile, userInfo: [NSUnderlyingErrorKey: error])))
+            }
+        }
+
+        private func deliverFileIfRequested() {
+            guard let subscriber, let file = pendingFile, demand > .none else { return }
+            pendingFile = nil
+            demand -= 1
+            // The receiver owns the file once it has been delivered, even if it cancels here.
+            _ = subscriber.receive(.response(fileUrl: file))
+            finish(.finished)
+        }
+
+        private func finish(_ completion: Subscribers.Completion<URLError>) {
+            let receiver = subscriber
+            subscriber = nil
+            observation?.invalidate()
+            observation = nil
+            task = nil
+            session = nil
+            receiver?.receive(completion: completion)
         }
     }
 }
