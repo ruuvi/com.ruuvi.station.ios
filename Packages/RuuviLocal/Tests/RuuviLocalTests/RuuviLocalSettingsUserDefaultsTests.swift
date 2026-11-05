@@ -34,6 +34,7 @@ final class RuuviLocalSettingsUserDefaultsTests: XCTestCase {
         "SettingsUserDefaults.pushAlertDisabled",
         "SettingsUserDefaults.marketingPreference",
         "SettingsUserDefaults.cardToOpenFromWidgetKey",
+        "SettingsUserDefaults.cloudProfileLanguageCode",
     ]
 
     override func tearDown() {

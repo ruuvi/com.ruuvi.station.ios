@@ -5,6 +5,10 @@ import RuuviOntology
 import UIKit
 
 class ImagePersistenceDocuments: ImagePersistence {
+    private let directory: URL?
+
+    init(directory: URL? = nil) { self.directory = directory }
+
     private let ext = ".png"
     private let bgDir = "bg"
 
@@ -39,6 +43,10 @@ class ImagePersistenceDocuments: ImagePersistence {
     }
 
     private func getBgDirectory() throws -> URL {
+        if let directory {
+            try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
+            return directory
+        }
         guard let docDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
         else {
             throw RuuviLocalError.failedToGetDocumentsDirectory

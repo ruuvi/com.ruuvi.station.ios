@@ -127,6 +127,14 @@ public struct WidgetSensorRecordSnapshot: Codable, Equatable {
         self.pressureOffset = pressureOffset
     }
 
+    fileprivate func shouldReplace(_ existing: WidgetSensorRecordSnapshot?) -> Bool {
+        guard let existing else { return true }
+        if date != existing.date { return date > existing.date }
+        // A cloud response may contain an earlier sample rounded to the same timestamp.
+        // Preserve Bluetooth at equal timestamps while allowing corrected local readings.
+        return source != RuuviTagSensorRecordSource.ruuviNetwork.rawValue
+            || existing.source == RuuviTagSensorRecordSource.ruuviNetwork.rawValue
+    }
 }
 
 public struct WidgetSensorSnapshot: Codable, Equatable {
@@ -223,7 +231,7 @@ public final class WidgetSensorCache {
                 snapshot.name = sensor.name.isEmpty ? sensor.id : sensor.name
                 snapshot.macId = sensor.macId?.value
                 snapshot.luid = sensor.luid?.value
-                if let record {
+                if let record, record.shouldReplace(snapshot.record) {
                     snapshot.record = record
                 }
                 if let settings {
@@ -307,12 +315,7 @@ public final class WidgetSensorCache {
                 snapshot.name = name.isEmpty ? sensorId : name
                 if let macId { snapshot.macId = macId }
                 if let luid { snapshot.luid = luid }
-                if let record,
-                   snapshot.record.map({ existing in
-                       record.date > existing.date ||
-                           (record.date == existing.date &&
-                               existing.source == RuuviTagSensorRecordSource.ruuviNetwork.rawValue)
-                   }) ?? true {
+                if let record, record.shouldReplace(snapshot.record) {
                     snapshot.record = record
                 }
                 if let settings {

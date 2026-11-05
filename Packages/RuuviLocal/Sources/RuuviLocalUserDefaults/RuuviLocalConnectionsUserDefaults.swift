@@ -5,117 +5,51 @@ import Foundation
 import RuuviOntology
 
 final class RuuviLocalConnectionsUserDefaults: RuuviLocalConnections {
-    private let prefs = UserDefaults.standard
+    private let prefs: UserDefaults
+    private let notifications: NotificationCenter
     private let keepConnectionArrayUDKey = "ConnectionPersistenceUserDefaults.keepConnection.array"
 
+    init(defaults: UserDefaults = .standard, notifications: NotificationCenter = .default) {
+        prefs = defaults
+        self.notifications = notifications
+    }
+
     var keepConnectionUUIDs: [AnyLocalIdentifier] {
-        let strings =
-            prefs.array(
-                forKey: keepConnectionArrayUDKey
-            ) as? [String]
-        return strings?.map(
-            \.luid.any
-        ) ?? []
+        storedUUIDs.map(\.luid.any)
     }
 
-    func keepConnection(
-        to luid: LocalIdentifier
-    ) -> Bool {
-        let uuid = luid.value
-        assert(
-            uuid.count == 36
-        )
-        if let array = prefs.array(
-            forKey: keepConnectionArrayUDKey
-        ) as? [String] {
-            return array.contains(
-                uuid
-            )
-        } else {
-            return false
-        }
+    private var storedUUIDs: [String] {
+        prefs.array(forKey: keepConnectionArrayUDKey) as? [String] ?? []
     }
 
-    // swiftlint:disable:next function_body_length
-    func setKeepConnection(
-        _ value: Bool,
-        for luid: LocalIdentifier
-    ) {
+    func keepConnection(to luid: LocalIdentifier) -> Bool {
+        storedUUIDs.contains(luid.value)
+    }
+
+    func setKeepConnection(_ value: Bool, for luid: LocalIdentifier) {
         let uuid = luid.value
-        assert(
-            uuid.count == 36
-        )
+        var identifiers = storedUUIDs
+        guard identifiers.contains(uuid) != value else { return }
+        if value { identifiers.append(uuid) } else { identifiers.removeAll { $0 == uuid } }
+        prefs.set(identifiers, forKey: keepConnectionArrayUDKey)
         if value {
-            if var array = prefs.array(
-                forKey: keepConnectionArrayUDKey
-            ) as? [String],
-                !array.contains(
-                    uuid
-                )
-            {
-                array.append(
-                    uuid
-                )
-                prefs.set(
-                    array,
-                    forKey: keepConnectionArrayUDKey
-                )
-                NotificationCenter.default.post(
-                    name: .ConnectionPersistenceDidStartToKeepConnection,
-                    object: nil,
-                    userInfo: [CPDidStartToKeepConnectionKey.uuid: uuid]
-                )
-            } else {
-                var array = [String]()
-                array.append(
-                    uuid
-                )
-                prefs.set(
-                    array,
-                    forKey: keepConnectionArrayUDKey
-                )
-                NotificationCenter.default.post(
-                    name: .ConnectionPersistenceDidStartToKeepConnection,
-                    object: nil,
-                    userInfo: [CPDidStartToKeepConnectionKey.uuid: uuid]
-                )
-            }
+            notifications.post(
+                name: .ConnectionPersistenceDidStartToKeepConnection, object: nil,
+                userInfo: [CPDidStartToKeepConnectionKey.uuid: uuid])
         } else {
-            if var array = prefs.array(
-                forKey: keepConnectionArrayUDKey
-            ) as? [String] {
-                array.removeAll(where: {
-                    $0 == uuid
-                })
-                prefs.set(
-                    array,
-                    forKey: keepConnectionArrayUDKey
-                )
-                NotificationCenter.default.post(
-                    name: .ConnectionPersistenceDidStopToKeepConnection,
-                    object: nil,
-                    userInfo: [CPDidStopToKeepConnectionKey.uuid: uuid]
-                )
-            }
+            notifications.post(
+                name: .ConnectionPersistenceDidStopToKeepConnection, object: nil,
+                userInfo: [CPDidStopToKeepConnectionKey.uuid: uuid])
         }
     }
 
     func unpairAllConnection() {
-        if var array = prefs.array(
-            forKey: keepConnectionArrayUDKey
-        ) as? [String] {
-            for uuid in array {
-                NotificationCenter.default.post(
-                    name: .ConnectionPersistenceDidStopToKeepConnection,
-                    object: nil,
-                    userInfo: [CPDidStopToKeepConnectionKey.uuid: uuid]
-                )
-            }
-            array.removeAll()
-            prefs.set(
-                array,
-                forKey: keepConnectionArrayUDKey
-            )
+        let identifiers = storedUUIDs
+        prefs.set([String](), forKey: keepConnectionArrayUDKey)
+        for uuid in identifiers {
+            notifications.post(
+                name: .ConnectionPersistenceDidStopToKeepConnection, object: nil,
+                userInfo: [CPDidStopToKeepConnectionKey.uuid: uuid])
         }
     }
 }

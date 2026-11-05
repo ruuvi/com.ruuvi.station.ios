@@ -5,11 +5,22 @@ import RuuviOntology
 import UIKit
 
 final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
-    init(imagePersistence: ImagePersistence) {
+    init(
+        imagePersistence: ImagePersistence,
+        defaults: UserDefaults = .standard,
+        notifications: NotificationCenter = .default,
+        imageNamed: @escaping (String) -> UIImage? = { UIImage(named: $0) }
+    ) {
         self.imagePersistence = imagePersistence
+        self.defaults = defaults
+        self.notifications = notifications
+        self.imageNamed = imageNamed
     }
 
     private let imagePersistence: ImagePersistence
+    private let defaults: UserDefaults
+    private let notifications: NotificationCenter
+    private let imageNamed: (String) -> UIImage?
     private let bgMinIndex = 1  // must be > 0, 0 means custom background
     private let bgMaxIndex = 17
     // The images of index 16 will be used for default background for RuuviTag.
@@ -24,13 +35,13 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     private let cloudSensorPictureUrlPrefix = "SensorServiceImpl.backgroundUrlPrefix"
 
     private var usedBackgrounds: [Int] {
-        if let ub = UserDefaults.standard.array(forKey: usedBackgroundsUDKey) as? [Int],
-            ub.count == bgMaxIndex
+        if let ub = defaults.array(forKey: usedBackgroundsUDKey) as? [Int],
+            ub.count == bgMaxIndex, ub.allSatisfy({ $0 >= 0 })
         {
             return ub
         } else {
             let ub = Array(repeating: 0, count: bgMaxIndex - bgMinIndex + 1)
-            UserDefaults.standard.set(ub, forKey: usedBackgroundsUDKey)
+            defaults.set(ub, forKey: usedBackgroundsUDKey)
             return ub
         }
     }
@@ -52,7 +63,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
             setBackground(id, for: identifier)
         }
         imagePersistence.deleteBgIfExists(for: identifier)
-        return UIImage(named: "bg\(id)")
+        return imageNamed("bg\(id)")
     }
 
     func getCustomBackground(for identifier: Identifier) -> UIImage? {
@@ -62,7 +73,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     func getBackground(for identifier: Identifier) -> UIImage? {
         let id = backgroundId(for: identifier)
         if id >= bgMinIndex, id <= bgMaxIndex {
-            return UIImage(named: "bg\(id)")
+            return imageNamed("bg\(id)")
         } else {
             return getCustomBackground(for: identifier)
         }
@@ -74,7 +85,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     ) -> UIImage? {
         let id = backgroundId(for: identifier)
         if id >= bgMinIndex, id <= bgMaxIndex {
-            return UIImage(named: "bg\(id)")
+            return imageNamed("bg\(id)")
         } else {
             if let custom = getCustomBackground(for: identifier) {
                 return custom
@@ -82,7 +93,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
                 let bgIndexDefault: Int =
                     ruuviDeviceType == .ruuviTag ? bgIndexDefaultRuuviTag : bgIndexDefaultRuuviAir
                 setBackground(bgIndexDefault, for: identifier)
-                return UIImage(named: "bg\(bgIndexDefault)")
+                return imageNamed("bg\(bgIndexDefault)")
             }
         }
     }
@@ -106,8 +117,12 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     func setBackground(_ id: Int, for identifier: Identifier) {
         let uuid = identifier.value
         let key = bgUDKeyPrefix + uuid
-        UserDefaults.standard.set(id, forKey: key)
-        UserDefaults.standard.synchronize()
+        defaults.set(id, forKey: key)
+        if id >= bgMinIndex, id <= bgMaxIndex {
+            var array = usedBackgrounds
+            if array[id - bgMinIndex] < Int.max { array[id - bgMinIndex] += 1 }
+            defaults.set(array, forKey: usedBackgroundsUDKey)
+        }
         let userInfoKey: BPDidChangeBackgroundKey
         if identifier is LocalIdentifier {
             userInfoKey = .luid
@@ -117,60 +132,38 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
             userInfoKey = .luid
             assertionFailure()
         }
-        NotificationCenter
-            .default
-            .post(
-                name: .BackgroundPersistenceDidChangeBackground,
-                object: nil,
-                userInfo: [userInfoKey: identifier]
-            )
-        if id >= bgMinIndex, id <= bgMaxIndex {
-            var array = usedBackgrounds
-            array[id - bgMinIndex] += 1
-            UserDefaults.standard.set(array, forKey: usedBackgroundsUDKey)
-        }
+        notifications.post(
+            name: .BackgroundPersistenceDidChangeBackground,
+            object: nil,
+            userInfo: [userInfoKey: identifier]
+        )
     }
 
     private func backgroundId(for identifier: Identifier) -> Int {
         let uuid = identifier.value
         let key = bgUDKeyPrefix + uuid
-        let id = UserDefaults.standard.integer(forKey: key)
+        let id = defaults.integer(forKey: key)
         return id
     }
 
-    // swiftlint:disable legacy_random
     private func biasedToNotUsedRandom() -> Int {
         let array = usedBackgrounds
-        var result: Int
-        if let min = array.min() {
-            let indicies = array.enumerated().compactMap { $1 == min ? $0 + bgMinIndex : nil }
-            if indicies.count == 0 {
-                result = Int(arc4random_uniform(UInt32(bgMaxIndex)) + UInt32(bgMinIndex))
-            } else {
-                result = indicies.shuffled()[0]
-            }
-        } else {
-            result = Int(arc4random_uniform(UInt32(bgMaxIndex)) + UInt32(bgMinIndex))
-        }
-
-        assert(result >= bgMinIndex)
-        assert(result <= bgMaxIndex)
-        assert(result - bgMinIndex < array.count)
-
-        return result
+        // usedBackgrounds always contains one valid counter for each built-in image.
+        let minimum = array.dropFirst().reduce(array[0], min)
+        let indices = array.enumerated().compactMap { $1 == minimum ? $0 + bgMinIndex : nil }
+        return indices[Int.random(in: indices.indices)]
     }
-
-    // swiftlint:enable legacy_random
 
     func backgroundUploadProgress(for identifier: Identifier) -> Double? {
         let uuid = identifier.value
         let key = uploadBackgroundKeyPrefix + uuid
-        return (UserDefaults.standard.object(forKey: key) as? NSNumber)?.doubleValue
+        return (defaults.object(forKey: key) as? NSNumber)?.doubleValue
     }
 
     func setBackgroundUploadProgress(percentage: Double, for identifier: Identifier) {
         let uuid = identifier.value
         let key = uploadBackgroundKeyPrefix + uuid
+        defaults.set(percentage, forKey: key)
         let userInfoKey: BPDidUpdateBackgroundUploadProgressKey
         if identifier is LocalIdentifier {
             userInfoKey = .luid
@@ -180,28 +173,25 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
             userInfoKey = .luid
             assertionFailure()
         }
-        NotificationCenter
-            .default
-            .post(
-                name: .BackgroundPersistenceDidUpdateBackgroundUploadProgress,
-                object: nil,
-                userInfo: [
-                    userInfoKey: identifier,
-                    BPDidUpdateBackgroundUploadProgressKey.progress: percentage,
-                ]
-            )
-        UserDefaults.standard.setValue(percentage, forKey: key)
+        notifications.post(
+            name: .BackgroundPersistenceDidUpdateBackgroundUploadProgress,
+            object: nil,
+            userInfo: [
+                userInfoKey: identifier,
+                BPDidUpdateBackgroundUploadProgressKey.progress: percentage,
+            ]
+        )
     }
 
     func deleteBackgroundUploadProgress(for identifier: Identifier) {
         let uuid = identifier.value
         let key = uploadBackgroundKeyPrefix + uuid
-        UserDefaults.standard.removeObject(forKey: key)
+        defaults.removeObject(forKey: key)
     }
 
     func isPictureCached(for cloudSensor: CloudSensor) -> Bool {
         guard let url = cloudSensor.picture,
-            let cachedUrl = UserDefaults.standard.url(
+            let cachedUrl = defaults.url(
                 forKey: cloudSensorPictureUrlPrefix + cloudSensor.id
             )
         else {
@@ -228,7 +218,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     }
 
     func setPictureIsCached(for cloudSensor: CloudSensor) {
-        UserDefaults.standard.set(
+        defaults.set(
             cloudSensor.picture,
             forKey: cloudSensorPictureUrlPrefix + cloudSensor.id
         )
@@ -237,20 +227,20 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     func setPictureRemovedFromCache(for ruuviTag: RuuviTagSensor) {
         // Remove local cache
         if let macId = ruuviTag.macId {
-            UserDefaults.standard.set(
+            defaults.set(
                 nil,
                 forKey: bgUDKeyPrefix + macId.value
             )
         }
         if let luid = ruuviTag.luid {
-            UserDefaults.standard.set(
+            defaults.set(
                 nil,
                 forKey: bgUDKeyPrefix + luid.value
             )
         }
 
         // Remove cloud cache
-        UserDefaults.standard.set(
+        defaults.set(
             nil,
             forKey: cloudSensorPictureUrlPrefix + ruuviTag.id
         )

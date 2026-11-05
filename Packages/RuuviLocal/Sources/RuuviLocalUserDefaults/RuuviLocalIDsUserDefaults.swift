@@ -5,35 +5,39 @@ import Foundation
 import RuuviOntology
 
 class RuuviLocalIDsUserDefaults: RuuviLocalIDs {
+    private let defaults: UserDefaults
+
+    init(defaults: UserDefaults = .standard) { self.defaults = defaults }
+
     func mac(for luid: LocalIdentifier) -> MACIdentifier? {
-        UserDefaults.standard.string(forKey: luid.value)?.mac
+        defaults.string(forKey: luid.value)?.mac
     }
 
     func set(mac: MACIdentifier, for luid: LocalIdentifier) {
-        UserDefaults.standard.set(mac.value, forKey: luid.value)
+        defaults.set(mac.value, forKey: luid.value)
     }
 
     func extendedLuid(for mac: MACIdentifier) -> LocalIdentifier? {
         let key = mac.value + ".ext"
-        return UserDefaults.standard.string(forKey: key)?.luid
+        return defaults.string(forKey: key)?.luid
     }
 
     func luid(for mac: MACIdentifier) -> LocalIdentifier? {
-        UserDefaults.standard.string(forKey: mac.value)?.luid
+        defaults.string(forKey: mac.value)?.luid
     }
 
     func set(luid: LocalIdentifier, for mac: MACIdentifier) {
-        UserDefaults.standard.set(luid.value, forKey: mac.value)
+        defaults.set(luid.value, forKey: mac.value)
     }
 
     func set(extendedLuid: LocalIdentifier, for mac: MACIdentifier) {
         let key = mac.value + ".ext"
-        UserDefaults.standard.set(extendedLuid.value, forKey: key)
+        defaults.set(extendedLuid.value, forKey: key)
     }
 
     func fullMac(for mac: MACIdentifier) -> MACIdentifier? {
         let key = mac.value + ".full"
-        if let value = UserDefaults.standard.string(forKey: key) {
+        if let value = defaults.string(forKey: key) {
             return value.mac
         }
         return nil
@@ -41,26 +45,30 @@ class RuuviLocalIDsUserDefaults: RuuviLocalIDs {
 
     func originalMac(for fullMac: MACIdentifier) -> MACIdentifier? {
         let key = fullMac.value + ".orig"
-        if let value = UserDefaults.standard.string(forKey: key) {
+        if let value = defaults.string(forKey: key) {
             return value.mac
         }
         return nil
     }
 
     func set(fullMac: MACIdentifier, for mac: MACIdentifier) {
+        removeFullMac(for: mac)
+        if let previous = originalMac(for: fullMac), self.fullMac(for: previous)?.value == fullMac.value {
+            defaults.removeObject(forKey: previous.value + ".full")
+        }
         let key = mac.value + ".full"
-        UserDefaults.standard.set(fullMac.value, forKey: key)
+        defaults.set(fullMac.value, forKey: key)
 
         let reverseKey = fullMac.value + ".orig"
-        UserDefaults.standard.set(mac.value, forKey: reverseKey)
+        defaults.set(mac.value, forKey: reverseKey)
     }
 
     func removeFullMac(for mac: MACIdentifier) {
         let key = mac.value + ".full"
-        if let full = UserDefaults.standard.string(forKey: key) {
+        if let full = defaults.string(forKey: key), defaults.string(forKey: full + ".orig") == mac.value {
             let reverseKey = full + ".orig"
-            UserDefaults.standard.removeObject(forKey: reverseKey)
+            defaults.removeObject(forKey: reverseKey)
         }
-        UserDefaults.standard.removeObject(forKey: key)
+        defaults.removeObject(forKey: key)
     }
 }

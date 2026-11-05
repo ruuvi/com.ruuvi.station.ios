@@ -18,7 +18,19 @@ struct UserDefault<T> {
             UserDefaults.standard.object(forKey: key) as? T ?? defaultValue
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: key)
+            if let optional = newValue as? OptionalPreference, optional.isNil {
+                UserDefaults.standard.removeObject(forKey: key)
+            } else {
+                UserDefaults.standard.set(newValue, forKey: key)
+            }
         }
     }
+}
+
+private protocol OptionalPreference {
+    var isNil: Bool { get }
+}
+
+extension Optional: OptionalPreference {
+    fileprivate var isNil: Bool { self == nil }
 }

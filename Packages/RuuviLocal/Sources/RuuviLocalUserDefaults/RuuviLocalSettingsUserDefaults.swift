@@ -6,6 +6,12 @@ import RuuviOntology
 
 // swiftlint:disable type_body_length file_length
 final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
+    private let notificationServiceAppGroup: UserDefaults?
+
+    init(notificationServiceDefaults: UserDefaults? = UserDefaults(suiteName: "group.com.ruuvi.station.pnservice")) {
+        notificationServiceAppGroup = notificationServiceDefaults
+    }
+
     @UserDefault("SettingsUserDefaults.signedInAtleastOnce", defaultValue: false)
     var signedInAtleastOnce: Bool
 
@@ -48,7 +54,6 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
         UserDefaults.standard.set(value, forKey: firmwareVersionPrefix + luid.value)
     }
 
-    private let notificationServiceAppGroup = UserDefaults(suiteName: "group.com.ruuvi.station.pnservice")
     var language: Language {
         get {
             if let savedCode = notificationServiceAppGroup?.string(forKey: languageUDKey) {
@@ -73,8 +78,26 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     private let languageUDKey = "SettingsUserDegaults.languageUDKey"
 
-    @UserDefault("SettingsUserDefaults.cardToOpenFromWidgetKey", defaultValue: nil)
-    var cloudProfileLanguageCode: String?
+    private let cloudProfileLanguageCodeKey = "SettingsUserDefaults.cloudProfileLanguageCode"
+    var cloudProfileLanguageCode: String? {
+        get {
+            migrateLegacyCloudLanguage()
+            return UserDefaults.standard.string(forKey: cloudProfileLanguageCodeKey)
+        }
+        set {
+            migrateLegacyCloudLanguage()
+            UserDefaults.standard.set(newValue, forKey: cloudProfileLanguageCodeKey)
+        }
+    }
+
+    private func migrateLegacyCloudLanguage() {
+        guard let legacy = UserDefaults.standard.string(forKey: cardToOpenFromWidgetKey),
+              Language(rawValue: legacy) != nil else { return }
+        if UserDefaults.standard.string(forKey: cloudProfileLanguageCodeKey) == nil {
+            UserDefaults.standard.set(legacy, forKey: cloudProfileLanguageCodeKey)
+        }
+        UserDefaults.standard.removeObject(forKey: cardToOpenFromWidgetKey)
+    }
 
     var humidityUnit: HumidityUnit {
         get {
@@ -613,10 +636,12 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
 
     private let cardToOpenFromWidgetKey = "SettingsUserDefaults.cardToOpenFromWidgetKey"
     func cardToOpenFromWidget() -> String? {
-        UserDefaults.standard.value(forKey: cardToOpenFromWidgetKey) as? String
+        migrateLegacyCloudLanguage()
+        return UserDefaults.standard.value(forKey: cardToOpenFromWidgetKey) as? String
     }
 
     func setCardToOpenFromWidget(for macId: String?) {
+        migrateLegacyCloudLanguage()
         UserDefaults.standard.set(macId, forKey: cardToOpenFromWidgetKey)
     }
 
@@ -1059,6 +1084,7 @@ final class RuuviLocalSettingsUserDefaults: RuuviLocalSettings {
             "SettingsUserDefaults.emailAlertDisabled",
             "SettingsUserDefaults.pushAlertDisabled",
             "SettingsUserDefaults.marketingPreference",
+            cloudProfileLanguageCodeKey,
             "SettingsUserDefaults.cardToOpenFromWidgetKey",
         ]
 
