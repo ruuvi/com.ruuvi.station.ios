@@ -4,8 +4,10 @@ import RuuviOntology
 import RuuviService
 @testable import station
 
-final class AppSettingsServiceSpy: RuuviServiceAppSettings {
+@MainActor final class AppSettingsServiceSpy: RuuviServiceAppSettings {
     let settings: AppTestSettings
+    var onGetMarketing: (() async throws(RuuviServiceError) -> RuuviCloudMarketingConsent)?
+    var onSetMarketing: ((Bool) async throws(RuuviServiceError) -> RuuviCloudMarketingConsent)?
     var calls = [String]()
     var beforeSave: (() async -> Void)?
     var failure: RuuviServiceError?
@@ -117,9 +119,13 @@ final class AppSettingsServiceSpy: RuuviServiceAppSettings {
         return try await saved("dashboardSensorOrder", dashboardSensorOrder)
     }
     func getMarketingConsent() async throws(RuuviServiceError) -> RuuviCloudMarketingConsent {
+        calls.append("getMarketing")
+        if let onGetMarketing { return try await onGetMarketing() }
         throw .failedToParseNetworkResponse
     }
     func set(marketingPreference: Bool) async throws(RuuviServiceError) -> RuuviCloudMarketingConsent {
+        calls.append("setMarketing")
+        if let onSetMarketing { return try await onSetMarketing(marketingPreference) }
         settings.marketingPreference = marketingPreference
         throw .failedToParseNetworkResponse
     }

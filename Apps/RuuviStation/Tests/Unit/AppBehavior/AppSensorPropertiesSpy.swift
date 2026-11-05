@@ -3,7 +3,7 @@ import RuuviOntology
 import RuuviService
 import UIKit
 
-final class AppSensorPropertiesSpy: RuuviServiceSensorProperties {
+@MainActor final class AppSensorPropertiesSpy: RuuviServiceSensorProperties {
     var images = [String: UIImage]()
     var imageReads = [String]()
     var names = [(String, String)]()

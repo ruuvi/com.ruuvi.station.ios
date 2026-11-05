@@ -89,6 +89,7 @@ class MyRuuviAccountViewController: UIViewController {
         setUpVerticalLayout()
         configureViews()
         localize()
+        bindViewModel()
         output.viewDidLoad()
     }
 

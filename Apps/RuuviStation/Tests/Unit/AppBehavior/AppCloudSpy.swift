@@ -27,6 +27,8 @@ import RuuviOntology
     var onResetImage: (() async -> Void)?
     var onUnclaim: (() async -> Void)?
     var beforeAlert: (() async -> Void)?
+    var deletedEmails = [String]()
+    var onDeleteAccount: ((String) async throws(RuuviCloudError) -> Bool)?
     var requestedEmails = [String]()
     var requestedCodes = [String]()
     var onRequestCode: ((String) async throws(RuuviCloudError) -> String?)?
@@ -44,6 +46,8 @@ import RuuviOntology
     }
 
     func deleteAccount(email: String) async throws(RuuviCloudError) -> Bool {
+        deletedEmails.append(email)
+        if let onDeleteAccount { return try await onDeleteAccount(email) }
         throw .notAuthorized
     }
 

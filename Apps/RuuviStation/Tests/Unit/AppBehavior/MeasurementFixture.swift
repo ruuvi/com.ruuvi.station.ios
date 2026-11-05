@@ -106,7 +106,7 @@ final class AppTestFlags: RuuviLocalFlags {
     var graphDownsampleMaximumPoints = 3000
 }
 
-final class AppTestCloudSync: RuuviServiceCloudSync {
+@MainActor final class AppTestCloudSync: RuuviServiceCloudSync {
     var count = 0
     var failure = false
     var beforeSync: (() async -> Void)?

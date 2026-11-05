@@ -54,7 +54,7 @@ final class GraphOutputSpy: CardsGraphPresenterOutput {
     }
 }
 
-final class GraphExportSpy: RuuviServiceExport {
+@MainActor final class GraphExportSpy: RuuviServiceExport {
     struct Request {
         let format: String
         let id: String

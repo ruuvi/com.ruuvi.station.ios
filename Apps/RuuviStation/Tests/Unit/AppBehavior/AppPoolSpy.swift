@@ -2,7 +2,7 @@ import Foundation
 import RuuviOntology
 import RuuviPool
 
-final class AppPoolSpy: RuuviPool {
+@MainActor final class AppPoolSpy: RuuviPool {
     var subscriptions = [String: CloudSensorSubscription]()
     var subscriptionReads = [String]()
     var subscriptionFailure: RuuviPoolError?

@@ -94,7 +94,7 @@ final class SignInOutputSpy: SignInModuleOutput {
     func signIn(module: SignInModuleInput, didSelectUseWithoutAccount sender: Any?) { skips += 1 }
 }
 
-final class SignInSyncSpy: RuuviServiceCloudSync {
+@MainActor final class SignInSyncSpy: RuuviServiceCloudSync {
     var historyCalls = 0
     var latestCalls = 0
     var historyError: RuuviServiceError?
@@ -128,7 +128,7 @@ final class SignInDaemonSpy: RuuviDaemonCloudSync {
     func refreshLatestRecord() {}
 }
 
-final class SignInNotificationSpy: RuuviServiceCloudNotification {
+@MainActor final class SignInNotificationSpy: RuuviServiceCloudNotification {
     var tokens = [String?]()
     var languages = [Language]()
     var sounds = [RuuviAlertSound]()
@@ -148,7 +148,7 @@ final class SignInNotificationSpy: RuuviServiceCloudNotification {
     func listTokens() async throws(RuuviServiceError) -> [RuuviCloudPNToken] { [] }
 }
 
-final class SignInAuthSpy: RuuviServiceAuth {
+@MainActor final class SignInAuthSpy: RuuviServiceAuth {
     var logouts = 0
     var failure: RuuviServiceError?
     func logout() async throws(RuuviServiceError) -> Bool {

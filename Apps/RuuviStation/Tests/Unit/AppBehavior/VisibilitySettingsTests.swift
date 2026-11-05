@@ -320,7 +320,7 @@ import XCTest
     }
 }
 
-private final class VisibilityPropertiesSpy: RuuviServiceSensorProperties {
+@MainActor private final class VisibilityPropertiesSpy: RuuviServiceSensorProperties {
     struct Call { let codes: [String]?; let useDefault: Bool }
     var calls: [Call] = []
     var completed = 0

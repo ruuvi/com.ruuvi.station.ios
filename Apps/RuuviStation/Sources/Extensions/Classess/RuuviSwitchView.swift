@@ -72,6 +72,7 @@ extension RuuviSwitchView {
     func disableEditing(
         disable: Bool
     ) {
+        statusSwitch.isEnabled = !disable
         statusSwitch.disable(disable)
         statusLabel.disable(disable)
     }
