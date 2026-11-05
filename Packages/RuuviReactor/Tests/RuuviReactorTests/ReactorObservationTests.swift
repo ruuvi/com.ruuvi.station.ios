@@ -13,6 +13,61 @@ import RuuviReactor
 import XCTest
 
 @MainActor final class ReactorObservationTests: XCTestCase {
+    func testCorrectedValuesAtTheSameTimestampAndNewLiveReadingsAreDelivered() async throws {
+        let fixture = try ReactorDatabaseFixture()
+        defer { fixture.close() }
+        let sensor = fixture.sensor(luid: fixture.luid, mac: fixture.mac)
+        var record = fixture.record(seconds: 10)
+        _ = try await fixture.store.create(record)
+        _ = try await fixture.store.createLast(record)
+        let initial = expectation(description: "Three initial observations")
+        initial.expectedFulfillmentCount = 3
+        let corrected = expectation(description: "Three corrected observations")
+        corrected.expectedFulfillmentCount = 3
+        let live = expectation(description: "New live reading with the same database identity")
+        var historyValues = [Double]()
+        var lastValues = [Double]()
+        var latestValues = [Double]()
+        func received(_ value: Double?) {
+            switch value {
+            case 10: initial.fulfill()
+            case 35: corrected.fulfill()
+            case 45: live.fulfill()
+            default: XCTFail("Unexpected measurement \(String(describing: value))")
+            }
+        }
+        let tokens = [
+            fixture.reactor.observe(fixture.luid) { values in
+                let value = values.last?.temperature?.value
+                historyValues.append(value ?? -1)
+                received(value)
+            },
+            fixture.reactor.observeLast(sensor) { change in
+                guard case .update(let value) = change else { return XCTFail("Expected history value") }
+                lastValues.append(value?.temperature?.value ?? -1)
+                received(value?.temperature?.value)
+            },
+            fixture.reactor.observeLatest(sensor) { change in
+                guard case .update(let value) = change else { return XCTFail("Expected live value") }
+                latestValues.append(value?.temperature?.value ?? -1)
+                received(value?.temperature?.value)
+            },
+        ]
+        defer { tokens.forEach { $0.invalidate() } }
+        await fulfillment(of: [initial], timeout: 3)
+        record.temperature = .init(value: 35, unit: .celsius)
+        _ = try await fixture.store.create(record)
+        _ = try await fixture.store.updateLast(record)
+        await fulfillment(of: [corrected], timeout: 3)
+        record.date.addTimeInterval(10)
+        record.temperature = .init(value: 45, unit: .celsius)
+        _ = try await fixture.store.updateLast(record)
+        await fulfillment(of: [live], timeout: 3)
+        XCTAssertEqual(historyValues, [10, 35])
+        XCTAssertEqual(lastValues, [10, 35])
+        XCTAssertEqual(latestValues, [10, 35, 45])
+    }
+
     func testHistoryIsOrderedByDateAndScopedToTheLocalIdentifier() async throws {
         let fixture = try ReactorDatabaseFixture()
         defer { fixture.close() }

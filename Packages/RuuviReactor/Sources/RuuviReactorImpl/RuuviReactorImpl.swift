@@ -44,12 +44,12 @@ final class RuuviReactorImpl: RuuviReactor {
     func observe(_ luid: LocalIdentifier, _ block: @escaping ([AnyRuuviTagSensorRecord]) -> Void) -> RuuviReactorToken {
         let request = RuuviTagDataSQLite.order(RuuviTagDataSQLite.dateColumn).filter(
             RuuviTagDataSQLite.luidColumn == luid.value)
-        let observation = ValueObservation.tracking { db in try request.fetchAll(db) }.removeDuplicates()
+        let observation = ValueObservation.tracking { db in try Row.fetchAll(db, request) }.removeDuplicates()
         let token = observation.start(
             in: sqliteContext.database.dbPool,
             onError: { [errorReporter] in
                 errorReporter.report(error: $0)
-            }, onChange: { block($0.map(\.any)) })
+            }, onChange: { block($0.map { RuuviTagDataSQLite(row: $0).any }) })
         return RuuviReactorToken { token.cancel() }
     }
 
@@ -58,12 +58,12 @@ final class RuuviReactorImpl: RuuviReactor {
     ) -> RuuviReactorToken {
         let request = RuuviTagDataSQLite.order(RuuviTagDataSQLite.dateColumn.desc)
             .filter(identityFilter(sensor, luid: RuuviTagDataSQLite.luidColumn, mac: RuuviTagDataSQLite.macColumn))
-        let observation = ValueObservation.tracking { db in try request.fetchOne(db) }.removeDuplicates()
+        let observation = ValueObservation.tracking { db in try Row.fetchOne(db, request) }.removeDuplicates()
         let token = observation.start(
             in: sqliteContext.database.dbPool,
             onError: {
                 block(.error(.ruuviPersistence(.grdb($0))))
-            }, onChange: { block(.update($0?.any)) })
+            }, onChange: { block(.update($0.map { RuuviTagDataSQLite(row: $0).any })) })
         return RuuviReactorToken { token.cancel() }
     }
 
@@ -74,12 +74,12 @@ final class RuuviReactorImpl: RuuviReactor {
             .filter(
                 identityFilter(
                     sensor, luid: RuuviTagLatestDataSQLite.luidColumn, mac: RuuviTagLatestDataSQLite.macColumn))
-        let observation = ValueObservation.tracking { db in try request.fetchOne(db) }.removeDuplicates()
+        let observation = ValueObservation.tracking { db in try Row.fetchOne(db, request) }.removeDuplicates()
         let token = observation.start(
             in: sqliteContext.database.dbPool,
             onError: {
                 block(.error(.ruuviPersistence(.grdb($0))))
-            }, onChange: { block(.update($0?.any)) })
+            }, onChange: { block(.update($0.map { RuuviTagLatestDataSQLite(row: $0).any })) })
         return RuuviReactorToken { token.cancel() }
     }
 
