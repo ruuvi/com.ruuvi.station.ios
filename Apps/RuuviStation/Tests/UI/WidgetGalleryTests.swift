@@ -15,7 +15,11 @@ final class WidgetGalleryTests: XCTestCase {
         }
         showHomeScreen(springboard)
         func visibleIcon() -> XCUIElement? {
-            springboard.icons.matching(identifier: "Ruuvi Station").allElementsBoundByIndex.first { $0.isHittable }
+            let screen = springboard.frame
+            return springboard.icons.matching(identifier: "Ruuvi Station").allElementsBoundByIndex.first {
+                let frame = $0.frame
+                return !frame.isEmpty && !frame.isInfinite && screen.contains(frame)
+            }
         }
         for _ in 0..<6 where visibleIcon() == nil { springboard.swipeRight() }
         for _ in 0..<6 where visibleIcon() == nil { springboard.swipeLeft() }
@@ -24,7 +28,7 @@ final class WidgetGalleryTests: XCTestCase {
             XCTFail("Installed Ruuvi Station icon is not reachable: \(springboard.debugDescription)")
             return
         }
-        icon.press(forDuration: 1.2)
+        icon.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).press(forDuration: 1.2)
         attach(springboard, name: "Widget app context menu")
         let editHome = springboard.buttons["Edit Home Screen"].firstMatch
         XCTAssertTrue(editHome.waitForExistence(timeout: 5), springboard.debugDescription)

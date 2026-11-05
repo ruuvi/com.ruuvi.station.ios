@@ -31,6 +31,20 @@ class SignInPresenter: NSObject {
     var authService: RuuviServiceAuth!
     var settings: RuuviLocalSettings!
 
+    private let notificationCenter: NotificationCenter
+    var reloadWidget: (String) -> Void = { WidgetCenter.shared.reloadTimelines(ofKind: $0) }
+    var requestFCMToken: (@escaping (String?) -> Void) -> Void = { callback in
+        Messaging.messaging().token { token, _ in callback(token) }
+    }
+
+    init(notificationCenter: NotificationCenter = .default) {
+        self.notificationCenter = notificationCenter
+        super.init()
+    }
+
+    private var requestTask: Task<Void, Never>?
+    private var verificationTask: Task<Void, Never>?
+    private var deepLinkTask: Task<Void, Never>?
     private let maxRetryCount: Int = 1
     private var currentRetryCount: Int = 0
     private var state: State = .enterEmail
@@ -42,8 +56,11 @@ class SignInPresenter: NSObject {
     }
 
     deinit {
-        universalLinkObservationToken?.invalidate()
-        NotificationCenter.default.removeObserver(self)
+        requestTask?.cancel()
+        verificationTask?.cancel()
+        deepLinkTask?.cancel()
+        if let universalLinkObservationToken { notificationCenter.removeObserver(universalLinkObservationToken) }
+        notificationCenter.removeObserver(self)
     }
 }
 
@@ -61,9 +78,17 @@ extension SignInPresenter: SignInViewOutput {
         case .isSyncing:
             break
         case .enterVerificationCode:
+            deepLinkTask?.cancel()
+            if verificationTask != nil { activityPresenter.dismiss() }
+            verificationTask?.cancel()
+            verificationTask = nil
+            view.fromDeepLink = false
             viewModel.showVerficationScreen.value = false
             state = .enterEmail
         case .enterEmail:
+            if requestTask != nil { activityPresenter.dismiss() }
+            requestTask?.cancel()
+            requestTask = nil
             router.popViewController(animated: true, completion: nil)
         }
     }
@@ -150,65 +175,62 @@ extension SignInPresenter {
     }
 
     private func sendVerificationCode(for email: String) {
+        guard requestTask == nil else { return }
         activityPresenter.show(with: .loading(message: nil))
-        Task { @MainActor [weak self, ruuviCloud = ruuviCloud!] in
+        requestTask = Task { @MainActor [weak self, cloud = ruuviCloud!] in
             defer {
-                ({ [weak self] in
+                if !Task.isCancelled {
+                    self?.requestTask = nil
                     self?.activityPresenter.dismiss()
-                })()
+                }
             }
             do {
-                let value = try await ruuviCloud.requestCode(email: email)
-                ({ [weak self] email in
-                    guard let sSelf = self else { return }
-                    sSelf.activityPresenter.dismiss()
-                    sSelf.ruuviUser.email = email
-                    sSelf.viewModel.showVerficationScreen.value = true
-                    sSelf.state = .enterVerificationCode(nil)
-                })(value)
+                let response = try await cloud.requestCode(email: email)
+                guard let self, !Task.isCancelled else { return }
+                self.ruuviUser.email = (response ?? email).lowercased()
+                self.viewModel.showVerficationScreen.value = true
+                self.state = .enterVerificationCode(nil)
             } catch {
-                ({ [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                })(error)
+                guard !Task.isCancelled else { return }
+                self?.errorPresenter.present(error: error)
             }
         }
     }
 
     private func verify(_ code: String) {
+        guard verificationTask == nil else { return }
+        if case .isSyncing = state { return }
+        currentRetryCount = 0
         activityPresenter.show(with: .loading(message: RuuviLocalization.SignIn.Sync.message))
-        Task { @MainActor [weak self, ruuviCloud = ruuviCloud!] in
+        verificationTask = Task { @MainActor [weak self, cloud = ruuviCloud!] in
+            defer { if !Task.isCancelled { self?.verificationTask = nil } }
             do {
-                let value = try await ruuviCloud.validateCode(code: code)
-                ({ [weak self] result in
-                    guard let sSelf = self else { return }
-                    if sSelf.ruuviUser.email == result.email.lowercased() {
-                        if !sSelf.settings.signedInAtleastOnce {
-                            sSelf.settings.signedInAtleastOnce = true
-                        }
-                        sSelf.ruuviUser.login(apiKey: result.apiKey)
-                        sSelf.reloadWidgets()
-                        sSelf.state = .isSyncing
-                        sSelf.settings.isSyncing = true
-                        sSelf.settings.syncExtensiveChangesInProgress = true
-                        sSelf.registerFCMToken()
-                        sSelf.syncAllRecords()
-                    } else if let requestedEmail = sSelf.ruuviUser.email {
-                        sSelf.activityPresenter.dismiss()
-                        sSelf.view.showEmailsAreDifferent(
-                            requestedEmail: requestedEmail,
-                            validatedEmail: result.email.lowercased()
-                        )
-                    } else {
-                        sSelf.view.showFailedToGetRequestedEmail()
-                        sSelf.activityPresenter.dismiss()
-                    }
-                })(value)
+                let result = try await cloud.validateCode(code: code)
+                guard let self, !Task.isCancelled else { return }
+                if self.ruuviUser.email?.lowercased() == result.email.lowercased() {
+                    self.settings.signedInAtleastOnce = true
+                    self.ruuviUser.login(apiKey: result.apiKey)
+                    self.reloadWidgets()
+                    self.state = .isSyncing
+                    self.settings.isSyncing = true
+                    self.settings.syncExtensiveChangesInProgress = true
+                    self.registerFCMToken()
+                    self.syncAllRecords()
+                } else if let email = self.ruuviUser.email {
+                    self.activityPresenter.dismiss()
+                    self.view.fromDeepLink = false
+                    self.view.showEmailsAreDifferent(requestedEmail: email, validatedEmail: result.email.lowercased())
+                } else {
+                    self.view.fromDeepLink = false
+                    self.view.showFailedToGetRequestedEmail()
+                    self.activityPresenter.dismiss()
+                }
             } catch {
-                ({ [weak self] error in
-                    self?.activityPresenter.dismiss()
-                    self?.view.showInvalidTokenEntered()
-                    self?.errorPresenter.present(error: error)
-                })(error)
+                guard let self, !Task.isCancelled else { return }
+                self.activityPresenter.dismiss()
+                self.view.fromDeepLink = false
+                self.view.showInvalidTokenEntered()
+                self.errorPresenter.present(error: error)
             }
         }
     }
@@ -260,6 +282,7 @@ extension SignInPresenter {
             case .api(.unexpectedHTTPStatusCodeShouldRetry):
                 guard currentRetryCount < maxRetryCount
                 else {
+                    finishFailedSync()
                     activityPresenter.dismiss()
                     view.showUnexpectedHTTPStatusCodeError()
                     break
@@ -277,13 +300,22 @@ extension SignInPresenter {
     private func dismissActivityAndShowError(
         from error: RuuviServiceError
     ) {
+        finishFailedSync()
         activityPresenter.dismiss()
         errorPresenter.present(error: error)
     }
 
+    private func finishFailedSync() {
+        settings.isSyncing = false
+        settings.syncExtensiveChangesInProgress = false
+        state = .enterVerificationCode(nil)
+        view.fromDeepLink = false
+    }
+
     private func startObservingUniversalLinks() {
-        universalLinkObservationToken = NotificationCenter
-            .default
+        if let universalLinkObservationToken { notificationCenter.removeObserver(universalLinkObservationToken) }
+        universalLinkObservationToken =
+            notificationCenter
             .addObserver(
                 forName: .DidOpenWithUniversalLink,
                 object: nil,
@@ -300,16 +332,16 @@ extension SignInPresenter {
     }
 
     private func startObservingAppState() {
-        NotificationCenter
-            .default
+        notificationCenter.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
+        notificationCenter.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
+        notificationCenter
             .addObserver(
                 self,
                 selector: #selector(handleAppEnterForgroundState),
                 name: UIApplication.willEnterForegroundNotification,
                 object: nil
             )
-        NotificationCenter
-            .default
+        notificationCenter
             .addObserver(
                 self,
                 selector: #selector(handleAppEnterBackgroundState),
@@ -355,24 +387,27 @@ extension SignInPresenter {
     private func processCode(_ code: String) {
         view.fromDeepLink = true
         viewModel.inputText.value = code
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(750)) { [weak self] in
+        deepLinkTask?.cancel()
+        deepLinkTask = Task { @MainActor [weak self] in
+            do { try await Task.sleep(nanoseconds: 750_000_000) } catch { return }
+            guard !Task.isCancelled else { return }
             self?.verify(code)
         }
     }
 
     private func reloadWidgets() {
-        WidgetCenter.shared.reloadTimelines(
-            ofKind: AppAssemblyConstants.simpleWidgetKindId
+        reloadWidget(
+            AppAssemblyConstants.simpleWidgetKindId
         )
-        WidgetCenter.shared.reloadTimelines(
-            ofKind: AppAssemblyConstants.multiSensorWidgetKindId
+        reloadWidget(
+            AppAssemblyConstants.multiSensorWidgetKindId
         )
     }
 
     private func registerFCMToken() {
         let sound = settings.alertSound
         let language = settings.language
-        Messaging.messaging().token { [weak self] fcmToken, _ in
+        requestFCMToken { [weak self] fcmToken in
             Task { @MainActor [self] in
                 _ = try? await self?.cloudNotificationService.set(
                     token: fcmToken,

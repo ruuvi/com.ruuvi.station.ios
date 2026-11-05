@@ -19,9 +19,6 @@ class RuuviCodeView: UIStackView {
     private let textBackgroundColor: UIColor = .white.withAlphaComponent(0.6)
     private let activeBorderColor: UIColor = .white
 
-    // Utils
-    private var remainingStrStack: [String] = []
-
     required init(coder: NSCoder) {
         super.init(coder: coder)
         setupSuper()
@@ -56,6 +53,7 @@ extension RuuviCodeView {
 
     // Activate last field if invalid code is entered
     func reset() {
+        isValidCode = false
         codeEntries.removeAll()
         arrangedSubviews.forEach { $0.removeFromSuperview() }
         setupRuuviCodeFields()
@@ -80,7 +78,7 @@ extension RuuviCodeView {
     }
 
     private func setupRuuviCodeFields() {
-        for index in 0 ..< entriesCount {
+        for index in 0..<entriesCount {
             let field = RuuviCodeTextField()
             field.autocorrectionType = .no
             field.spellCheckingType = .no
@@ -97,6 +95,7 @@ extension RuuviCodeView {
 
     private func setupRuuviCodeField(_ textField: RuuviCodeTextField) {
         textField.delegate = self
+        textField.addTarget(self, action: #selector(codeDidChange), for: .editingChanged)
         textField.translatesAutoresizingMaskIntoConstraints = false
         addArrangedSubview(textField)
         textField.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
@@ -115,16 +114,15 @@ extension RuuviCodeView {
     }
 
     private func populateRuuviCodeFields(with string: String) {
-        remainingStrStack = string.reversed().filter { $0 != " " }.compactMap { String($0) }
-        for textField in codeEntries {
-            if let charToAdd = remainingStrStack.popLast() {
-                textField.text = String(charToAdd).uppercased()
-            } else {
-                break
-            }
+        let characters = Array(string.uppercased().filter { $0 != " " }.prefix(entriesCount))
+        for (index, textField) in codeEntries.enumerated() {
+            textField.text = index < characters.count ? String(characters[index]) : ""
         }
         validateRuuviCodeEntries()
-        remainingStrStack = []
+    }
+
+    @objc private func codeDidChange() {
+        validateRuuviCodeEntries()
     }
 
     private func validateRuuviCodeEntries() {
@@ -158,11 +156,11 @@ extension RuuviCodeView: UITextFieldDelegate {
         }
 
         // Define the allowed characters as a CharacterSet
-        let allowedChars = "ABCDFGHJKLMNPQRSTVWXYZbcdfghjklmnpqrstvwxyz23456789"
+        let allowedChars = "ABCDFGHJKLMNPQRSTVWXYZ23456789"
         let allowedCharacterSet = CharacterSet(charactersIn: allowedChars)
 
         // Check if the string contains only allowed characters
-        let isStringValid = string.rangeOfCharacter(from: allowedCharacterSet.inverted) == nil
+        let isStringValid = string.uppercased().rangeOfCharacter(from: allowedCharacterSet.inverted) == nil
 
         // Proceed only if the string contains allowed characters
         if isStringValid {

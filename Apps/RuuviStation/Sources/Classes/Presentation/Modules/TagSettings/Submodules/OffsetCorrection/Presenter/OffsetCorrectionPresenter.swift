@@ -15,252 +15,171 @@ final class OffsetCorrectionPresenter: OffsetCorrectionModuleInput {
     var ruuviReactor: RuuviReactor!
     var settings: RuuviLocalSettings!
 
-    private var ruuviTagObserveLastRecordToken: RuuviReactorToken?
-    private var sensorSettingsObserveToken: RuuviReactorToken?
-
-    private var temperatureUnitSettingToken: NSObjectProtocol?
-    private var humidityUnitSettingToken: NSObjectProtocol?
-    private var pressureUnitSettingToken: NSObjectProtocol?
-
+    private let notificationCenter: NotificationCenter
+    private var notificationTokens = [NSObjectProtocol]()
+    private var lastRecordToken: RuuviReactorToken?
+    private var sensorSettingsToken: RuuviReactorToken?
+    private var loadTask: Task<Void, Never>?
+    private var generation = UUID()
+    private var isObserving = false
     private var ruuviTag: RuuviTagSensor!
     private var sensorSettings: SensorSettings!
-
     private var lastSensorRecord: RuuviTagSensorRecord?
 
+    init(notificationCenter: NotificationCenter = .default) {
+        self.notificationCenter = notificationCenter
+    }
+
+    deinit {
+        loadTask?.cancel()
+        lastRecordToken?.invalidate()
+        sensorSettingsToken?.invalidate()
+        notificationTokens.forEach(notificationCenter.removeObserver)
+    }
+
     func configure(type: OffsetCorrectionType, ruuviTag: RuuviTagSensor, sensorSettings: SensorSettings?) {
+        loadTask?.cancel()
+        generation = UUID()
         self.ruuviTag = ruuviTag
-        self.sensorSettings =
-            sensorSettings
-            ?? SensorSettingsStruct(
-                luid: ruuviTag.luid,
-                macId: ruuviTag.macId,
-                temperatureOffset: nil,
-                humidityOffset: nil,
-                pressureOffset: nil
-            )
-        view.viewModel = {
-            let vm = OffsetCorrectionViewModel(
-                type: type,
-                sensorSettings: self.sensorSettings
-            )
-            Task { @MainActor [weak self, ruuviStorage = ruuviStorage!, ruuviTag = ruuviTag] in
-                do throws(RuuviStorageError) {
-                    let value = try await ruuviStorage.readLatest(ruuviTag)
-                    ({ [weak self] record in
-                        if let record {
-                            self?.lastSensorRecord = record
-                            vm.update(
-                                ruuviTagRecord:
-                                    record
-                                    .with(sensorSettings: sensorSettings)
-                            )
-                        }
-                    })(value)
-                } catch {
-                }
+        self.sensorSettings = sensorSettings ?? emptySettings()
+        lastSensorRecord = nil
+        let model = OffsetCorrectionViewModel(type: type, sensorSettings: self.sensorSettings)
+        model.temperatureUnit.value = settings.temperatureUnit
+        model.humidityUnit.value = settings.humidityUnit
+        model.pressureUnit.value = settings.pressureUnit
+        view.viewModel = model
+        let generation = generation
+        loadTask = Task { @MainActor [weak self, storage = ruuviStorage!] in
+            do {
+                let record = try await storage.readLatest(ruuviTag)
+                guard let self, self.generation == generation, !Task.isCancelled, let record else { return }
+                self.update(record: record)
+            } catch {
+                // A live observation may still supply a reading when the initial read fails.
             }
-            vm.temperatureUnit.value = self.settings.temperatureUnit
-            vm.humidityUnit.value = self.settings.humidityUnit
-            vm.pressureUnit.value = self.settings.pressureUnit
-            return vm
-        }()
+        }
+        if isObserving { observeSensor() }
+    }
+
+    private func emptySettings() -> SensorSettings {
+        SensorSettingsStruct(
+            luid: ruuviTag.luid, macId: ruuviTag.macId,
+            temperatureOffset: nil, humidityOffset: nil, pressureOffset: nil)
+    }
+
+    private func update(record: RuuviTagSensorRecord) {
+        if let previous = lastSensorRecord, record.date < previous.date { return }
+        lastSensorRecord = record
+        view.viewModel.update(ruuviTagRecord: record.with(sensorSettings: sensorSettings))
+    }
+
+    private func update(sensorSettings: SensorSettings) {
+        self.sensorSettings = sensorSettings
+        view.viewModel.update(sensorSettings: sensorSettings)
+        if let lastSensorRecord { update(record: lastSensorRecord) }
     }
 }
 
 extension OffsetCorrectionPresenter: OffsetCorrectionViewOutput {
     func viewDidLoad() {
-        observeRuuviTagUpdate()
-        observeSensorSettings()
-        startObservingSettingsChanges()
+        isObserving = true
+        observeSensor()
+        observeUnits()
     }
 
-    func viewDidOpenCalibrateDialog() {
-        view.showCalibrateDialog()
-    }
+    func viewDidOpenCalibrateDialog() { view.showCalibrateDialog() }
+    func viewDidOpenClearDialog() { view.showClearConfirmationDialog() }
 
-    func viewDidOpenClearDialog() {
-        view.showClearConfirmationDialog()
-    }
-
-    // swiftlint:disable:next cyclomatic_complexity
     func viewDidSetCorrectValue(correctValue: Double) {
-        var offset: Double = 0
+        guard correctValue.isFinite, let original = view.viewModel.originalValue.value, original.isFinite else {
+            return
+        }
+        let offset: Double
         switch view.viewModel.type {
         case .temperature:
-            let fromTemperature = view.viewModel.originalValue.value.bound
-            switch settings.temperatureUnit {
-            case .celsius:
-                offset = correctValue - fromTemperature
-            case .fahrenheit:
-                offset = correctValue.celsiusFromFahrenheit - fromTemperature
-            case .kelvin:
-                offset = correctValue.celsiusFromKelvin - fromTemperature
-            }
+            offset =
+                Temperature(value: correctValue, unit: settings.temperatureUnit.unitTemperature)
+                .converted(to: .celsius).value - original
         case .humidity:
-            offset = (correctValue / 100) - view.viewModel.originalValue.value.bound
+            offset = correctValue / 100 - original
         case .pressure:
-            switch settings.pressureUnit {
-            case .hectopascals:
-                offset = correctValue - view.viewModel.originalValue.value.bound
-            case .newtonsPerMetersSquared:
-                offset = correctValue.hPaFromPa - view.viewModel.originalValue.value.bound
-            case .inchesOfMercury:
-                offset = correctValue.hPaFrominHg - view.viewModel.originalValue.value.bound
-            case .millimetersOfMercury:
-                offset = correctValue.hPaFrommmHg - view.viewModel.originalValue.value.bound
-            default:
-                offset = correctValue - view.viewModel.originalValue.value.bound
-            }
+            offset =
+                Pressure(value: correctValue, unit: settings.pressureUnit)
+                .converted(to: .hectopascals).value - original
         }
+        guard offset.isFinite else { return }
+        save(offset: offset)
+    }
+
+    func viewDidClearOffsetValue() { save(offset: nil) }
+
+    private func save(offset: Double?) {
+        let generation = generation
         let correctionType = view.viewModel.type
         Task {
             @MainActor [
-                weak self, ruuviOffsetCalibrationService = ruuviOffsetCalibrationService!, ruuviTag = ruuviTag!,
-                lastSensorRecord = lastSensorRecord
+                weak self, service = ruuviOffsetCalibrationService!, sensor = ruuviTag!,
+                record = lastSensorRecord
             ] in
-            do throws(RuuviServiceError) {
-                let value = try await ruuviOffsetCalibrationService.set(
-                    offset: offset,
-                    of: correctionType,
-                    for: ruuviTag,
-                    lastOriginalRecord: lastSensorRecord
-                )
-                ({ [weak self] settings in
-                    self?.sensorSettings = settings
-                    self?.view.viewModel.update(sensorSettings: settings)
-                    if let lastRecord = self?.lastSensorRecord {
-                        self?.view.viewModel.update(
-                            ruuviTagRecord: lastRecord.with(sensorSettings: settings)
-                        )
-                    }
-                    self?.notifyCalibrationSettingsUpdate()
-                })(value)
+            do {
+                let settings = try await service.set(
+                    offset: offset, of: correctionType, for: sensor, lastOriginalRecord: record)
+                guard let self, self.generation == generation else { return }
+                self.update(sensorSettings: settings)
+                self.notificationCenter.post(name: .SensorCalibrationDidChange, object: self)
             } catch {
-                ({ [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                })(error)
+                guard let self, self.generation == generation else { return }
+                self.errorPresenter.present(error: error)
             }
         }
     }
+}
 
-    func viewDidClearOffsetValue() {
-        let correctionType = view.viewModel.type
-        Task {
-            @MainActor [
-                weak self, ruuviOffsetCalibrationService = ruuviOffsetCalibrationService!, ruuviTag = ruuviTag!,
-                lastSensorRecord = lastSensorRecord
-            ] in
-            do throws(RuuviServiceError) {
-                let value = try await ruuviOffsetCalibrationService.set(
-                    offset: nil,
-                    of: correctionType,
-                    for: ruuviTag,
-                    lastOriginalRecord: lastSensorRecord
-                )
-                ({ [weak self] sensorSettings in
-                    self?.sensorSettings = sensorSettings
-                    self?.view.viewModel.update(sensorSettings: sensorSettings)
-                    if let lastRecord = self?.lastSensorRecord {
-                        self?.view.viewModel.update(
-                            ruuviTagRecord:
-                                lastRecord
-                                .with(sensorSettings: sensorSettings)
-                        )
-                    }
-                    self?.notifyCalibrationSettingsUpdate()
-                })(value)
-            } catch {
-                ({ [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                })(error)
-            }
-        }
-    }
-
-    private func notifyCalibrationSettingsUpdate() {
-        NotificationCenter.default.post(
-            name: .SensorCalibrationDidChange,
-            object: self,
-            userInfo: nil
-        )
-    }
-
-    private func observeRuuviTagUpdate() {
-        ruuviTagObserveLastRecordToken?.invalidate()
-        ruuviTagObserveLastRecordToken = ruuviReactor.observeLatest(ruuviTag) { [weak self] changes in
-            if case let .update(anyRecord) = changes,
-                let record = anyRecord
-            {
-                self?.lastSensorRecord = record
-                self?.view.viewModel.update(
-                    ruuviTagRecord: record.with(sensorSettings: self?.sensorSettings)
-                )
-            }
-        }
-    }
-
-    private func observeSensorSettings() {
-        sensorSettingsObserveToken?.invalidate()
-        sensorSettingsObserveToken = ruuviReactor.observe(ruuviTag) { [weak self] change in
-            guard let self = self else { return }
-
+private extension OffsetCorrectionPresenter {
+    func observeSensor() {
+        lastRecordToken?.invalidate()
+        sensorSettingsToken?.invalidate()
+        let generation = generation
+        lastRecordToken = ruuviReactor.observeLatest(ruuviTag) { [weak self] change in
+            guard let self, self.generation == generation else { return }
             switch change {
-            case let .update(updatedSettings):
-                // Update the local cache
-                self.sensorSettings = updatedSettings
-                // Update the view model
-                self.view.viewModel.update(sensorSettings: updatedSettings)
-                // Update the displayed values with the new settings
-                if let lastRecord = self.lastSensorRecord {
-                    self.view.viewModel.update(
-                        ruuviTagRecord: lastRecord.with(sensorSettings: updatedSettings)
-                    )
+            case .initial(let records):
+                if let newest = records.compactMap({ $0 }).max(by: { $0.date < $1.date }) {
+                    self.update(record: newest)
                 }
-
-            case let .initial(initialSettings):
-                if let firstSettings = initialSettings.first {
-                    self.sensorSettings = firstSettings
-                    self.view.viewModel.update(sensorSettings: firstSettings)
-                    if let lastRecord = self.lastSensorRecord {
-                        self.view.viewModel.update(
-                            ruuviTagRecord: lastRecord.with(sensorSettings: firstSettings)
-                        )
-                    }
-                }
-
-            case .insert, .delete, .error:
-                // No action needed for these cases
+            case .update(let record), .insert(let record):
+                if let record { self.update(record: record) }
+            case .delete, .error:
+                break
+            }
+        }
+        sensorSettingsToken = ruuviReactor.observe(ruuviTag) { [weak self] change in
+            guard let self, self.generation == generation else { return }
+            switch change {
+            case .initial(let settings):
+                if let first = settings.first { self.update(sensorSettings: first) }
+            case .update(let settings), .insert(let settings):
+                self.update(sensorSettings: settings)
+            case .delete:
+                self.update(sensorSettings: self.emptySettings())
+            case .error:
                 break
             }
         }
     }
 
-    private func startObservingSettingsChanges() {
-        temperatureUnitSettingToken = NotificationCenter.default
-            .addObserver(
-                forName: .TemperatureUnitDidChange,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                self?.view.viewModel.temperatureUnit.value = self?.settings.temperatureUnit
+    func observeUnits() {
+        notificationTokens.forEach(notificationCenter.removeObserver)
+        let changes: [(Notification.Name, (OffsetCorrectionPresenter) -> Void)] = [
+            (.TemperatureUnitDidChange, { $0.view.viewModel.temperatureUnit.value = $0.settings.temperatureUnit }),
+            (.HumidityUnitDidChange, { $0.view.viewModel.humidityUnit.value = $0.settings.humidityUnit }),
+            (.PressureUnitDidChange, { $0.view.viewModel.pressureUnit.value = $0.settings.pressureUnit }),
+        ]
+        notificationTokens = changes.map { name, update in
+            notificationCenter.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
+                guard let self else { return }
+                update(self)
             }
-        humidityUnitSettingToken = NotificationCenter.default
-            .addObserver(
-                forName: .HumidityUnitDidChange,
-                object: nil,
-                queue: .main,
-                using: { [weak self] _ in
-                    self?.view.viewModel.humidityUnit.value = self?.settings.humidityUnit
-                }
-            )
-        pressureUnitSettingToken = NotificationCenter.default
-            .addObserver(
-                forName: .PressureUnitDidChange,
-                object: nil,
-                queue: .main,
-                using: { [weak self] _ in
-                    self?.view.viewModel.pressureUnit.value = self?.settings.pressureUnit
-                }
-            )
+        }
     }
 }

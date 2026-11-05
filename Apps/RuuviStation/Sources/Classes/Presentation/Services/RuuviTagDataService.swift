@@ -58,6 +58,7 @@ class RuuviTagDataService {
     private let settings: RuuviLocalSettings
     private let flags: RuuviLocalFlags
     private let ruuviPool: RuuviPool
+    private let notificationCenter: NotificationCenter
 
     // MARK: - Properties
     weak var delegate: RuuviTagDataServiceDelegate?
@@ -96,8 +97,11 @@ class RuuviTagDataService {
         }
     }
 
-    // MARK: - Background Loading
-    private var backgroundLoadingQueue = DispatchQueue(label: "com.ruuvi.background.loading", qos: .utility)
+    private var isObserving = false
+    private var observationGeneration = UUID()
+    private var recordTasks = [String: Task<Void, Never>]()
+    private var imageTasks = [String: Task<Void, Never>]()
+    private var subscriptionTasks = [String: Task<Void, Never>]()
 
     // MARK: - Observation Tokens
     private var ruuviTagToken: RuuviReactorToken?
@@ -113,7 +117,8 @@ class RuuviTagDataService {
         ruuviSensorPropertiesService: RuuviServiceSensorProperties,
         settings: RuuviLocalSettings,
         flags: RuuviLocalFlags,
-        ruuviPool: RuuviPool
+        ruuviPool: RuuviPool,
+        notificationCenter: NotificationCenter = .default
     ) {
         self.ruuviReactor = ruuviReactor
         self.ruuviStorage = ruuviStorage
@@ -122,6 +127,7 @@ class RuuviTagDataService {
         self.settings = settings
         self.flags = flags
         self.ruuviPool = ruuviPool
+        self.notificationCenter = notificationCenter
         Self.setPreferredUnits(measurementService.units)
     }
 
@@ -131,12 +137,24 @@ class RuuviTagDataService {
 
     // MARK: - Public Interface
     func startObservingSensors() {
+        guard !isObserving else { return }
+        isObserving = true
+        Self.setPreferredUnits(measurementService.units)
+        observationGeneration = UUID()
         observeRuuviTags()
         observeBackgroundChanges()
         observeUnitChanges()
     }
 
     func stopObservingSensors() {
+        isObserving = false
+        observationGeneration = UUID()
+        recordTasks.values.forEach { $0.cancel() }
+        imageTasks.values.forEach { $0.cancel() }
+        subscriptionTasks.values.forEach { $0.cancel() }
+        recordTasks.removeAll()
+        imageTasks.removeAll()
+        subscriptionTasks.removeAll()
         ruuviTagToken?.invalidate()
         ruuviTagObserveLastRecordTokens.forEach { $0.invalidate() }
         sensorSettingsTokens.forEach { $0.invalidate() }
@@ -145,64 +163,13 @@ class RuuviTagDataService {
         ruuviTagObserveLastRecordTokens.removeAll()
         sensorSettingsTokens.removeAll()
 
-        backgroundToken?.invalidate()
+        if let backgroundToken { notificationCenter.removeObserver(backgroundToken) }
         backgroundToken = nil
     }
 
     func updateSnapshot(for sensorId: String, with record: RuuviTagSensorRecord) {
-        guard let snapshotIndex = snapshots.firstIndex(where: { $0.id == sensorId }),
-            let sensor = ruuviTags.first(where: { $0.id == sensorId })
-        else { return }
-
-        let sensorSettings = matchingSensorSettings(for: sensor)
-
-        let snapshot = snapshots[snapshotIndex]
-
-        let enrichedRecord = sensorSettings != nil ? record.with(sensorSettings: sensorSettings) : record
-
-        DispatchQueue.main.async {
-            guard
-                let currentSensor = self.currentSensor(
-                    id: sensor.id,
-                    macId: sensor.macId,
-                    luid: sensor.luid
-                )
-            else { return }
-
-            let didUpdate = snapshot.updateFromRecord(
-                enrichedRecord,
-                sensor: currentSensor,
-                measurementService: self.measurementService,
-                flags: self.flags,
-                sensorSettings: sensorSettings
-            )
-
-            let availableVariants = self.availableIndicatorVariants(
-                from: enrichedRecord,
-                sensor: currentSensor,
-                snapshot: snapshot
-            )
-
-            let visibilityChanged = self.updateMeasurementVisibilityMetadata(
-                for: snapshot,
-                sensor: currentSensor,
-                sensorSettings: sensorSettings,
-                availableVariants: availableVariants
-            )
-
-            if visibilityChanged {
-                self.rebuildIndicatorGrid(
-                    for: snapshot,
-                    sensor: currentSensor,
-                    sensorSettings: sensorSettings
-                )
-            }
-            if visibilityChanged {
-                self.publishSnapshotUpdate(snapshot, force: true)
-            } else if didUpdate {
-                self.publishSnapshotUpdate(snapshot)
-            }
-        }
+        guard let snapshot = getSnapshot(for: sensorId), let sensor = getSensor(for: sensorId) else { return }
+        updateSnapshot(snapshot, with: record, sensor: sensor)
     }
 
     func reorderSnapshots() {
@@ -231,9 +198,9 @@ class RuuviTagDataService {
         for snapshot: RuuviTagCardSnapshot
     ) {
         guard let sensor = getSensor(for: snapshot.id) else { return }
-        Task { @MainActor [self] in
+        Task { @MainActor [properties = ruuviSensorPropertiesService] in
             do throws(RuuviServiceError) {
-                let value = try await ruuviSensorPropertiesService.set(name: newName, for: sensor)
+                let value = try await properties.set(name: newName, for: sensor)
                 ({ _ in
                     #if canImport(WidgetKit)
                         UserDefaults(suiteName: AppGroupConstants.appGroupSuiteIdentifier)?.set(
@@ -297,33 +264,34 @@ class RuuviTagDataService {
     }
 
     func loadBackground(for snapshot: RuuviTagCardSnapshot, sensor: AnyRuuviTagSensor) {
-        backgroundLoadingQueue.async { [weak self] in
-            guard let self = self else { return }
-
-            Task { @MainActor [weak self, ruuviSensorPropertiesService = ruuviSensorPropertiesService] in
-                do throws(RuuviServiceError) {
-                    let value = try await ruuviSensorPropertiesService.getImage(for: sensor)
-                    ({ [weak self] image in
-                        guard let self = self else { return }
-
-                        DispatchQueue.main.async {
-                            guard !self.settings.syncExtensiveChangesInProgress else { return }
-                            let didUpdate = snapshot.updateBackgroundImage(image)
-                            if didUpdate {
-                                self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
-                            }
-                        }
-                    })(value)
-                } catch {
+        guard isObserving else { return }
+        imageTasks[sensor.id]?.cancel()
+        let generation = observationGeneration
+        imageTasks[sensor.id] = Task { @MainActor [weak self, weak snapshot, properties = ruuviSensorPropertiesService] in
+            defer {
+                if !Task.isCancelled, self?.observationGeneration == generation { self?.imageTasks[sensor.id] = nil }
+            }
+            do {
+                let image = try await properties.getImage(for: sensor)
+                guard let self, let snapshot, !Task.isCancelled,
+                    self.isObserving, self.observationGeneration == generation,
+                    self.getSnapshot(for: sensor.id) === snapshot,
+                    !self.settings.syncExtensiveChangesInProgress else { return }
+                if snapshot.updateBackgroundImage(image) {
+                    self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
                 }
+            } catch {
+                // Keep the current background when its replacement cannot be loaded.
             }
         }
     }
+
 }
 
 extension RuuviTagDataService: RuuviServiceMeasurementDelegate {
     func measurementServiceDidUpdateUnit() {
         Self.setPreferredUnits(measurementService.units)
+        guard isObserving else { return }
         buildInitialSnapshots()
     }
 }
@@ -332,13 +300,13 @@ extension RuuviTagDataService: RuuviServiceMeasurementDelegate {
 private extension RuuviTagDataService {
 
     func observeBackgroundChanges() {
-        backgroundToken?.invalidate()
-        backgroundToken = NotificationCenter.default.addObserver(
+        if let backgroundToken { notificationCenter.removeObserver(backgroundToken) }
+        backgroundToken = notificationCenter.addObserver(
             forName: .BackgroundPersistenceDidChangeBackground,
             object: nil,
             queue: .main
         ) { [weak self] notification in
-            guard let self = self else { return }
+            guard let self, self.isObserving else { return }
 
             if let userInfo = notification.userInfo {
                 let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
@@ -368,8 +336,9 @@ private extension RuuviTagDataService {
 
     func observeRuuviTags() {
         ruuviTagToken?.invalidate()
+        let generation = observationGeneration
         ruuviTagToken = ruuviReactor.observe { [weak self] change in
-            guard let self = self else { return }
+            guard let self, self.isObserving, self.observationGeneration == generation else { return }
 
             switch change {
             case let .initial(ruuviTags):
@@ -380,6 +349,11 @@ private extension RuuviTagDataService {
                 self.restartObservingRuuviTagLastRecords()
 
             case let .insert(sensor):
+                if let existing = self.ruuviTags.firstIndex(where: { $0.id == sensor.id }) {
+                    self.ruuviTags[existing] = sensor
+                    self.updateSensorSnapshot(sensor: sensor)
+                    return
+                }
                 self.ruuviTags.append(sensor.any)
                 self.addSensorSnapshot(sensor: sensor.any)
                 self.observeSensorSettings()
@@ -389,6 +363,15 @@ private extension RuuviTagDataService {
                 self.notifyRestartHeartBeatDaemon()
 
             case let .delete(sensor):
+                self.recordTasks.removeValue(forKey: sensor.id)?.cancel()
+                self.imageTasks.removeValue(forKey: sensor.id)?.cancel()
+                self.subscriptionTasks.removeValue(forKey: sensor.id)?.cancel()
+                self.updateSensorSettingsList { list in
+                    list.removeAll {
+                        ($0.luid != nil && $0.luid?.any == sensor.luid?.any)
+                            || ($0.macId != nil && $0.macId?.any == sensor.macId?.any)
+                    }
+                }
                 self.ruuviTags.removeAll { $0.id == sensor.id }
                 self.snapshots.removeAll { $0.id == sensor.id }
                 RuuviTagDataService.clearMeasurementDisplayPreference(for: sensor.id)
@@ -428,110 +411,49 @@ private extension RuuviTagDataService {
         measurementService.add(self)
     }
 
-    // swiftlint:disable:next function_body_length
     func buildInitialSnapshots() {
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            guard let self = self else { return }
-
-            var snapshotsWithRecords:
-                [  // swiftlint:disable:next large_tuple
-                (
-                    RuuviTagCardSnapshot,
-                    RuuviTagSensorRecord?,
-                    SensorSettings?,
-                    AnyRuuviTagSensor,
-                    Bool
-                )] = []
-
-            for tag in self.ruuviTags {
-                let existingSnapshot = self.snapshots.first { current in
-                    self.snapshot(current, matches: tag)
-                }
-                let snapshot = existingSnapshot ?? self.createSnapshot(from: tag)
-
-                // Load latest record synchronously for initial build
-                let record = self.ruuviStorage.cachedLatestBlocking(for: tag)
-                let settings = self.matchingSensorSettings(for: tag)
-
-                self.updateMeasurementDisplayPreference(for: tag, settings: settings)
-
-                snapshotsWithRecords.append((snapshot, record, settings, tag, existingSnapshot != nil))
+        guard isObserving else { return }
+        let previousSnapshots = snapshots
+        let updatedSnapshots = ruuviTags.map { sensor in
+            let snapshot = previousSnapshots.first { self.snapshot($0, matches: sensor) }
+                ?? createSnapshot(from: sensor)
+            updateMeasurementDisplayPreference(for: sensor, settings: matchingSensorSettings(for: sensor))
+            populateSnapshot(snapshot, with: sensor)
+            if let record = snapshot.latestRawRecord {
+                let calibration = matchingSensorSettings(for: sensor)
+                snapshot.updateFromRecord(record.with(sensorSettings: calibration), sensor: sensor, measurementService: measurementService,
+                                          flags: flags, sensorSettings: calibration)
+                _ = updateMeasurementVisibilityMetadata(for: snapshot, sensor: sensor, sensorSettings: calibration,
+                    availableVariants: availableIndicatorVariants(from: record, sensor: sensor, snapshot: snapshot))
             }
+            return snapshot
+        }
+        snapshots = reorderSnapshots(updatedSnapshots, with: settings.dashboardSensorOrder)
+        if !settings.syncExtensiveChangesInProgress {
+            delegate?.sensorDataService(self, didUpdateSnapshots: snapshots, withAnimation: false)
+        }
+        for snapshot in snapshots {
+            guard let sensor = getSensor(for: snapshot.id) else { continue }
+            if snapshot.displayData.background == nil { loadBackground(for: snapshot, sensor: sensor) }
+            if snapshot.latestRawRecord == nil { loadLatestRecord(for: snapshot, sensor: sensor) }
+        }
+    }
 
-            DispatchQueue.main.async {
-                var newSnapshots: [RuuviTagCardSnapshot] = []
-
-                // Update snapshots on main thread to avoid @Published property race conditions
-                for (snapshot, record, settings, sensor, wasReused) in snapshotsWithRecords {
-                    guard
-                        let currentSensor = self.currentSensor(
-                            id: sensor.id,
-                            macId: sensor.macId,
-                            luid: sensor.luid
-                        )
-                    else { continue }
-
-                    self.populateSnapshot(snapshot, with: currentSensor)
-
-                    if let record = record {
-                        let updatedRecord = record.with(sensorSettings: settings)
-                        snapshot.updateFromRecord(
-                            updatedRecord,
-                            sensor: currentSensor,
-                            measurementService: self.measurementService,
-                            flags: self.flags,
-                            sensorSettings: settings
-                        )
-
-                        let availableVariants = self.availableIndicatorVariants(
-                            from: updatedRecord,
-                            sensor: currentSensor,
-                            snapshot: snapshot
-                        )
-                        _ = self.updateMeasurementVisibilityMetadata(
-                            for: snapshot,
-                            sensor: currentSensor,
-                            sensorSettings: settings,
-                            availableVariants: availableVariants
-                        )
-                    } else {
-                        _ = self.updateMeasurementVisibilityMetadata(
-                            for: snapshot,
-                            sensor: currentSensor,
-                            sensorSettings: settings,
-                            availableVariants: snapshot.displayData.measurementVisibility?.availableVariants
-                        )
-                    }
-
-                    if !wasReused,
-                        let existing = self.snapshots.first(where: { $0.id == snapshot.id })
-                    {
-                        snapshot.displayData.background = existing.displayData.background
-                    }
-
-                    newSnapshots.append(snapshot)
-                }
-
-                let orderedSnapshots = self.reorderSnapshots(
-                    newSnapshots,
-                    with: self.settings.dashboardSensorOrder
-                )
-                self.snapshots = orderedSnapshots
-
-                // Load backgrounds only for snapshots that don't have one
-                for snapshot in self.snapshots where snapshot.displayData.background == nil {
-                    if let sensor = self.ruuviTags.first(where: { $0.id == snapshot.id }) {
-                        self.loadBackground(for: snapshot, sensor: sensor)
-                    }
-                }
-
-                if !self.settings.syncExtensiveChangesInProgress {
-                    self.delegate?.sensorDataService(
-                        self,
-                        didUpdateSnapshots: self.snapshots,
-                        withAnimation: false
-                    )
-                }
+    func loadLatestRecord(for snapshot: RuuviTagCardSnapshot, sensor: AnyRuuviTagSensor) {
+        guard isObserving, recordTasks[sensor.id] == nil else { return }
+        let generation = observationGeneration
+        recordTasks[sensor.id] = Task { @MainActor [weak self, weak snapshot, storage = ruuviStorage] in
+            defer {
+                if !Task.isCancelled, self?.observationGeneration == generation { self?.recordTasks[sensor.id] = nil }
+            }
+            do {
+                let record = try await storage.readLatest(sensor)
+                guard let self, let snapshot, let record, !Task.isCancelled,
+                    self.isObserving, self.observationGeneration == generation,
+                    self.getSnapshot(for: sensor.id) === snapshot else { return }
+                self.updateSnapshot(snapshot, with: record, sensor: sensor)
+            } catch {
+                // Live observations can still provide measurements when the stored read fails.
             }
         }
     }
@@ -628,56 +550,7 @@ private extension RuuviTagDataService {
                 )
         }
 
-        // Load latest record asynchronously
-        Task { @MainActor [weak self, ruuviStorage = ruuviStorage] in
-            do throws(RuuviStorageError) {
-                let value = try await ruuviStorage.readLatest(sensor)
-                ({ [weak self] record in
-                    guard let self = self, let record = record else { return }
-
-                    let settings = self.matchingSensorSettings(for: sensor)
-                    let updatedRecord = record.with(sensorSettings: settings)
-
-                    DispatchQueue.main.async {
-                        guard
-                            let currentSensor = self.currentSensor(
-                                id: sensor.id,
-                                macId: sensor.macId,
-                                luid: sensor.luid
-                            )
-                        else { return }
-
-                        let didUpdate = snapshot.updateFromRecord(
-                            updatedRecord,
-                            sensor: currentSensor,
-                            measurementService: self.measurementService,
-                            flags: self.flags,
-                            sensorSettings: settings
-                        )
-
-                        let availableVariants = self.availableIndicatorVariants(
-                            from: updatedRecord,
-                            sensor: currentSensor,
-                            snapshot: snapshot
-                        )
-
-                        let visibilityChanged = self.updateMeasurementVisibilityMetadata(
-                            for: snapshot,
-                            sensor: currentSensor,
-                            sensorSettings: settings,
-                            availableVariants: availableVariants
-                        )
-
-                        if visibilityChanged {
-                            self.publishSnapshotUpdate(snapshot, force: true)
-                        } else if didUpdate {
-                            self.publishSnapshotUpdate(snapshot)
-                        }
-                    }
-                })(value)
-            } catch {
-            }
-        }
+        loadLatestRecord(for: snapshot, sensor: sensor)
     }
 
     func updateSensorSnapshot(sensor: AnyRuuviTagSensor) {
@@ -685,8 +558,10 @@ private extension RuuviTagDataService {
 
         let snapshot = snapshots[snapshotIndex]
 
-        // Ensure we update @Published properties on the main thread
-        DispatchQueue.main.async {
+        let generation = observationGeneration
+        DispatchQueue.main.async { [weak self, weak snapshot] in
+            guard let self, let snapshot, self.isObserving, self.observationGeneration == generation,
+                self.getSnapshot(for: sensor.id) === snapshot else { return }
             let previousName = snapshot.displayData.name
             // Update basic sensor information
             let didUpdate = self.populateSnapshot(snapshot, with: sensor)
@@ -736,13 +611,15 @@ private extension RuuviTagDataService {
         sensorSettingsTokens.forEach { $0.invalidate() }
         sensorSettingsTokens.removeAll()
 
+        let generation = observationGeneration
         for sensor in ruuviTags {
             let sensorId = sensor.id
             let macId = sensor.macId
             let luid = sensor.luid
             sensorSettingsTokens.append(
                 ruuviReactor.observe(sensor) { [weak self] change in
-                    self?.processSensorSettingsChange(
+                    guard let self, self.isObserving, self.observationGeneration == generation else { return }
+                    self.processSensorSettingsChange(
                         change,
                         id: sensorId,
                         macId: macId,
@@ -824,30 +701,10 @@ private extension RuuviTagDataService {
 
         guard let snapshot = snapshots.first(where: { $0.id == sensor.id }) else { return }
 
-        let processRecord: (RuuviTagSensorRecord) -> Void = { [weak self, weak snapshot] rawRecord in
-            guard let self, let snapshot else { return }
-            let enrichedRecord = rawRecord.with(sensorSettings: sensorSettings)
-            self.updateSnapshot(
-                snapshot,
-                with: enrichedRecord,
-                sensor: sensor,
-                sensorSettings: sensorSettings
-            )
-        }
-
-        if snapshot.lastUpdated != nil, let lastRecord = snapshot.latestRawRecord {
-            processRecord(lastRecord)
+        if let record = snapshot.latestRawRecord {
+            updateSnapshot(snapshot, with: record, sensor: sensor)
         } else {
-            Task { @MainActor [self] in
-                do throws(RuuviStorageError) {
-                    let value = try await ruuviStorage.readLatest(sensor)
-                    ({ record in
-                        guard let record else { return }
-                        processRecord(record)
-                    })(value)
-                } catch {
-                }
-            }
+            loadLatestRecord(for: snapshot, sensor: sensor)
         }
     }
 
@@ -884,7 +741,8 @@ private extension RuuviTagDataService {
                 if shouldRebuildGrid {
                     rebuildIndicatorGrid(for: snapshot, sensor: sensor, sensorSettings: settings)
                 }
-                DispatchQueue.main.async {
+                DispatchQueue.main.async { [weak self, weak snapshot] in
+                    guard let self, let snapshot, self.getSnapshot(for: sensor.id) === snapshot else { return }
                     if shouldRebuildGrid {
                         self.publishSnapshotUpdate(snapshot, force: true)
                     } else {
@@ -919,7 +777,8 @@ private extension RuuviTagDataService {
                 rebuildIndicatorGrid(for: snapshot, sensor: sensor, sensorSettings: settings)
             }
 
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self, weak snapshot] in
+                guard let self, let snapshot, self.getSnapshot(for: sensor.id) === snapshot else { return }
                 if shouldRebuildGrid {
                     self.publishSnapshotUpdate(snapshot, force: true)
                 } else {
@@ -932,63 +791,18 @@ private extension RuuviTagDataService {
     func restartObservingRuuviTagLastRecords() {
         ruuviTagObserveLastRecordTokens.forEach { $0.invalidate() }
         ruuviTagObserveLastRecordTokens.removeAll()
-
+        let generation = observationGeneration
         for sensor in ruuviTags {
-            let token = ruuviReactor.observeLatest(sensor) { [weak self] changes in
-                guard let self = self else { return }
-
-                if case let .update(anyRecord) = changes,
-                    let record = anyRecord,
-                    let snapshot = self.snapshots.first(where: { $0.id == sensor.id })
-                {
-
-                    DispatchQueue.global(qos: .userInitiated).async {
-                        let sensorSettings = self.matchingSensorSettings(for: sensor)
-
-                        let updatedRecord = record.with(
-                            sensorSettings: sensorSettings
-                        )
-
-                        DispatchQueue.main
-                            .async {
-                                guard
-                                    let currentSensor = self.currentSensor(
-                                        id: sensor.id,
-                                        macId: sensor.macId,
-                                        luid: sensor.luid
-                                    )
-                                else { return }
-                                let didUpdate =
-                                    snapshot
-                                    .updateFromRecord(
-                                        updatedRecord,
-                                        sensor: currentSensor,
-                                        measurementService: self.measurementService,
-                                        flags: self.flags,
-                                        sensorSettings: sensorSettings
-                                    )
-
-                                let availableVariants = self.availableIndicatorVariants(
-                                    from: updatedRecord,
-                                    sensor: currentSensor,
-                                    snapshot: snapshot
-                                )
-
-                                let visibilityChanged = self.updateMeasurementVisibilityMetadata(
-                                    for: snapshot,
-                                    sensor: currentSensor,
-                                    sensorSettings: sensorSettings,
-                                    availableVariants: availableVariants
-                                )
-
-                                if visibilityChanged {
-                                    self.publishSnapshotUpdate(snapshot, force: true)
-                                } else if didUpdate {
-                                    self.publishSnapshotUpdate(snapshot)
-                                }
-                            }
-                    }
+            let token = ruuviReactor.observeLatest(sensor) { [weak self] change in
+                guard let self, self.isObserving, self.observationGeneration == generation,
+                    let snapshot = self.getSnapshot(for: sensor.id) else { return }
+                let record: RuuviTagSensorRecord?
+                switch change {
+                case .initial(let records): record = records.compactMap { $0 }.max { $0.date < $1.date }
+                case .insert(let value), .update(let value): record = value
+                case .delete, .error: return
                 }
+                if let record { self.updateSnapshot(snapshot, with: record, sensor: sensor) }
             }
             ruuviTagObserveLastRecordTokens.append(token)
         }
@@ -1020,8 +834,7 @@ private extension RuuviTagDataService {
     }
 
     func notifyRestartAdvertisementDaemon() {
-        NotificationCenter
-            .default
+        notificationCenter
             .post(
                 name: .RuuviTagAdvertisementDaemonShouldRestart,
                 object: nil,
@@ -1030,8 +843,7 @@ private extension RuuviTagDataService {
     }
 
     func notifyRestartHeartBeatDaemon() {
-        NotificationCenter
-            .default
+        notificationCenter
             .post(
                 name: .RuuviTagHeartBeatDaemonShouldRestart,
                 object: nil,
@@ -1219,7 +1031,7 @@ private extension RuuviTagDataService {
         invalidateLayout: Bool = false,
         force: Bool = false
     ) {
-        guard force || !settings.syncExtensiveChangesInProgress else { return }
+        guard isObserving, force || !settings.syncExtensiveChangesInProgress else { return }
         let notify = {
             self.delegate?.sensorDataService(
                 self,
@@ -1299,71 +1111,49 @@ private extension RuuviTagDataService {
         return snapshot.updateMeasurementVisibility(visibility)
     }
 
-    private func syncMaxShareCount(
-        for snapshot: RuuviTagCardSnapshot,
-        sensor: AnyRuuviTagSensor
-    ) {
-        Task { @MainActor [weak self, weak snapshot, ruuviPool = ruuviPool] in
-            do throws(RuuviPoolError) {
-                let value =
-                    try await ruuviPool
-                    .readSensorSubscriptionSettings(sensor)
-                ({ [weak self, weak snapshot] subscription in
-                    guard let self, let snapshot else { return }
-
-                    let newValue = subscription?.maxSharesPerSensor
-                    DispatchQueue.main.async {
-                        guard snapshot.ownership.maxShareCount != newValue else { return }
-                        snapshot.ownership.maxShareCount = newValue
-
-                        if !self.settings.syncExtensiveChangesInProgress {
-                            self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
-                        }
-                    }
-                })(value)
+    private func syncMaxShareCount(for snapshot: RuuviTagCardSnapshot, sensor: AnyRuuviTagSensor) {
+        guard isObserving else { return }
+        subscriptionTasks[sensor.id]?.cancel()
+        let generation = observationGeneration
+        subscriptionTasks[sensor.id] = Task { @MainActor [weak self, weak snapshot, pool = ruuviPool] in
+            defer {
+                if !Task.isCancelled, self?.observationGeneration == generation { self?.subscriptionTasks[sensor.id] = nil }
+            }
+            do {
+                let subscription = try await pool.readSensorSubscriptionSettings(sensor)
+                guard let self, let snapshot, !Task.isCancelled,
+                    self.isObserving, self.observationGeneration == generation,
+                    self.getSnapshot(for: sensor.id) === snapshot else { return }
+                let limit = subscription?.maxSharesPerSensor
+                guard snapshot.ownership.maxShareCount != limit else { return }
+                snapshot.ownership.maxShareCount = limit
+                if !self.settings.syncExtensiveChangesInProgress {
+                    self.delegate?.sensorDataService(self, didUpdateSnapshot: snapshot)
+                }
             } catch {
+                // Keep the last known limit on transient storage errors.
             }
         }
     }
 
-    private func updateSnapshot(
-        _ snapshot: RuuviTagCardSnapshot,
-        with record: RuuviTagSensorRecord,
-        sensor: AnyRuuviTagSensor,
-        sensorSettings: SensorSettings?
-    ) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            guard
-                let currentSensor = self.currentSensor(
-                    id: sensor.id,
-                    macId: sensor.macId,
-                    luid: sensor.luid
-                )
+    private func updateSnapshot(_ snapshot: RuuviTagCardSnapshot, with record: RuuviTagSensorRecord,
+                                sensor: AnyRuuviTagSensor) {
+        let generation = observationGeneration
+        DispatchQueue.main.async { [weak self, weak snapshot] in
+            guard let self, let snapshot, self.isObserving, self.observationGeneration == generation,
+                self.getSnapshot(for: sensor.id) === snapshot,
+                let currentSensor = self.currentSensor(id: sensor.id, macId: sensor.macId, luid: sensor.luid)
             else { return }
-
-            let didUpdate = snapshot.updateFromRecord(
-                record,
-                sensor: currentSensor,
-                measurementService: self.measurementService,
-                flags: self.flags,
-                sensorSettings: sensorSettings
-            )
-
-            let availableVariants = self.availableIndicatorVariants(
-                from: record,
-                sensor: currentSensor,
-                snapshot: snapshot
-            )
-
-            let visibilityChanged = self.updateMeasurementVisibilityMetadata(
-                for: snapshot,
-                sensor: currentSensor,
-                sensorSettings: sensorSettings,
-                availableVariants: availableVariants
-            )
-
+            if let previousDate = snapshot.lastUpdated, record.date < previousDate { return }
+            let calibration = self.matchingSensorSettings(for: currentSensor)
+            let enriched = record.with(sensorSettings: calibration)
+            let didUpdate = snapshot.updateFromRecord(enriched, sensor: currentSensor,
+                measurementService: self.measurementService, flags: self.flags, sensorSettings: calibration)
+            let available = self.availableIndicatorVariants(from: enriched, sensor: currentSensor, snapshot: snapshot)
+            let visibilityChanged = self.updateMeasurementVisibilityMetadata(for: snapshot, sensor: currentSensor,
+                sensorSettings: calibration, availableVariants: available)
             if visibilityChanged {
+                self.rebuildIndicatorGrid(for: snapshot, sensor: currentSensor, sensorSettings: calibration)
                 self.publishSnapshotUpdate(snapshot, force: true)
             } else if didUpdate {
                 self.publishSnapshotUpdate(snapshot)
@@ -1440,42 +1230,6 @@ private extension RuuviTagDataService {
             return current.isEmpty
         }
         return desired == current
-    }
-}
-
-// MARK: - RuuviStorage Extension for Blocking Read
-extension RuuviStorage {
-
-    /// Synchronously returns the cached latest record (if any) from SQLite.
-    /// Call **off** the main thread; waits up to `timeout` for the disk IO.
-    func cachedLatestBlocking(
-        for sensor: AnyRuuviTagSensor,
-        timeout: TimeInterval = 0.15
-    ) -> RuuviTagSensorRecord? {
-
-        var record: RuuviTagSensorRecord?
-        let sema = DispatchSemaphore(value: 0)
-
-        Task { @MainActor [self] in
-            do {
-                let value = try await readLatest(sensor)
-                ({ rec in
-                    record = rec
-                    sema.signal()
-                })(value)
-            } catch {
-                ({ _ in
-                    // ignore the error – just surface `nil`
-                    sema.signal()
-                })(error)
-            }
-        }
-
-        // Block only when *not* on the main thread
-        if !Thread.isMainThread {
-            _ = sema.wait(timeout: .now() + timeout)
-        }
-        return record
     }
 }
 

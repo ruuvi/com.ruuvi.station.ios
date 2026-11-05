@@ -10,10 +10,16 @@ class AppearanceSettingsPresenter: NSObject, AppearanceSettingsModuleInput {
 
     var settings: RuuviLocalSettings!
 
+    private let notificationCenter: NotificationCenter
+    init(notificationCenter: NotificationCenter = .default) {
+        self.notificationCenter = notificationCenter
+        super.init()
+    }
+
     private var themeToken: NSObjectProtocol?
 
     deinit {
-        themeToken?.invalidate()
+        if let themeToken { notificationCenter.removeObserver(themeToken) }
     }
 }
 
@@ -54,8 +60,9 @@ extension AppearanceSettingsPresenter {
     }
 
     private func startObservingThemeSetting() {
-        themeToken = NotificationCenter
-            .default
+        if let themeToken { notificationCenter.removeObserver(themeToken) }
+        themeToken =
+            notificationCenter
             .addObserver(
                 forName: .AppearanceSettingsDidChange,
                 object: nil,
