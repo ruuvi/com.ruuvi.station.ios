@@ -215,14 +215,10 @@ final class FirmwareInteractor: FirmwareInteracting {
         fullUrl: URL
     ) -> AnyPublisher<FlashResponse, Error> {
         let firmwareUrl: URL
-        if let currentRelease {
-            let currentMajor = currentRelease.version.drop(while: { !$0.isNumber }).prefix(while: { $0 != "." })
-            let latestMajor = latestRelease.version.drop(while: { !$0.isNumber }).prefix(while: { $0 != "." })
-            if currentMajor == latestMajor {
-                firmwareUrl = appUrl
-            } else {
-                firmwareUrl = fullUrl
-            }
+        if let currentMajor = currentRelease?.version.semVar?.first,
+           let latestMajor = latestRelease.version.semVar?.first,
+           currentMajor == latestMajor {
+            firmwareUrl = appUrl
         } else {
             firmwareUrl = fullUrl
         }

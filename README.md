@@ -39,8 +39,8 @@ Ruuvi Station is an open-source iOS app [available](https://itunes.apple.com/us/
 
 ## Requirements
 
-- iOS 13.0+
-- Xcode 11.3
+- iOS 16.0 or later for the app; iOS 17.0 or later for tests.
+- Xcode with Swift 6.2 or later. Verification currently uses Xcode 27.2.
 
 ## How to use
 
@@ -63,9 +63,37 @@ xed Ruuvi.xcodeproj
 <details>
 <summary>Optionally</summary>
    
-Setup your [Firebase](https://firebase.google.com) project and replace ```station/Resources/Plists/GoogleService-Info.plist```
+Setup your [Firebase](https://firebase.google.com) project and replace `Apps/RuuviStation/Sources/Resources/Plists/GoogleService-Info.plist`
    
 </details>
+
+## Testing
+
+Generate the project before running tests. The `AllTests` scheme includes package, module, app, extension and UI tests:
+
+```zsh
+make xcodeproj
+xcodebuild -project Ruuvi.xcodeproj -scheme AllTests \
+  -destination 'platform=iOS Simulator,name=iPhone 18 Pro' \
+  -enableCodeCoverage YES -resultBundlePath /tmp/RuuviTests.xcresult test \
+  CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES
+python3 scripts/test/coverage.py /tmp/RuuviTests.xcresult \
+  --output /tmp/RuuviCoverage.json
+```
+
+For a complete verification, boot the simulator and use a new output directory:
+
+```zsh
+python3 scripts/test/verify.py --device 'iPhone 18 Pro' \
+  --output /tmp/RuuviVerification
+```
+
+This generates resources, builds every Swift package product and test target,
+runs the full simulator suite, and exports coverage and screenshots. Use
+`--minimum-coverage 95` to enforce a per-target coverage threshold.
+Reports retain every first-party target, including targets with no executable lines.
+The UI navigation checks preserve saved simulator sensors; the existing-sensor
+check needs at least one saved sensor.
 
 ## Get in touch
 
@@ -98,7 +126,7 @@ AppStore, Testflight build source code is available at associate release branche
 [facebook]:https://www.facebook.com/ruuvi.cc/
 [twitter-image]:http://i.imgur.com/tXSoThF.png
 [twitter]:https://twitter.com/ruuvicom
-[swift-image]:https://img.shields.io/badge/swift-5.0-orange.svg
+[swift-image]:https://img.shields.io/badge/swift-6.2-orange.svg
 [swift-url]: https://swift.org/
 [license-image]: https://img.shields.io/badge/License-BSD-blue.svg
 [license-url]: LICENSE

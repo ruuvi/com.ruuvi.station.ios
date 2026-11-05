@@ -292,7 +292,11 @@ extension DFUViewModel {
         case .noNeedToUpgrade:
             state
         case let .isAbleToUpgrade(latestRelease, currentRelease):
-            .downloading(latestRelease, currentRelease)
+            if case .onStartUpgrade = event {
+                .downloading(latestRelease, currentRelease)
+            } else {
+                state
+            }
         case .downloading:
             switch event {
             case let .onDidFailDownloading(error):
@@ -335,16 +339,9 @@ extension DFUViewModel {
             default:
                 state
             }
-        case .readyToUpdate:
+        case let .readyToUpdate(latestRelease, currentRelease, selectedDevice, appUrl, fullUrl, additionalFiles):
             switch event {
-            case let .onLostRuuviBootDevice(
-                latestRelease,
-                currentRelease,
-                _,
-                appUrl,
-                fullUrl,
-                additionalFiles
-            ):
+            case let .onLostRuuviBootDevice(_, _, device, _, _, _) where device.uuid == selectedDevice.uuid:
                 .listening(
                     latestRelease,
                     currentRelease,
@@ -352,18 +349,11 @@ extension DFUViewModel {
                     fullUrl: fullUrl,
                     additionalFiles: additionalFiles
                 )
-            case let .onUserDidConfirmToFlash(
-                latestRelease,
-                currentRelease,
-                dfuDevice,
-                appUrl,
-                fullUrl,
-                additionalFiles
-            ):
+            case let .onUserDidConfirmToFlash(_, _, device, _, _, _) where device.uuid == selectedDevice.uuid:
                 .flashing(
                     latestRelease,
                     currentRelease,
-                    dfuDevice: dfuDevice,
+                    dfuDevice: selectedDevice,
                     appUrl: appUrl,
                     fullUrl: fullUrl,
                     additionalFiles: additionalFiles
@@ -438,7 +428,7 @@ extension DFUViewModel {
         return normalizedVersion.contains("-dev") || normalizedVersion.contains("+dev")
     }
 
-    private func areVersionsEqual(expected: String, actual: String) -> Bool {
+    private static func areVersionsEqual(expected: String, actual: String) -> Bool {
         let normalizedExpected =
             expected.normalizedFirmwareVersionIdentifier ?? expected.trimmingCharacters(in: .whitespacesAndNewlines)
         let normalizedActual =
@@ -721,19 +711,22 @@ extension DFUViewModel {
 
             let isAirFirmware = firmwareType == .e1 || firmwareType == .v6
             if isAirFirmware {
-                return sSelf.interactor
+                let interactor = sSelf.interactor
+                let sensor = sSelf.ruuviTag
+                return interactor
                     .waitForAirDevice(
-                        ruuviTag: sSelf.ruuviTag,
+                        ruuviTag: sensor,
                         timeout: 2 * 60
                     )
                     .receive(on: RunLoop.main)
                     .flatMap { _ -> AnyPublisher<Event, Never> in
-                        sSelf.interactor
-                            .serveCurrentRelease(for: sSelf.ruuviTag)
+                        return Deferred {
+                            interactor.serveCurrentRelease(for: sensor)
+                        }
                             .retry(3)
                             .receive(on: RunLoop.main)
                             .map { currentRelease in
-                                if sSelf.areVersionsEqual(
+                                if Self.areVersionsEqual(
                                     expected: latestRelease.version,
                                     actual: currentRelease.version
                                 ) {

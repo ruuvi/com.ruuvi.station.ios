@@ -50,26 +50,10 @@ extension DFUInteractor: DFUInteractorInput {
         switch deviceType {
         case .ruuviTag:
             let firmwareUrl: URL
-            if let currentRelease {
-                let currentMajor = currentRelease.version.drop(
-                    while: {
-                        !$0.isNumber
-                    }).prefix(
-                        while: {
-                            $0 != "."
-                        })
-                let latestMajor = latestRelease.version.drop(
-                    while: {
-                        !$0.isNumber
-                    }).prefix(
-                        while: {
-                            $0 != "."
-                        })
-                if currentMajor == latestMajor {
-                    firmwareUrl = appUrl
-                } else {
-                    firmwareUrl = fullUrl
-                }
+            if let currentMajor = currentRelease?.version.semVar?.first,
+               let latestMajor = latestRelease.version.semVar?.first,
+               currentMajor == latestMajor {
+                firmwareUrl = appUrl
             } else {
                 firmwareUrl = fullUrl
             }
@@ -96,7 +80,7 @@ extension DFUInteractor: DFUInteractorInput {
 
         case .ruuviAir:
             var firmwareUrls: [URL] = [appUrl]
-            for url in additionalFiles where url != appUrl {
+            for url in additionalFiles where !firmwareUrls.contains(url) {
                 firmwareUrls.append(url)
             }
             return ruuviDFU.flashFirmware(dfuDevice: dfuDevice, with: firmwareUrls)

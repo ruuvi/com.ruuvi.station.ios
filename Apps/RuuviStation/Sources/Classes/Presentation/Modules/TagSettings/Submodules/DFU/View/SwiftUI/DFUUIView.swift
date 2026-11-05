@@ -37,13 +37,12 @@ struct DFUUIView: View {
     private let bodyFont = Font(RuuviFonts.mulish(.regular, size: 16))
     private let texts = Texts()
     @State private var isBatteryLow = false
-    @State private var superviewSize: CGSize = .zero
 
     var body: some View {
-        NavigationView {
-            ZStack {
+        NavigationStack {
+            GeometryReader { proxy in
                 VStack {
-                    content
+                    content(availableWidth: proxy.size.width)
                         .alert(
                             isPresented: $viewModel.isMigrationFailed
                         ) {
@@ -63,24 +62,19 @@ struct DFUUIView: View {
                         }
                 }
                 .padding(
-                    .top, 48
+                    .top, 16
                 )
-                GeometryReader { proxy in
-                    HStack {} // just an empty container to get superview size.
-                        .onAppear {
-                            superviewSize = proxy.size
-                        }
-                }
+                .frame(width: proxy.size.width, height: proxy.size.height, alignment: .top)
             }
-            .background(RuuviColor.primary.swiftUIColor)
-            .edgesIgnoringSafeArea(.all)
+            .background(RuuviColor.primary.swiftUIColor.ignoresSafeArea())
             .navigationBarTitle(texts.navigationTitle)
             .navigationBarBackButtonHidden(true)
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: Button(action: goBack) {
                 HStack {
                     RuuviAsset.dismissModalIcon.swiftUIImage
-                        .foregroundColor(.primary)
+                        .renderingMode(.template)
+                        .foregroundColor(RuuviColor.tintColor.swiftUIColor)
                 }
             })
             .onAppear {
@@ -92,10 +86,10 @@ struct DFUUIView: View {
                 UIApplication.shared.isIdleTimerDisabled = false
             }
         }
-        .navigationViewStyle(StackNavigationViewStyle())
     }
 
-    private var content: some View {
+    // swiftlint:disable:next function_body_length
+    private func content(availableWidth: CGFloat) -> some View {
         switch viewModel.state {
         case .idle:
             return Color.clear.eraseToAnyView()
@@ -295,7 +289,7 @@ struct DFUUIView: View {
                         }
                         DFUInstructionsView(
                             isAir: viewModel.isRuuviAir(),
-                            maxWidth: superviewSize.width - 32
+                            maxWidth: max(1, availableWidth - 40)
                         )
                         Button(
                             action: {},
@@ -337,7 +331,7 @@ struct DFUUIView: View {
                         }
                         DFUInstructionsView(
                             isAir: viewModel.isRuuviAir(),
-                            maxWidth: superviewSize.width - 32
+                            maxWidth: max(1, availableWidth - 40)
                         )
                         Button(
                             action: {
@@ -497,9 +491,16 @@ struct DFUUIView: View {
         }
 
         func updateUIView(_ uiView: UILabel, context: Context) {
+            uiView.attributedText = attributedString
             uiView.preferredMaxLayoutWidth = maxWidth
             uiView.invalidateIntrinsicContentSize()
             uiView.setNeedsLayout()
+        }
+
+        func sizeThatFits(_ proposal: ProposedViewSize, uiView: UILabel, context: Context) -> CGSize? {
+            let width = min(proposal.width ?? maxWidth, maxWidth)
+            guard width.isFinite, width > 0 else { return nil }
+            return uiView.sizeThatFits(CGSize(width: width, height: .greatestFiniteMagnitude))
         }
     }
 

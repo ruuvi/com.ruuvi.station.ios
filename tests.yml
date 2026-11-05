@@ -362,6 +362,10 @@ targets:
     sources:
       - path: Modules/RuuviFirmware/Tests
     dependencies:
+      - package: BTKit
+      - package: NordicDFU
+      - target: RuuviDaemon
+        embed: false
       - target: RuuviDFU
         embed: false
       - target: RuuviFirmware
@@ -419,6 +423,7 @@ targets:
       - path: Apps/RuuviStation/Tests/Unit/AppBehavior
     dependencies:
       - package: DGCharts
+      - package: NordicDFU
       - target: RuuviCloud
         embed: false
       - target: RuuviReactor
