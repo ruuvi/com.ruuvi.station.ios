@@ -159,12 +159,20 @@ final class RuuviTagAlertSubscriptionTests: XCTestCase {
         )
         // Observe the real service's snapshot without presenter-driven refresh loops.
         coordinator.services.alert.delegate = nil
+        coordinator.start()
+        // Drive sensor updates explicitly; keep alert and connection subscriptions active.
+        coordinator.services.data.stopObservingSensors()
         // Persist local settings for both identities without making cloud requests.
         types.forEach { alerts.register(type: $0, ruuviTag: sensor) }
     }
 
     func cleanUp() {
+        coordinator.stop()
         types.forEach { alerts.remove(type: $0, ruuviTag: sensor) }
+        let identities = [sensor.luid?.value, sensor.macId?.value].compactMap { $0 }
+        UserDefaults.standard.dictionaryRepresentation().keys.filter { key in
+            identities.contains { key == $0 || key.hasSuffix("." + $0) }
+        }.forEach(UserDefaults.standard.removeObject(forKey:))
     }
 
     func load(_ snapshots: [RuuviTagCardSnapshot]? = nil) {
@@ -211,8 +219,9 @@ final class RuuviTagAlertSubscriptionTests: XCTestCase {
             try? await Task.sleep(nanoseconds: 10_000_000)
         }
         for type in types {
-            XCTAssertEqual(snapshot.getAlertConfig(for: type)?.isFiring, expected,
-                           type.rawValue, file: file, line: line)
+            XCTAssertEqual(
+                snapshot.getAlertConfig(for: type)?.isFiring, expected,
+                type.rawValue, file: file, line: line)
         }
     }
 

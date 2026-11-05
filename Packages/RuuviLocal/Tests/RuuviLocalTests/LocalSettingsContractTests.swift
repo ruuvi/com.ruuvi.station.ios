@@ -10,21 +10,24 @@ import XCTest
 
 final class LocalSettingsContractTests: XCTestCase {
     private var previous: [String: Any] = [:]
+    private var domain = ""
     private let prefixes = ["SettingsUserDefaults.", "SettingsUserDegaults.", "DashboardScrollViewController."]
 
     override func setUp() {
         super.setUp()
-        previous = UserDefaults.standard.dictionaryRepresentation().filter { key, _ in
-            prefixes.contains { key.hasPrefix($0) }
-        }
-        previous.keys.forEach(UserDefaults.standard.removeObject(forKey:))
+        domain = Bundle.main.bundleIdentifier ?? ProcessInfo.processInfo.processName
+        let defaults = UserDefaults.standard
+        previous = defaults.persistentDomain(forName: domain) ?? [:]
+        // Replace once: removing thousands of stale per-sensor keys individually can
+        // cross CFPreferences' size limit while a previous test domain is being restored.
+        defaults.setPersistentDomain(
+            previous.filter { key, _ in
+                !prefixes.contains { key.hasPrefix($0) }
+            }, forName: domain)
     }
 
     override func tearDown() {
-        UserDefaults.standard.dictionaryRepresentation().keys.filter { key in
-            prefixes.contains { key.hasPrefix($0) }
-        }.forEach(UserDefaults.standard.removeObject(forKey:))
-        previous.forEach { UserDefaults.standard.set($0.value, forKey: $0.key) }
+        UserDefaults.standard.setPersistentDomain(previous, forName: domain)
         super.tearDown()
     }
 

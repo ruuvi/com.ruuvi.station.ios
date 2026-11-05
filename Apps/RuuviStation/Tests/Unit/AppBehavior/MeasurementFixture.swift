@@ -2,6 +2,7 @@ import Combine
 import DGCharts
 import Foundation
 import Humidity
+import RuuviCloud
 import RuuviLocal
 import RuuviOntology
 import RuuviReactor
@@ -12,6 +13,8 @@ import XCTest
 @testable import station
 
 @MainActor final class MeasurementFixture {
+    private let suite = "MeasurementTests." + UUID().uuidString
+    private let defaults: UserDefaults
     let settings = AppTestSettings()
     let sensor: RuuviTagSensorStruct
     let snapshot: RuuviTagCardSnapshot
@@ -25,6 +28,7 @@ import XCTest
     var registeredAlerts: [AlertType] = []
 
     init(cloud: Bool = false) {
+        defaults = UserDefaults(suiteName: suite)!
         sensor = RuuviTagSensorStruct(
             version: 225, firmwareVersion: nil, luid: UUID().uuidString.luid,
             macId: String(UUID().uuidString.replacingOccurrences(of: "-", with: "").prefix(12)).mac, serviceUUID: nil,
@@ -37,7 +41,9 @@ import XCTest
             serviceUUID: nil, isCloud: cloud, isOwner: true, isConnectable: true, version: sensor.version
         )
         let resolver = AppAssembly.shared.assembler.resolver
-        alerts = resolver.resolve(RuuviServiceAlert.self)!
+        alerts = RuuviServiceAlertImpl(
+            cloud: resolver.resolve(RuuviCloud.self)!, localIDs: resolver.resolve(RuuviLocalIDs.self)!,
+            ruuviLocalSettings: settings, defaults: defaults)
         measurement = RuuviServiceMeasurementImpl(settings: settings, emptyValueString: "-", percentString: "%")
         storage = AppTestStorage(resolver.resolve(RuuviStorage.self)!)
     }
@@ -68,7 +74,11 @@ import XCTest
         registeredAlerts.append(type)
     }
 
-    func cleanup() { registeredAlerts.forEach { alerts.remove(type: $0, ruuviTag: sensor) } }
+    func cleanup() {
+        defaults.removePersistentDomain(forName: suite)
+    }
+
+    deinit { defaults.removePersistentDomain(forName: suite) }
 
     func record(date: Date = Date(), temperature: Double = 20, co2: Double = 800) -> RuuviTagSensorRecordStruct {
         RuuviTagSensorRecordStruct(

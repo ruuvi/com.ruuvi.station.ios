@@ -11,6 +11,8 @@ import UserNotifications
 #endif
 
 @MainActor final class LocalNotificationFixture {
+    private let suite = "LocalNotificationTests." + UUID().uuidString
+    private let defaults: UserDefaults
     let center = NotificationCenterSpy()
     let cloud = NotificationCloudSpy()
     var settings: RuuviLocalSettings
@@ -36,6 +38,7 @@ import UserNotifications
         center: center, now: { [unowned self] in date })
 
     init() {
+        defaults = UserDefaults(suiteName: suite)!
         let local = RuuviLocalFactoryUserDefaults()
         settings = local.createLocalSettings()
         ids = local.createLocalIDs()
@@ -61,12 +64,14 @@ import UserNotifications
             canShare: false, sharedTo: [], maxHistoryDays: nil)
         ids.set(mac: sensor.macId!, for: sensor.luid!)
         ids.set(luid: sensor.luid!, for: sensor.macId!)
-        alerts = RuuviServiceAlertImpl(cloud: cloud, localIDs: ids, ruuviLocalSettings: settings)
+        alerts = RuuviServiceAlertImpl(cloud: cloud, localIDs: ids, ruuviLocalSettings: settings, defaults: defaults)
     }
 
     var uuid: String { sensor.luid!.value }
     func clean() {
-        for type in AlertType.allCases { alerts.remove(type: type, ruuviTag: sensor) }
+        defaults.removePersistentDomain(forName: suite)
+        UserDefaults.standard.removeObject(forKey: sensor.luid!.value)
+        UserDefaults.standard.removeObject(forKey: sensor.macId!.value)
         settings.limitAlertNotificationsEnabled = saved.limited
         settings.alertsMuteIntervalMinutes = saved.minutes
         settings.alertSound = saved.sound

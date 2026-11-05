@@ -227,11 +227,15 @@ extension AlertMetric {
     let sensor: RuuviTagSensorStruct
     let settings: RuuviLocalSettings
     let ids: RuuviLocalIDs
+    private let suite = "AlertMatrixTests." + UUID().uuidString
+    let defaults: UserDefaults
+    var persistence: AlertPersistenceUserDefaults { AlertPersistenceUserDefaults(defaults: defaults) }
     init(identity: Int = 2, cloud enabled: Bool = false) {
+        defaults = UserDefaults(suiteName: suite)!
         let factory = RuuviLocalFactoryUserDefaults()
         ids = factory.createLocalIDs()
         settings = factory.createLocalSettings()
-        service = RuuviServiceAlertImpl(cloud: cloud, localIDs: ids, ruuviLocalSettings: settings)
+        service = RuuviServiceAlertImpl(cloud: cloud, localIDs: ids, ruuviLocalSettings: settings, defaults: defaults)
         let bytes = UUID().uuidString.replacingOccurrences(of: "-", with: "").prefix(12)
         let mac = stride(from: 0, to: 12, by: 2).map { offset in
             let start = bytes.index(bytes.startIndex, offsetBy: offset)
@@ -248,16 +252,15 @@ extension AlertMetric {
         }
     }
     func clean() {
-        let persistence = AlertPersistenceUserDefaults()
-        for type in AlertType.allCases {
-            service.remove(type: type, ruuviTag: sensor)
-            for id in [sensor.luid?.value, sensor.macId?.value].compactMap({ $0 }) {
-                persistence.setUpdatedAt(nil, for: id, of: type)
-            }
-        }
-        settings.setShowCustomTempAlertBound(false, for: sensor.id)
-        settings.setShowCustomCO2AlertBound(false, for: sensor.id)
-        settings.setShowCustomPMAlertBound(false, for: sensor.id)
+        defaults.removePersistentDomain(forName: suite)
+        let identities = [sensor.luid?.value, sensor.macId?.value].compactMap { $0 }
+        let standard = UserDefaults.standard
+        let domain = Bundle.main.bundleIdentifier ?? ProcessInfo.processInfo.processName
+        let values = standard.persistentDomain(forName: domain) ?? [:]
+        standard.setPersistentDomain(
+            values.filter { key, _ in
+                !identities.contains { key == $0 || key.hasSuffix("." + $0) }
+            }, forName: domain)
     }
 }
 

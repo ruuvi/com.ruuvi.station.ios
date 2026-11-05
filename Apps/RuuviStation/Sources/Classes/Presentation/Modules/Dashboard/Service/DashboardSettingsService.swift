@@ -46,7 +46,7 @@ class DashboardSettingsService {
     private var isActivelyDraggingCards: Bool = false
 
     // MARK: - App Group
-    private let appGroupDefaults = UserDefaults(suiteName: AppGroupConstants.appGroupSuiteIdentifier)
+    private let appGroupDefaults: UserDefaults?
 
     // MARK: - Observation Tokens
     private var temperatureUnitToken: NSObjectProtocol?
@@ -67,9 +67,11 @@ class DashboardSettingsService {
     // MARK: - Initialization
     init(
         settings: RuuviLocalSettings,
-        ruuviAppSettingsService: RuuviServiceAppSettings
+        ruuviAppSettingsService: RuuviServiceAppSettings,
+        appGroupDefaults: UserDefaults? = UserDefaults(suiteName: AppGroupConstants.appGroupSuiteIdentifier)
     ) {
         self.settings = settings
+        self.appGroupDefaults = appGroupDefaults
         self.ruuviAppSettingsService = ruuviAppSettingsService
     }
 

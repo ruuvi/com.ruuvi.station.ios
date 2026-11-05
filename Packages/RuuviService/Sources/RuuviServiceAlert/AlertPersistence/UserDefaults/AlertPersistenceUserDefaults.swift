@@ -7,7 +7,9 @@ import RuuviOntology
 
 // swiftlint:disable file_length type_body_length
 class AlertPersistenceUserDefaults: AlertPersistence {
-    private let prefs = UserDefaults.standard
+    private let prefs: UserDefaults
+
+    init(defaults: UserDefaults = .standard) { prefs = defaults }
     private let alertUpdatedAtUDKeyPrefix = "AlertPersistenceUserDefaults.alertUpdatedAtUDKeyPrefix."
 
     // temperature

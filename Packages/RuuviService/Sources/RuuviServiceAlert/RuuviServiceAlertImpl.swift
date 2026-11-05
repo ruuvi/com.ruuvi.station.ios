@@ -1960,12 +1960,13 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
     public init(
         cloud: RuuviCloud,
         localIDs: RuuviLocalIDs,
-        ruuviLocalSettings: RuuviLocalSettings
+        ruuviLocalSettings: RuuviLocalSettings,
+        defaults: UserDefaults = .standard
     ) {
         self.cloud = cloud
         self.localIDs = localIDs
         self.ruuviLocalSettings = ruuviLocalSettings
-        alertPersistence = AlertPersistenceUserDefaults()
+        alertPersistence = AlertPersistenceUserDefaults(defaults: defaults)
     }
 
     // RuuviCloudAlert

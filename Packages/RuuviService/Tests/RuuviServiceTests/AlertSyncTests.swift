@@ -74,7 +74,7 @@ import RuuviOntology
         let fixture = AlertMatrixFixture()
         defer { fixture.clean() }
         let date = Date(timeIntervalSince1970: 1_800_000_000)
-        let persistence = AlertPersistenceUserDefaults()
+        let persistence = fixture.persistence
         for metric in AlertMetric.all {
             fixture.service.register(type: metric.type, ruuviTag: fixture.sensor)
             for id in [fixture.sensor.luid?.value, fixture.sensor.macId?.value].compactMap({ $0 }) {

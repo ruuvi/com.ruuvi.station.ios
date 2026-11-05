@@ -33,7 +33,7 @@ import RuuviOntology
                 XCTAssertEqual(metric.description(service, sensor), "Custom 🌿 " + label, label)
                 let reopened = RuuviServiceAlertImpl(
                     cloud: fixture.cloud, localIDs: fixture.ids,
-                    ruuviLocalSettings: fixture.settings)
+                    ruuviLocalSettings: fixture.settings, defaults: fixture.defaults)
                 XCTAssertEqual(metric.lowerValue(reopened, sensor), metric.lower + 1, label)
                 XCTAssertEqual(metric.upperValue(reopened, sensor), metric.upper + 2, label)
                 for id in [sensor.luid?.value, sensor.macId?.value].compactMap({ $0 }) {

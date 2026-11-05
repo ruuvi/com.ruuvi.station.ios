@@ -21,6 +21,7 @@ final class VisibilitySettingsPresenter: VisibilitySettingsModuleInput {
     weak var output: VisibilitySettingsModuleOutput?
 
     private let sensorPropertiesService: RuuviServiceSensorProperties
+    private let coordinatorManager: RuuviTagServiceCoordinatorManager
     private let settings: RuuviLocalSettings
     private var snapshotCancellables = Set<AnyCancellable>()
 
@@ -46,10 +47,12 @@ final class VisibilitySettingsPresenter: VisibilitySettingsModuleInput {
 
     init(
         sensorPropertiesService: RuuviServiceSensorProperties,
-        settings: RuuviLocalSettings
+        settings: RuuviLocalSettings,
+        coordinatorManager: RuuviTagServiceCoordinatorManager = .shared
     ) {
         self.sensorPropertiesService = sensorPropertiesService
         self.settings = settings
+        self.coordinatorManager = coordinatorManager
     }
 
     func configure(
@@ -796,7 +799,7 @@ private extension VisibilitySettingsPresenter {
         _ block: (RuuviTagAlertService, RuuviTagCardSnapshot, RuuviTagSensor) -> Void
     ) {
         guard let snapshot, let sensor else { return }
-        RuuviTagServiceCoordinatorManager.shared.withCoordinator { coordinator in
+        coordinatorManager.withCoordinator { coordinator in
             block(coordinator.services.alert, snapshot, sensor)
         }
     }

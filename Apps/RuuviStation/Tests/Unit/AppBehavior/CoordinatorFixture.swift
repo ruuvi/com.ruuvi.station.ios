@@ -17,7 +17,7 @@ import RuuviOntology
     let notifications = AccountNotificationSpy()
     let cloud: RuuviCloudService
     let alerts: RuuviTagAlertService
-    let connection: RuuviTagConnectionService
+    let connection: CoordinatorConnectionServiceSpy
     let coordinator: RuuviTagServiceCoordinator
     let manager: RuuviTagServiceCoordinatorManager
     init() {
@@ -27,7 +27,7 @@ import RuuviOntology
         alerts = RuuviTagAlertService(
             alertService: data.measurements.alerts, alertHandler: notifier,
             settings: data.measurements.settings, pushNotificationsManager: push)
-        connection = RuuviTagConnectionService(
+        connection = CoordinatorConnectionServiceSpy(
             foreground: BTKit.foreground, background: BTKit.background,
             connectionPersistence: connections, localSyncState: sync)
         coordinator = RuuviTagServiceCoordinator(
@@ -130,4 +130,12 @@ final class CoordinatorNotifierSpy: RuuviNotifier {
         lock.withLock { observers[uuid]?.contains { $0.value === observer } ?? false }
     }
     func clearMovementHysteresis(for uuid: String) { lock.withLock { cleared.append(uuid) } }
+}
+
+final class CoordinatorConnectionServiceSpy: RuuviTagConnectionService {
+    var refreshes = 0
+    override func refreshBluetoothState() {
+        refreshes += 1
+        super.refreshBluetoothState()
+    }
 }

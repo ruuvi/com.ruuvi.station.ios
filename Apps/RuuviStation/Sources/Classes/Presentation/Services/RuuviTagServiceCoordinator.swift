@@ -88,11 +88,12 @@ class RuuviTagServiceCoordinator {
 
     // MARK: - State
     private var isStarted = false
+    private var observationGeneration = UUID()
     private var initialSetupCompleted = false
 
     // MARK: - Snapshot Tracking
     private var previousSnapshots: [RuuviTagCardSnapshot] = []
-    private var snapshotIdMap: [String: RuuviTagCardSnapshot] = [:]
+    private var snapshotIdMap: [String: SnapshotState] = [:]
 
     // MARK: - Initialization
     init(
@@ -117,8 +118,9 @@ class RuuviTagServiceCoordinator {
 
     // MARK: - Observer Management
     func addObserver(_ observer: RuuviTagServiceCoordinatorObserver) {
-        observersQueue.async(flags: .barrier) { [weak self] in
-            guard let self = self else { return }
+        observersQueue.async(flags: .barrier) { [weak self, weak observer] in
+            guard let self, let observer else { return }
+            guard !self.observers.contains(where: { $0.observer === observer }) else { return }
 
             // Remove any existing observer to prevent duplicates
             self.observers.removeAll { $0.observer === observer }
@@ -126,16 +128,21 @@ class RuuviTagServiceCoordinator {
             // Add new observer
             self.observers.append(WeakObserverWrapper(observer: observer))
 
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self, weak observer] in
+                guard let self, let observer, self.containsObserver(observer) else { return }
                 self.sendCurrentStateToObserver(observer)
             }
         }
     }
 
     func removeObserver(_ observer: RuuviTagServiceCoordinatorObserver) {
+        // Removal is also called from deinit; never retain that observer in queued work.
+        let identity = ObjectIdentifier(observer)
         observersQueue.async(flags: .barrier) { [weak self] in
-            guard let self = self else { return }
-            self.observers.removeAll { $0.observer === observer }
+            self?.observers.removeAll { wrapper in
+                guard let observer = wrapper.observer else { return true }
+                return ObjectIdentifier(observer) == identity
+            }
         }
     }
 
@@ -200,6 +207,7 @@ class RuuviTagServiceCoordinator {
         guard !isStarted else { return }
 
         isStarted = true
+        observationGeneration = UUID()
 
         dataService.startObservingSensors()
         cloudService.startObserving()
@@ -216,6 +224,7 @@ class RuuviTagServiceCoordinator {
         guard isStarted else { return }
 
         isStarted = false
+        observationGeneration = UUID()
         initialSetupCompleted = false
         previousSnapshots = []
         snapshotIdMap = [:]
@@ -227,6 +236,7 @@ class RuuviTagServiceCoordinator {
     }
 
     private func performInitialSetup() {
+        guard isStarted else { return }
         let snapshots = dataService.getAllSnapshots()
         guard !snapshots.isEmpty else {
             // If no snapshots yet, wait for the data service to load them
@@ -395,7 +405,7 @@ private extension RuuviTagServiceCoordinator {
         for snapshot in newSnapshots {
             if let oldSnapshot = snapshotIdMap[snapshot.id],
                oldIds.contains(snapshot.id),
-               hasSnapshotChanged(old: oldSnapshot, new: snapshot) {
+               oldSnapshot != SnapshotState(snapshot) {
                 updated.append(snapshot)
             }
         }
@@ -436,20 +446,8 @@ private extension RuuviTagServiceCoordinator {
         return Set(oldIds) == Set(newIds) && oldIds != newIds
     }
 
-    func hasSnapshotChanged(old: RuuviTagCardSnapshot, new: RuuviTagCardSnapshot) -> Bool {
-        // Compare relevant properties that indicate a value change
-        return old.latestRawRecord?.date != new.latestRawRecord?.date ||
-               old.displayData.name != new.displayData.name ||
-               old.displayData.background != new.displayData.background ||
-               old.metadata.isOwner != new.metadata.isOwner ||
-               old.metadata.isCloud != new.metadata.isCloud ||
-               old.metadata.canShareTag != new.metadata.canShareTag ||
-               old.ownership != new.ownership ||
-               old.alertData != new.alertData
-    }
-
     func updateSnapshotIdMap(_ snapshots: [RuuviTagCardSnapshot]) {
-        snapshotIdMap = Dictionary(uniqueKeysWithValues: snapshots.map { ($0.id, $0) })
+        snapshotIdMap = Dictionary(uniqueKeysWithValues: snapshots.map { ($0.id, SnapshotState($0)) })
     }
 
     func notifySnapshotChange(
@@ -480,19 +478,23 @@ private extension RuuviTagServiceCoordinator {
         }
     }
 
+    private func containsObserver(_ observer: RuuviTagServiceCoordinatorObserver) -> Bool {
+        observersQueue.sync { observers.contains { $0.observer === observer } }
+    }
+
     private func performNotification(_ event: RuuviTagServiceCoordinatorEvent) {
-        // Read observers without blocking
-        observersQueue.async { [weak self] in
-            guard let self = self else { return }
-
-            // Get current observers
-            let activeObservers = self.observers.compactMap { $0.observer }
-
-            // Notify on main thread
-            DispatchQueue.main.async {
-                for observer in activeObservers {
-                    observer.coordinatorDidReceiveEvent(self, event: event)
-                }
+        guard isStarted else { return }
+        let generation = observationGeneration
+        let registered = observersQueue.sync { observers }
+        // Enqueue directly from main so concurrent observer reads cannot reorder events.
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            for wrapper in registered {
+                guard self.isStarted, self.observationGeneration == generation else { return }
+                guard let observer = wrapper.observer,
+                      self.observersQueue.sync(execute: { self.observers.contains { $0 === wrapper } })
+                else { continue }
+                observer.coordinatorDidReceiveEvent(self, event: event)
             }
         }
     }
@@ -506,6 +508,7 @@ extension RuuviTagServiceCoordinator: RuuviTagDataServiceDelegate {
         didUpdateSnapshots snapshots: [RuuviTagCardSnapshot],
         withAnimation: Bool
     ) {
+        guard isStarted else { return }
         applyAuthorizationState(to: snapshots)
 
         // Detect what changed
@@ -532,10 +535,11 @@ extension RuuviTagServiceCoordinator: RuuviTagDataServiceDelegate {
         didUpdateSnapshot snapshot: RuuviTagCardSnapshot,
         invalidateLayout: Bool
     ) {
+        guard isStarted else { return }
         applyAuthorizationState(to: snapshot)
 
         // Update the snapshot in our tracking map
-        snapshotIdMap[snapshot.id] = snapshot
+        snapshotIdMap[snapshot.id] = SnapshotState(snapshot)
 
         // Update the snapshot in previousSnapshots if it exists
         if let index = previousSnapshots.firstIndex(where: { $0.id == snapshot.id }) {
@@ -553,6 +557,7 @@ extension RuuviTagServiceCoordinator: RuuviTagDataServiceDelegate {
         didAddNewSensor sensor: RuuviTagSensor,
         newOrder: [String]
     ) {
+        guard isStarted else { return }
         // Update other services when new sensor is added
         let snapshots = dataService.getAllSnapshots()
         applyAuthorizationState(to: snapshots)
@@ -581,7 +586,7 @@ extension RuuviTagServiceCoordinator: RuuviCloudServiceDelegate {
         userDidLogin loggedIn: Bool
     ) {
         DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
+            guard let self, self.isStarted else { return }
 
             self.dataService.getAllSnapshots().forEach { snapshot in
                 snapshot.ownership.isAuthorized = loggedIn
@@ -598,7 +603,7 @@ extension RuuviTagServiceCoordinator: RuuviCloudServiceDelegate {
         userDidLogOut loggedOut: Bool
     ) {
         DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
+            guard let self, self.isStarted else { return }
 
             self.dataService.getAllSnapshots().forEach { snapshot in
                 snapshot.ownership.isAuthorized = false
@@ -643,6 +648,7 @@ extension RuuviTagServiceCoordinator: RuuviCloudServiceDelegate {
         _ service: RuuviCloudService,
         syncDidComplete: Bool
     ) {
+        guard isStarted else { return }
         dataService.refreshSubscriptionDataForSnapshots()
         notifyEvent(.cloudSyncCompleted)
     }
@@ -676,6 +682,8 @@ extension RuuviTagServiceCoordinator: RuuviTagAlertServiceDelegate {
         _ service: RuuviTagAlertService,
         didUpdateSnapshot snapshot: RuuviTagCardSnapshot
     ) {
+        guard isStarted else { return }
+        snapshotIdMap[snapshot.id] = SnapshotState(snapshot)
         notifyEvent(.alertSnapshotUpdated(snapshot))
     }
 
@@ -683,6 +691,7 @@ extension RuuviTagServiceCoordinator: RuuviTagAlertServiceDelegate {
         _ service: RuuviTagAlertService,
         alertsDidChange: Bool
     ) {
+        guard isStarted else { return }
         notifyEvent(.alertsChanged)
         if alertsDidChange {
             // Trigger alerts if needed
@@ -700,6 +709,8 @@ extension RuuviTagServiceCoordinator: RuuviTagConnectionServiceDelegate {
         _ service: RuuviTagConnectionService,
         didUpdateSnapshot snapshot: RuuviTagCardSnapshot
     ) {
+        guard isStarted else { return }
+        snapshotIdMap[snapshot.id] = SnapshotState(snapshot)
         notifyEvent(.connectionSnapshotUpdated(snapshot))
     }
 
@@ -716,6 +727,29 @@ extension RuuviTagServiceCoordinator: RuuviTagConnectionServiceDelegate {
         didEncounterError error: Error
     ) {
         notifyEvent(.connectionServiceError(error))
+    }
+}
+
+// Store values, since snapshots are mutable objects shared with the data service.
+private struct SnapshotState: Equatable {
+    let date: Date?
+    let display: RuuviTagCardSnapshotDisplayData
+    let metadata: RuuviTagCardSnapshotMetadata
+    let ownership: RuuviTagCardSnapshotOwnership
+    let alerts: RuuviTagCardSnapshotAlertData
+    let connection: RuuviTagCardSnapshotConnectionData
+    let calibration: RuuviTagCardSnapshotCalibrationData
+    let capabilities: RuuviTagCardSnapshotCapabilities
+
+    init(_ snapshot: RuuviTagCardSnapshot) {
+        date = snapshot.latestRawRecord?.date
+        display = snapshot.displayData
+        metadata = snapshot.metadata
+        ownership = snapshot.ownership
+        alerts = snapshot.alertData
+        connection = snapshot.connectionData
+        calibration = snapshot.calibration
+        capabilities = snapshot.capabilities
     }
 }
 
@@ -768,9 +802,8 @@ class RuuviTagServiceCoordinatorManager {
         coordinatorQueue.async(flags: .barrier) { [weak self] in
             guard let self = self else { return }
 
-            DispatchQueue.main.async {
-                self.coordinator?.stop()
-            }
+            let previousCoordinator = self.coordinator
+            DispatchQueue.main.async { previousCoordinator?.stop() }
 
             self.coordinator = nil
             self.isInitialized = false

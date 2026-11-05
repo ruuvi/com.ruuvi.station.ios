@@ -11,9 +11,13 @@ import RuuviOntology
 
 final class AlertLifecycleTests: XCTestCase {
     @MainActor func testEveryAlertCanRegisterMuteTriggerUnmuteAndRemove() {
+        let suite = "AlertLifecycleTests." + UUID().uuidString
+        let defaults = UserDefaults(suiteName: suite)!
+        defer { defaults.removePersistentDomain(forName: suite) }
         let factory = RuuviLocalFactoryUserDefaults()
         let service = RuuviServiceAlertImpl(
-            cloud: CloudSpy(), localIDs: factory.createLocalIDs(), ruuviLocalSettings: factory.createLocalSettings())
+            cloud: CloudSpy(), localIDs: factory.createLocalIDs(), ruuviLocalSettings: factory.createLocalSettings(),
+            defaults: defaults)
         for identity in 0..<3 {
             let sensor = makeSensor(identity: identity, cloud: false)
             for type in AlertType.allCases {
@@ -40,10 +44,14 @@ final class AlertLifecycleTests: XCTestCase {
     }
 
     @MainActor func testCloudRegistrationConvertsHumidityAndPressureUnits() async throws {
+        let suite = "AlertLifecycleTests." + UUID().uuidString
+        let defaults = UserDefaults(suiteName: suite)!
+        defer { defaults.removePersistentDomain(forName: suite) }
         let factory = RuuviLocalFactoryUserDefaults()
         let cloud = CloudSpy()
         let service = RuuviServiceAlertImpl(
-            cloud: cloud, localIDs: factory.createLocalIDs(), ruuviLocalSettings: factory.createLocalSettings())
+            cloud: cloud, localIDs: factory.createLocalIDs(), ruuviLocalSettings: factory.createLocalSettings(),
+            defaults: defaults)
         let sensor = makeSensor(identity: 1, cloud: true)
         let writes = expectation(description: "Converted cloud alert requests")
         writes.expectedFulfillmentCount = 2

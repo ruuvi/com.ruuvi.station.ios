@@ -270,7 +270,8 @@ import XCTest
 }
 
 @MainActor private final class VisibilityFixture {
-    let measurements = MeasurementFixture()
+    let services = CoordinatorFixture()
+    var measurements: MeasurementFixture { services.data.measurements }
     let service = VisibilityPropertiesSpy()
     let view = VisibilityViewSpy()
     let router = VisibilityRouterSpy()
@@ -293,7 +294,7 @@ import XCTest
         )
         measurements.snapshot.displayData.indicatorGrid = .init(indicators: available.map(measurements.indicator))
         let presenter = VisibilitySettingsPresenter(
-            sensorPropertiesService: service, settings: measurements.settings
+            sensorPropertiesService: service, settings: measurements.settings, coordinatorManager: services.manager
         )
         presenter.view = view
         presenter.router = router
@@ -311,6 +312,7 @@ import XCTest
     func settle() async { try? await Task.sleep(nanoseconds: 30_000_000) }
     func cleanup() {
         optionalPresenter?.dismiss(completion: nil)
+        services.cleanup()
         measurements.cleanup()
         RuuviTagDataService.clearMeasurementDisplayPreference(for: measurements.sensor.id)
         let cache = WidgetSensorCache()

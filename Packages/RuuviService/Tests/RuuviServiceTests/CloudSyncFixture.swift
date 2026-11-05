@@ -20,6 +20,8 @@ import RuuviStorage
 #endif
 
 @MainActor final class CloudSyncFixture {
+    private let suite = "CloudSyncAlertsTests." + UUID().uuidString
+    private let defaults: UserDefaults
     let cloud = CloudSpy()
     let directory: URL
     let persistence: RuuviPersistenceSQLite
@@ -38,6 +40,7 @@ import RuuviStorage
     let date = Date(timeIntervalSince1970: 1_800_000_000)
 
     init() throws {
+        defaults = UserDefaults(suiteName: suite)!
         directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         let context = try SQLiteContextFactoryGRDB().create(at: directory.appendingPathComponent("sync.sqlite"))
@@ -55,7 +58,7 @@ import RuuviStorage
             connectionPersistence: local.createLocalConnections())
         storage = RuuviStorageFactoryCoordinator().create(sqlite: persistence)
         repository = RuuviRepositoryFactoryCoordinator().create(pool: pool, storage: storage)
-        alerts = RuuviServiceAlertImpl(cloud: cloud, localIDs: ids, ruuviLocalSettings: settings)
+        alerts = RuuviServiceAlertImpl(cloud: cloud, localIDs: ids, ruuviLocalSettings: settings, defaults: defaults)
         service = RuuviServiceCloudSyncImpl(
             ruuviStorage: storage, ruuviCloud: cloud, ruuviPool: pool, ruuviLocalSettings: settings,
             ruuviLocalSyncState: syncState, ruuviLocalImages: local.createLocalImages(), ruuviRepository: repository,
@@ -108,7 +111,9 @@ import RuuviStorage
     }
 
     func close() {
-        for type in AlertType.allCases { alerts.remove(type: type, ruuviTag: sensor) }
+        defaults.removePersistentDomain(forName: suite)
+        UserDefaults.standard.removeObject(forKey: sensor.luid!.value)
+        UserDefaults.standard.removeObject(forKey: sensor.macId!.value)
         settings.cloudModeEnabled = savedCloudMode
         settings.isSyncing = savedIsSyncing
         syncState.setSyncDate(savedSyncDate)

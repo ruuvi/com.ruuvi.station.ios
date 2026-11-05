@@ -66,6 +66,7 @@ class DashboardPresenter {
     }
 
     private func startAllServices() {
+        stopAllObservations()
         settingsService.startObservingSettings()
         serviceCoordinatorManager.addObserver(self)
 
@@ -546,7 +547,6 @@ private extension DashboardPresenter {
     }
 
     func handleBluetoothStateChangeIfNeeded() {
-        serviceCoordinatorManager.refreshBluetoothState()
         let snapshots = coordinatorSnapshots()
         if serviceCoordinatorManager.shouldShowBluetoothAlert(for: snapshots) {
             let (_, userDeclined) = serviceCoordinatorManager.getCurrentBluetoothState()

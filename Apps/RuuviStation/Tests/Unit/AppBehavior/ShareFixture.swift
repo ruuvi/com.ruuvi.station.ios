@@ -53,6 +53,10 @@ final class ShareRouterSpy: ShareRouterInput {
 }
 
 @MainActor final class ShareOwnershipSpy: RuuviServiceOwnership {
+    var ownerChecks = [String]()
+    var ownerResult: (String?, String?) = (nil, nil)
+    var ownerFailure: RuuviServiceError?
+    var beforeOwner: (() async -> Void)?
     var claims = [AnyRuuviTagSensor]()
     var unclaims = [(AnyRuuviTagSensor, Bool)]()
     var contests = [(AnyRuuviTagSensor, String)]()
@@ -121,6 +125,9 @@ final class ShareRouterSpy: ShareRouterInput {
         return sensor.with(isOwner: false).any
     }
     func checkOwner(macId: MACIdentifier) async throws(RuuviServiceError) -> (String?, String?) {
-        throw .failedToParseNetworkResponse
+        ownerChecks.append(macId.value)
+        await beforeOwner?()
+        if let ownerFailure { throw ownerFailure }
+        return ownerResult
     }
 }
