@@ -176,9 +176,9 @@ extension RuuviTagDataSQLite: FetchableRecord {
             let accelerationZ = Double.fromDatabaseValue(row[RuuviTagDataSQLite.accelerationZColumn])
         {
             acceleration = Acceleration(
-                x: AccelerationMeasurement(value: accelerationX, unit: .metersPerSecondSquared),
-                y: AccelerationMeasurement(value: accelerationY, unit: .metersPerSecondSquared),
-                z: AccelerationMeasurement(value: accelerationZ, unit: .metersPerSecondSquared)
+                x: AccelerationMeasurement(value: accelerationX, unit: .gravity),
+                y: AccelerationMeasurement(value: accelerationY, unit: .gravity),
+                z: AccelerationMeasurement(value: accelerationZ, unit: .gravity)
             )
         }
         if let volts = Double.fromDatabaseValue(row[RuuviTagDataSQLite.voltsColumn]) {
@@ -221,9 +221,9 @@ extension RuuviTagDataSQLite: PersistableRecord {
         container[RuuviTagDataSQLite.celsiusColumn] = temperature?.converted(to: .celsius).value
         container[RuuviTagDataSQLite.relativeHumidityInPercentColumn] = humidity?.value
         container[RuuviTagDataSQLite.hectopascalsColumn] = pressure?.converted(to: .hectopascals).value
-        container[RuuviTagDataSQLite.accelerationXColumn] = acceleration?.x.converted(to: .metersPerSecondSquared).value
-        container[RuuviTagDataSQLite.accelerationYColumn] = acceleration?.y.converted(to: .metersPerSecondSquared).value
-        container[RuuviTagDataSQLite.accelerationZColumn] = acceleration?.z.converted(to: .metersPerSecondSquared).value
+        container[RuuviTagDataSQLite.accelerationXColumn] = acceleration?.x.converted(to: .gravity).value
+        container[RuuviTagDataSQLite.accelerationYColumn] = acceleration?.y.converted(to: .gravity).value
+        container[RuuviTagDataSQLite.accelerationZColumn] = acceleration?.z.converted(to: .gravity).value
         container[RuuviTagDataSQLite.voltsColumn] = voltage?.converted(to: .volts).value
         container[RuuviTagDataSQLite.movementCounterColumn] = movementCounter
         container[RuuviTagDataSQLite.measurementSequenceNumberColumn] = measurementSequenceNumber

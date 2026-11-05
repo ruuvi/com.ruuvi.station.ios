@@ -50,17 +50,17 @@ extension RuuviTag: RuuviTagSensorRecord {
             x:
             AccelerationMeasurement(
                 value: accelerationX,
-                unit: .metersPerSecondSquared
+                unit: .gravity
             ),
             y:
             AccelerationMeasurement(
                 value: accelerationY,
-                unit: .metersPerSecondSquared
+                unit: .gravity
             ),
             z:
             AccelerationMeasurement(
                 value: accelerationZ,
-                unit: .metersPerSecondSquared
+                unit: .gravity
             )
         )
     }

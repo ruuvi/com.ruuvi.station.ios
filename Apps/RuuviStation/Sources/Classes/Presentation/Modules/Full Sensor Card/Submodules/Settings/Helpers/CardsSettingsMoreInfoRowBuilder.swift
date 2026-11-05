@@ -74,7 +74,7 @@ struct CardsSettingsMoreInfoRowBuilder {
             )
         }
 
-        if let accX = latestRawRecord?.acceleration?.x.value ?? display.accelerationX {
+        if let accX = latestRawRecord?.acceleration?.x.converted(to: .gravity).value ?? display.accelerationX {
             rows.append(
                 CardsSettingsMoreInfoRowModel(
                     id: CardsSettingsMoreInfoRowID.accX.rawValue,
@@ -90,7 +90,7 @@ struct CardsSettingsMoreInfoRowBuilder {
             )
         }
 
-        if let accY = latestRawRecord?.acceleration?.y.value ?? display.accelerationY {
+        if let accY = latestRawRecord?.acceleration?.y.converted(to: .gravity).value ?? display.accelerationY {
             rows.append(
                 CardsSettingsMoreInfoRowModel(
                     id: CardsSettingsMoreInfoRowID.accY.rawValue,
@@ -106,7 +106,7 @@ struct CardsSettingsMoreInfoRowBuilder {
             )
         }
 
-        if let accZ = latestRawRecord?.acceleration?.z.value ?? display.accelerationZ {
+        if let accZ = latestRawRecord?.acceleration?.z.converted(to: .gravity).value ?? display.accelerationZ {
             rows.append(
                 CardsSettingsMoreInfoRowModel(
                     id: CardsSettingsMoreInfoRowID.accZ.rawValue,

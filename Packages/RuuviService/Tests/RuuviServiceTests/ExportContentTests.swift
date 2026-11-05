@@ -13,8 +13,8 @@ import Testing
 #endif
 
 extension ExportTests {
-    @Test(arguments: [5, 0xC5, 6, 225])
-    func exportedFilesPreserveEverySupportedReadingAndUnit(version: Int) async throws {
+    @Test(arguments: [5, 0xC5, 6, 225], [false, true])
+    func exportedFilesPreserveEverySupportedReadingAndUnit(version: Int, useSIAcceleration: Bool) async throws {
         let fixture = try PropertiesFixture()
         try await fixture.pool.create(fixture.sensor)
         var populated = record(sensor: fixture.sensor, date: Date().addingTimeInterval(-120))
@@ -22,10 +22,11 @@ extension ExportTests {
         populated.humidity = .init(value: 0.5, unit: .relative(temperature: populated.temperature!))
         populated.pressure = .init(value: 1013.25, unit: .hectopascals)
         populated.voltage = .init(value: 3.1, unit: .volts)
+        let accelerationUnit: UnitAcceleration = useSIAcceleration ? .metersPerSecondSquared : .gravity
         populated.acceleration = .init(
-            x: .init(value: -1, unit: .metersPerSecondSquared),
-            y: .init(value: 0, unit: .metersPerSecondSquared),
-            z: .init(value: 1, unit: .metersPerSecondSquared))
+            x: .init(value: -1, unit: .gravity).converted(to: accelerationUnit),
+            y: .init(value: 0, unit: .gravity).converted(to: accelerationUnit),
+            z: .init(value: 1, unit: .gravity).converted(to: accelerationUnit))
         if version == 0xC5 { populated.acceleration = nil }
         populated.movementCounter = 12
         populated.measurementSequenceNumber = 345

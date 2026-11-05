@@ -181,9 +181,9 @@ extension RuuviTagLatestDataSQLite: FetchableRecord {
             let accelerationZ = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.accelerationZColumn])
         {
             acceleration = Acceleration(
-                x: AccelerationMeasurement(value: accelerationX, unit: .metersPerSecondSquared),
-                y: AccelerationMeasurement(value: accelerationY, unit: .metersPerSecondSquared),
-                z: AccelerationMeasurement(value: accelerationZ, unit: .metersPerSecondSquared)
+                x: AccelerationMeasurement(value: accelerationX, unit: .gravity),
+                y: AccelerationMeasurement(value: accelerationY, unit: .gravity),
+                z: AccelerationMeasurement(value: accelerationZ, unit: .gravity)
             )
         }
         if let volts = Double.fromDatabaseValue(row[RuuviTagLatestDataSQLite.voltsColumn]) {
@@ -228,13 +228,13 @@ extension RuuviTagLatestDataSQLite: PersistableRecord {
         container[RuuviTagLatestDataSQLite.hectopascalsColumn] = pressure?.converted(to: .hectopascals).value
         container[RuuviTagLatestDataSQLite.accelerationXColumn] =
             acceleration?.x
-            .converted(to: .metersPerSecondSquared).value
+            .converted(to: .gravity).value
         container[RuuviTagLatestDataSQLite.accelerationYColumn] =
             acceleration?.y
-            .converted(to: .metersPerSecondSquared).value
+            .converted(to: .gravity).value
         container[RuuviTagLatestDataSQLite.accelerationZColumn] =
             acceleration?.z
-            .converted(to: .metersPerSecondSquared).value
+            .converted(to: .gravity).value
         container[RuuviTagLatestDataSQLite.voltsColumn] = voltage?.converted(to: .volts).value
         container[RuuviTagLatestDataSQLite.movementCounterColumn] = movementCounter
         container[RuuviTagLatestDataSQLite.measurementSequenceNumberColumn] = measurementSequenceNumber

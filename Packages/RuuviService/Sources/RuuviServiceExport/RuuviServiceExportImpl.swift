@@ -713,7 +713,7 @@ extension RuuviServiceExportImpl {
                 ColumnDefinition(
                     header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .accelerationX)),
                     cellExtractor: { record in
-                        toString(record.acceleration?.x.value)
+                        toString(record.acceleration?.x.converted(to: .gravity).value)
                     }
                 )
             )
@@ -721,7 +721,7 @@ extension RuuviServiceExportImpl {
                 ColumnDefinition(
                     header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .accelerationY)),
                     cellExtractor: { record in
-                        toString(record.acceleration?.y.value)
+                        toString(record.acceleration?.y.converted(to: .gravity).value)
                     }
                 )
             )
@@ -729,7 +729,7 @@ extension RuuviServiceExportImpl {
                 ColumnDefinition(
                     header: shortNameWithUnit(for: MeasurementDisplayVariant(type: .accelerationZ)),
                     cellExtractor: { record in
-                        toString(record.acceleration?.z.value)
+                        toString(record.acceleration?.z.converted(to: .gravity).value)
                     }
                 )
             )

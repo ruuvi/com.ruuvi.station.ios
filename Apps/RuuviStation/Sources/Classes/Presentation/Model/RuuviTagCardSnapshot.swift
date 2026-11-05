@@ -755,15 +755,15 @@ extension RuuviTagCardSnapshot {
         if updatedDisplayData.voltage != finalRecord.voltage?.value {
             updatedDisplayData.voltage = finalRecord.voltage?.value
         }
-        let accX = finalRecord.acceleration?.x.value
+        let accX = finalRecord.acceleration?.x.converted(to: .gravity).value
         if updatedDisplayData.accelerationX != accX {
             updatedDisplayData.accelerationX = accX
         }
-        let accY = finalRecord.acceleration?.y.value
+        let accY = finalRecord.acceleration?.y.converted(to: .gravity).value
         if updatedDisplayData.accelerationY != accY {
             updatedDisplayData.accelerationY = accY
         }
-        let accZ = finalRecord.acceleration?.z.value
+        let accZ = finalRecord.acceleration?.z.converted(to: .gravity).value
         if updatedDisplayData.accelerationZ != accZ {
             updatedDisplayData.accelerationZ = accZ
         }

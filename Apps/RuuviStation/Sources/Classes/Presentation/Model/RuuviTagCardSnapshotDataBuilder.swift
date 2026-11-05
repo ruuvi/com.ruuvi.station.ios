@@ -576,7 +576,7 @@ struct AccelerationAxisMeasurementExtractor: MeasurementExtractor {
         case .z: measurement = acceleration.z
         }
 
-        guard let value = measurementService?.accelerationString(for: measurement.value) else {
+        guard let value = measurementService?.accelerationString(for: measurement.converted(to: .gravity).value) else {
             return nil
         }
 

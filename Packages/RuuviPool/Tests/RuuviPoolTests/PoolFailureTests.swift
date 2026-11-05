@@ -107,6 +107,57 @@ import XCTest
         XCTAssertFalse(deleted)
         XCTAssertEqual(fixture.ids.writes, 0)
     }
+    func testSavedSubscriptionRoundTripsItsEntitlementsThroughThePool() async throws {
+        let fixture = try PoolDatabaseFixture()
+        defer { fixture.close() }
+        let subscription = PoolSubscription(macId: fixture.mac.value)
+        _ = try await fixture.pool.save(subscription: subscription)
+        let result = try await fixture.pool.readSensorSubscriptionSettings(fixture.sensor())
+        let stored = try XCTUnwrap(result)
+        XCTAssertEqual(stored.macId, subscription.macId)
+        XCTAssertEqual(stored.subscriptionName, "Pro")
+        XCTAssertEqual(stored.isActive, true)
+        XCTAssertEqual(stored.maxClaims, 10)
+        XCTAssertEqual(stored.maxHistoryDays, 365)
+        XCTAssertEqual(stored.maxResolutionMinutes, 1)
+        XCTAssertEqual(stored.maxShares, 10)
+        XCTAssertEqual(stored.maxSharesPerSensor, 10)
+        XCTAssertEqual(stored.delayedAlertAllowed, true)
+        XCTAssertEqual(stored.emailAlertAllowed, true)
+        XCTAssertEqual(stored.offlineAlertAllowed, true)
+        XCTAssertEqual(stored.pdfExportAllowed, true)
+        XCTAssertEqual(stored.pushAlertAllowed, true)
+        XCTAssertEqual(stored.telegramAlertAllowed, true)
+        XCTAssertNil(stored.endAt)
+    }
+
+    func testRemovingCalibrationKeepsTheSensorAndItsArchivedMeasurements() async throws {
+        let fixture = try PoolDatabaseFixture()
+        defer { fixture.close() }
+        let sensor = fixture.sensor()
+        _ = try await fixture.pool.create(sensor)
+        _ = try await fixture.pool.create(fixture.record())
+        _ = try await fixture.pool.createLast(fixture.record())
+        _ = try await fixture.pool.updateOffsetCorrection(type: .temperature, with: 2, of: sensor)
+        let removed = try await fixture.persistence.deleteOffsetCorrection(ruuviTag: sensor)
+        XCTAssertTrue(removed)
+        let again = try await fixture.persistence.deleteOffsetCorrection(ruuviTag: sensor)
+        XCTAssertFalse(again)
+        let retained = try await fixture.persistence.readOne(sensor.id)
+        let history = try await fixture.persistence.readAll(sensor.id)
+        let latest = try await fixture.persistence.readLast(sensor)
+        XCTAssertEqual(retained.name, "Room")
+        XCTAssertEqual(history.count, 1)
+        XCTAssertEqual(latest?.temperature?.value, 21)
+        try fixture.context.database.dbPool.close()
+        do {
+            _ = try await fixture.persistence.deleteOffsetCorrection(ruuviTag: sensor)
+            XCTFail("Closed storage must propagate its failure")
+        } catch {
+            guard case .grdb = error else { return XCTFail("Unexpected error: \(error)") }
+        }
+    }
+
 }
 
 private struct PoolSubscription: CloudSensorSubscription {

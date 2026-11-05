@@ -123,7 +123,7 @@ public extension RuuviCloudSensorSubscriptionSQLite {
             table.column(RuuviCloudSensorSubscriptionSQLite.pdfExportAllowedColumn.name, .boolean).notNull()
             table.column(RuuviCloudSensorSubscriptionSQLite.pushAlertAllowedColumn.name, .boolean).notNull()
             table.column(RuuviCloudSensorSubscriptionSQLite.telegramAlertAllowedColumn.name, .boolean).notNull()
-            table.column(RuuviCloudSensorSubscriptionSQLite.endAtColumn.name, .text).notNull()
+            table.column(RuuviCloudSensorSubscriptionSQLite.endAtColumn.name, .text)
         }
     }
 }

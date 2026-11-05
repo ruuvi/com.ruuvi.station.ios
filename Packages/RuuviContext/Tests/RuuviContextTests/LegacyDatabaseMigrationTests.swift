@@ -124,6 +124,48 @@ final class LegacyDatabaseMigrationTests: XCTestCase {
             }
         }
     }
+    func testSubscriptionExpiryMigrationPreservesExistingPlansAndAllowsAnAbsentExpiry() throws {
+        let fixture = try LegacyDatabaseFixture()
+        defer { fixture.close() }
+        try fixture.database.migrateIfNeeded()
+        let original = try fixture.database.dbPool.write { db -> Row in
+            let table = "ruuvi_cloud_sensor_subscription"
+            let schema = try XCTUnwrap(String.fetchOne(
+                db, sql: "SELECT sql FROM sqlite_master WHERE name = ?", arguments: [table]))
+            try db.drop(table: table)
+            try db.execute(sql: schema.replacingOccurrences(of: "\"endAt\" TEXT", with: "\"endAt\" TEXT NOT NULL"))
+            XCTAssertTrue(try db.columns(in: table).contains { $0.name == "endAt" && $0.isNotNull })
+            try db.execute(sql: "DELETE FROM grdb_migrations WHERE identifier = ?",
+                           arguments: ["Allow optional cloud subscription expiry"])
+            try db.execute(sql: """
+                INSERT INTO ruuvi_cloud_sensor_subscription VALUES (
+                    'original-subscription', 'original', 'Business', 1, 10, 365, 1, 100, 10,
+                    1, 0, 1, 0, 1, 0, '2030-01-01');
+                """)
+            return try XCTUnwrap(Row.fetchOne(db, sql: "SELECT * FROM ruuvi_cloud_sensor_subscription"))
+        }
+        try fixture.database.migrateIfNeeded()
+        try fixture.database.dbPool.write { db in
+            XCTAssertEqual(try Row.fetchOne(db, sql: "SELECT * FROM ruuvi_cloud_sensor_subscription"), original)
+            try db.execute(sql: """
+                INSERT INTO ruuvi_cloud_sensor_subscription VALUES (
+                    'new-subscription', 'new', 'Pro', 1, 10, 365, 1, 10, 10, 1, 1, 1, 1, 1, 1, NULL);
+                """)
+        }
+        try fixture.database.migrateIfNeeded()
+        try fixture.database.dbPool.read { db in
+            XCTAssertEqual(try Int.fetchOne(db, sql: "SELECT COUNT(*) FROM ruuvi_cloud_sensor_subscription"), 2)
+            XCTAssertEqual(try Row.fetchOne(db, sql:
+                "SELECT * FROM ruuvi_cloud_sensor_subscription WHERE macId = 'original'"), original)
+            let added = try XCTUnwrap(Row.fetchOne(db, sql:
+                "SELECT * FROM ruuvi_cloud_sensor_subscription WHERE macId = 'new'"))
+            XCTAssertNil(added["endAt"] as String?)
+            XCTAssertEqual(added["subscriptionName"] as String, "Pro")
+            XCTAssertEqual(try String.fetchOne(db, sql: "PRAGMA integrity_check"), "ok")
+            XCTAssertFalse(try db.tableExists("ruuvi_cloud_sensor_subscription_expiry_migration"))
+        }
+    }
+
 }
 
 private final class LegacyDatabaseFixture {

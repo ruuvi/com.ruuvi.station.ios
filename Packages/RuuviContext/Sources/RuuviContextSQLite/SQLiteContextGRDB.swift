@@ -440,6 +440,18 @@ extension SQLiteGRDBDatabase {
             try RuuviUserSettingSQLite.createTable(in: db)
         }
 
+        migrator.registerMigration("Allow optional cloud subscription expiry") { db in
+            let table = RuuviCloudSensorSubscriptionSQLite.databaseTableName
+            let columns = try db.columns(in: table)
+            guard columns.contains(where: { $0.name == "endAt" && $0.isNotNull }) else { return }
+            let backup = table + "_expiry_migration"
+            let names = columns.map { "\"\($0.name)\"" }.joined(separator: ", ")
+            try db.rename(table: table, to: backup)
+            try RuuviCloudSensorSubscriptionSQLite.createTable(in: db)
+            try db.execute(sql: "INSERT INTO \(table) (\(names)) SELECT \(names) FROM \(backup)")
+            try db.drop(table: backup)
+        }
+
         try migrator.migrate(dbPool)
     }
 }
