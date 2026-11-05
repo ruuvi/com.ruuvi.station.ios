@@ -1,0 +1,26 @@
+---
+targets:
+  RuuviWidgets:
+    templates:
+      - Module
+    settings:
+      base:
+        APPLICATION_EXTENSION_API_ONLY: true
+    sources:
+      - path: Sources
+    resources:
+      - path: ../../Apps/RuuviStation/Sources/Resources/Strings/
+    dependencies:
+      - package: Swinject
+      - package: BTKit
+      - package: GRDB
+      - package: Humidity
+      - package: KeychainAccess
+      - target: RuuviUser
+      - target: RuuviCloud
+      - target: RuuviOntology
+      - target: RuuviPool
+      - target: RuuviLocal
+      - target: RuuviPersistence
+      - target: RuuviContext
+      - target: RuuviLocalization

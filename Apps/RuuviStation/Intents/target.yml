@@ -34,34 +34,14 @@ targets:
           PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.intents"
     sources:
       - path: Sources
-        name: Intents
-        excludes:
-        - "*.entitlements"
-        - Info.plist
-      - path: ../Widgets/Sources/
         excludes:
           - "*.entitlements"
           - Info.plist
-          - RuuviWidgets.swift
-          - Intent/*
-          - Model/MultiSensorWidgetEntry.swift
-          - Provider/MultiSensorWidgetProvider.swift
-          - Provider/MultiSensorWidgetLegacyProvider.swift
-          - Provider/SingleSensorWidgetProvider.swift
-          - View/MultiSensorWidgetView.swift
     resources:
-      - path: ../Widgets/Sources/Resources/
+      - path: ../Widgets/Sources/Resources/Fonts/
     dependencies:
-      - package: Swinject
-      - package: BTKit
-      - package: GRDB
-      - package: Humidity
-      - package: KeychainAccess
-      - target: RuuviUser
-      - target: RuuviCloud
-      - target: RuuviOntology
-      - target: RuuviPool
-      - target: RuuviLocal
-      - target: RuuviPersistence
-      - target: RuuviContext
-      - target: RuuviLocalization
+      - target: RuuviWidgets
+    postBuildScripts:
+      - path: ../../../scripts/build/copy_widget_intents.sh
+        name: Copy Shared Widget Intent Definitions
+        basedOnDependencyAnalysis: false

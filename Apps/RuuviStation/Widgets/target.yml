@@ -28,26 +28,17 @@ targets:
           CODE_SIGN_IDENTITY: "iPhone Distribution"
           PROVISIONING_PROFILE_SPECIFIER: "match AdHoc com.ruuvi.station.widgets"
           EXCLUDED_SOURCE_FILE_NAMES: "FLEX*"
-    sources: 
-      - path: Sources/
-        name: Widgets
+    sources:
+      - path: Sources
         excludes:
-        - "*.entitlements"
-        - Info.plist
+          - "*.entitlements"
+          - Info.plist
     resources:
-      - path: Sources/Resources/
+      - path: Sources/Resources/Fonts/
       - path: ../Sources/Resources/Strings/
     dependencies:
-      - package: Swinject
-      - package: BTKit
-      - package: GRDB
-      - package: Humidity
-      - package: KeychainAccess
-      - target: RuuviUser
-      - target: RuuviCloud
-      - target: RuuviOntology
-      - target: RuuviPool
-      - target: RuuviLocal
-      - target: RuuviPersistence
-      - target: RuuviContext
-      - target: RuuviLocalization
+      - target: RuuviWidgets
+    postBuildScripts:
+      - path: ../../../scripts/build/copy_widget_intents.sh
+        name: Copy Shared Widget Intent Definitions
+        basedOnDependencyAnalysis: false

@@ -1,0 +1,308 @@
+import Intents
+import RuuviCloud
+import RuuviLocal
+import RuuviOntology
+import WidgetKit
+
+@available(iOSApplicationExtension 16.0, *)
+struct MultiSensorWidgetProvider: IntentTimelineProvider {
+    typealias Intent = RuuviMultiSensorSelectionIntent
+    typealias Entry = MultiSensorWidgetEntry
+
+    private let viewModel: WidgetViewModel
+    private let localCache: WidgetSensorCache
+    private let cloudCache: WidgetCloudCache
+    private let now: () -> Date
+
+    init(
+        viewModel: WidgetViewModel = WidgetViewModel(), localCache: WidgetSensorCache = WidgetSensorCache(),
+        cloudCache: WidgetCloudCache = WidgetCloudCache(), now: @escaping () -> Date = Date.init
+    ) {
+        self.viewModel = viewModel
+        self.localCache = localCache
+        self.cloudCache = cloudCache
+        self.now = now
+    }
+
+    func placeholder(in context: Context) -> Entry {
+        .placeholder(for: context.family)
+    }
+
+    func getSnapshot(
+        for configuration: Intent,
+        in context: Context,
+        completion: @escaping (Entry) -> Void
+    ) {
+        snapshot(for: configuration, family: context.family, completion: completion)
+    }
+
+    func snapshot(for configuration: Intent, family: WidgetFamily, completion: @escaping (Entry) -> Void) {
+        // Always instant — build from local cache with no network calls
+        let localSnapshots = localCache.loadAll()
+        let selectedIds = selectedSensors(from: configuration)
+
+        if !selectedIds.isEmpty, !localSnapshots.isEmpty {
+            let items: [MultiSensorWidgetSensorItem] = selectedIds.enumerated().compactMap { index, sensorId in
+                guard let snap = localSnapshots.first(where: { $0.matches(identifier: sensorId) }) else { return nil }
+                let settings = sensorSettings(from: snap)
+                let record = snap.record?.toRecord()
+                let deviceType = viewModel.deviceType(from: record)
+                return MultiSensorWidgetSensorItem(
+                    id: "\(index + 1)-\(sensorId)",
+                    sensorId: sensorId,
+                    name: snap.name,
+                    record: record,
+                    settings: settings,
+                    cloudSettings: nil,
+                    deviceType: deviceType,
+                    selectedCodes: []
+                )
+            }
+            if !items.isEmpty {
+                completion(
+                    MultiSensorWidgetEntry(
+                        date: now(),
+                        isAuthorized: viewModel.isAuthorized(),
+                        isPreview: true,
+                        sensors: items
+                    ))
+                return
+            }
+        }
+
+        completion(.placeholder(for: family))
+    }
+
+    func getTimeline(
+        for configuration: Intent,
+        in context: Context,
+        completion: @escaping (Timeline<Entry>) -> Void
+    ) {
+        timeline(for: configuration, family: context.family, isPreview: context.isPreview, completion: completion)
+    }
+
+    func timeline(
+        for configuration: Intent, family: WidgetFamily, isPreview: Bool,
+        completion: @escaping (Timeline<Entry>) -> Void
+    ) {
+        if isPreview {
+            snapshot(for: configuration, family: family) { entry in
+                completion(Timeline(entries: [entry], policy: .never))
+            }
+            return
+        }
+
+        Task {
+            let entry = await makeEntry(for: configuration)
+            let nextUpdateDate =
+                Calendar.current.date(
+                    byAdding: .minute,
+                    value: viewModel.refreshIntervalMins(),
+                    to: now()
+                ) ?? now()
+
+            completion(
+                Timeline(
+                    entries: [entry],
+                    policy: .after(nextUpdateDate)
+                )
+            )
+        }
+    }
+}
+
+@available(iOSApplicationExtension 16.0, *)
+extension MultiSensorWidgetProvider {
+    // swiftlint:disable:next function_body_length
+    func makeEntry(
+        for configuration: Intent
+    ) async -> Entry {
+        let selectedSensorIds = selectedSensors(from: configuration)
+        guard !selectedSensorIds.isEmpty else {
+            return .empty()
+        }
+
+        let localSnapshots = localCache.loadAll()
+
+        // Cache-first: serve from disk if cloud data is still fresh
+        if cloudCache.isFresh(intervalMinutes: viewModel.refreshIntervalMins()),
+            !viewModel.shouldForceRefresh(),
+            !localSnapshots.isEmpty
+        {
+            let items = buildItems(from: selectedSensorIds, localSnapshots: localSnapshots)
+            if !items.isEmpty {
+                return MultiSensorWidgetEntry(
+                    date: now(),
+                    isAuthorized: viewModel.isAuthorized(),
+                    isPreview: false,
+                    sensors: items
+                )
+            }
+        }
+
+        // Fetch fresh cloud data
+        let cloudSensors = await viewModel.fetchRuuviTagsAsync()
+        if !cloudSensors.isEmpty {
+            persistCloudData(cloudSensors)
+            cloudCache.markFresh()
+        }
+
+        // Rebuild items merging cloud + local (cloud has priority)
+        let refreshedSnapshots = cloudSensors.isEmpty ? localSnapshots : localCache.loadAll()
+        let items = buildItems(
+            from: selectedSensorIds,
+            localSnapshots: refreshedSnapshots,
+            cloudSensors: cloudSensors
+        )
+
+        if items.isEmpty {
+            return .empty()
+        }
+
+        return MultiSensorWidgetEntry(
+            date: now(),
+            isAuthorized: viewModel.isAuthorized(),
+            isPreview: false,
+            sensors: items
+        )
+    }
+
+    func buildItems(
+        from selectedSensorIds: [String],
+        localSnapshots: [WidgetSensorSnapshot],
+        cloudSensors: [RuuviCloudSensorDense] = []
+    ) -> [MultiSensorWidgetSensorItem] {
+        let cloudMap = Dictionary(
+            cloudSensors.map { ($0.sensor.id, $0) },
+            uniquingKeysWith: { first, next in
+                (next.record?.date ?? .distantPast) > (first.record?.date ?? .distantPast) ? next : first
+            })
+
+        return selectedSensorIds.enumerated().compactMap { index, sensorId in
+            let localSnapshot = localSnapshots.first(where: { $0.matches(identifier: sensorId) })
+
+            // Cloud path: cloud sensor found for this ID
+            if let sensor = cloudMap[sensorId]
+                ?? cloudSensors.first(where: {
+                    sensorIdentifiers(for: $0).contains(sensorId)
+                })
+            {
+                let localSettings = localSnapshot.flatMap { sensorSettings(from: $0) }
+                let settings = localSettings ?? SensorSettingsStruct.settings(from: sensor.sensor.any)
+                let shouldPreferLocalVisibility = localSettings != nil
+                let localRecord = localSnapshot?.record?.toRecord()
+                let record: RuuviTagSensorRecord?
+                if let localRecord, let cloudRecord = sensor.record,
+                    localRecord.date > cloudRecord.date
+                        || (localRecord.date == cloudRecord.date && localRecord.source != .ruuviNetwork)
+                {
+                    record = localRecord
+                } else {
+                    record = sensor.record ?? localRecord
+                }
+                let deviceType = viewModel.deviceType(from: record)
+                return MultiSensorWidgetSensorItem(
+                    id: "\(index + 1)-\(sensorId)",
+                    sensorId: sensorId,
+                    name: localSnapshot?.name ?? sensor.sensor.name,
+                    record: record,
+                    settings: settings,
+                    cloudSettings: shouldPreferLocalVisibility ? nil : sensor.settings,
+                    deviceType: deviceType,
+                    selectedCodes: []
+                )
+            }
+
+            // Local-only path
+            if let snap = localSnapshot {
+                let settings = sensorSettings(from: snap)
+                let record = snap.record?.toRecord()
+                let deviceType = viewModel.deviceType(from: record)
+                return MultiSensorWidgetSensorItem(
+                    id: "\(index + 1)-\(sensorId)",
+                    sensorId: sensorId,
+                    name: snap.name,
+                    record: record,
+                    settings: settings,
+                    cloudSettings: nil,
+                    deviceType: deviceType,
+                    selectedCodes: []
+                )
+            }
+
+            return nil
+        }
+    }
+
+    func persistCloudData(_ tags: [RuuviCloudSensorDense]) {
+        WidgetCloudSnapshotStore.persist(tags, in: localCache)
+    }
+
+    func selectedSensors(
+        from configuration: Intent
+    ) -> [String] {
+        let configuredSensors = configuredSensors(from: configuration)
+
+        var seen = Set<String>()
+        var orderedUniqueIds: [String] = []
+
+        for sensor in configuredSensors {
+            guard
+                let id = WidgetConfigurationSelection.normalizedSensorIdentifier(
+                    from: sensor
+                )
+            else {
+                continue
+            }
+
+            if seen.insert(id).inserted {
+                orderedUniqueIds.append(id)
+            }
+
+            if orderedUniqueIds.count == 6 {
+                break
+            }
+        }
+
+        return orderedUniqueIds
+    }
+
+    func configuredSensors(
+        from configuration: Intent
+    ) -> [RuuviWidgetTag?] {
+        [
+            configuration.sensor1,
+            configuration.sensor2,
+            configuration.sensor3,
+            configuration.sensor4,
+            configuration.sensor5,
+            configuration.sensor6,
+        ]
+    }
+
+    func sensorSettings(
+        from snapshot: WidgetSensorSnapshot
+    ) -> SensorSettingsStruct? {
+        snapshot.settings.map { settings in
+            SensorSettingsStruct(
+                luid: snapshot.luid?.luid,
+                macId: snapshot.macId?.mac,
+                temperatureOffset: settings.temperatureOffset,
+                humidityOffset: settings.humidityOffset,
+                pressureOffset: settings.pressureOffset,
+                displayOrder: settings.displayOrder,
+                defaultDisplayOrder: settings.defaultDisplayOrder
+            )
+        }
+    }
+
+    func sensorIdentifiers(
+        for sensor: RuuviCloudSensorDense
+    ) -> [String] {
+        [
+            sensor.sensor.id,
+            sensor.record?.macId?.value,
+            sensor.record?.luid?.value,
+        ].compactMap { $0 }
+    }
+}

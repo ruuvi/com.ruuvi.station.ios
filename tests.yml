@@ -1,4 +1,29 @@
 targets:
+  RuuviWidgetsTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Modules/RuuviWidgets/Tests
+    dependencies:
+      - package: Swinject
+      - target: RuuviUser
+        embed: false
+      - target: RuuviWidgets
+        embed: false
+      - target: RuuviOntology
+        embed: false
+      - target: RuuviLocal
+        embed: false
+      - target: RuuviCloud
+        embed: false
+      - target: RuuviLocalization
+        embed: false
+      - package: Humidity
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        IPHONEOS_DEPLOYMENT_TARGET: 17.0
+
   RuuviAnalyticsTests:
     type: bundle.unit-test
     platform: iOS
@@ -386,6 +411,7 @@ targets:
       - path: Apps/RuuviStation/Tests/Unit/CardsGraphViewInteractorTests.swift
       - path: Apps/RuuviStation/Tests/Unit/FirmwareDownloadTests.swift
       - path: Apps/RuuviStation/Tests/Unit/FirmwareLifetimeTests.swift
+      - path: Apps/RuuviStation/Tests/Unit/ExtensionPackagingTests.swift
     dependencies:
       - target: station
       - target: RuuviService
@@ -427,6 +453,17 @@ targets:
         TEST_TARGET_NAME: station
         IPHONEOS_DEPLOYMENT_TARGET: 17.0
 schemes:
+  RuuviWidgetsTests:
+    build:
+      targets:
+        RuuviWidgetsTests: [test]
+    test:
+      gatherCoverageData: true
+      coverageTargets:
+        - RuuviWidgets
+      targets:
+        - RuuviWidgetsTests
+
   RuuviAnalyticsTests:
     build:
       targets:
@@ -690,6 +727,7 @@ schemes:
         - RuuviUser
         - RuuviDiscover
         - RuuviFirmware
+        - RuuviWidgets
         - RuuviOnboard
         - RuuviLocalization
         - RuuviPresenters
@@ -714,6 +752,7 @@ schemes:
         - RuuviUserTests
         - RuuviDiscoverTests
         - RuuviFirmwareTests
+        - RuuviWidgetsTests
         - RuuviOnboardTests
         - RuuviLocalizationTests
         - RuuviPresentersTests

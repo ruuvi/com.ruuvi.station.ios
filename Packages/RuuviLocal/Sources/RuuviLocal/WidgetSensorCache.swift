@@ -376,8 +376,10 @@ public final class WidgetCloudCache {
 
     public func isFresh(intervalMinutes: Int) -> Bool {
         Self.queue.sync {
-            guard let ts = userDefaults?.object(forKey: Self.timestampKey) as? Date else { return false }
-            return Date().timeIntervalSince(ts) < Double(intervalMinutes * 60)
+            guard intervalMinutes > 0,
+                  let timestamp = userDefaults?.object(forKey: Self.timestampKey) as? Date else { return false }
+            let age = Date().timeIntervalSince(timestamp)
+            return age >= 0 && age < Double(intervalMinutes) * 60
         }
     }
 

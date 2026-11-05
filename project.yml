@@ -157,6 +157,7 @@ include:
 - Modules/RuuviDiscover/target.yml
 - Modules/RuuviOnboard/target.yml
 - Modules/RuuviFirmware/target.yml
+- Modules/RuuviWidgets/target.yml
 - Apps/RuuviStation/target.yml
 - Apps/RuuviStation/Widgets/target.yml
 - Apps/RuuviStation/NotificationService/target.yml
