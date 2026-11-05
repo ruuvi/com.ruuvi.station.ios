@@ -12,6 +12,7 @@ def main():
     parser.add_argument("result", type=Path, help="Xcode result bundle from AllTests")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--minimum", type=float, help="Required percentage for every executable target")
+    parser.add_argument("--minimum-total", type=float, help="Required aggregate percentage across all production targets")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     project = json.loads(subprocess.check_output([
@@ -61,6 +62,9 @@ def main():
     print(f"Total: {output['percent']:.2f}% ({covered}/{executable})")
     if missing:
         print("Coverage is incomplete; missing: " + ", ".join(missing), file=sys.stderr)
+        return 1
+    if args.minimum_total is not None and output["percent"] < args.minimum_total:
+        print(f"Aggregate coverage is below {args.minimum_total:g}%", file=sys.stderr)
         return 1
     if args.minimum is not None:
         below = [t["name"] for t in targets if t["percent"] is not None and t["percent"] < args.minimum]

@@ -36,7 +36,7 @@ extension SelectionPresenter: SelectionModuleInput {
 extension SelectionPresenter: SelectionViewOutput {
     func viewDidSelect(itemAtIndex index: Int) {
         guard let viewModel,
-              viewModel.items.count > 0
+            viewModel.items.indices.contains(index)
         else {
             dismiss()
             return

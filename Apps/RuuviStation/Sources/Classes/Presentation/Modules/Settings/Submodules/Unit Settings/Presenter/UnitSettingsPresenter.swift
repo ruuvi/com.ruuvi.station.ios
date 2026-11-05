@@ -11,13 +11,13 @@ class UnitSettingsPresenter {
     var settings: RuuviLocalSettings!
     var ruuviAppSettingsService: RuuviServiceAppSettings!
 
-    private var temperatureUnitToken: NSObjectProtocol?
-    private var temperatureAccuracyToken: NSObjectProtocol?
-    private var humidityUnitToken: NSObjectProtocol?
-    private var humidityAccuracyToken: NSObjectProtocol?
-    private var measurementAccuracyToken: NSObjectProtocol?
-    private var pressureUnitToken: NSObjectProtocol?
-    private var pressureAccuracyToken: NSObjectProtocol?
+    private let notificationCenter: NotificationCenter
+
+    init(notificationCenter: NotificationCenter = .default) {
+        self.notificationCenter = notificationCenter
+    }
+
+    private var notificationTokens = [NSObjectProtocol]()
     private var pendingSelectionMeasurementType: MeasurementType?
     private var pendingResolutionTarget: ResolutionSettingsTarget?
 
@@ -30,14 +30,9 @@ class UnitSettingsPresenter {
     var output: UnitSettingsModuleOutput?
 
     deinit {
-        temperatureUnitToken?.invalidate()
-        temperatureAccuracyToken?.invalidate()
-        humidityUnitToken?.invalidate()
-        humidityAccuracyToken?.invalidate()
-        measurementAccuracyToken?.invalidate()
-        pressureUnitToken?.invalidate()
-        pressureAccuracyToken?.invalidate()
+        notificationTokens.forEach(notificationCenter.removeObserver)
     }
+
 }
 
 extension UnitSettingsPresenter: UnitSettingsModuleInput {
@@ -64,6 +59,7 @@ extension UnitSettingsPresenter: UnitSettingsViewOutput {
 
         switch viewModel.mode {
         case .measurement:
+            guard row == 0 || row == 1 else { return }
             let type: UnitSettingsType = row == 0 ? .unit : .accuracy
             openSelection(type: type, measurementType: viewModel.measurementType)
         case .globalUnits:
@@ -99,14 +95,19 @@ extension UnitSettingsPresenter: SelectionModuleOutput {
         case .unit:
             switch item {
             case let temperatureUnit as TemperatureUnit:
-                Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(temperatureUnit: temperatureUnit)
+                Task { @MainActor [service = ruuviAppSettingsService!] in
+                    _ = try? await service.set(temperatureUnit: temperatureUnit)
                 }
                 view.temperatureUnit = temperatureUnit
             case let humidityUnit as HumidityUnit:
-                Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(humidityUnit: humidityUnit) }
+                Task { @MainActor [service = ruuviAppSettingsService!] in
+                    _ = try? await service.set(humidityUnit: humidityUnit)
+                }
                 view.humidityUnit = humidityUnit
             case let pressureUnit as UnitPressure:
-                Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(pressureUnit: pressureUnit) }
+                Task { @MainActor [service = ruuviAppSettingsService!] in
+                    _ = try? await service.set(pressureUnit: pressureUnit)
+                }
                 view.pressureUnit = pressureUnit
             default:
                 break
@@ -135,13 +136,19 @@ extension UnitSettingsPresenter: SelectionModuleOutput {
                 }
                 switch measurementType {
                 case .temperature:
-                    Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(temperatureAccuracy: item) }
+                    Task { @MainActor [service = ruuviAppSettingsService!] in
+                        _ = try? await service.set(temperatureAccuracy: item)
+                    }
                     view.temperatureAccuracy = item
                 case .humidity:
-                    Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(humidityAccuracy: item) }
+                    Task { @MainActor [service = ruuviAppSettingsService!] in
+                        _ = try? await service.set(humidityAccuracy: item)
+                    }
                     view.humidityAccuracy = item
                 case .pressure:
-                    Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(pressureAccuracy: item) }
+                    Task { @MainActor [service = ruuviAppSettingsService!] in
+                        _ = try? await service.set(pressureAccuracy: item)
+                    }
                     view.pressureAccuracy = item
                 default:
                     return
@@ -340,105 +347,61 @@ extension UnitSettingsPresenter {
     ) {
         switch target {
         case .temperature:
-            Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(temperatureAccuracy: accuracy) }
+            Task { @MainActor [service = ruuviAppSettingsService!] in
+                _ = try? await service.set(temperatureAccuracy: accuracy)
+            }
             view.temperatureAccuracy = accuracy
         case .relativeHumidity:
-            Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(relativeHumidityAccuracy: accuracy) }
+            Task { @MainActor [service = ruuviAppSettingsService!] in
+                _ = try? await service.set(relativeHumidityAccuracy: accuracy)
+            }
         case .absoluteHumidity:
-            Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(absoluteHumidityAccuracy: accuracy) }
+            Task { @MainActor [service = ruuviAppSettingsService!] in
+                _ = try? await service.set(absoluteHumidityAccuracy: accuracy)
+            }
         case .dewPoint:
-            Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(dewPointAccuracy: accuracy) }
+            Task { @MainActor [service = ruuviAppSettingsService!] in
+                _ = try? await service.set(dewPointAccuracy: accuracy)
+            }
         case .pressure:
-            Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(pressureAccuracy: accuracy) }
+            Task { @MainActor [service = ruuviAppSettingsService!] in
+                _ = try? await service.set(pressureAccuracy: accuracy)
+            }
             view.pressureAccuracy = accuracy
         case .particulateMatter:
             let resolvedAccuracy: MeasurementAccuracyType = accuracy == .two ? .one : accuracy
-            Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(pmAccuracy: resolvedAccuracy) }
+            Task { @MainActor [service = ruuviAppSettingsService!] in
+                _ = try? await service.set(pmAccuracy: resolvedAccuracy)
+            }
         case .acceleration:
-            Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(accelerationAccuracy: accuracy) }
+            Task { @MainActor [service = ruuviAppSettingsService!] in
+                _ = try? await service.set(accelerationAccuracy: accuracy)
+            }
         case .voltage:
-            Task { @MainActor [self] in _ = try? await ruuviAppSettingsService.set(voltageAccuracy: accuracy) }
+            Task { @MainActor [service = ruuviAppSettingsService!] in
+                _ = try? await service.set(voltageAccuracy: accuracy)
+            }
         }
         view.reloadSettings()
     }
 
-    // swiftlint:disable:next function_body_length
     private func observeUnitChanges() {
-        temperatureUnitToken = NotificationCenter
-            .default
-            .addObserver(
-                forName: .TemperatureUnitDidChange,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let sSelf = self else { return }
-                sSelf.view.temperatureUnit = sSelf.settings.temperatureUnit
+        notificationTokens.forEach(notificationCenter.removeObserver)
+        let updates: [(Notification.Name, (UnitSettingsPresenter) -> Void)] = [
+            (.TemperatureUnitDidChange, { $0.view.temperatureUnit = $0.settings.temperatureUnit }),
+            (.TemperatureAccuracyDidChange, { $0.view.temperatureAccuracy = $0.settings.temperatureAccuracy }),
+            (.HumidityUnitDidChange, { $0.view.humidityUnit = $0.settings.humidityUnit }),
+            (.HumidityAccuracyDidChange, { $0.view.humidityAccuracy = $0.settings.humidityAccuracy }),
+            (.MeasurementAccuracyDidChange, { $0.view.reloadSettings() }),
+            (.PressureUnitDidChange, { $0.view.pressureUnit = $0.settings.pressureUnit }),
+            (.PressureUnitAccuracyChange, { $0.view.pressureAccuracy = $0.settings.pressureAccuracy }),
+        ]
+        notificationTokens = updates.map { name, update in
+            notificationCenter.addObserver(forName: name, object: nil, queue: .main) { [weak self] _ in
+                guard let self else { return }
+                update(self)
             }
-        temperatureAccuracyToken = NotificationCenter
-            .default
-            .addObserver(
-                forName: .TemperatureAccuracyDidChange,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let sSelf = self else { return }
-                sSelf.view.temperatureAccuracy = sSelf.settings.temperatureAccuracy
-            }
-        humidityUnitToken = NotificationCenter
-            .default
-            .addObserver(
-                forName: .HumidityUnitDidChange,
-                object: nil,
-                queue: .main,
-                using: { [weak self] _ in
-                    guard let sSelf = self else { return }
-                    sSelf.view.humidityUnit = sSelf.settings.humidityUnit
-                }
-            )
-        humidityAccuracyToken = NotificationCenter
-            .default
-            .addObserver(
-                forName: .HumidityAccuracyDidChange,
-                object: nil,
-                queue: .main,
-                using: { [weak self] _ in
-                    guard let sSelf = self else { return }
-                    sSelf.view.humidityAccuracy = sSelf.settings.humidityAccuracy
-                }
-            )
-        measurementAccuracyToken = NotificationCenter
-            .default
-            .addObserver(
-                forName: .MeasurementAccuracyDidChange,
-                object: nil,
-                queue: .main,
-                using: { [weak self] _ in
-                    guard let sSelf = self else { return }
-                    sSelf.view.reloadSettings()
-                }
-            )
-        pressureUnitToken = NotificationCenter
-            .default
-            .addObserver(
-                forName: .PressureUnitDidChange,
-                object: nil,
-                queue: .main,
-                using: { [weak self] _ in
-                    guard let sSelf = self else { return }
-                    sSelf.view.pressureUnit = sSelf.settings.pressureUnit
-                }
-            )
-        pressureAccuracyToken = NotificationCenter
-            .default
-            .addObserver(
-                forName: .PressureUnitAccuracyChange,
-                object: nil,
-                queue: .main,
-                using: { [weak self] _ in
-                    guard let sSelf = self else { return }
-                    sSelf.view.pressureAccuracy = sSelf.settings.pressureAccuracy
-                }
-            )
+        }
     }
 
     private func updateUnits() {

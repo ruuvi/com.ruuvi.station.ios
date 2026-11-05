@@ -75,22 +75,24 @@ Generate the project before running tests. The `AllTests` scheme includes packag
 make xcodeproj
 xcodebuild -project Ruuvi.xcodeproj -scheme AllTests \
   -destination 'platform=iOS Simulator,name=iPhone 18 Pro' \
-  -enableCodeCoverage YES -resultBundlePath /tmp/RuuviTests.xcresult test \
+  -enableCodeCoverage YES -resultBundlePath build/RuuviTests.xcresult test \
   CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES
-python3 scripts/test/coverage.py /tmp/RuuviTests.xcresult \
-  --output /tmp/RuuviCoverage.json
+python3 scripts/test/coverage.py build/RuuviTests.xcresult \
+  --output build/RuuviCoverage.json
 ```
 
 For a complete verification, boot the simulator and use a new output directory:
 
 ```zsh
 python3 scripts/test/verify.py --device 'iPhone 18 Pro' \
-  --output /tmp/RuuviVerification
+  --output build/RuuviVerification --minimum-total-coverage 90.01
 ```
 
 This generates resources, builds every Swift package product and test target,
-runs the full simulator suite, and exports coverage and screenshots. Use
-`--minimum-coverage 95` to enforce a per-target coverage threshold.
+runs the full simulator suite, and exports coverage and screenshots.
+`--minimum-total-coverage 90.01` requires aggregate production coverage strictly above 90%.
+Use `--minimum-coverage 95` to enforce an additional per-target threshold.
+Keep the output directory inside this workspace so reports survive temporary-directory cleanup.
 Reports retain every first-party target, including targets with no executable lines.
 The UI navigation checks preserve saved simulator sensors; the existing-sensor
 check needs at least one saved sensor.

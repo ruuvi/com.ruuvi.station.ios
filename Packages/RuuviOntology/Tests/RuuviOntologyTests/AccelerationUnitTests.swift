@@ -39,7 +39,8 @@ final class AccelerationUnitTests: XCTestCase {
             try record.sqlite.insert(db)
             try record.latest.insert(db)
             for table in [RuuviTagDataSQLite.databaseTableName, RuuviTagLatestDataSQLite.databaseTableName] {
-                try db.execute(sql: "UPDATE \(table) SET accelerationX = 0.004, accelerationY = -0.004, accelerationZ = 1.036")
+                try db.execute(
+                    sql: "UPDATE \(table) SET accelerationX = 0.004, accelerationY = -0.004, accelerationZ = 1.036")
             }
             let history = try XCTUnwrap(RuuviTagDataSQLite.fetchOne(db))
             let latest = try XCTUnwrap(RuuviTagLatestDataSQLite.fetchOne(db))
@@ -75,8 +76,16 @@ final class AccelerationUnitTests: XCTestCase {
                     XCTAssertEqual(row["accelerationY"] as Double, 0, accuracy: 0.000001)
                     XCTAssertEqual(row["accelerationZ"] as Double, 1, accuracy: 0.000001)
                 }
-                XCTAssertEqual(try RuuviTagDataSQLite.fetchOne(db)?.acceleration, record.acceleration)
-                XCTAssertEqual(try RuuviTagLatestDataSQLite.fetchOne(db)?.acceleration, record.acceleration)
+                let restored = [
+                    try RuuviTagDataSQLite.fetchOne(db)?.acceleration,
+                    try RuuviTagLatestDataSQLite.fetchOne(db)?.acceleration,
+                ]
+                for acceleration in restored {
+                    let value = try XCTUnwrap(acceleration)
+                    XCTAssertEqual(value.x.converted(to: .gravity).value, -1, accuracy: 0.000001)
+                    XCTAssertEqual(value.y.converted(to: .gravity).value, 0, accuracy: 0.000001)
+                    XCTAssertEqual(value.z.converted(to: .gravity).value, 1, accuracy: 0.000001)
+                }
             }
         }
     }

@@ -13,6 +13,7 @@ def main():
     parser.add_argument("--device", default="iPhone 18 Pro", help="Booted simulator name or UDID")
     parser.add_argument("--output", type=Path, required=True, help="New artifact directory")
     parser.add_argument("--minimum-coverage", type=float, help="Per-target coverage percentage to enforce")
+    parser.add_argument("--minimum-total-coverage", type=float, help="Aggregate production coverage percentage to enforce")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     output = args.output.resolve()
@@ -59,6 +60,8 @@ def main():
                 "--output", str(output / "coverage.json")]
     if args.minimum_coverage is not None:
         coverage.extend(["--minimum", str(args.minimum_coverage)])
+    if args.minimum_total_coverage is not None:
+        coverage.extend(["--minimum-total", str(args.minimum_total_coverage)])
     run("coverage", coverage)
     run("screenshots", ["xcrun", "xcresulttool", "export", "attachments", "--path", str(result),
                         "--output-path", str(output / "Screenshots")])

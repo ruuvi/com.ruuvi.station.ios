@@ -21,14 +21,21 @@ class NotificationsSettingsPresenter: NSObject, NotificationsSettingsModuleInput
         }
     }
 
+    private let notificationCenter: NotificationCenter
+
+    init(notificationCenter: NotificationCenter = .default) {
+        self.notificationCenter = notificationCenter
+        super.init()
+    }
+
     private var soundSettingsToken: NSObjectProtocol?
     private var emailAlertsSettingsToken: NSObjectProtocol?
     private var pushAlertsSettingsToken: NSObjectProtocol?
 
     deinit {
-        soundSettingsToken?.invalidate()
-        emailAlertsSettingsToken?.invalidate()
-        pushAlertsSettingsToken?.invalidate()
+        if let token = soundSettingsToken { notificationCenter.removeObserver(token) }
+        if let token = emailAlertsSettingsToken { notificationCenter.removeObserver(token) }
+        if let token = pushAlertsSettingsToken { notificationCenter.removeObserver(token) }
     }
 }
 
@@ -81,8 +88,8 @@ extension NotificationsSettingsPresenter {
         bind(viewModel.boolean, fire: false) { observer, enabled in
             let alertDisabled = !GlobalHelpers.getBool(from: enabled)
             observer.settings.emailAlertDisabled = alertDisabled
-            Task { @MainActor [self] in
-                _ = try? await observer.ruuviAppSettingsService.set(disableEmailAlert: alertDisabled)
+            Task { @MainActor [service = observer.ruuviAppSettingsService!] in
+                _ = try? await service.set(disableEmailAlert: alertDisabled)
             }
         }
 
@@ -101,8 +108,8 @@ extension NotificationsSettingsPresenter {
         bind(viewModel.boolean, fire: false) { observer, enabled in
             let alertDisabled = !GlobalHelpers.getBool(from: enabled)
             observer.settings.pushAlertDisabled = alertDisabled
-            Task { @MainActor [self] in
-                _ = try? await observer.ruuviAppSettingsService.set(disablePushAlert: alertDisabled)
+            Task { @MainActor [service = observer.ruuviAppSettingsService!] in
+                _ = try? await service.set(disablePushAlert: alertDisabled)
             }
         }
 
@@ -137,31 +144,31 @@ extension NotificationsSettingsPresenter {
     }
 
     private func startObservingAlertSoundSetting() {
-        soundSettingsToken = NotificationCenter
-            .default
+        if let token = soundSettingsToken { notificationCenter.removeObserver(token) }
+        soundSettingsToken =
+            notificationCenter
             .addObserver(
                 forName: .AlertSoundSettingsDidChange,
                 object: nil,
                 queue: .main,
                 using: { [weak self] _ in
-                    self?.configure()
-                    guard let sSelf = self else { return }
-                    DispatchQueue.main.async {
-                        Task { @MainActor [self] in
-                            _ = try? await sSelf.cloudNotificationService.set(
-                                sound: sSelf.settings.alertSound,
-                                language: sSelf.settings.language,
-                                deviceName: UIDevice.modelName
-                            )
-                        }
+                    guard let self else { return }
+                    self.configure()
+                    let service = self.cloudNotificationService!
+                    let sound = self.settings.alertSound
+                    let language = self.settings.language
+                    let deviceName = UIDevice.modelName
+                    Task { @MainActor in
+                        _ = try? await service.set(sound: sound, language: language, deviceName: deviceName)
                     }
                 }
             )
     }
 
     private func startObservingEmailAlertSetting() {
-        emailAlertsSettingsToken = NotificationCenter
-            .default
+        if let token = emailAlertsSettingsToken { notificationCenter.removeObserver(token) }
+        emailAlertsSettingsToken =
+            notificationCenter
             .addObserver(
                 forName: .EmailAlertSettingsDidChange,
                 object: nil,
@@ -173,8 +180,9 @@ extension NotificationsSettingsPresenter {
     }
 
     private func startObservingPushAlertSetting() {
-        pushAlertsSettingsToken = NotificationCenter
-            .default
+        if let token = pushAlertsSettingsToken { notificationCenter.removeObserver(token) }
+        pushAlertsSettingsToken =
+            notificationCenter
             .addObserver(
                 forName: .PushAlertSettingsDidChange,
                 object: nil,
@@ -199,7 +207,7 @@ extension NotificationsSettingsPresenter {
         if let viewModel = settingsViewModels.first(where: { vm in
             vm.settingsType.value == .push
         }) {
-            if viewModel.boolean.value == settings.emailAlertDisabled {
+            if viewModel.boolean.value == settings.pushAlertDisabled {
                 configure()
             }
         }
