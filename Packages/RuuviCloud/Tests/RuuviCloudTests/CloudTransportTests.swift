@@ -26,7 +26,7 @@ struct CloudTransportTests {
         defer { transport.close() }
         let database = try CloudQueueFixture()
         defer { database.close() }
-        let cloud = RuuviCloudPure(api: transport.api, user: CloudTestUser(), pool: database.pool)
+        let cloud = makeCloudService(api: transport.api, user: CloudTestUser(), pool: database.pool)
         for _ in 0..<2 {
             do {
                 _ = try await cloud.unshare(macId: "AA:BB:CC:DD:EE:FF".mac, with: recipient)
@@ -55,7 +55,7 @@ struct CloudTransportTests {
         let database = try CloudQueueFixture()
         defer { database.close() }
         let user = CloudTestUser()
-        let service = RuuviCloudPure(api: transport.api, user: user, pool: database.pool)
+        let service = makeCloudService(api: transport.api, user: user, pool: database.pool)
         struct Change {
             let key: RuuviCloudApiSetting
             let value: String
@@ -310,7 +310,7 @@ extension CloudTransportTests {
         defer { transport.close() }
         let database = try CloudQueueFixture()
         defer { database.close() }
-        let cloud = RuuviCloudPure(api: transport.api, user: CloudTestUser(), pool: database.pool)
+        let cloud = makeCloudService(api: transport.api, user: CloudTestUser(), pool: database.pool)
         var first = (1...5000).map { historyMeasurement(timestamp: 1_700_000_000 + $0) }
         first[100]["data"] = "unsupported"
         let second = (5000...5002).map { historyMeasurement(timestamp: 1_700_000_000 + $0) }
@@ -338,7 +338,7 @@ extension CloudTransportTests {
         defer { database.close() }
         let page = try historyPage((1...5000).map { historyMeasurement(timestamp: 1_700_000_000 + $0) })
         TransportProtocol.state.configurePages([page])
-        let cloud = RuuviCloudPure(api: transport.api, user: CloudTestUser(), pool: database.pool)
+        let cloud = makeCloudService(api: transport.api, user: CloudTestUser(), pool: database.pool)
         let records = try await cloud.loadRecords(
             macId: "AA:BB:CC:DD:EE:FF".mac,
             since: Date(timeIntervalSince1970: 1_700_000_000), until: nil)
@@ -359,7 +359,7 @@ extension CloudTransportTests {
                 historyPage(invalid),
                 historyPage([historyMeasurement(timestamp: 1_700_005_001)]),
             ])
-        let cloud = RuuviCloudPure(api: transport.api, user: CloudTestUser(), pool: database.pool)
+        let cloud = makeCloudService(api: transport.api, user: CloudTestUser(), pool: database.pool)
         let records = try await cloud.loadRecords(
             macId: "AA:BB:CC:DD:EE:FF".mac,
             since: Date(timeIntervalSince1970: 1_700_000_000), until: nil)
@@ -372,7 +372,7 @@ extension CloudTransportTests {
         defer { transport.close() }
         let database = try CloudQueueFixture()
         defer { database.close() }
-        let cloud = RuuviCloudPure(api: transport.api, user: CloudTestUser(), pool: database.pool)
+        let cloud = makeCloudService(api: transport.api, user: CloudTestUser(), pool: database.pool)
         var missing = historyMeasurement(timestamp: 1_700_000_001)
         missing.removeValue(forKey: "timestamp")
         TransportProtocol.state.configurePages(try [historyPage([missing])])
@@ -396,7 +396,7 @@ extension CloudTransportTests {
         let database = try CloudQueueFixture()
         defer { database.close() }
         let user = CloudTestUser()
-        let cloud = RuuviCloudPure(api: transport.api, user: user, pool: database.pool)
+        let cloud = makeCloudService(api: transport.api, user: user, pool: database.pool)
         let task = Task { @MainActor in
             try await cloud.loadRecords(macId: "AA:BB:CC:DD:EE:FF".mac, since: Date(), until: nil)
         }
@@ -432,7 +432,7 @@ extension CloudTransportTests {
 
 }
 
-private struct TransportFixture {
+struct TransportFixture {
     let session: URLSession
     let api: RuuviCloudApiURLSession
 
@@ -446,20 +446,29 @@ private struct TransportFixture {
     func close() { session.invalidateAndCancel() }
 }
 
-private struct TransportResponse {
+struct TransportResponse {
     let status: Int
     let data: Data
     let error: Error?
     let pending: Bool
 }
 
-private final class TransportState: @unchecked Sendable {
+final class TransportState: @unchecked Sendable {
     private let lock = NSLock()
     private var capturedRequest: URLRequest?
     private var capturedBody: Data?
     private var capturedRequests: [URLRequest] = []
     private var pages: [TransportResponse] = []
     var requests: [URLRequest] { lock.withLock { capturedRequests } }
+    func configureResponses(_ values: [TransportResponse]) {
+        lock.withLock {
+            pages = values
+            response = values.last ?? TransportResponse(status: 200, data: Data(), error: nil, pending: false)
+            capturedRequests = []
+            capturedRequest = nil
+            capturedBody = nil
+        }
+    }
     func configurePages(_ data: [Data]) {
         lock.withLock {
             pages = data.map { TransportResponse(status: 200, data: $0, error: nil, pending: false) }
@@ -503,7 +512,7 @@ private final class TransportState: @unchecked Sendable {
     }
 }
 
-private final class TransportProtocol: URLProtocol, @unchecked Sendable {
+final class TransportProtocol: URLProtocol, @unchecked Sendable {
     static let state = TransportState()
     override class func canInit(with request: URLRequest) -> Bool { true }
     override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
@@ -520,7 +529,7 @@ private final class TransportProtocol: URLProtocol, @unchecked Sendable {
     override func stopLoading() {}
 }
 
-private final class CloudTestUser: RuuviUser {
+final class CloudTestUser: RuuviUser {
     var apiKey: String? = "test-key"
     var email: String? = "test@example.com"
     var isAuthorized: Bool { apiKey != nil }
@@ -528,7 +537,7 @@ private final class CloudTestUser: RuuviUser {
     func logout() { apiKey = nil; email = nil }
 }
 
-@MainActor private struct CloudQueueFixture {
+@MainActor struct CloudQueueFixture {
     let directory: URL
     let persistence: RuuviPersistenceSQLite
     let pool: RuuviPool

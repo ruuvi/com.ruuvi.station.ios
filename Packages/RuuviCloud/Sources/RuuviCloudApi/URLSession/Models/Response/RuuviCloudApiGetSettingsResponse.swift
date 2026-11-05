@@ -60,7 +60,7 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
             return String(value)
         }
         if let value = try? container.decode(Double.self, forKey: key) {
-            return value.rounded() == value ? String(Int(value)) : String(value)
+            return Int(exactly: value).map(String.init) ?? String(value)
         }
         if let value = try? container.decode(Bool.self, forKey: key) {
             return value.chartBoolSettingString
@@ -72,14 +72,14 @@ public struct RuuviCloudApiSettings: Decodable, RuuviCloudSettings {
         from container: KeyedDecodingContainer<DynamicCodingKey>,
         forKey key: DynamicCodingKey
     ) -> Date? {
-        if let value = try? container.decode(Double.self, forKey: key) {
+        if let value = try? container.decode(Double.self, forKey: key), value.isFinite {
             return Date(timeIntervalSince1970: value)
         }
         if let value = try? container.decode(Int.self, forKey: key) {
             return Date(timeIntervalSince1970: TimeInterval(value))
         }
         if let value = try? container.decode(String.self, forKey: key),
-            let timestamp = Double(value)
+            let timestamp = Double(value), timestamp.isFinite
         {
             return Date(timeIntervalSince1970: timestamp)
         }

@@ -28,20 +28,17 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     @MainActor
     public func loadAlerts() async throws(RuuviCloudError) -> [RuuviCloudSensorAlerts] {
-        var outcome: Result<[RuuviCloudSensorAlerts], RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let request = RuuviCloudApiGetAlertsRequest()
         do {
             let response = try await api.getAlerts(request, authorization: apiKey)
-            outcome = .success(response.sensors ?? [])
+            return response.sensors ?? []
         } catch let error {
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @discardableResult
@@ -59,12 +56,10 @@ public final class RuuviCloudPure: RuuviCloud {
         for macId: MACIdentifier
     ) async throws(RuuviCloudError) -> Void {
         notifyListener(state: .loading, macId: macId.mac)
-        var outcome: Result<Void, RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
             notifyListener(state: .failed, macId: macId.mac)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let request = RuuviCloudApiPostAlertRequest(
             sensor: macId.value,
@@ -79,8 +74,7 @@ public final class RuuviCloudPure: RuuviCloud {
         )
         defer { self.notifyListener(state: .complete, macId: macId.mac) }
         do {
-            let _ = try await api.postAlert(request, authorization: apiKey)
-            outcome = .success(())
+            _ = try await api.postAlert(request, authorization: apiKey)
             self.notifyListener(state: .success, macId: macId.mac)
         } catch let error {
             let uniqueKey = macId.value + "-" + type.rawValue + "-" + settingType.rawValue
@@ -90,38 +84,16 @@ public final class RuuviCloudPure: RuuviCloud {
                 uniqueKey: uniqueKey
             )
 
-            outcome = .failure(.api(error))
             self.notifyListener(state: .failed, macId: macId.mac)
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @discardableResult
     @MainActor
     public func set(temperatureUnit: TemperatureUnit) async throws(RuuviCloudError) -> TemperatureUnit {
-        var outcome: Result<TemperatureUnit, RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
-        }
-        let request = RuuviCloudApiPostSettingRequest(
-            name: .unitTemperature,
-            value: temperatureUnit.ruuviCloudApiSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
-        )
-        do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(temperatureUnit)
-        } catch let error {
-            await self.createQueuedRequest(
-                from: request,
-                type: .settings,
-                uniqueKey: RuuviCloudApiSetting.unitTemperature.rawValue
-            )
-            outcome = .failure(.api(error))
-        }
-        return try outcome.get()
+        try await set(userSetting: .unitTemperature, value: temperatureUnit.ruuviCloudApiSettingString)
+        return temperatureUnit
     }
 
     @discardableResult
@@ -129,96 +101,31 @@ public final class RuuviCloudPure: RuuviCloud {
     public func set(temperatureAccuracy: MeasurementAccuracyType) async throws(RuuviCloudError)
         -> MeasurementAccuracyType
     {
-        var outcome: Result<MeasurementAccuracyType, RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
-        }
-        let request = RuuviCloudApiPostSettingRequest(
-            name: .accuracyTemperature,
-            value: temperatureAccuracy.value.ruuviCloudApiSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
-        )
-        do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(temperatureAccuracy)
-        } catch let error {
-            await self.createQueuedRequest(
-                from: request,
-                type: .settings,
-                uniqueKey: RuuviCloudApiSetting.accuracyTemperature.rawValue
-            )
-            outcome = .failure(.api(error))
-        }
-        return try outcome.get()
+        try await set(userSetting: .accuracyTemperature, value: temperatureAccuracy.value.ruuviCloudApiSettingString)
+        return temperatureAccuracy
     }
 
     @discardableResult
     @MainActor
     public func set(humidityUnit: HumidityUnit) async throws(RuuviCloudError) -> HumidityUnit {
-        var outcome: Result<HumidityUnit, RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
-        }
-        let request = RuuviCloudApiPostSettingRequest(
-            name: .unitHumidity,
-            value: humidityUnit.ruuviCloudApiSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
-        )
-        do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(humidityUnit)
-        } catch let error {
-            await self.createQueuedRequest(
-                from: request,
-                type: .settings,
-                uniqueKey: RuuviCloudApiSetting.unitHumidity.rawValue
-            )
-            outcome = .failure(.api(error))
-        }
-        return try outcome.get()
+        try await set(userSetting: .unitHumidity, value: humidityUnit.ruuviCloudApiSettingString)
+        return humidityUnit
     }
 
     @discardableResult
     @MainActor
     public func set(humidityAccuracy: MeasurementAccuracyType) async throws(RuuviCloudError) -> MeasurementAccuracyType
     {
-        var outcome: Result<MeasurementAccuracyType, RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
-        }
-        let request = RuuviCloudApiPostSettingRequest(
-            name: .accuracyHumidity,
-            value: humidityAccuracy.value.ruuviCloudApiSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
-        )
-        do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(humidityAccuracy)
-        } catch let error {
-            await self.createQueuedRequest(
-                from: request,
-                type: .settings,
-                uniqueKey: RuuviCloudApiSetting.accuracyHumidity.rawValue
-            )
-            outcome = .failure(.api(error))
-        }
-        return try outcome.get()
+        try await set(userSetting: .accuracyHumidity, value: humidityAccuracy.value.ruuviCloudApiSettingString)
+        return humidityAccuracy
     }
 
     @discardableResult
     @MainActor
     public func set(userSetting: RuuviCloudApiSetting, value: String) async throws(RuuviCloudError) -> String {
-        var outcome: Result<String, RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let request = RuuviCloudApiPostSettingRequest(
             name: userSetting,
@@ -226,270 +133,80 @@ public final class RuuviCloudPure: RuuviCloud {
             timestamp: Int(Date().timeIntervalSince1970)
         )
         do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(value)
+            _ = try await api.postSetting(request, authorization: apiKey)
+            return value
         } catch let error {
             await self.createQueuedRequest(
                 from: request,
                 type: .settings,
                 uniqueKey: userSetting.rawValue
             )
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @discardableResult
     @MainActor
     public func set(pressureUnit: UnitPressure) async throws(RuuviCloudError) -> UnitPressure {
-        var outcome: Result<UnitPressure, RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
-        }
-        let request = RuuviCloudApiPostSettingRequest(
-            name: .unitPressure,
-            value: pressureUnit.ruuviCloudApiSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
-        )
-        do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(pressureUnit)
-        } catch let error {
-            await self.createQueuedRequest(
-                from: request,
-                type: .settings,
-                uniqueKey: RuuviCloudApiSetting.unitPressure.rawValue
-            )
-            outcome = .failure(.api(error))
-        }
-        return try outcome.get()
+        try await set(userSetting: .unitPressure, value: pressureUnit.ruuviCloudApiSettingString)
+        return pressureUnit
     }
 
     @discardableResult
     @MainActor
     public func set(pressureAccuracy: MeasurementAccuracyType) async throws(RuuviCloudError) -> MeasurementAccuracyType
     {
-        var outcome: Result<MeasurementAccuracyType, RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
-        }
-        let request = RuuviCloudApiPostSettingRequest(
-            name: .accuracyPressure,
-            value: pressureAccuracy.value.ruuviCloudApiSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
-        )
-        do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(pressureAccuracy)
-        } catch let error {
-            await self.createQueuedRequest(
-                from: request,
-                type: .settings,
-                uniqueKey: RuuviCloudApiSetting.accuracyPressure.rawValue
-            )
-            outcome = .failure(.api(error))
-        }
-        return try outcome.get()
+        try await set(userSetting: .accuracyPressure, value: pressureAccuracy.value.ruuviCloudApiSettingString)
+        return pressureAccuracy
     }
 
     @discardableResult
     @MainActor
     public func set(showAllData: Bool) async throws(RuuviCloudError) -> Bool {
-        var outcome: Result<Bool, RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
-        }
-        let request = RuuviCloudApiPostSettingRequest(
-            name: .chartShowAllPoints,
-            value: showAllData.chartBoolSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
-        )
-        do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(showAllData)
-        } catch let error {
-            await self.createQueuedRequest(
-                from: request,
-                type: .settings,
-                uniqueKey: RuuviCloudApiSetting.chartShowAllPoints.rawValue
-            )
-            outcome = .failure(.api(error))
-        }
-        return try outcome.get()
+        try await set(userSetting: .chartShowAllPoints, value: showAllData.chartBoolSettingString)
+        return showAllData
     }
 
     @discardableResult
     @MainActor
     public func set(drawDots: Bool) async throws(RuuviCloudError) -> Bool {
-        var outcome: Result<Bool, RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
-        }
-        let request = RuuviCloudApiPostSettingRequest(
-            name: .chartDrawDots,
-            value: drawDots.chartBoolSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
-        )
-        do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(drawDots)
-        } catch let error {
-            await self.createQueuedRequest(
-                from: request,
-                type: .settings,
-                uniqueKey: RuuviCloudApiSetting.chartDrawDots.rawValue
-            )
-            outcome = .failure(.api(error))
-        }
-        return try outcome.get()
+        try await set(userSetting: .chartDrawDots, value: drawDots.chartBoolSettingString)
+        return drawDots
     }
 
     @discardableResult
     @MainActor
     public func set(chartDuration: Int) async throws(RuuviCloudError) -> Int {
-        var outcome: Result<Int, RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
-        }
-        let request = RuuviCloudApiPostSettingRequest(
-            name: .chartViewPeriod,
-            value: chartDuration.ruuviCloudApiSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
-        )
-        do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(chartDuration)
-        } catch let error {
-            await self.createQueuedRequest(
-                from: request,
-                type: .settings,
-                uniqueKey: RuuviCloudApiSetting.chartViewPeriod.rawValue
-            )
-            outcome = .failure(.api(error))
-        }
-        return try outcome.get()
+        try await set(userSetting: .chartViewPeriod, value: chartDuration.ruuviCloudApiSettingString)
+        return chartDuration
     }
 
     @discardableResult
     @MainActor
     public func set(showMinMaxAvg: Bool) async throws(RuuviCloudError) -> Bool {
-        var outcome: Result<Bool, RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
-        }
-        let request = RuuviCloudApiPostSettingRequest(
-            name: .chartShowMinMaxAverage,
-            value: showMinMaxAvg.chartBoolSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
-        )
-        do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(showMinMaxAvg)
-        } catch let error {
-            await self.createQueuedRequest(
-                from: request,
-                type: .settings,
-                uniqueKey: RuuviCloudApiSetting.chartShowMinMaxAverage.rawValue
-            )
-            outcome = .failure(.api(error))
-        }
-        return try outcome.get()
+        try await set(userSetting: .chartShowMinMaxAverage, value: showMinMaxAvg.chartBoolSettingString)
+        return showMinMaxAvg
     }
 
     @discardableResult
     @MainActor
     public func set(cloudMode: Bool) async throws(RuuviCloudError) -> Bool {
-        var outcome: Result<Bool, RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
-        }
-        let request = RuuviCloudApiPostSettingRequest(
-            name: .cloudModeEnabled,
-            value: cloudMode.chartBoolSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
-        )
-        do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(cloudMode)
-        } catch let error {
-            await self.createQueuedRequest(
-                from: request,
-                type: .settings,
-                uniqueKey: RuuviCloudApiSetting.cloudModeEnabled.rawValue
-            )
-            outcome = .failure(.api(error))
-        }
-        return try outcome.get()
+        try await set(userSetting: .cloudModeEnabled, value: cloudMode.chartBoolSettingString)
+        return cloudMode
     }
 
     @discardableResult
     @MainActor
     public func set(dashboard: Bool) async throws(RuuviCloudError) -> Bool {
-        var outcome: Result<Bool, RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
-        }
-        let request = RuuviCloudApiPostSettingRequest(
-            name: .dashboardEnabled,
-            value: dashboard.chartBoolSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
-        )
-        do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(dashboard)
-        } catch let error {
-            await self.createQueuedRequest(
-                from: request,
-                type: .settings,
-                uniqueKey: RuuviCloudApiSetting.dashboardEnabled.rawValue
-            )
-            outcome = .failure(.api(error))
-        }
-        return try outcome.get()
+        try await set(userSetting: .dashboardEnabled, value: dashboard.chartBoolSettingString)
+        return dashboard
     }
 
     @discardableResult
     @MainActor
     public func set(dashboardType: DashboardType) async throws(RuuviCloudError) -> DashboardType {
-        var outcome: Result<DashboardType, RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
-        }
-        let request = RuuviCloudApiPostSettingRequest(
-            name: .dashboardType,
-            value: dashboardType.rawValue,
-            timestamp: Int(Date().timeIntervalSince1970)
-        )
-        do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(dashboardType)
-        } catch let error {
-            await self.createQueuedRequest(
-                from: request,
-                type: .settings,
-                uniqueKey: RuuviCloudApiSetting.dashboardType.rawValue
-            )
-            outcome = .failure(.api(error))
-        }
-        return try outcome.get()
+        try await set(userSetting: .dashboardType, value: dashboardType.rawValue)
+        return dashboardType
     }
 
     @discardableResult
@@ -497,85 +214,22 @@ public final class RuuviCloudPure: RuuviCloud {
     public func set(dashboardTapActionType: DashboardTapActionType) async throws(RuuviCloudError)
         -> DashboardTapActionType
     {
-        var outcome: Result<DashboardTapActionType, RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
-        }
-        let request = RuuviCloudApiPostSettingRequest(
-            name: .dashboardTapActionType,
-            value: dashboardTapActionType.rawValue,
-            timestamp: Int(Date().timeIntervalSince1970)
-        )
-        do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(dashboardTapActionType)
-        } catch let error {
-            await self.createQueuedRequest(
-                from: request,
-                type: .settings,
-                uniqueKey: RuuviCloudApiSetting.dashboardTapActionType.rawValue
-            )
-            outcome = .failure(.api(error))
-        }
-        return try outcome.get()
+        try await set(userSetting: .dashboardTapActionType, value: dashboardTapActionType.rawValue)
+        return dashboardTapActionType
     }
 
     @discardableResult
     @MainActor
     public func set(disableEmailAlert: Bool) async throws(RuuviCloudError) -> Bool {
-        var outcome: Result<Bool, RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
-        }
-        let request = RuuviCloudApiPostSettingRequest(
-            name: .emailAlertDisabled,
-            value: disableEmailAlert.chartBoolSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
-        )
-        do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(disableEmailAlert)
-        } catch let error {
-            await self.createQueuedRequest(
-                from: request,
-                type: .settings,
-                uniqueKey: RuuviCloudApiSetting.emailAlertDisabled.rawValue
-            )
-            outcome = .failure(.api(error))
-        }
-        return try outcome.get()
+        try await set(userSetting: .emailAlertDisabled, value: disableEmailAlert.chartBoolSettingString)
+        return disableEmailAlert
     }
 
     @discardableResult
     @MainActor
     public func set(disablePushAlert: Bool) async throws(RuuviCloudError) -> Bool {
-        var outcome: Result<Bool, RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
-        }
-        let request = RuuviCloudApiPostSettingRequest(
-            name: .pushAlertDisabled,
-            value: disablePushAlert.chartBoolSettingString,
-            timestamp: Int(Date().timeIntervalSince1970)
-        )
-        do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(disablePushAlert)
-        } catch let error {
-            await self.createQueuedRequest(
-                from: request,
-                type: .settings,
-                uniqueKey: RuuviCloudApiSetting.pushAlertDisabled.rawValue
-            )
-            outcome = .failure(.api(error))
-        }
-        return try outcome.get()
+        try await set(userSetting: .pushAlertDisabled, value: disablePushAlert.chartBoolSettingString)
+        return disablePushAlert
     }
 
     @discardableResult
@@ -612,76 +266,34 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     @MainActor
     public func set(profileLanguageCode: String) async throws(RuuviCloudError) -> String {
-        var outcome: Result<String, RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
-        }
-        let request = RuuviCloudApiPostSettingRequest(
-            name: .profileLanguageCode,
-            value: profileLanguageCode,
-            timestamp: Int(Date().timeIntervalSince1970)
-        )
-        do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(profileLanguageCode)
-        } catch let error {
-            await self.createQueuedRequest(
-                from: request,
-                type: .settings,
-                uniqueKey: RuuviCloudApiSetting.profileLanguageCode.rawValue
-            )
-            outcome = .failure(.api(error))
-        }
-        return try outcome.get()
+        try await set(userSetting: .profileLanguageCode, value: profileLanguageCode)
+        return profileLanguageCode
     }
 
     @discardableResult
     @MainActor
     public func set(dashboardSensorOrder: [String]) async throws(RuuviCloudError) -> [String] {
-        var outcome: Result<[String], RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+        guard let value = RuuviCloudApiHelper.jsonStringFromArray(dashboardSensorOrder) else {
+            throw .api(.badParameters)
         }
-        let request = RuuviCloudApiPostSettingRequest(
-            name: .dashboardSensorOrder,
-            value: RuuviCloudApiHelper.jsonStringFromArray(dashboardSensorOrder),
-            timestamp: Int(Date().timeIntervalSince1970)
-        )
-        do {
-            let _ = try await api.postSetting(request, authorization: apiKey)
-            outcome = .success(dashboardSensorOrder)
-        } catch let error {
-            await self.createQueuedRequest(
-                from: request,
-                type: .settings,
-                uniqueKey: RuuviCloudApiSetting.dashboardSensorOrder.rawValue
-            )
-            outcome = .failure(.api(error))
-        }
-        return try outcome.get()
+        try await set(userSetting: .dashboardSensorOrder, value: value)
+        return dashboardSensorOrder
     }
 
     @discardableResult
     @MainActor
     public func getCloudSettings() async throws(RuuviCloudError) -> RuuviCloudSettings? {
-        var outcome: Result<RuuviCloudSettings?, RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let request = RuuviCloudApiGetSettingsRequest()
         do {
             let response = try await api.getSettings(request, authorization: apiKey)
-            outcome = .success(response.settings)
+            return response.settings
         } catch let error {
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @discardableResult
@@ -689,28 +301,24 @@ public final class RuuviCloudPure: RuuviCloud {
     public func resetImage(
         for macId: MACIdentifier
     ) async throws(RuuviCloudError) -> Void {
-        var outcome: Result<Void, RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let request = RuuviCloudApiSensorImageUploadRequest(
             sensor: macId.value,
             action: .reset
         )
         do {
-            let _ = try await api.resetImage(request, authorization: apiKey)
-            outcome = .success(())
+            _ = try await api.resetImage(request, authorization: apiKey)
         } catch let error {
             await self.createQueuedRequest(
                 from: request,
                 type: .uploadImage,
                 uniqueKey: macId.value + "-uploadImage"
             )
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @MainActor
@@ -720,11 +328,9 @@ public final class RuuviCloudPure: RuuviCloud {
         progress: ((MACIdentifier, Double) -> Void)?,
         for macId: MACIdentifier
     ) async throws(RuuviCloudError) -> URL {
-        var outcome: Result<URL, RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let requestModel = RuuviCloudApiSensorImageUploadRequest(
             sensor: macId.value,
@@ -740,7 +346,7 @@ public final class RuuviCloudPure: RuuviCloud {
                     progress?(macId, percentage)
                 }
             )
-            outcome = .success(response.uploadURL)
+            return response.uploadURL
         } catch let error {
             let uniqueKey = macId.value + "-uploadImage"
             await self.createQueuedRequest(
@@ -749,9 +355,8 @@ public final class RuuviCloudPure: RuuviCloud {
                 type: .uploadImage,
                 uniqueKey: uniqueKey
             )
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @discardableResult
@@ -762,16 +367,13 @@ public final class RuuviCloudPure: RuuviCloud {
         values: [String],
         timestamp: Int?
     ) async throws(RuuviCloudError) -> AnyRuuviTagSensor {
-        var outcome: Result<AnyRuuviTagSensor, RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
 
         guard types.count == values.count else {
-            outcome = .failure(.api(.badParameters))
-            return try outcome.get()
+            throw .api(.badParameters)
         }
 
         let request = RuuviCloudApiPostSensorSettingsRequest(
@@ -782,18 +384,16 @@ public final class RuuviCloudPure: RuuviCloud {
         )
 
         do {
-            let _ = try await api.postSensorSettings(request, authorization: apiKey)
-            outcome = .success(sensor.any)
+            _ = try await api.postSensorSettings(request, authorization: apiKey)
+            return sensor.any
         } catch let error {
             await self.createQueuedRequest(
                 from: request,
                 type: .sensorSettings,
                 uniqueKey: sensor.id + "-sensor-settings"
             )
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-
-        return try outcome.get()
     }
 
     @MainActor
@@ -803,11 +403,9 @@ public final class RuuviCloudPure: RuuviCloud {
         pressureOffset: Double?,
         for sensor: RuuviTagSensor
     ) async throws(RuuviCloudError) -> AnyRuuviTagSensor {
-        var outcome: Result<AnyRuuviTagSensor, RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let request = RuuviCloudApiSensorUpdateRequest(
             sensor: sensor.id,
@@ -818,8 +416,8 @@ public final class RuuviCloudPure: RuuviCloud {
             timestamp: Int(Date().timeIntervalSince1970)
         )
         do {
-            let _ = try await api.update(request, authorization: apiKey)
-            outcome = .success(sensor.any)
+            _ = try await api.update(request, authorization: apiKey)
+            return sensor.any
         } catch let error {
             var keySuffix: String = ""
             if temperatureOffset != nil {
@@ -837,9 +435,8 @@ public final class RuuviCloudPure: RuuviCloud {
                 uniqueKey: uniqueKey
             )
 
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @MainActor
@@ -848,12 +445,10 @@ public final class RuuviCloudPure: RuuviCloud {
         for sensor: RuuviTagSensor
     ) async throws(RuuviCloudError) -> AnyRuuviTagSensor {
         notifyListener(state: .loading, macId: sensor.id)
-        var outcome: Result<AnyRuuviTagSensor, RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
             notifyListener(state: .failed, macId: sensor.id)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let request = RuuviCloudApiSensorUpdateRequest(
             sensor: sensor.id,
@@ -865,9 +460,10 @@ public final class RuuviCloudPure: RuuviCloud {
         )
         defer { self.notifyListener(state: .complete, macId: sensor.id) }
         do {
-            let _ = try await api.update(request, authorization: apiKey)
-            outcome = .success(sensor.with(name: name).any)
+            _ = try await api.update(request, authorization: apiKey)
+            let updated = sensor.with(name: name).any
             self.notifyListener(state: .success, macId: sensor.id)
+            return updated
         } catch let error {
             let uniqueKey = sensor.id + "-name"
             await self.createQueuedRequest(
@@ -875,49 +471,42 @@ public final class RuuviCloudPure: RuuviCloud {
                 type: .sensor,
                 uniqueKey: uniqueKey
             )
-            outcome = .failure(.api(error))
             self.notifyListener(state: .failed, macId: sensor.id)
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @MainActor
     public func loadShared(for sensor: RuuviTagSensor) async throws(RuuviCloudError) -> Set<AnyShareableSensor> {
-        var outcome: Result<Set<AnyShareableSensor>, RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let request = RuuviCloudApiGetSensorsRequest(sensor: sensor.id)
         do {
             let response = try await api.sensors(request, authorization: apiKey)
             let arrayOfAny = response.sensors?.map(\.shareableSensor.any)
             let setOfAny = Set<AnyShareableSensor>(arrayOfAny ?? [])
-            outcome = .success(setOfAny)
+            return setOfAny
         } catch let error {
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @discardableResult
     @MainActor
     public func checkOwner(macId: MACIdentifier) async throws(RuuviCloudError) -> (String?, String?) {
-        var outcome: Result<(String?, String?), RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let request = RuuviCloudApiGetSensorsRequest(sensor: macId.mac)
         do {
             let response = try await api.owner(request, authorization: apiKey)
-            outcome = .success((response.email, response.sensor))
+            return (response.email, response.sensor)
         } catch let error {
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @MainActor
@@ -930,11 +519,9 @@ public final class RuuviCloudPure: RuuviCloud {
         alerts: Bool?,
         settings: Bool?
     ) async throws(RuuviCloudError) -> [RuuviCloudSensorDense] {
-        var outcome: Result<[RuuviCloudSensorDense], RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let request = RuuviCloudApiGetSensorsDenseRequest(
             sensor: sensor?.id,
@@ -988,20 +575,17 @@ public final class RuuviCloudPure: RuuviCloud {
                     }
                 )
             }
-            outcome = .success(arrayOfAny ?? [])
+            return arrayOfAny ?? []
         } catch let error {
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @MainActor
     public func share(macId: MACIdentifier, with email: String) async throws(RuuviCloudError) -> ShareSensorResponse {
-        var outcome: Result<ShareSensorResponse, RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let request = RuuviCloudApiShareRequest(user: email, sensor: macId.value)
         do {
@@ -1010,25 +594,22 @@ public final class RuuviCloudPure: RuuviCloud {
                 macId: response.sensor?.mac,
                 invited: response.invited
             )
-            outcome = .success(result)
+            return result
         } catch let error {
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @MainActor
     public func unshare(macId: MACIdentifier, with email: String?) async throws(RuuviCloudError) -> MACIdentifier {
-        var outcome: Result<MACIdentifier, RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let request = RuuviCloudApiShareRequest(user: email, sensor: macId.value)
         do {
-            let _ = try await api.unshare(request, authorization: apiKey)
-            outcome = .success(macId)
+            _ = try await api.unshare(request, authorization: apiKey)
+            return macId
         } catch let error {
             // A nil recipient removes the current user's share and also needs an offline retry.
             let uniqueKey = macId.mac + "-unshare-" + (email ?? "$self")
@@ -1037,9 +618,8 @@ public final class RuuviCloudPure: RuuviCloud {
                 type: .unshare,
                 uniqueKey: uniqueKey
             )
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @MainActor
@@ -1047,20 +627,17 @@ public final class RuuviCloudPure: RuuviCloud {
         name: String,
         macId: MACIdentifier
     ) async throws(RuuviCloudError) -> MACIdentifier? {
-        var outcome: Result<MACIdentifier?, RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let request = RuuviCloudApiClaimRequest(name: name, sensor: macId.value)
         do {
             let response = try await api.claim(request, authorization: apiKey)
-            outcome = .success(response.sensor?.mac)
+            return response.sensor?.mac
         } catch let error {
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @discardableResult
@@ -1069,20 +646,17 @@ public final class RuuviCloudPure: RuuviCloud {
         macId: MACIdentifier,
         secret: String
     ) async throws(RuuviCloudError) -> MACIdentifier? {
-        var outcome: Result<MACIdentifier?, RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let request = RuuviCloudApiContestRequest(sensor: macId.value, secret: secret)
         do {
             let response = try await api.contest(request, authorization: apiKey)
-            outcome = .success(response.sensor?.mac)
+            return response.sensor?.mac
         } catch let error {
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @MainActor
@@ -1090,19 +664,17 @@ public final class RuuviCloudPure: RuuviCloud {
         macId: MACIdentifier,
         removeCloudHistory: Bool
     ) async throws(RuuviCloudError) -> MACIdentifier {
-        var outcome: Result<MACIdentifier, RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let request = RuuviCloudApiUnclaimRequest(
             sensor: macId.value,
             deleteData: removeCloudHistory
         )
         do {
-            let _ = try await api.unclaim(request, authorization: apiKey)
-            outcome = .success(macId)
+            _ = try await api.unclaim(request, authorization: apiKey)
+            return macId
         } catch let error {
             let uniqueKey = macId.mac + "-unclaim"
             await self.createQueuedRequest(
@@ -1110,22 +682,19 @@ public final class RuuviCloudPure: RuuviCloud {
                 type: .unclaim,
                 uniqueKey: uniqueKey
             )
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @MainActor
     public func requestCode(email: String) async throws(RuuviCloudError) -> String? {
-        var outcome: Result<String?, RuuviCloudError>
         let request = RuuviCloudApiRegisterRequest(email: email)
         do {
             let response = try await api.register(request)
-            outcome = .success(response.email)
+            return response.email
         } catch let error {
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @MainActor
@@ -1140,11 +709,9 @@ public final class RuuviCloudPure: RuuviCloud {
 
     @MainActor
     public func deleteAccount(email: String) async throws(RuuviCloudError) -> Bool {
-        var outcome: Result<Bool, RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let request = RuuviCloudApiAccountDeleteRequest(email: email)
         do {
@@ -1152,11 +719,10 @@ public final class RuuviCloudPure: RuuviCloud {
                 request,
                 authorization: apiKey
             )
-            outcome = .success(response.email == email)
+            return response.email == email
         } catch let error {
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @MainActor
@@ -1167,11 +733,9 @@ public final class RuuviCloudPure: RuuviCloud {
         data: String?,
         params: [String: String]?
     ) async throws(RuuviCloudError) -> Int {
-        var outcome: Result<Int, RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let request = RuuviCloudPNTokenRegisterRequest(
             token: token,
@@ -1185,11 +749,10 @@ public final class RuuviCloudPure: RuuviCloud {
                 request,
                 authorization: apiKey
             )
-            outcome = .success(response.id)
+            return response.id
         } catch let error {
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @MainActor
@@ -1197,30 +760,26 @@ public final class RuuviCloudPure: RuuviCloud {
         token: String?,
         tokenId: Int?
     ) async throws(RuuviCloudError) -> Bool {
-        var outcome: Result<Bool, RuuviCloudError>
         let request = RuuviCloudPNTokenUnregisterRequest(
             token: token,
             id: tokenId
         )
         do {
-            let _ = try await api.unregisterPNToken(
+            _ = try await api.unregisterPNToken(
                 request,
                 authorization: user.apiKey
             )
-            outcome = .success(true)
+            return true
         } catch let error {
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @MainActor
     public func listPNTokens() async throws(RuuviCloudError) -> [RuuviCloudPNToken] {
-        var outcome: Result<[RuuviCloudPNToken], RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
         let request = RuuviCloudPNTokenListRequest()
         do {
@@ -1229,30 +788,26 @@ public final class RuuviCloudPure: RuuviCloud {
                 authorization: apiKey
             )
             let tokens = response.anyTokens
-            outcome = .success(tokens)
+            return tokens
         } catch let error {
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @MainActor
     public func loadSensors() async throws(RuuviCloudError) -> [AnyCloudSensor] {
-        var outcome: Result<[AnyCloudSensor], RuuviCloudError>
         guard let apiKey = user.apiKey
         else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+            throw .notAuthorized
         }
         do {
             let response = try await api.user(authorization: apiKey)
             let email = response.email
             let sensors = response.sensors.map { $0.with(email: email).any }
-            outcome = .success(sensors)
+            return sensors
         } catch let error {
-            outcome = .failure(.api(error))
+            throw .api(error)
         }
-        return try outcome.get()
     }
 
     @MainActor
@@ -1298,154 +853,49 @@ public final class RuuviCloudPure: RuuviCloud {
     public func executeQueuedRequest(from request: RuuviCloudQueuedRequest)
         async throws(RuuviCloudError) -> Bool
     {
-        var outcome: Result<Bool, RuuviCloudError>
-        guard let apiKey = user.apiKey
-        else {
-            outcome = .failure(.notAuthorized)
-            return try outcome.get()
+        guard let apiKey = user.apiKey else { throw .notAuthorized }
+        guard let type = request.type, let data = request.requestBodyData else {
+            throw .api(.badParameters)
         }
-
-        guard let type = request.type,
-            let requestBody = request.requestBodyData
-        else {
-            outcome = .failure(.api(.badParameters))
-            return try outcome.get()
-        }
-
         let decoder = JSONDecoder()
-        switch type {
-        case .sensor:
-            do {
-                let request = try decoder.decode(
-                    RuuviCloudApiSensorUpdateRequest.self,
-                    from: requestBody
-                )
-
-                do {
-                    let _ = try await api.update(request, authorization: apiKey)
-                    outcome = .success(true)
-                } catch let error {
-                    outcome = .failure(.api(error))
-                }
-            } catch {
-                outcome = .failure(.api(.parsing(error)))
-            }
-        case .unclaim:
-            do {
-                let request = try decoder.decode(
-                    RuuviCloudApiUnclaimRequest.self,
-                    from: requestBody
-                )
-
-                do {
-                    let _ = try await api.unclaim(request, authorization: apiKey)
-                    outcome = .success(true)
-                } catch let error {
-                    outcome = .failure(.api(error))
-                }
-            } catch {
-                outcome = .failure(.api(.parsing(error)))
-            }
-        case .unshare:
-            do {
-                let request = try decoder.decode(
-                    RuuviCloudApiShareRequest.self,
-                    from: requestBody
-                )
-
-                do {
-                    let _ = try await api.unshare(request, authorization: apiKey)
-                    outcome = .success(true)
-                } catch let error {
-                    outcome = .failure(.api(error))
-                }
-            } catch {
-                outcome = .failure(.api(.parsing(error)))
-            }
-        case .alert:
-            do {
-                let request = try decoder.decode(
-                    RuuviCloudApiPostAlertRequest.self,
-                    from: requestBody
-                )
-
-                do {
-                    let _ = try await api.postAlert(request, authorization: apiKey)
-                    outcome = .success(true)
-                } catch let error {
-                    outcome = .failure(.api(error))
-                }
-            } catch {
-                outcome = .failure(.api(.parsing(error)))
-            }
-        case .settings:
-            do {
-                let request = try decoder.decode(
-                    RuuviCloudApiPostSettingRequest.self,
-                    from: requestBody
-                )
-
-                do {
-                    let _ = try await api.postSetting(request, authorization: apiKey)
-                    outcome = .success(true)
-                } catch let error {
-                    outcome = .failure(.api(error))
-                }
-            } catch {
-                outcome = .failure(.api(.parsing(error)))
-            }
-        case .sensorSettings:
-            do {
-                let request = try decoder.decode(
-                    RuuviCloudApiPostSensorSettingsRequest.self,
-                    from: requestBody
-                )
-
-                do {
-                    let _ = try await api.postSensorSettings(request, authorization: apiKey)
-                    outcome = .success(true)
-                } catch let error {
-                    outcome = .failure(.api(error))
-                }
-            } catch {
-                outcome = .failure(.api(.parsing(error)))
-            }
-        case .uploadImage:
-            do {
-                let requestModel = try decoder.decode(
-                    RuuviCloudApiSensorImageUploadRequest.self,
-                    from: requestBody
-                )
-
-                if requestModel.action == .reset {
-                    do {
-                        let _ = try await api.resetImage(requestModel, authorization: apiKey)
-                        outcome = .success(true)
-                    } catch let error {
-                        outcome = .failure(.api(error))
-                    }
-                } else if let imageData = request.additionalData {
-                    do {
-                        let _ = try await api.uploadImage(
-                            requestModel,
-                            imageData: imageData,
-                            authorization: apiKey,
-                            uploadProgress: nil
-                        )
-                        outcome = .success(true)
-                    } catch let error {
-                        outcome = .failure(.api(error))
-                    }
+        do {
+            switch type {
+            case .sensor:
+                let model = try decoder.decode(RuuviCloudApiSensorUpdateRequest.self, from: data)
+                _ = try await api.update(model, authorization: apiKey)
+            case .unclaim:
+                let model = try decoder.decode(RuuviCloudApiUnclaimRequest.self, from: data)
+                _ = try await api.unclaim(model, authorization: apiKey)
+            case .unshare:
+                let model = try decoder.decode(RuuviCloudApiShareRequest.self, from: data)
+                _ = try await api.unshare(model, authorization: apiKey)
+            case .alert:
+                let model = try decoder.decode(RuuviCloudApiPostAlertRequest.self, from: data)
+                _ = try await api.postAlert(model, authorization: apiKey)
+            case .settings:
+                let model = try decoder.decode(RuuviCloudApiPostSettingRequest.self, from: data)
+                _ = try await api.postSetting(model, authorization: apiKey)
+            case .sensorSettings:
+                let model = try decoder.decode(RuuviCloudApiPostSensorSettingsRequest.self, from: data)
+                _ = try await api.postSensorSettings(model, authorization: apiKey)
+            case .uploadImage:
+                let model = try decoder.decode(RuuviCloudApiSensorImageUploadRequest.self, from: data)
+                if model.action == .reset {
+                    _ = try await api.resetImage(model, authorization: apiKey)
+                } else if let image = request.additionalData {
+                    _ = try await api.uploadImage(model, imageData: image, authorization: apiKey, uploadProgress: nil)
                 } else {
-                    outcome = .failure(.api(.badParameters))
+                    throw RuuviCloudApiError.badParameters
                 }
-            } catch {
-                outcome = .failure(.api(.parsing(error)))
+            case .none:
+                throw RuuviCloudApiError.badParameters
             }
-        default:
-            outcome = .failure(.api(.badParameters))
+            return true
+        } catch let error as RuuviCloudApiError {
+            throw .api(error)
+        } catch {
+            throw .api(.parsing(error))
         }
-        return try outcome.get()
     }
 
     static func isValidNetworkPayload(_ payload: String) -> Bool {

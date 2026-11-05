@@ -100,93 +100,63 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         name: String,
         macId: MACIdentifier
     ) async throws(RuuviCloudError) -> MACIdentifier? {
-        var outcome: Result<MACIdentifier?, RuuviCloudError>
-        do {
-            let response = try await cloud.claim(
-                name: name,
-                macId: canonical(macId)
-            )
-            let restored = response.map { self.original(for: $0, fallback: macId) }
-            outcome = .success(restored)
-        } catch let error {
-            outcome = .failure(error)
-        }
-        return try outcome.get()
+        let response = try await cloud.claim(
+            name: name,
+            macId: canonical(macId)
+        )
+        let restored = response.map { self.original(for: $0, fallback: macId) }
+        return restored
     }
 
     public func contest(
         macId: MACIdentifier,
         secret: String
     ) async throws(RuuviCloudError) -> MACIdentifier? {
-        var outcome: Result<MACIdentifier?, RuuviCloudError>
-        do {
-            let response = try await cloud.contest(
-                macId: canonical(macId),
-                secret: secret
-            )
-            let restored = response.map { self.original(for: $0, fallback: macId) }
-            outcome = .success(restored)
-        } catch let error {
-            outcome = .failure(error)
-        }
-        return try outcome.get()
+        let response = try await cloud.contest(
+            macId: canonical(macId),
+            secret: secret
+        )
+        let restored = response.map { self.original(for: $0, fallback: macId) }
+        return restored
     }
 
     public func unclaim(
         macId: MACIdentifier,
         removeCloudHistory: Bool
     ) async throws(RuuviCloudError) -> MACIdentifier {
-        var outcome: Result<MACIdentifier, RuuviCloudError>
-        do {
-            let response = try await cloud.unclaim(
-                macId: canonical(macId),
-                removeCloudHistory: removeCloudHistory
-            )
-            outcome = .success(self.original(for: response, fallback: macId))
-        } catch let error {
-            outcome = .failure(error)
-        }
-        return try outcome.get()
+        let response = try await cloud.unclaim(
+            macId: canonical(macId),
+            removeCloudHistory: removeCloudHistory
+        )
+        return self.original(for: response, fallback: macId)
     }
 
     public func share(
         macId: MACIdentifier,
         with email: String
     ) async throws(RuuviCloudError) -> ShareSensorResponse {
-        var outcome: Result<ShareSensorResponse, RuuviCloudError>
-        do {
-            let response = try await cloud.share(
-                macId: canonical(macId),
-                with: email
-            )
-            var adjusted = response
-            if let returnedMac = response.macId {
-                adjusted.macId = self.original(for: returnedMac, fallback: macId)
-            } else {
-                adjusted.macId = macId
-            }
-            outcome = .success(adjusted)
-        } catch let error {
-            outcome = .failure(error)
+        let response = try await cloud.share(
+            macId: canonical(macId),
+            with: email
+        )
+        var adjusted = response
+        if let returnedMac = response.macId {
+            adjusted.macId = self.original(for: returnedMac, fallback: macId)
+        } else {
+            adjusted.macId = macId
         }
-        return try outcome.get()
+        return adjusted
     }
 
     public func unshare(
         macId: MACIdentifier,
         with email: String?
     ) async throws(RuuviCloudError) -> MACIdentifier {
-        var outcome: Result<MACIdentifier, RuuviCloudError>
-        do {
-            let response = try await cloud.unshare(
-                macId: canonical(macId),
-                with: email
-            )
-            outcome = .success(self.original(for: response, fallback: macId))
-        } catch let error {
-            outcome = .failure(error)
-        }
-        return try outcome.get()
+        let response = try await cloud.unshare(
+            macId: canonical(macId),
+            with: email
+        )
+        return self.original(for: response, fallback: macId)
     }
 
     public func loadShared(
@@ -203,19 +173,13 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         name: String,
         for sensor: RuuviTagSensor
     ) async throws(RuuviCloudError) -> AnyRuuviTagSensor {
-        var outcome: Result<AnyRuuviTagSensor, RuuviCloudError>
         let originalMacId = sensor.macId
-        do {
-            let updated = try await cloud.update(
-                name: name,
-                for: canonicalizedSensor(sensor)
-            )
-            let restored = self.restore(sensor: updated, originalMac: originalMacId)
-            outcome = .success(restored)
-        } catch let error {
-            outcome = .failure(error)
-        }
-        return try outcome.get()
+        let updated = try await cloud.update(
+            name: name,
+            for: canonicalizedSensor(sensor)
+        )
+        let restored = self.restore(sensor: updated, originalMac: originalMacId)
+        return restored
     }
 
     public func upload(
@@ -352,23 +316,17 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         values: [String],
         timestamp: Int?
     ) async throws(RuuviCloudError) -> AnyRuuviTagSensor {
-        var outcome: Result<AnyRuuviTagSensor, RuuviCloudError>
         let originalMacId = sensor.macId
-        do {
-            let updated = try await cloud.updateSensorSettings(
-                for: canonicalizedSensor(
-                    sensor
-                ),
-                types: types,
-                values: values,
-                timestamp: timestamp
-            )
-            let restored = self.restore(sensor: updated, originalMac: originalMacId)
-            outcome = .success(restored)
-        } catch let error {
-            outcome = .failure(error)
-        }
-        return try outcome.get()
+        let updated = try await cloud.updateSensorSettings(
+            for: canonicalizedSensor(
+                sensor
+            ),
+            types: types,
+            values: values,
+            timestamp: timestamp
+        )
+        let restored = self.restore(sensor: updated, originalMac: originalMacId)
+        return restored
     }
     public func update(
         temperatureOffset: Double?,
@@ -376,21 +334,15 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         pressureOffset: Double?,
         for sensor: RuuviTagSensor
     ) async throws(RuuviCloudError) -> AnyRuuviTagSensor {
-        var outcome: Result<AnyRuuviTagSensor, RuuviCloudError>
         let originalMacId = sensor.macId
-        do {
-            let updated = try await cloud.update(
-                temperatureOffset: temperatureOffset,
-                humidityOffset: humidityOffset,
-                pressureOffset: pressureOffset,
-                for: canonicalizedSensor(sensor)
-            )
-            let restored = self.restore(sensor: updated, originalMac: originalMacId)
-            outcome = .success(restored)
-        } catch let error {
-            outcome = .failure(error)
-        }
-        return try outcome.get()
+        let updated = try await cloud.update(
+            temperatureOffset: temperatureOffset,
+            humidityOffset: humidityOffset,
+            pressureOffset: pressureOffset,
+            for: canonicalizedSensor(sensor)
+        )
+        let restored = self.restore(sensor: updated, originalMac: originalMacId)
+        return restored
     }
 
     // swiftlint:disable:next function_parameter_count

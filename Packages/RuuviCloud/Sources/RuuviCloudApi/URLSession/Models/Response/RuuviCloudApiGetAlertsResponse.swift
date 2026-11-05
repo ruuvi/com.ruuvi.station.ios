@@ -50,11 +50,11 @@ public struct RuuviCloudApiGetAlert: Decodable, RuuviCloudAlert {
             type = nil
         }
 
-        enabled = try container.decode(Bool.self, forKey: .enabled)
-        min = try container.decode(Double.self, forKey: .min)
-        max = try container.decode(Double.self, forKey: .max)
-        counter = try container.decode(Int.self, forKey: .counter)
-        description = try container.decode(String.self, forKey: .description)
+        enabled = try container.decodeIfPresent(Bool.self, forKey: .enabled)
+        min = try container.decodeIfPresent(Double.self, forKey: .min)
+        max = try container.decodeIfPresent(Double.self, forKey: .max)
+        counter = try container.decodeIfPresent(Int.self, forKey: .counter)
+        description = try container.decodeIfPresent(String.self, forKey: .description)
 
         if let delay = try? container.decode(Int.self, forKey: .delay) {
             self.delay = delay
@@ -62,8 +62,8 @@ public struct RuuviCloudApiGetAlert: Decodable, RuuviCloudAlert {
             delay = nil
         }
 
-        triggered = try container.decode(Bool.self, forKey: .triggered)
-        triggeredAt = try container.decode(String.self, forKey: .triggeredAt)
+        triggered = try container.decodeIfPresent(Bool.self, forKey: .triggered)
+        triggeredAt = try container.decodeIfPresent(String.self, forKey: .triggeredAt)
 
         if let lastUpdatedValue = try? container.decode(Int.self, forKey: .lastUpdated) {
             lastUpdated = Date(timeIntervalSince1970: TimeInterval(lastUpdatedValue))

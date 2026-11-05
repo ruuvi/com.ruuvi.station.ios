@@ -356,7 +356,7 @@ public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
         )
         var request = URLRequest(url: response.uploadURL)
         request.httpMethod = HttpMethod.put.rawValue
-        request.setValue(MimeType.jpg.rawValue, forHTTPHeaderField: "Content-Type")
+        request.setValue((requestModel.mimeType ?? .jpg).rawValue, forHTTPHeaderField: "Content-Type")
         let delegate = UploadProgressDelegate(progress: uploadProgress)
         defer { delegate.finish() }
         do {
@@ -367,6 +367,9 @@ public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
             )
             guard let http = result as? HTTPURLResponse else {
                 throw RuuviCloudApiError.failedToGetDataFromResponse
+            }
+            if (500..<600).contains(http.statusCode) {
+                throw RuuviCloudApiError.unexpectedHTTPStatusCodeShouldRetry(http.statusCode)
             }
             guard (200..<300).contains(http.statusCode) else {
                 throw RuuviCloudApiError.unexpectedHTTPStatusCode(http.statusCode)
@@ -396,7 +399,7 @@ extension RuuviCloudApiURLSession {
                 guard var components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {
                     throw RuuviCloudApiError.badParameters
                 }
-                components.queryItems = try URLQueryItemEncoder().encode(model)
+                components.queryItems = try RuuviCloudQuery.items(for: model)
                 guard let encodedURL = components.url else { throw RuuviCloudApiError.badParameters }
                 url = encodedURL
             } else {
