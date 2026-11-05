@@ -113,6 +113,12 @@ targets:
         embed: false
       - target: RuuviOntology
         embed: false
+      - target: RuuviPool
+        embed: false
+      - target: RuuviPersistence
+        embed: false
+      - target: RuuviReactor
+        embed: false
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES

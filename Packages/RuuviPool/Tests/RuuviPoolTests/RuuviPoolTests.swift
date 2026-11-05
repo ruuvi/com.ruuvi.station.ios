@@ -51,6 +51,8 @@ import XCTest
             for operation: () async throws -> Void in [
                 { _ = try await fixture.pool.create(sensor) },
                 { _ = try await fixture.pool.update(sensor) },
+                { _ = try await fixture.pool.delete(sensor) },
+                { _ = try await fixture.pool.updateOffsetCorrection(type: .temperature, with: 2, of: sensor) },
             ] {
                 await assertMissingIdentity(operation)
             }

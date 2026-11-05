@@ -249,7 +249,7 @@ final class RuuviPoolCoordinator: RuuviPool {
         lastOriginalRecord record: RuuviTagSensorRecord?
     ) async throws(RuuviPoolError) -> SensorSettings {
         var outcome: Result<SensorSettings, RuuviPoolError>
-        if ruuviTag.macId != nil {
+        if let macId = ruuviTag.macId, !macId.value.isEmpty {
             do {
                 let settings = try await sqlite.updateOffsetCorrection(
                     type: type,

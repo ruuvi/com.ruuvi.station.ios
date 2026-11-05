@@ -1,8 +1,5 @@
 #if SWIFT_PACKAGE
     import RuuviDaemon
-    import RuuviDaemonOperation
-    import RuuviNotification
-    import RuuviService
 #endif
 import BTKit
 import Foundation
@@ -12,296 +9,202 @@ import RuuviPersistence
 import RuuviPool
 import RuuviReactor
 
-public final class RuuviTagPropertiesDaemonBTKit: RuuviDaemonWorker, RuuviTagPropertiesDaemon {
-    private let ruuviPool: RuuviPool
-    private let ruuviReactor: RuuviReactor
-    private let foreground: BTForeground
-    private let idPersistence: RuuviLocalIDs
-    private let sqiltePersistence: RuuviPersistence
+public final class RuuviTagPropertiesDaemonBTKit: RuuviTagPropertiesDaemon {
+    private let client: SensorPropertiesDaemonClient
+    private let lock = NSRecursiveLock()
+    private var epoch: UUID?
+    private var sensors = [AnyRuuviTagSensor]()
+    private var observation: (() -> Void)?
+    private var scan: (() -> Void)?
+    private var jobs = [String: Job]()
 
-    public init(
+    private struct Job {
+        let id: UUID
+        let task: Task<Void, Never>
+    }
+
+    public convenience init(
         ruuviPool: RuuviPool,
         ruuviReactor: RuuviReactor,
         foreground: BTForeground,
         idPersistence: RuuviLocalIDs,
         sqiltePersistence: RuuviPersistence
     ) {
-        self.ruuviPool = ruuviPool
-        self.ruuviReactor = ruuviReactor
-        self.foreground = foreground
-        self.idPersistence = idPersistence
-        self.sqiltePersistence = sqiltePersistence
-        super.init()
+        self.init(
+            client: .live(
+                pool: ruuviPool, reactor: ruuviReactor, foreground: foreground,
+                identifiers: idPersistence, persistence: sqiltePersistence))
     }
 
-    private var ruuviTagsToken: RuuviReactorToken?
-    private var observeTokens = [ObservationToken]()
-    private var scanTokens = [ObservationToken]()
-    private var ruuviTags = [AnyRuuviTagSensor]()
-    private var processingUUIDs = Set<String>()
-
-    @objc private class RuuviTagPropertiesDaemonPair: NSObject {
-        var ruuviTag: AnyRuuviTagSensor
-        var device: RuuviTag
-
-        init(ruuviTag: AnyRuuviTagSensor, device: RuuviTag) {
-            self.ruuviTag = ruuviTag
-            self.device = device
-        }
-    }
-
-    deinit {
-        observeTokens.forEach { $0.invalidate() }
-        observeTokens.removeAll()
-        scanTokens.forEach { $0.invalidate() }
-        scanTokens.removeAll()
-        ruuviTagsToken?.invalidate()
-    }
+    init(client: SensorPropertiesDaemonClient) { self.client = client }
+    deinit { stop() }
 
     public func start() {
-        start { [weak self] in
-            self?.ruuviTagsToken = self?.ruuviReactor.observe { [weak self] change in
-                guard let sSelf = self else { return }
-                switch change {
-                case let .initial(ruuviTags):
-                    sSelf.ruuviTags = ruuviTags
-                    if !ruuviTags.isEmpty {
-                        sSelf.restartObserving()
-                    }
-                case let .update(ruuviTag):
-                    if let index = sSelf.ruuviTags
-                        .firstIndex(
-                            where: {
-                                ($0.macId != nil && $0.macId?.any == ruuviTag.macId?.any)
-                                    || ($0.luid != nil && $0.luid?.any == ruuviTag.luid?.any)
-                            })
-                    {
-                        sSelf.ruuviTags[index] = ruuviTag
-                    }
-                    sSelf.restartObserving()
-                case let .insert(ruuviTag):
-                    sSelf.ruuviTags.append(ruuviTag)
-                    sSelf.restartObserving()
-                case let .delete(ruuviTag):
-                    sSelf.ruuviTags.removeAll(where: {
-                        ($0.macId != nil && $0.macId?.any == ruuviTag.macId?.any)
-                            || ($0.luid != nil && $0.luid?.any == ruuviTag.luid?.any)
-                    })
-                    sSelf.restartObserving()
-                case let .error(error):
-                    sSelf.post(error: .ruuviReactor(error))
-                }
-            }
+        lock.withLock {
+            guard epoch == nil else { return }
+            let session = UUID()
+            epoch = session
+            observation = client.observeSensors { [weak self] change in self?.receive(change, session: session) }
         }
     }
 
     public func stop() {
-        perform(
-            #selector(RuuviTagPropertiesDaemonBTKit.stopDaemon),
-            on: thread,
-            with: nil,
-            waitUntilDone: false,
-            modes: [RunLoop.Mode.default.rawValue]
-        )
+        lock.withLock {
+            epoch = nil
+            observation?()
+            observation = nil
+            scan?()
+            scan = nil
+            jobs.values.forEach { $0.task.cancel() }
+            jobs.removeAll()
+            sensors.removeAll()
+        }
     }
 
-    @objc private func stopDaemon() {
-        removeTokens()
-        ruuviTagsToken?.invalidate()
-        stopWork()
-    }
-
-    private func removeTokens() {
-        observeTokens.forEach { $0.invalidate() }
-        observeTokens.removeAll()
-        scanTokens.forEach { $0.invalidate() }
-        scanTokens.removeAll()
-    }
-
-    private func restartObserving() {
-        removeTokens()
-        listenToUuidChangesForMac()
-        for ruuviTag in ruuviTags {
-            if let luid = ruuviTag.luid {
-                observeTokens.append(
-                    foreground.observe(
-                        self,
-                        uuid: luid.value,
-                        options: [.callbackQueue(.untouch)]
-                    ) {
-                        [weak self] _, device in
-                        guard let sSelf = self, sSelf.thread != nil else { return }
-                        if let tag = device.ruuvi?.tag {
-                            let pair = RuuviTagPropertiesDaemonPair(ruuviTag: ruuviTag, device: tag)
-                            sSelf.perform(
-                                #selector(RuuviTagPropertiesDaemonBTKit.tryToUpdate(pair:)),
-                                on: sSelf.thread,
-                                with: pair,
-                                waitUntilDone: false,
-                                modes: [RunLoop.Mode.default.rawValue]
-                            )
-                        }
-                    })
-            } else if ruuviTag.isCloud {
-                scanRemoteSensor(ruuviTag: ruuviTag)
+    private func receive(_ change: RuuviReactorChange<AnyRuuviTagSensor>, session: UUID) {
+        lock.withLock {
+            guard epoch == session else { return }
+            switch change {
+            case .initial(let initial):
+                let retained = Set(initial.map(\.id))
+                for key in Array(jobs.keys) where !retained.contains(key) {
+                    jobs.removeValue(forKey: key)?.task.cancel()
+                }
+                sensors = initial
+            case .insert(let sensor), .update(let sensor):
+                if let index = sensors.firstIndex(where: { Self.matches($0, sensor) }) {
+                    sensors[index] = sensor
+                } else {
+                    sensors.append(sensor)
+                }
+            case .delete(let sensor):
+                remove(sensor)
+            case .error(let error):
+                report(.ruuviReactor(error), session: session)
+            }
+            if sensors.isEmpty {
+                scan?()
+                scan = nil
+            } else if scan == nil {
+                scan = client.scan { [weak self] device in self?.receive(device, session: session) }
             }
         }
     }
 
-    @objc private func tryToUpdate(pair: RuuviTagPropertiesDaemonPair) {
-        if let mac = pair.device.mac, mac != pair.ruuviTag.macId?.value {
-            // this is the case when data format 3 tag (2.5.9) changes format
-            // either by pressing B or by upgrading firmware
-            if let mac = idPersistence.mac(for: pair.device.uuid.luid) {
-                // tag is already saved to SQLite
-                Task { @MainActor [self] in
-                    do throws(RuuviPoolError) {
-                        _ = try await ruuviPool.update(
-                            pair.ruuviTag
-                                .with(macId: mac)
-                                .with(version: pair.device.version))
-                    } catch {
-                        ({ [weak self] error in
-                            self?.handlePoolFailure(error, ruuviTag: pair.ruuviTag)
-                        })(error)
-                    }
+    private func receive(_ device: SensorPropertiesAdvertisement, session: UUID) {
+        lock.withLock {
+            guard epoch == session, !device.luid.isEmpty else { return }
+            if let sensor = sensors.first(where: { $0.luid?.value == device.luid }) {
+                var updated = sensor.struct
+                if device.mac != sensor.macId?.value {
+                    guard let mapped = client.macForLuid(device.luid), !mapped.isEmpty else { return }
+                    updated.macId = mapped.mac
                 }
-            }
-        } else if pair.ruuviTag.macId?.value != nil, pair.device.mac == nil {
-            // this is the case when 2.5.9 tag is returning to data format 3 mode
-            // but we have it in sqlite database already
-            if let mac = idPersistence.mac(for: pair.device.uuid.luid),
-                pair.device.version != pair.ruuviTag.version
+                updated.version = device.version
+                guard updated.version != sensor.version || updated.macId?.value != sensor.macId?.value else { return }
+                enqueue(sensor, session: session) { updated }
+            } else if let mac = device.mac, !mac.isEmpty,
+                let sensor = sensors.first(where: { $0.macId?.value == mac })
             {
-                Task { @MainActor [self] in
-                    do throws(RuuviPoolError) {
-                        _ = try await ruuviPool.update(
-                            pair.ruuviTag
-                                .with(macId: mac)
-                                .with(version: pair.device.version))
-                    } catch {
-                        ({ [weak self] error in
-                            self?.handlePoolFailure(error, ruuviTag: pair.ruuviTag)
-                        })(error)
-                    }
-                }
-            }
-        } else {
-            if pair.device.version != pair.ruuviTag.version {
-                Task { @MainActor [self] in
-                    do throws(RuuviPoolError) {
-                        _ = try await ruuviPool.update(
-                            pair.ruuviTag
-                                .with(version: pair.device.version))
-                    } catch {
-                        ({ [weak self] error in
-                            self?.handlePoolFailure(error, ruuviTag: pair.ruuviTag)
-                        })(error)
+                if sensor.luid == nil, sensor.isCloud {
+                    var updated = sensor.struct
+                    updated.luid = device.luid.luid
+                    updated.version = device.version
+                    updated.serviceUUID = device.serviceUUID
+                    updated.isConnectable = device.isConnectable
+                    enqueue(sensor, session: session) { updated }
+                } else if client.luidForMac(mac) != device.luid {
+                    // Read the current row before rebinding a changed Bluetooth identifier.
+                    let read = client.readSensor
+                    enqueue(sensor, session: session) {
+                        try await read(mac).with(luid: device.luid.luid)
                     }
                 }
             }
         }
     }
 
-    private func listenToUuidChangesForMac() {
-        let scanToken = foreground.scan(
-            self,
-            closure: { observer, device in
-                guard let tag = device.ruuvi?.tag,
-                    let luid = tag.luid,
-                    let macId = tag.macId
-                else {
-                    return
-                }
-                if observer.idPersistence.luid(for: macId)?.any != luid.any {
-                    observer.idPersistence.set(luid: luid, for: macId)
-                    Task { @MainActor [self] in
-                        do throws(RuuviPersistenceError) {
-                            let value = try await observer.sqiltePersistence.readOne(macId.mac)
-                            _ = try? await observer.ruuviPool.update(value.with(luid: luid))
-                        } catch {
-                        }
-                    }
-                }
-            })
-        scanTokens.append(scanToken)
-    }
-
-    private func scanRemoteSensor(ruuviTag: AnyRuuviTagSensor) {
-        guard let mac = ruuviTag.macId,
-            ruuviTag.luid == nil
-        else {
-            return
-        }
-        let scanToken = foreground.scan(
-            self,
-            closure: { [weak self] _, device in
-                guard let sSelf = self,
-                    let tag = device.ruuvi?.tag,
-                    mac.any == tag.macId?.any,
-                    ruuviTag.luid == nil || ruuviTag.serviceUUID == nil,
-                    !sSelf.processingUUIDs.contains(tag.uuid)
-                else {
-                    return
-                }
-                sSelf.processingUUIDs.insert(tag.uuid)
-                var ruuviSensor = ruuviTag.struct
-                ruuviSensor.version = tag.version
-                ruuviSensor.luid = device.uuid.luid
-                ruuviSensor.serviceUUID = device.serviceUUID
-                ruuviSensor.isConnectable = device.isConnectable
-                sSelf.idPersistence.set(mac: mac, for: device.uuid.luid)
-                sSelf.idPersistence.set(luid: device.uuid.luid, for: mac)
-                Task { @MainActor [self] in
-                    defer {
-                        ({ [weak sSelf] in
-                            sSelf?.processingUUIDs.remove(tag.uuid)
-                        })()
-                    }
-                    do throws(RuuviPoolError) {
-                        _ = try await sSelf.ruuviPool.update(ruuviSensor)
-                    } catch {
-                        ({ [weak sSelf] error in
-                            guard let self = sSelf else { return }
-                            self.processingUUIDs.remove(tag.uuid)
-                            self.handlePoolFailure(error, ruuviTag: ruuviSensor)
-                        })(error)
-                    }
-                }
-            })
-        scanTokens.append(scanToken)
-    }
-
-    private func post(error: RuuviDaemonError) {
-        DispatchQueue.main.async {
-            NotificationCenter
-                .default
-                .post(
-                    name: .RuuviTagPropertiesDaemonDidFail,
-                    object: nil,
-                    userInfo: [RuuviTagPropertiesDaemonDidFailKey.error: error]
-                )
-        }
-    }
-
-    private func handlePoolFailure(
-        _ error: RuuviPoolError,
-        ruuviTag: RuuviTagSensor
+    private func enqueue(
+        _ sensor: RuuviTagSensor, session: UUID,
+        prepare: @escaping @MainActor () async throws -> RuuviTagSensor
     ) {
-        if case let .ruuviPersistence(persistenceError) = error,
-            case .failedToFindRuuviTag = persistenceError
-        {
-            removeCachedSensor(matching: ruuviTag)
-            restartObserving()
-            return
+        let key = sensor.id
+        guard jobs[key] == nil else { return }
+        let id = UUID()
+        let update = client.updateSensor
+        let task = Task { @MainActor [weak self] in
+            defer { self?.finish(key: key, id: id) }
+            do {
+                guard self?.isCurrent(key: key, id: id, session: session) == true else { return }
+                let updated = try await prepare()
+                try Task.checkCancellation()
+                guard self?.isCurrent(key: key, id: id, session: session) == true else { return }
+                let saved = try await update(updated)
+                if saved, !Task.isCancelled {
+                    self?.didSave(updated, replacing: sensor, session: session)
+                }
+            } catch {
+                guard !Task.isCancelled else { return }
+                self?.failed(error, sensor: sensor, session: session)
+            }
         }
-        post(error: .ruuviPool(error))
+        jobs[key] = Job(id: id, task: task)
     }
 
-    private func removeCachedSensor(matching ruuviTag: RuuviTagSensor) {
-        ruuviTags.removeAll(where: {
-            ($0.macId != nil && $0.macId?.any == ruuviTag.macId?.any)
-                || ($0.luid != nil && $0.luid?.any == ruuviTag.luid?.any)
-        })
+    private func isCurrent(key: String, id: UUID, session: UUID) -> Bool {
+        lock.withLock { epoch == session && jobs[key]?.id == id }
+    }
+
+    private func finish(key: String, id: UUID) {
+        lock.withLock { if jobs[key]?.id == id { jobs[key] = nil } }
+    }
+
+    private func didSave(_ updated: RuuviTagSensor, replacing sensor: RuuviTagSensor, session: UUID) {
+        lock.withLock {
+            guard epoch == session, let index = sensors.firstIndex(where: { Self.matches($0, sensor) }) else { return }
+            sensors[index] = updated.any
+        }
+    }
+
+    private func failed(_ error: Error, sensor: RuuviTagSensor, session: UUID) {
+        lock.withLock {
+            guard epoch == session else { return }
+            if let poolError = error as? RuuviPoolError {
+                if case .ruuviPersistence(.failedToFindRuuviTag) = poolError {
+                    remove(sensor)
+                } else {
+                    report(.ruuviPool(poolError), session: session)
+                }
+            } else if let persistenceError = error as? RuuviPersistenceError {
+                if case .failedToFindRuuviTag = persistenceError {
+                    remove(sensor)
+                } else {
+                    report(.ruuviPersistence(persistenceError), session: session)
+                }
+            }
+            if sensors.isEmpty { scan?(); scan = nil }
+        }
+    }
+
+    private func remove(_ sensor: RuuviTagSensor) {
+        for stored in sensors where Self.matches(stored, sensor) {
+            jobs.removeValue(forKey: stored.id)?.task.cancel()
+        }
+        sensors.removeAll { Self.matches($0, sensor) }
+    }
+
+    private func report(_ error: RuuviDaemonError, session: UUID) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            self.lock.withLock {
+                guard self.epoch == session else { return }
+                self.client.report(error)
+            }
+        }
+    }
+
+    private static func matches(_ lhs: RuuviTagSensor, _ rhs: RuuviTagSensor) -> Bool {
+        (lhs.macId != nil && lhs.macId?.value == rhs.macId?.value)
+            || (lhs.luid != nil && lhs.luid?.value == rhs.luid?.value)
     }
 }

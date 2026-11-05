@@ -100,7 +100,7 @@ let package = Package(
             name: "RuuviDaemonTests",
             dependencies: [
                 "RuuviDaemon", "RuuviDaemonRuuviTag", "RuuviDaemonCloudSync",
-                "RuuviService", "RuuviOntology",
+                "RuuviService", "RuuviOntology", "RuuviPool", "RuuviPersistence", "RuuviReactor",
             ]
         ),
     ],
