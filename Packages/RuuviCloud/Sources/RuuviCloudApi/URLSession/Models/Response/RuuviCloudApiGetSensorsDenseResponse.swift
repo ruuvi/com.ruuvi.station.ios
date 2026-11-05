@@ -67,55 +67,13 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
             public let description: String?
             public let descriptionLastUpdated: Int?
 
-            enum CodingKeys: CodingKey {
+            enum CodingKeys: String, CodingKey {
                 case displayOrder
                 case defaultDisplayOrder
-                case displayOrderLastUpdated
-                case defaultDisplayOrderLastUpdated
+                case displayOrderLastUpdated = "displayOrder_lastUpdated"
+                case defaultDisplayOrderLastUpdated = "defaultDisplayOrder_lastUpdated"
                 case description
-                case descriptionLastUpdated
-
-                var stringValue: String {
-                    switch self {
-                    case .displayOrder:
-                        return RuuviCloudApiSetting.sensorDisplayOrder.rawValue
-                    case .defaultDisplayOrder:
-                        return RuuviCloudApiSetting.sensorDefaultDisplayOrder.rawValue
-                    case .displayOrderLastUpdated:
-                        return RuuviCloudApiSetting.sensorDisplayOrder.rawValue + "_lastUpdated"
-                    case .defaultDisplayOrderLastUpdated:
-                        return RuuviCloudApiSetting.sensorDefaultDisplayOrder.rawValue + "_lastUpdated"
-                    case .description:
-                        return RuuviCloudApiSetting.sensorDescription.rawValue
-                    case .descriptionLastUpdated:
-                        return RuuviCloudApiSetting.sensorDescription.rawValue + "_lastUpdated"
-                    }
-                }
-
-                init?(stringValue: String) {
-                    switch stringValue {
-                    case RuuviCloudApiSetting.sensorDisplayOrder.rawValue:
-                        self = .displayOrder
-                    case RuuviCloudApiSetting.sensorDefaultDisplayOrder.rawValue:
-                        self = .defaultDisplayOrder
-                    case RuuviCloudApiSetting.sensorDisplayOrder.rawValue + "_lastUpdated":
-                        self = .displayOrderLastUpdated
-                    case RuuviCloudApiSetting.sensorDefaultDisplayOrder.rawValue + "_lastUpdated":
-                        self = .defaultDisplayOrderLastUpdated
-                    case RuuviCloudApiSetting.sensorDescription.rawValue:
-                        self = .description
-                    case RuuviCloudApiSetting.sensorDescription.rawValue + "_lastUpdated":
-                        self = .descriptionLastUpdated
-                    default:
-                        return nil
-                    }
-                }
-
-                var intValue: Int? { nil }
-
-                init?(intValue: Int) {
-                    return nil
-                }
+                case descriptionLastUpdated = "description_lastUpdated"
             }
 
             public init(from decoder: Decoder) throws {
@@ -164,18 +122,7 @@ public struct RuuviCloudApiGetSensorsDenseResponse: Decodable {
             }
 
             private static func parseDisplayOrder(_ raw: String) -> [String]? {
-                guard let data = raw.data(using: .utf8) else {
-                    return nil
-                }
-                if let decoded = try? JSONDecoder().decode([String].self, from: data) {
-                    return decoded
-                }
-                if let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []),
-                    let decoded = jsonObject as? [String]
-                {
-                    return decoded
-                }
-                return nil
+                try? JSONDecoder().decode([String].self, from: Data(raw.utf8))
             }
 
             private static func parseBoolean(_ raw: String) -> Bool? {

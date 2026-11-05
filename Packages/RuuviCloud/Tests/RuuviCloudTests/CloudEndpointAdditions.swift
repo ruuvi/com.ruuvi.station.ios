@@ -185,3 +185,45 @@ extension CloudTransportTests {
         }
     }
 }
+
+extension CloudTransportTests {
+    @MainActor @Test(arguments: [true, false]) func denseReadingsRequireServerTimestampAndDecodeValidPayloads(
+        hasTimestamp: Bool
+    ) async throws {
+        var measurement: [String: Any] = ["rssi": -60, "data": "0201061BFF990405" + String(repeating: "00", count: 23)]
+        if hasTimestamp { measurement["timestamp"] = 1_700_000_000 }
+        let sensor: [String: Any] = [
+            "sensor": "AA:BB:CC:DD:EE:FF", "owner": "test@example.com", "name": "Sauna",
+            "picture": "", "public": false, "canShare": true, "measurements": [measurement],
+        ]
+        let body = try JSONSerialization.data(withJSONObject: ["result": "success", "data": ["sensors": [sensor]]])
+        let transport = TransportFixture(status: 200, body: String(decoding: body, as: UTF8.self))
+        defer { transport.close() }
+        let service = makeCloudService(api: transport.api, user: CloudTestUser(), pool: nil)
+        let sensors = try await service.loadSensorsDense(
+            for: nil, measurements: true, sharedToOthers: nil,
+            sharedToMe: nil, alerts: nil, settings: nil)
+        #expect(sensors.count == 1)
+        if hasTimestamp {
+            let record = try #require(sensors.first?.record)
+            #expect(record.date == Date(timeIntervalSince1970: 1_700_000_000))
+            #expect(record.source == .ruuviNetwork && record.macId?.value == "AA:BB:CC:DD:EE:FF")
+            #expect(record.version == 5 && record.rssi == -60)
+            #expect(record.temperature?.value == 0)
+        } else {
+            #expect(sensors.first?.record == nil)
+        }
+    }
+
+    @MainActor @Test func unsupportedPressureUnitFailsWithoutSendingAnEmptyCloudSetting() async throws {
+        let transport = TransportFixture(status: 200, body: cloudSuccess("{}"))
+        defer { transport.close() }
+        let service = makeCloudService(api: transport.api, user: CloudTestUser(), pool: nil)
+        do {
+            _ = try await service.set(pressureUnit: .kilopascals); Issue.record("Unsupported pressure unit accepted")
+        } catch { guard case .api(.badParameters) = error else { Issue.record("\(error)"); return } }
+        #expect(TransportProtocol.state.requests.isEmpty)
+        #expect(try await service.set(chartDuration: 48) == 48)
+        try assertCloudRequest(path: "/settings", body: ["name": "CHART_VIEW_PERIOD", "value": "48"])
+    }
+}

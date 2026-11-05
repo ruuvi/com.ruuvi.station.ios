@@ -20,10 +20,10 @@ public struct UserApiSensorRecord: Decodable {
 }
 
 public extension UserApiSensorRecord {
-    var date: Date {
-        guard let timestamp
+    var date: Date? {
+        guard let timestamp, timestamp.isFinite
         else {
-            return Date()
+            return nil
         }
         return Date(timeIntervalSince1970: timestamp)
     }

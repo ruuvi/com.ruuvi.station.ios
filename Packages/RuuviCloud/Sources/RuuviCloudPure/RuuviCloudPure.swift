@@ -148,7 +148,9 @@ public final class RuuviCloudPure: RuuviCloud {
     @discardableResult
     @MainActor
     public func set(pressureUnit: UnitPressure) async throws(RuuviCloudError) -> UnitPressure {
-        try await set(userSetting: .unitPressure, value: pressureUnit.ruuviCloudApiSettingString)
+        let value = pressureUnit.ruuviCloudApiSettingString
+        guard !value.isEmpty else { throw .api(.badParameters) }
+        try await set(userSetting: .unitPressure, value: value)
         return pressureUnit
     }
 
@@ -988,6 +990,7 @@ public final class RuuviCloudPure: RuuviCloud {
     ) -> AnyRuuviTagSensorRecord? {
         let decoder = Ruuvi.decoder
         guard let record,
+            let date = record.date,
             let rssi = record.rssi,
             let data = record.data, Self.isValidNetworkPayload(data),
             let device = decoder.decodeNetwork(
@@ -1002,7 +1005,7 @@ public final class RuuviCloudPure: RuuviCloud {
         }
         return RuuviTagSensorRecordStruct(
             luid: nil,
-            date: record.date,
+            date: date,
             source: .ruuviNetwork,
             macId: macId,
             rssi: record.rssi,
