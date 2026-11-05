@@ -201,6 +201,9 @@ targets:
     dependencies:
       - target: RuuviOntology
         embed: false
+      - package: GRDB
+      - package: BTKit
+      - package: Humidity
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES

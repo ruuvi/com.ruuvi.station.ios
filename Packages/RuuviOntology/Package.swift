@@ -38,7 +38,8 @@ let package = Package(
         ),
         .testTarget(
             name: "RuuviOntologyTests",
-            dependencies: ["RuuviOntology"]
+            dependencies: ["RuuviOntology", "RuuviOntologySQLite", "BTKit", "Humidity",
+                           .product(name: "GRDB", package: "GRDB")]
         ),
     ],
     swiftLanguageModes: [.v5]

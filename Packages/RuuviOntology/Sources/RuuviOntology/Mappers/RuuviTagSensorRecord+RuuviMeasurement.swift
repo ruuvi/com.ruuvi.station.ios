@@ -61,14 +61,22 @@ public extension RuuviTagSensorRecord {
             return luminance != nil
         case .soundInstant:
             return dbaInstant != nil
+        case .soundAverage:
+            return dbaAvg != nil
+        case .soundPeak:
+            return dbaPeak != nil
         case .voltage:
             return voltage != nil
         case .rssi:
             return rssi != nil
         case .accelerationX, .accelerationY, .accelerationZ:
             return acceleration != nil
-        default:
-            return false
+        case .movementCounter:
+            return movementCounter != nil
+        case .measurementSequenceNumber:
+            return measurementSequenceNumber != nil
+        case .txPower:
+            return txPower != nil
         }
     }
 }

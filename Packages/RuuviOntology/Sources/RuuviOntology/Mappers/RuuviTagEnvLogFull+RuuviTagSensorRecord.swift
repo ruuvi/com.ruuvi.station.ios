@@ -27,7 +27,7 @@ extension RuuviTagEnvLogFull {
     }
 
     var unitVoltage: Voltage? {
-        Voltage(value: batteryVoltage ?? 0, unit: .volts)
+        batteryVoltage.map { Voltage(value: $0, unit: .volts) }
     }
 
     public func ruuviSensorRecord(uuid: String, mac: String?) -> RuuviTagSensorRecord {

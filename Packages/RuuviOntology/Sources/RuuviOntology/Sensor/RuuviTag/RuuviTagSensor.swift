@@ -684,16 +684,9 @@ public struct AnyRuuviTagSensor: RuuviTagSensor, Equatable, Hashable, Reorderabl
     }
 
     public static func == (lhs: AnyRuuviTagSensor, rhs: AnyRuuviTagSensor) -> Bool {
-        let idIsEqual = lhs.id == rhs.id
-        var luidIsEqual = false
-        if let lhsLuid = lhs.luid?.value, let rhsLuid = rhs.luid?.value {
-            luidIsEqual = lhsLuid == rhsLuid
-        }
-        var macIsEqual = false
-        if let lhsMac = lhs.macId?.value, let rhsMac = rhs.macId?.value {
-            macIsEqual = lhsMac == rhsMac
-        }
-        return idIsEqual || luidIsEqual || macIsEqual
+        // Equality must use the same stable identity as hashing. Matching either
+        // of two identifiers is not transitive and breaks Set/Dictionary lookup.
+        lhs.id == rhs.id
     }
 
     public func hash(into hasher: inout Hasher) {
