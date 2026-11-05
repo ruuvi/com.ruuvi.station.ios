@@ -65,13 +65,18 @@ public protocol DfuFlasherOutputProtocol: AnyObject {
 }
 
 public final class RuuviDFUToken {
-    private let cancellationClosure: () -> Void
+    private let lock = NSLock()
+    private var cancellationClosure: (() -> Void)?
 
     public init(cancellationClosure: @escaping () -> Void) {
         self.cancellationClosure = cancellationClosure
     }
 
     public func invalidate() {
-        cancellationClosure()
+        lock.lock()
+        let cancellation = cancellationClosure
+        cancellationClosure = nil
+        lock.unlock()
+        cancellation?()
     }
 }

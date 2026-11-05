@@ -44,7 +44,10 @@ let package = Package(
         ),
         .testTarget(
             name: "RuuviDFUTests",
-            dependencies: ["RuuviDFU"]
+            dependencies: [
+                "RuuviDFU", "RuuviDFUImpl",
+                .product(name: "NordicDFU", package: "IOS-Pods-DFU-Library"),
+            ]
         ),
     ],
     swiftLanguageModes: [.v5]

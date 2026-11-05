@@ -3,7 +3,6 @@
 #endif
 import Combine
 import Foundation
-import iOSMcuManagerLibrary
 #if canImport(NordicDFU)
     import NordicDFU
 #endif
@@ -11,285 +10,269 @@ import iOSMcuManagerLibrary
     import iOSDFULibrary
 #endif
 
-class DfuFlasher: NSObject {
-    private let queue = DispatchQueue(label: "DfuFlasher", qos: .userInteractive)
-    private var dfuServiceInitiator: DFUServiceInitiator
-    private var firmware: DFUFirmware?
-    private var partsCompleted: Int = 0
-    private var dfuServiceController: DFUServiceController?
-    private var subject: PassthroughSubject<FlashResponse, Error>?
+protocol DFULegacyFlashing: AnyObject {
+    func start(
+        uuid: UUID, firmware: DFUFirmware, event: @escaping (FlashResponse) -> Void,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) -> Bool
+    func cancel() -> Bool
+}
 
-    // MCUManager properties
-    private var fsManager: FileSystemManager?
-    private var defaultManager: DefaultManager?
-    private var bleTransport: McuMgrBleTransport?
+protocol DFUFileTransport: AnyObject {
+    func upload(
+        path: String, data: Data, progress: @escaping (Int) -> Void,
+        completion: @escaping (Result<Void, Error>) -> Void
+    ) -> Bool
+    func reset(completion: @escaping (Error?) -> Void)
+    func cancel()
+}
 
-    private var firmwareUploads: [FirmwareUpload] = []
-    private var currentUploadIndex: Int = 0
-    private var totalBatchBytes: Int = 0
-    private var uploadedBatchBytes: Int = 0
-    private var lastLoggedOverallProgress: Int = -1
-
-    private struct FilesController {
-        static let partitionKey = "partition_key"
-        static let defaultPartition = "/lfs1"
-    }
-
-    private struct FirmwareUpload {
+/// Serializes each upgrade and rejects callbacks belonging to a previous session.
+final class DfuFlasher {
+    private struct Upload {
         let path: String
         let data: Data
     }
-
-    private var partition: String {
-        return UserDefaults.standard
-            .string(forKey: FilesController.partitionKey)
-            ?? FilesController.defaultPartition
-    }
-
-    override init() {
-        dfuServiceInitiator = DFUServiceInitiator(
-            queue: queue,
-            delegateQueue: queue,
-            progressQueue: queue,
-            loggerQueue: queue
-        )
-        super.init()
-    }
-
-    // MARK: - RuuviTag DFU Flash (Legacy Nordic DFU)
-    func flashFirmware(
-        uuid: String,
-        with firmware: DFUFirmware
-    ) -> AnyPublisher<FlashResponse, Error> {
-        guard let uuid = UUID(uuidString: uuid)
-        else {
-            assertionFailure("Invalid UUID")
-            return Fail(error: RuuviDfuError(description: "Invalid UUID"))
-                .eraseToAnyPublisher()
+    private final class Operation {
+        let id: UUID
+        let deviceID: String
+        let subject: PassthroughSubject<FlashResponse, Error>
+        var legacy: DFULegacyFlashing?
+        var transport: DFUFileTransport?
+        var uploads: [Upload] = []
+        var index = 0
+        var uploadedBytes = 0
+        var totalBytes = 0
+        var progress = 0.0
+        var awaitingUpload = false
+        init(id: UUID, deviceID: String, subject: PassthroughSubject<FlashResponse, Error>) {
+            self.id = id
+            self.deviceID = deviceID
+            self.subject = subject
         }
-        let subject = PassthroughSubject<FlashResponse, Error>()
-        self.subject = subject
-        self.firmware = firmware
-        partsCompleted = 0
-        dfuServiceInitiator.delegate = self
-        dfuServiceInitiator.progressDelegate = self
-        dfuServiceInitiator.logger = self
-        dfuServiceController =
-            dfuServiceInitiator
-            .with(firmware: firmware)
-            .start(targetWithIdentifier: uuid)
-        return subject.eraseToAnyPublisher()
+    }
+    private let queue: DispatchQueue
+    private let queueKey = DispatchSpecificKey<Bool>()
+    private let legacyFactory: () -> DFULegacyFlashing
+    private let transportFactory: (DFUDevice) throws -> DFUFileTransport
+    private let partition: () -> String
+    private let nextUploadDelay: TimeInterval
+    private var operation: Operation?
+
+    init(
+        queue: DispatchQueue = DispatchQueue(label: "DfuFlasher", qos: .userInteractive),
+        legacyFactory: (() -> DFULegacyFlashing)? = nil,
+        transportFactory: @escaping (DFUDevice) throws -> DFUFileTransport = DFUMcuTransport.init,
+        partition: @escaping () -> String = {
+            UserDefaults.standard.string(forKey: "partition_key") ?? "/lfs1"
+        },
+        nextUploadDelay: TimeInterval = 0.5
+    ) {
+        self.queue = queue
+        self.legacyFactory = legacyFactory ?? { DFUNordicTransport(queue: queue) }
+        self.transportFactory = transportFactory
+        self.partition = partition
+        self.nextUploadDelay = nextUploadDelay
+        queue.setSpecific(key: queueKey, value: true)
     }
 
-    // MARK: - RuuviAir Firmware Upload (McuManager FileSystemManager)
-    func flashFirmware(
-        dfuDevice: DFUDevice,
-        with firmwareURL: URL
-    ) -> AnyPublisher<FlashResponse, Error> {
+    deinit {
+        let operation = operation
+        queue.async {
+            _ = operation?.legacy?.cancel()
+            operation?.transport?.cancel()
+            operation?.subject.send(completion: .failure(RuuviDfuError(description: "Firmware update closed")))
+        }
+    }
+
+    func flashFirmware(uuid: String, with firmware: DFUFirmware) -> AnyPublisher<FlashResponse, Error> {
+        publisher { flasher, id, subject in
+            guard let uuid = UUID(uuidString: uuid) else {
+                subject.send(completion: .failure(RuuviDfuError(description: "Invalid UUID")))
+                return
+            }
+            guard let operation = flasher.begin(id: id, deviceID: uuid.uuidString, subject: subject) else { return }
+            let transport = flasher.legacyFactory()
+            operation.legacy = transport
+            let started = transport.start(
+                uuid: uuid, firmware: firmware,
+                event: { [weak flasher] event in
+                    flasher?.queue.async { [weak flasher] in flasher?.receive(event, id: id) }
+                },
+                completion: { [weak flasher] result in
+                    flasher?.queue.async { [weak flasher] in flasher?.complete(id: id, result: result) }
+                })
+            if !started {
+                flasher.complete(
+                    id: id, result: .failure(RuuviDfuError(description: "Failed to start firmware update")))
+            }
+        }
+    }
+
+    func flashFirmware(dfuDevice: DFUDevice, with firmwareURL: URL) -> AnyPublisher<FlashResponse, Error> {
         flashFirmware(dfuDevice: dfuDevice, with: [firmwareURL])
     }
 
-    func flashFirmware(
-        dfuDevice: DFUDevice,
-        with firmwareURLs: [URL]
-    ) -> AnyPublisher<FlashResponse, Error> {
-        guard !firmwareURLs.isEmpty else {
-            return Fail(error: RuuviDfuError(description: "No firmware files provided"))
-                .eraseToAnyPublisher()
-        }
-
-        let subject = PassthroughSubject<FlashResponse, Error>()
-        self.subject = subject
-
-        do {
-            let transport = McuMgrBleTransport(dfuDevice.peripheral)
-            defaultManager = DefaultManager(transport: transport)
-            bleTransport = transport
-            fsManager = FileSystemManager(transport: transport)
-
-            // Load and validate ALL files upfront
-            firmwareUploads = []
-            for url in firmwareURLs {
-                guard FileManager.default.fileExists(atPath: url.path) else {
-                    throw RuuviDfuError(description: "File does not exist: \(url.lastPathComponent)")
+    func flashFirmware(dfuDevice: DFUDevice, with firmwareURLs: [URL]) -> AnyPublisher<FlashResponse, Error> {
+        publisher { flasher, id, subject in
+            guard let operation = flasher.begin(id: id, deviceID: dfuDevice.uuid, subject: subject) else { return }
+            do {
+                guard !firmwareURLs.isEmpty else { throw RuuviDfuError(description: "No firmware files provided") }
+                let partition = flasher.partition().trimmingCharacters(in: CharacterSet(charactersIn: "/"))
+                for url in firmwareURLs {
+                    let data = try Data(contentsOf: url)
+                    guard !data.isEmpty else {
+                        throw RuuviDfuError(description: "Empty firmware file: \(url.lastPathComponent)")
+                    }
+                    operation.uploads.append(Upload(path: "/" + partition + "/" + url.lastPathComponent, data: data))
+                    operation.totalBytes += data.count
                 }
-
-                let data = try Data(contentsOf: url)
-                let fullPath = partition + "/" + url.lastPathComponent
-                firmwareUploads.append(FirmwareUpload(path: fullPath, data: data))
+                operation.transport = try flasher.transportFactory(dfuDevice)
+                flasher.startNextUpload(id: id)
+            } catch {
+                flasher.complete(id: id, result: .failure(error))
             }
-
-            guard !firmwareUploads.isEmpty else {
-                throw RuuviDfuError(description: "No firmware data available")
-            }
-
-            totalBatchBytes = firmwareUploads.reduce(0) { $0 + $1.data.count }
-            uploadedBatchBytes = 0
-            currentUploadIndex = 0
-            lastLoggedOverallProgress = -1
-
-            startNextUpload()
-
-        } catch {
-            return Fail(error: error).eraseToAnyPublisher()
         }
-
-        return subject.eraseToAnyPublisher()
     }
 
-    // MARK: - Stop Operations
     func stopFlashFirmware(device: DFUDevice) -> Bool {
-        // Nordic DFU
-        if let serviceController = dfuServiceController {
-            return serviceController.abort()
+        onQueue {
+            guard let operation, operation.deviceID == device.uuid else { return false }
+            return cancel(id: operation.id)
         }
-        // FileSystemManager
-        if let fsManager = fsManager {
-            fsManager.cancelTransfer()
-            self.fsManager = nil
-            subject?.send(completion: .failure(RuuviDfuError(description: "Upload cancelled by user")))
-            cleanup()
-            return true
-        }
-        return false
     }
 
-    // MARK: - Upload Execution
-    private func startNextUpload() {
-        guard currentUploadIndex < firmwareUploads.count else {
-            finishUploads()
+    private func onQueue<T>(_ action: () -> T) -> T {
+        if DispatchQueue.getSpecific(key: queueKey) == true { return action() }
+        return queue.sync(execute: action)
+    }
+
+    private func publisher(
+        start: @escaping (DfuFlasher, UUID, PassthroughSubject<FlashResponse, Error>) -> Void
+    ) -> AnyPublisher<FlashResponse, Error> {
+        Deferred { [weak self] () -> AnyPublisher<FlashResponse, Error> in
+            let subject = PassthroughSubject<FlashResponse, Error>()
+            let id = UUID()
+            let gate = DFUStartGate()
+            return subject.handleEvents(
+                receiveCancel: { [weak self] in
+                    self?.queue.async { [weak self] in _ = self?.cancel(id: id, force: true) }
+                },
+                receiveRequest: { [weak self] _ in
+                    guard gate.claim() else { return }
+                    guard let self else {
+                        subject.send(completion: .failure(RuuviDfuError(description: "Firmware update closed")))
+                        return
+                    }
+                    self.queue.async { start(self, id, subject) }
+                }
+            ).eraseToAnyPublisher()
+        }.eraseToAnyPublisher()
+    }
+
+    private func begin(
+        id: UUID, deviceID: String, subject: PassthroughSubject<FlashResponse, Error>
+    ) -> Operation? {
+        guard operation == nil else {
+            subject.send(completion: .failure(RuuviDfuError(description: "A firmware update is already running")))
+            return nil
+        }
+        let operation = Operation(id: id, deviceID: deviceID, subject: subject)
+        self.operation = operation
+        return operation
+    }
+
+    private func cancel(id: UUID, force: Bool = false) -> Bool {
+        guard let operation, operation.id == id else { return false }
+        if let legacy = operation.legacy, !legacy.cancel(), !force { return false }
+        operation.transport?.cancel()
+        complete(id: id, result: .failure(RuuviDfuError(description: "Upload cancelled by user")))
+        return true
+    }
+
+    private func receive(_ event: FlashResponse, id: UUID) {
+        guard let operation, operation.id == id else { return }
+        switch event {
+        case .progress(let value):
+            guard value.isFinite else { return }
+            operation.progress = max(operation.progress, min(1, max(0, value)))
+            operation.subject.send(.progress(operation.progress))
+        case .log:
+            operation.subject.send(event)
+        case .done:
+            complete(id: id, result: .success(()))
+        }
+    }
+
+    private func startNextUpload(id: UUID) {
+        guard let operation, operation.id == id, let transport = operation.transport else { return }
+        guard operation.index < operation.uploads.count else {
+            transport.reset { [weak self] error in
+                self?.queue.async { [weak self] in
+                    self?.complete(id: id, result: error.map { .failure($0) } ?? .success(()))
+                }
+            }
             return
         }
-
-        guard let transport = bleTransport else {
-            subject?.send(completion: .failure(RuuviDfuError(description: "Transport unavailable")))
-            cleanup()
-            return
-        }
-
-        // Create NEW FileSystemManager for each upload
-        fsManager = FileSystemManager(transport: transport)
-
-        let upload = firmwareUploads[currentUploadIndex]
-        let started = fsManager?.upload(
-            name: upload.path,
-            data: upload.data,
-            delegate: self
-        )
-
-        if started != true {
-            subject?
-                .send(
-                    completion: .failure(
-                        RuuviDfuError(
-                            description: "Failed to start upload for \(upload.path)."
-                        )
-                    )
-                )
-            cleanup()
+        let index = operation.index
+        let upload = operation.uploads[index]
+        operation.awaitingUpload = true
+        let started = transport.upload(
+            path: upload.path, data: upload.data,
+            progress: { [weak self] bytes in
+                self?.queue.async { [weak self] in self?.uploadProgress(id: id, index: index, bytes: bytes) }
+            },
+            completion: { [weak self] result in
+                self?.queue.async { [weak self] in self?.uploadCompleted(id: id, index: index, result: result) }
+            })
+        if !started {
+            complete(id: id, result: .failure(RuuviDfuError(description: "Failed to start upload for \(upload.path)")))
         }
     }
 
-    // MARK: - Finish
-    private func finishUploads() {
-        if totalBatchBytes > 0 {
-            subject?.send(.progress(1.0))
-        }
-        guard let defaultManager = defaultManager else {
-            subject?.send(.done)
-            subject?.send(completion: .finished)
-            cleanup()
-            return
-        }
-        defaultManager.reset { [weak self] _, _ in
-            guard let self = self else { return }
-            self.subject?.send(.done)
-            self.subject?.send(completion: .finished)
-            self.cleanup()
+    private func uploadProgress(id: UUID, index: Int, bytes: Int) {
+        guard let operation, operation.id == id, operation.index == index, operation.awaitingUpload else { return }
+        let bounded = min(operation.uploads[index].data.count, max(0, bytes))
+        let progress = Double(operation.uploadedBytes + bounded) / Double(operation.totalBytes)
+        receive(.progress(progress), id: id)
+    }
+
+    private func uploadCompleted(id: UUID, index: Int, result: Result<Void, Error>) {
+        guard let operation, operation.id == id, operation.index == index, operation.awaitingUpload else { return }
+        operation.awaitingUpload = false
+        switch result {
+        case .failure:
+            complete(id: id, result: result)
+        case .success:
+            operation.uploadedBytes += operation.uploads[index].data.count
+            operation.index += 1
+            receive(.progress(Double(operation.uploadedBytes) / Double(operation.totalBytes)), id: id)
+            queue.asyncAfter(deadline: .now() + nextUploadDelay) { [weak self] in self?.startNextUpload(id: id) }
         }
     }
 
-    private func cleanup() {
-        fsManager = nil
-        defaultManager = nil
-        bleTransport = nil
-        firmwareUploads = []
-        currentUploadIndex = 0
-        totalBatchBytes = 0
-        uploadedBatchBytes = 0
-        lastLoggedOverallProgress = -1
-    }
-}
-
-// MARK: - Nordic DFU Delegates
-extension DfuFlasher: DFUServiceDelegate {
-    func dfuStateDidChange(to state: DFUState) {
-        if state == .completed {
-            subject?.send(.done)
-            subject?.send(completion: .finished)
-            cleanup()
-        }
-    }
-    func dfuError(_ error: DFUError, didOccurWithMessage message: String) {
-        subject?.send(completion: .failure(RuuviDfuError(description: message)))
-        cleanup()
-    }
-}
-
-extension DfuFlasher: DFUProgressDelegate {
-    func dfuProgressDidChange(
-        for part: Int,
-        outOf totalParts: Int,
-        to progress: Int,
-        currentSpeedBytesPerSecond _: Double,
-        avgSpeedBytesPerSecond _: Double
-    ) {
-        guard let parts = firmware?.parts else { return }
-        let totalProgress = (Float(partsCompleted) + (Float(progress) / 100.0)) / Float(parts)
-        subject?.send(.progress(Double(totalProgress)))
-        if progress == 100 && part == 1 && totalParts == 2 {
-            partsCompleted += 1
+    private func complete(id: UUID, result: Result<Void, Error>) {
+        guard let operation, operation.id == id else { return }
+        self.operation = nil
+        switch result {
+        case .success:
+            operation.subject.send(.progress(1))
+            operation.subject.send(.done)
+            operation.subject.send(completion: .finished)
+        case .failure(let error):
+            operation.subject.send(completion: .failure(error))
         }
     }
 }
 
-extension DfuFlasher: LoggerDelegate {
-    func logWith(_ level: LogLevel, message: String) {
-        debugPrint("\(level.name()): \(message)")
-        subject?.send(.log(DFULog(message: message, time: Date())))
-    }
-}
-
-// MARK: - FileSystemManager Delegate
-extension DfuFlasher: FileUploadDelegate {
-    func uploadProgressDidChange(bytesSent: Int, fileSize: Int, timestamp: Date) {
-        guard totalBatchBytes > 0 else { return }
-        let completedBytes = uploadedBatchBytes + bytesSent
-        let overall = Double(completedBytes) / Double(totalBatchBytes)
-
-        let overallPercent = Int(overall * 100)
-        if overallPercent != lastLoggedOverallProgress {
-            lastLoggedOverallProgress = overallPercent
-        }
-
-        subject?.send(.progress(overall))
-    }
-
-    func uploadDidFail(with error: Error) {
-        subject?.send(completion: .failure(error))
-        cleanup()
-    }
-
-    func uploadDidCancel() {
-        subject?.send(completion: .failure(RuuviDfuError(description: "Upload cancelled")))
-        cleanup()
-    }
-
-    func uploadDidFinish() {
-        uploadedBatchBytes += firmwareUploads[currentUploadIndex].data.count
-        currentUploadIndex += 1
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.startNextUpload()
-        }
+private final class DFUStartGate {
+    private let lock = NSLock()
+    private var started = false
+    func claim() -> Bool {
+        lock.lock()
+        defer { lock.unlock() }
+        guard !started else { return false }
+        started = true
+        return true
     }
 }

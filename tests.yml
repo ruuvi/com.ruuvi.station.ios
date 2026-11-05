@@ -96,6 +96,7 @@ targets:
     dependencies:
       - target: RuuviDFU
         embed: false
+      - package: NordicDFU
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES

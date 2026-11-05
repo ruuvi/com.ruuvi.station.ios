@@ -5,155 +5,150 @@ import CoreBluetooth
 import Foundation
 import UIKit
 
-class DfuScanner: NSObject {
-    private class LostObservation {
-        var block: (DFUDevice) -> Void
-        var lostDeviceDelay: TimeInterval
+protocol DFUScanning: AnyObject {
+    var state: CBManagerState { get }
+    var isScanning: Bool { get }
+    var onStateChange: (() -> Void)? { get set }
+    var onDiscovery: ((DFUPeripheral, [String: Any], Int) -> Void)? { get set }
+    func scan(services: [CBUUID]?)
+    func stop()
+}
 
-        init(block: @escaping ((DFUDevice) -> Void), lostDeviceDelay: TimeInterval) {
-            self.block = block
-            self.lostDeviceDelay = lostDeviceDelay
-        }
+final class DFUBluetoothScanner: NSObject, DFUScanning, CBCentralManagerDelegate {
+    private let queue: DispatchQueue
+    private lazy var manager = CBCentralManager(delegate: self, queue: queue)
+    var onStateChange: (() -> Void)?
+    var onDiscovery: ((DFUPeripheral, [String: Any], Int) -> Void)?
+    var state: CBManagerState { manager.state }
+    var isScanning: Bool { manager.isScanning }
+
+    init(queue: DispatchQueue) {
+        self.queue = queue
+        super.init()
     }
+    func scan(services: [CBUUID]?) {
+        manager.scanForPeripherals(
+            withServices: services, options: [CBCentralManagerScanOptionAllowDuplicatesKey: true])
+    }
+    func stop() { manager.stopScan() }
+    func centralManagerDidUpdateState(_: CBCentralManager) { onStateChange?() }
+    func centralManager(
+        _: CBCentralManager, didDiscover peripheral: CBPeripheral,
+        advertisementData: [String: Any], rssi: NSNumber
+    ) {
+        onDiscovery?(peripheral, advertisementData, rssi.intValue)
+    }
+}
 
-    private let queue = DispatchQueue(label: "DfuScanner", qos: .userInteractive)
-    private lazy var manager: CBCentralManager = .init(delegate: self, queue: queue)
-
-    private var lastSeen = [DFUDevice: Date]()
+final class DfuScanner {
+    private let queue: DispatchQueue
+    private let manager: DFUScanning
+    private let now: () -> Date
+    private let automaticallyCheckLostDevices: Bool
+    private let notificationCenter: NotificationCenter
+    private var lifecycleTokens: [NSObjectProtocol] = []
+    private var lastSeen: [DFUDevice: Date] = [:]
+    private var deviceObservations: [UUID: (DFUDevice) -> Void] = [:]
+    private var lostObservations: [UUID: (DFUDevice) -> Void] = [:]
     private var lostTimer: DispatchSourceTimer?
-
-    private var observations = (
-        device: [UUID: (DFUDevice) -> Void](),
-        lost: [UUID: LostObservation]()
-    )
-
-    private var includeScanServices: Bool = true {
-        didSet {
-            stopIfNeeded()
-            startIfNeeded()
-        }
-    }
-
+    private var includeScanServices = true
+    private var active = true
     private let scanServices = [
         CBUUID(string: "00001530-1212-EFDE-1523-785FEABCD123"),
-        CBUUID(string: "FE59"),
-        CBUUID(string: "180A"),
+        CBUUID(string: "FE59"), CBUUID(string: "180A"),
     ]
 
+    init(
+        manager: DFUScanning? = nil,
+        queue: DispatchQueue = DispatchQueue(label: "DfuScanner", qos: .userInteractive),
+        now: @escaping () -> Date = Date.init,
+        automaticallyCheckLostDevices: Bool = true,
+        notificationCenter: NotificationCenter = .default
+    ) {
+        self.queue = queue
+        self.manager = manager ?? DFUBluetoothScanner(queue: queue)
+        self.now = now
+        self.automaticallyCheckLostDevices = automaticallyCheckLostDevices
+        self.notificationCenter = notificationCenter
+        self.manager.onStateChange = { [weak self] in
+            self?.queue.async { [weak self] in self?.updateScanning() }
+        }
+        self.manager.onDiscovery = { [weak self] peripheral, data, rssi in
+            self?.queue.async { [weak self] in self?.discovered(peripheral, data: data, rssi: rssi) }
+        }
+        lifecycleTokens = [
+            notificationCenter.addObserver(
+                forName: UIApplication.willResignActiveNotification, object: nil, queue: nil
+            ) { [weak self] _ in self?.setActive(false) },
+            notificationCenter.addObserver(
+                forName: UIApplication.didBecomeActiveNotification, object: nil, queue: nil
+            ) { [weak self] _ in self?.setActive(true) },
+        ]
+    }
+
     deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-
-    override required init() {
-        super.init()
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(willResignActiveNotification(_:)),
-            name: UIApplication.willResignActiveNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(didBecomeActiveNotification(_:)),
-            name: UIApplication.didBecomeActiveNotification,
-            object: nil
-        )
-        queue.async { [weak self] in
-            self?.startIfNeeded()
-        }
-    }
-
-    @objc func willResignActiveNotification(_: Notification) {
-        queue.async { [weak self] in
-            self?.manager.stopScan()
-        }
-    }
-
-    @objc func didBecomeActiveNotification(_: Notification) {
-        queue.async { [weak self] in
-            self?.startIfNeeded()
-        }
-    }
-
-    func startLostDevicesTimer() {
-        lostTimer = DispatchSource.makeTimerSource(queue: queue)
-        lostTimer?.schedule(deadline: .now(), repeating: .seconds(1))
-        lostTimer?.setEventHandler { [weak self] in
-            self?.notifyLostDevices()
-        }
-        lostTimer?.activate()
-    }
-
-    func stopLostDevicesTimer() {
+        lifecycleTokens.forEach(notificationCenter.removeObserver)
         lostTimer?.cancel()
-        lostTimer = nil
+        let manager = manager
+        queue.async { manager.stop() }
     }
 
-    private func notifyLostDevices() {
-        observations.lost.values.forEach { observation in
-            var lostDevices = [DFUDevice]()
-            for (device, seen) in lastSeen {
-                let elapsed = Date().timeIntervalSince(seen)
-                if elapsed > observation.lostDeviceDelay {
-                    lostDevices.append(device)
-                }
-            }
-            for lostDevice in lostDevices {
-                lastSeen.removeValue(forKey: lostDevice)
-                observation.block(lostDevice)
-            }
+    private func setActive(_ value: Bool) {
+        queue.async { [weak self] in
+            self?.active = value
+            self?.updateScanning()
         }
     }
 
-    private func startIfNeeded() {
-        if manager.state == .poweredOn, !manager.isScanning {
-            manager.scanForPeripherals(
-                withServices: self.includeScanServices ? scanServices : nil,
-                options: [CBCentralManagerScanOptionAllowDuplicatesKey: NSNumber(value: true)]
-            )
-        }
-        let shouldObserveLostDevices = observations.lost.count > 0
-        if shouldObserveLostDevices, lostTimer == nil {
-            startLostDevicesTimer()
+    func setIncludeScanServices(_ value: Bool) {
+        queue.async { [weak self] in
+            guard let self, self.includeScanServices != value else { return }
+            self.includeScanServices = value
+            if self.manager.isScanning { self.manager.stop() }
+            self.updateScanning()
         }
     }
 
-    private func stopIfNeeded() {
-        if manager.isScanning {
-            manager.stopScan()
+    private func updateScanning() {
+        let hasObservers = !deviceObservations.isEmpty || !lostObservations.isEmpty
+        if active && hasObservers && manager.state == .poweredOn {
+            if !manager.isScanning { manager.scan(services: includeScanServices ? scanServices : nil) }
+        } else if manager.isScanning {
+            manager.stop()
         }
-        let shouldObserveLostDevices = observations.lost.count > 0
-        if !shouldObserveLostDevices, lostTimer != nil {
-            stopLostDevicesTimer()
+        let needsTimer = active && !lostObservations.isEmpty && automaticallyCheckLostDevices
+        if needsTimer && lostTimer == nil {
+            let timer = DispatchSource.makeTimerSource(queue: queue)
+            timer.schedule(deadline: .now() + 1, repeating: .seconds(1))
+            timer.setEventHandler { [weak self] in self?.notifyLostDevices() }
+            lostTimer = timer
+            timer.activate()
+        } else if !needsTimer {
+            lostTimer?.cancel()
+            lostTimer = nil
         }
-    }
-
-    func setIncludeScanServices(_ includeScanServices: Bool) {
-        self.includeScanServices = includeScanServices
+        if !hasObservers { lastSeen.removeAll() }
     }
 
     @discardableResult
     func scan<T: AnyObject>(_ observer: T, closure: @escaping (T, DFUDevice) -> Void) -> RuuviDFUToken {
         let id = UUID()
-        queue.async { [weak self] in
-            self?.observations.device[id] = { [weak self, weak observer] device in
-                guard let observer
-                else {
-                    self?.observations.device.removeValue(forKey: id)
-                    self?.stopIfNeeded()
+        queue.async { [weak self, weak observer] in
+            guard let self, let observer else { return }
+            self.deviceObservations[id] = { [weak self, weak observer] device in
+                guard let observer else {
+                    self?.deviceObservations.removeValue(forKey: id)
+                    self?.updateScanning()
                     return
                 }
-
                 closure(observer, device)
             }
-
-            self?.startIfNeeded()
+            self.updateScanning()
         }
-
         return RuuviDFUToken { [weak self] in
             self?.queue.async { [weak self] in
-                self?.observations.device.removeValue(forKey: id)
-                self?.stopIfNeeded()
+                self?.deviceObservations.removeValue(forKey: id)
+                self?.updateScanning()
             }
         }
     }
@@ -161,58 +156,44 @@ class DfuScanner: NSObject {
     @discardableResult
     func lost<T: AnyObject>(_ observer: T, closure: @escaping (T, DFUDevice) -> Void) -> RuuviDFUToken {
         let id = UUID()
-        queue.async { [weak self] in
-            self?.observations.lost[id] = LostObservation(
-                block: { [weak self, weak observer] device in
-                    guard let observer
-                    else {
-                        self?.observations.lost.removeValue(forKey: id)
-                        self?.stopIfNeeded()
-                        return
-                    }
-
-                    closure(observer, device)
-                }, lostDeviceDelay: 5)
-
-            self?.startIfNeeded()
+        queue.async { [weak self, weak observer] in
+            guard let self, let observer else { return }
+            self.lostObservations[id] = { [weak self, weak observer] device in
+                guard let observer else {
+                    self?.lostObservations.removeValue(forKey: id)
+                    self?.updateScanning()
+                    return
+                }
+                closure(observer, device)
+            }
+            self.updateScanning()
         }
-
         return RuuviDFUToken { [weak self] in
             self?.queue.async { [weak self] in
-                self?.observations.lost.removeValue(forKey: id)
-                self?.stopIfNeeded()
+                self?.lostObservations.removeValue(forKey: id)
+                self?.updateScanning()
             }
         }
     }
-}
 
-extension DfuScanner: CBCentralManagerDelegate {
-    func centralManagerDidUpdateState(_: CBCentralManager) {
-        queue.async { [weak self] in
-            self?.startIfNeeded()
+    /// Called on the scanner queue by the timer or a deterministic scheduler.
+    func notifyLostDevices() {
+        guard active else { return }
+        let deadline = now().addingTimeInterval(-5)
+        let expired = lastSeen.filter { $0.value < deadline }.map(\.key)
+        for device in expired {
+            lastSeen.removeValue(forKey: device)
+            for callback in Array(lostObservations.values) { callback(device) }
         }
     }
 
-    func centralManager(
-        _: CBCentralManager,
-        didDiscover peripheral: CBPeripheral,
-        advertisementData: [String: Any],
-        rssi RSSI: NSNumber
-    ) {
-        guard RSSI.intValue != 127 else { return }
-        let uuid = peripheral.identifier.uuidString
-        let isConnectable = (advertisementData[CBAdvertisementDataIsConnectable] as? NSNumber)?.boolValue ?? false
-        let name = advertisementData[CBAdvertisementDataLocalNameKey] as? String
-        let dfuDevice = DFUDevice(
-            uuid: uuid,
-            rssi: RSSI.intValue,
-            isConnectable: isConnectable,
-            name: name,
-            peripheral: peripheral
-        )
-        lastSeen[dfuDevice] = Date()
-        observations.device.values.forEach { closure in
-            closure(dfuDevice)
-        }
+    private func discovered(_ peripheral: DFUPeripheral, data: [String: Any], rssi: Int) {
+        guard active, rssi != 127 else { return }
+        let device = DFUDevice(
+            uuid: peripheral.identifier.uuidString, rssi: rssi,
+            isConnectable: (data[CBAdvertisementDataIsConnectable] as? NSNumber)?.boolValue ?? false,
+            name: data[CBAdvertisementDataLocalNameKey] as? String, peripheral: peripheral)
+        if !lostObservations.isEmpty { lastSeen[device] = now() }
+        for callback in Array(deviceObservations.values) { callback(device) }
     }
 }
