@@ -365,7 +365,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                         || (ruuviTag.macId?.value != nil
                             && Record.macColumn
                                 .like(
-                                    "%\(ruuviTag.macId!.value.lastThreeBytes)"
+                                    "%\(ruuviTag.macId?.value.lastThreeBytes ?? "")"
                                 ))
                 )
                 sqliteRecord = try request.fetchOne(db)
@@ -389,7 +389,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                         (ruuviTag.luid?.value != nil && RecordLatest.luidColumn == ruuviTag.luid?.value)
                             || (ruuviTag.macId?.value != nil
                                 && RecordLatest.macColumn.like(
-                                    "%\(ruuviTag.macId!.value.lastThreeBytes)"
+                                    "%\(ruuviTag.macId?.value.lastThreeBytes ?? "")"
                                 ))
                     )
                 sqliteRecord = try request.fetchOne(db)
@@ -573,7 +573,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     (normalizedTag.luid?.value != nil && Settings.luidColumn == normalizedTag.luid?.value)
                         || (normalizedTag.macId?.value != nil
                             && Settings.macIdColumn.like(
-                                "%\(normalizedTag.macId!.value.lastThreeBytes)"
+                                "%\(normalizedTag.macId?.value.lastThreeBytes ?? "")"
                             ))
                 )
                 sqliteSensorSettings = try request.fetchOne(db)
@@ -717,7 +717,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     (normalizedTag.luid?.value != nil && Settings.luidColumn == normalizedTag.luid?.value)
                         || (normalizedTag.macId?.value != nil
                             && Settings.macIdColumn.like(
-                                "%\(normalizedTag.macId!.value.lastThreeBytes)"
+                                "%\(normalizedTag.macId?.value.lastThreeBytes ?? "")"
                             ))
                 )
                 if let existingSettings = try request.fetchOne(db) {
@@ -892,7 +892,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     (normalizedTag.luid?.value != nil && Settings.luidColumn == normalizedTag.luid?.value)
                         || (normalizedTag.macId?.value != nil
                             && Settings.macIdColumn.like(
-                                "%\(normalizedTag.macId!.value.lastThreeBytes)"
+                                "%\(normalizedTag.macId?.value.lastThreeBytes ?? "")"
                             ))
                 )
                 let sensorSettings: Settings? = try request.fetchOne(db)
@@ -979,34 +979,14 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     public func readQueuedRequests(
         for key: String
     ) async throws(RuuviPersistenceError) -> [RuuviCloudQueuedRequest] {
-        var outcome: Result<[RuuviCloudQueuedRequest], RuuviPersistenceError>
-        do {
-            let reqs = try await readQueuedRequests()
-            let requests = reqs.filter { req in
-                req.uniqueKey != nil && req.uniqueKey == key
-            }
-            outcome = .success(requests)
-        } catch let error {
-            outcome = .failure(.grdb(error))
-        }
-        return try outcome.get()
+        try await readQueuedRequests().filter { $0.uniqueKey == key }
     }
 
     @discardableResult
     public func readQueuedRequests(
         for type: RuuviCloudQueuedRequestType
     ) async throws(RuuviPersistenceError) -> [RuuviCloudQueuedRequest] {
-        var outcome: Result<[RuuviCloudQueuedRequest], RuuviPersistenceError>
-        do {
-            let reqs = try await readQueuedRequests()
-            let requests = reqs.filter { req in
-                req.type != nil && req.type == type
-            }
-            outcome = .success(requests)
-        } catch let error {
-            outcome = .failure(.grdb(error))
-        }
-        return try outcome.get()
+        try await readQueuedRequests().filter { $0.type == type }
     }
 
     @discardableResult

@@ -43,7 +43,11 @@ let package = Package(
         ),
         .testTarget(
             name: "RuuviNotifierTests",
-            dependencies: ["RuuviNotifier"]
+            dependencies: [
+                "RuuviNotifier", "RuuviNotifierImpl",
+                .product(name: "RuuviLocalUserDefaults", package: "RuuviLocal"),
+                .product(name: "RuuviServiceMeasurement", package: "RuuviService"),
+            ]
         ),
     ],
     swiftLanguageModes: [.v5]

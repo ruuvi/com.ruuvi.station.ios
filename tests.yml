@@ -190,6 +190,15 @@ targets:
     dependencies:
       - target: RuuviNotifier
         embed: false
+      - target: RuuviLocal
+        embed: false
+      - target: RuuviService
+        embed: false
+      - target: RuuviNotification
+        embed: false
+      - target: RuuviOntology
+        embed: false
+      - package: Humidity
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
@@ -253,6 +262,8 @@ targets:
         embed: false
       - target: RuuviPersistence
         embed: false
+      - package: GRDB
+      - package: Humidity
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
@@ -326,6 +337,14 @@ targets:
     dependencies:
       - target: RuuviStorage
         embed: false
+      - target: RuuviOntology
+        embed: false
+      - target: RuuviContext
+        embed: false
+      - target: RuuviPersistence
+        embed: false
+      - package: GRDB
+      - package: Humidity
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES

@@ -19,6 +19,7 @@ let package = Package(
     dependencies: [
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviPersistence"),
+        .package(path: "../RuuviContext"),
     ],
     targets: [
         .target(
@@ -40,7 +41,12 @@ let package = Package(
         ),
         .testTarget(
             name: "RuuviStorageTests",
-            dependencies: ["RuuviStorage"]
+            dependencies: [
+                "RuuviStorage", "RuuviStorageCoordinator", "RuuviOntology",
+                .product(name: "RuuviPersistenceSQLite", package: "RuuviPersistence"),
+                .product(name: "RuuviContext", package: "RuuviContext"),
+                .product(name: "RuuviContextSQLite", package: "RuuviContext"),
+            ]
         ),
     ],
     swiftLanguageModes: [.v5]

@@ -1674,7 +1674,7 @@ extension RuuviNotifierImpl {
             didMove = false
         }
 
-        let isTriggered = didMove || isMovementHysteresisActive(for: luid.value, now: Date())
+        let isTriggered = didMove || isMovementHysteresisActive(for: luid.value, now: now())
         return (isTriggered, didMove)
     }
 
@@ -1686,7 +1686,7 @@ extension RuuviNotifierImpl {
 
     func restoreMovementHysteresisState() {
         let interval = movementHysteresisInterval()
-        let now = Date()
+        let now = self.now()
         var didMutate = false
         movementAlertHysteresisLock.lock()
         movementAlertHysteresisLastEventByUUID = settings.movementAlertHysteresisLastEvents()
@@ -1707,7 +1707,7 @@ extension RuuviNotifierImpl {
             movementAlertHysteresisLastEventByUUID = movementAlertHysteresisLastEventByUUID.filter {
                 $0.value.addingTimeInterval(interval) > now
             }
-            didMutate = movementAlertHysteresisLastEventByUUID.count != before
+            didMutate = didMutate || movementAlertHysteresisLastEventByUUID.count != before
         }
         movementAlertHysteresisLock.unlock()
         if didMutate {
@@ -1734,7 +1734,7 @@ extension RuuviNotifierImpl {
             }
             return
         }
-        let safeDate = min(eventDate, Date())
+        let safeDate = min(eventDate, now())
         if let existingDate = movementAlertHysteresisLastEventByUUID[uuid],
             existingDate > safeDate
         {
@@ -1818,7 +1818,7 @@ extension RuuviNotifierImpl {
             self.movementAlertHysteresisTimer?.invalidate()
             self.movementAlertHysteresisTimer = nil
             guard let nextExpiry else { return }
-            let delay = max(0.1, nextExpiry.timeIntervalSinceNow)
+            let delay = max(0.1, nextExpiry.timeIntervalSince(self.now()))
             self.movementAlertHysteresisTimer = Timer.scheduledTimer(
                 withTimeInterval: delay,
                 repeats: false
@@ -1829,13 +1829,14 @@ extension RuuviNotifierImpl {
     }
 
     private func handleMovementHysteresisTimerFired() {
-        let now = Date()
+        let now = self.now()
         let interval = movementHysteresisInterval()
         var expiredUUIDs = [String]()
         var didMutate = false
         movementAlertHysteresisLock.lock()
         if interval <= 0 {
             if !movementAlertHysteresisLastEventByUUID.isEmpty {
+                expiredUUIDs = Array(movementAlertHysteresisLastEventByUUID.keys)
                 movementAlertHysteresisLastEventByUUID.removeAll()
                 didMutate = true
             }
@@ -1887,11 +1888,8 @@ extension RuuviNotifierImpl {
                 of: alertType
             )
         {
-            let calendar = Calendar.current
-            let thresholdDateTime =
-                calendar.date(
-                    byAdding: .second, value: -Int(unseenDuration), to: Date()
-                ) ?? Date()
+            guard unseenDuration.isFinite, unseenDuration >= 0 else { return false }
+            let thresholdDateTime = now().addingTimeInterval(-unseenDuration)
 
             // Check the last successful system sync with the cloud
             if let lastSystemCloudSyncDate = localSyncState.getSyncDate() {

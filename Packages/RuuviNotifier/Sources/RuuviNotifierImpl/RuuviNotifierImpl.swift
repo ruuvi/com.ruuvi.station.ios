@@ -10,7 +10,8 @@ import RuuviService
 public final class RuuviNotifierImpl: RuuviNotifier {
     var observations = [String: NSPointerArray]()
     let titles: RuuviNotifierTitles
-    let ruuviAlertService: RuuviServiceAlert
+    let ruuviAlertService: NotifierAlertAccess
+    let now: () -> Date
     let localNotificationsManager: RuuviNotificationLocal
     let localSyncState: RuuviLocalSyncState
     let measurementService: RuuviServiceMeasurement
@@ -20,7 +21,7 @@ public final class RuuviNotifierImpl: RuuviNotifier {
     var movementAlertHysteresisTimer: Timer?
     private var alertDidChangeToken: NSObjectProtocol?
 
-    public init(
+    public convenience init(
         ruuviAlertService: RuuviServiceAlert,
         ruuviNotificationLocal: RuuviNotificationLocal,
         localSyncState: RuuviLocalSyncState,
@@ -28,7 +29,23 @@ public final class RuuviNotifierImpl: RuuviNotifier {
         settings: RuuviLocalSettings,
         titles: RuuviNotifierTitles
     ) {
-        self.ruuviAlertService = ruuviAlertService
+        self.init(
+            alertAccess: ServiceNotifierAlerts(service: ruuviAlertService),
+            ruuviNotificationLocal: ruuviNotificationLocal, localSyncState: localSyncState,
+            measurementService: measurementService, settings: settings, titles: titles)
+    }
+
+    init(
+        alertAccess: NotifierAlertAccess,
+        ruuviNotificationLocal: RuuviNotificationLocal,
+        localSyncState: RuuviLocalSyncState,
+        measurementService: RuuviServiceMeasurement,
+        settings: RuuviLocalSettings,
+        titles: RuuviNotifierTitles,
+        now: @escaping () -> Date = Date.init
+    ) {
+        self.ruuviAlertService = alertAccess
+        self.now = now
         localNotificationsManager = ruuviNotificationLocal
         self.localSyncState = localSyncState
         self.titles = titles

@@ -94,7 +94,7 @@ final class RuuviStorageCoordinator: RuuviStorage {
     }
 
     func readLast(_ ruuviTag: RuuviTagSensor) async throws(RuuviStorageError) -> RuuviTagSensorRecord? {
-        guard ruuviTag.macId != nil else {
+        guard ruuviTag.macId != nil || ruuviTag.luid != nil else {
             throw .ruuviPersistence(.failedToFindRuuviTag)
         }
         do {
@@ -105,7 +105,7 @@ final class RuuviStorageCoordinator: RuuviStorage {
     }
 
     func readLatest(_ ruuviTag: RuuviTagSensor) async throws(RuuviStorageError) -> RuuviTagSensorRecord? {
-        guard ruuviTag.macId != nil else {
+        guard ruuviTag.macId != nil || ruuviTag.luid != nil else {
             throw .ruuviPersistence(.failedToFindRuuviTag)
         }
         do {
@@ -140,7 +140,7 @@ final class RuuviStorageCoordinator: RuuviStorage {
     }
 
     func readSensorSettings(_ ruuviTag: RuuviTagSensor) async throws(RuuviStorageError) -> SensorSettings? {
-        guard ruuviTag.macId != nil else {
+        guard ruuviTag.macId != nil || ruuviTag.luid != nil else {
             throw .ruuviPersistence(.failedToFindRuuviTag)
         }
         do {
