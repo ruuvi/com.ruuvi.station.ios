@@ -1,3 +1,4 @@
+import RuuviCore
 import RuuviFirmware
 import RuuviLocalization
 import RuuviOntology

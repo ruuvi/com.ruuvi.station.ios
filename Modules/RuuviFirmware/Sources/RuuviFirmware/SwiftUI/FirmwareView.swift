@@ -1,3 +1,4 @@
+import RuuviCore
 // swiftlint:disable file_length
 import RuuviLocalization
 import SwiftUI

@@ -1,6 +1,6 @@
 import UIKit
 import XCTest
-@testable import station
+@testable import RuuviCore
 
 @MainActor final class FormattedDescriptionTests: XCTestCase {
     func testTitlesBoldLinksAndUnicodeRetainTextAndAttributes() throws {

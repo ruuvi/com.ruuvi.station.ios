@@ -1,9 +1,8 @@
 // swiftlint:disable file_length
 
 import UIKit
-import RuuviLocalization
 
-extension NSAttributedString {
+public extension NSAttributedString {
 
     // swiftlint:disable:next function_parameter_count
     static func fromFormattedDescription(
