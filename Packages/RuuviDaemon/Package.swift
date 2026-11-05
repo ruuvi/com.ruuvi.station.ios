@@ -98,7 +98,10 @@ let package = Package(
         ),
         .testTarget(
             name: "RuuviDaemonTests",
-            dependencies: ["RuuviDaemon", "RuuviDaemonRuuviTag"]
+            dependencies: [
+                "RuuviDaemon", "RuuviDaemonRuuviTag", "RuuviDaemonCloudSync",
+                "RuuviService", "RuuviOntology",
+            ]
         ),
     ],
     swiftLanguageModes: [.v5]

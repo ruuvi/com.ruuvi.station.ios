@@ -5,103 +5,161 @@ import Foundation
 import RuuviLocal
 import RuuviService
 
-class RuuviDaemonCloudSyncWorker: RuuviDaemonWorker, RuuviDaemonCloudSync {
-    private var localSettings: RuuviLocalSettings
-    private var localSyncState: RuuviLocalSyncState
+/// Owns cancellable polling and sync tasks. A stopped or replaced session cannot restart itself.
+final class RuuviDaemonCloudSyncWorker: RuuviDaemonCloudSync {
+    private let pullInterval: () -> TimeInterval
+    private let migrationInProgress: () -> Bool
     private let cloudSyncService: RuuviServiceCloudSync
-    private var pullTimer: Timer?
-    private var refreshAfterMigrationWorkItem: DispatchWorkItem?
+    private let retryDelay: TimeInterval
+    private let lock = NSLock()
     private var running = false
+    private var epoch = UUID()
+    private var pollingTask: Task<Void, Never>?
+    private var refreshTask: Task<Void, Never>?
+    private var latestTask: Task<Void, Never>?
+    private var retryTask: Task<Void, Never>?
+    private var refreshID: UUID?
+    private var latestID: UUID?
+    private var retryID: UUID?
 
-    init(
+    convenience init(
         localSettings: RuuviLocalSettings,
-        localSyncState: RuuviLocalSyncState,
+        localSyncState _: RuuviLocalSyncState,
         cloudSyncService: RuuviServiceCloudSync
     ) {
-        self.localSettings = localSettings
-        self.localSyncState = localSyncState
-        self.cloudSyncService = cloudSyncService
+        self.init(
+            pullInterval: { TimeInterval(localSettings.networkPullIntervalSeconds) },
+            migrationInProgress: { localSettings.signalVisibilityMigrationInProgress },
+            cloudSyncService: cloudSyncService)
     }
 
+    init(
+        pullInterval: @escaping () -> TimeInterval,
+        migrationInProgress: @escaping () -> Bool,
+        cloudSyncService: RuuviServiceCloudSync,
+        retryDelay: TimeInterval = 5
+    ) {
+        self.pullInterval = pullInterval
+        self.migrationInProgress = migrationInProgress
+        self.cloudSyncService = cloudSyncService
+        self.retryDelay = retryDelay
+    }
+
+    deinit { stop() }
+
     func start() {
-        start { [weak self] in
-            guard let sSelf = self else { return }
-            sSelf.pullTimer?.invalidate()
-            // Call the refreshImmediately method to execute it right away when
-            // thread is started.
-            sSelf.refreshImmediately()
-            let timer = Timer.scheduledTimer(
-                timeInterval: TimeInterval(sSelf.localSettings.networkPullIntervalSeconds),
-                target: sSelf,
-                selector: #selector(RuuviDaemonCloudSyncWorker.refreshImmediately),
-                userInfo: nil,
-                repeats: true
-            )
-            RunLoop.current.add(timer, forMode: .common)
-            sSelf.pullTimer = timer
-            sSelf.running = true
+        lock.withLock {
+            guard !running else { return }
+            running = true
+            let session = epoch
+            pollingTask = Task { [weak self] in
+                while !Task.isCancelled {
+                    guard let delay = self?.poll(session: session) else { return }
+                    do { try await Task.sleep(nanoseconds: delay) } catch { return }
+                }
+            }
         }
     }
 
     func stop() {
-        guard let thread
-        else {
-            return
+        let tasks = lock.withLock {
+            let tasks = [pollingTask, refreshTask, latestTask, retryTask].compactMap { $0 }
+            running = false
+            epoch = UUID()
+            pollingTask = nil
+            refreshTask = nil
+            latestTask = nil
+            retryTask = nil
+            refreshID = nil
+            latestID = nil
+            retryID = nil
+            return tasks
         }
-        perform(
-            #selector(RuuviDaemonCloudSyncWorker.stopDaemon),
-            on: thread,
-            with: nil,
-            waitUntilDone: false,
-            modes: [RunLoop.Mode.default.rawValue]
-        )
+        tasks.forEach { $0.cancel() }
     }
 
-    func isRunning() -> Bool {
-        running
-    }
+    func isRunning() -> Bool { lock.withLock { running } }
 
-    @objc
-    func refreshImmediately() {
-        DispatchQueue.global(qos: .default).async { [weak self] in
-            guard let self else { return }
-
-            guard !self.localSettings.signalVisibilityMigrationInProgress else {
-                // Temporary workaround until we properly handle sync vs local data collisions.
-                self.scheduleRefreshAfterMigration()
-                return
-            }
-
-            Task { @MainActor [self] in _ = try? await self.cloudSyncService.syncAllRecords() }
-        }
-    }
+    func refreshImmediately() { requestRefresh() }
 
     func refreshLatestRecord() {
-        DispatchQueue.global(qos: .default).async { [weak self] in
-            guard let self else { return }
-            guard !self.localSettings.signalVisibilityMigrationInProgress else { return }
-            Task { @MainActor [self] in _ = try? await self.cloudSyncService.refreshLatestRecord() }
+        lock.withLock {
+            guard !migrationInProgress(), latestTask == nil else { return }
+            let identifier = UUID()
+            latestID = identifier
+            latestTask = Task { @MainActor [weak self, cloudSyncService] in
+                guard self?.lock.withLock({ self?.latestID == identifier }) == true else { return }
+                defer {
+                    self?.lock.withLock {
+                        guard self?.latestID == identifier else { return }
+                        self?.latestID = nil
+                        self?.latestTask = nil
+                    }
+                }
+                _ = try? await cloudSyncService.refreshLatestRecord()
+            }
         }
     }
 
-    @objc private func stopDaemon() {
-        pullTimer?.invalidate()
-        refreshAfterMigrationWorkItem?.cancel()
-        refreshAfterMigrationWorkItem = nil
-        stopWork()
-        running = false
+    private func poll(session: UUID) -> UInt64? {
+        let delay = lock.withLock { running && epoch == session ? Self.nanoseconds(pullInterval()) : nil }
+        guard let delay else { return nil }
+        requestRefresh(expectedEpoch: session)
+        return delay
     }
 
-    private func scheduleRefreshAfterMigration() {
-        guard refreshAfterMigrationWorkItem == nil else { return }
-
-        let workItem = DispatchWorkItem { [weak self] in
-            guard let self else { return }
-            self.refreshAfterMigrationWorkItem = nil
-            self.refreshImmediately()
+    private func requestRefresh(expectedEpoch: UUID? = nil) {
+        lock.withLock {
+            guard expectedEpoch == nil || epoch == expectedEpoch, refreshTask == nil else { return }
+            if migrationInProgress() {
+                scheduleRetry()
+                return
+            }
+            retryTask?.cancel()
+            retryTask = nil
+            retryID = nil
+            let identifier = UUID()
+            refreshID = identifier
+            refreshTask = Task { @MainActor [weak self, cloudSyncService] in
+                guard self?.lock.withLock({ self?.refreshID == identifier }) == true else { return }
+                defer {
+                    self?.lock.withLock {
+                        guard self?.refreshID == identifier else { return }
+                        self?.refreshID = nil
+                        self?.refreshTask = nil
+                    }
+                }
+                _ = try? await cloudSyncService.syncAllRecords()
+            }
         }
+    }
 
-        refreshAfterMigrationWorkItem = workItem
-        DispatchQueue.global(qos: .default).asyncAfter(deadline: .now() + 5, execute: workItem)
+    /// Called with the state lock held; all retries belong to the current session.
+    private func scheduleRetry() {
+        guard retryTask == nil else { return }
+        let identifier = UUID()
+        let session = epoch
+        let delay = Self.nanoseconds(retryDelay)
+        retryID = identifier
+        retryTask = Task { [weak self] in
+            do { try await Task.sleep(nanoseconds: delay) } catch { return }
+            self?.retry(identifier: identifier, session: session)
+        }
+    }
+
+    private func retry(identifier: UUID, session: UUID) {
+        let shouldRefresh = lock.withLock {
+            guard retryID == identifier, epoch == session else { return false }
+            retryID = nil
+            retryTask = nil
+            return true
+        }
+        if shouldRefresh { requestRefresh(expectedEpoch: session) }
+    }
+
+    private static func nanoseconds(_ interval: TimeInterval) -> UInt64 {
+        let value = interval * 1_000_000_000
+        guard value.isFinite, value >= 1, value < Double(UInt64.max) else { return 60_000_000_000 }
+        return UInt64(value)
     }
 }

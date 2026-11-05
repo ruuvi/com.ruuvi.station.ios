@@ -109,6 +109,10 @@ targets:
     dependencies:
       - target: RuuviDaemon
         embed: false
+      - target: RuuviService
+        embed: false
+      - target: RuuviOntology
+        embed: false
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES
