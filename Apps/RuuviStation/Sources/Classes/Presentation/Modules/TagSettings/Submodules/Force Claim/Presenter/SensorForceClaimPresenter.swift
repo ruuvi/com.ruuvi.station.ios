@@ -23,10 +23,19 @@ final class SensorForceClaimPresenter: SensorForceClaimModuleInput {
     private var secret: String?
     private var macId: String?
 
+    private var context = UUID()
+    private var ownershipTask: Task<Void, Never>?
+    private var gattRequest: UUID?
     private var timer: Timer?
-    private var gattTimeoutSeconds: Double = 15
+    var gattTimeoutSeconds: Double = 15
+    var readGattSecret: ((String, TimeInterval, @escaping (Result<String, Error>) -> Void) -> Void)?
 
     func configure(ruuviTag: RuuviTagSensor) {
+        if gattRequest != nil { activityPresenter.dismiss() }
+        invalidateTimer()
+        context = UUID()
+        secret = nil
+        macId = nil
         self.ruuviTag = ruuviTag
     }
 
@@ -59,12 +68,13 @@ extension SensorForceClaimPresenter: SensorForceClaimViewOutput {
     }
 
     func viewDidTapUseBluetooth() {
-        setUpTimeoutTimerForGATTSecret()
         getTagSecretFromGatt()
     }
 
     func viewDidReceiveNFCMessages(messages: [NFCNDEFMessage]) {
-        // Stop NFC session
+        // Each scan must supply its own credentials; never reuse a previous tag's secret.
+        secret = nil
+        macId = nil
         view?.stopNFCSession()
         // Parse the message
         for message in messages {
@@ -97,74 +107,65 @@ extension SensorForceClaimPresenter: SensorForceClaimViewOutput {
 }
 
 extension SensorForceClaimPresenter {
-    /// Sets up a 15 seconds timer to attempt GATT connection and get secret.
-    private func setUpTimeoutTimerForGATTSecret() {
-        timer = Timer.scheduledTimer(
-            withTimeInterval: gattTimeoutSeconds,
-            repeats: true,
-            block: { [weak self] _ in
-                self?.activityPresenter.dismiss()
-                self?.invalidateTimer()
-                self?.view?.showGATTConnectionTimeoutDialog()
-            }
-        )
-    }
-
-    /// Invalidates the running timer
     private func invalidateTimer() {
         timer?.invalidate()
         timer = nil
+        gattRequest = nil
     }
 
     private func getTagSecretFromGatt() {
-        guard let luid = ruuviTag?.luid
-        else {
-            return
+        guard ownershipTask == nil, gattRequest == nil, let luid = ruuviTag?.luid else { return }
+        let request = UUID()
+        gattRequest = request
+        timer = Timer.scheduledTimer(withTimeInterval: gattTimeoutSeconds, repeats: false) { [weak self] _ in
+            guard let self, gattRequest == request else { return }
+            invalidateTimer()
+            activityPresenter.dismiss()
+            view?.showGATTConnectionTimeoutDialog()
         }
         activityPresenter.show(with: .loading(message: nil))
-        background.services.gatt.serialRevision(
-            for: self,
-            uuid: luid.value,
-            options: [.connectionTimeout(gattTimeoutSeconds)]  // Doesn't work now.
-        ) { [weak self] _, result in
-            switch result {
-            case let .success(secret):
-                if secret != "XX:XX:XX:XX:XX:XX:XX:XX" {
-                    self?.contestSensor(with: secret)
+        let completion: (Result<String, Error>) -> Void = { [weak self] result in
+            Task { @MainActor [weak self] in
+                guard let self, gattRequest == request else { return }
+                switch result {
+                case let .success(secret):
+                    guard secret != "XX:XX:XX:XX:XX:XX:XX:XX", !secret.isEmpty else { return }
+                    invalidateTimer()
+                    contestSensor(with: secret)
+                case let .failure(error):
+                    invalidateTimer()
+                    activityPresenter.dismiss()
+                    errorPresenter.present(error: error)
                 }
-            case let .failure(error):
-                self?.activityPresenter.dismiss()
-                self?.errorPresenter.present(error: error)
             }
+        }
+        if let readGattSecret {
+            readGattSecret(luid.value, gattTimeoutSeconds, completion)
+        } else {
+            background.services.gatt.serialRevision(
+                for: self, uuid: luid.value, options: [.connectionTimeout(gattTimeoutSeconds)]
+            ) { _, result in completion(result.mapError { $0 as Error }) }
         }
     }
 
-    /// Contest sensor with tag secret.
     private func contestSensor(with secret: String?) {
-        guard let ruuviTag,
-            let secret
-        else { return }
-
+        guard ownershipTask == nil, let ruuviTag, let secret, !secret.isEmpty else { return }
+        invalidateTimer()
+        let context = context
         activityPresenter.show(with: .loading(message: nil))
-        Task {
-            @MainActor [weak self, ruuviOwnershipService = ruuviOwnershipService!, ruuviTag = ruuviTag, secret = secret]
-            in
+        ownershipTask = Task {
+            @MainActor [weak self, service = ruuviOwnershipService!, activity = activityPresenter!] in
             defer {
-                ({ [weak self] in
-                    self?.activityPresenter.dismiss()
-                })()
+                activity.dismiss()
+                self?.ownershipTask = nil
             }
-            do throws(RuuviServiceError) {
-                let value =
-                    try await ruuviOwnershipService
-                    .contest(sensor: ruuviTag, secret: secret)
-                ({ [weak self] _ in
-                    self?.router?.dismiss()
-                })(value)
+            do {
+                _ = try await service.contest(sensor: ruuviTag, secret: secret)
+                guard let self, self.context == context else { return }
+                router?.dismiss()
             } catch {
-                ({ [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                })(error)
+                guard let self, self.context == context else { return }
+                errorPresenter.present(error: error)
             }
         }
     }

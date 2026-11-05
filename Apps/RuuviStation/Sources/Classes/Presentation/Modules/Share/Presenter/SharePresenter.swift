@@ -10,7 +10,6 @@ import UIKit
 class SharePresenter {
     weak var view: ShareViewInput!
     var router: ShareRouterInput!
-
     var activityPresenter: ActivityPresenter!
     var alertPresenter: AlertPresenter!
     var errorPresenter: ErrorPresenter!
@@ -18,27 +17,24 @@ class SharePresenter {
     var ruuviReactor: RuuviReactor!
     var ruuviPool: RuuviPool!
 
-    private var sensor: RuuviTagSensor! {
-        didSet {
-            fetchShared()
-        }
-    }
-
+    private var sensor: RuuviTagSensor!
+    private var context = UUID()
+    private var mutations = Set<String>()
+    private var permissionTask: Task<Void, Never>?
+    private var limitsTask: Task<Void, Never>?
     private var observedSensors: [String: AnyRuuviTagSensor] = [:]
     private var viewModel: ShareViewModel! {
-        didSet {
-            view.viewModel = viewModel
-        }
+        didSet { view.viewModel = viewModel }
     }
-
     private var ruuviTagToken: RuuviReactorToken?
 
     deinit {
         ruuviTagToken?.invalidate()
+        permissionTask?.cancel()
+        limitsTask?.cancel()
+        // A confirmed share change finishes persisting even after its screen closes.
     }
 }
-
-// MARK: - ShareViewOutput
 
 extension SharePresenter: ShareViewOutput {
     func viewDidLoad() {
@@ -46,109 +42,45 @@ extension SharePresenter: ShareViewOutput {
     }
 
     func viewDidTapSendButton(email: String?) {
-        guard let email,
-            !email.isEmpty,
-            isValidEmail(email)
-        else {
+        guard let email, !email.isEmpty, isValidEmail(email) else {
             view.showInvalidEmail()
             return
         }
-
-        activityPresenter.show(with: .loading(message: nil))
-        Task { @MainActor [weak self, ruuviOwnershipService = ruuviOwnershipService!, sensor = sensor!] in
-            defer {
-                ({ [weak self] in
-                    self?.activityPresenter.dismiss()
-                })()
-            }
-            do throws(RuuviServiceError) {
-                let value =
-                    try await ruuviOwnershipService
-                    .share(macId: sensor.id.mac, with: email.lowercased())
-                ({ [weak self] result in
-                    self?.view.clearInput()
-                    if let invited = result.invited, invited {
-                        self?.updatePendingShared(email: email.lowercased(), add: true)
-                        self?.view.showSuccessfullyInvited()
-                    } else {
-                        self?.updateAcceptedShared(email: email.lowercased(), add: true)
-                        self?.view.showSuccessfullyShared()
-                    }
-
-                })(value)
-            } catch {
-                ({ [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                })(error)
-            }
-        }
+        guard sensor.canShare else { return }
+        changeSharing(email: email.lowercased(), removing: false)
     }
 
-    private func unshareTag(_ email: String) {
-        activityPresenter.show(with: .loading(message: nil))
-        Task { @MainActor [weak self, ruuviOwnershipService = ruuviOwnershipService!, sensor = sensor!] in
-            defer {
-                ({ [weak self] in
-                    self?.activityPresenter.dismiss()
-                })()
-            }
-            do throws(RuuviServiceError) {
-                let value =
-                    try await ruuviOwnershipService
-                    .unshare(macId: sensor.id.mac, with: email.lowercased())
-                ({ [weak self] _ in
-                    self?.removeShared(email: email.lowercased())
-                })(value)
-            } catch {
-                ({ [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                })(error)
-            }
-        }
+    func confirmUnshare(email: String) {
+        changeSharing(email: email.lowercased(), removing: true)
     }
 
     func viewDidTapUnshareEmail(_ email: String?) {
-        guard let email,
-            !email.isEmpty
-        else {
-            return
+        guard let email, !email.isEmpty else { return }
+        let confirm = UIAlertAction(title: RuuviLocalization.yes, style: .default) { [weak self] _ in
+            self?.confirmUnshare(email: email)
         }
-        let title: String? = nil
-        let message = RuuviLocalization.SharePresenter.UnshareSensor.message(
-            email.lowercased()
-        )
-        let confirmActionTitle = RuuviLocalization.yes
-        let cancelActionTitle = RuuviLocalization.no
-        let confirmAction = UIAlertAction(
-            title: confirmActionTitle,
-            style: .default
-        ) { [weak self] _ in
-            self?.unshareTag(email)
-        }
-
-        let cancleAction = UIAlertAction(
-            title: cancelActionTitle,
-            style: .cancel,
-            handler: nil
-        )
-        let actions = [confirmAction, cancleAction]
-        let alertViewModel = AlertViewModel(
-            title: title,
-            message: message,
-            style: .alert,
-            actions: actions
-        )
-        alertPresenter.showAlert(alertViewModel)
+        let cancel = UIAlertAction(title: RuuviLocalization.no, style: .cancel)
+        alertPresenter.showAlert(
+            AlertViewModel(
+                title: nil,
+                message: RuuviLocalization.SharePresenter.UnshareSensor.message(email.lowercased()),
+                style: .alert,
+                actions: [confirm, cancel]
+            ))
     }
 }
 
-// MARK: - ShareModuleInput
-
 extension SharePresenter: ShareModuleInput {
     func configure(sensor: RuuviTagSensor) {
-        viewModel = ShareViewModel()
-        syncShareLimits(ruuviTag: sensor)
+        context = UUID()
+        permissionTask?.cancel()
+        limitsTask?.cancel()
         self.sensor = sensor
+        viewModel = ShareViewModel()
+        updateViewModel()
+        syncPlanShareUsage()
+        syncShareLimits(ruuviTag: sensor)
+        fetchShared()
     }
 
     func dismiss() {
@@ -156,173 +88,144 @@ extension SharePresenter: ShareModuleInput {
     }
 }
 
-// MARK: - Private
-
 extension SharePresenter {
-    private func startObservingRuuviTag() {
-        ruuviTagToken?.invalidate()
-        ruuviTagToken = ruuviReactor.observe { [weak self] change in
-            switch change {
-            case let .initial(sensors):
-                self?.replaceObservedSensors(with: sensors)
-                self?.syncPlanShareUsage()
-            case let .update(sensor):
-                self?.storeObservedSensor(sensor)
-                self?.syncPlanShareUsage()
-                if (sensor.luid?.any != nil && sensor.luid?.any == self?.sensor.luid?.any)
-                    || (sensor.macId?.any != nil && sensor.macId?.any == self?.sensor.macId?.any)
-                {
-                    self?.sensor = sensor
+    private func changeSharing(email: String, removing: Bool) {
+        guard let sensor, mutations.insert(sensor.id).inserted else { return }
+        permissionTask?.cancel()
+        let context = context
+        activityPresenter.show(with: .loading(message: nil))
+        Task { @MainActor [weak self, service = ruuviOwnershipService!, activity = activityPresenter!] in
+            defer {
+                activity.dismiss()
+                self?.mutations.remove(sensor.id)
+            }
+            do {
+                let invited: Bool
+                if removing {
+                    _ = try await service.unshare(macId: sensor.id.mac, with: email)
+                    invited = false
+                } else {
+                    invited = try await service.share(macId: sensor.id.mac, with: email).invited == true
                 }
-            case let .insert(sensor):
-                self?.storeObservedSensor(sensor)
-                self?.syncPlanShareUsage()
-            case let .delete(sensor):
-                self?.observedSensors.removeValue(forKey: sensor.id)
-                self?.syncPlanShareUsage()
-            default: return
+                // Apply the response to its original sensor, preserving newer local metadata.
+                let visibleSensor = self?.sensor
+                let current: RuuviTagSensor =
+                    visibleSensor?.id == sensor.id
+                    ? visibleSensor! : self?.observedSensors[sensor.id] ?? sensor.any
+                let updated = Self.changingRecipients(of: current, email: email, removing: removing, invited: invited)
+                _ = try await service.updateShareable(for: updated)
+                guard let self, self.context == context else { return }
+                self.sensor = updated
+                if observedSensors[updated.id] != nil { observedSensors[updated.id] = updated.any }
+                updateViewModel()
+                syncPlanShareUsage()
+                if !removing {
+                    view.clearInput()
+                    if invited { view.showSuccessfullyInvited() } else { view.showSuccessfullyShared() }
+                }
+            } catch {
+                guard let self, self.context == context else { return }
+                errorPresenter.present(error: error)
             }
         }
     }
 
-    private func fetchShared() {
-        guard !sensor.canShare
-        else {
-            updateViewModel()
-            return
+    private static func changingRecipients(
+        of sensor: RuuviTagSensor, email: String, removing: Bool, invited: Bool
+    ) -> RuuviTagSensor {
+        var accepted = sensor.sharedTo.filter { $0.lowercased() != email }
+        var pending = sensor.sharedToPending.filter { $0.lowercased() != email }
+        if !removing {
+            if invited { pending.append(email) } else { accepted.append(email) }
         }
+        return sensor.with(sharedTo: accepted).with(sharedToPending: pending)
+    }
 
-        Task { @MainActor [weak self, ruuviOwnershipService = ruuviOwnershipService!, sensor = sensor!] in
-            do throws(RuuviServiceError) {
-                let value =
-                    try await ruuviOwnershipService
-                    .loadShared(for: sensor)
-                ({ [weak self] shareableSensors in
-                    guard let sSelf = self else { return }
-                    if let shareable =
-                        shareableSensors
-                        .first(where: {
-                            $0.id == sSelf.sensor.id
-                        })
-                    {
-                        guard
-                            sSelf.sensor.canShare != shareable.canShare
-                                || sSelf.sensor.sharedTo != shareable.sharedTo
-                                || sSelf.sensor.sharedToPending != shareable.sharedToPending
-                        else {
-                            sSelf.updateViewModel()
-                            return
-                        }
-                        let updated = sSelf.sensor
-                            .with(canShare: shareable.canShare)
-                            .with(sharedTo: shareable.sharedTo)
-                            .with(sharedToPending: shareable.sharedToPending)
-                        Task { @MainActor [self] in
-                            _ = try? await sSelf.ruuviOwnershipService.updateShareable(for: updated)
-                        }
-                        sSelf.sensor = updated
-                    }
-                })(value)
+    private func startObservingRuuviTag() {
+        ruuviTagToken?.invalidate()
+        ruuviTagToken = ruuviReactor.observe { [weak self] change in
+            guard let self else { return }
+            switch change {
+            case let .initial(sensors):
+                observedSensors = Dictionary(uniqueKeysWithValues: sensors.map { ($0.id, $0) })
+            case let .update(updated):
+                observedSensors[updated.id] = updated
+                if (updated.luid?.any != nil && updated.luid?.any == sensor.luid?.any)
+                    || (updated.macId?.any != nil && updated.macId?.any == sensor.macId?.any)
+                {
+                    sensor = updated
+                    updateViewModel()
+                    fetchShared()
+                }
+            case let .insert(inserted):
+                observedSensors[inserted.id] = inserted
+            case let .delete(deleted):
+                observedSensors.removeValue(forKey: deleted.id)
+            default: return
+            }
+            syncPlanShareUsage()
+        }
+    }
+
+    private func fetchShared() {
+        permissionTask?.cancel()
+        guard !sensor.canShare, !mutations.contains(sensor.id) else { return }
+        let sensor = sensor!
+        let context = context
+        permissionTask = Task { @MainActor [weak self, service = ruuviOwnershipService!] in
+            do {
+                let values = try await service.loadShared(for: sensor)
+                guard !Task.isCancelled, self?.context == context,
+                    let shareable = values.first(where: { $0.id == sensor.id })
+                else { return }
+                guard
+                    sensor.canShare != shareable.canShare || sensor.sharedTo != shareable.sharedTo
+                        || sensor.sharedToPending != shareable.sharedToPending
+                else { return }
+                let updated = sensor.with(canShare: shareable.canShare).with(sharedTo: shareable.sharedTo)
+                    .with(sharedToPending: shareable.sharedToPending)
+                _ = try await service.updateShareable(for: updated)
+                guard !Task.isCancelled, let self, self.context == context else { return }
+                self.sensor = updated
+                updateViewModel()
             } catch {
-                ({ [weak self] error in
-                    self?.errorPresenter.present(error: error)
-                })(error)
+                guard !Task.isCancelled, let self, self.context == context else { return }
+                errorPresenter.present(error: error)
             }
         }
     }
 
     private func updateViewModel() {
-        viewModel.sharedEmails.value = sensor.sharedTo.map({ $0.lowercased() })
-        viewModel.pendingSharedEmails.value = sensor.sharedToPending.map({ $0.lowercased() })
+        viewModel.sharedEmails.value = sensor.sharedTo.map { $0.lowercased() }
+        viewModel.pendingSharedEmails.value = sensor.sharedToPending.map { $0.lowercased() }
         viewModel.canShare.value = sensor.canShare
         view.reloadTableView()
     }
 
-    private func updateAcceptedShared(email: String, add: Bool) {
-        var sharedTo = sensor.sharedTo
-        if add {
-            sharedTo.append(email)
-        } else {
-            if let index = sharedTo.firstIndex(where: { shared in
-                shared.lowercased() == email.lowercased()
-            }) {
-                sharedTo.remove(at: index)
-            } else {
-                return
-            }
-        }
-        let sensor = sensor.with(sharedTo: sharedTo)
-        Task { @MainActor [self] in _ = try? await ruuviOwnershipService.updateShareable(for: sensor) }
-    }
-
-    private func updatePendingShared(email: String, add: Bool) {
-        var sharedToPending = sensor.sharedToPending
-        if add {
-            sharedToPending.append(email)
-        } else {
-            if let index = sharedToPending.firstIndex(where: { shared in
-                shared.lowercased() == email.lowercased()
-            }) {
-                sharedToPending.remove(at: index)
-            } else {
-                return
-            }
-        }
-        let sensor = sensor.with(sharedToPending: sharedToPending)
-        Task { @MainActor [self] in _ = try? await ruuviOwnershipService.updateShareable(for: sensor) }
-    }
-
-    private func removeShared(email: String) {
-        let sharedTo = sensor.sharedTo.filter { shared in
-            shared.lowercased() != email.lowercased()
-        }
-        let sharedToPending = sensor.sharedToPending.filter { shared in
-            shared.lowercased() != email.lowercased()
-        }
-        let sensor =
-            sensor
-            .with(sharedTo: sharedTo)
-            .with(sharedToPending: sharedToPending)
-        Task { @MainActor [self] in _ = try? await ruuviOwnershipService.updateShareable(for: sensor) }
-    }
-
     private func syncShareLimits(ruuviTag: RuuviTagSensor) {
-        Task { @MainActor [weak self, ruuviPool = ruuviPool!] in
-            do throws(RuuviPoolError) {
-                let value = try await ruuviPool.readSensorSubscriptionSettings(
-                    ruuviTag
-                )
-                ({ [weak self] subscription in
-                    self?.viewModel.maxCount.value = subscription?.maxSharesPerSensor ?? 10
-                    self?.viewModel.totalAvailableCount.value = subscription?.maxShares ?? 0
-                    self?.view.reloadTableView()
-                })(value)
+        let context = context
+        limitsTask = Task { @MainActor [weak self, pool = ruuviPool!] in
+            do {
+                let subscription = try await pool.readSensorSubscriptionSettings(ruuviTag)
+                guard !Task.isCancelled, let self, self.context == context else { return }
+                viewModel.maxCount.value = subscription?.maxSharesPerSensor ?? 10
+                viewModel.totalAvailableCount.value = subscription?.maxShares ?? 0
+                view.reloadTableView()
             } catch {
+                // Keep the default limits if the subscription is unavailable.
             }
         }
-    }
-
-    private func replaceObservedSensors(with sensors: [AnyRuuviTagSensor]) {
-        observedSensors = Dictionary(uniqueKeysWithValues: sensors.map { ($0.id, $0) })
-    }
-
-    private func storeObservedSensor(_ sensor: AnyRuuviTagSensor) {
-        observedSensors[sensor.id] = sensor
     }
 
     private func syncPlanShareUsage() {
-        let totalUsed = observedSensors.values
-            .filter { $0.isOwner }
-            .reduce(0) { partialResult, sensor in
-                partialResult + sensor.sharedTo.count + sensor.sharedToPending.count
-            }
-        viewModel.totalUsedCount.value = totalUsed
+        viewModel.totalUsedCount.value = observedSensors.values.filter { $0.isOwner }.reduce(0) {
+            $0 + $1.sharedTo.count + $1.sharedToPending.count
+        }
         view.reloadTableView()
     }
 
     private func isValidEmail(_ email: String) -> Bool {
         let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-        let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
-        return emailPred.evaluate(with: email)
+        return NSPredicate(format: "SELF MATCHES %@", emailRegEx).evaluate(with: email)
     }
 }

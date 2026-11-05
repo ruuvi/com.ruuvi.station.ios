@@ -88,10 +88,7 @@ class ShareViewController: UITableViewController {
     }
 
     override func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch Section(
-            value: section,
-            pendingSharedEmailsExist: viewModel.pendingSharedToCount > 0
-        ) {
+        switch sectionType(at: section) {
         case .description:
             1
         case .addFriend:
@@ -109,10 +106,7 @@ class ShareViewController: UITableViewController {
         _: UITableView,
         viewForHeaderInSection section: Int
     ) -> UIView? {
-        let section = Section(
-            value: section,
-            pendingSharedEmailsExist: viewModel.pendingSharedToCount > 0
-        )
+        let section = sectionType(at: section)
         let titleText: String? = switch section {
         case .shareSummary:
             RuuviLocalization.shareSensorSharedToCountMessage(
@@ -148,10 +142,7 @@ class ShareViewController: UITableViewController {
     }
 
     override func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        let section = Section(
-            value: section,
-            pendingSharedEmailsExist: viewModel.pendingSharedToCount > 0
-        )
+        let section = sectionType(at: section)
         let titleText: String? = switch section {
         case .shareSummary:
             RuuviLocalization.shareSensorSharedToCountMessage(
@@ -169,10 +160,7 @@ class ShareViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: UITableViewCell = switch Section(
-            value: indexPath.section,
-            pendingSharedEmailsExist: viewModel.pendingSharedToCount > 0
-        ) {
+        let cell: UITableViewCell = switch sectionType(at: indexPath.section) {
         case .description:
             getDescriptionCell(tableView, indexPath: indexPath)
         case .addFriend:
@@ -262,6 +250,11 @@ extension ShareViewController {
         tableView.tableFooterView = UIView(frame: .zero)
     }
 
+    private func sectionType(at index: Int) -> Section {
+        guard viewModel.canShare.value == true else { return .description }
+        return Section(value: index, pendingSharedEmailsExist: viewModel.pendingSharedToCount > 0)
+    }
+
     private func getDescriptionCell(_ tableView: UITableView, indexPath: IndexPath) -> ShareDescriptionTableViewCell {
         let cell = tableView.dequeueReusableCell(
             with: ShareDescriptionTableViewCell.self,
@@ -333,6 +326,8 @@ extension ShareViewController {
         cell.emailLabel.font = UIFont.ruuviBody()
         cell.unshareButton.tintColor = RuuviColor.textColor.color
         cell.unshareButton.setImage(RuuviAsset.smallCrossClearIcon.image, for: .normal)
+        cell.unshareButton.isHidden = false
+        cell.unshareButton.isUserInteractionEnabled = true
         cell.delegate = self
         cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.width, bottom: 0, right: 0)
         return cell

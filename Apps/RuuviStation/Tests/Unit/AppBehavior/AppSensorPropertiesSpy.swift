@@ -4,6 +4,8 @@ import RuuviService
 import UIKit
 
 @MainActor final class AppSensorPropertiesSpy: RuuviServiceSensorProperties {
+    var imageWrites = [(String, UIImage, CGSize, CGFloat)]()
+    var beforeSetImage: (() async -> Void)?
     var images = [String: UIImage]()
     var imageReads = [String]()
     var names = [(String, String)]()
@@ -28,7 +30,10 @@ import UIKit
         image: UIImage, for sensor: RuuviTagSensor, progress: ((MACIdentifier, Double) -> Void)?,
         maxSize: CGSize, compressionQuality: CGFloat
     ) async throws(RuuviServiceError) -> URL {
-        throw .failedToGetJpegRepresentation
+        imageWrites.append((sensor.id, image, maxSize, compressionQuality))
+        await beforeSetImage?()
+        if let failure { throw failure }
+        return URL(fileURLWithPath: "/test-background.jpg")
     }
     func setNextDefaultBackground(for sensor: RuuviTagSensor) async throws(RuuviServiceError) -> UIImage {
         throw .failedToGetJpegRepresentation

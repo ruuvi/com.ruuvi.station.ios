@@ -3,6 +3,9 @@ import RuuviOntology
 import RuuviPool
 
 @MainActor final class AppPoolSpy: RuuviPool {
+    var updatedSensors = [AnyRuuviTagSensor]()
+    var allowSensorUpdates = false
+    var beforeUpdate: (() async -> Void)?
     var subscriptions = [String: CloudSensorSubscription]()
     var subscriptionReads = [String]()
     var subscriptionFailure: RuuviPoolError?
@@ -11,7 +14,10 @@ import RuuviPool
         throw .ruuviPersistence(.failedToFindRuuviTag)
     }
     func update(_ ruuviTag: RuuviTagSensor) async throws(RuuviPoolError) -> Bool {
-        throw .ruuviPersistence(.failedToFindRuuviTag)
+        updatedSensors.append(ruuviTag.any)
+        await beforeUpdate?()
+        guard allowSensorUpdates else { throw .ruuviPersistence(.failedToFindRuuviTag) }
+        return true
     }
     func delete(_ ruuviTag: RuuviTagSensor) async throws(RuuviPoolError) -> Bool {
         throw .ruuviPersistence(.failedToFindRuuviTag)

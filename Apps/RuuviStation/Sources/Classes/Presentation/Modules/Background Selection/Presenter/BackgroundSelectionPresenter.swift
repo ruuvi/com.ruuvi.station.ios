@@ -6,39 +6,30 @@ import RuuviService
 import UIKit
 
 final class BackgroundSelectionPresenter: BackgroundSelectionModuleInput {
+    var notificationCenter: NotificationCenter = .default
     var viewController: UIViewController {
-        if let view = weakView {
-            return view
-        } else {
-            let view = BackgroundSelectionViewController()
-            view.output = self
-            view.viewModel = viewModel
-            weakView = view
-            return view
-        }
+        if let weakView { return weakView }
+        let view = BackgroundSelectionViewController()
+        view.output = self
+        view.viewModel = viewModel
+        weakView = view
+        return view
     }
 
-    private weak var weakView: UIViewController?
+    private weak var weakView: BackgroundSelectionViewController?
     private let ruuviTag: RuuviTagSensor?
-    private var viewModel: BackgroundSelectionViewModel! {
-        didSet {
-            prepareDefaultImages()
-        }
-    }
-
+    private var viewModel = BackgroundSelectionViewModel()
     private var backgroundUploadProgressToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
-    // TODO: Find out why backgroundToken is getting notification twice.
-    /// A boolean to keep track of background upload for local sensors
-    private var didUploadBackground: Bool = false
-    private let maxSize: CGSize = .init(width: 3000, height: 3000)
+    private var observerCenter: NotificationCenter?
+    private var imageTask: Task<Void, Never>?
+    private var uploadTask: Task<Void, Never>?
+    private var didUploadBackground = false
+    private let maxSize = CGSize(width: 3000, height: 3000)
 
     var photoPickerPresenter: PhotoPickerPresenter! {
-        didSet {
-            photoPickerPresenter.delegate = self
-        }
+        didSet { photoPickerPresenter.delegate = self }
     }
-
     var ruuviSensorPropertiesService: RuuviServiceSensorProperties!
     var ruuviLocalImages: RuuviLocalImages!
     var settings: RuuviLocalSettings!
@@ -46,165 +37,120 @@ final class BackgroundSelectionPresenter: BackgroundSelectionModuleInput {
 
     init(ruuviTag: RuuviTagSensor?) {
         self.ruuviTag = ruuviTag
+        prepareDefaultImages()
+    }
 
-        // swiftlint:disable:next inert_defer
-        defer { self.viewModel = BackgroundSelectionViewModel() }
+    deinit {
+        if let backgroundToken { observerCenter?.removeObserver(backgroundToken) }
+        if let backgroundUploadProgressToken { observerCenter?.removeObserver(backgroundUploadProgressToken) }
+        imageTask?.cancel()
+        uploadTask?.cancel()
     }
 }
 
 extension BackgroundSelectionPresenter: BackgroundSelectionViewOutput {
     func viewDidLoad() {
-        startSubscribeToBackgroundUploadProgressChanges()
+        if let backgroundToken { observerCenter?.removeObserver(backgroundToken) }
+        if let backgroundUploadProgressToken { observerCenter?.removeObserver(backgroundUploadProgressToken) }
+        observerCenter = notificationCenter
+        backgroundUploadProgressToken = notificationCenter.addObserver(
+            forName: .BackgroundPersistenceDidUpdateBackgroundUploadProgress, object: nil, queue: .main
+        ) { [weak self] notification in self?.updateProgress(notification) }
+        backgroundToken = notificationCenter.addObserver(
+            forName: .BackgroundPersistenceDidChangeBackground, object: nil, queue: .main
+        ) { [weak self] notification in self?.refreshBackground(notification) }
     }
 
-    func viewDidAskToSelectCamera() {
-        photoPickerPresenter.showCameraUI()
-    }
-
-    func viewDidAskToSelectGallery() {
-        photoPickerPresenter.showLibrary()
-    }
+    func viewDidAskToSelectCamera() { photoPickerPresenter.showCameraUI() }
+    func viewDidAskToSelectGallery() { photoPickerPresenter.showLibrary() }
 
     func viewDidSelectDefaultPhoto(model: DefaultBackgroundModel) {
-        if let photo = model.image {
-            if let ruuviTag {
-                performPhotoUpload(with: photo, ruuviTag: ruuviTag)
-            }
-        }
+        guard let photo = model.image, let ruuviTag else { return }
+        performPhotoUpload(with: photo, ruuviTag: ruuviTag)
     }
 
     func viewDidCancelUpload() {
+        uploadTask?.cancel()
+        imageTask?.cancel()
         viewModel.isUploadingBackground.value = false
         viewModel.uploadingBackgroundPercentage.value = nil
-        if let macId = ruuviTag?.macId {
-            ruuviLocalImages.deleteBackgroundUploadProgress(for: macId)
-        }
+        if let macId = ruuviTag?.macId { ruuviLocalImages.deleteBackgroundUploadProgress(for: macId) }
     }
 }
 
-extension BackgroundSelectionPresenter {
-    // swiftlint:disable:next function_body_length cyclomatic_complexity
-    private func startSubscribeToBackgroundUploadProgressChanges() {
-        backgroundUploadProgressToken = NotificationCenter
-            .default
-            .addObserver(
-                forName: .BackgroundPersistenceDidUpdateBackgroundUploadProgress,
-                object: nil,
-                queue: .main
-            ) { [weak self] notification in
-                guard let sSelf = self else { return }
-                if let userInfo = notification.userInfo, let ruuviTag = sSelf.ruuviTag {
-                    let luid = userInfo[BPDidUpdateBackgroundUploadProgressKey.luid] as? LocalIdentifier
-                    let macId = userInfo[BPDidUpdateBackgroundUploadProgressKey.macId] as? MACIdentifier
-                    if (ruuviTag.luid?.value != nil && ruuviTag.luid?.value == luid?.value)
-                        || (ruuviTag.macId?.any != nil && ruuviTag.macId?.any == macId?.any)
-                    {
-                        if let percentage = userInfo[BPDidUpdateBackgroundUploadProgressKey.progress] as? Double {
-                            sSelf.viewModel.uploadingBackgroundPercentage.value = percentage
-                            sSelf.viewModel.isUploadingBackground.value = percentage < 1.0
-                            if percentage == 1.0 {
-                                if let weakView = sSelf.weakView as? BackgroundSelectionViewController {
-                                    weakView.viewShouldDismiss()
-                                }
-                            }
-                        } else {
-                            sSelf.viewModel.uploadingBackgroundPercentage.value = nil
-                            sSelf.viewModel.isUploadingBackground.value = false
-                        }
-                    }
-                }
-            }
-        backgroundToken = NotificationCenter
-            .default
-            .addObserver(
-                forName: .BackgroundPersistenceDidChangeBackground,
-                object: nil,
-                queue: .main
-            ) { [weak self] notification in
-
-                guard let sSelf = self else { return }
-                if let userInfo = notification.userInfo, let ruuviTag = sSelf.ruuviTag {
-                    let luid = userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier
-                    let macId = userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier
-                    if (ruuviTag.luid?.any != nil && ruuviTag.luid?.any == luid?.any)
-                        || (ruuviTag.macId?.any != nil && ruuviTag.macId?.any == macId?.any)
-                    {
-                        Task { @MainActor [self] in
-                            do throws(RuuviServiceError) {
-                                let value = try await sSelf.ruuviSensorPropertiesService.getImage(for: ruuviTag)
-                                ({ [weak sSelf] image in
-                                    guard let sSelf else { return }
-                                    sSelf.viewModel.background.value = image
-                                    var isLocalSensor: Bool = true
-                                    if let isCloudSensor = sSelf.ruuviTag?.isCloudSensor {
-                                        isLocalSensor = !isCloudSensor
-                                    }
-
-                                    if isLocalSensor, !sSelf.didUploadBackground {
-                                        sSelf.didUploadBackground = true
-                                        if let weakView = sSelf.weakView as? BackgroundSelectionViewController {
-                                            weakView.viewShouldDismiss()
-                                        }
-                                    }
-                                })(value)
-                            } catch {
-                                ({ [weak sSelf] error in
-                                    sSelf?.errorPresenter.present(error: error)
-                                })(error)
-                            }
-                        }
-                    }
-                }
-            }
+private extension BackgroundSelectionPresenter {
+    func matches(luid: LocalIdentifier?, macId: MACIdentifier?) -> Bool {
+        guard let ruuviTag else { return false }
+        return (ruuviTag.luid != nil && ruuviTag.luid?.value == luid?.value)
+            || (ruuviTag.macId != nil && ruuviTag.macId?.value == macId?.value)
     }
 
-    private func prepareDefaultImages() {
-        var defaultImages: [DefaultBackgroundModel] = []
-        for i in (1...17).reversed() {
-            let image = UIImage(named: "bg\(i)")
-            if let image {
-                let model = DefaultBackgroundModel(
-                    id: i,
-                    image: image,
-                    thumbnail: image.resize()
-                )
-                defaultImages.append(model)
+    func updateProgress(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+            matches(
+                luid: userInfo[BPDidUpdateBackgroundUploadProgressKey.luid] as? LocalIdentifier,
+                macId: userInfo[BPDidUpdateBackgroundUploadProgressKey.macId] as? MACIdentifier)
+        else { return }
+        let percentage = userInfo[BPDidUpdateBackgroundUploadProgressKey.progress] as? Double
+        viewModel.uploadingBackgroundPercentage.value = percentage
+        viewModel.isUploadingBackground.value = percentage.map { $0 < 1 } ?? false
+        if percentage == 1 { weakView?.viewShouldDismiss() }
+    }
+
+    func refreshBackground(_ notification: Notification) {
+        guard let userInfo = notification.userInfo, let ruuviTag,
+            matches(
+                luid: userInfo[BPDidChangeBackgroundKey.luid] as? LocalIdentifier,
+                macId: userInfo[BPDidChangeBackgroundKey.macId] as? MACIdentifier)
+        else { return }
+        imageTask?.cancel()
+        imageTask = Task { @MainActor [weak self, service = ruuviSensorPropertiesService!] in
+            do {
+                let image = try await service.getImage(for: ruuviTag)
+                guard !Task.isCancelled, let self else { return }
+                viewModel.background.value = image
+                if ruuviTag.isCloudSensor != true, !didUploadBackground {
+                    didUploadBackground = true
+                    weakView?.viewShouldDismiss()
+                }
+            } catch {
+                guard !Task.isCancelled else { return }
+                self?.errorPresenter.present(error: error)
             }
         }
-        viewModel.defaultImages.value = defaultImages
+    }
+
+    func prepareDefaultImages() {
+        viewModel.defaultImages.value = (1...17).reversed().compactMap { index in
+            guard let image = UIImage(named: "bg\(index)") else { return nil }
+            return DefaultBackgroundModel(id: index, image: image, thumbnail: image.resize())
+        }
     }
 }
 
 extension BackgroundSelectionPresenter: PhotoPickerPresenterDelegate {
     func photoPicker(presenter _: PhotoPickerPresenter, didPick photo: UIImage) {
-        if let ruuviTag {
-            performPhotoUpload(with: photo, ruuviTag: ruuviTag)
-        }
+        guard let ruuviTag else { return }
+        performPhotoUpload(with: photo, ruuviTag: ruuviTag)
     }
 
     private func performPhotoUpload(with photo: UIImage, ruuviTag: RuuviTagSensor) {
+        uploadTask?.cancel()
+        viewModel.uploadingBackgroundPercentage.value = 0
         viewModel.isUploadingBackground.value = true
-        Task {
-            @MainActor [
-                weak self, ruuviTag = ruuviTag, maxSize = maxSize,
-                ruuviSensorPropertiesService = ruuviSensorPropertiesService!, settings = settings!
-            ] in
-            do throws(RuuviServiceError) {
-                let value = try await ruuviSensorPropertiesService.set(
-                    image: photo,
-                    for: ruuviTag,
-                    maxSize: maxSize,
-                    compressionQuality: CGFloat(settings.imageCompressionQuality) / 100
-                )
-                ({ [weak self] _ in
-                    self?.viewModel.isUploadingBackground.value = false
-                    self?.viewModel.background.value = photo
-                })(value)
+        uploadTask = Task {
+            @MainActor [weak self, service = ruuviSensorPropertiesService!, settings = settings!, maxSize = maxSize] in
+            do {
+                _ = try await service.set(
+                    image: photo, for: ruuviTag, maxSize: maxSize,
+                    compressionQuality: CGFloat(settings.imageCompressionQuality) / 100)
+                guard !Task.isCancelled else { return }
+                self?.viewModel.isUploadingBackground.value = false
+                self?.viewModel.background.value = photo
             } catch {
-                ({ [weak self] error in
-                    self?.viewModel.isUploadingBackground.value = false
-                    self?.errorPresenter.present(error: error)
-                })(error)
+                guard !Task.isCancelled else { return }
+                self?.viewModel.isUploadingBackground.value = false
+                self?.errorPresenter.present(error: error)
             }
         }
     }

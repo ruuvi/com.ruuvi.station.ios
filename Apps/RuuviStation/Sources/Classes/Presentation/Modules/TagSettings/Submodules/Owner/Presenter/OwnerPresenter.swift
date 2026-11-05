@@ -23,6 +23,8 @@ final class OwnerPresenter: OwnerModuleInput {
     var connectionPersistence: RuuviLocalConnections!
     var settings: RuuviLocalSettings!
 
+    private var ownershipTask: Task<Void, Never>?
+    private var context = UUID()
     private var ruuviTag: RuuviTagSensor!
     private var ownershipMode: OwnershipMode = .claim {
         didSet {
@@ -31,6 +33,7 @@ final class OwnerPresenter: OwnerModuleInput {
     }
 
     func configure(ruuviTag: RuuviTagSensor, mode: OwnershipMode) {
+        context = UUID()
         self.ruuviTag = ruuviTag
         ownershipMode = mode
     }
@@ -53,21 +56,14 @@ extension OwnerPresenter: OwnerViewOutput {
 
     /// Update the tag with owner information
     func updateOwnerInfo(with email: String) {
-        Task { @MainActor [weak self, ruuviStorage = ruuviStorage!] in
-            do throws(RuuviStorageError) {
-                let value = try await ruuviStorage.readAll()
-                ({ [weak self] localSensors in
-                    guard let sSelf = self else { return }
-                    if let sensor = localSensors.first(where: { $0.id == sSelf.ruuviTag.id }) {
-                        Task { @MainActor [self] in
-                            _ = try? await sSelf.ruuviPool.update(
-                                sensor
-                                    .with(owner: email.lowercased())
-                                    .with(isOwner: false))
-                        }
-                    }
-                })(value)
+        guard let sensorID = ruuviTag?.id else { return }
+        Task { @MainActor [storage = ruuviStorage!, pool = ruuviPool!] in
+            do {
+                let localSensors = try await storage.readAll()
+                guard let sensor = localSensors.first(where: { $0.id == sensorID }) else { return }
+                _ = try await pool.update(sensor.with(owner: email.lowercased()).with(isOwner: false))
             } catch {
+                // The next sensor sync can refresh owner details if local storage is unavailable.
             }
         }
     }
@@ -94,72 +90,53 @@ extension OwnerPresenter: OwnerViewOutput {
 }
 
 extension OwnerPresenter {
-    private func removeConnection() {
-        guard settings.cloudModeEnabled
-        else {
-            return
-        }
-        if let luid = ruuviTag.luid {
-            connectionPersistence.setKeepConnection(false, for: luid)
-        }
-    }
-
-    private func claimSensor() {
-        activityPresenter.show(with: .loading(message: nil))
-        Task { @MainActor [weak self, ruuviOwnershipService = ruuviOwnershipService!, ruuviTag = ruuviTag!] in
-            defer {
-                ({ [weak self] in
-                    self?.activityPresenter.dismiss()
-                })()
-            }
-            do throws(RuuviServiceError) {
-                let value =
-                    try await ruuviOwnershipService
-                    .claim(sensor: ruuviTag)
-                ({ [weak self] _ in
-                    self?.router.dismiss()
-                    self?.removeConnection()
-                    self?.activityPresenter.show(with: .success(message: nil))
-                })(value)
-            } catch {
-                ({ [weak self] error in
-                    switch error {
-                    case .ruuviCloud(.api(.api(.erSensorAlreadyClaimed))):
-                        if let luid = self?.ruuviTag.luid {
-                            self?.connectionPersistence.setKeepConnection(false, for: luid)
-                        }
-                        self?.view.showSensorAlreadyClaimedDialog()
-                    default:
-                        self?.activityPresenter.show(with: .failed(message: error.localizedDescription))
-                    }
-                })(error)
-            }
-        }
-    }
-
+    private func claimSensor() { changeOwnership(claiming: true, removeCloudHistory: false) }
     private func unclaimSensor(removeCloudHistory: Bool) {
+        changeOwnership(claiming: false, removeCloudHistory: removeCloudHistory)
+    }
+
+    private func changeOwnership(claiming: Bool, removeCloudHistory: Bool) {
+        guard ownershipTask == nil, let ruuviTag else { return }
+        let context = context
+        let cloudMode = settings.cloudModeEnabled
         activityPresenter.show(with: .loading(message: nil))
-        Task { @MainActor [weak self, ruuviOwnershipService = ruuviOwnershipService!, ruuviTag = ruuviTag!] in
+        ownershipTask = Task {
+            @MainActor [
+                weak self, service = ruuviOwnershipService!, activity = activityPresenter!,
+                connections = connectionPersistence!
+            ] in
             defer {
-                ({ [weak self] in
-                    self?.activityPresenter.dismiss()
-                })()
+                activity.dismiss()
+                self?.ownershipTask = nil
             }
-            do throws(RuuviServiceError) {
-                let value =
-                    try await ruuviOwnershipService
-                    .unclaim(
-                        sensor: ruuviTag,
-                        removeCloudHistory: removeCloudHistory
-                    )
-                ({ [weak self] _ in
-                    self?.router.dismiss()
-                    self?.activityPresenter.update(with: .success(message: nil))
-                })(value)
+            do {
+                if claiming {
+                    _ = try await service.claim(sensor: ruuviTag)
+                    if cloudMode, let luid = ruuviTag.luid { connections.setKeepConnection(false, for: luid) }
+                } else {
+                    _ = try await service.unclaim(sensor: ruuviTag, removeCloudHistory: removeCloudHistory)
+                }
+                guard let self, self.context == context else { return }
+                router.dismiss()
+                if claiming {
+                    activity.show(with: .success(message: nil))
+                } else {
+                    activity.update(with: .success(message: nil))
+                }
             } catch {
-                ({ [weak self] error in
-                    self?.activityPresenter.show(with: .failed(message: error.localizedDescription))
-                })(error)
+                let alreadyClaimed: Bool
+                if case RuuviServiceError.ruuviCloud(.api(.api(.erSensorAlreadyClaimed))) = error {
+                    alreadyClaimed = claiming
+                } else {
+                    alreadyClaimed = false
+                }
+                if alreadyClaimed, let luid = ruuviTag.luid { connections.setKeepConnection(false, for: luid) }
+                guard let self, self.context == context else { return }
+                if alreadyClaimed {
+                    view.showSensorAlreadyClaimedDialog()
+                } else {
+                    activity.show(with: .failed(message: error.localizedDescription))
+                }
             }
         }
     }

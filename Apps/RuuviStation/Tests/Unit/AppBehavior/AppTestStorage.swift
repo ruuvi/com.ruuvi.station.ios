@@ -4,6 +4,7 @@ import RuuviStorage
 
 @MainActor final class AppTestStorage: RuuviStorage {
     let base: RuuviStorage
+    var sensorsOverride: [AnyRuuviTagSensor]?
     var records: [RuuviTagSensorRecord] = []
     var downsampled: [RuuviTagSensorRecord] = []
     var recent: [RuuviTagSensorRecord] = []
@@ -60,8 +61,10 @@ import RuuviStorage
     }
     func readAll() async throws(RuuviStorageError) -> [AnyRuuviTagSensor] {
         readAllCount += 1
+        let result = sensorsOverride
         await beforeReadAll?()
         if failReadAll { throw .ruuviPersistence(.failedToFindRuuviTag) }
+        if let result { return result }
         return try await base.readAll()
     }
     func readLast(_ id: String, from: TimeInterval) async throws(RuuviStorageError) -> [RuuviTagSensorRecord] {
