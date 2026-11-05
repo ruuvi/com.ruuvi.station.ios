@@ -108,7 +108,7 @@ extension RuuviServiceExportImpl {
         let emptyValueString = emptyValueString
         let measurementService = measurementService
         let includeAirMeasurements = firmware == .e1 || firmware == .v6
-        let includeTagMeasurements = firmware == .v5
+        let includeTagMeasurements = firmware == .v5 || firmware == .vC5
         let hasTemperature = records.contains { $0.temperature != nil }
         let hasHumidityAndTemperature = records.contains { $0.humidity != nil && $0.temperature != nil }
         let hasPressure = records.contains { record in

@@ -120,7 +120,7 @@ import RuuviStorage
         }
     }
 
-    private func exporter(storage: RuuviStorage, settings: RuuviLocalSettings) -> RuuviServiceExportImpl {
+    func exporter(storage: RuuviStorage, settings: RuuviLocalSettings) -> RuuviServiceExportImpl {
         RuuviServiceExportImpl(
             ruuviStorage: storage,
             measurementService: RuuviServiceMeasurementImpl(
@@ -128,7 +128,7 @@ import RuuviStorage
             emptyValueString: "—", ruuviLocalSettings: settings)
     }
 
-    private func record(sensor: RuuviTagSensor, date: Date) -> RuuviTagSensorRecordStruct {
+    func record(sensor: RuuviTagSensor, date: Date) -> RuuviTagSensorRecordStruct {
         RuuviTagSensorRecordStruct(
             luid: sensor.luid, date: date, source: .log, macId: sensor.macId, rssi: -55,
             version: 5, temperature: .init(value: 20, unit: .celsius), humidity: nil, pressure: nil,

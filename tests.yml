@@ -330,6 +330,8 @@ targets:
         embed: false
       - target: RuuviCore
         embed: false
+      - target: RuuviLocalization
+        embed: false
       - target: RuuviService
         embed: false
       - target: RuuviOntology

@@ -256,6 +256,7 @@ let package = Package(
         .testTarget(
             name: "RuuviServiceTests",
             dependencies: [
+                "RuuviLocalization",
                 .product(name: "GRDB", package: "GRDB.swift"),
                 .product(name: "RuuviRepositoryCoordinator", package: "RuuviRepository"),
                 "RuuviServiceExport", "RuuviServiceMeasurement",

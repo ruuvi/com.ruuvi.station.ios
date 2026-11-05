@@ -132,6 +132,7 @@ final class SensorPropertiesTests: XCTestCase {
 }
 
 @MainActor final class PropertiesFixture {
+    let context: SQLiteContext
     let directory: URL
     let pool: RuuviPool
     let storage: RuuviStorage
@@ -159,7 +160,7 @@ final class SensorPropertiesTests: XCTestCase {
     init() throws {
         directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
-        let context = try SQLiteContextFactoryGRDB().create(at: directory.appendingPathComponent("test.sqlite"))
+        context = try SQLiteContextFactoryGRDB().create(at: directory.appendingPathComponent("test.sqlite"))
         let persistence = RuuviPersistenceSQLite(context: context)
         let local = RuuviLocalFactoryUserDefaults()
         pool = RuuviPoolFactoryCoordinator().create(
@@ -167,7 +168,10 @@ final class SensorPropertiesTests: XCTestCase {
             connectionPersistence: local.createLocalConnections())
         storage = RuuviStorageFactoryCoordinator().create(sqlite: persistence)
     }
-    deinit { try? FileManager.default.removeItem(at: directory) }
+    deinit {
+        try? context.database.dbPool.close()
+        try? FileManager.default.removeItem(at: directory)
+    }
 }
 
 private struct ImageCropStub: RuuviCoreImage {
