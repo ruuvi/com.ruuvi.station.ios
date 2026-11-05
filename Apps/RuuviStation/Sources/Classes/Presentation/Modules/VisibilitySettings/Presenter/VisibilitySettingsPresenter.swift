@@ -11,7 +11,7 @@ import RuuviService
 #endif
 
 final class VisibilitySettingsPresenter: VisibilitySettingsModuleInput {
-    private struct PersistSignature: Equatable {
+    struct PersistSignature: Equatable {
         let usesDefaultOrder: Bool
         let displayOrderCodes: [String]?
     }
@@ -34,12 +34,15 @@ final class VisibilitySettingsPresenter: VisibilitySettingsModuleInput {
     private var usesDefaultOrder: Bool = true
     private var lastKnownCustomOrderCodes: [String]?
     private var isSaving: Bool = false
-    private var hasPendingPersistRequest = false
     private var needsPersistVisibleReorder: Bool = false
     private let persistDebouncer = Debouncer(delay: 1.0)
     private var isPersistScheduled = false
     private var hasUnsavedChanges = false
     private var inFlightPersistSignature: PersistSignature?
+    private var persistTask: Task<Void, Never>?
+    private var sessionID = UUID()
+    private var indicatorCache: [MeasurementDisplayVariant: RuuviTagCardSnapshotIndicatorData] = [:]
+    private var indicatorCacheDate: Date?
 
     init(
         sensorPropertiesService: RuuviServiceSensorProperties,
@@ -54,6 +57,9 @@ final class VisibilitySettingsPresenter: VisibilitySettingsModuleInput {
         sensor: RuuviTagSensor,
         sensorSettings: SensorSettings?
     ) {
+        sessionID = UUID()
+        indicatorCache = [:]
+        indicatorCacheDate = nil
         self.snapshot = snapshot
         self.sensor = sensor
         self.sensorSettings = sensorSettings
@@ -65,6 +71,7 @@ final class VisibilitySettingsPresenter: VisibilitySettingsModuleInput {
     }
 
     func dismiss(completion: (() -> Void)?) {
+        flushPendingPersistIfNeeded()
         shutdown()
         completion?()
     }
@@ -131,7 +138,8 @@ extension VisibilitySettingsPresenter: VisibilitySettingsViewOutput {
                 confirmTitle: RuuviLocalization.yes,
                 cancelTitle: RuuviLocalization.no,
                 onConfirm: { [weak self] in
-                    self?.performHide(at: index)
+                    guard let self, let currentIndex = self.visibleVariants.firstIndex(of: variant) else { return }
+                    self.performHide(at: currentIndex)
                 },
                 onCancel: { [weak self] in
                     self?.presentCurrentState()
@@ -262,8 +270,11 @@ private extension VisibilitySettingsPresenter {
         lastKnownCustomOrderCodes = nil
         usesDefaultOrder = true
         isSaving = false
-        hasPendingPersistRequest = false
         needsPersistVisibleReorder = false
+        sessionID = UUID()
+        persistTask = nil
+        indicatorCache.removeAll()
+        indicatorCacheDate = nil
         snapshot = nil
         sensor = nil
         sensorSettings = nil
@@ -304,6 +315,14 @@ private extension VisibilitySettingsPresenter {
 
     func rebuildState() {
         guard let snapshot else { return }
+        let recordDate = snapshot.latestRawRecord?.date
+        if indicatorCacheDate != recordDate {
+            indicatorCache.removeAll()
+            indicatorCacheDate = recordDate
+        }
+        for indicator in snapshot.displayData.indicatorGrid?.indicators ?? [] {
+            indicatorCache[indicator.variant] = indicator
+        }
         let currentVisibility = snapshot.displayData.measurementVisibility
 
         if let explicit = currentVisibility?.usesDefaultOrder {
@@ -319,7 +338,9 @@ private extension VisibilitySettingsPresenter {
         let available =
             currentVisibility?.availableVariants
             ?? defaultAvailableVariants(for: snapshot)
-        availableVariants = available
+        availableVariants = available.reduce(into: []) { result, variant in
+            if !result.contains(variant) { result.append(variant) }
+        }
 
         let baseVisible: [MeasurementDisplayVariant]
         if usesDefaultOrder {
@@ -356,12 +377,12 @@ private extension VisibilitySettingsPresenter {
     }
 
     func defaultVisibleVariants(for snapshot: RuuviTagCardSnapshot) -> [MeasurementDisplayVariant] {
-        RuuviTagDataService.measurementDisplayProfile(for: snapshot)
+        RuuviTagDataService.measurementDisplayProfile(for: snapshot, useDefaultOrder: true)
             .orderedVisibleVariants(for: .indicator)
     }
 
     func defaultVisibleVariants(for sensor: RuuviTagSensor) -> [MeasurementDisplayVariant] {
-        RuuviTagDataService.defaultMeasurementDisplayProfile(for: sensor)
+        RuuviTagDataService.measurementDisplayProfile(for: sensor, useDefaultOrder: true)
             .orderedVisibleVariants(for: .indicator)
     }
 
@@ -370,7 +391,7 @@ private extension VisibilitySettingsPresenter {
         available: [MeasurementDisplayVariant]
     ) -> [MeasurementDisplayVariant] {
         var filtered: [MeasurementDisplayVariant] = []
-        for variant in initial where available.contains(variant) {
+        for variant in initial where available.contains(variant) && !filtered.contains(variant) {
             filtered.append(variant)
         }
         if filtered.isEmpty {
@@ -385,7 +406,8 @@ private extension VisibilitySettingsPresenter {
         visible: [MeasurementDisplayVariant]
     ) -> [MeasurementDisplayVariant] {
         var hidden: [MeasurementDisplayVariant] = []
-        for variant in initial where available.contains(variant) && !visible.contains(variant) {
+        for variant in initial
+        where available.contains(variant) && !visible.contains(variant) && !hidden.contains(variant) {
             hidden.append(variant)
         }
 
@@ -457,11 +479,10 @@ private extension VisibilitySettingsPresenter {
             return snapshot.displayData.indicatorGrid
         }
 
-        let existingIndicators = snapshot.displayData.indicatorGrid?.indicators ?? []
-        let indicatorLookup = Dictionary(
-            uniqueKeysWithValues: existingIndicators.map {
-                ($0.variant, $0)
-            })
+        var indicatorLookup = indicatorCache
+        for indicator in snapshot.displayData.indicatorGrid?.indicators ?? [] {
+            indicatorLookup[indicator.variant] = indicator
+        }
 
         let previewIndicators: [RuuviTagCardSnapshotIndicatorData] = visibleVariants.compactMap { variant in
             indicatorData(for: variant, existing: indicatorLookup)
@@ -508,6 +529,7 @@ private extension VisibilitySettingsPresenter {
 
         let applyDefault: () -> Void = { [weak self] in
             guard let self else { return }
+            let previouslyVisible = self.visibleVariants
             self.visibleVariants = self.resolveVisible(
                 from: defaultVisible,
                 available: self.availableVariants
@@ -517,6 +539,9 @@ private extension VisibilitySettingsPresenter {
                 available: self.availableVariants,
                 visible: self.visibleVariants
             )
+            for variant in previouslyVisible {
+                self.disableAlertIfNeeded(for: variant)
+            }
             self.usesDefaultOrder = true
             self.schedulePersist()
             self.presentCurrentState()
@@ -552,27 +577,18 @@ private extension VisibilitySettingsPresenter {
     func measurementTypeNamesWithActiveAlertsWhenSwitchingToDefault(
         targetVisible: [MeasurementDisplayVariant]
     ) -> [String] {
-        let targetTypes = targetVisible.map(\.type)
-        var affectedTypes: [MeasurementType] = []
-        for variant in visibleVariants {
-            let type = variant.type
-            guard !targetTypes.contains(where: { $0.isSameCase(as: type) }) else {
-                continue
-            }
-            if hasActiveAlert(for: type) {
-                affectedTypes.append(type)
-            }
+        let retainedAlerts = Set(targetVisible.compactMap { $0.toAlertType()?.rawValue })
+        var seenAlerts = Set<String>()
+        return visibleVariants.compactMap { variant in
+            guard let alert = variant.toAlertType(), !retainedAlerts.contains(alert.rawValue),
+                hasActiveAlert(for: variant), seenAlerts.insert(alert.rawValue).inserted
+            else { return nil }
+            return variant.type.shortNameWithUnit(for: variant)
         }
-
-        let uniqueTypes = affectedTypes.reduce(into: [MeasurementType]()) { partial, type in
-            if !partial.contains(where: { $0.isSameCase(as: type) }) {
-                partial.append(type)
-            }
-        }
-        return uniqueTypes.map { $0.shortName }
     }
 
     func performHide(at index: Int) {
+        guard visibleVariants.indices.contains(index), visibleVariants.count > 1 else { return }
         let variant = visibleVariants.remove(at: index)
         disableAlertIfNeeded(for: variant)
         if !hiddenVariants.contains(variant) {
@@ -588,29 +604,15 @@ private extension VisibilitySettingsPresenter {
         variant: MeasurementDisplayVariant,
         excludingIndex: Int
     ) -> Bool {
-        guard hasActiveAlert(for: variant.type) else { return false }
-        let remainingVisibleCount = visibleVariants.enumerated().filter { entry in
-            entry.offset != excludingIndex && entry.element.type.isSameCase(as: variant.type)
-        }.count
-        return remainingVisibleCount == 0
+        guard hasActiveAlert(for: variant), let alert = variant.toAlertType() else { return false }
+        return !visibleVariants.enumerated().contains { entry in
+            entry.offset != excludingIndex && entry.element.toAlertType()?.rawValue == alert.rawValue
+        }
     }
 
-    func hasActiveAlert(for type: MeasurementType) -> Bool {
-        guard let snapshot else { return false }
-        let hasMeasurementAlert = snapshot.alertData.alertConfigurations.values.contains { config in
-            guard let alertType = config.alertType ?? config.type?.toAlertType() else { return false }
-            guard let measurementType = alertType.toMeasurementType() else { return false }
-            return measurementType.isSameCase(as: type) && config.isActive
-        }
-
-        if hasMeasurementAlert {
-            return true
-        }
-
-        return snapshot.alertData.nonMeasurementAlerts.contains { alertType, config in
-            guard let measurementType = alertType.toMeasurementType() else { return false }
-            return measurementType.isSameCase(as: type) && config.isActive
-        }
+    func hasActiveAlert(for variant: MeasurementDisplayVariant) -> Bool {
+        guard let alert = variant.toAlertType() else { return false }
+        return snapshot?.getAlertConfig(for: alert)?.isActive == true
     }
 
     func forcedVisibleMeasurementTypes(for snapshot: RuuviTagCardSnapshot) -> [MeasurementType] {
@@ -623,44 +625,37 @@ private extension VisibilitySettingsPresenter {
 
     func persistCurrentSelection() {
         guard let sensor else { return }
-
-        if isSaving {
-            hasPendingPersistRequest = true
-            return
-        }
-
-        let displayOrderCodes = currentDisplayOrderCodes()
-        inFlightPersistSignature = PersistSignature(
+        let signature = PersistSignature(
             usesDefaultOrder: usesDefaultOrder,
-            displayOrderCodes: displayOrderCodes
+            displayOrderCodes: currentDisplayOrderCodes()
         )
-
+        guard !isSaving || signature != inFlightPersistSignature else { return }
+        inFlightPersistSignature = signature
         isSaving = true
         view?.setSaving(true)
-
-        Task {
-            @MainActor [
-                weak self, sensorPropertiesService = sensorPropertiesService, sensor = sensor,
-                usesDefaultOrder = usesDefaultOrder
-            ] in
+        let previous = persistTask
+        let session = sessionID
+        // Each submitted write owns immutable input and waits for the previous write.
+        // Closing the screen releases the presenter while the final edit still reaches storage.
+        persistTask = Task { @MainActor [weak self, sensorPropertiesService] in
+            await previous?.value
             do {
-                let value =
-                    try await sensorPropertiesService
-                    .updateDisplaySettings(
-                        for: sensor,
-                        displayOrder: displayOrderCodes,
-                        defaultDisplayOrder: usesDefaultOrder
+                let saved = try await sensorPropertiesService.updateDisplaySettings(
+                    for: sensor, displayOrder: signature.displayOrderCodes,
+                    defaultDisplayOrder: signature.usesDefaultOrder
+                )
+                WidgetSensorCache().upsert(sensor: sensor.any, record: nil, settings: saved)
+                #if canImport(WidgetKit)
+                    UserDefaults(suiteName: AppGroupConstants.appGroupSuiteIdentifier)?.set(
+                        true, forKey: AppGroupConstants.forceRefreshWidgetKey
                     )
-                ({ [weak self] settings in
-                    self?.handlePersistSuccess(
-                        settings: settings,
-                        displayOrderCodes: displayOrderCodes
-                    )
-                })(value)
+                    WidgetCenter.shared.reloadAllTimelines()
+                #endif
+                guard let self, self.sessionID == session, self.inFlightPersistSignature == signature else { return }
+                self.handlePersistSuccess(settings: saved, signature: signature)
             } catch {
-                ({ [weak self] error in
-                    self?.handlePersistFailure(error: error)
-                })(error)
+                guard let self, self.sessionID == session, self.inFlightPersistSignature == signature else { return }
+                self.handlePersistFailure(error: error)
             }
         }
     }
@@ -708,7 +703,7 @@ private extension VisibilitySettingsPresenter {
         guard let alertType = variant.toAlertType() else { return }
         guard snapshot.getAlertConfig(for: alertType)?.isActive == true else { return }
         let hasOtherVisibleVariants = visibleVariants.contains {
-            $0.type.isSameCase(as: variant.type) && $0 != variant
+            $0.toAlertType()?.rawValue == alertType.rawValue
         }
         guard !hasOtherVisibleVariants else { return }
         withAlertService { service, snapshot, sensor in
@@ -806,61 +801,30 @@ private extension VisibilitySettingsPresenter {
         }
     }
 
-    func handlePersistSuccess(
-        settings: SensorSettings,
-        displayOrderCodes: [String]?
-    ) {
-        runOnMain { [weak self] in
-            guard let self else { return }
-            self.sensorSettings = settings
-            if let sensor = self.sensor {
-                WidgetSensorCache().upsert(
-                    sensor: sensor.any,
-                    record: nil,
-                    settings: settings
-                )
-            }
-            if let codes = settings.displayOrder, !codes.isEmpty {
-                self.lastKnownCustomOrderCodes = codes
-            }
-            self.updateMeasurementPreferenceCache(with: displayOrderCodes)
-            self.applySelectionToSnapshot()
-            if !self.hasPendingPersistRequest && !self.isPersistScheduled {
-                self.hasUnsavedChanges = false
-            }
-            #if canImport(WidgetKit)
-                UserDefaults(suiteName: AppGroupConstants.appGroupSuiteIdentifier)?.set(
-                    true,
-                    forKey: AppGroupConstants.forceRefreshWidgetKey
-                )
-                WidgetCenter.shared.reloadAllTimelines()
-            #endif
-            self.inFlightPersistSignature = nil
-            self.finishPersist()
+    func handlePersistSuccess(settings: SensorSettings, signature: PersistSignature) {
+        sensorSettings = settings
+        let current = PersistSignature(
+            usesDefaultOrder: usesDefaultOrder, displayOrderCodes: currentDisplayOrderCodes()
+        )
+        hasUnsavedChanges = isPersistScheduled || current != signature
+        if !hasUnsavedChanges, let codes = settings.displayOrder, !codes.isEmpty {
+            lastKnownCustomOrderCodes = codes
         }
+        finishPersist()
     }
 
     func handlePersistFailure(error: Error) {
-        runOnMain { [weak self] in
-            guard let self else { return }
-            self.view?.showMessage(error.localizedDescription)
-            if !self.hasPendingPersistRequest && !self.isPersistScheduled {
-                self.hasUnsavedChanges = false
-            }
-            self.inFlightPersistSignature = nil
-            self.finishPersist()
-            self.rebuildState()
-            self.presentCurrentState()
-        }
+        view?.showMessage(error.localizedDescription)
+        // Keep the edit retryable when the user leaves the screen after a storage error.
+        hasUnsavedChanges = true
+        finishPersist()
+        presentCurrentState()
     }
 
     func finishPersist() {
+        inFlightPersistSignature = nil
         isSaving = false
         view?.setSaving(false)
-        if hasPendingPersistRequest {
-            hasPendingPersistRequest = false
-            persistCurrentSelection()
-        }
     }
 
     func schedulePersist() {
@@ -877,22 +841,9 @@ private extension VisibilitySettingsPresenter {
     }
 
     func flushPendingPersistIfNeeded() {
-        guard hasUnsavedChanges || isPersistScheduled || isSaving || hasPendingPersistRequest else {
-            return
-        }
+        guard hasUnsavedChanges || isPersistScheduled || isSaving else { return }
         persistDebouncer.cancel()
         isPersistScheduled = false
-        let currentSignature = PersistSignature(
-            usesDefaultOrder: usesDefaultOrder,
-            displayOrderCodes: currentDisplayOrderCodes()
-        )
-        if isSaving {
-            if let inFlightPersistSignature, inFlightPersistSignature == currentSignature {
-                return
-            }
-            hasPendingPersistRequest = true
-            return
-        }
         persistCurrentSelection()
     }
 
@@ -907,13 +858,6 @@ private extension VisibilitySettingsPresenter {
         return codes.isEmpty ? nil : codes
     }
 
-    func runOnMain(_ block: @escaping () -> Void) {
-        if Thread.isMainThread {
-            block()
-        } else {
-            DispatchQueue.main.async(execute: block)
-        }
-    }
 }
 
 // swiftlint:enable file_length

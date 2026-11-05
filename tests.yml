@@ -412,7 +412,13 @@ targets:
       - path: Apps/RuuviStation/Tests/Unit/FirmwareDownloadTests.swift
       - path: Apps/RuuviStation/Tests/Unit/FirmwareLifetimeTests.swift
       - path: Apps/RuuviStation/Tests/Unit/ExtensionPackagingTests.swift
+      - path: Apps/RuuviStation/Tests/Unit/AppBehavior
     dependencies:
+      - package: DGCharts
+      - target: RuuviCloud
+        embed: false
+      - target: RuuviReactor
+        embed: false
       - target: station
       - target: RuuviService
         embed: false

@@ -434,28 +434,28 @@ extension CardsGraphInternalView {
             data = emptyDataSet
         }
 
-        if highestVisibleX >= data?.xMax ?? 0 {
-            for point in newData {
-                if let set = data?.dataSets.first as? LineChartDataSet,
-                    let index = data?.index(
-                    of: set
-                ) {
-                    data?.appendEntry(point, toDataSet: index)
-                    setYAxisLimit(min: data?.yMin ?? 0, max: data?.yMax ?? 0)
-                }
+        // Keep receiving measurements while the user inspects older history. Only the
+        // viewport follows the clock; panning must never discard incoming data.
+        let followsLatest = highestVisibleX >= (data?.xMax ?? 0)
+        if let set = data?.dataSets.first as? LineChartDataSet,
+           let index = data?.index(of: set) {
+            for point in newData.sorted(by: { $0.x < $1.x }) where point.x.isFinite && point.y.isFinite {
+                if let last = set.entries.last, point.x <= last.x { continue }
+                data?.appendEntry(point, toDataSet: index)
             }
-
+        }
+        if followsLatest {
+            setYAxisLimit(min: data?.yMin ?? 0, max: data?.yMax ?? 0)
             if !settings.chartShowAll {
                 let from = RuuviHistoryWindow.start(
                     limitHours: settings.dataPruningOffsetHours,
-                    requestedHours: settings.chartShowAll ? nil : settings.chartDurationHours
+                    requestedHours: settings.chartDurationHours
                 )
                 xAxis.axisMinimum = from.timeIntervalSince1970
                 xAxis.axisMaximum = Date().timeIntervalSince1970
             }
-
-            reloadData()
         }
+        reloadData()
     }
 
     func setMarker(

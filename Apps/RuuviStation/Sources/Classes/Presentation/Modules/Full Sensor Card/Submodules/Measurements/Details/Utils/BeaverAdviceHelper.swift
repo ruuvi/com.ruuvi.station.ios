@@ -167,9 +167,10 @@ public struct BeaverAdviceHelper {
         co2Quality: MeasurementQualityState?,
         pm25Quality: MeasurementQualityState?,
         lastUpdated: Date?,
+        now: Date = Date()
     ) -> String {
         if let lastUpdated,
-           Date().timeIntervalSince(lastUpdated) > outdateThreshold {
+           now.timeIntervalSince(lastUpdated) > outdateThreshold {
             return RuuviLocalization.aqiAdviceOutdated
         }
 
@@ -179,7 +180,7 @@ public struct BeaverAdviceHelper {
         }
 
         let aqiAdvices = aqiSet(for: aqiQuality)
-        let randomAdvice = aqiAdvices.randomElement() ?? aqiAdvices[0]
+        guard let randomAdvice = aqiAdvices.randomElement() else { return RuuviLocalization.na }
 
         if let additionalAdvice = co2PmAdvice(
             co2: co2Quality,

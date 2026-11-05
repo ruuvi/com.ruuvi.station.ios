@@ -45,8 +45,9 @@ final class NavigationSmokeTests: XCTestCase {
         for destination in ["units", "resolution", "chart", "appearance", "notifications"] {
             let cell = app.cells["settings." + destination]
             XCTAssertTrue(cell.waitForExistence(timeout: 5), destination)
+            if !cell.isHittable { list.swipeUp() }
             cell.tap()
-            XCTAssertFalse(app.tables["settings.list"].exists, destination)
+            XCTAssertTrue(list.waitForNonExistence(timeout: 5), destination + "\n" + app.debugDescription)
             XCTAssertEqual(app.state, .runningForeground)
             attachScreenshot(app, name: destination)
             let back = app.navigationBars.buttons.element(boundBy: 0)

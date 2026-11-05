@@ -79,6 +79,7 @@ final class MeasurementDetailsViewController: UIViewController {
 
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
+        label.accessibilityIdentifier = "measurement.title"
         label.textColor = RuuviColor.dashboardIndicatorBig.color
         label.font = UIFont.ruuviCallout()
         label.textAlignment = .left
@@ -97,6 +98,7 @@ final class MeasurementDetailsViewController: UIViewController {
 
     private lazy var valueLabel: UILabel = {
         let label = UILabel()
+        label.accessibilityIdentifier = "measurement.value"
         label.textColor = RuuviColor.dashboardIndicatorBig.color
         label.font = UIFont.ruuviCallout()
         label.textAlignment = .right
@@ -114,6 +116,7 @@ final class MeasurementDetailsViewController: UIViewController {
 
     private lazy var unitLabel: UILabel = {
         let label = UILabel()
+        label.accessibilityIdentifier = "measurement.unit"
         label.textColor = RuuviColor.dashboardIndicatorBig.color
         label.font = UIFont.ruuviHeadlineTiny()
         label.textAlignment = .right
@@ -246,6 +249,7 @@ final class MeasurementDetailsViewController: UIViewController {
 
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
+        label.accessibilityIdentifier = "measurement.description"
         label.textColor = RuuviColor.dashboardIndicator.color
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
@@ -696,6 +700,9 @@ private extension MeasurementDetailsViewController {
     }
 
     func setupAQIContent() {
+        aqiMeasurementsStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        co2Card = nil
+        pm25Card = nil
         let measurements = tagSnapshot.displayData.indicatorGrid?
             .indicators.filter { $0.type == .co2 || $0.type == .pm25 }
 
@@ -724,6 +731,7 @@ private extension MeasurementDetailsViewController {
     }
 
     func hideAQIContent() {
+        lastAQIQualityState = nil
         aqiMeasurementsStack.arrangedSubviews.forEach {
             $0.removeFromSuperview()
         }
@@ -930,6 +938,14 @@ private extension MeasurementDetailsViewController {
     func updateAQIContent(
         from indicatorData: RuuviTagCardSnapshotDisplayData
     ) {
+        let quality = indicatorData.indicatorGrid?.indicators.first { $0.type == .aqi }?.qualityState
+        if case .undefined = quality {
+            hideAQIContent()
+            return
+        }
+        if co2Card == nil && pm25Card == nil {
+            setupAQIContent()
+        }
         let measurements = indicatorData.indicatorGrid?.indicators
             .filter { $0.type == .co2 || $0.type == .pm25 }
 

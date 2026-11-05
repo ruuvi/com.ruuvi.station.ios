@@ -1495,9 +1495,10 @@ extension RuuviTagDataService {
     )
 
     static func measurementDisplayProfile(
-        for sensor: RuuviTagSensor
+        for sensor: RuuviTagSensor,
+        useDefaultOrder: Bool = false
     ) -> MeasurementDisplayProfile {
-        let preference = measurementDisplayPreference(for: sensor.id)
+        let preference = useDefaultOrder ? nil : measurementDisplayPreference(for: sensor.id)
         let baseProfile = measurementDisplayOverride(for: sensor.id) ?? defaultMeasurementDisplayProfile(for: sensor)
         let profileWithPreference = applyMeasurementPreference(
             preference: preference,
@@ -1510,9 +1511,10 @@ extension RuuviTagDataService {
     }
 
     static func measurementDisplayProfile(
-        for snapshot: RuuviTagCardSnapshot
+        for snapshot: RuuviTagCardSnapshot,
+        useDefaultOrder: Bool = false
     ) -> MeasurementDisplayProfile {
-        let preference = measurementDisplayPreference(for: snapshot.id)
+        let preference = useDefaultOrder ? nil : measurementDisplayPreference(for: snapshot.id)
         let baseProfile =
             measurementDisplayOverride(for: snapshot.id) ?? defaultMeasurementDisplayProfile(for: snapshot)
         let profileWithPreference = applyMeasurementPreference(

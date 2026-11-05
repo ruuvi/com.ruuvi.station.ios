@@ -5,8 +5,6 @@ import RuuviOntology
 import RuuviLocal
 import RuuviService
 import RuuviStorage
-import RuuviReactor
-import BTKit
 import DGCharts
 import Combine
 import RuuviLocalization
@@ -21,8 +19,6 @@ class MeasurementDetailsPresenter: NSObject {
     private let alertService: RuuviServiceAlert
     private let ruuviStorage: RuuviStorage
     private let cloudSyncService: RuuviServiceCloudSync
-    private let ruuviReactor: RuuviReactor
-    private let localSyncState: RuuviLocalSyncState
     private lazy var variantResolver = MeasurementVariantResolver(
         settings: settings,
         measurementService: measurementService,
@@ -51,36 +47,16 @@ class MeasurementDetailsPresenter: NSObject {
     private var currentAlertRangeFingerprint: AlertRangeFingerprint?
     private weak var output: MeasurementDetailsPresenterOutput?
 
-    // Thread-safe data management
-    private let dataQueue = DispatchQueue(
-        label: "com.ruuvi.measurementdetails.data",
-        attributes: .concurrent
-    )
-    private var _ruuviTagData: [RuuviMeasurement] = []
-    private var ruuviTagData: [RuuviMeasurement] {
-        get { dataQueue.sync { _ruuviTagData } }
-        set { dataQueue.async(flags: .barrier) { self._ruuviTagData = newValue } }
-    }
-
-    private var _lastMeasurementDate: Date?
-    private var lastMeasurementDate: Date? {
-        get { dataQueue.sync { _lastMeasurementDate } }
-        set { dataQueue.async(flags: .barrier) { self._lastMeasurementDate = newValue } }
-    }
-
-    // State management
-    private let stateQueue = DispatchQueue(label: "com.ruuvi.measurementdetails.state")
-    private var _isDataLoaded = false
-    private var isDataLoaded: Bool {
-        get { stateQueue.sync { _isDataLoaded } }
-        set { stateQueue.async { self._isDataLoaded = newValue } }
-    }
-
-    private var _isViewActive = false
-    private var isViewActive: Bool {
-        get { stateQueue.sync { _isViewActive } }
-        set { stateQueue.async { self._isViewActive = newValue } }
-    }
+    // UIKit and the subscriptions below access presentation state on the main thread.
+    // Requests carry a generation because a storage implementation may complete after cancellation.
+    private var ruuviTagData: [RuuviMeasurement] = []
+    private var lastMeasurementDate: Date?
+    private var isDataLoaded = false
+    private var isViewActive = false
+    private var requestGeneration = UUID()
+    private var historyTask: Task<Void, Never>?
+    private var latestTask: Task<Void, Never>?
+    private var latestReadPending = false
 
     // Observation tokens
     private var unitChangeTokens: [NSObjectProtocol] = []
@@ -100,9 +76,7 @@ class MeasurementDetailsPresenter: NSObject {
         measurementService: RuuviServiceMeasurement,
         alertService: RuuviServiceAlert,
         ruuviStorage: RuuviStorage,
-        cloudSyncService: RuuviServiceCloudSync,
-        ruuviReactor: RuuviReactor,
-        localSyncState: RuuviLocalSyncState
+        cloudSyncService: RuuviServiceCloudSync
     ) {
         self.settings = settings
         self.flags = flags
@@ -110,9 +84,13 @@ class MeasurementDetailsPresenter: NSObject {
         self.alertService = alertService
         self.ruuviStorage = ruuviStorage
         self.cloudSyncService = cloudSyncService
-        self.ruuviReactor = ruuviReactor
-        self.localSyncState = localSyncState
         super.init()
+    }
+
+    deinit {
+        historyTask?.cancel()
+        latestTask?.cancel()
+        unitChangeTokens.forEach(NotificationCenter.default.removeObserver)
     }
 }
 
@@ -129,6 +107,7 @@ extension MeasurementDetailsPresenter: MeasurementDetailsPresenterInput {
         sensorSettings: SensorSettings?,
         output: MeasurementDetailsPresenterOutput
     ) {
+        stop()
         self.ruuviTag = ruuviTag
         self.snapshot = snapshot
         self.measurementType = measurementType
@@ -147,15 +126,21 @@ extension MeasurementDetailsPresenter: MeasurementDetailsPresenterInput {
     }
 
     func start() {
-        guard !isViewActive else { return }
+        guard !isViewActive, snapshot != nil, ruuviTag != nil else { return }
 
         isViewActive = true
         setupObservers()
-        loadInitialData()
+        loadHistoricalData(syncCloud: true)
     }
 
     func stop() {
         isViewActive = false
+        requestGeneration = UUID()
+        historyTask?.cancel()
+        historyTask = nil
+        latestTask?.cancel()
+        latestTask = nil
+        latestReadPending = false
         removeAllObservers()
     }
 
@@ -187,206 +172,122 @@ extension MeasurementDetailsPresenter: MeasurementDetailsViewOutput {
     func didTapMeasurement(_ measurement: RuuviTagCardSnapshotIndicatorData) {
         measurementVariant = measurement.variant
         measurementType = measurement.type
-        loadInitialData()
+        loadHistoricalData(syncCloud: true)
     }
 }
 
 // MARK: - Data Loading
 
 private extension MeasurementDetailsPresenter {
-
-    func loadInitialData() {
-        loadHistoricalData { [weak self] in
-            self?.syncCloudDataIfNeeded()
-        }
-    }
-
-    func loadHistoricalData(completion: (() -> Void)? = nil) {
+    func loadHistoricalData(syncCloud: Bool = false) {
+        guard isViewActive, let sensor = ruuviTag else { return }
+        historyTask?.cancel()
+        latestTask?.cancel()
+        latestTask = nil
+        latestReadPending = false
+        isDataLoaded = false
+        let generation = UUID()
+        requestGeneration = generation
         let fromDate = RuuviHistoryWindow.start(
-            limitHours: settings.dataPruningOffsetHours,
-            requestedHours: defaultDurationHours
+            limitHours: settings.dataPruningOffsetHours, requestedHours: defaultDurationHours
         )
-
         let shouldDownsample = !settings.chartShowAllMeasurements
-
-        if shouldDownsample {
-            loadWithDownsamplingCheck(from: fromDate, completion: completion)
-        } else {
-            loadAllData(from: fromDate, completion: completion)
-        }
-    }
-
-    func loadAllData(from date: Date, completion: (() -> Void)? = nil) {
-
-        Task { @MainActor [weak self, ruuviStorage = ruuviStorage, ruuviTag = ruuviTag!] in
-            defer {
-                ({
-                    completion?()
-                })()
-            }
-            do throws(RuuviStorageError) {
-                let value = try await ruuviStorage.read(
-                    ruuviTag.id,
-                    after: date,
-                    with: TimeInterval(2)
-                )
-                ({ [weak self] results in
-                    self?.handleDataLoaded(results.map(\.measurement))
-                })(value)
+        let maximumPoints = maximumPointsCount
+        let interval = highDensityIntervalMinutes
+        let threshold = minimumDownsampleThreshold
+        historyTask = Task { @MainActor [weak self, ruuviStorage, cloudSyncService] in
+            do {
+                var records = try await ruuviStorage.read(sensor.id, after: fromDate, with: 2)
+                guard !Task.isCancelled else { return }
+                if shouldDownsample, records.count >= threshold {
+                    records = try await ruuviStorage.readDownsampled(
+                        sensor.id, after: fromDate, with: interval, pick: maximumPoints
+                    )
+                }
+                guard !Task.isCancelled, self?.requestGeneration == generation else { return }
+                self?.handleDataLoaded(records.map(\.measurement))
             } catch {
-                ({ [weak self] _ in
-                    self?.handleDataLoadError()
-                })(error)
+                guard !Task.isCancelled, self?.requestGeneration == generation else { return }
+                self?.ruuviTagData = []
+                self?.lastMeasurementDate = nil
+                self?.isDataLoaded = true
+                self?.view?.setNoDataLabelVisibility(show: true)
             }
-        }
-    }
-
-    func loadWithDownsamplingCheck(from date: Date, completion: (() -> Void)? = nil) {
-
-        Task { @MainActor [weak self, ruuviStorage = ruuviStorage, ruuviTag = ruuviTag!] in
-            do throws(RuuviStorageError) {
-                let value = try await ruuviStorage.read(
-                    ruuviTag.id,
-                    after: date,
-                    with: TimeInterval(2)
-                )
-                ({ [weak self] results in
-                    guard let self = self else {
-                        completion?()
-                        return
-                    }
-
-                    if results.count < self.minimumDownsampleThreshold {
-                        self.handleDataLoaded(results.map(\.measurement))
-                        completion?()
-                    } else {
-                        self.loadDownsampledData(from: date, completion: completion)
-                    }
-                })(value)
+            guard syncCloud, sensor.isCloud, !Task.isCancelled,
+                self?.isViewActive == true, self?.requestGeneration == generation
+            else { return }
+            do {
+                try await cloudSyncService.sync(sensor: sensor)
+                guard !Task.isCancelled, self?.requestGeneration == generation else { return }
+                self?.loadHistoricalData()
             } catch {
-                ({ [weak self] _ in
-                    self?.handleDataLoadError()
-                    completion?()
-                })(error)
-            }
-        }
-    }
-
-    func loadDownsampledData(from date: Date, completion: (() -> Void)? = nil) {
-
-        Task {
-            @MainActor [
-                weak self, ruuviStorage = ruuviStorage, ruuviTag = ruuviTag!,
-                highDensityIntervalMinutes = highDensityIntervalMinutes, maximumPointsCount = maximumPointsCount
-            ] in
-            defer {
-                ({
-                    completion?()
-                })()
-            }
-            do throws(RuuviStorageError) {
-                let value = try await ruuviStorage.readDownsampled(
-                    ruuviTag.id,
-                    after: date,
-                    with: highDensityIntervalMinutes,
-                    pick: maximumPointsCount
-                )
-                ({ [weak self] results in
-                    self?.handleDataLoaded(results.map(\.measurement))
-                })(value)
-            } catch {
-                ({ [weak self] _ in
-                    self?.handleDataLoadError()
-                })(error)
+                // Retain the available local chart when an online refresh fails.
             }
         }
     }
 
     func handleDataLoaded(_ measurements: [RuuviMeasurement]) {
-        // Sort measurements by date to ensure correct order
-        let sortedMeasurements = measurements.sorted { $0.date < $1.date }
-
-        ruuviTagData = sortedMeasurements
-        lastMeasurementDate = sortedMeasurements.last?.date
+        ruuviTagData = orderedUniqueMeasurements(measurements)
+        lastMeasurementDate = ruuviTagData.last?.date
         isDataLoaded = true
-
-        DispatchQueue.main.async { [weak self] in
-            self?.updateChart()
+        updateChart()
+        if latestReadPending {
+            latestReadPending = false
+            loadLatestMeasurements()
         }
     }
 
-    func handleDataLoadError() {
-        ruuviTagData = []
-        isDataLoaded = true
-
-        DispatchQueue.main.async { [weak self] in
-            self?.view?.setNoDataLabelVisibility(show: true)
-        }
+    func orderedUniqueMeasurements(_ measurements: [RuuviMeasurement]) -> [RuuviMeasurement] {
+        var dates = Set<Date>()
+        return measurements.filter { $0.date.timeIntervalSince1970.isFinite && dates.insert($0.date).inserted }
+            .sorted { $0.date < $1.date }
     }
 
     func loadLatestMeasurements() {
-        guard let ruuviTag = ruuviTag,
-            let lastDate = lastMeasurementDate,
-            isDataLoaded
-        else { return }
-
-        Task { @MainActor [weak self, ruuviStorage = ruuviStorage, ruuviTag = ruuviTag] in
-            do throws(RuuviStorageError) {
-                let value = try await ruuviStorage.readLast(
-                    ruuviTag.id,
-                    from: lastDate.timeIntervalSince1970
-                )
-                ({ [weak self] results in
-                    guard let self = self else { return }
-
-                    // Filter out duplicates and only add truly new measurements
-                    let newMeasurements =
-                        results
-                        .map(\.measurement)
-                        .filter { measurement in
-                            measurement.date > lastDate
-                        }
-                        .sorted { $0.date < $1.date }
-
-                    guard !newMeasurements.isEmpty else { return }
-
-                    self.appendNewMeasurements(newMeasurements)
-                })(value)
+        guard isViewActive, let sensor = ruuviTag else { return }
+        guard isDataLoaded, latestTask == nil else {
+            latestReadPending = true
+            return
+        }
+        guard let lastDate = lastMeasurementDate else {
+            loadHistoricalData()
+            return
+        }
+        let generation = requestGeneration
+        latestTask = Task { @MainActor [weak self, ruuviStorage] in
+            defer {
+                if self?.requestGeneration == generation {
+                    self?.latestTask = nil
+                    if self?.latestReadPending == true {
+                        self?.latestReadPending = false
+                        self?.loadLatestMeasurements()
+                    }
+                }
+            }
+            do {
+                let records = try await ruuviStorage.readLast(sensor.id, from: lastDate.timeIntervalSince1970)
+                guard !Task.isCancelled, self?.requestGeneration == generation else { return }
+                self?.appendNewMeasurements(records.map(\.measurement).filter { $0.date > lastDate })
             } catch {
+                // A later reading can retry without clearing valid chart history.
             }
         }
     }
 
-    func appendNewMeasurements(_ newMeasurements: [RuuviMeasurement]) {
-        dataQueue.async(flags: .barrier) { [weak self] in
-            guard let self = self else { return }
-
-            let cutoffDate = RuuviHistoryWindow.start(
-                limitHours: self.settings.dataPruningOffsetHours,
-                requestedHours: self.defaultDurationHours
-            )
-            let visibleMeasurements = newMeasurements.filter { $0.date >= cutoffDate }
-            self._ruuviTagData.append(contentsOf: visibleMeasurements)
-
-            // Update last measurement date
-            if let lastNew = newMeasurements.last {
-                self._lastMeasurementDate = lastNew.date
-            }
-
-            // Crop the in-memory presentation only; keep database history intact.
-            let previousCount = self._ruuviTagData.count
-            self._ruuviTagData.removeAll { $0.date < cutoffDate }
-            let retainedMeasurements = self._ruuviTagData
-            let removedExpiredMeasurements = retainedMeasurements.count != previousCount
-
-            // Update chart on main thread
-            DispatchQueue.main.async { [weak self] in
-                if removedExpiredMeasurements {
-                    self?.updateChart(with: retainedMeasurements)
-                } else {
-                    self?.appendDataToChart(visibleMeasurements)
-                }
-            }
+    func appendNewMeasurements(_ measurements: [RuuviMeasurement]) {
+        let newMeasurements = orderedUniqueMeasurements(measurements)
+        guard !newMeasurements.isEmpty else { return }
+        let cutoffDate = RuuviHistoryWindow.start(
+            limitHours: settings.dataPruningOffsetHours, requestedHours: defaultDurationHours
+        )
+        let visible = newMeasurements.filter { $0.date >= cutoffDate }
+        let expired = ruuviTagData.contains { $0.date < cutoffDate }
+        ruuviTagData = ruuviTagData.filter { $0.date >= cutoffDate } + visible
+        lastMeasurementDate = newMeasurements.last?.date
+        if expired {
+            updateChart()
+        } else {
+            appendDataToChart(visible)
         }
     }
 }
@@ -474,6 +375,7 @@ private extension MeasurementDetailsPresenter {
         }
 
         if !entries.isEmpty {
+            view?.setNoDataLabelVisibility(show: false)
             view?.updateChartData(
                 entries,
                 showAlertRangeInGraph: shouldShowAlertRangeInGraph(for: variant)
@@ -522,6 +424,15 @@ private extension MeasurementDetailsPresenter {
 
         cancellables
             .removeAll()
+
+        snapshot.$latestRawRecord
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] record in
+                guard record != nil else { return }
+                self?.loadLatestMeasurements()
+            }
+            .store(in: &cancellables)
 
         // Subscribe to data changes
         snapshot.$displayData
@@ -664,29 +575,6 @@ private extension MeasurementDetailsPresenter {
             lower: isRangeVisible ? bounds.lower : nil,
             upper: isRangeVisible ? bounds.upper : nil
         )
-    }
-}
-
-// MARK: - Cloud Sync
-
-private extension MeasurementDetailsPresenter {
-
-    func syncCloudDataIfNeeded() {
-        guard ruuviTag.isCloud,
-            isViewActive
-        else { return }
-
-        Task { @MainActor [weak self, cloudSyncService = cloudSyncService, ruuviTag = ruuviTag!] in
-            do throws(RuuviServiceError) {
-                let value = try await cloudSyncService.sync(sensor: ruuviTag)
-                ({ [weak self] _ in
-                    guard self?.isViewActive == true else { return }
-                    // Reload data after sync completes
-                    self?.loadHistoricalData()
-                })(value)
-            } catch {
-            }
-        }
     }
 }
 

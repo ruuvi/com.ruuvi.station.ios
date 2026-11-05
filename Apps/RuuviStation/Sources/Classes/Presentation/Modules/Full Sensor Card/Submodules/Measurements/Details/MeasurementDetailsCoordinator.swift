@@ -127,9 +127,7 @@ private extension MeasurementDetailsCoordinator {
             measurementService: r.resolve(RuuviServiceMeasurement.self)!,
             alertService: r.resolve(RuuviServiceAlert.self)!,
             ruuviStorage: r.resolve(RuuviStorage.self)!,
-            cloudSyncService: r.resolve(RuuviServiceCloudSync.self)!,
-            ruuviReactor: r.resolve(RuuviReactor.self)!,
-            localSyncState: r.resolve(RuuviLocalSyncState.self)!
+            cloudSyncService: r.resolve(RuuviServiceCloudSync.self)!
         )
 
         presenter.view = viewController

@@ -99,6 +99,9 @@ struct MeasurementVariantResolver {
 
         switch variant.type {
         case .aqi:
+            guard let co2 = measurement.co2, co2.isFinite,
+                let pm25 = measurement.pm25, pm25.isFinite
+            else { return nil }
             switch configuration.aqiPresentation {
             case .roundedScore:
                 let (aqi, _, _) = measurementService.aqi(
@@ -113,15 +116,15 @@ struct MeasurementVariantResolver {
                 )
             }
         case .co2:
-            return measurementService.double(for: measurement.co2)
+            return measurement.co2.map { measurementService.double(for: $0) }
         case .pm10:
-            return measurementService.double(for: measurement.pm1)
+            return measurement.pm1.map { measurementService.double(for: $0) }
         case .pm25:
-            return measurementService.double(for: measurement.pm25)
+            return measurement.pm25.map { measurementService.double(for: $0) }
         case .pm40:
-            return measurementService.double(for: measurement.pm4)
+            return measurement.pm4.map { measurementService.double(for: $0) }
         case .pm100:
-            return measurementService.double(for: measurement.pm10)
+            return measurement.pm10.map { measurementService.double(for: $0) }
         case .voc:
             return measurement.voc.flatMap {
                 $0 == 0 ? nil : measurementService.double(for: $0)
@@ -131,16 +134,17 @@ struct MeasurementVariantResolver {
                 $0 == 0 ? nil : measurementService.double(for: $0)
             }
         case .luminosity:
-            return measurementService.double(for: measurement.luminosity)
+            return measurement.luminosity.map { measurementService.double(for: $0) }
         case .soundInstant:
-            return measurementService.double(for: measurement.soundInstant)
+            return measurement.soundInstant.map { measurementService.double(for: $0) }
         case .soundAverage:
-            return measurementService.double(for: measurement.soundAvg)
+            return measurement.soundAvg.map { measurementService.double(for: $0) }
         case .soundPeak:
-            return measurementService.double(for: measurement.soundPeak)
+            return measurement.soundPeak.map { measurementService.double(for: $0) }
         case .voltage:
             guard let value = measurementService.double(for: measurement.voltage),
-                  value != 0 else { return nil }
+                value != 0
+            else { return nil }
             return value
         case .rssi:
             return measurement.rssi.map(Double.init)
@@ -191,10 +195,8 @@ struct MeasurementVariantResolver {
         case .humidity:
             switch variant.resolvedHumidityUnit(default: settings.humidityUnit) {
             case .percent:
-                let upper = alertConfig?.upperBound ??
-                    alertService.upperRelativeHumidity(for: sensor).map { $0 * 100 }
-                let lower = alertConfig?.lowerBound ??
-                    alertService.lowerRelativeHumidity(for: sensor).map { $0 * 100 }
+                let upper = alertConfig?.upperBound ?? alertService.upperRelativeHumidity(for: sensor).map { $0 * 100 }
+                let lower = alertConfig?.lowerBound ?? alertService.lowerRelativeHumidity(for: sensor).map { $0 * 100 }
                 return visibleAlertBounds(
                     lower: lower,
                     upper: upper,
@@ -202,10 +204,10 @@ struct MeasurementVariantResolver {
                     maximum: RuuviAlertConstants.RelativeHumidity.upperBound
                 )
             case .gm3:
-                let upper = alertConfig?.upperBound ??
-                    alertService.upperHumidity(for: sensor)?.converted(to: .absolute).value
-                let lower = alertConfig?.lowerBound ??
-                    alertService.lowerHumidity(for: sensor)?.converted(to: .absolute).value
+                let upper =
+                    alertConfig?.upperBound ?? alertService.upperHumidity(for: sensor)?.converted(to: .absolute).value
+                let lower =
+                    alertConfig?.lowerBound ?? alertService.lowerHumidity(for: sensor)?.converted(to: .absolute).value
                 return visibleAlertBounds(
                     lower: lower,
                     upper: upper,
@@ -396,10 +398,12 @@ struct MeasurementVariantResolver {
         unit: UnitTemperature
     ) -> (lower: Double, upper: Double) {
         let usesCustomRange = settings.showCustomTempAlertBound(for: sensor.id)
-        let lower = usesCustomRange
+        let lower =
+            usesCustomRange
             ? RuuviAlertConstants.Temperature.customLowerBound
             : RuuviAlertConstants.Temperature.lowerBound
-        let upper = usesCustomRange
+        let upper =
+            usesCustomRange
             ? RuuviAlertConstants.Temperature.customUpperBound
             : RuuviAlertConstants.Temperature.upperBound
 
@@ -411,27 +415,31 @@ struct MeasurementVariantResolver {
 
     private func carbonDioxideAlertRange(for sensor: AnyRuuviTagSensor) -> ClosedRange<Double> {
         if settings.showCustomCO2AlertBound(for: sensor.id) {
-            return ClosedRange(uncheckedBounds: (
-                lower: RuuviAlertConstants.CarbonDioxide.customLowerBound,
-                upper: RuuviAlertConstants.CarbonDioxide.customUpperBound
-            ))
+            return ClosedRange(
+                uncheckedBounds: (
+                    lower: RuuviAlertConstants.CarbonDioxide.customLowerBound,
+                    upper: RuuviAlertConstants.CarbonDioxide.customUpperBound
+                ))
         }
-        return ClosedRange(uncheckedBounds: (
-            lower: RuuviAlertConstants.CarbonDioxide.lowerBound,
-            upper: RuuviAlertConstants.CarbonDioxide.upperBound
-        ))
+        return ClosedRange(
+            uncheckedBounds: (
+                lower: RuuviAlertConstants.CarbonDioxide.lowerBound,
+                upper: RuuviAlertConstants.CarbonDioxide.upperBound
+            ))
     }
 
     private func particulateMatterAlertRange(for sensor: AnyRuuviTagSensor) -> ClosedRange<Double> {
         if settings.showCustomPMAlertBound(for: sensor.id) {
-            return ClosedRange(uncheckedBounds: (
-                lower: RuuviAlertConstants.ParticulateMatter.customLowerBound,
-                upper: RuuviAlertConstants.ParticulateMatter.customUpperBound
-            ))
+            return ClosedRange(
+                uncheckedBounds: (
+                    lower: RuuviAlertConstants.ParticulateMatter.customLowerBound,
+                    upper: RuuviAlertConstants.ParticulateMatter.customUpperBound
+                ))
         }
-        return ClosedRange(uncheckedBounds: (
-            lower: RuuviAlertConstants.ParticulateMatter.lowerBound,
-            upper: RuuviAlertConstants.ParticulateMatter.upperBound
-        ))
+        return ClosedRange(
+            uncheckedBounds: (
+                lower: RuuviAlertConstants.ParticulateMatter.lowerBound,
+                upper: RuuviAlertConstants.ParticulateMatter.upperBound
+            ))
     }
 }
