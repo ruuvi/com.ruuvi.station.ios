@@ -104,7 +104,7 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviTagPropertiesDaemon {
                 guard updated.version != sensor.version || updated.macId?.value != sensor.macId?.value else { return }
                 enqueue(sensor, session: session) { updated }
             } else if let mac = device.mac, !mac.isEmpty,
-                let sensor = sensors.first(where: { $0.macId?.value == mac })
+                let sensor = matchingSensor(mac: mac)
             {
                 if sensor.luid == nil, sensor.isCloud {
                     var updated = sensor.struct
@@ -113,11 +113,11 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviTagPropertiesDaemon {
                     updated.serviceUUID = device.serviceUUID
                     updated.isConnectable = device.isConnectable
                     enqueue(sensor, session: session) { updated }
-                } else if client.luidForMac(mac) != device.luid {
+                } else {
                     // Read the current row before rebinding a changed Bluetooth identifier.
                     let read = client.readSensor
                     enqueue(sensor, session: session) {
-                        try await read(mac).with(luid: device.luid.luid)
+                        try await read(sensor.id).with(luid: device.luid.luid)
                     }
                 }
             }
@@ -203,8 +203,28 @@ public final class RuuviTagPropertiesDaemonBTKit: RuuviTagPropertiesDaemon {
         }
     }
 
+    private func matchingSensor(mac: String) -> AnyRuuviTagSensor? {
+        // Prefer an exact full address. A shortened advertisement must identify one saved sensor.
+        let exact = sensors.filter { $0.macId?.value.caseInsensitiveCompare(mac) == .orderedSame }
+        if exact.count == 1 { return exact[0] }
+        let candidates = sensors.filter { Self.matchesMAC($0.macId?.value, mac) }
+        return candidates.count == 1 ? candidates[0] : nil
+    }
+
+    private static func matchesMAC(_ lhs: String?, _ rhs: String?) -> Bool {
+        guard let lhs, let rhs else { return false }
+        let clean: (String) -> String = { value in
+            value.lowercased().filter { "0123456789abcdef".contains($0) }
+        }
+        let left = clean(lhs)
+        let right = clean(rhs)
+        guard !left.isEmpty, !right.isEmpty else { return false }
+        if left == right { return true }
+        return ([6, 8].contains(left.count) || [6, 8].contains(right.count)) && left.suffix(6) == right.suffix(6)
+    }
+
     private static func matches(_ lhs: RuuviTagSensor, _ rhs: RuuviTagSensor) -> Bool {
-        (lhs.macId != nil && lhs.macId?.value == rhs.macId?.value)
+        Self.matchesMAC(lhs.macId?.value, rhs.macId?.value)
             || (lhs.luid != nil && lhs.luid?.value == rhs.luid?.value)
     }
 }

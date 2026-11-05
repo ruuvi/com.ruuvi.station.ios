@@ -53,8 +53,7 @@ final class SensorPropertiesFixture {
                     return { self.cancelledScans += 1 }
                 },
                 macForLuid: { self.macs[$0] },
-                luidForMac: { self.luids[$0] },
-                readSensor: read,
+                    readSensor: read,
                 updateSensor: update,
                 report: {
                     self.reportOnMainThread = self.reportOnMainThread && Thread.isMainThread

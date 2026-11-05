@@ -21,7 +21,6 @@ struct SensorPropertiesDaemonClient {
     var observeSensors: (@escaping (RuuviReactorChange<AnyRuuviTagSensor>) -> Void) -> () -> Void
     var scan: (@escaping (SensorPropertiesAdvertisement) -> Void) -> () -> Void
     var macForLuid: (String) -> String?
-    var luidForMac: (String) -> String?
     var readSensor: @MainActor (String) async throws(RuuviPersistenceError) -> RuuviTagSensor
     var updateSensor: @MainActor (RuuviTagSensor) async throws(RuuviPoolError) -> Bool
     var report: (RuuviDaemonError) -> Void
@@ -47,7 +46,6 @@ struct SensorPropertiesDaemonClient {
                 return { withExtendedLifetime(owner) { token.invalidate() } }
             },
             macForLuid: { identifiers.mac(for: $0.luid)?.value },
-            luidForMac: { identifiers.luid(for: $0.mac)?.value },
             readSensor: { mac async throws(RuuviPersistenceError) in try await persistence.readOne(mac) },
             updateSensor: { sensor async throws(RuuviPoolError) in try await pool.update(sensor) },
             report: {

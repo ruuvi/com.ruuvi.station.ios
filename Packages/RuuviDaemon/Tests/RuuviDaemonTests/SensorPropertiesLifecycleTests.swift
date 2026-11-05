@@ -206,9 +206,9 @@ import XCTest
         XCTAssertTrue(fixture.errors.isEmpty)
     }
 
-    private func settle() async { try? await Task.sleep(for: .milliseconds(20)) }
+    func settle() async { try? await Task.sleep(for: .milliseconds(20)) }
 
-    private func eventually(file: StaticString = #filePath, line: UInt = #line, _ condition: () -> Bool) async {
+    func eventually(file: StaticString = #filePath, line: UInt = #line, _ condition: () -> Bool) async {
         for _ in 0..<200 {
             if condition() { return }
             try? await Task.sleep(for: .milliseconds(5))

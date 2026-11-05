@@ -14,9 +14,20 @@ class DefaultsPresenter: NSObject, DefaultsModuleInput {
     var ruuviUser: RuuviUser!
     var output: DefaultsModuleOutput?
 
-    let appGroupDefaults = UserDefaults(
-        suiteName: AppGroupConstants.appGroupSuiteIdentifier
-    )
+    let appGroupDefaults: UserDefaults?
+    private let notificationCenter: NotificationCenter
+    private let reloadWidget: (String) -> Void
+
+    init(
+        appGroupDefaults: UserDefaults? = UserDefaults(suiteName: AppGroupConstants.appGroupSuiteIdentifier),
+        notificationCenter: NotificationCenter = .default,
+        reloadWidget: @escaping (String) -> Void = { WidgetCenter.shared.reloadTimelines(ofKind: $0) }
+    ) {
+        self.appGroupDefaults = appGroupDefaults
+        self.notificationCenter = notificationCenter
+        self.reloadWidget = reloadWidget
+        super.init()
+    }
 
     func configure(output: DefaultsModuleOutput) {
         configureViewModels()
@@ -68,7 +79,6 @@ extension DefaultsPresenter {
             buildHideNFCButtonInSensorContents(),
             buildIsAuthorized(),
             buildAuthToken(),
-            buildIsAuthorized(),
             buildShowStatusLabelSettings(),
             buildShowAlertRangeInGraph(),
             buildUseNewChartsRendering(),
@@ -144,10 +154,14 @@ extension DefaultsPresenter {
         return viewModel
     }
 
+    private func displaySeconds(_ interval: TimeInterval) -> Int {
+        max(0, Int(exactly: interval.rounded(.towardZero)) ?? 0)
+    }
+
     private func buildConnectionTimeout() -> DefaultsViewModel {
         let connectionTimeout = DefaultsViewModel()
         connectionTimeout.title = RuuviLocalization.Defaults.ConnectionTimeout.title
-        connectionTimeout.integer.value = Int(settings.connectionTimeout)
+        connectionTimeout.integer.value = displaySeconds(settings.connectionTimeout)
         connectionTimeout.type.value = .stepper
         connectionTimeout.unit = .seconds
 
@@ -160,7 +174,7 @@ extension DefaultsPresenter {
     private func buildServiceTimeout() -> DefaultsViewModel {
         let serviceTimeout = DefaultsViewModel()
         serviceTimeout.title = RuuviLocalization.Defaults.ServiceTimeout.title
-        serviceTimeout.integer.value = Int(settings.serviceTimeout)
+        serviceTimeout.integer.value = displaySeconds(settings.serviceTimeout)
         serviceTimeout.type.value = .stepper
         serviceTimeout.unit = .seconds
 
@@ -671,15 +685,13 @@ extension DefaultsPresenter {
             useDevServer,
             forKey: AppGroupConstants.useDevServerKey
         )
-        WidgetCenter.shared.reloadTimelines(
-            ofKind: AppAssemblyConstants.simpleWidgetKindId
+        reloadWidget(
+            AppAssemblyConstants.simpleWidgetKindId
         )
-        WidgetCenter.shared.reloadTimelines(
-            ofKind: AppAssemblyConstants.multiSensorWidgetKindId
+        reloadWidget(
+            AppAssemblyConstants.multiSensorWidgetKindId
         )
-        NotificationCenter
-            .default
-            .post(
+        notificationCenter.post(
                 name: .NetworkSyncDidFailForAuthorization,
                 object: self,
                 userInfo: nil
