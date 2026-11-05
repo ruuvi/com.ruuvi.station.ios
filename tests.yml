@@ -441,6 +441,7 @@ targets:
       - path: Apps/RuuviStation/Tests/Unit/ExtensionPackagingTests.swift
       - path: Apps/RuuviStation/Tests/Unit/AppBehavior
     dependencies:
+      - package: RangeSeekSlider
       - package: DGCharts
       - package: NordicDFU
       - target: RuuviCloud

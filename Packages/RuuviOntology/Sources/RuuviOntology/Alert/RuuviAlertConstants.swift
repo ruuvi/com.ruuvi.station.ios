@@ -85,6 +85,8 @@ public struct RuuviAlertConstants {
 
         public static func normalizedUnseenDuration(_ duration: Double?) -> Double {
             guard let duration,
+                  duration.isFinite,
+                  duration < Double(Int.max),
                   duration >= Double(minUnseenDurationSeconds) else {
                 return Double(defaultUnseenDuration)
             }

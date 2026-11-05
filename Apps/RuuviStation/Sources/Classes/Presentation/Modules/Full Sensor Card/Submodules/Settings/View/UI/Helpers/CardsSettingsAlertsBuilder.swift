@@ -359,7 +359,7 @@ private extension CardsSettingsAlertsBuilder {
                     config: config,
                     hasMeasurement: hasMeasurement,
                     range: RuuviAlertConstants.Sound.lowerBound...RuuviAlertConstants.Sound.upperBound,
-                    unit: RuuviLocalization.dBm,
+                    unit: RuuviLocalization.unitSound,
                     format: Constants.configFormat,
                     latestMeasurement: latestSound(
                         snapshot: snapshot,
@@ -375,7 +375,7 @@ private extension CardsSettingsAlertsBuilder {
                     config: config,
                     hasMeasurement: hasMeasurement,
                     range: RuuviAlertConstants.Sound.lowerBound...RuuviAlertConstants.Sound.upperBound,
-                    unit: RuuviLocalization.dBm,
+                    unit: RuuviLocalization.unitSound,
                     format: Constants.configFormat,
                     latestMeasurement: peakSound(
                         snapshot: snapshot,
@@ -391,7 +391,7 @@ private extension CardsSettingsAlertsBuilder {
                     config: config,
                     hasMeasurement: hasMeasurement,
                     range: RuuviAlertConstants.Sound.lowerBound...RuuviAlertConstants.Sound.upperBound,
-                    unit: RuuviLocalization.dBm,
+                    unit: RuuviLocalization.unitSound,
                     format: Constants.configFormat,
                     latestMeasurement: avgSound(
                         snapshot: snapshot,
@@ -1293,7 +1293,7 @@ private extension CardsSettingsAlertsBuilder {
     ) -> String? {
         guard let value = snapshot.latestRawRecord?.dbaInstant,
                 let measurementService else { return nil }
-        return "\(measurementService.soundString(for: value)) \(RuuviLocalization.dBm)"
+        return "\(measurementService.soundString(for: value)) \(RuuviLocalization.unitSound)"
     }
 
     static func peakSound(
@@ -1302,7 +1302,7 @@ private extension CardsSettingsAlertsBuilder {
     ) -> String? {
         guard let value = snapshot.latestRawRecord?.dbaPeak,
                 let measurementService else { return nil }
-        return "\(measurementService.soundString(for: value)) \(RuuviLocalization.dBm)"
+        return "\(measurementService.soundString(for: value)) \(RuuviLocalization.unitSound)"
     }
 
     static func avgSound(
@@ -1311,7 +1311,7 @@ private extension CardsSettingsAlertsBuilder {
     ) -> String? {
         guard let value = snapshot.latestRawRecord?.dbaAvg,
                 let measurementService else { return nil }
-        return "\(measurementService.soundString(for: value)) \(RuuviLocalization.dBm)"
+        return "\(measurementService.soundString(for: value)) \(RuuviLocalization.unitSound)"
     }
 
     static func latestLuminosity(
