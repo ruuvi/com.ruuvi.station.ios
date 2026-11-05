@@ -16,9 +16,7 @@ let package = Package(
             targets: ["RuuviUserCoordinator"]
         ),
     ],
-    dependencies: [
-        .package(url: "https://github.com/kishikawakatsumi/KeychainAccess", from: "4.2.1")
-    ],
+    dependencies: [],
     targets: [
         .target(
             name: "RuuviUser"
@@ -26,13 +24,12 @@ let package = Package(
         .target(
             name: "RuuviUserCoordinator",
             dependencies: [
-                "RuuviUser",
-                "KeychainAccess"
+                "RuuviUser"
             ]
         ),
         .testTarget(
             name: "RuuviUserTests",
-            dependencies: ["RuuviUser"]
+            dependencies: ["RuuviUser", "RuuviUserCoordinator"]
         ),
     ],
     swiftLanguageModes: [.v5]

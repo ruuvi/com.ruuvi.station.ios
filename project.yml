@@ -119,9 +119,6 @@ packages:
   iOSMcuManagerLibrary:
     url: https://github.com/NordicSemiconductor/IOS-nRF-Connect-Device-Manager
     from: 1.7.0
-  KeychainAccess:
-    url: https://github.com/kishikawakatsumi/KeychainAccess
-    from: 4.2.1
   GRDB: 
     url: https://github.com/groue/GRDB.swift
     from: 7.12.0

@@ -15,7 +15,6 @@ targets:
       - package: BTKit
       - package: GRDB
       - package: Humidity
-      - package: KeychainAccess
       - target: RuuviUser
       - target: RuuviCloud
       - target: RuuviOntology

@@ -38,7 +38,6 @@ targets:
         product: FirebaseCrashlytics
       - package: Firebase
         product: FirebaseInAppMessaging-Beta
-      - package: KeychainAccess
       - package: Humidity
       - package: FLEX
       - target: RuuviAnalytics

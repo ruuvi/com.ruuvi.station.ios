@@ -2,7 +2,6 @@
     import RuuviUser
 #endif
 import Foundation
-import WidgetKit
 
 final class RuuviUserCoordinator: RuuviUser {
     var apiKey: String? {
@@ -25,32 +24,44 @@ final class RuuviUserCoordinator: RuuviUser {
 
     var isAuthorized: Bool {
         get {
-            keychainService.userIsAuthorized && UserDefaults.standard.bool(forKey: isAuthorizedUDKey)
+            keychainService.userIsAuthorized && defaults.bool(forKey: isAuthorizedUDKey)
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: isAuthorizedUDKey)
+            defaults.set(newValue, forKey: isAuthorizedUDKey)
             appGroupDefaults?.set(newValue, forKey: isAuthorizedUDKey)
         }
     }
 
     private var keychainService: KeychainService
     private let isAuthorizedUDKey = "RuuviUserCoordinator.isAuthorizedUDKey"
-    private let appGroupDefaults = UserDefaults(suiteName: "group.com.ruuvi.station.widgets")
+    private let defaults: UserDefaults
+    private let appGroupDefaults: UserDefaults?
+    private let notificationCenter: NotificationCenter
 
-    init(keychainService: KeychainService) {
+    init(
+        keychainService: KeychainService,
+        defaults: UserDefaults = .standard,
+        appGroupDefaults: UserDefaults? = UserDefaults(suiteName: "group.com.ruuvi.station.widgets"),
+        notificationCenter: NotificationCenter = .default
+    ) {
         self.keychainService = keychainService
+        self.defaults = defaults
+        self.appGroupDefaults = appGroupDefaults
+        self.notificationCenter = notificationCenter
     }
 
     func login(apiKey: String) {
         self.apiKey = apiKey
+        guard !apiKey.isEmpty, keychainService.ruuviUserApiKey == apiKey else {
+            isAuthorized = false
+            return
+        }
         isAuthorized = true
-        NotificationCenter
-            .default
-            .post(
-                name: .RuuviUserDidAuthorized,
-                object: self,
-                userInfo: nil
-            )
+        notificationCenter.post(
+            name: .RuuviUserDidAuthorized,
+            object: self,
+            userInfo: nil
+        )
     }
 
     func logout() {
