@@ -745,7 +745,10 @@ class RuuviTagServiceCoordinatorManager {
     private var isInitialized = false
 
     // MARK: - Private Initialization
-    private init() {}
+    init(coordinator: RuuviTagServiceCoordinator? = nil) {
+        self.coordinator = coordinator
+        isInitialized = coordinator != nil
+    }
 
     // MARK: - Coordinator Initialization
     func initialize() {

@@ -12,7 +12,7 @@ final class CardsSettingsViewController: UIViewController {
 
     private var cancellables = Set<AnyCancellable>()
     private let state: CardsSettingsState
-    private var actions = CardsSettingsActions()
+    private let actions: CardsSettingsActions
     private var dashboardSortingType: DashboardSortingType?
     private var tagNameTextField = UITextField()
     private let tagNameCharaterLimit: Int = 32
@@ -50,8 +50,10 @@ final class CardsSettingsViewController: UIViewController {
         snapshot: RuuviTagCardSnapshot,
         measurementService: RuuviServiceMeasurement?,
         showsAlertSections: Bool = true,
-        showsAlertShortcutSection: Bool = false
+        showsAlertShortcutSection: Bool = false,
+        actions: CardsSettingsActions? = nil
     ) {
+        self.actions = actions ?? CardsSettingsActions()
         self.state = CardsSettingsState(
             snapshot: snapshot,
             measurementService: measurementService

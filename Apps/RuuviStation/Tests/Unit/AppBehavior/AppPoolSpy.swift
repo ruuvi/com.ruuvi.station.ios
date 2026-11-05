@@ -3,6 +3,9 @@ import RuuviOntology
 import RuuviPool
 
 @MainActor final class AppPoolSpy: RuuviPool {
+    var sensorSettings = [String: SensorSettings]()
+    var settingsReads = [String]()
+    var beforeReadSettings: (() async -> Void)?
     var updatedSensors = [AnyRuuviTagSensor]()
     var allowSensorUpdates = false
     var beforeUpdate: (() async -> Void)?
@@ -66,7 +69,10 @@ import RuuviPool
         descriptionLastUpdated: Date?
     ) async throws(RuuviPoolError) -> SensorSettings { throw .ruuviPersistence(.failedToFindRuuviTag) }
     func readSensorSettings(_ ruuviTag: RuuviTagSensor) async throws(RuuviPoolError) -> SensorSettings? {
-        throw .ruuviPersistence(.failedToFindRuuviTag)
+        settingsReads.append(ruuviTag.id)
+        let value = sensorSettings[ruuviTag.id]
+        await beforeReadSettings?()
+        return value
     }
     func createQueuedRequest(_ request: RuuviCloudQueuedRequest) async throws(RuuviPoolError) -> Bool {
         throw .ruuviPersistence(.failedToFindRuuviTag)

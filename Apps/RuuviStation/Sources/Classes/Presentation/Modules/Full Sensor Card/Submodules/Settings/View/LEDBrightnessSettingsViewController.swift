@@ -218,10 +218,20 @@ extension LEDBrightnessSettingsViewController: UITableViewDelegate {
         guard isFirmwareSupported else { return }
         guard let onSelection, !isApplyingSelection else { return }
         let option = options[indexPath.row]
+        let previous = selection
         selection = option
         isApplyingSelection = true
-        onSelection(option) { [weak self] _ in
-            self?.isApplyingSelection = false
+        onSelection(option) { [weak self] result in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                isApplyingSelection = false
+                if case let .failure(error) = result {
+                    selection = previous
+                    let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel))
+                    present(alert, animated: true)
+                }
+            }
         }
     }
 }

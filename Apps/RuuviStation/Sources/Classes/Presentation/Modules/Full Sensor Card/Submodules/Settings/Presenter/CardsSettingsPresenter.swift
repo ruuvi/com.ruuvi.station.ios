@@ -20,6 +20,8 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
     var router: CardsSettingsRouterInput?
 
     private let ruuviSensorPropertiesService: RuuviServiceSensorProperties
+    private let coordinatorManager: RuuviTagServiceCoordinatorManager
+    private let notificationCenter: NotificationCenter
     private let measurementService: RuuviServiceMeasurement
     private let errorPresenter: ErrorPresenter
     private let activityPresenter: ActivityPresenter
@@ -27,11 +29,13 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
     private var settings: RuuviLocalSettings
 
     // MARK: - State
+    private var configurationID = UUID()
     private var snapshots: [RuuviTagCardSnapshot] = []
     private var snapshot: RuuviTagCardSnapshot?
     private var sensor: AnyRuuviTagSensor?
     private var sensorSettings: SensorSettings?
     private var ledBrightnessSelection: RuuviOntology.RuuviLedBrightnessLevel = .defaultSelection
+    var writeLedBrightness: ((String, RuuviLedBrightnessLevel, @escaping (Result<Void, Error>) -> Void) -> Void)?
     private var airShellClient: RuuviAirShellClient?
 
     // MARK: - Subscriptions
@@ -56,14 +60,20 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
         measurementService: RuuviServiceMeasurement,
         settings: RuuviLocalSettings,
         errorPresenter: ErrorPresenter,
-        activityPresenter: ActivityPresenter
+        activityPresenter: ActivityPresenter,
+        coordinatorManager: RuuviTagServiceCoordinatorManager = .shared,
+        notificationCenter: NotificationCenter = .default,
+        pool: RuuviPool? = nil
     ) {
+        self.coordinatorManager = coordinatorManager
+        self.notificationCenter = notificationCenter
         self.ruuviSensorPropertiesService = ruuviSensorPropertiesService
         self.measurementService = measurementService
         self.settings = settings
         self.errorPresenter = errorPresenter
         self.activityPresenter = activityPresenter
         super.init()
+        if let pool { self.ruuviPool = pool }
     }
 
     // MARK: - CardsSettingsPresenterInput
@@ -82,6 +92,7 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
         sensor: AnyRuuviTagSensor?,
         settings: SensorSettings?
     ) {
+        configurationID = UUID()
         self.snapshot = snapshot
         self.sensor = sensor
         self.sensorSettings = settings
@@ -108,12 +119,13 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
             updateAlertSections(for: snapshot)
         }
         refreshFirmwareVersionIfNeeded()
-        RuuviTagServiceCoordinatorManager.shared.setAlertMuteRefreshActive(true)
+        coordinatorManager.setAlertMuteRefreshActive(true)
     }
 
     func stop() {
+        stopObservingOwnerCheck()
         stopObservingCoordinator()
-        RuuviTagServiceCoordinatorManager.shared.setAlertMuteRefreshActive(false)
+        coordinatorManager.setAlertMuteRefreshActive(false)
         stopObservingCloudRequestState()
         invalidateKeepConnectionTimer()
     }
@@ -127,13 +139,10 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
         completion?()
     }
 
-    func shutdown() {
-        ruuviTagSensorOwnerCheckToken?.invalidate()
-        stopObservingCoordinator()
-        RuuviTagServiceCoordinatorManager.shared.setAlertMuteRefreshActive(false)
-        stopObservingCloudRequestState()
-        invalidateKeepConnectionTimer()
-    }
+    func shutdown() { stop() }
+
+    deinit { stop() }
+
 }
 
 extension CardsSettingsPresenter: CardsSettingsViewOutput {
@@ -160,7 +169,7 @@ extension CardsSettingsPresenter: CardsSettingsViewOutput {
 
     func viewDidChangeTag(name: String) {
         guard let snapshot else { return }
-        RuuviTagServiceCoordinatorManager.shared.updateSensorName(name, for: snapshot)
+        coordinatorManager.updateSensorName(name, for: snapshot)
     }
 
     func viewDidTapOnMacAddress() {
@@ -203,8 +212,7 @@ extension CardsSettingsPresenter: CardsSettingsViewOutput {
         guard let snapshot else { return }
         withSensor { sensor in
             if snapshot.ownership.isClaimedTag == false {
-                ruuviTagSensorOwnerCheckToken?.invalidate()
-                ruuviTagSensorOwnerCheckToken = nil
+                stopObservingOwnerCheck()
                 router?.openOwner(ruuviTag: sensor, mode: .claim)
             } else {
                 if snapshot.metadata.isOwner {
@@ -231,27 +239,38 @@ extension CardsSettingsPresenter: CardsSettingsViewOutput {
     }
 
     func viewDidTapLedBrightness() {
-        let currentSelection =
-            settings.ledBrightnessSelection(
-                for: ledBrightnessMacId()
-            ) ?? ledBrightnessSelection
+        let mac = ledBrightnessMacId()
+        let currentSelection = settings.ledBrightnessSelection(for: mac) ?? ledBrightnessSelection
+        let context = configurationID
+        let sensor = sensor
         ledBrightnessSelection = currentSelection
         router?.openLedBrightnessSettings(
             selection: currentSelection,
             firmwareVersion: snapshot?.displayData.firmwareVersion,
             snapshotId: snapshot?.id,
             onUpdateFirmware: { [weak self] in
-                guard let self else { return }
-                self.withSensor { sensor in
-                    self.router?.openUpdateFirmware(ruuviTag: sensor)
-                }
+                guard let sensor else { return }
+                self?.router?.openUpdateFirmware(ruuviTag: sensor)
             },
-            onSelection: { [weak self] selection, completion in
-                guard let self else { return }
-                self.ledBrightnessSelection = selection
-                self.view?.updateLedBrightnessSelection(selection)
-                self.settings.setLedBrightnessSelection(selection, for: self.ledBrightnessMacId())
-                self.applyLedBrightnessSelection(selection) { result in
+            onSelection: { [weak self, settings = settings] selection, completion in
+                guard let self else {
+                    completion(.failure(UnexpectedError.callerDeinitedDuringOperation))
+                    return
+                }
+                let previous = settings.ledBrightnessSelection(for: mac) ?? currentSelection
+                self.applyLedBrightnessSelection(selection, sensor: sensor) { [weak self] result in
+                    let displayed: RuuviLedBrightnessLevel
+                    switch result {
+                    case .success:
+                        settings.setLedBrightnessSelection(selection, for: mac)
+                        displayed = selection
+                    case .failure:
+                        displayed = previous
+                    }
+                    if let self, self.configurationID == context {
+                        self.ledBrightnessSelection = displayed
+                        self.view?.updateLedBrightnessSelection(displayed)
+                    }
                     completion(result)
                 }
             }
@@ -437,7 +456,7 @@ extension CardsSettingsPresenter: SensorRemovalModuleOutput {
         module.dismiss(completion: { [weak self] in
             guard let self else { return }
 
-            let remaining = RuuviTagServiceCoordinatorManager.shared.getAllSnapshots()
+            let remaining = coordinatorManager.getAllSnapshots()
 
             let completion: () -> Void = { [weak self] in
                 guard let self else { return }
@@ -468,12 +487,15 @@ extension CardsSettingsPresenter: SensorRemovalModuleOutput {
 }
 
 extension CardsSettingsPresenter {
-    private func startObservingRuuviTagOwnerCheckResponse() {
-        ruuviTagSensorOwnerCheckToken?.invalidate()
+    private func stopObservingOwnerCheck() {
+        if let token = ruuviTagSensorOwnerCheckToken { notificationCenter.removeObserver(token) }
         ruuviTagSensorOwnerCheckToken = nil
+    }
 
-        ruuviTagSensorOwnerCheckToken = NotificationCenter
-            .default
+    private func startObservingRuuviTagOwnerCheckResponse() {
+        stopObservingOwnerCheck()
+
+        ruuviTagSensorOwnerCheckToken = notificationCenter
             .addObserver(
                 forName: .RuuviTagOwnershipCheckDidEnd,
                 object: nil,
@@ -493,13 +515,13 @@ extension CardsSettingsPresenter {
 
     private func startObservingCoordinator() {
         guard !isObservingCoordinator else { return }
-        RuuviTagServiceCoordinatorManager.shared.addObserver(self)
+        coordinatorManager.addObserver(self)
         isObservingCoordinator = true
     }
 
     private func stopObservingCoordinator() {
         guard isObservingCoordinator else { return }
-        RuuviTagServiceCoordinatorManager.shared.removeObserver(self)
+        coordinatorManager.removeObserver(self)
         isObservingCoordinator = false
     }
 
@@ -516,8 +538,8 @@ extension CardsSettingsPresenter {
 
     private func handleSnapshotUpdate(_ updatedSnapshot: RuuviTagCardSnapshot) {
         snapshot = updatedSnapshot
-        sensor = RuuviTagServiceCoordinatorManager.shared.getSensor(for: updatedSnapshot.id)
-        sensorSettings = RuuviTagServiceCoordinatorManager.shared
+        sensor = coordinatorManager.getSensor(for: updatedSnapshot.id)
+        sensorSettings = coordinatorManager
             .getSensorSettings(for: updatedSnapshot.id)
         refreshConnectionStateIfNeeded()
 
@@ -564,20 +586,20 @@ extension CardsSettingsPresenter {
 
         if let luid = snapshot.identifierData.luid {
             connectionPersistence?.setKeepConnection(false, for: luid)
-            NotificationCenter.default.post(
+            notificationCenter.post(
                 name: .RuuviTagHeartBeatDaemonShouldRestart,
                 object: nil
             )
         }
 
         if snapshot.metadata.isOwner {
-            NotificationCenter.default.post(
+            notificationCenter.post(
                 name: .RuuviTagAdvertisementDaemonShouldRestart,
                 object: nil
             )
 
             if snapshot.connectionData.isConnected {
-                NotificationCenter.default.post(
+                notificationCenter.post(
                     name: .RuuviTagHeartBeatDaemonShouldRestart,
                     object: nil
                 )
@@ -597,7 +619,7 @@ extension CardsSettingsPresenter {
     }
 
     private func restartServiceCoordinatorSensors() {
-        RuuviTagServiceCoordinatorManager.shared.withCoordinator { coordinator in
+        coordinatorManager.withCoordinator { coordinator in
             coordinator.services.data.stopObservingSensors()
             coordinator.services.data.startObservingSensors()
         }
@@ -605,7 +627,7 @@ extension CardsSettingsPresenter {
 
     private func applyKeepConnection(_ keep: Bool) {
         guard let snapshot else { return }
-        RuuviTagServiceCoordinatorManager.shared.withCoordinator { coordinator in
+        coordinatorManager.withCoordinator { coordinator in
             coordinator.services.connection.setKeepConnection(
                 keep,
                 for: snapshot
@@ -743,6 +765,7 @@ private extension CardsSettingsPresenter {
 
     func applyLedBrightnessSelection(
         _ selection: RuuviOntology.RuuviLedBrightnessLevel,
+        sensor: AnyRuuviTagSensor?,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         guard let sensor else {
@@ -754,6 +777,10 @@ private extension CardsSettingsPresenter {
             return
         }
 
+        if let writeLedBrightness {
+            writeLedBrightness(luid.value, selection, completion)
+            return
+        }
         let client = RuuviAirShellClient()
         airShellClient = client
         client.setLedBrightness(
@@ -815,94 +842,44 @@ private extension CardsSettingsPresenter {
         )
     }
 
-    func updateNotes(
-        _ notes: String?,
-        completion: @escaping (Result<Void, Error>) -> Void
-    ) {
+    func updateNotes(_ notes: String?, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let sensor = sensor?.any else {
             completion(.failure(UnexpectedError.failedToFindRuuviTag))
             return
         }
-
-        let value: String? = {
-            guard let notes else { return nil }
-            let limited = String(notes.prefix(1000))
-            return limited.isEmpty ? nil : limited
-        }()
-
+        let value = notes.flatMap { $0.isEmpty ? nil : String($0.prefix(1000)) }
+        let context = configurationID
         activityPresenter.show(with: .loading(message: nil))
-        Task { @MainActor [weak self, ruuviSensorPropertiesService = ruuviSensorPropertiesService, sensor = sensor] in
-            defer {
-                ({ [weak self] in
-                    self?.activityPresenter.dismiss()
-                })()
-            }
-            do throws(RuuviServiceError) {
-                let value = try await ruuviSensorPropertiesService.updateDescription(
-                    for: sensor,
-                    description: value
-                )
-                ({ [weak self] settings in
-                    self?.sensorSettings = settings
-                    self?.refreshNotesSummary()
-                    completion(.success(()))
-                })(value)
+        Task { @MainActor [weak self, service = ruuviSensorPropertiesService, pool = ruuviPool,
+                          activity = activityPresenter] in
+            defer { activity.dismiss() }
+            do {
+                let settings = try await service.updateDescription(for: sensor, description: value)
+                if let self, self.configurationID == context {
+                    self.sensorSettings = settings
+                    self.refreshNotesSummary()
+                }
+                completion(.success(()))
             } catch {
-                ({ [weak self] error in
-                    guard let self else { return }
-                    if self.isCloudOnlyNotesSaveFailure(error) {
-                        self.handleCloudOnlyNotesSaveFailure(
-                            for: sensor,
-                            completion: completion
-                        )
-                    } else {
-                        self.errorPresenter.present(error: error)
-                        completion(.failure(error))
+                if case RuuviServiceError.ruuviCloud = error {
+                    // The local write succeeded. Preserve it even if cloud synchronization failed.
+                    if let pool {
+                        do {
+                            let settings = try await pool.readSensorSettings(sensor)
+                            if let self, self.configurationID == context {
+                                self.sensorSettings = settings
+                                self.refreshNotesSummary()
+                            }
+                        } catch {
+                            // Keep the last displayed note if rereading local settings also fails.
+                        }
                     }
-                })(error)
-            }
-        }
-    }
-
-    private func isCloudOnlyNotesSaveFailure(_ error: RuuviServiceError) -> Bool {
-        if case .ruuviCloud = error {
-            return true
-        }
-        return false
-    }
-
-    private func handleCloudOnlyNotesSaveFailure(
-        for sensor: RuuviTagSensor,
-        completion: @escaping (Result<Void, Error>) -> Void
-    ) {
-        guard let ruuviPool else {
-            activityPresenter.update(
-                with: .failed(
-                    message: RuuviLocalization.activitySavingFail
-                )
-            )
-            completion(.success(()))
-            return
-        }
-
-        Task { @MainActor [weak self, sensor = sensor, ruuviPool = ruuviPool] in
-            defer {
-                ({ [weak self] in
-                    self?.activityPresenter.update(
-                        with: .failed(
-                            message: RuuviLocalization.activitySavingFail
-                        )
-                    )
+                    activity.update(with: .failed(message: RuuviLocalization.activitySavingFail))
                     completion(.success(()))
-                })()
-            }
-            do throws(RuuviPoolError) {
-                let value = try await ruuviPool.readSensorSettings(sensor)
-                ({ [weak self] settings in
-                    self?.sensorSettings = settings
-                    self?.refreshNotesSummary()
-                })(value)
-            } catch {
+                } else {
+                    if let self, self.configurationID == context { self.errorPresenter.present(error: error) }
+                    completion(.failure(error))
+                }
             }
         }
     }
@@ -911,14 +888,14 @@ private extension CardsSettingsPresenter {
         _ block: (RuuviTagAlertService, RuuviTagCardSnapshot, RuuviTagSensor) -> Void
     ) {
         guard let snapshot, let sensor = sensor?.any else { return }
-        RuuviTagServiceCoordinatorManager.shared.withCoordinator { coordinator in
+        coordinatorManager.withCoordinator { coordinator in
             block(coordinator.services.alert, snapshot, sensor)
         }
     }
 
     func syncAlertsIfNeeded() {
         guard let snapshot, let sensor = sensor?.any else { return }
-        RuuviTagServiceCoordinatorManager.shared.syncAllAlerts(
+        coordinatorManager.syncAllAlerts(
             for: snapshot,
             physicalSensor: sensor
         )
@@ -930,7 +907,7 @@ private extension CardsSettingsPresenter {
             return false
         }
 
-        let status = RuuviTagServiceCoordinatorManager.shared
+        let status = coordinatorManager
             .getConnectionStatus(for: snapshot)
         return snapshot.updateConnectionData(
             isConnected: status.isConnected,

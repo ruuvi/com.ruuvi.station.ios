@@ -4,6 +4,8 @@ import RuuviService
 import UIKit
 
 @MainActor final class AppSensorPropertiesSpy: RuuviServiceSensorProperties {
+    var descriptions = [(String, String?)]()
+    var beforeDescription: (() async -> Void)?
     var imageWrites = [(String, UIImage, CGSize, CGFloat)]()
     var beforeSetImage: (() async -> Void)?
     var images = [String: UIImage]()
@@ -44,5 +46,12 @@ import UIKit
     { throw .failedToParseNetworkResponse }
     func updateDescription(for sensor: RuuviTagSensor, description: String?)
         async throws(RuuviServiceError) -> SensorSettings
-    { throw .failedToParseNetworkResponse }
+    {
+        descriptions.append((sensor.id, description))
+        await beforeDescription?()
+        if let failure { throw failure }
+        return SensorSettingsStruct(
+            luid: sensor.luid, macId: sensor.macId, temperatureOffset: nil,
+            humidityOffset: nil, pressureOffset: nil, description: description)
+    }
 }
