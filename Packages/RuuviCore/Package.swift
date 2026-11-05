@@ -60,7 +60,10 @@ let package = Package(
         ),
         .testTarget(
             name: "RuuviCoreTests",
-            dependencies: ["RuuviCore", "RuuviCoreDiff", "RuuviCoreImage", "RuuviCoreLocation"]
+            dependencies: [
+                "RuuviCore", "RuuviCoreDiff", "RuuviCoreImage", "RuuviCoreLocation",
+                "RuuviCorePermission", "RuuviCorePN",
+            ]
         ),
     ],
     swiftLanguageModes: [.v5]
