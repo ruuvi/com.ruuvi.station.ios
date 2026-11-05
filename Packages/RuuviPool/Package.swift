@@ -20,6 +20,7 @@ let package = Package(
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviPersistence"),
         .package(path: "../RuuviLocal"),
+        .package(path: "../RuuviContext"),
     ],
     targets: [
         .target(
@@ -43,7 +44,14 @@ let package = Package(
         ),
         .testTarget(
             name: "RuuviPoolTests",
-            dependencies: ["RuuviPool"]
+            dependencies: [
+                "RuuviPool", "RuuviPoolCoordinator",
+                .product(name: "RuuviOntology", package: "RuuviOntology"),
+                .product(name: "RuuviLocalUserDefaults", package: "RuuviLocal"),
+                .product(name: "RuuviContext", package: "RuuviContext"),
+                .product(name: "RuuviContextSQLite", package: "RuuviContext"),
+                .product(name: "RuuviPersistenceSQLite", package: "RuuviPersistence"),
+            ]
         ),
     ],
     swiftLanguageModes: [.v5]

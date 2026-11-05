@@ -246,6 +246,16 @@ targets:
     dependencies:
       - target: RuuviPool
         embed: false
+      - target: RuuviLocal
+        embed: false
+      - target: RuuviContext
+        embed: false
+      - target: RuuviPersistence
+        embed: false
+      - target: RuuviOntology
+        embed: false
+      - package: GRDB
+      - package: Humidity
     settings:
       base:
         GENERATE_INFOPLIST_FILE: YES

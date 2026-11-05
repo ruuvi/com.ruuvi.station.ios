@@ -27,73 +27,53 @@ final class RuuviPoolCoordinator: RuuviPool {
 
     @MainActor
     func create(_ ruuviTag: RuuviTagSensor) async throws(RuuviPoolError) -> Bool {
-        var outcome: Result<Bool, RuuviPoolError>
-        if let macId = ruuviTag.macId,
-            let luid = ruuviTag.luid
-        {
-            idPersistence.set(mac: macId, for: luid)
-        }
-        if ruuviTag.macId != nil,
-            ruuviTag.macId?.value.isEmpty == false
-        {
-            do {
-                let result = try await sqlite.create(ruuviTag)
-                outcome = .success(result)
-            } catch let error {
-                outcome = .failure(.ruuviPersistence(error))
-            }
-        } else {
+        guard let macId = ruuviTag.macId, !macId.value.isEmpty else {
             throw .ruuviPersistence(.failedToFindRuuviTag)
         }
-        if let macId = ruuviTag.macId, let luid = ruuviTag.luid {
-            idPersistence.set(mac: macId, for: luid)
-            idPersistence.set(luid: luid, for: macId)
+        do {
+            let created = try await sqlite.create(ruuviTag)
+            if created, let luid = ruuviTag.luid {
+                idPersistence.set(mac: macId, for: luid)
+                idPersistence.set(luid: luid, for: macId)
+            }
+            return created
+        } catch {
+            throw .ruuviPersistence(error)
         }
-        return try outcome.get()
     }
 
     @MainActor
     func update(_ ruuviTag: RuuviTagSensor) async throws(RuuviPoolError) -> Bool {
-        var outcome: Result<Bool, RuuviPoolError>
-        if ruuviTag.macId != nil {
-            do {
-                let success = try await sqlite.update(ruuviTag)
-                outcome = .success(success)
-            } catch let error {
-                outcome = .failure(.ruuviPersistence(error))
-            }
-        } else {
+        guard let macId = ruuviTag.macId, !macId.value.isEmpty else {
             throw .ruuviPersistence(.failedToFindRuuviTag)
         }
-        if let macId = ruuviTag.macId, let luid = ruuviTag.luid {
-            idPersistence.set(mac: macId, for: luid)
-            idPersistence.set(luid: luid, for: macId)
+        do {
+            let updated = try await sqlite.update(ruuviTag)
+            if updated, let luid = ruuviTag.luid {
+                idPersistence.set(mac: macId, for: luid)
+                idPersistence.set(luid: luid, for: macId)
+            }
+            return updated
+        } catch {
+            throw .ruuviPersistence(error)
         }
-        return try outcome.get()
     }
 
     @MainActor
     func delete(_ ruuviTag: RuuviTagSensor) async throws(RuuviPoolError) -> Bool {
-        var outcome: Result<Bool, RuuviPoolError>
-        if ruuviTag.macId != nil {
-            do {
-                let success = try await sqlite.deleteOffsetCorrection(ruuviTag: ruuviTag)
-                do {
-                    let success = try await self.sqlite.delete(ruuviTag)
-                    if let luid = ruuviTag.luid {
-                        self.connectionPersistence.setKeepConnection(false, for: luid)
-                    }
-                    outcome = .success(success)
-                } catch let error {
-                    outcome = .failure(.ruuviPersistence(error))
-                }
-            } catch let error {
-                outcome = .failure(.ruuviPersistence(error))
-            }
-        } else {
+        guard let macId = ruuviTag.macId, !macId.value.isEmpty else {
             throw .ruuviPersistence(.failedToFindRuuviTag)
         }
-        return try outcome.get()
+        do {
+            // Persistence removes the sensor and its calibration in the same transaction.
+            let deleted = try await sqlite.delete(ruuviTag)
+            if let luid = ruuviTag.luid {
+                connectionPersistence.setKeepConnection(false, for: luid)
+            }
+            return deleted
+        } catch {
+            throw .ruuviPersistence(error)
+        }
     }
 
     @MainActor
@@ -111,7 +91,7 @@ final class RuuviPoolCoordinator: RuuviPool {
     @MainActor
     func create(_ record: RuuviTagSensorRecord) async throws(RuuviPoolError) -> Bool {
         var outcome: Result<Bool, RuuviPoolError>
-        if record.macId != nil {
+        if let macId = record.macId, !macId.value.isEmpty {
             do {
                 let success = try await sqlite.create(record)
                 outcome = .success(success)
@@ -119,7 +99,7 @@ final class RuuviPoolCoordinator: RuuviPool {
                 outcome = .failure(.ruuviPersistence(error))
             }
         } else if let luid = record.luid,
-            let macId = idPersistence.mac(for: luid)
+            let macId = idPersistence.mac(for: luid), !macId.value.isEmpty
         {
             do {
                 let success = try await sqlite.create(record.with(macId: macId))
@@ -136,7 +116,7 @@ final class RuuviPoolCoordinator: RuuviPool {
     @MainActor
     func createLast(_ record: RuuviTagSensorRecord) async throws(RuuviPoolError) -> Bool {
         var outcome: Result<Bool, RuuviPoolError>
-        if record.macId != nil {
+        if let macId = record.macId, !macId.value.isEmpty {
             do {
                 let success = try await sqlite.createLast(record)
                 outcome = .success(success)
@@ -144,7 +124,7 @@ final class RuuviPoolCoordinator: RuuviPool {
                 outcome = .failure(.ruuviPersistence(error))
             }
         } else if let luid = record.luid,
-            let macId = idPersistence.mac(for: luid)
+            let macId = idPersistence.mac(for: luid), !macId.value.isEmpty
         {
             do {
                 let success = try await sqlite.createLast(record.with(macId: macId))
@@ -161,7 +141,7 @@ final class RuuviPoolCoordinator: RuuviPool {
     @MainActor
     func updateLast(_ record: RuuviTagSensorRecord) async throws(RuuviPoolError) -> Bool {
         var outcome: Result<Bool, RuuviPoolError>
-        if record.macId != nil {
+        if let macId = record.macId, !macId.value.isEmpty {
             do {
                 let success = try await sqlite.updateLast(record)
                 outcome = .success(success)
@@ -169,7 +149,7 @@ final class RuuviPoolCoordinator: RuuviPool {
                 outcome = .failure(.ruuviPersistence(error))
             }
         } else if let luid = record.luid,
-            let macId = idPersistence.mac(for: luid)
+            let macId = idPersistence.mac(for: luid), !macId.value.isEmpty
         {
             do {
                 let success = try await sqlite.updateLast(record.with(macId: macId))

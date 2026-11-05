@@ -488,7 +488,18 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     sharedToPending: normalizedTag.sharedToPending,
                     maxHistoryDays: normalizedTag.maxHistoryDays
                 )
-                return try entity.delete(db)
+                let deleted = try entity.delete(db)
+                let settings = Settings.filter(
+                    (normalizedTag.luid?.value != nil && Settings.luidColumn == normalizedTag.luid?.value)
+                        || (normalizedTag.macId?.value != nil
+                            && Settings.macIdColumn.like(
+                                "%\(normalizedTag.macId?.value.lastThreeBytes ?? "")"
+                            ))
+                )
+                if let settings = try settings.fetchOne(db) {
+                    try settings.delete(db)
+                }
+                return deleted
             }
             outcome = .success(success)
         } catch {

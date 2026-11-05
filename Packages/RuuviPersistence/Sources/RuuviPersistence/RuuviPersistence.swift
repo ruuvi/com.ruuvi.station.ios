@@ -7,6 +7,7 @@ import RuuviOntology
 public protocol RuuviPersistence {
     func create(_ ruuviTag: RuuviTagSensor) async throws(RuuviPersistenceError) -> Bool
     func update(_ ruuviTag: RuuviTagSensor) async throws(RuuviPersistenceError) -> Bool
+    /// Removes the sensor and its calibration atomically; a failure preserves both.
     func delete(_ ruuviTag: RuuviTagSensor) async throws(RuuviPersistenceError) -> Bool
     func deleteAllRecords(_ ruuviTagId: String) async throws(RuuviPersistenceError) -> Bool
     func deleteAllRecords(_ ruuviTagId: String, before date: Date) async throws(RuuviPersistenceError) -> Bool
