@@ -43,69 +43,49 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     var ruuviOwnershipService: RuuviServiceOwnership!
     var firmwareBuilder: RuuviFirmwareBuilder!
 
-    private weak var firmwareModule: RuuviFirmware?
-    private weak var view: DiscoverViewInput?
-    private var accessQueue = DispatchQueue(
-        label: "com.ruuviDiscover.accessQueue", attributes: .concurrent
-    )
-    private var _persistedSensors: [RuuviTagSensor] = []
-    private var persistedSensors: [RuuviTagSensor]! {
-        get {
-            accessQueue.sync {
-                _persistedSensors
-            }
-        }
-        set {
-            accessQueue.async(flags: .barrier) {
-                self._persistedSensors = newValue
-                DispatchQueue.main.async {
-                    self.updateViewDevices()
-                }
-            }
-        }
+    private let transportOverride: DiscoveryBluetoothTransport?
+    private lazy var bluetooth: DiscoveryBluetoothTransport = transportOverride ?? BTKitDiscoveryTransport(foreground: foreground)
+    private let permissionGranted: () -> Bool
+    private let reloadInterval: TimeInterval
+    private let initialReloadDelay: TimeInterval
+
+    init(view: DiscoverViewInput? = nil, transport: DiscoveryBluetoothTransport? = nil,
+        reloadInterval: TimeInterval = 3, initialReloadDelay: TimeInterval = 0.5,
+        permissionGranted: @escaping () -> Bool = {
+            CBManager.authorization != .denied && CBManager.authorization != .restricted
+        }) {
+        self.view = view
+        self.transportOverride = transport
+        self.reloadInterval = reloadInterval
+        self.initialReloadDelay = initialReloadDelay
+        self.permissionGranted = permissionGranted
+        super.init()
     }
 
-    private var _ruuviTags = Set<RuuviTag>()
-    private var ruuviTags: Set<RuuviTag> {
-        get {
-            accessQueue.sync {
-                _ruuviTags
-            }
-        }
-        set {
-            accessQueue.async(flags: .barrier) {
-                self._ruuviTags = newValue
-            }
-        }
+    private weak var firmwareModule: RuuviFirmware?
+    private weak var view: DiscoverViewInput?
+    // UIKit, Bluetooth callbacks and reactor snapshots share main-queue state.
+    private var persistedSensors: [RuuviTagSensor] = [] {
+        didSet { updateViewDevices() }
     }
+    private var ruuviTags = Set<RuuviTag>()
+    private var observationGeneration: UUID?
+    private var persistedGeneration = UUID()
 
     private var nfcSensor: NFCSensor?
 
     private var reloadTimer: Timer?
-    private var scanToken: ObservationToken?
-    private var stateToken: ObservationToken?
-    private var lostToken: ObservationToken?
+    private var scanToken: (() -> Void)?
+    private var stateToken: (() -> Void)?
+    private var lostToken: (() -> Void)?
     private var persistedReactorToken: RuuviReactorToken?
-    private var isBluetoothPermissionGranted: Bool {
-        let centralAuthorization = CBManager.authorization
-        if centralAuthorization == .denied || centralAuthorization == .restricted {
-            return false
-        }
-
-        let peripheralStatus = CBManager.authorization
-        switch peripheralStatus {
-        case .denied, .restricted:
-            return false
-        default:
-            return true
-        }
-    }
+    private var isBluetoothPermissionGranted: Bool { permissionGranted() }
 
     deinit {
         reloadTimer?.invalidate()
-        scanToken?.invalidate()
-        stateToken?.invalidate()
-        lostToken?.invalidate()
+        scanToken?()
+        stateToken?()
+        lostToken?()
         persistedReactorToken?.invalidate()
     }
 }
@@ -114,12 +94,14 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
 
 extension DiscoverPresenter: DiscoverViewOutput {
     func viewDidLoad() {
-        view?.isBluetoothEnabled = resolvedBluetoothState(for: foreground.bluetoothState).isEnabled
+        view?.isBluetoothEnabled = resolvedBluetoothState(for: bluetooth.state).isEnabled
         view?.isCloseEnabled = true
         startObservingPersistedRuuviSensors()
     }
 
     func viewWillAppear() {
+        viewWillDisappear()
+        observationGeneration = UUID()
         startObservingBluetoothState()
         startScanning()
         startReloading()
@@ -127,6 +109,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewWillDisappear() {
+        observationGeneration = nil
         stopObservingBluetoothState()
         stopScanning()
         stopReloading()
@@ -153,7 +136,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewDidTriggerDisabledBTRow() {
-        let resolvedState = resolvedBluetoothState(for: foreground.bluetoothState)
+        let resolvedState = resolvedBluetoothState(for: bluetooth.state)
         view?.showBluetoothDisabled(userDeclined: resolvedState.userDeclined)
     }
 
@@ -356,39 +339,52 @@ extension DiscoverPresenter: RuuviFirmwareOutput {
 
 extension DiscoverPresenter {
     private func startObservingPersistedRuuviSensors() {
+        persistedReactorToken?.invalidate()
+        let generation = UUID()
+        persistedGeneration = generation
         persistedReactorToken = ruuviReactor.observe { [weak self] change in
-            guard let self else { return }
-            switch change {
-            case let .initial(sensors):
-                persistedSensors = sensors
-            case let .insert(sensor):
-                persistedSensors.append(sensor)
-            case let .delete(sensor):
-                persistedSensors.removeAll(where: { $0.any == sensor })
-            default:
-                return
+            DispatchQueue.main.async { [weak self] in
+                guard let self, self.persistedGeneration == generation else { return }
+                switch change {
+                case let .initial(sensors): self.persistedSensors = sensors
+                case let .insert(sensor):
+                    self.persistedSensors.removeAll { $0.id == sensor.id }
+                    self.persistedSensors.append(sensor)
+                case let .update(sensor):
+                    if let index = self.persistedSensors.firstIndex(where: { $0.id == sensor.id }) {
+                        self.persistedSensors[index] = sensor
+                    }
+                case let .delete(sensor): self.persistedSensors.removeAll { $0.id == sensor.id }
+                case .error: break
+                }
             }
         }
     }
 
+    private func whileObserving(_ generation: UUID?, perform action: @escaping (DiscoverPresenter) -> Void) {
+        let deliver = { [weak self] in
+            guard let self, let generation, self.observationGeneration == generation else { return }
+            action(self)
+        }
+        if Thread.isMainThread { deliver() } else { DispatchQueue.main.async(execute: deliver) }
+    }
+
     private func startObservingLost() {
-        lostToken = foreground.lost(
-            self, options: [.lostDeviceDelay(10)],
-            closure: { observer, device in
-                if let ruuviTag = device.ruuvi?.tag {
-                    observer.ruuviTags.remove(ruuviTag)
-                }
-            })
+        let generation = observationGeneration
+        lostToken = bluetooth.observeLost { [weak self] tag in
+            self?.whileObserving(generation) { $0.ruuviTags.remove(tag) }
+        }
     }
 
     private func stopObservingLost() {
-        lostToken?.invalidate()
+        lostToken?()
+        lostToken = nil
     }
 
     private func startObservingBluetoothState() {
-        stateToken = foreground.state(
-            self,
-            closure: { observer, state in
+        let generation = observationGeneration
+        stateToken = bluetooth.observeState { [weak self] state in
+            self?.whileObserving(generation) { observer in
                 let resolvedState = observer.resolvedBluetoothState(for: state)
                 observer.view?.isBluetoothEnabled = resolvedState.isEnabled
                 if !resolvedState.isEnabled || resolvedState.userDeclined {
@@ -396,11 +392,13 @@ extension DiscoverPresenter {
                     observer.view?.ruuviTags = []
                     observer.view?.showBluetoothDisabled(userDeclined: resolvedState.userDeclined)
                 }
-            })
+            }
+        }
     }
 
     private func stopObservingBluetoothState() {
-        stateToken?.invalidate()
+        stateToken?()
+        stateToken = nil
     }
 
     private func resolvedBluetoothState(for state: BTScannerState) -> (isEnabled: Bool, userDeclined: Bool) {
@@ -421,41 +419,41 @@ extension DiscoverPresenter {
     }
 
     private func startScanning() {
-        scanToken = foreground.scan(self) { observer, device in
-            if let ruuviTag = device.ruuvi?.tag {
-                // when mode is changed, the device should be replaced
-                if let sameUUID = observer.ruuviTags.first(
-                    where: {
-                        $0.uuid == ruuviTag.uuid || $0.mac?.mac.any == ruuviTag.macId?.any
-                    }), sameUUID != ruuviTag
-                {
-                    observer.ruuviTags.remove(sameUUID)
+        let generation = observationGeneration
+        scanToken = bluetooth.scan { [weak self] tag in
+            self?.whileObserving(generation) { observer in
+                if let previous = observer.ruuviTags.first(where: {
+                    $0.uuid == tag.uuid || (tag.macId != nil && $0.mac?.mac.any == tag.macId?.any)
+                }), previous != tag {
+                    observer.ruuviTags.remove(previous)
                 }
-                observer.ruuviTags.update(with: ruuviTag)
+                observer.ruuviTags.update(with: tag)
             }
         }
     }
 
     private func stopScanning() {
-        scanToken?.invalidate()
+        scanToken?()
+        scanToken = nil
     }
 
     private func startReloading() {
         reloadTimer = Timer.scheduledTimer(
-            withTimeInterval: 3,
+            withTimeInterval: reloadInterval,
             repeats: true,
             block: { [weak self] _ in
                 self?.updateViewDevices()
             }
         )
-        // don't wait for timer, reload after 0.5 sec
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-            self?.updateViewDevices()
+        let generation = observationGeneration
+        DispatchQueue.main.asyncAfter(deadline: .now() + initialReloadDelay) { [weak self] in
+            self?.whileObserving(generation) { $0.updateViewDevices() }
         }
     }
 
     private func stopReloading() {
         reloadTimer?.invalidate()
+        reloadTimer = nil
     }
 
     private func updateViewDevices() {
@@ -476,17 +474,9 @@ extension DiscoverPresenter {
     private func visibleTags(ruuviTags: [DiscoverRuuviTagViewModel]) -> [DiscoverRuuviTagViewModel] {
         let filtered = ruuviTags.filter { tag in
             !persistedSensors.contains(where: { persistedTag in
-                if let tagLuid = tag.luid?.value,
-                    let persistedTagLuid = persistedTag.luid?.value
-                {
-                    tagLuid == persistedTagLuid
-                } else if let tagMacId = tag.mac,
-                    let persistedTagMacId = persistedTag.macId?.value
-                {
-                    tagMacId == persistedTagMacId
-                } else {
-                    false
-                }
+                let sameLuid = tag.luid != nil && tag.luid?.value == persistedTag.luid?.value
+                let sameMac = tag.mac != nil && tag.mac?.mac.any == persistedTag.macId?.any
+                return sameLuid || sameMac
             })
         }.sorted(by: {
             if let rssi0 = $0.rssi, let rssi1 = $1.rssi {

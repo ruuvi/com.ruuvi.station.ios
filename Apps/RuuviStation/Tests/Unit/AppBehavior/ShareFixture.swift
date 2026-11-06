@@ -72,6 +72,10 @@ final class ShareRouterSpy: ShareRouterInput {
     var loadFailure: RuuviServiceError?
     var updateFailure: RuuviServiceError?
     var beforeShare: (() async -> Void)?
+    var allowAdds = false
+    var additions = [(AnyRuuviTagSensor, AnyRuuviTagSensorRecord?)]()
+    var addFailure: RuuviServiceError?
+    var beforeAdd: (() async -> Void)?
     var beforeLoad: (() async -> Void)?
     var beforeUpdate: (() async -> Void)?
     func share(macId: MACIdentifier, with email: String) async throws(RuuviServiceError) -> ShareSensorResponse {
@@ -100,7 +104,11 @@ final class ShareRouterSpy: ShareRouterInput {
     }
     func add(sensor: RuuviTagSensor, record: RuuviTagSensorRecord?) async throws(RuuviServiceError) -> AnyRuuviTagSensor
     {
-        throw .failedToParseNetworkResponse
+        guard allowAdds else { throw .failedToParseNetworkResponse }
+        additions.append((sensor.any, record?.any))
+        await beforeAdd?()
+        if let addFailure { throw addFailure }
+        return sensor.any
     }
     func remove(sensor: RuuviTagSensor, removeCloudHistory: Bool) async throws(RuuviServiceError) -> AnyRuuviTagSensor {
         throw .failedToParseNetworkResponse
