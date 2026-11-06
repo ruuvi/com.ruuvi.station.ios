@@ -4,18 +4,40 @@ import UIKit
 import UserNotifications
 
 class InfoProviderImpl: InfoProvider {
+    private let appInfo: [String: Any]
+    private let locationStatus: () -> CLAuthorizationStatus
+    private let photoStatus: () -> PHAuthorizationStatus
+    private let cameraStatus: () -> AVAuthorizationStatus
+    private let notificationStatus: (@escaping (UNAuthorizationStatus) -> Void) -> Void
+
+    init(
+        appInfo: [String: Any] = Bundle.main.infoDictionary ?? [:],
+        locationStatus: @escaping () -> CLAuthorizationStatus = { CLLocationManager().authorizationStatus },
+        photoStatus: @escaping () -> PHAuthorizationStatus = { PHPhotoLibrary.authorizationStatus() },
+        cameraStatus: @escaping () -> AVAuthorizationStatus = { AVCaptureDevice.authorizationStatus(for: .video) },
+        notificationStatus: @escaping (@escaping (UNAuthorizationStatus) -> Void) -> Void = { receive in
+            UNUserNotificationCenter.current().getNotificationSettings { receive($0.authorizationStatus) }
+        }
+    ) {
+        self.appInfo = appInfo
+        self.locationStatus = locationStatus
+        self.photoStatus = photoStatus
+        self.cameraStatus = cameraStatus
+        self.notificationStatus = notificationStatus
+    }
+
     var deviceModel: String {
         UIDevice.modelName
     }
 
     var appVersion: String {
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "unknown"
-        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "unknown"
+        let version = appInfo["CFBundleShortVersionString"] as? String ?? "unknown"
+        let build = appInfo["CFBundleVersion"] as? String ?? "unknown"
         return version + "(" + build + ")"
     }
 
     var appName: String {
-        Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String ?? "unknown|"
+        appInfo["CFBundleDisplayName"] as? String ?? "unknown"
     }
 
     var systemName: String {
@@ -28,7 +50,7 @@ class InfoProviderImpl: InfoProvider {
 
     var locationPermission: String {
         var result = "Location: "
-        switch CLLocationManager().authorizationStatus {
+        switch locationStatus() {
         case .authorizedAlways:
             result += "always"
         case .authorizedWhenInUse:
@@ -47,7 +69,7 @@ class InfoProviderImpl: InfoProvider {
 
     var photoLibraryPermission: String {
         var result = "Photo Library: "
-        switch PHPhotoLibrary.authorizationStatus() {
+        switch photoStatus() {
         case .authorized:
             result += "authorized"
         case .denied:
@@ -69,7 +91,7 @@ class InfoProviderImpl: InfoProvider {
         #if targetEnvironment(macCatalyst)
             result += "unknown"
         #else
-            switch AVCaptureDevice.authorizationStatus(for: .video) {
+            switch cameraStatus() {
             case .authorized:
                 result += "authorized"
             case .denied:
@@ -102,9 +124,9 @@ class InfoProviderImpl: InfoProvider {
         result += cameraPermission + "\n"
 
         result += "Notifications: "
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
+        notificationStatus { status in
             DispatchQueue.main.async {
-                switch settings.authorizationStatus {
+                switch status {
                 case .authorized:
                     result += "authorized"
                 case .provisional:

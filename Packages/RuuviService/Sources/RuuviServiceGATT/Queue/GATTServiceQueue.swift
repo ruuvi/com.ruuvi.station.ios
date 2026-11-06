@@ -8,7 +8,7 @@ import RuuviPool
 
 public final class GATTServiceQueue: GATTService {
     private let ruuviPool: RuuviPool
-    private let background: BTBackground
+    private let transport: RuuviLogTransport
     private let lock = NSLock()
     private var operations = [String: RuuviTagReadLogsOperation]()
     private let queue: OperationQueue = {
@@ -17,9 +17,14 @@ public final class GATTServiceQueue: GATTService {
         return queue
     }()
 
-    public init(ruuviPool: RuuviPool, background: BTBackground) {
+    public convenience init(ruuviPool: RuuviPool, background: BTBackground) {
+        self.init(ruuviPool: ruuviPool, transport: BTKitLogTransport(background: background))
+    }
+
+    init(ruuviPool: RuuviPool, transport: RuuviLogTransport, maxConcurrentDownloads: Int = 3) {
         self.ruuviPool = ruuviPool
-        self.background = background
+        self.transport = transport
+        queue.maxConcurrentOperationCount = maxConcurrentDownloads
     }
 
     public func syncLogs(
@@ -33,7 +38,7 @@ public final class GATTServiceQueue: GATTService {
     ) async throws(RuuviServiceError) -> Bool {
         let operation = RuuviTagReadLogsOperation(
             uuid: uuid, mac: mac, firmware: firmware, from: from, settings: settings,
-            ruuviPool: ruuviPool, background: background, progress: progress,
+            ruuviPool: ruuviPool, transport: transport, progress: progress,
             connectionTimeout: timeouts.connection, serviceTimeout: timeouts.service
         )
         let registered = lock.withLock {

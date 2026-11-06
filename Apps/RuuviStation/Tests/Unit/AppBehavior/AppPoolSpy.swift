@@ -5,6 +5,8 @@ import RuuviPool
 @MainActor final class AppPoolSpy: RuuviPool {
     var allowRecordWrites = false
     var recordFailure: RuuviPoolError?
+    var createdBatches = [[AnyRuuviTagSensorRecord]]()
+    var beforeCreateBatch: (() async -> Void)?
     var createdRecords = [AnyRuuviTagSensorRecord]()
     var createdLatest = [AnyRuuviTagSensorRecord]()
     var updatedLatest = [AnyRuuviTagSensorRecord]()
@@ -61,7 +63,11 @@ import RuuviPool
         throw .ruuviPersistence(.failedToFindRuuviTag)
     }
     func create(_ records: [RuuviTagSensorRecord]) async throws(RuuviPoolError) -> Bool {
-        throw .ruuviPersistence(.failedToFindRuuviTag)
+        guard allowRecordWrites else { throw .ruuviPersistence(.failedToFindRuuviTag) }
+        createdBatches.append(records.map(\.any))
+        await beforeCreateBatch?()
+        if let recordFailure { throw recordFailure }
+        return true
     }
     func deleteAllRecords(_ ruuviTagId: String) async throws(RuuviPoolError) -> Bool {
         throw .ruuviPersistence(.failedToFindRuuviTag)

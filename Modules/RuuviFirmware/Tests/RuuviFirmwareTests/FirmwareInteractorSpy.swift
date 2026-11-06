@@ -17,12 +17,18 @@ final class FirmwareInteractorSpy: FirmwareInteracting {
     func restartPropertiesDaemon() { daemonRestarts += 1 }
     func ensureBatteryHasEnoughPower(uuid: String) { checkedBatteries.append(uuid) }
     func loadLatestGitHubRelease() -> AnyPublisher<GitHubRelease, Error> { releases.eraseToAnyPublisher() }
-    func serveCurrentRelease(uuid: String) -> Future<CurrentRelease, Error> { Future { self.currentPromise = $0 } }
+    func serveCurrentRelease(uuid: String) -> AnyPublisher<CurrentRelease, Error> {
+        Future<CurrentRelease, Error> { self.currentPromise = $0 }.eraseToAnyPublisher()
+    }
     func download(release: GitHubRelease) -> AnyPublisher<FirmwareDownloadResponse, Error> {
         downloads.eraseToAnyPublisher()
     }
-    func listen() -> Future<String, Never> { Future { self.listenPromise = $0 } }
-    func observeLost(uuid: String) -> Future<String, Never> { Future { self.lostPromise = $0 } }
+    func listen() -> AnyPublisher<String, Never> {
+        Future<String, Never> { self.listenPromise = $0 }.eraseToAnyPublisher()
+    }
+    func observeLost(uuid: String) -> AnyPublisher<String, Never> {
+        Future<String, Never> { self.lostPromise = $0 }.eraseToAnyPublisher()
+    }
     func flash(
         uuid: String, latestRelease: GitHubRelease, currentRelease: CurrentRelease?,
         appUrl: URL, fullUrl: URL

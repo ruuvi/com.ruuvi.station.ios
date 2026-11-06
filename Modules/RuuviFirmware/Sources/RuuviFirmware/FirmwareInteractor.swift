@@ -24,10 +24,10 @@ protocol FirmwareInteracting {
     func restartPropertiesDaemon()
     func ensureBatteryHasEnoughPower(uuid: String)
     func loadLatestGitHubRelease() -> AnyPublisher<GitHubRelease, Error>
-    func serveCurrentRelease(uuid: String) -> Future<CurrentRelease, Error>
+    func serveCurrentRelease(uuid: String) -> AnyPublisher<CurrentRelease, Error>
     func download(release: GitHubRelease) -> AnyPublisher<FirmwareDownloadResponse, Error>
-    func listen() -> Future<String, Never>
-    func observeLost(uuid: String) -> Future<String, Never>
+    func listen() -> AnyPublisher<String, Never>
+    func observeLost(uuid: String) -> AnyPublisher<String, Never>
     func flash(
         uuid: String, latestRelease: GitHubRelease, currentRelease: CurrentRelease?,
         appUrl: URL, fullUrl: URL
@@ -42,7 +42,11 @@ final class FirmwareInteractor: FirmwareInteracting {
     private let session: URLSession
     private let downloader: FirmwareDownloader
     private let ruuviDFU: RuuviDFU
-    private var ruuviTagObservationToken: ObservationToken?
+    private var cancelBatteryObservation: (() -> Void)?
+    private var batteryGeneration = UUID()
+    private let observeBattery: ((String, @escaping (RuuviTag) -> Void) -> (() -> Void))?
+    private let firmwareRevision: ((String, @escaping (Result<String, Error>) -> Void) -> Void)?
+    private let revisionTimeout: TimeInterval
 
     init(
         background: BTBackground,
@@ -50,18 +54,24 @@ final class FirmwareInteractor: FirmwareInteracting {
         propertiesDaemon: RuuviTagPropertiesDaemon,
         ruuviDFU: RuuviDFU,
         firmwareRepository: FirmwareRepository,
-        session: URLSession = .shared
+        session: URLSession = .shared,
+        observeBattery: ((String, @escaping (RuuviTag) -> Void) -> (() -> Void))? = nil,
+        firmwareRevision: ((String, @escaping (Result<String, Error>) -> Void) -> Void)? = nil,
+        revisionTimeout: TimeInterval = 15
     ) {
         self.background = background
         self.foreground = foreground
         self.propertiesDaemon = propertiesDaemon
         self.ruuviDFU = ruuviDFU
         self.session = session
+        self.observeBattery = observeBattery
+        self.firmwareRevision = firmwareRevision
+        self.revisionTimeout = revisionTimeout
         downloader = FirmwareDownloader(session: session, repository: firmwareRepository)
     }
 
     deinit {
-        ruuviTagObservationToken?.invalidate()
+        cancelBatteryObservation?()
     }
 
     func restartPropertiesDaemon() {
@@ -69,11 +79,24 @@ final class FirmwareInteractor: FirmwareInteracting {
     }
 
     func ensureBatteryHasEnoughPower(uuid: String) {
-        ruuviTagObservationToken?.invalidate()
-        ruuviTagObservationToken = foreground.observe(self, uuid: uuid) { observer, device in
-            if let ruuviTag = device.ruuvi?.tag {
-                observer.batteryIsLow.value = observer.batteryNeedsReplacement(ruuviTag: ruuviTag)
+        cancelBatteryObservation?()
+        let generation = UUID()
+        batteryGeneration = generation
+        batteryIsLow.value = false
+        let receive: (RuuviTag) -> Void = { [weak self] tag in
+            let deliver = { [weak self] in
+                guard let self, self.batteryGeneration == generation else { return }
+                self.batteryIsLow.value = self.batteryNeedsReplacement(ruuviTag: tag)
             }
+            if Thread.isMainThread { deliver() } else { DispatchQueue.main.async(execute: deliver) }
+        }
+        if let observeBattery {
+            cancelBatteryObservation = observeBattery(uuid, receive)
+        } else {
+            let token = foreground.observe(self, uuid: uuid) { _, device in
+                if let tag = device.ruuvi?.tag { receive(tag) }
+            }
+            cancelBatteryObservation = { token.invalidate() }
         }
     }
 
@@ -109,26 +132,20 @@ final class FirmwareInteractor: FirmwareInteracting {
             .eraseToAnyPublisher()
     }
 
-    func serveCurrentRelease(uuid: String) -> Future<CurrentRelease, Error> {
-        Future { [weak self] promise in
-            guard let self else { return }
-            background.services.gatt.firmwareRevision(
-                for: self,
-                uuid: uuid,
-                options: [
-                    .connectionTimeout(15),
-                    .serviceTimeout(15),
-                ]
-            ) { _, result in
-                switch result {
-                case let .success(version):
-                    let sanitizedVersion = version.ruuviFirmwareDisplayValue
-                    let currentRelease = CurrentRelease(version: sanitizedVersion)
-                    promise(.success(currentRelease))
-                case let .failure(error):
-                    promise(.failure(error))
-                }
+    func serveCurrentRelease(uuid: String) -> AnyPublisher<CurrentRelease, Error> {
+        firmwareObservation(timeout: (revisionTimeout, BTError.logic(.connectionTimedOut) as Error)) { [self] complete in
+            let receive: (Result<String, Error>) -> Void = { result in
+                complete(result.map { CurrentRelease(version: $0.ruuviFirmwareDisplayValue) })
             }
+            if let firmwareRevision {
+                firmwareRevision(uuid, receive)
+            } else {
+                background.services.gatt.firmwareRevision(
+                    for: self, uuid: uuid,
+                    options: [.connectionTimeout(revisionTimeout), .serviceTimeout(revisionTimeout)]
+                ) { _, result in receive(result.mapError { $0 as Error }) }
+            }
+            return nil
         }
     }
 
@@ -154,25 +171,21 @@ final class FirmwareInteractor: FirmwareInteracting {
             .eraseToAnyPublisher()
     }
 
-    func listen() -> Future<String, Never> {
-        Future { [weak self] promise in
-            guard let self else { return }
-            ruuviDFU.scan(self, includeScanServices: false) { _, device in
-                promise(.success(device.uuid))
+    func listen() -> AnyPublisher<String, Never> {
+        firmwareObservation { [self] complete in
+            let token = ruuviDFU.scan(self, includeScanServices: false) { _, device in
+                complete(.success(device.uuid))
             }
+            return { token.invalidate() }
         }
     }
 
-    func observeLost(uuid: String) -> Future<String, Never> {
-        Future { [weak self] promise in
-            guard let self else { return }
-            ruuviDFU.lost(
-                self,
-                closure: { _, device in
-                    if device.uuid == uuid {
-                        promise(.success(uuid))
-                    }
-                })
+    func observeLost(uuid: String) -> AnyPublisher<String, Never> {
+        firmwareObservation { [self] complete in
+            let token = ruuviDFU.lost(self) { _, device in
+                if device.uuid == uuid { complete(.success(uuid)) }
+            }
+            return { token.invalidate() }
         }
     }
 

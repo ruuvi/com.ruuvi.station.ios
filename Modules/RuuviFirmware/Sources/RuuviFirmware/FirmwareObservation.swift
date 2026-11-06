@@ -2,7 +2,7 @@ import Combine
 import Foundation
 
 /// One subscription owns one Bluetooth observation and its timeout.
-func firmwareObservation<Output, Failure: Error>(
+public func firmwareObservation<Output, Failure: Error>(
     delay: TimeInterval = 0,
     timeout: (TimeInterval, Failure)? = nil,
     start: @escaping (@escaping (Result<Output, Failure>) -> Void) -> (() -> Void)?

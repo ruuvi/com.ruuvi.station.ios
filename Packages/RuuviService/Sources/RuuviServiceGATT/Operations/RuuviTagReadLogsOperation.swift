@@ -13,7 +13,7 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
     var sensorSettings: SensorSettings?
     var error: RuuviServiceError?
 
-    private var background: BTBackground
+    private let transport: RuuviLogTransport
     private var ruuviPool: RuuviPool
     private var progress: ((BTServiceProgress) -> Void)?
     private var connectionTimeout: TimeInterval?
@@ -22,6 +22,7 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
     private let resultLock = NSRecursiveLock()
     private let progressLock = NSLock()
     private var latestProgress: BTServiceProgress?
+    private var hasTerminalResult = false
     private var persistenceTask: Task<Void, Never>?
 
     var currentProgress: BTServiceProgress? {
@@ -37,7 +38,7 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
         from: Date,
         settings: SensorSettings?,
         ruuviPool: RuuviPool,
-        background: BTBackground,
+        transport: RuuviLogTransport,
         progress: ((BTServiceProgress) -> Void)? = nil,
         connectionTimeout: TimeInterval? = 0,
         serviceTimeout: TimeInterval? = 0
@@ -48,7 +49,7 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
         self.from = from
         sensorSettings = settings
         self.ruuviPool = ruuviPool
-        self.background = background
+        self.transport = transport
         self.progress = progress
         self.connectionTimeout = connectionTimeout
         self.serviceTimeout = serviceTimeout
@@ -65,28 +66,26 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
     private func readLogs() {
         post(started: from, with: uuid)
         let firmwareVersion = RuuviDataFormat.dataFormat(from: firmware)
-        background.services.ruuvi.nus.log(
+        transport.read(
             for: self,
             uuid: uuid,
             from: from,
             service: firmwareVersion == .e1 || firmwareVersion == .v6 ? .e1 : .all,
-            options: [
-                .callbackQueue(.untouch),
-                .connectionTimeout(connectionTimeout ?? 0),
-                .serviceTimeout(serviceTimeout ?? 0),
-            ],
+            connectionTimeout: connectionTimeout ?? 0,
+            serviceTimeout: serviceTimeout ?? 0,
             progress: { [weak self] in self?.handle(progress: $0) }
         ) { observer, result in
             // Finish any persistence already in progress before cancellation returns.
             observer.resultLock.lock()
             defer { observer.resultLock.unlock() }
-            guard !observer.isCancelled else { return }
+            guard !observer.isCancelled, !observer.hasTerminalResult else { return }
             switch result {
             case let .success(logResult):
                 switch logResult {
                 case let .points(points):
                     observer.post(progress: .reading(points), with: observer.uuid)
                 case let .logs(logs):
+                    observer.hasTerminalResult = true
                     let records = logs.compactMap {
                         $0.ruuviSensorRecord(
                             uuid: observer.uuid,
@@ -110,6 +109,7 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
                     }
                 }
             case let .failure(error):
+                observer.hasTerminalResult = true
                 observer.post(error: error, with: observer.uuid)
                 observer.error = .btkit(error)
                 observer.state = .finished
@@ -130,16 +130,13 @@ final class RuuviTagReadLogsOperation: AsyncOperation {
     }
 
     public func stopSync() {
-        background.services.ruuvi.nus.disconnect(
-            for: self,
-            uuid: uuid,
-            options: [],
-            result: { _, _ in }
-        )
+        transport.disconnect(for: self, uuid: uuid)
     }
 
     private func handle(progress: BTServiceProgress) {
-        guard !isCancelled else { return }
+        resultLock.lock()
+        defer { resultLock.unlock() }
+        guard !isCancelled, !hasTerminalResult else { return }
         post(progress: progress, with: uuid)
         self.progress?(progress)
     }
