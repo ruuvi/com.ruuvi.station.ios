@@ -30,6 +30,9 @@ class CardsBasePresenter: NSObject {
     private let errorPresenter: ErrorPresenter
     private let featureToggleService: FeatureToggleService
     private let flags: RuuviLocalFlags
+    private let coordinatorManager: RuuviTagServiceCoordinatorManager
+    private let observeBluetoothState: ((@escaping (BTScannerState) -> Void) -> (() -> Void))?
+    private let permissionGranted: (() -> Bool)?
 
     // MARK: Properties
     private var snapshot: RuuviTagCardSnapshot!
@@ -38,10 +41,12 @@ class CardsBasePresenter: NSObject {
     private var sensorSettings: [SensorSettings] = []
     private var activeMenu: CardsMenuType = .measurement
     private var graphGattSyncInProgress: Bool = false
+    private var isActive = true
     private var shouldLimitGraphGattSyncToSingleSensor: Bool {
         !flags.allowConcurrentGattSyncForMultipleSensors
     }
     private var isBluetoothPermissionGranted: Bool {
+        if let permissionGranted { return permissionGranted() }
         let centralAuthorization = CBManager.authorization
         if centralAuthorization == .denied || centralAuthorization == .restricted {
             return false
@@ -58,20 +63,23 @@ class CardsBasePresenter: NSObject {
 
     // MARK: Observations
     private var sensorOrderChangeToken: NSObjectProtocol?
-    private var stateToken: ObservationToken?
+    private var cancelStateObservation: (() -> Void)?
 
     init(
-        measurementPresenter: CardsMeasurementPresenter,
-        graphPresenter: CardsGraphPresenter,
-        alertsPresenter: CardsAlertsPresenter,
-        settingsPresenter: CardsSettingsPresenter,
+        measurementPresenter: CardsMeasurementPresenterInput,
+        graphPresenter: CardsGraphPresenterInput,
+        alertsPresenter: CardsAlertsPresenterInput,
+        settingsPresenter: CardsSettingsPresenterInput,
         foreground: BTForeground,
         ruuviCloudService: RuuviCloudService,
         settings: RuuviLocalSettings,
         connectionPersistence: RuuviLocalConnections,
         errorPresenter: ErrorPresenter,
         featureToggleService: FeatureToggleService,
-        flags: RuuviLocalFlags
+        flags: RuuviLocalFlags,
+        coordinatorManager: RuuviTagServiceCoordinatorManager = .shared,
+        observeBluetoothState: ((@escaping (BTScannerState) -> Void) -> (() -> Void))? = nil,
+        permissionGranted: (() -> Bool)? = nil
     ) {
         self.measurementPresenter = measurementPresenter
         self.graphPresenter = graphPresenter
@@ -85,6 +93,9 @@ class CardsBasePresenter: NSObject {
         self.errorPresenter = errorPresenter
         self.featureToggleService = featureToggleService
         self.flags = flags
+        self.coordinatorManager = coordinatorManager
+        self.observeBluetoothState = observeBluetoothState
+        self.permissionGranted = permissionGranted
         super.init()
 
         self.startObservingSensorOrderChanges()
@@ -92,6 +103,12 @@ class CardsBasePresenter: NSObject {
         self.startObservingBluetoothState()
         self.measurementPresenter?.configure(output: self)
         self.graphPresenter?.configure(output: self)
+    }
+
+    deinit {
+        sensorOrderChangeToken?.invalidate()
+        stopObservingBluetoothState()
+        stopServices()
     }
 
     // TODO: Move this to service coordinator
@@ -105,9 +122,9 @@ class CardsBasePresenter: NSObject {
                 object: nil,
                 queue: .main,
                 using: { [weak self] _ in
-                    guard let self = self else { return }
-                    DispatchQueue.main.async {
-                        RuuviTagServiceCoordinatorManager.shared
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self, self.isActive else { return }
+                        self.coordinatorManager
                             .reorderSnapshots(with: self.settings.dashboardSensorOrder)
                     }
                 }
@@ -139,9 +156,10 @@ extension CardsBasePresenter: CardsBasePresenterInput {
     }
 
     func dismiss(completion: (() -> Void)?) {
-        // TODO: Cleanup
         stopServices()
         stopObservingBluetoothState()
+        sensorOrderChangeToken?.invalidate()
+        sensorOrderChangeToken = nil
         // Call Completetion
         completion?()
     }
@@ -390,6 +408,7 @@ extension CardsBasePresenter: CardsGraphPresenterOutput {
         for snapshot: RuuviTagCardSnapshot,
         source: GraphHistoryAbortSyncSource
     ) {
+        graphGattSyncInProgress = false
         switch source {
         case .rootBackButton:
             // Go back to root
@@ -438,6 +457,7 @@ extension CardsBasePresenter: RuuviTagServiceCoordinatorObserver {
         _ coordinator: RuuviTagServiceCoordinator,
         event: RuuviTagServiceCoordinatorEvent
     ) {
+        guard isActive, snapshot != nil else { return }
         switch event {
         case .snapshotsUpdated(let snapshots, let reason, _):
             if snapshots.count > 0 {
@@ -597,6 +617,7 @@ extension CardsBasePresenter: RuuviCloudServiceDelegate {
         _ service: RuuviCloudService,
         syncStatusDidChange isRefreshing: Bool
     ) {
+        guard isActive else { return }
         view?.setActivityIndicatorVisible(isRefreshing)
     }
 
@@ -612,8 +633,8 @@ extension CardsBasePresenter: RuuviCloudServiceDelegate {
         historySyncInProgress inProgress: Bool,
         for macId: String
     ) {
-        if activeMenu == .graph,
-            snapshot.identifierData.mac?.value == macId {
+        if isActive, activeMenu == .graph,
+            snapshot?.identifierData.mac?.value == macId {
             view?.setActivityIndicatorVisible(inProgress)
         }
     }
@@ -636,14 +657,17 @@ extension CardsBasePresenter: RuuviCloudServiceDelegate {
 // MARK: Private Helpers
 private extension CardsBasePresenter {
     func startServices() {
-        RuuviTagServiceCoordinatorManager.shared.addObserver(self)
+        isActive = true
+        coordinatorManager.addObserver(self)
         ruuviCloudService.startObserving()
 
         ruuviCloudService.delegate = self
     }
 
     func stopServices() {
-        RuuviTagServiceCoordinatorManager.shared.removeObserver(self)
+        guard isActive else { return }
+        isActive = false
+        coordinatorManager.removeObserver(self)
         ruuviCloudService.stopObserving()
     }
 
@@ -675,17 +699,26 @@ private extension CardsBasePresenter {
     }
 
     func startObservingBluetoothState() {
-        stateToken = foreground.state(self, closure: { [weak self] _, state in
-            self?.handleBluetoothStateChange(state)
-        })
-        handleBluetoothStateChange(foreground.bluetoothState)
+        if let observeBluetoothState {
+            cancelStateObservation = observeBluetoothState { [weak self] state in
+                self?.handleBluetoothStateChange(state)
+            }
+        } else {
+            let token = foreground.state(self, closure: { [weak self] _, state in
+                self?.handleBluetoothStateChange(state)
+            })
+            cancelStateObservation = { token.invalidate() }
+            handleBluetoothStateChange(foreground.bluetoothState)
+        }
     }
 
     func stopObservingBluetoothState() {
-        stateToken?.invalidate()
+        cancelStateObservation?()
+        cancelStateObservation = nil
     }
 
     func handleBluetoothStateChange(_ state: BTScannerState) {
+        guard isActive else { return }
         let permissionDenied = !isBluetoothPermissionGranted
         if permissionDenied {
             view?.showBluetoothDisabled(userDeclined: true)

@@ -34,6 +34,13 @@ class UniversalLinkRouterImpl: UniversalLinkRouter {
             return
         }
 
+        // Reveal the dashboard if it belongs to an unselected tab.
+        var child: UIViewController = dashboardViewController
+        while let parent = child.parent {
+            if let tabs = parent as? UITabBarController { tabs.selectedViewController = child }
+            child = parent
+        }
+
         let openCard = {
             dashboardViewController.output
                 .viewDidTriggerOpenSensorCardFromWidget(for: snapshot)

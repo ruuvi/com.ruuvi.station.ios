@@ -2,6 +2,7 @@ import RuuviLocalization
 import UIKit
 
 class HeartbeatTableViewController: UITableViewController {
+    private var bindingGeneration = UUID()
     var output: HeartbeatViewOutput!
     var confirmBackgroundScanningDisable: ((@escaping (Bool) -> Void) -> Void)!
 
@@ -101,13 +102,17 @@ extension HeartbeatTableViewController {
 
     private func bindViewModel() {
         if isViewLoaded {
+            let generation = UUID()
+            bindingGeneration = generation
             bgScanningSwitch.bind(viewModel.bgScanningState) { [weak self] view, isOn in
+                guard let self, self.bindingGeneration == generation else { return }
                 view.toggleState(with: isOn.bound)
-                view.hideStatusLabel(hide: self?.viewModel.hideSwitchStatusLabel.value ?? false)
-                self?.bgScannigIntervalCell.isHidden = !isOn.bound
-                self?.tableView.reloadData()
+                view.hideStatusLabel(hide: self.viewModel.hideSwitchStatusLabel.value ?? false)
+                self.bgScannigIntervalCell.isHidden = !isOn.bound
+                self.tableView.reloadData()
             }
-            bgScanningIntervalValueLabel.bind(viewModel.bgScanningInterval) { label, interval in
+            bgScanningIntervalValueLabel.bind(viewModel.bgScanningInterval) { [weak self] label, interval in
+                guard self?.bindingGeneration == generation else { return }
                 if interval.bound > 0 {
                     label.text = RuuviLocalization.Heartbeat.Interval.Every.string
                         + " " + "\(interval.bound)"
@@ -116,7 +121,8 @@ extension HeartbeatTableViewController {
                     label.text = RuuviLocalization.Heartbeat.Interval.All.string
                 }
             }
-            bgScanningIntervalStepper.bind(viewModel.bgScanningInterval) { stepper, interval in
+            bgScanningIntervalStepper.bind(viewModel.bgScanningInterval) { [weak self] stepper, interval in
+                guard self?.bindingGeneration == generation else { return }
                 stepper.value = Double(interval.bound)
             }
         }

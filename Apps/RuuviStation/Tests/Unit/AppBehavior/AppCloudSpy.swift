@@ -16,6 +16,19 @@ import RuuviOntology
         let description: String?
         let mac: String
     }
+    struct PushRegistration {
+        let token: String
+        let type: String
+        let name: String?
+        let data: String?
+        let params: [String: String]?
+    }
+    var pushRegistrations = [PushRegistration]()
+    var pushUnregisters = [(String?, Int?)]()
+    var pushTokens = [RuuviCloudPNToken]()
+    var pushTokenID: Int?
+    var pushFailure: RuuviCloudError?
+    var pushListReads = 0
     var onDense: (() async throws(RuuviCloudError) -> [RuuviCloudSensorDense])?
     var onHistory: ((MACIdentifier, Date) async throws(RuuviCloudError) -> [AnyRuuviTagSensorRecord])?
     var onSettings: (() async throws(RuuviCloudError) -> RuuviCloudSettings?)?
@@ -58,6 +71,9 @@ import RuuviOntology
         data: String?,
         params: [String: String]?
     ) async throws(RuuviCloudError) -> Int {
+        pushRegistrations.append(.init(token: token, type: type, name: name, data: data, params: params))
+        if let pushFailure { throw pushFailure }
+        if let pushTokenID { return pushTokenID }
         throw .notAuthorized
     }
 
@@ -65,10 +81,16 @@ import RuuviOntology
         token: String?,
         tokenId: Int?
     ) async throws(RuuviCloudError) -> Bool {
+        pushUnregisters.append((token, tokenId))
+        if let pushFailure { throw pushFailure }
+        if pushTokenID != nil { return true }
         throw .notAuthorized
     }
 
     func listPNTokens() async throws(RuuviCloudError) -> [RuuviCloudPNToken] {
+        pushListReads += 1
+        if let pushFailure { throw pushFailure }
+        if pushTokenID != nil { return pushTokens }
         throw .notAuthorized
     }
 

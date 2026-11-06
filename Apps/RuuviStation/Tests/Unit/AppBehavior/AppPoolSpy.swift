@@ -3,6 +3,9 @@ import RuuviOntology
 import RuuviPool
 
 @MainActor final class AppPoolSpy: RuuviPool {
+    var allowDeletes = false
+    var deletionFailure: RuuviPoolError?
+    var deletionCalls = [(String, String?)]()
     var allowRecordWrites = false
     var recordFailure: RuuviPoolError?
     var createdBatches = [[AnyRuuviTagSensorRecord]]()
@@ -33,7 +36,10 @@ import RuuviPool
         return true
     }
     func delete(_ ruuviTag: RuuviTagSensor) async throws(RuuviPoolError) -> Bool {
-        throw .ruuviPersistence(.failedToFindRuuviTag)
+        deletionCalls.append(("sensor", ruuviTag.id))
+        if let deletionFailure { throw deletionFailure }
+        guard allowDeletes else { throw .ruuviPersistence(.failedToFindRuuviTag) }
+        return true
     }
     func deleteSensorSettings(_ ruuviTag: RuuviTagSensor) async throws(RuuviPoolError) -> Bool {
         throw .ruuviPersistence(.failedToFindRuuviTag)
@@ -60,7 +66,10 @@ import RuuviPool
         return true
     }
     func deleteLast(_ ruuviTagId: String) async throws(RuuviPoolError) -> Bool {
-        throw .ruuviPersistence(.failedToFindRuuviTag)
+        deletionCalls.append(("latest", ruuviTagId))
+        if let deletionFailure { throw deletionFailure }
+        guard allowDeletes else { throw .ruuviPersistence(.failedToFindRuuviTag) }
+        return true
     }
     func create(_ records: [RuuviTagSensorRecord]) async throws(RuuviPoolError) -> Bool {
         guard allowRecordWrites else { throw .ruuviPersistence(.failedToFindRuuviTag) }
@@ -70,7 +79,10 @@ import RuuviPool
         return true
     }
     func deleteAllRecords(_ ruuviTagId: String) async throws(RuuviPoolError) -> Bool {
-        throw .ruuviPersistence(.failedToFindRuuviTag)
+        deletionCalls.append(("history", ruuviTagId))
+        if let deletionFailure { throw deletionFailure }
+        guard allowDeletes else { throw .ruuviPersistence(.failedToFindRuuviTag) }
+        return true
     }
     func deleteAllRecords(_ ruuviTagId: String, before date: Date) async throws(RuuviPoolError) -> Bool {
         throw .ruuviPersistence(.failedToFindRuuviTag)
@@ -106,8 +118,18 @@ import RuuviPool
     func deleteQueuedRequest(_ request: RuuviCloudQueuedRequest) async throws(RuuviPoolError) -> Bool {
         throw .ruuviPersistence(.failedToFindRuuviTag)
     }
-    func deleteQueuedRequests() async throws(RuuviPoolError) -> Bool { throw .ruuviPersistence(.failedToFindRuuviTag) }
-    func deleteUserSettings() async throws(RuuviPoolError) -> Bool { throw .ruuviPersistence(.failedToFindRuuviTag) }
+    func deleteQueuedRequests() async throws(RuuviPoolError) -> Bool {
+        deletionCalls.append(("queue", nil))
+        if let deletionFailure { throw deletionFailure }
+        guard allowDeletes else { throw .ruuviPersistence(.failedToFindRuuviTag) }
+        return true
+    }
+    func deleteUserSettings() async throws(RuuviPoolError) -> Bool {
+        deletionCalls.append(("settings", nil))
+        if let deletionFailure { throw deletionFailure }
+        guard allowDeletes else { throw .ruuviPersistence(.failedToFindRuuviTag) }
+        return true
+    }
     func save(
         subscription: CloudSensorSubscription
     ) async throws(RuuviPoolError) -> CloudSensorSubscription { throw .ruuviPersistence(.failedToFindRuuviTag) }

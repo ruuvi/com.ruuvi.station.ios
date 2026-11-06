@@ -21,7 +21,11 @@ class UniversalLinkCoordinatorImpl {
     var router: UniversalLinkRouter!
     var settings: RuuviLocalSettings!
 
-    private var urlComponents: URLComponents!
+    private let topViewController: (() -> UIViewController?)?
+
+    init(topViewController: (() -> UIViewController?)? = nil) {
+        self.topViewController = topViewController
+    }
 }
 
 // MARK: - UniversalLinkInteractorInput
@@ -36,8 +40,7 @@ extension UniversalLinkCoordinatorImpl: UniversalLinkCoordinator {
         else {
             return
         }
-        self.urlComponents = urlComponents
-        detectViewController(for: path)
+        detectViewController(for: path, components: urlComponents)
     }
 
     func processWidgetLink(macId: String) {
@@ -48,7 +51,8 @@ extension UniversalLinkCoordinatorImpl: UniversalLinkCoordinator {
         )
         DispatchQueue.main.async { [weak self] in
             guard let sSelf = self else { return }
-            guard let topViewController = UIApplication.shared.topViewController()
+            let findView = sSelf.topViewController ?? { UIApplication.shared.topViewController() }
+            guard let topViewController = findView()
             else {
                 return
             }
@@ -65,27 +69,29 @@ extension UniversalLinkCoordinatorImpl: UniversalLinkCoordinator {
 // MARK: - Private
 
 extension UniversalLinkCoordinatorImpl {
-    private func detectViewController(for path: UniversalLinkType) {
+    private func detectViewController(for path: UniversalLinkType, components: URLComponents) {
         DispatchQueue.main.async { [weak self] in
-            guard let topViewController = UIApplication.shared.topViewController()
+            guard let self else { return }
+            let findView = self.topViewController ?? { UIApplication.shared.topViewController() }
+            guard let topViewController = findView()
             else {
                 return
             }
             if topViewController.isMember(of: path.handlerType) {
-                self?.postNotification(with: path)
+                self.postNotification(with: path, components: components)
             } else {
                 switch path {
                 case .verify:
-                    self?.openVerify(from: topViewController)
+                    self.openVerify(from: topViewController, components: components)
                 case .dashboard:
-                    self?.openDashboard(from: topViewController)
+                    self.openDashboard(from: topViewController)
                 }
             }
         }
     }
 
-    private func openVerify(from topViewController: UIViewController) {
-        guard let token = urlComponents.queryItems?
+    private func openVerify(from topViewController: UIViewController, components: URLComponents) {
+        guard let token = components.queryItems?
             .first(where: { $0.name == "token" })?
             .value,
             !ruuviUser.isAuthorized
@@ -105,11 +111,11 @@ extension UniversalLinkCoordinatorImpl {
         // we will be opening dashboard anyway on deeplink tap.
     }
 
-    private func postNotification(with path: UniversalLinkType) {
+    private func postNotification(with path: UniversalLinkType, components: URLComponents) {
         var userInfo: [String: Any] = [
             "path": path
         ]
-        urlComponents.queryItems?.forEach {
+        components.queryItems?.filter { $0.name != "path" }.forEach {
             userInfo[$0.name] = $0.value
         }
         NotificationCenter.default.post(

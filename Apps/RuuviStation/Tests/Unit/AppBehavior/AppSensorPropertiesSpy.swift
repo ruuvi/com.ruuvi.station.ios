@@ -4,6 +4,7 @@ import RuuviService
 import UIKit
 
 @MainActor final class AppSensorPropertiesSpy: RuuviServiceSensorProperties {
+    var removedImages = [String]()
     var descriptions = [(String, String?)]()
     var beforeDescription: (() async -> Void)?
     var imageWrites = [(String, UIImage, CGSize, CGFloat)]()
@@ -40,7 +41,7 @@ import UIKit
     func setNextDefaultBackground(for sensor: RuuviTagSensor) async throws(RuuviServiceError) -> UIImage {
         throw .failedToGetJpegRepresentation
     }
-    func removeImage(for sensor: RuuviTagSensor) { images.removeValue(forKey: sensor.id) }
+    func removeImage(for sensor: RuuviTagSensor) { removedImages.append(sensor.id); images.removeValue(forKey: sensor.id) }
     func updateDisplaySettings(for sensor: RuuviTagSensor, displayOrder: [String]?, defaultDisplayOrder: Bool)
         async throws(RuuviServiceError) -> SensorSettings
     { throw .failedToParseNetworkResponse }
