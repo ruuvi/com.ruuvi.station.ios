@@ -286,6 +286,17 @@ public final class WidgetSensorCache {
         }
     }
 
+    /// A deleted settings record must clear cached offsets, while an unknown settings value may preserve them.
+    public func removeSettings(for identifier: String) {
+        Self.queue.sync {
+            var snapshots = loadAllInternal()
+            guard let index = snapshots.firstIndex(where: { $0.matches(identifier: identifier) }) else { return }
+            snapshots[index].settings = nil
+            snapshots[index].updatedAt = Date()
+            saveInternal(snapshots)
+        }
+    }
+
     public func prune(keeping identifiers: Set<String>) {
         Self.queue.sync {
             let snapshots = loadAllInternal()

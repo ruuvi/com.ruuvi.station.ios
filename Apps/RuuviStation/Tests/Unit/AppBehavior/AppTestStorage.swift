@@ -3,6 +3,7 @@ import RuuviOntology
 import RuuviStorage
 
 @MainActor final class AppTestStorage: RuuviStorage {
+    var settingsBySensor: [String: SensorSettings]?
     var oneSensors: [String: AnyRuuviTagSensor]?
     var oneReads = [String]()
     var beforeReadOne: (() async -> Void)?
@@ -110,6 +111,7 @@ import RuuviStorage
     }
     func readSensorSettings(_ ruuviTag: RuuviTagSensor) async throws(RuuviStorageError) -> SensorSettings? {
         if failSettings { throw .ruuviPersistence(.failedToFindRuuviTag) }
+        if let settingsBySensor { return settingsBySensor[ruuviTag.id] }
         return try await base.readSensorSettings(ruuviTag)
     }
     func readUserSettings() async throws(RuuviStorageError) -> [RuuviUserSetting] {

@@ -252,6 +252,7 @@ final class DashboardViewController: UIViewController {
     // MARK: - Drag and reorder Properties
     private var currentSnapshotIdentifiers: [RuuviTagCardSnapshot] = []
     private var isDragSessionInProgress: Bool = false
+    private var hasDeferredUpdates = false
     private var isReadyForAnimations: Bool = false
 
     // MARK: - Search Properties
@@ -713,7 +714,11 @@ private extension DashboardViewController {
         with newSnapshots: [RuuviTagCardSnapshot],
         animated: Bool = true
     ) {
-        guard !isDragSessionInProgress, !isContextMenuPresented else { return }
+        guard !isDragSessionInProgress, !isContextMenuPresented else {
+            hasDeferredUpdates = true
+            return
+        }
+        hasDeferredUpdates = false
         let shouldAnimateDiff = shouldAnimate(animated) && hasAppliedInitialNonEmptySnapshot
 
         var snapshot = NSDiffableDataSourceSnapshot<MasonrySection, RuuviTagCardSnapshot>()
@@ -742,7 +747,13 @@ private extension DashboardViewController {
             guard let self else { return }
             guard !self.isDragSessionInProgress,
                 !self.isContextMenuPresented
-            else { return }
+            else {
+                self.hasDeferredUpdates = true
+                return
+            }
+            if self.dataSource?.snapshot().itemIdentifiers.map(\.id) != self.displayedSnapshots.map(\.id) {
+                self.updateData(with: self.displayedSnapshots, animated: false)
+            }
 
             if redrawLayout {
                 self.heightCache.clearCache()
@@ -1279,6 +1290,13 @@ extension DashboardViewController: MasonryReorderableLayoutDelegate {
         layout: MasonryReorderableLayout,
         didEndDraggingItemTo indexPath: IndexPath
     ) {
+        defer {
+            isDragSessionInProgress = false
+            DispatchQueue.main.async { [weak self] in
+                self?.resumeDeferredUpdates()
+                self?.refreshContextMenus()
+            }
+        }
         // Get the current order directly from the data source
         let currentSnapshot = dataSource.snapshot()
         let currentItems = currentSnapshot.itemIdentifiers(inSection: .main)
@@ -1300,11 +1318,6 @@ extension DashboardViewController: MasonryReorderableLayoutDelegate {
         output.viewDidReorderSensors(with: .manual, orderedIds: newMacIds)
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
 
-        // Force refresh context menus after reordering
-        DispatchQueue.main.async { [weak self] in
-            self?.refreshContextMenus()
-            self?.isDragSessionInProgress = false
-        }
     }
 
     func collectionView(
@@ -1314,6 +1327,12 @@ extension DashboardViewController: MasonryReorderableLayoutDelegate {
         currentSnapshots: [RuuviTagCardSnapshot]
     ) {
         currentSnapshotIdentifiers = currentSnapshots
+    }
+
+    private func resumeDeferredUpdates() {
+        guard hasDeferredUpdates, !isDragSessionInProgress, !isContextMenuPresented else { return }
+        updateData(with: displayedSnapshots, animated: false)
+        updateSnapshot(redrawLayout: true, animated: false)
     }
 
     private func refreshContextMenus() {
@@ -1525,6 +1544,7 @@ extension DashboardViewController: DashboardCellDelegate {
         isPresented: Bool
     ) {
         isContextMenuPresented = isPresented
+        if !isPresented { resumeDeferredUpdates() }
     }
 }
 

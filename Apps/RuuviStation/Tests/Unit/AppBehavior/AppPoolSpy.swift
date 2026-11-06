@@ -3,6 +3,14 @@ import RuuviOntology
 import RuuviPool
 
 @MainActor final class AppPoolSpy: RuuviPool {
+    var allowRecordWrites = false
+    var recordFailure: RuuviPoolError?
+    var createdRecords = [AnyRuuviTagSensorRecord]()
+    var createdLatest = [AnyRuuviTagSensorRecord]()
+    var updatedLatest = [AnyRuuviTagSensorRecord]()
+    var beforeCreateRecord: (() async -> Void)?
+    var beforeCreateLatest: (() async -> Void)?
+    var beforeUpdateLatest: (() async -> Void)?
     var sensorSettings = [String: SensorSettings]()
     var settingsReads = [String]()
     var beforeReadSettings: (() async -> Void)?
@@ -29,13 +37,25 @@ import RuuviPool
         throw .ruuviPersistence(.failedToFindRuuviTag)
     }
     func create(_ record: RuuviTagSensorRecord) async throws(RuuviPoolError) -> Bool {
-        throw .ruuviPersistence(.failedToFindRuuviTag)
+        guard allowRecordWrites else { throw .ruuviPersistence(.failedToFindRuuviTag) }
+        createdRecords.append(record.any)
+        await beforeCreateRecord?()
+        if let recordFailure { throw recordFailure }
+        return true
     }
     func createLast(_ record: RuuviTagSensorRecord) async throws(RuuviPoolError) -> Bool {
-        throw .ruuviPersistence(.failedToFindRuuviTag)
+        guard allowRecordWrites else { throw .ruuviPersistence(.failedToFindRuuviTag) }
+        createdLatest.append(record.any)
+        await beforeCreateLatest?()
+        if let recordFailure { throw recordFailure }
+        return true
     }
     func updateLast(_ record: RuuviTagSensorRecord) async throws(RuuviPoolError) -> Bool {
-        throw .ruuviPersistence(.failedToFindRuuviTag)
+        guard allowRecordWrites else { throw .ruuviPersistence(.failedToFindRuuviTag) }
+        updatedLatest.append(record.any)
+        await beforeUpdateLatest?()
+        if let recordFailure { throw recordFailure }
+        return true
     }
     func deleteLast(_ ruuviTagId: String) async throws(RuuviPoolError) -> Bool {
         throw .ruuviPersistence(.failedToFindRuuviTag)

@@ -120,6 +120,24 @@ extension WidgetSensorCacheTests {
         }
     }
 
+    func testDeletingSettingsClearsOffsetsWithoutRemovingTheSensorOrItsLatestRecord() throws {
+        try withCache { cache, _ in
+            let sensor = makeSensor(mac: "AA:BB", luid: "local", name: "Office")
+            let record = makeRecord(date: 2000, temperature: 22)
+            let settings = SensorSettingsStruct(luid: "local".luid, macId: "AA:BB".mac,
+                temperatureOffset: 4, humidityOffset: 2, pressureOffset: 3)
+            cache.upsert(sensor: sensor, record: record, settings: settings)
+            cache.removeSettings(for: "unknown")
+            XCTAssertEqual(cache.snapshot(matching: sensor.id)?.settings?.temperatureOffset, 4)
+            cache.removeSettings(for: "local")
+            XCTAssertNil(cache.snapshot(matching: sensor.id)?.settings)
+            XCTAssertEqual(cache.snapshot(matching: sensor.id)?.record, record)
+            XCTAssertEqual(cache.snapshot(matching: sensor.id)?.name, "Office")
+            cache.upsert(sensor: sensor, record: nil, settings: nil)
+            XCTAssertNil(cache.snapshot(matching: sensor.id)?.settings)
+        }
+    }
+
     func testSyncingSensorListPreservesReadingsAndSettingsAcrossIdentityChangesAndPrunesRemovedSensors() throws {
         try withCache { cache, _ in
             let local = makeSensor(mac: nil, luid: "local", name: "")
