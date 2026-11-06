@@ -47,6 +47,50 @@ final class RuuviOnboardTests: XCTestCase {
         XCTAssertEqual(output.consents, [true, false])
     }
 
+    @MainActor func testSkipGoesToFinalPageAndPagingBackRestoresTheSkipButton() throws {
+        let pages = RuuviOnboardPages(ruuviUser: OnboardUser(), tosAccepted: false, analyticsConsentGiven: false)
+        let controller = try XCTUnwrap(pages.viewController as? RuuviOnboardViewController)
+        let navigation = UINavigationController(rootViewController: controller)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 402, height: 874))
+        window.rootViewController = navigation
+        defer { window.rootViewController = nil }
+        controller.loadViewIfNeeded()
+        controller.view.frame = window.bounds
+        controller.beginAppearanceTransition(true, animated: false)
+        controller.endAppearanceTransition()
+        controller.view.layoutIfNeeded()
+        XCTAssertTrue(navigation.isNavigationBarHidden)
+        let collection = try XCTUnwrap(descendants(of: controller.view, as: UICollectionView.self).first)
+        let control = try XCTUnwrap(descendants(of: controller.view, as: UIPageControl.self).first)
+        let skip = try XCTUnwrap(
+            descendants(of: controller.view, as: UIButton.self).first {
+                $0.actions(forTarget: controller, forControlEvent: .touchUpInside)?.contains("handleSkipButtonTap")
+                    == true
+            })
+        XCTAssertFalse(skip.isHidden)
+        // Exercise the registered target/action directly in the framework test host.
+        let action = try XCTUnwrap(skip.actions(forTarget: controller, forControlEvent: .touchUpInside)?.first)
+        controller.perform(NSSelectorFromString(action))
+        collection.layoutIfNeeded()
+        XCTAssertEqual(control.currentPage, collection.numberOfItems(inSection: 0) - 1)
+        XCTAssertTrue(skip.isHidden)
+        collection.scrollToItem(at: IndexPath(item: 2, section: 0), at: .centeredHorizontally, animated: false)
+        collection.layoutIfNeeded()
+        controller.scrollViewDidEndDecelerating(collection)
+        XCTAssertEqual(control.currentPage, 2)
+        XCTAssertFalse(skip.isHidden)
+    }
+
+    @MainActor func testAcceptedTermsWithMissingAnalyticsConsentStartsAtConsentPage() throws {
+        let pages = RuuviOnboardPages(ruuviUser: OnboardUser(), tosAccepted: true, analyticsConsentGiven: false)
+        let controller = try XCTUnwrap(pages.viewController as? RuuviOnboardViewController)
+        controller.loadViewIfNeeded()
+        controller.view.frame = CGRect(x: 0, y: 0, width: 402, height: 874)
+        controller.view.layoutIfNeeded()
+        let control = try XCTUnwrap(descendants(of: controller.view, as: UIPageControl.self).first)
+        XCTAssertEqual(control.currentPage, control.numberOfPages - 1)
+    }
+
     @MainActor private func descendants<View: UIView>(of view: UIView, as type: View.Type) -> [View] {
         view.subviews.flatMap { child in
             (child as? View).map { [$0] } ?? descendants(of: child, as: type)

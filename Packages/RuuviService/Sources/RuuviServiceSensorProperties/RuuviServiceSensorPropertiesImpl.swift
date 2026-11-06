@@ -151,31 +151,10 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         // Fetch current settings to determine which timestamps to update
         do {
             let currentSettings = try await pool.readSensorSettings(sensor)
-            // Determine which timestamps to update based on what changed
-            var displayOrderTimestamp: Date?
-            var defaultDisplayOrderTimestamp: Date?
-
-            // Update displayOrder timestamp only if the value changed
-            if let currentDisplayOrder = currentSettings?.displayOrder,
-                let newDisplayOrder = displayOrder
-            {
-                if currentDisplayOrder != newDisplayOrder {
-                    displayOrderTimestamp = updatedAt
-                }
-            } else if displayOrder != nil {
-                // New value being set, no previous value
-                displayOrderTimestamp = updatedAt
-            }
-
-            // Update defaultDisplayOrder timestamp only if the value changed
-            if let currentDefaultDisplayOrder = currentSettings?.defaultDisplayOrder {
-                if currentDefaultDisplayOrder != defaultDisplayOrder {
-                    defaultDisplayOrderTimestamp = updatedAt
-                }
-            } else {
-                // New value being set, no previous value
-                defaultDisplayOrderTimestamp = updatedAt
-            }
+            let displayOrderTimestamp = currentSettings?.displayOrder != displayOrder
+                ? updatedAt : currentSettings?.displayOrderLastUpdated
+            let defaultDisplayOrderTimestamp = currentSettings?.defaultDisplayOrder != defaultDisplayOrder
+                ? updatedAt : currentSettings?.defaultDisplayOrderLastUpdated
 
             do {
                 let settings = try await self.pool.updateDisplaySettings(
@@ -221,7 +200,7 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
         do {
             let currentSettings = try await pool.readSensorSettings(sensor)
             let descriptionTimestamp: Date? =
-                currentSettings?.description != description ? updatedAt : nil
+                currentSettings?.description != description ? updatedAt : currentSettings?.descriptionLastUpdated
 
             do {
                 let settings = try await self.pool.updateDescription(

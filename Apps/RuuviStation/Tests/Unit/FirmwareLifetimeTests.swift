@@ -62,7 +62,7 @@ private final class FirmwareActivitySpy: ActivityPresenter {
     func dismiss(immediately: Bool) { dismissed += 1 }
 }
 
-private final class IdleFirmwareInteractor: DFUInteractorInput {
+final class IdleFirmwareInteractor: DFUInteractorInput {
     func listen(ruuviTag: RuuviTagSensor) -> AnyPublisher<DFUDevice, Never> {
         Future<DFUDevice, Never> { _ in }.eraseToAnyPublisher()
     }

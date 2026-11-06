@@ -48,6 +48,7 @@ class RuuviCloudService {
 
     private var settings: RuuviLocalSettings
     private var pnManager: RuuviCorePN
+    private var isLogoutInProgress = false
 
     // MARK: - Properties
     weak var delegate: RuuviCloudServiceDelegate?
@@ -127,54 +128,49 @@ class RuuviCloudService {
     }
 
     func forceLogout() {
-        guard ruuviUser.isAuthorized else { return }
+        guard Thread.isMainThread else {
+            DispatchQueue.main.async { [weak self] in self?.forceLogout() }
+            return
+        }
+        guard ruuviUser.isAuthorized, !isLogoutInProgress else { return }
+        isLogoutInProgress = true
+        let token = pnManager.fcmToken
+        let tokenId = pnManager.fcmTokenId
+        let refreshed = pnManager.fcmTokenLastRefreshed
 
-        // Unregister push notifications
-        if let token = pnManager.fcmToken, !token.isEmpty {
-            Task { @MainActor [weak self, cloudNotificationService = cloudNotificationService] in
+        Task { @MainActor [weak self, cloudNotificationService, authService] in
+            defer {
+                self?.isLogoutInProgress = false
+                if let self { self.delegate?.ruuviCloudService(self, authorizationFailed: true) }
+            }
+            // Push removal still needs the credentials that logout will revoke.
+            if let token, !token.isEmpty {
                 do throws(RuuviServiceError) {
-                    let value = try await cloudNotificationService.unregister(token: token, tokenId: nil)
-                    ({ [weak self] _ in
-                        self?.pnManager.fcmToken = nil
-                        self?.pnManager.fcmTokenLastRefreshed = nil
-                    })(value)
+                    let removed = try await cloudNotificationService.unregister(token: token, tokenId: nil)
+                    if removed, let self, self.pnManager.fcmToken == token, self.pnManager.fcmTokenId == tokenId,
+                       self.pnManager.fcmTokenLastRefreshed == refreshed {
+                        self.pnManager.fcmToken = nil
+                        self.pnManager.fcmTokenId = nil
+                        self.pnManager.fcmTokenLastRefreshed = nil
+                    }
                 } catch {
+                    // Local logout must remain available when the cloud is unreachable.
                 }
             }
-        }
-
-        // Perform logout
-        Task { @MainActor [weak self, authService = authService] in
-            defer {
-                ({ [weak self] in
-                    // Logout completed
-                    guard let self = self else { return }
-                    self.delegate?.ruuviCloudService(self, authorizationFailed: true)
-                })()
-            }
             do throws(RuuviServiceError) {
-                let value = try await authService.logout()
-                ({ [weak self] _ in
-                    guard let self = self else { return }
-
-                    // Stop observing cloud mode state to avoid simultaneous access
-                    self.cloudModeToken?.invalidate()
-                    self.cloudModeToken = nil
-
-                    // Disable cloud mode
-                    self.settings.cloudModeEnabled = false
-
-                    // Notify delegate
-                    self.delegate?.ruuviCloudService(self, cloudModeDidChange: false)
-
-                    // Restart cloud mode observation
-                    self.observeCloudModeChanges()
-
-                })(value)
+                guard try await authService.logout(), let self else { return }
+                let wasObserving = self.cloudModeToken != nil
+                self.cloudModeToken?.invalidate()
+                self.cloudModeToken = nil
+                self.settings.cloudModeEnabled = false
+                self.delegate?.ruuviCloudService(self, cloudModeDidChange: false)
+                if wasObserving { self.observeCloudModeChanges() }
             } catch {
+                // Authorization failure is reported by the completion above, including failed local cleanup.
             }
         }
     }
+
 }
 
 // MARK: - Private Implementation

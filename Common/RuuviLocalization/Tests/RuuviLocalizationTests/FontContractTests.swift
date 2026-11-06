@@ -109,6 +109,35 @@ import XCTest
         }
     }
 
+    func testSwiftUITypographyPreservesHierarchyAndEverySemanticStyleRenders() throws {
+        let groups: [[SwiftUI.Font]] = [
+            [.ruuviHeadlineLarge(), .ruuviHeadlineMedium(), .ruuviHeadlineSmall()],
+            [.ruuviBodyLarge(), .ruuviBodyMedium(), .ruuviBodySmall()],
+            [.ruuviCaptionLarge(), .ruuviCaptionSmall()],
+            [.ruuviButtonLarge(), .ruuviButtonMedium(), .ruuviButtonSmall()],
+            [.ruuviLargeTitle(), .ruuviTitle1(), .ruuviTitle2(), .ruuviTitle3()],
+            [
+                .ruuviHeadline(), .ruuviCallout(), .ruuviSubheadline(), .ruuviFootnote(), .ruuviCaption1(),
+                .ruuviCaption2(),
+            ],
+        ]
+        for group in groups {
+            let sizes = try group.map { font in
+                try XCTUnwrap(ImageRenderer(content: Text("Ruuvi 123").font(font)).uiImage).size
+            }
+            XCTAssertTrue(sizes.allSatisfy { $0.width > 20 && $0.height > 5 })
+            for pair in zip(sizes, sizes.dropFirst()) { XCTAssertGreaterThan(pair.0.height, pair.1.height) }
+        }
+        let body = try XCTUnwrap(ImageRenderer(content: Text("Ruuvi").font(SwiftUI.Font.ruuviBody())).uiImage)
+        XCTAssertGreaterThan(body.size.height, 10)
+        let asset = RuuviFonts.Mulish.regular
+        XCTAssertEqual(try XCTUnwrap(UIFont(asset: asset, size: 19)).fontName, "Mulish-Regular")
+        for font in [SwiftUI.Font.ruuvi(asset, size: 19), asset.swiftUIFont(size: 19, relativeTo: .body)] {
+            let image = try XCTUnwrap(ImageRenderer(content: Text("Ruuvi").font(font)).uiImage)
+            XCTAssertGreaterThan(image.size.height, 10)
+        }
+    }
+
     private func assertFont(
         _ font: UIFont, family: String, style: String,
         file: StaticString = #filePath, line: UInt = #line

@@ -394,16 +394,13 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             value: humidity.value,
             unit: .relative(temperature: temperature)
         )
-        if allowSettings {
-            humidityFormatter.numberFormatter = humidityNumberFormatter(for: unit)
-        } else {
-            humidityFormatter.numberFormatter = commonNumberFormatter
-        }
+        let formatter = humidityFormatter(for: unit)
+        formatter.numberFormatter = allowSettings ? humidityNumberFormatter(for: unit) : commonNumberFormatter
         switch unit {
         case .percent:
-            return humidityFormatter.string(from: humidityWithTemperature)
+            return formatter.string(from: humidityWithTemperature)
         case .gm3:
-            return humidityFormatter.string(from: humidityWithTemperature.converted(to: .absolute))
+            return formatter.string(from: humidityWithTemperature.converted(to: .absolute))
         case .dew:
             guard let dp = try? humidityWithTemperature.dewPoint(temperature: temperature)
             else {

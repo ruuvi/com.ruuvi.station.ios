@@ -385,6 +385,8 @@ private extension CardsProminentIndicatorView {
         if let aqiValue = indicatorData.value.aqiIntValue,
            let aqiState = indicatorData.qualityState {
             aqiIndicatorView.setValue(aqiValue, maxValue: 100, state: aqiState)
+        } else {
+            aqiIndicatorView.setValue(0, maxValue: 100, state: .undefined(0))
         }
     }
 

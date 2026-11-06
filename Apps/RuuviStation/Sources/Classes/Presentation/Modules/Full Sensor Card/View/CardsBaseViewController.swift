@@ -694,7 +694,7 @@ private extension CardsBaseViewController {
     }
 
     func updateCurrentSnapshotUI() {
-        guard currentSnapshotIndex < currentSnapshots.count else {
+        guard currentSnapshots.indices.contains(currentSnapshotIndex) else {
             return
         }
 
@@ -744,7 +744,7 @@ private extension CardsBaseViewController {
 
     // MARK: - Footer Update Methods
     private func updateFooter() {
-        guard currentSnapshotIndex < currentSnapshots.count else {
+        guard currentSnapshots.indices.contains(currentSnapshotIndex) else {
             updateFooterVisibility(for: activeTab, animated: false)
             return
         }
@@ -877,7 +877,7 @@ private extension CardsBaseViewController {
 // MARK: - TimestampUpdateable
 extension CardsBaseViewController: TimestampUpdateable {
     func updateTimestampLabel() {
-        guard currentSnapshotIndex < currentSnapshots.count else {
+        guard currentSnapshots.indices.contains(currentSnapshotIndex) else {
             updatedAtLabel.text = RuuviLocalization.Cards.UpdatedLabel.NoData.message
             return
         }
@@ -942,6 +942,7 @@ extension CardsBaseViewController: CardsBaseViewInput {
     }
 
     func setActiveSnapshotIndex(_ index: Int) {
+        guard currentSnapshots.indices.contains(index) else { return }
         currentSnapshotIndex = index
         updateCurrentSnapshotUI()
     }

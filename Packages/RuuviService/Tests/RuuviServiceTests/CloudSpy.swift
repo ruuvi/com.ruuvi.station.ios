@@ -16,6 +16,14 @@ import RuuviOntology
         let description: String?
         let mac: String
     }
+    struct ImageUpload {
+        let data: Data
+        let mimeType: MimeType
+        let progress: ((MACIdentifier, Double) -> Void)?
+        let macId: MACIdentifier
+    }
+    var onUpload: ((ImageUpload) async throws(RuuviCloudError) -> URL)?
+    var sensorSettingsFailure: RuuviCloudError?
     var onDense: (() async throws(RuuviCloudError) -> [RuuviCloudSensorDense])?
     var onHistory: ((MACIdentifier, Date) async throws(RuuviCloudError) -> [AnyRuuviTagSensorRecord])?
     var onSettings: (() async throws(RuuviCloudError) -> RuuviCloudSettings?)?
@@ -144,6 +152,7 @@ import RuuviOntology
         progress: ((MACIdentifier, Double) -> Void)?,
         for macId: MACIdentifier
     ) async throws(RuuviCloudError) -> URL {
+        if let onUpload { return try await onUpload(.init(data: imageData, mimeType: mimeType, progress: progress, macId: macId)) }
         throw .notAuthorized
     }
 
@@ -290,6 +299,7 @@ import RuuviOntology
         timestamp: Int?
     ) async throws(RuuviCloudError) -> AnyRuuviTagSensor {
         sensorSettingWrites.append((types, values))
+        if let sensorSettingsFailure { throw sensorSettingsFailure }
         return sensor.any
     }
 

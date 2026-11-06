@@ -99,6 +99,8 @@ import XCTest
         let timeouts: GATTServiceTimeouts
     }
     var requests = [Request]()
+    var stops = [String]()
+    var stopFailure: RuuviServiceError?
     var globallySyncing = false
     var syncingIDs = Set<String>()
     var result = true
@@ -116,5 +118,9 @@ import XCTest
         if let failure { throw failure }
         return result
     }
-    func stopGattSync(for uuid: String) async throws(RuuviServiceError) -> Bool { true }
+    func stopGattSync(for uuid: String) async throws(RuuviServiceError) -> Bool {
+        stops.append(uuid)
+        if let stopFailure { throw stopFailure }
+        return true
+    }
 }

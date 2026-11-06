@@ -137,7 +137,7 @@ final class SensorPropertiesTests: XCTestCase {
     let pool: RuuviPool
     let storage: RuuviStorage
     let cloud = CloudSpy()
-    fileprivate let images = LocalImagesSpy()
+    let images = PropertiesImagesSpy()
     let sensor = RuuviTagSensorStruct(
         version: 5, firmwareVersion: nil, luid: nil,
         macId: "AA:BB:CC:DD:EE:01".mac, serviceUUID: nil, isConnectable: false,
@@ -176,26 +176,6 @@ final class SensorPropertiesTests: XCTestCase {
 
 private struct ImageCropStub: RuuviCoreImage {
     func cropped(image: UIImage, to maxSize: CGSize) -> UIImage { image }
-}
-
-private final class LocalImagesSpy: RuuviLocalImages {
-    let image = UIImage()
-    var backgroundChanges = 0
-    func getOrGenerateBackground(for identifier: Identifier, ruuviDeviceType: RuuviDeviceType) -> UIImage? { image }
-    func getBackground(for identifier: Identifier) -> UIImage? { image }
-    func setBackground(_ id: Int, for identifier: Identifier) {}
-    func setNextDefaultBackground(for identifier: Identifier) -> UIImage? { backgroundChanges += 1; return image }
-    func getCustomBackground(for identifier: Identifier) -> UIImage? { nil }
-    func setCustomBackground(image: UIImage, compressionQuality: CGFloat, for identifier: Identifier)
-        async throws(RuuviLocalError) -> URL
-    { throw .failedToGetJpegRepresentation }
-    func deleteCustomBackground(for uuid: Identifier) {}
-    func backgroundUploadProgress(for identifier: Identifier) -> Double? { nil }
-    func setBackgroundUploadProgress(percentage: Double, for identifier: Identifier) {}
-    func deleteBackgroundUploadProgress(for identifier: Identifier) {}
-    func isPictureCached(for cloudSensor: CloudSensor) -> Bool { false }
-    func setPictureIsCached(for cloudSensor: CloudSensor) {}
-    func setPictureRemovedFromCache(for ruuviTag: RuuviTagSensor) {}
 }
 
 private final class OwnershipTestUser: RuuviUser {
