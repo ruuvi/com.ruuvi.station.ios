@@ -63,15 +63,21 @@ private final class FirmwareActivitySpy: ActivityPresenter {
 }
 
 private final class IdleFirmwareInteractor: DFUInteractorInput {
-    func listen(ruuviTag: RuuviTagSensor) -> Future<DFUDevice, Never> { Future { _ in } }
-    func observeLost(uuid: String) -> Future<String, Never> { Future { _ in } }
+    func listen(ruuviTag: RuuviTagSensor) -> AnyPublisher<DFUDevice, Never> {
+        Future<DFUDevice, Never> { _ in }.eraseToAnyPublisher()
+    }
+    func observeLost(uuid: String) -> AnyPublisher<String, Never> {
+        Future<String, Never> { _ in }.eraseToAnyPublisher()
+    }
     func download(release: LatestRelease, currentRelease: CurrentRelease?) -> AnyPublisher<
         FirmwareDownloadResponse, Error
     > {
         Empty().eraseToAnyPublisher()
     }
     func loadLatestRelease() -> AnyPublisher<LatestRelease, Error> { Empty().eraseToAnyPublisher() }
-    func serveCurrentRelease(for ruuviTag: RuuviTagSensor) -> Future<CurrentRelease, Error> { Future { _ in } }
+    func serveCurrentRelease(for ruuviTag: RuuviTagSensor) -> AnyPublisher<CurrentRelease, Error> {
+        Future<CurrentRelease, Error> { _ in }.eraseToAnyPublisher()
+    }
     func waitForAirDevice(ruuviTag: RuuviTagSensor, timeout: TimeInterval) -> AnyPublisher<Void, Error> {
         Empty().eraseToAnyPublisher()
     }

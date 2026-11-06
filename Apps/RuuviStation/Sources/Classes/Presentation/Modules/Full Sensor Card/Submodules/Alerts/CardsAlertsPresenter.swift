@@ -20,19 +20,24 @@ final class CardsAlertsPresenter: NSObject {
     private var snapshot: RuuviTagCardSnapshot?
     private var sensor: AnyRuuviTagSensor?
     private var sensorSettings: SensorSettings?
+    private var observationGeneration = UUID()
     private var isObservingCoordinator = false
     private var observedCloudRequestMac: String?
-    private lazy var alertHandler: RuuviNotifier? =
-        AppAssembly.shared.assembler.resolver.resolve(RuuviNotifier.self)
+    private let coordinatorManager: RuuviTagServiceCoordinatorManager
+    private let alertHandler: RuuviNotifier?
 
     init(
         measurementService: RuuviServiceMeasurement,
         activityPresenter: ActivityPresenter,
-        settings: RuuviLocalSettings
+        settings: RuuviLocalSettings,
+        coordinatorManager: RuuviTagServiceCoordinatorManager = .shared,
+        alertHandler: RuuviNotifier? = nil
     ) {
         self.measurementService = measurementService
         self.activityPresenter = activityPresenter
         self.settings = settings
+        self.coordinatorManager = coordinatorManager
+        self.alertHandler = alertHandler ?? AppAssembly.shared.assembler.resolver.resolve(RuuviNotifier.self)
         super.init()
     }
 }
@@ -54,9 +59,11 @@ extension CardsAlertsPresenter: CardsAlertsPresenterInput {
         sensor: AnyRuuviTagSensor?,
         settings: SensorSettings?
     ) {
+        observationGeneration = UUID()
         self.snapshot = snapshot
         self.sensor = sensor
         self.sensorSettings = settings
+        if isObservingCoordinator { startObservingCloudRequestState() }
     }
 
     func start() {
@@ -69,13 +76,13 @@ extension CardsAlertsPresenter: CardsAlertsPresenterInput {
             updateAlertSections(for: snapshot)
             updateAlertDeliveryPrompt(for: snapshot)
         }
-        RuuviTagServiceCoordinatorManager.shared.setAlertMuteRefreshActive(true)
+        coordinatorManager.setAlertMuteRefreshActive(true)
     }
 
     func stop() {
         stopObservingCoordinator()
         stopObservingCloudRequestState()
-        RuuviTagServiceCoordinatorManager.shared.setAlertMuteRefreshActive(false)
+        coordinatorManager.setAlertMuteRefreshActive(false)
     }
 
     func scroll(to index: Int, animated: Bool) {}
@@ -187,6 +194,7 @@ extension CardsAlertsPresenter: RuuviTagServiceCoordinatorObserver {
         _ coordinator: RuuviTagServiceCoordinator,
         event: RuuviTagServiceCoordinatorEvent
     ) {
+        guard isObservingCoordinator else { return }
         switch event {
         case let .snapshotsUpdated(snapshots, _, _):
             self.snapshots = snapshots
@@ -212,15 +220,20 @@ extension CardsAlertsPresenter: RuuviTagServiceCoordinatorObserver {
 
 private extension CardsAlertsPresenter {
     func processSnapshotUpdate(_ updatedSnapshot: RuuviTagCardSnapshot) {
-        guard matchesCurrentSnapshot(updatedSnapshot) else { return }
+        guard isObservingCoordinator, matchesCurrentSnapshot(updatedSnapshot) else { return }
+        let generation = observationGeneration
         DispatchQueue.main.async { [weak self] in
-            self?.handleSnapshotUpdate(updatedSnapshot)
+            guard let self, self.isObservingCoordinator, self.observationGeneration == generation,
+                  self.matchesCurrentSnapshot(updatedSnapshot) else { return }
+            self.handleSnapshotUpdate(updatedSnapshot)
         }
     }
 
     func refreshCurrentSnapshot() {
+        let generation = observationGeneration
         DispatchQueue.main.async { [weak self] in
-            guard let self, let snapshot = self.snapshot else { return }
+            guard let self, self.isObservingCoordinator, self.observationGeneration == generation,
+                  let snapshot = self.snapshot else { return }
             self.refreshConnectionStateIfNeeded()
             self.updateAlertSections(for: snapshot)
             self.updateAlertDeliveryPrompt(for: snapshot)
@@ -246,8 +259,8 @@ private extension CardsAlertsPresenter {
 
     func handleSnapshotUpdate(_ updatedSnapshot: RuuviTagCardSnapshot) {
         snapshot = updatedSnapshot
-        sensor = RuuviTagServiceCoordinatorManager.shared.getSensor(for: updatedSnapshot.id)
-        sensorSettings = RuuviTagServiceCoordinatorManager.shared
+        sensor = coordinatorManager.getSensor(for: updatedSnapshot.id)
+        sensorSettings = coordinatorManager
             .getSensorSettings(for: updatedSnapshot.id)
         refreshConnectionStateIfNeeded()
         view?.configure(snapshot: updatedSnapshot)
@@ -257,24 +270,24 @@ private extension CardsAlertsPresenter {
 
     func startObservingCoordinator() {
         guard !isObservingCoordinator else { return }
-        RuuviTagServiceCoordinatorManager.shared.addObserver(self)
+        coordinatorManager.addObserver(self)
         isObservingCoordinator = true
     }
 
     func stopObservingCoordinator() {
         guard isObservingCoordinator else { return }
-        RuuviTagServiceCoordinatorManager.shared.removeObserver(self)
+        observationGeneration = UUID()
+        coordinatorManager.removeObserver(self)
         isObservingCoordinator = false
     }
 
     func startObservingCloudRequestState() {
+        stopObservingCloudRequestState()
         guard let mac = snapshot?.identifierData.mac?.value else { return }
-        if let previous = observedCloudRequestMac {
-            RuuviCloudRequestStateObserverManager.shared.stopObserving(for: previous)
-        }
         observedCloudRequestMac = mac
         RuuviCloudRequestStateObserverManager.shared.startObserving(for: mac) { [weak self] state in
-            self?.presentActivityIndicator(with: state)
+            guard let self, self.isObservingCoordinator, self.observedCloudRequestMac == mac else { return }
+            self.presentActivityIndicator(with: state)
         }
     }
 
@@ -322,7 +335,7 @@ private extension CardsAlertsPresenter {
         _ block: (RuuviTagAlertService, RuuviTagCardSnapshot, RuuviTagSensor) -> Void
     ) {
         guard let snapshot, let sensor = sensor?.any else { return }
-        RuuviTagServiceCoordinatorManager.shared.withCoordinator { coordinator in
+        coordinatorManager.withCoordinator { coordinator in
             block(coordinator.services.alert, snapshot, sensor)
         }
     }
@@ -333,7 +346,7 @@ private extension CardsAlertsPresenter {
             return false
         }
 
-        let status = RuuviTagServiceCoordinatorManager.shared
+        let status = coordinatorManager
             .getConnectionStatus(for: snapshot)
         return snapshot.updateConnectionData(
             isConnected: status.isConnected,
@@ -344,7 +357,7 @@ private extension CardsAlertsPresenter {
 
     func syncAlertsIfNeeded() {
         guard let snapshot, let sensor = sensor?.any else { return }
-        RuuviTagServiceCoordinatorManager.shared.syncAllAlerts(
+        coordinatorManager.syncAllAlerts(
             for: snapshot,
             physicalSensor: sensor
         )

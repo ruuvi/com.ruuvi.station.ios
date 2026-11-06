@@ -111,7 +111,14 @@ import XCTest
         XCTAssertTrue(
             fixture.view.textField(
                 lower, shouldChangeCharactersIn: NSRange(location: 4, length: 1), replacementString: ""))
+        XCTAssertTrue(fixture.view.textField(
+            lower, shouldChangeCharactersIn: NSRange(location: 3, length: 2), replacementString: "50"))
+        lower.text = "12"
+        XCTAssertFalse(fixture.view.textField(
+            lower, shouldChangeCharactersIn: NSRange(location: 2, length: 0), replacementString: "-"))
         upper.text = ""
+        XCTAssertTrue(fixture.view.textField(
+            upper, shouldChangeCharactersIn: NSRange(location: 0, length: 0), replacementString: "-12" + separator + "50"))
         XCTAssertTrue(
             fixture.view.textField(
                 upper, shouldChangeCharactersIn: NSRange(location: 0, length: 0), replacementString: "-"))

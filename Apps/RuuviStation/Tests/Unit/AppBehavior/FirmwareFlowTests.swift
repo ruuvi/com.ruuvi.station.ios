@@ -331,11 +331,15 @@ private final class FirmwareFlowInteractor: DFUInteractorInput {
         loads += 1
         return release.eraseToAnyPublisher()
     }
-    func serveCurrentRelease(for ruuviTag: RuuviTagSensor) -> Future<CurrentRelease, Error> {
-        Future { self.serves.append($0) }
+    func serveCurrentRelease(for ruuviTag: RuuviTagSensor) -> AnyPublisher<CurrentRelease, Error> {
+        Future<CurrentRelease, Error> { self.serves.append($0) }.eraseToAnyPublisher()
     }
-    func listen(ruuviTag: RuuviTagSensor) -> Future<DFUDevice, Never> { Future { self.listeners.append($0) } }
-    func observeLost(uuid: String) -> Future<String, Never> { Future { self.lost.append($0) } }
+    func listen(ruuviTag: RuuviTagSensor) -> AnyPublisher<DFUDevice, Never> {
+        Future<DFUDevice, Never> { self.listeners.append($0) }.eraseToAnyPublisher()
+    }
+    func observeLost(uuid: String) -> AnyPublisher<String, Never> {
+        Future<String, Never> { self.lost.append($0) }.eraseToAnyPublisher()
+    }
     func download(release: LatestRelease, currentRelease: CurrentRelease?) -> AnyPublisher<
         FirmwareDownloadResponse, Error
     > {

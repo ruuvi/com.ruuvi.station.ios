@@ -15,7 +15,7 @@ final class CardsAlertsViewController: UIViewController {
     private let shouldExpandFirstAlertByDefault: Bool
     private let alertSettingsDisplayMode: CardsSettingsAlertDisplayMode
     private var configuredSnapshotID: String
-    private var actions = CardsSettingsActions()
+    private let actions: CardsSettingsActions
     private var hasAppliedDefaultAlertExpansion = false
     private var customAlertDescriptionTextField = UITextField()
     private let customAlertDescriptionCharacterLimit = 32
@@ -37,8 +37,10 @@ final class CardsAlertsViewController: UIViewController {
         snapshot: RuuviTagCardSnapshot,
         measurementService: RuuviServiceMeasurement?,
         shouldExpandFirstAlertByDefault: Bool = false,
-        alertSettingsDisplayMode: CardsSettingsAlertDisplayMode = .legacySettings
+        alertSettingsDisplayMode: CardsSettingsAlertDisplayMode = .legacySettings,
+        actions: CardsSettingsActions? = nil
     ) {
+        self.actions = actions ?? CardsSettingsActions()
         self.state = CardsSettingsState(
             snapshot: snapshot,
             measurementService: measurementService
@@ -98,30 +100,9 @@ extension CardsAlertsViewController: UITextFieldDelegate {
         if textField == customAlertDescriptionTextField {
             return limit <= customAlertDescriptionCharacterLimit
         } else if textField == alertMinRangeTextField || textField == alertMaxRangeTextField {
-            guard let decimalSeparator = NSLocale.current.decimalSeparator else {
-                return true
-            }
-
-            var splitText = text.components(separatedBy: decimalSeparator)
-            let totalDecimalSeparators = splitText.count - 1
-            let isEditingEnd = (text.count - 3) < range.lowerBound
-
-            splitText.removeFirst()
-
-            if splitText.last?.count ?? 0 > 1, string.count != 0, isEditingEnd {
-                return false
-            }
-
-            if totalDecimalSeparators > 0, string == decimalSeparator {
-                return false
-            }
-
-            switch string {
-            case "", "-", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", decimalSeparator:
-                return true
-            default:
-                return false
-            }
+            return AlertDecimalInput.allows(
+                text: text, range: range, replacement: string,
+                decimalSeparator: Locale.current.decimalSeparator ?? ".")
         } else if textField == cloudConnectionAlertDelayTextField {
             let allowedCharacters = CharacterSet(charactersIn: "0123456789")
             let containsOnlyDigits = string.rangeOfCharacter(from: allowedCharacters.inverted) == nil

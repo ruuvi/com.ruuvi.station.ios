@@ -250,36 +250,9 @@ extension CardsSettingsViewController: UITextFieldDelegate {
                 return false
             }
         } else if textField == alertMinRangeTextField || textField == alertMaxRangeTextField {
-            guard let text = textField.text, let decimalSeparator = NSLocale.current.decimalSeparator
-            else {
-                return true
-            }
-
-            var splitText = text.components(separatedBy: decimalSeparator)
-            let totalDecimalSeparators = splitText.count - 1
-            let isEditingEnd = (text.count - 3) < range.lowerBound
-
-            splitText.removeFirst()
-
-            // Check if we will exceed 2 dp
-            if
-                splitText.last?.count ?? 0 > 1, string.count != 0,
-                isEditingEnd {
-                return false
-            }
-
-            // If there is already a dot we don't want to allow further dots
-            if totalDecimalSeparators > 0, string == decimalSeparator {
-                return false
-            }
-
-            // Only allow numbers and decimal separator
-            switch string {
-            case "", "-", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", decimalSeparator:
-                return true
-            default:
-                return false
-            }
+            return AlertDecimalInput.allows(
+                text: text, range: range, replacement: string,
+                decimalSeparator: Locale.current.decimalSeparator ?? ".")
         } else if textField == cloudConnectionAlertDelayTextField {
             let allowedCharacters = CharacterSet(charactersIn: "0123456789")
             let containsOnlyDigits = string.rangeOfCharacter(from: allowedCharacters.inverted) == nil

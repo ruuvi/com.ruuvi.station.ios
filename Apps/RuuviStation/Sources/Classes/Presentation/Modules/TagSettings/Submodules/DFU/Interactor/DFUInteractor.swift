@@ -21,21 +21,28 @@ final class DFUInteractor {
     private let session: URLSession
     private let downloader: FirmwareDownloader
 
-    private var timer: Timer?
-    private var timeoutDuration: Double = 15
-    private var ruuviTags = Set<AnyRuuviTagSensor>()
-    private var airScanToken: ObservationToken?
-    private var airScanTimeoutTimer: Timer?
+    private let timeoutDuration: TimeInterval
+    private let airScanDelay: TimeInterval
+    private let firmwareRevision: ((String, @escaping (Result<String, Error>) -> Void) -> Void)?
+    private let airScan: ((@escaping (RuuviTagSensorRecord) -> Void) -> (() -> Void))?
 
     init(
         deviceType: RuuviDeviceType = .ruuviTag,
         firmwareType: RuuviDFUFirmwareType,
         session: URLSession = .shared,
-        firmwareRepository: FirmwareRepository = FirmwareRepositoryImpl()
+        firmwareRepository: FirmwareRepository = FirmwareRepositoryImpl(),
+        timeoutDuration: TimeInterval = 15,
+        airScanDelay: TimeInterval = 5,
+        firmwareRevision: ((String, @escaping (Result<String, Error>) -> Void) -> Void)? = nil,
+        airScan: ((@escaping (RuuviTagSensorRecord) -> Void) -> (() -> Void))? = nil
     ) {
         self.deviceType = deviceType
         self.firmwareType = firmwareType
         self.session = session
+        self.timeoutDuration = timeoutDuration
+        self.airScanDelay = airScanDelay
+        self.firmwareRevision = firmwareRevision
+        self.airScan = airScan
         downloader = FirmwareDownloader(session: session, repository: firmwareRepository)
     }
 }
@@ -165,175 +172,67 @@ extension DFUInteractor: DFUInteractorInput {
         }
     }
 
-    func serveCurrentRelease(for ruuviTag: RuuviTagSensor) -> Future<CurrentRelease, Error> {
-        Future { [weak self] promise in
-            guard let sSelf = self else { return }
-            guard let uuid = ruuviTag.luid?.value
-            else {
-                promise(.failure(DFUError.failedToGetLuid))
-                return
-            }
-
-            sSelf.invalidateTimer()
-            sSelf.timer = Timer.scheduledTimer(
-                withTimeInterval: sSelf.timeoutDuration, repeats: false
-            ) { _ in
-                sSelf.invalidateTimer()
-                promise(.failure(BTError.logic(.connectionTimedOut)))
-            }
-
-            sSelf.background.services.gatt.firmwareRevision(
-                for: sSelf,
-                uuid: uuid,
-                options: [
-                    .connectionTimeout(sSelf.timeoutDuration),
-                    .serviceTimeout(sSelf.timeoutDuration),
-                ]
-            ) { _, result in
-                sSelf.invalidateTimer()
-                switch result {
-                case let .success(version):
-                    sSelf.syncStoredFirmwareVersionIfNeeded(version, for: ruuviTag)
-                    let currentRelease = CurrentRelease(version: version)
-                    promise(.success(currentRelease))
-                case let .failure(error):
-                    promise(.failure(error))
-                }
-            }
+    func serveCurrentRelease(for ruuviTag: RuuviTagSensor) -> AnyPublisher<CurrentRelease, Error> {
+        guard let uuid = ruuviTag.luid?.value else {
+            return Fail(error: DFUError.failedToGetLuid).eraseToAnyPublisher()
         }
-    }
-
-    func listen(ruuviTag: RuuviTagSensor) -> Future<DFUDevice, Never> {
-        let firmwareType = RuuviDataFormat.dataFormat(
-            from: ruuviTag.version
-        )
-        let skipScanServices = firmwareType == .e1 || firmwareType == .v6
-
-        return Future { [weak self] promise in
-            guard let sSelf = self else { return }
-            sSelf.ruuviDFU.scan(
-                sSelf,
-                includeScanServices: !skipScanServices
-            ) {
-                _,
-                device in
-                if skipScanServices {
-                    if device.uuid == ruuviTag.luid?.value {
-                        promise(.success(device))
-                    }
-                } else {
-                    // For older devices we return the device found in Bootloader mode.
-                    promise(.success(device))
+        return firmwareObservation(timeout: (timeoutDuration, BTError.logic(.connectionTimedOut) as Error)) { [self] complete in
+            let receive: (Result<String, Error>) -> Void = { complete($0.map { CurrentRelease(version: $0) }) }
+            if let firmwareRevision {
+                firmwareRevision(uuid, receive)
+            } else {
+                background.services.gatt.firmwareRevision(for: self, uuid: uuid,
+                    options: [.connectionTimeout(timeoutDuration), .serviceTimeout(timeoutDuration)]) { _, result in
+                    receive(result.mapError { $0 as Error })
                 }
             }
+            return nil
         }
-    }
-
-    func waitForAirDevice(
-        ruuviTag: RuuviTagSensor,
-        timeout: TimeInterval
-    ) -> AnyPublisher<Void, Error> {
-        guard deviceType == .ruuviAir else {
-            return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
-        }
-
-        return Future { [weak self] promise in
-            guard let self else { return }
-
-            var hasCompleted = false
-
-            func complete(_ result: Result<Void, Error>) {
-                guard !hasCompleted else { return }
-                hasCompleted = true
-                self.stopAirScan()
-                switch result {
-                case .success:
-                    promise(.success(()))
-                case let .failure(error):
-                    promise(.failure(error))
-                }
-            }
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) { [weak self] in
-                guard let self else { return }
-
-                guard let foreground else {
-                    complete(.success(()))
-                    return
-                }
-
-                self.stopAirScan()
-                self.ruuviTags.removeAll()
-
-                self.airScanToken = foreground.scan(self) { observer, device in
-                    guard let advertisement = device.ruuvi?.tag else {
-                        return
-                    }
-                    observer.handleAirAdvertisement(
-                        advertisement: advertisement,
-                        target: ruuviTag
-                    ) {
-                        complete(.success(()))
-                    }
-                }
-
-                self.airScanTimeoutTimer = Timer.scheduledTimer(
-                    withTimeInterval: timeout,
-                    repeats: false
-                ) { _ in
-                    complete(.failure(DFUError.airDeviceTimeout))
-                }
-            }
-        }
+        .handleEvents(receiveOutput: { [weak self] release in
+            self?.syncStoredFirmwareVersionIfNeeded(release.version, for: ruuviTag)
+        })
         .eraseToAnyPublisher()
     }
 
-    func observeLost(uuid: String) -> Future<String, Never> {
-        Future { [weak self] promise in
-            guard let sSelf = self else { return }
-            sSelf.ruuviDFU.lost(
-                sSelf,
-                closure: { _, device in
-                    if device.uuid == uuid {
-                        promise(.success(uuid))
-                    }
-                })
+    func listen(ruuviTag: RuuviTagSensor) -> AnyPublisher<DFUDevice, Never> {
+        let format = RuuviDataFormat.dataFormat(from: ruuviTag.version)
+        let skipScanServices = format == .e1 || format == .v6
+        return firmwareObservation { [self] complete in
+            let token = ruuviDFU.scan(self, includeScanServices: !skipScanServices) { _, device in
+                if !skipScanServices || device.uuid == ruuviTag.luid?.value { complete(.success(device)) }
+            }
+            return { token.invalidate() }
+        }
+    }
+
+    func waitForAirDevice(ruuviTag: RuuviTagSensor, timeout: TimeInterval) -> AnyPublisher<Void, Error> {
+        guard deviceType == .ruuviAir else {
+            return Just(()).setFailureType(to: Error.self).eraseToAnyPublisher()
+        }
+        return firmwareObservation(delay: airScanDelay, timeout: (timeout, DFUError.airDeviceTimeout as Error)) { [self] complete in
+            let receive: (RuuviTagSensorRecord) -> Void = { [self] advertisement in
+                if isSameDevice(advertisement, ruuviTag) { complete(.success(())) }
+            }
+            if let airScan { return airScan(receive) }
+            guard let foreground else { complete(.success(())); return nil }
+            let token = foreground.scan(self) { _, device in
+                if let advertisement = device.ruuvi?.tag { receive(advertisement) }
+            }
+            return { token.invalidate() }
+        }
+    }
+
+    func observeLost(uuid: String) -> AnyPublisher<String, Never> {
+        firmwareObservation { [self] complete in
+            let token = ruuviDFU.lost(self) { _, device in
+                if device.uuid == uuid { complete(.success(uuid)) }
+            }
+            return { token.invalidate() }
         }
     }
 }
 
 extension DFUInteractor {
-    private func handleAirAdvertisement(
-        advertisement: RuuviTagSensorRecord,
-        target: RuuviTagSensor,
-        onMatch: @escaping () -> Void
-    ) {
-        ruuviTags.update(with: target.any)
-
-        if isSameDevice(advertisement, target) {
-            onMatch()
-        }
-    }
-
-    private func stopAirScan() {
-        let invalidate: (DFUInteractor) -> Void = { interactor in
-            interactor.airScanToken?.invalidate()
-            interactor.airScanToken = nil
-            interactor.airScanTimeoutTimer?.invalidate()
-            interactor.airScanTimeoutTimer = nil
-            interactor.ruuviTags.removeAll()
-        }
-
-        if Thread.isMainThread {
-            invalidate(self)
-        } else {
-            DispatchQueue.main.async { [weak self] in
-                guard let self else { return }
-                invalidate(self)
-            }
-        }
-    }
-
     private func isSameDevice(_ lhs: RuuviTagSensorRecord, _ rhs: RuuviTagSensor) -> Bool {
         if let lhsMac = lhs.macId?.any, let rhsMac = rhs.macId?.any, lhsMac == rhsMac {
             return true
@@ -342,11 +241,6 @@ extension DFUInteractor {
             return true
         }
         return false
-    }
-
-    private func invalidateTimer() {
-        timer?.invalidate()
-        timer = nil
     }
 
     private func syncStoredFirmwareVersionIfNeeded(
