@@ -133,6 +133,7 @@ private extension CardsMeasurementViewController {
             return
         }
 
+        currentPageVC.pageIndex = currentIndex
         currentPageVC.configure(with: snapshots[currentIndex])
     }
 
@@ -164,9 +165,14 @@ extension CardsMeasurementViewController: CardsMeasurementViewInput {
         self.currentIndex = max(0, min(currentIndex, snapshots.count - 1))
 
         guard !snapshots.isEmpty else {
-            pageViewController.setViewControllers([], direction: .forward, animated: false)
+            // UIKit requires one controller even when the sensor list is empty.
+            let emptyPage = UIViewController()
+            emptyPage.view.backgroundColor = .clear
+            pageViewController.setViewControllers([emptyPage], direction: .forward, animated: false)
+            pageViewController.view.isHidden = true
             return
         }
+        pageViewController.view.isHidden = false
 
         let needsRebuild = shouldPerformRebuild(
             oldCount: oldCount,
@@ -214,7 +220,8 @@ private extension CardsMeasurementViewController {
     }
 
     func handleRebuildRequest() {
-        if shouldThrottleRebuild() {
+        if shouldThrottleRebuild(),
+            pageViewController.viewControllers?.first is CardsMeasurementPageViewController {
             performThrottledUpdate()
         } else {
             performFullRebuild()
@@ -227,6 +234,7 @@ private extension CardsMeasurementViewController {
             return
         }
 
+        currentPageVC.pageIndex = currentIndex
         currentPageVC.configure(with: snapshots[currentIndex])
     }
 }
@@ -295,6 +303,7 @@ extension CardsMeasurementViewController: CardsMeasurementPageViewControllerDele
         _ indicator: RuuviTagCardSnapshotIndicatorData,
         in pageViewController: CardsMeasurementPageViewController
     ) {
+        guard isValidIndex(pageViewController.pageIndex) else { return }
         let snapshot = snapshots[pageViewController.pageIndex]
         output?.viewDidTapMeasurement(for: indicator, snapshot: snapshot)
     }

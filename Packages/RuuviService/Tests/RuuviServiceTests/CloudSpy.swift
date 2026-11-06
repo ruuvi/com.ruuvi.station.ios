@@ -5,6 +5,23 @@ import RuuviOntology
 
 /// Offline cloud double: unexpected network operations fail explicitly. Alert writes are recorded.
 @MainActor final class CloudSpy: RuuviCloud {
+    struct OwnershipRequest {
+        let operation: String
+        let mac: String
+        let argument: String?
+        let removeHistory: Bool?
+    }
+    struct OffsetWrite {
+        let temperature: Double?
+        let humidity: Double?
+        let pressure: Double?
+        let sensor: String
+    }
+    var allowOwnership = false
+    var ownershipFailure: RuuviCloudError?
+    var ownerResponse: (String?, String?)?
+    var ownershipRequests = [OwnershipRequest]()
+    var offsetWrites = [OffsetWrite]()
     struct AlertRequest {
         let type: RuuviCloudAlertType
         let settingType: RuuviCloudAlertSettingType
@@ -99,6 +116,9 @@ import RuuviOntology
         name: String,
         macId: MACIdentifier
     ) async throws(RuuviCloudError) -> MACIdentifier? {
+        ownershipRequests.append(.init(operation: "claim", mac: macId.value, argument: name, removeHistory: nil))
+        if let ownershipFailure { throw ownershipFailure }
+        if allowOwnership { return macId }
         throw .notAuthorized
     }
 
@@ -106,6 +126,9 @@ import RuuviOntology
         macId: MACIdentifier,
         secret: String
     ) async throws(RuuviCloudError) -> MACIdentifier? {
+        ownershipRequests.append(.init(operation: "contest", mac: macId.value, argument: secret, removeHistory: nil))
+        if let ownershipFailure { throw ownershipFailure }
+        if allowOwnership { return macId }
         throw .notAuthorized
     }
 
@@ -113,7 +136,11 @@ import RuuviOntology
         macId: MACIdentifier,
         removeCloudHistory: Bool
     ) async throws(RuuviCloudError) -> MACIdentifier {
+        ownershipRequests.append(
+            .init(operation: "unclaim", mac: macId.value, argument: nil, removeHistory: removeCloudHistory))
         await onUnclaim?()
+        if let ownershipFailure { throw ownershipFailure }
+        if allowOwnership { return macId }
         throw .notAuthorized
     }
 
@@ -138,6 +165,9 @@ import RuuviOntology
     }
 
     func checkOwner(macId: MACIdentifier) async throws(RuuviCloudError) -> (String?, String?) {
+        ownershipRequests.append(.init(operation: "check", mac: macId.value, argument: nil, removeHistory: nil))
+        if let ownershipFailure { throw ownershipFailure }
+        if let ownerResponse { return ownerResponse }
         throw .notAuthorized
     }
 
@@ -152,7 +182,9 @@ import RuuviOntology
         progress: ((MACIdentifier, Double) -> Void)?,
         for macId: MACIdentifier
     ) async throws(RuuviCloudError) -> URL {
-        if let onUpload { return try await onUpload(.init(data: imageData, mimeType: mimeType, progress: progress, macId: macId)) }
+        if let onUpload {
+            return try await onUpload(.init(data: imageData, mimeType: mimeType, progress: progress, macId: macId))
+        }
         throw .notAuthorized
     }
 
@@ -309,6 +341,10 @@ import RuuviOntology
         pressureOffset: Double?,
         for sensor: RuuviTagSensor
     ) async throws(RuuviCloudError) -> AnyRuuviTagSensor {
+        offsetWrites.append(
+            .init(temperature: temperatureOffset, humidity: humidityOffset, pressure: pressureOffset, sensor: sensor.id)
+        )
+        if allowOwnership { return sensor.any }
         throw .notAuthorized
     }
 

@@ -70,6 +70,8 @@ final class MenuNewsletterView: UIView {
         }
         cardView.translatesAutoresizingMaskIntoConstraints = false
 
+        let preferredButtonWidth = subscribeButton.widthAnchor.constraint(equalTo: cardView.widthAnchor, multiplier: 0.68)
+        preferredButtonWidth.priority = .defaultHigh
         NSLayoutConstraint.activate([
             // Keep the card near the bottom of the available footer space. On
             // taller screens this leaves the same breathing room below the menu
@@ -95,7 +97,7 @@ final class MenuNewsletterView: UIView {
 
             subscribeButton.topAnchor.constraint(equalTo: descriptionLabel.bottomAnchor, constant: 12),
             subscribeButton.centerXAnchor.constraint(equalTo: cardView.centerXAnchor),
-            subscribeButton.widthAnchor.constraint(equalTo: cardView.widthAnchor, multiplier: 0.68),
+            preferredButtonWidth,
             subscribeButton.widthAnchor.constraint(lessThanOrEqualToConstant: 232),
             subscribeButton.heightAnchor.constraint(equalToConstant: 44),
             subscribeButton.bottomAnchor.constraint(equalTo: cardView.bottomAnchor, constant: -16),

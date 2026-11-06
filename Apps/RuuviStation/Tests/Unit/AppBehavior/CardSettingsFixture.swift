@@ -22,7 +22,8 @@ import UIKit
             ruuviSensorPropertiesService: services.data.properties,
             measurementService: services.data.measurements.measurement,
             settings: services.data.measurements.settings, errorPresenter: errors, activityPresenter: activity,
-            coordinatorManager: services.manager, notificationCenter: center, pool: services.data.pool)
+            coordinatorManager: services.manager, notificationCenter: center, pool: services.data.pool,
+            connections: services.connections, syncState: services.sync, storage: services.data.measurements.storage)
         presenter.view = view
         presenter.router = router
         presenter.output = output

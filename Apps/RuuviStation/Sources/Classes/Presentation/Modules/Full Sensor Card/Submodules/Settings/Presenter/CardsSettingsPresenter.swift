@@ -8,6 +8,7 @@ import RuuviPresenters
 import RuuviLocal
 import RuuviDaemon
 import RuuviPool
+import RuuviStorage
 import RuuviCloud
 import RuuviLocalization
 import RuuviNotifier
@@ -36,6 +37,8 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
     private var sensorSettings: SensorSettings?
     private var ledBrightnessSelection: RuuviOntology.RuuviLedBrightnessLevel = .defaultSelection
     var writeLedBrightness: ((String, RuuviLedBrightnessLevel, @escaping (Result<Void, Error>) -> Void) -> Void)?
+    var readFirmwareRevision: ((String, @escaping (Result<String, Error>) -> Void) -> Void)?
+    var keepConnectionTimeout: TimeInterval = 10
     private var airShellClient: RuuviAirShellClient?
 
     // MARK: - Subscriptions
@@ -49,6 +52,8 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
         AppAssembly.shared.assembler.resolver.resolve(BTBackground.self)
     private lazy var ruuviPool: RuuviPool? =
         AppAssembly.shared.assembler.resolver.resolve(RuuviPool.self)
+    private lazy var ruuviStorage: RuuviStorage? =
+        AppAssembly.shared.assembler.resolver.resolve(RuuviStorage.self)
     private lazy var alertHandler: RuuviNotifier? =
         AppAssembly.shared.assembler.resolver.resolve(RuuviNotifier.self)
     private var firmwareVersionCheckInProgress = false
@@ -63,7 +68,10 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
         activityPresenter: ActivityPresenter,
         coordinatorManager: RuuviTagServiceCoordinatorManager = .shared,
         notificationCenter: NotificationCenter = .default,
-        pool: RuuviPool? = nil
+        pool: RuuviPool? = nil,
+        connections: RuuviLocalConnections? = nil,
+        syncState: RuuviLocalSyncState? = nil,
+        storage: RuuviStorage? = nil
     ) {
         self.coordinatorManager = coordinatorManager
         self.notificationCenter = notificationCenter
@@ -74,6 +82,9 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
         self.activityPresenter = activityPresenter
         super.init()
         if let pool { self.ruuviPool = pool }
+        if let connections { self.connectionPersistence = connections }
+        if let syncState { self.localSyncState = syncState }
+        if let storage { self.ruuviStorage = storage }
     }
 
     // MARK: - CardsSettingsPresenterInput
@@ -93,6 +104,7 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
         settings: SensorSettings?
     ) {
         configurationID = UUID()
+        resetFirmwareCheck()
         self.snapshot = snapshot
         self.sensor = sensor
         self.sensorSettings = settings
@@ -123,6 +135,8 @@ class CardsSettingsPresenter: NSObject, CardsSettingsPresenterInput {
     }
 
     func stop() {
+        configurationID = UUID()
+        resetFirmwareCheck()
         stopObservingOwnerCheck()
         stopObservingCoordinator()
         coordinatorManager.setAlertMuteRefreshActive(false)
@@ -638,7 +652,7 @@ extension CardsSettingsPresenter {
     private func startKeepConnectionTimeoutTimer() {
         invalidateKeepConnectionTimer()
         keepConnectionTimer = Timer.scheduledTimer(
-            withTimeInterval: 10,
+            withTimeInterval: keepConnectionTimeout,
             repeats: false
         ) { [weak self] _ in
             guard let self else { return }
@@ -668,41 +682,39 @@ extension CardsSettingsPresenter {
 
     private func fetchFirmwareVersion() {
         guard !firmwareVersionCheckInProgress,
-            let sensor = sensor,
-            let luid = sensor.luid
-        else { return }
-
-        firmwareVersionCheckInProgress = true
-
-        guard let background else {
-            firmwareVersionCheckInProgress = false
-            return
-        }
-
-        let currentSensor = sensor
-        view?.freezeKeepConnectionDisplay()
-
-        background.services.gatt.firmwareRevision(
-            for: self,
-            uuid: luid.value,
-            options: [
-                .connectionTimeout(15),
-                .serviceTimeout(15),
-            ]
-        ) { [weak self] _, result in
-            guard let self else { return }
-
-            if case let .success(version) = result {
-                let updatedTag = currentSensor.with(firmwareVersion: version)
-                Task { @MainActor [self] in _ = try? await self.ruuviPool?.update(updatedTag) }
-                self.sensor = updatedTag.any
-            }
-
-            DispatchQueue.main.async {
-                self.firmwareVersionCheckInProgress = false
-                self.view?.unfreezeKeepConnectionDisplay()
+            let sensor, let luid = sensor.luid else { return }
+        let context = configurationID
+        let completion: (Result<String, Error>) -> Void = { [weak self] result in
+            Task { @MainActor [weak self] in
+                guard let self, self.configurationID == context else { return }
+                defer { if self.configurationID == context { self.resetFirmwareCheck() } }
+                guard case let .success(version) = result else { return }
+                let latest = (try? await self.ruuviStorage?.readOne(sensor.id)) ?? sensor
+                guard self.configurationID == context else { return }
+                let updated = latest.with(firmwareVersion: version)
+                _ = try? await self.ruuviPool?.update(updated)
+                guard self.configurationID == context else { return }
+                self.sensor = updated.any
             }
         }
+        if let readFirmwareRevision {
+            firmwareVersionCheckInProgress = true
+            view?.freezeKeepConnectionDisplay()
+            readFirmwareRevision(luid.value, completion)
+        } else if let background {
+            firmwareVersionCheckInProgress = true
+            view?.freezeKeepConnectionDisplay()
+            background.services.gatt.firmwareRevision(
+                for: self, uuid: luid.value,
+                options: [.connectionTimeout(15), .serviceTimeout(15)]
+            ) { _, result in completion(result.mapError { $0 as Error }) }
+        }
+    }
+
+    private func resetFirmwareCheck() {
+        guard firmwareVersionCheckInProgress else { return }
+        firmwareVersionCheckInProgress = false
+        view?.unfreezeKeepConnectionDisplay()
     }
 
     private func startObservingCloudRequestState() {

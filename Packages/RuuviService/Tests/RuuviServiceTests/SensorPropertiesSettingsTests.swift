@@ -18,8 +18,12 @@ import XCTest
             displayOrder: order, defaultDisplayOrder: false)
         XCTAssertEqual(saved.displayOrder, order)
         XCTAssertEqual(saved.defaultDisplayOrder, false)
-        XCTAssertGreaterThanOrEqual(try XCTUnwrap(saved.displayOrderLastUpdated), before)
-        XCTAssertGreaterThanOrEqual(try XCTUnwrap(saved.defaultDisplayOrderLastUpdated), before)
+        // GRDB stores Dates with millisecond precision; allow the encoding roundoff.
+        for timestamp in [saved.displayOrderLastUpdated, saved.defaultDisplayOrderLastUpdated] {
+            let date = try XCTUnwrap(timestamp)
+            XCTAssertGreaterThanOrEqual(date.timeIntervalSince(before), -0.001)
+            XCTAssertLessThanOrEqual(date.timeIntervalSinceNow, 0.001)
+        }
         let request = try XCTUnwrap(fixture.cloud.sensorSettingWrites.last)
         XCTAssertEqual(
             request.0,

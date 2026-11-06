@@ -31,6 +31,8 @@ class CardsGraphViewInteractor {
 
     private var ruuviTagSensorObservationToken: RuuviReactorToken?
     private var timer: Timer?
+    private var configurationID = UUID()
+    private var observationID = UUID()
     private var sensors: [AnyRuuviTagSensor] = []
 
     private let highDensityIntervalMinutes: Int = 15
@@ -42,8 +44,8 @@ class CardsGraphViewInteractor {
     deinit {
         ruuviTagSensorObservationToken?.invalidate()
         ruuviTagSensorObservationToken = nil
-        timer = nil
         timer?.invalidate()
+        timer = nil
     }
 }
 
@@ -51,33 +53,37 @@ class CardsGraphViewInteractor {
 
 extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
     func restartObservingTags() {
-        ruuviTagSensorObservationToken?.invalidate()
+        stopObservingTags()
+        let observationID = observationID
         ruuviTagSensorObservationToken = ruuviReactor.observe { [weak self] change in
-            switch change {
-            case let .initial(sensors):
-                self?.sensors = sensors
-                if let id = self?.ruuviTagSensor.id,
-                    let sensor = sensors.first(where: { $0.id == id })
-                {
-                    self?.ruuviTagSensor = sensor
+            let receive = { [weak self] in
+                guard let self, self.observationID == observationID else { return }
+                switch change {
+                case let .initial(sensors):
+                    self.sensors = sensors
+                    if let id = self.ruuviTagSensor?.id,
+                        let sensor = sensors.first(where: { $0.id == id }) {
+                        self.ruuviTagSensor = sensor
+                    }
+                case let .insert(sensor):
+                    self.sensors.append(sensor)
+                case let .update(sensor):
+                    if self.ruuviTagSensor?.id == sensor.id,
+                        let index = self.sensors.firstIndex(where: { $0.id == sensor.id }) {
+                        self.ruuviTagSensor = sensor
+                        self.sensors[index] = sensor
+                        self.presenter.interactorDidUpdate(sensor: sensor)
+                    }
+                default:
+                    break
                 }
-            case let .insert(sensor):
-                self?.sensors.append(sensor)
-            case let .update(sensor):
-                if self?.ruuviTagSensor.id == sensor.id,
-                    let index = self?.sensors.firstIndex(where: { $0.id == sensor.id })
-                {
-                    self?.ruuviTagSensor = sensor
-                    self?.sensors[index] = sensor
-                    self?.presenter.interactorDidUpdate(sensor: sensor)
-                }
-            default:
-                return
             }
+            if Thread.isMainThread { receive() } else { DispatchQueue.main.async(execute: receive) }
         }
     }
 
     func stopObservingTags() {
+        observationID = UUID()
         ruuviTagSensorObservationToken?.invalidate()
         ruuviTagSensorObservationToken = nil
     }
@@ -87,6 +93,7 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
         andSettings settings: SensorSettings?,
         syncFromCloud: Bool
     ) {
+        configurationID = UUID()
         ruuviTagSensor = ruuviTag
         sensorSettings = settings
         lastMeasurement = nil
@@ -99,12 +106,10 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
             syncFullHistory(for: ruuviTag)
         }
 
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            self?.fetchPoints { [weak self] in
-                guard let self else { return }
-                self.presenter.interactorDidFinishLoadingHistory()
-                self.presenter.interactorDidUpdate(sensor: self.ruuviTagSensor)
-            }
+        fetchPoints { [weak self] in
+            guard let self else { return }
+            self.presenter.interactorDidFinishLoadingHistory()
+            self.presenter.interactorDidUpdate(sensor: self.ruuviTagSensor)
         }
     }
 
@@ -113,6 +118,7 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
     }
 
     func restartObservingData() {
+        configurationID = UUID()
         ruuviTagData.removeAll()
         fetchPoints { [weak self] in
             guard let self else { return }
@@ -123,6 +129,7 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
     }
 
     func stopObservingRuuviTagsData() {
+        configurationID = UUID()
         timer?.invalidate()
         timer = nil
     }
@@ -276,11 +283,12 @@ extension CardsGraphViewInteractor {
             return
         }
 
+        let configurationID = configurationID
         Task { @MainActor [weak self, ruuviStorage = ruuviStorage!, ruuviTagSensor = ruuviTagSensor!] in
             do throws(RuuviStorageError) {
                 let value = try await ruuviStorage.readLatest(ruuviTagSensor)
                 ({ [weak self] record in
-                    guard let sSelf = self else { return }
+                    guard let sSelf = self, sSelf.configurationID == configurationID else { return }
                     guard let record
                     else {
                         sSelf.presenter.createChartModules(from: [])
@@ -294,6 +302,7 @@ extension CardsGraphViewInteractor {
                 })(value)
             } catch {
                 ({ [weak self] error in
+                    guard self?.configurationID == configurationID else { return }
                     self?.presenter.interactorDidError(.ruuviStorage(error))
                 })(error)
             }
@@ -307,6 +316,7 @@ extension CardsGraphViewInteractor {
             return
         }
 
+        let configurationID = configurationID
         Task {
             @MainActor [
                 weak self, ruuviStorage = ruuviStorage!, ruuviTagSensor = ruuviTagSensor!,
@@ -318,13 +328,14 @@ extension CardsGraphViewInteractor {
                     from: lastMeasurement.date.timeIntervalSince1970
                 )
                 ({ [weak self] results in
+                    guard self?.configurationID == configurationID else { return }
                     guard results.count > 0,
                         let last = results.last
                     else {
                         self?.presenter.updateLatestRecord(lastMeasurementRecord)
                         return
                     }
-                    guard let sSelf = self else { return }
+                    guard let sSelf = self, sSelf.configurationID == configurationID else { return }
                     sSelf.lastMeasurement = last.measurement
                     sSelf.lastMeasurementRecord = last
                     let cutoff = RuuviHistoryWindow.start(
@@ -339,6 +350,7 @@ extension CardsGraphViewInteractor {
                 })(value)
             } catch {
                 ({ [weak self] error in
+                    guard self?.configurationID == configurationID else { return }
                     self?.presenter.updateLatestRecord(lastMeasurementRecord)
                     self?.presenter.interactorDidError(.ruuviStorage(error))
                 })(error)
@@ -397,8 +409,9 @@ extension CardsGraphViewInteractor {
             requestedHours: settings.chartShowAll ? nil : settings.chartDurationHours
         )
 
+        let configurationID = configurationID
         Task { @MainActor [weak self, ruuviStorage = ruuviStorage!, ruuviTagSensor = ruuviTagSensor!] in
-            defer { completion?() }
+            defer { if self?.configurationID == configurationID { completion?() } }
             do throws(RuuviStorageError) {
                 let value = try await ruuviStorage.read(
                     ruuviTagSensor.id,
@@ -406,10 +419,12 @@ extension CardsGraphViewInteractor {
                     with: TimeInterval(2)
                 )
                 ({ [weak self] results in
+                    guard self?.configurationID == configurationID else { return }
                     self?.ruuviTagData = results.map(\.measurement).filter { $0.date >= date }
                 })(value)
             } catch {
                 ({ [weak self] error in
+                    guard self?.configurationID == configurationID else { return }
                     self?.presenter.interactorDidError(.ruuviStorage(error))
                 })(error)
             }
@@ -427,12 +442,13 @@ extension CardsGraphViewInteractor {
             requestedHours: settings.chartShowAll ? nil : settings.chartDurationHours
         )
 
+        let configurationID = configurationID
         Task {
             @MainActor [
                 weak self, ruuviStorage = ruuviStorage!, ruuviTagSensor = ruuviTagSensor!,
                 highDensityIntervalMinutes = highDensityIntervalMinutes, maximumPointsCount = maximumPointsCount
             ] in
-            defer { competion?() }
+            defer { if self?.configurationID == configurationID { competion?() } }
             do throws(RuuviStorageError) {
                 let value = try await ruuviStorage.readDownsampled(
                     ruuviTagSensor.id,
@@ -441,10 +457,12 @@ extension CardsGraphViewInteractor {
                     pick: maximumPointsCount
                 )
                 ({ [weak self] results in
+                    guard self?.configurationID == configurationID else { return }
                     self?.ruuviTagData = results.map(\.measurement).filter { $0.date >= date }
                 })(value)
             } catch {
                 ({ [weak self] error in
+                    guard self?.configurationID == configurationID else { return }
                     self?.presenter.interactorDidError(.ruuviStorage(error))
                 })(error)
             }
@@ -452,29 +470,17 @@ extension CardsGraphViewInteractor {
     }
 
     private func syncFullHistory(for ruuviTag: RuuviTagSensor) {
-        if ruuviTag.isCloud && settings.historySyncForEachSensor {
-            Task { @MainActor [weak self, ruuviStorage = ruuviStorage!] in
-                do {
-                    let value = try await ruuviStorage.readLatest(ruuviTag)
-                    ({ [weak self] record in
-                        if record != nil {
-                            Task { @MainActor [weak self] in
-                                guard let self else { return }
-                                do throws(RuuviServiceError) {
-                                    let value = try await self.cloudSyncService.sync(
-                                        sensor: ruuviTag
-                                    )
-                                    ({
-                                        [weak self] _ in
-                                        self?.restartScheduler()
-                                    })(value)
-                                } catch {
-                                }
-                            }
-                        }
-                    })(value)
-                } catch {
-                }
+        guard ruuviTag.isCloud && settings.historySyncForEachSensor else { return }
+        let configurationID = configurationID
+        Task { @MainActor [weak self, ruuviStorage = ruuviStorage!, cloudSyncService = cloudSyncService!] in
+            do {
+                let record = try await ruuviStorage.readLatest(ruuviTag)
+                guard record != nil, self?.configurationID == configurationID else { return }
+                _ = try await cloudSyncService.sync(sensor: ruuviTag)
+                guard self?.configurationID == configurationID else { return }
+                self?.restartScheduler()
+            } catch {
+                // Existing local history remains available when the optional cloud refresh fails.
             }
         }
     }

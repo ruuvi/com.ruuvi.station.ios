@@ -88,7 +88,7 @@ class CardsMeasurementPageViewController: UIViewController {
 
     private var snapshot: RuuviTagCardSnapshot?
     private var cancellables = Set<AnyCancellable>()
-    private var lastGridIndicatorVariants: Set<MeasurementDisplayVariant> = []
+    private var lastGridIndicatorVariants: [MeasurementDisplayVariant] = []
     private var currentMeasurementCards: [MeasurementDisplayVariant: CardsMeasurementIndicatorView] = [:]
 
     // MARK: - Layout Constraints
@@ -340,7 +340,7 @@ private extension CardsMeasurementPageViewController {
     }
 
     func checkIfGridRebuildNeeded(for displayData: RuuviTagCardSnapshotDisplayData) -> Bool {
-        let currentVariants = Set(displayData.secondaryIndicators.map { $0.variant })
+        let currentVariants = displayData.secondaryIndicators.map { $0.variant }
         let needsRebuild = currentVariants != lastGridIndicatorVariants
 
         if needsRebuild {
@@ -659,8 +659,10 @@ private extension CardsMeasurementPageViewController {
 
         // Set up tap handler
         card.onTap = { [weak self] in
-            guard let self = self else { return }
-            self.delegate?.cardsPageDidSelectMeasurementIndicator(measurement, in: self)
+            guard let self,
+                let current = self.snapshot?.displayData.secondaryIndicators.first(where: { $0.variant == measurement.variant })
+            else { return }
+            self.delegate?.cardsPageDidSelectMeasurementIndicator(current, in: self)
         }
 
         return card
