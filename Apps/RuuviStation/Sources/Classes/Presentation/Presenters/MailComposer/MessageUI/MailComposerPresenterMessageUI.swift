@@ -3,23 +3,21 @@ import MessageUI
 import RuuviPresenters
 
 class MailComposerPresenterMessageUI: NSObject, MailComposerPresenter {
+    var canOpenURL: (URL) -> Bool = { UIApplication.shared.canOpenURL($0) }
+    var openURL: (URL) -> Void = { UIApplication.shared.open($0) }
     var errorPresenter: ErrorPresenter!
 
     func present(email: String, subject: String, body: String?) {
         if let emailURL = generateEmailURL(email: email, subject: subject, body: body) {
-            if #available(iOS 10.0, *) {
-                UIApplication.shared.open(emailURL)
-            } else {
-                UIApplication.shared.openURL(emailURL)
-            }
+            openURL(emailURL)
         } else {
             errorPresenter.present(error: CoreError.unableToSendEmail)
         }
     }
 
     func present(email: String) {
-        if let emailURL = URL(string: email), UIApplication.shared.canOpenURL(emailURL) {
-            UIApplication.shared.open(emailURL)
+        if let emailURL = URL(string: email), canOpenURL(emailURL) {
+            openURL(emailURL)
         } else {
             errorPresenter.present(error: CoreError.unableToSendEmail)
         }
@@ -44,20 +42,14 @@ extension MailComposerPresenterMessageUI {
     /// This method takes three arguments recipient email, subject and body.
     /// Returns a computer email URL that opens the default email client set by the user.
     private func generateEmailURL(email: String, subject: String, body: String?) -> URL? {
-        guard let toEncoded = email
-            .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-            let subjectEncoded = subject
-                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-        else {
-            return nil
-        }
-        let bodyEncoded = body?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-
-        let defaultURL = URL(string: "mailto:\(toEncoded)?subject=\(subjectEncoded)&body=\(bodyEncoded)")
-        if let defaultURL, UIApplication.shared.canOpenURL(defaultURL) {
-            return defaultURL
-        } else {
-            return nil
-        }
+        var components = URLComponents()
+        components.scheme = "mailto"
+        components.path = email
+        components.queryItems = [
+            URLQueryItem(name: "subject", value: subject),
+            URLQueryItem(name: "body", value: body ?? "")
+        ]
+        guard let url = components.url, canOpenURL(url) else { return nil }
+        return url
     }
 }

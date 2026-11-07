@@ -25,16 +25,18 @@ class AppStateServiceImpl: AppStateService {
     private var authLogoutCompletionToken: NSObjectProtocol?
     private var daemonsPausedForLogout = false
 
-    private let appGroupDefaults = UserDefaults(
+    var notificationCenter = NotificationCenter.default
+
+    var appGroupDefaults = UserDefaults(
         suiteName: AppGroupConstants.appGroupSuiteIdentifier
     )
 
     deinit {
         if let token = authWillLogoutToken {
-            NotificationCenter.default.removeObserver(token)
+            notificationCenter.removeObserver(token)
         }
         if let token = authLogoutCompletionToken {
-            NotificationCenter.default.removeObserver(token)
+            notificationCenter.removeObserver(token)
         }
     }
 
@@ -140,7 +142,7 @@ private extension AppStateServiceImpl {
 
     func observeAuthLifecycleNotifications() {
         if authWillLogoutToken == nil {
-            authWillLogoutToken = NotificationCenter.default.addObserver(
+            authWillLogoutToken = notificationCenter.addObserver(
                 forName: .RuuviAuthServiceWillLogout,
                 object: nil,
                 queue: .main
@@ -149,7 +151,7 @@ private extension AppStateServiceImpl {
             }
         }
         if authLogoutCompletionToken == nil {
-            authLogoutCompletionToken = NotificationCenter.default.addObserver(
+            authLogoutCompletionToken = notificationCenter.addObserver(
                 forName: .RuuviAuthServiceLogoutDidFinish,
                 object: nil,
                 queue: .main

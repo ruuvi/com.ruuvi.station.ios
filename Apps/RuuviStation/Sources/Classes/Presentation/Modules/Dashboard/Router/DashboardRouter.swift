@@ -6,6 +6,8 @@ import RuuviOntology
 import UIKit
 
 class DashboardRouter: NSObject, DashboardRouterInput {
+    var openURL: (URL) -> Void = { UIApplication.shared.open($0, options: [:], completionHandler: nil) }
+    var makeFirmware: ((RuuviTagSensor) -> DFUModuleInput)?
     weak var transitionHandler: UIViewController!
     weak var delegate: DashboardRouterDelegate!
     private weak var dfuModule: DFUModuleInput?
@@ -19,7 +21,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
     private var menuTableTransition: MenuTableTransitioningDelegate!
 
     func open(url: URL) {
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        openURL(url)
     }
 
     func openMenu(output: MenuModuleOutput) {
@@ -64,7 +66,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         else {
             return
         }
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        openURL(url)
     }
 
     func openRuuviProductsPage() {
@@ -72,7 +74,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         else {
             return
         }
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        openURL(url)
     }
 
     func openRuuviProductsPageFromMenu() {
@@ -80,7 +82,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
         else {
             return
         }
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        openURL(url)
     }
 
     func openSignIn(output: SignInBenefitsModuleOutput) {
@@ -122,7 +124,7 @@ class DashboardRouter: NSObject, DashboardRouterInput {
 
     func openUpdateFirmware(ruuviTag: RuuviTagSensor) {
         let factory: DFUModuleFactory = DFUModuleFactoryImpl()
-        let module = factory.create(for: ruuviTag)
+        let module = makeFirmware?(ruuviTag) ?? factory.create(for: ruuviTag)
         module.output = self
         dfuModule = module
         transitionHandler

@@ -2,6 +2,7 @@ import SwiftUI
 import RuuviLocalization
 
 final class VisibilitySettingsViewController: UIViewController, VisibilitySettingsViewInput {
+    var alertActions = AlertActionFactory()
     var output: VisibilitySettingsViewOutput?
 
     private let state = VisibilitySettingsViewState()
@@ -112,7 +113,7 @@ final class VisibilitySettingsViewController: UIViewController, VisibilitySettin
             message: message,
             preferredStyle: .alert
         )
-        controller.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .default))
+        controller.addAction(alertActions(title: RuuviLocalization.ok, style: .default))
         present(controller, animated: true)
     }
 
@@ -126,10 +127,10 @@ final class VisibilitySettingsViewController: UIViewController, VisibilitySettin
         onCancel: (() -> Void)?
     ) {
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: cancelTitle, style: .cancel, handler: { _ in
+        controller.addAction(alertActions(title: cancelTitle, style: .cancel, handler: { _ in
             onCancel?()
         }))
-        controller.addAction(UIAlertAction(title: confirmTitle, style: .default, handler: { _ in
+        controller.addAction(alertActions(title: confirmTitle, style: .default, handler: { _ in
             onConfirm()
         }))
         present(controller, animated: true)

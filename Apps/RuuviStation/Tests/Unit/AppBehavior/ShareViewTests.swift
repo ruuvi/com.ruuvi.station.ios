@@ -79,7 +79,7 @@ import XCTest
     let view: ShareViewController
     let output = ShareViewOutputSpy()
     let window: UIWindow
-    private let previous: UIWindow?
+    private let host: AppViewHost
     init(canShare: Bool, accepted: [String] = [], pending: [String] = []) throws {
         view = try XCTUnwrap(
             UIStoryboard(name: "Share", bundle: .main)
@@ -93,13 +93,8 @@ import XCTest
         model.totalUsedCount.value = 4
         model.totalAvailableCount.value = 20
         view.viewModel = model
-        let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.first as? UIWindowScene)
-        previous = scene.windows.first(where: \.isKeyWindow)
-        window = UIWindow(windowScene: scene)
-        window.rootViewController = UINavigationController(rootViewController: view)
-        window.makeKeyAndVisible()
-        view.loadViewIfNeeded()
-        view.view.layoutIfNeeded()
+        host = try AppViewHost(view)
+        window = host.window
     }
     func cell(section: Int, row: Int) throws -> UITableViewCell {
         let index = IndexPath(row: row, section: section)
@@ -107,12 +102,7 @@ import XCTest
         view.tableView.layoutIfNeeded()
         return try XCTUnwrap(view.tableView.cellForRow(at: index))
     }
-    func close() {
-        view.dismiss(animated: false)
-        window.isHidden = true
-        window.rootViewController = nil
-        previous?.makeKeyAndVisible()
-    }
+    func close() { host.close() }
 }
 
 final class ShareViewOutputSpy: ShareViewOutput {

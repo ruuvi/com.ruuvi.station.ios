@@ -1,6 +1,7 @@
 @testable import station
 import RuuviCloud
 import RuuviLocal
+import RuuviLocalization
 import RuuviPresenters
 import RuuviService
 import RuuviUser
@@ -8,6 +9,63 @@ import UIKit
 import XCTest
 
 final class MarketingConsentPromptCoordinatorTests: XCTestCase {
+    @MainActor func testSuccessfulAndPendingSubscriptionsShowTheCorrectConfirmationAndClose() async throws {
+        for status in [RuuviCloudMarketingConsentStatus.subscribed, .unconfirmed] {
+            let fixture = Fixture()
+            await fixture.showDialog()
+            let dialog = try XCTUnwrap(fixture.dialog)
+            dialog.onPrimaryAction?()
+            await waitForConsentState("subscription save requested") { fixture.service.writes.count == 1 }
+            fixture.service.writes[0].resume(returning: .success(.init(consent: status == .subscribed, status: status)))
+            await waitForConsentState("subscription confirmation") {
+                dialog.view.consentDescendants.compactMap { ($0 as? UILabel)?.text }
+                    .contains(RuuviLocalization.marketingConsentPromptSaved)
+            }
+            let labels = dialog.view.consentDescendants.compactMap { ($0 as? UILabel)?.text }
+            XCTAssertEqual(
+                labels.contains(RuuviLocalization.newsletterSubscriptionConfirmation), status == .unconfirmed)
+            XCTAssertTrue(fixture.buttons(in: dialog).allSatisfy(\.isEnabled))
+            XCTAssertNil(dialog.onSecondaryAction)
+            dialog.onPrimaryAction?()
+            await waitForConsentState("confirmation dismissed") { fixture.dialog == nil }
+            XCTAssertEqual(fixture.service.writes.count, 1)
+        }
+    }
+
+    @MainActor func testRejectedConsentResponseShowsAnErrorAndAllowsRetryWithoutDuplicateWrites() async throws {
+        let fixture = Fixture()
+        await fixture.showDialog()
+        let dialog = try XCTUnwrap(fixture.dialog)
+        dialog.onPrimaryAction?()
+        await waitForConsentState("first subscription save") { fixture.service.writes.count == 1 }
+        fixture.service.writes[0].resume(returning: .success(.init(consent: false, status: .unsubscribed)))
+        await waitForConsentState("rejected subscription error") {
+            dialog.view.consentDescendants.compactMap { ($0 as? UILabel)?.text }.contains(
+                RuuviLocalization.activitySavingFail)
+        }
+        XCTAssertTrue(fixture.buttons(in: dialog).allSatisfy(\.isEnabled))
+        dialog.onPrimaryAction?()
+        dialog.onPrimaryAction?()
+        await waitForConsentState("subscription retry") { fixture.service.writes.count == 2 }
+        fixture.service.writes[1].resume(returning: .failure(.failedToParseNetworkResponse))
+        await fixture.settle()
+        XCTAssertTrue(fixture.buttons(in: dialog).allSatisfy(\.isEnabled))
+        await fixture.dismiss()
+    }
+
+    @MainActor func testChangingAccountWhileSavingCannotShowThePreviousAccountsConfirmation() async throws {
+        let fixture = Fixture()
+        await fixture.showDialog()
+        let dialog = try XCTUnwrap(fixture.dialog)
+        dialog.onPrimaryAction?()
+        await waitForConsentState("subscription save pending") { fixture.service.writes.count == 1 }
+        fixture.user.apiKey = "replacement-session"
+        fixture.user.email = "replacement@example.com"
+        fixture.service.writes[0].resume(returning: .success(.init(consent: true, status: .subscribed)))
+        await waitForConsentState("stale subscription dialog dismissed") { fixture.dialog == nil }
+        XCTAssertTrue(fixture.history.isEligible(account: "replacement@example.com"))
+    }
+
     @MainActor func testPendingConsentCheckDoesNotRetainCoordinator() async {
         let fixture = Fixture()
         var coordinator: MarketingConsentPromptCoordinator? = MarketingConsentPromptCoordinator(
@@ -220,4 +278,18 @@ private final class ConsentFlags: RuuviLocalFlags {
         }
         return dialog.map { collect($0.view) } ?? []
     }
+}
+
+@MainActor private func waitForConsentState(
+    _ description: String, file: StaticString = #filePath, line: UInt = #line,
+    _ condition: () -> Bool
+) async {
+    for _ in 0..<200 {
+        if condition() { return }
+        try? await Task.sleep(nanoseconds: 10_000_000)
+    }
+    XCTFail("Timed out waiting for " + description, file: file, line: line)
+}
+private extension UIView {
+    var consentDescendants: [UIView] { subviews.flatMap { [$0] + $0.consentDescendants } }
 }

@@ -156,6 +156,10 @@ final class DashboardViewController: UIViewController {
             leadingPadding: 4,
             trailingPadding: 4
         )
+        button.isAccessibilityElement = true
+        button.accessibilityIdentifier = "dashboard.search"
+        button.accessibilityTraits = .button
+        button.accessibilityLabel = RuuviLocalization.sensorSearchPlaceholder
         button.addGestureRecognizer(
             UITapGestureRecognizer(target: self, action: #selector(handleSearchButtonTap))
         )
@@ -164,6 +168,7 @@ final class DashboardViewController: UIViewController {
 
     private lazy var searchTextField: UITextField = {
         let tf = UITextField()
+        tf.accessibilityIdentifier = "dashboard.searchField"
         tf.placeholder = RuuviLocalization.sensorSearchPlaceholder
         tf.backgroundColor = RuuviColor.dashboardCardBG.color
         tf.textColor = RuuviColor.dashboardIndicator.color
@@ -185,6 +190,7 @@ final class DashboardViewController: UIViewController {
 
     private lazy var searchCancelButton: UIButton = {
         let btn = UIButton(type: .system)
+        btn.accessibilityIdentifier = "dashboard.searchCancel"
         btn.setTitle(RuuviLocalization.cancel, for: .normal)
         btn.setTitleColor(RuuviColor.tintColor.color, for: .normal)
         btn.addTarget(self, action: #selector(handleSearchCancelTap), for: .touchUpInside)

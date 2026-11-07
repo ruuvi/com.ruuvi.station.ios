@@ -12,6 +12,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--device", default="iPhone 18 Pro", help="Booted simulator name or UDID")
     parser.add_argument("--output", type=Path, required=True, help="New artifact directory")
+    parser.add_argument("--build-cache", type=Path, help="Reuse Xcode derived data while keeping verification artifacts separate")
     parser.add_argument("--minimum-coverage", type=float, help="Per-target coverage percentage to enforce")
     parser.add_argument("--minimum-total-coverage", type=float, help="Aggregate production coverage percentage to enforce")
     parser.add_argument("--minimum-app-coverage", type=float, help="Application production coverage percentage to enforce")
@@ -19,6 +20,7 @@ def main():
     root = Path(__file__).resolve().parents[2]
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
+    build_cache = args.build_cache.resolve() if args.build_cache else output
     devices = json.loads(subprocess.check_output(["xcrun", "simctl", "list", "devices", "booted", "-j"]))
     matches = [d for group in devices["devices"].values() for d in group
                if args.device in (d["name"], d["udid"]) and d["state"] == "Booted"]
@@ -29,6 +31,7 @@ def main():
         "device": device, "startedAt": datetime.now().isoformat(),
         "commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip(),
         "xcode": subprocess.check_output(["xcodebuild", "-version"], text=True).strip(),
+        "buildCache": str(build_cache),
     }, indent=2) + "\n")
 
     def run(label, command, cwd=root):
@@ -42,7 +45,7 @@ def main():
     run("assets", [str(root / ".tools/swiftgen/bin/swiftgen"), "--config", ".swiftgen.assets.yml"])
     destination = "platform=iOS Simulator,id=" + device["udid"]
     run("packages", ["xcodebuild", "-scheme", "RuuviPackageVerification", "-destination", destination,
-                     "-derivedDataPath", str(output / "PackageBuild"), "build", "CODE_SIGNING_ALLOWED=NO"],
+                     "-derivedDataPath", str(build_cache / "PackageBuild"), "build", "CODE_SIGNING_ALLOWED=NO"],
         cwd=root / "Tests/PackageVerification")
     for manifest in sorted(root.glob("*/Ruuvi*/Package.swift")):
         package = json.loads(subprocess.check_output([
@@ -51,11 +54,11 @@ def main():
         name = package["name"]
         scheme = name if len(package["products"]) == 1 else name + "-Package"
         run("package-tests-" + name, ["xcodebuild", "-scheme", scheme, "-destination", destination,
-                                     "-derivedDataPath", str(output / "PackageTestBuild"),
+                                     "-derivedDataPath", str(build_cache / "PackageTestBuild"),
                                      "build-for-testing", "CODE_SIGNING_ALLOWED=NO"], cwd=manifest.parent)
     result = output / "AllTests.xcresult"
     run("tests", ["xcodebuild", "-project", "Ruuvi.xcodeproj", "-scheme", "AllTests",
-                  "-destination", destination, "-derivedDataPath", str(output / "AppBuild"),
+                  "-destination", destination, "-derivedDataPath", str(build_cache / "AppBuild"),
                   "-enableCodeCoverage", "YES", "-resultBundlePath", str(result), "test",
                   "CODE_SIGN_IDENTITY=-", "CODE_SIGNING_ALLOWED=YES"])
     coverage = [sys.executable, str(root / "scripts/test/coverage.py"), str(result),

@@ -6,7 +6,9 @@
     "dependencyScope": "Original and migrated implementations run with the current SDK and dependencies. This is not a comparison of historical app binaries or historical operating systems.",
     "otherContracts": "Assertions are derived from source behavior and user-facing expectations. Tests use real UIKit views and native dialogs, isolated persistence, and deterministic transport/cloud doubles.",
     "dialogScope": "AlertActionRecorder invokes the same handler passed to native UIAlertAction. Tests cover callback behavior and real dialog construction; they do not simulate UIKit touch recognition or automatic dismissal. DiscoveryDialogContractTests also intercepts presentation to inspect the constructed native dialog without requiring an app-hosted module test.",
-    "coverageScope": "All first-party production executable lines compiled in the Debug simulator build remain in the denominator. Generated baseline code belongs only to the test target. Hardware and defensive paths are not excluded to increase the percentage. Release-only conditional paths are separately build-checked; the reported percentage is not Release coverage."
+    "coverageScope": "All first-party production executable lines compiled in the Debug simulator build remain in the denominator. Generated baseline code belongs only to the test target. Hardware and defensive paths are not excluded to increase the percentage. Release-only conditional paths are separately build-checked; the reported percentage is not Release coverage.",
+    "gestureScope": "Unit tests feed UIKit gesture states and locations through app-owned selectors, and record transition finish/cancel decisions. NavigationSmokeTests performs real simulator touches and portrait/landscape rotation. Full-screen captures avoid XCTest app-only screenshot cropping in landscape.",
+    "multiRuntimeCoverage": "Per-runtime reports are retained separately. Combined coverage must use xccov merge on reports and archives from unchanged compiled binaries; it is the union of exercised production lines, not an average of percentages."
   },
   "preservedContracts": [
     {
@@ -201,6 +203,54 @@
         "The real firmware presenter permits dismissal before and after flashing and blocks it during flashing",
         "Discovery confirmation actions carry the original NFC sensor or device identifier and cancel makes no request"
       ]
+    },
+    {
+      "area": "Native routes and lifecycle",
+      "tests": [
+        "NativeSettingsRoutingTests",
+        "NativeDashboardRoutingTests",
+        "FirmwareFactoryContractTests",
+        "AppStateLifecycleContractTests",
+        "CoordinatorInitialDataContractTests",
+        "DashboardConnectionContractTests"
+      ],
+      "contracts": [
+        "Real factories preserve sensor identity, recipients, calibration mode, ownership mode and removal output",
+        "Sign-in Back returns to benefits; offline completion is reported after native dismissal",
+        "Firmware routes retain safe-dismiss protection and factory construction does not start an update",
+        "Foreground authorization controls cloud sync; duplicate logout notifications do not duplicate daemon operations",
+        "Gatt suppression resets without deleting sync history; pairing state follows current connection persistence"
+      ]
+    },
+    {
+      "area": "Search, gestures and visibility",
+      "tests": [
+        "DashboardSearchInteractionTests",
+        "MenuGestureContractTests",
+        "VisibilityScreenContractTests",
+        "ShareFeedbackContractTests",
+        "NavigationSmokeTests.testSensorMeasurementAndGraphSurviveLandscapeAndReturnToPortrait"
+      ],
+      "contracts": [
+        "Cancelling search cancels the pending debounce, restores all sensors and allows a new search",
+        "Menu swipe direction, distance and velocity determine completion and cancellation",
+        "Visibility edits preserve indexes and ordering; confirmation and cancellation remain separate",
+        "Invalid addresses, accepted shares and pending invitations retain distinct feedback",
+        "Measurement and graph navigation remain usable after landscape rotation and return to portrait"
+      ]
+    },
+    {
+      "area": "Graph readouts and native feedback",
+      "tests": [
+        "GraphValuePresentationTests",
+        "NativeFeedbackPresentationTests",
+        "MarketingConsentPromptCoordinatorTests"
+      ],
+      "contracts": [
+        "Graph readout precision follows the measurement variant; rounded zero has no minus sign and AQI retains whole-number display",
+        "Native errors preserve message and actions; sound selection saves only the selected sound preference",
+        "Newsletter save success, pending confirmation, rejection and retry retain distinct outcomes; stale account responses cannot confirm a new account"
+      ]
     }
   ],
   "intentionalCorrections": [
@@ -274,6 +324,42 @@
       "evidence": "expanded-additional-red.xcresult",
       "tests": [
         "TextEditingContractTests"
+      ]
+    },
+    {
+      "area": "Description and text-view link hit testing",
+      "change": "Only a tap inside the actual link glyphs opens a link. Text-view insets are respected; blank space and out-of-bounds taps do not activate the nearest link. Wrapped Unicode link text remains tappable.",
+      "evidence": [
+        "next-coverage/interactions-red-2.xcresult",
+        "next-coverage/expanded-red-3.xcresult"
+      ],
+      "tests": [
+        "DescriptionHitTestingTests",
+        "LinkTextInteractionTests"
+      ]
+    },
+    {
+      "area": "Reconfigured link views",
+      "change": "Reuse one tap recognizer when link text or its URL changes, preventing multiple handlers for a single tap.",
+      "evidence": "next-coverage/expanded-red-3.xcresult",
+      "tests": [
+        "LinkTextInteractionTests.testReconfiguringALinkKeepsOneGestureAndOnlyRoutesTheCurrentURL"
+      ]
+    },
+    {
+      "area": "Numeric sign accessory",
+      "change": "The minus button toggles ASCII, full-width and Unicode minus signs without creating invalid double-minus input. Decimal text is preserved.",
+      "evidence": "next-coverage/expanded-red-3.xcresult",
+      "tests": [
+        "NumericSignAccessoryTests"
+      ]
+    },
+    {
+      "area": "Feedback email URL encoding",
+      "change": "Use URLComponents query items so ampersands, equals signs, Unicode and newlines remain within the original subject/body. Missing-body and unavailable-client behavior are preserved. The redundant pre-iOS-10 opening branch is removed; the project minimum is iOS 16.",
+      "evidence": "next-coverage/expanded-red-3.xcresult",
+      "tests": [
+        "MailLinkContractTests"
       ]
     }
   ],

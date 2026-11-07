@@ -15,6 +15,10 @@ class RuuviLinkTextView: UITextView {
     private var link: String?
     private var fontSize: CGFloat = 13
 
+    private lazy var linkTapGesture = UITapGestureRecognizer(
+        target: self, action: #selector(handleTap)
+    )
+
     weak var linkDelegate: RuuviLinkTextViewDelegate?
 
     convenience init(
@@ -93,18 +97,29 @@ class RuuviLinkTextView: UITextView {
 
         self.attributedText = attributedText
 
-        let tapGesture = UITapGestureRecognizer(
-            target: self, action: #selector(handleTap)
-        )
-        addGestureRecognizer(tapGesture)
+        if linkTapGesture.view !== self {
+            addGestureRecognizer(linkTapGesture)
+        }
     }
 
     @objc private func handleTap(gestureRecognizer: UITapGestureRecognizer) {
+        guard gestureRecognizer.state == .ended else { return }
         let location = gestureRecognizer.location(in: self)
-        let position = layoutManager.characterIndex(
-            for: location, in: textContainer,
-            fractionOfDistanceBetweenInsertionPoints: nil
+        guard bounds.contains(location) else { return }
+        let textLocation = CGPoint(
+            x: location.x - textContainerInset.left,
+            y: location.y - textContainerInset.top
         )
+        let glyphIndex = layoutManager.glyphIndex(
+            for: textLocation, in: textContainer,
+            fractionOfDistanceThroughGlyph: nil
+        )
+        guard glyphIndex < layoutManager.numberOfGlyphs,
+              layoutManager.boundingRect(
+                forGlyphRange: NSRange(location: glyphIndex, length: 1),
+                in: textContainer
+              ).contains(textLocation) else { return }
+        let position = layoutManager.characterIndexForGlyph(at: glyphIndex)
 
         guard let fullTextString,
               let linkString,

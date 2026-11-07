@@ -25,10 +25,8 @@ extension UITextField {
         else {
             return
         }
-        if currentText.hasPrefix("－") {
-            let offsetIndex = currentText.index(currentText.startIndex, offsetBy: 1)
-            let substring = currentText[offsetIndex...]
-            text = String(substring)
+        if currentText.hasPrefix("-") || currentText.hasPrefix("－") || currentText.hasPrefix("−") {
+            text = String(currentText.dropFirst())
         } else {
             text = "-" + currentText
         }

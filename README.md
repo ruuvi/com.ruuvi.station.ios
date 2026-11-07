@@ -92,10 +92,25 @@ This generates resources, builds every Swift package product and test target,
 runs the full simulator suite, and exports coverage and screenshots.
 `--minimum-total-coverage 90.01` requires aggregate production coverage strictly above 90%.
 Use `--minimum-coverage 95` to enforce an additional per-target threshold.
+Use `--minimum-app-coverage 90.01` to require the application itself to exceed 90%.
+`--build-cache build/PreviousVerification` reuses its derived data while still
+running every verification step and writing fresh results to `--output`.
 Keep the output directory inside this workspace so reports survive temporary-directory cleanup.
 Reports retain every first-party target, including targets with no executable lines.
 The UI navigation checks preserve saved simulator sensors; the existing-sensor
 check needs at least one saved sensor.
+
+To exercise older-iOS branches, run the same built `.xctestrun` with
+`xcodebuild test-without-building` on an additional compatible simulator.
+Keep the source and compiled products unchanged between runs. A fresh simulator
+can run the unit and module tests with `-skip-testing:station.uiTests`; the UI
+navigation and rotation checks still require the configured primary simulator.
+Export coverage from each result using `xcresulttool export coverage`, then use
+`xccov merge` with both report/archive pairs. `coverage.py` also accepts the
+merged `.xccovreport`. Retain and report the individual results alongside the
+combined result: combined coverage measures the union of exercised lines, not
+the coverage achieved by either runtime alone. Debug simulator coverage does
+not measure Release-only paths or prove physical sensor behavior.
 
 ## Get in touch
 

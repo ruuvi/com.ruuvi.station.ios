@@ -9,7 +9,7 @@ import sys
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("result", type=Path, help="Xcode result bundle from AllTests")
+    parser.add_argument("result", type=Path, help="Xcode result bundle from AllTests or a merged .xccovreport")
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--minimum", type=float, help="Required percentage for every executable target")
     parser.add_argument("--minimum-total", type=float, help="Required aggregate percentage across all production targets")
@@ -33,9 +33,11 @@ def main():
                     and target.get("productType") == "com.apple.product-type.application"}
     if not expected:
         raise SystemExit("The generated project must contain production coverage targets.")
-    report = json.loads(subprocess.check_output([
-        "xcrun", "xccov", "view", "--report", "--json", str(args.result)
-    ]))
+    command = ["xcrun", "xccov", "view", "--json"]
+    if args.result.suffix == ".xcresult":
+        command.append("--report")
+    command.append(str(args.result))
+    report = json.loads(subprocess.check_output(command))
     targets = []
     for target in report["targets"]:
         if target["name"] not in expected:

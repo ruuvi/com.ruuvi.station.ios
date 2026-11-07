@@ -100,6 +100,41 @@ final class NavigationSmokeTests: XCTestCase {
         attachScreenshot(app, name: "Dashboard after reopening and closing sensor")
     }
 
+    @MainActor func testSensorMeasurementAndGraphSurviveLandscapeAndReturnToPortrait() throws {
+        let app = XCUIApplication()
+        XCUIDevice.shared.orientation = .portrait
+        defer { XCUIDevice.shared.orientation = .portrait }
+        app.launch()
+        let dashboard = app.collectionViews["dashboard.sensors"]
+        XCTAssertTrue(dashboard.waitForExistence(timeout: 20))
+        let sensor = dashboard.cells.firstMatch
+        guard sensor.waitForExistence(timeout: 10) else {
+            throw XCTSkip("Rotation smoke check requires a saved sensor.")
+        }
+        sensor.tap()
+        for tab in ["measurement", "graph"] {
+            let button = app.buttons["sensor.tab." + tab]
+            XCTAssertTrue(button.waitForExistence(timeout: 10))
+            button.tap()
+            XCUIDevice.shared.orientation = .landscapeLeft
+            let landscape = NSPredicate { _, _ in app.frame.width > app.frame.height }
+            XCTAssertEqual(
+                XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: landscape, object: app)], timeout: 10),
+                .completed)
+            XCTAssertTrue(button.isHittable)
+            XCTAssertTrue(app.buttons["sensor.back"].isHittable)
+            attachScreenshot(app, name: "Landscape sensor " + tab)
+            XCUIDevice.shared.orientation = .portrait
+            let portrait = NSPredicate { _, _ in app.frame.height > app.frame.width }
+            XCTAssertEqual(
+                XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: portrait, object: app)], timeout: 10),
+                .completed)
+            XCTAssertTrue(button.isHittable)
+        }
+        app.buttons["sensor.back"].tap()
+        XCTAssertTrue(dashboard.waitForExistence(timeout: 10))
+    }
+
     @MainActor private func inspectChoices(
         _ app: XCUIApplication, parent: String, choices: String, rowID: String? = nil
     ) {
@@ -119,8 +154,8 @@ final class NavigationSmokeTests: XCTestCase {
         XCTAssertEqual(row.label, originalLabel, "Opening and cancelling a picker must keep its selection")
     }
 
-    @MainActor private func attachScreenshot(_ app: XCUIApplication, name: String) {
-        let attachment = XCTAttachment(screenshot: app.screenshot())
+    @MainActor private func attachScreenshot(_: XCUIApplication, name: String) {
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         attachment.name = name
         attachment.lifetime = .keepAlways
         add(attachment)

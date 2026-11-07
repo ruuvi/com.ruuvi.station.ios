@@ -1077,7 +1077,8 @@ private extension MeasurementDetailsViewController {
         _ location: CGPoint,
         in label: UILabel
     ) -> String? {
-        guard let attributedText = label.attributedText,
+        guard label.bounds.contains(location),
+              let attributedText = label.attributedText,
               attributedText.length > 0
         else { return nil }
 
@@ -1092,11 +1093,17 @@ private extension MeasurementDetailsViewController {
         textStorage.addLayoutManager(layoutManager)
         layoutManager.addTextContainer(textContainer)
 
-        let characterIndex = layoutManager.characterIndex(
+        let glyphIndex = layoutManager.glyphIndex(
             for: location,
             in: textContainer,
-            fractionOfDistanceBetweenInsertionPoints: nil
+            fractionOfDistanceThroughGlyph: nil
         )
+        guard glyphIndex < layoutManager.numberOfGlyphs,
+              layoutManager.boundingRect(
+                forGlyphRange: NSRange(location: glyphIndex, length: 1),
+                in: textContainer
+              ).contains(location) else { return nil }
+        let characterIndex = layoutManager.characterIndexForGlyph(at: glyphIndex)
 
         if characterIndex < attributedText.length {
             let linkURL = attributedText.attribute(
