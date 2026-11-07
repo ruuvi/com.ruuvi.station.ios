@@ -100,6 +100,22 @@ Reports retain every first-party target, including targets with no executable li
 The UI navigation checks preserve saved simulator sensors; the existing-sensor
 check needs at least one saved sensor.
 
+For an empty test simulator, a temporary sensor with graph readings can be
+prepared before verification and removed afterward:
+
+```zsh
+python3 scripts/test/simulator_sensor_fixture.py prepare --device SIMULATOR_UDID \
+  --backup-dir build/UISensorFixture
+# Run verification, including the sensor navigation and rotation tests.
+python3 scripts/test/simulator_sensor_fixture.py restore --device SIMULATOR_UDID \
+  --backup-dir build/UISensorFixture
+```
+
+The app must have launched once to create its database. Preparation refuses to
+replace existing sensors, measurements, or sensor settings and retains a database
+backup. Restoration removes only the temporary fixture's identities and preserves
+unrelated data. Fixture screenshots show synthetic readings, not physical sensors.
+
 To exercise older-iOS branches, run the same built `.xctestrun` with
 `xcodebuild test-without-building` on an additional compatible simulator.
 Keep the source and compiled products unchanged between runs. A fresh simulator
@@ -111,6 +127,13 @@ merged `.xccovreport`. Retain and report the individual results alongside the
 combined result: combined coverage measures the union of exercised lines, not
 the coverage achieved by either runtime alone. Debug simulator coverage does
 not measure Release-only paths or prove physical sensor behavior.
+Audit executable line counts after merging. Xcode can incorrectly combine
+same-named generic accessors at different source locations, even with unchanged
+binaries. If the counts expand unexpectedly, retain the individual reports and
+do not use the merged percentage as the headline result.
+Run simulator suites sequentially when they exercise system services shared with
+the Mac. NFC copy tests use an isolated native pasteboard to avoid clipboard
+permission dialogs and interference with another app's clipboard.
 
 ## Get in touch
 

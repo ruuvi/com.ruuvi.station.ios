@@ -58,19 +58,22 @@ import XCTest
         XCTAssertEqual(presentation.delegate?.presentationControllerShouldDismiss?(presentation), true)
     }
 
-    func testCopyActionsPreserveTheExactNfcIdentifiers() {
+    func testCopyActionsPreserveTheExactNfcIdentifiers() throws {
         let fixture = DiscoveryFixture()
-        let previousItems = UIPasteboard.general.items
-        defer { UIPasteboard.general.items = previousItems; fixture.cleanup() }
+        XCTAssertTrue(fixture.presenter.pasteboard === UIPasteboard.general)
+        let name = UIPasteboard.Name("DiscoveryFirmwareContractTests.\(UUID().uuidString)")
+        let pasteboard = try XCTUnwrap(UIPasteboard(name: name, create: true))
+        fixture.presenter.pasteboard = pasteboard
+        defer { UIPasteboard.remove(withName: name); fixture.cleanup() }
         let sensor = NFCSensor(id: "secret-with-punctuation:+/==", macId: "AA:BB:CC:DD:EE:FF", firmwareVersion: "2.5.9")
         fixture.presenter.viewDidACopyMacAddress(of: sensor)
-        XCTAssertEqual(UIPasteboard.general.string, sensor.macId)
+        XCTAssertEqual(pasteboard.string, sensor.macId)
         fixture.presenter.viewDidACopySecret(of: sensor)
-        XCTAssertEqual(UIPasteboard.general.string, sensor.id)
+        XCTAssertEqual(pasteboard.string, sensor.id)
         fixture.presenter.viewDidACopySecret(of: nil)
-        XCTAssertNil(UIPasteboard.general.string)
+        XCTAssertNil(pasteboard.string)
         fixture.presenter.viewDidACopyMacAddress(of: nil)
-        XCTAssertNil(UIPasteboard.general.string)
+        XCTAssertNil(pasteboard.string)
         XCTAssertTrue(fixture.ownership.additions.isEmpty)
     }
 }

@@ -26,6 +26,19 @@ import XCTest
         await flushAppBindings()
         view.view.layoutIfNeeded()
     }
+    var allViews: [UIView] {
+        if let window = host?.window { return descendants(window) }
+        return descendants(view.view)
+    }
+    func openSearch() async throws -> UITextField {
+        _ = view.perform(NSSelectorFromString("handleSearchButtonTap"))
+        host?.window.layoutIfNeeded()
+        host?.navigation.navigationBar.layoutIfNeeded()
+        await waitForAppState("dashboard search attached") {
+            self.allViews.contains { $0 is UITextField }
+        }
+        return try XCTUnwrap(allViews.compactMap { $0 as? UITextField }.first)
+    }
     func menu(at index: Int) throws -> UIMenu {
         let path = IndexPath(item: index, section: 0)
         collection.scrollToItem(at: path, at: .centeredVertically, animated: false)

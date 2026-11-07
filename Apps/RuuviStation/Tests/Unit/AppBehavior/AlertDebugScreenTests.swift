@@ -6,6 +6,7 @@ import XCTest
 #if DEBUG || ALPHA
     @MainActor final class AlertDebugScreenTests: XCTestCase {
         func testLogViewerRefreshesExportsAndClearsWithoutChangingTheEnabledPreference() async throws {
+            await waitForAppState("active debug-log host") { UIApplication.shared.applicationState == .active }
             let saved = DebugLogState()
             defer { saved.restore() }
             let view = AlertDebugLogViewController()
@@ -21,9 +22,19 @@ import XCTest
             try activate(view.navigationItem.rightBarButtonItems?.last)
             XCTAssertEqual(text.text, expected)
             try activate(view.navigationItem.rightBarButtonItems?.first)
-            await waitForAppState("debug log share sheet") { view.presentedViewController is UIActivityViewController }
+            // UIKit may forward presentation to the containing navigation controller.
+            func shareSheet() -> UIActivityViewController? {
+                (view.presentedViewController ?? host.navigation.presentedViewController) as? UIActivityViewController
+            }
+            // First-use system activity discovery can outlast the normal app-binding deadline.
+            await waitForAppState("debug log share sheet", timeout: 10) { shareSheet() != nil }
+            let sheet = try XCTUnwrap(shareSheet())
+            if let popover = sheet.popoverPresentationController {
+                XCTAssertTrue(popover.barButtonItem === view.navigationItem.rightBarButtonItems?.first)
+            }
             XCTAssertEqual(try String(contentsOf: saved.url, encoding: .utf8), expected)
-            await withCheckedContinuation { done in view.dismiss(animated: false) { done.resume() } }
+            await withCheckedContinuation { done in sheet.dismiss(animated: false) { done.resume() } }
+            XCTAssertNil(shareSheet())
             try activate(view.navigationItem.leftBarButtonItem)
             XCTAssertEqual(text.text, "Cleared. New entries will appear after the next alert event.")
             XCTAssertEqual(RuuviAlertDebugLog.text(), "")
@@ -33,6 +44,7 @@ import XCTest
         }
 
         func testRefreshScrollsToTheLastEntryWhenSensorNamesContainEmoji() async throws {
+            await waitForAppState("active debug-log host") { UIApplication.shared.applicationState == .active }
             let saved = DebugLogState()
             defer { saved.restore() }
             let view = AlertDebugLogViewController()

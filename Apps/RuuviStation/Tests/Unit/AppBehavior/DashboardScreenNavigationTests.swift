@@ -50,7 +50,7 @@ import XCTest
         defer { fixture.cleanup() }
         try await fixture.start()
         let button = try XCTUnwrap(
-            fixture.descendants(fixture.view.view).compactMap { $0 as? RuuviContextMenuButton }
+            fixture.allViews.compactMap { $0 as? RuuviContextMenuButton }
                 .first { $0.buttonTitleLabel.text == RuuviLocalization.view })
         var menu = try XCTUnwrap(button.button.menu)
         XCTAssertEqual(fixture.actions(menu).first { $0.title == RuuviLocalization.simpleCards }?.state, .on)

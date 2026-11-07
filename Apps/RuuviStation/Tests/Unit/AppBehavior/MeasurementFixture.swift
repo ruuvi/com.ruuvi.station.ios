@@ -162,10 +162,10 @@ final class DetailsOutputSpy: MeasurementDetailsPresenterOutput {
 }
 
 @MainActor func waitForAppState(
-    _ description: String, file: StaticString = #filePath, line: UInt = #line,
+    _ description: String, timeout: TimeInterval = 2, file: StaticString = #filePath, line: UInt = #line,
     _ condition: () -> Bool
 ) async {
-    for _ in 0..<200 {
+    for _ in 0..<Int(timeout * 100) {
         if condition() { return }
         try? await Task.sleep(nanoseconds: 10_000_000)
     }

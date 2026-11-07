@@ -8,7 +8,10 @@
     "dialogScope": "AlertActionRecorder invokes the same handler passed to native UIAlertAction. Tests cover callback behavior and real dialog construction; they do not simulate UIKit touch recognition or automatic dismissal. DiscoveryDialogContractTests also intercepts presentation to inspect the constructed native dialog without requiring an app-hosted module test.",
     "coverageScope": "All first-party production executable lines compiled in the Debug simulator build remain in the denominator. Generated baseline code belongs only to the test target. Hardware and defensive paths are not excluded to increase the percentage. Release-only conditional paths are separately build-checked; the reported percentage is not Release coverage.",
     "gestureScope": "Unit tests feed UIKit gesture states and locations through app-owned selectors, and record transition finish/cancel decisions. NavigationSmokeTests performs real simulator touches and portrait/landscape rotation. Full-screen captures avoid XCTest app-only screenshot cropping in landscape.",
-    "multiRuntimeCoverage": "Per-runtime reports are retained separately. Combined coverage must use xccov merge on reports and archives from unchanged compiled binaries; it is the union of exercised production lines, not an average of percentages."
+    "multiRuntimeCoverage": "Per-runtime reports are retained separately. Combined coverage must use xccov merge on reports and archives from unchanged compiled binaries; it is the union of exercised production lines, not an average of percentages.",
+    "appHostReadiness": "Consent tests wait for the active application scene, attach a correctly sized window, and restore the prior key window and animation setting. Missing responses fail through XCTest assertions instead of unchecked continuation-array indexing. Debug sharing tests wait for foreground activation and accept UIKit forwarding the share sheet to the navigation controller; they verify the real activity controller, popover anchor, exported contents, and dismissal. Dashboard tests inspect the host window, including the legacy navigation bar, and open search before editing. Optional popover assertions apply only when UIKit supplies a popover controller. First-use native share-sheet discovery has a ten-second presentation deadline; normal app-state waits retain two seconds.",
+    "clipboardIsolation": "NFC copy contracts use a private native UIPasteboard and assert that the production default remains UIPasteboard.general. Tests do not read or overwrite another application’s clipboard.",
+    "uiSensorFixture": "Empty test simulators may use simulator_sensor_fixture.py with a retained database backup. It refuses to replace existing sensor data and removes only its own temporary identities afterward. UI screenshots from that run contain synthetic readings."
   },
   "preservedContracts": [
     {
@@ -249,7 +252,8 @@
       "contracts": [
         "Graph readout precision follows the measurement variant; rounded zero has no minus sign and AQI retains whole-number display",
         "Native errors preserve message and actions; sound selection saves only the selected sound preference",
-        "Newsletter save success, pending confirmation, rejection and retry retain distinct outcomes; stale account responses cannot confirm a new account"
+        "Newsletter save success, pending confirmation, rejection and retry retain distinct outcomes; stale account responses cannot confirm a new account",
+        "A detached presenter cannot start a consent request or begin the presentation cooldown"
       ]
     }
   ],

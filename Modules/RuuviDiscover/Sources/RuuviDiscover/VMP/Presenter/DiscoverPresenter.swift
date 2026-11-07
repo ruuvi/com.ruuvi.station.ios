@@ -43,6 +43,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     var ruuviOwnershipService: RuuviServiceOwnership!
     var firmwareBuilder: RuuviFirmwareBuilder!
     var makeFirmware: ((String, String?) -> RuuviFirmware)?
+    var pasteboard: UIPasteboard = .general
 
     private let transportOverride: DiscoveryBluetoothTransport?
     private lazy var bluetooth: DiscoveryBluetoothTransport = transportOverride ?? BTKitDiscoveryTransport(foreground: foreground)
@@ -283,11 +284,11 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewDidACopyMacAddress(of sensor: NFCSensor?) {
-        UIPasteboard.general.string = sensor?.macId
+        pasteboard.string = sensor?.macId
     }
 
     func viewDidACopySecret(of sensor: NFCSensor?) {
-        UIPasteboard.general.string = sensor?.id
+        pasteboard.string = sensor?.id
     }
 
     func viewDidConfirmToUpdateFirmware(for uuid: String) {

@@ -8,7 +8,7 @@ import XCTest
         let fixture = DashboardScreenFixture()
         defer { fixture.cleanup() }
         try await fixture.start()
-        let field = try XCTUnwrap(fixture.descendants(fixture.view.view).compactMap { $0 as? UITextField }.first)
+        let field = try await fixture.openSearch()
         field.text = "off"; field.sendActions(for: .editingChanged)
         field.text = "KITCH"; field.sendActions(for: .editingChanged)
         await waitForAppState("filtered dashboard") { fixture.collection.numberOfItems(inSection: 0) == 1 }
@@ -18,7 +18,7 @@ import XCTest
         field.text = "not a sensor"; field.sendActions(for: .editingChanged)
         await waitForAppState("empty search") { fixture.collection.numberOfItems(inSection: 0) == 0 }
         let cancel = try XCTUnwrap(
-            fixture.descendants(fixture.view.view).compactMap { $0 as? UIButton }
+            fixture.allViews.compactMap { $0 as? UIButton }
                 .first { $0.title(for: .normal) == RuuviLocalization.cancel })
         cancel.sendActions(for: .touchUpInside)
         await waitForAppState("search cancelled") { fixture.collection.numberOfItems(inSection: 0) == 3 }
@@ -29,7 +29,7 @@ import XCTest
         let fixture = DashboardScreenFixture()
         defer { fixture.cleanup() }
         try await fixture.start()
-        let field = try XCTUnwrap(fixture.descendants(fixture.view.view).compactMap { $0 as? UITextField }.first)
+        let field = try await fixture.openSearch()
         field.text = "office"; field.sendActions(for: .editingChanged)
         await waitForAppState("initial name match") { fixture.collection.numberOfItems(inSection: 0) == 1 }
         let snapshot = fixture.snapshots[0]
@@ -104,11 +104,11 @@ import XCTest
         XCTAssertEqual(fixture.view.collectionView(portrait, heightForItemAt: IndexPath(item: 20, section: 0)), 200)
         fixture.view.isRefreshing = true
         XCTAssertTrue(
-            fixture.descendants(fixture.view.view).compactMap { $0 as? UIActivityIndicatorView }
+            fixture.allViews.compactMap { $0 as? UIActivityIndicatorView }
                 .contains(where: \.isAnimating))
         fixture.view.isRefreshing = false
         XCTAssertFalse(
-            fixture.descendants(fixture.view.view).compactMap { $0 as? UIActivityIndicatorView }
+            fixture.allViews.compactMap { $0 as? UIActivityIndicatorView }
                 .contains(where: \.isAnimating))
         NotificationCenter.default.post(name: UIApplication.willEnterForegroundNotification, object: nil)
         NotificationCenter.default.post(name: UIApplication.didBecomeActiveNotification, object: nil)

@@ -16,8 +16,7 @@ import XCTest
             host.window.allDescendants.first { $0.accessibilityIdentifier == "dashboard.search" })
         XCTAssertTrue(search.isAccessibilityElement)
         XCTAssertTrue(search.gestureRecognizers?.contains { $0 is UITapGestureRecognizer } == true)
-        _ = fixture.view.perform(NSSelectorFromString("handleSearchButtonTap"))
-        let field = try XCTUnwrap(host.window.allDescendants.compactMap { $0 as? UITextField }.first)
+        let field = try await fixture.openSearch()
         await waitForAppState("search becomes editable") { field.isFirstResponder }
         XCTAssertFalse(field.isHidden)
         field.text = "Kitchen"
@@ -42,7 +41,8 @@ import XCTest
         }
         _ = fixture.view.perform(NSSelectorFromString("handleMenuButtonTap"))
         XCTAssertEqual(fixture.output.navigation.last?.0, "menu")
-        _ = fixture.view.perform(NSSelectorFromString("handleSearchButtonTap"))
+        let reopened = try await fixture.openSearch()
+        XCTAssertTrue(reopened === field)
         await waitForAppState("search reopened") { field.isFirstResponder }
         field.text = "OUTSIDE"
         field.sendActions(for: .editingChanged)

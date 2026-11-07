@@ -6,8 +6,7 @@ final class NavigationSmokeTests: XCTestCase {
     override func setUpWithError() throws { continueAfterFailure = false }
 
     @MainActor func testDiscoveryAndAboutCanOpenAndDismissWithoutChangingSensors() {
-        let app = XCUIApplication()
-        app.launch()
+        let app = launchApp()
         let menu = app.buttons["dashboard.menu"]
         XCTAssertTrue(menu.waitForExistence(timeout: 20))
         let initialCount = app.collectionViews["dashboard.sensors"].cells.count
@@ -15,6 +14,7 @@ final class NavigationSmokeTests: XCTestCase {
         let discover = app.cells["menu.addSensor"]
         XCTAssertTrue(discover.waitForExistence(timeout: 5))
         discover.tap()
+        dismissBluetoothNotice(app)
         let closeDiscovery = app.buttons["discover.close"]
         XCTAssertTrue(closeDiscovery.waitForExistence(timeout: 10), app.debugDescription)
         attachScreenshot(app, name: "Sensor discovery")
@@ -32,8 +32,7 @@ final class NavigationSmokeTests: XCTestCase {
     }
 
     @MainActor func testSettingsNavigationAndReturnToDashboard() throws {
-        let app = XCUIApplication()
-        app.launch()
+        let app = launchApp()
         let menu = app.buttons["dashboard.menu"]
         XCTAssertTrue(menu.waitForExistence(timeout: 20), app.debugDescription)
         menu.tap()
@@ -71,8 +70,7 @@ final class NavigationSmokeTests: XCTestCase {
     }
 
     @MainActor func testExistingSensorMeasurementGraphAlertsAndSettings() throws {
-        let app = XCUIApplication()
-        app.launch()
+        let app = launchApp()
         let dashboard = app.collectionViews["dashboard.sensors"]
         XCTAssertTrue(dashboard.waitForExistence(timeout: 20))
         let sensor = dashboard.cells.firstMatch
@@ -80,10 +78,12 @@ final class NavigationSmokeTests: XCTestCase {
             throw XCTSkip("This smoke check requires a saved sensor; no simulator data is inserted or deleted.")
         }
         sensor.tap()
+        dismissBluetoothNotice(app)
         for tab in ["measurement", "graph", "alerts", "settings"] {
             let button = app.buttons["sensor.tab." + tab]
             XCTAssertTrue(button.waitForExistence(timeout: 10), app.debugDescription)
             button.tap()
+            dismissBluetoothNotice(app)
             XCTAssertEqual(app.state, .runningForeground)
             attachScreenshot(app, name: "Sensor " + tab)
         }
@@ -93,6 +93,7 @@ final class NavigationSmokeTests: XCTestCase {
         XCTAssertTrue(dashboard.waitForExistence(timeout: 10))
         XCTAssertTrue(sensor.waitForExistence(timeout: 5))
         sensor.tap()
+        dismissBluetoothNotice(app)
         XCTAssertTrue(app.buttons["sensor.tab.measurement"].waitForExistence(timeout: 10))
         XCTAssertTrue(back.waitForExistence(timeout: 5))
         back.tap()
@@ -101,10 +102,9 @@ final class NavigationSmokeTests: XCTestCase {
     }
 
     @MainActor func testSensorMeasurementAndGraphSurviveLandscapeAndReturnToPortrait() throws {
-        let app = XCUIApplication()
         XCUIDevice.shared.orientation = .portrait
         defer { XCUIDevice.shared.orientation = .portrait }
-        app.launch()
+        let app = launchApp()
         let dashboard = app.collectionViews["dashboard.sensors"]
         XCTAssertTrue(dashboard.waitForExistence(timeout: 20))
         let sensor = dashboard.cells.firstMatch
@@ -112,10 +112,12 @@ final class NavigationSmokeTests: XCTestCase {
             throw XCTSkip("Rotation smoke check requires a saved sensor.")
         }
         sensor.tap()
+        dismissBluetoothNotice(app)
         for tab in ["measurement", "graph"] {
             let button = app.buttons["sensor.tab." + tab]
             XCTAssertTrue(button.waitForExistence(timeout: 10))
             button.tap()
+            dismissBluetoothNotice(app)
             XCUIDevice.shared.orientation = .landscapeLeft
             let landscape = NSPredicate { _, _ in app.frame.width > app.frame.height }
             XCTAssertEqual(
@@ -133,6 +135,21 @@ final class NavigationSmokeTests: XCTestCase {
         }
         app.buttons["sensor.back"].tap()
         XCTAssertTrue(dashboard.waitForExistence(timeout: 10))
+    }
+
+    @MainActor private func launchApp() -> XCUIApplication {
+        let app = XCUIApplication()
+        app.launch()
+        dismissBluetoothNotice(app)
+        return app
+    }
+
+    @MainActor private func dismissBluetoothNotice(_ app: XCUIApplication) {
+        // A simulator has no Bluetooth radio; acknowledge only this known app notice.
+        let bluetoothNotice = app.alerts["Bluetooth is not enabled"]
+        if bluetoothNotice.waitForExistence(timeout: 3) {
+            bluetoothNotice.buttons["OK"].tap()
+        }
     }
 
     @MainActor private func inspectChoices(
