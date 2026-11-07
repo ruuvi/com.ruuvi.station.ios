@@ -77,6 +77,7 @@ extension UnitSettingsTableViewController: UnitSettingsViewInput {
 extension UnitSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.accessibilityIdentifier = "settings.unitConfiguration"
         localize()
         styleViews()
         output.viewDidLoad()

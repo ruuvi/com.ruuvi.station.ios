@@ -9,6 +9,8 @@ import UIKit
 
 // MARK: - Main View Controller
 final class DashboardViewController: UIViewController {
+    var alertActions = AlertActionFactory()
+
 
     // MARK: - Configuration Properties
     var output: DashboardViewOutput!
@@ -1424,7 +1426,7 @@ extension DashboardViewController: NewDashboardViewInput {
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
 
         alertVC.addAction(
-            UIAlertAction(
+            alertActions(
                 title: RuuviLocalization.PermissionPresenter.settings,
                 style: .default,
                 handler: { _ in
@@ -1437,7 +1439,7 @@ extension DashboardViewController: NewDashboardViewInput {
             ))
 
         alertVC.addAction(
-            UIAlertAction(
+            alertActions(
                 title: RuuviLocalization.ok,
                 style: .cancel,
                 handler: nil
@@ -1497,13 +1499,13 @@ extension DashboardViewController: NewDashboardViewInput {
 
         let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
         alert.addAction(
-            UIAlertAction(title: dismissTitle, style: .cancel) { _ in
+            alertActions(title: dismissTitle, style: .cancel) { _ in
                 onDismiss()
             })
 
         let keepTitle = RuuviLocalization.Cards.KeepConnectionDialog.KeepConnection.title
         alert.addAction(
-            UIAlertAction(title: keepTitle, style: .default) { _ in
+            alertActions(title: keepTitle, style: .default) { _ in
                 onKeep()
             })
 
@@ -1513,7 +1515,7 @@ extension DashboardViewController: NewDashboardViewInput {
     func showAlreadyLoggedInAlert(with email: String) {
         let message = RuuviLocalization.Cards.Alert.AlreadyLoggedIn.message(email)
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
+        alert.addAction(alertActions(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alert, animated: true)
     }
 
@@ -1521,10 +1523,10 @@ extension DashboardViewController: NewDashboardViewInput {
         let message = RuuviLocalization.resetOrderConfirmation
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
 
-        let cancelAction = UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil)
+        let cancelAction = alertActions(title: RuuviLocalization.cancel, style: .cancel, handler: nil)
         alert.addAction(cancelAction)
 
-        let confirmAction = UIAlertAction(title: RuuviLocalization.confirm, style: .default) { [weak self] _ in
+        let confirmAction = alertActions(title: RuuviLocalization.confirm, style: .default) { [weak self] _ in
             self?.output.viewDidReorderSensors(with: .alphabetical, orderedIds: [])
         }
         alert.addAction(confirmAction)

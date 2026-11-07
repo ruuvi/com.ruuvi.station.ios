@@ -28,6 +28,7 @@ class ASSelectionTableViewController: UITableViewController {
 extension ASSelectionTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.accessibilityIdentifier = "settings.themeChoices"
         setUpUI()
         localize()
         output.viewDidLoad()

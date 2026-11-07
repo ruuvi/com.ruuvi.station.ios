@@ -29,6 +29,7 @@ class NotificationsSettingsTableViewController: UITableViewController {
 extension NotificationsSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.accessibilityIdentifier = "settings.notificationOptions"
         setUpUI()
         localize()
         output?.viewDidLoad()
@@ -95,6 +96,8 @@ extension NotificationsSettingsTableViewController {
             else {
                 fatalError()
             }
+            cell.accessibilityIdentifier =
+                viewModel.settingsType.value == .alertSound ? "settings.alertSound" : nil
             cell.configure(
                 title: viewModel.title,
                 subtitle: viewModel.subtitle,

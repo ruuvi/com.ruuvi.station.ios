@@ -268,8 +268,8 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         }
         let converted = units.pressureUnit.convert(pressure)
         if units.pressureUnit == .newtonsPerMetersSquared {
-            let roundedValue = Double(Int(round(converted.value)))
-            let value = String(Int(roundedValue))
+            guard let integer = Int(exactly: converted.value.rounded()) else { return emptyValueString }
+            let value = String(integer)
             let symbol = units.pressureUnit.ruuviSymbol
             return "\(value)\(String.nbsp)\(symbol)"
         }
@@ -287,7 +287,8 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
         }
         let pressureValue = units.pressureUnit.convertedValue(from: pressure)
         if units.pressureUnit == .newtonsPerMetersSquared {
-            return String(Int(round(pressureValue)))
+            guard let integer = Int(exactly: pressureValue.rounded()) else { return emptyValueString }
+            return String(integer)
         }
         return pressureNumberFormatter.string(for: pressureValue) ?? emptyValueString
     }
@@ -298,7 +299,8 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
             return emptyValueString
         }
         if units.pressureUnit == .newtonsPerMetersSquared {
-            return String(Int(round(pressure)))
+            guard let integer = Int(exactly: pressure.rounded()) else { return emptyValueString }
+            return String(integer)
         }
         let number = NSNumber(value: pressure)
         return pressureNumberFormatter.string(from: number) ?? emptyValueString
@@ -583,11 +585,11 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     }
 
     public func co2String(for carbonDiOxide: Double?) -> String {
-        guard let carbonDiOxide
+        guard let carbonDiOxide, let integer = Int(exactly: carbonDiOxide.rounded(.towardZero))
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: Int(carbonDiOxide))
+        let number = NSNumber(value: integer)
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 
@@ -636,38 +638,38 @@ extension RuuviServiceMeasurementImpl: RuuviServiceMeasurement {
     }
 
     public func vocString(for voc: Double?) -> String {
-        guard let voc
+        guard let voc, let integer = Int(exactly: voc.rounded(.towardZero))
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: Int(voc))
+        let number = NSNumber(value: integer)
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 
     public func noxString(for nox: Double?) -> String {
-        guard let nox
+        guard let nox, let integer = Int(exactly: nox.rounded(.towardZero))
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: Int(nox))
+        let number = NSNumber(value: integer)
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 
     public func soundString(for sound: Double?) -> String {
-        guard let sound
+        guard let sound, let integer = Int(exactly: sound.rounded(.towardZero))
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: Int(sound))
+        let number = NSNumber(value: integer)
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 
     public func luminosityString(for luminosity: Double?) -> String {
-        guard let luminosity
+        guard let luminosity, let integer = Int(exactly: luminosity.rounded(.towardZero))
         else {
             return emptyValueString
         }
-        let number = NSNumber(value: Int(luminosity))
+        let number = NSNumber(value: integer)
         return commonNumberFormatter.string(from: number) ?? emptyValueString
     }
 

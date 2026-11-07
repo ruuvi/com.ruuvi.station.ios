@@ -1,0 +1,285 @@
+{
+  "issue": 2502,
+  "baselineRevision": "f2c7357f7f141cfe99c155c5c9292af0817b5f73",
+  "methodology": {
+    "measurementDifferentialTests": "The pinned original measurement source is compiled only into the test target. Symbol names are changed to avoid collisions; scripts/test/generate_measurement_baseline.py --check verifies provenance.",
+    "dependencyScope": "Original and migrated implementations run with the current SDK and dependencies. This is not a comparison of historical app binaries or historical operating systems.",
+    "otherContracts": "Assertions are derived from source behavior and user-facing expectations. Tests use real UIKit views and native dialogs, isolated persistence, and deterministic transport/cloud doubles.",
+    "dialogScope": "AlertActionRecorder invokes the same handler passed to native UIAlertAction. Tests cover callback behavior and real dialog construction; they do not simulate UIKit touch recognition or automatic dismissal. DiscoveryDialogContractTests also intercepts presentation to inspect the constructed native dialog without requiring an app-hosted module test.",
+    "coverageScope": "All first-party production executable lines compiled in the Debug simulator build remain in the denominator. Generated baseline code belongs only to the test target. Hardware and defensive paths are not excluded to increase the percentage. Release-only conditional paths are separately build-checked; the reported percentage is not Release coverage."
+  },
+  "preservedContracts": [
+    {
+      "area": "Measurement formatting",
+      "tests": [
+        "MeasurementBaselineParityTests"
+      ],
+      "contracts": [
+        "Temperature and pressure units, languages, rounding and configured precision",
+        "Humidity conversions and configured formatting",
+        "Air-quality threshold classification, missing-input score and finite display strings",
+        "Voltage and calibration offset formatting"
+      ]
+    },
+    {
+      "area": "Connections and discovery",
+      "tests": [
+        "ConnectionContractTests",
+        "DiscoveryFirmwareContractTests",
+        "DiscoveryNamingContractTests"
+      ],
+      "contracts": [
+        "Sensor identity, event payloads, persistence and permission policy",
+        "Firmware version sanitization and existing safe-dismiss policy",
+        "Device naming and cleared reusable cells"
+      ]
+    },
+    {
+      "area": "Notifications",
+      "tests": [
+        "LocalNotificationTests",
+        "AlertDebugLogTests",
+        "AlertDeliveryRenderingTests"
+      ],
+      "contracts": [
+        "Identity, descriptions, mute boundaries, badge and retry behavior",
+        "Disabled diagnostic logging, bounded ordered retention, export and clear"
+      ]
+    },
+    {
+      "area": "Device commands",
+      "tests": [
+        "AirShellCommandTests",
+        "AirShellLifetimeTests"
+      ],
+      "contracts": [
+        "All four LED levels preserve ruuvi led_brightness arguments",
+        "Invalid identity, busy operation, Bluetooth availability, timeout and transport errors"
+      ]
+    },
+    {
+      "area": "Dialogs and navigation",
+      "tests": [
+        "BottomSheetContractTests",
+        "CardSettingsDialogActionTests",
+        "DashboardDialogActionTests",
+        "GraphDialogActionTests",
+        "MeasurementCoordinatorTests",
+        "CardSettingsRouterTests",
+        "CardsAlertsDialogActionTests"
+      ],
+      "contracts": [
+        "Confirm versus cancel decisions, exact sensor identity and navigation destination",
+        "Dynamic sheet sizing, dismissal, ownership and firmware decisions",
+        "Notes and brightness callbacks remain connected to their screens"
+      ]
+    },
+    {
+      "area": "Graph history",
+      "tests": [
+        "GraphCacheContractTests"
+      ],
+      "contracts": [
+        "Sensor-scoped cache restores values immediately",
+        "Expired history is discarded and cache eviction requests fresh history",
+        "Alert updates are sensor-scoped and stopped screens stop observing settings"
+      ]
+    },
+    {
+      "area": "Cloud reconciliation",
+      "tests": [
+        "CloudDisplayConflictTests",
+        "CloudUserConflictTests",
+        "CloudImageContractTests"
+      ],
+      "contracts": [
+        "Independent timestamp winners, deleted notes and offline upload failure handling",
+        "Active and persisted user settings retain their selected winner",
+        "Only successfully downloaded, decoded and persisted images are marked cached"
+      ]
+    },
+    {
+      "area": "Secondary modules",
+      "tests": [
+        "SensorRemovalContractTests",
+        "DevicesPresenterContractTests",
+        "AlertDebugScreenTests"
+      ],
+      "contracts": [
+        "Removal confirmation, exact history choice, failures and retry",
+        "Released presenters cannot navigate from late completions",
+        "Device metadata, refresh, error display and screen lifetime",
+        "Diagnostic refresh, export and clear retain the enabled preference"
+      ]
+    },
+    {
+      "area": "Dashboard settings",
+      "tests": [
+        "DashboardSettingsContractTests"
+      ],
+      "contracts": [
+        "Notification payloads, drag-time sorting suppression, widget configuration and sign-in banner persistence"
+      ]
+    },
+    {
+      "area": "Retained UIKit controls",
+      "tests": [
+        "LegacyAlertControlTests",
+        "SwipeDismissContractTests"
+      ],
+      "contracts": [
+        "Plain and attributed alert descriptions, expansion state and delegate callbacks",
+        "Swipe dismissal only starts at the top of a table and honors the existing progress threshold"
+      ]
+    },
+    {
+      "area": "App entry and authentication handoff",
+      "tests": [
+        "AppEntryContractTests",
+        "SignInBenefitsContractTests"
+      ],
+      "contracts": [
+        "All three onboarding completion flags gate the initial dashboard",
+        "Actual analytics consent remains independent of completion of the consent step",
+        "Sign-in outcomes retain their sender and wait for child dismissal; closing keeps onboarding"
+      ]
+    },
+    {
+      "area": "Background and cloud settings",
+      "tests": [
+        "BackgroundSettingsContractTests",
+        "DefaultsContainerContractTests",
+        "DevicesFetchContractTests",
+        "AdvertisementPersistenceTests"
+      ],
+      "contracts": [
+        "Disabling background scanning unpairs connections; enabling does not recreate pairings",
+        "Cloud mode preserves its local setting when the remote save fails",
+        "Device token metadata and failures are forwarded on the main thread; late responses cannot retain a closed interactor",
+        "Endpoint selection presents sign-out confirmation before any change",
+        "Background sampling uses the configured interval on the persistence worker"
+      ]
+    },
+    {
+      "area": "Graph rendering and text editing",
+      "tests": [
+        "GraphRenderingContractTests",
+        "TextEditingContractTests",
+        "SensorDisplayProfileTests"
+      ],
+      "contracts": [
+        "Graph marker placement, locale-aware decimal formatting and AQI threshold labels",
+        "Automatic display order ignores saved custom codes",
+        "Unicode replacement uses native UTF-16 ranges; first and last occurrence helpers preserve unrelated text"
+      ]
+    },
+    {
+      "area": "Sensor defaults and utility values",
+      "tests": [
+        "OntologyPreferenceContractTests",
+        "ValueUtilityContractTests",
+        "NumericUtilityContractTests"
+      ],
+      "contracts": [
+        "Explicit temperature preferences override locale defaults and alert bounds retain the same physical range",
+        "Location labels and stable preferred ordering preserve missing fields and duplicate identities",
+        "Existing scalar conversions, humidity calibration, color channels and optional preference values"
+      ]
+    },
+    {
+      "area": "Native navigation boundaries",
+      "tests": [
+        "NavigationSmokeTests",
+        "AppDelegateRoutingTests",
+        "FirmwareFlowTests",
+        "DiscoveryDialogContractTests"
+      ],
+      "contracts": [
+        "Opening and cancelling unit, theme and alert-sound pickers retains the selection",
+        "Closing and reopening a sensor exercises coordinator cleanup",
+        "Widget and notification identities are stored before routing",
+        "The real firmware presenter permits dismissal before and after flashing and blocks it during flashing",
+        "Discovery confirmation actions carry the original NFC sensor or device identifier and cancel makes no request"
+      ]
+    }
+  ],
+  "intentionalCorrections": [
+    {
+      "area": "Humidity precision",
+      "change": "Explicit humidity units use their own configured precision; formatting without settings avoids forced trailing decimals.",
+      "test": "MeasurementBaselineParityTests.testExplicitHumidityPrecisionIsTheDocumentedCorrectionToTheOriginal",
+      "status": "Previously implemented; differential test documents the deviation."
+    },
+    {
+      "area": "NFC firmware presentation",
+      "change": "Apply the existing firmware safe-dismiss guard to the NFC upgrade route.",
+      "evidence": "expanded-discovery-notifications-red.xcresult",
+      "tests": [
+        "DiscoveryFirmwareContractTests"
+      ]
+    },
+    {
+      "area": "Connection observation lifetime",
+      "change": "Ignore callbacks from stopped or superseded observations and deliver transport state callbacks on the main thread.",
+      "evidence": "expanded-connection-red.xcresult",
+      "tests": [
+        "ConnectionLifetimeTests"
+      ]
+    },
+    {
+      "area": "LED request lifetime",
+      "change": "Ignore duplicate discoveries and obsolete callbacks, cancel the scan deadline after discovery, and close an outstanding transport when the client is released. Detach operation state before transport cleanup.",
+      "evidence": "expanded-air-red.xcresult",
+      "tests": [
+        "AirShellLifetimeTests"
+      ]
+    },
+    {
+      "area": "Unrepresentable numeric readings",
+      "change": "Integer-formatting paths return the existing unavailable marker instead of trapping on NaN, infinity or out-of-range values. Valid-value rounding remains unchanged.",
+      "evidence": "expanded-air-red.xcresult includes the reproduced non-finite integer conversion crash.",
+      "tests": [
+        "MeasurementBaselineParityTests.testUnrepresentableIntegerReadingsRenderUnavailableInsteadOfCrashing",
+        "MeasurementBaselineParityTests.testUnrepresentablePascalReadingsRenderUnavailableWithoutIntegerConversionTraps"
+      ]
+    },
+    {
+      "area": "Cloud delay editors",
+      "change": "Both settings layouts reject minute values that overflow conversion to seconds, including values arriving before an editing-change event. Ordinary minute values and confirmation behavior are preserved.",
+      "evidence": "expanded-contracts-red.xcresult",
+      "tests": [
+        "CardSettingsDialogActionTests",
+        "CardsAlertsDialogActionTests"
+      ]
+    },
+    {
+      "area": "Diagnostic log scrolling",
+      "change": "Use UIKit UTF-16 offsets and lay out text before scrolling to the latest entry, so emoji names do not leave the newest text offscreen.",
+      "evidence": "expanded-remaining-red.xcresult",
+      "tests": [
+        "AlertDebugScreenTests"
+      ]
+    },
+    {
+      "area": "Dashboard settings observation",
+      "change": "Starting observation first detaches previous observers, preventing duplicate notifications and callbacks after stop.",
+      "evidence": "expanded-observers-red.xcresult",
+      "tests": [
+        "DashboardSettingsContractTests.testRepeatedObservationIsIdempotentAndStoppedServicesDoNotForwardNotifications"
+      ]
+    },
+    {
+      "area": "Unicode text replacement",
+      "change": "Validate NSRange using UTF-16 length and subtraction-based bounds checks, preserving valid replacements and rejecting negative or overflowing ranges without trapping.",
+      "evidence": "expanded-additional-red.xcresult",
+      "tests": [
+        "TextEditingContractTests"
+      ]
+    }
+  ],
+  "limits": [
+    "CoreBluetooth radio operations and real sensor acknowledgements require physical hardware.",
+    "Firmware transfer, NFC hardware, APNs delivery, remote cloud availability and system permission prompts need integration validation outside deterministic simulator tests.",
+    "Tested workflows and differential checks provide evidence for their inputs; line coverage alone cannot prove complete behavioral equivalence."
+  ]
+}

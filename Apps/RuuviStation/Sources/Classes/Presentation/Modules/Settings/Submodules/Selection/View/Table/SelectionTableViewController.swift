@@ -51,6 +51,7 @@ extension SelectionTableViewController: SelectionViewInput {
 extension SelectionTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.accessibilityIdentifier = "settings.selection"
         styleViews()
         output.viewDidLoad()
         updateUI()

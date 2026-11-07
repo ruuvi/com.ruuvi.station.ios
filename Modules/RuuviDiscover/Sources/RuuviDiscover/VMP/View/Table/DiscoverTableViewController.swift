@@ -25,6 +25,15 @@ enum DiscoverTableSection {
 
 class DiscoverTableViewController: UIViewController {
     var output: DiscoverViewOutput!
+    var alertActionFactory: (String?, UIAlertAction.Style, ((UIAlertAction) -> Void)?) -> UIAlertAction = {
+        title, style, handler in UIAlertAction(title: title, style: style, handler: handler)
+    }
+
+    private func makeAlertAction(
+        title: String?, style: UIAlertAction.Style, handler: ((UIAlertAction) -> Void)?
+    ) -> UIAlertAction {
+        alertActionFactory(title, style, handler)
+    }
 
     // MARK: - UI Components
 
@@ -147,7 +156,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
             preferredStyle: .alert
         )
         alertVC.addAction(
-            UIAlertAction(
+            makeAlertAction(
                 title: RuuviLocalization.PermissionPresenter.settings,
                 style: .default,
                 handler: { [weak self] _ in
@@ -158,7 +167,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
             )
         )
         alertVC.addAction(
-            UIAlertAction(
+            makeAlertAction(
                 title: RuuviLocalization.ok,
                 style: .cancel,
                 handler: nil
@@ -196,14 +205,14 @@ extension DiscoverTableViewController: DiscoverViewInput {
         )
         let cancelTitle = RuuviLocalization.cancel
         alert.addAction(
-            UIAlertAction(
+            makeAlertAction(
                 title: cancelTitle,
                 style: .cancel,
                 handler: nil
             )
         )
         alert.addAction(
-            UIAlertAction(
+            makeAlertAction(
                 title: title,
                 style: .default,
                 handler: { [weak self] _ in
@@ -256,7 +265,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
 
         if showAddSensor {
             alertVC.addAction(
-                UIAlertAction(
+                makeAlertAction(
                     title: RuuviLocalization.addSensor,
                     style: .default,
                     handler: { [weak self] _ in
@@ -267,7 +276,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
         }
 
         alertVC.addAction(
-            UIAlertAction(
+            makeAlertAction(
                 title: RuuviLocalization.copyMacAddress,
                 style: .default,
                 handler: { [weak self] _ in
@@ -277,7 +286,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
         )
 
         alertVC.addAction(
-            UIAlertAction(
+            makeAlertAction(
                 title: RuuviLocalization.copyUniqueId,
                 style: .default,
                 handler: { [weak self] _ in
@@ -288,7 +297,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
 
         if showGoToSensor {
             alertVC.addAction(
-                UIAlertAction(
+                makeAlertAction(
                     title: RuuviLocalization.goToSensor,
                     style: .default,
                     handler: { [weak self] _ in
@@ -300,7 +309,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
 
         if showUpgradeFirmware {
             alertVC.addAction(
-                UIAlertAction(
+                makeAlertAction(
                     title: RuuviLocalization.DFUUIView
                         .navigationTitle,
                     style: .default,
@@ -314,7 +323,7 @@ extension DiscoverTableViewController: DiscoverViewInput {
         }
 
         alertVC.addAction(
-            UIAlertAction(
+            makeAlertAction(
                 title: RuuviLocalization.close,
                 style: .cancel,
                 handler: nil

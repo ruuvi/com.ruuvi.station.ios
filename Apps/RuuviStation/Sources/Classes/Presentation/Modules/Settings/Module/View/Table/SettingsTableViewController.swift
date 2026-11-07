@@ -160,6 +160,7 @@ extension SettingsTableViewController {
         unitsCell.accessibilityIdentifier = "settings.units"
         resolutionCell.accessibilityIdentifier = "settings.resolution"
         chartCell.accessibilityIdentifier = "settings.chart"
+        heartbeatCell.accessibilityIdentifier = "settings.heartbeat"
         appearanceCell.accessibilityIdentifier = "settings.appearance"
         alertNotificationsCell.accessibilityIdentifier = "settings.notifications"
         updateNavBarTitleFont()

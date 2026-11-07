@@ -14,6 +14,7 @@ def main():
     parser.add_argument("--output", type=Path, required=True, help="New artifact directory")
     parser.add_argument("--minimum-coverage", type=float, help="Per-target coverage percentage to enforce")
     parser.add_argument("--minimum-total-coverage", type=float, help="Aggregate production coverage percentage to enforce")
+    parser.add_argument("--minimum-app-coverage", type=float, help="Application production coverage percentage to enforce")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     output = args.output.resolve()
@@ -35,6 +36,7 @@ def main():
         with (output / (label + ".log")).open("w") as log:
             subprocess.run(command, cwd=cwd, stdout=log, stderr=subprocess.STDOUT, check=True)
 
+    run("behavior-baseline", [sys.executable, str(root / "scripts/test/generate_measurement_baseline.py"), "--check"])
     run("generate", ["make", "xcodeproj"])
     run("strings", [str(root / ".tools/swiftgen/bin/swiftgen"), "--config", ".swiftgen.localizable.yml"])
     run("assets", [str(root / ".tools/swiftgen/bin/swiftgen"), "--config", ".swiftgen.assets.yml"])
@@ -62,6 +64,8 @@ def main():
         coverage.extend(["--minimum", str(args.minimum_coverage)])
     if args.minimum_total_coverage is not None:
         coverage.extend(["--minimum-total", str(args.minimum_total_coverage)])
+    if args.minimum_app_coverage is not None:
+        coverage.extend(["--minimum-app", str(args.minimum_app_coverage)])
     run("coverage", coverage)
     run("screenshots", ["xcrun", "xcresulttool", "export", "attachments", "--path", str(result),
                         "--output-path", str(output / "Screenshots")])

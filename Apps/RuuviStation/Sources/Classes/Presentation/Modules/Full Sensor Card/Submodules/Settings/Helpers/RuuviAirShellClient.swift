@@ -1,22 +1,47 @@
 import CoreBluetooth
 import Foundation
-import iOSMcuManagerLibrary
 import RuuviOntology
 
-final class RuuviAirShellClient: NSObject, McuMgrLogDelegate {
-    private var centralManager: CBCentralManager?
+final class RuuviAirShellClient {
+    private let makeTransport: () -> RuuviAirShellTransport
+    private let scanTimeout: TimeInterval
+    private var transport: RuuviAirShellTransport?
     private var targetUUID: UUID?
     private var pendingLevel: String?
     private var completion: ((Result<Void, Error>) -> Void)?
-    private var transport: McuMgrBleTransport?
-    private var shell: ShellManager?
     private var scanTimeoutTimer: Timer?
     private var isScanning = false
     private var didStartLookup = false
+    private var isWriting = false
+    private var operationID: UUID?
+
+    init(
+        makeTransport: @escaping () -> RuuviAirShellTransport = { CoreBluetoothAirShellTransport() },
+        scanTimeout: TimeInterval = 6
+    ) {
+        self.makeTransport = makeTransport
+        self.scanTimeout = scanTimeout
+    }
+
+    deinit {
+        let timer = scanTimeoutTimer
+        let transport = transport
+        let cleanup = {
+            timer?.invalidate(); transport?.stop()
+        }
+        if Thread.isMainThread { cleanup() } else { DispatchQueue.main.async(execute: cleanup) }
+    }
+
+    private func receive(for operationID: UUID, action: @escaping (RuuviAirShellClient) -> Void) {
+        let deliver = { [weak self] in
+            guard let self, self.operationID == operationID else { return }
+            action(self)
+        }
+        if Thread.isMainThread { deliver() } else { DispatchQueue.main.async(execute: deliver) }
+    }
 
     func setLedBrightness(
-        uuid: String,
-        level: RuuviLedBrightnessLevel,
+        uuid: String, level: RuuviLedBrightnessLevel,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         DispatchQueue.main.async {
@@ -28,163 +53,96 @@ final class RuuviAirShellClient: NSObject, McuMgrLogDelegate {
                 completion(.failure(UnexpectedError.viewModelUUIDIsNil))
                 return
             }
+            let operationID = UUID()
+            self.operationID = operationID
             self.targetUUID = uuid
             self.pendingLevel = level.shellArgument
             self.completion = completion
-            self.startCentralManager()
-        }
-    }
-
-    func setLedBrightness(
-        peripheral: CBPeripheral,
-        level: String,
-        completion: @escaping (Result<Void, Error>) -> Void
-    ) {
-        DispatchQueue.main.async {
-            let transport = McuMgrBleTransport(peripheral)
-            transport.logDelegate = self
-
-            let shell = ShellManager(transport: transport)
-            shell.logDelegate = self
-
+            let transport = self.makeTransport()
             self.transport = transport
-            self.shell = shell
-
-            shell.execute(
-                command: "ruuvi",
-                arguments: ["led_brightness", level]
-            ) { [weak self] response, error in
-                guard let self else { return }
-                defer {
-                    transport.close()
-                    self.transport = nil
-                    self.shell = nil
-                }
-
-                if let error = error {
-                    completion(.failure(error))
-                    return
-                }
-                if let responseError = response?.getError() {
-                    completion(.failure(responseError))
-                    return
-                }
-                completion(.success(()))
-            }
+            transport.start(
+                stateChanged: { [weak self] state in
+                    self?.receive(for: operationID) { $0.receive(state: state) }
+                },
+                discovered: { [weak self] peripheral in
+                    self?.receive(for: operationID) { $0.receive(peripheral: peripheral) }
+                })
         }
     }
 
-    func minLogLevel() -> McuMgrLogLevel { .debug }
-
-    func log(
-        _ msg: String,
-        ofCategory category: McuMgrLogCategory,
-        atLevel level: McuMgrLogLevel
-    ) {
-#if DEBUG || ALPHA
-        print("[RuuviAirShellClient Log] - [\(category) \(level)] \(msg)")
-#endif
-    }
-}
-
-extension RuuviAirShellClient: CBCentralManagerDelegate {
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        switch central.state {
-        case .poweredOn:
-            startPeripheralLookup()
+    private func receive(state: CBManagerState) {
+        switch state {
+        case .poweredOn: startPeripheralLookup()
         case .unsupported, .unauthorized, .poweredOff:
             finish(with: .failure(UnexpectedError.failedToFindRuuviTag))
-        default:
-            break
+        default: break
         }
     }
 
-    func centralManager(
-        _ central: CBCentralManager,
-        didDiscover peripheral: CBPeripheral,
-        advertisementData _: [String: Any],
-        rssi _: NSNumber
-    ) {
-        guard let targetUUID else { return }
-        guard peripheral.identifier == targetUUID else { return }
+    private func startPeripheralLookup() {
+        guard !didStartLookup else { return }
+        didStartLookup = true
+        guard let transport, let targetUUID, let operationID else {
+            finish(with: .failure(UnexpectedError.failedToFindRuuviTag))
+            return
+        }
+        if let peripheral = transport.retrieve(targetUUID) {
+            write(to: peripheral)
+        } else {
+            isScanning = true
+            scanTimeoutTimer = Timer.scheduledTimer(withTimeInterval: scanTimeout, repeats: false) { [weak self] _ in
+                self?.receive(for: operationID) {
+                    $0.finish(with: .failure(UnexpectedError.failedToFindRuuviTag))
+                }
+            }
+            transport.scan()
+        }
+    }
+
+    private func receive(peripheral: RuuviAirShellPeripheral) {
+        guard !isWriting, peripheral.identifier == targetUUID else { return }
         stopScan()
+        write(to: peripheral)
+    }
+
+    private func write(to peripheral: RuuviAirShellPeripheral) {
+        guard !isWriting, let operationID else { return }
         guard let level = pendingLevel else {
             finish(with: .failure(UnexpectedError.callbackErrorAndResultAreNil))
             return
         }
-        setLedBrightness(peripheral: peripheral, level: level) { [weak self] result in
-            self?.finish(with: result)
-        }
-    }
-}
-
-private extension RuuviAirShellClient {
-    func startCentralManager() {
-        if centralManager == nil {
-            centralManager = CBCentralManager(delegate: self, queue: nil)
-            return
-        }
-        if centralManager?.state == .poweredOn {
-            startPeripheralLookup()
+        isWriting = true
+        scanTimeoutTimer?.invalidate()
+        scanTimeoutTimer = nil
+        transport?.execute(on: peripheral, command: "ruuvi", arguments: ["led_brightness", level]) {
+            [weak self] result in
+            self?.receive(for: operationID) { $0.finish(with: result) }
         }
     }
 
-    func startPeripheralLookup() {
-        guard !didStartLookup else { return }
-        didStartLookup = true
-        guard let centralManager, let targetUUID else {
-            finish(with: .failure(UnexpectedError.failedToFindRuuviTag))
-            return
-        }
-
-        if let peripheral = centralManager.retrievePeripherals(
-            withIdentifiers: [targetUUID]
-        ).first {
-            guard let level = pendingLevel else {
-                finish(with: .failure(UnexpectedError.callbackErrorAndResultAreNil))
-                return
-            }
-            setLedBrightness(peripheral: peripheral, level: level) { [weak self] result in
-                self?.finish(with: result)
-            }
-            return
-        }
-
-        startScan()
-    }
-
-    func startScan() {
-        guard let centralManager, !isScanning else { return }
-        isScanning = true
-        centralManager.scanForPeripherals(withServices: nil)
-        scanTimeoutTimer = Timer.scheduledTimer(
-            withTimeInterval: 6,
-            repeats: false
-        ) { [weak self] _ in
-            self?.finish(with: .failure(UnexpectedError.failedToFindRuuviTag))
-        }
-    }
-
-    func stopScan() {
-        guard let centralManager, isScanning else { return }
-        centralManager.stopScan()
+    private func stopScan() {
+        guard isScanning else { return }
+        transport?.stopScan()
         isScanning = false
     }
 
-    func finish(with result: Result<Void, Error>) {
-        stopScan()
+    private func finish(with result: Result<Void, Error>) {
+        guard operationID != nil else { return }
+        operationID = nil
+        let transport = transport
+        self.transport = nil
+        let wasScanning = isScanning
+        isScanning = false
         scanTimeoutTimer?.invalidate()
         scanTimeoutTimer = nil
         didStartLookup = false
-
+        isWriting = false
         let completion = completion
         self.completion = nil
         targetUUID = nil
         pendingLevel = nil
-        centralManager = nil
-
-        DispatchQueue.main.async {
-            completion?(result)
-        }
+        if wasScanning { transport?.stopScan() }
+        transport?.stop()
+        DispatchQueue.main.async { completion?(result) }
     }
 }

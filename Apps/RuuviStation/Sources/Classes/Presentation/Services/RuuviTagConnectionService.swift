@@ -29,12 +29,18 @@ class RuuviTagConnectionService {
     private let background: BTBackground
     private let connectionPersistence: RuuviLocalConnections
     private let localSyncState: RuuviLocalSyncState
+    private let notificationCenter: NotificationCenter
+    private let permissionGranted: () -> Bool
+    private let transportOverride: RuuviConnectionTransport?
+    private lazy var bluetooth: RuuviConnectionTransport = transportOverride
+        ?? BTKitConnectionTransport(foreground: foreground, background: background)
 
     // MARK: - Properties
     weak var delegate: RuuviTagConnectionServiceDelegate?
 
     // MARK: - Observation Tokens
-    private var stateToken: ObservationToken?
+    private var cancelStateObservation: (() -> Void)?
+    private var observationGeneration: UUID?
     private var notificationTokens: [NSObjectProtocol] = []
 
     // MARK: - State
@@ -49,32 +55,27 @@ class RuuviTagConnectionService {
     private let trackedSnapshotsQueue = DispatchQueue(label: "RuuviTagConnectionService.trackedSnapshotsQueue")
     private var trackedSnapshots: [RuuviTagCardSnapshot] = []
 
-    private var isBluetoothPermissionGranted: Bool {
-        let centralAuthorization = CBManager.authorization
-        if centralAuthorization == .denied || centralAuthorization == .restricted {
-            return false
-        }
-
-        let peripheralStatus = CBManager.authorization
-        switch peripheralStatus {
-        case .denied, .restricted:
-            return false
-        default:
-            return true
-        }
-    }
+    private var isBluetoothPermissionGranted: Bool { permissionGranted() }
 
     // MARK: - Initialization
     init(
         foreground: BTForeground,
         background: BTBackground,
         connectionPersistence: RuuviLocalConnections,
-        localSyncState: RuuviLocalSyncState
+        localSyncState: RuuviLocalSyncState,
+        transport: RuuviConnectionTransport? = nil,
+        notificationCenter: NotificationCenter = .default,
+        permissionGranted: @escaping () -> Bool = {
+            CBManager.authorization != .denied && CBManager.authorization != .restricted
+        }
     ) {
         self.foreground = foreground
         self.background = background
         self.connectionPersistence = connectionPersistence
         self.localSyncState = localSyncState
+        self.transportOverride = transport
+        self.notificationCenter = notificationCenter
+        self.permissionGranted = permissionGranted
     }
 
     deinit {
@@ -83,6 +84,7 @@ class RuuviTagConnectionService {
 
     // MARK: - Public Interface
     func startObservingConnections() {
+        observationGeneration = UUID()
         observeBluetoothState()
         resetNotificationObservers()
         observeConnectionEvents()
@@ -90,14 +92,15 @@ class RuuviTagConnectionService {
     }
 
     func stopObservingConnections() {
-        stateToken?.invalidate()
+        observationGeneration = nil
+        cancelStateObservation?()
         resetNotificationObservers()
 
-        stateToken = nil
+        cancelStateObservation = nil
     }
 
     func refreshBluetoothState() {
-        notifyBluetoothStateChange(foreground.bluetoothState)
+        notifyBluetoothStateChange(bluetooth.state)
     }
 
     func updateConnectionData(for snapshots: [RuuviTagCardSnapshot]) {
@@ -149,7 +152,7 @@ class RuuviTagConnectionService {
             return (false, false)
         }
 
-        let isConnected = background.isConnected(uuid: luid.value)
+        let isConnected = bluetooth.isConnected(uuid: luid.value)
         let keepConnection = connectionPersistence.keepConnection(to: luid)
 
         return (isConnected, keepConnection)
@@ -176,11 +179,16 @@ class RuuviTagConnectionService {
 private extension RuuviTagConnectionService {
 
     func observeBluetoothState() {
-        stateToken?.invalidate()
-        stateToken = foreground.state(self) { observer, state in
-            observer.notifyBluetoothStateChange(state)
+        cancelStateObservation?()
+        let generation = observationGeneration
+        cancelStateObservation = bluetooth.observeState { [weak self] state in
+            let receive = { [weak self] in
+                guard let self, generation != nil, self.observationGeneration == generation else { return }
+                self.notifyBluetoothStateChange(state)
+            }
+            if Thread.isMainThread { receive() } else { DispatchQueue.main.async(execute: receive) }
         }
-        notifyBluetoothStateChange(foreground.bluetoothState)
+        notifyBluetoothStateChange(bluetooth.state)
     }
 
     func observeConnectionEvents() {
@@ -216,7 +224,7 @@ private extension RuuviTagConnectionService {
     }
 
     func resetNotificationObservers() {
-        notificationTokens.forEach { $0.invalidate() }
+        notificationTokens.forEach { notificationCenter.removeObserver($0) }
         notificationTokens.removeAll()
     }
 
@@ -225,12 +233,14 @@ private extension RuuviTagConnectionService {
         key: Key,
         handler: @escaping (String) -> Void
     ) -> NSObjectProtocol {
-        NotificationCenter.default.addObserver(
+        let generation = observationGeneration
+        return notificationCenter.addObserver(
             forName: name,
             object: nil,
             queue: .main
-        ) { notification in
-            guard let uuid = notification.userInfo?[AnyHashable(key)] as? String else { return }
+        ) { [weak self] notification in
+            guard generation != nil, self?.observationGeneration == generation,
+                let uuid = notification.userInfo?[AnyHashable(key)] as? String else { return }
             handler(uuid)
         }
     }
@@ -249,7 +259,7 @@ private extension RuuviTagConnectionService {
     func handleConnectionChange(uuid: String, isConnected: Bool) {
         updateConnectionState(uuid: uuid, isConnected: isConnected)
 
-        NotificationCenter.default.post(
+        notificationCenter.post(
             name: .DashboardConnectionDidChange,
             object: nil,
             userInfo: [
@@ -325,7 +335,7 @@ private extension RuuviTagConnectionService {
     func refreshConnectionState(uuid: String) {
         updateConnectionState(
             uuid: uuid,
-            isConnected: background.isConnected(uuid: uuid)
+            isConnected: bluetooth.isConnected(uuid: uuid)
         )
     }
 
@@ -334,7 +344,7 @@ private extension RuuviTagConnectionService {
         var keepConnection = false
         var syncStatus: NetworkSyncStatus = .none
         if let luid = snapshot.identifierData.luid {
-            isConnected = background.isConnected(uuid: luid.value)
+            isConnected = bluetooth.isConnected(uuid: luid.value)
             keepConnection = connectionPersistence.keepConnection(to: luid)
         } else if snapshot.identifierData.mac != nil {
             syncStatus = snapshot.identifierData.mac.map {
@@ -384,7 +394,7 @@ extension RuuviTagConnectionService {
 extension RuuviTagConnectionService {
 
     func getCurrentBluetoothState() -> (isEnabled: Bool, userDeclined: Bool) {
-        resolvedBluetoothState(for: foreground.bluetoothState)
+        resolvedBluetoothState(for: bluetooth.state)
     }
 
     func requestBluetoothPermissionIfNeeded() -> Bool {
@@ -414,7 +424,7 @@ extension RuuviTagConnectionService {
     func getConnectionStatistics() -> (connected: Int, keepConnection: Int) {
         let keepConnectionUUIDs = connectionPersistence.keepConnectionUUIDs
         let connectedCount = keepConnectionUUIDs.filter { uuid in
-            background.isConnected(uuid: uuid.value)
+            bluetooth.isConnected(uuid: uuid.value)
         }.count
 
         return (connectedCount, keepConnectionUUIDs.count)

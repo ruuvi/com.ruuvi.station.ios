@@ -47,8 +47,14 @@ import XCTest
         await fixture.start()
         fixture.emit(fixture.packet(sequence: 1))
         await waitForAppState("background record") { fixture.pool.createdLatest.count == 1 }
+        let sampled = expectation(description: "worker sampled the second packet with the original interval")
+        fixture.measurements.settings.advertisementIntervalDidRead = { interval in
+            XCTAssertEqual(interval, 1)
+            sampled.fulfill()
+        }
         fixture.emit(fixture.packet(sequence: 2))
-        await flushAppBindings(); await flushAppBindings()
+        await fulfillment(of: [sampled], timeout: 2)
+        fixture.measurements.settings.advertisementIntervalDidRead = nil
         XCTAssertEqual(fixture.pool.createdRecords.count, 1)
         fixture.measurements.settings.advertisementDaemonIntervalMinutes = 0
         fixture.emit(fixture.packet(sequence: 3))

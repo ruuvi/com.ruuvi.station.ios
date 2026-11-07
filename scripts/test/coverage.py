@@ -13,6 +13,7 @@ def main():
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--minimum", type=float, help="Required percentage for every executable target")
     parser.add_argument("--minimum-total", type=float, help="Required aggregate percentage across all production targets")
+    parser.add_argument("--minimum-app", type=float, help="Required percentage for each application target")
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[2]
     project = json.loads(subprocess.check_output([
@@ -27,6 +28,9 @@ def main():
     # Omitting a production target from AllTests must fail verification, not hide that target.
     expected = {objects[target["productReference"]]["path"] for target in objects.values()
                 if target.get("isa") == "PBXNativeTarget" and target.get("productType") in production_types}
+    applications = {objects[target["productReference"]]["path"] for target in objects.values()
+                    if target.get("isa") == "PBXNativeTarget"
+                    and target.get("productType") == "com.apple.product-type.application"}
     if not expected:
         raise SystemExit("The generated project must contain production coverage targets.")
     report = json.loads(subprocess.check_output([
@@ -66,6 +70,12 @@ def main():
     if args.minimum_total is not None and output["percent"] < args.minimum_total:
         print(f"Aggregate coverage is below {args.minimum_total:g}%", file=sys.stderr)
         return 1
+    if args.minimum_app is not None:
+        below = [t["name"] for t in targets if t["name"] in applications
+                 and t["percent"] is not None and t["percent"] < args.minimum_app]
+        if below:
+            print(f"Application coverage below {args.minimum_app:g}%: " + ", ".join(below), file=sys.stderr)
+            return 1
     if args.minimum is not None:
         below = [t["name"] for t in targets if t["percent"] is not None and t["percent"] < args.minimum]
         if below:

@@ -65,6 +65,31 @@ import XCTest
         XCTAssertTrue(fixture.reads.allSatisfy { $0 == sensor.macId?.value })
     }
 
+    func testAlertsWithoutDescriptionsKeepAnEmptyBodyAndTheConfiguredMuteBoundary() async throws {
+        let fixture = LocalNotificationFixture()
+        defer { fixture.clean() }
+        // Original notification content contract: an absent description is an empty body.
+        for type in AlertType.allCases {
+            let delivered = expectation(description: type.rawValue)
+            fixture.center.onBadge = { delivered.fulfill() }
+            fixture.notifications.notify(.low, type, for: fixture.uuid, title: "Office alert")
+            await fulfillment(of: [delivered], timeout: 3)
+            let request = try XCTUnwrap(fixture.center.requests.last)
+            XCTAssertEqual(request.content.body, "")
+            XCTAssertEqual(request.content.subtitle, fixture.sensor.name)
+            XCTAssertEqual(request.identifier, fixture.uuid + type.rawValue)
+        }
+        fixture.settings.limitAlertNotificationsEnabled = true
+        fixture.settings.alertsMuteIntervalMinutes = 5
+        fixture.date.addTimeInterval(300)
+        let boundary = expectation(description: "Custom five minute interval expires exactly at boundary")
+        fixture.center.onBadge = { boundary.fulfill() }
+        fixture.notifications.notify(.high, .temperature(lower: 0, upper: 10), for: fixture.uuid, title: "Boundary")
+        await fulfillment(of: [boundary], timeout: 3)
+        XCTAssertEqual(fixture.center.requests.count, AlertType.allCases.count + 1)
+        XCTAssertEqual(fixture.center.requests.last?.content.title, "Boundary")
+    }
+
     func testConnectionMovementAndCustomSound() async throws {
         let fixture = LocalNotificationFixture()
         defer { fixture.clean() }

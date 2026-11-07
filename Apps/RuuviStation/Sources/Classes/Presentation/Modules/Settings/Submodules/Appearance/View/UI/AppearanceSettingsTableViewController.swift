@@ -28,6 +28,7 @@ class AppearanceSettingsTableViewController: UITableViewController {
 extension AppearanceSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.accessibilityIdentifier = "settings.appearanceOptions"
         setUpUI()
         localize()
         output.viewDidLoad()

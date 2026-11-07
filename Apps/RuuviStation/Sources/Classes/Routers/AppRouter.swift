@@ -6,6 +6,8 @@ import RuuviUser
 import UIKit
 
 final class AppRouter {
+    var makeDashboard: (() -> UIViewController)?
+    var makeOnboarding: ((OnboardRouter) -> UIViewController)?
     var viewController: UIViewController {
         navigationController
     }
@@ -26,7 +28,8 @@ final class AppRouter {
                 rootViewController = controller
             } else {
                 AppUtility.lockOrientation(.portrait)
-                rootViewController = onboardRouter().viewController
+                let router = onboardRouter()
+                rootViewController = makeOnboarding?(router) ?? router.viewController
             }
             let navigationController = UINavigationController(rootViewController: rootViewController)
             navigationController.navigationBar.tintColor = .clear
@@ -68,7 +71,7 @@ final class AppRouter {
     /// Return dashboard view controller
     private func dashboardViewController() -> UIViewController {
         let factory: DashboardModuleFactory = DashboardModuleFactoryImpl()
-        let module = factory.create()
+        let module = makeDashboard?() ?? factory.create()
         weakDashboardController = module
         return module
     }

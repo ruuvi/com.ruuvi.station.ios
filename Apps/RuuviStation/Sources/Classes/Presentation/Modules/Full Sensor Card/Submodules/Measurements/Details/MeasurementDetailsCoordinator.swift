@@ -26,6 +26,8 @@ protocol MeasurementDetailsCoordinatorDelegate: AnyObject {
 }
 
 class MeasurementDetailsCoordinator: RuuviCoordinator {
+    var makePresenter: (() -> MeasurementDetailsPresenter)?
+
     private var viewController: MeasurementDetailsViewController!
     private var presenter: MeasurementDetailsPresenter!
 
@@ -113,22 +115,13 @@ private extension MeasurementDetailsCoordinator {
     func createViewController(
         maximumSheetHeight: CGFloat
     ) -> MeasurementDetailsViewController {
-        let r = AppAssembly.shared.assembler.resolver
-
         let viewController = MeasurementDetailsViewController.createSheet(
             from: indicator,
             for: snapshot,
             maximumSheetHeight: maximumSheetHeight
         )
 
-        let presenter = MeasurementDetailsPresenter(
-            settings: r.resolve(RuuviLocalSettings.self)!,
-            flags: r.resolve(RuuviLocalFlags.self)!,
-            measurementService: r.resolve(RuuviServiceMeasurement.self)!,
-            alertService: r.resolve(RuuviServiceAlert.self)!,
-            ruuviStorage: r.resolve(RuuviStorage.self)!,
-            cloudSyncService: r.resolve(RuuviServiceCloudSync.self)!
-        )
+        let presenter = makePresenter?() ?? makeDefaultPresenter()
 
         presenter.view = viewController
         viewController.output = presenter
@@ -146,5 +139,16 @@ private extension MeasurementDetailsCoordinator {
         self.viewController = viewController
 
         return viewController
+    }
+    func makeDefaultPresenter() -> MeasurementDetailsPresenter {
+        let r = AppAssembly.shared.assembler.resolver
+        return MeasurementDetailsPresenter(
+            settings: r.resolve(RuuviLocalSettings.self)!,
+            flags: r.resolve(RuuviLocalFlags.self)!,
+            measurementService: r.resolve(RuuviServiceMeasurement.self)!,
+            alertService: r.resolve(RuuviServiceAlert.self)!,
+            ruuviStorage: r.resolve(RuuviStorage.self)!,
+            cloudSyncService: r.resolve(RuuviServiceCloudSync.self)!
+        )
     }
 }

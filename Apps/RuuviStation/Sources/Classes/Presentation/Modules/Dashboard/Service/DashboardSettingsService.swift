@@ -36,6 +36,8 @@ protocol DashboardSettingsServiceDelegate: AnyObject {
 class DashboardSettingsService {
 
     // MARK: - Dependencies
+    private let notificationCenter: NotificationCenter
+    private let reloadWidgetTimelines: (String) -> Void
     private let ruuviAppSettingsService: RuuviServiceAppSettings
 
     private var settings: RuuviLocalSettings
@@ -68,8 +70,12 @@ class DashboardSettingsService {
     init(
         settings: RuuviLocalSettings,
         ruuviAppSettingsService: RuuviServiceAppSettings,
-        appGroupDefaults: UserDefaults? = UserDefaults(suiteName: AppGroupConstants.appGroupSuiteIdentifier)
+        appGroupDefaults: UserDefaults? = UserDefaults(suiteName: AppGroupConstants.appGroupSuiteIdentifier),
+        notificationCenter: NotificationCenter = .default,
+        reloadWidgetTimelines: @escaping (String) -> Void = { WidgetCenter.shared.reloadTimelines(ofKind: $0) }
     ) {
+        self.notificationCenter = notificationCenter
+        self.reloadWidgetTimelines = reloadWidgetTimelines
         self.settings = settings
         self.appGroupDefaults = appGroupDefaults
         self.ruuviAppSettingsService = ruuviAppSettingsService
@@ -81,6 +87,7 @@ class DashboardSettingsService {
 
     // MARK: - Public Interface
     func startObservingSettings() {
+        stopObservingSettings()
         observeMeasurementUnitSettings()
         observeDashboardSettings()
         observeCalibrationSettings()
@@ -99,7 +106,7 @@ class DashboardSettingsService {
             sensorOrderChangeToken,
         ]
 
-        tokens.forEach { $0?.invalidate() }
+        tokens.compactMap { $0 }.forEach { notificationCenter.removeObserver($0) }
 
         temperatureUnitToken = nil
         temperatureAccuracyToken = nil
@@ -199,7 +206,7 @@ private extension DashboardSettingsService {
 
     // swiftlint:disable:next function_body_length
     func observeMeasurementUnitSettings() {
-        temperatureUnitToken = NotificationCenter.default.addObserver(
+        temperatureUnitToken = notificationCenter.addObserver(
             forName: .TemperatureUnitDidChange,
             object: nil,
             queue: .main
@@ -207,7 +214,7 @@ private extension DashboardSettingsService {
             self?.handleMeasurementUnitChange()
         }
 
-        temperatureAccuracyToken = NotificationCenter.default.addObserver(
+        temperatureAccuracyToken = notificationCenter.addObserver(
             forName: .TemperatureAccuracyDidChange,
             object: nil,
             queue: .main
@@ -215,7 +222,7 @@ private extension DashboardSettingsService {
             self?.handleMeasurementUnitChange()
         }
 
-        humidityUnitToken = NotificationCenter.default.addObserver(
+        humidityUnitToken = notificationCenter.addObserver(
             forName: .HumidityUnitDidChange,
             object: nil,
             queue: .main
@@ -223,7 +230,7 @@ private extension DashboardSettingsService {
             self?.handleMeasurementUnitChange()
         }
 
-        humidityAccuracyToken = NotificationCenter.default.addObserver(
+        humidityAccuracyToken = notificationCenter.addObserver(
             forName: .HumidityAccuracyDidChange,
             object: nil,
             queue: .main
@@ -231,7 +238,7 @@ private extension DashboardSettingsService {
             self?.handleMeasurementUnitChange()
         }
 
-        measurementAccuracyToken = NotificationCenter.default.addObserver(
+        measurementAccuracyToken = notificationCenter.addObserver(
             forName: .MeasurementAccuracyDidChange,
             object: nil,
             queue: .main
@@ -239,7 +246,7 @@ private extension DashboardSettingsService {
             self?.handleMeasurementUnitChange()
         }
 
-        pressureUnitToken = NotificationCenter.default.addObserver(
+        pressureUnitToken = notificationCenter.addObserver(
             forName: .PressureUnitDidChange,
             object: nil,
             queue: .main
@@ -247,7 +254,7 @@ private extension DashboardSettingsService {
             self?.handleMeasurementUnitChange()
         }
 
-        pressureAccuracyToken = NotificationCenter.default.addObserver(
+        pressureAccuracyToken = notificationCenter.addObserver(
             forName: .PressureUnitAccuracyChange,
             object: nil,
             queue: .main
@@ -255,7 +262,7 @@ private extension DashboardSettingsService {
             self?.handleMeasurementUnitChange()
         }
 
-        widgetRefreshIntervalToken = NotificationCenter.default.addObserver(
+        widgetRefreshIntervalToken = notificationCenter.addObserver(
             forName: .WidgetRefreshIntervalDidChange,
             object: nil,
             queue: .main
@@ -266,7 +273,7 @@ private extension DashboardSettingsService {
     }
 
     func observeDashboardSettings() {
-        dashboardTypeToken = NotificationCenter.default.addObserver(
+        dashboardTypeToken = notificationCenter.addObserver(
             forName: .DashboardTypeDidChange,
             object: nil,
             queue: .main
@@ -279,7 +286,7 @@ private extension DashboardSettingsService {
             }
         }
 
-        dashboardTapActionTypeToken = NotificationCenter.default.addObserver(
+        dashboardTapActionTypeToken = notificationCenter.addObserver(
             forName: .DashboardTapActionTypeDidChange,
             object: nil,
             queue: .main
@@ -294,7 +301,7 @@ private extension DashboardSettingsService {
     }
 
     func observeCalibrationSettings() {
-        calibrationSettingsToken = NotificationCenter.default.addObserver(
+        calibrationSettingsToken = notificationCenter.addObserver(
             forName: .SensorCalibrationDidChange,
             object: nil,
             queue: .main
@@ -305,7 +312,7 @@ private extension DashboardSettingsService {
     }
 
     func observeLanguageSettings() {
-        languageToken = NotificationCenter.default.addObserver(
+        languageToken = notificationCenter.addObserver(
             forName: .LanguageDidChange,
             object: nil,
             queue: .main
@@ -313,7 +320,7 @@ private extension DashboardSettingsService {
             self?.handleLanguageChange()
         }
 
-        systemLanguageChangeToken = NotificationCenter.default.addObserver(
+        systemLanguageChangeToken = notificationCenter.addObserver(
             forName: NSLocale.currentLocaleDidChangeNotification,
             object: nil,
             queue: .main
@@ -323,7 +330,7 @@ private extension DashboardSettingsService {
     }
 
     func observeSensorOrderSettings() {
-        sensorOrderChangeToken = NotificationCenter.default.addObserver(
+        sensorOrderChangeToken = notificationCenter.addObserver(
             forName: .DashboardSensorOrderDidChange,
             object: nil,
             queue: .main
@@ -430,8 +437,8 @@ private extension DashboardSettingsService {
     }
 
     func reloadWidgets() {
-        WidgetCenter.shared.reloadTimelines(ofKind: AppAssemblyConstants.simpleWidgetKindId)
-        WidgetCenter.shared.reloadTimelines(ofKind: AppAssemblyConstants.multiSensorWidgetKindId)
+        reloadWidgetTimelines(AppAssemblyConstants.simpleWidgetKindId)
+        reloadWidgetTimelines(AppAssemblyConstants.multiSensorWidgetKindId)
     }
 }
 

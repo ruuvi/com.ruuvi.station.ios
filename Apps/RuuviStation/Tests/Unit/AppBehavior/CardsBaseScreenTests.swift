@@ -123,7 +123,7 @@ import XCTest
     }
 }
 
-@MainActor private final class CardsBaseScreenFixture {
+@MainActor final class CardsBaseScreenFixture {
     let data = SensorDataFixture()
     let children: [CardsMenuType: UIViewController] = [
         .measurement: UIViewController(), .graph: UIViewController(),
@@ -149,7 +149,7 @@ import XCTest
     func close() { output.onNavigate = nil; host.close(); data.cleanup(); data.measurements.cleanup() }
 }
 
-private final class CardsBaseScreenOutputSpy: CardsBaseViewOutput {
+final class CardsBaseScreenOutputSpy: CardsBaseViewOutput {
     var tabs = [CardsMenuType]()
     var indices = [Int]()
     var foregrounds = 0

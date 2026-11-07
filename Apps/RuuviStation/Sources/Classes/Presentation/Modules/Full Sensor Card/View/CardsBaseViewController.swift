@@ -113,6 +113,7 @@ final class CardsBaseViewController: UIViewController {
     // Action Buttons
     private lazy var backButton: UIButton = {
         let button = UIButton()
+        button.accessibilityIdentifier = "sensor.back"
         button.tintColor = .white
         let buttonImage = RuuviAsset.chevronBack.image
         button.setImage(buttonImage, for: .normal)

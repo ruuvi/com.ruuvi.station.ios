@@ -42,7 +42,7 @@ final class NavigationSmokeTests: XCTestCase {
         settings.tap()
         let list = app.tables["settings.list"]
         XCTAssertTrue(list.waitForExistence(timeout: 5))
-        for destination in ["units", "resolution", "chart", "appearance", "notifications"] {
+        for destination in ["units", "resolution", "heartbeat", "chart", "appearance", "notifications"] {
             let cell = app.cells["settings." + destination]
             XCTAssertTrue(cell.waitForExistence(timeout: 5), destination)
             if !cell.isHittable { list.swipeUp() }
@@ -50,6 +50,16 @@ final class NavigationSmokeTests: XCTestCase {
             XCTAssertTrue(list.waitForNonExistence(timeout: 5), destination + "\n" + app.debugDescription)
             XCTAssertEqual(app.state, .runningForeground)
             attachScreenshot(app, name: destination)
+            switch destination {
+            case "units": inspectChoices(app, parent: "settings.unitConfiguration", choices: "settings.selection")
+            case "appearance":
+                inspectChoices(app, parent: "settings.appearanceOptions", choices: "settings.themeChoices")
+            case "notifications":
+                inspectChoices(
+                    app, parent: "settings.notificationOptions", choices: "settings.soundChoices",
+                    rowID: "settings.alertSound")
+            default: break
+            }
             let back = app.navigationBars.buttons.element(boundBy: 0)
             XCTAssertTrue(back.waitForExistence(timeout: 5))
             back.tap()
@@ -77,6 +87,36 @@ final class NavigationSmokeTests: XCTestCase {
             XCTAssertEqual(app.state, .runningForeground)
             attachScreenshot(app, name: "Sensor " + tab)
         }
+        let back = app.buttons["sensor.back"]
+        XCTAssertTrue(back.waitForExistence(timeout: 5))
+        back.tap()
+        XCTAssertTrue(dashboard.waitForExistence(timeout: 10))
+        XCTAssertTrue(sensor.waitForExistence(timeout: 5))
+        sensor.tap()
+        XCTAssertTrue(app.buttons["sensor.tab.measurement"].waitForExistence(timeout: 10))
+        XCTAssertTrue(back.waitForExistence(timeout: 5))
+        back.tap()
+        XCTAssertTrue(dashboard.waitForExistence(timeout: 10))
+        attachScreenshot(app, name: "Dashboard after reopening and closing sensor")
+    }
+
+    @MainActor private func inspectChoices(
+        _ app: XCUIApplication, parent: String, choices: String, rowID: String? = nil
+    ) {
+        let table = app.tables[parent]
+        XCTAssertTrue(table.waitForExistence(timeout: 5))
+        let row = rowID.map { table.cells[$0] } ?? table.cells.firstMatch
+        XCTAssertTrue(row.waitForExistence(timeout: 5))
+        if !row.isHittable { table.swipeUp() }
+        let originalLabel = row.label
+        row.tap()
+        let picker = app.tables[choices]
+        XCTAssertTrue(picker.waitForExistence(timeout: 5), app.debugDescription)
+        XCTAssertGreaterThan(picker.cells.count, 1)
+        attachScreenshot(app, name: choices)
+        app.navigationBars.buttons.element(boundBy: 0).tap()
+        XCTAssertTrue(table.waitForExistence(timeout: 5))
+        XCTAssertEqual(row.label, originalLabel, "Opening and cancelling a picker must keep its selection")
     }
 
     @MainActor private func attachScreenshot(_ app: XCUIApplication, name: String) {

@@ -12,6 +12,7 @@ import UIKit
 // swiftlint:disable file_length
 // swiftlint:disable:next type_body_length
 public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
+    private let imageSession: URLSession
     private let ruuviStorage: RuuviStorage
     private let ruuviCloud: RuuviCloud
     private let ruuviPool: RuuviPool
@@ -37,8 +38,10 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         ruuviLocalImages: RuuviLocalImages,
         ruuviRepository: RuuviRepository,
         ruuviLocalIDs: RuuviLocalIDs,
-        ruuviAlertService: RuuviServiceAlert
+        ruuviAlertService: RuuviServiceAlert,
+        imageSession: URLSession = .shared
     ) {
+        self.imageSession = imageSession
         self.ruuviStorage = ruuviStorage
         self.ruuviCloud = ruuviCloud
         self.ruuviPool = ruuviPool
@@ -82,7 +85,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         guard let picture = sensor.picture else { throw .pictureUrlIsNil }
         let data: Data
         do {
-            let response = try await URLSession.shared.data(from: picture)
+            let response = try await imageSession.data(from: picture)
             if let http = response.1 as? HTTPURLResponse, !(200..<300).contains(http.statusCode) {
                 throw URLError(.badServerResponse)
             }

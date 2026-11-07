@@ -8,6 +8,8 @@ import RuuviOntology
 import RuuviService
 
 final class CardsSettingsViewController: UIViewController {
+    var alertActions = AlertActionFactory()
+
     var output: CardsSettingsViewOutput!
 
     private var cancellables = Set<AnyCancellable>()
@@ -92,14 +94,14 @@ extension CardsSettingsViewController: CardsSettingsViewInput {
         let title = RuuviLocalization.claimSensorOwnership
         let message = RuuviLocalization.doYouOwnSensor
         let controller = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(
+        controller.addAction(alertActions(
             title: RuuviLocalization.yes,
             style: .default,
             handler: { [weak self] _ in
                 self?.output.viewDidConfirmClaimTag()
             }
         ))
-        controller.addAction(UIAlertAction(title: RuuviLocalization.no, style: .cancel, handler: nil))
+        controller.addAction(alertActions(title: RuuviLocalization.no, style: .cancel, handler: nil))
         present(controller, animated: true)
     }
 
@@ -109,10 +111,10 @@ extension CardsSettingsViewController: CardsSettingsViewInput {
             state.snapshot.identifierData.luid?.value ??
             RuuviLocalization.na
         let controller = UIAlertController(title: title, message: mac, preferredStyle: .alert)
-        let copyAction = UIAlertAction(title: RuuviLocalization.copy, style: .default) { _ in
+        let copyAction = alertActions(title: RuuviLocalization.copy, style: .default) { _ in
             UIPasteboard.general.string = mac
         }
-        let cancelAction = UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil)
+        let cancelAction = alertActions(title: RuuviLocalization.cancel, style: .cancel, handler: nil)
         controller.addAction(copyAction)
         controller.addAction(cancelAction)
         present(controller, animated: true)
@@ -122,11 +124,11 @@ extension CardsSettingsViewController: CardsSettingsViewInput {
         let message = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
-        let dismissAction = UIAlertAction(title: dismissTitle, style: .cancel) { [weak self] _ in
+        let dismissAction = alertActions(title: dismissTitle, style: .cancel) { [weak self] _ in
             self?.output.viewDidIgnoreFirmwareUpdateDialog()
         }
         let updateTitle = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title
-        let updateAction = UIAlertAction(title: updateTitle, style: .default) { [weak self] _ in
+        let updateAction = alertActions(title: updateTitle, style: .default) { [weak self] _ in
             self?.output.viewDidConfirmFirmwareUpdate()
         }
         alert.addAction(dismissAction)
@@ -138,9 +140,9 @@ extension CardsSettingsViewController: CardsSettingsViewInput {
         let message = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CancelConfirmation.message
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         let dismissTitle = RuuviLocalization.Cards.KeepConnectionDialog.Dismiss.title
-        let dismissAction = UIAlertAction(title: dismissTitle, style: .cancel, handler: nil)
+        let dismissAction = alertActions(title: dismissTitle, style: .cancel, handler: nil)
         let updateTitle = RuuviLocalization.Cards.LegacyFirmwareUpdateDialog.CheckForUpdate.title
-        let updateAction = UIAlertAction(title: updateTitle, style: .default) { [weak self] _ in
+        let updateAction = alertActions(title: updateTitle, style: .default) { [weak self] _ in
             self?.output.viewDidConfirmFirmwareUpdate()
         }
         alert.addAction(dismissAction)
@@ -152,14 +154,14 @@ extension CardsSettingsViewController: CardsSettingsViewInput {
         resetKeepConnectionSwitch()
         let message = RuuviLocalization.TagSettings.PairError.Timeout.description
         let controller = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel))
+        controller.addAction(alertActions(title: RuuviLocalization.ok, style: .cancel))
         present(controller, animated: true)
     }
 
     func showKeepConnectionCloudModeDialog() {
         let message = RuuviLocalization.TagSettings.PairError.CloudMode.description
         let controller = UIAlertController(title: nil, message: message, preferredStyle: .alert)
-        controller.addAction(UIAlertAction(
+        controller.addAction(alertActions(
             title: RuuviLocalization.ok,
             style: .cancel,
             handler: { [weak self] _ in
@@ -512,7 +514,7 @@ private extension CardsSettingsViewController {
             textField.text = section.configuration.customDescriptionText
             customAlertDescriptionTextField = textField
         }
-        let action = UIAlertAction(title: RuuviLocalization.ok, style: .default) { [weak self] _ in
+        let action = alertActions(title: RuuviLocalization.ok, style: .default) { [weak self] _ in
             guard let self else { return }
             let text = customAlertDescriptionTextField.text?
                 .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -524,7 +526,7 @@ private extension CardsSettingsViewController {
             self.customAlertDescriptionTextField = UITextField()
         }
         alert.addAction(action)
-        alert.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel))
+        alert.addAction(alertActions(title: RuuviLocalization.cancel, style: .cancel))
         present(alert, animated: true)
     }
 
@@ -567,7 +569,7 @@ private extension CardsSettingsViewController {
                 textField.addNumericAccessory()
             }
         }
-        let action = UIAlertAction(title: RuuviLocalization.ok, style: .default) { [weak self, weak alert] _ in
+        let action = alertActions(title: RuuviLocalization.ok, style: .default) { [weak self, weak alert] _ in
             guard
                 let self,
                 let lowerField = alert?.textFields?.first,
@@ -592,7 +594,7 @@ private extension CardsSettingsViewController {
             self.alertMaxRangeTextField = UITextField()
         }
         alert.addAction(action)
-        alert.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel))
+        alert.addAction(alertActions(title: RuuviLocalization.cancel, style: .cancel))
         present(alert, animated: true)
     }
 
@@ -608,12 +610,12 @@ private extension CardsSettingsViewController {
             .normalizedUnseenDuration(config?.unseenDuration)
         let currentMinutes = Int(currentSeconds) / 60
 
-        let action = UIAlertAction(title: RuuviLocalization.ok, style: .default) { [weak self, weak alert] _ in
+        let action = alertActions(title: RuuviLocalization.ok, style: .default) { [weak self, weak alert] _ in
             guard let self, let minutesText = alert?.textFields?.first?.text else { return }
             defer { self.resetCloudConnectionDelayDialogState() }
             guard let minutes = Int(minutesText) else { return }
             let minimum = RuuviAlertConstants.CloudConnection.minUnseenDuration
-            guard minutes >= minimum else { return }
+            guard minutes >= minimum, minutes <= Int.max / 60 else { return }
 
             let seconds = minutes * 60
             if Int(currentSeconds) == seconds {
@@ -639,7 +641,7 @@ private extension CardsSettingsViewController {
 
         alert.addAction(action)
         alert.addAction(
-            UIAlertAction(title: RuuviLocalization.cancel, style: .cancel) { [weak self] _ in
+            alertActions(title: RuuviLocalization.cancel, style: .cancel) { [weak self] _ in
                 self?.resetCloudConnectionDelayDialogState()
             }
         )
@@ -656,7 +658,7 @@ private extension CardsSettingsViewController {
               let minutes = Int(minutesText) else {
             return false
         }
-        return minutes >= RuuviAlertConstants.CloudConnection.minUnseenDuration
+        return minutes >= RuuviAlertConstants.CloudConnection.minUnseenDuration && minutes <= Int.max / 60
     }
 
     func resetCloudConnectionDelayDialogState() {
@@ -720,7 +722,7 @@ private extension CardsSettingsViewController {
             alertTextField.placeholder = defaultName
             tagNameTextField = alertTextField
         }
-        let action = UIAlertAction(title: RuuviLocalization.ok, style: .default) { [weak self] _ in
+        let action = alertActions(title: RuuviLocalization.ok, style: .default) { [weak self] _ in
             guard let self else { return }
             if let name = tagNameTextField.text, !name.isEmpty {
                 output.viewDidChangeTag(name: name)
@@ -728,7 +730,7 @@ private extension CardsSettingsViewController {
                 output.viewDidChangeTag(name: defaultName)
             }
         }
-        let cancelAction = UIAlertAction(title: RuuviLocalization.cancel, style: .cancel)
+        let cancelAction = alertActions(title: RuuviLocalization.cancel, style: .cancel)
         alert.addAction(action)
         alert.addAction(cancelAction)
         present(alert, animated: true, completion: nil)

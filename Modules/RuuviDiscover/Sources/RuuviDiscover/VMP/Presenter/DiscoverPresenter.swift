@@ -42,6 +42,7 @@ class DiscoverPresenter: NSObject, RuuviDiscover {
     var ruuviReactor: RuuviReactor!
     var ruuviOwnershipService: RuuviServiceOwnership!
     var firmwareBuilder: RuuviFirmwareBuilder!
+    var makeFirmware: ((String, String?) -> RuuviFirmware)?
 
     private let transportOverride: DiscoveryBluetoothTransport?
     private lazy var bluetooth: DiscoveryBluetoothTransport = transportOverride ?? BTKitDiscoveryTransport(foreground: foreground)
@@ -273,18 +274,11 @@ extension DiscoverPresenter: DiscoverViewOutput {
 
     func viewDidAskToUpgradeFirmware(of sensor: NFCSensor?) {
         guard let sensor else { return }
-        let firmwareModule = firmwareBuilder.build(
-            uuid: sensor.id,
-            currentFirmware: sensor.firmwareVersion.ruuviFirmwareDisplayValue,
-            dependencies: RuuviFirmwareDependencies(
-                background: background,
-                foreground: foreground,
-                propertiesDaemon: propertiesDaemon,
-                ruuviDFU: ruuviDFU
-            )
-        )
+        let firmwareModule = buildFirmware(
+            uuid: sensor.id, currentFirmware: sensor.firmwareVersion.ruuviFirmwareDisplayValue)
         firmwareModule.output = self
         viewController.present(firmwareModule.viewController, animated: true)
+        firmwareModule.viewController.presentationController?.delegate = self
         self.firmwareModule = firmwareModule
     }
 
@@ -297,16 +291,7 @@ extension DiscoverPresenter: DiscoverViewOutput {
     }
 
     func viewDidConfirmToUpdateFirmware(for uuid: String) {
-        let firmwareModule = firmwareBuilder.build(
-            uuid: uuid,
-            currentFirmware: "<=2.5.9",
-            dependencies: RuuviFirmwareDependencies(
-                background: background,
-                foreground: foreground,
-                propertiesDaemon: propertiesDaemon,
-                ruuviDFU: ruuviDFU
-            )
-        )
+        let firmwareModule = buildFirmware(uuid: uuid, currentFirmware: "<=2.5.9")
         firmwareModule.output = self
         let firmwareViewController = firmwareModule.viewController
         firmwareViewController.presentationController?.delegate = self
@@ -338,6 +323,15 @@ extension DiscoverPresenter: RuuviFirmwareOutput {
 // MARK: - Private
 
 extension DiscoverPresenter {
+    private func buildFirmware(uuid: String, currentFirmware: String?) -> RuuviFirmware {
+        if let makeFirmware { return makeFirmware(uuid, currentFirmware) }
+        return firmwareBuilder.build(
+            uuid: uuid, currentFirmware: currentFirmware,
+            dependencies: RuuviFirmwareDependencies(
+                background: background, foreground: foreground,
+                propertiesDaemon: propertiesDaemon, ruuviDFU: ruuviDFU))
+    }
+
     private func startObservingPersistedRuuviSensors() {
         persistedReactorToken?.invalidate()
         let generation = UUID()

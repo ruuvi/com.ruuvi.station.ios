@@ -13,6 +13,8 @@ import UIKit
 
 // swiftlint:disable type_body_length
 class CardsGraphViewController: UIViewController {
+    var alertActions = AlertActionFactory()
+
     weak var output: CardsGraphViewOutput?
 
     init(output: CardsGraphViewOutput, settings: RuuviLocalSettings) {
@@ -849,7 +851,7 @@ extension CardsGraphViewController: CardsGraphViewInput {
         let title = RuuviLocalization.TagCharts.BluetoothDisabledAlert.title
         let message = RuuviLocalization.TagCharts.BluetoothDisabledAlert.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(
+        alertVC.addAction(alertActions(
             title: RuuviLocalization.PermissionPresenter.settings,
             style: .default,
             handler: { _ in
@@ -862,7 +864,7 @@ extension CardsGraphViewController: CardsGraphViewInput {
                 UIApplication.shared.open(url)
             }
         ))
-        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
+        alertVC.addAction(alertActions(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
 
@@ -870,9 +872,9 @@ extension CardsGraphViewController: CardsGraphViewInput {
         let title = RuuviLocalization.clearLocalHistory
         let message = RuuviLocalization.clearLocalHistoryDescription
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel, handler: nil))
+        alertVC.addAction(alertActions(title: RuuviLocalization.cancel, style: .cancel, handler: nil))
         let actionTitle = RuuviLocalization.TagCharts.Clear.title
-        alertVC.addAction(UIAlertAction(title: actionTitle, style: .destructive, handler: { [weak self] _ in
+        alertVC.addAction(alertActions(title: actionTitle, style: .destructive, handler: { [weak self] _ in
             self?.output?.viewDidConfirmToClear(for: snapshot)
 
         }))
@@ -918,7 +920,7 @@ extension CardsGraphViewController: CardsGraphViewInput {
             message: RuuviLocalization.TagCharts.Dismiss.Alert.message,
             preferredStyle: .alert
         )
-        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
+        alertVC.addAction(alertActions(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         present(alertVC, animated: true)
     }
 
@@ -926,8 +928,8 @@ extension CardsGraphViewController: CardsGraphViewInput {
         let title = RuuviLocalization.TagCharts.FailedToSyncDialog.title
         let message = RuuviLocalization.TagCharts.FailedToSyncDialog.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
-        alertVC.addAction(UIAlertAction(
+        alertVC.addAction(alertActions(title: RuuviLocalization.ok, style: .cancel, handler: nil))
+        alertVC.addAction(alertActions(
             title: RuuviLocalization.TagCharts.TryAgain.title,
             style: .default,
             handler: { [weak self] _ in
@@ -946,9 +948,9 @@ extension CardsGraphViewController: CardsGraphViewInput {
         let title = RuuviLocalization.synchronisation
         let message = RuuviLocalization.gattSyncDescription
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: RuuviLocalization.close, style: .cancel, handler: nil))
+        alertVC.addAction(alertActions(title: RuuviLocalization.close, style: .cancel, handler: nil))
         let actionTitle = RuuviLocalization.doNotShowAgain
-        alertVC.addAction(UIAlertAction(
+        alertVC.addAction(alertActions(
             title: actionTitle,
             style: .default,
             handler: { [weak self] _ in
@@ -968,9 +970,9 @@ extension CardsGraphViewController: CardsGraphViewInput {
             RuuviLocalization.TagCharts.Dismiss.Alert.message
 
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
+        alertVC.addAction(alertActions(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         let actionTitle = RuuviLocalization.TagCharts.AbortSync.Button.title
-        alertVC.addAction(UIAlertAction(title: actionTitle, style: .destructive, handler: { [weak self] _ in
+        alertVC.addAction(alertActions(title: actionTitle, style: .destructive, handler: { [weak self] _ in
             self?.output?.viewDidConfirmAbortSync(source: source)
         }))
         present(alertVC, animated: true)
@@ -980,9 +982,9 @@ extension CardsGraphViewController: CardsGraphViewInput {
         let title = RuuviLocalization.TagCharts.DeleteHistoryConfirmationDialog.title
         let message = RuuviLocalization.TagCharts.Dismiss.Alert.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
+        alertVC.addAction(alertActions(title: RuuviLocalization.ok, style: .cancel, handler: nil))
         let actionTitle = RuuviLocalization.TagCharts.AbortSync.Button.title
-        alertVC.addAction(UIAlertAction(title: actionTitle, style: .destructive, handler: { [weak self] _ in
+        alertVC.addAction(alertActions(title: actionTitle, style: .destructive, handler: { [weak self] _ in
             self?.output?
                 .viewDidConfirmAbortSync(source: .rootNavigationButton(index))
         }))
@@ -1017,7 +1019,7 @@ extension CardsGraphViewController: CardsGraphViewInput {
             message: message,
             preferredStyle: .alert
         )
-        controller.addAction(UIAlertAction(
+        controller.addAction(alertActions(
             title: RuuviLocalization.ok,
             style: .cancel,
             handler: nil
@@ -1030,13 +1032,13 @@ extension CardsGraphViewController: CardsGraphViewInput {
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alertVC
             .addAction(
-                UIAlertAction(
+                alertActions(
                     title: RuuviLocalization.ok,
                     style: .cancel,
                     handler: nil
                 )
             )
-        alertVC.addAction(UIAlertAction(
+        alertVC.addAction(alertActions(
             title: RuuviLocalization.doNotShowAgain,
             style: .default,
             handler: { [weak self] _ in

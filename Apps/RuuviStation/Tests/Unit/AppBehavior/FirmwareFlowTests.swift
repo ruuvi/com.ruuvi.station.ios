@@ -22,6 +22,7 @@ import XCTest
             let fixture = try FirmwareFlowFixture(version: version)
             defer { fixture.close() }
             try await fixture.show()
+            XCTAssertTrue(fixture.presenter.isSafeToDismiss())
             try await fixture.offerUpgrade()
             var images = Set<Data>()
             images.insert(try await fixture.image(named: "Firmware offer \(version)", test: self))
@@ -42,6 +43,7 @@ import XCTest
             images.insert(try await fixture.image(named: "Firmware ready \(version)", test: self))
             fixture.confirm()
             try await waitForFirmwareState { fixture.interactor.flashes == 1 }
+            XCTAssertFalse(fixture.presenter.isSafeToDismiss())
             XCTAssertEqual(fixture.interactor.lastFiles, [fixture.app, fixture.full] + fixture.files)
             fixture.interactor.flash.send(.progress(0.5))
             fixture.interactor.flash.send(.log(.init(message: "Writing firmware", time: Date())))
@@ -67,6 +69,9 @@ import XCTest
             images.insert(try await fixture.image(named: "Firmware success \(version)", test: self))
             XCTAssertGreaterThanOrEqual(images.count, 5)
             XCTAssertEqual(fixture.model.isRuuviAir(), version == 225)
+            XCTAssertTrue(fixture.presenter.isSafeToDismiss())
+            fixture.model.output?.firmwareUpgradeDidFinishSuccessfully()
+            XCTAssertTrue(fixture.output.finished === fixture.presenter)
             fixture.close()
             try await waitForFirmwareState { fixture.daemon.starts == 1 }
         }
@@ -184,6 +189,8 @@ import XCTest
     let interactor = FirmwareFlowInteractor()
     let daemon = FirmwareFlowDaemon()
     let model: DFUViewModel
+    let presenter: DFUPresenter
+    let output = FirmwarePresenterOutputSpy()
     let latest = LatestRelease(version: "3.10.0", assets: [])
     let current = CurrentRelease(version: "3.9.0")
     let app = URL(fileURLWithPath: "/firmware/app.bin")
@@ -203,17 +210,20 @@ import XCTest
         device = .init(
             uuid: peripheral.identifier.uuidString, rssi: -50, isConnectable: true,
             name: "RuuviBoot", peripheral: peripheral)
-        model = DFUViewModel(
-            interactor: interactor, foreground: BTKit.foreground,
+        presenter = DFUPresenter(
+            interactor: interactor, ruuviTag: sensor, foreground: BTKit.foreground,
             idPersistence: try XCTUnwrap(resolver.resolve(RuuviLocalIDs.self)),
             sqiltePersistence: try XCTUnwrap(resolver.resolve(RuuviPersistence.self, name: "sqlite")),
-            ruuviTag: sensor, ruuviPool: try XCTUnwrap(resolver.resolve(RuuviPool.self)),
+            ruuviPool: try XCTUnwrap(resolver.resolve(RuuviPool.self)),
             ruuviStorage: try XCTUnwrap(resolver.resolve(RuuviStorage.self)), settings: AppTestSettings(),
             propertiesDaemon: daemon, activityPresenter: FirmwareFlowActivity())
+        presenter.output = output
+        model = try XCTUnwrap(presenter.viewController as? UIHostingController<DFUUIView>).rootView.viewModel
     }
     func show() async throws {
         let scene = try XCTUnwrap(UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first)
-        let host = UIHostingController(rootView: DFUUIView(viewModel: model))
+        let host = try XCTUnwrap(presenter.viewController as? UIHostingController<DFUUIView>)
+        XCTAssertTrue(presenter.viewController === host)
         host.overrideUserInterfaceStyle = .light
         let window = UIWindow(windowScene: scene)
         window.frame = CGRect(x: 0, y: 0, width: 393, height: 852)
@@ -370,4 +380,9 @@ private enum FirmwareFlowWaitError: Error { case timeout }
     }
     XCTFail("Timed out waiting for firmware state", file: file, line: line)
     throw FirmwareFlowWaitError.timeout
+}
+
+private final class FirmwarePresenterOutputSpy: DFUModuleOutput {
+    weak var finished: DFUModuleInput?
+    func dfuModuleSuccessfullyUpgraded(_ dfuModule: DFUModuleInput) { finished = dfuModule }
 }

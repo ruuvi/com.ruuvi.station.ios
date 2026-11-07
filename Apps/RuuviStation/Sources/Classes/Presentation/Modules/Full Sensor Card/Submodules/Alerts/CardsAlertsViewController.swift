@@ -11,6 +11,7 @@ final class CardsAlertsViewController: UIViewController {
     weak var output: CardsAlertsViewOutput?
 
     private var cancellables = Set<AnyCancellable>()
+    var alertActions = AlertActionFactory()
     private let state: CardsSettingsState
     private let shouldExpandFirstAlertByDefault: Bool
     private let alertSettingsDisplayMode: CardsSettingsAlertDisplayMode
@@ -265,7 +266,7 @@ private extension CardsAlertsViewController {
             textField.text = section.configuration.customDescriptionText
             customAlertDescriptionTextField = textField
         }
-        let action = UIAlertAction(title: RuuviLocalization.ok, style: .default) { [weak self] _ in
+        let action = alertActions(title: RuuviLocalization.ok, style: .default) { [weak self] _ in
             guard let self else { return }
             let text = customAlertDescriptionTextField.text?
                 .trimmingCharacters(in: .whitespacesAndNewlines)
@@ -277,7 +278,7 @@ private extension CardsAlertsViewController {
             self.customAlertDescriptionTextField = UITextField()
         }
         alert.addAction(action)
-        alert.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel))
+        alert.addAction(alertActions(title: RuuviLocalization.cancel, style: .cancel))
         present(alert, animated: true)
     }
 
@@ -320,7 +321,7 @@ private extension CardsAlertsViewController {
                 textField.addNumericAccessory()
             }
         }
-        let action = UIAlertAction(title: RuuviLocalization.ok, style: .default) { [weak self, weak alert] _ in
+        let action = alertActions(title: RuuviLocalization.ok, style: .default) { [weak self, weak alert] _ in
             guard
                 let self,
                 let lowerField = alert?.textFields?.first,
@@ -345,7 +346,7 @@ private extension CardsAlertsViewController {
             self.alertMaxRangeTextField = UITextField()
         }
         alert.addAction(action)
-        alert.addAction(UIAlertAction(title: RuuviLocalization.cancel, style: .cancel))
+        alert.addAction(alertActions(title: RuuviLocalization.cancel, style: .cancel))
         present(alert, animated: true)
     }
 
@@ -361,12 +362,12 @@ private extension CardsAlertsViewController {
             .normalizedUnseenDuration(config?.unseenDuration)
         let currentMinutes = Int(currentSeconds) / 60
 
-        let action = UIAlertAction(title: RuuviLocalization.ok, style: .default) { [weak self, weak alert] _ in
+        let action = alertActions(title: RuuviLocalization.ok, style: .default) { [weak self, weak alert] _ in
             guard let self, let minutesText = alert?.textFields?.first?.text else { return }
             defer { self.resetCloudConnectionDelayDialogState() }
             guard let minutes = Int(minutesText) else { return }
             let minimum = RuuviAlertConstants.CloudConnection.minUnseenDuration
-            guard minutes >= minimum else { return }
+            guard minutes >= minimum, minutes <= Int.max / 60 else { return }
 
             let seconds = minutes * 60
             if Int(currentSeconds) == seconds {
@@ -392,7 +393,7 @@ private extension CardsAlertsViewController {
 
         alert.addAction(action)
         alert.addAction(
-            UIAlertAction(title: RuuviLocalization.cancel, style: .cancel) { [weak self] _ in
+            alertActions(title: RuuviLocalization.cancel, style: .cancel) { [weak self] _ in
                 self?.resetCloudConnectionDelayDialogState()
             }
         )
@@ -409,7 +410,7 @@ private extension CardsAlertsViewController {
               let minutes = Int(minutesText) else {
             return false
         }
-        return minutes >= RuuviAlertConstants.CloudConnection.minUnseenDuration
+        return minutes >= RuuviAlertConstants.CloudConnection.minUnseenDuration && minutes <= Int.max / 60
     }
 
     func resetCloudConnectionDelayDialogState() {

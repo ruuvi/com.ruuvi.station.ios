@@ -80,6 +80,38 @@ import XCTest
         XCTAssertGreaterThan(restored.entries.count, 10)
     }
 
+    func testDefaultOrderPreservesTheProfileAndIgnoresSavedCustomCodes() throws {
+        let fixture = SensorDataFixture()
+        let sensor = fixture.sensor()
+        defer {
+            RuuviTagDataService.clearMeasurementDisplayPreference(for: sensor.id)
+            RuuviTagDataService.clearMeasurementDisplayOverride(for: sensor.id)
+            fixture.cleanup()
+        }
+        let co2 = MeasurementDisplayVariant(type: .co2)
+        let particles = MeasurementDisplayVariant(type: .pm25)
+        let co2Code = try XCTUnwrap(RuuviTagDataService.measurementCode(for: co2))
+        let particleCode = try XCTUnwrap(RuuviTagDataService.measurementCode(for: particles))
+        RuuviTagDataService.setMeasurementDisplayOverride(
+            .init(entries: [.init(.co2, visible: false, contexts: .graph), .init(.voc)]), for: sensor.id)
+        RuuviTagDataService.setMeasurementDisplayPreference(
+            .init(defaultDisplayOrder: true, displayOrderCodes: [co2Code, particleCode, particleCode, "unknown"]),
+            for: sensor.id)
+        let profile = RuuviTagDataService.measurementDisplayProfile(for: sensor)
+        XCTAssertEqual(profile.orderedVisibleTypes, [.voc])
+        XCTAssertEqual(profile.entries.map(\.type), [.co2, .voc])
+        XCTAssertFalse(profile.entries.contains { $0.variant == particles })
+        let carbonDioxide = try XCTUnwrap(profile.entries.first { $0.variant == co2 })
+        XCTAssertTrue(carbonDioxide.supports(.graph))
+        XCTAssertFalse(carbonDioxide.supports(.indicator))
+        RuuviTagDataService.setMeasurementDisplayPreference(
+            .init(defaultDisplayOrder: false, displayOrderCodes: [particleCode]), for: sensor.id)
+        XCTAssertEqual(RuuviTagDataService.measurementDisplayProfile(for: sensor).orderedVisibleTypes, [.pm25])
+        XCTAssertEqual(
+            RuuviTagDataService.measurementDisplayProfile(for: sensor, useDefaultOrder: true).orderedVisibleTypes,
+            [.voc])
+    }
+
     func testStoredOrderingKeepsEachCardAssociatedWithItsSensor() async {
         let fixture = SensorDataFixture()
         defer { fixture.cleanup() }

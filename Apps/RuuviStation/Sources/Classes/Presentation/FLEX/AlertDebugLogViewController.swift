@@ -78,7 +78,8 @@ final class AlertDebugLogViewController: UIViewController {
 
     private func scrollToBottom() {
         guard !textView.text.isEmpty else { return }
-        let bottom = NSRange(location: textView.text.count - 1, length: 0)
+        textView.layoutIfNeeded()
+        let bottom = NSRange(location: textView.text.utf16.count - 1, length: 1)
         textView.scrollRangeToVisible(bottom)
     }
 }

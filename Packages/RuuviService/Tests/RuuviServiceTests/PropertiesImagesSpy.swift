@@ -8,6 +8,8 @@ final class PropertiesImagesSpy: RuuviLocalImages {
         UIColor.red.setFill()
         context.fill(CGRect(x: 0, y: 0, width: 8, height: 8))
     }
+    var writtenImages = [UIImage]()
+    var cacheMarks = [String]()
     var backgroundChanges = 0
     var cached = [String: UIImage]()
     var generated = [String: UIImage]()
@@ -35,6 +37,7 @@ final class PropertiesImagesSpy: RuuviLocalImages {
         async throws(RuuviLocalError) -> URL
     {
         writes.append((identifier.value, compressionQuality))
+        writtenImages.append(image)
         if let localFailure { throw localFailure }
         return url
     }
@@ -45,6 +48,6 @@ final class PropertiesImagesSpy: RuuviLocalImages {
     }
     func deleteBackgroundUploadProgress(for identifier: Identifier) { deletedProgress.append(identifier.value) }
     func isPictureCached(for cloudSensor: CloudSensor) -> Bool { false }
-    func setPictureIsCached(for cloudSensor: CloudSensor) {}
+    func setPictureIsCached(for cloudSensor: CloudSensor) { cacheMarks.append(cloudSensor.id) }
     func setPictureRemovedFromCache(for ruuviTag: RuuviTagSensor) { invalidated.append(ruuviTag.id) }
 }

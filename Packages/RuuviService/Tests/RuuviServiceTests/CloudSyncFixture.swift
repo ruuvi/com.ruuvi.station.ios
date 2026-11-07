@@ -39,7 +39,7 @@ import RuuviStorage
     private let savedSyncDate: Date?
     let date = Date(timeIntervalSince1970: 1_800_000_000)
 
-    init() throws {
+    init(imageSession: URLSession = .shared, images: RuuviLocalImages? = nil) throws {
         defaults = UserDefaults(suiteName: suite)!
         directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
@@ -61,8 +61,8 @@ import RuuviStorage
         alerts = RuuviServiceAlertImpl(cloud: cloud, localIDs: ids, ruuviLocalSettings: settings, defaults: defaults)
         service = RuuviServiceCloudSyncImpl(
             ruuviStorage: storage, ruuviCloud: cloud, ruuviPool: pool, ruuviLocalSettings: settings,
-            ruuviLocalSyncState: syncState, ruuviLocalImages: local.createLocalImages(), ruuviRepository: repository,
-            ruuviLocalIDs: ids, ruuviAlertService: alerts)
+            ruuviLocalSyncState: syncState, ruuviLocalImages: images ?? local.createLocalImages(), ruuviRepository: repository,
+            ruuviLocalIDs: ids, ruuviAlertService: alerts, imageSession: imageSession)
         let bytes = UUID().uuidString.replacingOccurrences(of: "-", with: "").prefix(12)
         let mac = stride(from: 0, to: 12, by: 2).map { offset in
             let start = bytes.index(bytes.startIndex, offsetBy: offset)

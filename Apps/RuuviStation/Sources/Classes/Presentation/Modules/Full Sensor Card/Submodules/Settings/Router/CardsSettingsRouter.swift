@@ -5,6 +5,8 @@ import SwiftUI
 import UIKit
 
 class CardsSettingsRouter: NSObject, CardsSettingsRouterInput {
+    var makeFirmware: ((RuuviTagSensor) -> DFUModuleInput)?
+    var makeBackgroundSelection: ((RuuviTagSensor) -> BackgroundSelectionModuleInput)?
     weak var transitionHandler: UIViewController!
     private weak var dfuModule: DFUModuleInput?
     private var backgroundSelectionModule: BackgroundSelectionModuleInput?
@@ -21,7 +23,7 @@ class CardsSettingsRouter: NSObject, CardsSettingsRouterInput {
 
     func openBackgroundSelectionView(ruuviTag: RuuviTagSensor) {
         let factory: BackgroundSelectionModuleFactory = BackgroundSelectionModuleFactoryImpl()
-        let module = factory.create(for: ruuviTag)
+        let module = makeBackgroundSelection?(ruuviTag) ?? factory.create(for: ruuviTag)
         backgroundSelectionModule = module
         transitionHandler
             .navigationController?
@@ -61,7 +63,7 @@ class CardsSettingsRouter: NSObject, CardsSettingsRouterInput {
 
     func openUpdateFirmware(ruuviTag: RuuviTagSensor) {
         let factory: DFUModuleFactory = DFUModuleFactoryImpl()
-        let module = factory.create(for: ruuviTag)
+        let module = makeFirmware?(ruuviTag) ?? factory.create(for: ruuviTag)
         module.output = self
         dfuModule = module
         transitionHandler

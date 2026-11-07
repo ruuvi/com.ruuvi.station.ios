@@ -28,7 +28,23 @@ final class AppTestSettings: RuuviLocalSettings {
     var language: Language = .english
     var cloudProfileLanguageCode: String? = nil
     var isAdvertisementDaemonOn: Bool = false
-    var advertisementDaemonIntervalMinutes: Int = 0
+    private let advertisementIntervalLock = NSLock()
+    private var advertisementInterval = 0
+    private var intervalReadObserver: ((Int) -> Void)?
+    var advertisementIntervalDidRead: ((Int) -> Void)? {
+        get { advertisementIntervalLock.withLock { intervalReadObserver } }
+        set { advertisementIntervalLock.withLock { intervalReadObserver = newValue } }
+    }
+    var advertisementDaemonIntervalMinutes: Int {
+        get {
+            let (value, observer) = advertisementIntervalLock.withLock {
+                (advertisementInterval, intervalReadObserver)
+            }
+            observer?(value)
+            return value
+        }
+        set { advertisementIntervalLock.withLock { advertisementInterval = newValue } }
+    }
     var connectionTimeout: TimeInterval = 0
     var serviceTimeout: TimeInterval = 0
     var cardsSwipeHintWasShown: Bool = false
