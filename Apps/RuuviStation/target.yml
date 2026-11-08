@@ -188,6 +188,20 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         TEST_HOST: "$(BUILT_PRODUCTS_DIR)/station.app/station"
         BUNDLE_LOADER: "$(TEST_HOST)"
+  station.duoLayoutTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests/Unit/DuoLayout
+    dependencies:
+      - target: station
+      - target: RuuviLocalization
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/station.app/station"
+        BUNDLE_LOADER: "$(TEST_HOST)"
 schemes:
   station:
     build:
@@ -197,3 +211,4 @@ schemes:
       targets:
         - station.alertTests
         - station.marketingConsentTests
+        - station.duoLayoutTests

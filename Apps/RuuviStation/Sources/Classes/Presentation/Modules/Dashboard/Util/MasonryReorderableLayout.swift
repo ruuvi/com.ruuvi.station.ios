@@ -150,7 +150,7 @@ private class MasonryDragPreviewView: UIView {
         layer.shadowOpacity = 0
         layer.shadowRadius = 8.0
         layer.shouldRasterize = true
-        layer.rasterizationScale = UIScreen.main.scale
+        layer.rasterizationScale = RuuviAppGeometry.scale(for: cell)
     }
 
     private func setupImageViews() {

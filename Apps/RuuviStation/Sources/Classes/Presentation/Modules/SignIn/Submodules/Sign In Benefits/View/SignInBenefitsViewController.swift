@@ -33,6 +33,7 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
     }()
 
     private lazy var container = UIView(color: .clear)
+    private var sideInsetSwitch: RuuviVerticalBarConstraintSwitch?
 
     private lazy var titleStack = UIStackView()
     private lazy var titleLabel: UILabel = {
@@ -108,6 +109,11 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
 // MARK: - VIEW LIFE CYCLE
 
 extension SignInBenefitsViewController {
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        sideInsetSwitch?.update(for: traitCollection)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
@@ -163,7 +169,11 @@ extension SignInBenefitsViewController {
     private func setUpSignInPromoView() {
         scrollView.addSubview(container)
         container.fillSuperview()
-        container.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        // iPhone Duo: keep the content clear of the vertical bar / status bar on the side.
+        sideInsetSwitch = RuuviVerticalBarConstraintSwitch(
+            standard: [container.widthAnchor.constraint(equalTo: view.widthAnchor)],
+            verticalBar: [container.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor)]
+        )
         container.centerInSuperview()
 
         titleStack = UIStackView(arrangedSubviews: [

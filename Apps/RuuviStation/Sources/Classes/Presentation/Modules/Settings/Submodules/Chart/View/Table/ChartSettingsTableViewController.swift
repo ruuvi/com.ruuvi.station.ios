@@ -14,6 +14,7 @@ class ChartSettingsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        reloadWhenVerticalBarChanges()
         tableView.tableHeaderView = UIView()
         tableView.sectionFooterHeight = UITableView.automaticDimension
         localize()
@@ -96,7 +97,7 @@ extension ChartSettingsTableViewController {
         100
     }
 
-    override func tableView(_: UITableView, viewForFooterInSection section: Int) -> UIView? {
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let footerView = UIView()
         let footerLabel = UILabel()
         footerLabel.textColor = RuuviColor.textColor.color.withAlphaComponent(0.6)
@@ -104,7 +105,10 @@ extension ChartSettingsTableViewController {
         footerLabel.numberOfLines = 0
         footerLabel.text = viewModel.sections[section].note
         footerView.addSubview(footerLabel)
-        footerLabel.fillSuperview(padding: .init(top: 8, left: 20, bottom: 8, right: 20))
+        footerLabel.fillSuperviewAvoidingVerticalBar(
+            padding: .init(top: 8, left: 20, bottom: 8, right: 20),
+            traits: tableView.traitCollection
+        )
         return footerView
     }
 

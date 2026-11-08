@@ -166,7 +166,7 @@ class MyRuuviAccountViewController: UIViewController {
         let separator = UIView()
         separator.backgroundColor = RuuviColor.textColor.color.withAlphaComponent(0.25)
         separator.heightAnchor.constraint(
-            equalToConstant: 1 / UIScreen.main.scale
+            equalToConstant: 1 / RuuviAppGeometry.scale(for: view)
         ).isActive = true
         return separator
     }

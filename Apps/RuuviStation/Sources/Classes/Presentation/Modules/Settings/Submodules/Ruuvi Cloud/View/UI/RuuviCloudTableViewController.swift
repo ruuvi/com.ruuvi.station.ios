@@ -27,6 +27,7 @@ class RuuviCloudTableViewController: UITableViewController {
 extension RuuviCloudTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        reloadWhenVerticalBarChanges()
         setUpUI()
         localize()
         output.viewDidLoad()
@@ -100,7 +101,7 @@ extension RuuviCloudTableViewController {
         100
     }
 
-    override func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
+    override func tableView(_ tableView: UITableView, viewForFooterInSection _: Int) -> UIView? {
         let footerView = UIView()
         let footerLabel = UILabel()
         footerLabel.textColor = RuuviColor.textColor.color.withAlphaComponent(0.6)
@@ -108,7 +109,10 @@ extension RuuviCloudTableViewController {
         footerLabel.numberOfLines = 0
         footerLabel.text = RuuviLocalization.Settings.Label.CloudMode.description
         footerView.addSubview(footerLabel)
-        footerLabel.fillSuperview(padding: .init(top: 8, left: 20, bottom: 8, right: 20))
+        footerLabel.fillSuperviewAvoidingVerticalBar(
+            padding: .init(top: 8, left: 20, bottom: 8, right: 20),
+            traits: tableView.traitCollection
+        )
         return footerView
     }
 }

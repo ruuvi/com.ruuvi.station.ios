@@ -47,12 +47,15 @@ permissions:
 jobs:
   build:
     if: (github.event_name != 'pull_request' || github.event.pull_request.merged == true)
-    runs-on: macos-15
+    # Xcode 27 is only on GitHub's separate xcode-27 image (macOS 27); macos-26 ships Xcode 26.x.
+    runs-on: xcode-27
 
     steps:
       - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1
         with:
-          xcode-version: 'latest-stable'
+          # Exact GM pin: a range would also match the image's 27.2 release candidate.
+          # The iOS 27.1+ SDK is required for iPhone Duo support.
+          xcode-version: '27.1'
 
       - name: Checkout repository
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4

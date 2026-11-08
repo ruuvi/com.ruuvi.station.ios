@@ -55,7 +55,7 @@ class CardsGraphMarkerView: MarkerImage {
         let labelHeight = labelText.size(withAttributes: attrs).height + vPadding
         var rectangle = CGRect(x: point.x, y: point.y, width: labelWidth, height: labelHeight)
 
-        let chartWidth = chartView?.bounds.width ?? UIScreen.main.bounds.width
+        let chartWidth = chartView?.bounds.width ?? RuuviAppGeometry.bounds(for: nil).width
         if (point.x + rectangle.width) >= chartWidth {
             // shift left
             rectangle.origin.x -= rectangle.width

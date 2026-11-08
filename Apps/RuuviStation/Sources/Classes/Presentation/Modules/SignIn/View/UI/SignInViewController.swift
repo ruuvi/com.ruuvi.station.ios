@@ -43,6 +43,7 @@ class SignInViewController: UIViewController {
         sv.showsVerticalScrollIndicator = false
         return sv
     }()
+    private var sideInsetSwitch: RuuviVerticalBarConstraintSwitch?
 
     private lazy var signInView = SignInView()
     private lazy var signInVerifyView = SignInVerifyView()
@@ -73,6 +74,11 @@ class SignInViewController: UIViewController {
 // MARK: - VIEW LIFE CYCLE
 
 extension SignInViewController {
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        sideInsetSwitch?.update(for: traitCollection)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
@@ -215,8 +221,17 @@ extension SignInViewController {
             bottom: view.bottomAnchor,
             trailing: nil
         )
-        scrollView.centerXInSuperview()
-        scrollView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        // iPhone Duo: keep the content clear of the vertical bar / status bar on the side.
+        sideInsetSwitch = RuuviVerticalBarConstraintSwitch(
+            standard: [
+                scrollView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                scrollView.widthAnchor.constraint(equalTo: view.widthAnchor),
+            ],
+            verticalBar: [
+                scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            ]
+        )
     }
 
     private func setUpNavBarView() {

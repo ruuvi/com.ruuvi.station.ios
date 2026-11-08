@@ -70,10 +70,16 @@ struct DFUUIView: View {
                         .onAppear {
                             superviewSize = proxy.size
                         }
+                        .onChange(of: proxy.size) { newSize in
+                            // iPhone Duo: the display changes size when the device opens/closes.
+                            if AppUtility.isFoldableDevice {
+                                superviewSize = newSize
+                            }
+                        }
                 }
             }
             .background(RuuviColor.primary.swiftUIColor)
-            .edgesIgnoringSafeArea(.all)
+            .modifier(DFUSafeAreaModifier())
             .navigationBarTitle(texts.navigationTitle)
             .navigationBarBackButtonHidden(true)
             .navigationBarTitleDisplayMode(.inline)
@@ -527,5 +533,35 @@ struct DFUUIView: View {
 
     func goBack() {
         presentationMode.wrappedValue.dismiss()
+    }
+}
+
+/// `edgesIgnoringSafeArea(.all)`, except while iPhone Duo shows its vertical bar on a side of the
+/// display: then the content keeps the side safe area (so it doesn't run under the bar) and only
+/// the background extends there. On iPhone and iPad this is exactly `edgesIgnoringSafeArea(.all)`.
+private struct DFUSafeAreaModifier: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 27.1, *) {
+            content.modifier(DFUVerticalBarSafeAreaModifier())
+        } else {
+            content.edgesIgnoringSafeArea(.all)
+        }
+    }
+}
+
+@available(iOS 27.1, *)
+private struct DFUVerticalBarSafeAreaModifier: ViewModifier {
+    @Environment(\.toolbarVerticalEdge) private var verticalBarEdge
+
+    // One view structure for both states, so the view keeps its identity (and state) when the
+    // vertical bar comes and goes.
+    func body(content: Content) -> some View {
+        let hasVerticalBar = verticalBarEdge != nil
+        content
+            .edgesIgnoringSafeArea(hasVerticalBar ? [.top, .bottom] : .all)
+            .background(
+                (hasVerticalBar ? RuuviColor.primary.swiftUIColor : Color.clear)
+                    .edgesIgnoringSafeArea(.all)
+            )
     }
 }

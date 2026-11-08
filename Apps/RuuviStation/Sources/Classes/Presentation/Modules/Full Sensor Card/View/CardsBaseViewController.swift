@@ -89,6 +89,33 @@ final class CardsBaseViewController: UIViewController {
     private var isUpdatingUI = false
     private var cancellables: Set<AnyCancellable> = []
 
+    // MARK: - iPhone Duo vertical bar
+    /// `true` while back and the tabs are shown in the system vertical bar (iPhone Duo only).
+    private var isVerticalBarChromeApplied = false
+    private var headerLeadingStackLeadingConstraint: NSLayoutConstraint?
+
+    private lazy var backBarItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(
+            title: RuuviDuoStrings.back,
+            image: RuuviAsset.chevronBack.image.ruuviBarIcon(),
+            target: self,
+            action: #selector(backButtonDidTap)
+        )
+        item.tintColor = .white
+        return item
+    }()
+
+    /// The tab items currently shown in the vertical bar (rebuilt on every selection change).
+    private var tabBarItems: [CardsMenuType: UIBarButtonItem] = [:]
+
+    /// iPhone Duo: the four tabs are owned by a native tab bar controller, so the system shows a real
+    /// tab bar in the vertical bar with native selection behaviour. `nil` on iPhone and iPad, which
+    /// keep the custom tab row.
+    private var nativeTabBarController: UITabBarController?
+    private var usesNativeTabBar: Bool { nativeTabBarController != nil }
+    /// The containers the native tab bar controller shows (one per tab, wrapping `tabs`).
+    private var nativeTabContainers: [CardsMenuType: UIViewController] = [:]
+
     // MARK: - Base UI Components
     private lazy var cardBackgroundView = CardsBackgroundView()
     private lazy var tabBackgroundView = UIView(color: .clear)
@@ -257,6 +284,7 @@ final class CardsBaseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
+        registerVerticalBarObserver()
         startObservingAppState()
         TimestampUpdateService.shared.addSubscriber(self)
         updateCurrentSnapshotUI()
@@ -264,7 +292,9 @@ final class CardsBaseViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
+        applyVerticalBarChrome(updateNavigationBarVisibility: false)
+        // The navigation bar only shows on iPhone Duo, where it hosts the vertical bar.
+        navigationController?.setNavigationBarHidden(!isVerticalBarChromeApplied, animated: animated)
         output?.viewWillAppear()
     }
 
@@ -356,13 +386,13 @@ private extension CardsBaseViewController {
         ruuviLogoView.heightAnchor.constraint(equalToConstant: Constants.Layout.ruuviLogoSize.height).isActive = true
 
         headerContainerView.addSubview(headerLeadingStack)
-        headerLeadingStack
+        headerLeadingStackLeadingConstraint = headerLeadingStack
             .anchor(
                 top: headerContainerView.topAnchor,
                 leading: headerContainerView.safeLeftAnchor,
                 bottom: headerContainerView.bottomAnchor,
                 trailing: nil
-            )
+            ).leading
 
         headerContainerView.addSubview(menuBarView)
         menuBarView.anchor(
@@ -541,6 +571,10 @@ private extension CardsBaseViewController {
     }
 
     private func embedChildViewControllers() {
+        if AppUtility.isFoldableDevice {
+            embedTabsInNativeTabBarController()
+            return
+        }
         for (tab, vc) in tabs {
             addChild(vc)
             vc.view.overrideUserInterfaceStyle = .dark
@@ -552,6 +586,351 @@ private extension CardsBaseViewController {
             }
             vc.didMove(toParent: self)
             vc.view.isHidden = tab != activeTab
+        }
+    }
+}
+
+// MARK: - iPhone Duo vertical bar
+private extension CardsBaseViewController {
+    func registerVerticalBarObserver() {
+        guard #available(iOS 27.1, *) else { return }
+        registerForTraitChanges(RuuviDuoLayout.traitsAffectingVerticalBar) {
+            (controller: CardsBaseViewController, _: UITraitCollection) in
+            controller.applyVerticalBarChrome(updateNavigationBarVisibility: true)
+        }
+    }
+
+    /// iPhone Duo: where the system lays out bars vertically, back and the four tabs move into the
+    /// navigation bar so they show in the vertical bar (Apple's pattern for iPhone Duo). The logo,
+    /// sensor name row, tab content and footer stay as they are. `menuBarView` stays the single
+    /// source of truth for the selected tab. On iPhone and iPad `isVerticalBarActive` is always
+    /// false, so nothing here changes.
+    func applyVerticalBarChrome(updateNavigationBarVisibility: Bool) {
+        let shouldApply = RuuviDuoLayout.isVerticalBarActive(traitCollection)
+        guard shouldApply != isVerticalBarChromeApplied else { return }
+        isVerticalBarChromeApplied = shouldApply
+
+        backButton.isHidden = shouldApply
+        menuBarView.isHidden = shouldApply
+        // Without the back button the logo would touch the edge: same inset as on the dashboard.
+        headerLeadingStackLeadingConstraint?.constant = shouldApply
+            ? Constants.Layout.headerHorizontalPadding
+            : 0
+
+        if shouldApply {
+            navigationItem.hidesBackButton = true
+            navigationItem.leftBarButtonItems = [backBarItem]
+            updateTabBarItemsSelection()
+        } else {
+            navigationItem.leftBarButtonItems = nil
+            navigationItem.trailingItemGroups = []
+            tabBarItems = [:]
+            navigationItem.hidesBackButton = false
+            // The tab row was hidden while the vertical bar showed the tabs: re-sync its marker.
+            menuBarView.setSelectedTab(activeTab, animated: false, notify: false)
+            menuBarView.setNeedsLayout()
+        }
+        updateNativeTabBarVisibility()
+
+        if updateNavigationBarVisibility,
+           viewIfLoaded?.window != nil,
+           navigationController?.topViewController === self {
+            navigationController?.setNavigationBarHidden(!shouldApply, animated: true)
+        }
+    }
+
+    func makeTabBarItem(for tab: CardsMenuType) -> UIBarButtonItem {
+        let title = tab.verticalBarTitle
+        let image = tab.icon.ruuviBarIcon()
+        let action = UIAction(title: title, image: image) { [weak self] _ in
+            guard let self, tab != self.activeTab else { return }
+            self.menuBarView.setSelectedTab(tab, animated: false, notify: false)
+            self.handleTabChange(tab)
+            if self.activeTab != tab {
+                self.menuBarView.setSelectedTab(self.activeTab, animated: false, notify: false)
+            }
+        }
+        let item = UIBarButtonItem(primaryAction: action)
+        item.title = title
+        item.image = image
+        item.tintColor = .white
+        if #available(iOS 27.0, *) {
+            item.visibilityPriority = .high
+        }
+        return item
+    }
+
+    /// Shows the tabs in the vertical bar with the active one selected. The items are recreated on
+    /// every change: the vertical bar doesn't redraw `isSelected` changes on items it already shows.
+    func updateTabBarItemsSelection() {
+        selectNativeTab(activeTab)
+        guard isVerticalBarChromeApplied, !usesNativeTabBar else { return }
+        var items: [CardsMenuType: UIBarButtonItem] = [:]
+        for tab in CardsMenuType.allCases {
+            let item = makeTabBarItem(for: tab)
+            item.isSelected = tab == activeTab
+            items[tab] = item
+        }
+        tabBarItems = items
+        navigationItem.trailingItemGroups = [
+            UIBarButtonItemGroup(
+                barButtonItems: CardsMenuType.allCases.compactMap { items[$0] },
+                representativeItem: nil
+            ),
+        ]
+        updateAlertsBarItem(for: currentSnapshot)
+    }
+
+    func updateAlertState(for snapshot: RuuviTagCardSnapshot?) {
+        menuBarView.updateAlertState(for: snapshot)
+        updateAlertsBarItem(for: snapshot)
+        updateNativeAlertsBadge(for: snapshot)
+    }
+
+    /// Mirrors the alert bell badge of `CardsMenuButton` on the vertical bar's alerts item.
+    func updateAlertsBarItem(for snapshot: RuuviTagCardSnapshot?) {
+        guard isVerticalBarChromeApplied, let item = tabBarItems[.alerts] else { return }
+        item.isEnabled = snapshot != nil
+        guard #available(iOS 26.0, *) else { return }
+        guard let badgeData = snapshot?.alertBadgeData(), badgeData.count > 0 else {
+            item.badge = nil
+            return
+        }
+        var badge: UIBarButtonItem.Badge = badgeData.count > 99
+            ? .string("99+")
+            : .count(badgeData.count)
+        badge.foregroundColor = .white
+        badge.backgroundColor = badgeData.isTriggered ? RuuviColor.orangeColor.color : .clear
+        item.badge = badge
+    }
+}
+
+// MARK: - iPhone Duo native tab bar (no-ops on iPhone and iPad, where there is no native tab bar)
+extension CardsBaseViewController {
+    /// `spaceUntilSecondaryToolbar` from the current layout, without forcing a layout pass
+    /// (used by the measurement details sheet after an iPhone Duo display change).
+    var currentSpaceUntilSecondaryToolbar: CGFloat {
+        view.safeAreaInsets.top +
+            headerContainerView.frame.height +
+            secondaryToolbarView.frame.height +
+            Constants.Layout.spaceUntilSecondaryToolbarExtraMargin
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateNativeTabBarLayout()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        refreshNativeTabBarPlacement()
+    }
+
+    override func viewWillTransition(
+        to size: CGSize,
+        with coordinator: UIViewControllerTransitionCoordinator
+    ) {
+        super.viewWillTransition(to: size, with: coordinator)
+        guard usesNativeTabBar else { return }
+        coordinator.animate(alongsideTransition: nil) { [weak self] _ in
+            self?.refreshNativeTabBarPlacement()
+        }
+    }
+}
+
+private extension CardsBaseViewController {
+    func embedTabsInNativeTabBarController() {
+        let orderedTabs: [(CardsMenuType, UIViewController)] = CardsMenuType.allCases.compactMap { tab in
+            guard let content = tabs[tab] else { return nil }
+            content.view.overrideUserInterfaceStyle = .dark
+            // Same pinning as in `embedChildViewControllers()`.
+            let container = CardsNativeTabContainerViewController(
+                content: content,
+                extendsToBottomEdge: tab == .alerts || tab == .settings
+            )
+            return (tab, container)
+        }
+        for (index, (tab, container)) in orderedTabs.enumerated() {
+            container.tabBarItem = UITabBarItem(
+                title: tab.verticalBarTitle,
+                image: tab.icon.ruuviBarIcon(),
+                tag: index
+            )
+        }
+        nativeTabContainers = Dictionary(uniqueKeysWithValues: orderedTabs)
+
+        let tabBarController = UITabBarController()
+        tabBarController.viewControllers = orderedTabs.map(\.1)
+        tabBarController.selectedIndex = orderedTabs.firstIndex { $0.0 == activeTab } ?? 0
+        tabBarController.delegate = self
+        tabBarController.overrideUserInterfaceStyle = .dark
+        tabBarController.view.backgroundColor = .clear
+        tabBarController.tabBar.tintColor = .white
+
+        // The tab bar controller spans the whole screen (behind the header, sensor row and footer):
+        // the system only moves its tab bar into the vertical bar at the screen edge. The tab content
+        // is kept in the tab container's region (see `updateNativeTabBarLayout()`).
+        addChild(tabBarController)
+        view.insertSubview(tabBarController.view, aboveSubview: tabBackgroundView)
+        tabBarController.view.fillSuperview()
+        tabBarController.didMove(toParent: self)
+        nativeTabBarController = tabBarController
+        // `tabContainerView` stays only as the layout reference for the tab content region; the tab
+        // views now live in the tab bar controller underneath it, so it must not take their touches.
+        tabContainerView.isUserInteractionEnabled = false
+        updateNativeTabBarVisibility()
+    }
+
+    /// The native tab bar shows where the system lays out bars vertically; elsewhere (inner display
+    /// in portrait) it is hidden and the custom tab row drives the tabs, as on iPhone.
+    func updateNativeTabBarVisibility() {
+        guard let tabBarController = nativeTabBarController else { return }
+        let showsNativeTabBar = isVerticalBarChromeApplied
+        if #available(iOS 18.0, *) {
+            tabBarController.isTabBarHidden = !showsNativeTabBar
+        } else {
+            tabBarController.tabBar.isHidden = !showsNativeTabBar
+        }
+        menuBarView.isHidden = showsNativeTabBar
+        if !showsNativeTabBar {
+            menuBarView.setSelectedTab(activeTab, animated: false, notify: false)
+            menuBarView.setNeedsLayout()
+        }
+        view.setNeedsLayout()
+        if showsNativeTabBar {
+            // The vertical bar settles after this pass (device opened, closed or rotated).
+            DispatchQueue.main.async { [weak self] in
+                self?.refreshNativeTabBarPlacement()
+            }
+        }
+    }
+
+    /// The system first draws the vertical tab bar at the wrong edge (bottom-leading) and only moves
+    /// it into the shared vertical bar column (under Back, where UIKit lays it out and where the safe
+    /// area already reserves room) on its next tab bar layout. Re-show it once the screen is on
+    /// screen so it lands in the right place straight away.
+    func refreshNativeTabBarPlacement() {
+        guard let tabBarController = nativeTabBarController,
+              isVerticalBarChromeApplied,
+              view.window != nil else { return }
+        if #available(iOS 18.0, *) {
+            tabBarController.setTabBarHidden(true, animated: false)
+            tabBarController.view.layoutIfNeeded()
+            tabBarController.setTabBarHidden(false, animated: false)
+        } else {
+            tabBarController.tabBar.isHidden = true
+            tabBarController.view.layoutIfNeeded()
+            tabBarController.tabBar.isHidden = false
+        }
+    }
+
+    func updateNativeTabBarLayout() {
+        guard let tabBarController = nativeTabBarController else { return }
+
+        // Keep the tab content in the tab container's region (below the sensor row, above the
+        // footer) while the tab bar controller itself spans the screen.
+        let safeArea = view.safeAreaInsets
+        let insets = UIEdgeInsets(
+            top: max(0, tabContainerView.frame.minY - safeArea.top),
+            left: 0,
+            bottom: max(0, view.bounds.height - safeArea.bottom - tabContainerView.frame.maxY),
+            right: 0
+        )
+        if tabBarController.additionalSafeAreaInsets != insets {
+            tabBarController.additionalSafeAreaInsets = insets
+        }
+    }
+
+    func selectNativeTab(_ tab: CardsMenuType) {
+        guard let tabBarController = nativeTabBarController,
+              let viewController = nativeTabContainers[tab],
+              tabBarController.selectedViewController !== viewController else { return }
+        tabBarController.selectedViewController = viewController
+    }
+
+    /// Mirrors the alert bell badge of `CardsMenuButton` on the native alerts tab.
+    func updateNativeAlertsBadge(for snapshot: RuuviTagCardSnapshot?) {
+        guard usesNativeTabBar, let item = nativeTabContainers[.alerts]?.tabBarItem else { return }
+        item.isEnabled = snapshot != nil
+        guard let badgeData = snapshot?.alertBadgeData(), badgeData.count > 0 else {
+            item.badgeValue = nil
+            return
+        }
+        item.badgeValue = badgeData.count > 99 ? "99+" : "\(badgeData.count)"
+        item.badgeColor = badgeData.isTriggered ? RuuviColor.orangeColor.color : .clear
+        item.setBadgeTextAttributes([.foregroundColor: UIColor.white], for: .normal)
+    }
+}
+
+/// iPhone Duo: hosts one tab of the native tab bar controller and gives it the frame the custom tab
+/// container gave it: the safe area (which the card screen insets to the tab content region), and
+/// for alerts and settings down to the bottom edge (their footer is hidden and they run to the
+/// bottom of the screen).
+private final class CardsNativeTabContainerViewController: UIViewController {
+    private let content: UIViewController
+    private let extendsToBottomEdge: Bool
+
+    init(content: UIViewController, extendsToBottomEdge: Bool) {
+        self.content = content
+        self.extendsToBottomEdge = extendsToBottomEdge
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .clear
+        addChild(content)
+        view.addSubview(content.view)
+        let safeArea = view.safeAreaLayoutGuide
+        content.view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            content.view.topAnchor.constraint(equalTo: safeArea.topAnchor),
+            content.view.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+            content.view.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            content.view.bottomAnchor.constraint(
+                equalTo: extendsToBottomEdge ? view.bottomAnchor : safeArea.bottomAnchor
+            ),
+        ])
+        content.didMove(toParent: self)
+    }
+}
+
+extension CardsBaseViewController: UITabBarControllerDelegate {
+    func tabBarController(
+        _: UITabBarController,
+        didSelect viewController: UIViewController
+    ) {
+        guard let tab = nativeTabContainers.first(where: { $0.value === viewController })?.key,
+              tab != activeTab else { return }
+        // Keep the (hidden) custom row in sync without it reporting the change a second time.
+        menuBarView.setSelectedTab(tab, animated: false, notify: false)
+        handleTabChange(tab)
+        // The presenter switches synchronously, or shows a dialog first (keep connection, abort
+        // sync). Until it does switch, keep the native tab bar and the row on the shown tab; its
+        // later `showContentsForTab` selects the new tab.
+        if activeTab != tab {
+            menuBarView.setSelectedTab(activeTab, animated: false, notify: false)
+            selectNativeTab(activeTab)
+        }
+    }
+}
+
+extension CardsMenuType {
+    var verticalBarTitle: String {
+        switch self {
+        case .measurement:
+            return RuuviDuoStrings.measurements
+        case .graph:
+            return RuuviDuoStrings.history
+        case .alerts:
+            return RuuviDuoStrings.alerts
+        case .settings:
+            return RuuviDuoStrings.settings
         }
     }
 }
@@ -593,7 +972,7 @@ private extension CardsBaseViewController {
 
     @objc func handleAppWillMoveToForeground() {
         output?.appWillMoveToForeground()
-        menuBarView.updateAlertState(for: currentSnapshot)
+        updateAlertState(for: currentSnapshot)
     }
 }
 
@@ -612,6 +991,10 @@ private extension CardsBaseViewController {
     }
 
     func showTabViewController(for tab: CardsMenuType) {
+        guard !usesNativeTabBar else {
+            selectNativeTab(tab)
+            return
+        }
         guard let selectedVC = tabs[tab] else { return }
 
         UIView.animate(
@@ -706,7 +1089,7 @@ private extension CardsBaseViewController {
 
         let currentSnapshot = currentSnapshots[currentSnapshotIndex]
         self.currentSnapshot = currentSnapshot
-        menuBarView.updateAlertState(for: currentSnapshot)
+        updateAlertState(for: currentSnapshot)
         cardBackgroundView
             .setBackgroundImage(
                 with: currentSnapshot.displayData.background,
@@ -862,13 +1245,13 @@ private extension CardsBaseViewController {
 
         currentSnapshot.$alertData
             .sink { [weak self] _ in
-                self?.menuBarView.updateAlertState(for: currentSnapshot)
+                self?.updateAlertState(for: currentSnapshot)
             }
             .store(in: &cancellables)
 
         currentSnapshot.$metadata
             .sink { [weak self] _ in
-                self?.menuBarView.updateAlertState(for: currentSnapshot)
+                self?.updateAlertState(for: currentSnapshot)
             }
             .store(in: &cancellables)
     }
@@ -912,6 +1295,9 @@ extension CardsBaseViewController: MeasurementDetailsCoordinatorDelegate {
         output?.viewDidScrollToGraph(for: measurement, variant: variant)
         activeTab = .graph
         menuBarView.setSelectedTab(.graph, animated: true, notify: false)
+        if !usesNativeTabBar {
+            updateTabBarItemsSelection()
+        }
     }
 }
 
@@ -927,6 +1313,7 @@ extension CardsBaseViewController: CardsBaseViewInput {
         activeTab = tab
         updateHeaderSubtitle(for: tab, animated: true)
         menuBarView.setSelectedTab(tab, animated: true)
+        updateTabBarItemsSelection()
         updateFooterVisibility(for: tab, animated: true)
     }
 
@@ -955,6 +1342,8 @@ extension CardsBaseViewController: CardsBaseViewInput {
     }
 
     func showBluetoothDisabled(userDeclined: Bool) {
+        // The simulator has no Bluetooth: don't show this alert on every launch there.
+        guard !UIDevice.isSimulator else { return }
         let title = RuuviLocalization.Cards.BluetoothDisabledAlert.title
         let message = RuuviLocalization.Cards.BluetoothDisabledAlert.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)

@@ -109,7 +109,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _: UIApplication,
         supportedInterfaceOrientationsFor _: UIWindow?
     ) -> UIInterfaceOrientationMask {
-        orientationLock
+        AppUtility.supportedOrientations(lock: orientationLock)
     }
 }
 

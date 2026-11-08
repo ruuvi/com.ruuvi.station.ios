@@ -1,3 +1,4 @@
+import RuuviLocalization
 import UIKit
 
 // MARK: - ScrollViewEdgeFader
@@ -308,6 +309,11 @@ public final class ScrollViewEdgeFader: NSObject {
         let landscapeHeight = configuration.landscapeFadeTransitionHeight ?? baseHeight
         let portraitHeight = configuration.portraitFadeTransitionHeight ?? baseHeight
 
+        // iPhone Duo inner display: no landscape-specific layout (see CardsGraphViewController).
+        if RuuviDuoLayout.isFoldingDisplay(scrollView) {
+            return portraitHeight
+        }
+
         if let interfaceOrientation = scrollView
             .window?
             .windowScene?
@@ -321,7 +327,7 @@ public final class ScrollViewEdgeFader: NSObject {
             return bounds.width > bounds.height ? landscapeHeight : portraitHeight
         }
 
-        let screenBounds = UIScreen.main.bounds
+        let screenBounds = RuuviAppGeometry.bounds(for: scrollView)
         return screenBounds.width > screenBounds.height ? landscapeHeight : portraitHeight
     }
 }

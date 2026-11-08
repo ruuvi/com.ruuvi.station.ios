@@ -880,6 +880,7 @@ extension CardsGraphPresenter {
 
     private func tryToShowSwipeUpHint() {
         if UIWindow.isLandscape,
+           view?.allowsLandscapeSwipeHint ?? true,
            !settings.tagChartsLandscapeSwipeInstructionWasShown {
             settings.tagChartsLandscapeSwipeInstructionWasShown = true
             view?.showSwipeUpInstruction()

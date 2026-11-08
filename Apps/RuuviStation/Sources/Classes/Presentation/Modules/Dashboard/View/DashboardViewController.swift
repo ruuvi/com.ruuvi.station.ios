@@ -27,20 +27,20 @@ final class DashboardViewController: UIViewController {
 
     var dashboardType: DashboardType! {
         didSet {
-            viewButton.updateMenu(with: viewToggleMenuOptions())
+            refreshViewMenus()
             updateSnapshot(redrawLayout: true, animated: false)
         }
     }
 
     var dashboardTapActionType: DashboardTapActionType! {
         didSet {
-            viewButton.updateMenu(with: viewToggleMenuOptions())
+            refreshViewMenus()
         }
     }
 
     var dashboardSortingType: DashboardSortingType! {
         didSet {
-            viewButton.updateMenu(with: viewToggleMenuOptions())
+            refreshViewMenus()
         }
     }
 
@@ -259,6 +259,48 @@ final class DashboardViewController: UIViewController {
     private var savedTitleView: UIView?
     private var hasAppliedInitialNonEmptySnapshot = false
 
+    // MARK: - iPhone Duo vertical bar
+    /// `true` while the header actions are shown in the system vertical bar (iPhone Duo only).
+    private var isVerticalBarChromeApplied = false
+    private var logoLeadingToMenuConstraint: NSLayoutConstraint?
+    private var logoLeadingToContainerConstraint: NSLayoutConstraint?
+
+    private lazy var menuBarItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(
+            title: RuuviDuoStrings.menu,
+            image: RuuviAsset.baselineMenuWhite48pt.image.ruuviBarIcon(),
+            target: self,
+            action: #selector(handleMenuButtonTap)
+        )
+        item.tintColor = RuuviColor.menuTintColor.color
+        return item
+    }()
+
+    private lazy var viewBarItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(
+            title: RuuviLocalization.view,
+            image: UIImage(systemName: "square.grid.2x2"),
+            primaryAction: nil,
+            menu: viewToggleMenuOptions()
+        )
+        item.tintColor = RuuviColor.dashboardIndicator.color
+        if #available(iOS 27.0, *) {
+            item.visibilityPriority = .high
+        }
+        return item
+    }()
+
+    private lazy var searchBarItem: UIBarButtonItem = {
+        let item = UIBarButtonItem(
+            title: RuuviDuoStrings.search,
+            image: UIImage(systemName: "magnifyingglass"),
+            target: self,
+            action: #selector(handleSearchButtonTap)
+        )
+        item.tintColor = RuuviColor.dashboardIndicator.color
+        return item
+    }()
+
     // MARK: - Observers
     private var appDidBecomeActiveToken: NSObjectProtocol?
     private var marketingPromptActiveToken: NSObjectProtocol?
@@ -274,13 +316,19 @@ extension DashboardViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViewController()
+        registerVerticalBarObserver()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         let shouldAnimateTransition = shouldAnimate(animated)
         if #available(iOS 26.0, *) {
-            navigationController?.setNavigationBarHidden(true, animated: shouldAnimateTransition)
+            applyVerticalBarChrome(updateNavigationBarVisibility: false)
+            // The navigation bar only shows on iPhone Duo, where it hosts the vertical bar.
+            navigationController?.setNavigationBarHidden(
+                !isVerticalBarChromeApplied,
+                animated: shouldAnimateTransition
+            )
         } else {
             navigationController?.makeTransparent()
         }
@@ -397,6 +445,11 @@ private extension DashboardViewController {
 
         // Left side: Menu button + Ruuvi logo
         customHeaderView.addSubview(headerLeftContainer)
+        let logoLeadingToMenu = ruuviLogoView.leadingAnchor.constraint(
+            equalTo: menuButton.trailingAnchor,
+            constant: 4
+        )
+        logoLeadingToMenuConstraint = logoLeadingToMenu
 
         menuButton.translatesAutoresizingMaskIntoConstraints = false
         menuButton.isUserInteractionEnabled = true
@@ -417,12 +470,17 @@ private extension DashboardViewController {
                 .constraint(equalTo: headerLeftContainer.leadingAnchor, constant: 4),
             menuButton.centerYAnchor.constraint(equalTo: headerLeftContainer.centerYAnchor),
 
-            ruuviLogoView.leadingAnchor.constraint(equalTo: menuButton.trailingAnchor, constant: 4),
+            logoLeadingToMenu,
             ruuviLogoView.centerYAnchor.constraint(equalTo: headerLeftContainer.centerYAnchor),
             ruuviLogoView.widthAnchor.constraint(equalToConstant: 90),
             ruuviLogoView.heightAnchor.constraint(equalToConstant: 22),
             ruuviLogoView.trailingAnchor.constraint(equalTo: headerLeftContainer.trailingAnchor),
         ])
+        // iPhone Duo vertical bar mode: the menu button moves to the bar, the logo moves left.
+        logoLeadingToContainerConstraint = ruuviLogoView.leadingAnchor.constraint(
+            equalTo: headerLeftContainer.leadingAnchor,
+            constant: 8
+        )
 
         // Center: Activity indicator
         customHeaderView.addSubview(activityIndicator)
@@ -866,6 +924,7 @@ private extension DashboardViewController {
     @available(iOS 26.0, *)
     func activateSearchiOS26() {
         searchContainerView.isHidden = false
+        setVerticalBarItemsEnabled(false)
         UIView.animate(withDuration: 0.2) {
             self.searchContainerView.alpha = 1
             self.headerLeftContainer.alpha = 0
@@ -877,6 +936,7 @@ private extension DashboardViewController {
 
     @available(iOS 26.0, *)
     func deactivateSearchiOS26() {
+        setVerticalBarItemsEnabled(true)
         UIView.animate(withDuration: 0.2) {
             self.searchContainerView.alpha = 0
             self.headerLeftContainer.alpha = 1
@@ -920,6 +980,70 @@ private extension DashboardViewController {
             self.savedRightBarButtonItem = nil
             self.savedTitleView = nil
             self.searchContainerView.alpha = 1
+        }
+    }
+}
+
+// MARK: - iPhone Duo vertical bar
+private extension DashboardViewController {
+    func registerVerticalBarObserver() {
+        guard #available(iOS 27.1, *) else { return }
+        registerForTraitChanges(RuuviDuoLayout.traitsAffectingVerticalBar) {
+            (controller: DashboardViewController, _: UITraitCollection) in
+            controller.applyVerticalBarChrome(updateNavigationBarVisibility: true)
+        }
+    }
+
+    /// iPhone Duo: where the system lays out bars vertically, the header buttons move into the
+    /// navigation bar so they show in the vertical bar. The logo, activity indicator and search
+    /// field stay in the custom header. On iPhone and iPad `isVerticalBarActive` is always false,
+    /// so nothing here changes.
+    func applyVerticalBarChrome(updateNavigationBarVisibility: Bool) {
+        guard #available(iOS 26.0, *) else { return }
+        let shouldApply = RuuviDuoLayout.isVerticalBarActive(traitCollection)
+        guard shouldApply != isVerticalBarChromeApplied else { return }
+        isVerticalBarChromeApplied = shouldApply
+
+        menuButton.isHidden = shouldApply
+        viewButton.isHidden = shouldApply
+        searchButton.isHidden = shouldApply
+        // Deactivate before activating so the two logo constraints never conflict.
+        let (inactive, active) = shouldApply
+            ? (logoLeadingToMenuConstraint, logoLeadingToContainerConstraint)
+            : (logoLeadingToContainerConstraint, logoLeadingToMenuConstraint)
+        inactive?.isActive = false
+        active?.isActive = true
+
+        if shouldApply {
+            viewBarItem.menu = viewToggleMenuOptions()
+            navigationItem.leftBarButtonItems = [menuBarItem]
+            // Only where the header search field was installed (see `setupCustomHeaderView`).
+            navigationItem.rightBarButtonItems = searchContainerView.superview != nil
+                ? [viewBarItem, searchBarItem]
+                : [viewBarItem]
+            setVerticalBarItemsEnabled(!isSearchActive)
+        } else {
+            navigationItem.leftBarButtonItems = nil
+            navigationItem.rightBarButtonItems = nil
+        }
+
+        if updateNavigationBarVisibility,
+           viewIfLoaded?.window != nil,
+           navigationController?.topViewController === self {
+            navigationController?.setNavigationBarHidden(!shouldApply, animated: true)
+        }
+    }
+
+    /// While search is open the header buttons are hidden; the bar items they moved to follow.
+    func setVerticalBarItemsEnabled(_ enabled: Bool) {
+        guard isVerticalBarChromeApplied else { return }
+        [menuBarItem, viewBarItem, searchBarItem].forEach { $0.isEnabled = enabled }
+    }
+
+    func refreshViewMenus() {
+        viewButton.updateMenu(with: viewToggleMenuOptions())
+        if isVerticalBarChromeApplied {
+            viewBarItem.menu = viewToggleMenuOptions()
         }
     }
 }
@@ -1227,6 +1351,10 @@ extension DashboardViewController: MasonryReorderableLayoutDelegate {
     }
 
     func numberOfColumns(in collectionView: UICollectionView) -> Int {
+        // iPhone Duo inner display: an even count in every pose, so the grid splits at the fold.
+        if RuuviDuoLayout.isFoldingDisplay(collectionView) {
+            return 2
+        }
         let isLandscape = collectionView.bounds.width > collectionView.bounds.height
         if isLandscape {
             return UIDevice.current.userInterfaceIdiom == .pad ? 3 : 2
@@ -1386,6 +1514,8 @@ extension DashboardViewController: NewDashboardViewInput {
     }
 
     func showBluetoothDisabled(userDeclined: Bool) {
+        // The simulator has no Bluetooth: don't show this alert on every launch there.
+        guard !UIDevice.isSimulator else { return }
         let title = RuuviLocalization.Cards.BluetoothDisabledAlert.title
         let message = RuuviLocalization.Cards.BluetoothDisabledAlert.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)

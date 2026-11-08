@@ -266,6 +266,9 @@ final class MeasurementDetailsViewController: UIViewController {
     private var currentMeasurementVariant: MeasurementDisplayVariant?
     private var tagSnapshot: RuuviTagCardSnapshot
     private var maximumSheetHeight: CGFloat
+    /// Overrides `maximumSheetHeight` when set (see `MeasurementDetailsCoordinator`).
+    var maximumSheetHeightProvider: (() -> CGFloat?)?
+    private var sideInsetSwitch: RuuviVerticalBarConstraintSwitch?
 
     private var shouldHideStatusView = false
     private var shouldHideGraph = false
@@ -316,6 +319,11 @@ final class MeasurementDetailsViewController: UIViewController {
         setupLinkTapGesture()
         startObservingAppState()
         output?.viewDidLoad()
+    }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        sideInsetSwitch?.update(for: traitCollection)
     }
 
     override func viewDidLayoutSubviews() {
@@ -431,15 +439,20 @@ private extension MeasurementDetailsViewController {
     }
 
     func activateScrollViewConstraints() {
+        // iPhone Duo: keep the content clear of the vertical bar / status bar on the side.
+        sideInsetSwitch = RuuviVerticalBarConstraintSwitch(
+            standard: [
+                scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            ],
+            verticalBar: [
+                scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+                scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            ]
+        )
         NSLayoutConstraint.activate([
             scrollView.topAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.topAnchor
-            ),
-            scrollView.leadingAnchor.constraint(
-                equalTo: view.leadingAnchor
-            ),
-            scrollView.trailingAnchor.constraint(
-                equalTo: view.trailingAnchor
             ),
             scrollView.bottomAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.bottomAnchor
@@ -1102,9 +1115,12 @@ private extension MeasurementDetailsViewController {
         view.layoutIfNeeded()
         contentView.layoutIfNeeded()
 
+        // The content's own width: the view width everywhere except while iPhone Duo's vertical bar
+        // insets the scroll view.
+        let contentWidth = contentView.bounds.width > 0 ? contentView.bounds.width : view.bounds.width
         let contentHeight = contentView.systemLayoutSizeFitting(
             CGSize(
-                width: view.bounds.width,
+                width: contentWidth,
                 height: UIView.layoutFittingCompressedSize.height
             ),
             withHorizontalFittingPriority: .required,
@@ -1113,7 +1129,7 @@ private extension MeasurementDetailsViewController {
 
         let safeAreaHeight = view.safeAreaInsets.top
         let totalHeight = contentHeight + safeAreaHeight
-        let finalHeight = min(totalHeight, maximumSheetHeight)
+        let finalHeight = min(totalHeight, maximumSheetHeightProvider?() ?? maximumSheetHeight)
 
         if preferredContentSize.height != finalHeight {
             preferredContentSize = CGSize(

@@ -257,8 +257,9 @@ extension NoSensorView {
             return true
         }
 
+        let screenTraits = RuuviAppGeometry.screenTraits(for: self)
         return
-            UIScreen.main.traitCollection.horizontalSizeClass == .compact &&
-            UIScreen.main.traitCollection.verticalSizeClass == .regular
+            screenTraits.horizontalSizeClass == .compact &&
+            screenTraits.verticalSizeClass == .regular
     }
 }

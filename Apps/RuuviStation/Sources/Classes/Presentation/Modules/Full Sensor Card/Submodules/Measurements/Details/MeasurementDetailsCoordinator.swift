@@ -11,6 +11,7 @@ import RuuviReactor
 import RuuviPool
 import RuuviStorage
 import RuuviNotifier
+import RuuviLocalization
 
 protocol MeasurementDetailsCoordinatorDelegate: AnyObject {
     func measurementDetailsCoordinatorDidDismiss(
@@ -56,21 +57,49 @@ class MeasurementDetailsCoordinator: RuuviCoordinator {
 
     override func start() {
         super.start()
-        let config = SheetConfiguration(
-            maxHeight: UIScreen.main.bounds.height - topPadding,
+        let maximumSheetHeight = RuuviAppGeometry.bounds(for: baseViewController.view).height - topPadding
+        let maximumSheetHeightProvider = makeMaximumSheetHeightProvider(initialValue: maximumSheetHeight)
+        var config = SheetConfiguration(
+            maxHeight: maximumSheetHeight,
             prefersGrabberVisible: true,
             preferredCornerRadius: 16,
             prefersScrollingExpandsWhenScrolledToEdge: false,
             prefersEdgeAttachedInCompactHeight: true
         )
+        config.maxHeightProvider = maximumSheetHeightProvider
         viewController = createViewController(
-            maximumSheetHeight: UIScreen.main.bounds.height - topPadding
+            maximumSheetHeight: maximumSheetHeight
         )
+        viewController.maximumSheetHeightProvider = maximumSheetHeightProvider
         baseViewController.presentDynamicBottomSheet(
             vc: viewController,
             configuration: config,
             delegate: self
         )
+    }
+
+    /// The sheet height cap is computed once, when the sheet opens. It is recomputed only after the
+    /// card screen has moved to another display (iPhone Duo opened or closed while the sheet is
+    /// shown). iPhone and iPad have a single display, so there the initial value is always returned.
+    private func makeMaximumSheetHeightProvider(initialValue: CGFloat) -> () -> CGFloat? {
+        let initialView = baseViewController.view
+        let initialScreen = initialView?.window?.windowScene?.screen
+        let initialIsFoldingDisplay = initialView.map { RuuviDuoLayout.isFoldingDisplay($0) } ?? false
+        let initialTopPadding = topPadding
+        let cardsViewController = baseViewController as? CardsBaseViewController
+        return { [weak initialView, weak cardsViewController] in
+            guard RuuviDuoLayout.isFoldableDevice,
+                  let view = initialView,
+                  let screen = view.window?.windowScene?.screen else {
+                return initialValue
+            }
+            let isFoldingDisplay = RuuviDuoLayout.isFoldingDisplay(view)
+            guard screen !== initialScreen || isFoldingDisplay != initialIsFoldingDisplay else {
+                return initialValue
+            }
+            let topPadding = cardsViewController?.currentSpaceUntilSecondaryToolbar ?? initialTopPadding
+            return RuuviAppGeometry.bounds(for: view).height - topPadding
+        }
     }
 
     override func stop() {

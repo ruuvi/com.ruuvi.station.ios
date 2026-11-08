@@ -29,6 +29,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window.rootViewController = appRouter.viewController
         window.overrideUserInterfaceStyle = settings?.theme.uiInterfaceStyle ?? .unspecified
         window.makeKeyAndVisible()
+        observeHingeForOrientationLock(on: window)
 
         self.window = window
         self.appRouter = appRouter
@@ -64,6 +65,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 
 private extension SceneDelegate {
+    /// iPhone Duo: lifts the onboarding / sign in portrait lock while the device is open (inner
+    /// display), so the app fills the display instead of showing as a portrait box. Devices without
+    /// a hinge (every iPhone and iPad) report a `nil` hinge, so nothing changes there.
+    func observeHingeForOrientationLock(on window: UIWindow) {
+        guard #available(iOS 27.1, *) else { return }
+        window.addInteraction(UIHingeInteraction { _, update in
+            guard let hinge = update.hinge else {
+                AppUtility.updateFoldableDevice(hasHinge: false, isOpen: false)
+                return
+            }
+            AppUtility.updateFoldableDevice(
+                hasHinge: true,
+                isOpen: hinge.status == .partiallyOpen || hinge.status == .fullyOpen
+            )
+        })
+    }
+
     func handleConnectionOptions(_ connectionOptions: UIScene.ConnectionOptions) {
         if let userActivity = connectionOptions.userActivities.first(
             where: { $0.activityType == NSUserActivityTypeBrowsingWeb }

@@ -154,13 +154,19 @@ class CardsGraphViewController: UIViewController {
     private var isSyncingHighlights = false
 
     private var isLandscapeLayout: Bool {
+        // iPhone Duo inner display: its interface orientation doesn't follow the supported
+        // orientations, and its height suits the multi-chart layout in every pose.
+        if RuuviDuoLayout.isFoldingDisplay(view) {
+            return false
+        }
         if let interfaceOrientation = view.window?.windowScene?.interfaceOrientation {
             return interfaceOrientation.isLandscape
         }
         if view.bounds.width > 0, view.bounds.height > 0 {
             return view.bounds.width > view.bounds.height
         }
-        return UIScreen.main.bounds.width > UIScreen.main.bounds.height
+        let appBounds = RuuviAppGeometry.bounds(for: view)
+        return appBounds.width > appBounds.height
     }
 
     private lazy var graphScrollEdgeFadeConfiguration: ScrollViewEdgeFader.Configuration = {
@@ -667,6 +673,11 @@ extension CardsGraphViewController: CardsGraphViewDelegate {
 // MARK: - TagChartsViewInput
 
 extension CardsGraphViewController: CardsGraphViewInput {
+    var allowsLandscapeSwipeHint: Bool {
+        // The landscape chart layout (one chart per page) isn't used on iPhone Duo's inner display.
+        !RuuviDuoLayout.isFoldingDisplay(view)
+    }
+
     func setActiveSnapshot(_ snapshot: RuuviTagCardSnapshot?) {
         self.snapshot = snapshot
         pendingScrollVariant = nil
@@ -846,6 +857,8 @@ extension CardsGraphViewController: CardsGraphViewInput {
     }
 
     func showBluetoothDisabled(userDeclined: Bool) {
+        // The simulator has no Bluetooth: don't show this alert on every launch there.
+        guard !UIDevice.isSimulator else { return }
         let title = RuuviLocalization.TagCharts.BluetoothDisabledAlert.title
         let message = RuuviLocalization.TagCharts.BluetoothDisabledAlert.message
         let alertVC = UIAlertController(title: title, message: message, preferredStyle: .alert)
@@ -1198,6 +1211,10 @@ extension CardsGraphViewController {
         let landscapeHeight = graphScrollEdgeFadeConfiguration.landscapeFadeTransitionHeight ?? baseHeight
         let portraitHeight = graphScrollEdgeFadeConfiguration.portraitFadeTransitionHeight ?? baseHeight
 
+        if RuuviDuoLayout.isFoldingDisplay(view) {
+            return portraitHeight
+        }
+
         if let orientation = view.window?.windowScene?.interfaceOrientation {
             return orientation.isLandscape ? landscapeHeight : portraitHeight
         }
@@ -1207,7 +1224,7 @@ extension CardsGraphViewController {
             return bounds.width > bounds.height ? landscapeHeight : portraitHeight
         }
 
-        let screenBounds = UIScreen.main.bounds
+        let screenBounds = RuuviAppGeometry.bounds(for: view)
         return screenBounds.width > screenBounds.height ? landscapeHeight : portraitHeight
     }
 

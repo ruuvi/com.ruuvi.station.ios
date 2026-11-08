@@ -84,6 +84,17 @@ class RuuviOnboardViewController: UIViewController {
         return button
     }()
 
+    /// iPhone Duo: re-align to the current page after the next layout pass.
+    private var needsPageRealignment = false
+
+    /// iPhone Duo (a device with a hinge, the vertical bar on a side, or the folding display).
+    /// Never `true` on iPhone and iPad, where onboarding keeps its existing behaviour.
+    private var isDuoContext: Bool {
+        RuuviDuoLayout.isFoldableDevice
+            || RuuviDuoLayout.isVerticalBarActive(traitCollection)
+            || RuuviDuoLayout.isFoldingDisplay(view)
+    }
+
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -123,6 +134,41 @@ class RuuviOnboardViewController: UIViewController {
 }
 
 extension RuuviOnboardViewController {
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        // iPhone Duo: by default the paging scroll view absorbs the side safe area (status bar /
+        // vertical bar) as content inset, so the pages never see it and their text runs under the
+        // bar. Without that adjustment the pages stay full width (backgrounds edge to edge) and their
+        // content follows the safe area, as it already does on iPhone.
+        if isDuoContext, collectionView.contentInsetAdjustmentBehavior != .never {
+            collectionView.contentInsetAdjustmentBehavior = .never
+            needsPageRealignment = true
+        }
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        if needsPageRealignment {
+            needsPageRealignment = false
+            scrollToPage(currentPage)
+        }
+    }
+
+    override func viewWillTransition(
+        to size: CGSize,
+        with coordinator: UIViewControllerTransitionCoordinator
+    ) {
+        super.viewWillTransition(to: size, with: coordinator)
+        // iPhone Duo: opening or closing the device resizes the pages; stay on the same page.
+        guard isDuoContext else { return }
+        let page = visiblePage()
+        coordinator.animate(alongsideTransition: { [weak self] _ in
+            self?.scrollToPage(page)
+        }, completion: { [weak self] _ in
+            self?.scrollToPage(page)
+        })
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
@@ -148,6 +194,26 @@ extension RuuviOnboardViewController {
 extension RuuviOnboardViewController {
     @objc private func handleSkipButtonTap() {
         scrollToLast()
+    }
+
+    /// The page currently shown, from the scroll position.
+    private func visiblePage() -> Int {
+        let width = collectionView.bounds.width
+        guard width > 0, !viewModels.isEmpty else { return currentPage }
+        let page = Int((collectionView.contentOffset.x / width).rounded())
+        return max(0, min(viewModels.count - 1, page))
+    }
+
+    /// iPhone Duo: re-sizes the pages for the current width and shows `page`.
+    private func scrollToPage(_ page: Int) {
+        guard page < collectionView.numberOfItems(inSection: 0) else { return }
+        collectionView.collectionViewLayout.invalidateLayout()
+        collectionView.layoutIfNeeded()
+        let width = collectionView.bounds.width
+        guard width > 0 else { return }
+        collectionView.setContentOffset(CGPoint(x: CGFloat(page) * width, y: 0), animated: false)
+        currentPage = page
+        pageControl.currentPage = page
     }
 
     private func scrollToLast() {

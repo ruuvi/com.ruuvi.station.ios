@@ -29,6 +29,7 @@ class NotificationsSettingsTableViewController: UITableViewController {
 extension NotificationsSettingsTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        reloadWhenVerticalBarChanges()
         setUpUI()
         localize()
         output?.viewDidLoad()
@@ -130,7 +131,7 @@ extension NotificationsSettingsTableViewController {
     }
 
     override func tableView(
-        _: UITableView,
+        _ tableView: UITableView,
         viewForFooterInSection _: Int
     ) -> UIView? {
         let footerView = UIView()
@@ -141,7 +142,10 @@ extension NotificationsSettingsTableViewController {
         )
         footerTextView.linkDelegate = self
         footerView.addSubview(footerTextView)
-        footerTextView.fillSuperview(padding: .init(top: 0, left: 16, bottom: 0, right: 16))
+        footerTextView.fillSuperviewAvoidingVerticalBar(
+            padding: .init(top: 0, left: 16, bottom: 0, right: 16),
+            traits: tableView.traitCollection
+        )
         return footerView
     }
 }

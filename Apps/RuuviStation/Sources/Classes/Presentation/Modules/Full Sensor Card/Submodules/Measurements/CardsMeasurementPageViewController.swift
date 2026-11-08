@@ -42,7 +42,15 @@ class CardsMeasurementPageViewController: UIViewController {
         let spacing: CGFloat
         let horizontalPadding: CGFloat
 
-        static func forCurrentDevice(containerWidth: CGFloat) -> ColumnConfig {
+        /// - Parameters:
+        ///   - referenceBounds: The app bounds (replaces the deprecated `UIScreen.main.bounds`).
+        ///   - foldingDisplayContainerSize: The container size when shown on iPhone Duo's inner
+        ///     folding display; `nil` everywhere else (always on iPhone and iPad).
+        static func forCurrentDevice(
+            containerWidth: CGFloat,
+            referenceBounds: CGRect,
+            foldingDisplayContainerSize: CGSize? = nil
+        ) -> ColumnConfig {
             let isIPad = UIDevice.current.userInterfaceIdiom == .pad
             let spacing = Constants.measurementGridSpacing
 
@@ -50,8 +58,19 @@ class CardsMeasurementPageViewController: UIViewController {
             let shouldCenter: Bool
             let horizontalPadding: CGFloat
 
-            if isIPad {
-                let isLandscape = containerWidth > UIScreen.main.bounds.height
+            if let foldingDisplayContainerSize {
+                // iPhone Duo inner display: tablet-like grid. 4 columns in landscape split
+                // evenly (2 | 2) around the book-style fold.
+                if foldingDisplayContainerSize.width > foldingDisplayContainerSize.height {
+                    columns = Constants.iPadLandscapeColumns
+                    horizontalPadding = Constants.iPadLandscapeHorizontalPadding
+                } else {
+                    columns = Constants.iPadPortraitColumns
+                    horizontalPadding = Constants.iPadPortraitHorizontalPadding
+                }
+                shouldCenter = false
+            } else if isIPad {
+                let isLandscape = containerWidth > referenceBounds.height
                 if isLandscape {
                     columns = Constants.iPadLandscapeColumns
                     horizontalPadding = Constants.iPadLandscapeHorizontalPadding
@@ -96,6 +115,9 @@ class CardsMeasurementPageViewController: UIViewController {
     private var spacerMinHeightConstraint: NSLayoutConstraint!
     private var measurementsStackLeadingConstraint: NSLayoutConstraint!
     private var measurementsStackTrailingConstraint: NSLayoutConstraint!
+
+    /// iPhone Duo: whether the grid was last built for the inner (folding) display.
+    private var lastFoldingDisplayState = false
 
     // MARK: - UI Components
     private lazy var scrollView: UIScrollView = {
@@ -153,6 +175,7 @@ class CardsMeasurementPageViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        updateLayoutIfFoldingDisplayChanged()
         updateDynamicSpacing()
     }
 
@@ -160,7 +183,7 @@ class CardsMeasurementPageViewController: UIViewController {
         super.viewWillTransition(to: size, with: coordinator)
 
         coordinator.animate(alongsideTransition: { _ in
-            self.updateLayoutForRotation(containerWidth: size.width)
+            self.updateLayoutForRotation(containerSize: size)
         }, completion: { _ in
             self.updateDynamicSpacing()
         })
@@ -198,7 +221,7 @@ private extension CardsMeasurementPageViewController {
 
     // swiftlint:disable:next function_body_length
     func setupConstraints() {
-        let initialColumnConfig = ColumnConfig.forCurrentDevice(containerWidth: UIScreen.main.bounds.width)
+        let initialColumnConfig = self.columnConfig(containerSize: RuuviAppGeometry.bounds(for: view).size)
         let initialPadding = initialColumnConfig.horizontalPadding
 
         spacerHeightConstraint = dynamicSpacerView.heightAnchor.constraint(
@@ -374,7 +397,7 @@ private extension CardsMeasurementPageViewController {
             return
         }
 
-        let columnConfig = ColumnConfig.forCurrentDevice(containerWidth: view.bounds.width)
+        let columnConfig = self.columnConfig(containerSize: view.bounds.size)
         buildGrid(with: measurements, columnConfig: columnConfig)
     }
 
@@ -383,8 +406,26 @@ private extension CardsMeasurementPageViewController {
         rebuildMeasurementGrid()
     }
 
-    func updateLayoutForRotation(containerWidth: CGFloat) {
-        let columnConfig = ColumnConfig.forCurrentDevice(containerWidth: containerWidth)
+    private func columnConfig(containerSize: CGSize) -> ColumnConfig {
+        let isFoldingDisplay = RuuviDuoLayout.isFoldingDisplay(view)
+        // Remember which layout the grid was built for (it may be built while off-window).
+        lastFoldingDisplayState = isFoldingDisplay
+        return ColumnConfig.forCurrentDevice(
+            containerWidth: containerSize.width,
+            referenceBounds: RuuviAppGeometry.bounds(for: view),
+            foldingDisplayContainerSize: isFoldingDisplay ? containerSize : nil
+        )
+    }
+
+    /// iPhone Duo: re-runs the column layout when the page moves between the outer and the inner
+    /// (folding) display. Never triggers on iPhone/iPad, where `isFoldingDisplay` is always false.
+    func updateLayoutIfFoldingDisplayChanged() {
+        guard RuuviDuoLayout.isFoldingDisplay(view) != lastFoldingDisplayState else { return }
+        updateLayoutForRotation(containerSize: view.bounds.size)
+    }
+
+    func updateLayoutForRotation(containerSize: CGSize) {
+        let columnConfig = self.columnConfig(containerSize: containerSize)
 
         // Update padding constraints
         measurementsStackLeadingConstraint.constant = columnConfig.horizontalPadding
@@ -488,7 +529,7 @@ private extension CardsMeasurementPageViewController {
             return 0
         }
 
-        let columnConfig = ColumnConfig.forCurrentDevice(containerWidth: view.bounds.width)
+        let columnConfig = self.columnConfig(containerSize: view.bounds.size)
         let numberOfRows = Int(ceil(Double(indicatorCount) / Double(columnConfig.columns)))
         let totalCardHeight = CGFloat(numberOfRows) * Constants.cardHeight
         let totalSpacing = CGFloat(max(0, numberOfRows - 1)) * Constants.measurementGridSpacing
@@ -551,7 +592,7 @@ private extension CardsMeasurementPageViewController {
             return
         }
 
-        let columnConfig = ColumnConfig.forCurrentDevice(containerWidth: view.bounds.width)
+        let columnConfig = self.columnConfig(containerSize: view.bounds.size)
         buildGrid(with: measurements, columnConfig: columnConfig)
     }
 }

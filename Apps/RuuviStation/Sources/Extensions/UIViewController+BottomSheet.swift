@@ -7,6 +7,9 @@ struct SheetConfiguration {
     let preferredCornerRadius: CGFloat
     let prefersScrollingExpandsWhenScrolledToEdge: Bool
     let prefersEdgeAttachedInCompactHeight: Bool
+    /// Evaluated on every detent resolution; when set it overrides `maxHeight`.
+    /// Lets a sheet follow iPhone Duo's display changes while it is presented.
+    var maxHeightProvider: (() -> CGFloat?)?
 
     static let `default` = SheetConfiguration(
         maxHeight: nil,
@@ -86,7 +89,7 @@ private extension UIViewController {
             .custom { _ in
                 let contentHeight = viewController.preferredContentSize.height
 
-                if let maxHeight = configuration.maxHeight {
+                if let maxHeight = configuration.maxHeightProvider?() ?? configuration.maxHeight {
                     return min(contentHeight, maxHeight)
                 }
                 return contentHeight
@@ -109,7 +112,7 @@ private extension UIViewController {
                 let navBarHeight = navigationController.navigationBar.frame.height
                 let contentHeight = rootVC.preferredContentSize.height + navBarHeight + 20
 
-                if let maxHeight = configuration.maxHeight {
+                if let maxHeight = configuration.maxHeightProvider?() ?? configuration.maxHeight {
                     return min(contentHeight, maxHeight)
                 }
                 return contentHeight

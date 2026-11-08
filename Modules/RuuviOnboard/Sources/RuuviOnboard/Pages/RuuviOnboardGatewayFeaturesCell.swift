@@ -2,6 +2,13 @@ import RuuviLocalization
 import UIKit
 
 class RuuviOnboardGatewayFeaturesCell: UICollectionViewCell {
+    private var footerRowSwitch: RuuviVerticalBarConstraintSwitch?
+
+    override func layoutSubviews() {
+        footerRowSwitch?.update(for: traitCollection)
+        super.layoutSubviews()
+    }
+
     private lazy var appImageView: UIImageView = {
         let iv = UIImageView(
             image: nil,
@@ -134,14 +141,22 @@ private extension RuuviOnboardGatewayFeaturesCell {
             )
         )
 
-        stackView.leadingAnchor.constraint(
-            lessThanOrEqualTo: footerView.leadingAnchor, constant: 20
-        ).isActive = true
-        stackView.trailingAnchor.constraint(
-            lessThanOrEqualTo: footerView.trailingAnchor, constant: -20
-        ).isActive = true
-
-        stackView.centerXInSuperview()
+        // iPhone Duo: the teal footer runs edge to edge, but its row is centred in the safe area so
+        // it stays clear of the vertical bar. Elsewhere the original constraints are used.
+        let safeArea = footerView.safeAreaLayoutGuide
+        footerRowSwitch = RuuviVerticalBarConstraintSwitch(
+            standard: [
+                stackView.leadingAnchor.constraint(lessThanOrEqualTo: footerView.leadingAnchor, constant: 20),
+                stackView.trailingAnchor.constraint(lessThanOrEqualTo: footerView.trailingAnchor, constant: -20),
+                stackView.centerXAnchor.constraint(equalTo: footerView.centerXAnchor),
+            ],
+            // Same sizing as the original constraints produce (the row spans the width minus 20pt on
+            // each side), measured from the safe area instead of the footer edges.
+            verticalBar: [
+                stackView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor, constant: 20),
+                stackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
+            ]
+        )
     }
 }
 

@@ -127,6 +127,13 @@ extension DiscoverTableViewController: DiscoverViewInput {
     }
 
     func showBluetoothDisabled(userDeclined: Bool) {
+        // The simulator has no Bluetooth: don't show this alert there.
+        #if targetEnvironment(simulator)
+        let isSimulator = true
+        #else
+        let isSimulator = false
+        #endif
+        guard !isSimulator else { return }
         let title = RuuviLocalization.DiscoverTable
             .BluetoothDisabledAlert.title
         let message = RuuviLocalization.DiscoverTable
