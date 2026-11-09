@@ -384,6 +384,10 @@ extension SQLiteGRDBDatabase {
             try RuuviHistorySchema.create(in: db)
         }
 
+        migrator.registerMigration("Add history interval revisions") { db in
+            try RuuviHistorySchema.createIntervalRevisions(in: db)
+        }
+
         try migrator.migrate(dbPool)
     }
 }

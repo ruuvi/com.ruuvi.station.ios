@@ -146,18 +146,18 @@ final class RuuviHistoryTests: XCTestCase {
         XCTAssertThrowsError(try range(10, 100).nextCloudCursor(timestamps: [], responseIsEmpty: false))
     }
 
-    func testLongSelectionsRequestMaximumLimitForEveryPage() throws {
+    func testLongSelectionsKeepEveryPageBoundedIncludingContinuation() throws {
         let now = date(200_000_000)
         for days in [90, 365, 730, 1095] {
             let selected = RuuviHistoryRange(start: now.addingTimeInterval(-Double(days) * 86400), end: now)
             let requests = RuuviHistoryRequest.plan(missing: [selected], selected: selected, now: now)
-            XCTAssertEqual(requests.map(\.limit), [144_000, 144_000])
-            XCTAssertEqual(requests.map(\.mode), [.sparse, .mixed])
+            XCTAssertEqual(requests.map(\.limit), [5000, 5000])
+            XCTAssertEqual(requests.map(\.mode), [.mixed, .sparse])
             let lastArchivePage = try XCTUnwrap(
-                requests[0]
-                    .continuing(from: requests[0].range.end.addingTimeInterval(-3600))
+                requests[1]
+                    .continuing(from: requests[1].range.end.addingTimeInterval(-3600))
             )
-            XCTAssertEqual(lastArchivePage.limit, 144_000)
+            XCTAssertEqual(lastArchivePage.limit, 5000)
             XCTAssertEqual(lastArchivePage.mode, .sparse)
             XCTAssertNil(lastArchivePage.continuing(from: lastArchivePage.range.end))
         }
@@ -166,7 +166,7 @@ final class RuuviHistoryTests: XCTestCase {
     func testHistoryPlanSplitsWithoutHolesOrOverlaps() {
         let now = date(200_000_000.123)
         let selected = RuuviHistoryRange(start: now.addingTimeInterval(-1095 * 86400), end: now)
-        let requests = RuuviHistoryRequest.plan(missing: [selected], selected: selected, now: now)
+        let requests = RuuviHistoryRequest.plan(missing: [selected], selected: selected, now: now).sorted { $0.range.start < $1.range.start }
         XCTAssertEqual(requests.count, 2)
         XCTAssertEqual(requests.first?.range.start, selected.start)
         XCTAssertEqual(requests.last?.range.end, selected.end)
@@ -182,17 +182,19 @@ final class RuuviHistoryTests: XCTestCase {
         let missing = [RuuviHistoryRange(start: selected.start, end: selected.start.addingTimeInterval(3600)),
                        RuuviHistoryRange(start: now.addingTimeInterval(-3600), end: now)]
         let requests = RuuviHistoryRequest.plan(missing: missing, selected: selected, now: now)
-        XCTAssertEqual(requests.map(\.range), missing)
-        XCTAssertEqual(requests.map(\.mode), [.sparse, .mixed])
+        XCTAssertEqual(requests.map(\.range), Array(missing.reversed()))
+        XCTAssertEqual(requests.map(\.mode), [.mixed, .sparse])
         XCTAssertEqual(requests.map(\.limit), [5000, 5000])
         XCTAssertTrue(RuuviHistoryRequest.plan(missing: [], selected: selected, now: now).isEmpty)
     }
 
-    func testShortArchiveResponseContinuesBeforeRecentReadings() throws {
+    func testRecentReadingsLoadFirstAndArchiveContinuationStaysInItsInterval() throws {
         let now = date(200_000_000)
         let selected = RuuviHistoryRange(start: now.addingTimeInterval(-1095 * 86400), end: now)
         let requests = RuuviHistoryRequest.plan(missing: [selected], selected: selected, now: now)
-        let archive = requests[0]
+        XCTAssertEqual(requests[0].mode, .mixed)
+        XCTAssertEqual(requests[0].range.end, selected.end)
+        let archive = requests[1]
         // DynamoDB can return far fewer records than requested at its byte limit.
         let timestamps = [archive.range.start.timeIntervalSince1970, archive.range.start.timeIntervalSince1970 + 900]
         let cursor = try archive.range.nextCloudCursor(timestamps: timestamps, responseIsEmpty: false)
@@ -200,9 +202,9 @@ final class RuuviHistoryTests: XCTestCase {
         XCTAssertEqual(next.range.start, date(timestamps[1] + 1))
         XCTAssertEqual(next.range.end, archive.range.end)
         XCTAssertEqual(next.mode, .sparse)
-        XCTAssertLessThan(next.range.start, requests[1].range.start)
+        XCTAssertLessThan(next.range.start, requests[0].range.start)
         let emptyCursor = try next.range.nextCloudCursor(timestamps: [], responseIsEmpty: true)
-        XCTAssertEqual(emptyCursor, requests[1].range.start)
+        XCTAssertEqual(emptyCursor, requests[0].range.start)
         XCTAssertNil(next.continuing(from: emptyCursor))
     }
 
@@ -213,6 +215,79 @@ final class RuuviHistoryTests: XCTestCase {
         XCTAssertEqual(missing, [RuuviHistoryRange(start: now.addingTimeInterval(-48 * 3600), end: now)])
         let historical = RuuviHistoryRange(start: selected.start, end: now.addingTimeInterval(-90 * 86400))
         XCTAssertTrue(historical.historyToFetch(coverage: [historical], revalidate: true, now: now).isEmpty)
+    }
+
+    func testTilesCoverLongAndShortSelectionsWithoutOverlaps() {
+        for hours in [1, 48, 240, 2160, RuuviHistoryRange.retentionHours] {
+            let selected = range(1_800_012_345, 1_800_012_345 + Double(hours * 3600))
+            let tiles = selected.tiles()
+            XCTAssertLessThanOrEqual(tiles.count, 45)
+            XCTAssertEqual(tiles.first?.start, selected.start)
+            XCTAssertEqual(tiles.last?.end, selected.end)
+            XCTAssertTrue(selected.uncovered(by: tiles).isEmpty)
+            for (a, b) in zip(tiles, tiles.dropFirst()) { XCTAssertEqual(a.end, b.start) }
+        }
+        XCTAssertTrue(range(0, 0).tiles().isEmpty)
+    }
+
+    func testRollingHistoryReusesInteriorTilesAndBoundsBothMovingEdges() {
+        let selection = RuuviHistorySelection.rolling(hours: RuuviHistoryRange.retentionHours)
+        let before = selection.resolve(now: date(1_800_012_345)).tiles()
+        let after = selection.resolve(now: date(1_800_012_405)).tiles()
+        let changed = after.filter { !before.contains($0) }
+        XCTAssertEqual(changed.count, 2)
+        XCTAssertTrue(changed.allSatisfy { $0.end.timeIntervalSince($0.start) <= 21600 })
+    }
+
+    func testMergedTilesKeepRawStatisticsExtremaAndDoNotInventGaps() throws {
+        let selected = range(0, 1095 * 86400)
+        let tiles = selected.tiles()
+        let samplers = tiles.map(RuuviHistorySampler.init)
+        let raw = RuuviHistorySampler(range: selected)
+        var tile = 0
+        for index in 0..<(1095 * 96) {
+            let timestamp = date(Double(index * 900))
+            while !tiles[tile].contains(timestamp) { tile += 1 }
+            let value = index == 50001 ? -999.0 : index == 70001 ? 999.0 : Double(index % 17)
+            raw.add(date: timestamp, value: value)
+            samplers[tile].add(date: timestamp, value: value)
+        }
+        let merged = RuuviHistorySeries.merging(samplers.reversed().map { $0.finish() }, range: selected)
+        let expected = try XCTUnwrap(raw.finish().statistics)
+        let actual = try XCTUnwrap(merged.statistics)
+        XCTAssertEqual(actual.count, expected.count)
+        XCTAssertEqual(actual.minimum, expected.minimum)
+        XCTAssertEqual(actual.maximum, expected.maximum)
+        XCTAssertEqual(actual.latest, expected.latest)
+        XCTAssertEqual(actual.average, expected.average, accuracy: 0.00000001)
+        XCTAssertEqual(Set(merged.points.map(\.segment)), [0])
+        XCTAssertLessThanOrEqual(merged.points.count, 400)
+        XCTAssertTrue(merged.points.contains { $0.value == -999 })
+        XCTAssertTrue(merged.points.contains { $0.value == 999 })
+    }
+
+    func testDownsamplingRetainsAnIsolatedSegmentInALongRange() {
+        let sampler = RuuviHistorySampler(range: range(0, 1095 * 86400))
+        for index in 0..<250 { sampler.add(date: date(Double(index * 2)), value: Double(index % 10)) }
+        sampler.add(date: date(5000), value: 5)
+        for index in 0..<250 { sampler.add(date: date(Double(10000 + index * 2)), value: Double(index % 10)) }
+        let result = sampler.finish()
+        XCTAssertEqual(Set(result.points.map(\.segment)), [0, 1, 2])
+        XCTAssertTrue(result.points.contains { $0.timestamp == 5000 })
+        XCTAssertEqual(result.statistics?.count, 501)
+        XCTAssertLessThanOrEqual(result.points.count, 400)
+    }
+
+    func testMergingSingletonTilesAndRealGapsPreservesTimeWeightedAverage() throws {
+        let a = RuuviHistorySampler(range: range(0, 10))
+        a.add(date: date(1), value: 0)
+        let b = RuuviHistorySampler(range: range(10, 20000))
+        b.add(date: date(5000), value: 10)
+        b.add(date: date(15000), value: 20)
+        let merged = RuuviHistorySeries.merging([b.finish(), a.finish()], range: range(0, 20000))
+        XCTAssertEqual(merged.points.map(\.segment), [0, 1, 2])
+        XCTAssertEqual(merged.statistics?.count, 3)
+        XCTAssertEqual(try XCTUnwrap(merged.statistics?.average), (4999 * 5 + 10000 * 15) / 14999.0, accuracy: 0.00000001)
     }
 
     func testArchiveReuseStillFetchesHolesAndLivePollingOverlapsOneMinute() {

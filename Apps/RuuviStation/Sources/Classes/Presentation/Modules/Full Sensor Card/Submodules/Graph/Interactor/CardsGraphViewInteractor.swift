@@ -363,6 +363,10 @@ extension CardsGraphViewInteractor {
 
     func historyRevision() -> Future<Int, RuuviStorageError> { ruuviStorage.historyRevision(ruuviTagSensor.id) }
 
+    func historyRevisions(ranges: [RuuviHistoryRange]) -> Future<[Int], RuuviStorageError> {
+        ruuviStorage.historyRevisions(ruuviTagSensor.id, ranges: ranges)
+    }
+
     func scanHistory(range: RuuviHistoryRange, cancellation: RuuviHistoryCancellation,
                      consume: @escaping (RuuviTagSensorRecord) -> Void) -> Future<Int, RuuviStorageError> {
         ruuviStorage.scanHistory(ruuviTagSensor.id, range: range, cancellation: cancellation, consume: consume)

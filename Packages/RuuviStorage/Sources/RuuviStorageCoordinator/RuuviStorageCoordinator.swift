@@ -20,6 +20,10 @@ final class RuuviStorageCoordinator: RuuviStorage {
         sqlite.historyRevision(id).mapError { .ruuviPersistence($0) }
     }
 
+    func historyRevisions(_ id: String, ranges: [RuuviHistoryRange]) -> Future<[Int], RuuviStorageError> {
+        sqlite.historyRevisions(id, ranges: ranges).mapError { .ruuviPersistence($0) }
+    }
+
     func historyCoverage(_ id: String, scope: String, freshAfter: Date) -> Future<RuuviHistoryCoverage, RuuviStorageError> {
         sqlite.historyCoverage(id, scope: scope, freshAfter: freshAfter).mapError { .ruuviPersistence($0) }
     }

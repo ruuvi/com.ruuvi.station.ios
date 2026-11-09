@@ -81,6 +81,8 @@ class CardsGraphPresenter: NSObject {
     private var newpoints: [RuuviGraphViewDataModel] = []
     private var chartModules: [MeasurementDisplayVariant] = []
     private var historyCancellation = RuuviHistoryCancellation()
+    private let historyInteraction = RuuviGraphHistoryInteraction()
+    private let historyProcessingQueue = DispatchQueue(label: "RuuviGraph.historyProcessing", qos: .userInitiated)
     private var viewportWork: DispatchWorkItem?
     private var historyViewport: RuuviHistoryRange?
     private var historySelectedRange: RuuviHistoryRange?
@@ -97,7 +99,25 @@ class CardsGraphPresenter: NSObject {
     private var historyCache: [HistoryCacheKey: [MeasurementDisplayVariant: RuuviHistorySeries]] = [:]
     private var knownHistoryVariants = Set<MeasurementDisplayVariant>()
     private var historyCacheOrder: [HistoryCacheKey] = []
-    private let historyScan = RuuviGraphHistoryScan<HistoryCacheKey>()
+    private struct HistoryPresentationKey: Equatable {
+        let sensorID: String
+        let selected: RuuviHistoryRange
+        let sampled: RuuviHistoryRange
+        let variants: [MeasurementDisplayVariant]
+        let configuration: String
+        let alerts: AlertRangeFingerprint
+        let drawDots: Bool
+    }
+    private var lastHistoryPresentation: HistoryPresentationKey?
+    private var lastHistorySeries: [MeasurementDisplayVariant: RuuviHistorySeries] = [:]
+    private struct HistoryScanKey: Equatable {
+        let sensorID: String
+        let selection: RuuviHistorySelection
+        let viewport: RuuviHistoryRange?
+        let variants: [MeasurementDisplayVariant]
+        let configuration: String
+    }
+    private let historyScan = RuuviGraphHistoryScan<HistoryScanKey>()
     private struct AlertRangeBounds {
         let lower: Double?
         let upper: Double?
@@ -253,6 +273,7 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
     }
 
     func reloadChartsData(shouldSyncFromCloud: Bool) {
+        lastHistoryPresentation = nil
         historyActive = true
         historyViewport = nil
         historySelectedRange = nil
@@ -288,11 +309,15 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
     }
 
     func viewDidStartScrolling() {
+        guard !isUserScrolling else { return }
         isUserScrolling = true
+        viewDidBeginHistoryGesture()
     }
 
     func viewDidEndScrolling() {
+        guard isUserScrolling else { return }
         isUserScrolling = false
+        viewDidFinishHistoryGesture()
 
         // Process all pending measurements
         if !pendingMeasurements.isEmpty {
@@ -552,6 +577,8 @@ extension CardsGraphPresenter {
     }
 
     private func clearChartStateForNewSensor() {
+        lastHistoryPresentation = nil
+        lastHistorySeries.removeAll()
         knownHistoryVariants.removeAll()
         cloudHistoryFailed = false
         chartModules.removeAll()
@@ -562,6 +589,8 @@ extension CardsGraphPresenter {
     }
 
     private func invalidatePendingChartComputation() {
+        isUserScrolling = false
+        historyInteraction.reset()
         historyCancellation.cancel()
         viewportWork?.cancel()
     }
@@ -1099,6 +1128,7 @@ extension CardsGraphPresenter {
     }
 
     private func reloadChartsWithSensorSettingsChanges() {
+        lastHistoryPresentation = nil
         isLoadingHistory = true
         view?.setChartLoading(hideCharts: false)
         interactor?.restartObservingData()
@@ -1138,6 +1168,8 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
     }
 
     func interactorDidSuspendHistory() {
+        isUserScrolling = false
+        historyInteraction.reset()
         historyCancellation.cancel()
         viewportWork?.cancel()
     }
@@ -1188,6 +1220,7 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         historyViewport = viewport
         viewportWork?.cancel()
         historyCancellation.cancel()
+        guard !historyInteraction.isActive else { return }
         let work = DispatchWorkItem { [weak self] in
             self?.viewportWork = nil
             self?.rebuildChartData(updateView: true)
@@ -1196,11 +1229,22 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: work)
     }
 
-    func viewDidFinishHistoryGesture() {
-        guard viewportWork != nil else { return }
+    func viewDidBeginHistoryGesture() {
+        historyInteraction.begin()
         viewportWork?.cancel()
         viewportWork = nil
-        rebuildChartData(updateView: true)
+    }
+
+    func viewDidFinishHistoryGesture() {
+        historyInteraction.end()
+        viewportWork?.cancel()
+        // Let inertial panning settle; subsequent viewport events replace this work.
+        let work = DispatchWorkItem { [weak self] in
+            self?.viewportWork = nil
+            self?.rebuildChartData(updateView: true)
+        }
+        viewportWork = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: work)
     }
 
     func viewDidRetryHistory() { interactor?.changeHistorySelection() }
@@ -1233,8 +1277,10 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         rebuildChartData(updateView: true)
     }
 
+    // swiftlint:disable:next function_body_length cyclomatic_complexity
     private func rebuildChartData(updateView: Bool) {
         guard historyActive, view != nil, let interactor, let sensor else { return }
+        guard !historyInteraction.isActive else { return }
         let variants = chartModules
         // Keep the overview stable for a minute, including duplicate-only cloud pages.
         let now = Date(timeIntervalSince1970: floor(Date().timeIntervalSince1970 / 60) * 60)
@@ -1242,14 +1288,17 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
             (historySelectedRange ?? RuuviGraphHistorySession.selection(settings: settings).resolve(now: now))
         historySelectedRange = selected
         let range = historyViewport?.intersection(selected) ?? selected
-        let resolver = variantResolver
+        let resolver = variantResolver.snapshotForHistory()
         let sensorSettings = sensorSettings
         let context = alertRangeChartContext(for: variants, sensor: sensor)
         let configuration = "\(settings.temperatureUnit)|\(settings.humidityUnit)|\(settings.pressureUnit.symbol)|" +
             "\(String(describing: sensorSettings?.temperatureOffset))|\(String(describing: sensorSettings?.humidityOffset))|\(String(describing: sensorSettings?.pressureOffset))"
+        let presentation = HistoryPresentationKey(sensorID: sensor.id, selected: selected, sampled: range,
+                                                   variants: variants, configuration: configuration,
+                                                   alerts: context.fingerprint, drawDots: settings.chartDrawDotsOn)
         // Revision changes during a download must not repeatedly cancel a long scan.
-        let requestKey = HistoryCacheKey(sensorID: sensor.id, range: range, variants: variants,
-                                         configuration: configuration, revision: 0)
+        let requestKey = HistoryScanKey(sensorID: sensor.id, selection: RuuviGraphHistorySession.selection(settings: settings),
+                                       viewport: historyViewport, variants: variants, configuration: configuration)
         guard let cancellation = historyScan.begin(requestKey) else { return }
         historyCancellation = cancellation
         let finished: () -> Void = { [weak self] in
@@ -1258,63 +1307,111 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         }
         let apply: ([MeasurementDisplayVariant: RuuviHistorySeries]) -> Void = { [weak self] series in
             guard let self, !cancellation.isCancelled, self.historyActive else { return }
-            let models = variants.compactMap { variant -> RuuviGraphViewDataModel? in
-                guard let sampled = series[variant] else { return nil }
-                if !sampled.points.isEmpty { self.knownHistoryVariants.insert(variant) }
-                guard self.knownHistoryVariants.contains(variant) else { return nil }
-                let bounds = context.bounds[variant]
-                let data = RuuviHistoryChartData(series: sampled, selectedRange: selected, sampledRange: range,
-                    upper: bounds?.upper, lower: bounds?.lower,
-                    showAlerts: self.settings.showAlertsRangeInGraph && context.states[variant] == true,
-                    drawDots: self.settings.chartDrawDotsOn)
-                return RuuviGraphViewDataModel(upperAlertValue: bounds?.upper, variant: variant,
-                                              chartData: data, lowerAlertValue: bounds?.lower)
+            self.historyInteraction.deliver { [weak self] in
+                guard let self, !cancellation.isCancelled, self.historyActive else { return }
+                guard self.lastHistoryPresentation != presentation || self.lastHistorySeries != series else { return }
+                self.lastHistoryPresentation = presentation
+                self.lastHistorySeries = series
+                let models = variants.compactMap { variant -> RuuviGraphViewDataModel? in
+                    guard let sampled = series[variant] else { return nil }
+                    if !sampled.points.isEmpty { self.knownHistoryVariants.insert(variant) }
+                    guard self.knownHistoryVariants.contains(variant) else { return nil }
+                    let bounds = context.bounds[variant]
+                    let data = RuuviHistoryChartData(series: sampled, selectedRange: selected, sampledRange: range,
+                        upper: bounds?.upper, lower: bounds?.lower,
+                        showAlerts: self.settings.showAlertsRangeInGraph && context.states[variant] == true,
+                        drawDots: self.settings.chartDrawDotsOn)
+                    return RuuviGraphViewDataModel(upperAlertValue: bounds?.upper, variant: variant,
+                                                  chartData: data, lowerAlertValue: bounds?.lower)
+                }
+                self.datasource = models
+                self.isLoadingHistory = false
+                self.currentAlertRangeFingerprint = context.fingerprint
+                self.view?.createChartViews(from: models.map(\.variant))
+                self.view?.setChartViewData(from: models, settings: self.settings)
+                self.view?.setHasChartData(models.contains { ($0.chartData?.entryCount ?? 0) > 0 } || self.historyViewport != nil)
+                self.updateLatestAlertStates()
             }
-            self.datasource = models
-            self.isLoadingHistory = false
-            self.currentAlertRangeFingerprint = context.fingerprint
-            self.view?.createChartViews(from: models.map(\.variant))
-            self.view?.setChartViewData(from: models, settings: self.settings)
-            self.view?.setHasChartData(models.contains { ($0.chartData?.entryCount ?? 0) > 0 } || self.historyViewport != nil)
-            self.updateLatestAlertStates()
         }
-        interactor.historyRevision().on(success: { [weak self] revision in
+        let tiles = Array(range.tiles().reversed())
+        let showPreview = datasource.isEmpty
+        interactor.historyRevisions(ranges: tiles).on(success: { [weak self] revisions in
             DispatchQueue.main.async {
                 guard let self, !cancellation.isCancelled else { return }
-                let key = HistoryCacheKey(sensorID: sensor.id, range: range, variants: variants, configuration: configuration, revision: revision)
-                if let cached = self.historyCache[key] {
-                    self.historyCacheOrder.removeAll { $0 == key }
-                    self.historyCacheOrder.append(key)
-                    apply(cached)
-                    finished()
-                    return
-                }
-                let samplers = Dictionary(uniqueKeysWithValues: variants.map { ($0, RuuviHistorySampler(range: range)) })
-                interactor.scanHistory(range: range, cancellation: cancellation) { record in
-                    let measurement = record.measurement
-                    for variant in variants {
-                        samplers[variant]?.add(date: record.date, value: resolver.value(for: measurement, variant: variant,
-                            sensorSettings: sensorSettings, configuration: .cardsGraph))
-                    }
-                }.on(success: { revision in
-                    DispatchQueue.main.async {
-                        guard revision >= 0, !cancellation.isCancelled else { return }
-                        let series = samplers.mapValues { $0.finish() }
-                        let savedKey = HistoryCacheKey(sensorID: sensor.id, range: range, variants: variants, configuration: configuration, revision: revision)
-                        self.historyCache[savedKey] = series
-                        self.historyCacheOrder.removeAll { $0 == savedKey }
-                        self.historyCacheOrder.append(savedKey)
-                        while self.historyCacheOrder.count > 5 { self.historyCache.removeValue(forKey: self.historyCacheOrder.removeFirst()) }
-                        apply(series)
-                        finished()
-                    }
-                }, failure: { [weak self] error in
-                    DispatchQueue.main.async {
+                var collected: [[MeasurementDisplayVariant: RuuviHistorySeries]] = []
+                var didShowPreview = false
+                func publish(final: Bool) {
+                    let snapshot = collected
+                    self.historyProcessingQueue.async {
                         guard !cancellation.isCancelled else { return }
-                        self?.interactorDidError(.ruuviStorage(error))
-                        finished()
+                        let series = Dictionary(uniqueKeysWithValues: variants.map { variant in
+                            (variant, RuuviHistorySeries.merging(snapshot.compactMap { $0[variant] }, range: range))
+                        })
+                        DispatchQueue.main.async {
+                            guard !cancellation.isCancelled else { return }
+                            apply(series)
+                            if final { finished() }
+                        }
                     }
-                })
+                }
+                func load(_ index: Int) {
+                    guard !cancellation.isCancelled else { return }
+                    guard index < tiles.count else { publish(final: true); return }
+                    let tile = tiles[index]
+                    let key = HistoryCacheKey(sensorID: sensor.id, range: tile, variants: variants,
+                                              configuration: configuration, revision: revisions[index])
+                    func accept(_ series: [MeasurementDisplayVariant: RuuviHistorySeries]) {
+                        collected.append(series)
+                        if showPreview, !didShowPreview, series.values.contains(where: { !$0.points.isEmpty }), index + 1 < tiles.count {
+                            didShowPreview = true
+                            publish(final: false)
+                        }
+                        // Yield between cached tiles too, so a gesture can cancel the job.
+                        DispatchQueue.main.async { load(index + 1) }
+                    }
+                    if let cached = self.historyCache[key] {
+                        self.historyCacheOrder.removeAll { $0 == key }
+                        self.historyCacheOrder.append(key)
+                        accept(cached)
+                        return
+                    }
+                    let samplers = variants.map { ($0, RuuviHistorySampler(range: tile)) }
+                    interactor.scanHistory(range: tile, cancellation: cancellation) { record in
+                        let measurement = record.measurement
+                        for (variant, sampler) in samplers {
+                            sampler.add(date: record.date, value: resolver.value(for: measurement, variant: variant,
+                                sensorSettings: sensorSettings, configuration: .cardsGraph))
+                        }
+                    }.observe(on: self.historyProcessingQueue).on(success: { revision in
+                        guard revision >= 0, !cancellation.isCancelled else { return }
+                        let series = Dictionary(uniqueKeysWithValues: samplers.map { ($0.0, $0.1.finish()) })
+                        DispatchQueue.main.async {
+                            guard !cancellation.isCancelled else { return }
+                            let savedKey = HistoryCacheKey(sensorID: sensor.id, range: tile, variants: variants,
+                                                           configuration: configuration, revision: revision)
+                            // Replace older revisions of this interval instead of retaining
+                            // obsolete copies during a download. Keep memory bounded.
+                            self.historyCacheOrder.removeAll { old in
+                                guard old.sensorID == savedKey.sensorID, old.range == tile else { return false }
+                                self.historyCache.removeValue(forKey: old)
+                                return true
+                            }
+                            self.historyCache[savedKey] = series
+                            self.historyCacheOrder.append(savedKey)
+                            while self.historyCacheOrder.count > 64 {
+                                self.historyCache.removeValue(forKey: self.historyCacheOrder.removeFirst())
+                            }
+                            accept(series)
+                        }
+                    }, failure: { [weak self] error in
+                        DispatchQueue.main.async {
+                            guard !cancellation.isCancelled else { return }
+                            self?.interactorDidError(.ruuviStorage(error))
+                            finished()
+                        }
+                    })
+                }
+                load(0)
             }
         }, failure: { [weak self] error in
             DispatchQueue.main.async {

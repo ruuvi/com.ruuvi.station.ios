@@ -16,6 +16,7 @@ final class HistoryPersistenceTests: XCTestCase {
                 try RuuviTagSQLite.createTable(in: db)
                 try RuuviTagDataSQLite.createTable(in: db)
                 try RuuviHistorySchema.create(in: db)
+                try RuuviHistorySchema.createIntervalRevisions(in: db)
             }
         }
 
@@ -334,5 +335,38 @@ final class HistoryPersistenceTests: XCTestCase {
         wait(for: [zoomed, read], timeout: 2)
         release.signal()
         XCTAssertGreaterThan(try awaitResult(overview), 0)
+    }
+
+    func testLiveInsertAndDeleteDoNotInvalidateArchivedIntervals() throws {
+        let day = floor(Date().timeIntervalSince1970 / 86400) * 86400
+        let archive = RuuviHistoryRange(start: Date(timeIntervalSince1970: day - 90 * 86400),
+                                        end: Date(timeIntervalSince1970: day - 89 * 86400))
+        let recent = RuuviHistoryRange(start: Date(timeIntervalSince1970: day), end: Date(timeIntervalSince1970: day + 86400))
+        _ = try awaitResult(persistence.create(record(archive.start.addingTimeInterval(60))))
+        let before = try awaitResult(persistence.historyRevisions(sensorID, ranges: [archive, recent]))
+        _ = try awaitResult(persistence.create(record(Date())))
+        let after = try awaitResult(persistence.historyRevisions(sensorID, ranges: [archive, recent]))
+        XCTAssertEqual(before[0], after[0])
+        XCTAssertGreaterThan(after[1], before[1])
+        let scanRevision = try awaitResult(persistence.scanHistory(sensorID, range: archive, cancellation: RuuviHistoryCancellation()) { _ in })
+        XCTAssertEqual(scanRevision, after[0])
+        _ = try awaitResult(persistence.deleteAllRecords(sensorID, before: archive.end))
+        let deleted = try awaitResult(persistence.historyRevisions(sensorID, ranges: [archive, recent]))
+        XCTAssertGreaterThan(deleted[0], after[0])
+        XCTAssertEqual(deleted[1], after[1])
+    }
+
+    func testMovingReadingInvalidatesBothOldAndNewIntervals() throws {
+        let day = floor(Date().timeIntervalSince1970 / 86400) * 86400 - 10 * 86400
+        let old = RuuviHistoryRange(start: Date(timeIntervalSince1970: day), end: Date(timeIntervalSince1970: day + 86400))
+        let new = RuuviHistoryRange(start: old.end, end: old.end.addingTimeInterval(86400))
+        _ = try awaitResult(persistence.create(record(old.start.addingTimeInterval(60))))
+        let before = try awaitResult(persistence.historyRevisions(sensorID, ranges: [old, new]))
+        try database.dbPool.write { db in
+            try db.execute(sql: "UPDATE ruuvi_tag_sensor_records SET date = ? WHERE mac = ?", arguments: [new.start.addingTimeInterval(60), sensorID])
+        }
+        let after = try awaitResult(persistence.historyRevisions(sensorID, ranges: [old, new]))
+        XCTAssertGreaterThan(after[0], before[0])
+        XCTAssertGreaterThan(after[1], before[1])
     }
 }

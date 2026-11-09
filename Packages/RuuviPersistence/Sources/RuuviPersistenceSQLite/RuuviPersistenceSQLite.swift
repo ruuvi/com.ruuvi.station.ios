@@ -128,12 +128,14 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     public func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         do {
-            let retained = records.filter { $0.date >= RuuviHistoryRange.retained().start }.sorted { $0.date < $1.date }
+            let cutoff = RuuviHistoryRange.retained().start
+            let retained = records.filter { $0.date >= cutoff }.sorted { $0.date < $1.date }
             for offset in stride(from: 0, to: retained.count, by: 5000) {
                 try database.dbPool.write { db in
                     try pruneHistoryIfNeeded(db)
+                    var normalizedMACs: [RecordIdentity: MACIdentifier] = [:]
                     for record in retained[offset..<min(offset + 5000, retained.count)] {
-                        let normalized = try normalizedRecord(record, db: db)
+                        let normalized = try normalizedRecord(record, db: db, cache: &normalizedMACs)
                         let id = normalized.macId?.value ?? normalized.luid?.value ?? ""
                         let duplicate = try Record.filter((Record.macColumn == id || Record.luidColumn == id) &&
                             Record.dateColumn > normalized.date.addingTimeInterval(-1.5) &&
@@ -171,7 +173,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     let cursor = try Record.fetchCursor(db, sql: Self.boundedHistorySQL,
                                                        arguments: [mac, range.start, range.end, luid, mac, range.start, range.end])
                     while !cancellation.isCancelled, let record = try cursor.next() { consume(record.any) }
-                    return try historyRevision(id, db: db)
+                    return try historyIntervalRevision(mac: mac, luid: luid, range: range, db: db)
                 }
                 promise.succeed(value: cancellation.isCancelled ? -1 : revision)
             } catch { promise.fail(error: .grdb(error)) }
@@ -192,6 +194,31 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         let sensor = try Entity.filter(Entity.macColumn == id || Entity.luidColumn == id).fetchOne(db)
         return try Int.fetchOne(db, sql: "SELECT SUM(revision) FROM history_revision WHERE sensor = ? OR sensor = ?",
                                arguments: [sensor?.macId?.value ?? id, sensor?.luid?.value ?? id]) ?? 0
+    }
+
+    public func historyRevisions(_ id: String, ranges: [RuuviHistoryRange]) -> Future<[Int], RuuviPersistenceError> {
+        let promise = Promise<[Int], RuuviPersistenceError>()
+        readQueue.async { [self] in
+            do {
+                let revisions = try database.dbPool.read { db in
+                    let sensor = try Entity.filter(Entity.macColumn == id || Entity.luidColumn == id).fetchOne(db)
+                    return try ranges.map {
+                        try historyIntervalRevision(mac: sensor?.macId?.value ?? id,
+                                                    luid: sensor?.luid?.value ?? id, range: $0, db: db)
+                    }
+                }
+                promise.succeed(value: revisions)
+            } catch { promise.fail(error: .grdb(error)) }
+        }
+        return promise.future
+    }
+
+    private func historyIntervalRevision(mac: String, luid: String, range: RuuviHistoryRange, db: Database) throws -> Int {
+        try Int.fetchOne(db, sql: """
+            SELECT SUM(revision) FROM history_interval_revision
+            WHERE sensor IN (?, ?) AND day >= ? AND day < ?
+            """, arguments: [mac, luid, Int(floor(range.start.timeIntervalSince1970 / 86400)),
+                             Int(ceil(range.end.timeIntervalSince1970 / 86400))]) ?? 0
     }
 
     private func pruneHistoryIfNeeded(_ db: Database) throws {
@@ -236,13 +263,15 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     let retained = range.intersection(.retained())
                     guard !retained.isEmpty else { return true }
                     // Timestamp lookup uses the sensor/date indexes and never materializes existing history.
+                    var normalizedMACs: [RecordIdentity: MACIdentifier] = [:]
                     for record in records where retained.contains(record.date) {
                         if cancellation.isCancelled { throw HistoryWriteError.cancelled }
                         guard record.macId?.value == id || record.luid?.value == id else { continue }
-                        let exists = try Record.filter((Record.macColumn == id || Record.luidColumn == id) &&
-                            Record.dateColumn > record.date.addingTimeInterval(-1.5) &&
-                            Record.dateColumn < record.date.addingTimeInterval(1.5)).fetchCount(db) > 0
-                        if !exists { try normalizedRecord(record, db: db).sqlite.insert(db) }
+                        let exists = try Bool.fetchOne(db, sql: """
+                            SELECT EXISTS(SELECT 1 FROM ruuvi_tag_sensor_records
+                            WHERE (mac = ? OR luid = ?) AND date > ? AND date < ?)
+                            """, arguments: [id, id, record.date.addingTimeInterval(-1.5), record.date.addingTimeInterval(1.5)]) ?? false
+                        if !exists { try normalizedRecord(record, db: db, cache: &normalizedMACs).sqlite.insert(db) }
                     }
                     let now = Date().timeIntervalSince1970
                     var start = retained.start.timeIntervalSince1970
@@ -1391,6 +1420,23 @@ extension RuuviPersistenceSQLite {
         }
 
         return record
+    }
+
+    private struct RecordIdentity: Hashable {
+        let mac: String
+        let luid: String?
+    }
+
+    private func normalizedRecord(_ record: RuuviTagSensorRecord, db: Database,
+                                  cache: inout [RecordIdentity: MACIdentifier]) throws -> RuuviTagSensorRecord {
+        guard let mac = record.macId else { return record }
+        let key = RecordIdentity(mac: mac.value, luid: record.luid?.value)
+        if let resolved = cache[key] {
+            return resolved.value == mac.value ? record : record.with(macId: resolved)
+        }
+        let normalized = try normalizedRecord(record, db: db)
+        cache[key] = normalized.macId
+        return normalized
     }
 
     private func normalizedMacId(

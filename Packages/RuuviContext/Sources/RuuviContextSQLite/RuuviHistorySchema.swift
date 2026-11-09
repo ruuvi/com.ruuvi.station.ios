@@ -2,6 +2,34 @@ import GRDB
 
 /// Kept separate so migrations and the real persistence tests use the same schema.
 enum RuuviHistorySchema {
+    static func createIntervalRevisions(in db: Database) throws {
+        try db.execute(sql: """
+        CREATE TABLE history_interval_revision(
+            sensor TEXT NOT NULL, day INTEGER NOT NULL, revision INTEGER NOT NULL,
+            PRIMARY KEY(sensor, day)
+        );
+        """)
+        for event in ["INSERT", "DELETE", "UPDATE"] {
+            // Updates can move a reading to another date or sensor. Invalidate both.
+            let rows = event == "UPDATE" ? ["OLD", "NEW"] : [event == "DELETE" ? "OLD" : "NEW"]
+            let statements = rows.flatMap { row in
+                ["mac", "luid"].map { column in
+                    """
+                    INSERT INTO history_interval_revision(sensor, day, revision)
+                    SELECT \(row).\(column), CAST(strftime('%s', \(row).date) AS INTEGER) / 86400, 1
+                    WHERE \(row).\(column) IS NOT NULL
+                    ON CONFLICT(sensor, day) DO UPDATE SET revision = revision + 1;
+                    """
+                }
+            }.joined(separator: "\n")
+            try db.execute(sql: """
+            CREATE TRIGGER history_interval_\(event.lowercased()) AFTER \(event) ON ruuvi_tag_sensor_records BEGIN
+                \(statements)
+            END;
+            """)
+        }
+    }
+
     static func create(in db: Database) throws {
         try db.execute(sql: """
         CREATE INDEX IF NOT EXISTS history_mac_date ON ruuvi_tag_sensor_records(mac, date);

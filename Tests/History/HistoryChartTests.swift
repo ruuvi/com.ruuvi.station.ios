@@ -178,3 +178,42 @@ final class HistoryScanTests: XCTestCase {
         XCTAssertFalse(scan.finish(afterForeground))
     }
 }
+
+final class HistoryInteractionTests: XCTestCase {
+    func testOverlappingInteractionsWaitUntilBothHaveFinished() {
+        let interaction = RuuviGraphHistoryInteraction()
+        var applied = false
+        interaction.begin()
+        interaction.begin()
+        interaction.deliver { applied = true }
+        interaction.end()
+        XCTAssertTrue(interaction.isActive)
+        XCTAssertFalse(applied)
+        interaction.end()
+        XCTAssertFalse(interaction.isActive)
+        XCTAssertTrue(applied)
+    }
+
+    func testDownloadedResultsWaitForGestureAndOnlyNewestIsDelivered() {
+        let interaction = RuuviGraphHistoryInteraction()
+        var applied: [Int] = []
+        interaction.begin()
+        for value in 0..<100 { interaction.deliver { applied.append(value) } }
+        XCTAssertTrue(applied.isEmpty)
+        interaction.end()
+        XCTAssertEqual(applied, [99])
+        interaction.end()
+        XCTAssertEqual(applied, [99])
+    }
+
+    func testClosingGraphDiscardsDeferredResultAndNextGraphCanUpdate() {
+        let interaction = RuuviGraphHistoryInteraction()
+        var applied: [Int] = []
+        interaction.begin()
+        interaction.deliver { applied.append(1) }
+        interaction.reset()
+        interaction.end()
+        interaction.deliver { applied.append(2) }
+        XCTAssertEqual(applied, [2])
+    }
+}

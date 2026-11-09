@@ -29,6 +29,15 @@ struct MeasurementVariantResolver {
     private let settings: RuuviLocalSettings
     private let measurementService: RuuviServiceMeasurement
     private let alertService: RuuviServiceAlert
+    private var valueUnits: (temperature: UnitTemperature, humidity: HumidityUnit, pressure: UnitPressure)?
+
+    /// A scan uses one immutable unit configuration instead of reading defaults
+    /// for every reading and potentially mixing units during a settings change.
+    func snapshotForHistory() -> Self {
+        var copy = self
+        copy.valueUnits = (settings.temperatureUnit.unitTemperature, settings.humidityUnit, settings.pressureUnit)
+        return copy
+    }
 
     init(
         settings: RuuviLocalSettings,
@@ -52,7 +61,7 @@ struct MeasurementVariantResolver {
                 return nil
             }
             let unit = variant.resolvedTemperatureUnit(
-                default: settings.temperatureUnit.unitTemperature
+                default: valueUnits?.temperature ?? settings.temperatureUnit.unitTemperature
             )
             return temp.converted(to: unit).value
         }
@@ -73,7 +82,7 @@ struct MeasurementVariantResolver {
                 value: humidity.value,
                 unit: .relative(temperature: temperature)
             )
-            switch variant.resolvedHumidityUnit(default: settings.humidityUnit) {
+            switch variant.resolvedHumidityUnit(default: valueUnits?.humidity ?? settings.humidityUnit) {
             case .percent:
                 return base.value * 100
             case .gm3:
@@ -83,7 +92,7 @@ struct MeasurementVariantResolver {
                     return nil
                 }
                 let unit = variant.resolvedTemperatureUnit(
-                    default: settings.temperatureUnit.unitTemperature
+                    default: valueUnits?.temperature ?? settings.temperatureUnit.unitTemperature
                 )
                 return dew.converted(to: unit).value
             }
@@ -93,7 +102,7 @@ struct MeasurementVariantResolver {
             guard let pressure = measurement.pressure?.plus(sensorSettings: sensorSettings) else {
                 return nil
             }
-            let unit = variant.resolvedPressureUnit(default: settings.pressureUnit)
+            let unit = variant.resolvedPressureUnit(default: valueUnits?.pressure ?? settings.pressureUnit)
             return unit.convertedValue(from: pressure)
         }
 

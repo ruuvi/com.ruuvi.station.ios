@@ -169,7 +169,7 @@ private extension MeasurementDetailsPresenter {
         let range = RuuviHistorySelection.rolling(hours: defaultDurationHours).resolve()
         let sampler = RuuviHistorySampler(range: range)
         let variant = resolvedVariant
-        let resolver = variantResolver
+        let resolver = variantResolver.snapshotForHistory()
         let sensorSettings = sensorSettings
         ruuviStorage.scanHistory(sensor.id, range: range, cancellation: cancellation) { record in
             sampler.add(date: record.date, value: resolver.value(for: record.measurement, variant: variant, sensorSettings: sensorSettings))

@@ -6,6 +6,7 @@ import RuuviStorage
 
 protocol CardsGraphViewInteractorInput: AnyObject {
     func historyRevision() -> Future<Int, RuuviStorageError>
+    func historyRevisions(ranges: [RuuviHistoryRange]) -> Future<[Int], RuuviStorageError>
     func scanHistory(range: RuuviHistoryRange, cancellation: RuuviHistoryCancellation,
                      consume: @escaping (RuuviTagSensorRecord) -> Void) -> Future<Int, RuuviStorageError>
     func changeHistorySelection()

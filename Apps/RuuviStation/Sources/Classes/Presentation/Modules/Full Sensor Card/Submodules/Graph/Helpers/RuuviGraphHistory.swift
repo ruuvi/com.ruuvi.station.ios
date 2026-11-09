@@ -11,6 +11,34 @@ enum RuuviGraphHistorySession {
     }
 }
 
+/// Main-queue delivery gate: downloads may finish during a gesture, but only the
+/// latest result is applied after interaction ends. Reset discards obsolete work.
+final class RuuviGraphHistoryInteraction {
+    private var activeCount = 0
+    var isActive: Bool { activeCount > 0 }
+    private var pending: (() -> Void)?
+
+    func begin() { activeCount += 1 }
+
+    func deliver(_ update: @escaping () -> Void) {
+        if isActive { pending = update } else { update() }
+    }
+
+    func end() {
+        guard activeCount > 0 else { return }
+        activeCount -= 1
+        guard !isActive else { return }
+        let update = pending
+        pending = nil
+        update?()
+    }
+
+    func reset() {
+        activeCount = 0
+        pending = nil
+    }
+}
+
 /// Carries raw-reading statistics separately from the sampled display points.
 final class RuuviHistoryChartData: LineChartData {
     let selectedRange: RuuviHistoryRange
@@ -146,6 +174,7 @@ enum RuuviGraphHistoryViewport {
         let sourceWidth = source.viewPortHandler.contentWidth
         let targetWidth = target.viewPortHandler.contentWidth
         targetMatrix.tx = sourceWidth > 0 ? sourceMatrix.tx * targetWidth / sourceWidth : sourceMatrix.tx
+        guard targetMatrix != target.viewPortHandler.touchMatrix else { return }
         target.viewPortHandler.refresh(newMatrix: targetMatrix, chart: target, invalidate: true)
     }
 }

@@ -8,6 +8,7 @@ public protocol RuuviStorage {
     func scanHistory(_ id: String, range: RuuviHistoryRange, cancellation: RuuviHistoryCancellation,
                      consume: @escaping (RuuviTagSensorRecord) -> Void) -> Future<Int, RuuviStorageError>
     func historyRevision(_ id: String) -> Future<Int, RuuviStorageError>
+    func historyRevisions(_ id: String, ranges: [RuuviHistoryRange]) -> Future<[Int], RuuviStorageError>
     func historyCoverage(_ id: String, scope: String, freshAfter: Date) -> Future<RuuviHistoryCoverage, RuuviStorageError>
     func saveHistoryPage(_ id: String, records: [AnyRuuviTagSensorRecord], range: RuuviHistoryRange,
                          scope: String, generation: Int, cancellation: RuuviHistoryCancellation) -> Future<Bool, RuuviStorageError>

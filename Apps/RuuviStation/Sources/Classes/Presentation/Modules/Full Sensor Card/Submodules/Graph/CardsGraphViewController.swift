@@ -498,9 +498,6 @@ class CardsGraphViewController: UIViewController {
         }
         custom.state = RuuviGraphHistorySession.customSelection == nil ? .off : .on
         actions.append(custom)
-        actions.append(UIAction(title: RuuviLocalization.TagCharts.TryAgain.title) { [weak self] _ in
-            self?.output?.viewDidRetryHistory()
-        })
 
         return UIMenu(
             title: "",
@@ -623,6 +620,10 @@ class CardsGraphViewController: UIViewController {
 }
 
 extension CardsGraphViewController: CardsGraphViewDelegate {
+    func chartHistoryGestureDidBegin(_ chartView: CardsGraphView) {
+        output?.viewDidBeginHistoryGesture()
+    }
+
     func chartHistoryGestureDidEnd(_ chartView: CardsGraphView) {
         chartDidTranslate(chartView)
         output?.viewDidFinishHistoryGesture()
@@ -634,6 +635,7 @@ extension CardsGraphViewController: CardsGraphViewDelegate {
                                             end: chartView.underlyingView.highestVisibleX)
         guard chartViews.count > 1
         else {
+            guard !(chartView.underlyingView.data is RuuviHistoryChartData) else { return }
             calculateMinMaxForChart(for: chartView)
             if showAlertRangeInGraph {
                 calculateAlertFillIfNeeded(for: chartView)
@@ -645,6 +647,9 @@ extension CardsGraphViewController: CardsGraphViewDelegate {
         }
 
         for view in chartViews {
+            // Raw-reading statistics and alert bounds do not change with the touch
+            // matrix. Reformat them when new history arrives, not on every frame.
+            guard !(view.underlyingView.data is RuuviHistoryChartData) else { continue }
             calculateMinMaxForChart(for: view)
             if showAlertRangeInGraph {
                 calculateAlertFillIfNeeded(for: view)

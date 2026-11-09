@@ -13,6 +13,7 @@ enum CardsGraphSource {
 }
 
 protocol CardsGraphInternalViewDelegate: NSObjectProtocol {
+    func chartHistoryGestureDidBegin(_ chartView: CardsGraphInternalView)
     func chartHistoryGestureDidEnd(_ chartView: CardsGraphInternalView)
     func chartDidTranslate(_ chartView: CardsGraphInternalView)
     func chartValueDidSelect(
@@ -28,6 +29,7 @@ protocol CardsGraphInternalViewDelegate: NSObjectProtocol {
 
 class CardsGraphInternalView: LineChartView {
     private var lastReportedHistoryViewport: RuuviHistoryRange?
+    private var activeHistoryGestures = Set<ObjectIdentifier>()
 
     weak var chartDelegate: CardsGraphInternalViewDelegate?
 
@@ -86,8 +88,8 @@ class CardsGraphInternalView: LineChartView {
     // MARK: - Private
 
     private func configure() {
-        gestureRecognizers?.filter { $0 is UIPinchGestureRecognizer }.forEach {
-            $0.addTarget(self, action: #selector(historyPinchChanged(_:)))
+        gestureRecognizers?.filter { $0 is UIPinchGestureRecognizer || $0 is UIPanGestureRecognizer }.forEach {
+            $0.addTarget(self, action: #selector(historyGestureChanged(_:)))
         }
         chartDescription.enabled = false
         dragEnabled = true
@@ -171,8 +173,19 @@ class CardsGraphInternalView: LineChartView {
         }
     }
 
-    @objc private func historyPinchChanged(_ gesture: UIPinchGestureRecognizer) {
-        if gesture.state == .ended || gesture.state == .cancelled { chartDelegate?.chartHistoryGestureDidEnd(self) }
+    @objc private func historyGestureChanged(_ gesture: UIGestureRecognizer) {
+        let id = ObjectIdentifier(gesture)
+        switch gesture.state {
+        case .began:
+            let wasEmpty = activeHistoryGestures.isEmpty
+            activeHistoryGestures.insert(id)
+            if wasEmpty { chartDelegate?.chartHistoryGestureDidBegin(self) }
+        case .ended, .cancelled, .failed:
+            if activeHistoryGestures.remove(id) != nil, activeHistoryGestures.isEmpty {
+                chartDelegate?.chartHistoryGestureDidEnd(self)
+            }
+        default: break
+        }
     }
 
     @objc private func handleTap(_ gesture: UITapGestureRecognizer) {
@@ -269,10 +282,6 @@ class CardsGraphInternalView: LineChartView {
 }
 
 extension CardsGraphInternalView: ChartViewDelegate {
-    func chartViewDidEndPanning(_ chartView: ChartViewBase) {
-        chartDelegate?.chartHistoryGestureDidEnd(self)
-    }
-
     func chartTranslated(
         _: ChartViewBase,
         dX _: CGFloat,
@@ -336,6 +345,7 @@ extension CardsGraphInternalView {
     }
 
     func clearChartData() {
+        activeHistoryGestures.removeAll()
         reportsHistoryViewportChanges = false
         lastReportedHistoryViewport = nil
         clearValues()
@@ -351,19 +361,23 @@ extension CardsGraphInternalView {
         if source == .mesurementDetails && graphType == .aqi {
             leftAxis.axisMinimum = 0
             leftAxis.axisMaximum = 100
-            leftYAxisRenderer = AQIYAxisRenderer(
-                viewPortHandler: viewPortHandler,
-                axis: leftAxis,
-                transformer: getTransformer(forAxis: .left)
-            )
+            if !(leftYAxisRenderer is AQIYAxisRenderer) {
+                leftYAxisRenderer = AQIYAxisRenderer(
+                    viewPortHandler: viewPortHandler,
+                    axis: leftAxis,
+                    transformer: getTransformer(forAxis: .left)
+                )
+            }
         } else {
             leftAxis.axisMinimum = min - 1
             leftAxis.axisMaximum = max + 1
-            leftYAxisRenderer = CustomYAxisRenderer(
-                viewPortHandler: viewPortHandler,
-                axis: leftAxis,
-                transformer: getTransformer(forAxis: .left)
-            )
+            if !(leftYAxisRenderer is CustomYAxisRenderer) {
+                leftYAxisRenderer = CustomYAxisRenderer(
+                    viewPortHandler: viewPortHandler,
+                    axis: leftAxis,
+                    transformer: getTransformer(forAxis: .left)
+                )
+            }
         }
 
         // Ensure entries are calculated
@@ -382,13 +396,14 @@ extension CardsGraphInternalView {
         showAll: Bool,
         timelineRange: ClosedRange<Double>? = nil
     ) {
-        let axisRenderer = CustomXAxisRenderer(
-            from: 0,
-            viewPortHandler: viewPortHandler,
-            axis: xAxis,
-            transformer: getTransformer(forAxis: .left)
-        )
-        xAxisRenderer = axisRenderer
+        if !(xAxisRenderer is CustomXAxisRenderer) {
+            xAxisRenderer = CustomXAxisRenderer(
+                from: 0,
+                viewPortHandler: viewPortHandler,
+                axis: xAxis,
+                transformer: getTransformer(forAxis: .left)
+            )
+        }
 
         if let history = data as? RuuviHistoryChartData {
             applyXAxisRange(min: history.selectedRange.start.timeIntervalSince1970,
