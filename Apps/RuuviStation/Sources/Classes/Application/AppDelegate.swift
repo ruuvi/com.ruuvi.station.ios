@@ -67,7 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appStateService = r.resolve(AppStateService.self)
         appStateService.application(application, didFinishLaunchingWithOptions: launchOptions)
         localNotificationsManager = r.resolve(RuuviNotificationLocal.self)
-        let disableTitle = RuuviLocalization.LocalNotificationsManager.Disable.button
+        let disableTitle = RuuviLocalization.alarmNotificationDisable
         let muteTitle = RuuviLocalization.LocalNotificationsManager.Mute.button
         localNotificationsManager.setup(
             disableTitle: disableTitle,

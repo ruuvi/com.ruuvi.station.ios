@@ -21,7 +21,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/kean/Future", .exact("1.3.0")),
+        .package(url: "https://github.com/kean/Future", exact: "1.3.0"),
         .package(url: "https://github.com/ruuvi/BTKit", branch: "master"),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviUser"),
@@ -60,7 +60,7 @@ let package = Package(
         ),
         .testTarget(
             name: "RuuviCloudTests",
-            dependencies: ["RuuviCloud", "RuuviCloudApi"]
+            dependencies: ["RuuviCloud", "RuuviCloudApi", "RuuviCloudPure", "RuuviPool", "Future"]
         ),
     ]
 )

@@ -17,10 +17,14 @@ let package = Package(
         ),
     ],
     dependencies: [
+        .package(url: "https://github.com/kean/Future", exact: "1.3.0"),
+        .package(url: "https://github.com/rinat-enikeev/Humidity", from: "0.1.5"),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviStorage"),
         .package(path: "../RuuviLocal"),
         .package(path: "../RuuviService"),
+        .package(path: "../RuuviCloud"),
+        .package(path: "../RuuviUser"),
     ],
     targets: [
         .target(
@@ -31,15 +35,21 @@ let package = Package(
             name: "RuuviNotificationLocal",
             dependencies: [
                 "RuuviNotification",
+                "Future",
                 "RuuviService",
                 "RuuviLocal",
                 "RuuviStorage",
                 "RuuviOntology",
+                "RuuviCloud",
+                "RuuviUser",
             ]
         ),
         .testTarget(
             name: "RuuviNotificationTests",
-            dependencies: ["RuuviNotification"]
+            dependencies: [
+                "RuuviNotification", "RuuviNotificationLocal", "Future", "Humidity",
+                "RuuviCloud", "RuuviOntology", "RuuviStorage",
+            ]
         ),
     ]
 )

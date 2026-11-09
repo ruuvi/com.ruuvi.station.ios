@@ -16,3 +16,23 @@ targets:
     - target: RuuviOntology
     - target: RuuviUser
     - target: RuuviPool
+  RuuviCloudAlertTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+    - path: Tests/RuuviCloudTests/RuuviCloudAlertRetryTests.swift
+    dependencies:
+    - target: RuuviCloud
+    - target: RuuviPool
+    - package: Future
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  RuuviCloudAlertTests:
+    build:
+      targets:
+        RuuviCloudAlertTests: all
+    test:
+      targets:
+      - RuuviCloudAlertTests

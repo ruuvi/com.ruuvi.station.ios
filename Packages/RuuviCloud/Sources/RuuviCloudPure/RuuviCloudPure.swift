@@ -74,21 +74,24 @@ public final class RuuviCloudPure: RuuviCloud {
         )
         api.postAlert(request, authorization: apiKey)
             .on(success: { [weak self] _ in
-                promise.succeed(value: ())
                 self?.notifyListener(state: .success, macId: macId.mac)
+                promise.succeed(value: ())
             }, failure: { [weak self] error in
                 let uniqueKey = macId.value + "-" + type.rawValue + "-" + settingType.rawValue
-                self?.createQueuedRequest(
-                    from: request,
-                    type: .alert,
-                    uniqueKey: uniqueKey
-                )
-
-                promise.fail(error: .api(error))
-                self?.notifyListener(state: .failed, macId: macId.mac)
-            }, completion: { [weak self] in
-                self?.notifyListener(state: .complete, macId: macId.mac)
+                RuuviCloudAlertRetry.persist(
+                    error: error,
+                    isCurrentSession: self?.user.apiKey == apiKey,
+                    enqueue: {
+                        self?.createQueuedRequest(from: request, type: .alert, uniqueKey: uniqueKey)
+                    }
+                ).on(failure: { error in
+                    self?.notifyListener(state: .failed, macId: macId.mac)
+                    promise.fail(error: error)
+                })
             })
+        promise.future.on(completion: { [weak self] in
+            self?.notifyListener(state: .complete, macId: macId.mac)
+        })
         return promise.future
     }
 
@@ -1564,16 +1567,17 @@ public final class RuuviCloudPure: RuuviCloud {
         ).any
     }
 
+    @discardableResult
     private func createQueuedRequest(
         from request: Codable,
         additionalData: Data? = nil,
         type: RuuviCloudQueuedRequestType,
         uniqueKey: String
-    ) {
+    ) -> Future<Bool, RuuviPoolError>? {
         let encoder = JSONEncoder()
         guard let data = try? encoder.encode(request)
         else {
-            return
+            return nil
         }
         let request = RuuviCloudQueuedRequestStruct(
             id: nil,
@@ -1586,7 +1590,7 @@ public final class RuuviCloudPure: RuuviCloud {
             requestBodyData: data,
             additionalData: additionalData
         )
-        pool?.createQueuedRequest(request)
+        return pool?.createQueuedRequest(request)
     }
 
     private func notifyListener(
