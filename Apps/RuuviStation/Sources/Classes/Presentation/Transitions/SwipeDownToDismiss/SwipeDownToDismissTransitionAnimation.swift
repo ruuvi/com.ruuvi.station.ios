@@ -28,9 +28,10 @@ class SwipeDownToDismissTransitionAnimation: NSObject, UIViewControllerAnimatedT
         dimmingView.frame = containerView.bounds
         containerView.insertSubview(dimmingView, belowSubview: fromVC.view)
 
-        let screenBounds = UIScreen.main.bounds
-        let bottomLeftCorner = CGPoint(x: 0, y: screenBounds.height)
-        let finalFrame = CGRect(origin: bottomLeftCorner, size: screenBounds.size)
+        // Slide out below the container (the window), not the screen, which differs in a resized window.
+        let containerBounds = containerView.bounds
+        let bottomLeftCorner = CGPoint(x: containerBounds.minX, y: containerBounds.maxY)
+        let finalFrame = CGRect(origin: bottomLeftCorner, size: containerBounds.size)
 
         UIView.animate(
             withDuration: transitionDuration(using: transitionContext),

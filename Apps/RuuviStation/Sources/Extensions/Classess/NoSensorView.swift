@@ -207,9 +207,23 @@ extension NoSensorView {
                 padding: .init(top: 0, left: 8, bottom: 0, right: 8)
             )
         } else {
-            centerButtonStackView.widthAnchor.constraint(
+            // At least 300pt wide where that fits. In a narrower space (a 320pt window leaves
+            // about 296pt) the buttons keep 8pt from the edges instead of being clipped.
+            let minimumWidth = centerButtonStackView.widthAnchor.constraint(
                 greaterThanOrEqualToConstant: 300
-            ).isActive = true
+            )
+            minimumWidth.priority = UILayoutPriority(rawValue: 999)
+            NSLayoutConstraint.activate([
+                minimumWidth,
+                centerButtonStackView.leadingAnchor.constraint(
+                    greaterThanOrEqualTo: container.leadingAnchor,
+                    constant: 8
+                ),
+                centerButtonStackView.trailingAnchor.constraint(
+                    lessThanOrEqualTo: container.trailingAnchor,
+                    constant: -8
+                ),
+            ])
         }
         centerButtonStackView.centerXInSuperview()
         centerButtonStackView
@@ -248,18 +262,11 @@ extension NoSensorView {
         buySensorsButtonBottomAnchor.isActive = true
     }
 
+    /// Signed out, the buttons are always centered. Signed in, they are centered in the iPad and
+    /// iPhone portrait layouts and follow the message in the iPhone landscape layout (compact
+    /// height). Read from the view's own traits, so a resized iPad window or an iPhone Duo display
+    /// gets the variant for its own size; re-evaluated in `traitCollectionDidChange(_:)`.
     private func activateCenterButtonStackConstraint() -> Bool {
-        if !userSignedIn {
-            return true
-        }
-
-        if UIDevice.isTablet() {
-            return true
-        }
-
-        let screenTraits = RuuviAppGeometry.screenTraits(for: self)
-        return
-            screenTraits.horizontalSizeClass == .compact &&
-            screenTraits.verticalSizeClass == .regular
+        !userSignedIn || traitCollection.ruuviLayoutClass != .compactHeight
     }
 }

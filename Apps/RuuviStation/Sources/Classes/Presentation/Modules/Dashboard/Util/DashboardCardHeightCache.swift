@@ -2,7 +2,12 @@ import UIKit
 import RuuviOntology
 
 class DashboardCardHeightCache {
-    private var cache: [String: CGFloat] = [:]
+    /// Heights per card width, for the few widths seen most recently (oldest first in
+    /// `recentWidths`). A live window resize gives a new width on every frame, so only a few
+    /// widths are kept; rotating an iPhone back and forth still finds both of its widths.
+    private var heightsByWidth: [CGFloat: [String: CGFloat]] = [:]
+    private var recentWidths: [CGFloat] = []
+    private let maximumWidthCount = 4
 
     func height(
         for snapshot: RuuviTagCardSnapshot,
@@ -17,7 +22,7 @@ class DashboardCardHeightCache {
             numberOfColumns: numberOfColumns
         )
 
-        if let cachedHeight = cache[key] {
+        if let cachedHeight = heightsByWidth[width]?[key] {
             return cachedHeight
         }
 
@@ -28,12 +33,23 @@ class DashboardCardHeightCache {
             numberOfColumns: numberOfColumns,
         )
 
-        cache[key] = height
+        store(height, forKey: key, width: width)
         return height
     }
 
     func clearCache() {
-        cache.removeAll()
+        heightsByWidth.removeAll()
+        recentWidths.removeAll()
+    }
+
+    private func store(_ height: CGFloat, forKey key: String, width: CGFloat) {
+        if heightsByWidth[width] == nil {
+            recentWidths.append(width)
+            if recentWidths.count > maximumWidthCount {
+                heightsByWidth[recentWidths.removeFirst()] = nil
+            }
+        }
+        heightsByWidth[width, default: [:]][key] = height
     }
 
     private func cacheKey(

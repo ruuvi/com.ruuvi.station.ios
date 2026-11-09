@@ -16,6 +16,11 @@ class SensorForceClaimViewController: UIViewController {
         return button
     }()
 
+    /// Holds the intro (message and Claim button), so the button stays reachable in a short window.
+    /// When the intro fits (every iPhone and full-screen iPad) it doesn't scroll.
+    private let introScrollView = UIScrollView()
+    private let introContentView = UIView()
+
     private lazy var messageLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor.textColor.color
@@ -215,22 +220,41 @@ extension SensorForceClaimViewController {
     }
 
     private func setUpClaimIntroView() {
-        view.addSubview(messageLabel)
-        messageLabel.anchor(
+        view.addSubview(introScrollView)
+        introScrollView.anchor(
             top: view.safeTopAnchor,
             leading: view.safeLeftAnchor,
+            bottom: view.safeBottomAnchor,
+            trailing: view.safeRightAnchor
+        )
+
+        introScrollView.addSubview(introContentView)
+        introContentView.anchor(
+            top: introScrollView.contentLayoutGuide.topAnchor,
+            leading: introScrollView.contentLayoutGuide.leadingAnchor,
+            bottom: introScrollView.contentLayoutGuide.bottomAnchor,
+            trailing: introScrollView.contentLayoutGuide.trailingAnchor
+        )
+        introContentView.widthAnchor.constraint(
+            equalTo: introScrollView.frameLayoutGuide.widthAnchor
+        ).isActive = true
+
+        introContentView.addSubview(messageLabel)
+        messageLabel.anchor(
+            top: introContentView.topAnchor,
+            leading: introContentView.leadingAnchor,
             bottom: nil,
-            trailing: view.safeRightAnchor,
+            trailing: introContentView.trailingAnchor,
             padding: .init(top: 16, left: 12, bottom: 0, right: 12)
         )
 
-        view.addSubview(claimSensorButton)
+        introContentView.addSubview(claimSensorButton)
         claimSensorButton.anchor(
             top: messageLabel.bottomAnchor,
             leading: nil,
-            bottom: nil,
+            bottom: introContentView.bottomAnchor,
             trailing: nil,
-            padding: .init(top: 40, left: 0, bottom: 0, right: 0),
+            padding: .init(top: 40, left: 0, bottom: 16, right: 0),
             size: .init(width: 200, height: 50)
         )
         claimSensorButton.centerXInSuperview()

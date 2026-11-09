@@ -8,6 +8,8 @@ class MyRuuviAccountViewController: UIViewController {
     private let contentScrollView = UIScrollView()
     private weak var accountDetailsStackView: UIStackView?
     private var supportLinkHeightConstraint: NSLayoutConstraint?
+    /// The hairline separators' heights: one pixel of the display the view is on.
+    private var separatorHeightConstraints: [NSLayoutConstraint] = []
 
     @IBOutlet weak var supportLinkTextView: RuuviLinkTextView!
     @IBOutlet var loggedInLabel: UILabel!
@@ -89,7 +91,13 @@ class MyRuuviAccountViewController: UIViewController {
         setUpVerticalLayout()
         configureViews()
         localize()
+        registerDisplayScaleObserver()
         output.viewDidLoad()
+    }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        updateSeparatorHeights()
     }
 
     override func viewDidLayoutSubviews() {
@@ -165,9 +173,9 @@ class MyRuuviAccountViewController: UIViewController {
     private func makeSeparatorView() -> UIView {
         let separator = UIView()
         separator.backgroundColor = RuuviColor.textColor.color.withAlphaComponent(0.25)
-        separator.heightAnchor.constraint(
-            equalToConstant: 1 / RuuviAppGeometry.scale(for: view)
-        ).isActive = true
+        let height = separator.heightAnchor.constraint(equalToConstant: hairlineHeight)
+        height.isActive = true
+        separatorHeightConstraints.append(height)
         return separator
     }
 
@@ -361,5 +369,32 @@ extension MyRuuviAccountViewController {
         deleteAccountButton.setTitle(RuuviLocalization.MyRuuvi.Settings.DeleteAccount.title, for: .normal)
         signoutButton.setTitle(RuuviLocalization.Menu.SignOut.text, for: .normal)
         signoutButton.setTitle(RuuviLocalization.Menu.SignOut.text, for: .highlighted)
+    }
+}
+
+// MARK: - Hairline separators
+private extension MyRuuviAccountViewController {
+    /// One pixel on the display the view is on (a window can move to an external display with another
+    /// scale), so it is read again on every layout and display-scale change.
+    var hairlineHeight: CGFloat {
+        let scale = view.traitCollection.displayScale > 0
+            ? view.traitCollection.displayScale : (view.window?.windowScene?.screen.scale ?? 0)
+        return scale > 0 ? 1 / scale : 1
+    }
+
+    func updateSeparatorHeights() {
+        let height = hairlineHeight
+        for constraint in separatorHeightConstraints where constraint.constant != height {
+            constraint.constant = height
+        }
+    }
+
+    func registerDisplayScaleObserver() {
+        // iOS 16 re-reads the scale in `viewWillLayoutSubviews` only.
+        guard #available(iOS 17.0, *) else { return }
+        registerForTraitChanges([UITraitDisplayScale.self]) {
+            (controller: MyRuuviAccountViewController, _: UITraitCollection) in
+            controller.updateSeparatorHeights()
+        }
     }
 }

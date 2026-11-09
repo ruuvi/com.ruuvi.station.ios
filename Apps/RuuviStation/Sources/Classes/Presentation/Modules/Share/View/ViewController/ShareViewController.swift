@@ -260,6 +260,9 @@ extension ShareViewController {
         tableView.sectionFooterHeight = .leastNormalMagnitude
         tableView.estimatedSectionFooterHeight = .leastNormalMagnitude
         tableView.tableFooterView = UIView(frame: .zero)
+        // No row shows a separator. Turned off for the table rather than per cell with an inset
+        // of the table's width, which went stale when the table got wider (rotation, resizing).
+        tableView.separatorStyle = .none
     }
 
     private func getDescriptionCell(_ tableView: UITableView, indexPath: IndexPath) -> ShareDescriptionTableViewCell {
@@ -281,13 +284,11 @@ extension ShareViewController {
         cell.descriptionLabel.textColor = RuuviColor.textColor.color
         cell.descriptionLabel.tintColor = RuuviColor.tintColor.color
         cell.descriptionLabel.font = UIFont.ruuviFootnote()
-        cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.width, bottom: 0, right: 0)
         return cell
     }
 
     private func getAddFriendCell(_ tableView: UITableView, indexPath: IndexPath) -> ShareEmailInputTableViewCell {
         let cell = tableView.dequeueReusableCell(with: ShareEmailInputTableViewCell.self, for: indexPath)
-        cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.width, bottom: 0, right: 0)
         cell.emailTextField.placeholder = RuuviLocalization.ShareViewController.EmailTextField.placeholder
         cell.emailTextField.delegate = self
         cell.emailTextField.textColor = RuuviColor.textColor.color
@@ -301,7 +302,6 @@ extension ShareViewController {
         cell.sendButton.setTitle(RuuviLocalization.TagSettings.Share.title, for: .normal)
         cell.sendButton.tintColor = RuuviColor.tintColor.color
         cell.sendButton.titleLabel?.font = UIFont.ruuviButtonMedium()
-        cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.width, bottom: 0, right: 0)
         return cell
     }
 
@@ -319,7 +319,6 @@ extension ShareViewController {
         cell.unshareButton.isHidden = email == nil
         cell.unshareButton.isUserInteractionEnabled = email != nil
         cell.delegate = email == nil ? nil : self
-        cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.width, bottom: 0, right: 0)
         return cell
     }
 
@@ -334,7 +333,6 @@ extension ShareViewController {
         cell.unshareButton.tintColor = RuuviColor.textColor.color
         cell.unshareButton.setImage(RuuviAsset.smallCrossClearIcon.image, for: .normal)
         cell.delegate = self
-        cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.width, bottom: 0, right: 0)
         return cell
     }
 

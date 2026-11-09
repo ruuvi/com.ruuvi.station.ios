@@ -17,8 +17,9 @@ protocol CardsGraphViewInput: ViewInput {
     var showAlertRangeInGraph: Bool { get set }
     var viewIsVisible: Bool { get }
     var graphIsVisibleForUser: Bool { get }
-    /// `false` where the landscape chart layout isn't used (iPhone Duo inner display).
-    var allowsLandscapeSwipeHint: Bool { get }
+    /// `true` while the graph shows one full-height chart per page with paging (as in iPhone
+    /// landscape), picked from the space the charts have; the swipe-up hint explains this layout.
+    var usesPagedChartLayout: Bool { get }
     func resetScrollPosition()
     func showBluetoothDisabled(userDeclined: Bool)
     func setActiveSnapshot(_ snapshot: RuuviTagCardSnapshot?)

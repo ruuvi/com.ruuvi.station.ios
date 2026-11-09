@@ -8,7 +8,8 @@ struct SheetConfiguration {
     let prefersScrollingExpandsWhenScrolledToEdge: Bool
     let prefersEdgeAttachedInCompactHeight: Bool
     /// Evaluated on every detent resolution; when set it overrides `maxHeight`.
-    /// Lets a sheet follow iPhone Duo's display changes while it is presented.
+    /// Lets a sheet follow rotation, window resizing and iPhone Duo's display changes while it is
+    /// presented (UIKit resolves the detents again whenever the sheet's container changes size).
     var maxHeightProvider: (() -> CGFloat?)?
 
     static let `default` = SheetConfiguration(
@@ -18,6 +19,18 @@ struct SheetConfiguration {
         prefersScrollingExpandsWhenScrolledToEdge: false,
         prefersEdgeAttachedInCompactHeight: true
     )
+}
+
+extension SheetConfiguration {
+    /// The sheet height for `contentHeight`: at most the configured maximum, and never more than the
+    /// sheet can be in its current container (window), which UIKit passes in `context`.
+    func detentHeight(
+        for contentHeight: CGFloat,
+        in context: UISheetPresentationControllerDetentResolutionContext
+    ) -> CGFloat {
+        let maxHeight = maxHeightProvider?() ?? self.maxHeight
+        return min(contentHeight, maxHeight ?? .greatestFiniteMagnitude, context.maximumDetentValue)
+    }
 }
 
 // MARK: - UIViewController Extension
@@ -86,13 +99,9 @@ private extension UIViewController {
         configuration: SheetConfiguration
     ) {
         sheet.detents = [
-            .custom { _ in
+            .custom { context in
                 let contentHeight = viewController.preferredContentSize.height
-
-                if let maxHeight = configuration.maxHeightProvider?() ?? configuration.maxHeight {
-                    return min(contentHeight, maxHeight)
-                }
-                return contentHeight
+                return configuration.detentHeight(for: contentHeight, in: context)
             },
         ]
         sheet.prefersGrabberVisible = configuration.prefersGrabberVisible
@@ -108,14 +117,10 @@ private extension UIViewController {
         configuration: SheetConfiguration
     ) {
         sheet.detents = [
-            .custom { _ in
+            .custom { context in
                 let navBarHeight = navigationController.navigationBar.frame.height
                 let contentHeight = rootVC.preferredContentSize.height + navBarHeight + 20
-
-                if let maxHeight = configuration.maxHeightProvider?() ?? configuration.maxHeight {
-                    return min(contentHeight, maxHeight)
-                }
-                return contentHeight
+                return configuration.detentHeight(for: contentHeight, in: context)
             },
         ]
         sheet.prefersGrabberVisible = configuration.prefersGrabberVisible

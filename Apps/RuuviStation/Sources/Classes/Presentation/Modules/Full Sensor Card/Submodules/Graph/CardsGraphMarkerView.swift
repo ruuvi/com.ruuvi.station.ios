@@ -14,7 +14,6 @@ class CardsGraphMarkerView: MarkerImage {
     private var unit: String = ""
     private var type: MeasurementType = .temperature
     private var measurementService: RuuviServiceMeasurement!
-    private var parentFrame: CGRect = .zero
 
     private let baselineOffset: Int = -4
     private let hPadding: CGFloat = 10.0
@@ -49,13 +48,14 @@ class CardsGraphMarkerView: MarkerImage {
     }
 
     override func draw(context: CGContext, point: CGPoint) {
-        guard let attrs else { return }
+        // The chart's current size, so the marker stays inside it after a rotation or a resize.
+        guard let attrs, let chartBounds = chartView?.bounds else { return }
 
         let labelWidth = labelText.size(withAttributes: attrs).width + hPadding
         let labelHeight = labelText.size(withAttributes: attrs).height + vPadding
         var rectangle = CGRect(x: point.x, y: point.y, width: labelWidth, height: labelHeight)
 
-        let chartWidth = chartView?.bounds.width ?? RuuviAppGeometry.bounds(for: nil).width
+        let chartWidth = chartBounds.width
         if (point.x + rectangle.width) >= chartWidth {
             // shift left
             rectangle.origin.x -= rectangle.width
@@ -64,7 +64,7 @@ class CardsGraphMarkerView: MarkerImage {
             rectangle.origin.x -= rectangle.width / 2
         }
 
-        let maxY = max(0, parentFrame.height - yBottomPadding)
+        let maxY = max(0, chartBounds.height - yBottomPadding)
         let minY: CGFloat = 0
         let aboveY = point.y - pointSpacing - rectangle.height
         let belowY = point.y + pointSpacing
@@ -129,12 +129,10 @@ extension CardsGraphMarkerView {
     func initialise(
         with unit: String,
         type: MeasurementType,
-        measurementService: RuuviServiceMeasurement,
-        parentFrame: CGRect
+        measurementService: RuuviServiceMeasurement
     ) {
         self.unit = unit
         self.type = type
         self.measurementService = measurementService
-        self.parentFrame = parentFrame
     }
 }

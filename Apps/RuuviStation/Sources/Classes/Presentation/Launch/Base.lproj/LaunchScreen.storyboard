@@ -33,13 +33,9 @@
                             <constraint firstItem="ieM-vO-jke" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="23M-L4-XkO"/>
                             <constraint firstItem="npU-OP-Nme" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="2o5-v5-Djn"/>
                             <constraint firstItem="ieM-vO-jke" firstAttribute="bottom" secondItem="Ze5-6b-2t3" secondAttribute="bottom" id="7mf-oA-XHp"/>
-                            <constraint firstAttribute="bottom" secondItem="ieM-vO-jke" secondAttribute="bottom" id="D9X-QG-tQ8"/>
                             <constraint firstItem="npU-OP-Nme" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="EzI-oH-5ox"/>
-                            <constraint firstItem="ieM-vO-jke" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Ktp-OB-tp1"/>
-                            <constraint firstItem="ieM-vO-jke" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="YDk-OF-2w5"/>
                             <constraint firstItem="ieM-vO-jke" firstAttribute="trailing" secondItem="Ze5-6b-2t3" secondAttribute="trailing" id="ZkA-Uw-OkG"/>
                             <constraint firstItem="ieM-vO-jke" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="tKN-bb-keR"/>
-                            <constraint firstItem="ieM-vO-jke" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="w2X-JQ-4yA"/>
                         </constraints>
                     </view>
                 </viewController>

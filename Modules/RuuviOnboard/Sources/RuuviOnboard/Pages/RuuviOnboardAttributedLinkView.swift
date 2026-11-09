@@ -14,6 +14,11 @@ class RuuviOnboardAttributedLinkView: UITextView {
 
     weak var linkDelegate: RuuviOnboardAttributedLinkViewDelegate?
 
+    /// Called after a layout pass in which the view's width changed (it was first laid out, or the
+    /// page was resized), so the owner can measure the height the text needs at the new width.
+    var onWidthChange: ((RuuviOnboardAttributedLinkView) -> Void)?
+    private var lastLayoutWidth: CGFloat = 0
+
     convenience init(
         textColor: UIColor = .white,
         linkColor: UIColor = .white,
@@ -38,6 +43,13 @@ class RuuviOnboardAttributedLinkView: UITextView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         setUpUI()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        guard bounds.width != lastLayoutWidth else { return }
+        lastLayoutWidth = bounds.width
+        onWidthChange?(self)
     }
 
     private func setUpUI() {

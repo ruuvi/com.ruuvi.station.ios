@@ -260,18 +260,63 @@ extension UIView {
     var safeBottomAnchor: NSLayoutYAxisAnchor {
         return self.safeAreaLayoutGuide.bottomAnchor
     }
+}
 
-    var bottomSafeAreaHeight: CGFloat {
-        let windowScenes = UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-        let activeScene = windowScenes
-            .filter { $0.activationState == .foregroundActive }
-        let firstActiveScene = activeScene.first
-        let keyWindow = firstActiveScene?.keyWindow
-        if let window = keyWindow {
-            let safeFrame = window.safeAreaLayoutGuide.layoutFrame
-            return window.frame.maxY - safeFrame.maxY
-        }
-        return 0
+// MARK: - Scrolling page
+
+extension UIView {
+    /// Adds a vertical scroll view to this view and returns it with `container`, the view to lay an
+    /// onboarding page out in (a clear, clipping `UIView(color:)`, like the pages used before).
+    ///
+    /// While the page content fits, `container` is exactly as tall as the scroll view, so nothing
+    /// scrolls or bounces and the page looks as it does without the scroll view. When the page is
+    /// shorter than its content (a short window), `container` grows to fit the content and the page
+    /// scrolls, so no text or button is cut off.
+    ///
+    /// Priorities: `container` keeps the scroll view's height at priority 500. Content that should
+    /// give way before the page scrolls (an image) must resist compression below that (e.g.
+    /// `.defaultLow`); text and buttons keep the default 750, so they are never compressed. A view
+    /// that only fills the remaining space (no intrinsic height) needs a `>= 0` height so the page
+    /// grows instead of that view's height going negative.
+    ///
+    /// The scroll view does not adjust its insets: the content lays out against its own safe area,
+    /// as the pages already do inside the paging collection view.
+    ///
+    /// - Parameter bottom: Where the scroll view ends; the bottom of this view by default.
+    func addScrollingPage(
+        bottom: NSLayoutYAxisAnchor? = nil
+    ) -> (scrollView: UIScrollView, container: UIView) {
+        let scrollView = UIScrollView()
+        scrollView.backgroundColor = .clear
+        scrollView.contentInsetAdjustmentBehavior = .never
+        scrollView.alwaysBounceVertical = false
+        scrollView.showsHorizontalScrollIndicator = false
+        addSubview(scrollView)
+        scrollView.anchor(
+            top: topAnchor,
+            leading: leadingAnchor,
+            bottom: bottom ?? bottomAnchor,
+            trailing: trailingAnchor
+        )
+
+        let container = UIView(color: .clear)
+        scrollView.addSubview(container)
+        container.translatesAutoresizingMaskIntoConstraints = false
+        let fillsPage = container.heightAnchor.constraint(
+            equalTo: scrollView.frameLayoutGuide.heightAnchor
+        )
+        fillsPage.priority = UILayoutPriority(500)
+        NSLayoutConstraint.activate([
+            container.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            container.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            container.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            container.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            container.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
+            container.heightAnchor.constraint(
+                greaterThanOrEqualTo: scrollView.frameLayoutGuide.heightAnchor
+            ),
+            fillsPage,
+        ])
+        return (scrollView, container)
     }
 }

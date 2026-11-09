@@ -1,7 +1,6 @@
 import UIKit
 
 class MenuTablePresentationController: UIPresentationController {
-    var menuWidth: CGFloat = 0
     var dismissTransition: MenuTableDismissTransitionAnimation!
 
     private lazy var dimmingView: UIView = {
@@ -58,7 +57,7 @@ class MenuTablePresentationController: UIPresentationController {
         forChildContentContainer _: UIContentContainer,
         withParentContainerSize parentSize: CGSize
     ) -> CGSize {
-        CGSize(width: menuWidth, height: parentSize.height)
+        CGSize(width: MenuTableTransitionManager.menuWidth(in: parentSize), height: parentSize.height)
     }
 
     override var frameOfPresentedViewInContainerView: CGRect {
@@ -112,7 +111,10 @@ class MenuTablePresentationController: UIPresentationController {
         if let bounds = containerView?.bounds {
             dimmingView.frame = bounds
         }
-        presentedView?.frame = frameOfPresentedViewInContainerView
+        let presentedFrame = frameOfPresentedViewInContainerView
+        presentedView?.frame = presentedFrame
+        // The shadow and background block follow the menu when the window is resized while it is open.
+        shadowView.frame = presentedFrame
     }
 
     @objc func dimmingViewTapped(_: UITapGestureRecognizer) {

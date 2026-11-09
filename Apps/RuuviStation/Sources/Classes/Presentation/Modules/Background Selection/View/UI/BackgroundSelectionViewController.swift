@@ -42,10 +42,10 @@ class BackgroundSelectionViewController: UIViewController {
     private let sectionHeaderKind: String = "sectionHeaderKind"
     private let cvCellIdentifier: String = "cvCellIdentifier"
     // Collection view layout properties
-    private let itemHorizontalSpacing: CGFloat = GlobalHelpers.isDeviceTablet() ? 8 : 4
-    private let itemGroupSpacing: CGFloat = GlobalHelpers.isDeviceTablet() ? 20 : 8
     private let sectionTopPadding: CGFloat = 4
     private let sectionBottomPadding: CGFloat = 12
+    /// The layout class the grid was last laid out for (see `viewWillLayoutSubviews`).
+    private var appliedLayoutClass: RuuviLayoutClass?
 }
 
 // MARK: - View lifecycle
@@ -57,6 +57,17 @@ extension BackgroundSelectionViewController {
         bindViewModel()
         localize()
         output.viewDidLoad()
+    }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        // The grid re-runs its section provider when its size changes. Also re-run it when only the
+        // size classes change, so it never keeps the variant of another layout class.
+        let layoutClass = view.traitCollection.ruuviLayoutClass
+        if let appliedLayoutClass, appliedLayoutClass != layoutClass {
+            collectionView.collectionViewLayout.invalidateLayout()
+        }
+        appliedLayoutClass = layoutClass
     }
 }
 
@@ -148,34 +159,33 @@ private extension BackgroundSelectionViewController {
     func createLayout() -> UICollectionViewLayout {
         let sectionProvider = { [weak self] (
             _: Int,
-            _: NSCollectionLayoutEnvironment
+            environment: NSCollectionLayoutEnvironment
         )
             -> NSCollectionLayoutSection? in
         guard let sSelf = self else { return nil }
 
-        let widthMultiplier = sSelf.itemWidthMultiplier()
-        let itemEstimatedHeight: CGFloat = sSelf.itemEstimatedHeight()
+        let grid = sSelf.gridMetrics(for: environment)
 
         let itemSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(widthMultiplier),
-            heightDimension: .absolute(itemEstimatedHeight)
+            widthDimension: .fractionalWidth(grid.itemWidthFraction),
+            heightDimension: .absolute(grid.itemHeight)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         item.contentInsets = NSDirectionalEdgeInsets(
             top: 0,
-            leading: sSelf.itemHorizontalSpacing,
+            leading: grid.itemHorizontalSpacing,
             bottom: 0,
-            trailing: sSelf.itemHorizontalSpacing
+            trailing: grid.itemHorizontalSpacing
         )
 
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(itemEstimatedHeight)
+            heightDimension: .absolute(grid.itemHeight)
         )
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
 
         let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = sSelf.itemGroupSpacing
+        section.interGroupSpacing = grid.itemGroupSpacing
         section.contentInsets = NSDirectionalEdgeInsets(
             top: sSelf.sectionTopPadding,
             leading: 0,
@@ -206,20 +216,55 @@ private extension BackgroundSelectionViewController {
         )
         return layout
     }
+}
 
-    func itemWidthMultiplier() -> CGFloat {
-        if GlobalHelpers.isDeviceTablet() {
-            GlobalHelpers.isDeviceLandscape() ? 0.125 : 0.20
-        } else {
-            GlobalHelpers.isDeviceLandscape() ? 0.20 : 0.33333333
-        }
+// MARK: - Grid variants
+
+private extension BackgroundSelectionViewController {
+    /// One grid variant: the share of a row one item takes, its height and the spacings.
+    struct GridMetrics {
+        let itemWidthFraction: CGFloat
+        let itemHeight: CGFloat
+        let itemHorizontalSpacing: CGFloat
+        let itemGroupSpacing: CGFloat
     }
 
-    func itemEstimatedHeight() -> CGFloat {
-        if GlobalHelpers.isDeviceTablet() {
-            GlobalHelpers.isDeviceLandscape() ? 200 : 190
-        } else {
-            GlobalHelpers.isDeviceLandscape() ? 190 : 170
+    /// In the `.regular` layout, the widest column that still shows 5 per row. The collection view is
+    /// 24 pt narrower than the window: full-screen iPad portrait (720-1008 pt, columns up to 201.6 pt)
+    /// keeps 5 per row and landscape (1056-1352 pt, 5 columns would be 211.2 pt or wider) keeps 8, as
+    /// before. 206 sits midway; other widths get the count that fits.
+    static let regularMaximumColumnWidth: CGFloat = 206
+
+    /// Picks the grid from the collection view's own traits and width, never from the device type
+    /// or orientation: iPhone portrait 3 per row, iPhone landscape 5, iPad 5 or 8.
+    func gridMetrics(for environment: NSCollectionLayoutEnvironment) -> GridMetrics {
+        switch environment.traitCollection.ruuviLayoutClass {
+        case .compactWidth:
+            return GridMetrics(
+                itemWidthFraction: 0.33333333,
+                itemHeight: 170,
+                itemHorizontalSpacing: 4,
+                itemGroupSpacing: 8
+            )
+        case .compactHeight:
+            return GridMetrics(
+                itemWidthFraction: 0.20,
+                itemHeight: 190,
+                itemHorizontalSpacing: 4,
+                itemGroupSpacing: 8
+            )
+        case .regular:
+            let columns = RuuviGridFit.columns(
+                in: environment.container.effectiveContentSize.width,
+                counts: [5, 8],
+                maximumColumnWidth: Self.regularMaximumColumnWidth
+            )
+            return GridMetrics(
+                itemWidthFraction: columns == 8 ? 0.125 : 0.20,
+                itemHeight: columns == 8 ? 200 : 190,
+                itemHorizontalSpacing: 8,
+                itemGroupSpacing: 20
+            )
         }
     }
 }

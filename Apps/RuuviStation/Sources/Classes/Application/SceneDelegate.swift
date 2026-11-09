@@ -17,6 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         options connectionOptions: UIScene.ConnectionOptions
     ) {
         guard let windowScene = scene as? UIWindowScene else { return }
+        applyPreferredMinimumSize(to: windowScene)
 
         let resolver = AppAssembly.shared.assembler.resolver
         let settings = appDelegate?.settings ?? resolver.resolve(RuuviLocalSettings.self)
@@ -65,6 +66,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 
 private extension SceneDelegate {
+    /// Asks for windows no narrower than the narrowest iPhone layout without Display Zoom (375 pt),
+    /// where the app resizes (iPadOS 27 windows, TN3192). It is only a preference: rotation and the
+    /// system can still make the scene narrower, and iPhone SE with Display Zoom is 320 pt wide, so
+    /// every screen still has to work below it. No height minimum. A full-screen scene (iPhone,
+    /// full-screen iPad) is not affected.
+    func applyPreferredMinimumSize(to windowScene: UIWindowScene) {
+        windowScene.sizeRestrictions?.minimumSize.width = 375
+    }
+
     /// iPhone Duo: lifts the onboarding / sign in portrait lock while the device is open (inner
     /// display), so the app fills the display instead of showing as a portrait box. Devices without
     /// a hinge (every iPhone and iPad) report a `nil` hinge, so nothing changes there.

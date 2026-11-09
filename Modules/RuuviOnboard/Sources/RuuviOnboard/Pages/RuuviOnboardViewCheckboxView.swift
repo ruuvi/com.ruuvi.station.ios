@@ -21,6 +21,8 @@ public class RuuviOnboardCheckboxProvider: NSObject {
 
     private var stateHolder = RuuviOnboardCheckboxState()
     private var cancellables = Set<AnyCancellable>()
+    /// Kept alive so its sizing options stay in effect: only its view is embedded in the page.
+    private var hostingController: UIViewController?
 
     public var isChecked: Bool {
         stateHolder.isChecked
@@ -36,7 +38,7 @@ public class RuuviOnboardCheckboxProvider: NSObject {
         titleMarkupString: String,
         titleLink: String
     ) -> UIViewController {
-        return UIHostingController(
+        let controller = UIHostingController(
             rootView: RuuviOnboardViewCheckboxView(
                 title: title,
                 titleMarkupString: titleMarkupString,
@@ -45,6 +47,11 @@ public class RuuviOnboardCheckboxProvider: NSObject {
                 stateHolder
             )
         )
+        // The view is laid out with Auto Layout: update its height whenever the text needs another
+        // height (it wraps differently after the page width changed).
+        controller.sizingOptions = .intrinsicContentSize
+        hostingController = controller
+        return controller
     }
 
     public func setChecked(_ isChecked: Bool) {
@@ -120,6 +127,22 @@ struct RuuviOnboardViewCheckboxView: View {
                 guard let url = URL(string: url) else { return }
                 UIApplication.shared.open(url)
             }
+
+            /// After the current layout pass, measures the height the text needs at the view's
+            /// width and stores it as the title's minimum height.
+            func measureHeight(of view: RuuviOnboardAttributedLinkView) {
+                DispatchQueue.main.async { [weak self, weak view] in
+                    guard let self, let view else { return }
+                    let height = view.sizeThatFits(
+                        CGSize(
+                            width: view.bounds.width,
+                            height: CGFloat.greatestFiniteMagnitude
+                        )
+                    ).height
+                    guard height != self.parent.dynamicHeight else { return }
+                    self.parent.dynamicHeight = height
+                }
+            }
         }
 
         func makeUIView(context: Context) -> RuuviOnboardAttributedLinkView {
@@ -129,20 +152,19 @@ struct RuuviOnboardViewCheckboxView: View {
                 link: titleLink
             )
             view.linkDelegate = context.coordinator
+            // SwiftUI does not update the view when only its width changes (the page was resized),
+            // so measure again whenever the text view gets another width.
+            view.onWidthChange = { [weak coordinator = context.coordinator] textView in
+                coordinator?.measureHeight(of: textView)
+            }
             view.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
             view.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
             return view
         }
 
         func updateUIView(_ uiView: RuuviOnboardAttributedLinkView, context: Context) {
-            DispatchQueue.main.async {
-                dynamicHeight = uiView.sizeThatFits(
-                    CGSize(
-                        width: uiView.bounds.width,
-                        height: CGFloat.greatestFiniteMagnitude
-                    )
-                ).height
-            }
+            context.coordinator.parent = self
+            context.coordinator.measureHeight(of: uiView)
         }
     }
 }

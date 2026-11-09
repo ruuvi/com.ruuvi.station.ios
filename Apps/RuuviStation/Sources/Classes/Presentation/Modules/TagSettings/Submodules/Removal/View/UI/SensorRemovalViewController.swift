@@ -16,6 +16,11 @@ class SensorRemovalViewController: UIViewController {
         return button
     }()
 
+    /// Holds the whole screen, so the Remove button stays reachable in a short window. When the
+    /// content fits (every iPhone and full-screen iPad) it doesn't scroll.
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
+
     private lazy var messageLabel: UILabel = {
         let label = UILabel()
         label.textColor = RuuviColor.textColor.color
@@ -119,6 +124,7 @@ extension SensorRemovalViewController: SensorRemovalViewInput {
 extension SensorRemovalViewController {
     private func setUpUI() {
         setUpBase()
+        setUpScrollView()
         setUpContentView()
     }
 
@@ -142,13 +148,34 @@ extension SensorRemovalViewController {
         }
     }
 
-    private func setUpContentView() {
-        view.addSubview(messageLabel)
-        messageLabel.anchor(
+    private func setUpScrollView() {
+        view.addSubview(scrollView)
+        scrollView.anchor(
             top: view.safeTopAnchor,
             leading: view.safeLeftAnchor,
+            bottom: view.safeBottomAnchor,
+            trailing: view.safeRightAnchor
+        )
+
+        scrollView.addSubview(contentView)
+        contentView.anchor(
+            top: scrollView.contentLayoutGuide.topAnchor,
+            leading: scrollView.contentLayoutGuide.leadingAnchor,
+            bottom: scrollView.contentLayoutGuide.bottomAnchor,
+            trailing: scrollView.contentLayoutGuide.trailingAnchor
+        )
+        contentView.widthAnchor.constraint(
+            equalTo: scrollView.frameLayoutGuide.widthAnchor
+        ).isActive = true
+    }
+
+    private func setUpContentView() {
+        contentView.addSubview(messageLabel)
+        messageLabel.anchor(
+            top: contentView.topAnchor,
+            leading: contentView.leadingAnchor,
             bottom: nil,
-            trailing: view.safeRightAnchor,
+            trailing: contentView.trailingAnchor,
             padding: .init(top: 16, left: 12, bottom: 0, right: 12)
         )
 
@@ -163,22 +190,22 @@ extension SensorRemovalViewController {
         removeCloudHistoryActionContainer.addSubview(removeCloudHistoryCheckboxVC.view)
         removeCloudHistoryCheckboxVC.view.fillSuperview()
 
-        view.addSubview(removeCloudHistoryActionContainer)
+        contentView.addSubview(removeCloudHistoryActionContainer)
         removeCloudHistoryActionContainer.anchor(
             top: messageLabel.bottomAnchor,
-            leading: view.safeLeftAnchor,
+            leading: contentView.leadingAnchor,
             bottom: nil,
-            trailing: view.safeRightAnchor,
+            trailing: contentView.trailingAnchor,
             padding: .init(top: 24, left: 12, bottom: 0, right: 12)
         )
 
-        view.addSubview(removeButton)
+        contentView.addSubview(removeButton)
         removeButton.anchor(
             top: nil,
             leading: nil,
-            bottom: nil,
+            bottom: contentView.bottomAnchor,
             trailing: nil,
-            padding: .init(top: 40, left: 0, bottom: 0, right: 0),
+            padding: .init(top: 40, left: 0, bottom: 16, right: 0),
             size: .init(width: 200, height: 50)
         )
         removeButton.centerXInSuperview()

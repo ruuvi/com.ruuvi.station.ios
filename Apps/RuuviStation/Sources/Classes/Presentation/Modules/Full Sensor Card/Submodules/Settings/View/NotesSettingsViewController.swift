@@ -162,9 +162,14 @@ private extension NotesSettingsViewController {
                 right: Constants.horizontalPadding
             )
         )
-        editorContainerView.heightAnchor.constraint(
+        // Below required (and below the counter's compression resistance): in a window too short
+        // for it with the keyboard up, the editor gets shorter and scrolls instead of the counter or
+        // the Update button being pushed over it. Kept wherever there is room, as before.
+        let minimumEditorHeightConstraint = editorContainerView.heightAnchor.constraint(
             greaterThanOrEqualToConstant: Constants.minimumEditorHeight
-        ).isActive = true
+        )
+        minimumEditorHeightConstraint.priority = .defaultHigh - 1
+        minimumEditorHeightConstraint.isActive = true
 
         editorContainerView.addSubview(textView)
         textView.fillSuperview()

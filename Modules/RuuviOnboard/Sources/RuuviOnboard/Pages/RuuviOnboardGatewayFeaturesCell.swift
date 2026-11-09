@@ -3,10 +3,31 @@ import UIKit
 
 class RuuviOnboardGatewayFeaturesCell: UICollectionViewCell {
     private var footerRowSwitch: RuuviVerticalBarConstraintSwitch?
+    /// Top, leading, bottom and trailing space around the app image; each constant is the padding.
+    private var appImagePaddingConstraints: [NSLayoutConstraint] = []
+    private var appliedAppImagePadding: CGFloat?
+    /// Scrolls the text and the image only when the page is too short for them.
+    private weak var pageScrollView: UIScrollView?
 
     override func layoutSubviews() {
         footerRowSwitch?.update(for: traitCollection)
+        updateAppImagePadding()
         super.layoutSubviews()
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        // Size classes are only known in a window: lay out again there, so the padding is right
+        // even if the cell was first laid out outside one.
+        if window != nil {
+            setNeedsLayout()
+        }
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        // The cell shows several pages: start each one at its top.
+        pageScrollView?.contentOffset = .zero
     }
 
     private lazy var appImageView: UIImageView = {
@@ -69,9 +90,20 @@ class RuuviOnboardGatewayFeaturesCell: UICollectionViewCell {
 private extension RuuviOnboardGatewayFeaturesCell {
     // swiftlint:disable:next function_body_length
     func setUpUI() {
-        let container = UIView(color: .clear)
-        contentView.addSubview(container)
-        container.fillSuperview()
+        // The teal footer stays at the bottom of the page. The text and the image above it scroll
+        // only when the page is too short for them (a short window).
+        let footerView = UIView(color: RuuviColor.tintColor.color)
+        contentView.addSubview(footerView)
+        footerView.anchor(
+            top: nil,
+            leading: contentView.leadingAnchor,
+            bottom: contentView.bottomAnchor,
+            trailing: contentView.trailingAnchor
+        )
+
+        let page = contentView.addScrollingPage(bottom: footerView.topAnchor)
+        pageScrollView = page.scrollView
+        let container = page.container
 
         let textStack = UIStackView(arrangedSubviews: [
             subtitleLabel, titleLabel
@@ -99,25 +131,25 @@ private extension RuuviOnboardGatewayFeaturesCell {
         appImageViewContainer.anchor(
             top: textStack.bottomAnchor,
             leading: container.safeLeadingAnchor,
-            bottom: nil,
+            bottom: container.bottomAnchor,
             trailing: container.safeTrailingAnchor
         )
 
         appImageViewContainer.addSubview(appImageView)
-        if UIDevice.isTablet() {
-            appImageView.fillSuperview(padding: .init(top: 60, left: 60, bottom: 60, right: 60))
-        } else {
-            appImageView.fillSuperview(padding: .init(top: 30, left: 30, bottom: 30, right: 30))
-        }
-
-        let footerView = UIView(color: RuuviColor.tintColor.color)
-        container.addSubview(footerView)
-        footerView.anchor(
-            top: appImageViewContainer.bottomAnchor,
-            leading: container.leadingAnchor,
-            bottom: container.bottomAnchor,
-            trailing: container.trailingAnchor
-        )
+        appImageView.translatesAutoresizingMaskIntoConstraints = false
+        appImagePaddingConstraints = [
+            appImageView.topAnchor.constraint(equalTo: appImageViewContainer.topAnchor),
+            appImageView.leadingAnchor.constraint(equalTo: appImageViewContainer.leadingAnchor),
+            appImageViewContainer.bottomAnchor.constraint(equalTo: appImageView.bottomAnchor),
+            appImageViewContainer.trailingAnchor.constraint(equalTo: appImageView.trailingAnchor),
+        ]
+        NSLayoutConstraint.activate(appImagePaddingConstraints)
+        updateAppImagePadding()
+        // The image is the part that gives way: it shrinks (down to nothing) before the text is
+        // compressed or the page scrolls, and it takes any extra height instead of the text.
+        appImageView.heightAnchor.constraint(greaterThanOrEqualToConstant: 0).isActive = true
+        appImageView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        appImageView.setContentHuggingPriority(.defaultLow - 1, for: .vertical)
 
         let stackView = UIStackView(arrangedSubviews: [
             gateWayImageView, gatewayRequireLabel
@@ -131,19 +163,24 @@ private extension RuuviOnboardGatewayFeaturesCell {
         stackView.anchor(
             top: footerView.topAnchor,
             leading: nil,
-            bottom: footerView.safeBottomAnchor,
+            bottom: nil,
             trailing: nil,
-            padding: .init(
-                top: 12,
-                left: 0,
-                bottom: bottomSafeAreaHeight > 0 ? 0 : 12,
-                right: 0
-            )
+            padding: .init(top: 12, left: 0, bottom: 0, right: 0)
         )
+
+        // The row ends on the footer's own safe area where it has a bottom inset (home indicator),
+        // otherwise 12pt above the footer's edge: the larger of the two, updated with the window.
+        let safeArea = footerView.safeAreaLayoutGuide
+        let rowOnSafeArea = stackView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
+        rowOnSafeArea.priority = UILayoutPriority(999)
+        NSLayoutConstraint.activate([
+            stackView.bottomAnchor.constraint(lessThanOrEqualTo: safeArea.bottomAnchor),
+            stackView.bottomAnchor.constraint(lessThanOrEqualTo: footerView.bottomAnchor, constant: -12),
+            rowOnSafeArea,
+        ])
 
         // iPhone Duo: the teal footer runs edge to edge, but its row is centred in the safe area so
         // it stays clear of the vertical bar. Elsewhere the original constraints are used.
-        let safeArea = footerView.safeAreaLayoutGuide
         footerRowSwitch = RuuviVerticalBarConstraintSwitch(
             standard: [
                 stackView.leadingAnchor.constraint(lessThanOrEqualTo: footerView.leadingAnchor, constant: 20),
@@ -157,6 +194,16 @@ private extension RuuviOnboardGatewayFeaturesCell {
                 stackView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor, constant: -20),
             ]
         )
+    }
+
+    /// 60pt around the image in the iPad layout (regular width and height), 30pt otherwise (iPhone,
+    /// narrow or short windows). Re-applied on every layout pass, so it follows size-class changes;
+    /// does nothing while the padding is unchanged.
+    func updateAppImagePadding() {
+        let padding: CGFloat = traitCollection.ruuviLayoutClass.isRegular ? 60 : 30
+        guard padding != appliedAppImagePadding else { return }
+        appliedAppImagePadding = padding
+        appImagePaddingConstraints.forEach { $0.constant = padding }
     }
 }
 

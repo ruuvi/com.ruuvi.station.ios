@@ -37,7 +37,6 @@ struct DFUUIView: View {
     private let bodyFont = Font(RuuviFonts.mulish(.regular, size: 16))
     private let texts = Texts()
     @State private var isBatteryLow = false
-    @State private var superviewSize: CGSize = .zero
 
     var body: some View {
         NavigationView {
@@ -65,18 +64,6 @@ struct DFUUIView: View {
                 .padding(
                     .top, 48
                 )
-                GeometryReader { proxy in
-                    HStack {} // just an empty container to get superview size.
-                        .onAppear {
-                            superviewSize = proxy.size
-                        }
-                        .onChange(of: proxy.size) { newSize in
-                            // iPhone Duo: the display changes size when the device opens/closes.
-                            if AppUtility.isFoldableDevice {
-                                superviewSize = newSize
-                            }
-                        }
-                }
             }
             .background(RuuviColor.primary.swiftUIColor)
             .modifier(DFUSafeAreaModifier())
@@ -210,7 +197,7 @@ struct DFUUIView: View {
             .padding()
             .eraseToAnyView()
         case let .isAbleToUpgrade(latestRelease, currentRelease):
-            return VStack {
+            return DFUScrollableIfNeeded {
                 VStack(alignment: .leading, spacing: 16) {
                     Text(texts.latestTitle).bold()
                         .font(titleFont)
@@ -299,10 +286,7 @@ struct DFUUIView: View {
                         if !viewModel.isRuuviAir() {
                             RuuviBoardView()
                         }
-                        DFUInstructionsView(
-                            isAir: viewModel.isRuuviAir(),
-                            maxWidth: superviewSize.width - 32
-                        )
+                        DFUInstructionsView(isAir: viewModel.isRuuviAir())
                         Button(
                             action: {},
                             label: {
@@ -341,10 +325,7 @@ struct DFUUIView: View {
                         if !viewModel.isRuuviAir() {
                             RuuviBoardView()
                         }
-                        DFUInstructionsView(
-                            isAir: viewModel.isRuuviAir(),
-                            maxWidth: superviewSize.width - 32
-                        )
+                        DFUInstructionsView(isAir: viewModel.isRuuviAir())
                         Button(
                             action: {
                                 viewModel.send(
@@ -384,20 +365,22 @@ struct DFUUIView: View {
             .padding(EdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20))
             .eraseToAnyView()
         case .flashing:
-            return VStack(alignment: .center, spacing: 24) {
-                Text(texts.updatingTitle)
-                    .font(bodyFont)
-                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                ProgressBar(value: $viewModel.flashProgress)
-                    .frame(height: 16)
-                Text("\(Int(viewModel.flashProgress * 100))%")
-                    .font(bodyFont)
-                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
-                Text(texts.doNotCloseTitle)
-                    .font(titleFont)
-                    .bold()
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(RuuviColor.textColor.swiftUIColor)
+            return DFUScrollableIfNeeded {
+                VStack(alignment: .center, spacing: 24) {
+                    Text(texts.updatingTitle)
+                        .font(bodyFont)
+                        .foregroundColor(RuuviColor.textColor.swiftUIColor)
+                    ProgressBar(value: $viewModel.flashProgress)
+                        .frame(height: 16)
+                    Text("\(Int(viewModel.flashProgress * 100))%")
+                        .font(bodyFont)
+                        .foregroundColor(RuuviColor.textColor.swiftUIColor)
+                    Text(texts.doNotCloseTitle)
+                        .font(titleFont)
+                        .bold()
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(RuuviColor.textColor.swiftUIColor)
+                }
             }
             .frame(
                 maxWidth: .infinity,
@@ -482,9 +465,10 @@ struct DFUUIView: View {
         }
     }
 
+    /// A multi-line label that wraps at the width SwiftUI actually gives it, on every layout pass, so
+    /// the instructions reflow when the window is resized or rotated.
     private struct AttributedText: UIViewRepresentable {
         let attributedString: NSAttributedString
-        let maxWidth: CGFloat
 
         func makeUIView(context: Context) -> UILabel {
             let label = UILabel()
@@ -497,21 +481,23 @@ struct DFUUIView: View {
             label.setContentHuggingPriority(.required, for: .vertical)
             label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
             label.setContentHuggingPriority(.defaultLow, for: .horizontal)
-            label.preferredMaxLayoutWidth = maxWidth
 
             return label
         }
 
-        func updateUIView(_ uiView: UILabel, context: Context) {
-            uiView.preferredMaxLayoutWidth = maxWidth
-            uiView.invalidateIntrinsicContentSize()
-            uiView.setNeedsLayout()
+        func updateUIView(_: UILabel, context _: Context) {}
+
+        func sizeThatFits(_ proposal: ProposedViewSize, uiView: UILabel, context _: Context) -> CGSize? {
+            guard let width = proposal.width, width > 0, width.isFinite else { return nil }
+            let fitting = uiView.sizeThatFits(
+                CGSize(width: width, height: .greatestFiniteMagnitude)
+            )
+            return CGSize(width: width, height: ceil(fitting.height))
         }
     }
 
     struct DFUInstructionsView: View {
         let isAir: Bool
-        let maxWidth: CGFloat
         var body: some View {
             AttributedText(
                 attributedString: NSAttributedString.fromFormattedDescription(
@@ -524,8 +510,7 @@ struct DFUUIView: View {
                     paragraphColor: RuuviColor.textColor.color,
                     linkColor: RuuviColor.tintColor.color,
                     linkFont: .ruuviCallout()
-                ),
-                maxWidth: maxWidth
+                )
             )
             .fixedSize(horizontal: false, vertical: true)
         }
@@ -533,6 +518,28 @@ struct DFUUIView: View {
 
     func goBack() {
         presentationMode.wrappedValue.dismiss()
+    }
+}
+
+/// `content` as it is when it fits the height it is given, and in a scroll view when it doesn't (a
+/// short window), so a state's button stays reachable. Whenever the content fits, as on every
+/// iPhone and full-screen iPad, this is exactly `content`.
+///
+/// Keep side effects (`onAppear`, alerts) outside: the content is measured in both variants.
+private struct DFUScrollableIfNeeded<Content: View>: View {
+    private let content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        ViewThatFits(in: .vertical) {
+            content
+            ScrollView(showsIndicators: false) {
+                content
+            }
+        }
     }
 }
 

@@ -82,9 +82,9 @@ private extension RuuviOnboardSignInCell {
 
     // swiftlint:disable:next function_body_length
     func setUpUI() {
-        let container = UIView(color: .clear)
-        contentView.addSubview(container)
-        container.fillSuperview()
+        // Scrolls only when the page is too short for its content (a short window), so the
+        // checkboxes and Continue, the only way to finish onboarding, always stay reachable.
+        let container = contentView.addScrollingPage().container
 
         let textStack = UIStackView(arrangedSubviews: [
             titleLabel, subtitleLabel
@@ -162,6 +162,10 @@ private extension RuuviOnboardSignInCell {
         continueButton.centerXInSuperview()
         setContinueButtonEnabled(false)
 
+        // The checkbox texts are never squeezed in a short page; the page scrolls instead.
+        tosCheckboxVC.view.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+        analyticsCheckboxVC.view.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+
         let beaverContainerView = UIView(color: .clear)
         container.addSubview(beaverContainerView)
         beaverContainerView.anchor(
@@ -170,15 +174,29 @@ private extension RuuviOnboardSignInCell {
             bottom: container.bottomAnchor,
             trailing: container.trailingAnchor
         )
+        // The beaver's space shrinks before the controls have to scroll, but not below the page's
+        // bottom safe area + 12pt, so a scrolled page ends with Continue clear of the home indicator.
+        // iPhones and full-screen iPads always have far more space than that: only short windows are
+        // affected. (A length from contentView, outside the scroll view, so scrolling can't change it.)
+        let bottomSafeAreaInset = contentView.safeBottomAnchor.anchorWithOffset(to: contentView.bottomAnchor)
+        beaverContainerView.heightAnchor.constraint(
+            greaterThanOrEqualTo: bottomSafeAreaInset,
+            constant: 12
+        ).isActive = true
         beaverContainerView.addSubview(beaverImageView)
 
         beaverImageView.anchor(
             top: nil,
             leading: beaverContainerView.safeLeadingAnchor,
             bottom: nil,
-            trailing: beaverContainerView.safeTrailingAnchor,
-            size: .init(width: 0, height: bounds.height / 2)
+            trailing: beaverContainerView.safeTrailingAnchor
         )
+        // Half the page height (as before), following the page when it is resized. Like before, the
+        // beaver is centred in its space and cropped by it when that space is shorter.
+        beaverImageView.heightAnchor.constraint(
+            equalTo: contentView.heightAnchor,
+            multiplier: 0.5
+        ).isActive = true
         beaverImageView.centerYInSuperview()
     }
 

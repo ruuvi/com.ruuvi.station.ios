@@ -878,9 +878,10 @@ extension CardsGraphPresenter {
         settings.setLastOpenedChart(with: sensor.id)
     }
 
+    /// The one-time hint explains the paged layout (one full-height chart per page). The view also
+    /// calls `viewDidTransition()` when it switches to that layout without a rotation.
     private func tryToShowSwipeUpHint() {
-        if UIWindow.isLandscape,
-           view?.allowsLandscapeSwipeHint ?? true,
+        if view?.usesPagedChartLayout == true,
            !settings.tagChartsLandscapeSwipeInstructionWasShown {
             settings.tagChartsLandscapeSwipeInstructionWasShown = true
             view?.showSwipeUpInstruction()

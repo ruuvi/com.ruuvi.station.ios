@@ -84,16 +84,13 @@ class RuuviOnboardViewController: UIViewController {
         return button
     }()
 
-    /// iPhone Duo: re-align to the current page after the next layout pass.
+    /// Re-size the pages and re-align to the current page after the next layout pass.
     private var needsPageRealignment = false
 
-    /// iPhone Duo (a device with a hinge, the vertical bar on a side, or the folding display).
-    /// Never `true` on iPhone and iPad, where onboarding keeps its existing behaviour.
-    private var isDuoContext: Bool {
-        RuuviDuoLayout.isFoldableDevice
-            || RuuviDuoLayout.isVerticalBarActive(traitCollection)
-            || RuuviDuoLayout.isFoldingDisplay(view)
-    }
+    /// The collection view size the pages were last laid out for (`.zero` before the first layout).
+    private var laidOutPageSize: CGSize = .zero
+    /// Keeps the header (page control and Skip) clear of the iPadOS window controls.
+    private var headerWindowControlsInset: RuuviWindowControlsInsetUpdater?
 
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -136,11 +133,15 @@ class RuuviOnboardViewController: UIViewController {
 extension RuuviOnboardViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        // iPhone Duo: by default the paging scroll view absorbs the side safe area (status bar /
-        // vertical bar) as content inset, so the pages never see it and their text runs under the
-        // bar. Without that adjustment the pages stay full width (backgrounds edge to edge) and their
-        // content follows the safe area, as it already does on iPhone.
-        if isDuoContext, collectionView.contentInsetAdjustmentBehavior != .never {
+        // With side safe-area insets (iPhone Duo's vertical bar or side status bar, a side notch)
+        // the paging scroll view would by default absorb them as horizontal content inset: every
+        // page is then offset and its text runs under the bar. Without that adjustment the pages
+        // stay full width (backgrounds edge to edge) and their content follows the safe area, as it
+        // already does at the top and bottom. Switched only once side insets appear, so portrait
+        // iPhones and full-screen iPads (no side insets) keep exactly their current behaviour.
+        let insets = view.safeAreaInsets
+        if insets.left > 0 || insets.right > 0,
+           collectionView.contentInsetAdjustmentBehavior != .never {
             collectionView.contentInsetAdjustmentBehavior = .never
             needsPageRealignment = true
         }
@@ -148,6 +149,18 @@ extension RuuviOnboardViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        headerWindowControlsInset?.update()
+        // Every page is as large as the view. After a size change (window resize, live resizing,
+        // rotation, iPhone Duo display change) the pages must be re-sized and the offset re-aligned
+        // to the current page, or the view ends up between pages or on another page. The first
+        // layout only records the size; full-screen iPhones and iPads never change it afterwards.
+        let pageSize = collectionView.bounds.size
+        if pageSize != laidOutPageSize {
+            if laidOutPageSize != .zero {
+                needsPageRealignment = true
+            }
+            laidOutPageSize = pageSize
+        }
         if needsPageRealignment {
             needsPageRealignment = false
             scrollToPage(currentPage)
@@ -159,9 +172,12 @@ extension RuuviOnboardViewController {
         with coordinator: UIViewControllerTransitionCoordinator
     ) {
         super.viewWillTransition(to: size, with: coordinator)
-        // iPhone Duo: opening or closing the device resizes the pages; stay on the same page.
-        guard isDuoContext else { return }
+        // Rotation or a display change resizes the pages; stay on the page shown now (also when
+        // the size changes mid-swipe, before `currentPage` is updated). The layout pass of the new
+        // size realigns to `currentPage` too.
         let page = visiblePage()
+        currentPage = page
+        pageControl.currentPage = page
         coordinator.animate(alongsideTransition: { [weak self] _ in
             self?.scrollToPage(page)
         }, completion: { [weak self] _ in
@@ -204,14 +220,18 @@ extension RuuviOnboardViewController {
         return max(0, min(viewModels.count - 1, page))
     }
 
-    /// iPhone Duo: re-sizes the pages for the current width and shows `page`.
+    /// Re-sizes the pages for the current size and shows `page`.
     private func scrollToPage(_ page: Int) {
         guard page < collectionView.numberOfItems(inSection: 0) else { return }
         collectionView.collectionViewLayout.invalidateLayout()
         collectionView.layoutIfNeeded()
         let width = collectionView.bounds.width
         guard width > 0 else { return }
-        collectionView.setContentOffset(CGPoint(x: CGFloat(page) * width, y: 0), animated: false)
+        // Pages scroll horizontally only; keep the vertical resting offset (0 without insets).
+        collectionView.setContentOffset(
+            CGPoint(x: CGFloat(page) * width, y: -collectionView.adjustedContentInset.top),
+            animated: false
+        )
         currentPage = page
         pageControl.currentPage = page
     }
@@ -402,7 +422,7 @@ extension RuuviOnboardViewController {
     private func setUpHeaderView() {
         let headerView = UIView(color: .clear)
         view.addSubview(headerView)
-        headerView.anchor(
+        let headerConstraints = headerView.anchor(
             top: view.safeTopAnchor,
             leading: view.safeLeadingAnchor,
             bottom: nil,
@@ -410,6 +430,11 @@ extension RuuviOnboardViewController {
             padding: .init(top: 0, left: 12, bottom: 0, right: 12),
             size: .init(width: 0, height: 44)
         )
+        // Replaces the navigation bar: its leading edge moves clear of the window controls of an
+        // iPadOS window that doesn't fill the screen (unchanged on iPhone and full-screen iPad).
+        if let leading = headerConstraints.leading {
+            headerWindowControlsInset = RuuviWindowControlsInsetUpdater(constraint: leading, in: view)
+        }
 
         headerView.addSubview(pageControl)
         pageControl.centerInSuperview()

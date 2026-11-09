@@ -92,6 +92,9 @@ targets:
                 UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
         UIRequiredDeviceCapabilities: [armv7]
         UIRequiresFullScreen: true
+        # Built with the iOS 27 SDK: iOS/iPadOS 27 and later ignore UIRequiresFullScreen and resize the
+        # app live (TN3192). iPadOS 16-26 keep full screen. The value is a version string.
+        UIRequiresFullScreenIgnoredStartingWithVersion: "27"
         UIStatusBarStyle: UIStatusBarStyleLightContent
         UISupportedInterfaceOrientations~ipad: [UIInterfaceOrientationLandscapeLeft, UIInterfaceOrientationLandscapeRight,UIInterfaceOrientationPortrait,  UIInterfaceOrientationPortraitUpsideDown]
         UIViewControllerBasedStatusBarAppearance: true

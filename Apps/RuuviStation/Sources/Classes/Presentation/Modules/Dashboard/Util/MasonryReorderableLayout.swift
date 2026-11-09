@@ -129,6 +129,8 @@ private class MasonryDragPreviewView: UIView {
     var indexPath: IndexPath?
     var originalCenter: CGPoint?
     var cellFrame: CGRect?
+    /// `true` once the drag of this preview is ending, so it ends only once.
+    var isEnding = false
     private var originalSize: CGSize?
 
     init(cell: UICollectionViewCell) {
@@ -150,7 +152,11 @@ private class MasonryDragPreviewView: UIView {
         layer.shadowOpacity = 0
         layer.shadowRadius = 8.0
         layer.shouldRasterize = true
-        layer.rasterizationScale = RuuviAppGeometry.scale(for: cell)
+        // The scale of the display the card is on (an iPad window can be on an external display).
+        let displayScale = cell?.traitCollection.displayScale ?? 0
+        layer.rasterizationScale = displayScale > 0
+            ? displayScale
+            : (cell?.window?.windowScene?.screen.scale ?? 1)
     }
 
     private func setupImageViews() {
@@ -673,8 +679,12 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
     }
 
     private func endDrag(_ indexPath: IndexPath?) {
+        // A drag cancelled on a resize (`cancelDrag()`) must not end again when the finger lifts
+        // while the preview is still flying back.
         guard let collectionView = safeCollectionView,
-              let previewView = cellPreviewView else { return }
+              let previewView = cellPreviewView,
+              !previewView.isEnding else { return }
+        previewView.isEnding = true
 
         let finalIndexPath = previewView.indexPath ?? IndexPath(item: 0, section: 0)
 
@@ -923,6 +933,13 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
         super.invalidateLayout()
     }
 
+    // UIKit's own invalidations (data source updates, bounds changes) come through here and not
+    // through `invalidateLayout()`, so the cached columns and safe-area insets are dropped here too.
+    public override func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
+        cachedConfiguration = nil
+        super.invalidateLayout(with: context)
+    }
+
     public override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
         guard let collectionView = safeCollectionView else { return false }
         let shouldInvalidate = !newBounds.size.equalTo(collectionView.bounds.size)
@@ -978,7 +995,12 @@ public class MasonryReorderableLayout: UICollectionViewLayout {
         }
     }
 
+    /// Drops the dragged card where it is, as if the finger was lifted; does nothing without a drag.
+    /// For a resize mid-drag, where the floating preview would keep the old card size and position.
+    /// Call it after the resize is laid out, not from `shouldInvalidateLayout(forBoundsChange:)`:
+    /// ending a drag invalidates the layout and animates.
     public func cancelDrag() {
+        guard isDragging else { return }
         endDrag(nil)
     }
 

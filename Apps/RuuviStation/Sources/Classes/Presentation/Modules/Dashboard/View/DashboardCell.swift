@@ -83,6 +83,8 @@ struct DashboardCellLayoutConstants {
         return topPadding + headerToGridSpacing + gridToFooterSpacing + bottomPadding
     }
 
+    // The prominent and grid row heights only fit their text, which is 2pt bigger on iPad
+    // (RuuviFonts), so they follow the device type like the font size, not the size class.
     static var prominentViewHeight: CGFloat {
         return UIDevice.isTablet() ? prominentViewHeightTablet : prominentViewHeightPhone
     }

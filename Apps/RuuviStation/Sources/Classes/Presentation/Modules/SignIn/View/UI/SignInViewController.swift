@@ -1,3 +1,4 @@
+// swiftlint:disable file_length
 import Foundation
 import RuuviLocalization
 import UIKit
@@ -67,6 +68,15 @@ class SignInViewController: UIViewController {
         return button
     }()
 
+    /// The email page: from the content top to 16pt below `useWithoutAccountButton`.
+    private lazy var emailPageGuide = UILayoutGuide()
+    /// Only the page on screen defines the scroll content height (one of these is active).
+    private var emailPageContentBottom: NSLayoutConstraint?
+    private var verifyPageContentBottom: NSLayoutConstraint?
+    private var isShowingVerificationPage = false
+    /// The keyboard's end frame from its last notification, in screen coordinates; nil while hidden.
+    private var keyboardFrame: CGRect?
+
     // ---------------------
     private var shouldAvoidVerifying: Bool = false
 }
@@ -77,11 +87,24 @@ extension SignInViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         sideInsetSwitch?.update(for: traitCollection)
+        // The window's class: UIKit can give this sheet a compact width even on a full-screen iPad.
+        let layoutClass = signInLayoutClass
+        signInView.applyLayout(layoutClass)
+        signInVerifyView.applyLayout(layoutClass)
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        // The pages and their fields are laid out by the scroll view, after this call; lay them out
+        // now so the keyboard check reads this pass's frames and content size.
+        scrollView.layoutIfNeeded()
+        updateKeyboardInset(revealingFocus: false)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
+        observeLayoutChanges()
         localize()
         output.viewDidLoad()
     }
@@ -114,6 +137,7 @@ private extension SignInViewController {
 
         view.bind(viewModel.showVerficationScreen) { [weak self] _, verificationPage in
             let showVerificationPage = GlobalHelpers.getBool(from: verificationPage)
+            self?.showContentPage(verification: showVerificationPage)
             self?.signInVerifyView.alpha = showVerificationPage ? 1 : 0
             if showVerificationPage {
                 self?.signInVerifyView.activate()
@@ -206,6 +230,7 @@ extension SignInViewController {
         setUpSignInView()
         setUpSignInVerifyView()
         setUpFooterView()
+        emailPageContentBottom?.isActive = true
     }
 
     private func setUpBase() {
@@ -257,15 +282,24 @@ extension SignInViewController {
         signInVerifyView.anchor(
             top: scrollView.topAnchor,
             leading: scrollView.leadingAnchor,
-            bottom: scrollView.safeBottomAnchor,
-            trailing: scrollView.trailingAnchor,
-            size: .init(
-                width: 0,
-                height: view.bounds.height
-            )
+            bottom: nil,
+            trailing: scrollView.trailingAnchor
         )
         signInVerifyView.centerXInSuperview()
         signInVerifyView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+        // The page fills the visible safe height, as before. In a short window the beaver's space
+        // shrinks first (the beaver is cropped); the page grows, and scrolls, only when the title and
+        // code field need more room.
+        let visibleHeight = scrollView.safeAreaLayoutGuide.heightAnchor
+        let fillVisibleHeight = signInVerifyView.heightAnchor.constraint(equalTo: visibleHeight)
+        fillVisibleHeight.priority = SignInVerifyView.fillVisibleHeightPriority
+        NSLayoutConstraint.activate([
+            signInVerifyView.heightAnchor.constraint(greaterThanOrEqualTo: visibleHeight),
+            fillVisibleHeight,
+        ])
+        verifyPageContentBottom = scrollView.contentLayoutGuide.bottomAnchor.constraint(
+            equalTo: signInVerifyView.bottomAnchor
+        )
         signInVerifyView.alpha = 0
         signInVerifyView.delegate = self
     }
@@ -275,14 +309,152 @@ extension SignInViewController {
         useWithoutAccountButton.anchor(
             top: signInView.bottomAnchor,
             leading: view.safeLeftAnchor,
-            bottom: view.safeBottomAnchor,
+            bottom: nil,
             trailing: view.safeRightAnchor,
             padding: .init(
                 top: 8,
                 left: 20,
-                bottom: 16,
+                bottom: 0,
                 right: 20
             )
         )
+
+        // The email page fills the visible safe height, as before: the button sits 16pt above the
+        // safe bottom and the email field stays centered. It grows, and scrolls, only when a short
+        // window cannot fit it. The low priority lets the content's own minimum height win.
+        scrollView.addLayoutGuide(emailPageGuide)
+        let visibleHeight = scrollView.safeAreaLayoutGuide.heightAnchor
+        let fillVisibleHeight = emailPageGuide.heightAnchor.constraint(equalTo: visibleHeight)
+        fillVisibleHeight.priority = .defaultLow
+        NSLayoutConstraint.activate([
+            emailPageGuide.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            emailPageGuide.leadingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.leadingAnchor),
+            emailPageGuide.trailingAnchor.constraint(equalTo: scrollView.frameLayoutGuide.trailingAnchor),
+            emailPageGuide.bottomAnchor.constraint(equalTo: useWithoutAccountButton.bottomAnchor, constant: 16),
+            emailPageGuide.heightAnchor.constraint(greaterThanOrEqualTo: visibleHeight),
+            fillVisibleHeight,
+        ])
+        emailPageContentBottom = scrollView.contentLayoutGuide.bottomAnchor.constraint(
+            equalTo: emailPageGuide.bottomAnchor
+        )
     }
 }
+
+// MARK: - LAYOUT CLASS, PAGES AND KEYBOARD
+
+extension SignInViewController {
+    private func observeLayoutChanges() {
+        if #available(iOS 17.0, *) {
+            registerForTraitChanges(RuuviLayoutClass.traitsAffectingLayoutClass) {
+                (controller: SignInViewController, _: UITraitCollection) in
+                controller.view.setNeedsLayout()
+            }
+        }
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillChangeFrame(_:)),
+            name: UIResponder.keyboardWillChangeFrameNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide(_:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+    }
+
+    /// Lets the page on screen alone define the scroll content height and starts it at the top.
+    private func showContentPage(verification: Bool) {
+        guard verification != isShowingVerificationPage else { return }
+        isShowingVerificationPage = verification
+        let active = verification ? verifyPageContentBottom : emailPageContentBottom
+        let inactive = verification ? emailPageContentBottom : verifyPageContentBottom
+        inactive?.isActive = false
+        active?.isActive = true
+        guard view.window != nil else { return }
+        view.layoutIfNeeded()
+        scrollView.setContentOffset(
+            CGPoint(x: scrollView.contentOffset.x, y: -scrollView.adjustedContentInset.top),
+            animated: false
+        )
+        updateKeyboardInset(revealingFocus: true)
+    }
+
+    @objc private func keyboardWillChangeFrame(_ notification: Notification) {
+        let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue
+        keyboardFrame = frame?.cgRectValue
+        guard view.window != nil else { return }
+        view.layoutIfNeeded()
+        updateKeyboardInset(revealingFocus: true)
+    }
+
+    @objc private func keyboardWillHide(_: Notification) {
+        keyboardFrame = nil
+        updateKeyboardInset(revealingFocus: false)
+    }
+
+    /// How far the docked keyboard covers the scroll view, measured up from its bottom edge.
+    /// A floating or undocked keyboard, which ends above that edge, counts as not covering it.
+    private func keyboardOverlap() -> CGFloat {
+        guard let keyboardFrame,
+              let screen = view.window?.windowScene?.screen
+        else {
+            return 0
+        }
+        let keyboard = view.convert(keyboardFrame, from: screen.coordinateSpace)
+        let scrollFrame = scrollView.frame
+        guard keyboard.maxY >= scrollFrame.maxY - 1,
+              keyboard.minY < scrollFrame.maxY,
+              keyboard.minX < scrollFrame.maxX,
+              keyboard.maxX > scrollFrame.minX
+        else {
+            return 0
+        }
+        return scrollFrame.maxY - max(keyboard.minY, scrollFrame.minY)
+    }
+
+    /// Keeps the email field and Request code button, or the code field, reachable above the
+    /// docked keyboard. The scroll view gets a bottom inset only while the keyboard covers them
+    /// with the page scrolled to its top, so where they stay clear of the keyboard (iPhone)
+    /// nothing changes. `revealingFocus` also scrolls them into view. Cheap when nothing changed,
+    /// so it runs on every layout pass (live resizing) too.
+    private func updateKeyboardInset(revealingFocus: Bool) {
+        let overlap = keyboardOverlap()
+        let focusView = isShowingVerificationPage
+            ? signInVerifyView.keyboardAvoidanceView
+            : signInView.keyboardAvoidanceView
+        // In content coordinates.
+        let focus = focusView.convert(focusView.bounds, to: scrollView)
+        let topOffset = -scrollView.adjustedContentInset.top
+        let height = scrollView.bounds.height
+        let isCovered = overlap > 0 && focus.maxY > topOffset + height - overlap
+        let inset = isCovered ? overlap : 0
+        let insetChanged = scrollView.contentInset.bottom != inset
+        if insetChanged {
+            scrollView.contentInset.bottom = inset
+            scrollView.verticalScrollIndicatorInsets.bottom = inset
+        }
+        guard insetChanged || (revealingFocus && isCovered) else { return }
+
+        var offset = scrollView.contentOffset.y
+        if revealingFocus, isCovered {
+            let margin: CGFloat = 16
+            let isVisible = focus.minY - margin >= offset - topOffset
+                && focus.maxY + margin <= offset + height - overlap
+            if !isVisible {
+                // The focus bottom just above the keyboard, but never its top out of view.
+                let revealing = focus.maxY + margin - (height - overlap)
+                offset = max(min(revealing, focus.minY - margin + topOffset), topOffset)
+            }
+        }
+        // Never past the end of the content, e.g. once the keyboard inset is gone.
+        let contentHeight = scrollView.contentSize.height + scrollView.adjustedContentInset.bottom
+        offset = min(offset, max(topOffset, contentHeight - height))
+        if offset != scrollView.contentOffset.y {
+            scrollView.setContentOffset(CGPoint(x: scrollView.contentOffset.x, y: offset), animated: true)
+        }
+    }
+}
+
+// swiftlint:enable file_length

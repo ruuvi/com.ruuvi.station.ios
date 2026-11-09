@@ -257,7 +257,12 @@ final class DashboardViewController: UIViewController {
     private var savedLeftBarButtonItem: UIBarButtonItem?
     private var savedRightBarButtonItem: UIBarButtonItem?
     private var savedTitleView: UIView?
+    /// iOS 16-25: the width given to the search field in the navigation bar.
+    private var legacySearchFieldWidth: CGFloat = 0
     private var hasAppliedInitialNonEmptySnapshot = false
+
+    // MARK: - Resizing Properties
+    private var resizeState = ResizeState()
 
     // MARK: - iPhone Duo vertical bar
     /// `true` while the header actions are shown in the system vertical bar (iPhone Duo only).
@@ -362,7 +367,27 @@ extension DashboardViewController {
         with coordinator: UIViewControllerTransitionCoordinator
     ) {
         super.viewWillTransition(to: size, with: coordinator)
+        // The masonry layout reflows by itself on every bounds change, and card heights depend only
+        // on the width. So this animated reconfigure of every card is skipped when the width stays
+        // the same, and while the window is being resized live (iPadOS 26+), where size transitions
+        // come far more often. A rotation always changes the width, so rotating is unchanged.
+        guard size.width != view.bounds.width, !isWindowInteractivelyResizing else { return }
         updateSnapshot(redrawLayout: false, animated: shouldAnimate(true))
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        resizeState.headerWindowControlsInset?.update()
+        endDragIfCollectionViewResized()
+        updateLegacySearchFieldWidthIfNeeded()
+        if isSearchActive { updateCollectionViewKeyboardInset() }
+    }
+
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        // The masonry layout bakes the collection view's bottom safe area (home indicator) into its
+        // section insets, so a safe-area change without a size change must re-run the layout too.
+        collectionView.collectionViewLayout.invalidateLayout()
     }
 }
 
@@ -377,6 +402,7 @@ private extension DashboardViewController {
         setupDataSource()
         configureAlertRefreshOnAppDidBecomeActive()
         configureMarketingPromptOnAppDidBecomeActive()
+        configureKeyboardTracking()
         localize()
         output.viewDidLoad()
     }
@@ -434,10 +460,17 @@ private extension DashboardViewController {
         view.addSubview(customHeaderView)
         customHeaderView.translatesAutoresizingMaskIntoConstraints = false
 
+        let customHeaderLeading = customHeaderView.leadingAnchor
+            .constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor)
+        // Moves clear of the window controls of an iPadOS window that doesn't fill the screen (the
+        // navigation bar this header replaces would avoid them); a no-op on iPhone and full-screen iPad.
+        resizeState.headerWindowControlsInset = RuuviWindowControlsInsetUpdater(
+            constraint: customHeaderLeading,
+            in: view
+        )
         NSLayoutConstraint.activate([
             customHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            customHeaderView.leadingAnchor
-                .constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            customHeaderLeading,
             customHeaderView.trailingAnchor
                 .constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             customHeaderView.heightAnchor.constraint(equalToConstant: 44),
@@ -749,6 +782,22 @@ private extension DashboardViewController {
                 }
     }
 
+    /// A hidden, zero-size view pinned to the keyboard layout guide, so every change of the docked
+    /// keyboard in this window runs a layout pass (see `updateCollectionViewKeyboardInset()`).
+    func configureKeyboardTracking() {
+        let keyboardTracker = UIView()
+        keyboardTracker.isHidden = true
+        keyboardTracker.isUserInteractionEnabled = false
+        keyboardTracker.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(keyboardTracker)
+        NSLayoutConstraint.activate([
+            keyboardTracker.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            keyboardTracker.widthAnchor.constraint(equalToConstant: 0),
+            keyboardTracker.heightAnchor.constraint(equalToConstant: 0),
+            keyboardTracker.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor),
+        ])
+    }
+
     func refreshVisibleAlertStates() {
         let visibleIndexPaths = collectionView.indexPathsForVisibleItems
         for indexPath in visibleIndexPaths {
@@ -819,6 +868,66 @@ private extension DashboardViewController {
     }
 }
 
+// MARK: - Resizing and Keyboard
+private extension DashboardViewController {
+    struct ResizeState {
+        /// The collection view width of the last layout pass, to notice a resize while a card is dragged.
+        var lastCollectionViewWidth: CGFloat = 0
+        /// Keeps the iOS 26+ custom header clear of the iPadOS window controls.
+        var headerWindowControlsInset: RuuviWindowControlsInsetUpdater?
+    }
+
+    /// `true` while the user resizes the window live (iPadOS 26 and later); always `false` before.
+    var isWindowInteractivelyResizing: Bool {
+        guard #available(iOS 26.0, *) else { return false }
+        return view.window?.windowScene?.effectiveGeometry.isInteractivelyResizing ?? false
+    }
+
+    /// The floating preview of a dragged card keeps the card's old size and position, so when the
+    /// cards reflow to a new width mid-drag (rotation, window resize, iPhone Duo fold or vertical
+    /// bar) the card is dropped where it is. Called from `viewDidLayoutSubviews`, where the new
+    /// width is known, never from the layout's own bounds invalidation.
+    func endDragIfCollectionViewResized() {
+        let width = collectionView.bounds.width
+        guard width != resizeState.lastCollectionViewWidth else { return }
+        resizeState.lastCollectionViewWidth = width
+        (collectionView.collectionViewLayout as? MasonryReorderableLayout)?.cancelDrag()
+    }
+
+    /// iOS 16-25: the search field is the navigation bar's title view, sized by its frame at
+    /// activation, and the bar does not resize a frame-sized title view by itself. Keep it at the
+    /// view's width minus 32pt, as at activation, after a rotation or a window resize.
+    func updateLegacySearchFieldWidthIfNeeded() {
+        guard isSearchActive, navigationItem.titleView === searchContainerView else { return }
+        let width = view.bounds.width - 32
+        guard width != legacySearchFieldWidth else { return }
+        legacySearchFieldWidth = width
+        searchContainerView.frame.size.width = width
+        searchContainerView.superview?.invalidateIntrinsicContentSize()
+        navigationController?.navigationBar.setNeedsLayout()
+    }
+
+    /// While the search field is open, the filtered cards scroll clear of the keyboard. Runs on every
+    /// layout pass while searching. The keyboard layout guide follows the docked keyboard in this
+    /// window (UIKit handles resized and moved windows and other screens); with no docked keyboard
+    /// its top is the safe-area bottom, so the inset is 0.
+    func updateCollectionViewKeyboardInset() {
+        guard isSearchActive, viewIfLoaded?.window != nil else {
+            setCollectionViewBottomInset(0)
+            return
+        }
+        let overlap = collectionView.frame.maxY - view.keyboardLayoutGuide.layoutFrame.minY
+        // The content is already inset by the bottom safe area (home indicator).
+        setCollectionViewBottomInset(max(0, overlap - collectionView.safeAreaInsets.bottom))
+    }
+
+    func setCollectionViewBottomInset(_ inset: CGFloat) {
+        guard collectionView.contentInset.bottom != inset else { return }
+        collectionView.contentInset.bottom = inset
+        collectionView.verticalScrollIndicatorInsets.bottom = inset
+    }
+}
+
 // MARK: - Action Handlers
 private extension DashboardViewController {
     @objc func handleMenuButtonTap() {
@@ -882,6 +991,7 @@ private extension DashboardViewController {
             deactivateSearchLegacy()
         }
         stopSearchLoadingAnimation()
+        setCollectionViewBottomInset(0)
         updateData(with: snapshots, animated: false)
     }
 
@@ -957,6 +1067,7 @@ private extension DashboardViewController {
         navigationItem.setRightBarButton(nil, animated: false)
 
         let width = view.bounds.width - 32
+        legacySearchFieldWidth = width
         searchContainerView.frame = CGRect(x: 0, y: 0, width: width, height: 40)
         searchContainerView.alpha = 0
         navigationItem.titleView = searchContainerView
@@ -1303,6 +1414,12 @@ private extension DashboardViewController {
         enum CellIdentifiers {
             static let dashboardCell = "RuuviTagDashboardCell"
         }
+
+        /// The widest a card gets before the grid adds a column. It keeps today's counts: 1 column
+        /// on iPhone portrait, 2 on iPhone landscape and iPad portrait (iPad 13" portrait has
+        /// ~500pt cards), 3 on iPad landscape (iPad 10.2" landscape would have ~525pt cards with 2).
+        /// A 1024pt-wide iPad gets 2: that is iPad 12.9" portrait, and also 9.7"/mini 5 landscape.
+        static let maximumCardWidth: CGFloat = 516
     }
 }
 
@@ -1350,17 +1467,17 @@ extension DashboardViewController: MasonryReorderableLayoutDelegate {
         )
     }
 
+    /// The fewest columns (1 to 3) whose cards are at most `Constants.maximumCardWidth` wide, from
+    /// the width the grid really has. The layout asks again on every bounds-size change.
     func numberOfColumns(in collectionView: UICollectionView) -> Int {
-        // iPhone Duo inner display: an even count in every pose, so the grid splits at the fold.
-        if RuuviDuoLayout.isFoldingDisplay(collectionView) {
-            return 2
-        }
-        let isLandscape = collectionView.bounds.width > collectionView.bounds.height
-        if isLandscape {
-            return UIDevice.current.userInterfaceIdiom == .pad ? 3 : 2
-        } else {
-            return UIDevice.current.userInterfaceIdiom == .pad ? 2 : 1
-        }
+        let sectionInsets = self.sectionInsets(in: collectionView)
+        return RuuviGridFit.columns(
+            in: collectionView.bounds.width,
+            counts: [1, 2, 3],
+            spacing: columnSpacing(in: collectionView),
+            padding: { _ in sectionInsets.left + sectionInsets.right },
+            maximumColumnWidth: Constants.maximumCardWidth
+        )
     }
 
     func columnSpacing(in collectionView: UICollectionView) -> CGFloat {

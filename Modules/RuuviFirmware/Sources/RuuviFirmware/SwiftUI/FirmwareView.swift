@@ -27,7 +27,6 @@ struct FirmwareView: View {
     private let texts = Texts()
     private let titleFont = Font(RuuviFonts.mulish(.bold, size: 16))
     private let bodyFont = Font(RuuviFonts.mulish(.regular, size: 16))
-    @State private var superviewSize: CGSize = .zero
 
     private var content: some View {
         switch viewModel.state {
@@ -229,7 +228,7 @@ struct FirmwareView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 20) {
                         RuuviBoardView()
-                        DFUInstructionsView(maxWidth: superviewSize.width - 32)
+                        DFUInstructionsView()
                         Button(
                             action: {},
                             label: {
@@ -266,7 +265,7 @@ struct FirmwareView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 20) {
                         RuuviBoardView()
-                        DFUInstructionsView(maxWidth: superviewSize.width - 32)
+                        DFUInstructionsView()
                         Button(
                             action: {
                                 viewModel.send(
@@ -366,38 +365,67 @@ struct FirmwareView: View {
     }
 
     var body: some View {
-        VStack {
-            content
-            GeometryReader { proxy in
-                HStack {} // just an empty container to get superview size.
-                    .onAppear {
-                        superviewSize = proxy.size
-                    }
+        stateLayout
+            .alert(isPresented: $viewModel.isBatteryLow) {
+                Alert(
+                    title: Text(""),
+                    message: Text(texts.lowBatteryWarningMessage),
+                    dismissButton: .cancel(Text(texts.okTitle))
+                )
             }
-        }
-        .alert(isPresented: $viewModel.isBatteryLow) {
-            Alert(
-                title: Text(""),
-                message: Text(texts.lowBatteryWarningMessage),
-                dismissButton: .cancel(Text(texts.okTitle))
-            )
-        }
-        .padding()
-        .accentColor(.red)
-        .navigationBarBackButtonHidden(true)
-        .onAppear {
-            viewModel.send(event: .onAppear)
-            UIApplication.shared.isIdleTimerDisabled = true
-        }
-        .onDisappear {
-            viewModel.restartPropertiesDaemon()
-            UIApplication.shared.isIdleTimerDisabled = false
+            .padding()
+            .accentColor(.red)
+            .navigationBarBackButtonHidden(true)
+            .onAppear {
+                viewModel.send(event: .onAppear)
+                UIApplication.shared.isIdleTimerDisabled = true
+            }
+            .onDisappear {
+                viewModel.restartPropertiesDaemon()
+                UIApplication.shared.isIdleTimerDisabled = false
+            }
+    }
+
+    /// How `content` fills the sheet.
+    /// - `.listening` and `.readyToUpdate` scroll, so they take the whole height.
+    /// - Every other state keeps its content in the upper part of the sheet, as it always has: a
+    ///   flexible filler below the content takes up to half of the height.
+    /// - The states with a button (and `.flashing`) scroll as a whole when they don't fit the height
+    ///   at all (a short window), so the button stays reachable. Whenever they fit, as on every iPhone
+    ///   and full-screen iPad, they look exactly as without the scroll view. None of these states has
+    ///   an `onAppear`, which matters because `ViewThatFits` builds the content for both variants.
+    @ViewBuilder
+    private var stateLayout: some View {
+        switch viewModel.state {
+        case .listening, .readyToUpdate:
+            content
+        case .noNeedToUpgrade, .isAbleToUpgrade, .flashing, .successfulyFlashed:
+            ViewThatFits(in: .vertical) {
+                contentAboveFiller
+                ScrollView(showsIndicators: false) {
+                    content
+                }
+            }
+        default:
+            contentAboveFiller
         }
     }
 
+    private var contentAboveFiller: some View {
+        VStack {
+            content
+            // Flexible like the GeometryReader that used to measure the width here, so the VStack
+            // splits the height exactly as before. The ideal height of 0 lets `ViewThatFits` compare
+            // only the content with the available height.
+            Color.clear
+                .frame(idealHeight: 0)
+        }
+    }
+
+    /// A multi-line label that wraps at the width SwiftUI actually gives it, on every layout pass, so
+    /// the instructions reflow when the window is resized or rotated.
     private struct AttributedText: UIViewRepresentable {
         let attributedString: NSAttributedString
-        let maxWidth: CGFloat
 
         func makeUIView(context: Context) -> UILabel {
             let label = UILabel()
@@ -410,20 +438,22 @@ struct FirmwareView: View {
             label.setContentHuggingPriority(.required, for: .vertical)
             label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
             label.setContentHuggingPriority(.defaultLow, for: .horizontal)
-            label.preferredMaxLayoutWidth = maxWidth
 
             return label
         }
 
-        func updateUIView(_ uiView: UILabel, context: Context) {
-            uiView.preferredMaxLayoutWidth = maxWidth
-            uiView.invalidateIntrinsicContentSize()
-            uiView.setNeedsLayout()
+        func updateUIView(_: UILabel, context _: Context) {}
+
+        func sizeThatFits(_ proposal: ProposedViewSize, uiView: UILabel, context _: Context) -> CGSize? {
+            guard let width = proposal.width, width > 0, width.isFinite else { return nil }
+            let fitting = uiView.sizeThatFits(
+                CGSize(width: width, height: .greatestFiniteMagnitude)
+            )
+            return CGSize(width: width, height: ceil(fitting.height))
         }
     }
 
     struct DFUInstructionsView: View {
-        let maxWidth: CGFloat
         var body: some View {
             AttributedText(
                 attributedString: NSAttributedString.fromFormattedDescription(
@@ -435,17 +465,10 @@ struct FirmwareView: View {
                     paragraphColor: RuuviColor.textColor.color,
                     linkColor: RuuviColor.tintColor.color,
                     linkFont: .ruuviCallout()
-                ),
-                maxWidth: maxWidth
+                )
             )
             .fixedSize(horizontal: false, vertical: true)
         }
-    }
-}
-
-private extension CGFloat {
-    func adjustedFontSize() -> CGFloat {
-        UIDevice.current.userInterfaceIdiom == .pad ? self + 4 : self
     }
 }
 

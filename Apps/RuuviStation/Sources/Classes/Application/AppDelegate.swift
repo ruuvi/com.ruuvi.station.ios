@@ -25,7 +25,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var cloudNotificationService: RuuviServiceCloudNotification!
     var pnManager: RuuviCorePN!
     var settings: RuuviLocalSettings!
-    var orientationLock = UIInterfaceOrientationMask.allButUpsideDown
+    /// Set by `AppUtility.lockOrientation(_:)`. Until a screen sets it, the app reports the
+    /// orientations its Info.plist declares for the device.
+    var orientationLock = AppDelegate.infoPlistOrientations
 
     func application(
         _ application: UIApplication,
@@ -111,6 +113,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> UIInterfaceOrientationMask {
         AppUtility.supportedOrientations(lock: orientationLock)
     }
+
+    /// The orientations the Info.plist declares for this device. `Bundle` resolves the device
+    /// specific key by itself, so this is Portrait and both Landscapes on iPhone (today's
+    /// `.allButUpsideDown`) and all four on iPad (`UISupportedInterfaceOrientations~ipad`), which
+    /// resizable iPad windows expect (TN3192).
+    private static let infoPlistOrientations: UIInterfaceOrientationMask = {
+        let names = Bundle.main.object(
+            forInfoDictionaryKey: "UISupportedInterfaceOrientations"
+        ) as? [String] ?? []
+        let mask = names.reduce(into: UIInterfaceOrientationMask()) { mask, name in
+            switch name {
+            case "UIInterfaceOrientationPortrait": mask.insert(.portrait)
+            case "UIInterfaceOrientationPortraitUpsideDown": mask.insert(.portraitUpsideDown)
+            case "UIInterfaceOrientationLandscapeLeft": mask.insert(.landscapeLeft)
+            case "UIInterfaceOrientationLandscapeRight": mask.insert(.landscapeRight)
+            default: break
+            }
+        }
+        return mask.isEmpty ? .allButUpsideDown : mask
+    }()
 }
 
 // MARK: - Push Notifications

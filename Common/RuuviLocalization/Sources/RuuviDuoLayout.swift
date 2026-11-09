@@ -6,7 +6,7 @@ import UIKit
 /// behind these gates never runs there and their look & behaviour stays unchanged.
 /// - `isVerticalBarActive`: UIKit documents `verticalBarEdge` as `.unspecified` on hardware and in
 ///   contexts where the system never places a vertical bar.
-/// - `isFoldingDisplay` / `activeFolds`: only a folding display reports *division* reserved regions.
+/// - `hasVerticalFold` / `activeFolds`: only a folding display reports *division* reserved regions.
 ///
 /// Safe to use from app extensions (no `UIApplication.shared`).
 public enum RuuviDuoLayout {
@@ -27,11 +27,17 @@ public enum RuuviDuoLayout {
         return traits.verticalBarEdge != .unspecified
     }
 
-    /// `true` when `view` is shown on iPhone Duo's inner folding display, fully open or partially
-    /// folded. Requires `view` to be in a window; returns `false` otherwise.
-    public static func isFoldingDisplay(_ view: UIView) -> Bool {
+    /// `true` when a vertical fold (iPhone Duo's inner display in landscape) runs through `view`,
+    /// whether the device is folded or flat. A grid can then use an even column count so the fold
+    /// falls between columns. Requires `view` to be in a window; returns `false` otherwise.
+    public static func hasVerticalFold(in view: UIView) -> Bool {
         guard #available(iOS 27.1, *), view.window != nil else { return false }
-        return !view.reservedRegions(kind: .division, options: .includeInactive).isEmpty
+        return view.reservedRegions(kind: .division, options: .includeInactive).contains { region in
+            let frame = region.frame
+            return frame.height > frame.width
+                && frame.midX > view.bounds.minX
+                && frame.midX < view.bounds.maxX
+        }
     }
 
     /// Frames of the active folds in `view`'s coordinate space. Non-empty only while iPhone Duo is

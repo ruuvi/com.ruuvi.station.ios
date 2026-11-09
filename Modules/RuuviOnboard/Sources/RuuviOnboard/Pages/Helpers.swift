@@ -21,9 +21,3 @@ public extension UIAlertController {
         setValue(messageText, forKey: "attributedMessage")
     }
 }
-
-extension UIDevice {
-    static func isTablet() -> Bool {
-        UIDevice.current.userInterfaceIdiom == .pad
-    }
-}

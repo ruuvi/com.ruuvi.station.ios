@@ -153,28 +153,52 @@ class CardsGraphViewController: UIViewController {
     private var isMarkerInteractionActive = false
     private var isSyncingHighlights = false
 
-    private var isLandscapeLayout: Bool {
-        // iPhone Duo inner display: its interface orientation doesn't follow the supported
-        // orientations, and its height suits the multi-chart layout in every pose.
-        if RuuviDuoLayout.isFoldingDisplay(view) {
-            return false
-        }
-        if let interfaceOrientation = view.window?.windowScene?.interfaceOrientation {
-            return interfaceOrientation.isLandscape
-        }
-        if view.bounds.width > 0, view.bounds.height > 0 {
-            return view.bounds.width > view.bounds.height
-        }
-        let appBounds = RuuviAppGeometry.bounds(for: view)
-        return appBounds.width > appBounds.height
+    /// What the chart heights, paging, fade and size menu were last applied for.
+    private struct ChartLayout: Equatable {
+        let isPaged: Bool
+        let scrollViewHeight: CGFloat
     }
 
-    private lazy var graphScrollEdgeFadeConfiguration: ScrollViewEdgeFader.Configuration = {
-        var configuration = ScrollViewEdgeFader.Configuration()
-        configuration.fadeTransitionHeight = 30
-        configuration.landscapeFadeTransitionHeight = 10
-        return configuration
-    }()
+    /// The rule behind `usesPagedChartLayout`.
+    private enum PagedChartLayoutRule {
+        /// The most charts the stack shows on one screen (the largest `chartsPerScreen`). The rule
+        /// uses it whatever the current setting, so the layout depends only on the space.
+        static let maximumChartsPerScreen: CGFloat = 3
+        /// A stacked chart may be at most this many times wider than tall.
+        static let maximumChartAspectRatio: CGFloat = 4
+    }
+
+    /// The bottom fade of the scroll view, and the matching bottom content inset.
+    private enum FadeTransitionHeight {
+        static let stacked: CGFloat = 30
+        static let paged: CGFloat = 10
+    }
+
+    /// See `applyChartLayoutIfNeeded()`.
+    private var appliedChartLayout: ChartLayout?
+    /// Size transitions (rotation) in flight; their completion does the remaining work.
+    private var activeSizeTransitionCount = 0
+    /// The page a size transition started on when it started in the paged layout; the transition keeps it.
+    private var sizeTransitionStartPage: CGFloat?
+
+    /// `true` for one full-height chart per page with paging (iPhone and iPad landscape), `false` for
+    /// a stack of `chartsPerScreen` charts (iPhone and iPad portrait). Picked from the space the
+    /// charts have, never from the orientation or the device: paged in a compact-height layout, and
+    /// wherever stacking the maximum number of charts would make each one more than
+    /// `maximumChartAspectRatio` times wider than tall (full-screen iPad landscape, iPhone Duo inner
+    /// display in landscape, short wide windows). So a stacked chart is always at least a quarter of
+    /// the width tall (80pt at 320pt), however short the window. Before the scroll view has a size,
+    /// only the size class decides.
+    var usesPagedChartLayout: Bool {
+        guard isViewLoaded else { return false }
+        if traitCollection.ruuviLayoutClass.isCompactHeight {
+            return true
+        }
+        let size = scrollView.bounds.size
+        guard size.width > 0, size.height > 0 else { return false }
+        return size.height / PagedChartLayoutRule.maximumChartsPerScreen
+            < size.width / PagedChartLayoutRule.maximumChartAspectRatio
+    }
 
     private lazy var chartsStackView: UIStackView = {
         let stack = UIStackView()
@@ -246,6 +270,7 @@ class CardsGraphViewController: UIViewController {
         setUpUI()
         localize()
         applyHasChartDataState()
+        registerLayoutClassObserver()
         output?.viewDidLoad()
     }
 
@@ -266,15 +291,26 @@ class CardsGraphViewController: UIViewController {
                   scrollView.frame.height > 0 {
             scroll(to: variant)
         }
+        applyChartLayoutIfNeeded()
     }
 
     override func viewWillTransition(
         to size: CGSize,
         with coordinator: UIViewControllerTransitionCoordinator
     ) {
-        coordinator.animate(alongsideTransition: { _ in
+        if activeSizeTransitionCount == 0 {
+            sizeTransitionStartPage = appliedChartLayout.flatMap { layout in
+                layout.isPaged ? (scrollView.contentOffset.y / layout.scrollViewHeight).rounded() : nil
+            }
+        }
+        activeSizeTransitionCount += 1
+        let isCompletionQueued = coordinator.animate(alongsideTransition: { _ in
         }, completion: { [weak self] _ in
             guard let sSelf = self else { return }
+            sSelf.activeSizeTransitionCount = max(sSelf.activeSizeTransitionCount - 1, 0)
+            if sSelf.activeSizeTransitionCount == 0 {
+                sSelf.sizeTransitionStartPage = nil
+            }
             sSelf.updateScrollviewBehaviour()
             sSelf.updateChartsCollectionConstaints(
                 from: sSelf.chartModules,
@@ -288,8 +324,25 @@ class CardsGraphViewController: UIViewController {
             sSelf.updateScrollInsetsForFade()
             self?.output?.viewDidTransition()
         })
+        if !isCompletionQueued {
+            activeSizeTransitionCount = max(activeSizeTransitionCount - 1, 0)
+            if activeSizeTransitionCount == 0 {
+                sizeTransitionStartPage = nil
+            }
+        }
         super.viewWillTransition(to: size, with: coordinator)
         gestureInstructor.dismissThenResume()
+    }
+
+    /// Size-class changes come with a layout pass, where `applyChartLayoutIfNeeded()` picks up the
+    /// new layout; this makes sure that pass happens. iOS 16 is full screen only, so there only
+    /// rotation changes the size classes, and it always lays out again.
+    private func registerLayoutClassObserver() {
+        guard #available(iOS 17.0, *) else { return }
+        registerForTraitChanges(RuuviLayoutClass.traitsAffectingLayoutClass) {
+            (controller: CardsGraphViewController, _: UITraitCollection) in
+            controller.view.setNeedsLayout()
+        }
     }
 
     fileprivate func setUpUI() {
@@ -418,7 +471,9 @@ class CardsGraphViewController: UIViewController {
     }
 
     private func configureViews() {
-        scrollView.enableEdgeFading(configuration: graphScrollEdgeFadeConfiguration)
+        var fadeConfiguration = ScrollViewEdgeFader.Configuration()
+        fadeConfiguration.fadeTransitionHeight = currentFadeTransitionHeight()
+        scrollView.enableEdgeFading(configuration: fadeConfiguration)
         updateScrollInsetsForFade()
     }
 
@@ -568,7 +623,7 @@ class CardsGraphViewController: UIViewController {
             minMaxAvgAction,
         ]
 
-        if chartModules.count > 2, !isLandscapeLayout {
+        if chartModules.count > 2, !usesPagedChartLayout {
             if chartsPerScreen > 1 {
                 actions.append(increaseChartSizeAction)
             }
@@ -673,11 +728,6 @@ extension CardsGraphViewController: CardsGraphViewDelegate {
 // MARK: - TagChartsViewInput
 
 extension CardsGraphViewController: CardsGraphViewInput {
-    var allowsLandscapeSwipeHint: Bool {
-        // The landscape chart layout (one chart per page) isn't used on iPhone Duo's inner display.
-        !RuuviDuoLayout.isFoldingDisplay(view)
-    }
-
     func setActiveSnapshot(_ snapshot: RuuviTagCardSnapshot?) {
         self.snapshot = snapshot
         pendingScrollVariant = nil
@@ -1147,6 +1197,13 @@ extension CardsGraphViewController {
     private func rebuildChartsStack(
         with variants: [MeasurementDisplayVariant]
     ) {
+        // Re-adding every chart is only needed when the charts change, not when only their
+        // heights do (rotation, window resizing, the size menu).
+        let views = variants.map { chartView(for: $0) }
+        guard !chartsStackView.arrangedSubviews.elementsEqual(views, by: { $0 === $1 }) else {
+            return
+        }
+
         chartsStackView.arrangedSubviews.forEach {
             chartsStackView.removeArrangedSubview($0)
             $0.removeFromSuperview()
@@ -1166,12 +1223,77 @@ extension CardsGraphViewController {
         from totalHeight: CGFloat,
         count: CGFloat
     ) -> CGFloat {
-        if isLandscapeLayout {
+        if usesPagedChartLayout {
             return totalHeight
         } else {
-            let effectiveChartsPerScreen = count > 2 ? CGFloat(chartsPerScreen) : count
+            let effectiveChartsPerScreen = count > 2 ? CGFloat(max(chartsPerScreen, 1)) : count
             return totalHeight / effectiveChartsPerScreen
         }
+    }
+
+    /// Follows the scroll view's size and the size classes on every layout pass (rotation, window
+    /// resizing, the sensor name wrapping, the footer collapsing). Cheap when nothing changed: a new
+    /// height only updates the chart height constants, and only a switch between the paged and the
+    /// stacked layout re-applies paging, the fade and the size menu. The charts are never rebuilt.
+    private func applyChartLayoutIfNeeded() {
+        let scrollViewHeight = scrollView.bounds.height
+        guard scrollViewHeight > 0 else { return }
+        let layout = ChartLayout(isPaged: usesPagedChartLayout, scrollViewHeight: scrollViewHeight)
+        guard layout != appliedChartLayout else { return }
+        let previousLayout = appliedChartLayout
+        appliedChartLayout = layout
+
+        let hasChartStack = !needsDeferredLayoutUpdate && !chartViews.isEmpty
+        if hasChartStack {
+            chartModules.forEach { variant in
+                updateChartViewHeight(
+                    for: variant,
+                    totalHeight: scrollViewHeight,
+                    itemCount: chartModules.count,
+                    animated: false
+                )
+            }
+        }
+
+        if layout.isPaged != previousLayout?.isPaged {
+            updateScrollviewBehaviour()
+            moreButton.updateMenu(with: moreButtonOptions(showChartStat: showChartStat))
+            // A rotation tells the presenter from its completion, as before.
+            if activeSizeTransitionCount == 0, graphIsVisibleForUser {
+                output?.viewDidTransition()
+            }
+        } else if layout.isPaged, hasChartStack, let previousLayout {
+            if activeSizeTransitionCount == 0 {
+                keepCurrentPage(previousPageHeight: previousLayout.scrollViewHeight)
+            } else if let sizeTransitionStartPage {
+                // The offset may already be clamped to the new size here, so a size transition
+                // (a window resize, a Duo display move) keeps the page it started on instead.
+                showPage(sizeTransitionStartPage)
+            }
+        }
+    }
+
+    /// Keeps the chart that was on screen when the page height changes in the paged layout (a window
+    /// resize, the sensor name wrapping), instead of leaving a page boundary in the middle of a chart.
+    private func keepCurrentPage(previousPageHeight: CGFloat) {
+        guard previousPageHeight > 0 else { return }
+        showPage((scrollView.contentOffset.y / previousPageHeight).rounded())
+    }
+
+    /// Scrolls the paged layout to `page` at the current page height, unless the user is scrolling.
+    private func showPage(_ page: CGFloat) {
+        guard !chartModules.isEmpty,
+              !scrollView.isDragging,
+              !scrollView.isDecelerating else {
+            return
+        }
+        let pageIndex = min(max(page, 0), CGFloat(chartModules.count - 1))
+        let offsetY = pageIndex * scrollView.bounds.height
+        guard offsetY != scrollView.contentOffset.y else { return }
+        scrollView.setContentOffset(
+            CGPoint(x: scrollView.contentOffset.x, y: offsetY),
+            animated: false
+        )
     }
 
     private func updateScrollviewBehaviour() {
@@ -1182,7 +1304,7 @@ extension CardsGraphViewController {
             scrollView.edgeFader?.updateFadeMask()
             return
         }
-        if isLandscapeLayout {
+        if usesPagedChartLayout {
             scrollView.isPagingEnabled = true
             scrollView.isScrollEnabled = true
             scrollView.showsVerticalScrollIndicator = true
@@ -1199,33 +1321,22 @@ extension CardsGraphViewController {
     }
 
     private func updateScrollInsetsForFade() {
-        let insetHeight = scrollView.isScrollEnabled ? currentFadeTransitionHeight() : 0
+        let fadeTransitionHeight = currentFadeTransitionHeight()
+        if let edgeFader = scrollView.edgeFader,
+           edgeFader.configuration.fadeTransitionHeight != fadeTransitionHeight {
+            // Setting the configuration re-applies the fade mask.
+            edgeFader.configuration.fadeTransitionHeight = fadeTransitionHeight
+        }
+        let insetHeight = scrollView.isScrollEnabled ? fadeTransitionHeight : 0
         var inset = scrollView.contentInset
         inset.bottom = insetHeight
         scrollView.contentInset = inset
         scrollView.scrollIndicatorInsets = inset
     }
 
+    /// The edge fader and the bottom inset use the same height, which follows the chart layout.
     private func currentFadeTransitionHeight() -> CGFloat {
-        let baseHeight = graphScrollEdgeFadeConfiguration.fadeTransitionHeight
-        let landscapeHeight = graphScrollEdgeFadeConfiguration.landscapeFadeTransitionHeight ?? baseHeight
-        let portraitHeight = graphScrollEdgeFadeConfiguration.portraitFadeTransitionHeight ?? baseHeight
-
-        if RuuviDuoLayout.isFoldingDisplay(view) {
-            return portraitHeight
-        }
-
-        if let orientation = view.window?.windowScene?.interfaceOrientation {
-            return orientation.isLandscape ? landscapeHeight : portraitHeight
-        }
-
-        let bounds = view.bounds
-        if bounds.width > 0, bounds.height > 0 {
-            return bounds.width > bounds.height ? landscapeHeight : portraitHeight
-        }
-
-        let screenBounds = RuuviAppGeometry.bounds(for: view)
-        return screenBounds.width > screenBounds.height ? landscapeHeight : portraitHeight
+        usesPagedChartLayout ? FadeTransitionHeight.paged : FadeTransitionHeight.stacked
     }
 
     private func updateChartViewHeight(

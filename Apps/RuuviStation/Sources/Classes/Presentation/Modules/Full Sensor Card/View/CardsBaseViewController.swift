@@ -18,6 +18,7 @@ final class CardsBaseViewController: UIViewController {
             static let headerHorizontalPadding: CGFloat = 12
             static let headerItemSpacing: CGFloat = 12
             static let headerLogoSpacing: CGFloat = 8
+            static let headerMinimumSpacing: CGFloat = 4
             static let secondaryToolbarTopPadding: CGFloat = 2
             static let arrowButtonSidePadding: CGFloat = 4
             static let arrowButtonIconTopPadding: CGFloat = 7
@@ -93,6 +94,9 @@ final class CardsBaseViewController: UIViewController {
     /// `true` while back and the tabs are shown in the system vertical bar (iPhone Duo only).
     private var isVerticalBarChromeApplied = false
     private var headerLeadingStackLeadingConstraint: NSLayoutConstraint?
+    /// Moves the back button and logo clear of the iPadOS window controls (no-op on iPhone and
+    /// full-screen iPad); also carries the iPhone Duo vertical-bar inset as its base constant.
+    private var headerWindowControlsInset: RuuviWindowControlsInsetUpdater?
 
     private lazy var backBarItem: UIBarButtonItem = {
         let item = UIBarButtonItem(
@@ -382,7 +386,7 @@ private extension CardsBaseViewController {
         backButton.widthAnchor.constraint(equalToConstant: Constants.Layout.backButtonSize.width).isActive = true
         backButton.heightAnchor.constraint(equalToConstant: Constants.Layout.backButtonSize.height).isActive = true
 
-        ruuviLogoView.widthAnchor.constraint(equalToConstant: Constants.Layout.ruuviLogoSize.width).isActive = true
+        // The logo's width is set in `activateHeaderFittingConstraints`.
         ruuviLogoView.heightAnchor.constraint(equalToConstant: Constants.Layout.ruuviLogoSize.height).isActive = true
 
         headerContainerView.addSubview(headerLeadingStack)
@@ -393,6 +397,10 @@ private extension CardsBaseViewController {
                 bottom: headerContainerView.bottomAnchor,
                 trailing: nil
             ).leading
+        // The navigation bar is hidden, so nothing else makes room for the window controls of an
+        // iPadOS window that doesn't fill the screen.
+        headerWindowControlsInset = headerLeadingStackLeadingConstraint
+            .map { RuuviWindowControlsInsetUpdater(constraint: $0, in: view) }
 
         headerContainerView.addSubview(menuBarView)
         menuBarView.anchor(
@@ -413,11 +421,54 @@ private extension CardsBaseViewController {
             .isActive = true
 
         headerContainerView.addSubview(activityIndicator)
-        activityIndicator.centerInSuperview()
+        activateHeaderFittingConstraints(leadingStack: headerLeadingStack)
 
         menuBarView.onTabChanged = { [weak self] tab in
             self?.handleTabChange(tab)
         }
+    }
+
+    /// Keeps the header row (back button and logo, activity indicator, tabs) from overlapping in
+    /// narrow windows, or when the window controls push the back button in. Nothing moves where
+    /// the row fits (every iPhone 375pt and wider, full-screen iPad): the logo shrinks only when it
+    /// would run into the tabs, and the activity indicator leaves the centre only to stay off the
+    /// tabs (it was over the first tab below about 360pt) and, where there is room, off the logo.
+    func activateHeaderFittingConstraints(leadingStack: UIStackView) {
+        // Just below required: the logo is the part of the row that gives way when it doesn't fit.
+        let ruuviLogoWidthConstraint = ruuviLogoView.widthAnchor.constraint(
+            equalToConstant: Constants.Layout.ruuviLogoSize.width
+        )
+        ruuviLogoWidthConstraint.priority = .required - 1
+        ruuviLogoView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.setContentCompressionResistancePriority(.required, for: .horizontal)
+
+        let activityIndicatorCenterX = activityIndicator.centerXAnchor.constraint(
+            equalTo: headerContainerView.centerXAnchor
+        )
+        activityIndicatorCenterX.priority = .defaultHigh
+        // Below the logo's width: in a row too narrow for both, the indicator overlaps the logo.
+        let activityIndicatorClearOfLogo = activityIndicator.leadingAnchor.constraint(
+            greaterThanOrEqualTo: leadingStack.trailingAnchor,
+            constant: Constants.Layout.headerMinimumSpacing
+        )
+        activityIndicatorClearOfLogo.priority = .required - 2
+
+        NSLayoutConstraint.activate([
+            ruuviLogoWidthConstraint,
+            activityIndicatorCenterX,
+            activityIndicator.centerYAnchor.constraint(equalTo: headerContainerView.centerYAnchor),
+            activityIndicator.trailingAnchor.constraint(
+                lessThanOrEqualTo: menuBarView.leadingAnchor,
+                constant: -Constants.Layout.headerMinimumSpacing
+            ),
+            activityIndicatorClearOfLogo,
+            leadingStack.trailingAnchor.constraint(
+                lessThanOrEqualTo: menuBarView.leadingAnchor,
+                constant: -Constants.Layout.headerLogoSpacing
+            ),
+        ])
     }
 
     func setUpSecondaryToolbarView() {
@@ -613,7 +664,7 @@ private extension CardsBaseViewController {
         backButton.isHidden = shouldApply
         menuBarView.isHidden = shouldApply
         // Without the back button the logo would touch the edge: same inset as on the dashboard.
-        headerLeadingStackLeadingConstraint?.constant = shouldApply
+        headerWindowControlsInset?.baseConstant = shouldApply
             ? Constants.Layout.headerHorizontalPadding
             : 0
 
@@ -705,10 +756,11 @@ private extension CardsBaseViewController {
     }
 }
 
-// MARK: - iPhone Duo native tab bar (no-ops on iPhone and iPad, where there is no native tab bar)
+// MARK: - Size changes and the iPhone Duo native tab bar (the tab bar parts are no-ops on iPhone and iPad)
 extension CardsBaseViewController {
     /// `spaceUntilSecondaryToolbar` from the current layout, without forcing a layout pass
-    /// (used by the measurement details sheet after an iPhone Duo display change).
+    /// (read by the measurement details sheet on every height update, so it follows rotation,
+    /// window resizing and iPhone Duo display changes).
     var currentSpaceUntilSecondaryToolbar: CGFloat {
         view.safeAreaInsets.top +
             headerContainerView.frame.height +
@@ -718,6 +770,7 @@ extension CardsBaseViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        headerWindowControlsInset?.update()
         updateNativeTabBarLayout()
     }
 
@@ -731,9 +784,15 @@ extension CardsBaseViewController {
         with coordinator: UIViewControllerTransitionCoordinator
     ) {
         super.viewWillTransition(to: size, with: coordinator)
-        guard usesNativeTabBar else { return }
         coordinator.animate(alongsideTransition: nil) { [weak self] _ in
-            self?.refreshNativeTabBarPlacement()
+            guard let self else { return }
+            if self.usesNativeTabBar {
+                self.refreshNativeTabBarPlacement()
+            }
+            // The measurement details sheet caps its height by this screen's height (see
+            // `MeasurementDetailsCoordinator`): let it measure again at the new size, also when
+            // only the window's height changed and the sheet itself kept its size.
+            self.presentedViewController?.viewIfLoaded?.setNeedsLayout()
         }
     }
 }

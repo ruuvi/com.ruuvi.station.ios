@@ -34,6 +34,9 @@ class SignInBenefitsViewController: UIViewController, SignInBenefitsViewInput {
 
     private lazy var container = UIView(color: .clear)
     private var sideInsetSwitch: RuuviVerticalBarConstraintSwitch?
+    private var titleSideConstraints: AnchoredConstraints?
+    private var continueButtonSideConstraints: AnchoredConstraints?
+    private var appliedLayoutClass: RuuviLayoutClass?
 
     private lazy var titleStack = UIStackView()
     private lazy var titleLabel: UILabel = {
@@ -112,11 +115,18 @@ extension SignInBenefitsViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         sideInsetSwitch?.update(for: traitCollection)
+        applySidePaddings(for: signInLayoutClass)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()
+        if #available(iOS 17.0, *) {
+            registerForTraitChanges(RuuviLayoutClass.traitsAffectingLayoutClass) {
+                (controller: SignInBenefitsViewController, _: UITraitCollection) in
+                controller.view.setNeedsLayout()
+            }
+        }
         localize()
     }
 
@@ -174,7 +184,16 @@ extension SignInBenefitsViewController {
             standard: [container.widthAnchor.constraint(equalTo: view.widthAnchor)],
             verticalBar: [container.widthAnchor.constraint(equalTo: view.safeAreaLayoutGuide.widthAnchor)]
         )
-        container.centerInSuperview()
+        container.centerXInSuperview()
+        // At least the visible height, as before (the content stays top-aligned); taller, and
+        // scrollable, only when a short window cannot fit the text.
+        let visibleHeight = scrollView.frameLayoutGuide.heightAnchor
+        let fillVisibleHeight = container.heightAnchor.constraint(equalTo: visibleHeight)
+        fillVisibleHeight.priority = .defaultLow
+        NSLayoutConstraint.activate([
+            container.heightAnchor.constraint(greaterThanOrEqualTo: visibleHeight),
+            fillVisibleHeight,
+        ])
 
         titleStack = UIStackView(arrangedSubviews: [
             titleLabel, subtitleLabel
@@ -184,16 +203,18 @@ extension SignInBenefitsViewController {
         titleStack.spacing = UIDevice.isiPhoneSE() ? 16 : 24
 
         container.addSubview(titleStack)
-        titleStack.anchor(
+        // Side paddings here and for the Continue button: iPhone values until
+        // applySidePaddings(for:) sets the ones for the layout class.
+        titleSideConstraints = titleStack.anchor(
             top: container.safeTopAnchor,
             leading: container.safeLeftAnchor,
             bottom: nil,
             trailing: container.safeRightAnchor,
             padding: .init(
                 top: 0,
-                left: !UIDevice.isTablet() ? 20 : 80,
+                left: 20,
                 bottom: 0,
-                right: !UIDevice.isTablet() ? 20 : 80
+                right: 20
             )
         )
 
@@ -228,16 +249,16 @@ extension SignInBenefitsViewController {
         )
 
         container.addSubview(continueButton)
-        continueButton.anchor(
+        continueButtonSideConstraints = continueButton.anchor(
             top: noteLabel.bottomAnchor,
             leading: container.safeLeftAnchor,
             bottom: nil,
             trailing: container.safeRightAnchor,
             padding: .init(
                 top: UIDevice.isiPhoneSE() ? 20 : 30,
-                left: !UIDevice.isTablet() ? 50 : 150,
+                left: 50,
                 bottom: 0,
-                right: !UIDevice.isTablet() ? 50 : 150
+                right: 50
             ),
             size: .init(width: 0, height: 50)
         )
@@ -259,6 +280,20 @@ extension SignInBenefitsViewController {
         signInOptionalLabel.bottomAnchor.constraint(
             lessThanOrEqualTo: container.bottomAnchor, constant: -30
         ).isActive = true
+    }
+
+    /// Today's iPad paddings for `.regular`, the iPhone paddings otherwise, by the window's layout
+    /// class: UIKit gives a sheet no wider than a form sheet a compact width even on a full-screen
+    /// iPad. Cheap; does nothing while the layout class stays the same.
+    private func applySidePaddings(for layoutClass: RuuviLayoutClass) {
+        guard layoutClass != appliedLayoutClass else { return }
+        appliedLayoutClass = layoutClass
+        let isRegular = layoutClass.isRegular
+        titleSideConstraints?.setSignInSidePadding(
+            isRegular ? 80 : 20,
+            remeasuring: [titleLabel, subtitleLabel, noteLabel]
+        )
+        continueButtonSideConstraints?.setSignInSidePadding(isRegular ? 150 : 50)
     }
 }
 

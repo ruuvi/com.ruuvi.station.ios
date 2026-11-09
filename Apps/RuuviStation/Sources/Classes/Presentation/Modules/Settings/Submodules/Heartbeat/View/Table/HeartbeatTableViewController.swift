@@ -60,6 +60,7 @@ extension HeartbeatTableViewController {
 extension HeartbeatTableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+        reloadWhenVerticalBarChanges()
         bindViewModel()
         updateUIComponent()
         localize()
@@ -74,7 +75,7 @@ extension HeartbeatTableViewController {
         100
     }
 
-    override func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
+    override func tableView(_ tableView: UITableView, viewForFooterInSection _: Int) -> UIView? {
         if let isOn = viewModel.bgScanningState.value, isOn {
             let footerView = UIView()
             let footerLabel = UILabel()
@@ -83,7 +84,10 @@ extension HeartbeatTableViewController {
             footerLabel.numberOfLines = 0
             footerLabel.text = RuuviLocalization.Settings.BackgroundScanning.Footer.message
             footerView.addSubview(footerLabel)
-            footerLabel.fillSuperview(padding: .init(top: 8, left: 20, bottom: 8, right: 20))
+            footerLabel.fillSuperviewAvoidingVerticalBar(
+                padding: .init(top: 8, left: 20, bottom: 8, right: 20),
+                traits: tableView.traitCollection
+            )
             return footerView
         }
         return nil

@@ -31,14 +31,39 @@ class DiscoverTableViewController: UIViewController {
         return headerView
     }()
 
+    /// The table's header: `headerView` plus today's 8 pt gap above the list. Being the table
+    /// header, the description scrolls with the list instead of taking a fixed part of short
+    /// windows. Sized in `viewDidLayoutSubviews`.
+    private lazy var tableHeaderContainer: UIView = {
+        let container = UIView()
+        container.backgroundColor = .clear
+        container.addSubview(headerView)
+        let bottom = headerView.bottomAnchor.constraint(
+            equalTo: container.bottomAnchor,
+            constant: -8
+        )
+        // Breakable, so the container's frame never conflicts with it before it is sized.
+        bottom.priority = UILayoutPriority(999)
+        NSLayoutConstraint.activate([
+            headerView.topAnchor.constraint(equalTo: container.topAnchor),
+            headerView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            headerView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            bottom,
+        ])
+        return container
+    }()
+
     private lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.backgroundColor = .clear
-        tableView.rowHeight = 44
+        tableView.rowHeight = DiscoverTableViewController.rowHeight
+        // Sensor rows are exactly this high (see `heightForRowAt`), so estimates are exact too.
+        tableView.estimatedRowHeight = DiscoverTableViewController.rowHeight
         tableView.delegate = self
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        let headerFooterView = UIView(
+        // The header is `tableHeaderContainer` (set in `setupViews`).
+        let footerView = UIView(
             frame: CGRect(
                 x: 0,
                 y: 0,
@@ -46,10 +71,19 @@ class DiscoverTableViewController: UIViewController {
                 height: CGFloat.leastNormalMagnitude
             )
         )
-        tableView.tableHeaderView = headerFooterView
-        tableView.tableFooterView = headerFooterView
+        tableView.tableFooterView = footerView
         return tableView
     }()
+
+    /// Measures the "no sensors" row, whose text can need more lines than 44 pt hold.
+    private lazy var noDevicesSizingCell = DiscoverNoDevicesTableViewCell(
+        style: .default,
+        reuseIdentifier: nil
+    )
+    /// The last measured "no sensors" row height, for the table width and text it was measured at.
+    private var noDevicesRowHeightCache: MeasuredRowHeight?
+    /// The "no sensors" row height last handed to the table.
+    private var appliedNoDevicesRowHeight: CGFloat?
 
     private lazy var closeBarButtonItem: UIBarButtonItem = {
         let button = UIBarButtonItem(
@@ -107,6 +141,15 @@ class DiscoverTableViewController: UIViewController {
 
     private let hideAlreadyAddedWebProviders = false
     private var session: NFCNDEFReaderSession?
+
+    /// Today's row height. Sensor rows always use it; the "no sensors" row only grows past it.
+    private static let rowHeight: CGFloat = 44
+
+    private struct MeasuredRowHeight {
+        let width: CGFloat
+        let text: String
+        let height: CGFloat
+    }
 }
 
 // MARK: - DiscoverViewInput
@@ -364,6 +407,12 @@ extension DiscoverTableViewController {
         super.viewWillDisappear(animated)
         output.viewWillDisappear()
     }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        updateTableHeaderSize()
+        updateNoDevicesRowHeightIfNeeded()
+    }
 }
 
 // MARK: - UITableViewDataSource
@@ -409,11 +458,7 @@ extension DiscoverTableViewController: UITableViewDataSource {
                 with: DiscoverNoDevicesTableViewCell.self,
                 for: indexPath
             )
-            cell.descriptionLabel.text = isBluetoothEnabled
-                ? RuuviLocalization.DiscoverTable
-                    .NoDevicesSection.NotFound.text
-                : RuuviLocalization.DiscoverTable
-                    .NoDevicesSection.BluetoothDisabled.text
+            cell.descriptionLabel.text = noDevicesText
             return cell
         }
     }
@@ -422,6 +467,20 @@ extension DiscoverTableViewController: UITableViewDataSource {
 // MARK: - UITableViewDelegate
 
 extension DiscoverTableViewController: UITableViewDelegate {
+    func tableView(
+        _ tableView: UITableView,
+        heightForRowAt _: IndexPath
+    ) -> CGFloat {
+        switch DiscoverTableSection.section(for: ruuviTags.count) {
+        case .device:
+            return Self.rowHeight
+        case .noDevices:
+            let height = noDevicesRowHeight(for: tableView.bounds.width)
+            appliedNoDevicesRowHeight = height
+            return height
+        }
+    }
+
     func tableView(
         _ tableView: UITableView,
         didSelectRowAt indexPath: IndexPath
@@ -484,24 +543,23 @@ extension DiscoverTableViewController {
     private func setupViews() {
         view.backgroundColor = RuuviColor.primary.color
 
-        view.addSubview(headerView)
-        view.addSubview(tableView)
+        // The button goes first: UIKit follows the root view's first-subview chain to find the scroll
+        // view that drives the navigation bar's scroll-edge appearance. With the table first, the bar
+        // would switch to its default background and hairline while the list is scrolled; with no
+        // scroll view found it stays transparent, as before. The two views don't overlap.
         view.addSubview(actionButton)
+        view.addSubview(tableView)
+        // The header is the table's header, so it scrolls with the list. The table starts where
+        // the header used to and has the same width, so the screen looks the same at rest.
+        tableView.tableHeaderView = tableHeaderContainer
+
+        // 210 pt, but never wider than the safe area minus 16 pt on each side.
+        let actionButtonWidth = actionButton.widthAnchor.constraint(equalToConstant: 210)
+        actionButtonWidth.priority = UILayoutPriority(999)
 
         NSLayoutConstraint.activate([
-            headerView.topAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.topAnchor
-            ),
-            headerView.leadingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.leadingAnchor
-            ),
-            headerView.trailingAnchor.constraint(
-                equalTo: view.safeAreaLayoutGuide.trailingAnchor
-            ),
-
             tableView.topAnchor.constraint(
-                equalTo: headerView.bottomAnchor,
-                constant: 8
+                equalTo: view.safeAreaLayoutGuide.topAnchor
             ),
             tableView.leadingAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.leadingAnchor
@@ -514,14 +572,20 @@ extension DiscoverTableViewController {
                 constant: -24
             ),
 
+            // Centred on the content (the safe area), which has the same centre as the view
+            // unless the side insets differ (iPhone Duo vertical bar, iPad window insets).
             actionButton.centerXAnchor.constraint(
-                equalTo: view.centerXAnchor
+                equalTo: view.safeAreaLayoutGuide.centerXAnchor
             ),
             actionButton.bottomAnchor.constraint(
                 equalTo: view.safeAreaLayoutGuide.bottomAnchor,
                 constant: -24
             ),
-            actionButton.widthAnchor.constraint(equalToConstant: 210),
+            actionButtonWidth,
+            actionButton.widthAnchor.constraint(
+                lessThanOrEqualTo: view.safeAreaLayoutGuide.widthAnchor,
+                constant: -32
+            ),
             actionButton.heightAnchor.constraint(equalToConstant: 44),
         ])
 
@@ -568,6 +632,71 @@ extension DiscoverTableViewController {
         if isViewLoaded {
             tableView.reloadData()
         }
+    }
+
+    private var noDevicesText: String {
+        isBluetoothEnabled
+            ? RuuviLocalization.DiscoverTable
+                .NoDevicesSection.NotFound.text
+            : RuuviLocalization.DiscoverTable
+                .NoDevicesSection.BluetoothDisabled.text
+    }
+
+    /// Sizes the table header to its content at the table's current width. Runs on every layout
+    /// pass, so it follows window resizes, and re-assigns the header only when its size changed
+    /// (that is what makes the table move its rows).
+    private func updateTableHeaderSize() {
+        let width = tableView.bounds.width
+        guard width > 0 else { return }
+        let container = tableHeaderContainer
+        if container.frame.width != width {
+            // Lets the multi-line description wrap at the new width before it is measured.
+            container.frame.size.width = width
+            container.layoutIfNeeded()
+        }
+        let height = container.systemLayoutSizeFitting(
+            CGSize(width: width, height: UIView.layoutFittingCompressedSize.height),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        ).height
+        guard container.frame.width != width || container.frame.height != height else { return }
+        container.frame = CGRect(x: 0, y: 0, width: width, height: height)
+        tableView.tableHeaderView = container
+    }
+
+    /// The "no sensors" row: today's 44 pt, taller only when its text needs more lines (long
+    /// translations, narrow windows), so the text is never clipped.
+    private func noDevicesRowHeight(for width: CGFloat) -> CGFloat {
+        guard width > 0 else { return Self.rowHeight }
+        let text = noDevicesText
+        if let cache = noDevicesRowHeightCache, cache.width == width, cache.text == text {
+            return cache.height
+        }
+        let cell = noDevicesSizingCell
+        cell.descriptionLabel.text = text
+        cell.bounds = CGRect(x: 0, y: 0, width: width, height: Self.rowHeight)
+        cell.layoutIfNeeded()
+        let contentHeight = cell.contentView.systemLayoutSizeFitting(
+            CGSize(width: width, height: UIView.layoutFittingCompressedSize.height),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        ).height
+        // + 1 pt leaves room for the cell separator below the content view.
+        let height = max(Self.rowHeight, ceil(contentHeight) + 1)
+        noDevicesRowHeightCache = MeasuredRowHeight(width: width, text: text, height: height)
+        return height
+    }
+
+    /// A width change alone isn't guaranteed to make the table ask for row heights again, so reload
+    /// the single "no sensors" row when its height at the new width differs from the one it has.
+    private func updateNoDevicesRowHeightIfNeeded() {
+        guard DiscoverTableSection.section(for: ruuviTags.count) == .noDevices,
+              let appliedNoDevicesRowHeight,
+              noDevicesRowHeight(for: tableView.bounds.width) != appliedNoDevicesRowHeight
+        else {
+            return
+        }
+        tableView.reloadData()
     }
 
     private func displayName(

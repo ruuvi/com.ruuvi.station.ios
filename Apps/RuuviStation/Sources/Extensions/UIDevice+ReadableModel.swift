@@ -169,6 +169,10 @@ extension UIDevice {
 }
 
 extension UIDevice {
+    /// `true` on iPad. For text sizes only (the bigger iPad fonts, and metrics that only fit that
+    /// text), which stay by device type. Never use it to pick a layout: a resized iPad window or
+    /// an iPhone Duo display needs the layout for its own size, so use the view's
+    /// `traitCollection.ruuviLayoutClass` (`RuuviLayoutClass`) instead.
     static func isTablet() -> Bool {
         UIDevice.current.userInterfaceIdiom == .pad
     }

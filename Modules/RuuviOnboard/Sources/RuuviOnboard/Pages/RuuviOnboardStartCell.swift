@@ -51,9 +51,8 @@ class RuuviOnboardStartCell: UICollectionViewCell {
 
 private extension RuuviOnboardStartCell {
     func setUpUI() {
-        let container = UIView(color: .clear)
-        contentView.addSubview(container)
-        container.fillSuperview()
+        // Scrolls only when the page is too short for the text (a short window).
+        let container = contentView.addScrollingPage().container
 
         let textStack = UIStackView(arrangedSubviews: [
             titleLabel, subtitleLabel, sub_subtitleLabel
@@ -84,15 +83,22 @@ private extension RuuviOnboardStartCell {
             bottom: container.bottomAnchor,
             trailing: container.trailingAnchor
         )
+        // The beaver's space shrinks to nothing before the text has to scroll.
+        beaverContainerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 0).isActive = true
         beaverContainerView.addSubview(beaverImageView)
 
         beaverImageView.anchor(
             top: nil,
             leading: beaverContainerView.safeLeadingAnchor,
             bottom: nil,
-            trailing: beaverContainerView.safeTrailingAnchor,
-            size: .init(width: 0, height: bounds.height / 2)
+            trailing: beaverContainerView.safeTrailingAnchor
         )
+        // Half the page height (as before), following the page when it is resized. Like before, the
+        // beaver is centred in its space and cropped by it when that space is shorter.
+        beaverImageView.heightAnchor.constraint(
+            equalTo: contentView.heightAnchor,
+            multiplier: 0.5
+        ).isActive = true
         beaverImageView.centerYInSuperview()
     }
 }

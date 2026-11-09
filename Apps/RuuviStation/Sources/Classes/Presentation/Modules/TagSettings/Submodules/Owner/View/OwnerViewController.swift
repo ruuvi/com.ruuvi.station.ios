@@ -162,7 +162,8 @@ extension OwnerViewController {
         removeCloudHistoryActionContainer.addSubview(removeCloudHistoryCheckboxVC.view)
         removeCloudHistoryCheckboxVC.view.fillSuperview()
 
-        view.addSubview(removeCloudHistoryActionContainer)
+        // The container stays in the scroll view's content (Owner.storyboard), so it scrolls with
+        // the label and the button. Its constraints are all made here.
         removeCloudHistoryActionContainer.anchor(
             top: claimOwnershipDescriptionLabel.bottomAnchor,
             leading: claimOwnershipDescriptionLabel.leadingAnchor,

@@ -25,14 +25,14 @@ final class RuuviDuoLayoutGateTests: XCTestCase {
         let controller = try makeControllerInWindow()
 
         XCTAssertFalse(RuuviDuoLayout.isVerticalBarActive(controller.traitCollection))
-        XCTAssertFalse(RuuviDuoLayout.isFoldingDisplay(controller.view))
+        XCTAssertFalse(RuuviDuoLayout.hasVerticalFold(in: controller.view))
         XCTAssertTrue(RuuviDuoLayout.activeFolds(in: controller.view).isEmpty)
     }
 
     func testDuoGatesAreOffForViewsOutsideAWindow() {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
 
-        XCTAssertFalse(RuuviDuoLayout.isFoldingDisplay(view))
+        XCTAssertFalse(RuuviDuoLayout.hasVerticalFold(in: view))
         XCTAssertTrue(RuuviDuoLayout.activeFolds(in: view).isEmpty)
     }
 
@@ -62,25 +62,6 @@ final class RuuviDuoLayoutGateTests: XCTestCase {
         XCTAssertFalse(constraintSwitch.isVerticalBarApplied)
         XCTAssertTrue(standard.allSatisfy(\.isActive))
         XCTAssertFalse(verticalBar.contains(where: \.isActive))
-    }
-
-    func testAppGeometryMatchesTheMainScreen() throws {
-        let controller = try makeControllerInWindow()
-        let mainScreen = UIScreen.main
-
-        XCTAssertTrue(RuuviAppGeometry.screen(for: controller.view) === mainScreen)
-        XCTAssertTrue(RuuviAppGeometry.screen(for: nil) === mainScreen)
-        XCTAssertEqual(RuuviAppGeometry.bounds(for: controller.view), mainScreen.bounds)
-        XCTAssertEqual(RuuviAppGeometry.bounds(for: nil), mainScreen.bounds)
-        XCTAssertEqual(RuuviAppGeometry.scale(for: controller.view), mainScreen.scale)
-        XCTAssertEqual(
-            RuuviAppGeometry.screenTraits(for: controller.view).horizontalSizeClass,
-            mainScreen.traitCollection.horizontalSizeClass
-        )
-        XCTAssertEqual(
-            RuuviAppGeometry.screenTraits(for: controller.view).verticalSizeClass,
-            mainScreen.traitCollection.verticalSizeClass
-        )
     }
 
     private func makeControllerInWindow() throws -> UIViewController {

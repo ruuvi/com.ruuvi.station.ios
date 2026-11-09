@@ -108,6 +108,8 @@ class CardsGraphInternalView: LineChartView {
         leftAxis.gridColor = leftAxis.gridColor.withAlphaComponent(0.4)
         leftAxis.labelTextColor =
             (source == .mesurementDetails) ? RuuviColor.dashboardIndicator.color : UIColor.white
+        // Fits the axis labels (ruuviCaption2, 2pt larger on iPad), so it follows the device type like
+        // the font does, not the size classes.
         leftAxis.minWidth = UIDevice.isTablet() ? 54.0 : 44.0
         leftAxis.maxWidth = UIDevice.isTablet() ? 54.0 : 44.0
         leftAxis.xOffset = 6
@@ -467,8 +469,7 @@ extension CardsGraphInternalView {
             marker.initialise(
                 with: unit,
                 type: type,
-                measurementService: measurementService,
-                parentFrame: frame
+                measurementService: measurementService
             )
         }
     }

@@ -1,21 +1,15 @@
-import RuuviLocalization
 import UIKit
 
 // MARK: - ScrollViewEdgeFader
 // A helper class that adds top and bottom edge fading to any UIScrollView
-// swiftlint:disable:next type_body_length
 public final class ScrollViewEdgeFader: NSObject {
 
     // MARK: - Configuration
     public struct Configuration {
-        /// Height of the fade transition in points
+        /// Height of the fade transition in points. A screen whose layout changes with the space it
+        /// has sets it again when its layout changes (as the graph does for its paged layout);
+        /// changing the configuration re-applies the mask.
         public var fadeTransitionHeight: CGFloat = 30
-
-        /// Optional height override for portrait orientation
-        public var portraitFadeTransitionHeight: CGFloat?
-
-        /// Optional height override for landscape orientation
-        public var landscapeFadeTransitionHeight: CGFloat?
 
         /// Alpha component for the fade effect (0-1)
         public var fadeAlphaComponent: CGFloat = 0.3
@@ -39,7 +33,6 @@ public final class ScrollViewEdgeFader: NSObject {
     private weak var scrollView: UIScrollView?
     private var scrollViewObservation: NSKeyValueObservation?
     private var boundsObservation: NSKeyValueObservation?
-    private var orientationObserver: NSObjectProtocol?
     public var configuration: Configuration {
         didSet {
             if configuration.isEnabled {
@@ -66,9 +59,6 @@ public final class ScrollViewEdgeFader: NSObject {
             .invalidate()
         boundsObservation?
             .invalidate()
-        if let observer = orientationObserver {
-            NotificationCenter.default.removeObserver(observer)
-        }
     }
 
     // MARK: - Setup
@@ -87,22 +77,12 @@ public final class ScrollViewEdgeFader: NSObject {
                 self?.updateFadeMask()
             }
 
-        // Also observe bounds changes
+        // Also observe bounds changes (scrolling, rotation and window resizing)
         boundsObservation = scrollView
             .observe(\.bounds, options: [.new]) { [weak self] _, _ in
                 DispatchQueue.main.async {
                     self?.updateFadeMask()
                 }
-            }
-
-        orientationObserver = NotificationCenter
-            .default
-            .addObserver(
-                forName: UIDevice.orientationDidChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                self?.updateFadeMask()
             }
 
         // Initial update with a slight delay
@@ -181,7 +161,7 @@ public final class ScrollViewEdgeFader: NSObject {
         var locations: [NSNumber] = []
 
         let fadeHeight = max(
-            currentFadeTransitionHeight(for: scrollView),
+            configuration.fadeTransitionHeight,
             .leastNonzeroMagnitude
         )
 
@@ -300,35 +280,6 @@ public final class ScrollViewEdgeFader: NSObject {
         )
 
         scrollView.layer.mask = gradientLayer
-    }
-
-    private func currentFadeTransitionHeight(
-        for scrollView: UIScrollView
-    ) -> CGFloat {
-        let baseHeight = configuration.fadeTransitionHeight
-        let landscapeHeight = configuration.landscapeFadeTransitionHeight ?? baseHeight
-        let portraitHeight = configuration.portraitFadeTransitionHeight ?? baseHeight
-
-        // iPhone Duo inner display: no landscape-specific layout (see CardsGraphViewController).
-        if RuuviDuoLayout.isFoldingDisplay(scrollView) {
-            return portraitHeight
-        }
-
-        if let interfaceOrientation = scrollView
-            .window?
-            .windowScene?
-            .interfaceOrientation {
-            return interfaceOrientation
-                .isLandscape ? landscapeHeight : portraitHeight
-        }
-
-        let bounds = scrollView.bounds
-        if bounds.height > 0 && bounds.width > 0 {
-            return bounds.width > bounds.height ? landscapeHeight : portraitHeight
-        }
-
-        let screenBounds = RuuviAppGeometry.bounds(for: scrollView)
-        return screenBounds.width > screenBounds.height ? landscapeHeight : portraitHeight
     }
 }
 

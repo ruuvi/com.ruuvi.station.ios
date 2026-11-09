@@ -53,6 +53,33 @@ class SignInVerifyView: UIView {
     }()
 
     private var beaverImageViewTopAnchor: NSLayoutConstraint!
+
+    private lazy var beaverContainerView = UIView(color: .clear)
+    private var titleSideConstraints: AnchoredConstraints?
+    private var appliedLayoutClass: RuuviLayoutClass?
+}
+
+extension SignInVerifyView {
+    /// Priority of the constraint that makes this page fill the visible height (set by
+    /// `SignInViewController`): below the labels' compression resistance (750), so in a window too
+    /// short for the title and code field the page grows and scrolls rather than clipping the text.
+    static let fillVisibleHeightPriority = UILayoutPriority(740)
+
+    /// The view to keep above the keyboard: the code field.
+    var keyboardAvoidanceView: UIView {
+        ruuviCodeView
+    }
+
+    /// Applies the side paddings of `layoutClass`: today's iPad padding for `.regular`, the iPhone
+    /// padding otherwise. Cheap; does nothing while the layout class stays the same.
+    func applyLayout(_ layoutClass: RuuviLayoutClass) {
+        guard layoutClass != appliedLayoutClass else { return }
+        appliedLayoutClass = layoutClass
+        titleSideConstraints?.setSignInSidePadding(
+            layoutClass.isRegular ? 80 : 20,
+            remeasuring: [titleLabel, subtitleLabel]
+        )
+    }
 }
 
 extension SignInVerifyView {
@@ -74,16 +101,17 @@ extension SignInVerifyView {
         titleStack.spacing = 16
 
         container.addSubview(titleStack)
-        titleStack.anchor(
+        // Side padding: iPhone value until applyLayout(_:) sets the one for the layout class.
+        titleSideConstraints = titleStack.anchor(
             top: nil,
             leading: container.safeLeftAnchor,
             bottom: nil,
             trailing: container.safeRightAnchor,
             padding: .init(
                 top: 0,
-                left: !UIDevice.isTablet() ? 20 : 80,
+                left: 20,
                 bottom: 0,
-                right: !UIDevice.isTablet() ? 20 : 80
+                right: 20
             )
         )
         titleStack.topAnchor.constraint(
@@ -106,7 +134,6 @@ extension SignInVerifyView {
     }
 
     private func setUpBeaverView() {
-        let beaverContainerView = UIView(color: .clear)
         container.addSubview(beaverContainerView)
 
         beaverContainerView.anchor(
@@ -115,6 +142,8 @@ extension SignInVerifyView {
             bottom: container.bottomAnchor,
             trailing: container.trailingAnchor
         )
+        // Never negative: when the title and code field need more room, the page grows instead.
+        beaverContainerView.heightAnchor.constraint(greaterThanOrEqualToConstant: 0).isActive = true
         beaverContainerView.addSubview(beaverImageView)
 
         beaverImageView.anchor(
@@ -123,6 +152,7 @@ extension SignInVerifyView {
             bottom: nil,
             trailing: beaverContainerView.trailingAnchor
         )
+        // Centred in its space and cropped by it (the container clips) when that space is shorter.
         beaverImageView.constrainHeight(constant: 400)
         beaverImageView.image = RuuviAsset.beaverMail.image.resize(targetHeight: 400)
         beaverImageView.centerYInSuperview()

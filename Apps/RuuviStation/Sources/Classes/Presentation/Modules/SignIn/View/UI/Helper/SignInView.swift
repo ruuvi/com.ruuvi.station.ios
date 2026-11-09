@@ -90,6 +90,15 @@ class SignInView: UIView {
         label.font = UIFont.mulish(.semiBoldItalic, size: UIDevice.isiPhoneSE() ? 14 : 16)
         return label
     }()
+
+    private lazy var textFieldStack = UIStackView(arrangedSubviews: [
+        emailTextField, requestCodeButton,
+    ])
+
+    private var titleSideConstraints: AnchoredConstraints?
+    private var textFieldSideConstraints: AnchoredConstraints?
+    private var noPasswordSideConstraints: AnchoredConstraints?
+    private var appliedLayoutClass: RuuviLayoutClass?
 }
 
 extension SignInView {
@@ -117,16 +126,18 @@ extension SignInView {
         titleStack.spacing = 16
 
         container.addSubview(titleStack)
-        titleStack.anchor(
+        // Side paddings here and below: iPhone values until applyLayout(_:) sets the ones for the
+        // layout class.
+        titleSideConstraints = titleStack.anchor(
             top: nil,
             leading: container.safeLeftAnchor,
             bottom: nil,
             trailing: container.safeRightAnchor,
             padding: .init(
                 top: 0,
-                left: !UIDevice.isTablet() ? 20 : 80,
+                left: 20,
                 bottom: 0,
-                right: !UIDevice.isTablet() ? 20 : 80
+                right: 20
             )
         )
         titleStack.topAnchor.constraint(
@@ -135,40 +146,37 @@ extension SignInView {
     }
 
     private func setUpTextFieldView() {
-        let textFieldStack = UIStackView(arrangedSubviews: [
-            emailTextField, requestCodeButton
-        ])
         textFieldStack.axis = .vertical
         textFieldStack.distribution = .fillEqually
         textFieldStack.spacing = 16
         emailTextField.constrainHeight(constant: 50)
 
         container.addSubview(textFieldStack)
-        textFieldStack.anchor(
+        textFieldSideConstraints = textFieldStack.anchor(
             top: titleStack.bottomAnchor,
             leading: container.safeLeftAnchor,
             bottom: nil,
             trailing: container.safeRightAnchor,
             padding: .init(
                 top: 30,
-                left: !UIDevice.isTablet() ? 30 : 100,
+                left: 30,
                 bottom: 0,
-                right: !UIDevice.isTablet() ? 30 : 100
+                right: 30
             )
         )
         textFieldStack.centerYInSuperview()
 
         container.addSubview(noPasswordLabel)
-        noPasswordLabel.anchor(
+        noPasswordSideConstraints = noPasswordLabel.anchor(
             top: textFieldStack.bottomAnchor,
             leading: container.safeLeftAnchor,
             bottom: nil,
             trailing: container.safeRightAnchor,
             padding: .init(
                 top: 30,
-                left: !UIDevice.isTablet() ? 30 : 100,
+                left: 30,
                 bottom: 0,
-                right: !UIDevice.isTablet() ? 30 : 100
+                right: 30
             )
         )
         noPasswordLabel.bottomAnchor.constraint(
@@ -184,6 +192,28 @@ extension SignInView {
 }
 
 extension SignInView {
+    /// The views to keep above the keyboard: the email field and the Request code button.
+    var keyboardAvoidanceView: UIView {
+        textFieldStack
+    }
+
+    /// Applies the side paddings of `layoutClass`: today's iPad paddings for `.regular`, the iPhone
+    /// paddings otherwise. Cheap; does nothing while the layout class stays the same.
+    func applyLayout(_ layoutClass: RuuviLayoutClass) {
+        guard layoutClass != appliedLayoutClass else { return }
+        appliedLayoutClass = layoutClass
+        let isRegular = layoutClass.isRegular
+        titleSideConstraints?.setSignInSidePadding(
+            isRegular ? 80 : 20,
+            remeasuring: [titleLabel, subtitleLabel]
+        )
+        textFieldSideConstraints?.setSignInSidePadding(isRegular ? 100 : 30)
+        noPasswordSideConstraints?.setSignInSidePadding(
+            isRegular ? 100 : 30,
+            remeasuring: [noPasswordLabel]
+        )
+    }
+
     func activate() {
         emailTextField.becomeFirstResponder()
     }

@@ -40,8 +40,9 @@ Benefits:
                                                 <color key="textColor" name="RuuviTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sdf-03-sQW">
+                                            <view contentMode="scaleToFill" id="sdf-03-sQW">
                                                 <rect key="frame" x="16" y="403" width="361" height="377"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </view>
                                             <button opaque="NO" contentMode="center" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TMq-hd-Z5t">
@@ -72,10 +73,6 @@ Benefits:
                                             <constraint firstItem="TMq-hd-Z5t" firstAttribute="centerX" secondItem="Snr-bv-x2g" secondAttribute="centerX" id="AUG-Jj-oR9"/>
                                             <constraint firstAttribute="trailing" secondItem="sa5-R9-s2b" secondAttribute="trailing" constant="16" id="Fcg-Nk-4rZ"/>
                                             <constraint firstAttribute="bottom" secondItem="TMq-hd-Z5t" secondAttribute="bottom" constant="8" id="KQV-qY-c8Z"/>
-                                            <constraint firstItem="sdf-03-sQW" firstAttribute="trailing" secondItem="sa5-R9-s2b" secondAttribute="trailing" id="aRb-AG-afR"/>
-                                            <constraint firstItem="TMq-hd-Z5t" firstAttribute="top" secondItem="sdf-03-sQW" secondAttribute="bottom" priority="750" constant="20" id="edL-Aq-NpE"/>
-                                            <constraint firstItem="sdf-03-sQW" firstAttribute="leading" secondItem="sa5-R9-s2b" secondAttribute="leading" id="efg-PJ-CWK"/>
-                                            <constraint firstItem="sdf-03-sQW" firstAttribute="top" secondItem="sa5-R9-s2b" secondAttribute="bottom" constant="20" id="fp4-LG-g2r"/>
                                             <constraint firstItem="sa5-R9-s2b" firstAttribute="leading" secondItem="Snr-bv-x2g" secondAttribute="leading" constant="16" id="hzA-fI-W8D"/>
                                         </constraints>
                                     </view>

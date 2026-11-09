@@ -413,7 +413,7 @@ Pass criteria:
 ## Implementation notes (2026-11-07, branch `feature/iphone-duo`)
 
 ### Differences from the plan above
-- **`RuuviAppGeometry`** (`Apps/RuuviStation/Sources/Extensions/Structs/RuuviAppGeometry.swift`) returns the
+- **`RuuviAppGeometry`** (removed on 2026-11-08, see "Resizable windows" below) returned the
   bounds and scale of the *scene's screen*, not the window. On iPadOS 26+ the app can run in a resizable
   window, and the old `UIScreen.main.bounds` was the screen's bounds, so this keeps iPad identical in that
   case too. It also has `screenTraits(for:)`, which `NoSensorView` uses.
@@ -579,13 +579,9 @@ sqlite3 "$C/Documents/grdb.sqlite" "INSERT OR REPLACE INTO ruuvi_tag_sensors (id
   `overwrite_screenshots:true` deletes every screenshot set of each uploaded locale, including the Duo
   sets fastlane can't classify. Don't overwrite until fastlane supports the Duo display types, or keep a
   copy to re-upload by hand.
-- **Decision needed: `UIRequiresFullScreen` on iOS 27.** Xcode 27.2's app-resizability guidance (TN3192)
-  says that with the iOS 27 SDK, iOS 27 ignores `UIRequiresFullScreen` and resizes the scene anyway.
-  - That affects iPad on iPadOS 27 and the Duo, regardless of the Duo code.
-  - `UIRequiresFullScreenIgnoredStartingWithVersion` decides which iOS releases keep the old
-    full-screen behaviour (for example `28` keeps iOS 27 full screen). Apple leaves its value to the
-    developer.
-  - The iPhone/iPad comparisons here ran on full-screen windows only.
+- **`UIRequiresFullScreen` on iOS 27: decided, see "Resizable windows" below.** With the iOS 27 SDK,
+  iOS 27 always resizes the scene. No value of `UIRequiresFullScreenIgnoredStartingWithVersion` keeps
+  iOS 27 full screen. The key only chooses between discrete resizing (key absent) and live resizing.
 - **The iOS 27 SDK bump itself** wasn't compared against the shipped 3.9.0 build, which used the iOS 26
   SDK. Every comparison here is `main` built with Xcode 27.2 against the branch built with Xcode 27.2.
 - **Translations:** the new bar titles use English until the shared translations repo adds `ident_ios`
@@ -593,3 +589,76 @@ sqlite3 "$C/Documents/grdb.sqlite" "INSERT OR REPLACE INTO ruuvi_tag_sensors (id
 - **Empty dashboard when partially folded:** the Sign in / Add sensor buttons are centred and can sit on
   a horizontal fold. They're inside a scroll view, which Apple exempts from moving off the fold, so they
   were left as they are.
+
+---
+
+## Resizable windows (2026-11-08)
+
+Since the iOS 27 SDK, iPadOS 27 resizes the app even with `UIRequiresFullScreen`
+([TN3192](https://developer.apple.com/documentation/technotes/tn3192-migrating-your-app-from-the-deprecated-uirequiresfullscreen-key)).
+The app now supports resizable windows. Several Duo-only gates from the phases above were replaced
+along the way.
+
+### Info.plist
+- `UIRequiresFullScreen` stays `true`.
+- `UIRequiresFullScreenIgnoredStartingWithVersion = "27"` (a string) is added. iOS/iPadOS 27 and later
+  resize live, and iPadOS 16–26 stay full screen as before.
+- `SceneDelegate` sets a preferred minimum window width of 375pt.
+
+### Rules
+- **Layout from size classes, not device type or orientation.** `RuuviLayoutClass`
+  (`Common/RuuviLocalization/Sources/RuuviLayoutClass.swift`) maps:
+  - regular × regular → `.regular`, today's iPad layout;
+  - compact height → `.compactHeight`, today's iPhone landscape (Pro Max landscape too);
+  - everything else → `.compactWidth`, today's iPhone portrait.
+- **Content shown in a sheet reads the window's class (`ruuviWindowLayoutClass`).** On iPad, UIKit gives
+  a floating, form-sheet-sized sheet a compact width even on a full-screen iPad.
+- **Grids fit columns to the width they actually have** (`RuuviGridFit`). The limits are chosen so that
+  full-screen iPhones and iPads keep today's counts:
+
+  | Grid | Columns | Max column width |
+  |---|---|---|
+  | Dashboard | 1–3 | 516pt |
+  | Measurements, regular layout | 3–4 | 308pt (even when a vertical fold crosses it) |
+  | Background Selection, regular layout | 5 or 8 | 206pt |
+
+  One known difference: 768×1024pt iPads (iPad 5th/6th gen, mini 5, Pro 9.7") in landscape now get the
+  portrait counts. Their width is the same as a 12.9" iPad in portrait.
+- **The graph pages one chart per screen** in compact height, or when 3 stacked charts would each be
+  more than 4× wider than tall. This keeps iPad landscape paged. The Duo inner display now pages in
+  landscape too.
+- **Font sizes stay by device type** (`UIDevice.isTablet()`, the +2pt in RuuviFonts). So do metrics that
+  only exist to fit that text.
+- **Orientation locks stay** for onboarding and sign-in on iPhone. Resizable iPad windows ignore them,
+  so those screens now also work in landscape and at any size.
+- **Custom headers clear the window controls** with `RuuviWindowControlsInsetUpdater`. Its inset is 0
+  unless the window is smaller than the screen. Don't use the corner-adapted safe area directly: it also
+  avoids the rounded display corners and would move headers on every iPhone and iPad.
+
+### Removed
+- `RuuviAppGeometry`.
+- `RuuviDuoLayout.isFoldingDisplay`; use `hasVerticalFold(in:)`.
+- `GlobalHelpers.isDeviceTablet()` and `isDeviceLandscape()`.
+- `UIWindow.isLandscape` and `isPortrait`.
+- The onboarding `isDuoContext` gate.
+- The DFU `isFoldableDevice` gate.
+- The graph's `allowsLandscapeSwipeHint`.
+
+### Verified
+- Before/after screenshots against HEAD `79c0116ce`, iPhone 18 Pro and iPad Pro 13", portrait and
+  landscape. Covered screens:
+  - Dashboard, menu, Discover, sign-in, card tabs, details sheet.
+  - Background Selection, Remove sensor, firmware.
+  - App settings, About, onboarding.
+
+  They are pixel-identical except for time-dependent text and data. On iPad, sign-in and onboarding now
+  rotate with the device, because the portrait lock no longer applies to a resizable app.
+- Unit tests: `RuuviLayoutClassTests` checks the fit limits against every iPhone and iPad screen size.
+- Live resizing on iPadOS 27 (simulator, Windowed Apps on) on the dashboard, sensor card and onboarding:
+  - The window never gets narrower than 375pt.
+  - Headers sit clear of the window controls, including in a maximized window.
+  - The grids change column count as the window is resized.
+  - Short windows report compact height: 3 measurement columns and a paged graph.
+  - Onboarding keeps its page.
+- Not re-checked after this change: the Duo inner display. Device Hub fold poses can't be automated.
+  The outer display matches the earlier Duo build.

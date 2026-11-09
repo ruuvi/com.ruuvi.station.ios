@@ -91,8 +91,18 @@ extension PhotoPickerPresenterSheet {
         viewController.present(picker, animated: true, completion: nil)
     }
 
+    /// Shows the system camera. While the app shares the screen with other apps (iPad windows,
+    /// Split View, Slide Over), the system may not allow camera capture, and
+    /// `UIImagePickerController` has no multitasking camera opt-in. Its system camera UI then stays
+    /// cancellable and the photo library remains the way to pick a photo. Where there is no camera
+    /// at all (e.g. a Mac running the iPad app), presenting a camera picker would raise an
+    /// exception, so the photo library opens instead.
     private func showCamera() {
         guard let viewController = UIApplication.shared.topViewController() else { return }
+        guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
+            presentPhotoPicker(from: viewController)
+            return
+        }
         let vc = UIImagePickerController()
         vc.sourceType = .camera
         vc.delegate = self

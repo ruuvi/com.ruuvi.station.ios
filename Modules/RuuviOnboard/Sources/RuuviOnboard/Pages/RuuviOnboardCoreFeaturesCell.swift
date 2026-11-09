@@ -1,6 +1,9 @@
 import UIKit
 
 class RuuviOnboardCoreFeaturesCell: UICollectionViewCell {
+    /// Scrolls the page only when it is too short for its content.
+    private weak var pageScrollView: UIScrollView?
+
     private lazy var appImageView: UIImageView = {
         let iv = UIImageView(
             image: nil,
@@ -37,13 +40,20 @@ class RuuviOnboardCoreFeaturesCell: UICollectionViewCell {
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        // The cell shows several pages: start each one at its top.
+        pageScrollView?.contentOffset = .zero
+    }
 }
 
 private extension RuuviOnboardCoreFeaturesCell {
     func setUpUI() {
-        let container = UIView(color: .clear)
-        contentView.addSubview(container)
-        container.fillSuperview()
+        // Scrolls only when the page is too short for the text (a short window).
+        let page = contentView.addScrollingPage()
+        pageScrollView = page.scrollView
+        let container = page.container
 
         let textStack = UIStackView(arrangedSubviews: [
             subtitleLabel, titleLabel
@@ -75,6 +85,10 @@ private extension RuuviOnboardCoreFeaturesCell {
             padding: .init(top: 30, left: 0, bottom: 0, right: 0)
         )
         appImageView.bottomAnchor.constraint(lessThanOrEqualTo: container.bottomAnchor).isActive = true
+        // The screenshot is the part that gives way when the page is short: it shrinks (down to
+        // nothing) before the text is compressed, and only then does the page scroll.
+        appImageView.heightAnchor.constraint(greaterThanOrEqualToConstant: 0).isActive = true
+        appImageView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
     }
 }
 

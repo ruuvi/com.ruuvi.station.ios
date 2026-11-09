@@ -26,78 +26,81 @@ class CardsMeasurementPageViewController: UIViewController {
         static let cardHeight: CGFloat = 48
         static let contentBottomPadding: CGFloat = 20
         static let standardHorizontalPadding: CGFloat = 20
-        static let iPadPortraitColumns: Int = 3
-        static let iPadLandscapeColumns: Int = 4
-        static let iPadPortraitHorizontalPadding: CGFloat = 60
-        static let iPadLandscapeHorizontalPadding: CGFloat = 80
+        static let compactWidthColumns: Int = 2
+        static let compactHeightColumns: Int = 3
+        static let regularColumns: Int = 3
+        static let regularWideColumns: Int = 4
+        static let regularHorizontalPadding: CGFloat = 60
+        static let regularWideHorizontalPadding: CGFloat = 80
         static let minimumItemWidth: CGFloat = 100
-        static let constraintPriority: Float = 999
+        /// `.regular` layout: 3 columns while they are at most this wide, 4 beyond. With the page's
+        /// own width this keeps the full-screen iPad grids: 3 columns in portrait (744-1032pt wide,
+        /// columns up to 300pt) and 4 in landscape (1080-1376pt wide, where 3 would be 316pt+). 308
+        /// sits midway between the two.
+        static let regularMaximumItemWidth: CGFloat = 308
     }
 
     // MARK: - Column Configuration
-    private struct ColumnConfig {
+    /// The measurement grid's column count and side padding, from the page's own size classes and
+    /// width (never the device type or the orientation), so the grid follows the space the page
+    /// has: full screen, a resized iPad window or either iPhone Duo display. Card widths are not
+    /// part of it: each row shares its real width equally between its columns.
+    private struct ColumnConfig: Equatable {
         let columns: Int
-        let shouldCenter: Bool
-        let itemWidth: CGFloat
         let spacing: CGFloat
         let horizontalPadding: CGFloat
 
-        /// - Parameters:
-        ///   - referenceBounds: The app bounds (replaces the deprecated `UIScreen.main.bounds`).
-        ///   - foldingDisplayContainerSize: The container size when shown on iPhone Duo's inner
-        ///     folding display; `nil` everywhere else (always on iPhone and iPad).
-        static func forCurrentDevice(
+        /// - `.compactWidth` (iPhone portrait): 2 columns, 20pt side padding.
+        /// - `.compactHeight` (iPhone landscape): 3 columns, 20pt side padding.
+        /// - `.regular` (iPad, iPhone Duo inner display): 3 columns with 60pt side padding, or 4
+        ///   with 80pt once 3 would be wider than `regularMaximumItemWidth`. Where a vertical fold
+        ///   runs through the page (iPhone Duo inner display in landscape) the count is made even,
+        ///   so the fold falls between two columns.
+        static func make(
+            for layoutClass: RuuviLayoutClass,
             containerWidth: CGFloat,
-            referenceBounds: CGRect,
-            foldingDisplayContainerSize: CGSize? = nil
+            hasVerticalFold: () -> Bool
         ) -> ColumnConfig {
-            let isIPad = UIDevice.current.userInterfaceIdiom == .pad
             let spacing = Constants.measurementGridSpacing
 
-            let columns: Int
-            let shouldCenter: Bool
-            let horizontalPadding: CGFloat
-
-            if let foldingDisplayContainerSize {
-                // iPhone Duo inner display: tablet-like grid. 4 columns in landscape split
-                // evenly (2 | 2) around the book-style fold.
-                if foldingDisplayContainerSize.width > foldingDisplayContainerSize.height {
-                    columns = Constants.iPadLandscapeColumns
-                    horizontalPadding = Constants.iPadLandscapeHorizontalPadding
-                } else {
-                    columns = Constants.iPadPortraitColumns
-                    horizontalPadding = Constants.iPadPortraitHorizontalPadding
+            switch layoutClass {
+            case .compactWidth:
+                return ColumnConfig(
+                    columns: Constants.compactWidthColumns,
+                    spacing: spacing,
+                    horizontalPadding: Constants.standardHorizontalPadding
+                )
+            case .compactHeight:
+                return ColumnConfig(
+                    columns: Constants.compactHeightColumns,
+                    spacing: spacing,
+                    horizontalPadding: Constants.standardHorizontalPadding
+                )
+            case .regular:
+                var columns = RuuviGridFit.columns(
+                    in: containerWidth,
+                    counts: [Constants.regularColumns, Constants.regularWideColumns],
+                    spacing: spacing,
+                    padding: { 2 * regularHorizontalPadding(columns: $0) },
+                    minimumColumnWidth: Constants.minimumItemWidth,
+                    maximumColumnWidth: Constants.regularMaximumItemWidth
+                )
+                if !columns.isMultiple(of: 2), hasVerticalFold() {
+                    columns += 1
                 }
-                shouldCenter = false
-            } else if isIPad {
-                let isLandscape = containerWidth > referenceBounds.height
-                if isLandscape {
-                    columns = Constants.iPadLandscapeColumns
-                    horizontalPadding = Constants.iPadLandscapeHorizontalPadding
-                } else {
-                    columns = Constants.iPadPortraitColumns
-                    horizontalPadding = Constants.iPadPortraitHorizontalPadding
-                }
-                shouldCenter = false
-            } else {
-                // iPhone - keep existing logic unchanged
-                columns = UIDevice.current.orientation.isLandscape ? 3 : 2
-                shouldCenter = false
-                horizontalPadding = Constants.standardHorizontalPadding
+                return ColumnConfig(
+                    columns: columns,
+                    spacing: spacing,
+                    horizontalPadding: regularHorizontalPadding(columns: columns)
+                )
             }
+        }
 
-            let totalHorizontalPadding = horizontalPadding * 2
-            let availableWidth = containerWidth - totalHorizontalPadding
-            let totalSpacing = CGFloat(columns - 1) * spacing
-            let itemWidth = (availableWidth - totalSpacing) / CGFloat(columns)
-
-            return ColumnConfig(
-                columns: columns,
-                shouldCenter: shouldCenter,
-                itemWidth: max(itemWidth, Constants.minimumItemWidth),
-                spacing: spacing,
-                horizontalPadding: horizontalPadding
-            )
+        /// 60pt side padding for 3 columns, 80pt for 4 (today's iPad portrait and landscape grids).
+        private static func regularHorizontalPadding(columns: Int) -> CGFloat {
+            columns >= Constants.regularWideColumns
+                ? Constants.regularWideHorizontalPadding
+                : Constants.regularHorizontalPadding
         }
     }
 
@@ -116,8 +119,8 @@ class CardsMeasurementPageViewController: UIViewController {
     private var measurementsStackLeadingConstraint: NSLayoutConstraint!
     private var measurementsStackTrailingConstraint: NSLayoutConstraint!
 
-    /// iPhone Duo: whether the grid was last built for the inner (folding) display.
-    private var lastFoldingDisplayState = false
+    /// The configuration the grid was last built and padded with; `nil` until the first build.
+    private var appliedColumnConfig: ColumnConfig?
 
     // MARK: - UI Components
     private lazy var scrollView: UIScrollView = {
@@ -173,9 +176,16 @@ class CardsMeasurementPageViewController: UIViewController {
         startObservingAppState()
     }
 
+    override func viewIsAppearing(_ animated: Bool) {
+        super.viewIsAppearing(animated)
+        // The grid is first built before the page is in a window, where the size classes aren't
+        // known yet: correct it now that they are (normally already done by the first layout).
+        updateColumnConfigIfNeeded()
+    }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        updateLayoutIfFoldingDisplayChanged()
+        updateColumnConfigIfNeeded()
         updateDynamicSpacing()
     }
 
@@ -183,7 +193,8 @@ class CardsMeasurementPageViewController: UIViewController {
         super.viewWillTransition(to: size, with: coordinator)
 
         coordinator.animate(alongsideTransition: { _ in
-            self.updateLayoutForRotation(containerSize: size)
+            self.updateColumnConfigIfNeeded()
+            self.view.layoutIfNeeded()
         }, completion: { _ in
             self.updateDynamicSpacing()
         })
@@ -221,8 +232,9 @@ private extension CardsMeasurementPageViewController {
 
     // swiftlint:disable:next function_body_length
     func setupConstraints() {
-        let initialColumnConfig = self.columnConfig(containerSize: RuuviAppGeometry.bounds(for: view).size)
-        let initialPadding = initialColumnConfig.horizontalPadding
+        // Replaced by the grid's real padding when it is built and on every layout pass
+        // (`applyColumnConfig(_:)`); the size classes aren't known yet here.
+        let initialPadding = Constants.standardHorizontalPadding
 
         spacerHeightConstraint = dynamicSpacerView.heightAnchor.constraint(
             equalToConstant: Constants.minimumSpacing
@@ -386,18 +398,22 @@ private extension CardsMeasurementPageViewController {
         }
     }
 
-    func rebuildMeasurementGrid() {
+    private func rebuildMeasurementGrid(with columnConfig: ColumnConfig? = nil) {
+        // First, as it may load the view (the first build happens before the page is shown).
+        let columnConfig = columnConfig ?? currentColumnConfig()
+
         // Clear existing cards tracking
         currentMeasurementCards.removeAll()
 
         // Remove existing views
         measurementsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
+        applyColumnConfig(columnConfig)
+
         guard let measurements = getFilteredIndicators() else {
             return
         }
 
-        let columnConfig = self.columnConfig(containerSize: view.bounds.size)
         buildGrid(with: measurements, columnConfig: columnConfig)
     }
 
@@ -406,35 +422,39 @@ private extension CardsMeasurementPageViewController {
         rebuildMeasurementGrid()
     }
 
-    private func columnConfig(containerSize: CGSize) -> ColumnConfig {
-        let isFoldingDisplay = RuuviDuoLayout.isFoldingDisplay(view)
-        // Remember which layout the grid was built for (it may be built while off-window).
-        lastFoldingDisplayState = isFoldingDisplay
-        return ColumnConfig.forCurrentDevice(
-            containerWidth: containerSize.width,
-            referenceBounds: RuuviAppGeometry.bounds(for: view),
-            foldingDisplayContainerSize: isFoldingDisplay ? containerSize : nil
+    /// The grid configuration for the page's current size classes and width.
+    private func currentColumnConfig() -> ColumnConfig {
+        ColumnConfig.make(
+            for: view.traitCollection.ruuviLayoutClass,
+            containerWidth: view.bounds.width,
+            hasVerticalFold: {
+                // Checked on the page view controller's view, which stays put while pages scroll,
+                // so a neighbouring page laid out off screen sees the fold as well.
+                RuuviDuoLayout.hasVerticalFold(in: parent?.view ?? view)
+            }
         )
     }
 
-    /// iPhone Duo: re-runs the column layout when the page moves between the outer and the inner
-    /// (folding) display. Never triggers on iPhone/iPad, where `isFoldingDisplay` is always false.
-    func updateLayoutIfFoldingDisplayChanged() {
-        guard RuuviDuoLayout.isFoldingDisplay(view) != lastFoldingDisplayState else { return }
-        updateLayoutForRotation(containerSize: view.bounds.size)
-    }
-
-    func updateLayoutForRotation(containerSize: CGSize) {
-        let columnConfig = self.columnConfig(containerSize: containerSize)
-
-        // Update padding constraints
+    /// Sets the grid's side padding and remembers `columnConfig` as the applied configuration.
+    private func applyColumnConfig(_ columnConfig: ColumnConfig) {
+        appliedColumnConfig = columnConfig
+        guard measurementsStackLeadingConstraint.constant != columnConfig.horizontalPadding else { return }
         measurementsStackLeadingConstraint.constant = columnConfig.horizontalPadding
         measurementsStackTrailingConstraint.constant = -columnConfig.horizontalPadding
+    }
 
-        // Force rebuild for orientation changes since column count might change
-        forceRebuildMeasurements()
-
-        view.layoutIfNeeded()
+    /// Re-evaluates the grid for the page's current size classes and width. Runs on every layout
+    /// pass (rotation, window resizing, the page joining a window), so it is cheap and idempotent:
+    /// the cards are rebuilt only when the column count changes and the padding is set only when
+    /// it changes. Card widths need nothing, the rows share their width equally.
+    func updateColumnConfigIfNeeded() {
+        let columnConfig = currentColumnConfig()
+        guard columnConfig != appliedColumnConfig else { return }
+        if columnConfig.columns != appliedColumnConfig?.columns {
+            rebuildMeasurementGrid(with: columnConfig)
+        } else {
+            applyColumnConfig(columnConfig)
+        }
     }
 
     func updateUI() {
@@ -529,8 +549,9 @@ private extension CardsMeasurementPageViewController {
             return 0
         }
 
-        let columnConfig = self.columnConfig(containerSize: view.bounds.size)
-        let numberOfRows = Int(ceil(Double(indicatorCount) / Double(columnConfig.columns)))
+        // The column count the grid is built with.
+        let columns = (appliedColumnConfig ?? currentColumnConfig()).columns
+        let numberOfRows = Int(ceil(Double(indicatorCount) / Double(columns)))
         let totalCardHeight = CGFloat(numberOfRows) * Constants.cardHeight
         let totalSpacing = CGFloat(max(0, numberOfRows - 1)) * Constants.measurementGridSpacing
 
@@ -580,27 +601,11 @@ private extension CardsMeasurementPageViewController {
         let secondary = snapshot?.displayData.secondaryIndicators ?? []
         return secondary.isEmpty ? nil : secondary
     }
-
-    func updateMeasurements() {
-        // Clear existing cards tracking
-        currentMeasurementCards.removeAll()
-
-        // Remove existing views
-        measurementsStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-
-        guard let measurements = getFilteredIndicators() else {
-            return
-        }
-
-        let columnConfig = self.columnConfig(containerSize: view.bounds.size)
-        buildGrid(with: measurements, columnConfig: columnConfig)
-    }
 }
 
 // MARK: - Grid Building
 private extension CardsMeasurementPageViewController {
 
-    // swiftlint:disable:next function_body_length
     private func buildGrid(
         with indicators: [RuuviTagCardSnapshotIndicatorData],
         columnConfig: ColumnConfig
@@ -610,75 +615,35 @@ private extension CardsMeasurementPageViewController {
             let rowStackView = UIStackView()
             rowStackView.axis = .horizontal
             rowStackView.spacing = columnConfig.spacing
-            rowStackView.distribution = .fill
+            // Equal columns that always follow the row's real width (rotation, window resizing),
+            // with no fixed card widths that could go stale.
+            rowStackView.distribution = .fillEqually
             rowStackView.alignment = .fill
 
             var cardsInRow = 0
 
-            // Add actual measurement cards with fixed widths
+            // Add actual measurement cards
             while cardsInRow < columnConfig.columns && index < indicators.count {
                 let card = createMeasurementCard(for: indicators[index])
 
                 // Track the card for alert updates
                 currentMeasurementCards[indicators[index].variant] = card
 
-                // Set both width constraint AND content hugging/compression resistance
-                let widthConstraint = card.widthAnchor.constraint(equalToConstant: columnConfig.itemWidth)
-                widthConstraint.priority = UILayoutPriority(Constants.constraintPriority) // High priority
-                widthConstraint.isActive = true
-
-                // Prevent the card from expanding beyond its intended width
-                card.setContentHuggingPriority(.required, for: .horizontal)
-                card.setContentCompressionResistancePriority(.required, for: .horizontal)
-
                 rowStackView.addArrangedSubview(card)
                 cardsInRow += 1
                 index += 1
             }
 
-            // Add invisible placeholder views for remaining columns to maintain layout
+            // Invisible placeholders fill the remaining columns, so the cards of a short last row
+            // keep the same width as the cards above them.
             while cardsInRow < columnConfig.columns {
                 let placeholder = UIView()
                 placeholder.backgroundColor = .clear
-                placeholder.isHidden = false // Keep visible for layout but transparent
-
-                // Set same width as cards to maintain proper spacing
-                let placeholderWidthConstraint = placeholder.widthAnchor.constraint(
-                    equalToConstant: columnConfig.itemWidth
-                )
-                placeholderWidthConstraint.priority = UILayoutPriority(Constants.constraintPriority)
-                placeholderWidthConstraint.isActive = true
-
-                placeholder.setContentHuggingPriority(.required, for: .horizontal)
-                placeholder.setContentCompressionResistancePriority(.required, for: .horizontal)
-
                 rowStackView.addArrangedSubview(placeholder)
                 cardsInRow += 1
             }
 
-            // Handle centering for iPad landscape
-            if columnConfig.shouldCenter {
-                let containerStack = UIStackView()
-                containerStack.axis = .horizontal
-                containerStack.distribution = .fill
-                containerStack.alignment = .center
-
-                let leadingSpacer = UIView()
-                let trailingSpacer = UIView()
-
-                leadingSpacer.setContentHuggingPriority(.defaultLow, for: .horizontal)
-                trailingSpacer.setContentHuggingPriority(.defaultLow, for: .horizontal)
-
-                containerStack.addArrangedSubview(leadingSpacer)
-                containerStack.addArrangedSubview(rowStackView)
-                containerStack.addArrangedSubview(trailingSpacer)
-
-                leadingSpacer.widthAnchor.constraint(equalTo: trailingSpacer.widthAnchor).isActive = true
-
-                measurementsStackView.addArrangedSubview(containerStack)
-            } else {
-                measurementsStackView.addArrangedSubview(rowStackView)
-            }
+            measurementsStackView.addArrangedSubview(rowStackView)
         }
     }
 
