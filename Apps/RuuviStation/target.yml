@@ -194,6 +194,13 @@ targets:
     sources:
       - path: Tests/Unit/MeasurementFreshness
     dependencies:
+      - package: Future
+      - package: GRDB
+      - package: Humidity
+      - target: RuuviPersistence
+        embed: false
+      - target: RuuviContext
+        embed: false
       - target: station
       - target: RuuviLocal
         embed: false

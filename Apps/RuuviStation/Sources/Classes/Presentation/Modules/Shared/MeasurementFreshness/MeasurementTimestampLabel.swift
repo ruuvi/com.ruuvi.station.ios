@@ -18,7 +18,7 @@ final class MeasurementTimestampLabel: UILabel {
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTap)))
     }
 
-    required init?(coder: NSCoder) {
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 

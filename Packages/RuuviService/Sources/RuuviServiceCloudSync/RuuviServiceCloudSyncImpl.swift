@@ -178,8 +178,6 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     @discardableResult
     public func refreshLatestRecord() -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
-        let syncID = UUID()
-        RuuviCloudSyncEvent.started(syncID).publish()
         ruuviLocalSyncState.setSyncStatus(.syncing)
         pendingOffsetUpdates()
             .observe(on: .global(qos: .utility))
@@ -188,19 +186,16 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 self.syncSensors(pendingOffsetUpdates: pendingOffsets)
                     .observe(on: .global(qos: .utility))
                     .on(success: { [weak self] _ in
-                        RuuviCloudSyncEvent.finished(syncID).publish()
                         self?.ruuviLocalSyncState.setSyncStatus(.complete)
                         self?.ruuviLocalSyncState.setSyncDate(Date())
                         promise.succeed(value: true)
                     }, failure: { [weak self] error in
-                        RuuviCloudSyncEvent.finished(syncID).publish()
                         self?.ruuviLocalSyncState.setSyncStatus(.onError)
                         promise.fail(error: error)
                     }, completion: { [weak self] in
                         self?.ruuviLocalSyncState.setSyncStatus(.none)
                     })
             }, failure: { [weak self] error in
-                RuuviCloudSyncEvent.finished(syncID).publish()
                 self?.ruuviLocalSyncState.setSyncStatus(.onError)
                 promise.fail(error: error)
                 self?.ruuviLocalSyncState.setSyncStatus(.none)
@@ -212,18 +207,14 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
     public func syncAllRecords() -> Future<Bool, RuuviServiceError> {
         let promise = Promise<Bool, RuuviServiceError>()
         ruuviLocalSettings.isSyncing = true
-        let syncID = UUID()
-        RuuviCloudSyncEvent.started(syncID).publish()
         ruuviLocalSyncState.setSyncStatus(.syncing)
         let syncAll = syncAll()
         syncAll
             .observe(on: .global(qos: .utility))
             .on(success: { [weak self] _ in
-                RuuviCloudSyncEvent.finished(syncID).publish()
                 self?.ruuviLocalSyncState.setSyncStatus(.complete)
                 promise.succeed(value: true)
             }, failure: { [weak self] error in
-                RuuviCloudSyncEvent.finished(syncID).publish()
                 self?.ruuviLocalSyncState.setSyncStatus(.onError)
                 promise.fail(error: error)
             }, completion: { [weak self] in
@@ -684,9 +675,18 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         return promise.future
     }
 
+    // Measurement progress must not finish merely because the parallel settings request failed.
+    private func syncSensors(
+        pendingOffsetUpdates: Set<QueuedOffsetUpdate>?
+    ) -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
+        CloudMeasurementSyncProgress.track {
+            performSensorSync(pendingOffsetUpdates: pendingOffsetUpdates)
+        }
+    }
+
     // This method syncs the sensors, latest measurements and alerts.
     // swiftlint:disable:next function_body_length
-    private func syncSensors(
+    private func performSensorSync(
         pendingOffsetUpdates: Set<QueuedOffsetUpdate>?
     ) -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
         let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
@@ -765,22 +765,11 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         )
                     }
 
-                    Future.zip(syncLatestPoint)
+                    // A failed write must not finish progress while sibling writes remain in flight.
+                    CloudMeasurementSyncProgress.allSettled(syncLatestPoint + addLatestPointToHistory)
                         .observe(on: .global(qos: .utility))
                         .on(success: { _ in
-                            let dates = denseSensors.reduce(into: [String: Date]()) { result, sensor in
-                                if let date = sensor.record?.date {
-                                    result[sensor.sensor.ruuviTagSensor.id.mac.mac.uppercased()] = date
-                                }
-                            }
-                            RuuviCloudSyncEvent.recordsSaved(dates).publish()
-                            Future.zip(addLatestPointToHistory)
-                                .observe(on: .global(qos: .utility))
-                                .on(success: { _ in
-                                    promise.succeed(value: updatedSensors)
-                                }, failure: { error in
-                                    promise.fail(error: error)
-                                })
+                            promise.succeed(value: updatedSensors)
                         }, failure: { error in
                             promise.fail(error: error)
                         })

@@ -173,7 +173,7 @@ private final class TestSnackbarPan: UIPanGestureRecognizer {
         set { testState = newValue }
     }
 
-    override func translation(in view: UIView?) -> CGPoint { testTranslation }
-    override func setTranslation(_ translation: CGPoint, in view: UIView?) { testTranslation = translation }
-    override func velocity(in view: UIView?) -> CGPoint { testVelocity }
+    override func translation(in _: UIView?) -> CGPoint { testTranslation }
+    override func setTranslation(_ translation: CGPoint, in _: UIView?) { testTranslation = translation }
+    override func velocity(in _: UIView?) -> CGPoint { testVelocity }
 }

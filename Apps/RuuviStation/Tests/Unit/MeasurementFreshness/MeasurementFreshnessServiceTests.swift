@@ -32,7 +32,9 @@ final class MeasurementFreshnessServiceTests: XCTestCase {
         timeout = 10000
         service.refresh()
         XCTAssertTrue(snapshots.allSatisfy { !$0.isOutdated })
-        withExtendedLifetime(observation) {}
+        withExtendedLifetime(observation) {
+            // Keep the subscription alive through the preceding assertions.
+        }
     }
 
     func testInitialSubscriptionDoesNotRecheckAndRecordChangesAreCoalesced() async {
@@ -59,7 +61,9 @@ final class MeasurementFreshnessServiceTests: XCTestCase {
         await fulfillment(of: [refreshed], timeout: 2)
         XCTAssertEqual(reads, 1)
         XCTAssertFalse(snapshot.isOutdated)
-        withExtendedLifetime(observation) {}
+        withExtendedLifetime(observation) {
+            // Keep the subscription alive through the preceding assertions.
+        }
     }
 
     func testTrackingDoesNotRetainDiscardedSnapshot() {
@@ -72,6 +76,39 @@ final class MeasurementFreshnessServiceTests: XCTestCase {
         }
         XCTAssertNil(released)
         service.refresh()
+    }
+
+    func testReplacementAtReleasedIdentityIsObservedAndAgesOnSubsequentTicks() async {
+        var uptime: TimeInterval = 0
+        let gate = MeasurementFreshnessGate(notificationCenter: NotificationCenter(), uptime: { uptime })
+        uptime = 30
+        var now = Date()
+        // Reuse a deterministic key instead of depending on the allocator to recycle an address.
+        let reusedIdentity = ObjectIdentifier(NSObject())
+        let service = MeasurementFreshnessService(gate: gate, now: { now }, identity: { _ in reusedIdentity })
+        weak var released: RuuviTagCardSnapshot?
+        autoreleasepool {
+            let old = RuuviTagCardSnapshot(id: "old", identifierData: .init(), lastUpdated: nil)
+            released = old
+            service.track(old)
+        }
+        XCTAssertNil(released)
+        let replacement = RuuviTagCardSnapshot(
+            id: "replacement", identifierData: .init(), lastUpdated: now.addingTimeInterval(-7200)
+        )
+        service.track(replacement)
+        XCTAssertTrue(replacement.isOutdated)
+        let fresh = expectation(description: "Replacement measurement observed")
+        let observation = replacement.$isOutdated.dropFirst().filter { !$0 }.sink { _ in fresh.fulfill() }
+        replacement.lastUpdated = now
+        await fulfillment(of: [fresh], timeout: 2)
+        XCTAssertFalse(replacement.isOutdated)
+        now = now.addingTimeInterval(3600)
+        service.refresh()
+        XCTAssertTrue(replacement.isOutdated)
+        withExtendedLifetime(observation) {
+            // Keep the replacement observation alive through both transitions.
+        }
     }
 
     func testOneBindingUpdatesBothControlsAndNotifiesOnlyOnFreshTransitions() {

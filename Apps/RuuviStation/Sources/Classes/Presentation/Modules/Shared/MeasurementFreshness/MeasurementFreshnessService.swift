@@ -17,22 +17,25 @@ final class MeasurementFreshnessService {
     private let gate: MeasurementFreshnessGate
     private let timeout: () -> Int
     private let now: () -> Date
+    private let identity: (RuuviTagCardSnapshot) -> ObjectIdentifier
     private var entries: [ObjectIdentifier: Entry] = [:]
     private var refreshScheduled = false
 
     init(
         gate: MeasurementFreshnessGate? = nil,
         timeout: @escaping () -> Int = { RuuviMeasurementFreshness.defaultTimeoutSeconds },
-        now: @escaping () -> Date = Date.init
+        now: @escaping () -> Date = Date.init,
+        identity: @escaping (RuuviTagCardSnapshot) -> ObjectIdentifier = ObjectIdentifier.init
     ) {
         self.gate = gate ?? .shared
         self.timeout = timeout
         self.now = now
+        self.identity = identity
     }
 
     func track(_ snapshot: RuuviTagCardSnapshot) {
-        let key = ObjectIdentifier(snapshot)
-        guard entries[key] == nil else {
+        let key = identity(snapshot)
+        if entries[key]?.snapshot === snapshot {
             update(snapshot, timeout: timeout(), now: now())
             return
         }

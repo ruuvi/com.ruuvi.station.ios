@@ -1,9 +1,8 @@
 import Foundation
 
-/// Correlates concurrent refreshes and the measurement dates committed before their completion.
+/// Correlates the lifetime of concurrent sensor/measurement sync operations.
 public enum RuuviCloudSyncEvent: Sendable {
     case started(UUID)
-    case recordsSaved([String: Date])
     case finished(UUID)
 
     public static let notification = Notification.Name("RuuviCloudSync.MeasurementProgress")

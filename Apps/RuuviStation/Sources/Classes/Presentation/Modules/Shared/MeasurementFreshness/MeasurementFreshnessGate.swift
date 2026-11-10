@@ -1,5 +1,6 @@
 import Foundation
 import RuuviLocal
+import RuuviOntology
 import RuuviService
 
 /// Startup protection is bounded even when a refresh never starts or never completes.
@@ -17,6 +18,7 @@ final class MeasurementFreshnessGate {
     private var activeSyncs: [UUID: TimeInterval] = [:]
     private var committedDates: [String: Date] = [:]
     private var syncToken: NSObjectProtocol?
+    private var recordToken: NSObjectProtocol?
     private var logoutToken: NSObjectProtocol?
 
     init(
@@ -32,6 +34,17 @@ final class MeasurementFreshnessGate {
             let value = notification.userInfo?[RuuviCloudSyncEvent.userInfoKey]
             guard let event = value as? RuuviCloudSyncEvent else { return }
             MainActor.assumeIsolated { self?.receive(event) }
+        }
+        recordToken = notificationCenter.addObserver(
+            forName: RuuviCloudMeasurementCommit.notification, object: nil, queue: .main
+        ) { [weak self] notification in
+            let value = notification.userInfo?[RuuviCloudMeasurementCommit.userInfoKey]
+            guard let commit = value as? RuuviCloudMeasurementCommit else { return }
+            MainActor.assumeIsolated {
+                guard let self, self.cloudSyncExpected else { return }
+                // Commit order, not measurement age, determines the currently persisted record.
+                self.committedDates[commit.mac.uppercased()] = commit.date
+            }
         }
         logoutToken = notificationCenter.addObserver(
             forName: .RuuviAuthServiceDidLogout, object: nil, queue: .main
@@ -84,12 +97,6 @@ final class MeasurementFreshnessGate {
         case .started(let id):
             cloudSyncExpected = true
             activeSyncs[id] = uptime()
-        case .recordsSaved(let dates):
-            guard cloudSyncExpected else { return }
-            for (mac, date) in dates {
-                let key = mac.uppercased()
-                committedDates[key] = max(committedDates[key] ?? .distantPast, date)
-            }
         case .finished(let id):
             guard activeSyncs.removeValue(forKey: id) != nil else { return }
             if activeSyncs.isEmpty { initialCloudSyncCompleted = true }
@@ -103,6 +110,7 @@ final class MeasurementFreshnessGate {
 
     deinit {
         if let syncToken { notificationCenter.removeObserver(syncToken) }
+        if let recordToken { notificationCenter.removeObserver(recordToken) }
         if let logoutToken { notificationCenter.removeObserver(logoutToken) }
     }
 }

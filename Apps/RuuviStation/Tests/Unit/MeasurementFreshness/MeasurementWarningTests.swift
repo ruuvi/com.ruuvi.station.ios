@@ -376,6 +376,10 @@ private final class MeasurementCellDelegate: DashboardCellDelegate {
     var refreshedSensorID: String?
     func didTapMeasurementWarning(for snapshot: RuuviTagCardSnapshot) { tappedSensorID = snapshot.id }
     func didReceiveFreshMeasurements(for snapshot: RuuviTagCardSnapshot) { refreshedSensorID = snapshot.id }
-    func didTapAlertButton(for snapshot: RuuviTagCardSnapshot) {}
-    func didChangeMoreButtonMenuPresentationState(for snapshot: RuuviTagCardSnapshot, isPresented: Bool) {}
+    func didTapAlertButton(for _: RuuviTagCardSnapshot) {
+        // Alert actions are outside the measurement freshness tests.
+    }
+    func didChangeMoreButtonMenuPresentationState(for _: RuuviTagCardSnapshot, isPresented _: Bool) {
+        // Menu presentation is outside the measurement freshness tests.
+    }
 }

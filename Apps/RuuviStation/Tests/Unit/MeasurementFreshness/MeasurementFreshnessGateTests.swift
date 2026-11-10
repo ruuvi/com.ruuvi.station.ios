@@ -94,7 +94,7 @@ final class MeasurementFreshnessGateTests: XCTestCase {
         gate.beginForegroundSession(expectingCloudSync: true)
         let cloud = snapshot(cloud: true)
         let id = start()
-        post(.recordsSaved(["AA:BB:CC:DD:EE:FF": now]))
+        commit(now, mac: "AA:BB:CC:DD:EE:FF")
         finish(id)
         uptime = 30
         XCTAssertFalse(warns(cloud))
@@ -107,7 +107,7 @@ final class MeasurementFreshnessGateTests: XCTestCase {
         let cloud = snapshot(cloud: true)
         let id = start()
         cloud.lastUpdated = now
-        post(.recordsSaved(["aa:bb:cc:dd:ee:ff": now]))
+        commit(now, mac: "aa:bb:cc:dd:ee:ff")
         finish(id)
         uptime = 30
         XCTAssertFalse(warns(cloud))
@@ -118,7 +118,7 @@ final class MeasurementFreshnessGateTests: XCTestCase {
         let cloud = snapshot(cloud: true)
         let id = start()
         let committed = now.addingTimeInterval(-4000)
-        post(.recordsSaved(["AA:BB:CC:DD:EE:FF": committed]))
+        commit(committed, mac: "AA:BB:CC:DD:EE:FF")
         finish(id)
         uptime = 30
         XCTAssertFalse(warns(cloud))
@@ -126,10 +126,26 @@ final class MeasurementFreshnessGateTests: XCTestCase {
         XCTAssertTrue(warns(cloud))
     }
 
+    func testOlderFinalCloudCommitReplacesSupersededCatchUpTimestamp() {
+        gate.beginForegroundSession(expectingCloudSync: true)
+        let first = start()
+        let second = start()
+        let cloud = snapshot(cloud: true)
+        commit(now)
+        let finalStoredDate = now.addingTimeInterval(-4000)
+        commit(finalStoredDate)
+        cloud.lastUpdated = finalStoredDate
+        uptime = 30
+        finish(second)
+        XCTAssertFalse(warns(cloud))
+        finish(first)
+        XCTAssertTrue(warns(cloud), "The final persisted old reading must not wait for a superseded newer timestamp")
+    }
+
     func testLostSnapshotUpdateAlsoHasABoundedFallback() {
         gate.beginForegroundSession(expectingCloudSync: true)
         let id = start()
-        post(.recordsSaved(["AA:BB:CC:DD:EE:FF": now]))
+        commit(now, mac: "AA:BB:CC:DD:EE:FF")
         finish(id)
         uptime = 60
         XCTAssertTrue(warns(snapshot(cloud: true)))
@@ -189,6 +205,12 @@ final class MeasurementFreshnessGateTests: XCTestCase {
         XCTAssertTrue(warns(local, timeout: 1))
         XCTAssertFalse(warns(local, timeout: 3600))
         XCTAssertFalse(gate.shouldShowWarning(for: nil, timeoutSeconds: 1, now: now))
+    }
+
+    private func commit(_ date: Date, mac: String = "AA:BB:CC:DD:EE:FF") {
+        let record = RuuviCloudMeasurementCommit(mac: mac, date: date)
+        center.post(name: RuuviCloudMeasurementCommit.notification, object: nil,
+                    userInfo: [RuuviCloudMeasurementCommit.userInfoKey: record])
     }
 
     private func post(_ event: RuuviCloudSyncEvent) {

@@ -32,7 +32,7 @@ final class SnackbarTestAnimator {
     private var completions: [(Bool) -> Void] = []
 
     func animate(
-        duration: TimeInterval, options: UIView.AnimationOptions,
+        duration _: TimeInterval, options _: UIView.AnimationOptions,
         animations: @escaping () -> Void, completion: ((Bool) -> Void)?
     ) {
         beforeAnimation?()
@@ -47,7 +47,7 @@ final class SnackbarTestAnimator {
     }
 
     static func immediately(
-        duration: TimeInterval, options: UIView.AnimationOptions,
+        duration _: TimeInterval, options _: UIView.AnimationOptions,
         animations: @escaping () -> Void, completion: ((Bool) -> Void)?
     ) {
         animations()
