@@ -188,6 +188,24 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         TEST_HOST: "$(BUILT_PRODUCTS_DIR)/station.app/station"
         BUNDLE_LOADER: "$(TEST_HOST)"
+  station.measurementFreshnessTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests/Unit/MeasurementFreshness
+    dependencies:
+      - target: station
+      - target: RuuviLocal
+        embed: false
+      - target: RuuviOntology
+        embed: false
+      - target: RuuviService
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/station.app/station"
+        BUNDLE_LOADER: "$(TEST_HOST)"
 schemes:
   station:
     build:
@@ -197,3 +215,4 @@ schemes:
       targets:
         - station.alertTests
         - station.marketingConsentTests
+        - station.measurementFreshnessTests

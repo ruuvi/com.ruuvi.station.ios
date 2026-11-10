@@ -25,7 +25,6 @@ final class CardsBaseViewController: UIViewController {
             static let tagNameLabelPadding = UIEdgeInsets(top: 4, left: 4, bottom: 6, right: 4)
             static let tabContainerVerticalPadding: CGFloat = 8
             static let sourceUpdateStackSpacing: CGFloat = 6
-            static let dataSourceIconMaxWidth: CGFloat = 22
             static let footerStackSpacing: CGFloat = 4
             static let footerStackHorizontalPadding: CGFloat = 20
             static let footerStackHeight: CGFloat = 24
@@ -47,11 +46,10 @@ final class CardsBaseViewController: UIViewController {
             static let updatedAtLabelFontSize: CGFloat = 10
             static let tagNameLabelLines: Int = 2
             static let pageTitleLabelLines: Int = 1
-            static let updatedAtLabelLines: Int = 0
+            static let updatedAtLabelLines: Int = 1
         }
 
         enum Alpha {
-            static let dataSourceIconAlpha: CGFloat = 0.7
             static let whiteWithAlpha: CGFloat = 0.8
             static let chartBackgroundVisible: CGFloat = 1
             static let chartBackgroundHidden: CGFloat = 0
@@ -71,6 +69,14 @@ final class CardsBaseViewController: UIViewController {
     // MARK: Properties
     /// Mapping of tab identifier to its view controller
     private let tabs: [CardsMenuType: UIViewController]
+    private let freshnessService: MeasurementFreshnessService
+    private lazy var freshnessBinding: MeasurementFreshnessBinding = {
+        let binding = MeasurementFreshnessBinding(button: dataSourceButton, timestamp: updatedAtLabel)
+        binding.onFresh = { [weak self] snapshot in self?.measurementWarningPresenter.dismiss(for: snapshot.id) }
+        return binding
+    }()
+    private let measurementWarningPresenter = MeasurementWarningPresenter()
+    private var isScreenVisible = false
 
     /// Currently visible tab
     private var activeTab: CardsMenuType
@@ -83,6 +89,9 @@ final class CardsBaseViewController: UIViewController {
     private var currentSnapshotIndex: Int = 0
     private var currentSnapshot: RuuviTagCardSnapshot? {
         didSet {
+            guard oldValue !== currentSnapshot else { return }
+            measurementWarningPresenter.dismiss()
+            freshnessBinding.bind(currentSnapshot, service: freshnessService)
             reconfigureSnapshotObservation()
         }
     }
@@ -215,25 +224,26 @@ final class CardsBaseViewController: UIViewController {
         return view
     }()
 
-    private lazy var updatedAtLabel: UILabel = {
-        let label = UILabel()
+    private lazy var updatedAtLabel: MeasurementTimestampLabel = {
+        let label = MeasurementTimestampLabel()
+        label.onTap = { [weak self] in self?.didTapMeasurementWarning() }
+        label.accessibilityIdentifier = "measurement-timestamp"
         label.textColor = .white.withAlphaComponent(Constants.Alpha.whiteWithAlpha)
         label.textAlignment = .left
         label.numberOfLines = Constants.Typography.updatedAtLabelLines
+        label.lineBreakMode = .byTruncatingTail
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         label.font = UIFont.ruuviCaption2()
         return label
     }()
 
-    private lazy var dataSourceIconView: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
-        iv.backgroundColor = .clear
-        iv.alpha = Constants.Alpha.dataSourceIconAlpha
-        iv.tintColor = .white.withAlphaComponent(Constants.Alpha.whiteWithAlpha)
-        return iv
+    private lazy var dataSourceButton: SensorDataSourceButton = {
+        let button = SensorDataSourceButton()
+        button.tintColor = .white.withAlphaComponent(Constants.Alpha.whiteWithAlpha)
+        button.addTarget(self, action: #selector(didTapMeasurementWarning), for: .touchUpInside)
+        return button
     }()
 
-    private var dataSourceIconViewWidthConstraint: NSLayoutConstraint!
     private var footerStackHeightConstraint: NSLayoutConstraint!
     private var footerBottomToSafeConstraint: NSLayoutConstraint!
     private var footerBottomToViewConstraint: NSLayoutConstraint!
@@ -242,8 +252,10 @@ final class CardsBaseViewController: UIViewController {
     // MARK: - Init
     init(
         tabs: [CardsMenuType: UIViewController],
-        activeTab: CardsMenuType
+        activeTab: CardsMenuType,
+        freshnessService: MeasurementFreshnessService = .shared
     ) {
+        self.freshnessService = freshnessService
         self.tabs = tabs
         self.activeTab = activeTab
         super.init(nibName: nil, bundle: nil)
@@ -258,7 +270,6 @@ final class CardsBaseViewController: UIViewController {
         super.viewDidLoad()
         setUpUI()
         startObservingAppState()
-        TimestampUpdateService.shared.addSubscriber(self)
         updateCurrentSnapshotUI()
     }
 
@@ -268,21 +279,30 @@ final class CardsBaseViewController: UIViewController {
         output?.viewWillAppear()
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        isScreenVisible = true
+        freshnessBinding.bind(currentSnapshot, service: freshnessService)
+        updateTimestampLabel()
+    }
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        isScreenVisible = false
+        freshnessBinding.bind(nil, service: nil)
+        measurementWarningPresenter.dismiss(animated: false)
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
 
     override func didMove(toParent parent: UIViewController?) {
         super.didMove(toParent: parent)
         if parent == nil {
-            TimestampUpdateService.shared.removeSubscriber(self)
+            freshnessBinding.bind(nil, service: nil)
         }
     }
 
     deinit {
         NotificationCenter.default.removeObserver(self)
-        TimestampUpdateService.shared.removeSubscriber(self)
     }
 }
 
@@ -497,7 +517,7 @@ private extension CardsBaseViewController {
 
         let sourceAndUpdateStack = UIStackView(
             arrangedSubviews: [
-                dataSourceIconView,
+                dataSourceButton,
                 updatedAtLabel,
             ]
         )
@@ -505,11 +525,7 @@ private extension CardsBaseViewController {
         sourceAndUpdateStack.spacing = Constants.Layout.sourceUpdateStackSpacing
         sourceAndUpdateStack.distribution = .fill
 
-        dataSourceIconViewWidthConstraint = dataSourceIconView.widthAnchor
-            .constraint(
-                lessThanOrEqualToConstant: Constants.Layout.dataSourceIconMaxWidth
-            )
-        dataSourceIconViewWidthConstraint.isActive = true
+        dataSourceButton.widthAnchor.constraint(equalToConstant: SensorDataSourceButton.width).isActive = true
 
         let footerStack = UIStackView(
             arrangedSubviews: [
@@ -694,7 +710,10 @@ private extension CardsBaseViewController {
     }
 
     func updateCurrentSnapshotUI() {
-        guard currentSnapshotIndex < currentSnapshots.count else {
+        guard currentSnapshots.indices.contains(currentSnapshotIndex) else {
+            currentSnapshot = nil
+            updateTimestampLabel()
+            updateFooterVisibility(for: activeTab, animated: false)
             return
         }
 
@@ -744,14 +763,13 @@ private extension CardsBaseViewController {
 
     // MARK: - Footer Update Methods
     private func updateFooter() {
-        guard currentSnapshotIndex < currentSnapshots.count else {
+        guard currentSnapshots.indices.contains(currentSnapshotIndex) else {
             updateFooterVisibility(for: activeTab, animated: false)
             return
         }
 
         let currentSnapshot = currentSnapshots[currentSnapshotIndex]
 
-        updateSourceIcon(for: currentSnapshot.displayData.source)
         batteryLevelView.isHidden = !currentSnapshot.displayData.batteryNeedsReplacement
         updateTimestampLabel()
         updateFooterVisibility(for: activeTab, animated: false)
@@ -768,11 +786,12 @@ private extension CardsBaseViewController {
               footerBottomToSafeConstraint != nil else {
             return
         }
-        let hasSnapshot = currentSnapshotIndex < currentSnapshots.count
+        let hasSnapshot = currentSnapshots.indices.contains(currentSnapshotIndex)
         let shouldExtendToBottom = tab == .alerts || tab == .settings
         applyFooterBottomLayout(extendToBottom: shouldExtendToBottom)
 
         let shouldCollapse = !hasSnapshot || tab == .alerts || tab == .settings
+        if shouldCollapse { measurementWarningPresenter.dismiss() }
         let targetAlpha: CGFloat = shouldCollapse ? 0 : 1
         footerStackHeightConstraint.constant = shouldCollapse ? 0 : Constants.Layout.footerStackHeight
         footerView.isUserInteractionEnabled = !shouldCollapse
@@ -816,25 +835,11 @@ private extension CardsBaseViewController {
         }
     }
 
-    private func updateSourceIcon(for source: RuuviTagSensorRecordSource?) {
-        guard let source = source else {
-            dataSourceIconView.image = nil
-            return
-        }
-
-        switch source {
-        case .unknown:
-            dataSourceIconView.image = nil
-        case .advertisement, .bgAdvertisement:
-            dataSourceIconView.image = RuuviAsset.iconBluetooth.image
-        case .heartbeat, .log:
-            dataSourceIconView.image = RuuviAsset.iconBluetoothConnected.image
-        case .ruuviNetwork:
-            dataSourceIconView.image = RuuviAsset.iconGateway.image
-        }
-
-        dataSourceIconView.image = dataSourceIconView.image?
-            .withRenderingMode(.alwaysTemplate)
+    @objc private func didTapMeasurementWarning() {
+        guard let currentSnapshot, isScreenVisible, dataSourceButton.isStale,
+              activeTab == .measurement || activeTab == .graph,
+              currentSnapshot.isOutdated else { return }
+        measurementWarningPresenter.show(for: currentSnapshot.id, in: view)
     }
 
     func reconfigureSnapshotObservation() {
@@ -861,12 +866,14 @@ private extension CardsBaseViewController {
             .store(in: &cancellables)
 
         currentSnapshot.$alertData
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.menuBarView.updateAlertState(for: currentSnapshot)
             }
             .store(in: &cancellables)
 
         currentSnapshot.$metadata
+            .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.menuBarView.updateAlertState(for: currentSnapshot)
             }
@@ -874,20 +881,9 @@ private extension CardsBaseViewController {
     }
 }
 
-// MARK: - TimestampUpdateable
-extension CardsBaseViewController: TimestampUpdateable {
+extension CardsBaseViewController {
     func updateTimestampLabel() {
-        guard currentSnapshotIndex < currentSnapshots.count else {
-            updatedAtLabel.text = RuuviLocalization.Cards.UpdatedLabel.NoData.message
-            return
-        }
-
-        let currentSnapshot = currentSnapshots[currentSnapshotIndex]
-        if let date = currentSnapshot.lastUpdated {
-            updatedAtLabel.text = date.ruuviAgo()
-        } else {
-            updatedAtLabel.text = RuuviLocalization.Cards.UpdatedLabel.NoData.message
-        }
+        freshnessBinding.updateTimestampLabel()
     }
 }
 
@@ -932,6 +928,10 @@ extension CardsBaseViewController: CardsBaseViewInput {
 
     func setSnapshots(_ snapshots: [RuuviTagCardSnapshot]) {
         currentSnapshots = snapshots
+        if !currentSnapshots.indices.contains(currentSnapshotIndex) {
+            currentSnapshot = nil
+            updateTimestampLabel()
+        }
     }
 
     func updateSnapshot(_ snapshot: RuuviTagCardSnapshot) {

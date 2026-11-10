@@ -137,6 +137,7 @@ private final class ConsentFlags: RuuviLocalFlags {
     var showMarketingPreference = true
     var marketingConsentPromptIntervalMinutes = 1
     var showDashboardSensorSearch = false
+    var measurementStaleTimeoutSeconds = RuuviMeasurementFreshness.defaultTimeoutSeconds
     var graphDownsampleMaximumPoints = 3000
 }
 

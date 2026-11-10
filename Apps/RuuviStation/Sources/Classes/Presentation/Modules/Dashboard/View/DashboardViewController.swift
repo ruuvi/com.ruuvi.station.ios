@@ -244,6 +244,7 @@ final class DashboardViewController: UIViewController {
     private var isListRefreshable: Bool = true
     private var isPulling: Bool = false
     private var isContextMenuPresented: Bool = false
+    private let measurementWarningPresenter = MeasurementWarningPresenter()
 
     // MARK: - Drag and reorder Properties
     private var currentSnapshotIdentifiers: [RuuviTagCardSnapshot] = []
@@ -300,6 +301,7 @@ extension DashboardViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        measurementWarningPresenter.dismiss(animated: false)
         let shouldAnimateTransition = shouldAnimate(animated)
         if #available(iOS 26.0, *) {
             navigationController?.setNavigationBarHidden(false, animated: shouldAnimateTransition)
@@ -637,12 +639,12 @@ private extension DashboardViewController {
             return UICollectionViewCell()
         }
 
+        cell.delegate = self
         cell
             .configure(
                 with: snapshot,
                 dashboardType: dashboardType
             )
-        cell.delegate = self
         cell.setMenu(cardContextMenuOption(for: indexPath))
         return cell
     }
@@ -707,6 +709,10 @@ private extension DashboardViewController {
         with newSnapshots: [RuuviTagCardSnapshot],
         animated: Bool = true
     ) {
+        if let sensorID = measurementWarningPresenter.sensorID,
+           !newSnapshots.contains(where: { $0.id == sensorID }) {
+            measurementWarningPresenter.dismiss()
+        }
         guard !isDragSessionInProgress, !isContextMenuPresented else { return }
         let shouldAnimateDiff = shouldAnimate(animated) && hasAppliedInitialNonEmptySnapshot
 
@@ -1349,6 +1355,7 @@ extension DashboardViewController: UICollectionViewDelegate {
         )
 
         if scrollView.isDragging {
+            measurementWarningPresenter.dismiss()
             refresher.fadeIn()
             isListRefreshable = false
         }
@@ -1498,6 +1505,16 @@ extension DashboardViewController: NewDashboardViewInput {
 
 // MARK: - RuuviTagDashboardCellDelegate
 extension DashboardViewController: DashboardCellDelegate {
+    func didTapMeasurementWarning(for snapshot: RuuviTagCardSnapshot) {
+        guard !isDragSessionInProgress, !isContextMenuPresented,
+              snapshot.isOutdated else { return }
+        measurementWarningPresenter.show(for: snapshot.id, in: view)
+    }
+
+    func didReceiveFreshMeasurements(for snapshot: RuuviTagCardSnapshot) {
+        measurementWarningPresenter.dismiss(for: snapshot.id)
+    }
+
     func didTapAlertButton(for snapshot: RuuviTagCardSnapshot) {
         output.viewDidTriggerAlerts(for: snapshot)
     }

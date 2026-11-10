@@ -6,6 +6,9 @@ import RuuviOntology
 import RuuviLocalization
 
 protocol DashboardCellDelegate: AnyObject {
+    func didTapMeasurementWarning(for snapshot: RuuviTagCardSnapshot)
+    func didReceiveFreshMeasurements(for snapshot: RuuviTagCardSnapshot)
+
     func didTapAlertButton(
         for snapshot: RuuviTagCardSnapshot
     )
@@ -57,8 +60,6 @@ struct DashboardCellLayoutConstants {
     static let footerHeight: CGFloat = 24
     static let footerTrailingPadding: CGFloat = 14
     static let sourceIconToTextSpacing: CGFloat = 6
-    static let sourceIconRegularWidth: CGFloat = 22
-    static let sourceIconCompactWidth: CGFloat = 16
 
     // Image cell specific properties
     static let imageWidthRatio: CGFloat = 0.25
@@ -154,7 +155,7 @@ struct DashboardCellLayoutConstants {
 }
 
 // swiftlint:disable:next type_body_length
-class DashboardCell: UICollectionViewCell, TimestampUpdateable {
+class DashboardCell: UICollectionViewCell {
 
     // MARK: - Configuration
     private var dashboardType: DashboardType = .simple
@@ -305,28 +306,26 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
     // Indicator view cache keyed by measurement type
     private var indicatorViewCache: [MeasurementDisplayVariant: DashboardIndicatorView] = [:]
 
-    private lazy var dataSourceIconView: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
-        iv.backgroundColor = .clear
-        iv.alpha = 0.7
-        iv.tintColor = RuuviColor
-            .dashboardIndicator.color
-            .withAlphaComponent(
-                0.8
-            )
-        return iv
+    private lazy var dataSourceButton: SensorDataSourceButton = {
+        let button = SensorDataSourceButton()
+        button.tintColor = RuuviColor.dashboardIndicator.color.withAlphaComponent(0.8)
+        button.addTarget(self, action: #selector(didTapMeasurementWarning), for: .touchUpInside)
+        return button
     }()
 
-    private lazy var updatedAtLabel: UILabel = {
-        let label = UILabel()
+    private lazy var updatedAtLabel: MeasurementTimestampLabel = {
+        let label = MeasurementTimestampLabel()
+        label.onTap = { [weak self] in self?.didTapMeasurementWarning() }
+        label.accessibilityIdentifier = "measurement-timestamp"
         label.textColor = RuuviColor
             .dashboardIndicator.color
             .withAlphaComponent(
                 0.5
             )
         label.textAlignment = .left
-        label.numberOfLines = 0
+        label.numberOfLines = 1
+        label.lineBreakMode = .byTruncatingTail
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         label.font = UIFont.ruuviCaption2()
         return label
     }()
@@ -335,12 +334,18 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
     private lazy var noDataView = NoDataView()
 
     // Constraints for layout switching
-    private var dataSourceIconViewWidthConstraint: NSLayoutConstraint!
     private var nameLeadingConstraint: NSLayoutConstraint!
     private var gridTopConstraint: NSLayoutConstraint!
     private var noDataViewLeadingConstraint: NSLayoutConstraint!
 
     // MARK: - Properties
+    var freshnessService = MeasurementFreshnessService.shared
+    var liveMeasurementUpdatesEnabled = true
+    private lazy var freshnessBinding: MeasurementFreshnessBinding = {
+        let binding = MeasurementFreshnessBinding(button: dataSourceButton, timestamp: updatedAtLabel)
+        binding.onFresh = { [weak self] snapshot in self?.delegate?.didReceiveFreshMeasurements(for: snapshot) }
+        return binding
+    }()
     private var currentSnapshot: RuuviTagCardSnapshot?
     private var cancellables = Set<AnyCancellable>()
     weak var delegate: DashboardCellDelegate?
@@ -403,18 +408,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         alertBadgeView.hideBadge()
         alertBadgeView.isHidden = true
         alertButton.isUserInteractionEnabled = false
-        dataSourceIconViewWidthConstraint.constant = DashboardCellLayoutConstants.sourceIconCompactWidth
-        TimestampUpdateService.shared
-            .removeSubscriber(
-                self
-            )
-    }
-
-    deinit {
-        TimestampUpdateService.shared
-            .removeSubscriber(
-                self
-            )
+        freshnessBinding.bind(nil, service: nil)
     }
 
     // MARK: - Configuration
@@ -425,7 +419,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         dashboardType: DashboardType
     ) {
         let dashboardTypeChanged = self.dashboardType != dashboardType
-        let snapshotChanged = currentSnapshot != snapshot
+        let snapshotChanged = currentSnapshot !== snapshot
 
         // Set dashboard type and update layout if changed
         if dashboardTypeChanged {
@@ -479,22 +473,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
                     in: &cancellables
                 )
 
-            snapshot.$lastUpdated
-                .receive(
-                    on: DispatchQueue.main
-                )
-                .sink { [weak self] _ in
-                    self?.updateTimestampLabel()
-                }
-                .store(
-                    in: &cancellables
-                )
-
-            // Subscribe to timer updates
-            TimestampUpdateService.shared
-                .addSubscriber(
-                    self
-                )
+            freshnessBinding.bind(snapshot, service: liveMeasurementUpdatesEnabled ? freshnessService : nil)
 
             // Initial update
             updateDisplayData(
@@ -615,9 +594,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         )
 
         // Update source icon
-        updateSourceIcon(
-            for: displayData.source
-        )
+        freshnessBinding.updateTimestampLabel()
 
         // Update battery and no data states
         batteryLevelView.isHidden = !displayData.batteryNeedsReplacement
@@ -646,16 +623,7 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
     }
 
     func updateTimestampLabel() {
-        guard let snapshot = currentSnapshot else {
-            return
-        }
-
-        if let date = snapshot.lastUpdated {
-            updatedAtLabel.text = date
-                .ruuviAgo()
-        } else {
-            updatedAtLabel.text = RuuviLocalization.Cards.UpdatedLabel.NoData.message
-        }
+        freshnessBinding.updateTimestampLabel()
     }
 
     // MARK: - Indicator Grid Building
@@ -989,36 +957,9 @@ class DashboardCell: UICollectionViewCell, TimestampUpdateable {
         }
     }
 
-    private func updateSourceIcon(
-        for source: RuuviTagSensorRecordSource?
-    ) {
-        guard let source = source else {
-            dataSourceIconView.image = nil
-            return
-        }
-
-        switch source {
-        case .unknown:
-            dataSourceIconView.image = nil
-        case .advertisement, .bgAdvertisement:
-            dataSourceIconView.image = RuuviAsset.iconBluetooth.image
-        case .heartbeat, .log:
-            dataSourceIconView.image = RuuviAsset.iconBluetoothConnected.image
-        case .ruuviNetwork:
-            dataSourceIconView.image = RuuviAsset.iconGateway.image
-        }
-
-        switch source {
-        case .ruuviNetwork:
-            dataSourceIconViewWidthConstraint.constant = DashboardCellLayoutConstants.sourceIconRegularWidth
-        default:
-            dataSourceIconViewWidthConstraint.constant = DashboardCellLayoutConstants.sourceIconCompactWidth
-        }
-
-        dataSourceIconView.image = dataSourceIconView.image?
-            .withRenderingMode(
-                .alwaysTemplate
-            )
+    @objc private func didTapMeasurementWarning() {
+        guard dataSourceButton.isStale, let currentSnapshot else { return }
+        delegate?.didTapMeasurementWarning(for: currentSnapshot)
     }
 
     private func updateAlertBell(
@@ -1312,7 +1253,7 @@ extension DashboardCell {
         // Footer Section
         let sourceAndUpdateStack = UIStackView(
             arrangedSubviews: [
-                dataSourceIconView,
+                dataSourceButton,
                 updatedAtLabel,
             ]
         )
@@ -1320,11 +1261,7 @@ extension DashboardCell {
         sourceAndUpdateStack.spacing = DashboardCellLayoutConstants.sourceIconToTextSpacing
         sourceAndUpdateStack.distribution = .fill
 
-        dataSourceIconViewWidthConstraint = dataSourceIconView.widthAnchor
-            .constraint(
-                lessThanOrEqualToConstant: DashboardCellLayoutConstants.sourceIconRegularWidth
-            )
-        dataSourceIconViewWidthConstraint.isActive = true
+        dataSourceButton.widthAnchor.constraint(equalToConstant: SensorDataSourceButton.width).isActive = true
 
         let footerStack = UIStackView(
             arrangedSubviews: [
@@ -1336,7 +1273,7 @@ extension DashboardCell {
         )
         footerStack.spacing = 4
         footerStack.axis = .horizontal
-        footerStack.distribution = .fillProportionally
+        footerStack.distribution = .fill
 
         containerView
             .addSubview(

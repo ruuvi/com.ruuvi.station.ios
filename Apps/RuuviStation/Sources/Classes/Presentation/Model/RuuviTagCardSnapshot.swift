@@ -25,6 +25,13 @@ public final class RuuviTagCardSnapshot: ObservableObject, Hashable, Equatable {
     @Published var calibration: RuuviTagCardSnapshotCalibrationData
     @Published var capabilities: RuuviTagCardSnapshotCapabilities
     @Published var lastUpdated: Date?
+    @Published private(set) var isOutdated = false
+
+    @MainActor
+    func updateMeasurementFreshness(_ isOutdated: Bool) {
+        guard self.isOutdated != isOutdated else { return }
+        self.isOutdated = isOutdated
+    }
 
     public var anyIndicatorAlertPublisher: AnyPublisher<[RuuviTagCardSnapshotAlertConfig], Never> {
         return $displayData

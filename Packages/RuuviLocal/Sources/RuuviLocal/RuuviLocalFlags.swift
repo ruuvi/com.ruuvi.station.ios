@@ -38,6 +38,9 @@ public protocol RuuviLocalFlags {
     /// expands into a search bar to filter sensors by name.
     var showDashboardSensorSearch: Bool { get set }
 
+    /// Age in seconds after which dashboard and sensor card measurements are marked outdated.
+    var measurementStaleTimeoutSeconds: Int { get set }
+
     /// Maximum number of points used for graph downsampling.
     /// Defaults to 3000.
     var graphDownsampleMaximumPoints: Int { get set }

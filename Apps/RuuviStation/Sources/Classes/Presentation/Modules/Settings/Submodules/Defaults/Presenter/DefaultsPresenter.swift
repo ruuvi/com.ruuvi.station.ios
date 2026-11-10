@@ -83,6 +83,7 @@ extension DefaultsPresenter {
             buildShowMarketingPreference(),
             buildMarketingConsentPromptInterval(),
             buildShowDashboardSensorSearch(),
+            buildMeasurementStaleTimeout(),
         ]
     }
 
@@ -615,6 +616,27 @@ extension DefaultsPresenter {
                 .getBool(from: bool)
         }
 
+        return viewModel
+    }
+
+    private func buildMeasurementStaleTimeout() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Outdated measurement timeout"
+        viewModel.integer.value = flags.measurementStaleTimeoutSeconds
+        viewModel.unit = .seconds
+        viewModel.type.value = .stepper
+        viewModel.integerEditor = DefaultsIntegerEditorConfiguration(
+            range: RuuviMeasurementFreshness.allowedTimeoutSeconds,
+            message: "Enter a timeout in seconds (minimum 1). Applies to dashboard and sensor cards.",
+            presets: [
+                .init(title: "1 second (testing)", value: 1),
+                .init(title: "1 hour (default)", value: RuuviMeasurementFreshness.defaultTimeoutSeconds),
+            ],
+            formatValue: { "\($0) \(RuuviLocalization.Defaults.Interval.Sec.string)" }
+        )
+        bind(viewModel.integer, fire: false) { observer, value in
+            observer.flags.measurementStaleTimeoutSeconds = value.bound
+        }
         return viewModel
     }
 
