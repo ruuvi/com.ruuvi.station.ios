@@ -63,6 +63,9 @@ xcuserdata
 Utilities/Docker/*.tar.gz
 .swiftpm
 Package.resolved
+# Track lockfiles for the cloud alert notification packages.
+!Packages/RuuviNotification/Package.resolved
+!Packages/RuuviService/Package.resolved
 /build
 
 # CocoaPods

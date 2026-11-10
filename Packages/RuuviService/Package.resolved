@@ -1,0 +1,68 @@
+{
+  "pins" : [
+    {
+      "identity" : "btkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ruuvi/BTKit",
+      "state" : {
+        "branch" : "master",
+        "revision" : "4b8e0cd124583427e8292ed2dc2f12f26f0ccdb4"
+      }
+    },
+    {
+      "identity" : "future",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kean/Future",
+      "state" : {
+        "revision" : "8a5363d3581cd0c1c1f4116616496ad46ef17049",
+        "version" : "1.3.0"
+      }
+    },
+    {
+      "identity" : "grdb.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/groue/GRDB.swift",
+      "state" : {
+        "revision" : "5ee47c3c2765bdfde0f44c2ea9a263f6aa252d63",
+        "version" : "4.14.0"
+      }
+    },
+    {
+      "identity" : "humidity",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rinat-enikeev/Humidity",
+      "state" : {
+        "revision" : "fb909b332a1f17a6453587dbeaebcfe7c6712a72",
+        "version" : "0.1.5"
+      }
+    },
+    {
+      "identity" : "keychainaccess",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kishikawakatsumi/KeychainAccess",
+      "state" : {
+        "revision" : "84e546727d66f1adc5439debad16270d0fdd04e7",
+        "version" : "4.2.2"
+      }
+    },
+    {
+      "identity" : "libxlsxwriter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jmcnamara/libxlsxwriter",
+      "state" : {
+        "branch" : "main",
+        "revision" : "fdca3e44af6138cefb3f0fd2016ca9cdf5ea6d1e"
+      }
+    },
+    {
+      "identity" : "xlsxwriter.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ruuvi/xlsxwriter.swift",
+      "state" : {
+        "branch" : "SPM",
+        "revision" : "f4c0e101ce5ec0e5dbd762121b666945e1a2b68a"
+      }
+    }
+  ],
+  "version" : 2
+}
