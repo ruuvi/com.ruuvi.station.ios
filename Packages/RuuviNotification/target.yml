@@ -19,3 +19,28 @@ targets:
     - target: RuuviLocal
     - target: RuuviStorage
     - target: RuuviService
+    - target: RuuviCloud
+    - target: RuuviUser
+  RuuviNotificationTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+    - path: Tests/RuuviNotificationTests
+    dependencies:
+    - target: RuuviNotification
+    - target: RuuviOntology
+    - target: RuuviStorage
+    - target: RuuviCloud
+    - package: Future
+    - package: Humidity
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  RuuviNotificationTests:
+    build:
+      targets:
+        RuuviNotificationTests: all
+    test:
+      targets:
+      - RuuviNotificationTests

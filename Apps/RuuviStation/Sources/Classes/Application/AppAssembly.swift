@@ -628,7 +628,9 @@ private final class CoreAssembly: Assembly {
                 ruuviStorage: ruuviStorage,
                 idPersistence: idPersistence,
                 settings: settings,
-                ruuviAlertService: ruuviAlertService
+                ruuviAlertService: ruuviAlertService,
+                ruuviUser: r.resolve(RuuviUser.self)!,
+                ruuviCloud: r.resolve(RuuviCloud.self)!
             )
             return manager
         }.inObjectScope(.container)

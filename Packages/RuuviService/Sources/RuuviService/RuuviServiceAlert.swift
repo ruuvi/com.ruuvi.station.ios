@@ -234,6 +234,8 @@ public protocol RuuviServiceAlertDeprecated {
 }
 
 public protocol RuuviServiceAlertPhysicalSensor {
+    /// Update local state after a cloud update has already succeeded.
+    func unregister(type: AlertType, for sensor: PhysicalSensor)
     // physical sensor
     func hasRegistrations(for sensor: PhysicalSensor) -> Bool
     func isOn(type: AlertType, for sensor: PhysicalSensor) -> Bool

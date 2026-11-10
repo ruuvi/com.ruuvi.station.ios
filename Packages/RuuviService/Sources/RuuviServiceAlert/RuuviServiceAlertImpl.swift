@@ -2353,7 +2353,7 @@ public final class RuuviServiceAlertImpl: RuuviServiceAlert {
         postAlertDidChange(with: sensor, of: type)
     }
 
-    func unregister(type: AlertType, for sensor: PhysicalSensor) {
+    public func unregister(type: AlertType, for sensor: PhysicalSensor) {
         let type = normalizedCloudConnectionAlertType(type)
         if let luid = sensor.luid, let macId = sensor.macId {
             alertPersistence.unregister(type: type, for: luid.value)

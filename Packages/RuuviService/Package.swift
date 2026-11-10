@@ -71,7 +71,7 @@ let package = Package(
         .package(url: "https://github.com/ruuvi/xlsxwriter.swift", branch: "SPM"),
         .package(path: "../RuuviOntology"),
         .package(path: "../RuuviStorage"),
-        .package(path: "../RuuviLocalization"),
+        .package(path: "../../Common/RuuviLocalization"),
         .package(path: "../RuuviCloud"),
         .package(path: "../RuuviPool"),
         .package(path: "../RuuviLocal"),

@@ -1,8 +1,10 @@
 import Foundation
+import RuuviCloud
 import RuuviLocal
 import RuuviOntology
 import RuuviService
 import RuuviStorage
+import RuuviUser
 import UIKit
 // swiftlint:disable file_length
 import UserNotifications
@@ -37,6 +39,7 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
     private let idPersistence: RuuviLocalIDs
     private let settings: RuuviLocalSettings
     private let ruuviAlertService: RuuviServiceAlert
+    private let cloudAlertHandler: CloudAlertNotificationHandler
 
     private weak var output: RuuviNotificationLocalOutput?
 
@@ -44,12 +47,20 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
         ruuviStorage: RuuviStorage,
         idPersistence: RuuviLocalIDs,
         settings: RuuviLocalSettings,
-        ruuviAlertService: RuuviServiceAlert
+        ruuviAlertService: RuuviServiceAlert,
+        ruuviUser: RuuviUser,
+        ruuviCloud: RuuviCloud
     ) {
         self.ruuviStorage = ruuviStorage
         self.idPersistence = idPersistence
         self.settings = settings
         self.ruuviAlertService = ruuviAlertService
+        cloudAlertHandler = CloudAlertNotificationHandler(
+            ruuviStorage: ruuviStorage,
+            ruuviAlertService: ruuviAlertService,
+            ruuviUser: ruuviUser,
+            ruuviCloud: ruuviCloud
+        )
     }
 
     private let lowHigh = LocalAlertCategory(
@@ -579,7 +590,11 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
             options: .customDismissAction
         )
 
-        nc.setNotificationCategories([lowHighCategory, blastCategory])
+        nc.setNotificationCategories([
+            lowHighCategory,
+            blastCategory,
+            CloudAlertNotification.category(disableTitle: disableTitle),
+        ])
     }
 
     public func userNotificationCenter(
@@ -602,13 +617,13 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         }
     }
 
-    // swiftlint:disable:next cyclomatic_complexity
     public func userNotificationCenter(
         _: UNUserNotificationCenter,
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping () -> Void
     ) {
         let userInfo = response.notification.request.content.userInfo
+        if handleCloudAlertAction(response, completion: completionHandler) { return }
         var alertToDisable: (type: AlertType, uuid: String)?
         alertNotificationDebugLog(
             "AlertNotification",
@@ -646,6 +661,30 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
             }
         }
 
+        handleNotificationTap(userInfo: userInfo)
+
+        if let alertToDisable {
+            disable(type: alertToDisable.type, uuid: alertToDisable.uuid, completion: completionHandler)
+        } else {
+            completionHandler()
+        }
+    }
+
+    private func handleCloudAlertAction(
+        _ response: UNNotificationResponse,
+        completion: @escaping () -> Void
+    ) -> Bool {
+        guard response.actionIdentifier == CloudAlertNotification.disableActionIdentifier else { return false }
+        let category = response.notification.request.content.categoryIdentifier
+        guard category == CloudAlertNotification.categoryIdentifier else {
+            completion()
+            return true
+        }
+        cloudAlertHandler.handle(userInfo: response.notification.request.content.userInfo, completion: completion)
+        return true
+    }
+
+    private func handleNotificationTap(userInfo: [AnyHashable: Any]) {
         if let uuid = userInfo[lowHigh.uuidKey] as? String
             ?? userInfo[blast.uuidKey] as? String {
             NotificationCenter.default.post(name: .LNMDidReceive, object: nil, userInfo: [LNMDidReceiveKey.uuid: uuid])
@@ -655,12 +694,6 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         // Handle push notification tap
         if let macId = userInfo["id"] as? String {
             output?.notificationDidTap(for: macId)
-        }
-
-        if let alertToDisable {
-            disable(type: alertToDisable.type, uuid: alertToDisable.uuid, completion: completionHandler)
-        } else {
-            completionHandler()
         }
     }
 
@@ -817,24 +850,18 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         intervalPassed: Bool,
         completion: @escaping (Bool) -> Void
     ) {
-        if let mutedTill = ruuviAlertService.mutedTill(type: type, for: uuid) {
-            let isMuted = !(intervalPassed && mutedTill > Date())
-            alertNotificationDebugLog(
-                "AlertNotification",
-                "isMuted result uuid=\(uuid) type=\(type.rawValue) " +
-                    "intervalPassed=\(intervalPassed) mutedTill=\(mutedTill) " +
-                    "mutedTillActive=\(mutedTill > Date()) isMuted=\(isMuted)"
-            )
-            completion(isMuted)
-        } else {
-            let isMuted = !intervalPassed
-            alertNotificationDebugLog(
-                "AlertNotification",
-                "isMuted result uuid=\(uuid) type=\(type.rawValue) " +
-                    "intervalPassed=\(intervalPassed) mutedTill=nil isMuted=\(isMuted)"
-            )
-            completion(isMuted)
-        }
+        let mutedTill = ruuviAlertService.mutedTill(type: type, for: uuid)
+        let isMuted = Self.isMuted(intervalPassed: intervalPassed, mutedTill: mutedTill, now: Date())
+        alertNotificationDebugLog(
+            "AlertNotification",
+            "isMuted result uuid=\(uuid) type=\(type.rawValue) " +
+                "intervalPassed=\(intervalPassed) mutedTill=\(String(describing: mutedTill)) isMuted=\(isMuted)"
+        )
+        completion(isMuted)
+    }
+
+    static func isMuted(intervalPassed: Bool, mutedTill: Date?, now: Date) -> Bool {
+        !intervalPassed || (mutedTill.map { $0 > now } ?? false)
     }
 
     private func setTriggered(
