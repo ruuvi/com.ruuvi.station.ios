@@ -1,5 +1,6 @@
 import RuuviAnalytics
 import RuuviLocal
+import RuuviUser
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -21,6 +22,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let resolver = AppAssembly.shared.assembler.resolver
         let settings = appDelegate?.settings ?? resolver.resolve(RuuviLocalSettings.self)
 
+        beginMeasurementFreshnessSession()
+
         let appRouter = AppRouter()
         appRouter.settings = settings
         appRouter.ruuviAnalytics = resolver.resolve(RuuviAnalytics.self)
@@ -37,6 +40,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneWillEnterForeground(_: UIScene) {
+        beginMeasurementFreshnessSession()
         appDelegate?.appStateService.applicationWillEnterForeground(UIApplication.shared)
     }
 
@@ -64,6 +68,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 }
 
 private extension SceneDelegate {
+    func beginMeasurementFreshnessSession() {
+        let user = AppAssembly.shared.assembler.resolver.resolve(RuuviUser.self)
+        MeasurementFreshnessGate.shared.beginForegroundSession(expectingCloudSync: user?.isAuthorized == true)
+        TimestampUpdateService.shared.refresh()
+    }
+
     func handleConnectionOptions(_ connectionOptions: UIScene.ConnectionOptions) {
         if let userActivity = connectionOptions.userActivities.first(
             where: { $0.activityType == NSUserActivityTypeBrowsingWeb }

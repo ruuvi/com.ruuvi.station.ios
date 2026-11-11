@@ -144,6 +144,7 @@ final class DashboardCellPreviewContainerView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .clear
+        cell.liveMeasurementUpdatesEnabled = false
         cell.isUserInteractionEnabled = false
         cell.contentView.isUserInteractionEnabled = false
         addSubview(cell)
@@ -159,7 +160,4 @@ final class DashboardCellPreviewContainerView: UIView {
         cell.configure(with: snapshot, dashboardType: dashboardType)
     }
 
-    deinit {
-        cell.prepareForReuse()
-    }
 }

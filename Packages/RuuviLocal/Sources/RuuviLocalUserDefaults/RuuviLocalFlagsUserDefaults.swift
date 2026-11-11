@@ -40,6 +40,15 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     @UserDefault("RuuviFeatureFlags.showDashboardSensorSearch", defaultValue: false)
     var showDashboardSensorSearch: Bool
 
+    @UserDefault("RuuviFeatureFlags.measurementStaleTimeoutSeconds",
+                 defaultValue: RuuviMeasurementFreshness.defaultTimeoutSeconds)
+    private var storedMeasurementStaleTimeoutSeconds: Int
+
+    var measurementStaleTimeoutSeconds: Int {
+        get { RuuviMeasurementFreshness.normalizedTimeout(storedMeasurementStaleTimeoutSeconds) }
+        set { storedMeasurementStaleTimeoutSeconds = RuuviMeasurementFreshness.normalizedTimeout(newValue) }
+    }
+
     @UserDefault("RuuviFeatureFlags.graphDownsampleMaximumPoints", defaultValue: 3000)
     var graphDownsampleMaximumPoints: Int
 

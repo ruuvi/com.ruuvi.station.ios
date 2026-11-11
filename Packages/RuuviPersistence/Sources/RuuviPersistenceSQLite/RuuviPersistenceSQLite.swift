@@ -94,6 +94,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 let normalizedRecord = try normalizedRecord(record, db: db)
                 assert(normalizedRecord.macId != nil)
                 try normalizedRecord.latest.insert(db)
+                publishCloudMeasurementCommit(normalizedRecord, in: db)
             }
             promise.succeed(value: true)
         } catch {
@@ -110,12 +111,24 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                 let normalizedRecord = try normalizedRecord(record, db: db)
                 assert(normalizedRecord.macId != nil)
                 try normalizedRecord.latest.update(db)
+                publishCloudMeasurementCommit(normalizedRecord, in: db)
             }
             promise.succeed(value: true)
         } catch {
             promise.fail(error: .grdb(error))
         }
         return promise.future
+    }
+
+    private func publishCloudMeasurementCommit(_ record: RuuviTagSensorRecord, in db: Database) {
+        guard record.source == .ruuviNetwork else { return }
+        let id = record.uuid
+        // Commit hooks run on GRDB's serialized writer queue and never run for rolled-back writes.
+        db.afterNextTransaction(onCommit: { db in
+            guard let stored = try? RecordLatest.fetchOne(db, key: id),
+                  stored.source == .ruuviNetwork, let mac = stored.macId?.mac else { return }
+            RuuviCloudMeasurementCommit(mac: mac, date: stored.date).publish()
+        })
     }
 
     public func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RuuviPersistenceError> {

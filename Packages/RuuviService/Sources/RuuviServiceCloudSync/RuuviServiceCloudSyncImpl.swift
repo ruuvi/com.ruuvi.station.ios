@@ -168,6 +168,8 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                             }, failure: { error in
                                 promise.fail(error: error)
                             })
+                    }, failure: { error in
+                        promise.fail(error: error)
                     })
             })
         return promise.future
@@ -193,6 +195,10 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                     }, completion: { [weak self] in
                         self?.ruuviLocalSyncState.setSyncStatus(.none)
                     })
+            }, failure: { [weak self] error in
+                self?.ruuviLocalSyncState.setSyncStatus(.onError)
+                promise.fail(error: error)
+                self?.ruuviLocalSyncState.setSyncStatus(.none)
             })
         return promise.future
     }
@@ -669,9 +675,18 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         return promise.future
     }
 
+    // Measurement progress must not finish merely because the parallel settings request failed.
+    private func syncSensors(
+        pendingOffsetUpdates: Set<QueuedOffsetUpdate>?
+    ) -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
+        CloudMeasurementSyncProgress.track {
+            performSensorSync(pendingOffsetUpdates: pendingOffsetUpdates)
+        }
+    }
+
     // This method syncs the sensors, latest measurements and alerts.
     // swiftlint:disable:next function_body_length
-    private func syncSensors(
+    private func performSensorSync(
         pendingOffsetUpdates: Set<QueuedOffsetUpdate>?
     ) -> Future<Set<AnyRuuviTagSensor>, RuuviServiceError> {
         let promise = Promise<Set<AnyRuuviTagSensor>, RuuviServiceError>()
@@ -750,19 +765,16 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         )
                     }
 
-                    Future.zip(syncLatestPoint)
+                    // A failed write must not finish progress while sibling writes remain in flight.
+                    CloudMeasurementSyncProgress.allSettled(syncLatestPoint + addLatestPointToHistory)
                         .observe(on: .global(qos: .utility))
                         .on(success: { _ in
-                            Future.zip(addLatestPointToHistory)
-                                .observe(on: .global(qos: .utility))
-                                .on(success: { _ in
-                                    promise.succeed(value: updatedSensors)
-                                }, failure: { error in
-                                    promise.fail(error: error)
-                                })
+                            promise.succeed(value: updatedSensors)
                         }, failure: { error in
                             promise.fail(error: error)
                         })
+                }, failure: { error in
+                    promise.fail(error: error)
                 })
         }, failure: { [weak self] error in
             if case .api(.api(.erUnauthorized)) = error {
