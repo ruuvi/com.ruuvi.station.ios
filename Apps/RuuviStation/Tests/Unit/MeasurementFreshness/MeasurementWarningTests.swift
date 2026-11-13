@@ -74,8 +74,8 @@ final class MeasurementWarningTests: XCTestCase {
             XCTAssertEqual(delegate.tappedSensorID, snapshot.id)
             let timestamp = try timestamp(in: cell)
             delegate.tappedSensorID = nil
-            XCTAssertTrue(timestamp.accessibilityActivate())
-            XCTAssertEqual(delegate.tappedSensorID, snapshot.id)
+            assertTimestampIsStatic(timestamp)
+            XCTAssertNil(delegate.tappedSensorID)
             snapshot.lastUpdated = Date()
             TimestampUpdateService.shared.refresh()
             cell.updateTimestampLabel()
@@ -94,7 +94,7 @@ final class MeasurementWarningTests: XCTestCase {
             XCTAssertTrue(button.isStale)
             cell.prepareForReuse()
             XCTAssertFalse(button.isStale)
-            XCTAssertFalse(timestamp.isWarningVisible)
+            assertTimestampIsStatic(timestamp)
             delegate.refreshedSensorID = nil
             cell.configure(with: makeSnapshot(id: snapshot.id, age: 0), dashboardType: style)
             XCTAssertEqual(delegate.refreshedSensorID, snapshot.id)
@@ -166,7 +166,9 @@ final class MeasurementWarningTests: XCTestCase {
         XCTAssertTrue(messages(in: card.view).isEmpty)
         card.setActiveSnapshotIndex(0)
         XCTAssertTrue(messages(in: card.view).isEmpty)
-        XCTAssertTrue(try timestamp(in: card.view).accessibilityActivate())
+        assertTimestampIsStatic(try timestamp(in: card.view))
+        XCTAssertTrue(messages(in: card.view).isEmpty)
+        button.sendActions(for: .touchUpInside)
         XCTAssertEqual(messages(in: card.view).count, 1)
         card.showContentsForTab(.settings)
         XCTAssertTrue(messages(in: card.view).isEmpty)
@@ -189,7 +191,10 @@ final class MeasurementWarningTests: XCTestCase {
         card.viewDidAppear(false)
         XCTAssertTrue(messages(in: card.view).isEmpty)
         let timestamp = try timestamp(in: card.view)
-        XCTAssertTrue(timestamp.accessibilityActivate())
+        let button = try XCTUnwrap(descendants(in: card.view).compactMap { $0 as? SensorDataSourceButton }.first)
+        assertTimestampIsStatic(timestamp)
+        XCTAssertTrue(messages(in: card.view).isEmpty)
+        button.sendActions(for: .touchUpInside)
         XCTAssertFalse(messages(in: card.view).isEmpty)
         snapshot.lastUpdated = Date()
         TimestampUpdateService.shared.refresh()
@@ -200,7 +205,9 @@ final class MeasurementWarningTests: XCTestCase {
         TimestampUpdateService.shared.refresh()
         card.updateTimestampLabel()
         XCTAssertTrue(messages(in: card.view).isEmpty)
-        XCTAssertTrue(timestamp.accessibilityActivate())
+        assertTimestampIsStatic(timestamp)
+        button.sendActions(for: .touchUpInside)
+        XCTAssertFalse(messages(in: card.view).isEmpty)
         card.setSnapshots([])
         card.setActiveSnapshotIndex(-1)
         TimestampUpdateService.shared.refresh()
@@ -277,7 +284,7 @@ final class MeasurementWarningTests: XCTestCase {
         XCTAssertEqual(reads, 0)
         XCTAssertEqual(timestamp.text, "Static preview")
         XCTAssertFalse(button.isStale)
-        XCTAssertFalse(timestamp.isWarningVisible)
+        assertTimestampIsStatic(timestamp)
     }
 
     func testSourceImageSizesAndUpperRightBadgeAnchor() throws {
@@ -295,12 +302,20 @@ final class MeasurementWarningTests: XCTestCase {
             XCTAssertGreaterThan(source.frame.maxX, badge.frame.minX)
         }
     }
-
 }
 
 private extension MeasurementWarningTests {
-    func timestamp(in view: UIView) throws -> MeasurementTimestampLabel {
-        try XCTUnwrap(descendants(in: view).compactMap { $0 as? MeasurementTimestampLabel }.first)
+    func timestamp(in view: UIView) throws -> UILabel {
+        try XCTUnwrap(descendants(in: view).first {
+            $0.accessibilityIdentifier == "measurement-timestamp"
+        } as? UILabel)
+    }
+
+    func assertTimestampIsStatic(_ label: UILabel, file: StaticString = #filePath, line: UInt = #line) {
+        XCTAssertFalse(label.isUserInteractionEnabled, file: file, line: line)
+        XCTAssertFalse(label.accessibilityTraits.contains(.button), file: file, line: line)
+        XCTAssertTrue(label.gestureRecognizers?.isEmpty ?? true, file: file, line: line)
+        XCTAssertFalse(label.accessibilityActivate(), file: file, line: line)
     }
 
     var sourcePreviews: [(RuuviTagSensorRecordSource, String)] {

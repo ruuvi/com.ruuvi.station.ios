@@ -224,9 +224,8 @@ final class CardsBaseViewController: UIViewController {
         return view
     }()
 
-    private lazy var updatedAtLabel: MeasurementTimestampLabel = {
-        let label = MeasurementTimestampLabel()
-        label.onTap = { [weak self] in self?.didTapMeasurementWarning() }
+    private lazy var updatedAtLabel: UILabel = {
+        let label = UILabel()
         label.accessibilityIdentifier = "measurement-timestamp"
         label.textColor = .white.withAlphaComponent(Constants.Alpha.whiteWithAlpha)
         label.textAlignment = .left

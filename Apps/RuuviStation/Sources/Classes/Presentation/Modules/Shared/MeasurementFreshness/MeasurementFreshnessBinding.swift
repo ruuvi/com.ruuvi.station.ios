@@ -2,18 +2,18 @@ import Combine
 import UIKit
 import RuuviLocalization
 
-/// A single binding keeps the source badge, timestamp action and freshness callback consistent.
+/// A single binding keeps the source badge, timestamp text and freshness callback consistent.
 @MainActor
 final class MeasurementFreshnessBinding: TimestampUpdateable {
     var onFresh: ((RuuviTagCardSnapshot) -> Void)?
     private let button: SensorDataSourceButton
-    private let timestamp: MeasurementTimestampLabel
+    private let timestamp: UILabel
     private weak var snapshot: RuuviTagCardSnapshot?
     private var observation: AnyCancellable?
     private var lastStaleState: Bool?
     private var live = false
 
-    init(button: SensorDataSourceButton, timestamp: MeasurementTimestampLabel) {
+    init(button: SensorDataSourceButton, timestamp: UILabel) {
         self.button = button
         self.timestamp = timestamp
     }
@@ -44,7 +44,6 @@ final class MeasurementFreshnessBinding: TimestampUpdateable {
 
     private func setStale(_ stale: Bool) {
         button.update(source: snapshot?.displayData.source, isStale: stale)
-        timestamp.isWarningVisible = stale
         guard lastStaleState != stale else { return }
         lastStaleState = stale
         if live, !stale, let snapshot { onFresh?(snapshot) }

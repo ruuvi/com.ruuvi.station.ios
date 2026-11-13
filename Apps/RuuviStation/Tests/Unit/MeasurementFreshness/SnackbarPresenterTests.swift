@@ -1,5 +1,6 @@
 @testable import station
 import XCTest
+import RuuviLocalization
 
 @MainActor
 final class SnackbarPresenterTests: XCTestCase {
@@ -122,6 +123,32 @@ final class SnackbarPresenterTests: XCTestCase {
             XCTAssertEqual(message.subviews.compactMap { $0 as? UILabel }.first?.text, text)
             presenter.dismiss()
             XCTAssertTrue(host.subviews.isEmpty)
+        }
+    }
+
+    func testSnackbarRendersWithBrandColorsInLightAndDarkAppearance() throws {
+        for style in [UIUserInterfaceStyle.light, .dark] {
+            window.overrideUserInterfaceStyle = style
+            let presenter = SnackbarPresenter(animationDuration: 0)
+            XCTAssertTrue(presenter.show(message: RuuviLocalization.sensorMeasurementsOutdated, in: host))
+            let message = try XCTUnwrap(host.subviews.first { $0 is SnackbarView })
+            let label = try XCTUnwrap(message.subviews.compactMap { $0 as? UILabel }.first)
+            let traits = UITraitCollection(userInterfaceStyle: style)
+            XCTAssertEqual(message.backgroundColor?.resolvedColor(with: traits),
+                           RuuviColor.snackbarBackground.color.resolvedColor(with: traits))
+            XCTAssertEqual(label.textColor.resolvedColor(with: traits),
+                           RuuviColor.ruuviGreen.color.resolvedColor(with: traits))
+            XCTAssertEqual(message.frame.minX, host.safeAreaLayoutGuide.layoutFrame.minX + 12, accuracy: 0.1)
+            XCTAssertEqual(message.frame.maxX, host.safeAreaLayoutGuide.layoutFrame.maxX - 12, accuracy: 0.1)
+            XCTAssertGreaterThanOrEqual(message.bounds.height, 48)
+            let image = UIGraphicsImageRenderer(bounds: host.bounds).image { _ in
+                XCTAssertTrue(host.drawHierarchy(in: host.bounds, afterScreenUpdates: true))
+            }
+            let attachment = XCTAttachment(image: image)
+            attachment.name = "snackbar-\(style == .dark ? "dark" : "light")"
+            attachment.lifetime = .keepAlways
+            add(attachment)
+            presenter.dismiss(animated: false)
         }
     }
 

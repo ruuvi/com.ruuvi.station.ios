@@ -56,8 +56,8 @@ final class SnackbarPresenter: NSObject {
         snackbar.addGestureRecognizer(pan)
         view.addSubview(snackbar)
         NSLayoutConstraint.activate([
-            snackbar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-            snackbar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
+            snackbar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 12),
+            snackbar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -12),
             snackbar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -32),
         ])
         view.layoutIfNeeded()

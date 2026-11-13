@@ -118,7 +118,7 @@ final class MeasurementFreshnessServiceTests: XCTestCase {
         let now = Date()
         let service = MeasurementFreshnessService(gate: gate, now: { now })
         let button = SensorDataSourceButton()
-        let label = MeasurementTimestampLabel()
+        let label = UILabel()
         let binding = MeasurementFreshnessBinding(button: button, timestamp: label)
         var callbacks = 0
         binding.onFresh = { _ in callbacks += 1 }
@@ -127,19 +127,19 @@ final class MeasurementFreshnessServiceTests: XCTestCase {
         )
         binding.bind(snapshot, service: service)
         XCTAssertTrue(button.isStale)
-        XCTAssertTrue(label.isWarningVisible)
+        XCTAssertFalse(label.isUserInteractionEnabled)
         for _ in 0..<5 { service.refresh(); binding.updateTimestampLabel() }
         XCTAssertEqual(callbacks, 0)
         snapshot.lastUpdated = now
         service.refresh()
         XCTAssertFalse(button.isStale)
-        XCTAssertFalse(label.isWarningVisible)
+        XCTAssertFalse(label.isUserInteractionEnabled)
         XCTAssertEqual(callbacks, 1)
         for _ in 0..<5 { service.refresh(); binding.updateTimestampLabel() }
         binding.bind(snapshot, service: service)
         XCTAssertEqual(callbacks, 1)
         binding.bind(nil, service: nil)
         XCTAssertFalse(button.isStale)
-        XCTAssertFalse(label.isWarningVisible)
+        XCTAssertFalse(label.isUserInteractionEnabled)
     }
 }
