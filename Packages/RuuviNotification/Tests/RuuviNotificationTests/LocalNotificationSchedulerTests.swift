@@ -53,7 +53,9 @@ final class LocalNotificationSchedulerTests: XCTestCase {
         center.removeDelivered = { calls.append("delivered \($0.joined())") }
 
         let request = UNNotificationRequest(identifier: "sensor", content: UNMutableNotificationContent(), trigger: nil)
-        scheduler.add(request) { _ in }
+        scheduler.add(request) { error in
+            XCTAssertNil(error)
+        }
         scheduler.cancel(identifiers: [request.identifier])
         scheduler.add(request) { error in
             XCTAssertNil(error)
@@ -62,12 +64,76 @@ final class LocalNotificationSchedulerTests: XCTestCase {
         wait(for: [completed], timeout: 2)
         XCTAssertEqual(calls, ["add sensor", "pending sensor", "delivered sensor", "add sensor"])
     }
+
+    func testCancellationAndReplacementWaitForAsynchronousAddCompletion() {
+        let center = NotificationCenterStub()
+        let scheduler = LocalNotificationScheduler(center: center)
+        let completed = expectation(description: "Replacement scheduled")
+        let callbackQueue = DispatchQueue(label: "notification-test-callbacks")
+        let lock = NSLock()
+        var calls = [String]()
+
+        func record(_ call: String) {
+            lock.lock()
+            defer { lock.unlock() }
+            calls.append(call)
+        }
+
+        center.addRequest = { request, completion in
+            XCTAssertFalse(Thread.isMainThread)
+            record("add \(request.identifier)")
+            callbackQueue.asyncAfter(deadline: .now() + 0.05) {
+                record("added \(request.identifier)")
+                completion?(nil)
+            }
+        }
+        center.removePending = { record("pending \($0.joined())") }
+        center.removeDelivered = { record("delivered \($0.joined())") }
+
+        let request = UNNotificationRequest(identifier: "sensor", content: UNMutableNotificationContent(), trigger: nil)
+        scheduler.add(request) { error in
+            XCTAssertNil(error)
+        }
+        scheduler.cancel(identifiers: [request.identifier])
+        scheduler.add(request) { error in
+            XCTAssertNil(error)
+            completed.fulfill()
+        }
+        wait(for: [completed], timeout: 2)
+        lock.lock()
+        defer { lock.unlock() }
+        XCTAssertEqual(calls, [
+            "add sensor", "added sensor", "pending sensor", "delivered sensor", "add sensor", "added sensor",
+        ])
+    }
+
+    func testFailedAddDoesNotPreventCancellation() {
+        let center = NotificationCenterStub()
+        let scheduler = LocalNotificationScheduler(center: center)
+        let failed = expectation(description: "Scheduling error delivered")
+        let cancelled = expectation(description: "Cancellation completed after error")
+        let error = NSError(domain: "LocalNotificationSchedulerTests", code: 1)
+        center.addRequest = { _, completion in completion?(error) }
+        center.removeDelivered = { _ in cancelled.fulfill() }
+
+        let request = UNNotificationRequest(identifier: "sensor", content: UNMutableNotificationContent(), trigger: nil)
+        scheduler.add(request) { receivedError in
+            XCTAssertEqual(receivedError as NSError?, error)
+            failed.fulfill()
+        }
+        scheduler.cancel(identifiers: [request.identifier])
+        wait(for: [failed, cancelled], timeout: 2, enforceOrder: true)
+    }
 }
 
 private final class NotificationCenterStub: LocalNotificationCenter {
     var addRequest: (UNNotificationRequest, ((Error?) -> Void)?) -> Void = { _, completion in completion?(nil) }
-    var removePending: ([String]) -> Void = { _ in }
-    var removeDelivered: ([String]) -> Void = { _ in }
+    var removePending: ([String]) -> Void = { _ in
+        // Tests that inspect pending removals replace this default no-op.
+    }
+    var removeDelivered: ([String]) -> Void = { _ in
+        // Tests that inspect delivered removals replace this default no-op.
+    }
 
     func add(_ request: UNNotificationRequest, withCompletionHandler completionHandler: ((Error?) -> Void)?) {
         addRequest(request, completionHandler)
@@ -81,7 +147,7 @@ private final class NotificationCenterStub: LocalNotificationCenter {
         removeDelivered(identifiers)
     }
 
-    func setBadgeCount(_ newBadgeCount: Int, withCompletionHandler completionHandler: ((Error?) -> Void)?) {
+    func setBadgeCount(_: Int, withCompletionHandler completionHandler: ((Error?) -> Void)?) {
         completionHandler?(nil)
     }
 }

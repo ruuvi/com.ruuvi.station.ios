@@ -76,19 +76,24 @@ final class RuuviCloudVerifyTests: XCTestCase {
     }
 
     func testVerifyQueryCarriesTokenAndPlusAddressedEmail() throws {
-        let baseUrl = try XCTUnwrap(URL(string: "https://network.ruuvi.com/verify"))
+        var baseComponents = URLComponents()
+        baseComponents.scheme = "https"
+        baseComponents.host = "example.com"
+        baseComponents.path = "/verify"
+        let baseUrl = try XCTUnwrap(baseComponents.url)
         let url = try XCTUnwrap(
             RuuviCloudApiURLSession.url(
                 baseUrl,
                 withQueryFrom: RuuviCloudApiVerifyRequest(token: "AB12", email: "first+tag@example.com")
             )
         )
+        let components = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: false))
+        XCTAssertEqual(components.scheme, baseComponents.scheme)
+        XCTAssertEqual(components.host, baseComponents.host)
+        XCTAssertEqual(components.path, baseComponents.path)
+        XCTAssertEqual(components.percentEncodedQuery, "token=AB12&email=first%2Btag@example.com")
         XCTAssertEqual(
-            url.absoluteString,
-            "https://network.ruuvi.com/verify?token=AB12&email=first%2Btag@example.com"
-        )
-        XCTAssertEqual(
-            URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems,
+            components.queryItems,
             [
                 URLQueryItem(name: "token", value: "AB12"),
                 URLQueryItem(name: "email", value: "first+tag@example.com"),

@@ -20,10 +20,15 @@ final class LocalNotificationScheduler {
     }
 
     // Notification-center methods can wait synchronously for the system service.
-    // Keep those waits off the UI thread and preserve add/cancel submission order.
+    // Keep those waits off the UI thread and finish each add before submitting later work.
     func add(_ request: UNNotificationRequest, completion: @escaping (Error?) -> Void) {
-        queue.async { [center] in
-            center.add(request, withCompletionHandler: completion)
+        queue.async { [center, queue] in
+            // Suspend queued work without blocking a thread while the system registers the request.
+            queue.suspend()
+            center.add(request) { error in
+                defer { queue.resume() }
+                completion(error)
+            }
         }
     }
 
