@@ -79,8 +79,7 @@ final class RuuviCloudVerifyTests: XCTestCase {
         var baseComponents = URLComponents()
         baseComponents.scheme = "https"
         baseComponents.host = "example.com"
-        baseComponents.path = "/verify"
-        let baseUrl = try XCTUnwrap(baseComponents.url)
+        let baseUrl = try XCTUnwrap(baseComponents.url).appendingPathComponent("verify")
         let url = try XCTUnwrap(
             RuuviCloudApiURLSession.url(
                 baseUrl,
@@ -90,7 +89,7 @@ final class RuuviCloudVerifyTests: XCTestCase {
         let components = try XCTUnwrap(URLComponents(url: url, resolvingAgainstBaseURL: false))
         XCTAssertEqual(components.scheme, baseComponents.scheme)
         XCTAssertEqual(components.host, baseComponents.host)
-        XCTAssertEqual(components.path, baseComponents.path)
+        XCTAssertEqual(components.path, baseUrl.path)
         XCTAssertEqual(components.percentEncodedQuery, "token=AB12&email=first%2Btag@example.com")
         XCTAssertEqual(
             components.queryItems,
