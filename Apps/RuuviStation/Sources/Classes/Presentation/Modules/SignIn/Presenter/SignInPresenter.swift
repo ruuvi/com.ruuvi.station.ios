@@ -161,8 +161,22 @@ extension SignInPresenter {
     }
 
     private func verify(_ code: String) {
+        guard let email = ruuviUser.email?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !email.isEmpty
+        else {
+            view.fromDeepLink = false
+            view.showInvalidTokenEntered()
+            view.showFailedToGetRequestedEmail()
+            viewModel.showVerficationScreen.value = false
+            if viewModel.inputText.value != nil {
+                // A code from a link is also bound to the e-mail field.
+                viewModel.inputText.value = nil
+            }
+            state = .enterEmail
+            return
+        }
         activityPresenter.show(with: .loading(message: RuuviLocalization.SignIn.Sync.message))
-        ruuviCloud.validateCode(code: code)
+        ruuviCloud.validateCode(code: code, email: email)
             .on(success: { [weak self] result in
                 guard let sSelf = self else { return }
                 if sSelf.ruuviUser.email == result.email.lowercased() {
@@ -188,6 +202,7 @@ extension SignInPresenter {
                 }
             }, failure: { [weak self] error in
                 self?.activityPresenter.dismiss()
+                self?.view.fromDeepLink = false
                 self?.view.showInvalidTokenEntered()
                 self?.errorPresenter.present(error: error)
             })

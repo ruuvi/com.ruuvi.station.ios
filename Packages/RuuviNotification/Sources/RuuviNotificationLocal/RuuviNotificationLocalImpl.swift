@@ -40,6 +40,7 @@ public final class RuuviNotificationLocalImpl: NSObject, RuuviNotificationLocal 
     private let settings: RuuviLocalSettings
     private let ruuviAlertService: RuuviServiceAlert
     private let cloudAlertHandler: CloudAlertNotificationHandler
+    private let notificationScheduler = LocalNotificationScheduler()
 
     private weak var output: RuuviNotificationLocalOutput?
 
@@ -453,7 +454,7 @@ extension RuuviNotificationLocalImpl {
             "schedule kind=\(kind) uuid=\(uuid) type=\(type) " +
                 "notificationId=\(request.identifier)"
         )
-        UNUserNotificationCenter.current().add(request) { error in
+        notificationScheduler.add(request) { error in
             if let error {
                 alertNotificationDebugLog(
                     "AlertNotification",
@@ -716,9 +717,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
             "AlertNotification",
             "cancel notification uuid=\(uuid) type=\(type.rawValue) notificationId=\(uuid + type.rawValue)"
         )
-        let nc = UNUserNotificationCenter.current()
-        nc.removePendingNotificationRequests(withIdentifiers: [uuid + type.rawValue])
-        nc.removeDeliveredNotifications(withIdentifiers: [uuid + type.rawValue])
+        notificationScheduler.cancel(identifiers: [uuid + type.rawValue])
     }
 
     private func mute(type: AlertType, uuid: String) {
@@ -914,7 +913,7 @@ extension RuuviNotificationLocalImpl: UNUserNotificationCenterDelegate {
         settings.setNotificationsBadgeCount(value: newBadgeCount)
 
         if #available(iOS 16.0, *) {
-            UNUserNotificationCenter.current().setBadgeCount(newBadgeCount)
+            notificationScheduler.setBadgeCount(newBadgeCount)
         } else {
             UIApplication.shared.applicationIconBadgeNumber = newBadgeCount
         }

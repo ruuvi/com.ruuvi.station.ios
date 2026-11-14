@@ -21,6 +21,7 @@ targets:
     platform: iOS
     sources:
     - path: Tests/RuuviCloudTests/RuuviCloudAlertRetryTests.swift
+    - path: Tests/RuuviCloudTests/RuuviCloudVerifyTests.swift
     dependencies:
     - target: RuuviCloud
     - target: RuuviPool

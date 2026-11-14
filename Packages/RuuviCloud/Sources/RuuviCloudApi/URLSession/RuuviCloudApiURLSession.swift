@@ -398,9 +398,7 @@ extension RuuviCloudApiURLSession {
         }
         var url: URL = baseUrl.appendingPathComponent(endpoint.rawValue)
         if method == .get {
-            var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)
-            urlComponents?.queryItems = try? URLQueryItemEncoder().encode(model)
-            guard let urlFromComponents = urlComponents?.url
+            guard let urlFromComponents = Self.url(url, withQueryFrom: model)
             else {
                 fatalError()
             }
@@ -482,6 +480,15 @@ extension RuuviCloudApiURLSession {
         }
         task.resume()
         return promise.future
+    }
+
+    static func url(_ url: URL, withQueryFrom model: some Encodable) -> URL? {
+        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)
+        urlComponents?.queryItems = try? URLQueryItemEncoder().encode(model)
+        // URLComponents leaves "+" as it is, and the server reads it as a space
+        let query = urlComponents?.percentEncodedQuery?.replacingOccurrences(of: "+", with: "%2B")
+        urlComponents?.percentEncodedQuery = query
+        return urlComponents?.url
     }
 }
 

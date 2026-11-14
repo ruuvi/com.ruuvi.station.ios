@@ -22,8 +22,8 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         cloud.requestCode(email: email)
     }
 
-    public func validateCode(code: String) -> Future<ValidateCodeResponse, RuuviCloudError> {
-        cloud.validateCode(code: code)
+    public func validateCode(code: String, email: String) -> Future<ValidateCodeResponse, RuuviCloudError> {
+        cloud.validateCode(code: code, email: email)
     }
 
     public func deleteAccount(email: String) -> Future<Bool, RuuviCloudError> {

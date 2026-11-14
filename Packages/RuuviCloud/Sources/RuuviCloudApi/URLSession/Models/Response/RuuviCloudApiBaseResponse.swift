@@ -17,7 +17,20 @@ public struct RuuviCloudApiBaseResponse<T: Any>: Decodable where T: Decodable {
         case data
         case errorDescription = "error"
         case code
-        case subCode
+        case subCode = "sub_code"
+    }
+
+    // Codes are read as strings, so that a value this app version does not know is ignored
+    // instead of failing the whole response.
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        status = try container.decode(Status.self, forKey: .status)
+        data = try container.decodeIfPresent(T.self, forKey: .data)
+        errorDescription = try container.decodeIfPresent(String.self, forKey: .errorDescription)
+        code = try container.decodeIfPresent(String.self, forKey: .code)
+            .flatMap(RuuviCloudApiErrorCode.init(rawValue:))
+        subCode = try container.decodeIfPresent(String.self, forKey: .subCode)
+            .flatMap(RuuviCloudApiErrorCode.init(rawValue:))
     }
 }
 
@@ -35,6 +48,9 @@ public extension RuuviCloudApiBaseResponse {
             }
             return .success(data)
         case .error:
+            if let subCode, subCode.isVerifySubCode {
+                return .failure(.api(subCode))
+            }
             guard let code
             else {
                 if errorDescription != nil {
@@ -45,6 +61,18 @@ public extension RuuviCloudApiBaseResponse {
             }
 
             return .failure(.api(code))
+        }
+    }
+}
+
+private extension RuuviCloudApiErrorCode {
+    // Sub codes of /verify, which tell why the code was refused. Other sub codes do not replace the code.
+    var isVerifySubCode: Bool {
+        switch self {
+        case .erSubInvalidCode, .erSubCodeUsed, .erSubCodeExpired, .erSubTooManyAttempts:
+            true
+        default:
+            false
         }
     }
 }

@@ -29,7 +29,7 @@ public protocol RuuviCloud {
     func requestCode(email: String) -> Future<String?, RuuviCloudError>
 
     @discardableResult
-    func validateCode(code: String) -> Future<ValidateCodeResponse, RuuviCloudError>
+    func validateCode(code: String, email: String) -> Future<ValidateCodeResponse, RuuviCloudError>
 
     @discardableResult
     func deleteAccount(email: String) -> Future<Bool, RuuviCloudError>

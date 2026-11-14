@@ -145,6 +145,7 @@ extension SignInViewController: SignInViewInput {
     }
 
     func showFailedToGetRequestedEmail() {
+        view.endEditing(true)
         let message = RuuviLocalization.SignIn.EmailMissing.Alert.message
         let alertVC = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: RuuviLocalization.ok, style: .cancel, handler: nil))
