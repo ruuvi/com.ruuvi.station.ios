@@ -69,6 +69,14 @@ public enum RuuviCloudApiErrorCode: String, Codable {
     case erSubDataStorageError = "ER_SUB_DATA_STORAGE_ERROR"
     // Returned when no user could be found or created via e-mail verification flow
     case erSubNoUser = "ER_SUB_NO_USER"
+    // Sign-in code is wrong or was requested for another e-mail
+    case erSubInvalidCode = "ER_SUB_INVALID_CODE"
+    // Sign-in code has already been used
+    case erSubCodeUsed = "ER_SUB_CODE_USED"
+    // Sign-in code has expired
+    case erSubCodeExpired = "ER_SUB_CODE_EXPIRED"
+    // Too many wrong sign-in codes were entered for the e-mail
+    case erSubTooManyAttempts = "ER_SUB_TOO_MANY_ATTEMPTS"
 
     // Operation was successful
     case ok = "OK"

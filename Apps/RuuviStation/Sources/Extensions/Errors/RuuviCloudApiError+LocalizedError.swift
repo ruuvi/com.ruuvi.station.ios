@@ -96,6 +96,14 @@ private extension RuuviCloudApiErrorCode {
             RuuviLocalization.UserApiError.erSubDataStorageError
         case .erSubNoUser:
             RuuviLocalization.UserApiError.erSubNoUser
+        case .erSubInvalidCode:
+            RuuviLocalization.UserApiError.erSubInvalidCode
+        case .erSubCodeUsed:
+            RuuviLocalization.UserApiError.erSubCodeUsed
+        case .erSubCodeExpired:
+            RuuviLocalization.UserApiError.erSubCodeExpired
+        case .erSubTooManyAttempts:
+            RuuviLocalization.UserApiError.erSubTooManyAttempts
         case .ok:
             RuuviLocalization.UserApiError.ok
         }

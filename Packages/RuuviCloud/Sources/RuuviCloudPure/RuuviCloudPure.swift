@@ -1109,9 +1109,9 @@ public final class RuuviCloudPure: RuuviCloud {
         return promise.future
     }
 
-    public func validateCode(code: String) -> Future<ValidateCodeResponse, RuuviCloudError> {
+    public func validateCode(code: String, email: String) -> Future<ValidateCodeResponse, RuuviCloudError> {
         let promise = Promise<ValidateCodeResponse, RuuviCloudError>()
-        let request = RuuviCloudApiVerifyRequest(token: code)
+        let request = RuuviCloudApiVerifyRequest(token: code, email: email)
         api.verify(request)
             .on(success: { response in
                 guard let email = response.email,

@@ -213,6 +213,20 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         TEST_HOST: "$(BUILT_PRODUCTS_DIR)/station.app/station"
         BUNDLE_LOADER: "$(TEST_HOST)"
+  station.signInTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests/Unit/SignIn
+    dependencies:
+      - target: station
+      - target: RuuviUser
+        embed: false
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/station.app/station"
+        BUNDLE_LOADER: "$(TEST_HOST)"
 schemes:
   station:
     build:
@@ -223,3 +237,4 @@ schemes:
         - station.alertTests
         - station.marketingConsentTests
         - station.measurementFreshnessTests
+        - station.signInTests
