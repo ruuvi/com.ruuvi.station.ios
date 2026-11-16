@@ -320,6 +320,10 @@ final class RuuviPoolCoordinator: RuuviPool {
         return promise.future
     }
 
+    func deleteQueuedImageUploads(for macId: MACIdentifier, through date: Date?) -> Future<Bool, RuuviPoolError> {
+        sqlite.deleteQueuedImageUploads(for: macId, through: date).mapError { RuuviPoolError.ruuviPersistence($0) }
+    }
+
     func deleteQueuedRequests() -> Future<Bool, RuuviPoolError> {
         let promise = Promise<Bool, RuuviPoolError>()
         sqlite.deleteQueuedRequests()

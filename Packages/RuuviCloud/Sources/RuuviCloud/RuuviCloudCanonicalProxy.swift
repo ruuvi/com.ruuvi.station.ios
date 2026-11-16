@@ -224,7 +224,9 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
     public func upload(
         imageData: Data,
         mimeType: MimeType,
+        lastUpdated: Date,
         progress: ((MACIdentifier, Double) -> Void)?,
+        isCurrentSelection: (() -> Bool)? = nil,
         for macId: MACIdentifier
     ) -> Future<URL, RuuviCloudError> {
         let canonicalMac = canonical(macId)
@@ -244,7 +246,9 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         return cloud.upload(
             imageData: imageData,
             mimeType: mimeType,
+            lastUpdated: lastUpdated,
             progress: wrappedProgress,
+            isCurrentSelection: isCurrentSelection,
             for: canonicalMac
         )
     }

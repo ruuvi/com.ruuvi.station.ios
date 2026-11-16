@@ -7,6 +7,32 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
         self.imagePersistence = imagePersistence
     }
 
+    private let writeLock = NSLock()
+    private struct PendingWrite {
+        let generation: UUID
+        let isDownload: Bool
+    }
+    private var pendingWrites: [String: PendingWrite] = [:]
+
+    func isBackgroundWritePending(for identifier: Identifier) -> Bool {
+        writeLock.lock()
+        defer { writeLock.unlock() }
+        return pendingWrites[identifier.value]?.isDownload == false
+    }
+
+    func backgroundSelectionVersion(for identifier: Identifier) -> UUID? {
+        BackgroundImageRecord(for: identifier).selectionVersion
+    }
+
+    private func beginBackgroundSelection(for identifier: Identifier) {
+        writeLock.lock()
+        pendingWrites.removeValue(forKey: identifier.value)
+        writeLock.unlock()
+        var record = BackgroundImageRecord(for: identifier)
+        record.selectionVersion = UUID()
+        record.save(for: identifier)
+    }
+
     private let imagePersistence: ImagePersistence
     private let bgMinIndex = 1 // must be > 0, 0 means custom background
     private let bgMaxIndex = 17
@@ -19,7 +45,6 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     private let bgUDKeyPrefix = "BackgroundPersistenceUserDefaults.background."
 
     private let uploadBackgroundKeyPrefix = "BackgroundPersistenceUserDefaults.uploadBackground."
-    private let cloudSensorPictureUrlPrefix = "SensorServiceImpl.backgroundUrlPrefix"
 
     private var usedBackgrounds: [Int] {
         if let ub = UserDefaults.standard.array(forKey: usedBackgroundsUDKey) as? [Int],
@@ -33,27 +58,41 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     }
 
     func deleteCustomBackground(for identifier: Identifier) {
-        imagePersistence.deleteBgIfExists(for: identifier)
+        let hadImage = hasCustomBackground(for: identifier)
+        beginBackgroundSelection(for: identifier)
+        var record = BackgroundImageRecord(for: identifier)
+        let previous = record.file
+        record.file = nil
+        record.selectedAt = nil
+        record.cachedURL = nil
+        record.forced = false
+        record.retiredThrough = Date()
+        record.save(for: identifier)
+        retireFile(previous)
+        if hadImage { notifyBackgroundChanged(for: identifier) }
+    }
+
+    private func retireFile(_ file: String?) {
+        guard let file else { return }
+        DispatchQueue.global(qos: .utility).async {
+            // Retain the previous file until the new pointer is durable. A crash can then
+            // restore either complete version, never an old image with a new date.
+            if UserDefaults.standard.synchronize() {
+                self.imagePersistence.deleteBgIfExists(for: file.luid)
+            }
+        }
     }
 
     func setNextDefaultBackground(for identifier: Identifier) -> UIImage? {
         var id = backgroundId(for: identifier)
-        if id >= bgMinIndex, id < bgMaxIndex {
-            id += 1
-            setBackground(id, for: identifier)
-        } else if id >= bgMaxIndex {
-            id = bgMinIndex
-            setBackground(id, for: identifier)
+        if id >= bgMinIndex {
+            id = id < bgMaxIndex ? id + 1 : bgMinIndex
         } else {
             id = biasedToNotUsedRandom()
-            setBackground(id, for: identifier)
         }
-        imagePersistence.deleteBgIfExists(for: identifier)
+        setBackground(id, for: identifier)
+        deleteCustomBackground(for: identifier)
         return UIImage(named: "bg\(id)")
-    }
-
-    func getCustomBackground(for identifier: Identifier) -> UIImage? {
-        imagePersistence.fetchBg(for: identifier)
     }
 
     func getBackground(for identifier: Identifier) -> UIImage? {
@@ -78,53 +117,31 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
             } else {
                 let bgIndexDefault: Int =
                     ruuviDeviceType == .ruuviTag ? bgIndexDefaultRuuviTag : bgIndexDefaultRuuviAir
-                setBackground(bgIndexDefault, for: identifier)
+                // A display placeholder is not a user choice and must not cancel a pending cloud download.
+                publishBackgroundIndex(bgIndexDefault, for: identifier)
                 return UIImage(named: "bg\(bgIndexDefault)")
             }
         }
     }
 
-    func setCustomBackground(
-        image: UIImage,
-        compressionQuality: CGFloat,
-        for identifier: Identifier
-    ) -> Future<URL, RuuviLocalError> {
-        let promise = Promise<URL, RuuviLocalError>()
-        let persist = imagePersistence.persistBg(
-            image: image,
-            compressionQuality: compressionQuality,
-            for: identifier
-        )
-        persist.on(success: { url in
-            self.setBackground(0, for: identifier)
-            let userInfoKey: BPDidChangeBackgroundKey
-            if identifier is LocalIdentifier {
-                userInfoKey = .luid
-            } else if identifier is MACIdentifier {
-                userInfoKey = .macId
-            } else {
-                userInfoKey = .luid
-                assertionFailure()
-            }
-            NotificationCenter
-                .default
-                .post(
-                    name: .BackgroundPersistenceDidChangeBackground,
-                    object: nil,
-                    userInfo: [userInfoKey: identifier]
-                )
-            promise.succeed(value: url)
-        }, failure: { error in
-            promise.fail(error: error)
-        })
-        return promise.future
+    func setBackground(_ id: Int, for identifier: Identifier) {
+        beginBackgroundSelection(for: identifier)
+        publishBackgroundIndex(id, for: identifier)
     }
 
-    func setBackground(_ id: Int, for identifier: Identifier) {
+    private func publishBackgroundIndex(_ id: Int, for identifier: Identifier) {
         let uuid = identifier.value
         let key = bgUDKeyPrefix + uuid
         UserDefaults.standard.set(id, forKey: key)
-        UserDefaults.standard.synchronize()
+        notifyBackgroundChanged(for: identifier)
+        if id >= bgMinIndex, id <= bgMaxIndex {
+            var array = usedBackgrounds
+            array[id - bgMinIndex] += 1
+            UserDefaults.standard.set(array, forKey: usedBackgroundsUDKey)
+        }
+    }
+
+    private func notifyBackgroundChanged(for identifier: Identifier) {
         let userInfoKey: BPDidChangeBackgroundKey
         if identifier is LocalIdentifier {
             userInfoKey = .luid
@@ -141,11 +158,6 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
                 object: nil,
                 userInfo: [userInfoKey: identifier]
             )
-        if id >= bgMinIndex, id <= bgMaxIndex {
-            var array = usedBackgrounds
-            array[id - bgMinIndex] += 1
-            UserDefaults.standard.set(array, forKey: usedBackgroundsUDKey)
-        }
     }
 
     private func backgroundId(for identifier: Identifier) -> Int {
@@ -216,38 +228,37 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
         UserDefaults.standard.removeObject(forKey: key)
     }
 
-    func isPictureCached(for cloudSensor: CloudSensor) -> Bool {
-        guard let url = cloudSensor.picture,
-              let cachedUrl = UserDefaults.standard.url(
-                  forKey: cloudSensorPictureUrlPrefix + cloudSensor.id
-              )
-        else {
-            return false
-        }
-
-        if let fileName = pictureFileName(from: url),
-           let cachedFileName = pictureFileName(from: cachedUrl) {
-            return fileName == cachedFileName
-        }
-
-        return cachedUrl == url
+    func cachedPictureURL(for identifier: Identifier) -> URL? {
+        BackgroundImageRecord(for: identifier).cachedURL
     }
 
-    private func pictureFileName(from url: URL) -> String? {
-        let fileName = url.lastPathComponent
-        guard !fileName.isEmpty,
-              !url.pathExtension.isEmpty
-        else {
-            return nil
-        }
-        return fileName
+    func setCachedPictureURL(_ url: URL?, for identifier: Identifier) {
+        var record = BackgroundImageRecord(for: identifier)
+        record.cachedURL = url
+        record.save(for: identifier)
+    }
+
+    func isBackgroundUploadForced(for identifier: Identifier) -> Bool {
+        BackgroundImageRecord(for: identifier).forced
+    }
+
+    func setBackgroundUploadForced(_ forced: Bool, for identifier: Identifier) {
+        var record = BackgroundImageRecord(for: identifier)
+        record.forced = forced
+        record.save(for: identifier)
+    }
+
+    func isPictureCached(for cloudSensor: CloudSensor) -> Bool {
+        let identifier = cloudSensor.id.mac
+        return customBackgroundLastUpdated(for: identifier) == nil
+            && getCustomBackground(for: identifier) != nil
+            && matchesCachedPicture(cloudSensor.picture, for: identifier)
     }
 
     func setPictureIsCached(for cloudSensor: CloudSensor) {
-        UserDefaults.standard.set(
-            cloudSensor.picture,
-            forKey: cloudSensorPictureUrlPrefix + cloudSensor.id
-        )
+        setCustomBackgroundLastUpdated(nil, for: cloudSensor.id.mac)
+        setBackgroundUploadForced(false, for: cloudSensor.id.mac)
+        setCachedPictureURL(cloudSensor.picture, for: cloudSensor.id.mac)
     }
 
     func setPictureRemovedFromCache(for ruuviTag: RuuviTagSensor) {
@@ -266,9 +277,123 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
         }
 
         // Remove cloud cache
-        UserDefaults.standard.set(
-            nil,
-            forKey: cloudSensorPictureUrlPrefix + ruuviTag.id
-        )
+        for identifier in [ruuviTag.macId as Identifier?, ruuviTag.luid as Identifier?].compactMap({ $0 }) {
+            setCachedPictureURL(nil, for: identifier)
+        }
     }
+}
+
+// MARK: - Versioned custom images
+extension RuuviLocalImagesUserDefaults {
+    func customBackgroundLastUpdated(for identifier: Identifier) -> Date? {
+        BackgroundImageRecord(for: identifier).selectedAt
+    }
+
+    func setCustomBackgroundLastUpdated(_ date: Date?, for identifier: Identifier) {
+        var record = BackgroundImageRecord(for: identifier)
+        record.selectedAt = date
+        if date != nil { record.selectionVersion = UUID() }
+        record.save(for: identifier)
+    }
+
+    func backgroundUploadRetiredThrough(for identifier: Identifier) -> Date? {
+        BackgroundImageRecord(for: identifier).retiredThrough
+    }
+
+    func acknowledgeBackgroundUpload(_ url: URL, selectedAt: Date, for identifier: Identifier) {
+        var record = BackgroundImageRecord(for: identifier)
+        guard let current = record.selectedAt, abs(current.timeIntervalSince(selectedAt)) < 0.001 else { return }
+        record.cachedURL = url
+        record.selectedAt = nil
+        record.forced = false
+        record.retiredThrough = max(record.retiredThrough ?? .distantPast, selectedAt)
+        record.save(for: identifier)
+    }
+
+    func hasCustomBackground(for identifier: Identifier) -> Bool {
+        guard let file = BackgroundImageRecord(for: identifier).file else { return false }
+        return imagePersistence.hasBg(for: file.luid)
+    }
+
+    func getCustomBackground(for identifier: Identifier) -> UIImage? {
+        guard let file = BackgroundImageRecord(for: identifier).file else { return nil }
+        return imagePersistence.fetchBg(for: file.luid)
+    }
+
+    func backgroundUploadData(for identifier: Identifier) -> Future<Data, RuuviLocalError> {
+        let result = Promise<Data, RuuviLocalError>()
+        let file = BackgroundImageRecord(for: identifier).file
+        DispatchQueue.global(qos: .utility).async {
+            do {
+                guard let file else { throw RuuviLocalError.backgroundSuperseded }
+                result.succeed(value: try self.imagePersistence.fetchBgData(for: file.luid))
+            } catch {
+                result.fail(error: .disk(error))
+            }
+        }
+        return result.future
+    }
+
+    func setUserSelectedBackground(
+        image: UIImage, compressionQuality: CGFloat, selectedAt: Date, for identifier: Identifier
+    ) -> Future<URL, RuuviLocalError> {
+        persist(image: image, quality: compressionQuality, selectedAt: selectedAt, for: identifier)
+    }
+
+    func setCustomBackground(
+        image: UIImage, compressionQuality: CGFloat, for identifier: Identifier
+    ) -> Future<URL, RuuviLocalError> {
+        persist(image: image, quality: compressionQuality, selectedAt: nil, for: identifier)
+    }
+
+    func setDownloadedBackground(
+        image: UIImage, from url: URL, for identifier: Identifier, canPublish: @escaping () -> Bool
+    ) -> Future<URL, RuuviLocalError> {
+        persist(image: image, quality: 1, selectedAt: nil, cachedURL: url, for: identifier, canPublish: canPublish)
+    }
+
+    private func persist(
+        image: UIImage, quality: CGFloat, selectedAt: Date?, cachedURL: URL? = nil,
+        for identifier: Identifier, canPublish: @escaping () -> Bool = { true }
+    ) -> Future<URL, RuuviLocalError> {
+        let result = Promise<URL, RuuviLocalError>()
+        if cachedURL == nil { beginBackgroundSelection(for: identifier) }
+        let generation = UUID()
+        let file = "image-" + generation.uuidString
+        writeLock.lock()
+        pendingWrites[identifier.value] = PendingWrite(generation: generation, isDownload: cachedURL != nil)
+        writeLock.unlock()
+        imagePersistence.persistBg(image: image, compressionQuality: quality, for: file.luid)
+            .observe(on: .main)
+            .on(success: { url in
+                self.writeLock.lock()
+                let current = self.pendingWrites[identifier.value]?.generation == generation
+                if current { self.pendingWrites.removeValue(forKey: identifier.value) }
+                self.writeLock.unlock()
+                guard current, canPublish() else {
+                    self.imagePersistence.deleteBgIfExists(for: file.luid)
+                    result.fail(error: .backgroundSuperseded)
+                    return
+                }
+                var record = BackgroundImageRecord(for: identifier)
+                let previous = record.file
+                record.file = file
+                record.selectedAt = selectedAt
+                record.forced = false
+                if let cachedURL { record.cachedURL = cachedURL }
+                record.save(for: identifier)
+                self.publishBackgroundIndex(0, for: identifier)
+                self.retireFile(previous)
+                result.succeed(value: url)
+            }, failure: { error in
+                self.writeLock.lock()
+                if self.pendingWrites[identifier.value]?.generation == generation {
+                    self.pendingWrites.removeValue(forKey: identifier.value)
+                }
+                self.writeLock.unlock()
+                result.fail(error: error)
+            })
+        return result.future
+    }
+
 }
