@@ -1,4 +1,4 @@
-import RuuviPersistence
+@testable import RuuviPersistence
 import RuuviContext
 import RuuviOntology
 import Future
@@ -48,6 +48,44 @@ final class ImageQueuePersistenceTests: XCTestCase {
         let remaining = try database.dbPool.read { try RuuviCloudQueuedRequestSQLite.fetchAll($0) }
         XCTAssertEqual(remaining.count, 1)
         XCTAssertEqual(remaining.first?.requestDate, Date(timeIntervalSince1970: 20))
+    }
+
+    func testQueuedRetryCannotReappearAfterVersionIsDiscarded() throws {
+        let database = try QueueTestDatabase()
+        let writeQueue = DispatchQueue(label: "ImageQueuePersistenceTests.discard")
+        let persistence = RuuviPersistenceSQLite(context: QueueTestContext(database: database), writeQueue: writeQueue)
+        waitSuccess(persistence.createQueuedRequest(request(at: 100)))
+        let discarded = try database.dbPool.read { try XCTUnwrap(RuuviCloudQueuedRequestSQLite.fetchOne($0)) }
+
+        // Delay a repeated failure for this version until after its discard has been requested.
+        writeQueue.suspend()
+        let queuedFailure = persistence.createQueuedRequest(request(at: 100))
+        let discard = persistence.deleteQueuedRequest(discarded)
+        writeQueue.resume()
+
+        waitSuccess(queuedFailure)
+        waitSuccess(discard)
+        XCTAssertTrue(try database.dbPool.read { try RuuviCloudQueuedRequestSQLite.fetchAll($0) }.isEmpty)
+    }
+
+    func testDiscardOfOlderVersionKeepsUncommittedNewerRetry() throws {
+        let database = try QueueTestDatabase()
+        let writeQueue = DispatchQueue(label: "ImageQueuePersistenceTests.replacement")
+        let persistence = RuuviPersistenceSQLite(context: QueueTestContext(database: database), writeQueue: writeQueue)
+        waitSuccess(persistence.createQueuedRequest(request(at: 100)))
+        let older = try database.dbPool.read { try XCTUnwrap(RuuviCloudQueuedRequestSQLite.fetchOne($0)) }
+
+        writeQueue.suspend()
+        let newer = persistence.createQueuedRequest(request(at: 200))
+        let discard = persistence.deleteQueuedRequest(older)
+        writeQueue.resume()
+
+        waitSuccess(newer)
+        waitSuccess(discard)
+        let remaining = try database.dbPool.read { try RuuviCloudQueuedRequestSQLite.fetchAll($0) }
+        XCTAssertEqual(remaining.count, 1)
+        XCTAssertEqual(remaining.first?.requestDate, Date(timeIntervalSince1970: 200))
+        XCTAssertEqual(remaining.first?.additionalData, Data([200]))
     }
 
     func testAcknowledgementDoesNotDeleteNewerQueuedImage() throws {

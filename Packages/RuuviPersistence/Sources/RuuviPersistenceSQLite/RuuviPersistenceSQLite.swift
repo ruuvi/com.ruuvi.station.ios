@@ -26,13 +26,19 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             label: "RuuviTagPersistenceSQLite.readQueue",
             qos: .default
         )
-    private let writeQueue: DispatchQueue =
-        .init(
+    private let writeQueue: DispatchQueue
+
+    public init(context: SQLiteContext) {
+        self.context = context
+        self.writeQueue = DispatchQueue(
             label: "RuuviTagPersistenceSQLite.writeQueue",
             qos: .default
         )
-    public init(context: SQLiteContext) {
+    }
+
+    init(context: SQLiteContext, writeQueue: DispatchQueue) {
         self.context = context
+        self.writeQueue = writeQueue
     }
 
     public func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
@@ -1094,21 +1100,24 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             requestBodyData: request.requestBodyData,
             additionalData: request.additionalData
         )
-        do {
-            var success = false
-            try database.dbPool.write { db in
-                if request.type == .uploadImage,
-                   let current = try QueuedRequest.fetchOne(db, key: request.id),
-                   current.requestDate != request.requestDate
-                    || current.requestBodyData != request.requestBodyData
-                    || current.additionalData != request.additionalData {
-                    return
+        // Preserve invocation order with queued upserts and image acknowledgements.
+        writeQueue.async {
+            do {
+                var success = false
+                try self.database.dbPool.write { db in
+                    if request.type == .uploadImage,
+                       let current = try QueuedRequest.fetchOne(db, key: request.id),
+                       current.requestDate != request.requestDate
+                        || current.requestBodyData != request.requestBodyData
+                        || current.additionalData != request.additionalData {
+                        return
+                    }
+                    success = try entity.delete(db)
                 }
-                success = try entity.delete(db)
+                promise.succeed(value: success)
+            } catch {
+                promise.fail(error: .grdb(error))
             }
-            promise.succeed(value: success)
-        } catch {
-            promise.fail(error: .grdb(error))
         }
         return promise.future
     }
