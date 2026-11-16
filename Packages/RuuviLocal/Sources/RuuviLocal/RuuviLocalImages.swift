@@ -28,6 +28,8 @@ public protocol RuuviLocalImages {
     func getBackground(for identifier: Identifier) -> UIImage?
     func setBackground(_ id: Int, for identifier: Identifier)
     func setNextDefaultBackground(for identifier: Identifier) -> UIImage?
+    /// Changes on local choices, including defaults and removals, independently of image timestamps.
+    func backgroundSelectionVersion(for identifier: Identifier) -> UUID?
     func hasCustomBackground(for identifier: Identifier) -> Bool
     func backgroundUploadData(for identifier: Identifier) -> Future<Data, RuuviLocalError>
     func setUserSelectedBackground(

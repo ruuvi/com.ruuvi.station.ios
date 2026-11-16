@@ -20,6 +20,19 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
         return pendingWrites[identifier.value]?.isDownload == false
     }
 
+    func backgroundSelectionVersion(for identifier: Identifier) -> UUID? {
+        BackgroundImageRecord(for: identifier).selectionVersion
+    }
+
+    private func beginBackgroundSelection(for identifier: Identifier) {
+        writeLock.lock()
+        pendingWrites.removeValue(forKey: identifier.value)
+        writeLock.unlock()
+        var record = BackgroundImageRecord(for: identifier)
+        record.selectionVersion = UUID()
+        record.save(for: identifier)
+    }
+
     private let imagePersistence: ImagePersistence
     private let bgMinIndex = 1 // must be > 0, 0 means custom background
     private let bgMaxIndex = 17
@@ -46,9 +59,7 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
 
     func deleteCustomBackground(for identifier: Identifier) {
         let hadImage = hasCustomBackground(for: identifier)
-        writeLock.lock()
-        pendingWrites.removeValue(forKey: identifier.value)
-        writeLock.unlock()
+        beginBackgroundSelection(for: identifier)
         var record = BackgroundImageRecord(for: identifier)
         let previous = record.file
         record.file = nil
@@ -74,16 +85,12 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
 
     func setNextDefaultBackground(for identifier: Identifier) -> UIImage? {
         var id = backgroundId(for: identifier)
-        if id >= bgMinIndex, id < bgMaxIndex {
-            id += 1
-            setBackground(id, for: identifier)
-        } else if id >= bgMaxIndex {
-            id = bgMinIndex
-            setBackground(id, for: identifier)
+        if id >= bgMinIndex {
+            id = id < bgMaxIndex ? id + 1 : bgMinIndex
         } else {
             id = biasedToNotUsedRandom()
-            setBackground(id, for: identifier)
         }
+        setBackground(id, for: identifier)
         deleteCustomBackground(for: identifier)
         return UIImage(named: "bg\(id)")
     }
@@ -110,13 +117,19 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
             } else {
                 let bgIndexDefault: Int =
                     ruuviDeviceType == .ruuviTag ? bgIndexDefaultRuuviTag : bgIndexDefaultRuuviAir
-                setBackground(bgIndexDefault, for: identifier)
+                // A display placeholder is not a user choice and must not cancel a pending cloud download.
+                publishBackgroundIndex(bgIndexDefault, for: identifier)
                 return UIImage(named: "bg\(bgIndexDefault)")
             }
         }
     }
 
     func setBackground(_ id: Int, for identifier: Identifier) {
+        beginBackgroundSelection(for: identifier)
+        publishBackgroundIndex(id, for: identifier)
+    }
+
+    private func publishBackgroundIndex(_ id: Int, for identifier: Identifier) {
         let uuid = identifier.value
         let key = bgUDKeyPrefix + uuid
         UserDefaults.standard.set(id, forKey: key)
@@ -279,6 +292,7 @@ extension RuuviLocalImagesUserDefaults {
     func setCustomBackgroundLastUpdated(_ date: Date?, for identifier: Identifier) {
         var record = BackgroundImageRecord(for: identifier)
         record.selectedAt = date
+        if date != nil { record.selectionVersion = UUID() }
         record.save(for: identifier)
     }
 
@@ -343,6 +357,7 @@ extension RuuviLocalImagesUserDefaults {
         for identifier: Identifier, canPublish: @escaping () -> Bool = { true }
     ) -> Future<URL, RuuviLocalError> {
         let result = Promise<URL, RuuviLocalError>()
+        if cachedURL == nil { beginBackgroundSelection(for: identifier) }
         let generation = UUID()
         let file = "image-" + generation.uuidString
         writeLock.lock()
@@ -367,7 +382,7 @@ extension RuuviLocalImagesUserDefaults {
                 record.forced = false
                 if let cachedURL { record.cachedURL = cachedURL }
                 record.save(for: identifier)
-                self.setBackground(0, for: identifier)
+                self.publishBackgroundIndex(0, for: identifier)
                 self.retireFile(previous)
                 result.succeed(value: url)
             }, failure: { error in

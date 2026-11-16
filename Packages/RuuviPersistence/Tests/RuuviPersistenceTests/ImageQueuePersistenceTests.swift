@@ -120,12 +120,7 @@ final class ImageQueuePersistenceTests: XCTestCase {
         let database = try QueueTestDatabase()
         try database.dbPool.write { try RuuviTagSQLite.createTable(in: $0) }
         let persistence = RuuviPersistenceSQLite(context: QueueTestContext(database: database))
-        let sensor = CloudSensorStruct(
-            id: "AA:BB:CC:DD:EE:FF", serviceUUID: nil, name: "Sensor", isClaimed: true, isOwner: true,
-            owner: "owner@example.com", ownersPlan: "free", picture: nil,
-            offsetTemperature: nil, offsetHumidity: nil, offsetPressure: nil, isCloudSensor: true,
-            canShare: true, sharedTo: [], sharedToPending: [], maxHistoryDays: 30, lastUpdated: nil
-        ).ruuviTagSensor
+        let sensor = makeSensor()
         waitSuccess(persistence.create(sensor))
         waitSuccess(persistence.createQueuedRequest(request(at: 100)))
         var unrelated = request(at: 200)
@@ -135,6 +130,39 @@ final class ImageQueuePersistenceTests: XCTestCase {
         let remaining = try database.dbPool.read { try RuuviCloudQueuedRequestSQLite.fetchAll($0) }
         XCTAssertEqual(remaining.count, 1)
         XCTAssertEqual(remaining.first?.uniqueKey, unrelated.uniqueKey)
+    }
+
+    func testSensorRemovalWaitsForQueuedImageFailure() throws {
+        let database = try QueueTestDatabase()
+        try database.dbPool.write { try RuuviTagSQLite.createTable(in: $0) }
+        let writeQueue = DispatchQueue(label: "ImageQueuePersistenceTests.removeSensor")
+        let persistence = RuuviPersistenceSQLite(context: QueueTestContext(database: database), writeQueue: writeQueue)
+        let sensor = makeSensor()
+        waitSuccess(persistence.create(sensor))
+        var unrelated = request(at: 200)
+        unrelated.uniqueKey = "AA:BB:CC:11:22:33-uploadImage"
+        waitSuccess(persistence.createQueuedRequest(unrelated))
+
+        writeQueue.suspend()
+        let pendingFailure = persistence.createQueuedRequest(request(at: 100))
+        let removal = persistence.delete(sensor)
+        writeQueue.resume()
+
+        waitSuccess(pendingFailure)
+        waitSuccess(removal)
+        let remaining = try database.dbPool.read { try RuuviCloudQueuedRequestSQLite.fetchAll($0) }
+        XCTAssertEqual(remaining.count, 1)
+        XCTAssertEqual(remaining.first?.uniqueKey, unrelated.uniqueKey)
+        XCTAssertTrue(try database.dbPool.read { try RuuviTagSQLite.fetchAll($0) }.isEmpty)
+    }
+
+    private func makeSensor() -> RuuviTagSensor {
+        CloudSensorStruct(
+            id: "AA:BB:CC:DD:EE:FF", serviceUUID: nil, name: "Sensor", isClaimed: true, isOwner: true,
+            owner: "owner@example.com", ownersPlan: "free", picture: nil,
+            offsetTemperature: nil, offsetHumidity: nil, offsetPressure: nil, isCloudSensor: true,
+            canShare: true, sharedTo: [], sharedToPending: [], maxHistoryDays: 30, lastUpdated: nil
+        ).ruuviTagSensor
     }
 
     private func waitSuccess(_ future: Future<Bool, RuuviPersistenceError>) {

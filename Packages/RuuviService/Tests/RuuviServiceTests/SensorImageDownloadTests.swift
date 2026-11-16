@@ -98,6 +98,72 @@ final class SensorImageDownloadTests: XCTestCase {
         XCTAssertNil(images.cachedPictureURL(for: mac))
     }
 
+    func testDefaultSelectedDuringNetworkRequestIsPreserved() {
+        let rejected = expectRejection(sync.download(local: local, remote: remote("older.jpg")))
+        _ = images.setNextDefaultBackground(for: mac)
+        let selectedIndex = backgroundIndex(for: mac)
+        XCTAssertGreaterThan(selectedIndex, 0)
+
+        olderResponse.succeed(value: UIImage())
+
+        wait(for: [rejected], timeout: 2)
+        XCTAssertEqual(backgroundIndex(for: mac), selectedIndex)
+        XCTAssertNil(images.getCustomBackground(for: mac))
+        XCTAssertNil(images.cachedPictureURL(for: mac))
+    }
+
+    func testBluetoothDefaultSelectedDuringDiskWriteIsPreserved() {
+        let heldWrite = holdOlderWrite()
+        _ = images.setNextDefaultBackground(for: luid)
+        let selectedIndex = backgroundIndex(for: luid)
+
+        heldWrite.promise.succeed(value: FileManager.default.temporaryDirectory.appendingPathComponent("older.jpg"))
+
+        wait(for: [heldWrite.rejected], timeout: 2)
+        XCTAssertEqual(backgroundIndex(for: luid), selectedIndex)
+        XCTAssertNil(images.getCustomBackground(for: mac))
+        XCTAssertNil(images.cachedPictureURL(for: mac))
+    }
+
+    func testAutomaticPlaceholderDoesNotCancelCloudDownload() {
+        let saved = expectSuccess(sync.download(local: local, remote: remote("older.jpg")))
+        _ = images.getOrGenerateBackground(for: mac, ruuviDeviceType: .ruuviTag)
+        let downloaded = UIImage()
+
+        olderResponse.succeed(value: downloaded)
+
+        wait(for: [saved], timeout: 2)
+        assertCached(downloaded, name: "older.jpg")
+    }
+
+    func testDirectDefaultChoiceDuringDiskWriteIsPreserved() {
+        let heldWrite = holdOlderWrite()
+        images.setBackground(7, for: mac)
+
+        heldWrite.promise.succeed(value: FileManager.default.temporaryDirectory.appendingPathComponent("older.jpg"))
+
+        wait(for: [heldWrite.rejected], timeout: 2)
+        XCTAssertEqual(backgroundIndex(for: mac), 7)
+        XCTAssertNil(images.getCustomBackground(for: mac))
+        XCTAssertNil(images.cachedPictureURL(for: mac))
+    }
+
+    func testChoiceThroughAnotherStoreInstanceInvalidatesPendingDownload() {
+        let rejected = expectRejection(sync.download(local: local, remote: remote("older.jpg")))
+        let otherStore = RuuviLocalImagesUserDefaults(imagePersistence: disk)
+        otherStore.setBackground(7, for: luid)
+
+        olderResponse.succeed(value: UIImage())
+
+        wait(for: [rejected], timeout: 2)
+        XCTAssertEqual(backgroundIndex(for: luid), 7)
+        XCTAssertNil(images.getCustomBackground(for: mac))
+    }
+
+    private func backgroundIndex(for identifier: Identifier) -> Int {
+        UserDefaults.standard.integer(forKey: "BackgroundPersistenceUserDefaults.background." + identifier.value)
+    }
+
     private func holdOlderWrite()
     -> (promise: Promise<URL, RuuviLocalError>, rejected: XCTestExpectation) {
         let held = Promise<URL, RuuviLocalError>()

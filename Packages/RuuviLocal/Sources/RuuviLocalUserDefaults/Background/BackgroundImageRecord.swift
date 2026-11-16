@@ -9,6 +9,7 @@ struct BackgroundImageRecord {
     var cachedURL: URL?
     var forced = false
     var retiredThrough: Date?
+    var selectionVersion: UUID?
 
     init(for identifier: Identifier) {
         let defaults = UserDefaults.standard
@@ -18,6 +19,7 @@ struct BackgroundImageRecord {
             cachedURL = (record["cachedURL"] as? String).flatMap(URL.init(string:))
             forced = record["forced"] as? Bool ?? false
             retiredThrough = record["retiredThrough"] as? Date
+            selectionVersion = (record["selectionVersion"] as? String).flatMap(UUID.init(uuidString:))
         } else {
             // Existing installations continue to use their original files until the next write.
             file = identifier.value
@@ -35,6 +37,7 @@ struct BackgroundImageRecord {
         record["selectedAt"] = selectedAt
         record["cachedURL"] = cachedURL?.absoluteString
         record["retiredThrough"] = retiredThrough
+        record["selectionVersion"] = selectionVersion?.uuidString
         UserDefaults.standard.set(record, forKey: Self.prefix + identifier.value)
     }
 }

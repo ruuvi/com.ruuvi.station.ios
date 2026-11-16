@@ -495,36 +495,39 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     public func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPersistenceError> {
         let promise = Promise<Bool, RuuviPersistenceError>()
         assert(ruuviTag.macId != nil)
-        do {
-            try database.dbPool.write { db in
-                let normalizedTag = try normalizedSensor(ruuviTag, db: db)
-                let entity = Entity(
-                    id: normalizedTag.id,
-                    macId: normalizedTag.macId,
-                    luid: normalizedTag.luid,
-                    serviceUUID: normalizedTag.serviceUUID,
-                    name: normalizedTag.name,
-                    version: normalizedTag.version,
-                    firmwareVersion: normalizedTag.firmwareVersion,
-                    isConnectable: normalizedTag.isConnectable,
-                    isClaimed: normalizedTag.isClaimed,
-                    isOwner: normalizedTag.isOwner,
-                    owner: normalizedTag.owner,
-                    ownersPlan: normalizedTag.ownersPlan,
-                    isCloudSensor: normalizedTag.isCloudSensor,
-                    canShare: normalizedTag.canShare,
-                    sharedTo: normalizedTag.sharedTo,
-                    sharedToPending: normalizedTag.sharedToPending,
-                    maxHistoryDays: normalizedTag.maxHistoryDays
-                )
-                if let macId = normalizedTag.macId {
-                    _ = try deleteImageRetries(for: macId, through: nil, in: db)
+        // Sensor removal must follow any retry writes already enqueued for that sensor.
+        writeQueue.async {
+            do {
+                let success = try self.database.dbPool.write { db in
+                    let normalizedTag = try self.normalizedSensor(ruuviTag, db: db)
+                    let entity = Entity(
+                        id: normalizedTag.id,
+                        macId: normalizedTag.macId,
+                        luid: normalizedTag.luid,
+                        serviceUUID: normalizedTag.serviceUUID,
+                        name: normalizedTag.name,
+                        version: normalizedTag.version,
+                        firmwareVersion: normalizedTag.firmwareVersion,
+                        isConnectable: normalizedTag.isConnectable,
+                        isClaimed: normalizedTag.isClaimed,
+                        isOwner: normalizedTag.isOwner,
+                        owner: normalizedTag.owner,
+                        ownersPlan: normalizedTag.ownersPlan,
+                        isCloudSensor: normalizedTag.isCloudSensor,
+                        canShare: normalizedTag.canShare,
+                        sharedTo: normalizedTag.sharedTo,
+                        sharedToPending: normalizedTag.sharedToPending,
+                        maxHistoryDays: normalizedTag.maxHistoryDays
+                    )
+                    if let macId = normalizedTag.macId {
+                        _ = try self.deleteImageRetries(for: macId, through: nil, in: db)
+                    }
+                    return try entity.delete(db)
                 }
-                let success = try entity.delete(db)
                 promise.succeed(value: success)
+            } catch {
+                promise.fail(error: .grdb(error))
             }
-        } catch {
-            promise.fail(error: .grdb(error))
         }
         return promise.future
     }

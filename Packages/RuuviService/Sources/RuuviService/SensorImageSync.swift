@@ -186,8 +186,17 @@ public final class SensorImageSync {
         return generation
     }
 
-    private func canPublishDownload(local: RuuviTagSensor, remote: CloudSensor, generation: UUID) -> Bool {
-        downloadGenerations[remote.id] == generation && action(local: local, remote: remote) == .download
+    private func downloadValidator(
+        local: RuuviTagSensor, remote: CloudSensor, generation: UUID
+    ) -> () -> Bool {
+        let selections = identifiers(local: local, remote: remote).map {
+            (identifier: $0, version: images.backgroundSelectionVersion(for: $0))
+        }
+        return {
+            self.downloadGenerations[remote.id] == generation
+                && selections.allSatisfy { self.images.backgroundSelectionVersion(for: $0.identifier) == $0.version }
+                && self.action(local: local, remote: remote) == .download
+        }
     }
 
     private func download(
@@ -202,9 +211,10 @@ public final class SensorImageSync {
             result.fail(error: .ruuviCloud(.api(.api(.erConflict))))
             return result.future
         }
+        let canPublish = downloadValidator(local: local, remote: remote, generation: generation)
         loadImage(url).observe(on: .main).on(success: { image in
             // A newer cloud snapshot or a local selection supersedes this response.
-            guard self.canPublishDownload(local: local, remote: remote, generation: generation) else {
+            guard canPublish() else {
                 result.fail(error: .ruuviCloud(.api(.api(.erConflict))))
                 return
             }
@@ -215,9 +225,7 @@ public final class SensorImageSync {
                 self.images.setBackgroundUploadForced(false, for: identifier)
             }
             let identifier: Identifier = local.macId ?? local.luid ?? remote.id.mac
-            self.images.setDownloadedBackground(image: image, from: url, for: identifier, canPublish: {
-                self.canPublishDownload(local: local, remote: remote, generation: generation)
-            })
+            self.images.setDownloadedBackground(image: image, from: url, for: identifier, canPublish: canPublish)
                 .observe(on: .main)
                 .on(success: { fileURL in
                     result.succeed(value: fileURL)
