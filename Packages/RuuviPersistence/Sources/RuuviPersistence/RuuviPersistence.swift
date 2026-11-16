@@ -123,6 +123,9 @@ public protocol RuuviPersistence {
     ) -> Future<Bool, RuuviPersistenceError>
 
     @discardableResult
+    func deleteQueuedImageUploads(for macId: MACIdentifier, through date: Date?) -> Future<Bool, RuuviPersistenceError>
+
+    @discardableResult
     func deleteQueuedRequests() -> Future<Bool, RuuviPersistenceError>
 
     // MARK: - Subscription

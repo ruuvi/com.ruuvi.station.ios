@@ -19,3 +19,34 @@ targets:
     - target: RuuviLocalization
     - target: RuuviRepository
     - target: RuuviCore
+  RuuviImageSyncTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+    - path: ../RuuviCloud/Tests/RuuviCloudTests/RuuviCloudImageSyncTests.swift
+    - path: ../RuuviCloud/Tests/RuuviCloudTests/RuuviCloudImageTestDoubles.swift
+    - path: ../RuuviLocal/Tests/RuuviLocalTests/RuuviLocalImageSyncTests.swift
+    - path: Tests/RuuviServiceTests/SyncCollisionResolverTests.swift
+    - path: Tests/RuuviServiceTests/SensorImageSyncTests.swift
+    - path: Tests/RuuviServiceTests/SensorImageSyncTestDoubles.swift
+    - path: ../RuuviPersistence/Tests/RuuviPersistenceTests/ImageQueuePersistenceTests.swift
+    dependencies:
+    - target: RuuviCloud
+    - target: RuuviLocal
+    - target: RuuviService
+    - target: RuuviPersistence
+    - target: RuuviContext
+    - target: RuuviCore
+    - package: GRDB
+    - package: Future
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  RuuviImageSyncTests:
+    build:
+      targets:
+        RuuviImageSyncTests: all
+    test:
+      targets:
+      - RuuviImageSyncTests

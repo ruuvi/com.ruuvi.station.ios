@@ -511,6 +511,9 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
                     sharedToPending: normalizedTag.sharedToPending,
                     maxHistoryDays: normalizedTag.maxHistoryDays
                 )
+                if let macId = normalizedTag.macId {
+                    _ = try deleteImageRetries(for: macId, through: nil, in: db)
+                }
                 let success = try entity.delete(db)
                 promise.succeed(value: success)
             }
@@ -1038,30 +1041,35 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
     public func createQueuedRequest(
         _ request: RuuviCloudQueuedRequest
     ) -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
-        // Check if there's already a request stored for the key.
-        // If exists update the existing record, otherwise create a new.
-        readQueuedRequests().on(success: { [weak self] requests in
-
-            let existingRequest = requests.first(
-                where: { ($0.uniqueKey != nil && $0.uniqueKey == request.uniqueKey)
-                    && ($0.type != nil && $0.type == request.type)
+        let result = Promise<Bool, RuuviPersistenceError>()
+        writeQueue.async {
+            do {
+                try self.database.dbPool.write { db in
+                    let existing = try QueuedRequest.fetchAll(db).first {
+                        $0.uniqueKey != nil && $0.uniqueKey == request.uniqueKey && $0.type == request.type
+                    }
+                    if let existing {
+                        // A delayed failure from an older selection must not replace the newer retry.
+                        if request.type == .uploadImage,
+                           let savedDate = existing.requestDate,
+                           savedDate > (request.requestDate ?? .distantPast) { return }
+                        let entity = QueuedRequest(
+                            id: existing.id, type: request.type, status: request.status,
+                            uniqueKey: request.uniqueKey, requestDate: request.requestDate,
+                            successDate: request.successDate, attempts: (existing.attempts ?? 0) + 1,
+                            requestBodyData: request.requestBodyData, additionalData: request.additionalData
+                        )
+                        try entity.update(db)
+                    } else {
+                        try request.sqlite.insert(db)
+                    }
                 }
-            )
-            let isCreate = (requests.count == 0) || existingRequest == nil
-
-            self?.createQueueRequest(
-                isCreate: isCreate,
-                newRequest: request,
-                existingRequest: existingRequest
-            )
-            .on(success: { _ in
-                promise.succeed(value: true)
-            }, failure: { error in
-                promise.fail(error: .grdb(error))
-            })
-        })
-        return promise.future
+                result.succeed(value: true)
+            } catch {
+                result.fail(error: .grdb(error))
+            }
+        }
+        return result.future
     }
 
     @discardableResult
@@ -1084,6 +1092,13 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         do {
             var success = false
             try database.dbPool.write { db in
+                if request.type == .uploadImage,
+                   let current = try QueuedRequest.fetchOne(db, key: request.id),
+                   current.requestDate != request.requestDate
+                    || current.requestBodyData != request.requestBodyData
+                    || current.additionalData != request.additionalData {
+                    return
+                }
                 success = try entity.delete(db)
             }
             promise.succeed(value: success)
@@ -1091,6 +1106,40 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             promise.fail(error: .grdb(error))
         }
         return promise.future
+    }
+
+    /// Acknowledge only this version and older retries, atomically with respect to queue upserts.
+    public func deleteQueuedImageUploads(
+        for macId: MACIdentifier, through date: Date?
+    ) -> Future<Bool, RuuviPersistenceError> {
+        let result = Promise<Bool, RuuviPersistenceError>()
+        writeQueue.async {
+            do {
+                let removed = try self.database.dbPool.write { db in
+                    try self.deleteImageRetries(for: macId, through: date, in: db)
+                }
+                result.succeed(value: removed)
+            } catch {
+                result.fail(error: .grdb(error))
+            }
+        }
+        return result.future
+    }
+
+    private func deleteImageRetries(for macId: MACIdentifier, through date: Date?, in db: Database) throws -> Bool {
+        let rows = try Row.fetchAll(db, QueuedRequest
+            .select(QueuedRequest.idColumn, QueuedRequest.uniqueKeyColumn, QueuedRequest.requestDateColumn)
+            .filter(QueuedRequest.typeColumn == RuuviCloudQueuedRequestType.uploadImage.rawValue))
+        var removed = false
+        for row in rows {
+            guard let key: String = row[QueuedRequest.uniqueKeyColumn], key.hasSuffix("-uploadImage"),
+                  String(key.dropLast("-uploadImage".count)).isLast3BytesEqual(to: macId.value) else { continue }
+            let queuedDate: Date? = row[QueuedRequest.requestDateColumn]
+            if let date, let queuedDate, queuedDate.timeIntervalSince(date) > 0.001 { continue }
+            let id: Int64 = row[QueuedRequest.idColumn]
+            removed = try QueuedRequest.deleteOne(db, key: id) || removed
+        }
+        return removed
     }
 
     @discardableResult
@@ -1149,54 +1198,6 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
 // MARK: - Private
 
 extension RuuviPersistenceSQLite {
-    /// Create or Update a queued request.
-    private func createQueueRequest(
-        isCreate: Bool,
-        newRequest: RuuviCloudQueuedRequest,
-        existingRequest: RuuviCloudQueuedRequest?
-    )
-    -> Future<Bool, RuuviPersistenceError> {
-        let promise = Promise<Bool, RuuviPersistenceError>()
-        if isCreate {
-            do {
-                try database.dbPool.write { db in
-                    assert(newRequest.uniqueKey != nil)
-                    try newRequest.sqlite.insert(db)
-                }
-                promise.succeed(value: true)
-            } catch {
-                promise.fail(error: .grdb(error))
-            }
-        } else {
-            guard let existingRequest
-            else {
-                return promise.future
-            }
-
-            let retryCount = existingRequest.attempts ?? 0 + 1
-            let entity = QueuedRequest(
-                id: existingRequest.id,
-                type: existingRequest.type,
-                status: newRequest.status,
-                uniqueKey: newRequest.uniqueKey,
-                requestDate: newRequest.requestDate,
-                successDate: newRequest.successDate,
-                attempts: retryCount,
-                requestBodyData: newRequest.requestBodyData,
-                additionalData: newRequest.additionalData
-            )
-            do {
-                try database.dbPool.write { db in
-                    try entity.update(db)
-                }
-                promise.succeed(value: true)
-            } catch {
-                promise.fail(error: .grdb(error))
-            }
-        }
-        return promise.future
-    }
-
     private func normalizedSensor(
         _ sensor: RuuviTagSensor,
         db: Database

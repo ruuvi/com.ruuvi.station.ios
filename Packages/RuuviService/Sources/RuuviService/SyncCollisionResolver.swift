@@ -17,6 +17,13 @@ enum UserSettingTimestamp {
 }
 
 public struct SyncCollisionResolver {
+    /// Compare the user-selected image's date, independently of other sensor edits.
+    static func shouldUploadImage(localTimestamp: Date?, cloudTimestamp: Date?) -> Bool {
+        guard let localTimestamp, let cloudTimestamp else { return false }
+        // Cloud timestamps have whole-second precision; a same-second date cannot establish freshness.
+        return floor(localTimestamp.timeIntervalSince1970) > floor(cloudTimestamp.timeIntervalSince1970)
+    }
+
     /// Tolerance for clock skew (1 second)
     private static let tolerance: TimeInterval = 1.0
 

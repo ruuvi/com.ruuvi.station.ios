@@ -3,6 +3,54 @@ import RuuviOntology
 import XCTest
 
 final class SyncCollisionResolverTests: XCTestCase {
+    func testOnlyAnExplicitlyDatedNewerImageWins() {
+        let cloud = Date(timeIntervalSince1970: 100)
+        XCTAssertFalse(SyncCollisionResolver.shouldUploadImage(localTimestamp: nil, cloudTimestamp: cloud))
+        XCTAssertFalse(
+            SyncCollisionResolver.shouldUploadImage(
+                localTimestamp: Date(timeIntervalSince1970: 99), cloudTimestamp: cloud
+            )
+        )
+        XCTAssertFalse(SyncCollisionResolver.shouldUploadImage(localTimestamp: cloud, cloudTimestamp: cloud))
+        XCTAssertFalse(
+            SyncCollisionResolver.shouldUploadImage(
+                localTimestamp: Date(timeIntervalSince1970: 100.9), cloudTimestamp: cloud
+            )
+        )
+        XCTAssertTrue(
+            SyncCollisionResolver.shouldUploadImage(
+                localTimestamp: Date(timeIntervalSince1970: 101), cloudTimestamp: cloud
+            )
+        )
+    }
+
+    func testTimestampAloneCannotAuthorizeUploadWhenAgeIsUnknown() {
+        XCTAssertFalse(SyncCollisionResolver.shouldUploadImage(localTimestamp: nil, cloudTimestamp: nil))
+        XCTAssertFalse(
+            SyncCollisionResolver.shouldUploadImage(
+                localTimestamp: Date(timeIntervalSince1970: 101), cloudTimestamp: nil
+            )
+        )
+    }
+
+    func testNewerLocalMetadataKeepsLocalWithoutAuthorizingAnOlderImageUpload() {
+        let cloudTimestamp = Date(timeIntervalSince1970: 200)
+        XCTAssertEqual(
+            SyncCollisionResolver.resolve(
+                localTimestamp: Date(timeIntervalSince1970: 300),
+                cloudTimestamp: cloudTimestamp,
+                preferCloudWhenBothTimestampsMissing: true
+            ),
+            .keepLocalAndQueue
+        )
+        XCTAssertFalse(
+            SyncCollisionResolver.shouldUploadImage(
+                localTimestamp: Date(timeIntervalSince1970: 100),
+                cloudTimestamp: cloudTimestamp
+            )
+        )
+    }
+
     func testPreferCloudWhenBothTimestampsAreMissingIsOptIn() {
         XCTAssertEqual(
             SyncCollisionResolver.resolve(

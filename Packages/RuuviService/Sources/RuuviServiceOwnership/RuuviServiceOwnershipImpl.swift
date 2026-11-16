@@ -396,42 +396,9 @@ extension RuuviServiceOwnershipImpl {
             }
         }
 
-        func uploadBackground(_ image: UIImage) {
-            guard let jpegData = image.jpegData(compressionQuality: 1.0) else {
-                promise.fail(error: .failedToGetJpegRepresentation)
-                return
-            }
-            let remote = self.cloud.upload(
-                imageData: jpegData,
-                mimeType: .jpg,
-                progress: nil,
-                for: macId
-            )
-            remote.on(success: { _ in
-                promise.succeed(value: sensor.any)
-            }, failure: { error in
-                promise.fail(error: .ruuviCloud(error))
-            })
-        }
-
-        if let localBackground = localCustomBackground(for: sensor) {
-            uploadBackground(localBackground)
-            return
-        }
-
-        promise.succeed(value: sensor.any)
-    }
-
-    private func localCustomBackground(for sensor: RuuviTagSensor) -> UIImage? {
-        if let macId = sensor.macId,
-           let image = localImages.getCustomBackground(for: macId) {
-            return image
-        }
-        if let luid = sensor.luid,
-           let image = localImages.getCustomBackground(for: luid) {
-            return image
-        }
-        return nil
+        SensorImageSync(images: localImages, cloud: cloud).claim(local: sensor)
+            .on(success: { _ in promise.succeed(value: sensor.any) },
+                failure: { promise.fail(error: $0) })
     }
 
     private func cleanupSensorData(for sensor: RuuviTagSensor) {

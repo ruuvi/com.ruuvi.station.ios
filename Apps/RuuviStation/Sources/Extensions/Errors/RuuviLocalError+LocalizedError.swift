@@ -5,6 +5,8 @@ import RuuviLocalization
 extension RuuviLocalError: LocalizedError {
     public var errorDescription: String? {
         switch self {
+        case .backgroundSuperseded:
+            CocoaError(.userCancelled).localizedDescription
         case let .disk(error):
             error.localizedDescription
         case .failedToGetJpegRepresentation:

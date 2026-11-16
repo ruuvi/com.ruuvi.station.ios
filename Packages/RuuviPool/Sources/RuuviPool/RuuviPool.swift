@@ -60,6 +60,9 @@ public protocol RuuviPool {
     @discardableResult
     func deleteQueuedRequest(_ request: RuuviCloudQueuedRequest) -> Future<Bool, RuuviPoolError>
     @discardableResult
+    func deleteQueuedImageUploads(for macId: MACIdentifier, through date: Date?) -> Future<Bool, RuuviPoolError>
+
+    @discardableResult
     func deleteQueuedRequests() -> Future<Bool, RuuviPoolError>
     @discardableResult
     func deleteUserSettings() -> Future<Bool, RuuviPoolError>

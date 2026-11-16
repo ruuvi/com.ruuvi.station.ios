@@ -118,10 +118,13 @@ public protocol RuuviCloud {
     ) -> Future<AnyRuuviTagSensor, RuuviCloudError>
 
     @discardableResult
+    // swiftlint:disable:next function_parameter_count
     func upload(
         imageData: Data,
         mimeType: MimeType,
+        lastUpdated: Date,
         progress: ((MACIdentifier, Double) -> Void)?,
+        isCurrentSelection: (() -> Bool)?,
         for macId: MACIdentifier
     ) -> Future<URL, RuuviCloudError>
 
@@ -262,4 +265,14 @@ public enum RuuviCloudRequestStateType: String {
     case success
     case failed
     case complete
+}
+
+public extension RuuviCloud {
+    func upload(
+        imageData: Data, mimeType: MimeType, lastUpdated: Date,
+        progress: ((MACIdentifier, Double) -> Void)?, for macId: MACIdentifier
+    ) -> Future<URL, RuuviCloudError> {
+        upload(imageData: imageData, mimeType: mimeType, lastUpdated: lastUpdated,
+               progress: progress, isCurrentSelection: nil, for: macId)
+    }
 }

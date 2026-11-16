@@ -702,15 +702,71 @@ public final class RuuviCloudPure: RuuviCloud {
         return promise.future
     }
 
+    private let imageUploadLock = NSRecursiveLock()
+    private var imageUploads: [String: (date: Date, future: Future<URL, RuuviCloudError>)] = [:]
+
     public func upload(
         imageData: Data,
         mimeType: MimeType,
+        lastUpdated: Date,
         progress: ((MACIdentifier, Double) -> Void)?,
+        isCurrentSelection: (() -> Bool)? = nil,
+        for macId: MACIdentifier
+    ) -> Future<URL, RuuviCloudError> {
+        let session = user.apiKey
+        let key = (session ?? "") + macId.value
+        imageUploadLock.lock()
+        let previous = imageUploads[key]
+        if let previous, previous.date == lastUpdated {
+            imageUploadLock.unlock()
+            return previous.future
+        }
+        let result = Promise<URL, RuuviCloudError>()
+        if let previous, previous.date > lastUpdated {
+            imageUploadLock.unlock()
+            result.fail(error: .api(.api(.erConflict)))
+            return result.future
+        }
+        imageUploads[key] = (lastUpdated, result.future)
+        imageUploadLock.unlock()
+        result.future.on(completion: {
+            self.imageUploadLock.lock()
+            if self.imageUploads[key]?.date == lastUpdated { self.imageUploads.removeValue(forKey: key) }
+            self.imageUploadLock.unlock()
+        })
+        let start = {
+            guard self.user.apiKey == session else {
+                result.fail(error: .notAuthorized)
+                return
+            }
+            self.imageUploadLock.lock()
+            let isLatest = self.imageUploads[key]?.date == lastUpdated
+            self.imageUploadLock.unlock()
+            guard isLatest, isCurrentSelection?() != false else {
+                result.fail(error: .api(.api(.erConflict)))
+                return
+            }
+            self.performImageUpload(
+                imageData: imageData, mimeType: mimeType, lastUpdated: lastUpdated, progress: progress,
+                isCurrentSelection: isCurrentSelection, for: macId
+            ).on(success: { result.succeed(value: $0) }, failure: { result.fail(error: $0) })
+        }
+        // Serialize different selections for a sensor; coalesce simultaneous copies of the same selection.
+        if let previous { previous.future.on(completion: { start() }) } else { start() }
+        return result.future
+    }
+
+    // swiftlint:disable:next function_parameter_count
+    private func performImageUpload(
+        imageData: Data,
+        mimeType: MimeType,
+        lastUpdated: Date,
+        progress: ((MACIdentifier, Double) -> Void)?,
+        isCurrentSelection: (() -> Bool)?,
         for macId: MACIdentifier
     ) -> Future<URL, RuuviCloudError> {
         let promise = Promise<URL, RuuviCloudError>()
-        guard let apiKey = user.apiKey
-        else {
+        guard let apiKey = user.apiKey else {
             promise.fail(error: .notAuthorized)
             return promise.future
         }
@@ -727,16 +783,37 @@ public final class RuuviCloudPure: RuuviCloud {
                 progress?(macId, percentage)
             }
         ).on(success: { response in
-            promise.succeed(value: response.uploadURL)
+            guard self.user.apiKey == apiKey else {
+                promise.fail(error: .notAuthorized)
+                return
+            }
+            let cleanup = self.pool?.deleteQueuedImageUploads(for: macId, through: lastUpdated)
+            if let cleanup {
+                cleanup.on(completion: { promise.succeed(value: response.uploadURL) })
+            } else {
+                promise.succeed(value: response.uploadURL)
+            }
         }, failure: { [weak self] error in
-            let uniqueKey = macId.value + "-uploadImage"
-            self?.createQueuedRequest(
+            guard let self, self.user.apiKey == apiKey else {
+                promise.fail(error: .notAuthorized)
+                return
+            }
+            guard isCurrentSelection?() != false else {
+                promise.fail(error: .api(error))
+                return
+            }
+            guard let queued = self.createQueuedRequest(
                 from: requestModel,
                 additionalData: imageData,
+                requestDate: lastUpdated,
                 type: .uploadImage,
-                uniqueKey: uniqueKey
-            )
-            promise.fail(error: .api(error))
+                uniqueKey: macId.value + "-uploadImage"
+            ) else {
+                promise.fail(error: .api(error))
+                return
+            }
+            // Finish only after the retry payload and original selection time are persisted.
+            queued.on(completion: { promise.fail(error: .api(error)) })
         })
         return promise.future
     }
@@ -1313,6 +1390,14 @@ public final class RuuviCloudPure: RuuviCloud {
     public func executeQueuedRequest(from request: RuuviCloudQueuedRequest)
     -> Future<Bool, RuuviCloudError> {
         let promise = Promise<Bool, RuuviCloudError>()
+        if request.type == .uploadImage,
+           let body = request.requestBodyData,
+           let image = try? JSONDecoder().decode(RuuviCloudApiSensorImageUploadRequest.self, from: body),
+           image.action == .reset {
+            // Keep the reset API available, but never replay an old reset from the queue.
+            promise.succeed(value: true)
+            return promise.future
+        }
         guard let apiKey = user.apiKey
         else {
             promise.fail(error: .notAuthorized)
@@ -1426,33 +1511,17 @@ public final class RuuviCloudPure: RuuviCloud {
             }
         case .uploadImage:
             do {
-                let requestModel = try decoder.decode(
-                    RuuviCloudApiSensorImageUploadRequest.self,
-                    from: requestBody
-                )
-
-                if requestModel.action == .reset {
-                    api.resetImage(requestModel, authorization: apiKey)
-                        .on(success: { _ in
-                            promise.succeed(value: true)
-                        }, failure: { error in
-                            promise.fail(error: .api(error))
-                        })
-                } else if let imageData = request.additionalData {
-                    api.uploadImage(
-                        requestModel,
-                        imageData: imageData,
-                        authorization: apiKey,
-                        uploadProgress: nil
-                    )
+                let model = try decoder.decode(RuuviCloudApiSensorImageUploadRequest.self, from: requestBody)
+                guard model.action == .upload, let imageData = request.additionalData else {
+                    promise.fail(error: .api(.badParameters))
+                    return promise.future
+                }
+                api.uploadImage(model, imageData: imageData, authorization: apiKey, uploadProgress: nil)
                     .on(success: { _ in
                         promise.succeed(value: true)
                     }, failure: { error in
                         promise.fail(error: .api(error))
                     })
-                } else {
-                    promise.fail(error: .api(.badParameters))
-                }
             } catch {
                 promise.fail(error: .api(.parsing(error)))
             }
@@ -1571,6 +1640,7 @@ public final class RuuviCloudPure: RuuviCloud {
     private func createQueuedRequest(
         from request: Codable,
         additionalData: Data? = nil,
+        requestDate: Date = Date(),
         type: RuuviCloudQueuedRequestType,
         uniqueKey: String
     ) -> Future<Bool, RuuviPoolError>? {
@@ -1584,7 +1654,7 @@ public final class RuuviCloudPure: RuuviCloud {
             type: type,
             status: .failed,
             uniqueKey: uniqueKey,
-            requestDate: Date(),
+            requestDate: requestDate,
             successDate: nil,
             attempts: 1,
             requestBodyData: data,
