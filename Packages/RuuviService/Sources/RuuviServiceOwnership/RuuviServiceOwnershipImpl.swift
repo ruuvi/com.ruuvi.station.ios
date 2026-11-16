@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+import RuuviService
+#endif
 // swiftlint:disable file_length
 
 import Foundation

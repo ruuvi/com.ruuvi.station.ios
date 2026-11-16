@@ -322,7 +322,7 @@ extension SensorImageSyncTests {
         let restartedBeforeCommit = RuuviLocalImagesUserDefaults(imagePersistence: disk)
         XCTAssertTrue(restartedBeforeCommit.getCustomBackground(for: mac) === original)
         XCTAssertEqual(restartedBeforeCommit.customBackgroundLastUpdated(for: mac), Date(timeIntervalSince1970: 200))
-        disk.heldWrite?.succeed(value: URL(fileURLWithPath: "/tmp/staged.jpg"))
+        disk.heldWrite?.succeed(value: FileManager.default.temporaryDirectory.appendingPathComponent("staged.jpg"))
         wait(for: [committed], timeout: 2)
         let restartedAfterCommit = RuuviLocalImagesUserDefaults(imagePersistence: disk)
         XCTAssertTrue(restartedAfterCommit.getCustomBackground(for: mac) === replacement)

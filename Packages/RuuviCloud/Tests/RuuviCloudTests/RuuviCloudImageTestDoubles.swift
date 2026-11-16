@@ -17,16 +17,16 @@ final class ImageAPIStub: RuuviCloudApi {
     func uploadImage(
         _ requestModel: RuuviCloudApiSensorImageUploadRequest,
         imageData: Data,
-        authorization: String,
-        uploadProgress: ((Double) -> Void)?
+        authorization _: String,
+        uploadProgress _: ((Double) -> Void)?
     ) -> Future<RuuviCloudApiSensorImageUploadResponse, RuuviCloudApiError> {
         uploads.append((requestModel, imageData))
         return uploadResult.future
     }
 
     func resetImage(
-        _ requestModel: RuuviCloudApiSensorImageUploadRequest,
-        authorization: String
+        _ _: RuuviCloudApiSensorImageUploadRequest,
+        authorization _: String
     ) -> Future<RuuviCloudApiSensorImageResetResponse, RuuviCloudApiError> {
         resetCalls += 1
         XCTFail("No reset should be sent")
@@ -36,165 +36,165 @@ final class ImageAPIStub: RuuviCloudApi {
     }
 
     func register(
-        _ requestModel: RuuviCloudApiRegisterRequest
+        _ _: RuuviCloudApiRegisterRequest
     ) -> Future<RuuviCloudApiRegisterResponse, RuuviCloudApiError> {
         fatalError("Unexpected register")
     }
 
     func verify(
-        _ requestModel: RuuviCloudApiVerifyRequest
+        _ _: RuuviCloudApiVerifyRequest
     ) -> Future<RuuviCloudApiVerifyResponse, RuuviCloudApiError> {
         fatalError("Unexpected verify")
     }
 
     func deleteAccount(
-        _ requestModel: RuuviCloudApiAccountDeleteRequest,
-        authorization: String
+        _ _: RuuviCloudApiAccountDeleteRequest,
+        authorization _: String
     ) -> Future<RuuviCloudApiAccountDeleteResponse, RuuviCloudApiError> {
         fatalError("Unexpected deleteAccount")
     }
 
     func registerPNToken(
-        _ requestModel: RuuviCloudPNTokenRegisterRequest,
-        authorization: String
+        _ _: RuuviCloudPNTokenRegisterRequest,
+        authorization _: String
     ) -> Future<RuuviCloudPNTokenRegisterResponse, RuuviCloudApiError> {
         fatalError("Unexpected registerPNToken")
     }
 
     func unregisterPNToken(
-        _ requestModel: RuuviCloudPNTokenUnregisterRequest,
-        authorization: String?
+        _ _: RuuviCloudPNTokenUnregisterRequest,
+        authorization _: String?
     ) -> Future<RuuviCloudPNTokenUnregisterResponse, RuuviCloudApiError> {
         fatalError("Unexpected unregisterPNToken")
     }
 
     func listPNTokens(
-        _ requestModel: RuuviCloudPNTokenListRequest,
-        authorization: String
+        _ _: RuuviCloudPNTokenListRequest,
+        authorization _: String
     ) -> Future<RuuviCloudPNTokenListResponse, RuuviCloudApiError> {
         fatalError("Unexpected listPNTokens")
     }
 
     func claim(
-        _ requestModel: RuuviCloudApiClaimRequest,
-        authorization: String
+        _ _: RuuviCloudApiClaimRequest,
+        authorization _: String
     ) -> Future<RuuviCloudApiClaimResponse, RuuviCloudApiError> {
         fatalError("Unexpected claim")
     }
 
     func contest(
-        _ requestModel: RuuviCloudApiContestRequest,
-        authorization: String
+        _ _: RuuviCloudApiContestRequest,
+        authorization _: String
     ) -> Future<RuuviCloudApiContestResponse, RuuviCloudApiError> {
         fatalError("Unexpected contest")
     }
 
     func unclaim(
-        _ requestModel: RuuviCloudApiUnclaimRequest,
-        authorization: String
+        _ _: RuuviCloudApiUnclaimRequest,
+        authorization _: String
     ) -> Future<RuuviCloudApiUnclaimResponse, RuuviCloudApiError> {
         fatalError("Unexpected unclaim")
     }
 
     func share(
-        _ requestModel: RuuviCloudApiShareRequest,
-        authorization: String
+        _ _: RuuviCloudApiShareRequest,
+        authorization _: String
     ) -> Future<RuuviCloudApiShareResponse, RuuviCloudApiError> {
         fatalError("Unexpected share")
     }
 
     func unshare(
-        _ requestModel: RuuviCloudApiShareRequest,
-        authorization: String
+        _ _: RuuviCloudApiShareRequest,
+        authorization _: String
     ) -> Future<RuuviCloudApiUnshareResponse, RuuviCloudApiError> {
         fatalError("Unexpected unshare")
     }
 
     func sensors(
-        _ requestModel: RuuviCloudApiGetSensorsRequest,
-        authorization: String
+        _ _: RuuviCloudApiGetSensorsRequest,
+        authorization _: String
     ) -> Future<RuuviCloudApiGetSensorsResponse, RuuviCloudApiError> {
         fatalError("Unexpected sensors")
     }
 
     func owner(
-        _ requestModel: RuuviCloudApiGetSensorsRequest,
-        authorization: String
+        _ _: RuuviCloudApiGetSensorsRequest,
+        authorization _: String
     ) -> Future<RuuviCloudAPICheckOwnerResponse, RuuviCloudApiError> {
         fatalError("Unexpected owner")
     }
 
     func sensorsDense(
-        _ requestModel: RuuviCloudApiGetSensorsDenseRequest,
-        authorization: String
+        _ _: RuuviCloudApiGetSensorsDenseRequest,
+        authorization _: String
     ) -> Future<RuuviCloudApiGetSensorsDenseResponse, RuuviCloudApiError> {
         sensorsResult.future
     }
 
     func user(
-        authorization: String
+        authorization _: String
     ) -> Future<RuuviCloudApiUserResponse, RuuviCloudApiError> {
         fatalError("Unexpected user")
     }
 
     func getSensorData(
-        _ requestModel: RuuviCloudApiGetSensorRequest,
-        authorization: String
+        _ _: RuuviCloudApiGetSensorRequest,
+        authorization _: String
     ) -> Future<RuuviCloudApiGetSensorResponse, RuuviCloudApiError> {
         fatalError("Unexpected getSensorData")
     }
 
     func update(
-        _ requestModel: RuuviCloudApiSensorUpdateRequest,
-        authorization: String
+        _ _: RuuviCloudApiSensorUpdateRequest,
+        authorization _: String
     ) -> Future<RuuviCloudApiSensorUpdateResponse, RuuviCloudApiError> {
         fatalError("Unexpected update")
     }
 
     func getSettings(
-        _ requestModel: RuuviCloudApiGetSettingsRequest,
-        authorization: String
+        _ _: RuuviCloudApiGetSettingsRequest,
+        authorization _: String
     ) -> Future<RuuviCloudApiGetSettingsResponse, RuuviCloudApiError> {
         fatalError("Unexpected getSettings")
     }
 
     func postSetting(
-        _ requestModel: RuuviCloudApiPostSettingRequest,
-        authorization: String
+        _ _: RuuviCloudApiPostSettingRequest,
+        authorization _: String
     ) -> Future<RuuviCloudApiPostSettingResponse, RuuviCloudApiError> {
         fatalError("Unexpected postSetting")
     }
 
     func getMarketingConsent(
-        authorization: String
+        authorization _: String
     ) -> Future<RuuviCloudMarketingConsent, RuuviCloudApiError> {
         fatalError("Unexpected getMarketingConsent")
     }
 
     func setMarketingConsent(
-        _ requestModel: RuuviCloudApiSetMarketingConsentRequest,
-        authorization: String
+        _ _: RuuviCloudApiSetMarketingConsentRequest,
+        authorization _: String
     ) -> Future<RuuviCloudMarketingConsent, RuuviCloudApiError> {
         fatalError("Unexpected setMarketingConsent")
     }
 
     func postSensorSettings(
-        _ requestModel: RuuviCloudApiPostSensorSettingsRequest,
-        authorization: String
+        _ _: RuuviCloudApiPostSensorSettingsRequest,
+        authorization _: String
     ) -> Future<RuuviCloudApiPostSensorSettingsResponse, RuuviCloudApiError> {
         fatalError("Unexpected postSensorSettings")
     }
 
     func postAlert(
-        _ requestModel: RuuviCloudApiPostAlertRequest,
-        authorization: String
+        _ _: RuuviCloudApiPostAlertRequest,
+        authorization _: String
     ) -> Future<RuuviCloudApiPostAlertResponse, RuuviCloudApiError> {
         fatalError("Unexpected postAlert")
     }
 
     func getAlerts(
-        _ requestModel: RuuviCloudApiGetAlertsRequest,
-        authorization: String
+        _ _: RuuviCloudApiGetAlertsRequest,
+        authorization _: String
     ) -> Future<RuuviCloudApiGetAlertsResponse, RuuviCloudApiError> {
         fatalError("Unexpected getAlerts")
     }
@@ -209,47 +209,47 @@ final class ImagePoolStub: RuuviPool {
         return persistence.future
     }
 
-    func create(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError> {
+    func create(_ _: RuuviTagSensor) -> Future<Bool, RuuviPoolError> {
         fatalError("Unexpected create")
     }
 
-    func update(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError> {
+    func update(_ _: RuuviTagSensor) -> Future<Bool, RuuviPoolError> {
         Future(value: true)
     }
 
-    func delete(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError> {
+    func delete(_ _: RuuviTagSensor) -> Future<Bool, RuuviPoolError> {
         fatalError("Unexpected delete")
     }
 
-    func deleteSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<Bool, RuuviPoolError> {
+    func deleteSensorSettings(_ _: RuuviTagSensor) -> Future<Bool, RuuviPoolError> {
         fatalError("Unexpected deleteSensorSettings")
     }
 
-    func create(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError> {
+    func create(_ _: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError> {
         fatalError("Unexpected create")
     }
 
-    func createLast(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError> {
+    func createLast(_ _: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError> {
         fatalError("Unexpected createLast")
     }
 
-    func updateLast(_ record: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError> {
+    func updateLast(_ _: RuuviTagSensorRecord) -> Future<Bool, RuuviPoolError> {
         fatalError("Unexpected updateLast")
     }
 
-    func deleteLast(_ ruuviTagId: String) -> Future<Bool, RuuviPoolError> {
+    func deleteLast(_ _: String) -> Future<Bool, RuuviPoolError> {
         fatalError("Unexpected deleteLast")
     }
 
-    func create(_ records: [RuuviTagSensorRecord]) -> Future<Bool, RuuviPoolError> {
+    func create(_ _: [RuuviTagSensorRecord]) -> Future<Bool, RuuviPoolError> {
         fatalError("Unexpected create")
     }
 
-    func deleteAllRecords(_ ruuviTagId: String) -> Future<Bool, RuuviPoolError> {
+    func deleteAllRecords(_ _: String) -> Future<Bool, RuuviPoolError> {
         fatalError("Unexpected deleteAllRecords")
     }
 
-    func deleteAllRecords(_ ruuviTagId: String, before date: Date) -> Future<Bool, RuuviPoolError> {
+    func deleteAllRecords(_ _: String, before _: Date) -> Future<Bool, RuuviPoolError> {
         fatalError("Unexpected deleteAllRecords")
     }
 
@@ -258,37 +258,37 @@ final class ImagePoolStub: RuuviPool {
     }
 
     func updateOffsetCorrection(
-        type: OffsetCorrectionType,
-        with value: Double?,
-        of ruuviTag: RuuviTagSensor,
-        lastOriginalRecord record: RuuviTagSensorRecord?
+        type _: OffsetCorrectionType,
+        with _: Double?,
+        of _: RuuviTagSensor,
+        lastOriginalRecord _: RuuviTagSensorRecord?
     ) -> Future<SensorSettings, RuuviPoolError> {
         fatalError("Unexpected updateOffsetCorrection")
     }
 
     func updateDisplaySettings(
-        for ruuviTag: RuuviTagSensor,
-        displayOrder: [String]?,
-        defaultDisplayOrder: Bool?,
-        displayOrderLastUpdated: Date?,
-        defaultDisplayOrderLastUpdated: Date?
+        for _: RuuviTagSensor,
+        displayOrder _: [String]?,
+        defaultDisplayOrder _: Bool?,
+        displayOrderLastUpdated _: Date?,
+        defaultDisplayOrderLastUpdated _: Date?
     ) -> Future<SensorSettings, RuuviPoolError> {
         fatalError("Unexpected updateDisplaySettings")
     }
 
     func updateDescription(
-        for ruuviTag: RuuviTagSensor,
-        description: String?,
-        descriptionLastUpdated: Date?
+        for _: RuuviTagSensor,
+        description _: String?,
+        descriptionLastUpdated _: Date?
     ) -> Future<SensorSettings, RuuviPoolError> {
         fatalError("Unexpected updateDescription")
     }
 
-    func readSensorSettings(_ ruuviTag: RuuviTagSensor) -> Future<SensorSettings?, RuuviPoolError> {
+    func readSensorSettings(_ _: RuuviTagSensor) -> Future<SensorSettings?, RuuviPoolError> {
         fatalError("Unexpected readSensorSettings")
     }
 
-    func deleteQueuedRequest(_ request: RuuviCloudQueuedRequest) -> Future<Bool, RuuviPoolError> {
+    func deleteQueuedRequest(_ _: RuuviCloudQueuedRequest) -> Future<Bool, RuuviPoolError> {
         fatalError("Unexpected deleteQueuedRequest")
     }
 
@@ -311,13 +311,13 @@ final class ImagePoolStub: RuuviPool {
     }
 
     func save(
-        subscription: CloudSensorSubscription
+        subscription _: CloudSensorSubscription
     ) -> Future<CloudSensorSubscription, RuuviPoolError> {
         fatalError("Unexpected save")
     }
 
     func readSensorSubscriptionSettings(
-        _ ruuviTag: RuuviTagSensor
+        _ _: RuuviTagSensor
     ) -> Future<CloudSensorSubscription?, RuuviPoolError> {
         fatalError("Unexpected readSensorSubscriptionSettings")
     }

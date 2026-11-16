@@ -126,7 +126,9 @@ private final class QueueTestDatabase: GRDBDatabase {
         dbPool = try DatabasePool(path: dbPath)
         if createTable { try dbPool.write { try RuuviCloudQueuedRequestSQLite.createTable(in: $0) } }
     }
-    func migrateIfNeeded() {}
+    func migrateIfNeeded() {
+        // Each test creates exactly the schema it needs in init; production migrations are intentionally skipped.
+    }
     deinit {
         try? dbPool.close()
         try? FileManager.default.removeItem(atPath: dbPath)

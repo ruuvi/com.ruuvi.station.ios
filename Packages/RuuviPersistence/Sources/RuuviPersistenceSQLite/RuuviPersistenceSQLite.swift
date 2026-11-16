@@ -1045,9 +1045,7 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
         writeQueue.async {
             do {
                 try self.database.dbPool.write { db in
-                    let existing = try QueuedRequest.fetchAll(db).first {
-                        $0.uniqueKey != nil && $0.uniqueKey == request.uniqueKey && $0.type == request.type
-                    }
+                    let existing = try self.existingQueuedRequest(matching: request, in: db)
                     if let existing {
                         // A delayed failure from an older selection must not replace the newer retry.
                         if request.type == .uploadImage,
@@ -1070,6 +1068,13 @@ public class RuuviPersistenceSQLite: RuuviPersistence, DatabaseService {
             }
         }
         return result.future
+    }
+
+    private func existingQueuedRequest(matching request: RuuviCloudQueuedRequest, in db: Database) throws
+    -> QueuedRequest? {
+        try QueuedRequest.fetchAll(db).first {
+            $0.uniqueKey != nil && $0.uniqueKey == request.uniqueKey && $0.type == request.type
+        }
     }
 
     @discardableResult

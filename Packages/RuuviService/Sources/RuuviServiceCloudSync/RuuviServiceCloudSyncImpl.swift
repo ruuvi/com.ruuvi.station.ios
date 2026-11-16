@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+import RuuviService
+#endif
 import Foundation
 import Future
 import RuuviCloud
@@ -201,19 +204,22 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                 }
 
                 guard let self else { return promise.succeed(value: true) }
-                let queuedRequests = requests.filter { $0.type != .uploadImage }.map {
-                    self.executeAndRemoveQueuedRequest($0)
-                }
-                Future.zip(queuedRequests).on(completion: {
-                    self.syncQueuedImages(requests.filter { $0.type == .uploadImage }).on(completion: {
-                        promise.succeed(value: true)
-                    })
-                })
+                self.executePendingRequests(requests, completion: promise)
             }, failure: { _ in
                 // Pending-request storage should not prevent fresh cloud data from syncing.
                 promise.succeed(value: true)
             })
         return promise.future
+    }
+
+    private func executePendingRequests(
+        _ requests: [RuuviCloudQueuedRequest], completion: Promise<Bool, RuuviServiceError>
+    ) {
+        let queuedRequests = requests.filter { $0.type != .uploadImage }.map(executeAndRemoveQueuedRequest)
+        let queuedImages = requests.filter { $0.type == .uploadImage }
+        Future.zip(queuedRequests).on(completion: {
+            self.syncQueuedImages(queuedImages).on(completion: { completion.succeed(value: true) })
+        })
     }
 
     private func pendingOffsetUpdates()
@@ -860,6 +866,15 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
         )
     }
 
+    private func imageSyncs(cloudSensors: [AnyCloudSensor], localSensors: [AnyRuuviTagSensor])
+    -> [Future<Bool, RuuviServiceError>] {
+        cloudSensors.map { remote in
+            let local = localSensors.first { $0.id.isLast3BytesEqual(to: remote.id) }
+                ?? remote.ruuviTagSensor.any
+            return imageSync.sync(local: local, remote: remote)
+        }
+    }
+
     // swiftlint:disable:next function_body_length
     private func syncSensors(
         cloudSensors: [AnyCloudSensor],
@@ -977,11 +992,7 @@ public final class RuuviServiceCloudSyncImpl: RuuviServiceCloudSync {
                         return self.ruuviPool.create(newLocalSensor)
                     }
 
-                let syncImages = cloudSensors.map { remote in
-                    let local = localSensors.first { $0.id.isLast3BytesEqual(to: remote.id) }
-                        ?? remote.ruuviTagSensor.any
-                    return self.imageSync.sync(local: local, remote: remote)
-                }
+                let syncImages = self.imageSyncs(cloudSensors: cloudSensors, localSensors: localSensors)
 
                 Future.zip([Future.zip(createSensors), Future.zip(updateSensors)])
                     .observe(on: .global(qos: .utility))

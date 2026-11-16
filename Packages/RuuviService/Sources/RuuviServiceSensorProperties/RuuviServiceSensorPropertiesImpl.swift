@@ -1,3 +1,6 @@
+#if SWIFT_PACKAGE
+import RuuviService
+#endif
 import Foundation
 import Future
 import RuuviCloud
@@ -109,28 +112,36 @@ public final class RuuviServiceSensorPropertiesImpl: RuuviServiceSensorPropertie
                 promise.succeed(value: localUrl)
                 return
             }
-            self.localImages.setBackgroundUploadProgress(percentage: 0, for: macId)
-            self.localImages.backgroundUploadData(for: identifier)
-                .mapError { RuuviServiceError.ruuviLocal($0) }
-                .flatMap { jpegData in
-                    self.cloud.upload(
-                        imageData: jpegData, mimeType: .jpg, lastUpdated: imageTimestamp,
-                        progress: { macId, percentage in
-                            self.localImages.setBackgroundUploadProgress(percentage: percentage, for: macId)
-                            progress?(macId, percentage)
-                        },
-                        isCurrentSelection: {
-                            self.localImages.customBackgroundLastUpdated(for: identifier) == imageTimestamp
-                        },
-                        for: macId
-                    ).mapError { RuuviServiceError.ruuviCloud($0) }
-                }.on(success: { url in
-                    self.localImages.acknowledgeBackgroundUpload(url, selectedAt: imageTimestamp, for: identifier)
-                    self.localImages.deleteBackgroundUploadProgress(for: macId)
-                    promise.succeed(value: localUrl)
-                }, failure: { promise.fail(error: $0) })
+            self.uploadBackground(for: identifier, macId: macId, selectedAt: imageTimestamp, progress: progress)
+                .on(success: { _ in promise.succeed(value: localUrl) }, failure: { promise.fail(error: $0) })
         }, failure: { promise.fail(error: .ruuviLocal($0)) })
         return promise.future
+    }
+
+    private func uploadBackground(
+        for identifier: Identifier, macId: MACIdentifier, selectedAt: Date,
+        progress: ((MACIdentifier, Double) -> Void)?
+    ) -> Future<URL, RuuviServiceError> {
+        localImages.setBackgroundUploadProgress(percentage: 0, for: macId)
+        return localImages.backgroundUploadData(for: identifier)
+            .mapError { RuuviServiceError.ruuviLocal($0) }
+            .flatMap { jpegData in
+                self.cloud.upload(
+                    imageData: jpegData, mimeType: .jpg, lastUpdated: selectedAt,
+                    progress: { macId, percentage in
+                        self.localImages.setBackgroundUploadProgress(percentage: percentage, for: macId)
+                        progress?(macId, percentage)
+                    },
+                    isCurrentSelection: {
+                        self.localImages.customBackgroundLastUpdated(for: identifier) == selectedAt
+                    },
+                    for: macId
+                ).mapError { RuuviServiceError.ruuviCloud($0) }
+            }.map { url in
+                self.localImages.acknowledgeBackgroundUpload(url, selectedAt: selectedAt, for: identifier)
+                self.localImages.deleteBackgroundUploadProgress(for: macId)
+                return url
+            }
     }
 
     public func getImage(for sensor: RuuviTagSensor) -> Future<UIImage, RuuviServiceError> {

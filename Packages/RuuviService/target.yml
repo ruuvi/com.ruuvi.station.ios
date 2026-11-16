@@ -28,6 +28,7 @@ targets:
     - path: ../RuuviLocal/Tests/RuuviLocalTests/RuuviLocalImageSyncTests.swift
     - path: Tests/RuuviServiceTests/SyncCollisionResolverTests.swift
     - path: Tests/RuuviServiceTests/SensorImageSyncTests.swift
+    - path: Tests/RuuviServiceTests/SensorImageDownloadTests.swift
     - path: Tests/RuuviServiceTests/SensorImageSyncTestDoubles.swift
     - path: ../RuuviPersistence/Tests/RuuviPersistenceTests/ImageQueuePersistenceTests.swift
     dependencies:

@@ -33,6 +33,10 @@ public protocol RuuviLocalImages {
     func setUserSelectedBackground(
         image: UIImage, compressionQuality: CGFloat, selectedAt: Date, for identifier: Identifier
     ) -> Future<URL, RuuviLocalError>
+    /// Publishes the image and its cloud URL together, only while the download is still current.
+    func setDownloadedBackground(
+        image: UIImage, from url: URL, for identifier: Identifier, canPublish: @escaping () -> Bool
+    ) -> Future<URL, RuuviLocalError>
     func backgroundUploadRetiredThrough(for identifier: Identifier) -> Date?
     func acknowledgeBackgroundUpload(_ url: URL, selectedAt: Date, for identifier: Identifier)
     func getCustomBackground(for identifier: Identifier) -> UIImage?
@@ -48,6 +52,7 @@ public protocol RuuviLocalImages {
     func customBackgroundLastUpdated(for identifier: Identifier) -> Date?
     func setCustomBackgroundLastUpdated(_ date: Date?, for identifier: Identifier)
 
+    /// Local saves block reconciliation; an older cloud-cache write must not block a newer download.
     func isBackgroundWritePending(for identifier: Identifier) -> Bool
     func cachedPictureURL(for identifier: Identifier) -> URL?
     func setCachedPictureURL(_ url: URL?, for identifier: Identifier)

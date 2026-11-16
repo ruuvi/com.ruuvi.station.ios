@@ -6,23 +6,29 @@ import RuuviOntology
 import UIKit
 
 /// Image reconciliation is independent of sensor metadata reconciliation.
-final class SensorImageSync {
+public final class SensorImageSync {
     enum Action {
         case upload, download, preserve, none
     }
 
-    enum RetryAction {
+    public enum RetryAction {
         case upload, discard, preserve
     }
 
     private let images: RuuviLocalImages
     private let cloud: RuuviCloud
     private let loadImage: (URL) -> Future<UIImage, RuuviServiceError>
+    // Accessed on main, together with image publication and local selection metadata.
+    private var downloadGenerations: [String: UUID] = [:]
+
+    public convenience init(images: RuuviLocalImages, cloud: RuuviCloud) {
+        self.init(images: images, cloud: cloud, loadImage: Self.loadImage)
+    }
 
     init(
         images: RuuviLocalImages,
         cloud: RuuviCloud,
-        loadImage: @escaping (URL) -> Future<UIImage, RuuviServiceError> = SensorImageSync.loadImage
+        loadImage: @escaping (URL) -> Future<UIImage, RuuviServiceError>
     ) {
         self.images = images
         self.cloud = cloud
@@ -73,7 +79,7 @@ final class SensorImageSync {
         return cached ? .none : .download
     }
 
-    func retryAction(
+    public func retryAction(
         selectedAt: Date?, local: RuuviTagSensor, remote: CloudSensor
     ) -> RetryAction {
         if let selectedAt, identifiers(local: local, remote: remote).contains(where: {
@@ -87,7 +93,7 @@ final class SensorImageSync {
         return action(local: local, remote: remote) == .upload ? .upload : .preserve
     }
 
-    func sync(local: RuuviTagSensor, remote: CloudSensor) -> Future<Bool, RuuviServiceError> {
+    public func sync(local: RuuviTagSensor, remote: CloudSensor) -> Future<Bool, RuuviServiceError> {
         guard Thread.isMainThread else {
             let result = Promise<Bool, RuuviServiceError>()
             DispatchQueue.main.async {
@@ -96,6 +102,7 @@ final class SensorImageSync {
             }
             return result.future
         }
+        let generation = beginReconciliation(for: remote)
         switch action(local: local, remote: remote) {
         case .upload:
             guard let selected = selection(local: local, remote: remote) else { return Future(value: false) }
@@ -104,7 +111,7 @@ final class SensorImageSync {
                 macId: remote.id.mac, aliases: identifiers(local: local, remote: remote)
             ).map { _ in true }
         case .download:
-            return download(local: local, remote: remote).map { _ in true }
+            return download(local: local, remote: remote, generation: generation).map { _ in true }
         case .preserve:
             return Future(value: false)
         case .none:
@@ -119,7 +126,7 @@ final class SensorImageSync {
         }
     }
 
-    func claim(local: RuuviTagSensor) -> Future<Bool, RuuviServiceError> {
+    public func claim(local: RuuviTagSensor) -> Future<Bool, RuuviServiceError> {
         guard let macId = local.macId, let identifier = images.customBackgroundIdentifier(for: local) else {
             return completed()
         }
@@ -161,7 +168,31 @@ final class SensorImageSync {
             }
     }
 
-    func download(local: RuuviTagSensor, remote: CloudSensor) -> Future<URL, RuuviServiceError> {
+    public func download(local: RuuviTagSensor, remote: CloudSensor) -> Future<URL, RuuviServiceError> {
+        guard Thread.isMainThread else {
+            let result = Promise<URL, RuuviServiceError>()
+            DispatchQueue.main.async {
+                self.download(local: local, remote: remote)
+                    .on(success: { result.succeed(value: $0) }, failure: { result.fail(error: $0) })
+            }
+            return result.future
+        }
+        return download(local: local, remote: remote, generation: beginReconciliation(for: remote))
+    }
+
+    private func beginReconciliation(for remote: CloudSensor) -> UUID {
+        let generation = UUID()
+        downloadGenerations[remote.id] = generation
+        return generation
+    }
+
+    private func canPublishDownload(local: RuuviTagSensor, remote: CloudSensor, generation: UUID) -> Bool {
+        downloadGenerations[remote.id] == generation && action(local: local, remote: remote) == .download
+    }
+
+    private func download(
+        local: RuuviTagSensor, remote: CloudSensor, generation: UUID
+    ) -> Future<URL, RuuviServiceError> {
         let result = Promise<URL, RuuviServiceError>()
         guard let url = remote.picture else {
             result.fail(error: .pictureUrlIsNil)
@@ -172,8 +203,8 @@ final class SensorImageSync {
             return result.future
         }
         loadImage(url).observe(on: .main).on(success: { image in
-            // A photo may have been selected while the network request was running.
-            guard self.action(local: local, remote: remote) == .download else {
+            // A newer cloud snapshot or a local selection supersedes this response.
+            guard self.canPublishDownload(local: local, remote: remote, generation: generation) else {
                 result.fail(error: .ruuviCloud(.api(.api(.erConflict))))
                 return
             }
@@ -184,12 +215,11 @@ final class SensorImageSync {
                 self.images.setBackgroundUploadForced(false, for: identifier)
             }
             let identifier: Identifier = local.macId ?? local.luid ?? remote.id.mac
-            self.images.setCustomBackground(image: image, compressionQuality: 1, for: identifier)
+            self.images.setDownloadedBackground(image: image, from: url, for: identifier, canPublish: {
+                self.canPublishDownload(local: local, remote: remote, generation: generation)
+            })
                 .observe(on: .main)
                 .on(success: { fileURL in
-                    if self.selection(local: local, remote: remote) == nil {
-                        self.images.setCachedPictureURL(url, for: identifier)
-                    }
                     result.succeed(value: fileURL)
                 }, failure: { result.fail(error: .ruuviLocal($0)) })
         }, failure: { result.fail(error: $0) })

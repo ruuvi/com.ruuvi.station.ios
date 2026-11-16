@@ -14,24 +14,26 @@ class ImagePersistenceDocuments: ImagePersistence {
 
     /// Run once, before this process can stage any new files on the shared disk queue.
     private static let recoverUnpublishedFiles: Void = {
-        diskQueue.async {
-            let records = UserDefaults.standard.dictionaryRepresentation()
-            let liveFiles = Set(records.compactMap { key, value -> String? in
-                guard key.hasPrefix(BackgroundImageRecord.prefix) else { return nil }
-                return (value as? [String: Any])?["file"] as? String
-            })
-            guard let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first,
-                  let files = try? FileManager.default.contentsOfDirectory(
-                    at: documents.appendingPathComponent("bg"), includingPropertiesForKeys: nil
-                  ) else { return }
-            for file in files {
-                let name = file.deletingPathExtension().lastPathComponent
-                guard name.hasPrefix("image-"), UUID(uuidString: String(name.dropFirst(6))) != nil,
-                      !liveFiles.contains(name) else { continue }
-                try? FileManager.default.removeItem(at: file)
-            }
-        }
+        diskQueue.async(execute: removeUnpublishedFiles)
     }()
+
+    private static func removeUnpublishedFiles() {
+        let records = UserDefaults.standard.dictionaryRepresentation()
+        let liveFiles = Set(records.compactMap { key, value -> String? in
+            guard key.hasPrefix(BackgroundImageRecord.prefix) else { return nil }
+            return (value as? [String: Any])?["file"] as? String
+        })
+        guard let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first,
+              let files = try? FileManager.default.contentsOfDirectory(
+                at: documents.appendingPathComponent("bg"), includingPropertiesForKeys: nil
+              ) else { return }
+        for file in files {
+            let name = file.deletingPathExtension().lastPathComponent
+            guard name.hasPrefix("image-"), UUID(uuidString: String(name.dropFirst(6))) != nil,
+                  !liveFiles.contains(name) else { continue }
+            try? FileManager.default.removeItem(at: file)
+        }
+    }
     private let ext = ".png"
     private let bgDir = "bg"
     private var isBgDirCreated = false

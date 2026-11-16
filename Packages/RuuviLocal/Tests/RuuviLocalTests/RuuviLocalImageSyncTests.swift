@@ -212,11 +212,11 @@ final class ImagePersistenceSpy: ImagePersistence {
         image = nil
         images.removeValue(forKey: identifier.value)
     }
-    func persistBg(image: UIImage, compressionQuality: CGFloat, for identifier: Identifier)
+    func persistBg(image: UIImage, compressionQuality _: CGFloat, for _: Identifier)
     -> Future<URL, RuuviLocalError> {
         self.image = image
         let result = Promise<URL, RuuviLocalError>()
-        result.succeed(value: URL(fileURLWithPath: "/tmp/unused-image-test.jpg"))
+        result.succeed(value: FileManager.default.temporaryDirectory.appendingPathComponent("unused-image-test.jpg"))
         return result.future
     }
 }

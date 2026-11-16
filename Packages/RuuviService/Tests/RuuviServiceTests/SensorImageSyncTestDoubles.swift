@@ -22,16 +22,16 @@ final class SyncImageDisk: ImagePersistence {
         return images[identifier.value]
     }
     func deleteBgIfExists(for identifier: Identifier) { images.removeValue(forKey: identifier.value) }
-    func persistBg(image: UIImage, compressionQuality: CGFloat, for identifier: Identifier)
+    func persistBg(image: UIImage, compressionQuality _: CGFloat, for identifier: Identifier)
     -> Future<URL, RuuviLocalError> {
         images[identifier.value] = image
         if let heldWrite { return heldWrite.future }
         let result = Promise<URL, RuuviLocalError>()
-        result.succeed(value: URL(fileURLWithPath: "/tmp/test-image.jpg"))
+        result.succeed(value: FileManager.default.temporaryDirectory.appendingPathComponent("test-image.jpg"))
         return result.future
     }
 }
 
 struct SyncCoreImage: RuuviCoreImage {
-    func cropped(image: UIImage, to maxSize: CGSize) -> UIImage { image }
+    func cropped(image: UIImage, to _: CGSize) -> UIImage { image }
 }

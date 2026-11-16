@@ -8,12 +8,16 @@ final class RuuviLocalImagesUserDefaults: RuuviLocalImages {
     }
 
     private let writeLock = NSLock()
-    private var pendingWrites: [String: UUID] = [:]
+    private struct PendingWrite {
+        let generation: UUID
+        let isDownload: Bool
+    }
+    private var pendingWrites: [String: PendingWrite] = [:]
 
     func isBackgroundWritePending(for identifier: Identifier) -> Bool {
         writeLock.lock()
         defer { writeLock.unlock() }
-        return pendingWrites[identifier.value] != nil
+        return pendingWrites[identifier.value]?.isDownload == false
     }
 
     private let imagePersistence: ImagePersistence
@@ -328,22 +332,30 @@ extension RuuviLocalImagesUserDefaults {
         persist(image: image, quality: compressionQuality, selectedAt: nil, for: identifier)
     }
 
+    func setDownloadedBackground(
+        image: UIImage, from url: URL, for identifier: Identifier, canPublish: @escaping () -> Bool
+    ) -> Future<URL, RuuviLocalError> {
+        persist(image: image, quality: 1, selectedAt: nil, cachedURL: url, for: identifier, canPublish: canPublish)
+    }
+
     private func persist(
-        image: UIImage, quality: CGFloat, selectedAt: Date?, for identifier: Identifier
+        image: UIImage, quality: CGFloat, selectedAt: Date?, cachedURL: URL? = nil,
+        for identifier: Identifier, canPublish: @escaping () -> Bool = { true }
     ) -> Future<URL, RuuviLocalError> {
         let result = Promise<URL, RuuviLocalError>()
         let generation = UUID()
         let file = "image-" + generation.uuidString
         writeLock.lock()
-        pendingWrites[identifier.value] = generation
+        pendingWrites[identifier.value] = PendingWrite(generation: generation, isDownload: cachedURL != nil)
         writeLock.unlock()
         imagePersistence.persistBg(image: image, compressionQuality: quality, for: file.luid)
+            .observe(on: .main)
             .on(success: { url in
                 self.writeLock.lock()
-                let current = self.pendingWrites[identifier.value] == generation
+                let current = self.pendingWrites[identifier.value]?.generation == generation
                 if current { self.pendingWrites.removeValue(forKey: identifier.value) }
                 self.writeLock.unlock()
-                guard current else {
+                guard current, canPublish() else {
                     self.imagePersistence.deleteBgIfExists(for: file.luid)
                     result.fail(error: .backgroundSuperseded)
                     return
@@ -353,13 +365,14 @@ extension RuuviLocalImagesUserDefaults {
                 record.file = file
                 record.selectedAt = selectedAt
                 record.forced = false
+                if let cachedURL { record.cachedURL = cachedURL }
                 record.save(for: identifier)
                 self.setBackground(0, for: identifier)
                 self.retireFile(previous)
                 result.succeed(value: url)
             }, failure: { error in
                 self.writeLock.lock()
-                if self.pendingWrites[identifier.value] == generation {
+                if self.pendingWrites[identifier.value]?.generation == generation {
                     self.pendingWrites.removeValue(forKey: identifier.value)
                 }
                 self.writeLock.unlock()
