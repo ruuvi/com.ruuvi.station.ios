@@ -11,6 +11,7 @@ protocol CardsGraphViewInteractorInput: AnyObject {
         andSettings settings: SensorSettings?,
         syncFromCloud: Bool
     )
+    func configureCloudGraph(withTag sensor: AnyRuuviTagSensor, settings: SensorSettings?)
     func updateSensorSettings(settings: SensorSettings?)
     func restartObservingTags()
     func stopObservingTags()
@@ -31,4 +32,10 @@ protocol CardsGraphViewInteractorInput: AnyObject {
     func setHasLoggedFirstAutoSyncGattHistoryForRuuviAir(_ logged: Bool)
     func deleteAllRecords(for sensor: RuuviTagSensor) -> Future<Void, RUError>
     func updateChartShowMinMaxAvgSetting(with show: Bool)
+}
+
+extension CardsGraphViewInteractorInput {
+    func configureCloudGraph(withTag sensor: AnyRuuviTagSensor, settings: SensorSettings?) {
+        configure(withTag: sensor, andSettings: settings, syncFromCloud: false)
+    }
 }

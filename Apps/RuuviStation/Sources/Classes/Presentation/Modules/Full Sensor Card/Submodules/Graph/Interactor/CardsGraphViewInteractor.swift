@@ -33,6 +33,7 @@ class CardsGraphViewInteractor {
     private var ruuviTagSensorObservationToken: RuuviReactorToken?
     private var timer: Timer?
     private var sensors: [AnyRuuviTagSensor] = []
+    private var usesCloudGraph = false
 
     private let highDensityIntervalMinutes: Int = 15
     private let minimumDownsampleThreshold: Int = 1000
@@ -86,6 +87,7 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
         andSettings settings: SensorSettings?,
         syncFromCloud: Bool
     ) {
+        usesCloudGraph = false
         ruuviTagSensor = ruuviTag
         sensorSettings = settings
         lastMeasurement = nil
@@ -107,11 +109,23 @@ extension CardsGraphViewInteractor: CardsGraphViewInteractorInput {
         }
     }
 
+    func configureCloudGraph(withTag sensor: AnyRuuviTagSensor, settings: SensorSettings?) {
+        stopObservingRuuviTagsData()
+        usesCloudGraph = true
+        ruuviTagSensor = sensor
+        sensorSettings = settings
+        ruuviTagData.removeAll()
+        lastMeasurement = nil
+        lastMeasurementRecord = nil
+        fetchLast()
+    }
+
     func updateSensorSettings(settings: SensorSettings?) {
         sensorSettings = settings
     }
 
     func restartObservingData() {
+        guard !usesCloudGraph else { return }
         ruuviTagData.removeAll()
         fetchPoints { [weak self] in
             guard let self else { return }

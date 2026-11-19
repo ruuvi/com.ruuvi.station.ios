@@ -84,6 +84,7 @@ extension DefaultsPresenter {
             buildMarketingConsentPromptInterval(),
             buildShowDashboardSensorSearch(),
             buildMeasurementStaleTimeout(),
+            buildCloudHistoryAggregation(),
         ]
     }
 
@@ -616,6 +617,18 @@ extension DefaultsPresenter {
                 .getBool(from: bool)
         }
 
+        return viewModel
+    }
+
+    private func buildCloudHistoryAggregation() -> DefaultsViewModel {
+        let viewModel = DefaultsViewModel()
+        viewModel.title = "Current cloud aggregated history"
+        viewModel.boolean.value = flags.cloudHistoryAggregation
+        viewModel.hideStatusLabel.value = !settings.showSwitchStatusLabel
+        viewModel.type.value = .switcher
+        bind(viewModel.boolean, fire: false) { observer, value in
+            observer.flags.cloudHistoryAggregation = GlobalHelpers.getBool(from: value)
+        }
         return viewModel
     }
 

@@ -233,6 +233,7 @@ struct RuuviTagCardSnapshotOwnership: Equatable {
     var sharedTo: [String] = []
     var sharedToPending: [String] = []
     var maxShareCount: Int?
+    var maxHistoryDays: Int?
     var isAuthorized: Bool = false
     var isClaimedTag: Bool = false
     var canClaimTag: Bool = false

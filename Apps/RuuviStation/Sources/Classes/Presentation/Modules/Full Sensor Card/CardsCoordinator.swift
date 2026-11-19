@@ -1,4 +1,5 @@
 import UIKit
+import RuuviCloud
 import RuuviOntology
 import RuuviLocal
 import RuuviService
@@ -208,7 +209,8 @@ private extension CardsCoordinator {
             exportService: r.resolve(RuuviServiceExport.self)!,
             alertService: r.resolve(RuuviServiceAlert.self)!,
             background: r.resolve(BTBackground.self)!,
-            flags: r.resolve(RuuviLocalFlags.self)!
+            flags: r.resolve(RuuviLocalFlags.self)!,
+            cloud: r.resolve(RuuviCloud.self)
         )
         presenter.interactor = interactor
 

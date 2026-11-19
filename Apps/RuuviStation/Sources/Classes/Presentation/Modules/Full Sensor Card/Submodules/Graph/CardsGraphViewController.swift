@@ -37,6 +37,11 @@ class CardsGraphViewController: UIViewController {
     }
 
     private var snapshot: RuuviTagCardSnapshot?
+    private weak var activeGraphChart: CardsGraphView?
+    private var cloudHistoryLimitHours: Int?
+    private var usesCloudSummaries: Bool { cloudHistoryLimitHours != nil }
+    private var historyLimitHours: Int { cloudHistoryLimitHours ?? max(1, settings.dataPruningOffsetHours) }
+    private var summaryStatistics: [MeasurementDisplayVariant: (ClosedRange<Double>) -> (min: Double?, max: Double?, average: Double?)] = [:]
 
     var showAlertRangeInGraph: Bool = true
 
@@ -225,7 +230,7 @@ class CardsGraphViewController: UIViewController {
 
     private let historyHoursOptions: [Int] = [1, 2, 3, 6, 12]
     private let minimumHistoryLimit: Int = 1 // Day
-    private var maximumHistoryLimit: Int { max(0, settings.dataPruningOffsetHours / 24) }
+    private var maximumHistoryLimit: Int { max(1, historyLimitHours / 24) }
     private let highlightAnimationDelay: TimeInterval = 0.3
 
     private var settings: RuuviLocalSettings
@@ -434,7 +439,7 @@ class CardsGraphViewController: UIViewController {
         all_action.state = showChartAll ? .on : .off
         actions.append(all_action)
 
-        for hour in historyHoursOptions where hour <= max(0, settings.dataPruningOffsetHours) {
+        for hour in historyHoursOptions where hour <= historyLimitHours {
             let action = UIAction(
                 title: "\(hour) \(hour == 1 ? RuuviLocalization.hour : RuuviLocalization.hours)".lowercased()
             ) { [weak self] _ in
@@ -448,7 +453,10 @@ class CardsGraphViewController: UIViewController {
             actions.append(action)
         }
 
-        for day in 0 ... maximumHistoryLimit where day >= minimumHistoryLimit {
+        let days = usesCloudSummaries
+            ? Array(Set([1, 2, 3, 7, 14, 30, 60, 90, 180, 365, 730, maximumHistoryLimit])).sorted()
+            : Array(minimumHistoryLimit...max(minimumHistoryLimit, maximumHistoryLimit))
+        for day in days where day <= maximumHistoryLimit {
             let action = UIAction(title: day.days) {
                 [weak self] _ in
                 self?.handleHistoryLengthSelection(hours: day * 24)
@@ -465,7 +473,7 @@ class CardsGraphViewController: UIViewController {
         let more_action = UIAction(title: RuuviLocalization.more) { [weak self] _ in
             self?.handleHistoryLengthSelection(hours: nil)
         }
-        actions.append(more_action)
+        if !usesCloudSummaries { actions.append(more_action) }
 
         return UIMenu(
             title: "",
@@ -562,6 +570,10 @@ class CardsGraphViewController: UIViewController {
             minMaxAvgAction,
         ]
 
+        if usesCloudSummaries {
+            actions.removeAll { $0 === clearViewHistory }
+        }
+
         if chartModules.count > 2, !isLandscapeLayout {
             if chartsPerScreen > 1 {
                 actions.append(increaseChartSizeAction)
@@ -580,6 +592,12 @@ class CardsGraphViewController: UIViewController {
 
 extension CardsGraphViewController: CardsGraphViewDelegate {
     func chartDidTranslate(_ chartView: CardsGraphView) {
+        let chart = chartView.underlyingView
+        let lower = chart.lowestVisibleX
+        let upper = chart.highestVisibleX
+        if lower.isFinite, upper.isFinite, lower < upper {
+            output?.viewDidChangeGraphViewport(lower...upper)
+        }
         guard chartViews.count > 1
         else {
             calculateMinMaxForChart(for: chartView)
@@ -592,7 +610,9 @@ extension CardsGraphViewController: CardsGraphViewDelegate {
         chartViews.filter { $0 != chartView }.forEach { otherChart in
             var targetMatrix = otherChart.underlyingView.viewPortHandler.touchMatrix
             targetMatrix.a = sourceMatrix.a
-            targetMatrix.tx = sourceMatrix.tx
+            let sourceWidth = chartView.underlyingView.viewPortHandler.contentWidth
+            let targetWidth = otherChart.underlyingView.viewPortHandler.contentWidth
+            targetMatrix.tx = sourceWidth > 0 ? sourceMatrix.tx * targetWidth / sourceWidth : sourceMatrix.tx
             otherChart.underlyingView.viewPortHandler.refresh(
                 newMatrix: targetMatrix,
                 chart: otherChart.underlyingView,
@@ -669,6 +689,8 @@ extension CardsGraphViewController: CardsGraphViewDelegate {
 extension CardsGraphViewController: CardsGraphViewInput {
     func setActiveSnapshot(_ snapshot: RuuviTagCardSnapshot?) {
         self.snapshot = snapshot
+        historySelectionButton.updateMenu(with: historyLengthOptions())
+        moreButton.updateMenu(with: moreButtonOptions(showChartStat: showChartStat))
         pendingScrollVariant = nil
         shouldHighlightOnScroll = false
     }
@@ -724,9 +746,20 @@ extension CardsGraphViewController: CardsGraphViewInput {
         }
     }
 
+    func setCloudHistoryLimit(hours: Int?) {
+        cloudHistoryLimitHours = hours
+        historySelectionButton.updateMenu(with: historyLengthOptions())
+        moreButton.updateMenu(with: moreButtonOptions(showChartStat: showChartStat))
+    }
+
+    func setChartViewData(from chartViewData: [RuuviGraphViewDataModel], settings: RuuviLocalSettings) {
+        setChartViewData(from: chartViewData, settings: settings, preservingViewport: false)
+    }
+
     func setChartViewData(
         from chartViewData: [RuuviGraphViewDataModel],
-        settings: RuuviLocalSettings
+        settings: RuuviLocalSettings,
+        preservingViewport: Bool
     ) {
         self.settings = settings
         if chartViewData.isEmpty {
@@ -735,9 +768,16 @@ extension CardsGraphViewController: CardsGraphViewInput {
             return
         }
 
-        clearChartData()
+        // Replacing summary data must not reset an in-progress zoom/pan or its Y scale.
+        let matrices = preservingViewport
+            ? chartViewCache.mapValues { $0.underlyingView.viewPortHandler.touchMatrix } : [:]
+        if !preservingViewport { clearChartData() }
         showChartViews()
-        let timelineRange = resolveGlobalTimelineRange(from: chartViewData)
+        let summaryRange = chartViewData.compactMap(\.timelineRange).first
+        let timelineRange = summaryRange ?? resolveGlobalTimelineRange(from: chartViewData)
+        summaryStatistics = chartViewData.reduce(into: [:]) { result, model in
+            result[model.variant] = model.summaryStatistics
+        }
 
         for data in chartViewData {
             let view = chartView(for: data.variant)
@@ -746,18 +786,31 @@ extension CardsGraphViewController: CardsGraphViewInput {
                 displayType: data.variant.type,
                 unit: data.variant.type.unit(for: data.variant, settings: settings),
                 settings: settings,
-                view: view
+                view: view,
+                preservingViewport: preservingViewport
             )
         }
 
         chartViews.forEach {
             $0.setSettings(settings: settings)
             $0.setXAxisRenderer(
-                showAll: settings.chartShowAll,
+                showAll: summaryRange != nil || settings.chartShowAll,
                 timelineRange: timelineRange
             )
+            if let summaryRange {
+                // A two-year overview must still zoom to a minute, where the server
+                // can return its one-second grid. The legacy fixed scale stopped at hours.
+                let maximumScale = max(1, (summaryRange.upperBound - summaryRange.lowerBound) / 60)
+                $0.underlyingView.viewPortHandler.setMaximumScaleX(maximumScale)
+            } else {
+                $0.underlyingView.viewPortHandler.setMaximumScaleX(5000)
+            }
         }
 
+        for (variant, matrix) in matrices {
+            guard let chart = chartViewCache[variant]?.underlyingView else { continue }
+            chart.viewPortHandler.refresh(newMatrix: matrix, chart: chart, invalidate: true)
+        }
         DispatchQueue.main.async { [weak self] in
             self?.view.layoutIfNeeded()
             if let variant = self?.pendingScrollVariant {
@@ -1107,6 +1160,15 @@ extension CardsGraphViewController {
 
         let view = CardsGraphView(variant: variant)
         view.chartDelegate = self
+        view.underlyingView.graphInteractionChanged = { [weak self, weak view] active in
+            guard let self, let view, self.usesCloudSummaries else { return }
+            if active { self.activeGraphChart = view }
+            self.output?.viewDidChangeGraphInteraction(active: active)
+        }
+        view.underlyingView.graphViewportChanged = { [weak self, weak view] _ in
+            guard let self, let view, self.usesCloudSummaries, self.activeGraphChart === view else { return }
+            self.chartDidTranslate(view)
+        }
         view.translatesAutoresizingMaskIntoConstraints = false
         chartViewCache[variant] = view
         ensureHeightConstraint(for: view, variant: variant)
@@ -1241,7 +1303,8 @@ extension CardsGraphViewController {
         displayType: MeasurementType,
         unit: String,
         settings: RuuviLocalSettings,
-        view: CardsGraphView
+        view: CardsGraphView,
+        preservingViewport: Bool = false
     ) {
         view.setChartLabel(
             type: displayType,
@@ -1253,7 +1316,15 @@ extension CardsGraphViewController {
         view.underlyingView.upperAlertValue = data.upperAlertValue
         view.setSettings(settings: settings)
         view.localize()
-        view.setYAxisLimit(min: data.chartData?.yMin ?? 0, max: data.chartData?.yMax ?? 0)
+        if !preservingViewport {
+            // Overview means can hide peaks. Reserve the server's full extrema so
+            // finer detail does not get clipped when preserving the user's Y scale.
+            let extrema = data.timelineRange.flatMap { data.summaryStatistics?($0) }
+            let minimum = extrema?.min ?? data.chartData?.yMin ?? 0
+            let maximum = extrema?.max ?? data.chartData?.yMax ?? 0
+            view.setYAxisLimit(min: minimum.isFinite ? minimum : 0, max: maximum.isFinite ? maximum : 0)
+        }
+        view.underlyingView.highlightValue(nil)
         view.setChartStatVisible(show: showChartStat)
 
         // Calculation of min/max depends on the chart
@@ -1273,6 +1344,7 @@ extension CardsGraphViewController {
     }
 
     private func clearChartData() {
+        summaryStatistics.removeAll()
         chartViewCache.values.forEach {
             $0.clearChartData()
             $0.underlyingView.highlightValue(nil)
@@ -1401,6 +1473,15 @@ extension CardsGraphViewController {
     }
 
     private func calculateMinMaxForChart(for view: CardsGraphView) {
+        if let variant = variant(for: view), let summarize = summaryStatistics[variant] {
+            let lower = view.underlyingView.lowestVisibleX
+            let upper = view.underlyingView.highestVisibleX
+            guard lower.isFinite, upper.isFinite, lower <= upper else { return }
+            let stats = summarize(lower...upper)
+            view.setChartStat(min: stats.min, max: stats.max, avg: stats.average,
+                              type: variant.type, measurementService: measurementService)
+            return
+        }
         guard let data = view.underlyingView.data,
               let dataSet = data.dataSets.first as? LineChartDataSet else {
             return

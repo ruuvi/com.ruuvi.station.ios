@@ -52,4 +52,7 @@ final class RuuviLocalFlagsUserDefaults: RuuviLocalFlags {
     @UserDefault("RuuviFeatureFlags.graphDownsampleMaximumPoints", defaultValue: 3000)
     var graphDownsampleMaximumPoints: Int
 
+    @UserDefault("RuuviFeatureFlags.cloudHistoryAggregation", defaultValue: false)
+    var cloudHistoryAggregation: Bool
+
 }

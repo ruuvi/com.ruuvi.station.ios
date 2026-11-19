@@ -25,6 +25,9 @@ public struct ShareSensorResponse {
 }
 
 public protocol RuuviCloud {
+    @available(iOS 15.0, macOS 12.0, *)
+    func loadGraph(_ query: CloudGraphQuery) async throws -> CloudGraphResponse
+
     @discardableResult
     func requestCode(email: String) -> Future<String?, RuuviCloudError>
 
@@ -274,5 +277,12 @@ public extension RuuviCloud {
     ) -> Future<URL, RuuviCloudError> {
         upload(imageData: imageData, mimeType: mimeType, lastUpdated: lastUpdated,
                progress: progress, isCurrentSelection: nil, for: macId)
+    }
+}
+
+public extension RuuviCloud {
+    @available(iOS 15.0, macOS 12.0, *)
+    func loadGraph(_ query: CloudGraphQuery) async throws -> CloudGraphResponse {
+        throw CloudGraphError.unavailable
     }
 }

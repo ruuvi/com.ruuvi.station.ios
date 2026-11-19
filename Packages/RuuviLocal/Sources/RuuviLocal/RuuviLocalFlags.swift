@@ -44,4 +44,14 @@ public protocol RuuviLocalFlags {
     /// Maximum number of points used for graph downsampling.
     /// Defaults to 3000.
     var graphDownsampleMaximumPoints: Int { get set }
+
+    /// Rollout switch for the current cloud's POST /history/graph endpoint.
+    var cloudHistoryAggregation: Bool { get set }
+}
+
+public extension RuuviLocalFlags {
+    var cloudHistoryAggregation: Bool {
+        get { false }
+        set { }
+    }
 }

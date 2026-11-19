@@ -32,6 +32,33 @@ class CardsGraphInternalView: LineChartView {
     var upperAlertValue: Double?
     var graphType: MeasurementType = .temperature
 
+    var graphInteractionChanged: ((Bool) -> Void)?
+    var graphViewportChanged: ((ClosedRange<Double>) -> Void)?
+    private var graphGestures = Set<ObjectIdentifier>()
+    private var lastReportedGraphRange: ClosedRange<Double>?
+
+    override func draw(_ rect: CGRect) {
+        super.draw(rect)
+        // Includes inertial pan frames, which don't consistently send chartTranslated.
+        let lower = lowestVisibleX
+        let upper = highestVisibleX
+        guard lower.isFinite, upper.isFinite, lower < upper else { return }
+        let range = lower...upper
+        guard lastReportedGraphRange != range else { return }
+        lastReportedGraphRange = range
+        graphViewportChanged?(range)
+    }
+
+    @objc private func graphGestureChanged(_ recognizer: UIGestureRecognizer) {
+        let identifier = ObjectIdentifier(recognizer)
+        switch recognizer.state {
+        case .began: graphGestures.insert(identifier)
+        case .ended, .cancelled, .failed: graphGestures.remove(identifier)
+        default: return
+        }
+        graphInteractionChanged?(!graphGestures.isEmpty)
+    }
+
     // MARK: - Private
     private lazy var markerView = CardsGraphMarkerView()
     private var settings: RuuviLocalSettings!
@@ -77,7 +104,27 @@ class CardsGraphInternalView: LineChartView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        let shouldBegin = super.gestureRecognizerShouldBegin(gestureRecognizer)
+        if gestureRecognizer is UIPinchGestureRecognizer {
+            // Indirect pinches (for example Simulator trackpad gestures) may have
+            // fewer than two touches. DGCharts' axis detection reads touch 1;
+            // its simultaneous-axis mode uses the gesture centroid instead.
+            pinchZoomEnabled = shouldBegin && gestureRecognizer.numberOfTouches < 2
+        }
+        return shouldBegin
+    }
+
     // MARK: - Private
+
+    @objc private func finishPinchGesture(_ recognizer: UIPinchGestureRecognizer) {
+        switch recognizer.state {
+        case .ended, .cancelled, .failed:
+            pinchZoomEnabled = false
+        default:
+            break
+        }
+    }
 
     private func configure() {
         chartDescription.enabled = false
@@ -132,6 +179,12 @@ class CardsGraphInternalView: LineChartView {
         tapRecognizer.require(toFail: longPressRecognizer)
         addGestureRecognizer(tapRecognizer)
         addGestureRecognizer(longPressRecognizer)
+        for recognizer in gestureRecognizers ?? [] where recognizer is UIPanGestureRecognizer || recognizer is UIPinchGestureRecognizer {
+            recognizer.addTarget(self, action: #selector(graphGestureChanged(_:)))
+        }
+        for case let recognizer as UIPinchGestureRecognizer in gestureRecognizers ?? [] {
+            recognizer.addTarget(self, action: #selector(finishPinchGesture(_:)))
+        }
     }
 
     private func reloadData() {

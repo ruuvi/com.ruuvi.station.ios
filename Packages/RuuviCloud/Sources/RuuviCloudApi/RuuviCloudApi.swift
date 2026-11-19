@@ -6,6 +6,9 @@ import RuuviOntology
 
 /// https://docs.ruuvi.com/communication/ruuvi-network/backends/serverless/user-api
 public protocol RuuviCloudApi {
+    @available(iOS 15.0, macOS 12.0, *)
+    func loadGraph(_ query: CloudGraphQuery, authorization: String) async throws -> CloudGraphResponse
+
     func register(
         _ requestModel: RuuviCloudApiRegisterRequest
     ) -> Future<RuuviCloudApiRegisterResponse, RuuviCloudApiError>
@@ -137,4 +140,11 @@ public protocol RuuviCloudApi {
 
 public protocol RuuviCloudApiFactory {
     func create(baseUrl: URL) -> RuuviCloudApi
+}
+
+public extension RuuviCloudApi {
+    @available(iOS 15.0, macOS 12.0, *)
+    func loadGraph(_ query: CloudGraphQuery, authorization: String) async throws -> CloudGraphResponse {
+        throw CloudGraphError.unavailable
+    }
 }

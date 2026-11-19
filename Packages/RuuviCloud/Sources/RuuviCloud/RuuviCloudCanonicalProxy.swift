@@ -18,6 +18,15 @@ public final class RuuviCloudCanonicalProxy: RuuviCloud {
         self.localIDs = localIDs
     }
 
+    @available(iOS 15.0, macOS 12.0, *)
+    public func loadGraph(_ query: CloudGraphQuery) async throws -> CloudGraphResponse {
+        let canonicalQuery = try CloudGraphQuery(
+            sensors: query.sensors.map { canonical($0.mac).value },
+            since: query.since, until: query.until, metrics: query.metrics, compact: query.format == "columns"
+        )
+        return try await cloud.loadGraph(canonicalQuery)
+    }
+
     public func requestCode(email: String) -> Future<String?, RuuviCloudError> {
         cloud.requestCode(email: email)
     }

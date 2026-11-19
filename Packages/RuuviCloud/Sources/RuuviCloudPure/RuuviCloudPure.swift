@@ -22,6 +22,15 @@ public final class RuuviCloudPure: RuuviCloud {
         self.pool = pool
     }
 
+    @available(iOS 15.0, macOS 12.0, *)
+    public func loadGraph(_ query: CloudGraphQuery) async throws -> CloudGraphResponse {
+        guard let key = user.apiKey else { throw CloudGraphError.unauthorized }
+        let response = try await api.loadGraph(query, authorization: key)
+        try Task.checkCancellation()
+        guard user.apiKey == key else { throw CloudGraphError.unauthorized }
+        return response
+    }
+
     @discardableResult
     public func loadAlerts() -> Future<[RuuviCloudSensorAlerts], RuuviCloudError> {
         let promise = Promise<[RuuviCloudSensorAlerts], RuuviCloudError>()

@@ -61,6 +61,11 @@ enum RuuviGraphDataSetFactory {
         return dataSet
     }
 
+    static func configureCircles(for dataSet: LineChartDataSet, drawDots: Bool) {
+        dataSet.drawCirclesEnabled = dataSet.entryCount == 1 || drawDots
+        dataSet.circleRadius = dataSet.entryCount == 1 ? 6 : Constants.circleRadius
+    }
+
     // MARK: - Convenience Methods
     static func newDataSet(
         upperAlertValue: Double? = nil,

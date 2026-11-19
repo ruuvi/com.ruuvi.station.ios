@@ -12,6 +12,13 @@ class AppDateFormatter {
         return df
     }()
 
+    private let graphXAxisYearFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.locale = Locale.autoupdatingCurrent
+        df.setLocalizedDateFormatFromTemplate("MMMyyyy")
+        return df
+    }()
+
     private let shortTimeFormatter: DateFormatter = {
         let df = DateFormatter()
         df.locale = Locale.autoupdatingCurrent
@@ -44,6 +51,10 @@ extension AppDateFormatter {
 
     func shortTimeString(from date: Date) -> String {
         shortTimeFormatter.string(from: date)
+    }
+
+    func graphXAxisDateWithYearString(from date: Date) -> String {
+        graphXAxisYearFormatter.string(from: date)
     }
 
     func graphXAxisTimeString(from date: Date) -> String {

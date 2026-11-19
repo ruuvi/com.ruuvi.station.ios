@@ -8,6 +8,8 @@ class RuuviGraphViewDataModel: NSObject {
     var upperAlertValue: Double?
     var chartData: LineChartData?
     var lowerAlertValue: Double?
+    var timelineRange: ClosedRange<Double>?
+    var summaryStatistics: ((ClosedRange<Double>) -> (min: Double?, max: Double?, average: Double?))?
 
     init(
         upperAlertValue: Double?,

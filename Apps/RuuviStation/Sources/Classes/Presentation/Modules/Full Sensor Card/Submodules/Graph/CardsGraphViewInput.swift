@@ -17,6 +17,9 @@ protocol CardsGraphViewInput: ViewInput {
     var showAlertRangeInGraph: Bool { get set }
     var viewIsVisible: Bool { get }
     var graphIsVisibleForUser: Bool { get }
+    func setCloudHistoryLimit(hours: Int?)
+    func setChartViewData(from chartViewData: [RuuviGraphViewDataModel], settings: RuuviLocalSettings,
+                          preservingViewport: Bool)
     func resetScrollPosition()
     func showBluetoothDisabled(userDeclined: Bool)
     func setActiveSnapshot(_ snapshot: RuuviTagCardSnapshot?)
@@ -55,4 +58,12 @@ protocol CardsGraphViewInput: ViewInput {
     func showExportSheet(with path: URL)
     func showLongerHistoryDialog()
     func showGraphLongPressTutorialDialog()
+}
+
+extension CardsGraphViewInput {
+    func setCloudHistoryLimit(hours: Int?) { }
+    func setChartViewData(from data: [RuuviGraphViewDataModel], settings: RuuviLocalSettings,
+                          preservingViewport: Bool) {
+        setChartViewData(from: data, settings: settings)
+    }
 }

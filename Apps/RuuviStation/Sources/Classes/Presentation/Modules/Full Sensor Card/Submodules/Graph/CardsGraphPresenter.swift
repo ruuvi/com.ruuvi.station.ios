@@ -1,6 +1,7 @@
 // swiftlint:disable file_length
 
 import Combine
+import RuuviCloud
 import RuuviOntology
 import Foundation
 import RuuviLocal
@@ -34,6 +35,36 @@ class CardsGraphPresenter: NSObject {
     private let alertService: RuuviServiceAlert
     private let background: BTBackground
     private var flags: RuuviLocalFlags
+    private let cloud: RuuviCloud?
+    private var configuredHistoryDays: Int?
+    private var usesCloudSummaries: Bool {
+        flags.cloudHistoryAggregation && cloud != nil && snapshot?.metadata.isCloud == true
+            && CloudGraphQuery.historyHours(maxHistoryDays: snapshot?.ownership.maxHistoryDays) != nil
+    }
+    private var historyLimitHours: Int {
+        usesCloudSummaries ? CloudGraphQuery.historyHours(maxHistoryDays: snapshot?.ownership.maxHistoryDays)!
+            : max(1, settings.dataPruningOffsetHours)
+    }
+    private lazy var cloudGraph: CloudGraphLoader = CloudGraphLoader(
+        load: { [weak self] query in
+            guard let cloud = self?.cloud else { throw CloudGraphError.unavailable }
+            return try await cloud.loadGraph(query)
+        }, changed: { [weak self] viewport, preserving in
+            guard let self, self.usesCloudSummaries else { return }
+            self.isLoadingHistory = false
+            self.renderCloudHistory(viewport, preservingViewport: preserving)
+        }, failed: { [weak self] error, lostAccess in
+            guard let self else { return }
+            self.isLoadingHistory = false
+            if lostAccess {
+                self.datasource.removeAll()
+                self.chartModules.removeAll()
+                self.view?.clearChartHistory()
+            }
+            self.view?.setHasChartData(!lostAccess && !self.datasource.isEmpty && self.cloudGraph.viewport != nil)
+            self.errorPresenter.present(error: error)
+        }, isVisible: { [weak self] in self?.view?.graphIsVisibleForUser == true }
+    )
 
     // MARK: Observation Tokens
     private var advertisementToken: ObservationToken?
@@ -42,6 +73,7 @@ class CardsGraphPresenter: NSObject {
     private var humidityUnitToken: NSObjectProtocol?
     private var pressureUnitToken: NSObjectProtocol?
     private var backgroundToken: NSObjectProtocol?
+    private var graphForegroundToken: NSObjectProtocol?
     private var alertDidChangeToken: NSObjectProtocol?
     private var didConnectToken: NSObjectProtocol?
     private var didDisconnectToken: NSObjectProtocol?
@@ -139,6 +171,7 @@ class CardsGraphPresenter: NSObject {
         alertService: RuuviServiceAlert,
         background: BTBackground,
         flags: RuuviLocalFlags,
+        cloud: RuuviCloud? = nil,
         serviceCoordinatorManager: RuuviTagServiceCoordinatorManager = .shared
     ) {
         self.errorPresenter = errorPresenter
@@ -152,6 +185,7 @@ class CardsGraphPresenter: NSObject {
         self.alertService = alertService
         self.background = background
         self.flags = flags
+        self.cloud = cloud
         self.serviceCoordinatorManager = serviceCoordinatorManager
         super.init()
         observeExternalGattSync()
@@ -181,9 +215,17 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
         settings: SensorSettings?
     ) {
         let previousId = self.snapshot?.id
+        let previousHistoryDays = configuredHistoryDays
+        configuredHistoryDays = snapshot.ownership.maxHistoryDays
+        if previousId != snapshot.id { cloudGraph.stop(clear: true) }
         self.snapshot = snapshot
         self.sensor = sensor
         self.sensorSettings = settings
+        view?.setCloudHistoryLimit(hours: usesCloudSummaries ? historyLimitHours : nil)
+        if previousId == snapshot.id, previousHistoryDays != snapshot.ownership.maxHistoryDays {
+            cloudGraph.stop(clear: true)
+            reloadChartsData(shouldSyncFromCloud: false)
+        }
         observeAlertData(from: snapshot)
         handleSnapshotChangeIfNeeded(previousSnapshotId: previousId, newSnapshot: snapshot)
         applyVisibilityChangeIfNeeded()
@@ -216,10 +258,12 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
     }
 
     func stop() {
+        cloudGraph.stop()
         cancelScheduledAutoGattSync()
     }
 
     func scroll(to index: Int, animated: Bool) {
+        view?.setCloudHistoryLimit(hours: usesCloudSummaries ? historyLimitHours : nil)
         view?.setActiveSnapshot(snapshot)
         refreshSyncUIForCurrentSnapshot()
         restartObserving()
@@ -253,6 +297,14 @@ extension CardsGraphPresenter: CardsGraphPresenterInput {
     }
 
     func reloadChartsData(shouldSyncFromCloud: Bool) {
+        view?.setCloudHistoryLimit(hours: usesCloudSummaries ? historyLimitHours : nil)
+        if usesCloudSummaries, let sensor {
+            interactor?.configureCloudGraph(withTag: sensor, settings: sensorSettings)
+            interactor?.restartObservingTags()
+            loadCloudHistory()
+            return
+        }
+        cloudGraph.stop(clear: true)
         isLoadingHistory = true
         view?.setChartLoading(hideCharts: false)
         if let sensor {
@@ -277,7 +329,7 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
         view?.setActiveSnapshot(snapshot)
         refreshSyncUIForCurrentSnapshot()
 
-        view?.historyLengthInHours = min(max(1, settings.dataPruningOffsetHours), settings.chartDurationHours)
+        view?.historyLengthInHours = min(historyLimitHours, settings.chartDurationHours)
         view?.showChartStat = settings.chartStatsOn
         view?.chartsPerScreen = settings.chartsPerScreen
         view?.showChartAll = settings.chartShowAll
@@ -286,10 +338,12 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
 
     func viewDidStartScrolling() {
         isUserScrolling = true
+        if usesCloudSummaries { cloudGraph.setInteraction(active: true) }
     }
 
     func viewDidEndScrolling() {
         isUserScrolling = false
+        if usesCloudSummaries { cloudGraph.setInteraction(active: false) }
 
         // Process all pending measurements
         if !pendingMeasurements.isEmpty {
@@ -399,7 +453,7 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
             DispatchQueue.main.async { [weak self] in
                 guard self?.isActiveSyncSession(syncSessionId, for: snapshot.id) == true else { return }
                 guard self?.snapshot?.id == snapshot.id else { return }
-                self?.interactor?.restartObservingData()
+                self?.refreshHistory()
             }
         }, failure: { [weak self] _ in
             DispatchQueue.main.async { [weak self] in
@@ -500,14 +554,14 @@ extension CardsGraphPresenter: CardsGraphViewOutput {
 
     func viewDidSelectChartHistoryLength(hours: Int) {
         settings.chartShowAll = false
-        settings.chartDurationHours = min(max(1, settings.dataPruningOffsetHours), max(1, hours))
+        settings.chartDurationHours = min(historyLimitHours, max(1, hours))
         view?.showChartAll = false
-        view?.historyLengthInHours = min(max(1, settings.dataPruningOffsetHours), settings.chartDurationHours)
+        view?.historyLengthInHours = min(historyLimitHours, settings.chartDurationHours)
     }
 
     func viewDidSelectAllChartHistory() {
         settings.chartShowAll = true
-        settings.chartDurationHours = max(1, settings.dataPruningOffsetHours)
+        settings.chartDurationHours = historyLimitHours
         view?.showChartAll = settings.chartShowAll
     }
 
@@ -840,7 +894,7 @@ extension CardsGraphPresenter {
                     }
                     switch status {
                     case .complete:
-                        self?.interactor?.restartObservingData()
+                        self?.refreshHistory()
                     default:
                         break
                     }
@@ -855,6 +909,7 @@ extension CardsGraphPresenter {
         humidityUnitToken?.invalidate()
         pressureUnitToken?.invalidate()
         backgroundToken?.invalidate()
+        graphForegroundToken?.invalidate()
         alertDidChangeToken?.invalidate()
         didConnectToken?.invalidate()
         didDisconnectToken?.invalidate()
@@ -1011,7 +1066,7 @@ extension CardsGraphPresenter {
             DispatchQueue.main.async { [weak self] in
                 self?.refreshSyncUIForCurrentSnapshot()
                 if self?.snapshot?.id == target.id {
-                    self?.interactor?.restartObservingData()
+                    self?.refreshHistory()
                 }
             }
         } else {
@@ -1098,6 +1153,17 @@ extension CardsGraphPresenter {
 
     // swiftlint:disable:next function_body_length
     private func startListeningToSettings() {
+        backgroundToken?.invalidate()
+        graphForegroundToken?.invalidate()
+        backgroundToken = NotificationCenter.default.addObserver(
+            forName: UIApplication.didEnterBackgroundNotification, object: nil, queue: .main
+        ) { [weak self] _ in self?.cloudGraph.stop() }
+        graphForegroundToken = NotificationCenter.default.addObserver(
+            forName: UIApplication.didBecomeActiveNotification, object: nil, queue: .main
+        ) { [weak self] _ in
+            guard let self, self.usesCloudSummaries, self.view?.graphIsVisibleForUser == true else { return }
+            self.loadCloudHistory()
+        }
         temperatureUnitToken = NotificationCenter
             .default
             .addObserver(
@@ -1105,7 +1171,7 @@ extension CardsGraphPresenter {
                 object: nil,
                 queue: .main
             ) { [weak self] _ in
-                self?.interactor?.restartObservingData()
+                self?.refreshHistory()
             }
         humidityUnitToken = NotificationCenter
             .default
@@ -1114,7 +1180,7 @@ extension CardsGraphPresenter {
                 object: nil,
                 queue: .main,
                 using: { [weak self] _ in
-                    self?.interactor?.restartObservingData()
+                    self?.refreshHistory()
                 }
             )
         pressureUnitToken = NotificationCenter
@@ -1124,7 +1190,7 @@ extension CardsGraphPresenter {
                 object: nil,
                 queue: .main,
                 using: { [weak self] _ in
-                    self?.interactor?.restartObservingData()
+                    self?.refreshHistory()
                 }
             )
         downsampleDidChangeToken = NotificationCenter
@@ -1134,7 +1200,7 @@ extension CardsGraphPresenter {
                 object: nil,
                 queue: .main,
                 using: { [weak self] _ in
-                    self?.interactor?.restartObservingData()
+                    self?.refreshHistory()
                 }
             )
         chartDurationHourDidChangeToken = NotificationCenter
@@ -1145,7 +1211,7 @@ extension CardsGraphPresenter {
                 queue: .main,
                 using: { [weak self] _ in
                     guard let sSelf = self else { return }
-                    sSelf.interactor?.restartObservingData()
+                    sSelf.refreshHistory()
                 }
             )
         chartShowStatsStateDidChangeToken = NotificationCenter
@@ -1254,7 +1320,7 @@ extension CardsGraphPresenter {
                         return
                     }
                     if status == .complete {
-                        self?.interactor?.restartObservingData()
+                        self?.refreshHistory()
                     }
                 }
             )
@@ -1263,10 +1329,11 @@ extension CardsGraphPresenter {
     private func reloadChartsWithSensorSettingsChanges() {
         isLoadingHistory = true
         view?.setChartLoading(hideCharts: false)
-        interactor?.restartObservingData()
+        refreshHistory()
     }
 
     private func stopRunningProcesses() {
+        cloudGraph.stop()
         interactor?.stopObservingTags()
         interactor?.stopObservingRuuviTagsData()
         stopGattSync()
@@ -1275,6 +1342,7 @@ extension CardsGraphPresenter {
 
 extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
     func interactorDidFinishLoadingHistory() {
+        guard !usesCloudSummaries else { return }
         isLoadingHistory = false
         shouldRefreshEmptyStateAfterLoad = true
     }
@@ -1284,6 +1352,7 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
     }
 
     func createChartModules(from: [MeasurementDisplayVariant]) {
+        guard !usesCloudSummaries else { return }
         guard view != nil else { return }
         let filtered = filteredVariants(from: from)
         chartModules = filtered.isEmpty ? from : filtered
@@ -1302,6 +1371,7 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
 
     func interactorDidUpdate(sensor: AnyRuuviTagSensor) {
         self.sensor = sensor
+        guard !usesCloudSummaries else { return }
         let newMeasurements = interactor?.ruuviTagData ?? []
         let newFingerprint = MeasurementFingerprint(measurements: newMeasurements)
         ruuviTagData = newMeasurements
@@ -1322,6 +1392,7 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
     }
 
     func insertMeasurements(_ newValues: [RuuviMeasurement]) {
+        guard !usesCloudSummaries else { return }
         guard view != nil else { return }
 
         // If user is scrolling, queue the measurements instead of updating immediately
@@ -1382,6 +1453,10 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
     }
 
     private func rebuildChartData(updateView: Bool) {
+        if usesCloudSummaries {
+            if let viewport = cloudGraph.viewport { renderCloudHistory(viewport) }
+            return
+        }
         guard view != nil else { return }
         let variants = chartModules
         let measurements = ruuviTagData
@@ -1603,4 +1678,64 @@ extension CardsGraphPresenter: CardsGraphViewInteractorOutput {
         return profile.orderedVisibleVariants(for: .graph)
     }
 }
+
+// MARK: - Current-cloud aggregated history
+extension CardsGraphPresenter {
+    func viewDidChangeGraphViewport(_ range: ClosedRange<Double>) {
+        guard usesCloudSummaries else { return }
+        cloudGraph.move(to: range)
+    }
+
+    func viewDidChangeGraphInteraction(active: Bool) {
+        guard usesCloudSummaries else { return }
+        cloudGraph.setInteraction(active: active)
+    }
+
+    private func refreshHistory() {
+        if usesCloudSummaries { loadCloudHistory() } else { interactor?.restartObservingData() }
+    }
+
+    private func loadCloudHistory() {
+        guard usesCloudSummaries, let mac = snapshot?.identifierData.mac else { return }
+        isLoadingHistory = true
+        view?.setChartLoading(hideCharts: cloudGraph.viewport == nil)
+        let hours = settings.chartShowAll ? historyLimitHours : min(historyLimitHours, max(1, settings.chartDurationHours))
+        let metrics = filteredVariants(from: orderedChartMeasurementVariants()).compactMap {
+            CloudGraphAdapter.metric(for: $0, settings: settings)
+        }
+        guard !metrics.isEmpty else {
+            cloudGraph.stop(clear: true)
+            isLoadingHistory = false
+            datasource.removeAll()
+            view?.clearChartHistory()
+            view?.setHasChartData(false)
+            return
+        }
+        cloudGraph.start(sensor: mac.value, hours: hours, metrics: metrics)
+    }
+
+    private func renderCloudHistory(_ viewport: CloudGraphViewport, preservingViewport: Bool = true) {
+        let variants = filteredVariants(from: orderedChartMeasurementVariants())
+        let alertContext = alertRangeChartContext(for: variants, sensor: sensor)
+        currentAlertRangeFingerprint = alertContext.fingerprint
+        let models = variants.compactMap { variant in
+            CloudGraphAdapter.model(
+                viewport: viewport, variant: variant, settings: settings,
+                lowerAlertValue: alertContext.bounds[variant]?.lower,
+                upperAlertValue: alertContext.bounds[variant]?.upper,
+                showAlertRangeInGraph: settings.showAlertsRangeInGraph && alertContext.states[variant] == true
+            )
+        }
+        let modules = models.map(\.variant)
+        let modulesChanged = chartModules != modules
+        chartModules = modules
+        datasource = models
+        if modulesChanged || !preservingViewport { view?.createChartViews(from: modules) }
+        view?.setChartViewData(from: models, settings: settings, preservingViewport: preservingViewport)
+        view?.setHasChartData(!models.isEmpty)
+        if let record = snapshot?.latestRawRecord { updateLatestMeasurement(record.measurement) }
+        if let pending = pendingScrollRequest { scroll(to: pending.type, variant: pending.variant) }
+    }
+}
+
 // swiftlint:enable file_length

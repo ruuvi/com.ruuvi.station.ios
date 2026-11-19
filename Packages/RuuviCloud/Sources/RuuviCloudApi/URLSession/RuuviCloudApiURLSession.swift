@@ -47,10 +47,22 @@ public final class RuuviCloudApiURLSession: NSObject, RuuviCloudApi {
 
     private var progressHandlersByTaskID = [Int: ProgressHandler]()
     private let baseUrl: URL
+    private var graphSession: URLSession?
 
     public init(baseUrl: URL) {
         self.baseUrl = baseUrl
         Reachability.start()
+    }
+
+    @available(iOS 15.0, macOS 12.0, *)
+    public func loadGraph(_ query: CloudGraphQuery, authorization: String) async throws -> CloudGraphResponse {
+        try await CloudGraphTransport.load(query, baseURL: baseUrl, authorization: authorization, session: graphSession)
+    }
+
+    init(baseUrl: URL, graphSession: URLSession) {
+        self.baseUrl = baseUrl
+        self.graphSession = graphSession
+        super.init()
     }
 
     public func register(

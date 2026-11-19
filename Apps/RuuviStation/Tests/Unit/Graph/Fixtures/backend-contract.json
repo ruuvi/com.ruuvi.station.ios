@@ -1,0 +1,382 @@
+{
+  "result": "success",
+  "data": {
+    "series": [
+      {
+        "sensor": "AA:BB:CC:DD:EE:FF",
+        "name": "Synthetic",
+        "source": "dynamodb",
+        "since": 100,
+        "until": 120,
+        "resolutionSeconds": 60,
+        "offsetTemperature": 5,
+        "offsetHumidity": 10,
+        "offsetPressure": 3,
+        "archiveRecords": 2,
+        "timestamps": [
+          60
+        ],
+        "metrics": {
+          "temperature": {
+            "mean": [
+              20
+            ],
+            "min": [
+              10
+            ],
+            "max": [
+              30
+            ],
+            "count": [
+              2
+            ]
+          },
+          "humidity": {
+            "mean": [
+              40
+            ],
+            "min": [
+              40
+            ],
+            "max": [
+              40
+            ],
+            "count": [
+              2
+            ]
+          },
+          "pressure": {
+            "mean": [
+              100000
+            ],
+            "min": [
+              100000
+            ],
+            "max": [
+              100000
+            ],
+            "count": [
+              2
+            ]
+          },
+          "accelerationX": {
+            "mean": [
+              -1
+            ],
+            "min": [
+              -1
+            ],
+            "max": [
+              -1
+            ],
+            "count": [
+              2
+            ]
+          },
+          "accelerationY": {
+            "mean": [
+              -1
+            ],
+            "min": [
+              -1
+            ],
+            "max": [
+              -1
+            ],
+            "count": [
+              2
+            ]
+          },
+          "accelerationZ": {
+            "mean": [
+              -1
+            ],
+            "min": [
+              -1
+            ],
+            "max": [
+              -1
+            ],
+            "count": [
+              2
+            ]
+          },
+          "battery": {
+            "mean": [
+              null
+            ],
+            "min": [
+              null
+            ],
+            "max": [
+              null
+            ],
+            "count": [
+              0
+            ]
+          },
+          "txPower": {
+            "mean": [
+              null
+            ],
+            "min": [
+              null
+            ],
+            "max": [
+              null
+            ],
+            "count": [
+              0
+            ]
+          },
+          "movementCounter": {
+            "mean": [
+              null
+            ],
+            "min": [
+              null
+            ],
+            "max": [
+              null
+            ],
+            "count": [
+              0
+            ],
+            "last": [
+              null
+            ]
+          },
+          "measurementSequenceNumber": {
+            "mean": [
+              null
+            ],
+            "min": [
+              null
+            ],
+            "max": [
+              null
+            ],
+            "count": [
+              0
+            ],
+            "last": [
+              null
+            ]
+          },
+          "rssi": {
+            "mean": [
+              -47
+            ],
+            "min": [
+              -47
+            ],
+            "max": [
+              -47
+            ],
+            "count": [
+              2
+            ]
+          },
+          "pm10": {
+            "mean": [
+              null
+            ],
+            "min": [
+              null
+            ],
+            "max": [
+              null
+            ],
+            "count": [
+              0
+            ]
+          },
+          "pm25": {
+            "mean": [
+              null
+            ],
+            "min": [
+              null
+            ],
+            "max": [
+              null
+            ],
+            "count": [
+              0
+            ]
+          },
+          "pm40": {
+            "mean": [
+              null
+            ],
+            "min": [
+              null
+            ],
+            "max": [
+              null
+            ],
+            "count": [
+              0
+            ]
+          },
+          "pm100": {
+            "mean": [
+              null
+            ],
+            "min": [
+              null
+            ],
+            "max": [
+              null
+            ],
+            "count": [
+              0
+            ]
+          },
+          "co2": {
+            "mean": [
+              null
+            ],
+            "min": [
+              null
+            ],
+            "max": [
+              null
+            ],
+            "count": [
+              0
+            ]
+          },
+          "voc": {
+            "mean": [
+              null
+            ],
+            "min": [
+              null
+            ],
+            "max": [
+              null
+            ],
+            "count": [
+              0
+            ]
+          },
+          "nox": {
+            "mean": [
+              null
+            ],
+            "min": [
+              null
+            ],
+            "max": [
+              null
+            ],
+            "count": [
+              0
+            ]
+          },
+          "luminosity": {
+            "mean": [
+              null
+            ],
+            "min": [
+              null
+            ],
+            "max": [
+              null
+            ],
+            "count": [
+              0
+            ]
+          },
+          "dbAverage": {
+            "mean": [
+              null
+            ],
+            "min": [
+              null
+            ],
+            "max": [
+              null
+            ],
+            "count": [
+              0
+            ]
+          },
+          "dbPeak": {
+            "mean": [
+              null
+            ],
+            "min": [
+              null
+            ],
+            "max": [
+              null
+            ],
+            "count": [
+              0
+            ]
+          },
+          "dbInstant": {
+            "mean": [
+              null
+            ],
+            "min": [
+              null
+            ],
+            "max": [
+              null
+            ],
+            "count": [
+              0
+            ]
+          },
+          "absoluteHumidity": {
+            "mean": [
+              9.938319303444743
+            ],
+            "min": [
+              4.699030774209369
+            ],
+            "max": [
+              15.177607832680115
+            ],
+            "count": [
+              2
+            ]
+          },
+          "dewPoint": {
+            "mean": [
+              9.254620799756793
+            ],
+            "min": [
+              0.05421304020136133
+            ],
+            "max": [
+              18.455028559312225
+            ],
+            "count": [
+              2
+            ]
+          },
+          "aqi": {
+            "mean": [
+              null
+            ],
+            "min": [
+              null
+            ],
+            "max": [
+              null
+            ],
+            "count": [
+              0
+            ]
+          }
+        }
+      }
+    ],
+    "maxPoints": 1500,
+    "targetPoints": 1000
+  }
+}

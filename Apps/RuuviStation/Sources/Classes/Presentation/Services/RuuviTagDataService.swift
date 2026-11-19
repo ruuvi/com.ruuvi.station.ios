@@ -1046,6 +1046,7 @@ private extension RuuviTagDataService {
         }
 
         var updatedOwnership = snapshot.ownership
+        updatedOwnership.maxHistoryDays = sensor.maxHistoryDays
         let ownerName = sensor.owner?.lowercased() ?? RuuviLocalization.TagSettings.General.Owner.none
         if updatedOwnership.ownerName != ownerName {
             updatedOwnership.ownerName = ownerName

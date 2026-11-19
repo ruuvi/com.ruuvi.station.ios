@@ -1,6 +1,8 @@
 import Foundation
 
 protocol CardsGraphViewOutput: AnyObject {
+    func viewDidChangeGraphViewport(_ range: ClosedRange<Double>)
+    func viewDidChangeGraphInteraction(active: Bool)
     func viewDidLoad()
     func viewWillAppear()
     func viewDidTransition()
@@ -22,4 +24,9 @@ protocol CardsGraphViewOutput: AnyObject {
     func viewDidSelectLongerHistory()
     func viewDidSelectTriggerChartStat(show: Bool)
     func viewDidSelectChartsPerScreen(_ count: Int)
+}
+
+extension CardsGraphViewOutput {
+    func viewDidChangeGraphViewport(_ range: ClosedRange<Double>) { }
+    func viewDidChangeGraphInteraction(active: Bool) { }
 }

@@ -545,8 +545,8 @@ private extension DashboardPresenter {
         }
     }
 
-    func handleBluetoothStateChangeIfNeeded() {
-        serviceCoordinatorManager.refreshBluetoothState()
+    func handleBluetoothStateChangeIfNeeded(refreshState: Bool = true) {
+        if refreshState { serviceCoordinatorManager.refreshBluetoothState() }
         let snapshots = coordinatorSnapshots()
         if serviceCoordinatorManager.shouldShowBluetoothAlert(for: snapshots) {
             let (_, userDeclined) = serviceCoordinatorManager.getCurrentBluetoothState()
@@ -648,7 +648,7 @@ extension DashboardPresenter: RuuviTagServiceCoordinatorObserver {
             view?.updateSnapshot(from: snapshot)
 
         case .bluetoothStateChanged:
-            handleBluetoothStateChangeIfNeeded()
+            handleBluetoothStateChangeIfNeeded(refreshState: false)
 
         case .connectionServiceError(let error):
             errorPresenter.present(error: error)

@@ -22,6 +22,9 @@ targets:
     sources:
     - path: Tests/RuuviCloudTests/RuuviCloudAlertRetryTests.swift
     - path: Tests/RuuviCloudTests/RuuviCloudVerifyTests.swift
+    - path: Tests/RuuviCloudTests/CloudGraphViewportTests.swift
+    - path: Tests/RuuviCloudTests/CloudCompactGraphTests.swift
+    - path: Tests/RuuviCloudTests/CloudGraphTransportTests.swift
     dependencies:
     - target: RuuviCloud
     - target: RuuviPool

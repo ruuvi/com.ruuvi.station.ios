@@ -227,7 +227,37 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         TEST_HOST: "$(BUILT_PRODUCTS_DIR)/station.app/station"
         BUNDLE_LOADER: "$(TEST_HOST)"
+  station.graphTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests/Unit/Graph
+    dependencies:
+      - target: station
+      - target: RuuviCloud
+        embed: false
+      - target: RuuviLocal
+        embed: false
+      - target: RuuviOntology
+        embed: false
+      - target: RuuviService
+        embed: false
+      - package: DGCharts
+      - package: Humidity
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/station.app/station"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+
 schemes:
+  station.graphTests:
+    build:
+      targets:
+        station.graphTests: all
+    test:
+      targets:
+        - station.graphTests
   station:
     build:
       targets:
